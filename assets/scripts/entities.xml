@@ -1,0 +1,56 @@
+<root>
+	<!--
+		实体注册文件(<你的资产库>/scripts/entities.xml)
+		详细说明请参考：http://kbengine.org/cn/docs/configuration/entities.html
+					http://www.kbengine.org/cn/docs/programming/entitydef.html
+	-->
+	<Space/>
+	<AdminStub/>
+	<PlayerStub/>
+	<BaseApp/>
+	<TeamStub/>
+	<TeamMatchStub/>
+	<TeamDungeonStub/>
+	<SingleDungeonStub/>
+	<WorldLineStub/>
+	<CubeStub/>
+	<RaidStub/>
+	<CrossServerStub/>
+	<RaidDungeonStub/>
+	<LoginStub/>
+	<ItemLinkStub/>
+	<GlobalMailStub/>
+	<CubeSpaceMgr/>
+	<GuildStub/>
+	<Guild/>
+	<LeaderBoardStub/>
+	<AuctionStub/>
+	<DropStub/>
+	<WonderLandStub/>
+	<WonderLandSpaceMgr/>
+	<WorldLineSpaceMgr/>
+	<ActStub/>
+	<CrossSiegeWarStub/>
+	<SiegeWarStub/>
+	<SiegeWarSpaceStub/>
+	<SiegeWarSpaceMgr/>
+	<CrossDataStub/>
+	<WorldBossStub/>
+
+	<DungeonSpaceMgr hasClient="False"></DungeonSpaceMgr>
+	<MonsterGrp hasClient="False"></MonsterGrp>
+	<Account hasClient="true"></Account>
+	<Avatar hasClient="true"></Avatar>
+	<Monster hasClient="true"></Monster>
+	<Summon hasClient="true"></Summon>
+	<Barrier hasClient="true"></Barrier>
+	<Teleporter hasClient="true"></Teleporter>
+	<CityBattleTeleporter hasClient="true"></CityBattleTeleporter>
+	<CoreAreaFlag hasClient="true"></CoreAreaFlag>
+	<Npc hasClient="true"></Npc>
+	<Collection hasClient="true"></Collection>
+	<Creation hasClient="true"></Creation>
+	<DuelFlag hasClient="true"></DuelFlag>
+	<RaidMatchStub/>
+	<WorldRefreshEntityStub/>
+</root>

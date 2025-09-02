@@ -1,0 +1,51 @@
+<root>
+    <Properties>
+        <warehouse>
+            <Type>          WAREHOUSE_BAG_INFO      </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+            <CrossServer>   false                   </CrossServer>
+        </warehouse>
+    </Properties>
+
+    <BaseMethods>
+        <reqGetWarehouse><Exposed/>
+        </reqGetWarehouse>
+
+        <reqUnlockWarehouse><Exposed/>
+            <Arg>       UINT8      </Arg>
+        </reqUnlockWarehouse>
+
+        <reqMoveItemToWarehouse><Exposed/>
+            <Arg>       UINT32     </Arg>
+            <Arg>       ITEMID     </Arg>
+        </reqMoveItemToWarehouse>
+
+        <reqMoveItemToBag><Exposed/>
+            <Arg>       UINT32     </Arg>
+            <Arg>       ITEMID      </Arg>
+        </reqMoveItemToBag>
+
+        <reqWarehouseSort><Exposed/>
+        </reqWarehouseSort>
+    </BaseMethods>
+
+    <ClientMethods>
+        <onUnlockWarehouseGrids>
+            <Arg>      UINT8  </Arg>
+            <Arg>      UINT32  </Arg>
+        </onUnlockWarehouseGrids>
+
+        <onWarehouseInItems>
+            <Arg>     UINT8     </Arg>
+            <Arg>     ARRAY <of> BAG_ITEM_VAL </of>     </Arg>
+        </onWarehouseInItems>
+
+        <onWarehouseOutItems>
+            <Arg>     UINT8     </Arg>
+            <Arg>     UINT32    </Arg>
+        </onWarehouseOutItems>
+
+    </ClientMethods>
+</root>
+

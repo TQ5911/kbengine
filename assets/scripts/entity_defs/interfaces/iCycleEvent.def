@@ -1,0 +1,39 @@
+<root>
+    <Properties>
+        <tLastDayUpdateTimeDict>
+            <Type>          PY_DICT            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}                 </Default>
+        </tLastDayUpdateTimeDict>
+
+        <tLastWeekUpdateTimeDict>
+            <Type>          PY_DICT            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}                </Default>
+        </tLastWeekUpdateTimeDict>
+
+        <tLastMonthUpdateTimeDict>
+            <Type>          PY_DICT            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}                 </Default>
+        </tLastMonthUpdateTimeDict>
+
+        <tLastUpdateTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                 </Default>
+            <Persistent>    true           </Persistent>
+        </tLastUpdateTime>
+
+        <cycleEventCheckTimerId>
+            <Type>          TIMER_ID             </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                 </Default>
+        </cycleEventCheckTimerId>
+    </Properties>
+
+    <BaseMethods>
+
+    </BaseMethods>
+</root>
+

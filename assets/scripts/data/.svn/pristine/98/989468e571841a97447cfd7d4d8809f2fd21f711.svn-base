@@ -1,0 +1,82 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: raidBossChallenge/config
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    "dailyRewardNum": _tools.RODict({
+        "ID": "dailyRewardNum",
+        "value": 3,
+    }),
+    "rewardNumCoin": _tools.RODict({
+        "ID": "rewardNumCoin",
+        "value": 120,
+    }),
+    "rewardNumCoinDailyLimit": _tools.RODict({
+        "ID": "rewardNumCoinDailyLimit",
+        "value": 2,
+    }),
+    "rewardNumItem": _tools.RODict({
+        "ID": "rewardNumItem",
+        "value": 30000309,
+    }),
+    "rewardNumItemWeeklyLimit": _tools.RODict({
+        "ID": "rewardNumItemWeeklyLimit",
+        "value": 10,
+    }),
+    "raidBossChallengeActID": _tools.RODict({
+        "ID": "raidBossChallengeActID",
+        "value": 32000001,
+    }),
+    "enterRefusedMsg": _tools.RODict({
+        "ID": "enterRefusedMsg",
+        "value": 54000147,
+    }),
+    "slslAutoHelpInfo": _tools.RODict({
+        "ID": "slslAutoHelpInfo",
+        "value": 4,
+    }),
+    "continueEnterMsg": _tools.RODict({
+        "ID": "continueEnterMsg",
+        "value": 54000148,
+    }),
+    "raid_useUnbindItem": _tools.RODict({
+        "ID": "raid_useUnbindItem",
+        "value": 54000143,
+    }),
+    "raid_noRewardNum": _tools.RODict({
+        "ID": "raid_noRewardNum",
+        "value": 54000144,
+    }),
+    "raid_memberNoRewardNum": _tools.RODict({
+        "ID": "raid_memberNoRewardNum",
+        "value": 54000145,
+    }),
+    "sugMemberCnt": _tools.RODict({
+        "ID": "sugMemberCnt",
+        "value": 3,
+    }),
+    "raid_membersLow": _tools.RODict({
+        "ID": "raid_membersLow",
+        "value": 54000146,
+    }),
+    "dunReadyConfirm": _tools.RODict({
+        "ID": "dunReadyConfirm",
+        "value": 54000149,
+    }),
+    "useShanglingdingMsg": _tools.RODict({
+        "ID": "useShanglingdingMsg",
+        "value": "54001264",
+    })
+})

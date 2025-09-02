@@ -1,0 +1,12 @@
+<root>
+    <Properties>
+        <bodySize>
+            <Type>              PYTHON   </Type>
+            <Flags>             CELL_PRIVATE    </Flags>
+        </bodySize>
+    </Properties>
+
+    <CellMethods>
+
+    </CellMethods>
+</root>

@@ -1,0 +1,636 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: effect/timer
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+import utils
+import gameconst
+import random
+import math
+import KBEngine
+def _13080000(self, target, context):
+    buffSrc = context.getSrcEntity()
+    #self.attack(target, context, *context.args.ActionParam)
+    if buffSrc:
+        buffSrc.attack(target, context, *context.args.ActionParam)
+
+def _13080001(self, target, context):
+    #self.healByNum(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.healByNum(target, context, *context.args.ActionParam)
+
+def _13080002(self, target, context):
+    #self.addMp(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.addMp(target, context, *context.args.ActionParam)
+
+def _13080003(self, target, context):
+    self.changeAppearanceByBuff(context.args.ActionParam[0])
+
+def _13080004(self, target, context):
+    #self.attackByPct(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.attackByPct(target, context, *context.args.ActionParam)
+
+def _13080005(self, target, context):
+    #self.healByPct(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.healByPct(target, context, *context.args.ActionParam)
+
+def _13080006(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc and target:
+        healNum = target.getProp("fullHp") * context.args.ActionParam[0] + context.args.ActionParam[1]
+        buffSrc.healByNum(target, context, healNum)
+
+def _13080007(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc and target:
+        healNum = target.getProp("fullMp") * context.args.ActionParam[0] + context.args.ActionParam[1]
+        buffSrc.addMp(target, context, healNum)
+
+def _13080010(self, target, context):
+    #self.attackByNum(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.attackByNum(target, context, *context.args.ActionParam)
+
+def _13080011(self, target, context):
+    #self.addAureola(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.addAureola(target, context, *context.args.ActionParam)
+
+def _13080012(self, target, context):
+    #self.removeAureola(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.removeAureola(target, context, *context.args.ActionParam)
+
+def _13080013(self, target, context):
+    #self.noFatalHeal(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.noFatalHeal(target, context, *context.args.ActionParam)
+
+def _13080014(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.castSkill(target, context, *context.args.ActionParam)
+
+def _13080015(self, target, context):
+    self.castSkill(target, context, *context.args.ActionParam)
+
+def _13080016(self, target, context):
+    self.healByPct(self, context, *context.args.ActionParam)
+
+def _13080021(self, target, context):
+    if target and target.hasBuffTag(33):
+        self.attackByNum(target, context, context.args.ActionParam[0] * 2)
+    else:
+        self.attackByNum(target, context, context.args.ActionParam[0])
+
+def _13080022(self, target, context):
+    if self.hasBuffTag(31):
+        self.healByNum(self, context, context.args.ActionParam[0])
+
+def _13080023(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13080026(self, target, context):
+    self.hp = self.getProp("fullHp")
+
+def _13080027(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.heal(target, context, context.args.ActionParam[0], context.args.ActionParam[1])
+
+def _13080028(self, target, context):
+    # buff = context.getBuffObj()
+    # buffLv = context.buffLevel
+    # if buff:
+    #     releaser = buff.releaseRole
+    #     if releaser:
+    #         releaserAtk = random.randint(releaser.getProp("minAtk"), releaser.getProp("maxAtk"))
+    #         curseDmg = context.args.ActionParam[0]*releaserAtk + context.args.ActionParam[1]
+    #         self.noFatalAttack(target, context, 0, curseDmg * buffLv, 4, 2)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        #releaserAtk = random.randint(buffSrc.getProp("minAtk"), buffSrc.getProp("maxAtk"))
+        buffSrc.noFatalAttack(target, context, context.args.ActionParam[0],  context.args.ActionParam[1])
+
+def _13080029(self, target, context):
+    if context.getSrcEntity():
+        context.getSrcEntity().attack(target, context, context.args.ActionParam[0], 0, 1)
+
+def _13080030(self, target, context):
+    self.attackByNum(target, context, context.args.ActionParam[0])
+
+def _13080032(self, target, context):
+    #self.attackByNum(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        atk = random.randint(buffSrc.getProp("minAtk"), buffSrc.getProp("maxAtk"))
+        buffSrc.attackByNum(target, context, context.args.ActionParam[0] * atk + context.args.ActionParam[1], context.args.ActionParam[2])
+
+def _13080033(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.attackByNum(target, context, self.getProp("fullHp") * context.args.ActionParam[0])
+
+def _13080034(self, target, context):
+    self.setHpLock(self, context)
+
+def _13080035(self, target, context):
+    self.overleapBuff(self, context, 64020039, 10)
+
+def _13080036(self, target, context):
+    dmgNum = math.floor(self.getProp("hp") * 0.02)
+    if self.getProp("hp") / self.getProp("fullHp") > 0.1:
+        self.attackByNum(self, context, dmgNum, ignoreType=True)
+
+def _13080037(self, target, context):
+    self.overleapBuff(self, context, 64020043, 10)
+    self.addBuffBySkill(self, context, 64020049)
+
+def _13080038(self, target, context):
+    buffLv = context.args.ActionParam[0]
+    if buffLv > 1:
+        attribute = self.getConfigData()['attribute']
+        for e in self.entitiesInRange(30, 'Avatar'):
+            self.noFatalAttack(e, context, 1 * buffLv, 0, attribute)
+
+def _13080039(self, target, context):
+    #第一个参数目标有某buff，第二个参数，给目标上某BUFF，第3个参数范围,
+    buffSrc = context.getSrcEntity()
+    if not buffSrc:
+        return
+    for e in self.entitiesInRange(context.args.ActionParam[2], 'Avatar'):
+        if e is not self:
+            if context.args.ActionParam[0] == 0 and not e.hasBuff(context.args.ActionParam[1]):
+                buffSrc.addBuffBySkill(e, context, context.args.ActionParam[1])
+                return
+            if e.hasBuff(context.args.ActionParam[0]) and not e.hasBuff(context.args.ActionParam[1]):
+                buffSrc.addBuffBySkill(e, context, context.args.ActionParam[1])
+                buffSrc.removeBuffBySkill(e, context, context.args.ActionParam[0])
+                return
+
+def _13080040(self, target, context):
+    #第一个参数目标有某buff，第二个参数，给目标上某BUFF，第3个参数是目标身上有某buff则移除，,第4个参数范围,
+    buffSrc = context.getSrcEntity()
+    if not buffSrc:
+        return
+    for e in self.entitiesInRange(context.args.ActionParam[3], 'Avatar'):
+        if e is not self:
+            if e.hasBuff(context.args.ActionParam[2]):
+                buffSrc.removeBuffBySkill(e, context, context.args.ActionParam[2])
+            if e.hasBuff(context.args.ActionParam[0]):
+                buffSrc.addBuffBySkill(e, context, context.args.ActionParam[1])
+                buffSrc.removeBuffBySkill(e, context, context.args.ActionParam[0])
+
+def _13080041(self, target, context):
+    if self.hasBuff(64020034):
+        self.removeBuffBySkill(self, context, 64020073)
+        return
+    if self.getProp("hp") < self.getProp("fullHp") * 0.3:
+        self.addBuffBySkill(self, context, 64020034, 1)
+        self.removeBuffBySkill(self, context, 64020073)
+
+def _13080042(self, target, context):
+    self.lockMinHp(self, context, context.args.ActionParam[0], context.args.ActionParam[1])
+
+def _13080043(self, target, context):
+    for e in self.entitiesInRange(30, 'Avatar'):
+        if e.hasBuff(64060135):
+            self.removeBuffBySkill(e, context, 64060135)
+        elif e.hasBuff(64060136):
+            self.removeBuffBySkill(e, context, 64060136)
+        self.attackByNum(e, context, e.getProp("fullHp") * 0.5)
+
+def _13080044(self, target, context):
+    self.attackByNum(self, context, self.getProp("hp") - self.getProp("fullHp")*0.1,ignoreType=True)
+
+def _13080045(self, target, context):
+    self.attackByNum(self, context, self.getProp("fullHp")*0.4,ignoreType=True)
+
+def _13080046(self, target, context):
+    for e in self.entitiesInRange(30, 'Avatar'):
+        if not e.hasBuff(64020086):
+            self.attackByNum(e, context, e.getProp("fullHp") * 0.1)
+    self.addBuffBySkill(self, context, 64020087)
+
+def _13080047(self, target, context):
+    self.attackByNum(self, context, self.getProp("fullHp")*0.05,ignoreType=True)
+
+def _13080048(self, target, context):
+    self.attackByNum(self, context, self.getProp("hp")*context.args.ActionParam[0],ignoreType=True)
+
+def _13080049(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if not buffSrc:
+        return
+    for e in self.entitiesInRange(8, 'Avatar'):
+        buffSrc.attackByNum(e, context, e.getProp("fullHp")*context.args.ActionParam[0],ignoreType=True)
+
+def _13080050(self, target, context):
+    #注释同13080049
+    buffSrc = context.getSrcEntity()
+    if not buffSrc:
+        return
+    for e in self.entitiesInRange(3.5, 'Avatar'):
+        if e.hasBuff(64020113):
+            buffSrc.removeBuffBySkill(e, context, 64020113)
+            buffSrc.removeBuffBySkill(self, context, 64020112)
+            return
+        if e.hasBuff(64020112):
+            continue
+        else:
+            buffSrc.addBuffBySkill(e, context, 64020112)
+            continue
+
+def _13080051(self, target, context):
+    self.attackByNum(self, context, self.getProp("fullHp")*context.args.ActionParam[0],ignoreType=True)
+
+def _13080052(self, target, context):
+    for e in self.entitiesInRange(context.args.ActionParam[0], 'Avatar'):
+        self.attackByNum(e, context, e.getProp("fullHp") * context.args.ActionParam[1])
+
+def _13080053(self, target, context):
+    self.attackByNum(self, context, self.getProp("hp")*0.05,ignoreType=True)
+
+def _13080054(self, target, context):
+    for e in self.entitiesInRange(5, 'Avatar'):
+        if e and e.IsAvatar:
+            e.endHuanhua()
+            e.resetAllTargetTypeCache()
+
+def _13080055(self, target, context):
+      if self.hasBuff(64000059):
+        self.addBuffBySkill(self, context, 64020143, 1)
+        self.addBuffBySkill(self.getHost(), context, 64020131, 1)
+        self.removeBuffBySkill(self, context, 64020142)
+
+def _13080056(self, target, context):
+    self.castSkill(target, context, 90050064)
+
+def _13080057(self, target, context):
+    self.modifyMP(6)
+
+def _13080058(self, target, context):
+    if target:
+        self.attack(target, context, 0, target.getProp("fullHp") * context.args.ActionParam[0], 3)
+
+def _13080059(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if self.hasBuff(64004016) and self.hasBuff(64004018):
+        if buffSrc:
+            buffSrc.castSkill(target, context, 91020034)
+        self.removeBuffBySkill(self, context, 64004016)
+        self.removeBuffBySkill(self, context, 64004018)
+
+def _13080060(self, target, context):
+    if self.hasBuff(64004016) and self.hasBuff(64004017):
+        self.removeBuffBySkill(self, context, 64004016)
+        self.removeBuffBySkill(self, context, 64004017)
+
+def _13080061(self, target, context):
+    buffLv = self.getBuffLv(64004953)
+    is_in_lightning_area = self.isLightningArea()
+    #第一次不做
+    if context.args.tickCount and context.args.tickCount == 1:
+        return
+    if is_in_lightning_area:
+        if buffLv < 10:
+            # 如果在闪电区域且buff层数小于10，直接提升buff层数
+            self.overleapBuff(self, context, 64004953, 10, -1)
+            self.overleapBuff(self, context, 64004953, 10, -1)
+        elif buffLv == 10:
+            # 如果buff层数等于10，添加新的buff
+            if not self.hasBuff(64004952):
+                self.addBuff(64004952, 1,self.id)
+    elif buffLv > 0:
+        if buffLv > 1:
+            # 如果不在闪电区域且buff层数大于1，减少buff层数
+            self.changeBuffLevel(64004953, -1, self.id)
+        else:
+            # 如果不在闪电区域且buff层数等于1，移除buff
+            self.removeBuff(64004953)
+
+# 64004952定时器
+def _13080062(self, target, context):
+    buffLv = self.getBuffLv(64004953)
+    # 如果buff层数等于0
+    if buffLv == 0:
+        self.removeBuff(64004952)
+
+def _13080063(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        self.removeBuff(64004907)
+        self.removeBuff(64004902)
+        self.removeBuff(64004903)
+    self.changeAllSkill([(91017001, 1), (91017002, 10),(91017003, 50),(91017008, 50),(91017051, 100)])
+
+def _13080064(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        self.removeBuff(64004902)
+
+def _13080065(self, target, context):
+    buffLv = self.getBuffLv(64004963)
+    is_in_lightning_area = self.isLightningArea()
+    #第一次不做
+    if context.args.tickCount and context.args.tickCount == 1:
+        return
+    if is_in_lightning_area:
+        if buffLv < 10:
+            # 如果在闪电区域且buff层数小于10，直接提升buff层数
+            self.overleapBuff(self, context, 64004963, 10, -1)
+            self.overleapBuff(self, context, 64004963, 10, -1)
+        elif buffLv == 10:
+            # 如果buff层数等于10，添加新的buff
+            if not self.hasBuff(64004962):
+                self.addBuff(64004962, 1,self.id)
+    elif buffLv > 0:
+        if buffLv > 1:
+            # 如果不在闪电区域且buff层数大于1，减少buff层数
+            self.changeBuffLevel(64004963, -1, self.id)
+        else:
+            # 如果不在闪电区域且buff层数等于1，移除buff
+            self.removeBuff(64004963)
+
+# 64004962定时器
+def _13080066(self, target, context):
+    buffLv = self.getBuffLv(64004963)
+    # 如果buff层数等于0
+    if buffLv == 0:
+        self.removeBuff(64004962)
+
+def _13080067(self, target, context):
+    buffSrc = context.getSrcEntity()
+    dmgRatio = context.args.ActionParam[0]
+    levelDmg = context.args.ActionParam[1]
+    if not buffSrc:
+        return
+    elif not self.hasBuff(64003005):
+        buffSrc.attackByNum(target, context, dmgRatio, levelDmg, 0)
+    elif self.hasBuff(64003005):
+        dmgRatio = 1.5 * context.args.ActionParam[0]
+        levelDmg = 1.5 * context.args.ActionParam[1]
+        buffSrc.attackByNum(target, context, dmgRatio, levelDmg, 0)
+
+datas = _tools.RODict({ 
+    13080000: _tools.RODict({
+        "ID": 13080000,
+        "Action": _13080000
+    }),
+    13080001: _tools.RODict({
+        "ID": 13080001,
+        "Action": _13080001
+    }),
+    13080002: _tools.RODict({
+        "ID": 13080002,
+        "Action": _13080002
+    }),
+    13080003: _tools.RODict({
+        "ID": 13080003,
+        "Action": _13080003
+    }),
+    13080004: _tools.RODict({
+        "ID": 13080004,
+        "Action": _13080004
+    }),
+    13080005: _tools.RODict({
+        "ID": 13080005,
+        "Action": _13080005
+    }),
+    13080006: _tools.RODict({
+        "ID": 13080006,
+        "Action": _13080006
+    }),
+    13080007: _tools.RODict({
+        "ID": 13080007,
+        "Action": _13080007
+    }),
+    13080010: _tools.RODict({
+        "ID": 13080010,
+        "Action": _13080010
+    }),
+    13080011: _tools.RODict({
+        "ID": 13080011,
+        "Action": _13080011
+    }),
+    13080012: _tools.RODict({
+        "ID": 13080012,
+        "Action": _13080012
+    }),
+    13080013: _tools.RODict({
+        "ID": 13080013,
+        "Action": _13080013
+    }),
+    13080014: _tools.RODict({
+        "ID": 13080014,
+        "Action": _13080014
+    }),
+    13080015: _tools.RODict({
+        "ID": 13080015,
+        "Action": _13080015
+    }),
+    13080016: _tools.RODict({
+        "ID": 13080016,
+        "Action": _13080016
+    }),
+    13080021: _tools.RODict({
+        "ID": 13080021,
+        "Action": _13080021
+    }),
+    13080022: _tools.RODict({
+        "ID": 13080022,
+        "Action": _13080022
+    }),
+    13080023: _tools.RODict({
+        "ID": 13080023,
+        "Action": _13080023
+    }),
+    13080026: _tools.RODict({
+        "ID": 13080026,
+        "Action": _13080026
+    }),
+    13080027: _tools.RODict({
+        "ID": 13080027,
+        "Action": _13080027
+    }),
+    13080028: _tools.RODict({
+        "ID": 13080028,
+        "Action": _13080028
+    }),
+    13080029: _tools.RODict({
+        "ID": 13080029,
+        "Action": _13080029
+    }),
+    13080030: _tools.RODict({
+        "ID": 13080030,
+        "Action": _13080030
+    }),
+    13080032: _tools.RODict({
+        "ID": 13080032,
+        "Action": _13080032
+    }),
+    13080033: _tools.RODict({
+        "ID": 13080033,
+        "Action": _13080033
+    }),
+    13080034: _tools.RODict({
+        "ID": 13080034,
+        "Action": _13080034
+    }),
+    13080035: _tools.RODict({
+        "ID": 13080035,
+        "Action": _13080035
+    }),
+    13080036: _tools.RODict({
+        "ID": 13080036,
+        "Action": _13080036
+    }),
+    13080037: _tools.RODict({
+        "ID": 13080037,
+        "Action": _13080037
+    }),
+    13080038: _tools.RODict({
+        "ID": 13080038,
+        "Action": _13080038
+    }),
+    13080039: _tools.RODict({
+        "ID": 13080039,
+        "Action": _13080039
+    }),
+    13080040: _tools.RODict({
+        "ID": 13080040,
+        "Action": _13080040
+    }),
+    13080041: _tools.RODict({
+        "ID": 13080041,
+        "Action": _13080041
+    }),
+    13080042: _tools.RODict({
+        "ID": 13080042,
+        "Action": _13080042
+    }),
+    13080043: _tools.RODict({
+        "ID": 13080043,
+        "Action": _13080043
+    }),
+    13080044: _tools.RODict({
+        "ID": 13080044,
+        "Action": _13080044
+    }),
+    13080045: _tools.RODict({
+        "ID": 13080045,
+        "Action": _13080045
+    }),
+    13080046: _tools.RODict({
+        "ID": 13080046,
+        "Action": _13080046
+    }),
+    13080047: _tools.RODict({
+        "ID": 13080047,
+        "Action": _13080047
+    }),
+    13080048: _tools.RODict({
+        "ID": 13080048,
+        "Action": _13080048
+    }),
+    13080049: _tools.RODict({
+        "ID": 13080049,
+        "Action": _13080049
+    }),
+    13080050: _tools.RODict({
+        "ID": 13080050,
+        "Action": _13080050
+    }),
+    13080051: _tools.RODict({
+        "ID": 13080051,
+        "Action": _13080051
+    }),
+    13080052: _tools.RODict({
+        "ID": 13080052,
+        "Action": _13080052
+    }),
+    13080053: _tools.RODict({
+        "ID": 13080053,
+        "Action": _13080053
+    }),
+    13080054: _tools.RODict({
+        "ID": 13080054,
+        "Action": _13080054
+    }),
+    13080055: _tools.RODict({
+        "ID": 13080055,
+        "Action": _13080055
+    }),
+    13080056: _tools.RODict({
+        "ID": 13080056,
+        "Action": _13080056
+    }),
+    13080057: _tools.RODict({
+        "ID": 13080057,
+        "Action": _13080057
+    }),
+    13080058: _tools.RODict({
+        "ID": 13080058,
+        "Action": _13080058
+    }),
+    13080059: _tools.RODict({
+        "ID": 13080059,
+        "Action": _13080059
+    }),
+    13080060: _tools.RODict({
+        "ID": 13080060,
+        "Action": _13080060
+    }),
+    13080061: _tools.RODict({
+        "ID": 13080061,
+        "Action": _13080061
+    }),
+    13080062: _tools.RODict({
+        "ID": 13080062,
+        "Action": _13080062
+    }),
+    13080063: _tools.RODict({
+        "ID": 13080063,
+        "Action": _13080063
+    }),
+    13080064: _tools.RODict({
+        "ID": 13080064,
+        "Action": _13080064
+    }),
+    13080065: _tools.RODict({
+        "ID": 13080065,
+        "Action": _13080065
+    }),
+    13080066: _tools.RODict({
+        "ID": 13080066,
+        "Action": _13080066
+    }),
+    13080067: _tools.RODict({
+        "ID": 13080067,
+        "Action": _13080067
+    })
+})
+minKey = 13080000
+maxKey = 13080067

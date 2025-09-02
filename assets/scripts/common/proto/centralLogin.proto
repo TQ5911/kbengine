@@ -1,0 +1,195 @@
+syntax = "proto3";
+
+package CentralLoginClient;
+option go_package = "../clientService";
+option py_generic_services = true;
+
+enum AccountType
+{
+    ACCOUNT_UNKNOW = 0;
+    ACCOUNT_PASSWD = 1;
+    ACCOUNT_TOKEN = 2;
+    ACCOUNT_CROSS_SERVER = 3;
+}
+
+message Void {
+}
+
+message CheckCDKeyRequest
+{
+    string key = 1;
+}
+
+message CheckCDKeyReply
+{
+    enum CDKeyResult
+    {
+        CDKEY_PLACE_HOLDER = 0;
+        CDKEY_OK = 1;
+        CDKEY_USED = 2;
+        CDKEY_INVALID = 3;
+    }
+
+    CDKeyResult result=1;
+}
+
+message LoginKeyRequest
+{
+    string rStr = 1;
+}
+
+message LoginKeyResponse
+{
+    string rStr = 1;
+    string sStr = 2;
+}
+
+message PasswordLogin
+{
+    string accountName = 1;
+    string password = 2;
+}
+
+message TokenLogin
+{
+    string phone = 1;
+    string userInfo = 2;
+    string token = 3;
+}
+
+message LoginReply
+{
+    enum LoginResult
+    {
+        LOGIN_SUCCESS = 0;
+        LOGIN_PASSWD_ERROR = 1;
+        LOGIN_TOKEN_ERROR = 2;
+        LOGIN_NOT_LOGIN = 3;
+        LOGIN_NEED_CDKEY = 4;
+        LOGIN_DEVICE_LIMIT = 5;
+    }
+
+    LoginResult result=1;
+    string token=2;
+    uint32 centralServerId = 3;
+    string serverId = 4;
+    string gameServerHost = 5;
+    string queueServerHost = 6;
+}
+
+message CharacterInfo
+{
+    message CharacterVal
+    {
+        uint32 hostId = 1;
+        string name = 2;
+        uint32 school = 3;
+        uint32 level = 4;
+        uint32 sex = 5;
+        uint32 tLastLogin = 6;
+        uint64 gbId = 7;
+    }
+    repeated CharacterVal info = 1;
+}
+
+message ServerInfoVal
+{
+    enum ServerStatus
+    {
+        ST_NULL = 0;
+        ST_BAOMAN = 1;
+        ST_YONGJI = 2;
+        ST_LIUCHANG = 3;
+        ST_WEIHU = 4;
+    }
+    uint32 hostId = 1;
+    ServerStatus status = 2;
+}
+
+message ServerInfo
+{
+    repeated ServerInfoVal servers = 1;
+}
+
+message ServerListRequest
+{
+    string clientType = 1;
+    string clientVersion = 2;
+    bool isMaple = 3;
+}
+
+message ServerListReply
+{
+    bool isMaple = 1;
+    string serverListInfo = 2;
+}
+
+enum CaptchaType
+{
+    CT_NULL = 0;
+    //登录
+    CT_Login = 1;
+    //发布会
+    CT_Press = 2;
+    //领取奖励
+    CT_Award = 3;
+    //集市入口
+    CT_Market = 4;
+}
+
+//弹出验证通知
+message CheckCaptchaNotify
+{
+    //验证码类型
+    CaptchaType captchaType = 1;
+    //是否需要验证码
+    bool needCaptcha = 2;
+    //封禁账号到期时间
+    int64 forbidExpireTime = 3;
+}
+
+//验证码验证请求
+message CaptchaValidateRequest
+{
+    //验证码类型
+    CaptchaType captchaType = 1;
+    //验证码二次验证数据
+    string captchaData = 2;
+}
+
+//验证码验证结果返回
+message CaptchaValidateResponse
+{
+    //验证码类型
+    CaptchaType captchaType = 1;
+    //验证是否成功
+    bool success = 2;
+}
+
+//中心服务器提供的rpc
+service CentralServer
+{
+    rpc getLoginKey(LoginKeyRequest) returns(Void);
+    rpc loginByPassword(PasswordLogin) returns(Void);
+    rpc loginByToken(TokenLogin) returns(Void);
+    rpc getCharaterInfo(Void) returns(Void);
+    rpc listServers(Void) returns(Void);
+    rpc activeTick(Void) returns(Void);
+    rpc checkCDkey(CheckCDKeyRequest) returns(Void);
+    rpc getServerListDir(ServerListRequest) returns(Void);
+    rpc captchaValidate(CaptchaValidateRequest) returns(Void);
+}
+
+//客户端接受的rpc
+service GameClient
+{
+    rpc onGetLoginKey(LoginKeyResponse) returns(Void);
+    rpc onLoginReply(LoginReply) returns(Void);
+    rpc onGetCharacterInfo(CharacterInfo) returns(Void);
+    rpc onListServers(ServerInfo) returns(Void);
+    rpc activeTickCallback(Void) returns(Void);
+    rpc onCheckCDKey(CheckCDKeyReply) returns(Void);
+    rpc onGetServerListDir(ServerListReply) returns(Void);
+    rpc onCaptchaValidate(CaptchaValidateResponse) returns(Void);
+    rpc onCheckCaptcha(CheckCaptchaNotify) returns(Void);
+}

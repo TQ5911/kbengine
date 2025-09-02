@@ -1,0 +1,77 @@
+<root>
+    <Properties>
+        <scoresInfo>
+            <Type>  AVATAR_SCORES_VAL   </Type>
+            <Flags>  OWN_CLIENT    </Flags>
+        </scoresInfo>
+
+        <baseScoreInfo>
+            <Type>      AVATAR_SCORES_VAL   </Type>
+            <Flags>     BASE                </Flags>
+        </baseScoreInfo>
+
+        <totalScore>
+            <!-- totalScore 需要比所有SCORE表示的位数更多, 防止溢出 -->
+            <Type> INT64 </Type>
+            <Flags> ALL_CLIENTS </Flags>
+            <Default> 0  </Default>
+            <Persistent>    true    </Persistent>
+        </totalScore>
+
+        <updateScoreTimerId>
+            <Type>      OBJECT_ID       </Type>
+            <Flags>     BASE            </Flags>
+            <Default>   0               </Default>
+        </updateScoreTimerId>
+
+        <lastNotifyScoreTime>
+            <Type>      LONGTIME        </Type>
+            <Flags>     BASE            </Flags>
+            <Default>   0               </Default>
+        </lastNotifyScoreTime>
+
+        <scoreInitFinished>
+            <Type>      BOOL       </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+        </scoreInitFinished>
+    </Properties>
+
+    <BaseMethods>
+        <initAvatarBaseScores>
+        </initAvatarBaseScores>
+
+        <updateScoreToRedis>
+            <Arg>   SCORE   </Arg>
+        </updateScoreToRedis>
+
+        <baseScoreChanged>
+            <Arg>   BOOL    </Arg>
+            <Arg>   UNICODE </Arg>
+            <Arg>   SCORE   </Arg>
+        </baseScoreChanged>
+    </BaseMethods>
+
+    <CellMethods>
+        <onInitAvatarBaseScores>
+            <Arg>   PY_DICT     </Arg>
+        </onInitAvatarBaseScores>
+
+        <onUpdateMountScore>
+            <Arg>   SCORE   </Arg>
+        </onUpdateMountScore>
+
+        <onUpdatePetScore>
+            <Arg>   SCORE   </Arg>
+        </onUpdatePetScore>
+
+        <onUpdateSkillScore>
+			<Arg>   SCORE   </Arg>
+		</onUpdateSkillScore>
+    </CellMethods>
+
+    <ClientMethods>
+        <onAvatarTotalScoreInitCompleted>
+        </onAvatarTotalScoreInitCompleted>
+
+    </ClientMethods>
+</root>

@@ -1,0 +1,57 @@
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 628] - -----------------------------------------------------------------------------------------
+
+
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 677] - Resmgr::initialize: KBE_ROOT=/mnt/hgfs/game/Server/kbeLinux/kbengine/
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 677] - Resmgr::initialize: KBE_RES_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 677] - Resmgr::initialize: KBE_BIN_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/bin/server/
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 678] - NetworkInterface::initialize(EXTERNAL-TCP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:20013 )
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 678] - NetworkInterface::initialize(EXTERNAL-TCP): address 192.168.10.127:20013, SOMAXCONN=511, rBufSize=131072, wBufSize=16384, this=[0x7fffc721a410.
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 683] - NetworkInterface::initialize(EXTERNAL-TCP-IPV6): address fe80::250:56ff:fe2a:a839::20013, SOMAXCONN=511, rBufSize=131072, wBufSize=16384, this=[0x7fffc721a410.
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 683] - NetworkInterface::initialize(INTERNAL-TCP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:33853 )
+ WARNING   loginapp-1 1001 900001  [2025-09-02 12:08:08 684] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a receive buffer of only 425984 bytes (instead of 16777216)
+ WARNING   loginapp-1 1001 900001  [2025-09-02 12:08:08 684] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a send buffer of only 425984 bytes (instead of 16777216)
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 684] - NetworkInterface::initialize(INTERNAL-TCP): address 192.168.10.127:33853, SOMAXCONN=511, rBufSize=425984, wBufSize=425984, this=[0x7fffc721a410.
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 686] - server-configs:
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 687] - 	internalTcpAddr : 192.168.10.127:33853
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 687] - 	externalTcpAddr : 192.168.10.127:20013
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 687] - 	externalTcpIpv6Addr : fe80::250:56ff:fe2a:a839::20013
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:08 688] - 	componentID : 900001
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:10 201] - ThreadPool::createThreadPool: creating  threadpool...
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:10 202] - ThreadPool::createThreadPool: successfully(2), newThreadCount=1, normalMaxThreadCount=2, maxThreadCount=8
+   DEBUG   loginapp-1 1001 900001  [2025-09-02 12:08:10 318] - Script::install(): paths=/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/common:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/common/Lib:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/data:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/user_type:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/server_common:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/login:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/lib-dynload:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/DLLs:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib/site-packages:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib/dist-packages.
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:11 201] - Script::install(): is successfully, Python=(3.7.3 (default, Mar 21 2025, 15:25:47) 
+[GCC 13.3.0])!
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:11 202] - Script::install(): KBExtra is successfully!
+  S_INFO   loginapp-1 1001 900001  [2025-09-02 12:08:11 289] - onLoginAppReady: bootstrapGroupIndex=0, bootstrapGlobalIndex=0
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:11 295] - TelnetServer server is running on port 31000
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:11 295] - start server app, timing method:rdtsc 3417535442
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:11 487] - ---- loginapp Version: 2.5.8. ScriptVersion: 0.1.0. Pythoncore: 3.7.3. Protocol: 00C842919090D3FD4897D0C953C8FBA9. Protocol client: 3E7AE130BB33C652DBF24318D016ECD0. Config: Hybrid64 X64. Built: 21:30:12 Aug 27 2025. AppID: 900001. UID: 1001. PID: 1157809 ----
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:11 487] - Server ubuntumyh: Intel(R) Core(TM) i7-14700KF x4 with 8083592kB RAM
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:11 489] - ---- loginapp is running ----
+   DEBUG   loginapp-1 1001 900001  [2025-09-02 12:08:11 490] - Components::process(): Request for the process of identity...
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:18 509] - Components::findComponents: find logger(1)...
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:18 611] - Components::findComponents: found logger, addr:192.168.10.127:43117
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:18 611] - Components::addComponent: reset orderLog, uid=1001!
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:18 612] - Components::addComponent[logger], uid=1001, componentID=200001, globalorderid=1, grouporderid=1, totalcount=1
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:18 612] - Components::findComponents: find dbmgr(2)...
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:18 713] - Components::findComponents: found dbmgr, addr:192.168.10.127:49301
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:18 714] - Components::addComponent: reset orderLog, uid=1001!
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:18 714] - Components::addComponent[dbmgr], uid=1001, componentID=400001, globalorderid=4, grouporderid=1, totalcount=1
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:20 730] - Components::findComponents: find baseappmgr(1)...
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:21 062] - Components::findComponents: found baseappmgr, addr:192.168.10.127:45009
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:21 062] - Components::addComponent[baseappmgr], uid=1001, componentID=500001, globalorderid=1, grouporderid=1, totalcount=1
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:23 089] - Components::findComponents: register self to dbmgr...
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:23 109] - Components::findComponents: register self to baseappmgr...
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:23 110] - Components::process(): Found all the components!
+    INFO   loginapp-1 1001 900001  [2025-09-02 12:08:27 034] - Loginapp::onDbmgrInitCompleted:startGlobalOrder=1, startGroupOrder=1, digest=310F1B4E74384410B1CA6549E7DB2DA3.
+    INFO   loginapp01 1001 900001  [2025-09-02 12:08:28 240] - HTTPCBHandler::bind: 192.168.10.127:21103
+ WARNING   loginapp01 1001 900001  [2025-09-02 12:08:28 240] - channel.cpp:1174: Profile processRecvMessages, extra:[] took 1.21 seconds
+    INFO   loginapp01 1001 900001  [2025-09-02 12:09:07 830] - Loginapp::onBaseappInitProgress: progress=1.
+    INFO   loginapp01 1001 900001  [2025-09-02 17:15:06 067] - ServerApp::onHello: verInfo=2.5.8, scriptVerInfo=0.1.0, encryptedKey=B6 4A AA A2 77 D4 AF 30 CC CD A9 B5 C8 43 A5 F5 , addr:192.168.10.227:60196/0/0/0
+    INFO   loginapp01 1001 900001  [2025-09-02 17:15:06 067] - Loginapp::onHello: ------(00C842919090D3FD4897D0C953C8FBA9)  310F1B4E74384410B1CA6549E7DB2DA3 from 192.168.10.227:60196
+  S_INFO   loginapp01 1001 900001  [2025-09-02 17:15:06 089] - onRequestLogin() loginName=1:ztq1, clientType=7
+   DEBUG   loginapp01 1001 900001  [2025-09-02 17:15:06 089] - PendingLoginMgr::add: 1:ztq1, size=1.
+    INFO   loginapp01 1001 900001  [2025-09-02 17:15:06 089] - Loginapp::login: new client[CLIENT_TYPE_MINI], loginName=1:ztq1, datas={"token":"knatKNktnnPOxkV","loginServerId":1,"deviceModel":"Desktop","deviceUniqueIdentifier":"666c0e734407510533d6db05782f0b7f561557c0","devicePlatId":3,"appVersion":"0.0.0.0","vClientIPv6":"","UA":"","imei":"","url_args":"","loginChannel":"","operatingSystem":"","operator":"","networkState":"","oaid":"","caid":""}.
+  S_INFO   loginapp01 1001 900001  [2025-09-02 17:15:06 313] - onLoginCallbackFromDB() loginName=1:ztq1, accountName=1:ztq1, errorno=0
+   DEBUG   loginapp01 1001 900001  [2025-09-02 17:15:06 314] - Loginapp::onLoginAccountQueryBaseappAddrFromBaseappmgr:accountName=1:ztq1, addr_ipv6=fe80::250:56ff:fe2a:a839 addr=192.168.10.127, tcp_port_ipv6 = 12366, udp_port_ipv6 = 16501,		tcp_port=12110, udp_port=16245
+   DEBUG   loginapp01 1001 900001  [2025-09-02 17:15:06 314] - PendingLoginMgr::remove: 1:ztq1, size=0.

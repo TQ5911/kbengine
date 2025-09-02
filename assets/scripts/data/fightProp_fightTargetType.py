@@ -1,0 +1,90 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: fightProp/fightTargetType
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    "None": _tools.RODict({
+        "ID": "None",
+        "value": None
+    }),
+    "Enemy": _tools.RODict({
+        "ID": "Enemy",
+        "value": ((0,), (2,), (1,))
+    }),
+    "Friend": _tools.RODict({
+        "ID": "Friend",
+        "value": ((0,), (2,), (2, 3))
+    }),
+    "Self": _tools.RODict({
+        "ID": "Self",
+        "value": ((0,), (2,), (2,))
+    }),
+    "Any": _tools.RODict({
+        "ID": "Any",
+        "value": ((0,), (2,), (0,))
+    }),
+    "FriendExGB": _tools.RODict({
+        "ID": "FriendExGB",
+        "value": ((1, 2, 4, 5), (2,), (2, 3))
+    }),
+    "AnyExGB": _tools.RODict({
+        "ID": "AnyExGB",
+        "value": ((1, 2, 4, 5), (2,), (0,))
+    }),
+    "FriendExS": _tools.RODict({
+        "ID": "FriendExS",
+        "value": ((0,), (2,), (3,))
+    }),
+    "CorpsePlayerExS": _tools.RODict({
+        "ID": "CorpsePlayerExS",
+        "value": ((1,), (1,), (3,))
+    }),
+    "Monster": _tools.RODict({
+        "ID": "Monster",
+        "value": ((2,), (2,), (0,))
+    }),
+    "CorpseEnemy": _tools.RODict({
+        "ID": "CorpseEnemy",
+        "value": ((0,), (1,), (1,))
+    }),
+    "FriendPlayerExS": _tools.RODict({
+        "ID": "FriendPlayerExS",
+        "value": ((1,), (2,), (3,))
+    }),
+    "PlayerExS": _tools.RODict({
+        "ID": "PlayerExS",
+        "value": ((1,), (2,), (1, 3))
+    }),
+    "PlayerEnemy": _tools.RODict({
+        "ID": "PlayerEnemy",
+        "value": ((1,), (2,), (1,))
+    }),
+    "EnemyExTarget": _tools.RODict({
+        "ID": "EnemyExTarget",
+        "value": ((0,), (2,), (5,))
+    }),
+    "AnyExs": _tools.RODict({
+        "ID": "AnyExs",
+        "value": ((0,), (2,), (1, 3))
+    }),
+    "CorpseFriend": _tools.RODict({
+        "ID": "CorpseFriend",
+        "value": ((0,), (0,), (2, 3))
+    }),
+    "PlayerExTarget": _tools.RODict({
+        "ID": "PlayerExTarget",
+        "value": ((0,), (2,), (1,))
+    })
+})

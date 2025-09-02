@@ -1,0 +1,16 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+    </Interfaces>
+
+    <Properties>
+    </Properties>
+
+    <BaseMethods>
+        <onGetSwitchServerData>
+            <Arg>       BLOB                        </Arg>
+        </onGetSwitchServerData>
+    </BaseMethods>
+</root>

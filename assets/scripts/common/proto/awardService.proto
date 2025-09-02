@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+package awardService;
+
+option go_package = "./awardService";
+
+option py_generic_services = true;
+
+message Void {
+}
+
+message ItemVal
+{
+    uint32 itemId = 1;
+    uint32 itemNum = 2;
+}
+
+message ItemStorage
+{
+    string itemName = 1;
+    uint32 itemId = 2;
+    uint32 itemNum = 3;
+}
+
+message StorageVal
+{
+    uint64 uuid = 1;
+    string storageName = 2;
+    repeated ItemStorage items=3;
+}
+
+message Component
+{
+    uint32 serverId = 1;
+    uint32 componentOrder = 2;
+}
+
+message ItemWeightInfo
+{
+    uint32 itemId =1;
+    uint32 itemNum = 2;
+    uint32 sumWeight = 3;
+}
+
+//全服权重汇总后按items里的权重信息分配storage库存
+message ComponentAwardInfo
+{
+    string awardKey = 1;
+    uint64 userArg = 2;
+    StorageVal storage = 3;
+    repeated ItemWeightInfo items=4;
+}
+
+message CompAwardResultVal
+{
+    string itemName = 1;
+    uint32 itemId = 2;
+    uint32 itemNum = 3;
+}
+
+message CompAwardResult
+{
+    string awardKey = 1;
+    uint64 userArg = 2;
+    repeated CompAwardResultVal awardResults = 3;
+}
+
+message AssignFromStorageReq
+{
+    uint64 uuid = 1;
+    string storageName = 2;
+    repeated ItemStorage items=3;
+    bool needAssignAll = 4;
+}
+
+message SetResult
+{
+    uint32 result = 1;
+    StorageVal storageVal = 2;
+}
+
+message PriorityAwardInfo
+{
+    uint64 gbId = 1;
+    uint32 priority = 2;
+    string storageName = 3;
+    uint32 weight = 4;
+}
+
+message ReqSettlePriorityAward
+{
+    string priorityAwardKey = 1;
+    repeated string storageNames = 2;
+}
+
+message RespSettlePriorityAward
+{
+    message PriorityAwardVal
+    {
+        string storageName =1;
+        uint64 gbId=2;
+        uint32 itemId=3;
+    }
+    repeated PriorityAwardVal priorityAwards = 1;
+}
+
+message ReqResetAwardRecord
+{
+    string awardKey = 1;
+}
+
+message ReqRandRewardFromStorage
+{
+    message PropVal
+    {
+        string itemName = 1;
+        uint32 prop = 2;
+    }
+    string storageName = 1;
+    uint32 randType = 2;
+    repeated PropVal itemProps = 3;
+    uint64 userArg = 4;
+}
+
+message RespRandRewardFromStorage
+{
+    uint64 userArg = 1;
+    string itemName = 2;
+}
+
+service AwardService
+{
+    rpc registerAwardComp(Component) returns(Void);
+    rpc reqAssignReward(AssignFromStorageReq) returns(Void);
+    rpc setItemStorage(StorageVal) returns(Void);
+    rpc queryItemStorage(StorageVal) returns(Void);
+    rpc participateAward(ComponentAwardInfo) returns(Void);
+    rpc activeTick(Void) returns(Void);
+    rpc avatarApplyPriorityAward(PriorityAwardInfo) returns(Void);
+    rpc settlePriorityAwards(ReqSettlePriorityAward) returns(Void);
+    rpc resetWeightAwardRecord(ReqResetAwardRecord) returns(Void);
+    rpc reqAssignRandRewardFromStorage(ReqRandRewardFromStorage) returns(Void);
+    rpc reqAssignSerialNumber(AssignFromStorageReq) returns(Void);
+}
+
+// game 的 service
+service GameServer
+{
+    rpc onRewardAssigned(StorageVal) returns(Void);
+    rpc onQueryItemStorage(StorageVal) returns(Void);
+    rpc onSetItemStorage(SetResult) returns(Void);
+    rpc onGetParticipateWeightReward(CompAwardResult) returns(Void);
+    rpc activeTickCallback(Void) returns(Void);
+    rpc onSettlePriorityAwards(RespSettlePriorityAward) returns(Void);
+    rpc onAssignedRandRewardFromStorage(RespRandRewardFromStorage) returns(Void);
+    rpc onSerialNumberAssigned(StorageVal) returns(Void);
+}

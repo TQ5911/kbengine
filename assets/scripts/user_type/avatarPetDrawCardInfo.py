@@ -1,0 +1,255 @@
+
+# -*- encoding:utf-8 -*-
+
+from KBEDebug import *
+import KBEngine
+import userType
+import json
+import utils
+import gzip
+from collections import deque
+
+class cardPoolInfo(userType.UserSoleType):
+    def __init__(self, pool=0, num=0, guaranteed=0, dailyNum=0):
+        self.pool = pool
+        self.num = num
+        self.guaranteed = guaranteed
+        self.dailyNum = dailyNum
+
+    def initFromDict(self, dataDict):
+        self.pool = dataDict['pool']
+        self.num = dataDict['num']
+        self.guaranteed = dataDict['guaranteed']
+        self.dailyNum = dataDict['dailyNum']
+
+    def toSavedDict(self):
+        data = {
+            'pool': self.pool,
+            'num': self.num,
+            'guaranteed': self.guaranteed,
+            'dailyNum': self.dailyNum,
+        }
+        return data
+
+    def toClientDict(self):
+        data = {
+            'pool': self.pool,
+            'num': self.num,
+            'guaranteed': self.guaranteed,
+            'dailyNum': self.dailyNum,
+        }
+        return data
+
+class petDrawCardInfo(userType.UserSTDSoleType):
+    def __init__(self):
+        self.cardPoolInfoDict = {}
+
+    def initFromDict(self, dataDic):
+        cardPoolInfoList = dataDic.get('cardPoolInfoList', [])
+        for curInfo in cardPoolInfoList:
+            info = cardPoolInfo()
+            info.initFromDict(curInfo)
+            self.cardPoolInfoDict[curInfo['pool']] = info
+        return self
+
+    def toSavedDict(self):
+        cardPoolInfoList = []
+        for pool, info in self.cardPoolInfoDict.items():
+            cardPoolInfoList.append(info.toSavedDict())
+        data = {
+            'cardPoolInfoList': cardPoolInfoList,
+        }
+        return data
+
+    def setdefault(self, pool):
+        return self.cardPoolInfoDict.setdefault(pool, cardPoolInfo(pool))
+
+class petDrawCardInfoInstance(userType.UserSTDSoleInfo):
+    @property
+    def cls(self):
+        return petDrawCardInfo
+
+petDrawCardInfoInstance = petDrawCardInfoInstance()
+
+
+class drawCardRecord(userType.UserSoleType):
+    def __init__(self, id=0, ts=0, items=[]):
+        self.id = id
+        self.ts = ts
+        self.items = items
+
+    def initFromDict(self, dataDict):
+        self.id = dataDict['id']
+        self.ts = dataDict['ts']
+        self.items = dataDict['items']
+
+    def toSavedDict(self):
+        data = {
+            'id': self.id,
+            'ts': self.ts,
+            'items': self.items,
+        }
+        return data
+
+    def toClientDict(self):
+        data = {
+            'id': self.id,
+            'ts': self.ts,
+            'items': self.items,
+        }
+        return data
+
+class petDrawCardRecord(userType.UserSTDSoleType):
+    def __init__(self):
+        self.drawCardRecordDic = {}
+        self.clientDataDic = {}
+        pass
+
+    @classmethod
+    def _checkIgnores_(cls):
+        return 'clientDataDic',
+
+    def initFromDict(self, dataDic):
+        #DEBUG_MSG('init DrawCardRecord', dataDic)
+        drawCardRecordList = dataDic.get('drawCardRecordList', [])
+        for poolRecordData in drawCardRecordList:
+            pool = poolRecordData['pool']
+            recordDicList = poolRecordData['data']
+            poolData, clientData = self.setdefault(pool)
+            recordList = poolData["recordList"]
+            for recordDict in recordDicList:
+                record = drawCardRecord()
+                record.initFromDict(recordDict)
+                recordList.append(record)
+            poolData["curCnt"] = len(recordList)
+            poolData["totalCnt"] = poolRecordData['totalCnt']
+
+        # 初始化前检测一次
+        ts = utils.getNow()
+        for pool in self.drawCardRecordDic.keys():
+            self.checkCntLimit(pool)
+            self.checkExpiredLimit(pool, ts)
+        return self
+
+    def toSavedDict(self):
+        # 落库前检测一次
+        ts = utils.getNow()
+        for pool in self.drawCardRecordDic.keys():
+            self.checkCntLimit(pool)
+            self.checkExpiredLimit(pool, ts)
+
+        drawCardRecordList = []
+        for pool, poolData in self.drawCardRecordDic.items():
+            poolRecordData = {}
+            recordDicList = []
+            recordList = poolData["recordList"]
+            for record in recordList:
+                recordDicList.append(record.toSavedDict())
+            poolRecordData['pool'] = pool
+            poolRecordData['curCnt'] = len(recordDicList)
+            poolRecordData['totalCnt'] = poolData["totalCnt"]
+            poolRecordData['data'] = recordDicList
+            drawCardRecordList.append(poolRecordData)
+        data = {
+            'drawCardRecordList': drawCardRecordList,
+        }
+        #DEBUG_MSG('save DrawCardRecord', data)
+        return data
+
+    def toClientDict(self, pool):
+        # 同步前检测一次
+        poolData = self.drawCardRecordDic.get(pool, None)
+        clientData = self.clientDataDic.get(pool, None)
+        if not poolData or not clientData:
+            poolData, clientData = self.setdefault(pool)
+
+        ts = utils.getNow()
+        self.checkCntLimit(pool)
+        self.checkExpiredLimit(pool, ts)
+
+        if not clientData["beUpdate"]:
+            #DEBUG_MSG('update DrawCardRecord', clientData["clientData"])
+            return clientData["clientData"]
+
+        poolRecordData = {}
+        recordDicList = []
+        recordList = poolData["recordList"]
+        for record in recordList:
+            recordDicList.append(record.toClientDict())
+        poolRecordData['pool'] = pool
+        #poolRecordData['curCnt'] = len(recordDicList)
+        #poolRecordData['totalCnt'] = poolData["totalCnt"]
+        poolRecordData['data'] = recordDicList
+        #DEBUG_MSG('client DrawCardRecord', poolRecordData)
+
+        clientData["beUpdate"] = False
+        clientData["clientData"] = poolRecordData
+
+        #DEBUG_MSG('update DrawCardRecord', clientData["clientData"])
+        return poolRecordData
+
+    def setdefault(self, pool):
+        poolData = dict()
+        poolData["recordList"] = deque()
+        poolData["curCnt"] = 0
+        poolData["totalCnt"] = 0
+        clientData = dict()
+        clientData["beUpdate"] = True
+        clientData["clientData"] = {}
+        return self.drawCardRecordDic.setdefault(pool, poolData), self.clientDataDic.setdefault(pool, clientData)
+
+    def appendRecord(self, pool, items):
+        poolData = self.drawCardRecordDic.get(pool, None)
+        clientData = self.clientDataDic.get(pool, None)
+        if not poolData or not clientData:
+            poolData, clientData = self.setdefault(pool)
+        ts = utils.getNow()
+        poolData["totalCnt"] += 1
+        record = drawCardRecord(poolData["totalCnt"], ts, items)
+        poolData['recordList'].appendleft(record)
+        poolData["curCnt"] = len(poolData["recordList"])
+        clientData["beUpdate"] = True
+        self.checkCntLimit(pool)
+        self.checkExpiredLimit(pool, ts)
+
+    def checkCntLimit(self, pool):
+        poolData = self.drawCardRecordDic.get(pool, None)
+        clientData = self.clientDataDic.get(pool, None)
+        if not poolData or not clientData:
+            return
+        recordList = poolData["recordList"]
+        while len(recordList) > 500:
+            recordList.pop()
+            clientData["beUpdate"] = True
+        poolData["curCnt"] = len(recordList)
+
+    def checkExpiredLimit(self, pool, ts):
+        expiredTime = 60 * 60 * 24 * 180
+        poolData = self.drawCardRecordDic.get(pool, None)
+        clientData = self.clientDataDic.get(pool, None)
+        if not poolData or not clientData:
+            return
+        recordList = poolData["recordList"]
+        while len(recordList) > 0:
+            lastRecord = recordList[-1]
+            if ts >= lastRecord.ts and ts - lastRecord.ts < expiredTime:
+                break
+            recordList.pop()
+            clientData["beUpdate"] = True
+        poolData["curCnt"] = len(recordList)
+
+    def getStreamRecordData(self, pool):
+        dic = self.toClientDict(pool)
+        jsonStr = json.dumps(dic).encode('ascii')
+        DEBUG_MSG('in getStreamRecordData, jsonStr:', len(jsonStr))
+        zStr = gzip.compress(jsonStr)
+        DEBUG_MSG('in getStreamRecordData, gzipStr:', len(zStr))
+        return zStr
+
+class petDrawCardRecordInstance(userType.UserSTDSoleInfo):
+    @property
+    def cls(self):
+        return petDrawCardRecord
+
+petDrawCardRecordInstance = petDrawCardRecordInstance()
+

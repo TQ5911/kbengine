@@ -1,0 +1,45 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: cityBattle/resPath
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    1: _tools.RODict({
+        "ID": 1,
+        "resourcePath": "Assets/Res/ui/texture/citybattle/citybattle_map_legend01_icon.png",
+        "modelPath": ""
+    }),
+    2: _tools.RODict({
+        "ID": 2,
+        "resourcePath": "Assets/Res/ui/texture/citybattle/citybattle_map_legend13_icon.png",
+        "modelPath": ""
+    }),
+    3: _tools.RODict({
+        "ID": 3,
+        "resourcePath": "Assets/Res/ui/texture/citybattle/citybattle_map_legend02_icon.png",
+        "modelPath": "Assets/Res/art/char/monster/2007_00_zchengmen.prefab"
+    }),
+    4: _tools.RODict({
+        "ID": 4,
+        "resourcePath": "Assets/Res/ui/texture/citybattle/citybattle_map_legend03_icon.png",
+        "modelPath": "Assets/Res/art/char/monster/2008_00_fchengmen.prefab"
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "resourcePath": "Assets/Res/ui/texture/citybattle/citybattle_map_legend04_icon.png",
+        "modelPath": ""
+    })
+})
+minKey = 1
+maxKey = 5

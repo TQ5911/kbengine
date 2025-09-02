@@ -1,0 +1,130 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: rewardTask/config
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    "dailyLimitNum": _tools.RODict({
+        "ID": "dailyLimitNum",
+        "value": 5,
+    }),
+    "weeklyLimitNum": _tools.RODict({
+        "ID": "weeklyLimitNum",
+        "value": 5,
+    }),
+    "currentlyMaxNum": _tools.RODict({
+        "ID": "currentlyMaxNum",
+        "value": 10,
+    }),
+    "weeklyMaxNum": _tools.RODict({
+        "ID": "weeklyMaxNum",
+        "value": 30,
+    }),
+    "recommendPower": _tools.RODict({
+        "ID": "recommendPower",
+        "value": "推荐战斗力：{0}",
+    }),
+    "remaniningTimes": _tools.RODict({
+        "ID": "remaniningTimes",
+        "value": "剩余次数：{0}",
+    }),
+    "awardReceiveTimes": _tools.RODict({
+        "ID": "awardReceiveTimes",
+        "value": "领奖次数：{0}",
+    }),
+    "unclaimedReward": _tools.RODict({
+        "ID": "unclaimedReward",
+        "value": "未领取悬赏",
+    }),
+    "unabledToDisplayDistance": _tools.RODict({
+        "ID": "unabledToDisplayDistance",
+        "value": "无法显示移动距离",
+    }),
+    "automaticExecution": _tools.RODict({
+        "ID": "automaticExecution",
+        "value": "自动执行任务中",
+    }),
+    "automaticExecutionCompleted": _tools.RODict({
+        "ID": "automaticExecutionCompleted",
+        "value": "自动执行任务完成",
+    }),
+    "receiveTask": _tools.RODict({
+        "ID": "receiveTask",
+        "value": "接取任务",
+    }),
+    "rewardTaskCurrentlyNum": _tools.RODict({
+        "ID": "rewardTaskCurrentlyNum",
+        "value": 54001925,
+    }),
+    "rewardTaskNoWay": _tools.RODict({
+        "ID": "rewardTaskNoWay",
+        "value": 54001926,
+    }),
+    "rewardTaskAbnormalStatus": _tools.RODict({
+        "ID": "rewardTaskAbnormalStatus",
+        "value": 54001927,
+    }),
+    "rewardTaskChoicePrompt": _tools.RODict({
+        "ID": "rewardTaskChoicePrompt",
+        "value": 54001928,
+    }),
+    "rewardTaskReceiveLimit": _tools.RODict({
+        "ID": "rewardTaskReceiveLimit",
+        "value": 54001929,
+    }),
+    "rewardTaskNoSpace": _tools.RODict({
+        "ID": "rewardTaskNoSpace",
+        "value": 54001930,
+    }),
+    "rewardTaskNoPrize": _tools.RODict({
+        "ID": "rewardTaskNoPrize",
+        "value": 54001931,
+    }),
+    "rewardTaskAutomaticConfirm": _tools.RODict({
+        "ID": "rewardTaskAutomaticConfirm",
+        "value": 54001932,
+    }),
+    "rewardTaskLabel": _tools.RODict({
+        "ID": "rewardTaskLabel",
+        "value": _tools.ROList(['', 'Assets/Res/ui/texture/offerreward/offerreward_day_label_img.png', 'Assets/Res/ui/texture/offerreward/offerreward_week_label_img.png']),
+    }),
+    "rewardTaskNpc": _tools.RODict({
+        "ID": "rewardTaskNpc",
+        "value": 18000505,
+    }),
+    "rewardTaskDistance": _tools.RODict({
+        "ID": "rewardTaskDistance",
+        "value": "距离：{0}米",
+    }),
+    "rewardTaskWeeklyPickLimit": _tools.RODict({
+        "ID": "rewardTaskWeeklyPickLimit",
+        "value": 54001965,
+    }),
+    "receiveTheAward": _tools.RODict({
+        "ID": "receiveTheAward",
+        "value": "前往领奖",
+    }),
+    "rewardTaskStopExecution": _tools.RODict({
+        "ID": "rewardTaskStopExecution",
+        "value": 54001981,
+    }),
+    "rewardTaskScoreLabel1": _tools.RODict({
+        "ID": "rewardTaskScoreLabel1",
+        "value": "Assets/Res/ui/texture/task/taskinfo_label02_img.png",
+    }),
+    "rewardTaskScoreLabel2": _tools.RODict({
+        "ID": "rewardTaskScoreLabel2",
+        "value": "Assets/Res/ui/texture/task/taskinfo_label03_img.png",
+    })
+})

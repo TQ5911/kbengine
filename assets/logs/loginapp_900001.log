@@ -1,0 +1,41 @@
+  INFO root [2025-09-02 12:08:08,621] - 
+  INFO root [2025-09-02 12:08:08,623] - -----------------------------------------------------------------------------------------
+
+
+  INFO root [2025-09-02 12:08:08,676] - Resmgr::initialize: KBE_ROOT=/mnt/hgfs/game/Server/kbeLinux/kbengine/
+  INFO root [2025-09-02 12:08:08,677] - Resmgr::initialize: KBE_RES_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/
+  INFO root [2025-09-02 12:08:08,677] - Resmgr::initialize: KBE_BIN_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/bin/server/
+  INFO root [2025-09-02 12:08:08,678] - NetworkInterface::initialize(EXTERNAL-TCP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:20013 )
+  INFO root [2025-09-02 12:08:08,678] - NetworkInterface::initialize(EXTERNAL-TCP): address 192.168.10.127:20013, SOMAXCONN=511, rBufSize=131072, wBufSize=16384, this=[0x7fffc721a410.
+  INFO root [2025-09-02 12:08:08,680] - NetworkInterface::initialize(EXTERNAL-TCP-IPV6): address fe80::250:56ff:fe2a:a839::20013, SOMAXCONN=511, rBufSize=131072, wBufSize=16384, this=[0x7fffc721a410.
+  INFO root [2025-09-02 12:08:08,683] - NetworkInterface::initialize(INTERNAL-TCP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:33853 )
+  WARN root [2025-09-02 12:08:08,683] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a receive buffer of only 425984 bytes (instead of 16777216)
+  WARN root [2025-09-02 12:08:08,684] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a send buffer of only 425984 bytes (instead of 16777216)
+  INFO root [2025-09-02 12:08:08,684] - NetworkInterface::initialize(INTERNAL-TCP): address 192.168.10.127:33853, SOMAXCONN=511, rBufSize=425984, wBufSize=425984, this=[0x7fffc721a410.
+  INFO root [2025-09-02 12:08:08,685] - server-configs:
+  INFO root [2025-09-02 12:08:08,686] - 	internalTcpAddr : 192.168.10.127:33853
+  INFO root [2025-09-02 12:08:08,687] - 	externalTcpAddr : 192.168.10.127:20013
+  INFO root [2025-09-02 12:08:08,687] - 	externalTcpIpv6Addr : fe80::250:56ff:fe2a:a839::20013
+  INFO root [2025-09-02 12:08:08,687] - 	componentID : 900001
+  INFO root [2025-09-02 12:08:10,200] - ThreadPool::createThreadPool: creating  threadpool...
+  INFO root [2025-09-02 12:08:10,202] - ThreadPool::createThreadPool: successfully(2), newThreadCount=1, normalMaxThreadCount=2, maxThreadCount=8
+ DEBUG root [2025-09-02 12:08:10,317] - Script::install(): paths=/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/common:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/common/Lib:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/data:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/user_type:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/server_common:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/login:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/lib-dynload:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/DLLs:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib/site-packages:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib/dist-packages.
+  INFO root [2025-09-02 12:08:11,195] - Script::install(): is successfully, Python=(3.7.3 (default, Mar 21 2025, 15:25:47) 
+[GCC 13.3.0])!
+  INFO root [2025-09-02 12:08:11,201] - Script::install(): KBExtra is successfully!
+S_INFO root [2025-09-02 12:08:11,289] - onLoginAppReady: bootstrapGroupIndex=0, bootstrapGlobalIndex=0
+  INFO root [2025-09-02 12:08:11,290] - TelnetServer server is running on port 31000
+  INFO root [2025-09-02 12:08:11,295] - start server app, timing method:rdtsc 3417535442
+  INFO root [2025-09-02 12:08:11,485] - ---- loginapp Version: 2.5.8. ScriptVersion: 0.1.0. Pythoncore: 3.7.3. Protocol: 00C842919090D3FD4897D0C953C8FBA9. Protocol client: 3E7AE130BB33C652DBF24318D016ECD0. Config: Hybrid64 X64. Built: 21:30:12 Aug 27 2025. AppID: 900001. UID: 1001. PID: 1157809 ----
+  INFO root [2025-09-02 12:08:11,487] - Server ubuntumyh: Intel(R) Core(TM) i7-14700KF x4 with 8083592kB RAM
+  INFO root [2025-09-02 12:08:11,487] - ---- loginapp is running ----
+ DEBUG root [2025-09-02 12:08:11,489] - Components::process(): Request for the process of identity...
+  INFO root [2025-09-02 12:08:18,509] - Components::findComponents: find logger(1)...
+  INFO root [2025-09-02 12:08:18,611] - Components::findComponents: found logger, addr:192.168.10.127:43117
+  INFO root [2025-09-02 12:08:18,611] - Components::addComponent: reset orderLog, uid=1001!
+  INFO root [2025-09-02 12:08:18,611] - Components::addComponent[logger], uid=1001, componentID=200001, globalorderid=1, grouporderid=1, totalcount=1
+  INFO root [2025-09-02 12:08:18,612] - Components::findComponents: find dbmgr(2)...
+  INFO root [2025-09-02 12:08:18,713] - Components::findComponents: found dbmgr, addr:192.168.10.127:49301
+  INFO root [2025-09-02 12:08:18,713] - Components::addComponent: reset orderLog, uid=1001!
+  INFO root [2025-09-02 12:08:18,714] - Components::addComponent[dbmgr], uid=1001, componentID=400001, globalorderid=4, grouporderid=1, totalcount=1
+  WARN root [2025-09-02 12:08:19,715] - Forwarding logs to logger[192.168.10.127:43117/0/0/0]...

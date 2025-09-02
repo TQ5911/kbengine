@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Properties>
+        <drawCardDailyNum>
+            <Type>          UINT32                  </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Persistent>    true                    </Persistent>
+        </drawCardDailyNum>
+
+        <drawCardGuaranteedDic>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </drawCardGuaranteedDic>
+    </Properties>
+
+    <BaseMethods>
+        <reqRandomSummonPet> <Exposed/>
+            <Arg>   UINT8       </Arg>
+        </reqRandomSummonPet>
+
+        <reqGetGuaranteedPet> <Exposed/>
+            <Arg>   UINT8       </Arg>
+        </reqGetGuaranteedPet>
+
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onGetDrawCardInfo>
+            <Arg>   ARRAY <of> CLI_DRAW_CARD_INFO </of>    </Arg>
+        </onGetDrawCardInfo>
+
+        <onUpdateDrawCardGuaranteedNum>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT32      </Arg>
+        </onUpdateDrawCardGuaranteedNum>
+        <onRandomSummonPet>
+            <Arg>   ARRAY <of> ITEM_ID </of>    </Arg>
+        </onRandomSummonPet>
+        <onGetGuaranteedPet>
+            <Arg>   ITEM_ID     </Arg>
+        </onGetGuaranteedPet>
+    </ClientMethods>
+</root>

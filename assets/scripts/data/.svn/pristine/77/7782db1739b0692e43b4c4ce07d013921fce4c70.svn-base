@@ -1,0 +1,242 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: gamePlay/singleSceneData
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    "field_xinyuancheng": _tools.RODict({
+        "sceneRes": "field_xinyuancheng",
+        "sceneName": "新元城",
+        "defaultMapID": 1001,
+        "returnPos": ((175, 0.9, 194),),
+        "tmxRes": "xinYuanCheng",
+        "weatherType": 0,
+    }),
+    "field_tongxincun": _tools.RODict({
+        "sceneRes": "field_tongxincun",
+        "sceneName": "同心村",
+        "defaultMapID": 1002,
+        "returnPos": ((394, 7.8, 141),),
+        "tmxRes": "tongXinGu",
+        "weatherType": 0,
+    }),
+    "field_feishacheng": _tools.RODict({
+        "sceneRes": "field_feishacheng",
+        "sceneName": "飞沙要塞",
+        "defaultMapID": 1004,
+        "returnPos": ((92, 0.397, 135),),
+        "tmxRes": "feiShaCheng",
+        "weatherType": 0,
+    }),
+    "field_shikuzoulang_01": _tools.RODict({
+        "sceneRes": "field_shikuzoulang_01",
+        "sceneName": "石窟走廊",
+        "defaultMapID": 1010,
+        "returnPos": ((92, 0.397, 135),),
+        "tmxRes": "shiKuZouLang_01",
+        "weatherType": 0,
+    }),
+    "field_xinyuanchengjiao": _tools.RODict({
+        "sceneRes": "field_xinyuanchengjiao",
+        "sceneName": "新元城郊",
+        "defaultMapID": 1011,
+        "returnPos": ((175, 0.9, 194),),
+        "tmxRes": "xinYuanChengJiao",
+        "weatherType": 0,
+    }),
+    "field_zukedibao_01": _tools.RODict({
+        "sceneRes": "field_zukedibao_01",
+        "sceneName": "祖珂地堡一层",
+        "defaultMapID": 1020,
+        "returnPos": None,
+        "tmxRes": "zuKeTingJiao_01",
+        "weatherType": 0,
+    }),
+    "field_zukedibao_04": _tools.RODict({
+        "sceneRes": "field_zukedibao_04",
+        "sceneName": "祖珂地堡二层",
+        "defaultMapID": 1021,
+        "returnPos": None,
+        "tmxRes": "zuKeTingJiao_02",
+        "weatherType": 0,
+    }),
+    "field_zukedibao_05": _tools.RODict({
+        "sceneRes": "field_zukedibao_05",
+        "sceneName": "祖珂地堡五层",
+        "defaultMapID": 1024,
+        "returnPos": None,
+        "tmxRes": "zuKeTingJiao_05",
+        "weatherType": 0,
+    }),
+    "field_yueguanghaigang_01": _tools.RODict({
+        "sceneRes": "field_yueguanghaigang_01",
+        "sceneName": "月光海港一层",
+        "defaultMapID": 1030,
+        "returnPos": None,
+        "tmxRes": "yuRenDong_01",
+        "weatherType": 0,
+    }),
+    "field_yueguanghaigang_02": _tools.RODict({
+        "sceneRes": "field_yueguanghaigang_02",
+        "sceneName": "月光海港二层",
+        "defaultMapID": 1031,
+        "returnPos": None,
+        "tmxRes": "yuRenDong_02",
+        "weatherType": 0,
+    }),
+    "field_yueguanghaigang_06": _tools.RODict({
+        "sceneRes": "field_yueguanghaigang_06",
+        "sceneName": "月光海港六层",
+        "defaultMapID": 1035,
+        "returnPos": None,
+        "tmxRes": "yuRenDong_06",
+        "weatherType": 0,
+    }),
+    "field_wudushiku_01": _tools.RODict({
+        "sceneRes": "field_wudushiku_01",
+        "sceneName": "五毒石窟一层",
+        "defaultMapID": 1120,
+        "returnPos": None,
+        "tmxRes": "wuGongDong_01",
+        "weatherType": 0,
+    }),
+    "field_wudushiku_02": _tools.RODict({
+        "sceneRes": "field_wudushiku_02",
+        "sceneName": "五毒石窟二层",
+        "defaultMapID": 1121,
+        "returnPos": None,
+        "tmxRes": "wuGongDong_02",
+        "weatherType": 0,
+    }),
+    "field_wudushiku_04": _tools.RODict({
+        "sceneRes": "field_wudushiku_04",
+        "sceneName": "五毒石窟四层",
+        "defaultMapID": 1123,
+        "returnPos": None,
+        "tmxRes": "wuGongDong_04",
+        "weatherType": 0,
+    }),
+    "field_shouling_04": _tools.RODict({
+        "sceneRes": "field_shouling_04",
+        "sceneName": "首领讨伐4",
+        "defaultMapID": 2203,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_01",
+        "weatherType": 0,
+    }),
+    "field_hundunhuilang_01": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_01",
+        "sceneName": "混沌回廊入口",
+        "defaultMapID": 3100,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_01",
+        "weatherType": 0,
+    }),
+    "field_hundunhuilang_02": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_02",
+        "sceneName": "混沌回廊采集",
+        "defaultMapID": 3118,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_02",
+        "weatherType": 0,
+    }),
+    "field_hundunhuilang_03": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_03",
+        "sceneName": "混沌回廊经验",
+        "defaultMapID": 3103,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_03",
+        "weatherType": 0,
+    }),
+    "field_hundunhuilang_04": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_04",
+        "sceneName": "混沌回廊黄金",
+        "defaultMapID": 3112,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_04",
+        "weatherType": 0,
+    }),
+    "field_hundunhuilang_05": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_05",
+        "sceneName": "混沌回廊首领",
+        "defaultMapID": 3107,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_05",
+        "weatherType": 0,
+    }),
+    "field_hundunhuilang_06": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_06",
+        "sceneName": "混沌回廊魔物",
+        "defaultMapID": 3106,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_06",
+        "weatherType": 0,
+    }),
+    "field_hundunhuilang_07": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_07",
+        "sceneName": "混沌回廊协守",
+        "defaultMapID": 3115,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_07",
+        "weatherType": 0,
+    }),
+    "field_hundunhuilang_08": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_08",
+        "sceneName": "混沌回廊封印",
+        "defaultMapID": 3117,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_08",
+        "weatherType": 0,
+    }),
+    "field_xinyuanchengzhan": _tools.RODict({
+        "sceneRes": "field_xinyuanchengzhan",
+        "sceneName": "城战",
+        "defaultMapID": 6000,
+        "returnPos": None,
+        "tmxRes": "chengZhan",
+        "weatherType": 0,
+    }),
+    "field_xinshoufuben": _tools.RODict({
+        "sceneRes": "field_xinshoufuben",
+        "sceneName": "新手副本",
+        "defaultMapID": 4002,
+        "returnPos": ((394, 7.8, 141),),
+        "tmxRes": "xinShouFuBen",
+        "weatherType": 0,
+    }),
+    "field_jinglingzhicun": _tools.RODict({
+        "sceneRes": "field_jinglingzhicun",
+        "sceneName": "精灵之村",
+        "defaultMapID": 1005,
+        "returnPos": None,
+        "tmxRes": "jingLingZhiCun",
+        "weatherType": 0,
+    }),
+    "field_jinglingbaodian": _tools.RODict({
+        "sceneRes": "field_jinglingbaodian",
+        "sceneName": "精灵宝殿",
+        "defaultMapID": 1006,
+        "returnPos": None,
+        "tmxRes": "jingLingBaoDian",
+        "weatherType": 0,
+    }),
+    "field_shilianfeng_01": _tools.RODict({
+        "sceneRes": "field_shilianfeng_01",
+        "sceneName": "试炼峰一层",
+        "defaultMapID": 5100,
+        "returnPos": None,
+        "tmxRes": "shiLianFeng_01",
+        "weatherType": 0,
+    })
+})

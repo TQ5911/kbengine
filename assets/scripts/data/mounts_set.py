@@ -1,0 +1,54 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: mounts/set
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    "dropFromHighPlace": _tools.RODict({
+        "ID": "dropFromHighPlace",
+        "value": 1.0,
+    }),
+    "highLimitWhenInterface": _tools.RODict({
+        "ID": "highLimitWhenInterface",
+        "value": 2.0,
+    }),
+    "minDistanceOnMount": _tools.RODict({
+        "ID": "minDistanceOnMount",
+        "value": 30.0,
+    }),
+    "pressRideButtonCannotRide": _tools.RODict({
+        "ID": "pressRideButtonCannotRide",
+        "value": 54001055,
+    }),
+    "pressRideButtonNotEquipMount": _tools.RODict({
+        "ID": "pressRideButtonNotEquipMount",
+        "value": 54001056,
+    }),
+    "mountInitialTransparency": _tools.RODict({
+        "ID": "mountInitialTransparency",
+        "value": 0.2,
+    }),
+    "mountUpCD": _tools.RODict({
+        "ID": "mountUpCD",
+        "value": 3.7,
+    }),
+    "mountspeed": _tools.RODict({
+        "ID": "mountspeed",
+        "value": 1.5,
+    }),
+    "pressRideButtonCannotRideOnWater": _tools.RODict({
+        "ID": "pressRideButtonCannotRideOnWater",
+        "value": 54000136,
+    })
+})

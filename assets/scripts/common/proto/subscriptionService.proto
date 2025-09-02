@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package subscriptionService;
+
+option go_package = "./service";
+
+option py_generic_services = true;
+
+message Void {
+}
+
+message Component
+{
+    uint32 serverId = 1;
+    uint32 compOrder = 2;
+}
+
+message LotteryAwardInfo
+{
+    uint64 gbID = 1;
+    uint32 seqID = 2;
+    string spuID = 3;
+    string skuID = 4;
+    string skuName = 5;
+    string luckyID = 6;
+    int64 subBeginTime = 7;
+    int64 subEndTime = 8;
+    int64 lotteryTime = 9;
+}
+
+// subscription 的 service
+service SubscriptionService
+{
+    rpc registerSubscription(Component) returns(Void);
+    rpc activeTick(Void) returns(Void);
+}
+
+// game 的 service
+service GameServer
+{
+    rpc disptchAward(LotteryAwardInfo) returns(Void);
+    rpc activeTickCallback(Void) returns(Void);
+}

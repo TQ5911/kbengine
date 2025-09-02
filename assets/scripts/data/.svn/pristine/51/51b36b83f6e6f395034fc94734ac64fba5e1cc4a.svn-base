@@ -1,0 +1,83 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: mounts/mounts
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    1: _tools.RODict({
+        "ID": 1,
+        "mountsID": 88000001,
+        "name": "小棕马",
+        "quality": 1,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjFullHp', 20]]),
+        "isOpen": 1
+    }),
+    2: _tools.RODict({
+        "ID": 2,
+        "mountsID": 88000002,
+        "name": "夜影熊",
+        "quality": 2,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjPVPDmgAnti', 0.02]]),
+        "isOpen": 1
+    }),
+    3: _tools.RODict({
+        "ID": 3,
+        "mountsID": 88000003,
+        "name": "锋刃战狼",
+        "quality": 3,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjAntiMortal', 0.03]]),
+        "isOpen": 1
+    }),
+    4: _tools.RODict({
+        "ID": 4,
+        "mountsID": 88000004,
+        "name": "影狼",
+        "quality": 1,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjAntiMortal', 0.03]]),
+        "isOpen": 1
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "mountsID": 88000005,
+        "name": "虎",
+        "quality": 1,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjAntiMortal', 0.03]]),
+        "isOpen": 1
+    }),
+    6: _tools.RODict({
+        "ID": 6,
+        "mountsID": 88000006,
+        "name": "白虎",
+        "quality": 2,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjAntiMortal', 0.03]]),
+        "isOpen": 1
+    }),
+    7: _tools.RODict({
+        "ID": 7,
+        "mountsID": 88000007,
+        "name": "星辰虎",
+        "quality": 3,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjAntiMortal', 0.03]]),
+        "isOpen": 1
+    })
+})
+minKey = 1
+maxKey = 7

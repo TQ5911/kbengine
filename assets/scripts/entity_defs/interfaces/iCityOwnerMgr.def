@@ -1,0 +1,201 @@
+<root>
+    <Properties>
+        <cityOwnerServerId>
+            <Type>          INT32                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityOwnerServerId>
+        
+        <cityOwnerId>
+            <Type>          PLAYER_GBID             </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityOwnerId>
+
+        <cityOwnerName>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityOwnerName>
+
+        <cityOwnerServerName>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityOwnerServerName>
+
+        <cityOwnerGuildName>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </cityOwnerGuildName>
+
+        <cityOwnerGuildIcon>
+            <Type>          INT32                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityOwnerGuildIcon>
+
+        <cityOwnerGuildFlag>
+            <Type>          INT32                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityOwnerGuildFlag>
+
+        <cityOwnerGuildUUID>
+            <Type>          GUILD_UUID              </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityOwnerGuildUUID>
+
+        <cityOwnerSchool>
+            <Type>          SCHOOL                  </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityOwnerSchool>
+
+        <cityOwnerSex>
+            <Type>          SEX                     </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityOwnerSex>
+        
+        <cityMoney>
+            <Type>          INT64                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </cityMoney>
+        
+        <dailyCumulativeTax>
+            <Type>          INT64                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </dailyCumulativeTax>
+        
+        <lastDailyFinalTax>
+            <Type>          INT64                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </lastDailyFinalTax>
+        
+        <cityOfficerDict>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       {}                      </Default>
+        </cityOfficerDict>
+
+        <cityRecentActivityList>
+            <Type>          PY_LIST                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       []                      </Default>
+        </cityRecentActivityList>
+
+        <cityFundUseRecord>
+            <Type>          PY_LIST                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       []                      </Default>
+        </cityFundUseRecord>
+
+        <orderRemainTimesDict>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       {}                      </Default>
+        </orderRemainTimesDict>
+
+        <occupyTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </occupyTime>
+
+        <lastSiegeWarEndTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </lastSiegeWarEndTime>
+    </Properties>
+
+    <BaseMethods>
+        <onCityAuctionTax>
+            <Arg>           INT32                   </Arg>
+            <Arg>           INT64                   </Arg>
+        </onCityAuctionTax>
+
+        <onAppointCityOfficer>
+            <Arg>           INT32                         </Arg>
+            <Arg>           PLAYER_GBID                   </Arg>
+            <Arg>           INT32                         </Arg>
+            <Arg>           PLAYER_GBID                   </Arg>
+            <Arg>           UNICODE                       </Arg>
+            <Arg>           SEX                           </Arg>
+            <Arg>           SCHOOL                        </Arg>
+        </onAppointCityOfficer>
+
+        <cityRecentActivityRequest>
+            <Arg>           INT32                         </Arg>
+            <Arg>           ENTITYCALL                    </Arg>
+        </cityRecentActivityRequest>
+
+        <cityOwnerChange>
+            <Arg>           INT32                         </Arg>
+            <Arg>           PY_LIST                       </Arg>
+        </cityOwnerChange>
+
+        <useCityOfficerPrivilege>
+            <Arg>           INT32                         </Arg>
+            <Arg>           ENTITYCALL                    </Arg>
+            <Arg>           PLAYER_GBID                   </Arg>
+            <Arg>           INT32                         </Arg>
+            <Arg>           PLAYER_GBID                   </Arg>
+            <Arg>           UNICODE                       </Arg>
+        </useCityOfficerPrivilege>
+
+        <changeCityMoneyToGuildMoney>
+            <Arg>           INT32                         </Arg>
+            <Arg>           PLAYER_GBID                   </Arg>
+            <Arg>           UNICODE                       </Arg>
+            <Arg>           GUILD_UUID                    </Arg>
+            <Arg>           ENTITYCALL                    </Arg>
+            <Arg>           INT64                         </Arg>
+        </changeCityMoneyToGuildMoney>
+
+        <clearCityRecentRecord>
+        </clearCityRecentRecord>
+        
+        <gmAddCityMoney>
+            <Arg>           INT64                         </Arg>
+        </gmAddCityMoney>
+
+        <onGuildLeaderChange>
+            <Arg>           PLAYER_GBID                 </Arg>
+            <Arg>           PLAYER_GBID                 </Arg>
+            <Arg>           UNICODE                     </Arg>
+            <Arg>           SCHOOL                      </Arg>
+            <Arg>           SEX                         </Arg>
+        </onGuildLeaderChange>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

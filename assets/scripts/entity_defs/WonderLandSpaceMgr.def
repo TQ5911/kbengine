@@ -1,0 +1,23 @@
+<root>
+    <Interfaces>
+        <Interface>     iStaticSpaceMgr         </Interface>
+        <Interface>     iCollectionBossForMgr   </Interface>
+    </Interfaces>
+
+    <Properties>
+        <randomBossId>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </randomBossId>
+
+        <randomBossGameEntityId>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </randomBossGameEntityId>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+</root>

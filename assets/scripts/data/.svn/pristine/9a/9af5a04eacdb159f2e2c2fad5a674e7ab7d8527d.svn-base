@@ -1,0 +1,119 @@
+datas ={
+  "1003": {
+    "type": "createMonster",
+    "entityID": [
+      22010001
+    ],
+    "num": 0,
+    "lv": "28",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1009
+      ]
+    }
+  },
+  "1004": {
+    "type": "delayLoop",
+    "firstDelay": 1800.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1008
+      ]
+    }
+  },
+  "1001": {
+    "type": "dunStart",
+    "transition": {
+      "finished": [
+        1003,
+        1004,
+        1013
+      ]
+    }
+  },
+  "1005": {
+    "type": "dunEnd",
+    "exitTime": 20.0,
+    "isDungeonDone": 1,
+    "transition": {}
+  },
+  "1006": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      22010001
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1011
+      ]
+    }
+  },
+  "1008": {
+    "type": "dunFailed",
+    "exitTime": 20.0,
+    "transition": {}
+  },
+  "1009": {
+    "type": "monsterInBattle",
+    "monsterID": [
+      22010001
+    ],
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1010
+      ]
+    }
+  },
+  "1010": {
+    "type": "popupdialog",
+    "entityID": [
+      22010001
+    ],
+    "dialogID": 19900183,
+    "transition": {
+      "finished": [
+        1006
+      ]
+    }
+  },
+  "1011": {
+    "type": "popupdialog",
+    "entityID": [
+      21010002
+    ],
+    "dialogID": 19900184,
+    "transition": {
+      "finished": [
+        1005
+      ]
+    }
+  },
+  "1013": {
+    "type": "playerRestNum",
+    "compare": 1,
+    "num": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1008
+      ]
+    }
+  }
+}

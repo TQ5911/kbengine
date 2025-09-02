@@ -1,0 +1,2 @@
+import gamerefresh
+gamerefresh.refreshData()

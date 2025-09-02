@@ -1,0 +1,37 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+        <Interface> iMultiStaticSpace           </Interface>
+        <Interface> iMultiStaticSpacePlayer     </Interface>
+    </Interfaces>
+
+    <Properties>
+        <floor>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE                        </Flags>
+        </floor>
+    </Properties>
+
+    <BaseMethods>
+        <doEnterWonderLand>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          PLAYER_GBID                  </Arg>
+        </doEnterWonderLand>
+
+        <onEnterWonderLandSuccess>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+        </onEnterWonderLandSuccess>
+
+        <onLeaveWonderLand>
+            <Arg>          PLAYER_GBID                  </Arg>
+        </onLeaveWonderLand>
+
+        <logonEnterWonderLand>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          PLAYER_GBID                  </Arg>
+        </logonEnterWonderLand>
+    </BaseMethods>
+</root>

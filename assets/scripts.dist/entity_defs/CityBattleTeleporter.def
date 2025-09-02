@@ -1,0 +1,28 @@
+<root>
+    <Interfaces>
+        <Interface>	   iCell            </Interface>
+        <Interface>	   iFubenSpace      </Interface>
+        <Interface>	   iTimerCell       </Interface>
+        <Interface>    iGameEntity      </Interface>
+    </Interfaces>
+
+    <Properties>
+        <teleporterId>
+			<Type>	        OBJECT_ID 	        </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </teleporterId>
+    </Properties>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <CellMethods>
+        <doTeleport>
+            <Exposed/>
+        </doTeleport>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+
+</root>

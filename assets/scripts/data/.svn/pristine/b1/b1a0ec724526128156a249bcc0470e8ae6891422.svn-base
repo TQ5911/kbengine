@@ -1,0 +1,930 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: mall/coinPrice
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    1: _tools.RODict({
+        "ID": 1,
+        "itemId": 30010001,
+        "costItem": ((30000002, 10),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    2: _tools.RODict({
+        "ID": 2,
+        "itemId": 30010002,
+        "costItem": ((30000002, 10),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    3: _tools.RODict({
+        "ID": 3,
+        "itemId": 30010003,
+        "costItem": ((30000002, 25),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    4: _tools.RODict({
+        "ID": 4,
+        "itemId": 30010004,
+        "costItem": ((30000002, 25),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "itemId": 30010005,
+        "costItem": ((30000002, 45),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    6: _tools.RODict({
+        "ID": 6,
+        "itemId": 30010006,
+        "costItem": ((30000002, 45),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    7: _tools.RODict({
+        "ID": 7,
+        "itemId": 30000101,
+        "costItem": ((30000002, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "itemId": 30000219,
+        "costItem": ((30000002, 10000),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 3,
+        "limitNumber": 10
+    }),
+    9: _tools.RODict({
+        "ID": 9,
+        "itemId": 30000222,
+        "costItem": ((30000002, 10000),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 3,
+        "limitNumber": 10
+    }),
+    10: _tools.RODict({
+        "ID": 10,
+        "itemId": 30001001,
+        "costItem": ((30000001, 10),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 1,
+        "limitNumber": 1
+    }),
+    11: _tools.RODict({
+        "ID": 11,
+        "itemId": 30001002,
+        "costItem": ((30000002, 1000),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 1,
+        "limitNumber": 1
+    }),
+    12: _tools.RODict({
+        "ID": 12,
+        "itemId": 30000220,
+        "costItem": ((30000001, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 2,
+        "limitNumber": 100
+    }),
+    13: _tools.RODict({
+        "ID": 13,
+        "itemId": 30000221,
+        "costItem": ((30000001, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 2,
+        "limitNumber": 100
+    }),
+    14: _tools.RODict({
+        "ID": 14,
+        "itemId": 30002005,
+        "costItem": ((30000002, 1000),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 1,
+        "limitNumber": 1
+    }),
+    15: _tools.RODict({
+        "ID": 15,
+        "itemId": 30002008,
+        "costItem": ((30000001, 10),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 1,
+        "limitNumber": 1
+    }),
+    16: _tools.RODict({
+        "ID": 16,
+        "itemId": 30010003,
+        "costItem": ((30000002, 10), (30010001, 5)),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    17: _tools.RODict({
+        "ID": 17,
+        "itemId": 30010004,
+        "costItem": ((30000002, 10), (30010002, 5)),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    18: _tools.RODict({
+        "ID": 18,
+        "itemId": 30010005,
+        "costItem": ((30000002, 50), (30010003, 4)),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    19: _tools.RODict({
+        "ID": 19,
+        "itemId": 30010006,
+        "costItem": ((30000002, 50), (30010004, 4)),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    20: _tools.RODict({
+        "ID": 20,
+        "itemId": 30000235,
+        "costItem": ((30000001, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    21: _tools.RODict({
+        "ID": 21,
+        "itemId": 30000100,
+        "costItem": ((30000005, 1),),
+        "guildMallLv": 1,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    22: _tools.RODict({
+        "ID": 22,
+        "itemId": 30000101,
+        "costItem": ((30000005, 100),),
+        "guildMallLv": 1,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    23: _tools.RODict({
+        "ID": 23,
+        "itemId": 30000220,
+        "costItem": ((30000001, 1000),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 4,
+        "limitNumber": 1
+    }),
+    24: _tools.RODict({
+        "ID": 24,
+        "itemId": 30000235,
+        "costItem": ((30000005, 500),),
+        "guildMallLv": 1,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 3,
+        "limitNumber": 100
+    }),
+    25: _tools.RODict({
+        "ID": 25,
+        "itemId": 30000219,
+        "costItem": ((30000005, 1000),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 3,
+        "limitNumber": 10
+    }),
+    26: _tools.RODict({
+        "ID": 26,
+        "itemId": 30000221,
+        "costItem": ((30000001, 1000),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 4,
+        "limitNumber": 1
+    }),
+    27: _tools.RODict({
+        "ID": 27,
+        "itemId": 30000222,
+        "costItem": ((30000005, 1000),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 3,
+        "limitNumber": 10
+    }),
+    28: _tools.RODict({
+        "ID": 28,
+        "itemId": 30000239,
+        "costItem": ((30000002, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    29: _tools.RODict({
+        "ID": 29,
+        "itemId": 30000240,
+        "costItem": ((30000002, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    30: _tools.RODict({
+        "ID": 30,
+        "itemId": 30000241,
+        "costItem": ((30000002, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    31: _tools.RODict({
+        "ID": 31,
+        "itemId": 30000251,
+        "costItem": ((30000002, 1000),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    32: _tools.RODict({
+        "ID": 32,
+        "itemId": 30000252,
+        "costItem": ((30000002, 1000),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    33: _tools.RODict({
+        "ID": 33,
+        "itemId": 30000253,
+        "costItem": ((30000002, 1000),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    34: _tools.RODict({
+        "ID": 34,
+        "itemId": 30000299,
+        "costItem": ((30000002, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    35: _tools.RODict({
+        "ID": 35,
+        "itemId": 30000300,
+        "costItem": ((30000002, 500),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    36: _tools.RODict({
+        "ID": 36,
+        "itemId": 30000301,
+        "costItem": ((30000001, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    37: _tools.RODict({
+        "ID": 37,
+        "itemId": 30000302,
+        "costItem": ((30000001, 500),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    38: _tools.RODict({
+        "ID": 38,
+        "itemId": 30000236,
+        "costItem": ((30000002, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    39: _tools.RODict({
+        "ID": 39,
+        "itemId": 30010007,
+        "costItem": ((30000002, 80),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    40: _tools.RODict({
+        "ID": 40,
+        "itemId": 30010008,
+        "costItem": ((30000002, 80),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    41: _tools.RODict({
+        "ID": 41,
+        "itemId": 30000219,
+        "costItem": ((30000001, 60),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    42: _tools.RODict({
+        "ID": 42,
+        "itemId": 30000222,
+        "costItem": ((30000001, 120),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    43: _tools.RODict({
+        "ID": 43,
+        "itemId": 30000304,
+        "costItem": ((30000001, 120),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    44: _tools.RODict({
+        "ID": 44,
+        "itemId": 30000309,
+        "costItem": ((30000001, 120),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    45: _tools.RODict({
+        "ID": 45,
+        "itemId": 30010022,
+        "costItem": ((30000001, 30),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    46: _tools.RODict({
+        "ID": 46,
+        "itemId": 30010023,
+        "costItem": ((30000001, 15),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    47: _tools.RODict({
+        "ID": 47,
+        "itemId": 30010024,
+        "costItem": ((30000001, 5),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    48: _tools.RODict({
+        "ID": 48,
+        "itemId": 30000235,
+        "costItem": ((30000001, 80),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    49: _tools.RODict({
+        "ID": 49,
+        "itemId": 30000320,
+        "costItem": ((30000001, 100),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    50: _tools.RODict({
+        "ID": 50,
+        "itemId": 30000237,
+        "costItem": ((30000001, 2000),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    51: _tools.RODict({
+        "ID": 51,
+        "itemId": 30000238,
+        "costItem": ((30000001, 2000),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    52: _tools.RODict({
+        "ID": 52,
+        "itemId": 30010012,
+        "costItem": ((30000001, 60),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    53: _tools.RODict({
+        "ID": 53,
+        "itemId": 30010013,
+        "costItem": ((30000001, 30),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    54: _tools.RODict({
+        "ID": 54,
+        "itemId": 30010014,
+        "costItem": ((30000001, 15),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    55: _tools.RODict({
+        "ID": 55,
+        "itemId": 30010015,
+        "costItem": ((30000001, 60),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    56: _tools.RODict({
+        "ID": 56,
+        "itemId": 30010016,
+        "costItem": ((30000001, 30),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    57: _tools.RODict({
+        "ID": 57,
+        "itemId": 30010017,
+        "costItem": ((30000001, 15),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    58: _tools.RODict({
+        "ID": 58,
+        "itemId": 30010018,
+        "costItem": ((30000001, 60),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    59: _tools.RODict({
+        "ID": 59,
+        "itemId": 30010019,
+        "costItem": ((30000001, 30),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    60: _tools.RODict({
+        "ID": 60,
+        "itemId": 30010020,
+        "costItem": ((30000001, 15),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    61: _tools.RODict({
+        "ID": 61,
+        "itemId": 30010021,
+        "costItem": ((30000001, 120),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    62: _tools.RODict({
+        "ID": 62,
+        "itemId": 30000235,
+        "costItem": ((30000005, 80),),
+        "guildMallLv": 4,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 2,
+        "limitNumber": 2
+    }),
+    63: _tools.RODict({
+        "ID": 63,
+        "itemId": 30000320,
+        "costItem": ((30000005, 100),),
+        "guildMallLv": 4,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 2,
+        "limitNumber": 2
+    }),
+    64: _tools.RODict({
+        "ID": 64,
+        "itemId": 30000219,
+        "costItem": ((30000005, 180),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 2,
+        "limitNumber": 1
+    }),
+    65: _tools.RODict({
+        "ID": 65,
+        "itemId": 30000222,
+        "costItem": ((30000005, 360),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 2,
+        "limitNumber": 1
+    }),
+    66: _tools.RODict({
+        "ID": 66,
+        "itemId": 30000304,
+        "costItem": ((30000005, 360),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 2,
+        "limitNumber": 1
+    }),
+    67: _tools.RODict({
+        "ID": 67,
+        "itemId": 30000309,
+        "costItem": ((30000005, 360),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 2,
+        "limitNumber": 1
+    }),
+    68: _tools.RODict({
+        "ID": 68,
+        "itemId": 30000290,
+        "costItem": ((30000005, 20),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    69: _tools.RODict({
+        "ID": 69,
+        "itemId": 30000291,
+        "costItem": ((30000005, 20),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    70: _tools.RODict({
+        "ID": 70,
+        "itemId": 30000292,
+        "costItem": ((30000005, 20),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    71: _tools.RODict({
+        "ID": 71,
+        "itemId": 30000293,
+        "costItem": ((30000005, 500),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    72: _tools.RODict({
+        "ID": 72,
+        "itemId": 30000294,
+        "costItem": ((30000005, 500),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    73: _tools.RODict({
+        "ID": 73,
+        "itemId": 30000295,
+        "costItem": ((30000005, 500),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    74: _tools.RODict({
+        "ID": 74,
+        "itemId": 30000101,
+        "costItem": ((30000005, 10),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    75: _tools.RODict({
+        "ID": 75,
+        "itemId": 30000224,
+        "costItem": ((30000005, 100),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    76: _tools.RODict({
+        "ID": 76,
+        "itemId": 30000220,
+        "costItem": ((30000005, 2000),),
+        "guildMallLv": 5,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    77: _tools.RODict({
+        "ID": 77,
+        "itemId": 30000232,
+        "costItem": ((30000005, 2000),),
+        "guildMallLv": 5,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    78: _tools.RODict({
+        "ID": 78,
+        "itemId": 30010012,
+        "costItem": ((30000005, 60),),
+        "guildMallLv": 4,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    79: _tools.RODict({
+        "ID": 79,
+        "itemId": 30010013,
+        "costItem": ((30000005, 30),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    80: _tools.RODict({
+        "ID": 80,
+        "itemId": 30010014,
+        "costItem": ((30000005, 15),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    81: _tools.RODict({
+        "ID": 81,
+        "itemId": 30010015,
+        "costItem": ((30000005, 60),),
+        "guildMallLv": 4,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    82: _tools.RODict({
+        "ID": 82,
+        "itemId": 30010016,
+        "costItem": ((30000005, 30),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    83: _tools.RODict({
+        "ID": 83,
+        "itemId": 30010017,
+        "costItem": ((30000005, 15),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    84: _tools.RODict({
+        "ID": 84,
+        "itemId": 30010018,
+        "costItem": ((30000005, 60),),
+        "guildMallLv": 4,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    85: _tools.RODict({
+        "ID": 85,
+        "itemId": 30010019,
+        "costItem": ((30000005, 30),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    86: _tools.RODict({
+        "ID": 86,
+        "itemId": 30010020,
+        "costItem": ((30000005, 15),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    87: _tools.RODict({
+        "ID": 87,
+        "itemId": 30010021,
+        "costItem": ((30000005, 120),),
+        "guildMallLv": 4,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    88: _tools.RODict({
+        "ID": 88,
+        "itemId": 30010022,
+        "costItem": ((30000005, 30),),
+        "guildMallLv": 3,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    89: _tools.RODict({
+        "ID": 89,
+        "itemId": 30010023,
+        "costItem": ((30000005, 15),),
+        "guildMallLv": 2,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    90: _tools.RODict({
+        "ID": 90,
+        "itemId": 30010024,
+        "costItem": ((30000005, 5),),
+        "guildMallLv": 1,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 0,
+        "limitNumber": 0
+    }),
+    91: _tools.RODict({
+        "ID": 91,
+        "itemId": 30990152,
+        "costItem": ((30000001, 60),),
+        "guildMallLv": 0,
+        "startTime": None,
+        "deleteTime": None,
+        "limitType": 1,
+        "limitNumber": 1
+    })
+})
+minKey = 1
+maxKey = 91

@@ -1,0 +1,60 @@
+<root>
+    <Volatile>
+        <position/>
+        <!--<position> 0 </position> Don't update-->
+        <yaw/>
+        <!--<pitch> 20 </pitch>-->
+        <optimized> false </optimized>
+    </Volatile>
+
+    <Interfaces>
+        <Interface>    iCell    </Interface>
+        <Interface>    iBaseWithCell    </Interface>
+        <Interface>    iTimerBase       </Interface>
+        <Interface>    iTimerCell    </Interface>
+        <Interface>    iEventMgr     </Interface>
+        <Interface>    iGameEntity  </Interface>
+        <Interface>    iFubenSpace  </Interface>
+    </Interfaces>
+
+    <Properties>
+        <groupId>
+            <Type>            OBJECT_ID          </Type>
+            <Flags>           CELL_PRIVATE       </Flags>
+            <Default>            0               </Default>
+        </groupId>
+
+        <monsterIDs>
+            <Type>             PYTHON            </Type>
+            <Flags>            CELL_PRIVATE      </Flags>
+            <Default>             []             </Default>
+        </monsterIDs>
+
+        <monsterGIDs>
+            <Type>             PYTHON            </Type>
+            <Flags>            CELL_PRIVATE      </Flags>
+            <Default>             []             </Default>
+        </monsterGIDs>
+
+        <hasMonsterNeedRefresh>
+            <Type>             BOOL             </Type>
+            <Flags>            CELL_PRIVATE     </Flags>
+            <Default>          0                </Default>
+        </hasMonsterNeedRefresh>
+    </Properties>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <CellMethods>
+        <sync>
+            <Arg>           OBJECT_ID              </Arg>
+            <Arg>           STRING          </Arg>
+            <Arg>           PYTHON               </Arg>
+            <Arg>           PYTHON             </Arg>
+        </sync>
+
+        <canBeDestroy>
+        </canBeDestroy>
+    </CellMethods>
+</root>

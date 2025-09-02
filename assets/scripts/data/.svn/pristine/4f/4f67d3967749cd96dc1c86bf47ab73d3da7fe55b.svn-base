@@ -1,0 +1,505 @@
+datas ={
+  "1003": {
+    "type": "createMonster",
+    "entityID": [
+      20170003
+    ],
+    "num": 1,
+    "lv": "60",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 1,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1009
+      ]
+    }
+  },
+  "1004": {
+    "type": "delayLoop",
+    "firstDelay": 1800.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1008
+      ]
+    }
+  },
+  "1001": {
+    "type": "dunStart",
+    "transition": {
+      "finished": [
+        1003,
+        1004,
+        1007
+      ]
+    }
+  },
+  "1005": {
+    "type": "dunEnd",
+    "exitTime": 5.0,
+    "isDungeonDone": 1,
+    "transition": {}
+  },
+  "1006": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      20170005
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1011
+      ]
+    }
+  },
+  "1008": {
+    "type": "dunFailed",
+    "exitTime": 15.0,
+    "transition": {}
+  },
+  "1009": {
+    "type": "monsterInBattle",
+    "monsterID": [
+      20170003
+    ],
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1010,
+        1090
+      ]
+    }
+  },
+  "1010": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20170003
+    ],
+    "buffID": [
+      64004901
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 600.0,
+    "transition": {
+      "finished": [
+        1012
+      ]
+    }
+  },
+  "1011": {
+    "type": "popupdialog",
+    "entityID": [
+      20170005
+    ],
+    "dialogID": 19017006,
+    "transition": {
+      "finished": [
+        1005
+      ]
+    }
+  },
+  "1007": {
+    "type": "playerRestNum",
+    "compare": 1,
+    "num": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1008
+      ]
+    }
+  },
+  "1026": {
+    "type": "monsterHp",
+    "monsterID": [
+      20170003
+    ],
+    "compare": 5,
+    "hpPercent": 2.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1027
+      ]
+    }
+  },
+  "1012": {
+    "type": "castSkill",
+    "entityID": [
+      20170003
+    ],
+    "skillID": 91020035,
+    "lv": "1",
+    "forceToUse": 1,
+    "transition": {
+      "finished": [
+        1026
+      ]
+    }
+  },
+  "1042": {
+    "type": "castSkill",
+    "entityID": [
+      20170003
+    ],
+    "skillID": 91020037,
+    "lv": "1",
+    "forceToUse": 1,
+    "transition": {
+      "finished": [
+        1044,
+        1091
+      ]
+    }
+  },
+  "1043": {
+    "type": "removeMonster",
+    "entityID": [
+      20170003
+    ],
+    "transition": {
+      "finished": [
+        1050
+      ]
+    }
+  },
+  "1050": {
+    "type": "createMonster",
+    "entityID": [
+      20170004
+    ],
+    "num": 1,
+    "lv": "60",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 1,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1051,
+        1092
+      ]
+    }
+  },
+  "1052": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20170004
+    ],
+    "buffID": [
+      64004901
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 600.0,
+    "transition": {
+      "finished": [
+        1053
+      ]
+    }
+  },
+  "1056": {
+    "type": "monsterHp",
+    "monsterID": [
+      20170004
+    ],
+    "compare": 5,
+    "hpPercent": 2.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1028
+      ]
+    }
+  },
+  "1058": {
+    "type": "castSkill",
+    "entityID": [
+      20170004
+    ],
+    "skillID": 19017004,
+    "lv": "1",
+    "forceToUse": 1,
+    "transition": {
+      "finished": [
+        1029,
+        1093
+      ]
+    }
+  },
+  "1059": {
+    "type": "removeMonster",
+    "entityID": [
+      20170004
+    ],
+    "transition": {
+      "finished": [
+        1060
+      ]
+    }
+  },
+  "1060": {
+    "type": "createMonster",
+    "entityID": [
+      20170005
+    ],
+    "num": 1,
+    "lv": "60",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 1,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1061,
+        1094
+      ]
+    }
+  },
+  "1065": {
+    "type": "castSkill",
+    "entityID": [
+      20170005
+    ],
+    "skillID": 91020032,
+    "lv": "1",
+    "forceToUse": 1,
+    "transition": {
+      "finished": [
+        1006
+      ]
+    }
+  },
+  "1051": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20170004
+    ],
+    "buffID": [
+      64004912
+    ],
+    "lv": "1",
+    "lvlmt": 1,
+    "duration": 10.0,
+    "transition": {
+      "finished": [
+        1052
+      ]
+    }
+  },
+  "1055": {
+    "type": "castSkill",
+    "entityID": [
+      20170004
+    ],
+    "skillID": 91020031,
+    "lv": "1",
+    "forceToUse": 1,
+    "transition": {
+      "finished": [
+        1056
+      ]
+    }
+  },
+  "1062": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20170005
+    ],
+    "buffID": [
+      64004901
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 600.0,
+    "transition": {
+      "finished": [
+        1064
+      ]
+    }
+  },
+  "1061": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20170005
+    ],
+    "buffID": [
+      64004912
+    ],
+    "lv": "1",
+    "lvlmt": 1,
+    "duration": 10.0,
+    "transition": {
+      "finished": [
+        1062
+      ]
+    }
+  },
+  "1064": {
+    "type": "castSkill",
+    "entityID": [
+      20170005
+    ],
+    "skillID": 91020035,
+    "lv": "1",
+    "forceToUse": 1,
+    "transition": {
+      "finished": [
+        1066
+      ]
+    }
+  },
+  "1044": {
+    "type": "delayLoop",
+    "firstDelay": 2.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1043
+      ]
+    }
+  },
+  "1054": {
+    "type": "delayLoop",
+    "firstDelay": 1.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1055
+      ]
+    }
+  },
+  "1066": {
+    "type": "delayLoop",
+    "firstDelay": 1.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1065
+      ]
+    }
+  },
+  "1053": {
+    "type": "castSkill",
+    "entityID": [
+      20170004
+    ],
+    "skillID": 19017003,
+    "lv": "1",
+    "forceToUse": 1,
+    "transition": {
+      "finished": [
+        1054
+      ]
+    }
+  },
+  "1027": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20170003
+    ],
+    "buffID": [
+      64004913
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": -1.0,
+    "transition": {
+      "finished": [
+        1042
+      ]
+    }
+  },
+  "1028": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      20170004
+    ],
+    "buffID": [
+      64004913
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": -1.0,
+    "transition": {
+      "finished": [
+        1058
+      ]
+    }
+  },
+  "1029": {
+    "type": "delayLoop",
+    "firstDelay": 2.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1059
+      ]
+    }
+  },
+  "1090": {
+    "type": "popupdialog",
+    "entityID": [
+      20170003
+    ],
+    "dialogID": 19017001,
+    "transition": {}
+  },
+  "1091": {
+    "type": "popupdialog",
+    "entityID": [
+      20170003
+    ],
+    "dialogID": 19017002,
+    "transition": {}
+  },
+  "1092": {
+    "type": "popupdialog",
+    "entityID": [
+      20170004
+    ],
+    "dialogID": 19017001,
+    "transition": {}
+  },
+  "1093": {
+    "type": "popupdialog",
+    "entityID": [
+      20170004
+    ],
+    "dialogID": 19017001,
+    "transition": {}
+  },
+  "1094": {
+    "type": "popupdialog",
+    "entityID": [
+      20170005
+    ],
+    "dialogID": 19017005,
+    "transition": {}
+  }
+}

@@ -1,0 +1,35 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell </Interface>
+        <Interface> iGlobal    </Interface>
+        <Interface> iTimerBase </Interface>
+    </Interfaces>
+    
+    <Properties>
+        <spaceMap>
+            <Type>          PY_DICT        </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       {}                      </Default>    
+        </spaceMap>
+        
+        <loadedSet>
+            <Type>          PY_SET        </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       set([])         </Default>    
+        </loadedSet>    
+    </Properties>
+
+    <BaseMethods>
+        <regSpace>
+            <Arg>           SPACE_ID    </Arg>
+            <Arg>           MAILBOX         </Arg>
+        </regSpace>
+        <unRegSpace>
+            <Arg>           SPACE_ID    </Arg>
+            <Arg>           MAILBOX         </Arg>
+        </unRegSpace>
+        <entireConstruct>
+            <Arg>           SPACE_ID    </Arg>
+        </entireConstruct>
+    </BaseMethods>
+</root>

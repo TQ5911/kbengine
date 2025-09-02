@@ -1,0 +1,557 @@
+<root>
+    <Properties>
+        <guildBox>
+            <Type>          ENTITYCALL                  </Type>
+            <Flags>         BASE                        </Flags>
+        </guildBox>
+
+        <guildBoxCell>
+            <Type>          ENTITYCALL                  </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+        </guildBoxCell>
+
+        <guildName>
+            <Type>          UNICODE                     </Type>
+            <Flags>         OWN_CLIENT                  </Flags>
+        </guildName>
+
+        <guildNameBase>
+            <Type>          UNICODE                     </Type>
+            <Flags>         BASE                        </Flags>
+        </guildNameBase>
+
+        <guildContrib>
+            <Type>          GUILD_CONTRIB               </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+        </guildContrib>
+
+        <guildUUIDBase>
+            <Type>          GUILD_UUID                  </Type>
+            <Flags>         BASE                        </Flags>
+        </guildUUIDBase>
+
+        <guildUUID>
+            <Type>          GUILD_UUID                  </Type>
+            <Flags>         ALL_CLIENTS                 </Flags>
+        </guildUUID>
+
+        <leftGuildTS>
+            <Type>          LONGTIME                    </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+        </leftGuildTS>
+
+        <guildAssistTimes>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+            <Default>       0                           </Default>
+        </guildAssistTimes>
+
+        <nextRecoverGuildAssistTime>
+            <Type>          LONGTIME                    </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+            <Default>       0                           </Default>
+        </nextRecoverGuildAssistTime>
+
+        <recoverGuildAssistTimerId>
+            <Type>          TIMER_ID                    </Type>
+            <Flags>         BASE                        </Flags>
+            <Default>       0                           </Default>
+        </recoverGuildAssistTimerId>
+
+        <applyedGuilds>
+            <Type>          APPLYED_GUILD_DATA_INFO         </Type>
+            <Flags>         BASE                            </Flags>
+            <Persistent>    true                            </Persistent>
+        </applyedGuilds>
+
+        <guildDonateCoin>
+            <Type>          SCOIN                           </Type>
+            <Flags>         BASE_AND_CLIENT                 </Flags>
+            <Persistent>    true                            </Persistent>
+        </guildDonateCoin>
+
+        <guildDonateMoney>
+            <Type>          MONEY_NUM                       </Type>
+            <Flags>         BASE_AND_CLIENT                 </Flags>
+            <Persistent>    true                            </Persistent>
+        </guildDonateMoney>
+
+        <inviteCache>
+            <Type>          PY_DICT             </Type>
+            <Flags>         BASE                </Flags>
+        </inviteCache>
+
+        <wuHuaLevel>
+            <Type>          LEVEL               </Type>
+            <Flags>         BASE                </Flags>
+        </wuHuaLevel>
+
+        <qixieAssistTimes>
+            <Type>          UINT8               </Type>
+            <Flags>         BASE_AND_CLIENT     </Flags>
+            <Default>       0                   </Default>
+            <Persistent>    true                </Persistent>
+        </qixieAssistTimes>
+
+        <recoverQixieAssistTimerId>
+            <Type>          TIMER_ID                    </Type>
+            <Flags>         BASE                        </Flags>
+            <Default>       0                           </Default>
+        </recoverQixieAssistTimerId>
+
+        <nextRecoverQixieAssistTime>
+            <Type>          LONGTIME                    </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+            <Default>       0                           </Default>
+        </nextRecoverQixieAssistTime>
+
+        <guildRelationVersion>
+            <Type>          UINT32                      </Type>
+            <Flags>         CELL                        </Flags>
+            <Default>       0                           </Default>
+        </guildRelationVersion>
+
+        <guildDonateToken>
+            <Type>          UINT32                      </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+            <Default>       0                           </Default>
+        </guildDonateToken>
+        
+        <guildTask>
+            <Type>          PY_DICT                      </Type>
+            <Flags>         BASE                         </Flags>
+            <Persistent>    true                        </Persistent>
+        </guildTask>
+        
+    </Properties>
+
+    <BaseMethods>
+        <createGuild> <Exposed/>
+            <Arg>       GUILD_CREATE_DATA       </Arg>
+        </createGuild>
+
+        <guildAssist> <Exposed/>
+            <Arg>       GUILD_BUILDING_ID       </Arg>
+        </guildAssist>
+
+        <modifyGuildDesc> <Exposed/>
+            <Arg>       UNICODE                 </Arg>
+        </modifyGuildDesc>
+
+        <getGuildDetailInfo> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </getGuildDetailInfo>
+
+        <onGetGuildDetailInfo>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetGuildDetailInfo>
+
+        <setLeftGuildTS>
+            <Arg>       LONGTIME                </Arg>
+        </setLeftGuildTS>
+
+        <exitGuild> <Exposed/>
+        </exitGuild>
+
+        <oneKeyGuildApply> <Exposed/>
+            <Arg>       ARRAY   <of>    GUILD_UUID  </of>     </Arg>
+        </oneKeyGuildApply>
+
+        <onLoadGuildGetBox>
+            <Arg>       ENTITYCALL              </Arg>
+        </onLoadGuildGetBox>
+
+        <loadGuildButNotMember>
+        </loadGuildButNotMember>
+
+        <getGuildList> <Exposed/>
+        </getGuildList>
+
+        <onJoinGuild>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </onJoinGuild>
+
+        <doOneKeyGuildApply>
+            <Arg>       ARRAY   <of>    GUILDUUID_AND_BOX </of>     </Arg>
+        </doOneKeyGuildApply>
+
+        <onExitGuild>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       UINT8                   </Arg>
+        </onExitGuild>
+
+        <joinGuildCB>
+            <Arg>       UINT8                                   </Arg>
+            <Arg>       APPLYED_GUILD_VAL_DATA_INFO             </Arg>
+        </joinGuildCB>
+
+        <onCreateGuildResult>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </onCreateGuildResult>
+
+        <modifyJoinCond> <Exposed/>
+            <Arg>       GUILD_JOIN_COND_DATA_INFO       </Arg>
+        </modifyJoinCond>
+
+        <onGetGuildMemberDatas>
+            <Arg>       ARRAY   <of>    GUILD_MEMBER_DATA_INFO          </of>   </Arg>
+        </onGetGuildMemberDatas>
+
+        <modifyMemberJob> <Exposed/>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT8                   </Arg>
+        </modifyMemberJob>
+
+        <resign> <Exposed/>
+        </resign>
+
+        <kickMember> <Exposed/>
+            <Arg>       PLAYER_GBID             </Arg>
+        </kickMember>
+
+        <onGuildAssistResult>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       OP_UUID                 </Arg>
+        </onGuildAssistResult>
+
+        <upgradeGuildBuilding> <Exposed/>
+            <Arg>       GUILD_BUILDING_ID       </Arg>
+        </upgradeGuildBuilding>
+
+        <transformGuildMoneyToFund> <Exposed/>
+            <Arg>       GUILD_MONEY             </Arg>
+        </transformGuildMoneyToFund>
+
+        <modifyGuildName> <Exposed/>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       UINT8                   </Arg>
+        </modifyGuildName>
+
+        <modifyGuildNameResult>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </modifyGuildNameResult>
+
+        <removeApplyedGuild>
+            <Arg>       GUILD_UUID              </Arg>
+        </removeApplyedGuild>
+
+        <applyJoinGuild> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </applyJoinGuild>
+
+        <dealGuildApply> <Exposed/>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+        </dealGuildApply>
+
+        <editJobPermissions> <Exposed/>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       GUILD_PERMISSION        </Arg>
+        </editJobPermissions>
+
+        <guildDonate> <Exposed/>
+            <Arg>       ITEM_ID                 </Arg>
+            <Arg>       UINT32                  </Arg>
+        </guildDonate>
+
+        <guildDonateResult>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </guildDonateResult>
+
+        <modifyGuildIcon> <Exposed/>
+            <Arg>       GUILD_ICON_ID           </Arg>
+        </modifyGuildIcon>
+
+        <deleteApplyedGuild> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </deleteApplyedGuild>
+
+        <guildRecruit> <Exposed/>
+        </guildRecruit>
+
+        <modifyGuildDisp> <Exposed/>
+            <Arg>       UINT8                   </Arg>
+        </modifyGuildDisp>
+
+        <applyJoinGuildOnGetBox>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       GUILD_UUID              </Arg>
+        </applyJoinGuildOnGetBox>
+
+        <doRemoveApplyedGuild>
+            <Arg>       ENTITYCALL              </Arg>
+        </doRemoveApplyedGuild>
+
+        <inviteJoinGuild> <Exposed/>
+            <Arg>       PLAYER_GBID             </Arg>
+        </inviteJoinGuild>
+
+        <onGuildInvite>
+            <Arg>       INVITE_DATA             </Arg>
+        </onGuildInvite>
+
+        <dealGuildInvite> <Exposed/>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+        </dealGuildInvite>
+
+        <onDealGuildInviteGetBox>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       INVITE_DATA             </Arg>
+        </onDealGuildInviteGetBox>
+
+        <updateWuHuaLevel>
+            <Arg>       LEVEL                   </Arg>
+        </updateWuHuaLevel>
+
+        <getGuildInfosFromCrossData> <Exposed/>
+        </getGuildInfosFromCrossData>
+
+        <onGetGuildInfosFromCrossData>
+            <Arg>       ARRAY   <of>    GUILD_CROSS_DATA_INFO          </of>   </Arg>
+        </onGetGuildInfosFromCrossData>
+
+        <qixieAssist> <Exposed/>
+            <Arg>       QIXIE_TYPE              </Arg>
+        </qixieAssist>
+
+        <onQixieAssistFetchCostCoinResult>
+            <Arg>       QIXIE_TYPE              </Arg>
+            <Arg>       UINT32                  </Arg>
+        </onQixieAssistFetchCostCoinResult>
+
+        <onQixieAssistResult>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       OP_UUID                 </Arg>
+            <Arg>       UINT32                  </Arg>
+        </onQixieAssistResult>
+
+        <upgradeQixie> <Exposed/>
+            <Arg>       QIXIE_TYPE              </Arg>
+        </upgradeQixie>
+
+        <applyGuildUnion> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </applyGuildUnion>
+
+        <dealGuildUnionApply> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       BOOL                    </Arg>
+        </dealGuildUnionApply>
+
+        <cancelGuildUnion> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </cancelGuildUnion>
+
+        <getGuildInfosByRelationType> <Exposed/>
+            <Arg>       UINT8                   </Arg>
+        </getGuildInfosByRelationType>
+
+        <declareEnemy> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </declareEnemy>
+
+        <donateCityBattleToken> <Exposed/>
+            <Arg>       CITY_BATTLE_TOKEN       </Arg>
+        </donateCityBattleToken>
+
+        <getGuildUnionApplySender> <Exposed/>
+        </getGuildUnionApplySender>
+
+        <cancelApplyGuildUnion> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </cancelApplyGuildUnion>
+
+        <getGuildDetailOtherServer> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </getGuildDetailOtherServer>
+
+        <onGetGuildInfosByRelationType>
+            <Arg>       ARRAY   <of>    GUILD_CROSS_DATA_INFO          </of>   </Arg>
+            <Arg>       UINT8                       </Arg>
+        </onGetGuildInfosByRelationType>
+        
+        <getGuildTaskReward><Exposed/>
+                     <Arg>      ARRAY   <of>    UINT8       </of>   </Arg>
+        </getGuildTaskReward>
+    </BaseMethods>
+
+    <CellMethods>
+        <syncModifyGuildInfo>
+            <Arg>      PYTHON                   </Arg>
+        </syncModifyGuildInfo>
+    </CellMethods>
+
+    <ClientMethods>
+        <onGetGuildData>
+            <Arg>       GUILD_CLIENT_DATA       </Arg>
+        </onGetGuildData>
+
+        <onGetGuildListData>
+            <Arg>       ARRAY   <of>    GUILD_LIST_VAL </of>    </Arg>
+        </onGetGuildListData>
+
+        <onGuildApplyJoinList>
+            <Arg>       ARRAY   <of>    GUILD_JOIN_APPLY_DATA_INFO      </of>   </Arg>
+        </onGuildApplyJoinList>
+
+        <onGuildMemberDatas>
+            <Arg>       ARRAY   <of>    GUILD_MEMBER_DATA_INFO          </of>   </Arg>
+        </onGuildMemberDatas>
+
+        <onUpdateGuildMemberDatas>
+            <Arg>       ARRAY   <of>    GUILD_MEMBER_DATA_INFO          </of>   </Arg>
+        </onUpdateGuildMemberDatas>
+
+        <onRemoveGuildMember>
+            <Arg>       PLAYER_GBID             </Arg>
+        </onRemoveGuildMember>
+
+        <onRemoveGuildApplys>
+            <Arg>       ARRAY   <of>    PLAYER_GBID                     </of>   </Arg>
+        </onRemoveGuildApplys>
+
+        <recvGetGuildDetailInfo>
+            <Arg>       GUILD_DETAIL_DATA           </Arg>
+        </recvGetGuildDetailInfo>
+
+        <onGuildEventLogs>
+            <Arg>       ARRAY   <of>    GUILD_EVENT_LOG_DATA_INFO       </of>   </Arg>
+        </onGuildEventLogs>
+
+        <onUpdateApplyedGuilds>
+            <Arg>       ARRAY   <of>    APPLYED_GUILD_VAL_DATA_INFO     </of>   </Arg>
+        </onUpdateApplyedGuilds>
+
+        <onRemoveApplyedGuilds>
+            <Arg>       ARRAY   <of>    GUILD_UUID                      </of>   </Arg>
+        </onRemoveApplyedGuilds>
+
+        <onGuildJobData>
+            <Arg>       GUILD_PERMISSIONS_DATA_INFO                     </Arg>
+        </onGuildJobData>
+
+        <onExitGuildClient>
+        </onExitGuildClient>
+
+        <onGuildNameChanged>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       UINT8                   </Arg>
+        </onGuildNameChanged>
+
+        <onGuildDescChanged>
+            <Arg>       UNICODE                 </Arg>
+        </onGuildDescChanged>
+
+        <onGuildLevelChanged>
+            <Arg>       LEVEL                   </Arg>
+        </onGuildLevelChanged>
+
+        <onGuildExpChanged>
+            <Arg>       EXP                     </Arg>
+        </onGuildExpChanged>
+
+        <onGuildMoneyChanged>
+            <Arg>       GUILD_MONEY             </Arg>
+        </onGuildMoneyChanged>
+
+        <onGuildFundChanged>
+            <Arg>       GUILD_FUND              </Arg>
+        </onGuildFundChanged>
+
+        <onGuildJoinCondChanged>
+            <Arg>       GUILD_JOIN_COND_DATA_INFO           </Arg>
+        </onGuildJoinCondChanged>
+
+        <onGuildBuildingChanged>
+            <Arg>       GUILD_BUILDING_DATA_INFO            </Arg>
+        </onGuildBuildingChanged>
+
+        <onGuildIconChanged>
+            <Arg>       GUILD_ICON_ID                       </Arg>
+        </onGuildIconChanged>
+
+        <onGuildDispChanged>
+            <Arg>       UINT8                               </Arg>
+        </onGuildDispChanged>
+
+        <onGuildInvateToClient>
+            <Arg>       INVITE_DATA                         </Arg>
+        </onGuildInvateToClient>
+
+        <onGuildInfoFromCrossData>
+            <Arg>       ARRAY   <of>    GUILD_CROSS_DATA_INFO          </of>   </Arg>
+        </onGuildInfoFromCrossData>
+
+        <onGuildInfosByRelationType>
+            <Arg>       ARRAY   <of>    GUILD_CROSS_DATA_INFO          </of>   </Arg>
+            <Arg>       UINT8                       </Arg>
+        </onGuildInfosByRelationType>
+
+        <onGetEnemyGuildInfosClient>
+            <Arg>       ARRAY   <of>    ENEMY_GUILD_CROSS_DATA_INFO          </of>   </Arg>
+        </onGetEnemyGuildInfosClient>
+
+        <onCityBattleTokenChanged>
+            <Arg>       CITY_BATTLE_TOKEN       </Arg>
+        </onCityBattleTokenChanged>
+
+        <onJunXuArchitectureChanged>
+            <Arg>       JUN_XU_ARCHITECTURE_DATA_INFO       </Arg>
+        </onJunXuArchitectureChanged>
+
+        <onQixieChanged>
+            <Arg>       JUN_XU_QI_XIE_DATA_INFO             </Arg>
+        </onQixieChanged>
+
+        <onGuildRelationAll>
+            <Arg>       ARRAY   <of>    GUILD_AND_RELATION          </of>   </Arg>
+        </onGuildRelationAll>
+
+        <onAddGuildRelationClient>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       UINT8                   </Arg>
+        </onAddGuildRelationClient>
+
+        <onRemoveGuildRelationClient>
+            <Arg>       GUILD_UUID              </Arg>
+        </onRemoveGuildRelationClient>
+
+        <onNewApplyGuildUnion>
+            <Arg>       GUILD_APPLY_UNION_DATA_INFO       </Arg>
+        </onNewApplyGuildUnion>
+
+        <onRemoveApplyGuildUnion>
+            <Arg>       GUILD_UUID              </Arg>
+        </onRemoveApplyGuildUnion>
+
+        <onAllApplyGuildUnion>
+            <Arg>       ARRAY   <of>    GUILD_APPLY_UNION_DATA_INFO          </of>   </Arg>
+        </onAllApplyGuildUnion>
+
+        <onGetGuildUnionApplySender>
+            <Arg>       ARRAY   <of>    GUILD_APPLY_UNION_SENDER_DATA_INFO          </of>   </Arg>
+        </onGetGuildUnionApplySender>
+
+        <onNewGuildUnionApplySender>
+            <Arg>       GUILD_APPLY_UNION_SENDER_DATA_INFO          </Arg>
+        </onNewGuildUnionApplySender>
+        
+        <syncGuildTaskInfo>
+            <Arg>      ARRAY   <of> GUILD_ONETASK_INFO       </Arg>
+        </syncGuildTaskInfo>
+        
+    </ClientMethods>
+</root>

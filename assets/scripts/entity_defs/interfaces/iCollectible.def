@@ -1,0 +1,42 @@
+<root>
+    <Properties>
+        <collectibleData>
+            <Type>          COLLECTIBLE_INFO   </Type>
+            <Flags>         BASE               </Flags>
+            <Persistent>    true               </Persistent>
+        </collectibleData> 
+    </Properties>
+
+    <BaseMethods>
+        <reqCollect> <Exposed/>
+            <!-- 从哪里扣东西：背包类型bagType，背包格子gridID，装备的uniqueID或者物品的itemID -->
+            <Arg>   UINT8            </Arg>
+            <Arg>   GRIDID           </Arg>
+            <Arg>   UUID             </Arg>
+            <!-- 道具是否需要使用绑定道具 -->
+            <Arg>   ITEM_BIND_TYPE   </Arg>
+            <!-- 满足哪个收集需求：收集项id，收集项的第几个格子(从0开始，先对应equip后对应prop) -->
+            <Arg>   COLLECTIBLE_ID   </Arg>
+            <Arg>   UINT8            </Arg>
+        </reqCollect>
+        <reqMark> <Exposed/>
+            <!-- 收集项id -->
+            <Arg>   COLLECTIBLE_ID   </Arg>
+            <!-- 收藏或取消收藏 -->
+            <Arg>   BOOL   </Arg>
+        </reqMark>
+    </BaseMethods>
+
+    <CellMethods>
+        <onCollectAward>
+            <!-- 传入要加的prop的index -->
+            <Arg>   ARRAY <of> UINT32 </of>   </Arg>
+        </onCollectAward>
+    </CellMethods>
+
+    <ClientMethods>
+        <onGetCollectInfo>
+            <Arg> ARRAY <of> COLLECTIBLE_ITEM_VAL </of>  </Arg> 
+        </onGetCollectInfo>
+    </ClientMethods>
+</root>

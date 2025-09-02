@@ -1,0 +1,109 @@
+<root>
+	<Volatile>
+		<position/>
+		<!--<position> 0 </position> Don't update-->
+		<yaw/>
+		<!--<pitch> 20 </pitch>-->
+		<optimized> false </optimized>
+	</Volatile>
+
+	<Interfaces>
+	    <Interface>	   iBaseWithCell    </Interface>
+		<Interface>	   iSkillManager    </Interface>
+		<Interface>    iEventMgr     </Interface>
+		<Interface>	   iTimerCell    </Interface>
+		<Interface>	   iFubenSpace   </Interface>
+		<Interface>    iGameEntity 	 </Interface>
+		<Interface>    iEntityRefresh   </Interface>
+	</Interfaces>
+
+	<Properties>
+		<creationId>
+			<Type>	OBJECT_ID						</Type>
+			<Flags>	OTHER_CLIENTS					</Flags>
+			<WitnessName>     true                  </WitnessName>
+		</creationId>
+
+		<hostId>
+			<Type>	OBJECT_ID						</Type>
+			<Flags>	OTHER_CLIENTS					</Flags>
+			<WitnessName>     true                  </WitnessName>
+		</hostId>
+
+		<hostType>
+			<Type>	UINT8						    </Type>
+			<Flags>	OTHER_CLIENTS					</Flags>
+			<WitnessName>     true                  </WitnessName>
+		</hostType>
+
+		<casterType>
+			<Type>	STRING  						</Type>
+			<Flags>	CELL_PRIVATE					</Flags>
+		</casterType>
+
+		<casterTeamId>
+			<Type>	TEAMID   						</Type>
+			<Flags>	OTHER_CLIENTS					</Flags>
+		</casterTeamId>
+
+		<name>
+			<Type>	UNICODE							</Type>
+			<Flags>	OTHER_CLIENTS				    </Flags>
+			<WitnessName>   true                    </WitnessName>
+		</name>
+
+		<type>
+			<Type>	STRING							</Type>
+			<Flags>	OTHER_CLIENTS				</Flags>
+		</type>
+
+		<trapId>
+			<Type>	UINT32						</Type>
+			<Flags>	CELL_PRIVATE 			</Flags>
+		</trapId>
+
+		<trapEntities>
+			<Type>	ARRAY <of> OBJECT_ID </of> 		</Type>
+			<Flags>	CELL_PRIVATE 			</Flags>
+		</trapEntities>
+
+		<curAreaLoopNum>
+			<Type>	UINT32						</Type>
+			<Flags>	CELL_PRIVATE 			</Flags>
+		</curAreaLoopNum>
+
+		<curEnterLoopNum>
+			<Type>	UINT32						</Type>
+			<Flags>	CELL_PRIVATE 			</Flags>
+		</curEnterLoopNum>
+
+        <loopTimeId>
+			<Type>	INT32						</Type>
+			<Flags>	CELL_PRIVATE 			</Flags>
+		</loopTimeId>
+
+		<destroyTimeId>
+			<Type>	INT32						</Type>
+			<Flags>	CELL_PRIVATE 			</Flags>
+		</destroyTimeId>
+
+		<moveController>
+			<Type>	UINT32						</Type>
+			<Flags>	CELL_PRIVATE 			</Flags>
+		</moveController>
+
+	</Properties>
+
+	<BaseMethods>
+
+	</BaseMethods>
+
+	<CellMethods>
+
+	</CellMethods>
+
+	<ClientMethods>
+
+	</ClientMethods>
+</root>
+

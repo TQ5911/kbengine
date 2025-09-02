@@ -1,0 +1,46 @@
+<root>
+    <Properties>
+        <propChangedTimes>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    true            </Persistent>
+        </propChangedTimes>
+    </Properties>
+
+    <BaseMethods>
+        <getLeaderBoardList> <Exposed/>
+            <Arg>       UINT8                               </Arg>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+            <Arg>       SCHOOL                              </Arg>
+        </getLeaderBoardList>
+
+        <onLeaderBoardRank>
+            <Arg>       UINT8                               </Arg>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+        </onLeaderBoardRank>
+    </BaseMethods>
+
+    <CellMethods>
+
+    </CellMethods>
+
+    <ClientMethods>
+        <leaderBoardNotChanged>
+            <Arg>       UINT8                               </Arg>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+            <Arg>       SCHOOL                              </Arg>
+        </leaderBoardNotChanged>
+
+        <onLeaderBoardAvatarLevel>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+            <Arg>       ARRAY   <of>        LEADER_BOARD_AVATAR_CACHE_DATA_INFO     </of>   </Arg>
+            <Arg>       SCHOOL                              </Arg>
+        </onLeaderBoardAvatarLevel>
+
+        <onLeaderBoardAvatarScore>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+            <Arg>       ARRAY   <of>        LEADER_BOARD_AVATAR_SCORE_DATA_INFO     </of>   </Arg>
+            <Arg>       SCHOOL                              </Arg>
+        </onLeaderBoardAvatarScore>
+    </ClientMethods>
+</root>

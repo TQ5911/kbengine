@@ -1,0 +1,338 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: gearEnhance/replacement
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    1: _tools.RODict({
+        "ID": 1,
+        "gearID": 80113006,
+        "acquireID": 80113002,
+        "costCurrency": ((30000001, 100),)
+    }),
+    2: _tools.RODict({
+        "ID": 2,
+        "gearID": 80113007,
+        "acquireID": 80113003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    3: _tools.RODict({
+        "ID": 3,
+        "gearID": 80113008,
+        "acquireID": 80113004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    4: _tools.RODict({
+        "ID": 4,
+        "gearID": 80113009,
+        "acquireID": 80113005,
+        "costCurrency": ((30000001, 800),)
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "gearID": 80123006,
+        "acquireID": 80123002,
+        "costCurrency": ((30000001, 100),)
+    }),
+    6: _tools.RODict({
+        "ID": 6,
+        "gearID": 80123007,
+        "acquireID": 80123003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    7: _tools.RODict({
+        "ID": 7,
+        "gearID": 80123008,
+        "acquireID": 80123004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "gearID": 80123009,
+        "acquireID": 80123005,
+        "costCurrency": ((30000001, 800),)
+    }),
+    9: _tools.RODict({
+        "ID": 9,
+        "gearID": 80133006,
+        "acquireID": 80133002,
+        "costCurrency": ((30000001, 100),)
+    }),
+    10: _tools.RODict({
+        "ID": 10,
+        "gearID": 80133007,
+        "acquireID": 80133003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    11: _tools.RODict({
+        "ID": 11,
+        "gearID": 80133008,
+        "acquireID": 80133004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    12: _tools.RODict({
+        "ID": 12,
+        "gearID": 80133009,
+        "acquireID": 80133005,
+        "costCurrency": ((30000001, 800),)
+    }),
+    13: _tools.RODict({
+        "ID": 13,
+        "gearID": 80213006,
+        "acquireID": 80213003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    14: _tools.RODict({
+        "ID": 14,
+        "gearID": 80213007,
+        "acquireID": 80213004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    15: _tools.RODict({
+        "ID": 15,
+        "gearID": 80213008,
+        "acquireID": 80213005,
+        "costCurrency": ((30000001, 800),)
+    }),
+    16: _tools.RODict({
+        "ID": 16,
+        "gearID": 80214005,
+        "acquireID": 80214001,
+        "costCurrency": ((30000001, 1200),)
+    }),
+    17: _tools.RODict({
+        "ID": 17,
+        "gearID": 80214006,
+        "acquireID": 80214002,
+        "costCurrency": ((30000001, 1600),)
+    }),
+    18: _tools.RODict({
+        "ID": 18,
+        "gearID": 80214007,
+        "acquireID": 80214003,
+        "costCurrency": ((30000001, 2000),)
+    }),
+    19: _tools.RODict({
+        "ID": 19,
+        "gearID": 80215002,
+        "acquireID": 80215001,
+        "costCurrency": ((30000001, 2500),)
+    }),
+    20: _tools.RODict({
+        "ID": 20,
+        "gearID": 80223006,
+        "acquireID": 80223003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    21: _tools.RODict({
+        "ID": 21,
+        "gearID": 80223007,
+        "acquireID": 80223004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    22: _tools.RODict({
+        "ID": 22,
+        "gearID": 80223008,
+        "acquireID": 80223005,
+        "costCurrency": ((30000001, 800),)
+    }),
+    23: _tools.RODict({
+        "ID": 23,
+        "gearID": 80224005,
+        "acquireID": 80224001,
+        "costCurrency": ((30000001, 1200),)
+    }),
+    24: _tools.RODict({
+        "ID": 24,
+        "gearID": 80224006,
+        "acquireID": 80224002,
+        "costCurrency": ((30000001, 1600),)
+    }),
+    25: _tools.RODict({
+        "ID": 25,
+        "gearID": 80224007,
+        "acquireID": 80224003,
+        "costCurrency": ((30000001, 2000),)
+    }),
+    26: _tools.RODict({
+        "ID": 26,
+        "gearID": 80225002,
+        "acquireID": 80225001,
+        "costCurrency": ((30000001, 2500),)
+    }),
+    27: _tools.RODict({
+        "ID": 27,
+        "gearID": 80233006,
+        "acquireID": 80233003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    28: _tools.RODict({
+        "ID": 28,
+        "gearID": 80233007,
+        "acquireID": 80233004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    29: _tools.RODict({
+        "ID": 29,
+        "gearID": 80233008,
+        "acquireID": 80233005,
+        "costCurrency": ((30000001, 800),)
+    }),
+    30: _tools.RODict({
+        "ID": 30,
+        "gearID": 80234005,
+        "acquireID": 80234001,
+        "costCurrency": ((30000001, 1200),)
+    }),
+    31: _tools.RODict({
+        "ID": 31,
+        "gearID": 80234006,
+        "acquireID": 80234002,
+        "costCurrency": ((30000001, 1600),)
+    }),
+    32: _tools.RODict({
+        "ID": 32,
+        "gearID": 80234007,
+        "acquireID": 80234003,
+        "costCurrency": ((30000001, 2000),)
+    }),
+    33: _tools.RODict({
+        "ID": 33,
+        "gearID": 80235002,
+        "acquireID": 80235001,
+        "costCurrency": ((30000001, 2500),)
+    }),
+    34: _tools.RODict({
+        "ID": 34,
+        "gearID": 80703001,
+        "acquireID": 80693001,
+        "costCurrency": ((30000001, 700),)
+    }),
+    35: _tools.RODict({
+        "ID": 35,
+        "gearID": 80703002,
+        "acquireID": 80693002,
+        "costCurrency": ((30000001, 100),)
+    }),
+    36: _tools.RODict({
+        "ID": 36,
+        "gearID": 80703003,
+        "acquireID": 80693003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    37: _tools.RODict({
+        "ID": 37,
+        "gearID": 80703004,
+        "acquireID": 80693004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    38: _tools.RODict({
+        "ID": 38,
+        "gearID": 80703005,
+        "acquireID": 80693005,
+        "costCurrency": ((30000001, 800),)
+    }),
+    39: _tools.RODict({
+        "ID": 39,
+        "gearID": 80703001,
+        "acquireID": 80683001,
+        "costCurrency": ((30000001, 700),)
+    }),
+    40: _tools.RODict({
+        "ID": 40,
+        "gearID": 80703002,
+        "acquireID": 80683002,
+        "costCurrency": ((30000001, 100),)
+    }),
+    41: _tools.RODict({
+        "ID": 41,
+        "gearID": 80703003,
+        "acquireID": 80683003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    42: _tools.RODict({
+        "ID": 42,
+        "gearID": 80703004,
+        "acquireID": 80683004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    43: _tools.RODict({
+        "ID": 43,
+        "gearID": 80703005,
+        "acquireID": 80683005,
+        "costCurrency": ((30000001, 800),)
+    }),
+    44: _tools.RODict({
+        "ID": 44,
+        "gearID": 80803001,
+        "acquireID": 80793001,
+        "costCurrency": ((30000001, 700),)
+    }),
+    45: _tools.RODict({
+        "ID": 45,
+        "gearID": 80803002,
+        "acquireID": 80793002,
+        "costCurrency": ((30000001, 100),)
+    }),
+    46: _tools.RODict({
+        "ID": 46,
+        "gearID": 80803003,
+        "acquireID": 80793003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    47: _tools.RODict({
+        "ID": 47,
+        "gearID": 80803004,
+        "acquireID": 80793004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    48: _tools.RODict({
+        "ID": 48,
+        "gearID": 80803005,
+        "acquireID": 80793005,
+        "costCurrency": ((30000001, 800),)
+    }),
+    49: _tools.RODict({
+        "ID": 49,
+        "gearID": 80803001,
+        "acquireID": 80783001,
+        "costCurrency": ((30000001, 700),)
+    }),
+    50: _tools.RODict({
+        "ID": 50,
+        "gearID": 80803002,
+        "acquireID": 80783002,
+        "costCurrency": ((30000001, 100),)
+    }),
+    51: _tools.RODict({
+        "ID": 51,
+        "gearID": 80803003,
+        "acquireID": 80783003,
+        "costCurrency": ((30000001, 200),)
+    }),
+    52: _tools.RODict({
+        "ID": 52,
+        "gearID": 80803004,
+        "acquireID": 80783004,
+        "costCurrency": ((30000001, 400),)
+    }),
+    53: _tools.RODict({
+        "ID": 53,
+        "gearID": 80803005,
+        "acquireID": 80783005,
+        "costCurrency": ((30000001, 800),)
+    })
+})
+minKey = 1
+maxKey = 53

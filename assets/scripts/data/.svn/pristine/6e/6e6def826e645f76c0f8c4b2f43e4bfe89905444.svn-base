@@ -1,0 +1,266 @@
+datas ={
+  "SpaceConfig": {
+    "BornPos": {
+      "20050001": {
+        "ActivityID": 0,
+        "ClassName": "BornPos",
+        "ClassNameType": 6,
+        "CustomID": "",
+        "Dir": 7.24,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 20050001,
+        "Name": "\u51fa\u751f\u70b9",
+        "PosX": 151.18,
+        "PosY": 30.0,
+        "PosZ": 463.61,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "Remark": "",
+          "TelDir": 7.24,
+          "TelX": 151.18,
+          "TelY": 30.0,
+          "TelZ": 463.61
+        }
+      }
+    },
+    "RebornPos": {
+      "20050002": {
+        "ActivityID": 0,
+        "ClassName": "RebornPos",
+        "ClassNameType": 7,
+        "CustomID": "",
+        "Dir": 14.3,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 20050002,
+        "Name": "\u590d\u6d3b\u70b9",
+        "PosX": 150.46,
+        "PosY": 30.0,
+        "PosZ": 462.79,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "Remark": "",
+          "TelDir": 14.3,
+          "TelX": 150.46,
+          "TelY": 30.0,
+          "TelZ": 462.79
+        }
+      }
+    },
+    "InitEntities": {
+      "AirWall": {
+        "20050004": {
+          "ActivityID": 0,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 1,
+          "ID": 20050004,
+          "Name": "\u7a7a\u6c14\u5899",
+          "PosX": 114.04,
+          "PosY": 22.29814,
+          "PosZ": 439.15,
+          "Props": {
+            "AreaType": 2,
+            "Length": 22.0,
+            "MPosX": 90.0,
+            "MPosY": 22.3,
+            "MPosZ": 436.0,
+            "Remark": "",
+            "TelDir": 0.0,
+            "TelX": 114.04,
+            "TelY": 22.29814,
+            "TelZ": 439.15
+          }
+        },
+        "20050005": {
+          "ActivityID": 0,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 1,
+          "ID": 20050005,
+          "Name": "\u7a7a\u6c14\u5899",
+          "PosX": 158.04,
+          "PosY": 22.29814,
+          "PosZ": 439.15,
+          "Props": {
+            "AreaType": 2,
+            "Length": 22.0,
+            "MPosX": 134.0,
+            "MPosY": 22.3,
+            "MPosZ": 436.0,
+            "Remark": "",
+            "TelDir": 0.0,
+            "TelX": 158.04,
+            "TelY": 22.29814,
+            "TelZ": 439.15
+          }
+        },
+        "20050006": {
+          "ActivityID": 0,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 1,
+          "ID": 20050006,
+          "Name": "\u7a7a\u6c14\u5899",
+          "PosX": 202.04,
+          "PosY": 22.29814,
+          "PosZ": 439.15,
+          "Props": {
+            "AreaType": 2,
+            "Length": 22.0,
+            "MPosX": 178.0,
+            "MPosY": 22.3,
+            "MPosZ": 436.0,
+            "Remark": "",
+            "TelDir": 0.0,
+            "TelX": 202.04,
+            "TelY": 22.29814,
+            "TelZ": 439.15
+          }
+        },
+        "20050007": {
+          "ActivityID": 0,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 1,
+          "ID": 20050007,
+          "Name": "\u7a7a\u6c14\u5899",
+          "PosX": 244.04,
+          "PosY": 22.29814,
+          "PosZ": 439.15,
+          "Props": {
+            "AreaType": 2,
+            "Length": 20.0,
+            "MPosX": 222.0,
+            "MPosY": 22.3,
+            "MPosZ": 436.0,
+            "Remark": "",
+            "TelDir": 0.0,
+            "TelX": 244.04,
+            "TelY": 22.29814,
+            "TelZ": 439.15
+          }
+        },
+        "20050008": {
+          "ActivityID": 0,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 90.0,
+          "DisplayName": "",
+          "EntityID": 1,
+          "ID": 20050008,
+          "Name": "\u7a7a\u6c14\u5899",
+          "PosX": 263.48,
+          "PosY": 22.29814,
+          "PosZ": 459.15,
+          "Props": {
+            "AreaType": 2,
+            "Length": 20.0,
+            "MPosX": 260.0,
+            "MPosY": 22.3,
+            "MPosZ": 437.0,
+            "Remark": "",
+            "TelDir": 90.0,
+            "TelX": 263.48,
+            "TelY": 22.29814,
+            "TelZ": 459.15
+          }
+        },
+        "20050009": {
+          "ActivityID": 0,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 90.0,
+          "DisplayName": "",
+          "EntityID": 1,
+          "ID": 20050009,
+          "Name": "\u7a7a\u6c14\u5899",
+          "PosX": 263.48,
+          "PosY": 22.29814,
+          "PosZ": 499.15,
+          "Props": {
+            "AreaType": 2,
+            "Length": 20.0,
+            "MPosX": 260.0,
+            "MPosY": 22.3,
+            "MPosZ": 477.0,
+            "Remark": "",
+            "TelDir": 90.0,
+            "TelX": 263.48,
+            "TelY": 22.29814,
+            "TelZ": 499.15
+          }
+        },
+        "20050010": {
+          "ActivityID": 0,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 90.0,
+          "DisplayName": "",
+          "EntityID": 1,
+          "ID": 20050010,
+          "Name": "\u7a7a\u6c14\u5899",
+          "PosX": 92.13,
+          "PosY": 22.29814,
+          "PosZ": 459.2,
+          "Props": {
+            "AreaType": 2,
+            "Length": 20.0,
+            "MPosX": 89.0,
+            "MPosY": 22.3,
+            "MPosZ": 437.0,
+            "Remark": "",
+            "TelDir": 90.0,
+            "TelX": 92.13,
+            "TelY": 22.29814,
+            "TelZ": 459.2
+          }
+        },
+        "20050011": {
+          "ActivityID": 0,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 90.0,
+          "DisplayName": "",
+          "EntityID": 1,
+          "ID": 20050011,
+          "Name": "\u7a7a\u6c14\u5899",
+          "PosX": 92.13,
+          "PosY": 22.29814,
+          "PosZ": 499.2,
+          "Props": {
+            "AreaType": 2,
+            "Length": 20.0,
+            "MPosX": 89.0,
+            "MPosY": 22.3,
+            "MPosZ": 477.0,
+            "Remark": "",
+            "TelDir": 90.0,
+            "TelX": 92.13,
+            "TelY": 22.29814,
+            "TelZ": 499.2
+          }
+        }
+      }
+    }
+  }
+}

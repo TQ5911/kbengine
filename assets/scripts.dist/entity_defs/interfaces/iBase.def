@@ -1,0 +1,52 @@
+<root>
+    <Properties>
+        <isDestroying>
+            <Type>          BOOL        </Type>
+            <Flags>         BASE        </Flags>
+        </isDestroying>
+        
+        <birthInDB>
+            <Type>          LONGTIME    </Type>
+            <Flags>         BASE        </Flags>
+            <Persistent>    true        </Persistent>
+            <Default>       0        </Default>
+        </birthInDB>
+
+        <methodPoolBase>
+            <Type>          METHOD_POOL_INFO    </Type>
+            <Flags>         BASE        </Flags>
+        </methodPoolBase>
+
+        <tempMiscPropsBase>
+            <Type>     PY_DICT                  </Type>
+            <Flags>    BASE                  </Flags>
+            <Default>   {}                    </Default>
+        </tempMiscPropsBase>
+    </Properties>
+
+    <BaseMethods>
+        <entireDestroy>
+            <Arg>           BOOL            </Arg>          
+            <Arg>           BOOL            </Arg>          
+        </entireDestroy>
+        
+        <renewalBase>
+            <Arg>           PYTHON          </Arg>
+        </renewalBase> 
+        
+        <callMethod>
+            <Arg>           METHOD_NAME     </Arg>
+            <Arg>           METHOD_ARGS     </Arg>
+        </callMethod>
+
+        <createCellNearSelf>
+            <Arg>       MAILBOX     </Arg>
+        </createCellNearSelf>
+
+        <createCellNearHere>
+            <Arg>       MAILBOX     </Arg>
+        </createCellNearHere>
+    </BaseMethods>
+</root>
+
+

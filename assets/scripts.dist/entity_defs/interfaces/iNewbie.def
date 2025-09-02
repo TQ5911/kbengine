@@ -1,0 +1,31 @@
+<root>
+    <Properties>
+        <newbieStep>
+            <Type>          NEW_BIE_STEP            </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </newbieStep>
+    </Properties>
+
+    <BaseMethods>
+        <onNewbieDungeonReady>
+            <Arg>           MAILBOX                 </Arg>
+            <Arg>           MAILBOX                 </Arg>
+            <Arg>           OBJECT_ID               </Arg>
+            <Arg>           SPACE_NO                </Arg>
+        </onNewbieDungeonReady>
+    </BaseMethods>
+
+    <CellMethods>
+        <onNewbieStepModify>
+            <Arg>       NEW_BIE_STEP       </Arg>
+        </onNewbieStepModify>
+
+        <destroyFromNewbieDungeon>
+            <Arg>       DUNGEON_NO       </Arg>
+        </destroyFromNewbieDungeon>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

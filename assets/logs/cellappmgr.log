@@ -1,0 +1,32 @@
+  INFO root [2025-09-02 12:08:08,431] - 
+  INFO root [2025-09-02 12:08:08,432] - -----------------------------------------------------------------------------------------
+
+
+  INFO root [2025-09-02 12:08:08,442] - Resmgr::initialize: KBE_ROOT=/mnt/hgfs/game/Server/kbeLinux/kbengine/
+  INFO root [2025-09-02 12:08:08,443] - Resmgr::initialize: KBE_RES_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/
+  INFO root [2025-09-02 12:08:08,443] - Resmgr::initialize: KBE_BIN_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/bin/server/
+  INFO root [2025-09-02 12:08:08,444] - NetworkInterface::initialize(INTERNAL-TCP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:41755 )
+  WARN root [2025-09-02 12:08:08,444] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a receive buffer of only 425984 bytes (instead of 16777216)
+  WARN root [2025-09-02 12:08:08,444] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a send buffer of only 425984 bytes (instead of 16777216)
+  INFO root [2025-09-02 12:08:08,445] - NetworkInterface::initialize(INTERNAL-TCP): address 192.168.10.127:41755, SOMAXCONN=511, rBufSize=425984, wBufSize=425984, this=[0x7ffee029e500.
+  INFO root [2025-09-02 12:08:08,445] - server-configs:
+  INFO root [2025-09-02 12:08:08,446] - 	internalTcpAddr : 192.168.10.127:41755
+  INFO root [2025-09-02 12:08:08,447] - 	componentID : 600001
+  INFO root [2025-09-02 12:08:09,950] - ThreadPool::createThreadPool: creating  threadpool...
+  INFO root [2025-09-02 12:08:09,951] - ThreadPool::createThreadPool: successfully(2), newThreadCount=1, normalMaxThreadCount=2, maxThreadCount=8
+  INFO root [2025-09-02 12:08:10,051] - start server app, timing method:rdtsc 3417532110
+  INFO root [2025-09-02 12:08:10,245] - ---- cellappmgr Version: 2.5.8. ScriptVersion: 0.1.0. Pythoncore: 3.7.3. Protocol: 00C842919090D3FD4897D0C953C8FBA9. Protocol client: 4EDB66676632D353BE422596980EC70D. Config: Hybrid64 X64. Built: 21:29:44 Aug 27 2025. AppID: 600001. UID: 1001. PID: 1157795 ----
+  INFO root [2025-09-02 12:08:10,248] - Server ubuntumyh: Intel(R) Core(TM) i7-14700KF x4 with 8083592kB RAM
+  INFO root [2025-09-02 12:08:10,248] - ---- cellappmgr is running ----
+ DEBUG root [2025-09-02 12:08:10,251] - Components::process(): Request for the process of identity...
+  INFO root [2025-09-02 12:08:17,273] - Components::findComponents: find logger(1)...
+  INFO root [2025-09-02 12:08:17,281] - Components::findComponents: found logger, addr:192.168.10.127:43117
+  INFO root [2025-09-02 12:08:17,282] - Components::addComponent: reset orderLog, uid=1001!
+  INFO root [2025-09-02 12:08:17,282] - Components::addComponent[logger], uid=1001, componentID=200001, globalorderid=1, grouporderid=1, totalcount=1
+  INFO root [2025-09-02 12:08:17,282] - Components::findComponents: find dbmgr(2)...
+  INFO root [2025-09-02 12:08:17,385] - Components::findComponents: found dbmgr, addr:192.168.10.127:49301
+  INFO root [2025-09-02 12:08:17,385] - Components::addComponent: reset orderLog, uid=1001!
+  INFO root [2025-09-02 12:08:17,385] - Components::addComponent[dbmgr], uid=1001, componentID=400001, globalorderid=4, grouporderid=1, totalcount=1
+  WARN root [2025-09-02 12:08:18,386] - Forwarding logs to logger[192.168.10.127:43117/0/0/0]...
+ ERROR root [2025-09-02 12:08:20,894] - BundleBroadcast::receive: failed! It can be caused by the firewall, the broadcastaddr, etc.Maybe broadcastaddr is not a LAN ADDR, or the Machine process is not running.
+ ERROR root [2025-09-02 12:08:20,894] - Components::findComponents: receive error!

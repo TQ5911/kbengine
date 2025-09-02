@@ -1,0 +1,55 @@
+<root>
+    <Properties>
+        <duelAttr>
+            <Type>      DUEL_ATTR_DATA_INFO         </Type>
+            <Flags>     OWN_CLIENT                  </Flags>
+        </duelAttr>
+
+        <duelBlackDict>
+            <Type>      PY_DICT                     </Type>
+            <Flags>     CELL_PRIVATE                </Flags>
+        </duelBlackDict>
+    </Properties>
+
+    <BaseMethods>
+
+    </BaseMethods>
+
+    <CellMethods>
+        <reqDuel> <Exposed/>
+            <Arg>      OBJECT_ID       </Arg>
+        </reqDuel>
+
+        <dealDuelReq> <Exposed/>
+            <Arg>      BOOL       </Arg>
+            <Arg>      BOOL       </Arg>
+        </dealDuelReq>
+
+        <onDuelFinished>
+            <Arg>      UINT8       </Arg>
+        </onDuelFinished>
+    </CellMethods>
+
+    <ClientMethods>
+        <onRecvDuelReq>
+            <Arg>      OBJECT_ID       </Arg>
+            <Arg>      UNICODE          </Arg>
+        </onRecvDuelReq>
+
+        <onDuelFlagsChanged>
+            <Arg>      UINT8            </Arg>
+        </onDuelFlagsChanged>
+
+        <onDuelResult>
+            <Arg>      PLAYER_GBID      </Arg>
+            <Arg>      UNICODE          </Arg>
+            <Arg>      UINT8            </Arg>
+        </onDuelResult>
+
+        <duelFlagOut>
+        </duelFlagOut>
+
+        <duelFlagIn>
+        </duelFlagIn>
+    </ClientMethods>
+</root>

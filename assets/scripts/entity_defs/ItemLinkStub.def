@@ -1,0 +1,21 @@
+<root>
+    <Interfaces>
+        <Interface>     iLinkStub      </Interface>
+    </Interfaces>
+
+    <Properties>
+
+    </Properties>
+
+    <BaseMethods>
+        <uploadItemInfo>
+            <Arg>       UINT64         </Arg>
+            <Arg>       ITEM_VAL       </Arg>
+        </uploadItemInfo>
+
+        <downloadItemInfo>
+            <Arg>       UINT64         </Arg>
+            <Arg>       MAILBOX        </Arg>
+        </downloadItemInfo>
+    </BaseMethods>
+</root>

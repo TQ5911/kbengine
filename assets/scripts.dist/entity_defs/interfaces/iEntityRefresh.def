@@ -1,0 +1,19 @@
+<root>
+    <Properties>
+        <refreshTime>
+            <Type>              UINT32   </Type>
+            <Flags>             CELL_PRIVATE    </Flags>
+            <Default>           0       </Default>
+        </refreshTime>
+        <isGroupRefresh>
+            <Type>              BOOL    </Type>
+            <Flags>             CELL_PRIVATE    </Flags>
+            <Default>           0       </Default>
+        </isGroupRefresh>
+    </Properties>
+
+    <CellMethods>
+        <createRefreshTimer>
+        </createRefreshTimer>
+    </CellMethods>
+</root>

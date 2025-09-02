@@ -1,0 +1,351 @@
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:08 455] - -----------------------------------------------------------------------------------------
+
+
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:08 460] - Resmgr::initialize: KBE_ROOT=/mnt/hgfs/game/Server/kbeLinux/kbengine/
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:08 460] - Resmgr::initialize: KBE_RES_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:08 461] - Resmgr::initialize: KBE_BIN_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/bin/server/
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:08 461] - NetworkInterface::initialize(INTERNAL-TCP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:45009 )
+ WARNING baseappmgr-1 1001 500001  [2025-09-02 12:08:08 461] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a receive buffer of only 425984 bytes (instead of 16777216)
+ WARNING baseappmgr-1 1001 500001  [2025-09-02 12:08:08 462] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a send buffer of only 425984 bytes (instead of 16777216)
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:08 462] - NetworkInterface::initialize(INTERNAL-TCP): address 192.168.10.127:45009, SOMAXCONN=511, rBufSize=425984, wBufSize=425984, this=[0x7ffc8d41e010.
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:08 462] - server-configs:
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:08 462] - 	internalTcpAddr : 192.168.10.127:45009
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:08 462] - 	componentID : 500001
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:09 967] - ThreadPool::createThreadPool: creating  threadpool...
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:09 968] - ThreadPool::createThreadPool: successfully(2), newThreadCount=1, normalMaxThreadCount=2, maxThreadCount=8
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:10 073] - start server app, timing method:rdtsc 3417533219
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:10 239] - ---- baseappmgr Version: 2.5.8. ScriptVersion: 0.1.0. Pythoncore: 3.7.3. Protocol: 00C842919090D3FD4897D0C953C8FBA9. Protocol client: 4EDB66676632D353BE422596980EC70D. Config: Hybrid64 X64. Built: 21:29:02 Aug 27 2025. AppID: 500001. UID: 1001. PID: 1157781 ----
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:10 239] - Server ubuntumyh: Intel(R) Core(TM) i7-14700KF x4 with 8083592kB RAM
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:10 241] - ---- baseappmgr is running ----
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:10 241] - Components::process(): Request for the process of identity...
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:17 262] - Components::findComponents: find logger(1)...
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:17 280] - Components::findComponents: found logger, addr:192.168.10.127:43117
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:17 280] - Components::addComponent: reset orderLog, uid=1001!
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:17 280] - Components::addComponent[logger], uid=1001, componentID=200001, globalorderid=1, grouporderid=1, totalcount=1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:17 281] - Components::findComponents: find dbmgr(2)...
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:17 283] - Components::findComponents: found dbmgr, addr:192.168.10.127:49301
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:17 284] - Components::addComponent: reset orderLog, uid=1001!
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:17 284] - Components::addComponent[dbmgr], uid=1001, componentID=400001, globalorderid=4, grouporderid=1, totalcount=1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:19 290] - Components::findComponents: find cellappmgr(1)...
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:08:20 792] - BundleBroadcast::receive: failed! It can be caused by the firewall, the broadcastaddr, etc.Maybe broadcastaddr is not a LAN ADDR, or the Machine process is not running.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:08:20 792] - Components::findComponents: receive error!
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:21 810] - Components::findComponents: find cellappmgr(2)...
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:21 869] - Components::findComponents: found cellappmgr, addr:192.168.10.127:41755
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:21 869] - Components::addComponent[cellappmgr], uid=1001, componentID=600001, globalorderid=2, grouporderid=1, totalcount=1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:23 110] - ServerApp::onRegisterNewApp: uid:1001, username:fengyan, componentType:loginapp, componentID:900001, globalorderID=-1, grouporderID=-1, intaddr:192.168.10.127, intport:33853, extaddr:192.168.10.127, extport:20013,  from 192.168.10.127:44668/0/0/0.
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:23 110] - Components::addComponent[loginapp], uid=1001, componentID=900001, globalorderid=3, grouporderid=1, totalcount=1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:23 930] - Components::findComponents: register self to dbmgr...
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:23 950] - Components::findComponents: register self to cellappmgr...
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:23 962] - Components::process(): Found all the components!
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:24 045] - ServerApp::onRegisterNewApp: uid:1001, username:fengyan, componentType:cellappmgr, componentID:600001, globalorderID=-1, grouporderID=-1, intaddr:192.168.10.127, intport:41755, extaddr:nonsupport, extport:0,  from 192.168.10.127:44674/0/0/0.
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 015] - ServerApp::onRegisterNewApp: uid:1001, username:fengyan, componentType:cellapp, componentID:800001, globalorderID=-1, grouporderID=-1, intaddr:192.168.10.127, intport:44985, extaddr:nonsupport, extport:0,  from 192.168.10.127:51190/0/0/0.
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 015] - Components::addComponent[cellapp], uid=1001, componentID=800001, globalorderid=4, grouporderid=1, totalcount=1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 080] - IDServer::allocRange: 1-2001. 1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 110] - ServerApp::onRegisterNewApp: uid:1001, username:fengyan, componentType:baseapp, componentID:700002, globalorderID=-1, grouporderID=-1, intaddr:192.168.10.127, intport:35419, extaddr:192.168.10.127, extport:20015,  from 192.168.10.127:51192/0/0/0.
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 110] - Components::addComponent[baseapp], uid=1001, componentID=700002, globalorderid=5, grouporderid=1, totalcount=1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 115] - IDServer::allocRange: 2001-4001. 1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 115] - ServerApp::onRegisterNewApp: uid:1001, username:fengyan, componentType:cellapp, componentID:800002, globalorderID=-1, grouporderID=-1, intaddr:192.168.10.127, intport:59203, extaddr:nonsupport, extport:0,  from 192.168.10.127:51198/0/0/0.
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 115] - Components::addComponent[cellapp], uid=1001, componentID=800002, globalorderid=6, grouporderid=2, totalcount=2
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 178] - IDServer::allocRange: 4001-6001. 1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 410] - ServerApp::onRegisterNewApp: uid:1001, username:fengyan, componentType:baseapp, componentID:700001, globalorderID=-1, grouporderID=-1, intaddr:192.168.10.127, intport:58597, extaddr:192.168.10.127, extport:20017,  from 192.168.10.127:51210/0/0/0.
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 410] - Components::addComponent[baseapp], uid=1001, componentID=700001, globalorderid=7, grouporderid=2, totalcount=2
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:32 431] - IDServer::allocRange: 6001-8001. 1
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:35 411] - SyncAppDatasHandler::~SyncAppDatasHandler()
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:37 032] - Baseappmgr::onBaseappInitProgress: cid=700001, progress=1.
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:37 581] - GlobalDataServer::broadcastDataChanged: writer(cellapp, addr=192.168.10.127:51190/0/0/0), keySize=22, valSize=4, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:37 603] - GlobalDataServer::broadcastDataChanged: writer(cellapp, addr=192.168.10.127:51198/0/0/0), keySize=22, valSize=4, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:37 735] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=12, valSize=6, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:37 735] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=12, valSize=171, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:37 735] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=78, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:37 735] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=12, valSize=350, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:38 710] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=36, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:38 710] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=21, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:38 710] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=36, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:38 710] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=21, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 710] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=17, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 710] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=17, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 710] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=17, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=19, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=17, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=19, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=18, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=14, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 723] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 724] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 724] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=16, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=19, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=14, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=21, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=125, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=19, valSize=125, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=13, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=19, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=19, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=28, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=14, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 726] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 727] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 727] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 738] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=21, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=21, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=23, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 739] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 740] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 740] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 740] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 740] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 740] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 741] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 742] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 742] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 742] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 742] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 742] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 742] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 742] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 742] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 743] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 743] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 744] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 744] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 753] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 753] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 754] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 754] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 754] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 754] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 755] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 755] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 755] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 755] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 755] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 785] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=50, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 794] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=21, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 801] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=23, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 801] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=19, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 835] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=20, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 835] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=18, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 909] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:40 909] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=19, valSize=62, isDelete=0
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:43 607] - IDServer::allocRange: 8001-10001. 1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:43 803] - IDServer::allocRange: 10001-12001. 1
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:48 900] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:48 902] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:48 911] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:49 111] - IDServer::allocRange: 12001-14001. 1
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:49 237] - IDServer::allocRange: 14001-16001. 1
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:49 306] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:49 535] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:49 819] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:50 110] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:50 845] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:50 854] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:50 857] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:50 860] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:51 342] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:51 344] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:51 554] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:51 950] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:51 952] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:51 953] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:51 954] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:51 955] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:52 150] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:52 204] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:52 423] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:52 520] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:54 197] - IDServer::allocRange: 16001-18001. 1
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:54 288] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:54 492] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:54 635] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:54 784] - IDServer::allocRange: 18001-20001. 1
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:55 147] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:55 362] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:55 548] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:55 679] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:55 710] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:55 712] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:56 177] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:56 242] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:56 276] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:56 793] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:57 006] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:57 209] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=19, valSize=4, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:57 486] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:57 715] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=312, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:57 715] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=19, valSize=308, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:57 715] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=312, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:57 715] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=308, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:57 718] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=19, valSize=4, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:58 628] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:58 752] - IDServer::allocRange: 20001-22001. 1
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:58 809] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:58 970] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:59 055] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:59 304] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:59 332] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:59 388] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:08:59 398] - IDServer::allocRange: 22001-24001. 1
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:59 546] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:59 559] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:59 810] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:08:59 959] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:00 171] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:00 952] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:01 380] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:01 475] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:01 925] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:01 989] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:02 527] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=15, valSize=62, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:02 809] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=19, valSize=4, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:03 309] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=19, valSize=4, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:03 838] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=22, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:03 840] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51210/0/0/0), keySize=22, valSize=51, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:07 810] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=16, valSize=5, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:07 810] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=15, valSize=80, isDelete=0
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 12:09:07 810] - GlobalDataServer::broadcastDataChanged: writer(baseapp, addr=192.168.10.127:51192/0/0/0), keySize=19, valSize=80, isDelete=0
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:09:07 830] - Baseappmgr::onBaseappInitProgress: cid=700002, progress=1.
+    INFO baseappmgr-1 1001 500001  [2025-09-02 12:09:07 830] - Baseappmgr::onBaseappInitProgress: all completed!
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:10:23 952] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:11:42 311] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:13:10 426] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:14:38 555] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:16:06 680] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:17:34 831] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:19:02 945] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:20:31 045] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:21:59 273] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:23:27 397] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:24:55 494] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:26:23 606] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:27:51 732] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:29:19 841] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:30:48 054] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:32:16 087] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:33:44 218] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:35:12 443] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:36:40 579] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:38:08 694] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:39:36 801] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:41:04 902] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:42:33 027] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:44:01 148] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:45:29 258] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:46:57 463] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:48:25 546] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:49:53 656] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:51:21 777] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:52:49 935] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:54:18 060] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:55:46 164] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:57:14 269] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 12:58:42 402] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:00:10 629] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:01:38 736] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:03:06 878] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:04:35 008] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:06:03 119] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:07:31 230] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:08:59 345] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:10:27 453] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:11:55 649] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:13:23 754] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:14:51 857] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:16:19 976] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:17:48 191] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:19:16 306] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:20:44 428] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:22:12 534] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:23:40 653] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:25:08 781] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:26:36 898] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:28:05 117] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:29:33 232] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:31:01 390] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:32:29 519] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:33:57 644] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:35:25 746] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:36:53 841] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:38:21 966] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:39:50 171] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:41:18 279] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:42:46 383] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:44:14 492] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:45:42 705] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:47:10 805] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:48:38 934] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:50:07 042] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:51:35 254] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:53:03 360] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:54:31 483] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:55:59 578] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:57:27 777] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 13:58:55 822] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:00:24 034] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:01:52 075] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:03:20 289] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:04:48 398] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:06:16 498] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:07:44 636] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:09:12 762] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:10:40 884] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:12:09 091] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:13:37 126] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:15:05 344] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:16:33 465] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:18:01 579] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:19:29 706] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:20:57 818] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:22:25 912] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:23:54 049] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:25:22 263] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:26:50 371] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:28:18 480] - EndPoint::close: 4:0 0.0.0.0:0.
+   ERROR baseappmgr-1 1001 500001  [2025-09-02 14:29:46 585] - EndPoint::close: 4:0 0.0.0.0:0.
+   DEBUG baseappmgr-1 1001 500001  [2025-09-02 17:15:06 313] - Baseappmgr::registerPendingAccountToBaseapp:1:ztq1. allocBaseapp=700002, numEntities=46.

@@ -1,0 +1,30 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell        </Interface>
+        <Interface> iGlobal            </Interface>
+        <Interface> iTimerBase         </Interface>
+        <Interface> iLinePlayersStub   </Interface>
+        <Interface> iLineSpaceStub     </Interface>
+    </Interfaces>
+
+    <Properties>
+        <lineReadRecoverList>
+            <Type>      PY_LIST         </Type>
+            <Default>   []              </Default>
+            <Flags>     BASE            </Flags>
+        </lineReadRecoverList>
+
+    </Properties>
+
+    <BaseMethods>
+        <checkAutoSwitchLine>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arga>       SPACE_NO       </Arga>
+        </checkAutoSwitchLine>
+
+        <notifyRemoveFakeLeavePlayer>
+            <Arg>       PLAYER_GBID    </Arg>
+        </notifyRemoveFakeLeavePlayer>
+   </BaseMethods>
+</root>

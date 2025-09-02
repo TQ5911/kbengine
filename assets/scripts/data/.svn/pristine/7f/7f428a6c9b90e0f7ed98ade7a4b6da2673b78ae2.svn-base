@@ -1,0 +1,10 @@
+import gamedatatools as _tools
+
+datas = _tools.RODict({
+    1: _tools.ROList(['fullHp', 'fullMp', 'minPhysicalAtk', 'maxPhysicalAtk', 'physicalArmor', 'minMagicAtk', 'maxMagicAtk', 'magicArmor', 'spirit', 'skillCD']),
+    2: _tools.ROList(['hit', 'dodge', 'fatal', 'antiFatal', 'ignoreArmor', 'dmgArmor', 'mortal', 'antiMortal', 'finalDmg', 'finalDmgAnti', 'PVPDmg', 'PVPDmgAnti', 'monsterDmg', 'monsterDmgAnti', 'realDmg', 'realDmgDef', 'extraDmg', 'extraDmgDef', 'stunEnh', 'stunAnti', 'silentEnh', 'silentAnti', 'knockEnh', 'knockAnti', 'debilityEnh', 'debilityAnti', 'frozenEnh', 'frozenAnti', 'slowEnh', 'slowAnti', 'expGrow', 'copper', 'dropRate', 'medicineRate', 'miningRate', 'gatherRate']),
+    101: _tools.ROList(['atkBless'])
+})
+
+
+serverSend = _tools.ROSet({'fullHp', 'hp', 'fullMp', 'mp', 'adjFullMp', 'adjFullMpAbs', 'mulFullMp', 'hit', 'speed', 'adjSpeed', 'mulSpeed', 'adjHpRecovery', 'mulHpRecovery', 'adjHpRecoveryPercent', 'adjMpRecovery', 'mulMpRecovery', 'adjMpRecoveryPercent', 'minPhysicalAtk', 'adjMinPhysicalAtk', 'adjMinPhysicalAtkAbs', 'mulMinPhysicalAtk', 'maxPhysicalAtk', 'adjMaxPhysicalAtk', 'adjMaxPhysicalAtkAbs', 'mulMaxPhysicalAtk', 'minMagicAtk', 'adjMinMagicAtk', 'adjMinMagicAtkAbs', 'mulMinMagicAtk', 'maxMagicAtk', 'adjMaxMagicAtk', 'adjMaxMagicAtkAbs', 'mulMaxMagicAtk', 'atkBless', 'adjAtkBless', 'physicalArmor', 'adjPhysicalArmor', 'adjPhysicalArmorAbs', 'mulPhysicalArmor', 'magicArmor', 'adjMagicArmor', 'adjMagicArmorAbs', 'mulMagicArmor', 'dodge', 'fatal', 'antiFatal', 'ignoreArmor', 'dmgArmor', 'skillCD', 'mortal', 'antiMortal', 'finalDmg', 'finalDmgAnti', 'PVPDmg', 'PVPDmgAnti', 'monsterDmg', 'monsterDmgAnti', 'realDmg', 'realDmgDef', 'extraDmg', 'extraDmgDef', 'spirit', 'stunEnh', 'stunAnti', 'silentEnh', 'silentAnti', 'knockEnh', 'knockAnti', 'debilityEnh', 'debilityAnti', 'frozenEnh', 'frozenAnti', 'slowEnh', 'slowAnti', 'expGrow', 'adjExpGrow', 'copper', 'adjCopper', 'dropRate', 'adjDropRate', 'medicineRate', 'adjMedicineRate', 'miningRate', 'adjMiningRate', 'gatherRate', 'adjGatherRate', })

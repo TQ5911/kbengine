@@ -1,0 +1,26 @@
+<root>
+    <Properties>
+
+    <dunTelTargetEntityId>
+        <Type>          GAME_ENTITY_ID        </Type>
+        <Flags>         CELL_PRIVATE        </Flags>
+        <Default>       0           </Default>
+    </dunTelTargetEntityId>
+
+    <dunTelTrapRange>
+        <Type>          FLOAT        </Type>
+        <Flags>         CELL_PRIVATE        </Flags>
+        <Default>       0.0           </Default>
+    </dunTelTrapRange>
+
+    </Properties>
+
+    <ClientMethods>
+    </ClientMethods>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+</root>

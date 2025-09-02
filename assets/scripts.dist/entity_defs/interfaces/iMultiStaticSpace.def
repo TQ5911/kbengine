@@ -1,0 +1,33 @@
+<root>
+    <Properties>
+        <staticSpaces>
+            <Type>      PY_DICT         </Type>
+            <Flags>     BASE            </Flags>
+        </staticSpaces>
+    </Properties>
+
+    <BaseMethods>
+        <onEntityRefresh>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       GAME_ENTITY_ID  </Arg>
+            <Arg>       FLOAT    </Arg>
+        </onEntityRefresh>
+
+        <onStaticSpaceReady>
+            <Arg>       SPACE_NO        </Arg>
+        </onStaticSpaceReady>
+
+        <onSpaceMgrReady>
+            <Arg>       SPACE_NO        </Arg>
+            <Arg>       ENTITYCALL      </Arg>
+        </onSpaceMgrReady>
+
+        <onLoadGroupEntities>
+            <Arg>       PY_DICT       </Arg>
+        </onLoadGroupEntities>
+
+        <onRefreshGroupEntities>
+            <Arg>       PY_DICT       </Arg>
+        </onRefreshGroupEntities>
+    </BaseMethods>
+</root>

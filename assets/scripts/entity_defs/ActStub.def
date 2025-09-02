@@ -1,0 +1,23 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+    </Interfaces>
+
+    <Properties>
+        <actTimerId>
+            <Type>      TIMER_ID            </Type>
+            <Flags>     BASE                </Flags>
+            <Default>   0                   </Default>
+        </actTimerId>
+
+        <actTimeQueue>
+            <Type>      PY_LIST             </Type>
+            <Flags>     BASE                </Flags>
+        </actTimeQueue>
+    </Properties>
+
+    <BaseMethods>
+    </BaseMethods>
+</root>

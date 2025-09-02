@@ -1,0 +1,146 @@
+syntax	=	"proto3";
+
+package	PersonalInfoGameServer;
+option	go_package	=	"../gameServerPersonalInfoService";
+option	py_generic_services	=	true;
+
+message	Void	{
+}
+
+message	PlayerTokenReq
+{
+	uint64	gbId	=	1;
+	string	token	=	2;
+}
+
+message	MakeMaoTai500NumSyncReq
+{
+	uint64	gbId	=	1;
+	uint64	num	=	2;
+}
+
+message	MakeMaoTai100NumSyncReq
+{
+	uint64	gbId	=	1;
+	uint64	num	=	2;
+}
+
+message	ClothesNumSyncReq
+{
+	uint64	gbId	=	1;
+	uint64	num	=	2;
+}
+
+message	Top1000InBrewWineNumSyncReq
+{
+	uint64	gbId	=	1;
+	uint64	num	=	2;
+}
+
+message	XiaoXunLevelSyncReq
+{
+	uint64	gbId	=	1;
+	uint32	level	=	2;
+}
+
+message	XiaoXunFavorabilityNumSyncReq
+{
+	uint64	gbId	=	1;
+	uint32	favorabilityNum	=	2;
+}
+
+message	XiaoXunClothesNumSyncReq
+{
+	uint64	gbId	=	1;
+	uint32	xiaoXunClothesNum	=	2;		//小巽外观数量
+}
+
+message	MaxScoreInWheatGrindingSyncReq
+{
+	uint64	gbId	=	1;
+	uint32	maxScoreInWheatGrinding	=	2;			//小麦磨碎最高分
+}
+
+message	MaxScoreInMixedStarterIngredientsSyncReq
+{
+	uint64	gbId	=	1;
+	uint32	maxScoreInMixedStarterIngredients	=	2;	//拌曲配料最高分
+}
+
+message	MaxScoreInTreadStarterIngredientsSyncReq
+{
+	uint64	gbId	=	1;
+	uint32	maxScoreInTreadStarterIngredients	=	2;	//踩曲最高分
+}
+
+message	MaxScoreInCellarFermentationSyncReq
+{
+	uint64	gbId	=	1;
+	uint32	maxScoreInCellarFermentation	=	2;		//入窖发酵最高分
+}
+
+message SetMiniGameInfoReq
+{
+	uint64	gbId	=	1;
+	uint32	gameId  =	2;	
+	uint32	maxScore    =	3;	
+}
+
+message	PlayerGetDigitalCollectionReq
+{
+	uint64	gbId	=	1;
+	uint32	digitalCollection	=	2;		//
+	uint64	digitalCollectionNo	=	3;		//
+}
+
+message	CreateAvatarInfoReq
+{
+	uint64	gbId	=	1;
+	string	name	=	2;
+	uint32	sex	=	3;
+	uint32	avatarPhoto	=	4;
+	string	appearance	=	5;
+}
+
+message	AppearanceChangeReq
+{
+	uint64	gbId	=	1;
+	string	appearance	=	2;
+}
+
+message AvatarPhotoChangeReq
+{
+	uint64	gbId	=	1;
+	uint32  avatarPhoto =	2;
+}
+
+message PersonalInfoSyncedReply
+{
+	uint64	gbId	=	1;
+}
+
+//中心服务器向游戏服提供的rpc
+service	PersonalInfoServer
+{
+    rpc activeTick(Void) returns(Void);
+	rpc	createAvatarInfoReq						(CreateAvatarInfoReq						)	returns(Void);
+	rpc	setPlayerToken							(PlayerTokenReq								)	returns(Void);
+	rpc	setMakeMaoTai500Num						(MakeMaoTai500NumSyncReq					)	returns(Void);	
+	rpc	setMakeMaoTai100Num						(MakeMaoTai100NumSyncReq					)	returns(Void);	
+	rpc	setClothesNum							(ClothesNumSyncReq							)	returns(Void);	
+	rpc	setTop1000InBrewWineNum					(Top1000InBrewWineNumSyncReq				)	returns(Void);
+	rpc	setXiaoXunLevel							(XiaoXunLevelSyncReq						)	returns(Void);
+	rpc	setXiaoXunFavorabilityNum				(XiaoXunFavorabilityNumSyncReq				)	returns(Void);	
+	rpc	setXiaoXunClothesNum					(XiaoXunClothesNumSyncReq					)	returns(Void);
+	rpc	setMiniGameInfoReq          			(SetMiniGameInfoReq		                    )	returns(Void);
+	rpc	onPlayerGetDigitalCollectionReq		    (PlayerGetDigitalCollectionReq				)	returns(Void);
+	rpc	onAppearanceChangeReq					(AppearanceChangeReq						)	returns(Void);
+	rpc	onAvatarPhotoChangeReq			    	(AvatarPhotoChangeReq						)	returns(Void);
+}
+
+//游戏服向中心服的rpc
+service	GameServer
+{
+    rpc activeTickCallback(Void) returns(Void);
+    rpc avatarPersonalInfoSynced(PersonalInfoSyncedReply) returns(Void);
+}

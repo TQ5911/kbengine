@@ -1,0 +1,10 @@
+<root>
+    <BaseMethods>
+        <doNext>
+        </doNext>
+
+        <doLast>
+        </doLast>
+    </BaseMethods>
+</root>
+

@@ -1,0 +1,553 @@
+
+<root>
+    <Properties>
+        <bodyEquipData>
+            <Type>          BODY_EQUIP_INFO     </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Persistent>    true                </Persistent>
+        </bodyEquipData>
+        <equipSetLv>
+            <Type>          UINT8           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </equipSetLv>
+        <maxEquipSetLv>
+            <Type>          UINT8           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </maxEquipSetLv>
+        <baseMaxEquipSetLv>
+            <Type>          UINT8           </Type>
+            <Flags>         BASE            </Flags>
+        </baseMaxEquipSetLv>
+        <baseEquipEncExtraTimesList>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+        </baseEquipEncExtraTimesList>
+        <cellEquipEncExtraTimesList>
+            <Type>          PY_LIST         </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </cellEquipEncExtraTimesList>
+        <baseBodyEquipDressDataDic>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+        </baseBodyEquipDressDataDic>
+        <equipWashNum>
+            <Type>          UINT8           </Type>
+            <Flags>         BASE_AND_CLIENT    </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </equipWashNum>
+
+        <equipDropData>
+            <Type>          EQUIP_DROP_MGR_DATA_INFO    </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    true                        </Persistent>
+        </equipDropData>
+
+        <pickDropEquipLockTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </pickDropEquipLockTime>
+    </Properties>
+
+    <BaseMethods>
+        <baseEquipDeductItems>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       UUID        </Arg>
+            <Arg>       BONUS_SRC   </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       ENTITYCALL  </Arg>
+            <Arg>       METHOD_NAME </Arg>
+            <Arg>       METHOD_ARGS </Arg>
+            <Arg>       BOOL        </Arg>
+            <Arg>       BOOL        </Arg>
+        </baseEquipDeductItems>
+
+        <dressEquipment><Exposed/>
+            <Arg>       UINT32      </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       SLOT_ID     </Arg>
+        </dressEquipment>
+
+        <dressEquipmentCB>
+            <Arg>       UINT64      </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       PYTHON      </Arg>
+        </dressEquipmentCB>
+
+        <replaceEquipment>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       ITEM_VAL                </Arg>
+        </replaceEquipment>
+
+        <bagEquipEnhance>
+            <Arg>       GRIDID     </Arg>
+            <Arg>       UUID       </Arg>
+            <Arg>       UINT32     </Arg>
+            <Arg>       BOOL       </Arg>
+            <Arg>       UINT8      </Arg>
+        </bagEquipEnhance>
+
+        <bagEquipEnhanceDeductItemsCB>
+            <Arg>       OP_STAT     </Arg>
+            <Arg>       UUID       </Arg>
+            <Arg>       GRIDID     </Arg>
+            <Arg>       UINT32     </Arg>
+            <Arg>       UINT8      </Arg>
+        </bagEquipEnhanceDeductItemsCB>
+
+        <undressEquipment><Exposed/>
+            <Arg>       UINT32      </Arg>
+        </undressEquipment>
+
+        <cellUndressEquipmentFail>
+            <Arg>   SLOT_ID     </Arg>
+            <Arg>   UNICODE     </Arg>
+        </cellUndressEquipmentFail>
+
+        <cellUndressEquipmentSucc>
+            <Arg>   ITEM_VAL     </Arg>
+        </cellUndressEquipmentSucc>
+
+        <bagEquipAffixWashing>
+            <Arg>      GRIDID    </Arg>
+            <Arg>      UUID      </Arg>
+        </bagEquipAffixWashing>
+        <bagEquipAffixWashingDeductItemsCB>
+            <Arg>      OP_STAT    </Arg>
+            <Arg>      UUID    </Arg>
+            <Arg>      GRIDID     </Arg>
+        </bagEquipAffixWashingDeductItemsCB>
+
+        <bagEquipGlyphWashing>
+            <Arg>      GRIDID    </Arg>
+            <Arg>      UUID      </Arg>
+        </bagEquipGlyphWashing>
+
+        <bagEquipBless>
+            <Arg>      GRIDID    </Arg>
+            <Arg>      UUID      </Arg>
+        </bagEquipBless>
+
+        <bagEquipBackBless>
+            <Arg>      GRIDID    </Arg>
+            <Arg>      UUID      </Arg>
+        </bagEquipBackBless>
+
+        <bagEquipWashAssessment>
+            <Arg>      GRIDID    </Arg>
+            <Arg>      UUID      </Arg>
+            <Arg>      GRIDID    </Arg>
+        </bagEquipWashAssessment>
+
+        <bagEquipDisassemble>
+            <Arg>      UINT32   </Arg>
+            <Arg>      UINT64   </Arg>
+        </bagEquipDisassemble>
+        <bagEquipSell>
+            <Arg>      UINT32   </Arg>
+            <Arg>      UINT64   </Arg>
+        </bagEquipSell>
+
+        <reqMultiEquipDisassemble> <Exposed/>
+            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
+            <Arg>      ARRAY <of> UUID </of>  </Arg>
+        </reqMultiEquipDisassemble>
+
+        <gmBaseDressEquipsByQuality>
+            <Arg>      UINT8    </Arg>
+            <Arg>      UINT8    </Arg>
+            <Arg>      PY_LIST  </Arg>
+        </gmBaseDressEquipsByQuality>
+
+        <gmBaseDressEquips>
+            <Arg>      PY_LIST  </Arg>
+        </gmBaseDressEquips>
+
+        <updateAccountCharacterAppearance>
+            <Arg>      PY_DICT  </Arg>
+        </updateAccountCharacterAppearance>
+        <makeEquipmentLostLog>
+            <Arg>      UINT32       </Arg>
+            <Arg>      ITEM_VAL     </Arg>
+        </makeEquipmentLostLog>
+        <makeEquipmentEnhanceLog>
+            <Arg>      ITEM_ID      </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT8        </Arg>
+            <Arg>      UINT8        </Arg>
+            <Arg>      UINT8        </Arg>
+            <Arg>      FLOAT        </Arg>
+            <Arg>      BOOL         </Arg>
+            <Arg>      UINT8        </Arg>
+        </makeEquipmentEnhanceLog>
+        <makeEquipmentAffixWashingLog>
+            <Arg>      ITEM_ID       </Arg>
+            <Arg>      UUID          </Arg>
+            <Arg>      PY_DICT       </Arg>
+        </makeEquipmentAffixWashingLog>
+        <updateBodyEquipDressData>
+            <Arg>      PY_DICT       </Arg>
+        </updateBodyEquipDressData>
+        <updateMaxEquipSetLv>
+            <Arg>      UINT8        </Arg>
+        </updateMaxEquipSetLv>
+
+        <reqMakeEquipment> <Exposed/>
+            <Arg>      ITEM_ID      </Arg>
+            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
+        </reqMakeEquipment>
+
+        <onDropEquipBase>
+            <Arg>      UNIQUE_ID            </Arg>
+            <Arg>      UINT32               </Arg>
+            <Arg>      SPACE_NO             </Arg>
+            <Arg>      POSITION_ARG         </Arg>
+            <Arg>       PYTHON              </Arg>
+            <Arg>       LONGTIME            </Arg>
+            <Arg>       UNICODE             </Arg>
+            <Arg>       LONGTIME            </Arg>
+            <Arg>       BLOB                </Arg>
+            <Arg>       OBJECT_ID           </Arg>
+        </onDropEquipBase>
+
+        <onGetBackDropEquip>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       BLOB                </Arg>
+            <Arg>       BOOL                </Arg>
+        </onGetBackDropEquip>
+
+        <onTakeDropEquipSuccess>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       BLOB                </Arg>
+            <Arg>       LONGTIME            </Arg>
+            <Arg>       UINT32              </Arg>
+        </onTakeDropEquipSuccess>
+
+        <giveUpDropEquip> <Exposed/>
+            <Arg>       UNIQUE_ID           </Arg>
+        </giveUpDropEquip>
+
+        <redeemEquipDrop> <Exposed/>
+            <Arg>       UNIQUE_ID           </Arg>
+        </redeemEquipDrop>
+
+        <onRedeemResult>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       UINT8               </Arg>
+        </onRedeemResult>
+
+        <onDropTypeChangeToAvatar>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       UINT8               </Arg>
+        </onDropTypeChangeToAvatar>
+
+        <onGetDropTakeReward>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       UINT32              </Arg>
+        </onGetDropTakeReward>
+
+        <onGetDropInfo>
+            <Arg>       PYTHON              </Arg>
+            <Arg>       PYTHON              </Arg>
+        </onGetDropInfo>
+
+        <takeEquipBase>
+            <Arg>       UNIQUE_ID           </Arg>
+        </takeEquipBase>
+
+        <getTakerWaitReward> <Exposed/>
+            <Arg>       UNIQUE_ID           </Arg>
+        </getTakerWaitReward>
+
+        <onGiveUpDropEquip>
+            <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       UINT8               </Arg>
+            <Arg>       PLAYER_GBID         </Arg>
+        </onGiveUpDropEquip>
+
+        <onFetchOtherGiveUpEquip>
+            <Arg>      UNIQUE_ID                    </Arg>
+            <Arg>      BLOB                         </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      LONGTIME                     </Arg>
+        </onFetchOtherGiveUpEquip>
+
+        <onRemoveDropEquip>
+            <Arg>      UNIQUE_ID           </Arg>
+            <Arg>      UINT8               </Arg>
+            <Arg>      UINT8               </Arg>
+            <Arg>      OBJECT_ID           </Arg>
+        </onRemoveDropEquip>
+
+        <onOtherRemoveDropEquip>
+            <Arg>      UNIQUE_ID           </Arg>
+        </onOtherRemoveDropEquip>
+
+        <onTakeDropEquipFailed>
+            <Arg>      UNIQUE_ID           </Arg>
+            <Arg>      UINT8               </Arg>
+        </onTakeDropEquipFailed>
+
+        <onDropEquipExpire>
+            <Arg>      UNIQUE_ID           </Arg>
+            <Arg>      UINT8               </Arg>
+        </onDropEquipExpire>
+
+        <onAddDropNotify>
+        </onAddDropNotify>
+
+        <onGetDropNotifyList>
+            <Arg>      ARRAY <of> DROP_NOTIFY_DATA_INFO </of> </Arg>
+        </onGetDropNotifyList>
+
+        <reqEquipReplace> <Exposed/>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UINT64       </Arg>
+            <Arg>      BOOL         </Arg>
+        </reqEquipReplace>
+    </BaseMethods>
+
+    <CellMethods>
+        <reqSetEquipSuitHide> <Exposed/>
+            <Arg>      BOOL    </Arg>
+        </reqSetEquipSuitHide>
+        <cellDressEquipment>
+            <Arg>   UUID            </Arg>
+            <Arg>   ITEM_VAL        </Arg>
+            <Arg>   SLOT_ID         </Arg>
+        </cellDressEquipment>
+        <cellUndressEquipment>
+            <Arg>   UINT32          </Arg>
+        </cellUndressEquipment>
+        <reqEquipEnhance> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      GRIDID  </Arg>
+            <Arg>      UINT64  </Arg>
+            <Arg>      UINT32  </Arg>
+            <Arg>      BOOL    </Arg>
+        </reqEquipEnhance>
+        <cellEquipEnhance>
+            <Arg>   UINT8      </Arg>
+            <Arg>   UUID       </Arg>
+            <Arg>   UINT32     </Arg>
+            <Arg>   UINT32     </Arg>
+        </cellEquipEnhance>
+
+        <unlockBodyEquips>
+        </unlockBodyEquips>
+
+        <onChangeEnhanceWithSpirit>
+            <Arg>   INT32   </Arg>
+        </onChangeEnhanceWithSpirit>
+
+        <reqEquipAffixWashing> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT32  </Arg>
+            <Arg>      UINT64  </Arg>
+        </reqEquipAffixWashing>
+        <cellEquipAffixWashing>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UUID      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT64      </Arg>
+        </cellEquipAffixWashing>
+
+        <reqEquipGlyphWashing> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT32  </Arg>
+            <Arg>      UINT64  </Arg>
+        </reqEquipGlyphWashing>
+        <cellEquipGlyphWashing>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UUID      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT64      </Arg>
+        </cellEquipGlyphWashing>
+
+        <reqEquipBless> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT32  </Arg>
+            <Arg>      UINT64  </Arg>
+        </reqEquipBless>
+
+        <cellEquipBless>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UUID      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT64      </Arg>
+        </cellEquipBless>
+
+        <reqEquipBackBless> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT32  </Arg>
+            <Arg>      UINT64  </Arg>
+        </reqEquipBackBless>
+
+        <reqEquipWashAssessment> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT32  </Arg>
+            <Arg>      UINT64  </Arg>
+            <Arg>      GRIDID  </Arg>
+        </reqEquipWashAssessment>
+
+        <cellEquipWashAssessment>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UUID      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT64      </Arg>
+        </cellEquipWashAssessment>
+
+        <reqEquipSell> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT32  </Arg>
+            <Arg>      UINT64  </Arg>
+        </reqEquipSell>
+
+        <sendItemLinkInfoCell>
+            <Arg>      ENTITYCALL   </Arg>
+            <Arg>      UINT64       </Arg>
+            <Arg>      UINT32       </Arg>
+        </sendItemLinkInfoCell>
+    </CellMethods>
+
+    <ClientMethods>
+
+        <onDressEquipment>
+            <Arg>      CLIENT_BODY_EQUIP_ITEM_VAL  </Arg>
+        </onDressEquipment>
+
+        <onUndressEquipment>
+            <Arg>      UINT32     </Arg>
+        </onUndressEquipment>
+
+        <onEquipEnhanceSucc>
+            <Arg>      UINT8                </Arg>
+            <Arg>      GRIDID               </Arg>
+            <Arg>      UINT8                </Arg>
+            <Arg>      UINT8                </Arg>
+        </onEquipEnhanceSucc>
+
+        <onEquipEnhanceFailed>
+            <Arg>      UINT8                </Arg>
+            <Arg>      GRIDID               </Arg>
+        </onEquipEnhanceFailed>
+
+        <onEquipBaseAttrWashingSucc>
+            <Arg>      UINT8                </Arg>
+            <Arg>      GRIDID               </Arg>
+            <Arg>      CLI_EQUIP_ITEM_VAL   </Arg>
+        </onEquipBaseAttrWashingSucc>
+
+        <onEquipAffixWashingSucc>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+            <Arg>      ARRAY <of>  AFFIX_VAL </of> </Arg>
+            <Arg>      UINT8    </Arg>
+        </onEquipAffixWashingSucc>
+
+        <onEquipGlyphWashingSucc>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+            <Arg>      ARRAY <of>  AFFIX_VAL </of> </Arg>
+        </onEquipGlyphWashingSucc>
+
+        <onEquipBlessSucc>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+            <Arg>      ARRAY <of>  AFFIX_VAL </of> </Arg>
+            <Arg>      UINT8    </Arg>
+            <Arg>      UINT16   </Arg>
+        </onEquipBlessSucc>
+
+        <onEquipBackBlessSucc>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+            <Arg>      ARRAY <of>  AFFIX_VAL </of> </Arg>
+            <Arg>      UINT8    </Arg>
+            <Arg>      UINT16   </Arg>
+        </onEquipBackBlessSucc>
+
+        <onEquipWashAssessmentSucc>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+            <Arg>      UINT8    </Arg>
+        </onEquipWashAssessmentSucc>
+
+        <onEquipDisassemble>
+            <Arg>      UINT8    </Arg>
+            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
+            <Arg>      ARRAY <of> UUID </of>  </Arg>
+        </onEquipDisassemble>
+
+        <onEquipSell>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+            <Arg>      UUID     </Arg>
+        </onEquipSell>
+
+        <onAvatarEquipSetChanged>
+            <Arg>      ENTITY_ID        </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      BOOL             </Arg>
+        </onAvatarEquipSetChanged>
+        <onAffixWashingFailed>
+        </onAffixWashingFailed>
+        <onBodyEquipDailyUpdate>
+            <Arg>      ARRAY <of> SLOT_ID </of>    </Arg>
+        </onBodyEquipDailyUpdate>
+
+        <onSwapEquipEnhanceSucc>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+            <Arg>      CLI_EQUIP_ITEM_VAL </Arg>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+            <Arg>      CLI_EQUIP_ITEM_VAL </Arg>
+        </onSwapEquipEnhanceSucc>
+
+        <onSwapEquipEnhanceFailed>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+            <Arg>      UINT8    </Arg>
+            <Arg>      GRIDID   </Arg>
+        </onSwapEquipEnhanceFailed>
+        <onFirstUnlockEquipSet>
+            <Arg>      UINT8    </Arg>
+            <Arg>      BOOL     </Arg>
+        </onFirstUnlockEquipSet>
+
+        <onPickNewEquipDrop>
+            <Arg>      EQUIP_DROP_TAKER_DATA_INFO   </Arg>
+        </onPickNewEquipDrop>
+
+        <onRemovePickEquipDrop>
+            <Arg>      UNIQUE_ID                    </Arg>
+        </onRemovePickEquipDrop>
+
+        <onAddNewEquipDrop>
+            <Arg>      EQUIP_DROP_DATA_INFO         </Arg>
+        </onAddNewEquipDrop>
+
+        <onRemoveEquipDrop>
+            <Arg>      UNIQUE_ID                    </Arg>
+        </onRemoveEquipDrop>
+
+        <onInitEquipDropData>
+            <Arg>      EQUIP_DROP_MGR_DATA_INFO     </Arg>
+        </onInitEquipDropData>
+
+        <onEquipDropStateChange>
+            <Arg>      UNIQUE_ID                    </Arg>
+            <Arg>      UINT8                        </Arg>
+        </onEquipDropStateChange>
+    </ClientMethods>
+</root>
+

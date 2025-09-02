@@ -1,0 +1,18 @@
+<root>
+    <Interfaces>
+        <Interface>     iStaticSpaceMgr         </Interface>
+    </Interfaces>
+
+    <Properties>
+    </Properties>
+
+    <CellMethods>
+        <resetSiegeWarState>
+            <Arg>       PY_DICT     </Arg>
+        </resetSiegeWarState>
+
+        <onGetWinnerDataFromCityOwnerMgr>
+            <Arg>       PY_LIST     </Arg>
+        </onGetWinnerDataFromCityOwnerMgr>
+    </CellMethods>
+</root>

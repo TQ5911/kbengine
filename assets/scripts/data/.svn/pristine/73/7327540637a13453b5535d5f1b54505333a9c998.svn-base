@@ -1,0 +1,230 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: gearEnhance/gearconst
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    "strengtheningFormula": _tools.RODict({
+        "ID": "strengtheningFormula",
+        "value": 34000003,
+    }),
+    "enhancedAdvancementLevel": _tools.RODict({
+        "ID": "enhancedAdvancementLevel",
+        "value": 5,
+    }),
+    "enhancedGrowthValue": _tools.RODict({
+        "ID": "enhancedGrowthValue",
+        "value": 100,
+    }),
+    "intervalWeight": _tools.RODict({
+        "ID": "intervalWeight",
+        "value": 34000004,
+    }),
+    "enhanceFailed": _tools.RODict({
+        "ID": "enhanceFailed",
+        "value": 54000057,
+    }),
+    "enhanceSuccess": _tools.RODict({
+        "ID": "enhanceSuccess",
+        "value": 54000058,
+    }),
+    "enhanceLuckySuccess": _tools.RODict({
+        "ID": "enhanceLuckySuccess",
+        "value": 54000059,
+    }),
+    "enhanceGreatFailed": _tools.RODict({
+        "ID": "enhanceGreatFailed",
+        "value": 54000060,
+    }),
+    "advancedTips": _tools.RODict({
+        "ID": "advancedTips",
+        "value": "进阶成功率{0}%",
+    }),
+    "advancedSuccessTitle": _tools.RODict({
+        "ID": "advancedSuccessTitle",
+        "value": "进阶成功",
+    }),
+    "glyphUnlockEnhLv": _tools.RODict({
+        "ID": "glyphUnlockEnhLv",
+        "value": (2, 5, 8),
+    }),
+    "glyphCraftNumWeights": _tools.RODict({
+        "ID": "glyphCraftNumWeights",
+        "value": (100, 10),
+    }),
+    "gearBlessMaxValue": _tools.RODict({
+        "ID": "gearBlessMaxValue",
+        "value": 7,
+    }),
+    "totalBlessMaxValue": _tools.RODict({
+        "ID": "totalBlessMaxValue",
+        "value": 9,
+    }),
+    "gearBlessSuccess": _tools.RODict({
+        "ID": "gearBlessSuccess",
+        "value": 54000064,
+    }),
+    "gearBlessFailed": _tools.RODict({
+        "ID": "gearBlessFailed",
+        "value": 54000065,
+    }),
+    "gearBlessGreatFailed": _tools.RODict({
+        "ID": "gearBlessGreatFailed",
+        "value": 54000066,
+    }),
+    "glyphSlotUnlockTips": _tools.RODict({
+        "ID": "glyphSlotUnlockTips",
+        "value": "强化{0}级解锁",
+    }),
+    "gearBlessBacktrack": _tools.RODict({
+        "ID": "gearBlessBacktrack",
+        "value": 54000078,
+    }),
+    "gearBlessCntBacktrack": _tools.RODict({
+        "ID": "gearBlessCntBacktrack",
+        "value": 54000079,
+    }),
+    "affixWashNumTask": _tools.RODict({
+        "ID": "affixWashNumTask",
+        "value": 86020003,
+    }),
+    "affixWashNumLimit": _tools.RODict({
+        "ID": "affixWashNumLimit",
+        "value": 9999,
+    }),
+    "msgId_addAffixWashNum": _tools.RODict({
+        "ID": "msgId_addAffixWashNum",
+        "value": 54000081,
+    }),
+    "msgId_affixWashNumLimit": _tools.RODict({
+        "ID": "msgId_affixWashNumLimit",
+        "value": 54000082,
+    }),
+    "rarityAffixWashConfirmMinLevel": _tools.RODict({
+        "ID": "rarityAffixWashConfirmMinLevel",
+        "value": 2,
+    }),
+    "msgId_rarityAffixWashConfirm": _tools.RODict({
+        "ID": "msgId_rarityAffixWashConfirm",
+        "value": 54000085,
+    }),
+    "spiritValueText": _tools.RODict({
+        "ID": "spiritValueText",
+        "value": "以上材料可转化为<color=#b35b00>{0}点</color>灵气",
+    }),
+    "addGearSpiritSuccess": _tools.RODict({
+        "ID": "addGearSpiritSuccess",
+        "value": 54000083,
+    }),
+    "affixWashNumNotEnough": _tools.RODict({
+        "ID": "affixWashNumNotEnough",
+        "value": "完成任务：{0}获得附灵次数",
+    }),
+    "affixWashNumTaskConfirm": _tools.RODict({
+        "ID": "affixWashNumTaskConfirm",
+        "value": 54000084,
+    }),
+    "gearButtonAction_enhance": _tools.RODict({
+        "ID": "gearButtonAction_enhance",
+        "value": "findNearestEntityByTempleteId,18000067",
+    }),
+    "gearButtonAction_rune": _tools.RODict({
+        "ID": "gearButtonAction_rune",
+        "value": "findNearestEntityByTempleteId,18000067",
+    }),
+    "gearButtonAction_bless": _tools.RODict({
+        "ID": "gearButtonAction_bless",
+        "value": "findNearestEntityByTempleteId,18000067",
+    }),
+    "gearButtonAction_identify": _tools.RODict({
+        "ID": "gearButtonAction_identify",
+        "value": "findNearestEntityByTempleteId,18000149",
+    }),
+    "gearButtonLimitID_enhance": _tools.RODict({
+        "ID": "gearButtonLimitID_enhance",
+        "value": 17,
+    }),
+    "gearButtonLimitID_rune": _tools.RODict({
+        "ID": "gearButtonLimitID_rune",
+        "value": 17,
+    }),
+    "gearButtonLimitID_bless": _tools.RODict({
+        "ID": "gearButtonLimitID_bless",
+        "value": 17,
+    }),
+    "gearButtonLimitID_identify": _tools.RODict({
+        "ID": "gearButtonLimitID_identify",
+        "value": 18,
+    }),
+    "gearStrengthenMax": _tools.RODict({
+        "ID": "gearStrengthenMax",
+        "value": (0, 3, 5, 10, 13, 13),
+    }),
+    "gearblessingBack": _tools.RODict({
+        "ID": "gearblessingBack",
+        "value": 54000243,
+    }),
+    "auction_slotLocked": _tools.RODict({
+        "ID": "auction_slotLocked",
+        "value": 54000244,
+    }),
+    "auction_slotLocked2": _tools.RODict({
+        "ID": "auction_slotLocked2",
+        "value": 54000245,
+    }),
+    "gearBacktrack_ValueLack": _tools.RODict({
+        "ID": "gearBacktrack_ValueLack",
+        "value": 54000246,
+    }),
+    "strengthenDes1": _tools.RODict({
+        "ID": "strengthenDes1",
+        "value": "强化失败时，强化等级保持不变",
+    }),
+    "strengthenDes2": _tools.RODict({
+        "ID": "strengthenDes2",
+        "value": "强化失败时，强化等级概率下降",
+    }),
+    "gearFuLing_AccessFailed": _tools.RODict({
+        "ID": "gearFuLing_AccessFailed",
+        "value": 54000247,
+    }),
+    "gearEnhance_noChoiceEquipmenr": _tools.RODict({
+        "ID": "gearEnhance_noChoiceEquipmenr",
+        "value": 54000248,
+    }),
+    "gearStrengthenLevel": _tools.RODict({
+        "ID": "gearStrengthenLevel",
+        "value": "强化+{0}",
+    }),
+    "gearFuLlingCost": _tools.RODict({
+        "ID": "gearFuLlingCost",
+        "value": "附灵需要消耗灵气值{0}",
+    }),
+    "gearBlessLevel": _tools.RODict({
+        "ID": "gearBlessLevel",
+        "value": "幸运值{0}",
+    }),
+    "equipFuLingReikiInsufficient": _tools.RODict({
+        "ID": "equipFuLingReikiInsufficient",
+        "value": 54000304,
+    }),
+    "equipExchangeNoEquipment": _tools.RODict({
+        "ID": "equipExchangeNoEquipment",
+        "value": 54000305,
+    }),
+    "gearFuLlingTaskEffects": _tools.RODict({
+        "ID": "gearFuLlingTaskEffects",
+        "value": 31960000,
+    })
+})

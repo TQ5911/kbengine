@@ -1,0 +1,110 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: cinemaPlay/cinemaPlay
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    98000001: _tools.RODict({
+        "ID": 98000001,
+        "cinemaTime": 5,
+        "event": "",
+        "parm": "",
+    }),
+    98000002: _tools.RODict({
+        "ID": 98000002,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000003: _tools.RODict({
+        "ID": 98000003,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000004: _tools.RODict({
+        "ID": 98000004,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000005: _tools.RODict({
+        "ID": 98000005,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000006: _tools.RODict({
+        "ID": 98000006,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000007: _tools.RODict({
+        "ID": 98000007,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000008: _tools.RODict({
+        "ID": 98000008,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000009: _tools.RODict({
+        "ID": 98000009,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000010: _tools.RODict({
+        "ID": 98000010,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000011: _tools.RODict({
+        "ID": 98000011,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000012: _tools.RODict({
+        "ID": 98000012,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000013: _tools.RODict({
+        "ID": 98000013,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000014: _tools.RODict({
+        "ID": 98000014,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98010001: _tools.RODict({
+        "ID": 98010001,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    })
+})
+minKey = 98000001
+maxKey = 98010001

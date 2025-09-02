@@ -1,0 +1,116 @@
+namespace KBEngine
+{
+    using UnityEngine;
+    using System;
+    using System.Collections.Generic;
+
+    public class EntityCommonProperty: Entity
+    {
+        public float adjCD = 0f;
+        public APPEARANCE_INFO appearance = new APPEARANCE_INFO();
+        public List<Byte> appearanceList = new List<Byte>();
+        public Byte autoCombat = 0;
+        public Byte avatarGuideState = 0;
+        public Byte bTeamCaptain = 0;
+        public UInt32 baitId = 0;
+        public Int32 barrierId = 0;
+        public Byte battleFieldCamp = 0;
+        public UInt32 belongActId = 0;
+        public string belongName = "";
+        public UInt64 belongTeamId = 0;
+        //public BIG_WORLD_DUEL_PLAYER_CACHE_VAL bigWorldDuelCacheInfo = new BIG_WORLD_DUEL_PLAYER_CACHE_VAL();
+        public UInt64 bindingCoin = 0;
+        public Int32 bindingMoney = 0;
+        public Byte bornState = 0;
+        public double bossDeadDisappearTime = 0d;
+        public SByte buildId = 0;
+        public Byte canGather = 1;
+        public UInt64 captureAvatar = 0;
+        public UInt64 casterTeamId = 0;
+        public float chargeSpeed = 0f;
+        public Int32 collectionId = 0;
+        public double createTime = 0d;
+        public Int32 creationId = 0;
+        public Int32 cropId = 0;
+        public string curEnterGuildName = "";
+        public UInt64 curEnterGuildUUID = 0;
+        public Int32 dialogId = 0;
+        public Byte dieWithHost = 0;
+        public Byte duelFlagVisible = 0;
+        public UInt64 duelUUID = 0;
+        public UInt64 exp = 0;
+        public UInt32 fishingRodId = 0;
+        public Byte followCaptain = 0;
+        public Int32 force = 0;
+        public Int32 fullHp = 0;
+        public Int32 fullMp = 0;
+        public Int64 gameEntityId = 0;
+        public UInt64 gbId = 0;
+        public List<byte> guideAppearanceList = new List<byte>();
+        public Int32 guideNpcId = 0;
+        public Byte guideNpcState = 0;
+        public uint guidePetId = 0;
+        public UInt64 guildBanditOwnerTeamId = 0;
+        public UInt32 guildSpaceNo = 0;
+        public UInt64 guildUUID = 0;
+        public UInt64 homeSpaceOwnerGbId = 0;
+        public UInt32 homeWhaleLevel = 0;
+        public Int32 hostId = 0;
+        public UInt64 hostTeamId = 0;
+        public Int32 hp = 0;
+        public Int32 idolumId = 0;
+        public Int32 index = 0;
+        public Byte isBling = 0;
+        public Byte isBoss = 0;
+        public Byte isCropThief = 0;
+        public Byte isSelectable = 0;
+        public Byte isWitnessComplete = 2;
+        public UInt32 level = 1;
+        public UInt64 lingShouGbId = 0;
+        public UInt32 lingShouId = 0;
+        public Int32 monsterId = 0;
+        public Byte moveAni = 0;
+        public Int32 mp = 0;
+        public float mpCostRatio = 1.0f;
+        public float mulCD = 0f;
+        public Byte multi = 0;
+        public string name = "";
+        public Int32 npcId = 0;
+        public UInt64 ownerGbId = 0;
+        public float percentage = 0f;
+        public Int32 petId = 0;
+        public Byte pkModel = 0;
+        public UInt32 pkProtect = 0;
+        public Int32 pointId = 0;
+        public Int32 provideBuffId = 0;
+        public Byte raidAuth = 0;
+        public UInt64 raidId = 0;
+        public UInt16 rechargeVal = 0;
+        public UInt32 redNameLeftTime = 0;
+        public Int32 reikiID = 0;
+        public UInt16 school = 0;
+        public Int32 selectedTargetId = 0;
+        public Byte sex = 1;
+        public Byte slotId = 0;
+        public Int32 soulCardPillarId = 0;
+        public UInt32 spaceNo = 0;
+		public UInt32 oldSpaceNo = 0;
+        public float speed = 0f;
+        public UInt32 startTime = 0;
+        public Int64 state = 1;
+        public Int64 state2 = 0;
+        public Int32 summonId = 0;
+        public UInt64 teamId = 0;
+        public Int32 teleporterId = 0;
+        public Int32 transformId = 0;
+        public UInt64 weeklyGetBattleFieldReputationNum = 0;
+        public Int32 huanhuaPetId = 0;
+        public List<byte> huanhuaAppearanceList = new List<byte>();
+        public Byte dunTimeFreezeFlag = 0;
+        public UInt32 stoleNum = 0;
+        public UInt32 appearanceId = 0;
+        
+        public virtual void OnModelViewLoad(ViewEntity ve) {}	
+
+    }
+}

@@ -1,0 +1,1000 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: gearEnhance/gearStrengthen
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    100: _tools.RODict({
+        "ID": 100,
+        "type": 1,
+        "level": 0,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
+        "costItem": ((30000223, 30),),
+        "costCurrency": ((30000013, 40),),
+        "slot": 0,
+        "strengProp": 0
+    }),
+    101: _tools.RODict({
+        "ID": 101,
+        "type": 1,
+        "level": 1,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
+        "costItem": ((30000223, 40),),
+        "costCurrency": ((30000013, 100),),
+        "slot": 0,
+        "strengProp": 52002001
+    }),
+    102: _tools.RODict({
+        "ID": 102,
+        "type": 1,
+        "level": 2,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
+        "costItem": ((30000223, 80),),
+        "costCurrency": ((30000013, 200),),
+        "slot": 1,
+        "strengProp": 52002002
+    }),
+    103: _tools.RODict({
+        "ID": 103,
+        "type": 1,
+        "level": 3,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
+        "costItem": ((30000223, 240),),
+        "costCurrency": ((30000013, 400),),
+        "slot": 1,
+        "strengProp": 52002003
+    }),
+    104: _tools.RODict({
+        "ID": 104,
+        "type": 1,
+        "level": 4,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
+        "costItem": ((30000224, 10),),
+        "costCurrency": ((30000013, 1200),),
+        "slot": 1,
+        "strengProp": 52002004
+    }),
+    105: _tools.RODict({
+        "ID": 105,
+        "type": 1,
+        "level": 5,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
+        "costItem": ((30000224, 40),),
+        "costCurrency": ((30000013, 2400),),
+        "slot": 2,
+        "strengProp": 52002005
+    }),
+    106: _tools.RODict({
+        "ID": 106,
+        "type": 1,
+        "level": 6,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
+        "costItem": ((30000224, 80),),
+        "costCurrency": ((30000013, 4800),),
+        "slot": 2,
+        "strengProp": 52002006
+    }),
+    107: _tools.RODict({
+        "ID": 107,
+        "type": 1,
+        "level": 7,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
+        "costItem": ((30000224, 120),),
+        "costCurrency": ((30000013, 7200),),
+        "slot": 2,
+        "strengProp": 52002007
+    }),
+    108: _tools.RODict({
+        "ID": 108,
+        "type": 1,
+        "level": 8,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
+        "costItem": ((30000225, 6),),
+        "costCurrency": ((30000013, 21600),),
+        "slot": 3,
+        "strengProp": 52002008
+    }),
+    109: _tools.RODict({
+        "ID": 109,
+        "type": 1,
+        "level": 9,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
+        "costItem": ((30000225, 12),),
+        "costCurrency": ((30000013, 58000),),
+        "slot": 3,
+        "strengProp": 52002009
+    }),
+    110: _tools.RODict({
+        "ID": 110,
+        "type": 1,
+        "level": 10,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
+        "costItem": ((30000225, 24),),
+        "costCurrency": ((30000013, 115000),),
+        "slot": 3,
+        "strengProp": 52002010
+    }),
+    111: _tools.RODict({
+        "ID": 111,
+        "type": 1,
+        "level": 11,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
+        "costItem": ((30000226, 4),),
+        "costCurrency": ((30000013, 230000),),
+        "slot": 3,
+        "strengProp": 52002011
+    }),
+    112: _tools.RODict({
+        "ID": 112,
+        "type": 1,
+        "level": 12,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
+        "costItem": ((30000226, 8),),
+        "costCurrency": ((30000013, 460000),),
+        "slot": 3,
+        "strengProp": 52002012
+    }),
+    113: _tools.RODict({
+        "ID": 113,
+        "type": 1,
+        "level": 13,
+        "effect": 0,
+        "costItem": 0,
+        "costCurrency": ((30000013, 0),),
+        "slot": 3,
+        "strengProp": 52002013
+    }),
+    200: _tools.RODict({
+        "ID": 200,
+        "type": 2,
+        "level": 0,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
+        "costItem": ((30000223, 30),),
+        "costCurrency": ((30000013, 40),),
+        "slot": 0,
+        "strengProp": 0
+    }),
+    201: _tools.RODict({
+        "ID": 201,
+        "type": 2,
+        "level": 1,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
+        "costItem": ((30000223, 40),),
+        "costCurrency": ((30000013, 100),),
+        "slot": 0,
+        "strengProp": 52002014
+    }),
+    202: _tools.RODict({
+        "ID": 202,
+        "type": 2,
+        "level": 2,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
+        "costItem": ((30000223, 80),),
+        "costCurrency": ((30000013, 200),),
+        "slot": 1,
+        "strengProp": 52002015
+    }),
+    203: _tools.RODict({
+        "ID": 203,
+        "type": 2,
+        "level": 3,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
+        "costItem": ((30000223, 240),),
+        "costCurrency": ((30000013, 400),),
+        "slot": 1,
+        "strengProp": 52002016
+    }),
+    204: _tools.RODict({
+        "ID": 204,
+        "type": 2,
+        "level": 4,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
+        "costItem": ((30000224, 10),),
+        "costCurrency": ((30000013, 1200),),
+        "slot": 1,
+        "strengProp": 52002017
+    }),
+    205: _tools.RODict({
+        "ID": 205,
+        "type": 2,
+        "level": 5,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
+        "costItem": ((30000224, 40),),
+        "costCurrency": ((30000013, 2400),),
+        "slot": 2,
+        "strengProp": 52002018
+    }),
+    206: _tools.RODict({
+        "ID": 206,
+        "type": 2,
+        "level": 6,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
+        "costItem": ((30000224, 80),),
+        "costCurrency": ((30000013, 4800),),
+        "slot": 2,
+        "strengProp": 52002019
+    }),
+    207: _tools.RODict({
+        "ID": 207,
+        "type": 2,
+        "level": 7,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
+        "costItem": ((30000224, 120),),
+        "costCurrency": ((30000013, 7200),),
+        "slot": 2,
+        "strengProp": 52002020
+    }),
+    208: _tools.RODict({
+        "ID": 208,
+        "type": 2,
+        "level": 8,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
+        "costItem": ((30000225, 6),),
+        "costCurrency": ((30000013, 21600),),
+        "slot": 3,
+        "strengProp": 52002021
+    }),
+    209: _tools.RODict({
+        "ID": 209,
+        "type": 2,
+        "level": 9,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
+        "costItem": ((30000225, 12),),
+        "costCurrency": ((30000013, 58000),),
+        "slot": 3,
+        "strengProp": 52002022
+    }),
+    210: _tools.RODict({
+        "ID": 210,
+        "type": 2,
+        "level": 10,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
+        "costItem": ((30000225, 24),),
+        "costCurrency": ((30000013, 115000),),
+        "slot": 3,
+        "strengProp": 52002023
+    }),
+    211: _tools.RODict({
+        "ID": 211,
+        "type": 2,
+        "level": 11,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
+        "costItem": ((30000226, 4),),
+        "costCurrency": ((30000013, 230000),),
+        "slot": 3,
+        "strengProp": 52002024
+    }),
+    212: _tools.RODict({
+        "ID": 212,
+        "type": 2,
+        "level": 12,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
+        "costItem": ((30000226, 8),),
+        "costCurrency": ((30000013, 460000),),
+        "slot": 3,
+        "strengProp": 52002025
+    }),
+    213: _tools.RODict({
+        "ID": 213,
+        "type": 2,
+        "level": 13,
+        "effect": 0,
+        "costItem": 0,
+        "costCurrency": ((30000013, 0),),
+        "slot": 3,
+        "strengProp": 52002026
+    }),
+    300: _tools.RODict({
+        "ID": 300,
+        "type": 3,
+        "level": 0,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
+        "costItem": ((30000223, 30),),
+        "costCurrency": ((30000013, 40),),
+        "slot": 0,
+        "strengProp": 0
+    }),
+    301: _tools.RODict({
+        "ID": 301,
+        "type": 3,
+        "level": 1,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
+        "costItem": ((30000223, 40),),
+        "costCurrency": ((30000013, 100),),
+        "slot": 0,
+        "strengProp": 52002027
+    }),
+    302: _tools.RODict({
+        "ID": 302,
+        "type": 3,
+        "level": 2,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
+        "costItem": ((30000223, 80),),
+        "costCurrency": ((30000013, 200),),
+        "slot": 1,
+        "strengProp": 52002028
+    }),
+    303: _tools.RODict({
+        "ID": 303,
+        "type": 3,
+        "level": 3,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
+        "costItem": ((30000223, 240),),
+        "costCurrency": ((30000013, 400),),
+        "slot": 1,
+        "strengProp": 52002029
+    }),
+    304: _tools.RODict({
+        "ID": 304,
+        "type": 3,
+        "level": 4,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
+        "costItem": ((30000224, 10),),
+        "costCurrency": ((30000013, 1200),),
+        "slot": 1,
+        "strengProp": 52002030
+    }),
+    305: _tools.RODict({
+        "ID": 305,
+        "type": 3,
+        "level": 5,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
+        "costItem": ((30000224, 40),),
+        "costCurrency": ((30000013, 2400),),
+        "slot": 2,
+        "strengProp": 52002031
+    }),
+    306: _tools.RODict({
+        "ID": 306,
+        "type": 3,
+        "level": 6,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
+        "costItem": ((30000224, 80),),
+        "costCurrency": ((30000013, 4800),),
+        "slot": 2,
+        "strengProp": 52002032
+    }),
+    307: _tools.RODict({
+        "ID": 307,
+        "type": 3,
+        "level": 7,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
+        "costItem": ((30000224, 120),),
+        "costCurrency": ((30000013, 7200),),
+        "slot": 2,
+        "strengProp": 52002033
+    }),
+    308: _tools.RODict({
+        "ID": 308,
+        "type": 3,
+        "level": 8,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
+        "costItem": ((30000225, 6),),
+        "costCurrency": ((30000013, 21600),),
+        "slot": 3,
+        "strengProp": 52002034
+    }),
+    309: _tools.RODict({
+        "ID": 309,
+        "type": 3,
+        "level": 9,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
+        "costItem": ((30000225, 12),),
+        "costCurrency": ((30000013, 58000),),
+        "slot": 3,
+        "strengProp": 52002035
+    }),
+    310: _tools.RODict({
+        "ID": 310,
+        "type": 3,
+        "level": 10,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
+        "costItem": ((30000225, 24),),
+        "costCurrency": ((30000013, 115000),),
+        "slot": 3,
+        "strengProp": 52002036
+    }),
+    311: _tools.RODict({
+        "ID": 311,
+        "type": 3,
+        "level": 11,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
+        "costItem": ((30000226, 4),),
+        "costCurrency": ((30000013, 230000),),
+        "slot": 3,
+        "strengProp": 52002037
+    }),
+    312: _tools.RODict({
+        "ID": 312,
+        "type": 3,
+        "level": 12,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
+        "costItem": ((30000226, 8),),
+        "costCurrency": ((30000013, 460000),),
+        "slot": 3,
+        "strengProp": 52002038
+    }),
+    313: _tools.RODict({
+        "ID": 313,
+        "type": 3,
+        "level": 13,
+        "effect": 0,
+        "costItem": 0,
+        "costCurrency": ((30000013, 0),),
+        "slot": 3,
+        "strengProp": 52002039
+    }),
+    400: _tools.RODict({
+        "ID": 400,
+        "type": 4,
+        "level": 0,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
+        "costItem": ((30000223, 30),),
+        "costCurrency": ((30000013, 40),),
+        "slot": 0,
+        "strengProp": 0
+    }),
+    401: _tools.RODict({
+        "ID": 401,
+        "type": 4,
+        "level": 1,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
+        "costItem": ((30000223, 40),),
+        "costCurrency": ((30000013, 100),),
+        "slot": 0,
+        "strengProp": 52002040
+    }),
+    402: _tools.RODict({
+        "ID": 402,
+        "type": 4,
+        "level": 2,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
+        "costItem": ((30000223, 80),),
+        "costCurrency": ((30000013, 200),),
+        "slot": 1,
+        "strengProp": 52002041
+    }),
+    403: _tools.RODict({
+        "ID": 403,
+        "type": 4,
+        "level": 3,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
+        "costItem": ((30000223, 240),),
+        "costCurrency": ((30000013, 400),),
+        "slot": 1,
+        "strengProp": 52002042
+    }),
+    404: _tools.RODict({
+        "ID": 404,
+        "type": 4,
+        "level": 4,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
+        "costItem": ((30000224, 10),),
+        "costCurrency": ((30000013, 1200),),
+        "slot": 1,
+        "strengProp": 52002043
+    }),
+    405: _tools.RODict({
+        "ID": 405,
+        "type": 4,
+        "level": 5,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
+        "costItem": ((30000224, 40),),
+        "costCurrency": ((30000013, 2400),),
+        "slot": 2,
+        "strengProp": 52002044
+    }),
+    406: _tools.RODict({
+        "ID": 406,
+        "type": 4,
+        "level": 6,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
+        "costItem": ((30000224, 80),),
+        "costCurrency": ((30000013, 4800),),
+        "slot": 2,
+        "strengProp": 52002045
+    }),
+    407: _tools.RODict({
+        "ID": 407,
+        "type": 4,
+        "level": 7,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
+        "costItem": ((30000224, 120),),
+        "costCurrency": ((30000013, 7200),),
+        "slot": 2,
+        "strengProp": 52002046
+    }),
+    408: _tools.RODict({
+        "ID": 408,
+        "type": 4,
+        "level": 8,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
+        "costItem": ((30000225, 6),),
+        "costCurrency": ((30000013, 21600),),
+        "slot": 3,
+        "strengProp": 52002047
+    }),
+    409: _tools.RODict({
+        "ID": 409,
+        "type": 4,
+        "level": 9,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
+        "costItem": ((30000225, 12),),
+        "costCurrency": ((30000013, 58000),),
+        "slot": 3,
+        "strengProp": 52002048
+    }),
+    410: _tools.RODict({
+        "ID": 410,
+        "type": 4,
+        "level": 10,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
+        "costItem": ((30000225, 24),),
+        "costCurrency": ((30000013, 115000),),
+        "slot": 3,
+        "strengProp": 52002049
+    }),
+    411: _tools.RODict({
+        "ID": 411,
+        "type": 4,
+        "level": 11,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
+        "costItem": ((30000226, 4),),
+        "costCurrency": ((30000013, 230000),),
+        "slot": 3,
+        "strengProp": 52002050
+    }),
+    412: _tools.RODict({
+        "ID": 412,
+        "type": 4,
+        "level": 12,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
+        "costItem": ((30000226, 8),),
+        "costCurrency": ((30000013, 460000),),
+        "slot": 3,
+        "strengProp": 52002051
+    }),
+    413: _tools.RODict({
+        "ID": 413,
+        "type": 4,
+        "level": 13,
+        "effect": 0,
+        "costItem": 0,
+        "costCurrency": ((30000013, 0),),
+        "slot": 3,
+        "strengProp": 52002052
+    }),
+    500: _tools.RODict({
+        "ID": 500,
+        "type": 5,
+        "level": 0,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
+        "costItem": ((30000223, 30),),
+        "costCurrency": ((30000013, 40),),
+        "slot": 0,
+        "strengProp": 0
+    }),
+    501: _tools.RODict({
+        "ID": 501,
+        "type": 5,
+        "level": 1,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
+        "costItem": ((30000223, 40),),
+        "costCurrency": ((30000013, 100),),
+        "slot": 0,
+        "strengProp": 52002079
+    }),
+    502: _tools.RODict({
+        "ID": 502,
+        "type": 5,
+        "level": 2,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
+        "costItem": ((30000223, 80),),
+        "costCurrency": ((30000013, 200),),
+        "slot": 1,
+        "strengProp": 52002080
+    }),
+    503: _tools.RODict({
+        "ID": 503,
+        "type": 5,
+        "level": 3,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
+        "costItem": ((30000223, 240),),
+        "costCurrency": ((30000013, 400),),
+        "slot": 1,
+        "strengProp": 52002081
+    }),
+    504: _tools.RODict({
+        "ID": 504,
+        "type": 5,
+        "level": 4,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
+        "costItem": ((30000224, 10),),
+        "costCurrency": ((30000013, 1200),),
+        "slot": 1,
+        "strengProp": 52002082
+    }),
+    505: _tools.RODict({
+        "ID": 505,
+        "type": 5,
+        "level": 5,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
+        "costItem": ((30000224, 40),),
+        "costCurrency": ((30000013, 2400),),
+        "slot": 2,
+        "strengProp": 52002083
+    }),
+    506: _tools.RODict({
+        "ID": 506,
+        "type": 5,
+        "level": 6,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
+        "costItem": ((30000224, 80),),
+        "costCurrency": ((30000013, 4800),),
+        "slot": 2,
+        "strengProp": 52002084
+    }),
+    507: _tools.RODict({
+        "ID": 507,
+        "type": 5,
+        "level": 7,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
+        "costItem": ((30000224, 120),),
+        "costCurrency": ((30000013, 7200),),
+        "slot": 2,
+        "strengProp": 52002085
+    }),
+    508: _tools.RODict({
+        "ID": 508,
+        "type": 5,
+        "level": 8,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
+        "costItem": ((30000225, 6),),
+        "costCurrency": ((30000013, 21600),),
+        "slot": 3,
+        "strengProp": 52002086
+    }),
+    509: _tools.RODict({
+        "ID": 509,
+        "type": 5,
+        "level": 9,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
+        "costItem": ((30000225, 12),),
+        "costCurrency": ((30000013, 58000),),
+        "slot": 3,
+        "strengProp": 52002087
+    }),
+    510: _tools.RODict({
+        "ID": 510,
+        "type": 5,
+        "level": 10,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
+        "costItem": ((30000225, 24),),
+        "costCurrency": ((30000013, 115000),),
+        "slot": 3,
+        "strengProp": 52002088
+    }),
+    511: _tools.RODict({
+        "ID": 511,
+        "type": 5,
+        "level": 11,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
+        "costItem": ((30000226, 4),),
+        "costCurrency": ((30000013, 230000),),
+        "slot": 3,
+        "strengProp": 52002089
+    }),
+    512: _tools.RODict({
+        "ID": 512,
+        "type": 5,
+        "level": 12,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
+        "costItem": ((30000226, 8),),
+        "costCurrency": ((30000013, 460000),),
+        "slot": 3,
+        "strengProp": 52002090
+    }),
+    513: _tools.RODict({
+        "ID": 513,
+        "type": 5,
+        "level": 13,
+        "effect": 0,
+        "costItem": 0,
+        "costCurrency": ((30000013, 0),),
+        "slot": 3,
+        "strengProp": 52002091
+    }),
+    600: _tools.RODict({
+        "ID": 600,
+        "type": 6,
+        "level": 0,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
+        "costItem": ((30000223, 30),),
+        "costCurrency": ((30000013, 40),),
+        "slot": 0,
+        "strengProp": 0
+    }),
+    601: _tools.RODict({
+        "ID": 601,
+        "type": 6,
+        "level": 1,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
+        "costItem": ((30000223, 40),),
+        "costCurrency": ((30000013, 100),),
+        "slot": 0,
+        "strengProp": 52002066
+    }),
+    602: _tools.RODict({
+        "ID": 602,
+        "type": 6,
+        "level": 2,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
+        "costItem": ((30000223, 80),),
+        "costCurrency": ((30000013, 200),),
+        "slot": 1,
+        "strengProp": 52002067
+    }),
+    603: _tools.RODict({
+        "ID": 603,
+        "type": 6,
+        "level": 3,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
+        "costItem": ((30000223, 240),),
+        "costCurrency": ((30000013, 400),),
+        "slot": 1,
+        "strengProp": 52002068
+    }),
+    604: _tools.RODict({
+        "ID": 604,
+        "type": 6,
+        "level": 4,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
+        "costItem": ((30000224, 10),),
+        "costCurrency": ((30000013, 1200),),
+        "slot": 1,
+        "strengProp": 52002069
+    }),
+    605: _tools.RODict({
+        "ID": 605,
+        "type": 6,
+        "level": 5,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
+        "costItem": ((30000224, 40),),
+        "costCurrency": ((30000013, 2400),),
+        "slot": 2,
+        "strengProp": 52002070
+    }),
+    606: _tools.RODict({
+        "ID": 606,
+        "type": 6,
+        "level": 6,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
+        "costItem": ((30000224, 80),),
+        "costCurrency": ((30000013, 4800),),
+        "slot": 2,
+        "strengProp": 52002071
+    }),
+    607: _tools.RODict({
+        "ID": 607,
+        "type": 6,
+        "level": 7,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
+        "costItem": ((30000224, 120),),
+        "costCurrency": ((30000013, 7200),),
+        "slot": 2,
+        "strengProp": 52002072
+    }),
+    608: _tools.RODict({
+        "ID": 608,
+        "type": 6,
+        "level": 8,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
+        "costItem": ((30000225, 6),),
+        "costCurrency": ((30000013, 21600),),
+        "slot": 3,
+        "strengProp": 52002073
+    }),
+    609: _tools.RODict({
+        "ID": 609,
+        "type": 6,
+        "level": 9,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
+        "costItem": ((30000225, 12),),
+        "costCurrency": ((30000013, 58000),),
+        "slot": 3,
+        "strengProp": 52002074
+    }),
+    610: _tools.RODict({
+        "ID": 610,
+        "type": 6,
+        "level": 10,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
+        "costItem": ((30000225, 24),),
+        "costCurrency": ((30000013, 115000),),
+        "slot": 3,
+        "strengProp": 52002075
+    }),
+    611: _tools.RODict({
+        "ID": 611,
+        "type": 6,
+        "level": 11,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
+        "costItem": ((30000226, 4),),
+        "costCurrency": ((30000013, 230000),),
+        "slot": 3,
+        "strengProp": 52002076
+    }),
+    612: _tools.RODict({
+        "ID": 612,
+        "type": 6,
+        "level": 12,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
+        "costItem": ((30000226, 8),),
+        "costCurrency": ((30000013, 460000),),
+        "slot": 3,
+        "strengProp": 52002077
+    }),
+    613: _tools.RODict({
+        "ID": 613,
+        "type": 6,
+        "level": 13,
+        "effect": 0,
+        "costItem": 0,
+        "costCurrency": ((30000013, 0),),
+        "slot": 3,
+        "strengProp": 52002078
+    }),
+    700: _tools.RODict({
+        "ID": 700,
+        "type": 7,
+        "level": 0,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
+        "costItem": ((30000223, 30),),
+        "costCurrency": ((30000013, 40),),
+        "slot": 0,
+        "strengProp": 0
+    }),
+    701: _tools.RODict({
+        "ID": 701,
+        "type": 7,
+        "level": 1,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
+        "costItem": ((30000223, 40),),
+        "costCurrency": ((30000013, 100),),
+        "slot": 0,
+        "strengProp": 52002053
+    }),
+    702: _tools.RODict({
+        "ID": 702,
+        "type": 7,
+        "level": 2,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
+        "costItem": ((30000223, 80),),
+        "costCurrency": ((30000013, 200),),
+        "slot": 1,
+        "strengProp": 52002054
+    }),
+    703: _tools.RODict({
+        "ID": 703,
+        "type": 7,
+        "level": 3,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
+        "costItem": ((30000223, 240),),
+        "costCurrency": ((30000013, 400),),
+        "slot": 1,
+        "strengProp": 52002055
+    }),
+    704: _tools.RODict({
+        "ID": 704,
+        "type": 7,
+        "level": 4,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
+        "costItem": ((30000224, 10),),
+        "costCurrency": ((30000013, 1200),),
+        "slot": 1,
+        "strengProp": 52002056
+    }),
+    705: _tools.RODict({
+        "ID": 705,
+        "type": 7,
+        "level": 5,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
+        "costItem": ((30000224, 40),),
+        "costCurrency": ((30000013, 2400),),
+        "slot": 2,
+        "strengProp": 52002057
+    }),
+    706: _tools.RODict({
+        "ID": 706,
+        "type": 7,
+        "level": 6,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
+        "costItem": ((30000224, 80),),
+        "costCurrency": ((30000013, 4800),),
+        "slot": 2,
+        "strengProp": 52002058
+    }),
+    707: _tools.RODict({
+        "ID": 707,
+        "type": 7,
+        "level": 7,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
+        "costItem": ((30000224, 120),),
+        "costCurrency": ((30000013, 7200),),
+        "slot": 2,
+        "strengProp": 52002059
+    }),
+    708: _tools.RODict({
+        "ID": 708,
+        "type": 7,
+        "level": 8,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
+        "costItem": ((30000225, 6),),
+        "costCurrency": ((30000013, 21600),),
+        "slot": 3,
+        "strengProp": 52002060
+    }),
+    709: _tools.RODict({
+        "ID": 709,
+        "type": 7,
+        "level": 9,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
+        "costItem": ((30000225, 12),),
+        "costCurrency": ((30000013, 58000),),
+        "slot": 3,
+        "strengProp": 52002061
+    }),
+    710: _tools.RODict({
+        "ID": 710,
+        "type": 7,
+        "level": 10,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
+        "costItem": ((30000225, 24),),
+        "costCurrency": ((30000013, 115000),),
+        "slot": 3,
+        "strengProp": 52002062
+    }),
+    711: _tools.RODict({
+        "ID": 711,
+        "type": 7,
+        "level": 11,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
+        "costItem": ((30000226, 4),),
+        "costCurrency": ((30000013, 230000),),
+        "slot": 3,
+        "strengProp": 52002063
+    }),
+    712: _tools.RODict({
+        "ID": 712,
+        "type": 7,
+        "level": 12,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
+        "costItem": ((30000226, 8),),
+        "costCurrency": ((30000013, 460000),),
+        "slot": 3,
+        "strengProp": 52002064
+    }),
+    713: _tools.RODict({
+        "ID": 713,
+        "type": 7,
+        "level": 13,
+        "effect": 0,
+        "costItem": 0,
+        "costCurrency": ((30000013, 0),),
+        "slot": 3,
+        "strengProp": 52002065
+    })
+})
+minKey = 100
+maxKey = 713

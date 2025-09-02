@@ -1,0 +1,40 @@
+<root>
+    <Interfaces>
+    </Interfaces>
+
+    <Properties>
+    </Properties>
+
+    <CellMethods>
+
+    <enterWorldLine>
+        <Exposed/>
+        <Arg>   UINT32      </Arg>
+        <Arg> LINE_NO </Arg>
+        <Arg> TELEPORTER_ID </Arg>
+    </enterWorldLine>
+
+    <teleportFromSpaceToSpaceRpc>
+        <Arg>   SPACE_NO    </Arg>
+        <Arg>   PYTHON      </Arg>
+        <Arg>   PY_DICT     </Arg>
+    </teleportFromSpaceToSpaceRpc>
+
+    <onTeleportFromSpaceToLineSpaceFail>
+        <Arg>   UINT8       </Arg>
+        <Arg>   SPACE_NO    </Arg>
+        <Arg>   SPACE_NO    </Arg>
+        <Arg>   PYTHON      </Arg>
+        <Arg>   PY_DICT     </Arg>
+    </onTeleportFromSpaceToLineSpaceFail>
+
+    </CellMethods>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+
+</root>
+

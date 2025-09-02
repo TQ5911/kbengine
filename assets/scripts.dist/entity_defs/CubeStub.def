@@ -1,0 +1,70 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+        <Interface> iMultiStaticSpace           </Interface>
+        <Interface> iMultiStaticSpacePlayer     </Interface>
+    </Interfaces>
+
+    <Properties>
+        <randomRooms>
+            <Type>      PY_LIST         </Type>
+            <Flags>     BASE            </Flags>
+        </randomRooms>
+
+        <randomWeights>
+            <Type>      PY_LIST         </Type>
+            <Flags>     BASE            </Flags>
+        </randomWeights>
+
+        <cubeNo>
+            <Type>      CUBE_NO         </Type>
+            <Flags>     BASE            </Flags>
+        </cubeNo>
+
+        <cubeRooms>
+            <Type>      PY_DICT         </Type>
+            <Flags>     BASE            </Flags>
+        </cubeRooms>
+    </Properties>
+
+    <BaseMethods>
+        <doEnterCube>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       BOOL                </Arg>   
+            <Arg>       PLAYER_GBID         </Arg>   
+            <Arg>       SPACE_NO            </Arg>   
+            <Arg>       PYTHON              </Arg>
+        </doEnterCube>
+
+        <reliveToCubeRoom>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       MAP_ID              </Arg>
+            <Arg>       PLAYER_GBID         </Arg>   
+            <Arg>       PYTHON              </Arg>
+        </reliveToCubeRoom>
+
+        <onEnterCubeSuccess>
+            <Arg>       PLAYER_GBID         </Arg>   
+            <Arg>       SPACE_NO            </Arg>   
+        </onEnterCubeSuccess>
+
+        <onLeaveCube>
+            <Arg>       PLAYER_GBID         </Arg>   
+            <Arg>       SPACE_NO            </Arg>   
+            <Arg>       SPACE_NO            </Arg>   
+        </onLeaveCube>
+
+        <logonEnterCube>
+            <Arg>       ENTITYCALL          </Arg>
+            <Arg>       PLAYER_GBID         </Arg>   
+            <Arg>       SPACE_NO            </Arg>   
+            <Arg>       PYTHON              </Arg>
+        </logonEnterCube>
+
+        <onAvatarOffline>
+            <Arg>       PLAYER_GBID         </Arg>   
+        </onAvatarOffline>
+    </BaseMethods>
+</root>

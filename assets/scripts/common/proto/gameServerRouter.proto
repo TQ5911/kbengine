@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package RouterGameServer;
+
+option py_generic_services = true;
+
+message Void {
+}
+
+message BaseAppInfo
+{
+    uint32 serverId = 1;
+    uint32 componentId = 2;
+}
+
+message OthersBaseRequest
+{
+    uint32 serverId = 1;
+    uint32 dstServerId = 2;
+    uint32 componentId = 3;
+    bytes memoryStream = 4;
+}
+
+
+//中心服务器向游戏服提供的rpc
+service RouterServer
+{
+    rpc registerBaseapp(BaseAppInfo) returns(Void);
+    rpc doOnOthersBase(OthersBaseRequest) returns(Void);
+    rpc activeTick(Void) returns(Void);
+}
+
+//游戏服向中心服的rpc
+service GameServer
+{
+    rpc onRemoteCallFromOthersBase(OthersBaseRequest) returns(Void);
+    rpc activeTickCallback(Void) returns(Void);
+}

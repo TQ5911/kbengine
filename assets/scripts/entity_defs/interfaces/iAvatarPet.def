@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Properties>
+        <lingShouInfo>
+            <Type>          LINGSHOU_INFO           </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </lingShouInfo>
+
+        <lingShouId>
+            <Type>          PETID                   </Type>
+            <Flags>         ALL_CLIENTS             </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </lingShouId>
+
+        <battleIndex>
+            <Type>          UINT8                   </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </battleIndex>
+
+        <petBag>
+            <Type>          BAG_INFO                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </petBag>
+
+        <lingShouBattleList>
+            <Type>          PYTHON                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+        </lingShouBattleList>
+    </Properties>
+
+    <BaseMethods>
+        <updateLingShouBattleList> <Exposed/>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PETID       </Arg>
+            <Arg>   SLOTID      </Arg>
+        </updateLingShouBattleList>
+
+        <checkLingShouEggItemCondBase>
+            <Arg>   UINT16      </Arg>
+        </checkLingShouEggItemCondBase>
+
+        <useLingShouEggItemBase>
+            <Arg>   UINT16      </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT64      </Arg>
+        </useLingShouEggItemBase>
+
+        <useLingShouEquip> <Exposed/>
+            <Arg>   GRIDID      </Arg>
+            <Arg>   PETID    </Arg>
+            <Arg>   UINT8       </Arg>
+        </useLingShouEquip>
+
+        <setFollowPet> <Exposed/>
+            <Arg>   BOOL        </Arg>
+            <Arg>   PETID       </Arg>
+        </setFollowPet>
+
+        <modifyPetBattleListName> <Exposed/>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UNICODE     </Arg>
+        </modifyPetBattleListName>
+
+        <setBattleIndex> <Exposed/>
+            <Arg>   UINT8       </Arg>
+        </setBattleIndex>
+    </BaseMethods>
+
+    <CellMethods>
+        <setFollowPet>
+            <Arg>   BOOL        </Arg>
+            <Arg>   PETID       </Arg>
+        </setFollowPet>
+
+        <onSetLingShouBattleList>
+            <Arg>   PYTHON       </Arg>
+        </onSetLingShouBattleList>
+
+        <onUpdateLingShouBattleList>
+            <Arg>   PYTHON      </Arg>
+            <Arg>   SLOTID      </Arg>
+        </onUpdateLingShouBattleList>
+
+		<onInitPetProps>
+			<Arg>   PYTHON      </Arg>
+        </onInitPetProps>
+    </CellMethods>
+
+    <ClientMethods>
+        <onUpdateLingShouData>
+            <Arg>   ARRAY <of> CLIENT_LINGSHOU_ITEM_VAL </of>    </Arg>
+        </onUpdateLingShouData>
+
+        <onUpdateLingShouScore>
+            <Arg>   PETID    </Arg>
+            <Arg>   SCORE       </Arg>
+        </onUpdateLingShouScore>
+
+        <onUpdateLingShouBattleList>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PETID       </Arg>
+            <Arg>   SLOTID      </Arg>
+        </onUpdateLingShouBattleList>
+
+        <onGetLingShouBattleList>
+            <Arg>   ARRAY   <of>    LINGSHOU_BATTLE_LIST_VAL     </of>   </Arg>
+        </onGetLingShouBattleList>
+
+		<onUpdatePetBattleListName>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UNICODE     </Arg>
+        </onUpdatePetBattleListName>
+
+        <onUpdateLingShouEquip>
+            <Arg>   PETID       </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   ITEMID      </Arg>
+        </onUpdateLingShouEquip>
+    </ClientMethods>
+</root>

@@ -1,0 +1,38 @@
+<TLOGConf>
+	<PriorityHigh>NULL</PriorityHigh>
+	<PriorityLow>UNKNOWN</PriorityLow>
+	<DelayInit>0</DelayInit>
+	<SuppressError>0</SuppressError>
+	<Count>1</Count>
+	<CategoryList>
+		<Name>test</Name>
+		<PriorityHigh>NULL</PriorityHigh>
+		<PriorityLow>UNKNOWN</PriorityLow>
+		<LevelDispatch>1</LevelDispatch>				
+		<MustSucc>0</MustSucc>
+		<Format>%m%n</Format>
+		<ForwardCat></ForwardCat>
+		<Device>
+			<Type>VEC</Type>
+			<Device>
+				<Vec>
+					<Count>1</Count>
+					<Elements>
+						<Type>FILE</Type>
+						<Device>
+							<File>
+								<Pattern>./logs/xzj.log</Pattern>
+								<BuffSize> 1024000 </BuffSize>
+								<SizeLimit> 1073741824 </SizeLimit>
+								<Precision> 1 </Precision>
+								<MaxRotate> 10 </MaxRotate>
+								<SyncTime> 0 </SyncTime>
+								<NoFindLatest> 0 </NoFindLatest>
+							</File>	
+						</Device>	
+					</Elements>
+				</Vec>
+			</Device>
+		</Device>
+	</CategoryList>
+</TLOGConf>

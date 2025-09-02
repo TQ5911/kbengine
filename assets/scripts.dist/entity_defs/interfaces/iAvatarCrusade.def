@@ -1,0 +1,60 @@
+<root>
+    <Interfaces>
+    </Interfaces>
+
+    <Properties>
+        <crusadeInfo>
+            <Type>  CRUSADE_DUNGEON_PLAY_MODE_PLAYER_OBJ   </Type>
+            <Flags> BASE_AND_CLIENT  </Flags>
+            <Persistent>true</Persistent>
+        </crusadeInfo>
+    </Properties>
+
+    <CellMethods>
+        <enterCrusadeDungeon>
+            <Exposed/>
+            <Arg>   LEVEL   </Arg>
+        </enterCrusadeDungeon>
+    </CellMethods>
+
+    <BaseMethods>
+        <useItemToIncreaseCrusadeRewardNumber>
+            <Exposed/>
+            <Arg>   UINT8   </Arg>
+        </useItemToIncreaseCrusadeRewardNumber>
+
+        <useCoinToIncreaseCrusadeRewardNumber>
+            <Exposed/>
+            <Arg>   UINT8   </Arg>
+        </useCoinToIncreaseCrusadeRewardNumber>
+
+        <onUseItemToIncreaseCrusadeRewardNumber>
+            <Arg>   ITEM_ID     </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   PYTHON      </Arg>
+        </onUseItemToIncreaseCrusadeRewardNumber>
+
+        <onEnterCrusadeDungeon>
+            <Arg>           SPACE_NO          </Arg>
+            <Arg>           MAILBOX           </Arg>
+            <Arg>           PYTHON            </Arg>
+        </onEnterCrusadeDungeon>
+
+        <setCrusadeDungeonAutoConfirmConfig>
+		    <Exposed/>
+            <Arg>   UINT8   </Arg>
+        </setCrusadeDungeonAutoConfirmConfig>
+    </BaseMethods>
+
+    <ClientMethods>
+        <onTeammateConfirmCrusade>
+            <Arg>   DUNGEON_NO      </Arg>
+            <Arg>   LEVEL   </Arg>
+        </onTeammateConfirmCrusade>
+        <onSetCrusadeDungeonAutoConfirmConfig>
+            <Arg>   LEVEL   </Arg>
+        </onSetCrusadeDungeonAutoConfirmConfig>
+    </ClientMethods>
+
+</root>
+

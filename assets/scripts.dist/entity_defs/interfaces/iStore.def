@@ -1,0 +1,46 @@
+<root>
+    <Properties>
+        <storeData>
+            <Type>          STORE_DATA_VAL        </Type>
+            <Flags>         BASE             </Flags>
+            <Persistent>    true             </Persistent>
+        </storeData>
+    </Properties>
+
+
+    <BaseMethods>
+        <reqGetStoreList><Exposed/>
+            <Arg>   ARRAY <of> STOREID </of>  </Arg>
+        </reqGetStoreList>
+
+        <reqBuyItemsInStore><Exposed/>
+            <Arg>       STOREID     </Arg>
+            <Arg>       ITEMID      </Arg>
+            <Arg>       UINT32      </Arg>
+        </reqBuyItemsInStore>
+
+        <makeMallFlowLog>
+            <Arg>       UINT64         </Arg>
+            <Arg>       STOREID      </Arg>
+            <Arg>       ITEM_ID      </Arg>
+            <Arg>       UINT32       </Arg>
+            <Arg>       ITEM_ID      </Arg>
+            <Arg>       UINT32       </Arg>
+        </makeMallFlowLog>
+    </BaseMethods>
+
+
+    <ClientMethods>
+        <onGetStoreList>
+            <Arg>   ARRAY <of> CLIENT_STORE_VAL </of>  </Arg>
+        </onGetStoreList>
+
+        <onBuyStoreItems>
+            <Arg>       STOREID     </Arg>
+            <Arg>       ITEMID      </Arg>
+            <Arg>       UINT32      </Arg>
+            <Arg>       INT32       </Arg>
+        </onBuyStoreItems>
+    </ClientMethods>
+</root>
+

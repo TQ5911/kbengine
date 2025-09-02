@@ -1,0 +1,164 @@
+<root>
+    <Properties>
+        <wonderLandTicket>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    True                        </Persistent>
+            <Default>       0                           </Default>
+        </wonderLandTicket>
+
+        <wonderLandAddTimes>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    True                        </Persistent>
+            <Default>       0                           </Default>
+        </wonderLandAddTimes>
+
+        <wonderLandSwapTokenWeek>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    True                        </Persistent>
+            <Default>       0                           </Default>
+        </wonderLandSwapTokenWeek>
+
+        <wonderLandTimerId>
+            <Type>          TIMER_ID                    </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </wonderLandTimerId>
+
+        <wonderLandLeftTime>
+            <Type>          LONGTIME                    </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Persistent>    True                        </Persistent>
+            <Default>       0                           </Default>
+        </wonderLandLeftTime>
+    </Properties>
+
+    <BaseMethods>
+        <checkAndEnterWonderLand>
+            <Arg>          UINT8                        </Arg>
+        </checkAndEnterWonderLand>
+
+        <doAddWonderLandTicket>
+            <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          UINT8                        </Arg>
+        </doAddWonderLandTicket>
+
+        <addWonderLandTicket> <Exposed/>
+            <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT8                        </Arg>
+            <Arg>          UINT8                        </Arg>
+        </addWonderLandTicket>
+
+        <addWonderLandDurFailed>
+            <Arg>          OP_UUID                      </Arg>
+            <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT8                        </Arg>
+        </addWonderLandDurFailed>
+
+        <summonWonderLandBossBase>
+            <Arg>          OBJECT_ID                    </Arg>
+            <Arg>          ITEM_ID                      </Arg>
+            <Arg>          OBJECT_ID                    </Arg>
+        </summonWonderLandBossBase>
+
+        <summonWonderLandBossBaseFailed>
+            <Arg>          OP_UUID                      </Arg>
+            <Arg>          ITEM_ID                      </Arg>
+        </summonWonderLandBossBaseFailed>
+
+        <autoRenewWonderLand>
+            <Arg>          WONDER_LAND_SWITCH           </Arg>
+        </autoRenewWonderLand>
+
+        <checkSummonWonderLandBossBase>
+            <Arg>          ITEM_ID                      </Arg>
+        </checkSummonWonderLandBossBase>
+
+        <addWonderLandDurationFailedRewindTimes>
+        </addWonderLandDurationFailedRewindTimes>
+
+        <afterEnterWonderLandDeductTimes>
+        </afterEnterWonderLandDeductTimes>
+
+        <onLogonEnterWonderLandGetSpaceBox>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          OBJECT_ID                    </Arg>
+        </onLogonEnterWonderLandGetSpaceBox>
+    </BaseMethods>
+
+    <CellMethods>
+        <enterWonderLand> <Exposed/>
+            <Arg>          UINT8                        </Arg>
+        </enterWonderLand>
+
+        <leaveWonderLand> <Exposed/>
+        </leaveWonderLand>
+
+        <beginEnterWonderLand>
+            <Arg>          ENTITYCALL                   </Arg>
+            <Arg>          OBJECT_ID                    </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+            <Arg>          PY_DICT                      </Arg>
+        </beginEnterWonderLand>
+
+        <directlyAddWonderLandDuration>
+            <Arg>          STRING                       </Arg>
+            <Arg>          PYTHON                       </Arg>
+        </directlyAddWonderLandDuration>
+
+        <summonWonderLandBossFromBase>
+            <Arg>          OBJECT_ID                    </Arg>
+            <Arg>          ITEM_ID                      </Arg>
+            <Arg>          OBJECT_ID                    </Arg>
+            <Arg>          OP_UUID                      </Arg>
+        </summonWonderLandBossFromBase>
+
+        <reqChangeWonderLandSwitch> <Exposed/>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          WONDER_LAND_SWITCH           </Arg>
+        </reqChangeWonderLandSwitch>
+
+        <checkAddWonderLandDurationCondition>
+            <Arg>           ITEM_ID                     </Arg>
+            <Arg>           UINT8                        </Arg>
+        </checkAddWonderLandDurationCondition>
+
+        <doSendWonderLandLoginData>
+        </doSendWonderLandLoginData>
+
+        <addWonderLandRewardRecord>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </addWonderLandRewardRecord>
+    </CellMethods>
+
+    <ClientMethods>
+        <onWonderLandLeftTime>
+            <Arg>          LONGTIME                     </Arg>
+        </onWonderLandLeftTime>
+
+        <onWonderLandSwitch>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          WONDER_LAND_SWITCH           </Arg>
+        </onWonderLandSwitch>
+
+        <onAddWonderLandRewardRecord>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onAddWonderLandRewardRecord>
+
+        <onWonderLandLoginData>
+            <Arg>          LONGTIME                     </Arg>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          WONDER_LAND_SWITCH           </Arg>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onWonderLandLoginData>
+
+        <onWonderLandBossInfo>
+            <Arg>           ARRAY       <of>        OBJECT_ID       </of>   </Arg>
+        </onWonderLandBossInfo>
+    </ClientMethods>
+</root>

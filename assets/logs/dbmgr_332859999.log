@@ -1,0 +1,431 @@
+  INFO root [2025-09-02 12:08:01,441] - 
+  INFO root [2025-09-02 12:08:01,441] - -----------------------------------------------------------------------------------------
+
+
+  INFO root [2025-09-02 12:08:01,462] - Resmgr::initialize: KBE_ROOT=/mnt/hgfs/game/Server/kbeLinux/kbengine/
+  INFO root [2025-09-02 12:08:01,462] - Resmgr::initialize: KBE_RES_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/
+  INFO root [2025-09-02 12:08:01,462] - Resmgr::initialize: KBE_BIN_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/bin/server/
+  INFO root [2025-09-02 12:08:01,463] - NetworkInterface::initialize(INTERNAL-TCP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:40031 )
+  WARN root [2025-09-02 12:08:01,464] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a receive buffer of only 425984 bytes (instead of 16777216)
+  WARN root [2025-09-02 12:08:01,464] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a send buffer of only 425984 bytes (instead of 16777216)
+  INFO root [2025-09-02 12:08:01,464] - NetworkInterface::initialize(INTERNAL-TCP): address 192.168.10.127:40031, SOMAXCONN=511, rBufSize=425984, wBufSize=425984, this=[0x7ffdcc6506f0.
+  INFO root [2025-09-02 12:08:01,464] - server-configs:
+  INFO root [2025-09-02 12:08:01,464] - 	internalTcpAddr : 192.168.10.127:40031
+  INFO root [2025-09-02 12:08:01,464] - 	componentID : 3129652375332859999
+  INFO root [2025-09-02 12:08:02,968] - ThreadPool::createThreadPool: creating  threadpool...
+  INFO root [2025-09-02 12:08:02,969] - ThreadPool::createThreadPool: successfully(2), newThreadCount=1, normalMaxThreadCount=2, maxThreadCount=8
+ DEBUG root [2025-09-02 12:08:03,071] - Script::install(): paths=/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/common:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/common/Lib:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/data:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/user_type:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/server_common:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/db:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/lib-dynload:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/DLLs:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib/site-packages:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib/dist-packages.
+  INFO root [2025-09-02 12:08:03,427] - Script::install(): is successfully, Python=(3.7.3 (default, Mar 21 2025, 15:25:47) 
+[GCC 13.3.0])!
+  INFO root [2025-09-02 12:08:03,427] - Script::install(): KBExtra is successfully!
+  WARN root [2025-09-02 12:08:03,834] - DBUtil::initialize: db(default) password is not encrypted!
+please use password(rsa):
+004379C5E003C16240FB31F9EBF2AE06C31A043DFC9FFB221E2493EDB3DFBACF146DC760705D6B52090E876F7F4C1136AF9579A96E359806372F1C1D9EF97EB2629E50D141FCC917FFB4FE61F98E6B700B1A5C7E4860BA4C853AF72C685583F61C9E8B2D5DFE6D6592B4F4681F303DBFDDEE0F553F9FF535CD701E7077BEF2AE
+ DEBUG root [2025-09-02 12:08:03,843] - DBInterfaceMysql::attach: connect: 127.0.0.1:3306 starting...
+ DEBUG root [2025-09-02 12:08:03,851] - DBInterfaceMysql::attach: successfully! addr: 127.0.0.1:3306
+  INFO root [2025-09-02 12:08:03,851] - DBUtil::createInterface[0x7ffdcc64f978]: interface=default, dbtype=mysql, ip=127.0.0.1, port=3306, currdatabase=game_trunk, username=fengyan, connected=yes.
+
+  INFO root [2025-09-02 12:08:03,852] - ThreadPool::createThreadPool: creating  threadpool...
+ DEBUG root [2025-09-02 12:08:03,852] - DBInterfaceMysql::attach: connect: 127.0.0.1:3306 starting...
+ DEBUG root [2025-09-02 12:08:03,854] - DBInterfaceMysql::attach: successfully! addr: 127.0.0.1:3306
+ DEBUG root [2025-09-02 12:08:03,854] - DBThread::onStart(): 0x75d8c649cc80!
+  INFO root [2025-09-02 12:08:03,854] - ThreadPool::createThreadPool: successfully(5), newThreadCount=5, normalMaxThreadCount=5, maxThreadCount=5
+ DEBUG root [2025-09-02 12:08:03,854] - DBInterfaceMysql::attach: connect: 127.0.0.1:3306 starting...
+ DEBUG root [2025-09-02 12:08:03,855] - DBInterfaceMysql::attach: connect: 127.0.0.1:3306 starting...
+ DEBUG root [2025-09-02 12:08:03,856] - DBInterfaceMysql::attach: connect: 127.0.0.1:3306 starting...
+ DEBUG root [2025-09-02 12:08:03,856] - DBInterfaceMysql::attach: successfully! addr: 127.0.0.1:3306
+ DEBUG root [2025-09-02 12:08:03,857] - DBThread::onStart(): 0x75d8c649ce00!
+ DEBUG root [2025-09-02 12:08:03,857] - DBInterfaceMysql::attach: connect: 127.0.0.1:3306 starting...
+ DEBUG root [2025-09-02 12:08:03,857] - DBInterfaceMysql::attach: successfully! addr: 127.0.0.1:3306
+ DEBUG root [2025-09-02 12:08:03,858] - DBThread::onStart(): 0x75d8c649cd40!
+ DEBUG root [2025-09-02 12:08:03,859] - DBInterfaceMysql::attach: successfully! addr: 127.0.0.1:3306
+ DEBUG root [2025-09-02 12:08:03,859] - DBThread::onStart(): 0x75d8c649cec0!
+ DEBUG root [2025-09-02 12:08:03,861] - DBInterfaceMysql::attach: successfully! addr: 127.0.0.1:3306
+ DEBUG root [2025-09-02 12:08:03,861] - DBThread::onStart(): 0x75d8c649cf80!
+  INFO root [2025-09-02 12:08:03,966] - DBInterfaceMysql::query: successfully!
+  WARN root [2025-09-02 12:08:03,966] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,967] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,969] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,970] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,970] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,970] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,970] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,971] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,971] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,971] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,971] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,971] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,972] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,972] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,972] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,973] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,973] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,973] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,973] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,973] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,973] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,973] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,973] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,973] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,974] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,975] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,975] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,975] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,976] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,976] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,976] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,976] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,976] - ThreadPool::bufferTask: task buffered(33)!
+  WARN root [2025-09-02 12:08:03,976] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,976] - ThreadPool::bufferTask: task buffered(34)!
+  WARN root [2025-09-02 12:08:03,976] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,976] - ThreadPool::bufferTask: task buffered(35)!
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::bufferTask: task buffered(36)!
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::bufferTask: task buffered(37)!
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::bufferTask: task buffered(38)!
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::bufferTask: task buffered(39)!
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,977] - ThreadPool::bufferTask: task buffered(40)!
+  WARN root [2025-09-02 12:08:03,978] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,978] - ThreadPool::bufferTask: task buffered(41)!
+  WARN root [2025-09-02 12:08:03,978] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,978] - ThreadPool::bufferTask: task buffered(42)!
+  WARN root [2025-09-02 12:08:03,978] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,978] - ThreadPool::bufferTask: task buffered(43)!
+  WARN root [2025-09-02 12:08:03,978] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,978] - ThreadPool::bufferTask: task buffered(44)!
+  WARN root [2025-09-02 12:08:03,978] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::bufferTask: task buffered(45)!
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::bufferTask: task buffered(46)!
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::bufferTask: task buffered(47)!
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::bufferTask: task buffered(48)!
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::bufferTask: task buffered(49)!
+  WARN root [2025-09-02 12:08:03,979] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,980] - ThreadPool::bufferTask: task buffered(50)!
+  WARN root [2025-09-02 12:08:03,980] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,980] - ThreadPool::bufferTask: task buffered(51)!
+  WARN root [2025-09-02 12:08:03,980] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,980] - ThreadPool::bufferTask: task buffered(52)!
+  WARN root [2025-09-02 12:08:03,980] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,980] - ThreadPool::bufferTask: task buffered(53)!
+  WARN root [2025-09-02 12:08:03,980] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,980] - ThreadPool::bufferTask: task buffered(54)!
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::bufferTask: task buffered(55)!
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::bufferTask: task buffered(56)!
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::bufferTask: task buffered(57)!
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::bufferTask: task buffered(58)!
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::bufferTask: task buffered(59)!
+  WARN root [2025-09-02 12:08:03,981] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,982] - ThreadPool::bufferTask: task buffered(60)!
+  WARN root [2025-09-02 12:08:03,982] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,982] - ThreadPool::bufferTask: task buffered(61)!
+  WARN root [2025-09-02 12:08:03,982] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,983] - ThreadPool::bufferTask: task buffered(62)!
+  WARN root [2025-09-02 12:08:03,983] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,983] - ThreadPool::bufferTask: task buffered(63)!
+  WARN root [2025-09-02 12:08:03,983] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+ DEBUG root [2025-09-02 12:08:03,983] - final sqlStr :: CoreAreaFlag->().
+  INFO root [2025-09-02 12:08:03,983] - DBInterfaceMysql::query: successfully!
+  INFO root [2025-09-02 12:08:03,983] - DBInterfaceMysql::query: successfully!
+  INFO root [2025-09-02 12:08:03,984] - DBInterfaceMysql::query: successfully!
+  INFO root [2025-09-02 12:08:03,985] - DBInterfaceMysql::query: successfully!
+  INFO root [2025-09-02 12:08:03,985] - DBInterfaceMysql::query: successfully!
+  WARN root [2025-09-02 12:08:03,985] - ThreadPool::bufferTask: task buffered(64)!
+  WARN root [2025-09-02 12:08:03,986] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,986] - ThreadPool::popbufferTask: task buffered(64)!
+  WARN root [2025-09-02 12:08:03,986] - ThreadPool::popbufferTask: task buffered(63)!
+ DEBUG root [2025-09-02 12:08:03,987] - final sqlStr :: Avatar_storeData_stores->().
+  INFO root [2025-09-02 12:08:03,988] - DBInterfaceMysql::query: successfully!
+  WARN root [2025-09-02 12:08:03,988] - ThreadPool::popbufferTask: task buffered(62)!
+  INFO root [2025-09-02 12:08:03,988] - DBInterfaceMysql::query: successfully!
+  WARN root [2025-09-02 12:08:03,989] - ThreadPool::bufferTask: task buffered(62)!
+  WARN root [2025-09-02 12:08:03,989] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  INFO root [2025-09-02 12:08:03,990] - DBInterfaceMysql::query: successfully!
+  WARN root [2025-09-02 12:08:03,990] - ThreadPool::popbufferTask: task buffered(62)!
+ DEBUG root [2025-09-02 12:08:03,990] - final sqlStr :: RaidStub->().
+ DEBUG root [2025-09-02 12:08:03,991] - final sqlStr :: GlobalMailStub_delayMailList_despArgs->().
+  WARN root [2025-09-02 12:08:03,991] - ThreadPool::popbufferTask: task buffered(61)!
+  WARN root [2025-09-02 12:08:03,991] - ThreadPool::bufferTask: task buffered(61)!
+  WARN root [2025-09-02 12:08:03,991] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+ DEBUG root [2025-09-02 12:08:03,991] - final sqlStr :: Avatar_collectibleData_collectibleList->().
+ DEBUG root [2025-09-02 12:08:03,993] - final sqlStr :: Avatar_newbieGuideIds->().
+  WARN root [2025-09-02 12:08:03,993] - ThreadPool::popbufferTask: task buffered(61)!
+  WARN root [2025-09-02 12:08:03,993] - ThreadPool::bufferTask: task buffered(61)!
+  WARN root [2025-09-02 12:08:03,993] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,994] - ThreadPool::popbufferTask: task buffered(61)!
+  WARN root [2025-09-02 12:08:03,994] - ThreadPool::popbufferTask: task buffered(60)!
+ DEBUG root [2025-09-02 12:08:03,994] - final sqlStr :: Avatar_instantPotionSlots_slots->().
+  WARN root [2025-09-02 12:08:03,994] - ThreadPool::bufferTask: task buffered(60)!
+  WARN root [2025-09-02 12:08:03,995] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,995] - ThreadPool::popbufferTask: task buffered(60)!
+  WARN root [2025-09-02 12:08:03,995] - ThreadPool::bufferTask: task buffered(60)!
+  WARN root [2025-09-02 12:08:03,995] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,995] - ThreadPool::bufferTask: task buffered(61)!
+  WARN root [2025-09-02 12:08:03,995] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,995] - ThreadPool::bufferTask: task buffered(62)!
+  WARN root [2025-09-02 12:08:03,995] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+ DEBUG root [2025-09-02 12:08:03,996] - final sqlStr :: Guild_applyJoins_applyJoins->().
+ DEBUG root [2025-09-02 12:08:03,996] - final sqlStr :: Avatar_lingShouInfo_battleList->().
+  WARN root [2025-09-02 12:08:03,996] - ThreadPool::popbufferTask: task buffered(62)!
+ DEBUG root [2025-09-02 12:08:03,996] - final sqlStr :: PlayerStub->().
+  WARN root [2025-09-02 12:08:03,997] - ThreadPool::bufferTask: task buffered(62)!
+  WARN root [2025-09-02 12:08:03,997] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,997] - ThreadPool::popbufferTask: task buffered(62)!
+ DEBUG root [2025-09-02 12:08:03,997] - final sqlStr :: Avatar_storeData_stores_itemsList->().
+  WARN root [2025-09-02 12:08:03,997] - ThreadPool::popbufferTask: task buffered(61)!
+  WARN root [2025-09-02 12:08:03,997] - ThreadPool::popbufferTask: task buffered(60)!
+  WARN root [2025-09-02 12:08:03,998] - ThreadPool::bufferTask: task buffered(60)!
+  WARN root [2025-09-02 12:08:03,998] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,998] - ThreadPool::popbufferTask: task buffered(60)!
+  WARN root [2025-09-02 12:08:03,998] - ThreadPool::popbufferTask: task buffered(59)!
+  WARN root [2025-09-02 12:08:03,998] - ThreadPool::bufferTask: task buffered(59)!
+  WARN root [2025-09-02 12:08:03,999] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,999] - ThreadPool::bufferTask: task buffered(60)!
+  WARN root [2025-09-02 12:08:03,999] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,999] - ThreadPool::bufferTask: task buffered(61)!
+  WARN root [2025-09-02 12:08:03,999] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:03,999] - ThreadPool::bufferTask: task buffered(62)!
+  WARN root [2025-09-02 12:08:03,999] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,000] - ThreadPool::bufferTask: task buffered(63)!
+  WARN root [2025-09-02 12:08:04,000] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,000] - ThreadPool::bufferTask: task buffered(64)!
+  WARN root [2025-09-02 12:08:04,000] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,000] - ThreadPool::bufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,000] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,001] - ThreadPool::bufferTask: task buffered(66)!
+  WARN root [2025-09-02 12:08:04,001] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,001] - ThreadPool::bufferTask: task buffered(67)!
+  WARN root [2025-09-02 12:08:04,001] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,001] - ThreadPool::bufferTask: task buffered(68)!
+ DEBUG root [2025-09-02 12:08:04,001] - final sqlStr :: Creation->().
+ DEBUG root [2025-09-02 12:08:04,001] - final sqlStr :: TeamDungeonStub->().
+ DEBUG root [2025-09-02 12:08:04,001] - final sqlStr :: BaseApp->().
+ DEBUG root [2025-09-02 12:08:04,001] - final sqlStr :: Collection->().
+ DEBUG root [2025-09-02 12:08:04,002] - final sqlStr :: SingleDungeonStub->().
+  WARN root [2025-09-02 12:08:04,002] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,002] - ThreadPool::popbufferTask: task buffered(68)!
+  WARN root [2025-09-02 12:08:04,002] - ThreadPool::popbufferTask: task buffered(67)!
+  WARN root [2025-09-02 12:08:04,003] - ThreadPool::popbufferTask: task buffered(66)!
+  WARN root [2025-09-02 12:08:04,003] - ThreadPool::popbufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,003] - ThreadPool::bufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,003] - ThreadPool::popbufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,003] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,003] - ThreadPool::bufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,004] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,004] - ThreadPool::bufferTask: task buffered(66)!
+  WARN root [2025-09-02 12:08:04,004] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,005] - ThreadPool::bufferTask: task buffered(67)!
+  WARN root [2025-09-02 12:08:04,005] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,005] - ThreadPool::bufferTask: task buffered(68)!
+  WARN root [2025-09-02 12:08:04,005] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,005] - ThreadPool::bufferTask: task buffered(69)!
+ DEBUG root [2025-09-02 12:08:04,005] - final sqlStr :: LeaderBoardStub_leaderBoardList_schoolsData->().
+ DEBUG root [2025-09-02 12:08:04,005] - final sqlStr :: WonderLandStub->().
+ DEBUG root [2025-09-02 12:08:04,005] - final sqlStr :: TeamStub->().
+ DEBUG root [2025-09-02 12:08:04,006] - final sqlStr :: GlobalMailStub->().
+  WARN root [2025-09-02 12:08:04,006] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,006] - ThreadPool::bufferTask: task buffered(70)!
+  WARN root [2025-09-02 12:08:04,006] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,007] - ThreadPool::popbufferTask: task buffered(70)!
+ DEBUG root [2025-09-02 12:08:04,007] - final sqlStr :: SiegeWarStub->().
+  WARN root [2025-09-02 12:08:04,007] - ThreadPool::popbufferTask: task buffered(69)!
+  WARN root [2025-09-02 12:08:04,007] - ThreadPool::popbufferTask: task buffered(68)!
+  WARN root [2025-09-02 12:08:04,007] - ThreadPool::popbufferTask: task buffered(67)!
+ DEBUG root [2025-09-02 12:08:04,007] - final sqlStr :: Avatar_enemyMgr_recordList->().
+  WARN root [2025-09-02 12:08:04,008] - ThreadPool::bufferTask: task buffered(67)!
+  WARN root [2025-09-02 12:08:04,008] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,008] - ThreadPool::bufferTask: task buffered(68)!
+  WARN root [2025-09-02 12:08:04,010] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,010] - ThreadPool::popbufferTask: task buffered(68)!
+  WARN root [2025-09-02 12:08:04,010] - ThreadPool::popbufferTask: task buffered(67)!
+ DEBUG root [2025-09-02 12:08:04,010] - final sqlStr :: ActStub->().
+ DEBUG root [2025-09-02 12:08:04,011] - final sqlStr :: GuildStub->().
+ DEBUG root [2025-09-02 12:08:04,011] - final sqlStr :: WorldRefreshEntityStub->().
+  WARN root [2025-09-02 12:08:04,011] - ThreadPool::bufferTask: task buffered(67)!
+  WARN root [2025-09-02 12:08:04,011] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+ DEBUG root [2025-09-02 12:08:04,012] - final sqlStr :: Avatar_lingShouInfo_lingShouList->().
+  WARN root [2025-09-02 12:08:04,012] - ThreadPool::popbufferTask: task buffered(67)!
+ DEBUG root [2025-09-02 12:08:04,012] - final sqlStr :: Avatar_achievementInfo_finishedIds->().
+  WARN root [2025-09-02 12:08:04,012] - ThreadPool::popbufferTask: task buffered(66)!
+ DEBUG root [2025-09-02 12:08:04,013] - final sqlStr :: Avatar_savedBuffDic_buffs->().
+  WARN root [2025-09-02 12:08:04,013] - ThreadPool::bufferTask: task buffered(66)!
+  WARN root [2025-09-02 12:08:04,013] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,013] - ThreadPool::popbufferTask: task buffered(66)!
+ DEBUG root [2025-09-02 12:08:04,014] - final sqlStr :: RaidMatchStub->().
+  WARN root [2025-09-02 12:08:04,014] - ThreadPool::popbufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,014] - ThreadPool::bufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,014] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,014] - ThreadPool::popbufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,014] - ThreadPool::popbufferTask: task buffered(64)!
+  WARN root [2025-09-02 12:08:04,014] - ThreadPool::bufferTask: task buffered(64)!
+  WARN root [2025-09-02 12:08:04,014] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,015] - ThreadPool::bufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,015] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+ DEBUG root [2025-09-02 12:08:04,015] - final sqlStr :: GlobalMailStub_mailList_despArgs->().
+  WARN root [2025-09-02 12:08:04,015] - ThreadPool::popbufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,015] - ThreadPool::bufferTask: task buffered(65)!
+  WARN root [2025-09-02 12:08:04,015] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,015] - ThreadPool::bufferTask: task buffered(66)!
+  WARN root [2025-09-02 12:08:04,015] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,016] - ThreadPool::bufferTask: task buffered(67)!
+  WARN root [2025-09-02 12:08:04,016] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+  WARN root [2025-09-02 12:08:04,016] - ThreadPool::bufferTask: task buffered(68)!
+  WARN root [2025-09-02 12:08:04,016] - ThreadPool::addTask: can't createthread, the poolsize is full(5).
+ DEBUG root [2025-09-02 12:08:04,017] - final sqlStr :: Summon_skillDic_skills->().
+ DEBUG root [2025-09-02 12:08:04,018] - final sqlStr :: SiegeWarStub_cntList->().
+ DEBUG root [2025-09-02 12:08:04,018] - final sqlStr :: Teleporter->().
+ DEBUG root [2025-09-02 12:08:04,018] - final sqlStr :: MonsterGrp->().
+  WARN root [2025-09-02 12:08:04,018] - ThreadPool::popbufferTask: task buffered(68)!
+  WARN root [2025-09-02 12:08:04,018] - ThreadPool::popbufferTask: task buffered(67)!
+  WARN root [2025-09-02 12:08:04,018] - ThreadPool::popbufferTask: task buffered(66)!
+  WARN root [2025-09-02 12:08:04,019] - ThreadPool::popbufferTask: task buffered(65)!
+ DEBUG root [2025-09-02 12:08:04,019] - final sqlStr :: Avatar_warehouse_itemsList->().
+  WARN root [2025-09-02 12:08:04,019] - ThreadPool::popbufferTask: task buffered(64)!
+ DEBUG root [2025-09-02 12:08:04,019] - final sqlStr :: Guild_guildEvent_eventList->().
+ DEBUG root [2025-09-02 12:08:04,019] - final sqlStr :: Avatar_skillDic_skills->().
+  WARN root [2025-09-02 12:08:04,019] - ThreadPool::popbufferTask: task buffered(63)!
+ DEBUG root [2025-09-02 12:08:04,019] - final sqlStr :: Monster_skillDic_skills->().
+ DEBUG root [2025-09-02 12:08:04,020] - final sqlStr :: Avatar_bodyEquipData_bodyEquipList->().
+  WARN root [2025-09-02 12:08:04,020] - ThreadPool::popbufferTask: task buffered(62)!
+  WARN root [2025-09-02 12:08:04,020] - ThreadPool::popbufferTask: task buffered(61)!
+ DEBUG root [2025-09-02 12:08:04,020] - final sqlStr :: WorldBossStub->().
+  WARN root [2025-09-02 12:08:04,021] - ThreadPool::popbufferTask: task buffered(60)!
+  WARN root [2025-09-02 12:08:04,021] - ThreadPool::popbufferTask: task buffered(59)!
+  WARN root [2025-09-02 12:08:04,021] - ThreadPool::popbufferTask: task buffered(58)!
+ DEBUG root [2025-09-02 12:08:04,021] - final sqlStr :: CubeSpaceMgr->().
+ DEBUG root [2025-09-02 12:08:04,022] - final sqlStr :: Account->().
+ DEBUG root [2025-09-02 12:08:04,022] - final sqlStr :: Avatar_lingShouInfo_battleList_petIdList->().
+ DEBUG root [2025-09-02 12:08:04,022] - final sqlStr :: DungeonSpaceMgr->().
+ DEBUG root [2025-09-02 12:08:04,022] - final sqlStr :: Monster->().
+  WARN root [2025-09-02 12:08:04,023] - ThreadPool::popbufferTask: task buffered(57)!
+  WARN root [2025-09-02 12:08:04,023] - ThreadPool::popbufferTask: task buffered(56)!
+  WARN root [2025-09-02 12:08:04,023] - ThreadPool::popbufferTask: task buffered(55)!
+  WARN root [2025-09-02 12:08:04,023] - ThreadPool::popbufferTask: task buffered(54)!
+  WARN root [2025-09-02 12:08:04,023] - ThreadPool::popbufferTask: task buffered(53)!
+ DEBUG root [2025-09-02 12:08:04,024] - final sqlStr :: Guild_guildUnionApplyMgr_applyUnionList->().
+ DEBUG root [2025-09-02 12:08:04,025] - final sqlStr :: CubeStub->().
+ DEBUG root [2025-09-02 12:08:04,025] - final sqlStr :: Monster_savedBuffDic_buffs->().
+ DEBUG root [2025-09-02 12:08:04,026] - final sqlStr :: Avatar_outfitInfo_outfitList->().
+ DEBUG root [2025-09-02 12:08:04,026] - final sqlStr :: WorldLineSpaceMgr->().
+  WARN root [2025-09-02 12:08:04,026] - ThreadPool::popbufferTask: task buffered(52)!
+  WARN root [2025-09-02 12:08:04,026] - ThreadPool::popbufferTask: task buffered(51)!
+  WARN root [2025-09-02 12:08:04,027] - ThreadPool::popbufferTask: task buffered(50)!
+  WARN root [2025-09-02 12:08:04,027] - ThreadPool::popbufferTask: task buffered(49)!
+  WARN root [2025-09-02 12:08:04,027] - ThreadPool::popbufferTask: task buffered(48)!
+ DEBUG root [2025-09-02 12:08:04,027] - final sqlStr :: Account_characters_characters->().
+ DEBUG root [2025-09-02 12:08:04,027] - final sqlStr :: Avatar_equipDropData_timerData->().
+ DEBUG root [2025-09-02 12:08:04,028] - final sqlStr :: Avatar_holidayPayInfo_holidayPayList->().
+  WARN root [2025-09-02 12:08:04,028] - ThreadPool::popbufferTask: task buffered(47)!
+  WARN root [2025-09-02 12:08:04,028] - ThreadPool::popbufferTask: task buffered(46)!
+ DEBUG root [2025-09-02 12:08:04,028] - final sqlStr :: Avatar_friendship_receiveList->().
+ DEBUG root [2025-09-02 12:08:04,028] - final sqlStr :: Barrier->().
+ DEBUG root [2025-09-02 12:08:04,029] - final sqlStr :: Avatar_friendship_msgDic->().
+  WARN root [2025-09-02 12:08:04,029] - ThreadPool::popbufferTask: task buffered(45)!
+ DEBUG root [2025-09-02 12:08:04,029] - final sqlStr :: Space->().
+  WARN root [2025-09-02 12:08:04,030] - ThreadPool::popbufferTask: task buffered(44)!
+  WARN root [2025-09-02 12:08:04,030] - ThreadPool::popbufferTask: task buffered(43)!
+  WARN root [2025-09-02 12:08:04,030] - ThreadPool::popbufferTask: task buffered(42)!
+ DEBUG root [2025-09-02 12:08:04,030] - final sqlStr :: Avatar_buildDic_skills->().
+ DEBUG root [2025-09-02 12:08:04,031] - final sqlStr :: Avatar_friendship_blockList->().
+  WARN root [2025-09-02 12:08:04,031] - ThreadPool::popbufferTask: task buffered(41)!
+ DEBUG root [2025-09-02 12:08:04,031] - final sqlStr :: CityBattleTeleporter->().
+ DEBUG root [2025-09-02 12:08:04,031] - final sqlStr :: SiegeWarStub_nameList->().
+ DEBUG root [2025-09-02 12:08:04,032] - final sqlStr :: Avatar_achievementInfo_achieveList->().
+  WARN root [2025-09-02 12:08:04,032] - ThreadPool::popbufferTask: task buffered(40)!
+  WARN root [2025-09-02 12:08:04,032] - ThreadPool::popbufferTask: task buffered(39)!
+  WARN root [2025-09-02 12:08:04,032] - ThreadPool::popbufferTask: task buffered(38)!
+  WARN root [2025-09-02 12:08:04,032] - ThreadPool::popbufferTask: task buffered(37)!
+  WARN root [2025-09-02 12:08:04,032] - ThreadPool::popbufferTask: task buffered(36)!
+ DEBUG root [2025-09-02 12:08:04,033] - final sqlStr :: Guild_members_members->().
+ DEBUG root [2025-09-02 12:08:04,033] - final sqlStr :: WorldLineStub->().
+ DEBUG root [2025-09-02 12:08:04,033] - final sqlStr :: SiegeWarSpaceMgr->().
+  WARN root [2025-09-02 12:08:04,034] - ThreadPool::popbufferTask: task buffered(35)!
+ DEBUG root [2025-09-02 12:08:04,034] - final sqlStr :: LoginStub->().
+  WARN root [2025-09-02 12:08:04,034] - ThreadPool::popbufferTask: task buffered(34)!
+ DEBUG root [2025-09-02 12:08:04,034] - final sqlStr :: AdminStub->().
+ DEBUG root [2025-09-02 12:08:04,035] - final sqlStr :: Avatar_enemyMgr_enemyList->().
+  WARN root [2025-09-02 12:08:04,035] - ThreadPool::popbufferTask: task buffered(33)!
+ DEBUG root [2025-09-02 12:08:04,036] - final sqlStr :: WonderLandSpaceMgr->().
+ DEBUG root [2025-09-02 12:08:04,036] - final sqlStr :: Guild_guildEvent_eventList_args->().
+ DEBUG root [2025-09-02 12:08:04,036] - final sqlStr :: Guild_permissions_permissions->().
+ DEBUG root [2025-09-02 12:08:04,036] - final sqlStr :: Guild->().
+ DEBUG root [2025-09-02 12:08:04,036] - final sqlStr :: Summon_savedBuffDic_buffs->().
+ DEBUG root [2025-09-02 12:08:04,037] - final sqlStr :: Avatar_friendship_recentList->().
+ DEBUG root [2025-09-02 12:08:04,037] - final sqlStr :: CrossDataStub->().
+ DEBUG root [2025-09-02 12:08:04,037] - final sqlStr :: Npc->().
+ DEBUG root [2025-09-02 12:08:04,038] - final sqlStr :: Guild_junXuArchitecture_qixieList->().
+ DEBUG root [2025-09-02 12:08:04,038] - final sqlStr :: ItemLinkStub->().
+ DEBUG root [2025-09-02 12:08:04,038] - final sqlStr :: SiegeWarSpaceStub->().
+ DEBUG root [2025-09-02 12:08:04,038] - final sqlStr :: Creation_skillDic_skills->().
+ DEBUG root [2025-09-02 12:08:04,039] - final sqlStr :: GlobalMailStub_mailList->().
+ DEBUG root [2025-09-02 12:08:04,040] - final sqlStr :: Avatar_buildDic_skillLevels->().
+ DEBUG root [2025-09-02 12:08:04,043] - final sqlStr :: CrossSiegeWarStub->().
+ DEBUG root [2025-09-02 12:08:04,044] - final sqlStr :: Creation_savedBuffDic_buffs->().
+ DEBUG root [2025-09-02 12:08:04,044] - final sqlStr :: DropStub->().
+ DEBUG root [2025-09-02 12:08:04,044] - final sqlStr :: Summon->().
+ DEBUG root [2025-09-02 12:08:04,045] - final sqlStr :: Avatar->().
+ DEBUG root [2025-09-02 12:08:04,046] - final sqlStr :: SiegeWarStub_guildNameList->().
+ DEBUG root [2025-09-02 12:08:04,046] - final sqlStr :: Avatar_equipDropData_takerWaitList->().
+ DEBUG root [2025-09-02 12:08:04,047] - final sqlStr :: CrossServerStub->().
+ DEBUG root [2025-09-02 12:08:04,048] - final sqlStr :: Guild_guildUnionApplyMgr_senderList->().
+ DEBUG root [2025-09-02 12:08:04,048] - final sqlStr :: Npc_savedBuffDic_buffs->().
+ DEBUG root [2025-09-02 12:08:04,048] - final sqlStr :: Npc_skillDic_skills->().
+ DEBUG root [2025-09-02 12:08:04,049] - final sqlStr :: AuctionStub->().
+ DEBUG root [2025-09-02 12:08:04,049] - final sqlStr :: Avatar_blazeIds->().
+ DEBUG root [2025-09-02 12:08:04,049] - final sqlStr :: Avatar_drawCardInfo_cardPoolInfoList->().
+ DEBUG root [2025-09-02 12:08:04,051] - final sqlStr :: LeaderBoardStub->().
+ DEBUG root [2025-09-02 12:08:04,051] - final sqlStr :: DuelFlag->().
+ DEBUG root [2025-09-02 12:08:04,051] - final sqlStr :: Avatar_lingShouInfo_lingShouList_equipList->().
+ DEBUG root [2025-09-02 12:08:04,051] - final sqlStr :: RaidDungeonStub->().
+ DEBUG root [2025-09-02 12:08:04,053] - final sqlStr :: TeamMatchStub->().
+ DEBUG root [2025-09-02 12:08:04,053] - final sqlStr :: GlobalMailStub_delayMailList->().
+  INFO root [2025-09-02 12:08:04,072] - Shutdowner::onShutdownBegin: shutting down(period=0, tickPeriod=1)
+S_INFO root [2025-09-02 12:08:04,073] - onDBMgrShutDown()
+  INFO root [2025-09-02 12:08:04,073] - Shutdowner::onShutdown: shutting down
+  INFO root [2025-09-02 12:08:04,073] - Shutdowner::onShutdownEnd: shutting down
+  INFO root [2025-09-02 12:08:04,073] - start server app, timing method:rdtsc 3417537920
+  INFO root [2025-09-02 12:08:04,083] - ---- dbmgr Version: 2.5.8. ScriptVersion: 0.1.0. Pythoncore: 3.7.3. Protocol: 00C842919090D3FD4897D0C953C8FBA9. Protocol client: 3E7AE130BB33C652DBF24318D016ECD0. Config: Hybrid64 X64. Built: 21:29:54 Aug 27 2025. AppID: 3129652375332859999. UID: 1001. PID: 1157654 ----
+  INFO root [2025-09-02 12:08:04,083] - Server ubuntumyh: Intel(R) Core(TM) i7-14700KF x4 with 8083592kB RAM
+  INFO root [2025-09-02 12:08:04,083] - ---- dbmgr is running ----
+ DEBUG root [2025-09-02 12:08:04,083] - ThreadPool::destroy(): starting size 5.
+  WARN root [2025-09-02 12:08:04,384] - ThreadPool::destroy(): waiting for thread(5)[0x75d8c649cc80,0x75d8c649cd40,0x75d8c649ce00,0x75d8c649cec0,0x75d8c649cf80,], try=1
+ DEBUG root [2025-09-02 12:08:04,385] - DBThread::onEnd(): 0x75d8c649cec0!
+ DEBUG root [2025-09-02 12:08:04,385] - DBThread::onEnd(): 0x75d8c649ce00!
+ DEBUG root [2025-09-02 12:08:04,385] - DBThread::onEnd(): 0x75d8c649cc80!
+ DEBUG root [2025-09-02 12:08:04,389] - DBThread::onEnd(): 0x75d8c649cf80!
+ DEBUG root [2025-09-02 12:08:04,389] - DBThread::onEnd(): 0x75d8c649cd40!
+ DEBUG root [2025-09-02 12:08:04,786] - TPThread::~TPThread(): 0x75d8c649cc80
+ DEBUG root [2025-09-02 12:08:04,786] - TPThread::~TPThread(): 0x75d8c649cd40
+ DEBUG root [2025-09-02 12:08:04,786] - TPThread::~TPThread(): 0x75d8c649ce00
+ DEBUG root [2025-09-02 12:08:04,786] - TPThread::~TPThread(): 0x75d8c649cec0
+ DEBUG root [2025-09-02 12:08:04,786] - TPThread::~TPThread(): 0x75d8c649cf80
+ DEBUG root [2025-09-02 12:08:04,786] - ThreadPool::destroy(): successfully!
+  INFO root [2025-09-02 12:08:04,788] - Script::uninstall(): is successfully!
+ DEBUG root [2025-09-02 12:08:04,788] - ThreadPool::destroy(): starting size 2.
+  WARN root [2025-09-02 12:08:05,089] - ThreadPool::destroy(): waiting for thread(2)[0x75d8c704e040,0x75d8c704eae0,], try=1
+ DEBUG root [2025-09-02 12:08:05,491] - TPThread::~TPThread(): 0x75d8c704e040
+ DEBUG root [2025-09-02 12:08:05,491] - TPThread::~TPThread(): 0x75d8c704eae0
+ DEBUG root [2025-09-02 12:08:05,492] - ThreadPool::destroy(): successfully!
+ DEBUG root [2025-09-02 12:08:05,492] - Bundle::destroyObjPool(): size 9.
+ DEBUG root [2025-09-02 12:08:05,493] - Channel::destroyObjPool(): size 0.
+ DEBUG root [2025-09-02 12:08:05,493] - TCPPacket::destroyObjPool(): size 0.
+ DEBUG root [2025-09-02 12:08:05,493] - UDPPacket::destroyObjPool(): size 14.
+ DEBUG root [2025-09-02 12:08:05,493] - EndPoint::destroyObjPool(): size 0.
+ DEBUG root [2025-09-02 12:08:05,493] - Address::destroyObjPool(): size 0.
+ DEBUG root [2025-09-02 12:08:05,494] - TCPPacketReceiver::destroyObjPool(): size 0.
+ DEBUG root [2025-09-02 12:08:05,494] - UDPPacketReceiver::destroyObjPool(): size 0.
+  INFO root [2025-09-02 12:08:05,494] - dbmgr(3129652375332859999) has shut down.
+  INFO root [2025-09-02 12:08:06,797] - EventDispatcher()::~EventDispatcher: Num timers = 1

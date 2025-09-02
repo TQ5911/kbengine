@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Properties>
+        <spaceNo>
+            <Type>          SPACE_NO                </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+            <Persistent>    true                    </Persistent>
+        </spaceNo>
+
+        <birthInMem>
+            <Type>          LONGTIME        </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </birthInMem>
+
+        <methodPool>
+            <Type>          METHOD_POOL_INFO    </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </methodPool>
+
+        <delayDestroyTimerID>
+            <Type>          TIMER_ID        </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0           </Default>
+        </delayDestroyTimerID>
+
+        <tmpProps>
+            <Type>      PYTHON          </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>   {}              </Default>
+        </tmpProps>
+
+        <ttl>
+            <Type>          FLOAT               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </ttl>
+
+        <baseGlobalIdx>
+            <Type>          UINT8                   </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </baseGlobalIdx>
+
+        <tempMiscProps>
+            <Type>     PY_DICT                  </Type>
+            <Flags>    CELL_PRIVATE             </Flags>
+            <Default>   {}                    </Default>
+        </tempMiscProps>
+
+        <miscProps>
+            <Type>     PY_DICT                  </Type>
+            <Flags>    CELL_PRIVATE             </Flags>
+            <Default>   {}                    </Default>
+            <Persistent>    true                     </Persistent>
+        </miscProps>
+
+        <force>
+            <Type>          INT32               </Type>
+            <Flags>         ALL_CLIENTS         </Flags>
+            <Persistent>    true            </Persistent>
+            <WitnessName>   true                </WitnessName>
+        </force>
+    </Properties>
+    <CellMethods>
+        <safeDestroy/>
+
+        <delaySafeDestroy>
+            <Arg>       FLOAT           </Arg>
+        </delaySafeDestroy>
+
+        <renewalCell>
+            <Arg>           PYTHON      </Arg>
+        </renewalCell>
+        <callMethod>
+            <Arg>           METHOD_NAME </Arg>
+            <Arg>           METHOD_ARGS </Arg>
+        </callMethod>
+        <safeTeleport>
+            <Arg>           MAILBOX     </Arg>
+            <Arg>           PYTHON    </Arg>
+            <Arg>           PYTHON   </Arg>
+            <Arg>           SPACE_NO      </Arg>
+        </safeTeleport>
+        <onTeleportNear>
+            <Arg>           MAILBOX     </Arg>
+            <Arg>           PYTHON      </Arg>
+            <Arg>           PYTHON      </Arg>
+            <Arg>           SPACE_NO      </Arg>
+        </onTeleportNear>
+
+        <setBaseGlobalIdx>
+            <Arg>           BASE_GLOBAL_IDX   </Arg>
+        </setBaseGlobalIdx>
+    </CellMethods>
+    <DetailLevelsNoUse>
+        <NEAR>  <hyst>  0 </hyst> <radius> 30  </radius>    </NEAR>
+        <MEDIUM>  <hyst>  5 </hyst> <radius> 5 </radius>        </MEDIUM>
+        <FAR>   <hyst> 5 </hyst> <radius> 10   </radius>        </FAR>
+    </DetailLevelsNoUse>
+</root>

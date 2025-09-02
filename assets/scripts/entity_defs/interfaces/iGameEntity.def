@@ -1,0 +1,46 @@
+<root>
+    <Properties>
+        <gameEntityId>
+            <Type>      GAME_ENTITY_ID  </Type>
+            <Flags>     ALL_CLIENTS     </Flags>
+            <Default>       0           </Default>
+        </gameEntityId>
+
+        <posIndex>
+            <Type>      UINT32 </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>       0           </Default>
+        </posIndex>
+
+        <dirIndex>
+            <Type>      INT16  </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>       0           </Default>
+        </dirIndex>
+
+        <gameEntityIdentifyID>
+            <Type>     UINT32          </Type>
+            <Flags>    CELL_PRIVATE    </Flags>
+            <Default>   0              </Default>
+        </gameEntityIdentifyID>
+        
+        <disappearTime>
+            <Type>      UINT32           </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>   0                </Default>
+        </disappearTime>
+
+        <disappearTimer>
+            <Type>      UINT32           </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>   0                </Default>
+        </disappearTimer>
+
+        <dunTimeFreezeFlag>
+            <Type>      BOOL             </Type>
+            <Flags>     OTHER_CLIENTS    </Flags>
+            <Default>   0                </Default>
+        </dunTimeFreezeFlag>
+    </Properties>
+
+</root>

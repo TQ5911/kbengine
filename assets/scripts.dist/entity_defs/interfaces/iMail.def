@@ -1,0 +1,76 @@
+<root>
+
+    <Properties>
+        <mailLogInfoDic>
+            <Type>          PY_DICT   </Type>
+            <Flags>         BASE      </Flags>
+            <Persistent>    true      </Persistent>
+        </mailLogInfoDic>
+        <loadMailCDTime>
+            <Type>          ITEM_ID   </Type>
+            <Flags>         BASE      </Flags>
+        </loadMailCDTime>
+        <loadMailTimerId>
+            <Type>          ITEM_ID   </Type>
+            <Flags>         BASE      </Flags>
+        </loadMailTimerId>
+        <hasGotGlobalMails>
+            <Type>      PY_DICT  </Type>
+            <Flags>     BASE    </Flags>
+            <Persistent>    true   </Persistent>
+        </hasGotGlobalMails>
+    </Properties>
+
+    <BaseMethods>
+        <onNewMailInsertSucc>
+            <Arg>         MAILID        </Arg>
+            <Arg>         MAIL_GBID     </Arg>
+            <Arg>         UNICODE       </Arg>
+            <Arg>         UNICODE       </Arg>
+            <Arg>         UNICODE       </Arg>
+            <Arg>         UINT32        </Arg>
+            <Arg>         UINT32        </Arg>
+            <Arg>         OP_UUID       </Arg>
+            <Arg>         UNICODE       </Arg>
+            <Arg>         UINT32        </Arg>
+        </onNewMailInsertSucc>
+        <sendOneGlobalMail>
+            <Arg>         GLOBAL_MAIL_VAL        </Arg>
+        </sendOneGlobalMail>
+
+        <reqReadOneMail><Exposed/>
+            <Arg>         MAIL_GBID        </Arg>
+        </reqReadOneMail>
+        <reqGetOneMailAttach><Exposed/>
+            <Arg>         MAIL_GBID        </Arg>
+        </reqGetOneMailAttach>
+        <reqGetAllMailsAttach><Exposed/>
+        </reqGetAllMailsAttach>
+        <reqDelMails><Exposed/>
+            <Arg>          ARRAY <of>  MAIL_GBID </of>        </Arg>
+        </reqDelMails>
+        <reqDelAllMails><Exposed/>
+        </reqDelAllMails>
+    </BaseMethods>
+    <ClientMethods>
+        <onGetMailList>
+            <Arg>   ARRAY <of>  CLIENT_MAIL_VAL </of>  </Arg>
+        </onGetMailList>
+        <onGetNewMail>
+            <Arg>   ARRAY <of>  CLIENT_MAIL_VAL </of>  </Arg>
+        </onGetNewMail>
+
+        <onReadOneMail>
+            <Arg>         MAIL_GBID        </Arg>
+        </onReadOneMail>
+        <onGetMailAttach>
+            <Arg>   ARRAY <of>  MAIL_GBID </of>  </Arg>
+        </onGetMailAttach>
+        <onDelMails>
+            <Arg>         ARRAY <of>  MAIL_GBID  </of>        </Arg>
+        </onDelMails>
+        <onDelAllMails>
+        </onDelAllMails>
+    </ClientMethods>
+</root>
+

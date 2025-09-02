@@ -1,0 +1,10 @@
+ServerAddr: "192.168.10.127:20099"
+Verbose: true
+UDPMode: true
+ConfigFile: "config.yaml"
+ScriptFile: "temp.py"
+ComponentNum: 4
+Uid: 1001
+LogLevel: "INFO"
+LogFile: "runScripts.log"
+Timeout: 10

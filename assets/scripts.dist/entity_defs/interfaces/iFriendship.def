@@ -1,0 +1,206 @@
+<root>
+    <Properties>
+        <friendship>
+            <Type>          FRIEND_SHIP             </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+            <CrossServer>   false                   </CrossServer>
+        </friendship>
+
+        <packetSendTimer>
+            <Type>          TIMER_ID                </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </packetSendTimer>
+
+        <packetSendList>
+            <Type>          PY_LIST                 </Type>
+            <Flags>         BASE                    </Flags>
+        </packetSendList>
+    </Properties>
+
+    <BaseMethods>
+        <receiveFriendRequest>
+            <Arg>           PYTHON                  </Arg>
+            <Arg>           LONGTIME                </Arg>
+        </receiveFriendRequest>
+
+        <sendFriendRequest> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </sendFriendRequest>
+
+        <acceptRequest> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </acceptRequest>
+
+        <onAcceptFriendOffline>
+            <Arg>       ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
+        </onAcceptFriendOffline>
+
+        <onNotifyOnline>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           ENTITYCALL              </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onNotifyOnline>
+
+        <onGetFriendsBox>
+            <Arg>       ARRAY   <of>    BOX_AND_GBID    </of>   </Arg>
+        </onGetFriendsBox>
+
+        <removeFriend> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </removeFriend>
+
+        <removeRecent> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </removeRecent>
+
+        <onFriendRemoveYou>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onFriendRemoveYou>
+
+        <searchFriend> <Exposed/>
+            <Arg>           UNICODE                 </Arg>
+        </searchFriend>
+
+        <blockPlayer> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </blockPlayer>
+
+        <removeFromBlock> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </removeFromBlock>
+
+        <sendFriendMsg> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </sendFriendMsg>
+
+        <rejectRequest> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </rejectRequest>
+
+        <getFriendMsgs> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </getFriendMsgs>
+
+        <removeFriendMsgs> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           MSG_TS                  </Arg>
+        </removeFriendMsgs>
+
+        <acceptAllRequest> <Exposed/>
+        </acceptAllRequest>
+
+        <rejectAllRequest> <Exposed/>
+        </rejectAllRequest>
+
+        <onRecvMsg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           MSG_TS                  </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onRecvMsg>
+
+        <updateFriend> <Exposed/>
+        </updateFriend>
+
+        <onNotifyOffline>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onNotifyOffline>
+
+        <onNotifyFriendsNameChanged>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onNotifyFriendsNameChanged>
+
+        <getAvatarInterInfo> <Exposed/>
+            <Arg>           PLAYER_GBID           </Arg>
+        </getAvatarInterInfo>
+
+        <getInterInfoOffline>
+            <Arg>   ARRAY       <of>    PLAYER_GBID         </of>    </Arg>
+        </getInterInfoOffline>
+
+        <getInterInfoOnline>
+            <Arg>           PYTHON          </Arg>
+        </getInterInfoOnline>
+
+        <sendMyDetailInfoBase>
+            <Arg>           ENTITYCALL              </Arg>
+        </sendMyDetailInfoBase>
+
+        <onGetAvatarInterInfoBase>
+            <Arg>           ENTITYCALL              </Arg>
+        </onGetAvatarInterInfoBase>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onUpdateFriendsFull>
+            <Arg>       ARRAY   <of>    FRIEND_VAL              </of>   </Arg>
+        </onUpdateFriendsFull>
+
+        <onUpdateFriendsDiff>
+            <Arg>       ARRAY   <of>    FRIEND_CLIENT_DIFF      </of>   </Arg>
+        </onUpdateFriendsDiff>
+
+        <onFriendRequests>
+            <Arg>       ARRAY   <of>    FRIEND_REQUEST_VAL      </of>   </Arg>
+        </onFriendRequests>
+
+        <onRemoveFriends>
+            <Arg>       ARRAY   <of>    PLAYER_GBID             </of>   </Arg>
+        </onRemoveFriends>
+
+        <onRemoveFriendRequests>
+            <Arg>       ARRAY   <of>    PLAYER_GBID             </of>   </Arg>
+        </onRemoveFriendRequests>
+
+        <onSearchFriends>
+            <Arg>       UINT8                                   </Arg>
+            <Arg>       ARRAY   <of>    FRIEND_SEARCH_VAL       </of>   </Arg>
+        </onSearchFriends>
+
+        <onUpdateBlocks>
+            <Arg>       ARRAY   <of>    FRIEND_BLOCK_VAL        </of>   </Arg>
+        </onUpdateBlocks>
+
+        <onRemoveBlocks>
+            <Arg>       ARRAY   <of>    PLAYER_GBID             </of>   </Arg>
+        </onRemoveBlocks>
+
+        <onRemoveRecent>
+            <Arg>       ARRAY   <of>    PLAYER_GBID             </of>   </Arg>
+        </onRemoveRecent>
+
+        <onRemoveStrangers>
+            <Arg>       ARRAY   <of>    PLAYER_GBID             </of>   </Arg>
+        </onRemoveStrangers>
+
+        <onUpdateStrangerData>
+            <Arg>       ARRAY   <of>    STRANGER_FRIEND_VAL     </of>   </Arg>
+        </onUpdateStrangerData>
+
+        <onUpdateRecentData>
+            <Arg>       ARRAY   <of>    FRIEND_RECENT_VAL       </of>   </Arg>
+        </onUpdateRecentData>
+
+        <onGetFriendMsgs>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>       ARRAY   <of>    FRIEND_CLIENT_MSG       </of>   </Arg>
+        </onGetFriendMsgs>
+
+        <onFriendMsgChanged>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           MSG_CNT                 </Arg>
+            <Arg>           MSG_TS                  </Arg>
+        </onFriendMsgChanged>
+        
+        <onGetInterInfoClient>
+            <Arg>           AVATAR_INTER_VAL      </Arg>
+        </onGetInterInfoClient>
+    </ClientMethods>
+</root>

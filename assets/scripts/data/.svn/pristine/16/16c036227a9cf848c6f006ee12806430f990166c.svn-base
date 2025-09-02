@@ -1,0 +1,30 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: gearManufacture/config
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    "gearManufUnboundProb": _tools.RODict({
+        "ID": "gearManufUnboundProb",
+        "value": 0.3,
+    }),
+    "manufMatsNotInserted_msgId": _tools.RODict({
+        "ID": "manufMatsNotInserted_msgId",
+        "value": 54000298,
+    }),
+    "gearReplaceUnboundProb": _tools.RODict({
+        "ID": "gearReplaceUnboundProb",
+        "value": 0.3,
+    })
+})

@@ -1,0 +1,34 @@
+<root>
+    <Properties>
+        <autoMF>
+            <Type>          INT8            </Type>
+            <Flags>         BASE_AND_CLIENT </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </autoMF>
+    </Properties>
+
+    <BaseMethods>
+        <reqWorkshopSetAutoMF><Exposed/>
+            <Arg>       BOOL       </Arg>
+        </reqWorkshopSetAutoMF>
+        <reqWorkshopMF>
+            <Arg>       ITEM_ID    </Arg>
+            <Arg>       UINT8      </Arg>
+        </reqWorkshopMF>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onWorkshopSetAutoMF>
+            <Arg>       INT32       </Arg>
+        </onWorkshopSetAutoMF>
+        <onWorkshopMF>
+            <Arg>       INT32       </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT8       </Arg>
+        </onWorkshopMF>
+    </ClientMethods>
+</root>

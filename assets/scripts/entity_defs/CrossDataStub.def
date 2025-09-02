@@ -1,0 +1,106 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+        <Interface> iCentralStub                </Interface>
+    </Interfaces>
+
+    <Properties>
+        <remoteCallCache>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE                </Flags>
+        </remoteCallCache>
+
+        <connectSuccessTimes>
+            <Type>          UINT32              </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </connectSuccessTimes>
+    </Properties>
+
+    <BaseMethods>
+        <addGuildDataToCrossData>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </addGuildDataToCrossData>
+
+        <getGuildInfos>
+            <Arg>       ENTITYCALL              </Arg>
+        </getGuildInfos>
+
+        <removeGuildInfo>
+            <Arg>       GUILD_UUID              </Arg>
+        </removeGuildInfo>
+
+        <addGuildRelation>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       LONGTIME                </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       UUID                    </Arg>
+        </addGuildRelation>
+
+        <removeGuildRelation>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </removeGuildRelation>
+
+        <applyGuildUnionInCross>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </applyGuildUnionInCross>
+
+        <getEnemyGuildInfos>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       GUILD_UUID              </Arg>
+        </getEnemyGuildInfos>
+
+        <getCrossServerGuildDetailFromOtherServer>
+            <Arg>       UUID                    </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       GUILD_DETAIL_DATA       </Arg>
+        </getCrossServerGuildDetailFromOtherServer>
+
+        <getCrossServerGuildDetail>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </getCrossServerGuildDetail>
+
+        <getGuildInfosByGuildUUID>
+            <Arg>       ARRAY   <of>    GUILD_UUID    </of>    </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </getGuildInfosByGuildUUID>
+
+        <removeReceiverGuildApplyUnion>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       GUILD_UUID              </Arg>
+        </removeReceiverGuildApplyUnion>
+
+        <doOnCrossGuild>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </doOnCrossGuild>
+
+        <doOnCrossGuildBack>
+            <Arg>       UUID                    </Arg>
+            <Arg>       SERVER_ID               </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </doOnCrossGuildBack>
+    </BaseMethods>
+</root>
+

@@ -1,0 +1,28 @@
+<root>
+    <Interfaces>
+        <Interface>     iStaticSpaceMgr         </Interface>
+    </Interfaces>
+
+    <Properties>
+        <collToBoss>
+            <Type>          PYTHON                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+        </collToBoss>
+
+        <randomBossId>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </randomBossId>
+
+        <randomBossGameEntityId>
+            <Type>          OBJECT_ID               </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </randomBossGameEntityId>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+</root>

@@ -1,0 +1,305 @@
+<root>
+    <Interfaces>
+        <Interface>       iTimerBase            </Interface>
+        <Interface>       iCycleEvent           </Interface>
+    </Interfaces>
+
+    <Properties>
+        <characters>
+            <Type>          CHARACTERS_INFO         </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>        true                </Persistent>
+        </characters>
+
+        <accountType>
+            <Type>          UINT8       </Type>
+            <Flags>         BASE        </Flags>
+            <Persistent>    true        </Persistent>
+        </accountType>
+
+        <accountName>
+            <Type>              STRING              </Type>
+            <Flags>             BASE_AND_CLIENT     </Flags>
+            <Persistent>        true                </Persistent>
+            <Index>             INDEX               </Index>
+            <DatabaseLength>    255                 </DatabaseLength>
+        </accountName>
+
+        <avatarID>
+            <Type>          OBJECT_ID       </Type>
+            <Flags>         BASE                    </Flags>
+        </avatarID>
+
+        <avatarDatabaseID>
+            <Type>          UINT64      </Type>
+            <Flags>         BASE        </Flags>
+            <Persistent>    true        </Persistent>
+        </avatarDatabaseID>
+
+        <accountStatus>
+            <Type>          UINT8                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </accountStatus>
+
+        <centralServerId>
+            <Type>          UINT32                  </Type>
+            <Flags>         BASE                    </Flags>
+        </centralServerId>
+
+        <deviceUniqueIdentifier>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+        </deviceUniqueIdentifier>
+
+        <devicePlatId>
+            <Type>          UINT8                   </Type>
+            <Flags>         BASE                    </Flags>
+        </devicePlatId>
+
+        <loginState>
+            <Type>          UINT8       </Type>
+            <Flags>         BASE                    </Flags>
+        </loginState>
+
+        <channelId>
+            <Type>          UINT8                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </channelId>
+
+        <loginChannel>
+            <Type>          UNICODE                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </loginChannel>
+
+        <registerChannel>
+            <Type>          UNICODE                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </registerChannel>
+
+        <dinghaoNum>
+            <Type>          UINT8                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>         0                    </Default>
+        </dinghaoNum>
+
+        <dinghaoFirstTime>
+            <Type>          LONGTIME                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>         0                    </Default>
+        </dinghaoFirstTime>
+
+        <banAllServerPostTime>
+            <Type>          INT32                </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>         0                     </Default>
+            <Persistent>    true                    </Persistent>
+        </banAllServerPostTime>
+
+        <banAllServerPostReason>
+            <Type>          UNICODE                </Type>
+            <Flags>         BASE                    </Flags>
+        </banAllServerPostReason>
+
+        <otherServerAvatarBox>
+            <Type>          PYTHON              </Type>
+            <Flags>         BASE                </Flags>
+        </otherServerAvatarBox>
+
+        <delayDestroyTimer>
+            <Type>          TIMER_ID            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </delayDestroyTimer>
+
+        <streamDic>
+            <Type>          PY_DICT             </Type>
+            <Flags>         BASE                </Flags>
+        </streamDic>
+
+        <avatarClientEnableCBs>
+            <Type>          PY_LIST             </Type>
+            <Flags>         BASE                </Flags>
+        </avatarClientEnableCBs>
+
+        <loginCount>
+            <Type>          UINT16              </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </loginCount>
+
+        <isNewAccount>
+            <Type>          BOOL        </Type>
+            <Flags>         BASE        </Flags>
+            <Default>       1           </Default>
+            <Persistent>    true        </Persistent>
+        </isNewAccount>
+
+        <clientIP>
+            <Type>          UINT32                  </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </clientIP>
+
+        <serverId>
+            <Type>          UINT16                   </Type>
+            <Flags>         BASE_AND_CLIENT          </Flags>
+            <Default>       0                       </Default>
+        </serverId>
+
+        <isDelete>
+            <Type>         BOOL                </Type>
+            <Flags>         BASE                </Flags>
+            <Persistent>   true                 </Persistent>
+            <Default>       0                   </Default>
+        </isDelete>
+
+        <switchServerAvatars>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </switchServerAvatars>
+
+        <callbackList>
+            <Type>          PYTHON                  </Type>
+            <Flags>         BASE                    </Flags>
+        </callbackList>
+
+        <lastSelectGbId>
+            <Type>          PLAYER_GBID             </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </lastSelectGbId>
+    </Properties>
+
+    <ClientMethods>
+        <onReqAvatarList>
+            <Arg>   CHARACTERS_INFO </Arg>
+            <Arg>   BOOL            </Arg>
+        </onReqAvatarList>
+
+        <onReqAvatarGBID>
+            <Arg>   PLAYER_GBID </Arg>
+        </onReqAvatarGBID>
+
+        <onRemoveAvatar>
+            <Arg>   DBID        </Arg>
+        </onRemoveAvatar>
+
+        <onCreateAvatarResult>
+            <Arg>   UINT8           </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+        </onCreateAvatarResult>
+
+        <onCreateAvatarFailed>
+            <Arg>   UINT8           </Arg>
+        </onCreateAvatarFailed>
+
+        <onMessage>
+            <Arg>        INT32                        </Arg>
+            <Arg>        ARRAY <of> UNICODE </of>     </Arg>
+        </onMessage>
+
+        <onGameConfigChanged>
+            <Arg>    ARRAY    <of>   UINT16    </of> </Arg>
+            <Arg>    ARRAY    <of>   STRING    </of> </Arg>
+        </onGameConfigChanged>
+
+        <onGameConfigChangedByName>
+            <Arg>    ARRAY    <of>   STRING    </of> </Arg>
+            <Arg>    ARRAY    <of>   STRING    </of> </Arg>
+        </onGameConfigChangedByName>
+
+        <onKickAnotherAvatar>
+        </onKickAnotherAvatar>
+
+        <onKickAnotherAccount>
+        </onKickAnotherAccount>
+
+        <onAvatarDetailInAccount>
+            <Arg>    PLAYER_GBID    </Arg>
+            <Arg>    SCORE          </Arg>
+            <Arg>    SPACE_NO       </Arg>
+            <Arg>    UNICODE        </Arg>
+            <Arg>    SERVER_ID      </Arg>
+        </onAvatarDetailInAccount>
+    </ClientMethods>
+
+    <BaseMethods>
+        <selectAvatarGame>
+            <Exposed/>
+            <Arg>   PLAYER_GBID </Arg>
+        </selectAvatarGame>
+
+        <reqCreateAvatar>
+            <Exposed/>
+            <Arg>   SCHOOL  </Arg>  <!-- school -->
+            <Arg>   UNICODE </Arg>  <!-- name -->
+            <Arg>   SEX     </Arg>
+            <Arg>   BOOL    </Arg>
+            <Arg>   FACE_DATA  </Arg>
+        </reqCreateAvatar>
+
+        <logBeforeLogin> <Exposed/>
+            <Arg>   OBJECT_ID   </Arg>
+            <Arg>   UNICODE     </Arg>
+        </logBeforeLogin>
+
+        <reqCreateBot>
+            <Exposed/>
+            <Arg>   UNICODE </Arg>  <!-- name -->
+            <Arg>   SCHOOL  </Arg>  <!-- school -->
+        </reqCreateBot>
+
+        <reqRemoveAvatar>
+            <Exposed/>
+            <Arg>   UNICODE </Arg>  <!-- name -->
+        </reqRemoveAvatar>
+
+        <kickAnotherAvatar>
+            <Exposed/>
+            <Arg>   BOOL    </Arg>
+        </kickAnotherAvatar>
+
+        <destroyAccountReason>
+            <Arg>   UINT8   </Arg>
+        </destroyAccountReason>
+
+        <kickAccount>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   UINT32      </Arg>
+        </kickAccount>
+
+        <delAccount>
+        </delAccount>
+
+        <onCheckCrossServerTokenRet>
+            <Arg>   BOOL        </Arg>
+            <Arg>   PYTHON      </Arg>
+            <Arg>   UNICODE     </Arg>
+        </onCheckCrossServerTokenRet>
+
+        <onGetAvatarPorpertiesResp>
+            <Arg>   PYTHON      </Arg>
+            <Arg>   PYTHON      </Arg>
+        </onGetAvatarPorpertiesResp>
+
+        <getAvatarDetailForAccount> <Exposed/>
+            <Arg>    PLAYER_GBID    </Arg>
+        </getAvatarDetailForAccount>
+
+        <onGetGuildsCacheDataAccount>
+            <Arg>    PYTHON    </Arg>
+            <Arg>    PYTHON    </Arg>
+        </onGetGuildsCacheDataAccount>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+</root>

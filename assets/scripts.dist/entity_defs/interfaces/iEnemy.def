@@ -1,0 +1,68 @@
+<root>
+    <Properties>
+        <enemyMgr>
+            <Type>          ENEMY_MGR_DATA_INFO    </Type>
+            <Flags>         BASE_AND_CLIENT        </Flags>
+            <Persistent>    true                        </Persistent>
+        </enemyMgr>
+    </Properties>
+
+    <BaseMethods>
+        <onDeadAddEnemy>
+            <Arg>          PLAYER_GBID </Arg>
+            <Arg>          UNICODE </Arg>
+            <Arg>          SCHOOL </Arg>
+            <Arg>          LEVEL </Arg>
+            <Arg>          SPACE_NO </Arg>
+            <Arg>          SEX </Arg>
+            <Arg>          SCORE </Arg>
+        </onDeadAddEnemy>
+
+        <reqRemoveEnemy> <Exposed/>
+            <Arg>          PLAYER_GBID </Arg>
+        </reqRemoveEnemy>
+
+        <getEnemyFreshInfo> <Exposed/>
+        </getEnemyFreshInfo>
+
+        <getEnemyPosInfo> <Exposed/>
+            <Arg>          PLAYER_GBID </Arg>
+        </getEnemyPosInfo>
+
+        <onGetEnemyPosInfoResult>
+            <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          PYTHON                       </Arg>
+        </onGetEnemyPosInfoResult>
+    </BaseMethods>
+
+    <ClientMethods>
+        <onGetEnemyFreshInfo>
+            <Arg>          ARRAY <of> ENEMY_FRESH_INFO </of>    </Arg>
+        </onGetEnemyFreshInfo>
+
+        <onEnemyDatas>
+            <Arg>          ARRAY <of> RELATION_ENEMY_DATA_INFO </of>    </Arg>
+        </onEnemyDatas>
+
+        <onRemoveEnemy>
+            <Arg>          ARRAY <of> PLAYER_GBID </of>    </Arg>
+        </onRemoveEnemy>
+
+        <onNewEnemyRecord>
+            <Arg>          PLAYER_GBID </Arg>
+            <Arg>          ENEMY_RECORD_DATA_INFO </Arg>
+        </onNewEnemyRecord>
+
+        <sendEnemyPosInfoToClient>
+            <Arg>          PLAYER_GBID </Arg>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          SPACE_NO                     </Arg>
+        </sendEnemyPosInfoToClient>
+
+        <onInitEnemyRecord>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          ARRAY <of> ENEMY_RECORD_DATA_LIST </of> </Arg>
+        </onInitEnemyRecord>
+    </ClientMethods>
+</root>

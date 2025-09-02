@@ -1,0 +1,95 @@
+<root>
+    <Interfaces>
+        <Interface>     iBaseWithCell   </Interface>
+        <Interface>     iCell           </Interface>
+        <Interface>     iSpaceMgr       </Interface>
+        <Interface>     iTimerCell       </Interface>
+    </Interfaces>
+
+    <Properties>
+        <dungeonPlayMode>
+            <Type>      PYTHON                              </Type>
+            <Flags>     CELL_PRIVATE                        </Flags>
+        </dungeonPlayMode>
+
+        <dungeonStage>
+            <Type>      DUNGEON_STAGE      </Type>
+            <Flags>     CELL_PRIVATE       </Flags>
+            <Default>   0                  </Default>
+        </dungeonStage>
+
+        <dungeonStageStartT>
+            <Type>      LONGTIME      </Type>
+            <Flags>     CELL_PRIVATE       </Flags>
+            <Default>   0                  </Default>
+        </dungeonStageStartT>
+
+        <dungeonPlayerReliveRecordDic>
+            <Type> PY_DICT </Type>
+            <Flags> CELL_PRIVATE </Flags>
+            <Default> {} </Default>
+        </dungeonPlayerReliveRecordDic>
+
+        <dungeonGoodManColl>
+            <Type> PYTHON </Type>
+            <Flags> CELL_PRIVATE </Flags>
+            <Default> set() </Default>
+        </dungeonGoodManColl>
+
+        <dungeonGoodManActId>
+            <Type>      ACTIVITY_ID        </Type>
+            <Flags>     CELL_PRIVATE       </Flags>
+            <Default>   0                  </Default>
+        </dungeonGoodManActId>
+    </Properties>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <CellMethods>
+        <onDungeonStarted>
+            <Arg>   LONGTIME    </Arg>
+        </onDungeonStarted>
+
+        <onSingleDungeonCompleted>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            FLOAT           </Arg>
+        </onSingleDungeonCompleted>
+
+        <onTeamDungeonCompleted>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            TEAMID          </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            FLOAT           </Arg>
+        </onTeamDungeonCompleted>
+
+        <onRaidDungeonCompleted>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            RAID_ID         </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            FLOAT           </Arg>
+            <Arg>            PY_DICT         </Arg>
+            <Arg>            PY_LIST         </Arg>
+        </onRaidDungeonCompleted>
+
+        <doEnterTeamDungeon>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   PLAYER_GBID             </Arg>
+            <Arg>   UUID                    </Arg>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   PYTHON                  </Arg>
+        </doEnterTeamDungeon>
+
+        <enterRaidDungeonDirectly>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   PLAYER_GBID             </Arg>
+            <Arg>   UUID                    </Arg>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   DUNGEON_SRC             </Arg>
+            <Arg>   PYTHON                  </Arg>
+        </enterRaidDungeonDirectly>
+
+    </CellMethods>
+</root>

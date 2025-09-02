@@ -1,0 +1,11 @@
+<root>
+    <Interfaces>
+        <Interface>     iStaticSpaceMgr         </Interface>
+    </Interfaces>
+
+    <Properties>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+</root>

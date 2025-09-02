@@ -1,0 +1,32 @@
+
+功能：
+
+服务器在产品环境的热更新机制将通过替换某个class的函数对象实现，例如cell.Avatar的addSkill方法出错，需要更新时就重写一个addSkill方法，然后在每个cellapp进程上执行：
+def addSkill(self, skillId, skillLv):
+    print('new addSkill')
+    ...
+
+import Avatar
+Avatar.Avatar.addSkill=addSkill
+
+
+用法：
+0.pip install astor
+1.执行getHotReload.py脚本
+对于类方法参数格式为：component module class method，例如getHotReload.py cell Avatar Avatar addSkill
+对于模块方法，参数格式为：component module method
+
+
+2.在游戏中 GM执行$hotreload命令， 游戏内的代码就会热更到最新
+
+
+
+注：1，每次运行脚本工具 会在 hotReload.py 中增加一个 要热更新的函数，原有的其他函数会保留。 
+    2，使用GM命令的的时候，会热更 hotReload.py 内的 refreshCell() 或者 refreshBase() 中的 所有函数
+	3.提供三个GM命令：
+	$hotreload:同时在cellapp和baseapp上执行
+	$hotreloadCell: 在各个cellapp上执行hotReload.refreshCell()函数
+	$hotreloadBase: 在各个baseapp上执行hotReload.refreshBase()函数
+
+
+

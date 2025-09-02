@@ -1,0 +1,218 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: worldMonsterRefresh/loadLimit
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    99990006: _tools.RODict({
+        "mission": 0,
+    }),
+    40028018: _tools.RODict({
+        "mission": 0,
+    }),
+    40024002: _tools.RODict({
+        "mission": 0,
+    }),
+    40024003: _tools.RODict({
+        "mission": 0,
+    }),
+    40024004: _tools.RODict({
+        "mission": 0,
+    }),
+    40024005: _tools.RODict({
+        "mission": 0,
+    }),
+    40024001: _tools.RODict({
+        "mission": 0,
+    }),
+    40024006: _tools.RODict({
+        "mission": 0,
+    }),
+    40024007: _tools.RODict({
+        "mission": 0,
+    }),
+    40024008: _tools.RODict({
+        "mission": 0,
+    }),
+    40024009: _tools.RODict({
+        "mission": 0,
+    }),
+    40024010: _tools.RODict({
+        "mission": 0,
+    }),
+    40024011: _tools.RODict({
+        "mission": 0,
+    }),
+    40024012: _tools.RODict({
+        "mission": 0,
+    }),
+    40014001: _tools.RODict({
+        "mission": 0,
+    }),
+    40014002: _tools.RODict({
+        "mission": 0,
+    }),
+    40014003: _tools.RODict({
+        "mission": 0,
+    }),
+    10024055: _tools.RODict({
+        "mission": 0,
+    }),
+    10024056: _tools.RODict({
+        "mission": 0,
+    }),
+    10024057: _tools.RODict({
+        "mission": 0,
+    }),
+    10024058: _tools.RODict({
+        "mission": 0,
+    }),
+    10024059: _tools.RODict({
+        "mission": 0,
+    }),
+    10024060: _tools.RODict({
+        "mission": 0,
+    }),
+    10014096: _tools.RODict({
+        "mission": 0,
+    }),
+    10014097: _tools.RODict({
+        "mission": 0,
+    }),
+    10014098: _tools.RODict({
+        "mission": 0,
+    }),
+    10014100: _tools.RODict({
+        "mission": 0,
+    }),
+    10014101: _tools.RODict({
+        "mission": 0,
+    }),
+    10014102: _tools.RODict({
+        "mission": 0,
+    }),
+    10044039: _tools.RODict({
+        "mission": 0,
+    }),
+    10054023: _tools.RODict({
+        "mission": 0,
+    }),
+    10064005: _tools.RODict({
+        "mission": 0,
+    }),
+    10304020: _tools.RODict({
+        "mission": 0,
+    }),
+    10304021: _tools.RODict({
+        "mission": 0,
+    }),
+    10314001: _tools.RODict({
+        "mission": 0,
+    }),
+    10204001: _tools.RODict({
+        "mission": 0,
+    }),
+    10020405: _tools.RODict({
+        "mission": 0,
+    }),
+    10020404: _tools.RODict({
+        "mission": 0,
+    }),
+    10020396: _tools.RODict({
+        "mission": 0,
+    }),
+    10018048: _tools.RODict({
+        "mission": 0,
+    }),
+    10024044: _tools.RODict({
+        "mission": 0,
+    }),
+    10024048: _tools.RODict({
+        "mission": 0,
+    }),
+    10024019: _tools.RODict({
+        "mission": 0,
+    }),
+    10024049: _tools.RODict({
+        "mission": 0,
+    }),
+    10024054: _tools.RODict({
+        "mission": 0,
+    }),
+    10024052: _tools.RODict({
+        "mission": 0,
+    }),
+    10024053: _tools.RODict({
+        "mission": 0,
+    }),
+    10014011: _tools.RODict({
+        "mission": 0,
+    }),
+    10014041: _tools.RODict({
+        "mission": 0,
+    }),
+    10014095: _tools.RODict({
+        "mission": 0,
+    }),
+    10108045: _tools.RODict({
+        "mission": 0,
+    }),
+    10018052: _tools.RODict({
+        "mission": 0,
+    }),
+    10108046: _tools.RODict({
+        "mission": 0,
+    }),
+    10048021: _tools.RODict({
+        "mission": 0,
+    }),
+    10048022: _tools.RODict({
+        "mission": 0,
+    }),
+    11208014: _tools.RODict({
+        "mission": 0,
+    }),
+    11208013: _tools.RODict({
+        "mission": 0,
+    }),
+    10018053: _tools.RODict({
+        "mission": 0,
+    }),
+    10014103: _tools.RODict({
+        "mission": 0,
+    }),
+    10024061: _tools.RODict({
+        "mission": 0,
+    }),
+    10044041: _tools.RODict({
+        "mission": 0,
+    }),
+    10044040: _tools.RODict({
+        "mission": 0,
+    }),
+    10018054: _tools.RODict({
+        "mission": 0,
+    }),
+    10054004: _tools.RODict({
+        "mission": 0,
+    }),
+    10014042: _tools.RODict({
+        "mission": 0,
+    }),
+    10114001: _tools.RODict({
+        "mission": 0,
+    })
+})
+minKey = 10014011
+maxKey = 99990006

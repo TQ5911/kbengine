@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package gameInterface;
+
+option py_generic_services = true;
+
+message Void {
+}
+
+message ConfigVal
+{
+    string name = 1;
+    string val = 2;
+}
+
+message ListVal 
+{
+    repeated string vals = 1;
+}
+
+message IntVal
+{
+    uint32 value = 1;
+}
+
+// Interface 进程的 service
+service Interface
+{
+    rpc gameConfigChangedOnBaseapp(ConfigVal) returns(Void);
+    rpc cacheConfigOnBaseapp(ConfigVal) returns(Void);
+    rpc syncCacheConfigOnBaseapp(ConfigVal) returns(Void);
+    rpc activeTick(Void) returns(Void);
+    rpc interfaceReload(Void) returns(Void);
+    rpc interfaceDataReload(ListVal) returns(Void);
+    rpc syncRegisterCount(IntVal) returns(Void);
+}
+
+// BaseApp 的 service
+service BaseApp
+{
+    rpc activeTickCallback(Void) returns(Void);
+    rpc reqSyncCacheConfigOnBaseapp(Void) returns(Void);
+}

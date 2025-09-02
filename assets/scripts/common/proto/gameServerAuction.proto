@@ -1,0 +1,355 @@
+syntax = "proto3";
+
+package AuctionGameServer;
+option go_package = "../gameServerService";
+option py_generic_services = true;
+option optimize_for = LITE_RUNTIME;
+
+message Void {
+}
+
+message ServerInfoMessage
+{
+  uint32 serverId = 1;  //serverId
+  uint32 compId = 2;
+  string serverName = 3;  //serverName
+}
+
+message ItemData
+{
+  uint32 itemId = 1;
+  uint32 itemNum = 2;
+  uint64 uniqueId = 3;
+  uint32 bindType = 4;
+  uint32 createTime = 5;
+  uint32 expireTime = 6;
+  string attrJson = 7;
+}
+
+message AuctionItem
+{
+  uint32 auctionType = 1;
+  uint64 auctionItemUUID = 2;
+  uint32 addTime = 3;
+  ItemData itemData = 4;
+  uint64 price = 5;
+  uint32 number = 6;
+  uint32 bagType = 7;
+  uint32 source = 8;
+  uint32 status = 9;
+  uint32 locked = 10;
+  string extraInfo = 11;
+  uint32 tCreate = 12;
+  uint64 fromPlayerGBID = 13;
+}
+
+message AuctionClientInfo
+{
+  uint32 auctionType = 1;
+  uint64 auctionItemUUID = 2;
+  uint32 addTime = 3;
+  uint32 itemId = 4;
+  uint64 uniqueId = 5;
+  uint64 price = 6;
+  uint32 number = 7;
+  uint32 status = 8;
+  uint32 tCreate = 9;
+}
+
+message SaleItemReq
+{
+  uint64 playerGBID = 1;
+  string itemDict = 2;
+  uint64 totalPrice = 3;
+  uint32 number = 4;
+  uint32 bagType = 5;
+  string extra = 6;
+}
+
+message SaleItemResp
+{
+  uint64 playerGBID = 1;
+  AuctionItem auctionItem = 2;
+  string extra = 3;
+}
+
+message DoSaleItemReq
+{
+  uint64 auctionItemUUID = 1;
+  uint64 playerGBID = 2;
+  string extra = 3;
+  bool result = 4;
+}
+
+message DoSaleItemResp
+{
+  uint64 playerGBID = 1;
+  AuctionItem auctionItem = 2;
+  string extra = 3;
+}
+
+message BuyItemReq
+{
+  uint64 playerGBID = 1;
+  uint64 auctionItemUUID = 2;
+  uint32 number = 3;
+  string extra = 4;
+}
+
+message BuyItemResp
+{
+  uint64 playerGBID = 1;
+  uint64 auctionItemUUID = 2;
+  uint64 price = 3;
+  string extra = 4;
+  uint32 code = 5;
+}
+
+message DoBuyItemReq
+{
+  uint64 auctionItemUUID = 1;
+  uint64 playerGBID = 2;
+  uint32 errno = 3;
+  uint64 price = 4;
+  string extra = 5;
+}
+
+message DoBuyItemResp
+{
+  uint64 playerGBID = 1;
+  AuctionItem auctionItem = 2;
+  string extra = 3;
+}
+
+message CancelSaleItemReq
+{
+  uint64 playerGBID = 1;
+  uint64 auctionItemUUID = 2;
+  string extra = 3;
+}
+
+message CancelSaleItemResp
+{
+  uint64 playerGBID = 1;
+  AuctionItem auctionItem = 2;
+  string extra = 3;
+}
+
+message DoCancelSaleItemReq
+{
+  uint64 auctionItemUUID = 1;
+  uint64 playerGBID = 2;
+  string extra = 3;
+}
+
+message DoCancelSaleItemResp
+{
+  uint64 playerGBID = 1;
+  uint32 errno = 2;
+  AuctionItem auctionItem = 3;
+  string extra = 4;
+}
+
+message SearchItemsByItemIdReq
+{
+  uint64 playerGBID = 1;
+  repeated uint32 itemIds = 2;
+  uint32 limit = 3;
+  uint32 offset = 4;
+  string extra = 5;
+}
+
+message SearchItemsByItemIdResp
+{
+  uint64 playerGBID = 1;
+  repeated uint32 itemIds = 2;
+  uint32 limit = 3;
+  uint32 offset = 4;
+  repeated AuctionItem auctionItems = 5;
+  uint32 totalNum = 6;
+  string extra = 7;
+}
+
+message GetItemLastAndAvgPriceReq
+{
+  uint64 playerGBID = 1;
+  uint32 itemId = 2;
+  string extra = 3;
+}
+
+message GetItemLastAndAvgPriceResp
+{
+  uint64 playerGBID = 1;
+  uint32 itemId = 2;
+  float lastPrice = 3;
+  float avgPrice = 4;
+  string extra = 5;
+}
+
+message GetCurrentSaleItemInfoReq
+{
+  uint64 playerGBID = 1;
+  uint32 itemId = 2;
+  string extra = 3;
+}
+
+message GetCurrentSaleItemInfoResp
+{
+  uint64 playerGBID = 1;
+  uint32 itemId = 2;
+  float lastPrice = 3;
+  float avgPrice = 4;
+  string extra = 5;
+  repeated AuctionItem auctionItems = 6;
+}
+
+message GetPlayerAuctionItemsReq
+{
+  uint64 playerGBID = 1;
+  string extra = 2;
+}
+
+message GetPlayerAuctionItemsResp
+{
+  uint64 playerGBID = 1;
+  repeated AuctionItem auctionItems = 2;
+  string extra = 3;
+}
+
+message LoadPlayerAuctionItemReq
+{
+  uint64 playerGBID = 1;
+  string extra = 2;
+}
+
+message LoadPlayerAuctionItemResp
+{
+  uint64 playerGBID = 1;
+  repeated uint64 auctionItemUUIDs = 2;
+  string extra = 3;
+}
+
+message OnItemBeSaledInfo
+{
+  uint64 playerGBID = 1;
+  AuctionItem auctionItem = 2;
+  uint32 number = 3;
+  string extra = 4;
+}
+
+message DoCommandReq
+{
+  string command = 1;
+  string extra = 2;
+}
+
+message DoCommandResp
+{
+  string command = 1;
+  string extra = 2;
+}
+
+message GetItemNumByCategoryIdReq
+{
+  uint64 playerGBID = 1;
+  uint32 categoryId = 2;
+  repeated uint32 itemIds = 3;
+}
+
+message GetItemNumByCategoryIdResp
+{
+  uint64 playerGBID = 1;
+  uint32 categoryId = 2;
+  repeated uint32 itemIds = 3;
+  repeated uint32 itemNums = 4;
+  repeated float prices = 5;
+}
+message BuyItemByItemIdReq
+{
+  uint64 playerGBID = 1;
+  uint32 itemId = 2;
+  uint32 number = 3;
+  uint32 price = 4;
+  string extra = 5;
+}
+
+message BuyItemByItemIdResp
+{
+  uint64 playerGBID = 1;
+  uint32 itemId = 2;
+  uint32 number = 3;
+  uint32 price = 4;
+  string extra = 5;
+  uint32 remainNum = 6;
+  repeated uint64 auctionItemUUIDs = 7;
+  uint32 totalPrice = 8;
+}
+
+message DoBuyItemByItemIdReq
+{
+  uint64 playerGBID = 1;
+  uint32 errno = 2;
+  uint32 itemId = 3;
+  uint32 number = 4;
+  uint32 price = 5;
+  uint32 remainNum = 6;
+  repeated uint64 auctionItemUUIDs = 7;
+  uint32 totalPrice = 8;
+  string extra = 9;
+}
+
+message DoBuyItemByItemIdResp
+{
+  uint64 playerGBID = 1;
+  uint32 errno = 2;
+  uint32 itemId = 3;
+  uint32 number = 4;
+  uint32 price = 5;
+  uint32 remainNum = 6;
+  ItemData itemData = 7;
+  uint32 totalPrice = 8;
+  string extra = 9;
+}
+//中心服务器向游戏服提供的rpc
+service AuctionServer
+{
+  rpc registerServer(ServerInfoMessage) returns(Void);
+  rpc activeTick(Void) returns(Void);
+  rpc saleItem(SaleItemReq) returns(Void);
+  rpc doSaleItem(DoSaleItemReq) returns(Void);
+  rpc buyItem(BuyItemReq) returns(Void);
+  rpc doBuyItem(DoBuyItemReq) returns(Void);
+  rpc cancelSaleItem(CancelSaleItemReq) returns(Void);
+  rpc doCancelSaleItem(DoCancelSaleItemReq) returns(Void);
+  rpc searchItemsByItemId(SearchItemsByItemIdReq) returns(Void);
+  rpc getItemLastAndAvgPrice(GetItemLastAndAvgPriceReq) returns(Void);
+  rpc getCurrentSaleItemInfo(GetCurrentSaleItemInfoReq) returns(Void);
+  rpc getPlayerAuctionItems(GetPlayerAuctionItemsReq) returns(Void);
+  rpc loadPlayerAuctionItem(LoadPlayerAuctionItemReq) returns(Void);
+  rpc doCommand(DoCommandReq) returns(Void);
+  rpc getAuctionItemNumByCategoryId(GetItemNumByCategoryIdReq) returns(Void);
+  rpc buyItemByItemId(BuyItemByItemIdReq) returns(Void);
+  rpc doBuyItemByItemId(DoBuyItemByItemIdReq) returns(Void);
+}
+
+//游戏服向中心服的rpc
+service GameServer
+{
+  rpc activeTickCallback(Void) returns(Void);
+  rpc replySaleItem(SaleItemResp) returns(Void);
+  rpc replyDoSaleItem(DoSaleItemResp) returns(Void);
+  rpc replyBuyItem(BuyItemResp) returns(Void);
+  rpc replyDoBuyItem(DoBuyItemResp) returns(Void);
+  rpc replyCancelSaleItem(CancelSaleItemResp) returns(Void);
+  rpc replyDoCancelSaleItem(DoCancelSaleItemResp) returns(Void);
+  rpc replySearchItemsByItemId(SearchItemsByItemIdResp) returns(Void);
+  rpc replyGetItemLastAndAvgPrice(GetItemLastAndAvgPriceResp) returns(Void);
+  rpc replyGetCurrentSaleItemInfo(GetCurrentSaleItemInfoResp) returns(Void);
+  rpc replyGetPlayerAuctionItems(GetPlayerAuctionItemsResp) returns(Void);
+  rpc replyLoadPlayerAuctionItem(LoadPlayerAuctionItemResp) returns(Void);
+  rpc onItemBeSaled(OnItemBeSaledInfo) returns(Void);
+  rpc replyDoCommand(DoCommandResp) returns(Void);
+  rpc replyGetAuctionItemNumByCategoryId(GetItemNumByCategoryIdResp) returns(Void);
+  rpc replyBuyItemByItemId(BuyItemByItemIdResp) returns(Void);
+  rpc replyDoBuyItemByItemId(DoBuyItemByItemIdResp) returns(Void);
+}

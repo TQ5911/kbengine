@@ -1,0 +1,1141 @@
+# -*- coding: utf-8 -*-
+import KBEngine
+import random
+from KBEDebug import *
+import gameengine
+import utils
+import formula
+import gametimer
+import gameconst
+import gamesql
+import gamedecorator
+import gameglobal
+import gameclass
+import iTimer
+import iCycleEvent
+import Bag
+import appearance
+import gameconfig
+import json
+import gamelog
+import socket
+import struct
+import functools
+import dungeonPlayMode
+import math
+import character
+import WarehouseBag
+import proto.centralLogin_pb2 as centralLogin
+import chatConfig_channel as CC_CD
+
+import petData_set as PDSD
+import character_roleData as CRDD
+import bagData_set as BGDSD
+import iRouter
+import tutorConst_newbieStep as TC_NSD
+
+
+class AccountStatus(object):
+    normal = 0
+    creating = 1
+    avatarLoading = 2
+    avatarLoaded = 3
+
+
+class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
+    """
+    账号实体
+    客户端登陆到服务端后，服务端将自动创建这个实体，通过这个实体与客户端进行交互
+    """
+    IsAvatar = False
+
+    def __init__(self):
+        KBEngine.Proxy.__init__(self)
+        iCycleEvent.ICycleEvent.__init__(self)
+        self.avatarID = 0
+        self.shouldAutoBackup = False
+
+        loginJsonData, _ = self.getClientDatas()
+        clientData = utils.decodeClientData(loginJsonData)
+        self.centralServerId = clientData.get('loginServerId', 1)
+
+        self.accountType, self.accountName = utils.getAccountTypeAndName(self.__ACCOUNT_NAME__)
+        self.serverId = gameconfig.serverId()
+
+        self.onDailyEvent()
+        self._hasLoadAppearance = False
+
+        devicePlatId = clientData.get('devicePlatId', 0)
+        channelId = clientData.get('channelId', 0)
+        self.udid = clientData.get('deviceUniqueIdentifier', '')
+        self.devicePlatId = devicePlatId
+        self.channelId = channelId
+
+        stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
+        gameclass.DuplicatedCallList(stubs).onAccountCreated(self.accountName, devicePlatId, self.isNewAccount,
+                                                             channelId)
+        if self.isNewAccount:
+            self.isNewAccount = False
+        gameglobal.localAccountCache[self.__ACCOUNT_NAME__] = self
+        
+        if self.isCrossServer:
+            crossServerToken = clientData.get('crossServerToken')
+            gameengine.getGlobalBase('CrossServerStub').checkCrossServerToken(self.accountName, crossServerToken, self,
+                                                                        "onCheckCrossServerTokenRet",
+                                                                        (crossServerToken, ))
+
+        self.callbackList = []
+        self._callback(0.1, 'loadSwitchServerRecrod', (), gametimer.TIMER_TAG_LOAD_SWITCH_SERVER_RECORD)
+
+    def loadSwitchServerRecrod(self):
+        INFO_MSG('loadSwitchServerRecrod:', self.accountFullName())
+        gamesql.loadSwitchServerRecord(self.accountFullName(), self.onLoadSwitchServerRecord)
+
+    def onDeleteSwitchServerRecord(self, ret, num, insertId, err):
+        INFO_MSG('onDeleteSwitchServerRecord:', ret, num, insertId, err)
+        if err:
+            ERROR_MSG('onDeleteSwitchServerRecord:', err)
+            return
+
+    def onLoadSwitchServerRecord(self, ret, num, insertId, err):
+        INFO_MSG('onLoadSwitchServerRecord:', ret, num, insertId, err)
+        if err:
+            ERROR_MSG('onLoadSwitchServerRecord:', err)
+            return
+
+        gamesql.clearSwitchServerRecord(self.accountFullName(), self.onDeleteSwitchServerRecord)
+
+        _dbIds = []
+        for _dbId, in ret:
+            _dbId = int(_dbId)
+            _dbIds.append(_dbId)
+
+        if _dbIds:
+            gamesql.loadSwitchServerAvatarInfo(
+                _dbIds,
+                self.onLoadSwitchServerAvatarInfo
+            )
+        else:
+            self.onLoadSwitchServerAvatarInfo([], 0, 0, None)
+
+    def onLoadSwitchServerAvatarInfo(self, ret, num, insertId, err):
+        INFO_MSG('onLoadSwitchServerAvatarInfo:', ret, num, insertId, err)
+        if err:
+            ERROR_MSG('onLoadSwitchServerAvatarInfo:', err)
+            return
+
+        gbIdList = []
+        for _dbId, _gbId, _school, _sex, _name, _level, _birthInDB in ret:
+            _dbId = int(_dbId)
+            _gbId = int(_gbId)
+            _school = int(_school)
+            _sex = int(_sex)
+            _name = utils.getStringFromBytes(_name)
+            _level = int(_level)
+            _birthInDB = int(_birthInDB)
+            self.characters.addCharacter(_gbId, _dbId, _school, _name, _sex, _level, _birthInDB)
+            gbIdList.append(_gbId)
+
+        _cbList = self.callbackList
+        self.callbackList = None
+
+        for _func, _args in _cbList:
+            getattr(self, _func)(*_args)
+
+    def accountFullName(self):
+        return self.__ACCOUNT_NAME__
+
+    def onTimer(self, tid, userArg):
+        self._onTimer(tid, userArg)
+        if utils.isBelongTimerTag(userArg):
+            self._onTimerCallback(tid)
+        elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
+            self.onCycleEventTick()
+
+    @property
+    def avatar(self):
+        a = KBEngine.entities.get(self.avatarID, None)
+        return a
+    
+    @property
+    def isCrossServer(self):
+        return self.accountType==centralLogin.ACCOUNT_CROSS_SERVER
+
+    @property
+    def crossServerEntityCall(self):
+        serverId = gameconfig.serverId()
+        if not serverId:
+            return
+        return iRouter.RemoteServerBoxEntityCall(serverId, self)
+
+    def createAvatarGenerateGbId(self, props):
+        gbId = utils.generateUniqGlobalId()
+        sql = "select sm_gbID from tbl_Avatar where sm_gbID = %s " % gbId
+        props["gbId"] = gbId
+        props["checkCnt"] += 1
+        KBEngine.executeRawDatabaseCommand(sql,
+                                           lambda ret, num, insertId, err, props=props: self.checkGbIdCallback(ret, num,
+                                                                                                               insertId,
+                                                                                                               err,
+                                                                                                               props))
+
+    def checkGbIdCallback(self, result, nrows, insertid, error, props):
+        if error:
+            ERROR_MSG(f"checkGbIdCallback error: {error}")
+            self._onCreateAvatarFailed(props['name'], gameconst.CreateAvatarRes.DATABASE_OPR_ERROR)
+        elif not len(result):
+            self.createAvatar(props)
+        else:
+            WARNING_MSG("gbId %s has exist" % props["gbId"])
+            if props["checkCnt"] < 10:
+                self.createAvatarGenerateGbId(props)
+            else:
+                ERROR_MSG('checkGbIdCallback: retry too many times', self.accountName)
+                self._onCreateAvatarFailed(props['name'], gameconst.CreateAvatarRes.GBID_ERR)
+
+    def _defaultChatChannel(self):
+        _retBits = 0
+        for _idx, _data in CC_CD.datas.items():
+            if _data['channelDefaultSet'] == 1:
+                _retBits = _retBits | (1 << _idx)
+
+        return _retBits
+
+    def createAvatar(self, avatarProps):
+        INFO_MSG('createAvatar', avatarProps)
+
+        # TODO X: bag capacity
+        bag = Bag.Bag(gameconst.BagType.BAG_TYPE_NORMAL)
+        petBag = Bag.Bag(gameconst.BagType.BAG_TYPE_LINGSHOU_PEN, PDSD.datas['petBagCapacity']['value'])
+        warehouse = WarehouseBag.WarehouseBag(capacity=BGDSD.datas['initBankCapacity']['value'])
+
+        _appearance = appearance.Appearance()
+        _appearance.faceData = avatarProps['faceData']
+
+        crusadeInfo = dungeonPlayMode.CrusadeDungeonPlayModePlayerObj()
+        crusadeInfo.rewardNumber = crusadeInfo.dailyRewardNum
+        crusadeInfo.useItemAddRewardNumber = crusadeInfo.rewardNumItemWeeklyLimit
+        crusadeInfo.useCoinAddRewardNum = crusadeInfo.rewardNumCoinDailyLimit
+
+        chiefInfo = dungeonPlayMode.ChiefDungeonPlayModePlayerObj()
+        chiefInfo.rewardNumber = chiefInfo.dailyRewardNum
+        chiefInfo.useItemAddRewardNumber = chiefInfo.rewardNumItemWeeklyLimit
+        chiefInfo.useCoinAddRewardNum = chiefInfo.rewardNumCoinDailyLimit
+
+        cliConfigDic = {gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY: gameconst.CliConfigDef.EQUIP_AUTO_DISA_DEFAULT_VAL}
+        position, bornDirection = utils.getPlayerBornInfo()
+        direction = (0.0, 0.0, bornDirection * math.pi / 180)
+        bornGamePlayID = utils.getPlayerBornMapId()
+        props = {
+            'gbID': avatarProps["gbId"],
+            "name": avatarProps["name"],
+            "school": avatarProps["school"],
+            "sex": avatarProps["sex"],
+            'obId': utils.generateObId(),
+            'spaceNo': formula.getLineSpaceNo(bornGamePlayID, random.choice(
+                range(utils.getLineMaxNumber(bornGamePlayID)))),
+            "direction": direction,
+            "position": position,  # TODO X: set born position
+            'birthInDB': utils.getNow(),
+            'accountName': self.accountName,
+            'accountType': self.accountType,
+            'accountDBID': self.databaseID,
+            'bagData': bag,
+            'petBag': petBag,
+            'chatChannel': self._defaultChatChannel(),
+            'crusadeInfo': crusadeInfo,
+            'cliConfigDic': cliConfigDic,
+            'appearance': _appearance,
+            'gmGroup': 1 if self.accountName in gameconst.GM_ACCOUNT_LIST else 0,
+            'warehouse': warehouse,
+            'chiefInfo': chiefInfo,
+            'newbieStep': TC_NSD.minKey
+        }
+
+        avatar = KBEngine.createEntityLocally('Avatar', props)
+        if avatar:
+            INFO_MSG('create avatar success', avatar.id)
+            self._onAvatarBaseCreated(avatar)
+            avatar.pyWriteToDB(functools.partial(self._onAvatarSaved, props))
+            self.makeCreateAvatarLog(_appearance, str(avatarProps["gbId"]), avatarProps["name"], True)
+        else:
+            ERROR_MSG('failed to create avatar', self.accountName)
+            self.accountStatus = AccountStatus.normal
+            self._onCreateAvatarFailed(props['name'], gameconst.CreateAvatarRes.CREATE_ENTITY_ERR)
+            self.makeCreateAvatarLog(_appearance, str(avatarProps["gbId"]), avatarProps["name"], False)
+
+    def _onAvatarSaved(self, props, success, avatar):
+        INFO_MSG('zt: onAvatarSaved', success, avatar)
+
+        # 如果此时账号已经销毁， 角色已经无法被记录则我们清除这个角色
+        if self.isDestroyed:
+            ERROR_MSG('_onAvatarSaved: account is destroyed')
+            if avatar:
+                avatar.destroy(True)
+            return
+
+        if success:
+            INFO_MSG('zt: Account::_onAvatarSaved:(%i) create avatar state: %i, %s, %i' % (
+                self.id, success, props['name'], avatar.databaseID))
+            # TODO X: create avatar log
+            self.avatarID = avatar.id
+            self.accountStatus = AccountStatus.avatarLoaded
+            self.avatarDatabaseID = avatar.databaseID
+            self.characters.addCharacter(avatar.gbID, avatar.databaseID, props["school"], props["name"],
+                                         props['sex'], 1, props['birthInDB'], charAppearance=props['appearance'])
+            self.pyWriteToDB()
+            if gameconfig.enableCentralLogin():
+                createInfo = (self.accountType, self.accountName, avatar.gbID, props['name'], props['school'], props['sex'])
+                stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
+                gameclass.DuplicatedCallList(stubs).notifyCentralServerCreateAvatar(createInfo, self.centralServerId)
+
+            # TODO X: login avatar directly
+            if self.hasClient:
+                self.client.onCreateAvatarResult(gameconst.CreateAvatarRes.OK, avatar.gbID)
+            else:
+                INFO_MSG('onAvatarSaved: avatar created, account client gone', self.accountName)
+                self.destroyAccount(gameconst.AVATAR_OFFLINE_NO_CLIENT_NEW_CHAR)
+        else:
+            ERROR_MSG('zt: fail to create avatar')
+            self.accountStatus = AccountStatus.normal
+            self._onCreateAvatarFailed(props['name'], gameconst.CreateAvatarRes.WRITE_ENTITY_ERR)
+            avatar.destroy()
+
+    # avatar的base创建成功：新建角色或从数据加载
+    def _onAvatarBaseCreated(self, avatar):
+        avatar.setAccountInfo(self)
+        avatar.updateRoleCache({
+        })
+        self.makeLoginRoleLog(avatar)
+
+    def _onCreateAvatarFailed(self, name, reason):
+        self.delAvatarName(name)
+        self.client.onCreateAvatarFailed(reason)
+
+    def delAvatarName(self, name):
+        gameglobal.localBaseApp.getRedisClient().hdel(gameconst.RedisKey.avatarNameTbl, name.encode('utf-8'))
+
+    def nameRedisTableKey(self):
+        return '%s:%s' % (gameconfig.serverId(), self.__ACCOUNT_NAME__)
+
+    def checkNameDuplicate(self, props, callback):
+        val = self.nameRedisTableKey()
+        gameglobal.localBaseApp.getRedisClient().hsetnx(gameconst.RedisKey.avatarNameTbl, props['name'],
+                                                        val.encode('ascii'),
+                                                        lambda cid, err, result: callback(props, cid, err, result))
+
+    def onCheckNameDuplicate(self, props, cid, err, result):
+        if err:
+            ERROR_MSG('check name duplicate err:', self.accountName, props['name'], err)
+            self.accountStatus = AccountStatus.normal
+            self.client.onCreateAvatarFailed(gameconst.CreateAvatarRes.NAME_DUPLIATED)
+            return
+
+        if result == 0:
+            self.accountStatus = AccountStatus.normal
+            self.client.onCreateAvatarFailed(gameconst.CreateAvatarRes.NAME_DUPLIATED)
+            return
+
+        self.createAvatarGenerateGbId(props)
+
+    def _checkSexSchoolValid(self, sex, school):
+        for data in CRDD.datas.values():
+            if data['charID'] == school and data['sex'] == sex:
+                return bool(data['isOpen'])
+
+        return False
+
+    @gamedecorator.limitcall(1)
+    def reqCreateAvatar(self, school, name, sex, isRandName, faceData):
+        """
+        exposed.
+        客户端请求创建一个角色
+        """
+        if self.accountStatus != AccountStatus.normal:
+            INFO_MSG('avatar is in creating', self.accountStatus)
+            return
+
+        if self.avatarID:
+            INFO_MSG('avatar exists')
+            return
+
+        if sex not in (gameconst.Sex.MALE, gameconst.Sex.FEMALE):
+            ERROR_MSG("reqCreateAvatar sex is invalid", sex)
+            return
+
+        if not self._checkSexSchoolValid(sex, school):
+            ERROR_MSG("reqCreateAvatar school and sex not open", sex, school)
+            return
+
+        name = name.strip()
+        if not utils.checkAvatarNameLength(name):
+            self.client.onCreateAvatarFailed(gameconst.CreateAvatarRes.NAME_LENGTH_OVERLIMIT)
+            return
+
+        if not utils.checkAvatarName(name):
+            self.client.onCreateAvatarFailed(gameconst.CreateAvatarRes.NAME_INVALID)
+            return
+
+        if name.isdigit():
+            self.client.onCreateAvatarFailed(gameconst.CreateAvatarRes.NAME_INVALID)
+            return
+
+        self.accountStatus = AccountStatus.creating
+        props = {"school": school, "name": name, 'sex': sex, "gbId": 0, "checkCnt": 0, 'faceData': faceData}
+        self.checkNameDuplicate(props, self.onCheckNameDuplicate)
+        INFO_MSG('create avatar begin：', self.accountName, name)
+
+    @gamedecorator.limitcall(1)
+    def reqCreateBot(self, name, school):
+        import character_roleData_r_school
+
+        _datas = {}
+        for k, v in character_roleData_r_school.datas.items():
+            _datas[k] = v[0]['sex']
+        
+        _sex = _datas.get(school, None)
+        if _sex:
+            _school = school
+        else:
+            _school = random.choice(list(_datas.keys()))
+            _sex = _datas[_school]
+
+        props = {"name": name, "gbId": 0, "checkCnt": 0, 'isBotBase': True, 'sex': _sex, 'school': _school,
+                 "faceData": appearance.FaceDataVal(suitId=2,hairIdFaceId=257)}
+        DEBUG_MSG("reqCreateBot: ", props)
+        self.checkNameDuplicate(props, self.onCheckNameDuplicate)
+
+    def reqRemoveAvatar(self, name):
+        """
+        exposed.
+        客户端请求删除一个角色
+        """
+        DEBUG_MSG("Account[%i].reqRemoveAvatar: %s" % (self.id, name))
+        if not gameconfig.showAvatarRemoveButton():
+            ERROR_MSG('reqRemoveAvatar but config not enable')
+            return
+
+        found = 0
+        if self.avatar:
+            ERROR_MSG('avatar is online', self.avatar.gbId, name)
+            return
+
+        for key, info in self.characters.items():
+            if info.name == name:
+                found = key
+                break
+
+        if found:
+            newName = '#rem_' + name
+            sql = "update tbl_Avatar set sm_name = {} where sm_gbID={}".format(utils.escape_string(newName), found)
+            KBEngine.executeRawDatabaseCommand(
+                sql,
+                lambda ret, num, insertId, err, key=found: self.removeAvatarCallBack(ret, num, err, key)
+            )
+        else:
+            self.client.onRemoveAvatar(found)
+
+    def removeAvatarCallBack(self, result, num, err, gbId):
+        INFO_MSG('removeAvatarCallBack:', result, num, err, gbId)
+        if err:
+            ERRRO_MSG('removeAvatarCallBack: err:', err)
+            return
+
+        self.characters.removeCharacter(gbId)
+        self.client.onRemoveAvatar(gbId)
+
+    @gamedecorator.limitcall(1)
+    def selectAvatarGame(self, gbId):
+        """
+        exposed.
+        客户端选择某个角色进行游戏
+        """
+        self._selectAvatarGame(gbId)
+
+    def _selectAvatarGame(self, gbId):
+        # 注意:使用giveClientTo的entity必须是当前baseapp上的entity
+        INFO_MSG("Account[%i].selectAvatarGame:%i. self.avatar=%s" % (self.id, gbId, self.avatar))
+        if self.accountStatus == AccountStatus.avatarLoaded:
+            if self.avatar:
+                if self.avatar.gbID == gbId:
+                    self.giveClientTo(self.avatar)
+                return
+            else:
+                ERROR_MSG('selectAvatarGame avatar is destroying:', self.avatarID)
+                self.destroyActiveAvatar()
+                self._callback(0.2, '_selectAvatarGame', (gbId,), gametimer.TIMER_TAG_RETRY_SELECT_AVATAR)
+                return
+
+        elif self.accountStatus in (AccountStatus.avatarLoading, AccountStatus.creating):
+            INFO_MSG('avatar is loading:', self.accountStatus, self.accountName, gbId)
+            return
+
+        if gbId in self.characters:
+            self.lastSelCharacter = gbId
+            # 由于需要从数据库加载角色，因此是一个异步过程，加载成功或者失败会调用__onAvatarCreated接口
+            # 当角色创建好之后，account会调用giveClientTo将客户端控制权（可理解为网络连接与某个实体的绑定）切换到Avatar身上，
+            # 之后客户端各种输入输出都通过服务器上这个Avatar来代理，任何proxy实体获得控制权都会调用onClientEnabled
+            # Avatar继承了Teleport，Teleport.onClientEnabled会将玩家创建在具体的场景中
+            self.accountStatus = AccountStatus.avatarLoading
+            cVal = self.characters[gbId]
+            KBEngine.createEntityFromDBID("Avatar", cVal.dbId, self._onAvatarLoaded)
+        else:
+            ERROR_MSG("Account[%i]::selectAvatarGame: not found database id(%s)" % (self.id, gbId))
+
+    # --------------------------------------------------------------------------------------------
+    #                              Callbacks
+    # --------------------------------------------------------------------------------------------
+    def onClientEnabled(self):
+        """
+        KBEngine method.
+        该entity被正式激活为可使用， 此时entity已经建立了client对应实体， 可以在此创建它的
+        cell部分。
+        """
+        INFO_MSG(
+            "Account[%i]::onClientEnabled:entities enable. entityCall:%s, clientType(%i), clientDatas=(%s), hasAvatar=%s, accountName=%s" % \
+            (self.id, self.client, self.getClientType(), self.getClientDatas(), self.avatarID, self.accountName),
+            self.avatar)
+        DEBUG_MSG("login state", self.loginState)
+        gamelog.makeWLog("ServerOnClientConeect", {
+            "client_id": self.devicePlatId,
+            "ip": self.clientAddr[0],
+        })
+
+        if self.delayDestroyTimer:
+            self._cancelCallback(self.delayDestroyTimer, gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT)
+            self.delayDestroyTimer = 0
+
+        if self.loginState == gameconst.LoginState.AVATAR_EXIST:
+            # loginstate为AVATAR_EXIST时，说明顶avatar，客户端执行确认弹窗
+            self.client.onKickAnotherAvatar()
+            return
+
+        _maximumLimit = gameconfig.serverMaximumLoginAccount()
+        _currentLoginCount = gameglobal.localLoginStub.getGlobalAccountNum()
+        if _maximumLimit > 0 and _currentLoginCount > _maximumLimit and self.loginCount == 0:
+            ERROR_MSG(
+                "Account[%i]::onClientEnabled:maximum login account. entityCall:%s, clientType(%i), clientDatas=(%s), hasAvatar=%s, accountName=%s" % \
+                (self.id, self.client, self.getClientType(), self.getClientDatas(), self.avatarID, self.accountName),
+                self.avatar, getattr(self.avatar, 'canRelogin', False), _currentLoginCount, _maximumLimit)
+            self.destroyAccount()
+            return
+
+        self.loginCount += 1
+        self.sendHotfix()
+        self.loginAccount()
+
+        self.cancelDeleteFlag()
+        self.clientIP = self.clientAddr[0]
+
+    def cancelDeleteFlag(self):
+        pass
+
+    def loginAccount(self, isRetry=False):
+        not isRetry and gameconfig.sendClientConfig(self)
+
+        if self.accountStatus in (AccountStatus.creating, AccountStatus.avatarLoading):
+            INFO_MSG('loginAccount: avatar is creating', self.accountName, self.accountStatus)
+        elif self.accountStatus == AccountStatus.avatarLoaded:
+            if self.avatar and not self.avatar.isDestroying and not self.avatar.isDestroyed and not self.avatar.isDestroyingCell:
+                # 同一帧内调用giveClientTo会报错:Illegal access to entityID
+                INFO_MSG('avatar exists: try give client to', self.avatarID, self.accountName)
+                self.avatar.kickAvatar()
+                self._callback(0.2, '_reloginAvatar', (), gametimer.TIMER_TAG_RELOGIN_AVATAR)
+            else:
+                # wait for Loaded state exit
+                INFO_MSG('avatar is destroying. retrying', self.avatarID, self.accountName)
+                self._callback(0.2, 'loginAccount', (True,), gametimer.TIMER_TAG_RELOGIN_AVATAR)
+                return
+        else:
+            self.doLoginAccount()
+
+        try:
+            self.parseClientDatas(self.getClientDatas())
+            gamelog.makeWLog("ServerLogin", {
+                "client_id": self.devicePlatId,
+                "account_id": self.accountName,
+                "udid": self.deviceUniqueIdentifier
+            })
+        except Exception as e:
+            ERROR_MSG('loginAccount:', e)
+            ERROR_MSG('parse client data failed:', self.getClientDatas())
+
+    def parseClientDatas(self, clientDatas):
+        if isinstance(clientDatas, tuple):
+            loginJsonData = clientDatas[0]
+            if not loginJsonData:
+                # giveClientTo会把Account的loginData清空，转设给Avatar
+                # 某些情况下客户端会对Account执行reloginbaseapp，这个时候如果执行过giveClientTo(self.avatar)，就没有loginData
+                return
+
+            if loginJsonData.decode('utf-8') == 'bots':
+                self.deviceUniqueIdentifier = 'bots'
+                return
+            clientDatas = json.loads(loginJsonData.decode('utf-8'))
+            self.deviceUniqueIdentifier = clientDatas.get('deviceUniqueIdentifier', '')
+            self.devicePlatId = clientDatas.get('devicePlatId', 0)
+            self.channelId = clientDatas.get('channelId', 0)
+            if 'banPostTime' in clientDatas and 'banPostReason' in clientDatas and self.loginCount == 1:
+                self.banAllServerPostTime = clientDatas.get('banPostTime', 0)
+                self.banAllServerPostReason = clientDatas.get('banPostReason', 0)
+            self.loginChannel = str(clientDatas.get('loginChannel', ''))
+
+            if not self.registerChannel:
+                self.registerChannel = str(clientDatas.get('loginChannel', ''))
+
+    def doLoginAccount(self):
+        INFO_MSG('login account:', self.accountName, self.loginCount)
+        if self.loginCount <= 1:
+            stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
+            gameclass.DuplicatedCallList(stubs).onAccountLogin(self.accountName, self.devicePlatId, self,
+                                                               self.accountType)
+        self._beginLoadCharacterAppearance()
+
+    def _beginLoadCharacterAppearance(self):
+        if len(self.characters)>0 and not self._hasLoadAppearance:
+            gbIdList = [gbId for gbId in self.characters]
+            if gbIdList:
+                gamesql.loadAvatarAppearanceDataFromDB(gbIdList, lambda ret, num, insertId, err: self._onLoadCharacterAppearance(ret, num, insertId, err))
+                return
+        self.afterLoadCharacterAppearance()
+
+    def _onLoadCharacterAppearance(self, ret, num, insertId, err):
+        INFO_MSG('_onLoadCharacterAppearance', ret, num, err)
+        if err:
+            ERROR_MSG('_onLoadCharacterAppearance err:', err)
+            return
+        parentIDDic= {}
+        for data in ret:
+            parentID = int(data[0])
+            gbId = int(data[1])
+            birthInDB = int(data[2])
+            _appearance = appearance.Appearance()
+            _appearance.updateFromAvatarAppearanceDBData(data, 6)
+            self.characters[gbId].birthInDB = birthInDB
+            self.characters[gbId].level = int(data[5])
+            self.characters[gbId].setAppearance(_appearance)
+            parentIDDic[parentID] = gbId
+        gamesql.loadAvatarOutfitDataFromDB(parentIDDic.keys(), lambda ret, num, insertId, err, parentIDDic=parentIDDic: self._onLoadCharacterOutfitData(ret, num, insertId, err, parentIDDic))
+
+    def _onLoadCharacterOutfitData(self, ret, num, insertId, err, parentIDDic):
+        INFO_MSG('_onLoadCharacterOutfitData', ret, num, err, parentIDDic)
+        if err:
+            ERROR_MSG('_onLoadCharacterOutfitData err:', err)
+            return
+        for parentID, sm_outfitType, sm_outfitId, sm_expireTime in ret:
+            parentID = int(parentID)
+            outfitType = int(sm_outfitType)
+            outfitId = int(sm_outfitId)
+            expireTime = int(sm_expireTime)
+            gbId = parentIDDic[parentID]
+            self.characters[gbId].charAppearance.resetOutfitData(outfitType, outfitId, expireTime)
+        self._hasLoadAppearance = True
+        self.afterLoadCharacterAppearance()
+
+    def afterLoadCharacterAppearance(self):
+        self._sendAvatarList()
+
+    def _sendAvatarList(self):
+        if self.callbackList is not None:
+            self.callbackList.append(('_sendAvatarList', ()))
+            return
+
+        self.client.onReqAvatarList(self.characters, False)
+        # self.client.onReqAvatarGBID(self.avatarGBID)
+
+    def sendHotfix(self):
+        pass
+        # hotfix = gameglobal.hotfix
+        # self.streamStringProxy(hotfix, '', gameconst.StreamStringID.HOTFIX_DATA)
+
+    def registerCBStream(self, dataId, func, args):
+        self.streamDic[dataId].append((func, args))
+
+    def streamStringProxy(self, data, desc, dataId):
+        DEBUG_MSG('streamStringProxy:', dataId)
+        if self.client:
+            if self.streamDic.get(dataId):
+                DEBUG_MSG('need delay for the stream:', dataId)
+                self.registerCBStream(dataId, 'streamStringProxy', (data, desc, dataId))
+                return
+
+            self.streamDic[dataId] = []
+            self.streamStringToClient(data, desc, dataId)
+        return
+
+    def onStreamComplete(self, resId, success):
+        if not success:
+            ERROR_MSG('onStreamComplete: send stream to client fail', resId, success)
+
+        if resId not in self.streamDic:
+            return
+
+        if self.streamDic.get(resId, []):
+            func, args = self.streamDic.get(resId).pop(0)
+            if not self.streamDic.get(resId, []):
+                self.streamDic.pop(resId)
+            getattr(self, func)(*args)
+        else:
+            self.streamDic.pop(resId, None)
+
+    def _reloginAvatar(self):
+        if self.avatar:
+            self.avatar.doRelogin()
+        else:
+            INFO_MSG('reloginAvatar fail')
+
+    def destroyActiveAvatar(self, reason=gameconst.AVATAR_OFFLINE_REASON_DESTORY):
+        if not self.avatar:
+            return True
+
+        if self.avatar.destroySelf(reason):
+            return True
+        return False
+
+    def isDeviceNotSame(self, loginDataDict):
+        DEBUG_MSG("login device info", self.deviceUniqueIdentifier, loginDataDict)
+        return self.deviceUniqueIdentifier and loginDataDict.get('deviceUniqueIdentifier',
+                                                                 None) != self.deviceUniqueIdentifier
+
+    def onLogOnAttempt(self, ip, port, password):
+        # 杀进程时有时不能立即识别出客户端断开了，因而没走onClientDeath，所以这里无论如何都accept，顶号的话也让登
+        INFO_MSG('onLogOnAttempt', ip, port, self.client, self.avatar)
+        if not gameconfig.interfaceEnableLogin():
+            INFO_MSG('reject login, recovring cellapps')
+            return KBEngine.LOG_ON_REJECT
+
+        try:
+            loginDataDict = json.loads(self.getLoginDatas())
+        except:
+            ERROR_MSG('loads loginDatas failed')
+            loginDataDict = {}
+
+        if self.avatar:
+            if self.avatar.hasClient:
+                # 顶avatar分支
+                self.modifyDinghaoInfo()
+                if self.dinghaoNum >= 10:
+                    return KBEngine.LOG_ON_DINHAO_REJECT
+
+                if self.isDeviceNotSame(loginDataDict):
+                    # 不同设备则给一个state
+                    INFO_MSG('notify client another client login')
+                    self.loginState = gameconst.LoginState.AVATAR_EXIST
+                    return KBEngine.LOG_ON_ACCEPT
+                else:
+                    # 相同设备直接踢avatar正常顶号
+                    INFO_MSG('same device login')
+                    self.avatar.kickAvatar()
+                    self.loginState = gameconst.LoginState.NORMAL
+                    return KBEngine.LOG_ON_ACCEPT
+            else:
+                # 说明已经顶avatar直接ACCEPT
+                return KBEngine.LOG_ON_ACCEPT
+        else:
+            self.loginState = gameconst.LoginState.NORMAL
+            if self.hasClient:
+                # client存在进顶account分支,无需二次确认直接顶号
+                self.modifyDinghaoInfo()
+                if self.dinghaoNum >= 10:
+                    return KBEngine.LOG_ON_DINHAO_REJECT
+
+                self.client.onKickAnotherAccount()
+                return KBEngine.LOG_ON_ACCEPT
+            return KBEngine.LOG_ON_ACCEPT
+
+    def modifyDinghaoInfo(self):
+        if not self.dinghaoFirstTime:
+            self.dinghaoFirstTime = utils.getNow()
+
+        if utils.getNow() - self.dinghaoFirstTime >= 600:
+            self.dinghaoNum = 1
+            self.dinghaoFirstTime = utils.getNow()
+        else:
+            self.dinghaoNum += 1
+
+    def kickAnotherAvatar(self, acceptFlag):
+        if acceptFlag:
+            # 弹窗点击确定，踢avatar,继续执行原来onClientEnable逻辑
+            self.loginAccount()
+        else:
+            self.disconnect()
+        self.loginState = gameconst.LoginState.NORMAL
+
+    def onClientDeath(self):
+        """
+        KBEngine method.
+        客户端对应实体已经销毁
+        """
+        if self.accountStatus == AccountStatus.normal:
+            self.delayDestroyTimer = self._callback(10, 'destroyAccount',
+                                                    (gameconst.AVATAR_OFFLINE_REASON_CLIENT_DEATH,),
+                                                    gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT, 'delayDestroyTimer')
+        elif self.accountStatus == AccountStatus.avatarLoaded:
+            if self.avatar and not self.avatar.isDestroying and not self.avatar.isDestroyed:
+                self.avatar.startDestroyCountDown()
+            else:
+                self.delayDestroyTimer = self._callback(300, 'destroyAccount',
+                                                        (gameconst.AVATAR_OFFLINE_REASON_CLIENT_DEATH,),
+                                                        gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT, 'delayDestroyTimer')
+        else:  # creating, avatarLoading: handle after avatar created
+            pass
+
+        gamelog.makeWLog("ServerOnClientLost", {
+            "client_id": str(self.devicePlatId),
+            "account_id": str(self.accountName),
+            "udid": str(self.deviceUniqueIdentifier),
+            "role_name": self.avatar.characterName if self.avatar else '',
+            'role_id': str(self.avatar.gbID if self.avatar else '')
+        })
+        INFO_MSG("Account[%i].onClientDeath:", self.id, self.avatar)
+
+    def destroyAccount(self, reason=gameconst.AVATAR_OFFLINE_REASON_DESTORY):
+        self.destroyAccountReason(reason)
+
+    def destroyAccountReason(self, reason):
+        if self.isDestroyed:
+            return
+
+        if self.avatar:
+            # self.avatar.setAccountInfo(None)
+            if reason == gameconst.AVATAR_OFFLINE_REASON_KICK_BY_CENTRAL_SERVER:
+                self.avatar.client.onAnotherClientLogin()
+                self._callback(0.2, 'destroyActiveAvatar', (reason,), gametimer.TIMER_TAG_KICK_ACCOUNT_BY_OTHER_SERVER)
+                return
+            else:
+                try:
+                    self.destroyActiveAvatar(reason)
+                except:
+                    pass
+                return
+        else:
+            if reason == gameconst.AVATAR_OFFLINE_REASON_KICK_BY_CENTRAL_SERVER:
+                self.client.onKickAnotherAccount()
+                self._callback(0.2, 'destroy', (), gametimer.TIMER_TAG_KICK_ACCOUNT_BY_OTHER_SERVER)
+                return
+
+        self.destroy(deleteFromDB=False)
+
+    def onAvatarDestroy(self):
+        INFO_MSG('onAvatarDestroy', self.client)
+        self.accountStatus = AccountStatus.normal
+        self.avatarID = 0
+        if not self.client:
+            self.destroyAccount()
+
+    def onDestroy(self):
+        """
+        KBEngine method.
+        entity销毁
+        """
+        INFO_MSG("Account::onDestroy: %i." % self.id)
+
+        stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
+        gameclass.DuplicatedCallList(stubs).onAccountDestroy(self.accountName, self.accountType, self.devicePlatId,
+                                                             self.centralServerId, self.channelId)
+
+        gameglobal.localAccountCache.pop(self.__ACCOUNT_NAME__, None)
+
+    def _onAvatarLoaded(self, baseRef, dbid, wasActive):
+        """
+        选择角色进入游戏时被调用
+        """
+        if wasActive:
+            ERROR_MSG("Account::__onAvatarCreated:(%i): this character is in world now!" % (self.id))
+            return
+
+        if baseRef is None:
+            ERROR_MSG("Account::__onAvatarCreated:(%i): the character you wanted to created is not exist!" % (self.id))
+            return
+
+        avatar = KBEngine.entities.get(baseRef.id)
+        if avatar is None:
+            ERROR_MSG("Account::__onAvatarCreated:(%i): when character was created, it died as well!" % (self.id))
+            return
+
+        if self.isDestroyed:
+            ERROR_MSG("Account::__onAvatarCreated:(%i): i dead, will the destroy of Avatar!" % (self.id))
+            avatar.destroy()
+            return
+
+        INFO_MSG('create avatar succ', avatar.id, avatar.gbID)
+        self._onAvatarBaseCreated(avatar)
+        self.accountStatus = AccountStatus.avatarLoaded
+        self.avatarID = avatar.id
+        self.lastSelectGbId = avatar.gbID
+        if self.hasClient:
+            self.giveClientTo(avatar)
+        else:
+            INFO_MSG('_onAvatarLoaded: client is missing', self.accountName)
+            self.avatar.startDestroyCountDown()
+
+    def updateCharacterLevel(self, dbid, level, tLoginBase):
+        if dbid in self.characters:
+            cVal = self.characters[dbid]
+            cVal.level = level
+
+            if gameconfig.enableCentralLogin():
+                createInfo = (cVal.gbId, cVal.name, tLoginBase, False, cVal.school, level, cVal.sex)
+                stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
+                gameclass.DuplicatedCallList(stubs).updateCharacterInfo(createInfo, self.centralServerId)
+
+    def notifyLoginComplete(self):
+        if self.centralServerId:
+            stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
+            gameclass.DuplicatedCallList(stubs).notifyCentralServerLoginComplete(
+                self.accountType,
+                self.accountName,
+                self.centralServerId)
+        else:
+            WARNING_MSG('notifyLoginComplete invalid central server id', self.accountName)
+
+    def updateAppearance(self, dbid, updateDic):
+        cVal = self.characters.get(dbid)
+        if not cVal:
+            return
+        #cVal.charAppearance.__dict__.update(updateDic)
+        for attrName, attrVal in updateDic.items():
+            if hasattr(cVal.charAppearance, attrName):
+                setattr(cVal.charAppearance, attrName, attrVal)
+
+    def updateOutfit(self, dbid, attrName, attrVal):
+        cVal = self.characters.get(dbid)
+        if not cVal:
+            return
+        # TODO X: update outfit
+        # setattr(cVal.charAppearance.outfitData, attrName, attrVal)
+
+    def reloadScript(self):
+        for pName, pVal in self.__dict__.items():
+            if pName.startswith('__'):
+                continue
+
+            if hasattr(pVal, 'reloadScript'):
+                pVal.reloadScript()
+
+        return
+
+    def postReloadScript(self):
+        super(Account, self).postReloadScript()
+        self._reloadTimerData()
+
+    def logBeforeLogin(self, logId, jsonStr):
+        jsonData = json.loads(jsonStr)
+        jsonData.update({
+            'account': self.accountName,
+        })
+        # TODO login before log
+
+    def onAvatarLogonSucc(self, gbId):
+        avt = KBEngine.entities.get(self.avatarID)
+        pass
+
+    def getClientIp(self):
+        try:
+            return socket.inet_ntoa(struct.pack('I', self.clientIP))
+        except:
+            return '0.0.0.0'
+
+    def onCheckCrossServerTokenRet(self, checkRet, otherServerAvatarBox, token):
+        INFO_MSG("onCheckCrossServerTokenRet", checkRet, otherServerAvatarBox, token)
+        if not checkRet:
+            ERROR_MSG("onCheckCrossServerTokenRet check error, destroy self")
+            self.destroyAccount(gameconst.AVATAR_OFFLINE_REASON_END_CROSS_SERVER)
+            return
+
+        if checkRet and otherServerAvatarBox:
+            self.otherServerAvatarBox = otherServerAvatarBox
+            otherServerAvatarBox.onReqGetAvatarPorperties(token, self.crossServerEntityCall)
+
+    def onGetAvatarPorpertiesResp(self, baseMemoryStream, cellMemoryStream):
+        INFO_MSG("onGetAvatarPorpertiesResp", len(baseMemoryStream), len(cellMemoryStream))
+        KBEngine.createEntityFromStream("Avatar", baseMemoryStream, cellMemoryStream, self._onCrossServerAvatarCreated)
+
+    def _onCrossServerAvatarCreated(self, baseRef):
+        INFO_MSG("_onCrossServerAvatarCreated", baseRef)
+        if baseRef is None:
+            ERROR_MSG("Account::_onCrossServerAvatarCreated:(%i): the character you wanted to created is not exist!" % (self.id))
+            #self.stopJudgeTiming()
+            return
+
+        avatar = KBEngine.entities.get(baseRef.id)
+        if avatar is None:
+            ERROR_MSG("Account::_onCrossServerAvatarCreated:(%i): when character was created, it died as well!" % (self.id))
+            #self.stopJudgeTiming()
+            return
+
+        if self.isDestroyed:
+            ERROR_MSG("Account::_onCrossServerAvatarCreated:(%i): i dead, will the destroy of Avatar!" % (self.id))
+            #self.stopJudgeTiming()
+            avatar.destroy()
+            return
+
+        INFO_MSG('create cross server avatar succ', avatar.id, avatar.gbID)
+        avatar.setAccountInfo(self)
+        self.accountStatus = AccountStatus.avatarLoaded
+        self.avatarID = avatar.id
+        self.giveClientTo(avatar)
+        # if gameconfig.socketConnectIsSendMes():
+        #     WXWorkClient.instance().sendOnlineMsg(avatar.characterName + "上线了")
+
+    # 注册回调函数,在玩家client激活时候触发,但是触发的是account的方法
+    def registerAvatarClientEnableCB(self, func, args):
+        self.avatarClientEnableCBs.append((func, args))
+
+    def doAllAvatarClientEnableCB(self):
+        for func, args in self.avatarClientEnableCBs:
+            getattr(self, func)(*args)
+
+        self.avatarClientEnableCBs = []
+
+    def kickAccount(self, reason, accountName, accountType):
+        INFO_MSG("kickAccount", reason, accountName, accountType)
+        if accountName == self.accountName and accountType == self.accountType:
+            self.destroyAccountReason(reason)
+
+    def pyWriteToDB(self, callBackFunc=None):
+        if callBackFunc:
+            self.writeToDB(callBackFunc)
+        else:
+            self.writeToDB()
+
+    def makeCreateAvatarLog(self, _appearance, roleId='', roleName='', isSuccess=False):
+        gamelog.makeWLog("CreateRole", {
+            "ip": self.clientIP,
+            "udid": str(self.deviceUniqueIdentifier),
+            "app_channel": str(self.channelId),
+            "account_id": str(self.accountName),
+            "role_id": roleId,
+            "role_name": roleName,
+            "face_id": str(_appearance.faceData.faceID()),
+            "clothes_id": str(_appearance.outfitData.clothesId),
+            "create_time": str(utils.getTimestamp64()),
+            "is_sucess": str(isSuccess),
+        })
+
+    def getClientData(self):
+        return {
+            "ip": self.clientIP,
+            "udid": str(self.deviceUniqueIdentifier),
+            "app_channel": str(self.channelId),
+            "login_channel": str(self.loginChannel),
+            "account_id": str(self.accountName),
+            "client_type": str(self.devicePlatId),
+            "client_id": str(self.devicePlatId),
+        }
+
+    def delAccount(self):
+        INFO_MSG('delAccount', self.gbId)
+
+        if self.avatar:
+            self.avatar.destroySelf()
+        self.disconnect()
+
+    def makeLoginRoleLog(self, avatar):
+        clientData = self.getClientData()
+        logData = avatar.loginLogInfo()
+        logData.update(clientData)
+        gamelog.makeWLog("LoginRole", logData)
+
+# ---------------------------- switch avatar server start ----------------------------
+    def onAvatarSwitchServer(self, avatar):
+        _charVal = self.characters.get(avatar.gbID)
+        self.characters.removeCharacter(avatar.gbID)
+
+        self.switchServerAvatars[avatar.gbID] = _charVal.toSavedData()
+
+    def recoverSwitchAvatar(self, gbId):
+        INFO_MSG('recoverSwitchAvatar', gbId)
+        _charData = self.switchServerAvatars.get(gbId)
+        if not _charData:
+            ERROR_MSG('recoverSwitchAvatar', gbId)
+            return
+
+        gamesql.getAvatarGbIdByDbId(
+            _charData['dbId'],
+            lambda ret, num, insertId, err: self._recoverSwitchAvatar(ret, num, insertId, err, _charData)
+        )
+
+    def _recoverSwitchAvatar(self, ret, num, insertId, err, charData):
+        INFO_MSG('_recoverSwitchAvatar', ret)
+        if err:
+            ERROR_MSG('_recoverSwitchAvatar', err)
+            return
+
+        for _gbId, in ret:
+            _gbId = int(_gbId)
+            if _gbId != charData['gbId']:
+                continue
+
+            _charVal = character.CharacterVal.fromSavedData(charData)
+            self.characters[_gbId] = _charVal
+            self.switchServerAvatars.pop(_gbId, None)
+# ---------------------------- switch avatar server end ----------------------------
+
+    def onCharacterInfoUpdated(self, gbId, name):
+        charInfo = self.characters.get(gbId)
+        if not charInfo:
+            ERROR_MSG('onAvatarModifiedName but not has character')
+            return
+
+        charInfo.name = name
+
+    def getAvatarDetailForAccount(self, gbId):
+        _ctx = {
+            'gbId': gbId
+        }
+        gamesql.getAvatarTotalScoreAndSpaceNo(
+            gbId, 
+            functools.partial(self._onGetScoreAndSpaceNo, _ctx))
+
+    def _onGetScoreAndSpaceNo(self, ctx, ret, num, insertId, err):
+        if err:
+            ERROR_MSG('_onGetScoreAndSpaceNo', err)
+            return
+
+        for _totalScore, _spaceNo in ret:
+            ctx['totalScore'] = int(_totalScore)
+            ctx['spaceNo'] = int(_spaceNo)
+            gamesql.loadAvatarGuildInfo(
+                ctx['gbId'], 
+                functools.partial(self._onGetAvatarGuildUUID, ctx))
+            return
+
+    def _onGetAvatarGuildUUID(self, ctx, ret, num, insertId, err):
+        if err:
+            ERROR_Msg('_onGetAvatarGuildUUID', err)
+            return
+
+        if not ret:
+            self.client.onAvatarDetailInAccount(
+                ctx['gbId'],
+                ctx['totalScore'],
+                ctx['spaceNo'],
+                '',
+                gameconfig.serverId(),
+            )
+            return
+
+        for _guildUUID, in ret:
+            _guildUUID = int(_guildUUID)
+
+            gameengine.getGlobalBase('GuildStub').getGuildsCacheData(
+                [_guildUUID],
+                self,
+                'onGetGuildsCacheDataAccount',
+                (ctx,)
+            )
+
+    def onGetGuildsCacheDataAccount(self, _guildCaches, ctx):
+        _cache = _guildCaches[0]
+        _guildName = _cache.get('guildName', '')
+        self.client.onAvatarDetailInAccount(
+            ctx['gbId'],
+            ctx['totalScore'],
+            ctx['spaceNo'],
+            _guildName,
+            gameconfig.serverId(),
+        )
+
+
+

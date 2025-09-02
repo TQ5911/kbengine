@@ -1,0 +1,177 @@
+# coding: utf-8
+from KBEDebug import *
+import KBEngine
+
+import functools
+import json
+import math
+
+import gameconst
+import dataUtils
+
+import AvatarScores
+
+import const_const as CONST
+import formula_generalFormula as FML_G
+import experience_exp as EED
+import fightProp_define as FPD
+import gameengine
+
+
+
+class IScore(object):
+    """ score AIO """
+
+    def __init__(self):
+        # init score
+        self.initAvatarScores()
+
+    def initAvatarScores(self):
+        DEBUG_MSG('initAvatarScores')
+        self.scoreInitFinished = False
+        self.totalScore = 0
+        m_dict = {i: False for i in AvatarScores.AvatarScores.__attrs__}
+        self.setTempMiscProp(gameconst.AvatarProps.avatarScoresInitChecklist, m_dict)
+        self._initAvatarCellScores()
+        self.base.initAvatarBaseScores()
+        self.toCallbackAfter(10).checkInitScoreTimeout()
+
+    def _initAvatarCellScores(self):
+        self.updateSelfLevelScore()
+        self.updateEquipmentScore()
+        self.updateAwardFightPropScore()
+        self.updateGuildScoreFromInit()
+
+    def onInitAvatarBaseScores(self, data):
+        DEBUG_MSG('onInitAvatarBaseScores::', data)
+        data = data or {}
+        for k, v in data.items():
+            self._changeScore(k, v)
+
+    def checkInitScoreTimeout(self):
+        if self.scoreInitFinished:
+            return
+        gameengine.reportCritical('checkInitScoreTimeout:', self.getTempMiscProp(gameconst.AvatarProps.avatarScoresInitChecklist))
+        self.scoreInitFinished = True
+        self.onAllAvatarScoreBeInited(timeout=True)
+
+    def onAllAvatarScoreBeInited(self, timeout=False):
+        INFO_MSG("onAllAvatarScoreBeInited, timeout:", timeout)
+        self.scoreInitFinished = True
+        self.popTempMiscProp(gameconst.AvatarProps.avatarScoresInitChecklist)
+        self.client.onAvatarTotalScoreInitCompleted()
+
+    def markAvatarScoreBeInited(self, key):
+        if self.scoreInitFinished:
+            return
+        m_avatarScoresInitChecklist = self.getTempMiscProp(gameconst.AvatarProps.avatarScoresInitChecklist)
+        if not m_avatarScoresInitChecklist:
+            gameengine.reportCritical('markAvatarScoreBeInited, no avatarScoresInitChecklist cache')
+            return
+        if key not in m_avatarScoresInitChecklist:
+            ERROR_MSG("markAvatarScoreBeInited:: un-known key", key)
+            return
+        DEBUG_MSG('markAvatarScoreBeInited, score has init:', key)
+        m_avatarScoresInitChecklist[key] = True
+        if not all(m_avatarScoresInitChecklist.values()):
+            return
+        # 战力全部初始化完成
+        self.onAllAvatarScoreBeInited()
+
+    def getTotalScore(self):
+        return self.scoresInfo.totalScore
+
+    # --------------------------------------------------------------
+    # SCORE CALC.
+    def getSelfLevelScore(self):
+        changeAffactProp = FPD.datas['level']['changeAffactProp']
+        score = 0
+        for propName in changeAffactProp.split(';'):
+            propValue = getattr(self, propName)
+            if propValue > 0:
+                score += int(propValue * dataUtils.getPropBaseScore(propName))
+        return score
+
+    def getTotalEquipmentsScore(self):
+        totalScore = 0
+        for equipObj in self.bodyEquipData.equips_map.values():
+            totalScore += equipObj.getValidEquipScore()
+        # totalScore += self.bodyEquipData.getSetEffectScore()
+        return totalScore
+
+    # --------------------------------------------------------------
+
+    # --------------------------------------------------------------
+    # UPDATE FUNC
+
+    def _changeScore(self, key, val):
+        oldTotalScore = self.totalScore
+        setattr(self.scoresInfo, key, val)
+        self.scoresInfo = self.scoresInfo
+        self.totalScore = self.getTotalScore()
+        if oldTotalScore != self.totalScore:
+            self.base.baseScoreChanged(self.scoreInitFinished, key, val)
+        self.markAvatarScoreBeInited(key)
+
+    def _onScoreChange(self):
+        pass
+
+    def updateSelfLevelScore(self):
+        self._changeScore("level", math.floor(self.getSelfLevelScore()))
+        self._onScoreChange()
+
+    def updateEquipmentScore(self):
+        self._changeScore("equipments", math.floor(self.getTotalEquipmentsScore()))
+        self._onScoreChange()
+        self.syncBodyEquipDressData()
+
+    def onUpdateRewardFightProp(self, newScore):
+        self._changeScore("rewardFightProp", math.floor(newScore))
+        self._onScoreChange()
+
+    def onUpdateMountScore(self, newScore):
+        self._changeScore("mount", math.floor(newScore))
+        self._onScoreChange()
+
+    def onUpdatePetScore(self, newScore):
+        self._changeScore("pet", math.floor(newScore))
+        self._onScoreChange()
+
+    def onUpdateSkillScore(self, newScore):
+        self._changeScore("skill", math.floor(newScore))
+        self._onScoreChange()
+
+    def onUpdateGuildTrainScore(self, newScore):
+        self._changeScore("guildtrain", math.floor(newScore))
+        self._onScoreChange()
+    # --------------------------------------------------------------
+
+    # --------------------------------------------------------------
+    # GM
+
+#     def gmTotalScoreDebugMsg(self):
+#         s = self.scoresInfo
+#         _msg = ''' --- 玩家评分 ---
+# 装备: {0}
+# 等级: {1}
+# 怪物图鉴: {2}
+# 万象法阵: {3}
+# 小世界怪物: {4}
+# 小世界建筑: {5}
+# 小世界气数: {6}
+# 帮会修炼: {7}
+# 灵兽: {8}
+# 技能点: {9}
+# 魂卡点: {10}
+# 总分: {11}
+# '''.format(s.equipments, s.level, s.monstermanual, s.wanxiang, s.homecreep, s.homebuilding,
+#            s.homeqishu, s.guildtrain, s.lingshou, s.skillpoints, s.soulCards, s.totalScore)
+#
+#         _info = utils.buildChatChannelAvatarInfo(
+#             self.id, self.gbId, self.school, self.name, self.level, self.sex, self.appearance.outfitData.picFrameId)
+#
+#         import gameengine
+#         gameengine.broadcastBaseapp('onBroadcastToAllClients',
+#                                         ('onRecvAvatarChannelMsg',
+#                                          (gameconst.ChatChannel.WORLD, _info, _msg), ()))
+

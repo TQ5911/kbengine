@@ -1,0 +1,45 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+    </Interfaces>
+
+    <Properties>
+        <leaderBoardType>
+            <Type>          UINT8                                           </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+        </leaderBoardType>
+
+        <leaderBoardCache>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+        </leaderBoardCache>
+
+        <leaderBoardList>
+            <Type>          LEADER_BOARD_LIST_DATA_INFO                     </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+        </leaderBoardList>
+
+        <leaderBoardIdx>
+            <Type>          LEADER_BOARD_IDX                                </Type>
+            <Flags>         BASE                                            </Flags>
+        </leaderBoardIdx>
+    </Properties>
+
+    <BaseMethods>
+        <onGetLeaderBoardCache>
+            <Arg>           PYTHON                                  </Arg>
+        </onGetLeaderBoardCache>
+
+        <onFirstCreate>
+        </onFirstCreate>
+
+        <doGetLeaderBoardList>
+            <Arg>           ENTITYCALL                              </Arg>
+            <Arg>           LEADER_BOARD_IDX                        </Arg>
+        </doGetLeaderBoardList>
+    </BaseMethods>
+</root>

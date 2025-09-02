@@ -1,0 +1,170 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: bagData/commonBagCapacity
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    1: _tools.RODict({
+        "grid": 1,
+        "itemNeeded": 30000001,
+        "itemNum": 1
+    }),
+    2: _tools.RODict({
+        "grid": 2,
+        "itemNeeded": 30000001,
+        "itemNum": 2
+    }),
+    3: _tools.RODict({
+        "grid": 3,
+        "itemNeeded": 30000001,
+        "itemNum": 3
+    }),
+    4: _tools.RODict({
+        "grid": 4,
+        "itemNeeded": 30000001,
+        "itemNum": 4
+    }),
+    5: _tools.RODict({
+        "grid": 5,
+        "itemNeeded": 30000001,
+        "itemNum": 5
+    }),
+    6: _tools.RODict({
+        "grid": 6,
+        "itemNeeded": 30000001,
+        "itemNum": 6
+    }),
+    7: _tools.RODict({
+        "grid": 7,
+        "itemNeeded": 30000001,
+        "itemNum": 7
+    }),
+    8: _tools.RODict({
+        "grid": 8,
+        "itemNeeded": 30000001,
+        "itemNum": 8
+    }),
+    9: _tools.RODict({
+        "grid": 9,
+        "itemNeeded": 30000001,
+        "itemNum": 9
+    }),
+    10: _tools.RODict({
+        "grid": 10,
+        "itemNeeded": 30000001,
+        "itemNum": 10
+    }),
+    11: _tools.RODict({
+        "grid": 11,
+        "itemNeeded": 30000001,
+        "itemNum": 11
+    }),
+    12: _tools.RODict({
+        "grid": 12,
+        "itemNeeded": 30000001,
+        "itemNum": 12
+    }),
+    13: _tools.RODict({
+        "grid": 13,
+        "itemNeeded": 30000001,
+        "itemNum": 13
+    }),
+    14: _tools.RODict({
+        "grid": 14,
+        "itemNeeded": 30000001,
+        "itemNum": 14
+    }),
+    15: _tools.RODict({
+        "grid": 15,
+        "itemNeeded": 30000001,
+        "itemNum": 15
+    }),
+    16: _tools.RODict({
+        "grid": 16,
+        "itemNeeded": 30000001,
+        "itemNum": 16
+    }),
+    17: _tools.RODict({
+        "grid": 17,
+        "itemNeeded": 30000001,
+        "itemNum": 17
+    }),
+    18: _tools.RODict({
+        "grid": 18,
+        "itemNeeded": 30000001,
+        "itemNum": 18
+    }),
+    19: _tools.RODict({
+        "grid": 19,
+        "itemNeeded": 30000001,
+        "itemNum": 19
+    }),
+    20: _tools.RODict({
+        "grid": 20,
+        "itemNeeded": 30000001,
+        "itemNum": 20
+    }),
+    21: _tools.RODict({
+        "grid": 21,
+        "itemNeeded": 30000001,
+        "itemNum": 21
+    }),
+    22: _tools.RODict({
+        "grid": 22,
+        "itemNeeded": 30000001,
+        "itemNum": 22
+    }),
+    23: _tools.RODict({
+        "grid": 23,
+        "itemNeeded": 30000001,
+        "itemNum": 23
+    }),
+    24: _tools.RODict({
+        "grid": 24,
+        "itemNeeded": 30000001,
+        "itemNum": 24
+    }),
+    25: _tools.RODict({
+        "grid": 25,
+        "itemNeeded": 30000001,
+        "itemNum": 25
+    }),
+    26: _tools.RODict({
+        "grid": 26,
+        "itemNeeded": 30000001,
+        "itemNum": 26
+    }),
+    27: _tools.RODict({
+        "grid": 27,
+        "itemNeeded": 30000001,
+        "itemNum": 27
+    }),
+    28: _tools.RODict({
+        "grid": 28,
+        "itemNeeded": 30000001,
+        "itemNum": 28
+    }),
+    29: _tools.RODict({
+        "grid": 29,
+        "itemNeeded": 30000001,
+        "itemNum": 29
+    }),
+    30: _tools.RODict({
+        "grid": 30,
+        "itemNeeded": 30000001,
+        "itemNum": 30
+    })
+})
+minKey = 1
+maxKey = 30

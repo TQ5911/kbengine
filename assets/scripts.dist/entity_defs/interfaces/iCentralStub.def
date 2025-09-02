@@ -1,0 +1,17 @@
+<root>
+    <Properties>
+        <centralServerDic>
+            <Type>          PY_DICT             </Type>
+            <Flags>         BASE                </Flags>
+        </centralServerDic>
+
+        <csClients>
+            <Type>          PY_DICT             </Type>
+            <Flags>         BASE                </Flags>
+        </csClients>
+    </Properties>
+
+    <BaseMethods>
+
+    </BaseMethods>
+</root>

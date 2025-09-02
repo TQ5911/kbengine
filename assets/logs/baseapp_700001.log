@@ -1,0 +1,95 @@
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,903] - 
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,903] - -----------------------------------------------------------------------------------------
+
+
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,927] - Resmgr::initialize: KBE_ROOT=/mnt/hgfs/game/Server/kbeLinux/kbengine/
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,927] - Resmgr::initialize: KBE_RES_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/res/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,929] - Resmgr::initialize: KBE_BIN_PATH=/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/bin/server/
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,931] - NetworkInterface::initialize(EXTERNAL-TCP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:20017 )
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,931] - NetworkInterface::initialize(EXTERNAL-TCP): address 192.168.10.127:20017, SOMAXCONN=511, rBufSize=131072, wBufSize=16384, this=[0x7fff3a4f68d0.
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,934] - NetworkInterface::initialize(EXTERNAL-TCP-IPV6): address fe80::250:56ff:fe2a:a839::20018, SOMAXCONN=511, rBufSize=131072, wBufSize=16384, this=[0x7fff3a4f68d0.
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,934] - NetworkInterface::initialize(EXTERNAL-UDP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:30017 )
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,934] - NetworkInterface::initialize(EXTERNAL-UDP): address 192.168.10.127:30017, SOMAXCONN=511, rBufSize=212992, wBufSize=212992, this=[0x7fff3a4f68d0.
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,935] - NetworkInterface::initialize(EXTERNAL-UDP-IPV6): address fe80::250:56ff:fe2a:a839::30018, SOMAXCONN=511, rBufSize=212992, wBufSize=212992, this=[0x7fff3a4f68d0.
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,937] - NetworkInterface::initialize(INTERNAL-TCP): bound to all interfaces with default route interface on 192.168.10.127 ( 192.168.10.127:58597 )
+  WARN root [0x773520089fc0] [2025-09-02 12:08:07,937] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a receive buffer of only 425984 bytes (instead of 16777216)
+  WARN root [0x773520089fc0] [2025-09-02 12:08:07,937] - NetworkInterface::initialize(INTERNAL-TCP): Operating with a send buffer of only 425984 bytes (instead of 16777216)
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,937] - NetworkInterface::initialize(INTERNAL-TCP): address 192.168.10.127:58597, SOMAXCONN=511, rBufSize=425984, wBufSize=425984, this=[0x7fff3a4f68d0.
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,937] - server-configs:
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,937] - 	gameUpdateHertz : 10
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,937] - 	entryScriptFile : game
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,940] - 	internalTcpAddr : 192.168.10.127:58597
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,941] - 	externalTcpAddr : 192.168.10.127:20017
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,942] - 	externalUdpAddr : 192.168.10.127:30017
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,942] - 	externalTcpIpv6Addr : fe80::250:56ff:fe2a:a839::20018
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,946] - 	externalUdpIpv6Addr : fe80::250:56ff:fe2a:a839::30018
+  INFO root [0x773520089fc0] [2025-09-02 12:08:07,947] - 	componentID : 700001
+  INFO root [0x773520089fc0] [2025-09-02 12:08:09,455] - ThreadPool::createThreadPool: creating  threadpool...
+  INFO root [0x773520089fc0] [2025-09-02 12:08:09,457] - ThreadPool::createThreadPool: successfully(2), newThreadCount=1, normalMaxThreadCount=2, maxThreadCount=8
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:09,572] - Script::install(): paths=/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/common:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/common/Lib:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/data:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/user_type:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/server_common:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/base:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/base/interfaces:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/scripts/base/components:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/lib-dynload:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/DLLs:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib/site-packages:/mnt/hgfs/game/Server/kbeLinux/kbengine/kbe/res/scripts/common/Lib/dist-packages.
+  INFO root [0x773520089fc0] [2025-09-02 12:08:11,104] - Script::install(): is successfully, Python=(3.7.3 (default, Mar 21 2025, 15:25:47) 
+[GCC 13.3.0])!
+  INFO root [0x773520089fc0] [2025-09-02 12:08:11,109] - Script::install(): KBExtra is successfully!
+ S_WAR root [0x773520089fc0] [2025-09-02 12:08:12,167] - [lj]crossServerInfo load fail
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:16,891] - loaded entity-script:Space(1).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,021] - loaded entity-script:AdminStub(2).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,038] - loaded entity-script:PlayerStub(3).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,099] - loaded entity-script:BaseApp(4).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,120] - loaded entity-script:TeamStub(5).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,126] - loaded entity-script:TeamMatchStub(6).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,159] - loaded entity-script:TeamDungeonStub(7).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,165] - loaded entity-script:SingleDungeonStub(8).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,256] - loaded entity-script:WorldLineStub(9).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,298] - loaded entity-script:CubeStub(10).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,315] - loaded entity-script:RaidStub(11).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,358] - loaded entity-script:CrossServerStub(12).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,360] - loaded entity-script:RaidDungeonStub(13).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,392] - loaded entity-script:LoginStub(14).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,394] - loaded entity-script:ItemLinkStub(15).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,400] - loaded entity-script:GlobalMailStub(16).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,416] - loaded entity-script:GuildStub(18).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,501] - loaded entity-script:Guild(19).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,510] - loaded entity-script:LeaderBoardStub(20).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,541] - loaded entity-script:AuctionStub(21).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,598] - loaded entity-script:DropStub(22).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,605] - loaded entity-script:WonderLandStub(23).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,615] - loaded entity-script:ActStub(26).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,683] - loaded entity-script:CrossSiegeWarStub(27).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,694] - loaded entity-script:SiegeWarStub(28).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,717] - loaded entity-script:SiegeWarSpaceStub(29).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,737] - loaded entity-script:CrossDataStub(31).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,738] - loaded entity-script:WorldBossStub(32).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,749] - loaded entity-script:DungeonSpaceMgr(33).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,750] - loaded entity-script:MonsterGrp(34).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:17,793] - loaded entity-script:Account(35).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,468] - loaded entity-script:Avatar(36).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,468] - loaded entity-script:Monster(37).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,469] - loaded entity-script:Summon(38).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,470] - loaded entity-script:Barrier(39).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,471] - loaded entity-script:Teleporter(40).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,471] - loaded entity-script:CityBattleTeleporter(41).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,474] - loaded entity-script:CoreAreaFlag(42).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,474] - loaded entity-script:Npc(43).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,474] - loaded entity-script:Collection(44).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,474] - loaded entity-script:Creation(45).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,475] - loaded entity-script:RaidMatchStub(47).
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,496] - loaded entity-script:WorldRefreshEntityStub(48).
+  INFO root [0x773520089fc0] [2025-09-02 12:08:18,496] - Baseapp::initializeEnd: started resmgr tick(60s)!
+  INFO root [0x773520089fc0] [2025-09-02 12:08:18,497] - TelnetServer server is running on port 40001
+  INFO root [0x773520089fc0] [2025-09-02 12:08:18,497] - start server app, timing method:rdtsc 3417531436
+  INFO root [0x773520089fc0] [2025-09-02 12:08:18,512] - ---- baseapp Version: 2.5.8. ScriptVersion: 0.1.0. Pythoncore: 3.7.3. Protocol: 00C842919090D3FD4897D0C953C8FBA9. Protocol client: 3E7AE130BB33C652DBF24318D016ECD0. Config: Hybrid64 X64. Built: 21:28:36 Aug 27 2025. AppID: 700001. UID: 1001. PID: 1157696 ----
+  INFO root [0x773520089fc0] [2025-09-02 12:08:18,512] - Server ubuntumyh: Intel(R) Core(TM) i7-14700KF x4 with 8083592kB RAM
+  INFO root [0x773520089fc0] [2025-09-02 12:08:18,512] - ---- baseapp is running ----
+ DEBUG root [0x773520089fc0] [2025-09-02 12:08:18,513] - Components::process(): Request for the process of identity...
+  WARN root [0x773520089fc0] [2025-09-02 12:08:18,833] - BundleBroadcast::BundleBroadcast: Cannot bind to port 20102, Address already in use
+  WARN root [0x773520089fc0] [2025-09-02 12:08:24,854] - EntityApp::checkTickPeriod: tick took 6346% (6.35 seconds)!
+  INFO root [0x773520089fc0] [2025-09-02 12:08:25,909] - Components::findComponents: find logger(1)...
+  INFO root [0x773520089fc0] [2025-09-02 12:08:25,969] - Components::findComponents: found logger, addr:192.168.10.127:43117
+  INFO root [0x773520089fc0] [2025-09-02 12:08:25,970] - Components::addComponent: reset orderLog, uid=1001!
+  INFO root [0x773520089fc0] [2025-09-02 12:08:25,970] - Components::addComponent[logger], uid=1001, componentID=200001, globalorderid=1, grouporderid=1, totalcount=1
+  INFO root [0x773520089fc0] [2025-09-02 12:08:25,970] - Components::findComponents: find dbmgr(2)...
+  INFO root [0x773520089fc0] [2025-09-02 12:08:26,070] - Components::findComponents: found dbmgr, addr:192.168.10.127:49301
+  INFO root [0x773520089fc0] [2025-09-02 12:08:26,070] - Components::addComponent: reset orderLog, uid=1001!
+  INFO root [0x773520089fc0] [2025-09-02 12:08:26,071] - Components::addComponent[dbmgr], uid=1001, componentID=400001, globalorderid=4, grouporderid=1, totalcount=1
+  WARN root [0x773520089fc0] [2025-09-02 12:08:27,072] - EntityApp::checkTickPeriod: tick took 1262% (1.26 seconds)!
+  WARN root [0x773520089fc0] [2025-09-02 12:08:27,072] - Forwarding logs to logger[192.168.10.127:43117/0/0/0]...

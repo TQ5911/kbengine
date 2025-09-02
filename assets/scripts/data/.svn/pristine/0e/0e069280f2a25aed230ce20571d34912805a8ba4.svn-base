@@ -1,0 +1,852 @@
+datas ={
+  "1004": {
+    "type": "delayLoop",
+    "firstDelay": 1800.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1008
+      ]
+    }
+  },
+  "1001": {
+    "type": "dunStart",
+    "transition": {
+      "finished": [
+        1078,
+        1019,
+        1020,
+        1023,
+        1004,
+        1013,
+        1018,
+        1026,
+        1031,
+        1034,
+        1038,
+        1042,
+        1046,
+        1050
+      ]
+    }
+  },
+  "1008": {
+    "type": "dunFailed",
+    "exitTime": 20.0,
+    "transition": {}
+  },
+  "1013": {
+    "type": "playerRestNum",
+    "compare": 1,
+    "num": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1008
+      ]
+    }
+  },
+  "1018": {
+    "type": "createAirWall",
+    "entityID": [
+      21028003,
+      21028004,
+      21028005,
+      21028006,
+      21028007,
+      21028008
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1019": {
+    "type": "createMonster",
+    "entityID": [
+      21020003,
+      21020004,
+      21020005,
+      21020006,
+      21020007
+    ],
+    "num": 0,
+    "lv": "35",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1060
+      ]
+    }
+  },
+  "1020": {
+    "type": "taskFinished",
+    "taskID": 86070002,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1021
+      ]
+    }
+  },
+  "1021": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1022,
+        1024
+      ]
+    }
+  },
+  "1022": {
+    "type": "createMonster",
+    "entityID": [
+      21020009,
+      21020010
+    ],
+    "num": 0,
+    "lv": "35",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {}
+  },
+  "1023": {
+    "type": "taskInProgress",
+    "taskID": 86070003,
+    "transition": {
+      "finished": [
+        1021
+      ]
+    }
+  },
+  "1024": {
+    "type": "taskFinished",
+    "taskID": 86070003,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1025
+      ]
+    }
+  },
+  "1025": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1027,
+        1028
+      ]
+    }
+  },
+  "1026": {
+    "type": "taskInProgress",
+    "taskID": 86070004,
+    "transition": {
+      "finished": [
+        1025
+      ]
+    }
+  },
+  "1027": {
+    "type": "createMonster",
+    "entityID": [
+      21020008,
+      21020011,
+      21020012,
+      21020013,
+      21020014
+    ],
+    "num": 0,
+    "lv": "35",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {}
+  },
+  "1028": {
+    "type": "taskFinished",
+    "taskID": 86070004,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1029
+      ]
+    }
+  },
+  "1029": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1032,
+        1033
+      ]
+    }
+  },
+  "1031": {
+    "type": "taskInProgress",
+    "taskID": 86070005,
+    "transition": {
+      "finished": [
+        1029
+      ]
+    }
+  },
+  "1032": {
+    "type": "createMonster",
+    "entityID": [
+      21020017,
+      21020018
+    ],
+    "num": 0,
+    "lv": "35",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {}
+  },
+  "1033": {
+    "type": "taskFinished",
+    "taskID": 86070005,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1035
+      ]
+    }
+  },
+  "1034": {
+    "type": "taskInProgress",
+    "taskID": 86070006,
+    "transition": {
+      "finished": [
+        1035
+      ]
+    }
+  },
+  "1035": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1036,
+        1037
+      ]
+    }
+  },
+  "1036": {
+    "type": "createMonster",
+    "entityID": [
+      21020015,
+      21020016,
+      21020019,
+      21020020,
+      21020022,
+      21020023,
+      21020024,
+      21020025
+    ],
+    "num": 0,
+    "lv": "35",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {}
+  },
+  "1037": {
+    "type": "taskFinished",
+    "taskID": 86070006,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1039
+      ]
+    }
+  },
+  "1038": {
+    "type": "taskInProgress",
+    "taskID": 86070007,
+    "transition": {
+      "finished": [
+        1039
+      ]
+    }
+  },
+  "1039": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1040,
+        1041
+      ]
+    }
+  },
+  "1040": {
+    "type": "createMonster",
+    "entityID": [
+      21020021
+    ],
+    "num": 0,
+    "lv": "35",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1070
+      ]
+    }
+  },
+  "1041": {
+    "type": "taskFinished",
+    "taskID": 86070007,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1043
+      ]
+    }
+  },
+  "1042": {
+    "type": "taskInProgress",
+    "taskID": 86070008,
+    "transition": {
+      "finished": [
+        1043
+      ]
+    }
+  },
+  "1043": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1045,
+        1044
+      ]
+    }
+  },
+  "1044": {
+    "type": "createMonster",
+    "entityID": [
+      21020001
+    ],
+    "num": 0,
+    "lv": "35",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1054
+      ]
+    }
+  },
+  "1045": {
+    "type": "taskFinished",
+    "taskID": 86070008,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1047
+      ]
+    }
+  },
+  "1046": {
+    "type": "taskInProgress",
+    "taskID": 86070009,
+    "transition": {
+      "finished": [
+        1047
+      ]
+    }
+  },
+  "1047": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1048,
+        1049
+      ]
+    }
+  },
+  "1048": {
+    "type": "createMonster",
+    "entityID": [
+      21020026,
+      21020027,
+      21020028,
+      21020029,
+      21020030
+    ],
+    "num": 0,
+    "lv": "35",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {}
+  },
+  "1049": {
+    "type": "taskFinished",
+    "taskID": 86070009,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1052
+      ]
+    }
+  },
+  "1050": {
+    "type": "taskInProgress",
+    "taskID": 86070010,
+    "transition": {
+      "finished": [
+        1052
+      ]
+    }
+  },
+  "1052": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1053
+      ]
+    }
+  },
+  "1053": {
+    "type": "createMonster",
+    "entityID": [
+      21020002
+    ],
+    "num": 0,
+    "lv": "35",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1068
+      ]
+    }
+  },
+  "1054": {
+    "type": "monsterInBattle",
+    "monsterID": [
+      21020001
+    ],
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1055,
+        1010
+      ]
+    }
+  },
+  "1055": {
+    "type": "popupdialog",
+    "entityID": [
+      21020001
+    ],
+    "dialogID": 19013001,
+    "transition": {}
+  },
+  "1060": {
+    "type": "monsterInBattle",
+    "monsterID": [
+      21020004
+    ],
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1061
+      ]
+    }
+  },
+  "1061": {
+    "type": "popupdialog",
+    "entityID": [
+      21020004
+    ],
+    "dialogID": 19900185,
+    "transition": {
+      "finished": [
+        1062
+      ]
+    }
+  },
+  "1062": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      21020004
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1063
+      ]
+    }
+  },
+  "1063": {
+    "type": "popupdialog",
+    "entityID": [
+      21020004
+    ],
+    "dialogID": 19900186,
+    "transition": {}
+  },
+  "1068": {
+    "type": "monsterInBattle",
+    "monsterID": [
+      21020002
+    ],
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1015,
+        1069
+      ]
+    }
+  },
+  "1069": {
+    "type": "popupdialog",
+    "entityID": [
+      21020002
+    ],
+    "dialogID": 19014001,
+    "transition": {}
+  },
+  "1078": {
+    "type": "taskUndertake",
+    "taskID": 86070001,
+    "transition": {}
+  },
+  "1006": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      21020001
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1011
+      ]
+    }
+  },
+  "1010": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      21020001
+    ],
+    "buffID": [
+      64004901
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 600.0,
+    "transition": {
+      "finished": [
+        1030
+      ]
+    }
+  },
+  "1011": {
+    "type": "popupdialog",
+    "entityID": [
+      21020001
+    ],
+    "dialogID": 19013003,
+    "transition": {}
+  },
+  "1030": {
+    "type": "monsterHp",
+    "monsterID": [
+      21020001
+    ],
+    "compare": 5,
+    "hpPercent": 50.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1079
+      ]
+    }
+  },
+  "1079": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      21020001
+    ],
+    "buffID": [
+      64004905
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": -1.0,
+    "transition": {
+      "finished": [
+        1006,
+        1082
+      ]
+    }
+  },
+  "1007": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      21020002
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1016
+      ]
+    }
+  },
+  "1015": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      21020002
+    ],
+    "buffID": [
+      64004901
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 600.0,
+    "transition": {
+      "finished": [
+        1051
+      ]
+    }
+  },
+  "1016": {
+    "type": "popupdialog",
+    "entityID": [
+      21020002
+    ],
+    "dialogID": 19014005,
+    "transition": {
+      "finished": [
+        1081
+      ]
+    }
+  },
+  "1051": {
+    "type": "monsterHp",
+    "monsterID": [
+      21020002
+    ],
+    "compare": 5,
+    "hpPercent": 75.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1056
+      ]
+    }
+  },
+  "1056": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      21020002
+    ],
+    "buffID": [
+      64004904
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": -1.0,
+    "transition": {
+      "finished": [
+        1057,
+        1083
+      ]
+    }
+  },
+  "1057": {
+    "type": "monsterHp",
+    "monsterID": [
+      21020002
+    ],
+    "compare": 5,
+    "hpPercent": 50.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1058
+      ]
+    }
+  },
+  "1058": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      21020002
+    ],
+    "buffID": [
+      19014003
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": -1.0,
+    "transition": {
+      "finished": [
+        1080,
+        1084
+      ]
+    }
+  },
+  "1080": {
+    "type": "removeBuffFromMonster",
+    "monsterID": [
+      21020002
+    ],
+    "buffID": [
+      64004904
+    ],
+    "transition": {
+      "finished": [
+        1007
+      ]
+    }
+  },
+  "1081": {
+    "type": "dunEnd",
+    "exitTime": 20.0,
+    "isDungeonDone": 1,
+    "transition": {}
+  },
+  "1082": {
+    "type": "popupdialog",
+    "entityID": [
+      21020001
+    ],
+    "dialogID": 19013002,
+    "transition": {}
+  },
+  "1083": {
+    "type": "popupdialog",
+    "entityID": [
+      21020002
+    ],
+    "dialogID": 19014002,
+    "transition": {}
+  },
+  "1084": {
+    "type": "popupdialog",
+    "entityID": [
+      21020002
+    ],
+    "dialogID": 19014002,
+    "transition": {}
+  },
+  "1070": {
+    "type": "monsterInBattle",
+    "monsterID": [
+      21020021
+    ],
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1071
+      ]
+    }
+  },
+  "1071": {
+    "type": "popupdialog",
+    "entityID": [
+      21020021
+    ],
+    "dialogID": 19900187,
+    "transition": {
+      "finished": [
+        1072
+      ]
+    }
+  },
+  "1072": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      21020021
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1085
+      ]
+    }
+  },
+  "1085": {
+    "type": "popupdialog",
+    "entityID": [
+      21020021
+    ],
+    "dialogID": 19900188,
+    "transition": {}
+  }
+}

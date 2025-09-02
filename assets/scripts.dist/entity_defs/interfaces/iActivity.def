@@ -1,0 +1,18 @@
+<root>
+    <Properties>
+
+    </Properties>
+
+    <BaseMethods>
+        <activityComplete>
+            <Arg>          OBJECT_ID                    </Arg>
+        </activityComplete>
+    </BaseMethods>
+
+    <CellMethods>
+
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

@@ -1,0 +1,122 @@
+datas ={
+  "SpaceConfig": {
+    "InitEntities": {
+      "Monster": {
+        "22020001": {
+          "ActivityID": 0,
+          "ClassName": "Monster",
+          "ClassNameType": 0,
+          "CustomID": "",
+          "Dir": 223.136,
+          "DisplayName": "",
+          "EntityID": 11032001,
+          "ID": 22020001,
+          "Name": "\u732a\u732a\u4fa0",
+          "PosX": 279.7862,
+          "PosY": 524.9851,
+          "PosZ": 58.27962,
+          "Props": {
+            "GroupID": "",
+            "Level": 38.0,
+            "MapEntityScale": 0,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "22020002": {
+          "ActivityID": 0,
+          "ClassName": "Monster",
+          "ClassNameType": 0,
+          "CustomID": "",
+          "Dir": 223.136,
+          "DisplayName": "",
+          "EntityID": 11032002,
+          "ID": 22020002,
+          "Name": "5009_02",
+          "PosX": 279.7862,
+          "PosY": 524.9851,
+          "PosZ": 58.27962,
+          "Props": {
+            "GroupID": "",
+            "Level": 1,
+            "MapEntityScale": 0,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "22020003": {
+          "ActivityID": 0,
+          "ClassName": "Monster",
+          "ClassNameType": 0,
+          "CustomID": "",
+          "Dir": 223.136,
+          "DisplayName": "",
+          "EntityID": 11032003,
+          "ID": 22020003,
+          "Name": "5009_03",
+          "PosX": 279.7862,
+          "PosY": 524.9851,
+          "PosZ": 58.27962,
+          "Props": {
+            "GroupID": "",
+            "Level": 1,
+            "MapEntityScale": 0,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        }
+      }
+    },
+    "BornPos": {
+      "22028001": {
+        "ActivityID": 0,
+        "ClassName": "BornPos",
+        "ClassNameType": 6,
+        "CustomID": "",
+        "Dir": 44.35662,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 22028001,
+        "Name": "\u51fa\u751f\u70b9",
+        "PosX": 247.2619,
+        "PosY": 527.809,
+        "PosZ": 20.92353,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "Remark": ""
+        }
+      }
+    },
+    "RebornPos": {
+      "22028002": {
+        "ActivityID": 0,
+        "ClassName": "RebornPos",
+        "ClassNameType": 7,
+        "CustomID": "",
+        "Dir": 36.96138,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 22028002,
+        "Name": "\u590d\u6d3b\u70b9",
+        "PosX": 247.2361,
+        "PosY": 527.809,
+        "PosZ": 20.82262,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "Remark": ""
+        }
+      }
+    }
+  }
+}

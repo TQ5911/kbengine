@@ -1,0 +1,37 @@
+<root>
+    <Interfaces>
+        <Interface>	   iCell            </Interface>
+        <Interface>	   iBaseWithCell    </Interface>
+        <Interface>	   iFubenSpace      </Interface>
+        <Interface>	   iTimerCell    </Interface>
+        <Interface>    iGameEntity      </Interface>
+    </Interfaces>
+
+    <Properties>
+        <name>
+            <Type>      UNICODE         </Type>
+            <Flags>     ALL_CLIENTS     </Flags>
+        </name>
+
+        <teleporterId>
+            <Type>	OBJECT_ID						</Type>
+            <Flags>	OTHER_CLIENTS					</Flags>
+        </teleporterId>
+    </Properties>
+
+    <BaseMethods>
+
+    </BaseMethods>
+
+    <CellMethods>
+        <doTeleport>
+            <Exposed/>
+            <Arg>        TELEPORTER_ID  </Arg>
+            <Arg>        LINE_NO        </Arg>
+        </doTeleport>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+
+</root>

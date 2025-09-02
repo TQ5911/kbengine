@@ -1,0 +1,21 @@
+<root>
+    <Properties>
+        <welfareSignInInfo>
+            <Type>          WELFARE_SIGN_IN_INFO    </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </welfareSignInInfo>
+    </Properties>
+
+    <BaseMethods>
+        <reqWelfareSignIn> <Exposed/>
+            <Arg>   UINT8            </Arg>
+        </reqWelfareSignIn>
+    </BaseMethods>
+
+    <ClientMethods>
+        <onGetWelfareSignInInfo>
+            <Arg>   WELFARE_SIGN_IN_INFO    </Arg> 
+        </onGetWelfareSignInInfo>
+    </ClientMethods>
+</root>

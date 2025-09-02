@@ -1,0 +1,34 @@
+<root>
+    <Interfaces>
+    </Interfaces>
+
+    <Properties>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <ClientMethods>
+        <popDialog>
+            <Arg>   OBJECT_ID   </Arg>
+        </popDialog>
+
+        <popDialogWithSelfHead>
+            <Arg>   OBJECT_ID   </Arg>
+        </popDialogWithSelfHead>
+
+        <showPopoverMsg>
+            <Arg>   UINT32      </Arg>
+        </showPopoverMsg>
+
+        <showPopoverMsgWithArg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   ARRAY   <of>    UNICODE     </of>   </Arg>
+        </showPopoverMsgWithArg>
+    </ClientMethods>
+
+</root>
+

@@ -1,0 +1,45 @@
+<root>
+
+    <Interfaces>
+        <Interface>     iBaseNoCell     </Interface>
+        <Interface>     iGlobal         </Interface>
+        <Interface>     iTimerBase      </Interface>
+    </Interfaces>
+
+    <Properties>
+    </Properties>
+
+    <BaseMethods>
+        <teamAutoMatch>
+            <Arg>           PY_DICT         </Arg>
+            <Arg>           BOOL            </Arg>
+        </teamAutoMatch>
+        <setTeamMatchAllowAddRobot>
+            <Arg>           TEAMID          </Arg>
+            <Arg>           BOOL            </Arg>
+        </setTeamMatchAllowAddRobot>
+        <onTeamInfoUpdate>
+            <Arg>           PY_DICT         </Arg>
+        </onTeamInfoUpdate>
+        <teamStopAutoMatch>
+            <Arg>           TEAMID          </Arg>
+        </teamStopAutoMatch>
+        <playerAutoMatch>
+            <Arg>           PY_DICT         </Arg>
+        </playerAutoMatch>
+        <playerStopAutoMatch>
+            <Arg>           PLAYER_GBID     </Arg>
+        </playerStopAutoMatch>
+        <onPlayerMatchInfoUpdate>
+            <Arg>           PY_DICT         </Arg>
+        </onPlayerMatchInfoUpdate>
+        <removeTeamRobot>
+            <Arg>   TEAMID         </Arg>
+            <Arg>   ARRAY       <of>    PLAYER_GBID          </of>    </Arg>
+        </removeTeamRobot>
+        <replyForceMatchRobot>
+            <Arg>           TEAMID          </Arg>
+            <Arg>           BOOL            </Arg>
+        </replyForceMatchRobot>
+    </BaseMethods>
+</root>

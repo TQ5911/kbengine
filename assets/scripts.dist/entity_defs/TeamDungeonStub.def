@@ -1,0 +1,28 @@
+<root>
+
+    <Interfaces>
+        <Interface> iDungeonStub </Interface>
+        <Interface> iDungeonStubMonsterMixin </Interface>
+    </Interfaces>
+
+    <Properties>
+        <spaces>
+            <Type>          PY_DICT        </Type>
+            <Flags>         BASE           </Flags>
+            <Default>       {}             </Default>
+        </spaces>
+    </Properties>
+
+    <BaseMethods>
+        <!--<delayDestoryDungeonSpace>-->
+            <!--<Arg>       SPACE_NO     </Arg>-->
+            <!--<Arg>       STRING       </Arg>-->
+        <!--</delayDestoryDungeonSpace>-->
+        <completeTeamDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            TEAMID          </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            UINT32          </Arg>
+        </completeTeamDungeon>
+    </BaseMethods>
+</root>

@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package CentralLoginGameServer;
+option go_package = "../gameServerService";
+
+option py_generic_services = true;
+
+message Void {
+}
+
+message VerifyAccountRequest
+{
+    uint32 accountType = 1;
+    string accountName = 2;
+    string token = 3;
+    uint32 hostId = 4;
+}
+
+message VerifyAccountReply
+{
+    enum VerifyResult
+    {
+        VERIFY_ACCOUNT_UNKNOWN = 0;
+        VERIFY_ACCOUNT_OK = 1;
+        VERIFY_ACCOUNT_FAIL = 2;
+    }
+
+    VerifyResult result = 1;
+    string accountName = 2;
+    uint32 accountType = 3;
+    uint32 channelId = 4;
+    int64 banAccountTime = 5;
+    int64 banPostTime = 6;
+    string banAccountReason = 7;
+    string banPostReason = 8;
+}
+
+message AccountVal
+{
+    uint32 accountType = 1;
+    string accountName = 2;
+}
+
+message GameServerInfo
+{
+    uint32 hostId = 1;
+    uint32 onlineNum = 2;
+}
+
+message NewCharacterInfo
+{
+    uint32 accountType = 1;
+    string accountName = 2;
+    uint64 gbId = 3;
+    string name = 4;
+    uint32 level = 5;
+    uint32 school = 6;
+    uint32 gens = 7;
+    uint32 sex = 8;
+    uint32 hostId = 9;
+}
+
+message UpdateCharacterInfo
+{
+    uint64 gbId = 1;
+    string name = 2;
+    uint32 level = 3;
+    uint32 school = 4;
+    uint32 tLastLogin = 5;
+    bool delete = 6;
+    uint32 sex = 7;
+}
+
+message AccountOfflineVal
+{
+    uint32 hostId = 1;
+    string accountName = 2;
+    uint32 accountType = 3;
+}
+
+message KickAccountVal
+{
+    enum KickReasonType 
+    {
+        UNKNOW = 0;
+        LOGIN_VERIFY_FAIL = 14;
+        CAPTCHA_CHECK_FAIL = 19;
+    }
+    uint32 accountType = 1;
+    string accountName = 2;
+    KickReasonType kickReason = 3;
+}
+
+message LockLoginSwitchServerVal 
+{
+    uint64 gbId = 1;
+    uint64 dbId = 2;
+    uint32 serverId = 3;
+    string accountName = 4;
+    uint32 accountType = 5;
+}
+
+message UnlockLoginSwitchServerVal
+{
+    string accountName = 1;
+}
+
+//中心服务器向游戏服提供的rpc
+service CentralServer
+{
+    rpc verifyLogin(VerifyAccountRequest) returns(Void);
+    rpc registerServer(GameServerInfo) returns(Void);
+    rpc updateServerInfo(GameServerInfo) returns(Void);
+    rpc updateCharacter(UpdateCharacterInfo) returns(Void);
+    rpc onCreateCharacter(NewCharacterInfo) returns(Void);
+    rpc onLoginComplete(AccountVal) returns(Void);
+    rpc activeTick(Void) returns(Void);
+    rpc onAccountOffline(AccountOfflineVal) returns(Void);
+    rpc lockLoginSwitchServer(LockLoginSwitchServerVal) returns(Void);
+    rpc unlockLoginSwitchServer(UnlockLoginSwitchServerVal) returns(Void);
+}
+
+//游戏服向中心服的rpc
+service GameServer
+{
+    rpc onVerifyLogin(VerifyAccountReply) returns(Void);
+    rpc activeTickCallback(Void) returns(Void);
+    rpc onKickAccount(KickAccountVal) returns(Void);
+    rpc onLockedLogin(LockLoginSwitchServerVal) returns(Void);
+}

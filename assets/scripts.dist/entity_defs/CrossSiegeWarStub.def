@@ -1,0 +1,184 @@
+<root>
+    <Interfaces>
+        <Interface>     iBaseNoCell                     </Interface>
+        <Interface>     iGlobal                         </Interface>
+        <Interface>     iTimerBase                      </Interface>
+        <Interface>     iCityOwnerMgr                   </Interface>
+        <Interface>     iCycleEvent                     </Interface>
+    </Interfaces>
+    
+    <Properties>
+        <siegeWarState>
+            <Type>          INT32                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </siegeWarState>
+
+        <siegeWarStateEndTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </siegeWarStateEndTime>
+
+        <declareWarTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </declareWarTime>
+
+        <officialWarStartTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </officialWarStartTime>
+
+        <nowBiddingCnt>
+            <Type>          INT32                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </nowBiddingCnt>
+
+        <firstBiddingPrice>
+            <Type>          INT32                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </firstBiddingPrice>
+
+        <firstBiddingGuildName>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </firstBiddingGuildName>
+
+        <firstBiddingAvatarName>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </firstBiddingAvatarName>
+
+        <secondBiddingGuildName>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </secondBiddingGuildName>
+
+        <firstBiddingGuildUUID>
+            <Type>          GUILD_UUID              </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </firstBiddingGuildUUID>
+
+        <secondBiddingGuildUUID>
+            <Type>          GUILD_UUID              </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </secondBiddingGuildUUID>
+
+        <avatarGBID>
+            <Type>          PLAYER_GBID              </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </avatarGBID>
+
+        <avatarName>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </avatarName>
+
+        <biddingGuildList>
+            <Type>          PY_LIST                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       []                      </Default>
+        </biddingGuildList>
+
+        <biddingNameList>
+            <Type>          PY_LIST                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       []                      </Default>
+        </biddingNameList>
+
+        <biddingCntList>
+            <Type>          PY_LIST                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       []                      </Default>
+        </biddingCntList>
+
+        <warOffensiveGuildUUID>
+            <Type>          GUILD_UUID              </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </warOffensiveGuildUUID>
+
+        <warDefensiveGuildUUID>
+            <Type>          GUILD_UUID              </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </warDefensiveGuildUUID>
+
+        <warOffensiveGuildName>
+            <Type>           UNICODE                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </warOffensiveGuildName>
+
+        <warDefensiveGuildName>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </warDefensiveGuildName>
+
+        <haveCityOwner>
+            <Type>          BOOL                    </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       false                   </Default>
+        </haveCityOwner>
+
+        <hasResetSpace>
+            <Type>          BOOL                    </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	false					</Persistent>
+        </hasResetSpace>
+    </Properties>
+
+    <BaseMethods>
+        <getSiegeWarState>
+            <Arg>           INT32    </Arg>
+        </getSiegeWarState>
+
+        <doBidding>
+            <Arg>           INT32                       </Arg>
+            <Arg>           PLAYER_GBID                 </Arg>
+            <Arg>           UNICODE                     </Arg>
+            <Arg>           INT32                       </Arg>
+            <Arg>           UNICODE                     </Arg>
+            <Arg>           GUILD_UUID                  </Arg>
+        </doBidding>
+
+        <onSiegeWarDeclareWar>
+            <Arg>           INT32                       </Arg>
+            <Arg>           ENTITYCALL                  </Arg>
+            <Arg>           BOOL                        </Arg>
+            <Arg>           PLAYER_GBID                 </Arg>
+            <Arg>           UNICODE                     </Arg>
+            <Arg>           GUILD_UUID                  </Arg>
+        </onSiegeWarDeclareWar>
+
+        <onCrossSiegeWarEnd>
+            <Arg>           PY_LIST                     </Arg>
+            <Arg>           GUILD_UUID                  </Arg>
+        </onCrossSiegeWarEnd>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

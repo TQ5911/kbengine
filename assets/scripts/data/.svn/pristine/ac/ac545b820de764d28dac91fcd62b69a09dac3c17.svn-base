@@ -1,0 +1,982 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: action/FightAction
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+
+import gameconst
+import const_const
+import KBEngine
+import combatSkill
+import actionContext
+import effectEventCtx
+import buff_buff
+import utils
+import creep_base
+import conflict_status_def as CCDD
+def attack(self, target, context, *args):
+    arg1 = args[0] if len(args) >= 1 else 1.0
+    # 攻击力比例伤害
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 附带额外伤害
+    arg3 = args[2] if len(args) >= 3 else 0
+    # 属性类型，0无属性，1水，2雷，3火，4混沌
+    arg4 = args[3] if len(args) >= 4 else None
+    # 攻击类型，1物理攻击，2法术攻击              
+    arg5 = args[4] if len(args) >= 5 else 1
+    # 是否结算护盾，0不结算，1结算，默认结算
+    arg6 = args[5] if len(args) >= 6 and args[5] is not None else isHit(self, target)
+    # 是否传入命中，如果传入命中的值则用，没有传或args[5] 是None时,则在这个函数里去得命中结果，并且传入到 attackShare 
+    arg7 = args[6] if len(args) >= 7 else 0
+    #是否传入大招充能值，不传入默认为0
+    if arg6 > 0 and self.IsAvatar:
+        if not hasattr(context, 'has_added_ultra_power'):
+            self.addUltraSkillPower(arg7)
+            context.has_added_ultra_power = True
+            #命中时，才增加大招充能
+    result = attackShare(self, target, context, arg1, arg2, 0.0, 0, arg3, arg4, arg5, 0, arg6)
+    return result
+
+def bloodSuckAttack(self, target, context, *args):
+    # 吸血攻击函数
+
+    arg1 = args[0] if len(args) >= 1 else 1.0
+    # 攻击力比例伤害
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 附带额外伤害
+    arg3 = args[2] if len(args) >= 3 else 0.0
+    # 吸血比例
+    arg4 = args[3] if len(args) >= 4 else 0.0
+    # 属性类型，0无属性，1水，2雷，3火，4混沌
+    arg5 = args[4] if len(args) >= 5 else None
+    # 攻击类型，1物理攻击，2法术攻击
+    arg6 = args[5] if len(args) >= 6 else 1
+    # 是否结算护盾，0不结算，1结算，默认结算
+    arg7 = args[5] if len(args) >= 6 else isHit(self, target)
+    # 是否传入命中，如果传入命中的值则用，没有传则在这个函数里去得命中结果，并且传入到 attackShare 
+    result = attackShare(self, target, context, arg1, arg2, arg3, 0, arg4, arg5, arg6, 0,arg7)
+
+    return result
+
+def fatalAttack(self, target, context, *args):
+    # 必然暴击函数
+
+    arg1 = args[0] if len(args) >= 1 else 1.0
+    # 攻击力比例伤害
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 附带额外伤害
+    arg3 = args[2] if len(args) >= 3 else 0
+    # 属性类型，0无属性，1水，2雷，3火，4混沌
+    arg4 = args[3] if len(args) >= 4 else None
+    # 攻击类型，1物理攻击，2法术攻击
+    arg5 = args[4] if len(args) >= 5 else 1
+    # 是否结算护盾，0不结算，1结算，默认结算
+    arg6 = args[5] if len(args) >= 6 else isHit(self, target)
+    # 是否传入命中，如果传入命中的值则用，没有传则在这个函数里去得命中结果，并且传入到 attackShare 
+    result = attackShare(self, target, context, arg1, arg2, 0.0, 2, arg3, arg4, arg5, 0,arg6)
+
+def noFatalAttack(self, target, context, *args):
+    # 必然不暴击函数
+
+    arg1 = args[0] if len(args) >= 1 else 1.0
+    # 攻击力比例伤害
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 附带额外伤害
+    arg3 = args[2] if len(args) >= 3 else 0
+    # 属性类型，0无属性，1水，2雷，3火，4混沌
+    arg4 = args[3] if len(args) >= 4 else None
+    # 攻击类型，1物理攻击，2法术攻击
+    arg5 = args[4] if len(args) >= 5 else 1
+    # 是否结算护盾，0不结算，1结算，默认结算
+    arg6 = args[5] if len(args) >= 6 else isHit(self, target)
+    # 是否传入命中，如果传入命中的值则用，没有传则在这个函数里去得命中结果，并且传入到 attackShare 
+    result = attackShare(self, target, context, arg1, arg2, 0.0, 1, arg3, arg4, arg5, 0,arg6)
+
+def armorIgnoreAttack(self, target, context, *args):
+    # 无视百分比的防御
+
+    arg1 = args[0] if len(args) >= 1 else 1.0
+    # 攻击力比例伤害
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 附带额外伤害
+    arg3 = args[2] if len(args) >= 3 else 0.0
+    # 忽视防御的百分比
+    arg4 = args[3] if len(args) >= 4 else 0.0
+    # 属性类型，0无属性，1水，2雷，3火，4混沌
+    arg5 = args[4] if len(args) >= 5 else None
+    # 攻击类型，1物理攻击，2法术攻击
+    arg6 = args[5] if len(args) >= 6 else 1
+    # 是否结算护盾，0不结算，1结算，默认结算
+    arg7 = args[5] if len(args) >= 6 else isHit(self, target)
+    # 是否传入命中，如果传入命中的值则用，没有传则在这个函数里去得命中结果，并且传入到 attackShare 
+    result = attackShare(self, target, context, arg1, arg2, 0.0, 0, arg4, arg5, arg6, arg3,arg7)
+
+    return result
+
+
+def attackShare(self, target, context, *args):
+    arg1 = args[0] if len(args) >= 1 else 1.0
+    # 攻击力比例伤害
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 附带额外伤害
+    arg3 = args[2] if len(args) >= 3 else 0.0
+    # 吸血比例
+    arg4 = args[3] if len(args) >= 4 else 0
+    # 0计算暴击概率，1必然不暴击，2必然暴击
+    arg5 = args[4] if len(args) >= 5 else 0
+    # 属性类型，0无属性，1水，2雷，3火，4混沌
+    arg6 = args[5] if len(args) >= 6 else None
+    # 攻击类型，1物理攻击，2法术攻击
+    arg7 = args[6] if len(args) >= 7 else 1
+    # 是否结算护盾，0不结算，1结算，默认结算
+    arg8 = args[7] if len(args) >= 8 else 0
+    # 忽视防御的百分比，不填默认为0，即不忽视
+    arg9 = args[8] 
+    # 命中传入进来
+    if not target:
+        return combatSkill.DamageResult()
+
+    skill = self._getSkillByActionContext(context)
+    buff = self._getBuffByActionContext(context)
+
+    realHurt = 0
+    dodgeDmgRatio = 1.0
+    fatalDmgRatio = 1.0
+    bIsHit = True
+    bCrit = False
+
+    # 命中判定
+    bIsHit = arg9
+
+    # 闪避倍率计算（命中100%，未命中0%）
+    if bIsHit:
+        dodgeDmgRatio = 1.0
+
+        # 暴击判定
+        bCrit = isCrit(self, target, arg4)
+
+        # 暴击伤害倍率计算
+        if bCrit:
+            fatalDmgRatio = fatalDmg(self, target)
+        else:
+            fatalDmgRatio = 1.0
+    else:
+        dodgeDmgRatio = 0
+        
+    if arg6 is not None:
+        classTag = arg6
+    else:
+        if skill:
+            classTag = skill.getClassTag(self)
+        elif buff:
+            classTag = buff.getClassTag(self)
+        elif self.IsCreation:
+            import creation_creation
+            classTag = creation_creation.datas.get(context.creationId, {}).get('classTag', 0)
+        else:
+            classTag = 1
+
+    # 随机大小攻
+    realAtk = randomAtk(self, classTag)
+
+    dmgAvoidance = armorAvoidance(self, target, classTag, arg8)
+
+    # 对象伤害倍率计算
+    realDmgRatioEx = realDmgRatio(self, target)
+
+    # 善恶值对伤害影响
+    moralEffectRatio = moralEffect(self, target)
+
+    # 实际伤害计算
+    realHurt =max((((realAtk - dmgAvoidance) * arg1 + arg2) * fatalDmgRatio * realDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef") + realAtk * self.getProp("extraDmg") - dmgAvoidance * target.getProp("extraDmgDef"))* moralEffectRatio,0.1 * realAtk + 1) * dodgeDmgRatio
+    if target.IsMonster:
+        if not hasattr(context, "ignoreMaxDamage"):
+            maxDamage = creep_base.datas.get(target.monsterId, {}).get("MaxDamage", -1)
+            if maxDamage > 0:
+                realHurt = min(realHurt, maxDamage)
+# 承伤统计
+    hurtDmg = realHurt
+
+    realHurt = realHurt
+
+    # 吸血计算
+    bloodSuck = realHurt * arg3
+
+    result = combatSkill.DamageResult()
+    result.dmg = realHurt
+    result.hurtDmg = hurtDmg
+    result.hpSuck = bloodSuck
+    result.dmgType = arg5
+    result.calcShield = arg7
+    if bCrit:
+        result.atkType = 2
+    elif bIsHit:
+        result.atkType = 0
+    else:
+        result.atkType = 1
+        result.calcShield = 0
+
+    return result
+
+def attackByNum(self, target, context, *args):
+    # 按数值扣血，不会结算防御、暴击等免伤和伤害相关参数
+
+    arg1 = args[0] if len(args) >= 1 else 0
+    # 伤害绝对值
+    arg2 = args[4] if len(args) >= 5 else 0
+    # 属性类型，0无属性，1水，2雷，3火，4混沌
+    arg3 = args[5] if len(args) >= 6 else 1
+    # 攻击类型，1物理攻击，2法术攻击
+    arg4 = args[1] if len(args) >= 2 else 1
+    # 是否结算护盾，0不结算，1结算，默认结算
+
+    result = attackByValueShare(self, target, context, arg1, arg2, arg3, arg4)
+
+    return result
+
+def attackByPct(self, target, context, *args):
+    # 按百分比扣血，不会结算防御、暴击等免伤和伤害相关参数
+
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 最大生命值的百分比
+    arg2 = args[4] if len(args) >= 5 else 0
+    # 属性类型，0无属性，1水，2雷，3火，4混沌
+    arg3 = args[5] if len(args) >= 6 else 1
+    # 攻击类型，1物理攻击，2法术攻击
+    arg4 = args[1] if len(args) >= 2 else 1
+    # 是否结算护盾，0不结算，1结算，默认结算
+
+    arg1 = target.getProp("fullHp") * arg1
+
+    result = attackByValueShare(self, target, context, arg1, arg2, arg3, arg4)
+
+    return result
+
+def attackByValueShare(self, target, context, *args):
+    arg1 = args[0] if len(args) >= 1 else 0
+    # 伤害数值
+    arg2 = args[4] if len(args) >= 5 else 0
+    # 属性类型，0无属性，1水，2雷，3火，4混沌
+    arg3 = args[5] if len(args) >= 6 else 1
+    # 攻击类型，1物理攻击，2法术攻击
+    arg4 = args[1] if len(args) >= 2 else 1
+    # 是否结算护盾，0不结算，1结算，默认结算
+
+    if not target:
+        return combatSkill.DamageResult()
+
+    if target.IsMonster:
+        if not hasattr(context, "ignoreMaxDamage"):
+            maxDamage = creep_base.datas.get(target.monsterId, {}).get("MaxDamage", -1)
+            if maxDamage > 0:
+                arg1 = min(arg1, maxDamage)
+    result = combatSkill.DamageResult()
+    result.dmg = arg1
+    result.hurtDmg = arg1
+    result.hpSuck = 0
+    result.dmgType = 0
+    result.atkType = 0
+    result.calcShield = arg4
+
+    return result
+
+def heal(self, target, context, *args):
+    # 计算暴击概率
+
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 攻击力比例治疗量
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 附带额外治疗量
+    arg3 = args[2] if len(args) >= 3 else 0
+    # 是否溢出，0溢出，1不溢出，默认溢出
+    arg4 = args[3] if len(args) >= 4 else 1
+    # 是否参与治疗衰减，1参与，0不参与，默认参与
+
+    # result = healShare(self, target, context, arg1, arg2, 0, arg3, arg4)
+    # 暂定所有治疗都不需要暴击
+    result = healShare(self, target, context, arg1, arg2, 1, arg3, arg4)
+
+    return result
+
+def noFatalHeal(self, target, context, *args):
+    # 必然不暴击
+
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 攻击力比例治疗量
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 附带额外治疗量
+    arg3 = args[2] if len(args) >= 3 else 0
+    # 是否溢出，0溢出，1不溢出，默认溢出
+    arg4 = args[3] if len(args) >= 4 else 1
+    # 是否参与治疗衰减，1参与，0不参与，默认参与
+
+    result = healShare(self, target, context, arg1, arg2, 1, arg3, arg4)
+
+    return result
+
+def healShare(self, target, context, *args):
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 攻击力比例治疗量
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 附带额外治疗量
+    arg3 = args[2] if len(args) >= 3 else 0
+    # 0计算暴击概率，1必然不暴击，2必然暴击
+    arg4 = args[3] if len(args) >= 4 else 0
+    # 是否溢出，0溢出，1不溢出，默认溢出
+    arg5 = args[4] if len(args) >= 5 else 1
+    # 是否参与治疗衰减，1参与，0不参与，默认参与
+
+    if not target:
+        return combatSkill.HealResult()
+
+    realHeal = 0
+    fatalDmgRatio = 1.0
+    bCrit = False
+
+    # 暴击判定
+    bCrit = isCrit(self, target, arg3)
+
+    # 暴击伤害倍率计算
+    if bCrit:
+        fatalDmgRatio = fatalDmg(self, target)
+    else:
+        fatalDmgRatio = 1
+
+    # 随机大小攻
+    skill = self._getSkillByActionContext(context)
+    classTag = skill.getClassTag(self)
+    skillBaseAtk = randomAtk(self,classTag) * arg1 + arg2
+
+    # 治疗量计算（目前只受暴击影响最终数值）
+    realHeal = skillBaseAtk * fatalDmgRatio
+
+    # 治疗是否溢出
+    healNum = min(realHeal, target.getProp("fullHp") - target.getProp("hp"))
+    if arg4 == 1:
+        realHeal = healNum
+
+    realHeal = int(realHeal)
+
+    result = combatSkill.HealResult()
+    result.healVal = realHeal
+    result.isCrit = bCrit
+    result.doSkillHealCorrection = arg5
+
+    return result
+
+def healByNum(self, target, context, *args):
+    # 按数值治疗，不会结算暴击、攻击力、治疗加成等计算参数
+
+    arg1 = args[0] if len(args) >= 1 else 0
+    # 治疗绝对值
+    arg2 = args[1] if len(args) >= 2 else 0
+    # 是否溢出，0溢出，1不溢出，默认溢出
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与治疗衰减，1参与，0不参与，默认参与
+
+    result = healByValueShare(self, target, context, arg1, arg2, arg3)
+
+    return result
+
+def healByPct(self, target, context, *args):
+    # 按百分比治疗，不会结算暴击、攻击力、治疗加成等计算参数
+
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 最大生命值的百分比
+    arg2 = args[1] if len(args) >= 2 else 0
+    # 是否溢出，0溢出，1不溢出，默认溢出
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与治疗衰减，1参与，0不参与，默认参与
+
+    arg1 = arg1 * self.getProp("fullHp")
+
+    result =healByValueShare(self, target, context, arg1, arg2, arg3)
+
+    return result
+
+def healByValueShare(self, target, context, *args):
+    arg1 = args[0] if len(args) >= 1 else 0
+    # 治疗数值
+    arg2 = args[1] if len(args) >= 2 else 0
+    # 是否溢出，0溢出，1不溢出，默认溢出
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与治疗衰减，1参与，0不参与，默认参与
+
+    if not target:
+        return combatSkill.HealResult()
+
+    healNum = min(arg1, target.getProp("fullHp") - target.getProp("hp"))
+    if arg2 == 1:
+        arg1 = healNum
+
+    result = combatSkill.HealResult()
+    result.healVal = arg1
+    result.isCrit = False
+    result.doSkillHealCorrection = arg3
+
+    return result
+
+def isHit(self, target):
+    minHitRate = const_const.datas.get('minHitRate', {}).get('value')
+    maxHitRate = const_const.datas.get('maxHitRate', {}).get('value')
+    if not target:
+        return False
+    # 基础命中90%
+
+    hitRatio = min(max(0.93 + (self.getProp("hit") - target.getProp("dodge") + (self.level - target.level) * 3) / 1000, 0.7), 1)
+
+    if random.randint(1, 100) <= hitRatio * 100:
+        return True
+    else:
+        return False
+
+def isCrit(self, target, *args):
+    arg1 = args[0] if len(args) >= 1 else 0
+    # 0计算暴击概率，1必然不暴击，2必然暴击
+
+    if not target:
+        return False
+
+    # 必然不暴击
+    if arg1 == 1:
+        return False
+
+    # 必然暴击；目标身上有带有tag为40的buff则必定被暴击
+    if arg1 == 2 or target.hasBuffTag(40):
+        return True
+
+    minFatalRate = const_const.datas.get('minFatalRate', {}).get('value')
+    maxFatalRate = const_const.datas.get('maxFatalRate', {}).get('value')
+    fatalRate = min(max(0, self.getProp("fatal") - target.getProp("antiFatal") + (self.level - target.level) * 0.004 ), 0.5)
+    if random.randint(1, 100) <= fatalRate * 100 :
+        return True
+    else:
+        return False
+
+def randomAtk(self,classTag):
+    # 攻击在大小攻范围内浮动，受幸运值影响
+    # 随机区间取小数点后2位
+    atkBlessToplimit = const_const.datas.get('atkBlessToplimit', {}).get('value')
+    blessing_value = self.getProp("atkBless")
+    import action_RandomAtk as ARD
+    import utils
+    
+    probabilityList = ARD.datas[blessing_value]['probability']
+    randNode = utils.randomByWeight(probabilityList)
+ 
+    if classTag == 1:
+        #物理攻击
+        min_damage = self.getProp("minPhysicalAtk")
+        max_damage = self.getProp("maxPhysicalAtk")
+
+    if classTag == 2:
+        #法术攻击
+        min_damage = self.getProp("minMagicAtk")
+        max_damage = self.getProp("maxMagicAtk")
+
+    if blessing_value >= atkBlessToplimit:
+        # 当祝福值超过9时，必然得到最大值
+        return max_damage
+    elif min_damage >= max_damage:
+        return max_damage
+    
+    if randNode == 0:
+        damage = min_damage
+    elif randNode == 1:
+        damage = (max_damage-min_damage)*0.2 + min_damage
+    elif randNode == 2:
+        damage = (max_damage-min_damage)*0.4 + min_damage
+    elif randNode == 3:
+        damage = (max_damage-min_damage)*0.6 + min_damage 
+    elif randNode == 4:
+        damage = (max_damage-min_damage)*0.8 + min_damage
+    elif randNode == 5:
+        damage = max_damage
+
+    return damage
+
+def fatalDmg(self, target):
+    minFatalDmgRatio = const_const.datas.get('minFatalDmgRatio', {}).get('value')
+    maxFatalDmgRatio = const_const.datas.get('maxFatalDmgRatio', {}).get('value')
+    if self.IsMonster:
+        minFatalDmgRatio = const_const.datas.get('monsterMinFatalDmgRatio', {}).get('value')
+        maxFatalDmgRatio = const_const.datas.get('monsterMaxFatalDmgRatio', {}).get('value')
+    t_antiMortal = target.getProp("antiMortal") if target else 0
+    fatalDmgRatio = min(max(1.1, 1.5 + self.getProp("mortal") - t_antiMortal),
+                        2)
+    return fatalDmgRatio
+
+def armorAvoidance(self, target, classTag, ignoreRatio):
+    # 防御计算
+    if classTag == 2:
+        # 法术防御
+        t_armor = target.getProp("magicArmor") if target else 0
+    else:
+        # 物理防御，辅助技能保护（如果3的技能action里有attack则当做物攻）
+        t_armor = target.getProp("physicalArmor") if target else 0
+
+    ignoreArmor = min(max(t_armor * self.getProp("ignoreArmor") - target.getProp("dmgArmor"),0),0.5*t_armor)
+    dmgAvoidance = t_armor - ignoreArmor
+
+    return dmgAvoidance
+
+def realDmgRatio(self, target):
+    # 对象伤害倍率计算
+    # maxBossDmg = const_const.datas.get('maxBossDmg', {}).get('value')
+    # maxBossDmgAnti = const_const.datas.get('maxBossDmgAnti', {}).get('value')
+
+    realDmgRatio = 1.0
+    AtkDmgRatio = 0
+    DefDmgRatio = 0
+    if not target:
+        return realDmgRatio
+
+    if self.IsAvatar:
+        if target.IsAvatar:
+            AtkDmgRatio = self.getProp("PVPDmg")
+            DefDmgRatio = target.getProp("PVPDmgAnti")
+        elif target.IsMonster:
+            AtkDmgRatio = self.getProp("monsterDmg")
+            DefDmgRatio = target.getProp("PVPDmgAnti")
+    elif self.IsMonster:
+        if target.IsAvatar:
+            AtkDmgRatio = self.getProp("PVPDmg")
+            DefDmgRatio = target.getProp("monsterDmgAnti")
+        elif target.IsMonster:
+            AtkDmgRatio = self.getProp("monsterDmg")
+            DefDmgRatio = target.getProp("monsterDmgAnti")
+
+    realDmgRatio = min(max(1 + AtkDmgRatio - DefDmgRatio + self.getProp("finalDmg") - target.getProp("finalDmgAnti"),0.5),2)
+
+    return realDmgRatio
+
+def pushTarget(self, target, context, *args):
+    if not target:
+        return 
+    arg1 = args[0] if len(args) >= 1 else -1
+    # 击退距离，填-1表示会造成击退效果，但是效果由受击方决定（对应单位上配置被击退的效果）
+    arg2 = args[1] if len(args) >= 2 else 10.0
+    # 击退速度
+    arg3 = args[2] if len(args) >= 3 else 0.0
+    # 额外僵直时间
+    arg4 = args[3] if len(args) >= 4 else 1.0
+    # 成功的概率
+    arg5 = args[4] if len(args) >= 5 else 0
+    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效，默认只PVE生效
+
+    if arg5 == 1 and not utils.isPVP(self, target):
+        return
+    elif arg5 == 2 and utils.isPVP(self, target):
+        return
+    else:
+        if random.randint(1, 100) <= arg4 * 100:
+            if arg1 == -1:
+                self.pushTarget(target, context, -1)
+            else:
+                self.pushTarget(target, context, arg1, arg2, arg3)
+                target.tagDispelAll(26)
+    return
+
+def dragTarget(self, target, context, *args):
+    if not target:
+        return 
+    arg1 = args[0] if len(args) >= 1 else -1
+    # 距离，-1表示拉到施法者位置
+    arg2 = args[1] if len(args) >= 2 else 1.0
+    # 成功的概率
+    arg3 = args[2] if len(args) >= 3 else 2
+    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效，默认只PVE生效
+    arg4 = args[3] if len(args) >= 4 else 20.0
+    # 击退速度
+    arg5 = args[4] if len(args) >= 5 else 0.0
+    # 额外僵直时间
+
+    if not target:
+        return
+
+    if (not target.IsAvatar and target.hasTag(99)) or target.hasBuffTag(99):
+        return
+
+    if arg3 == 1 and not utils.isPVP(self, target):
+        return
+    elif arg3 == 2 and utils.isPVP(self, target):
+        return
+    else:
+        if random.randint(1, 100) <= arg2 * 100:
+            self.dragTarget(target, context, arg1, arg4, arg5)
+            target.tagDispelAll(26)
+    return
+
+def commonPlayerSkillPush(self, target, context, *args):
+    arg1 = args[0] if len(args) >= 1 else 1
+    # 生效的概率
+    if random.randint(0, 100) < arg1 * 30:
+        pushTarget(self, target, context)
+
+    return
+
+def controlResist(self, target, context, *args):
+    # 通用控制状态对抗函数
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 持续时间
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 概率
+    isDecay = args[2] if len(args) >= 3 else False
+    # 是否参与控制衰减计算
+    arg4 = args[3] if len(args) >= 4 else 0
+    # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+    controlBuffID = args[4] if len(args) >= 5 else 0
+    # 控制BuffID
+    stateID = args[5] if len(args) >= 6 else 0
+    # 控制状态ID
+    controlEnh = args[6] if len(args) >= 7 else 0
+    # 控制穿透
+    controlAnti = args[7] if len(args) >= 8 else 0
+    # 控制抵抗
+    adjControlAnti = args[8] if len(args) >= 9 else 0
+    # 控制抵抗调整值
+    dispelTag = args[9] if len(args) >= 10 else 0
+    # 可被驱散的Buff Tag
+
+    skill = self._getSkillByActionContext(context)
+    skillLv = skill.getLevel(self) if skill else 0
+    srcControlPower = 796 + 12 * (skillLv-1)  # 投放中控制技能强
+    if context.actionType == actionContext.ACTION_EQUIP:
+        srcControlPower = 42 + context.affixLv * context.affixLevelGap * 8
+    controlPower = srcControlPower + controlEnh - controlAnti
+
+    result = combatSkill.AntiControlResult()
+    result.resultCode = 0
+    result.controlState = stateID
+    result.controlBuffId = controlBuffID
+    result.controlDuration = 0
+    # PVP才生效
+    if not utils.isPVP(self, target):
+        isDecay = False
+    result.isDecay = isDecay
+    result.dispelBuffTag = dispelTag
+
+    # 控制衰减的等级
+    decayLv = self.getControllLv(stateID)
+
+    if arg4 == 1:
+        # 强制命中，且不会控制衰减
+        result.resultCode = 1
+        result.controlDuration = arg1
+    else:
+        if random.randint(1, 100) <= arg2 * 100:
+            if target.getProp("baseStateRate") == -1.0 or adjControlAnti >= 10000 or decayLv == 20:
+                # 免疫控制状态，没命中、命中、免疫、抵抗对应0，1，2，3，默认0
+                result.resultCode = 2
+            else:
+                if utils.isPVP(self, target):
+                    # PVP控制保底概率20%下限，95%上限
+                    controlPowerData = min(max(target.getProp("baseStateRate") + controlPower, 200), 950)
+                else:
+                    controlPowerData = target.getProp("baseStateRate") + controlPower
+                if random.randint(1, 1000) <= controlPowerData:
+                    # 控制衰减
+                    if isDecay:
+                        resistRatio = decayLv * 0.05
+                        arg1 = arg1 * (1 - resistRatio)
+                    if arg1 < 0.3:
+                        result.resultCode = 2
+                    else:
+                        # 控制状态命中，没命中、命中、免疫、抵抗对应0，1，2，3，默认0
+                        result.resultCode = 1
+                        result.controlDuration = arg1
+                else:
+                    # 抵抗控制状态，没命中、命中、免疫、抵抗对应0，1，2，3，默认0
+                    result.resultCode = 3
+
+    # 进行控制对抗的实际结算操作
+    self.calcAntiControl(target, context, result)
+
+    return result.resultCode
+
+def stun(self, target, context, *args):
+    # 通用眩晕
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 持续时间
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 概率
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
+    arg4 = args[3] if len(args) >= 4 else 0
+    # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+
+    if not target:
+        return
+
+        # 是否参与控制衰减计算
+    isDecay = True
+    if arg3 == 0:
+        isDecay = False
+    elif arg3 == 1:
+        isDecay = True
+    # 控制BuffID
+    controlBuffID = 64000001
+    # 控制状态ID
+    stateID = 6
+    # 控制穿透
+    controlEnh = self.getProp("stunEnh")
+    # 控制抵抗
+    controlAnti = target.getProp("stunAnti")
+    # 控制抵抗调整值
+    adjControlAnti = target.getProp("adjStunAnti")
+    # 可被驱散的Buff Tag
+    dispelTag = 22
+
+    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti,
+                  adjControlAnti, dispelTag)
+
+def silent(self, target, context, *args):
+    # 通用沉默
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 持续时间
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 概率
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
+    arg4 = args[3] if len(args) >= 4 else 0
+    # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+
+    if not target:
+        return
+    #目标免疫沉默
+    if target.hasState(CCDD.datas.silenceImmunity):
+        return
+    # 是否参与控制衰减计算
+    isDecay = True
+    if arg3 == 0:
+        isDecay = False
+    elif arg3 == 1:
+        isDecay = True
+    # 控制BuffID
+    controlBuffID = 64000002
+    # 控制状态ID
+    stateID = 8
+    # 控制穿透
+    controlEnh = self.getProp("silentEnh")
+    # 控制抵抗
+    controlAnti = target.getProp("silentAnti")
+    # 控制抵抗调整值
+    adjControlAnti = target.getProp("adjSilentAnti")
+    # 可被驱散的Buff Tag
+    dispelTag = 23
+
+    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
+
+def down(self, target, context, *args):
+    # 通用击倒
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 持续时间
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 概率
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
+    arg4 = args[3] if len(args) >= 4 else 0
+    # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+
+    if not target:
+        return
+
+    # 是否参与控制衰减计算
+    isDecay = True
+    if arg3 == 0:
+        isDecay = False
+    elif arg3 == 1:
+        isDecay = True
+    # 控制BuffID
+    controlBuffID = 64000003
+    # 控制状态ID
+    stateID = 5
+    # 控制穿透
+    controlEnh = self.getProp("knockEnh")
+    # 控制抵抗
+    controlAnti = target.getProp("knockAnti")
+    # 控制抵抗调整值
+    adjControlAnti = target.getProp("adjKnockAnti")
+    # 可被驱散的Buff Tag
+    dispelTag = 57
+
+    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
+
+def dragTargetToPos(self, target, context, *args):
+    if not target:
+        return 
+    arg1 = args[0] if len(args) >= 1 else -1
+    # 距离，-1表示拉到目标点位置，其他数表示拉到目标点与受击方的方向的多少米距离的位置上
+    arg2 = args[1] if len(args) >= 2 else 1.0
+    # 成功的概率
+    arg3 = args[2] if len(args) >= 3 else 2
+    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效，默认只PVE生效
+    arg4 = args[3] if len(args) >= 4 else 20.0
+    # 击退速度
+    arg5 = args[4] if len(args) >= 5 else 0.0
+    # 额外僵直时间
+
+    if not target:
+        return
+
+    if (not target.IsAvatar and target.hasTag(99)) or target.hasBuffTag(99):
+        return
+
+    if arg3 == 1 and not utils.isPVP(self, target):
+        return
+    elif arg3 == 2 and utils.isPVP(self, target):
+        return
+    else:
+        if random.randint(1, 100) <= arg2 * 100:
+            self.dragTargetToPos(target, context, arg1, arg4, arg5)
+            target.tagDispelAll(26)
+    return
+
+def frozen(self, target, context, *args):
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 持续时间
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 概率
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
+    arg4 = args[3] if len(args) >= 4 else 0
+    # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+
+    if not target:
+        return
+
+    # 是否参与控制衰减计算
+    isDecay = True
+    if arg3 == 0:
+        isDecay = False
+    elif arg3 == 1:
+        isDecay = True
+    # 控制BuffID
+    controlBuffID = 64000006
+    # 控制状态ID
+    stateID = 10
+    # 控制穿透
+    controlEnh = self.getProp("frozenEnh")
+    # 控制抵抗
+    controlAnti = target.getProp("frozenAnti")
+    # 控制抵抗调整值
+    adjControlAnti = target.getProp("adjFrozenAnti")
+    # 可被驱散的Buff Tag
+    dispelTag = 24
+
+    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh,
+                         controlAnti, adjControlAnti, dispelTag)
+
+def snare(self, target, context, *args):
+    # 通用定身
+    arg1 = args[0] if len(args) >= 1 else 0.0
+    # 持续时间
+    arg2 = args[1] if len(args) >= 2 else 0.0
+    # 概率
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
+    arg4 = args[3] if len(args) >= 4 else 0
+    # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+
+    if not target:
+        return
+
+    # 是否参与控制衰减计算
+    isDecay = True
+    if arg3 == 0:
+        isDecay = False
+    elif arg3 == 1:
+        isDecay = True
+    # 控制BuffID
+    controlBuffID = 64000005
+    # 控制状态ID
+    stateID = 9
+    # 控制穿透
+    controlEnh = self.getProp("snareEnh")
+    # 控制抵抗
+    controlAnti = target.getProp("snareAnti")
+    # 控制抵抗调整值
+    adjControlAnti = target.getProp("adjSnareAnti")
+    # 可被驱散的Buff Tag
+    dispelTag = 29
+
+    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
+
+def moralEffect(self, target):
+    # 红名状态对伤害的影响（红名玩家伤害降低，攻击方造成易伤）
+    import PKData_moralValueEffect as PKMVE
+
+    if not target:
+        return 1.0
+
+    attacker_moral = None
+    if self.IsAvatar:
+        attacker_moral = self.moralLevel
+    elif self.IsSummon or self.IsCreation:
+        hostRole = KBEngine.entities.get(self.hostId, None)
+        if hostRole and hostRole.IsAvatar:
+            attacker_moral = hostRole.moralLevel
+
+    target_moral = None
+    if target.IsAvatar:
+        target_moral = target.moralLevel
+    elif target.IsSummon or target.IsCreation:
+        hostRole = KBEngine.entities.get(target.hostId, None)
+        if hostRole and hostRole.IsAvatar:
+            target_moral = hostRole.moralLevel
+
+    if attacker_moral is not None and target_moral is not None:
+        AtkEffect = PKMVE.datas[attacker_moral]['PVPDmgReduced']
+        DefEffect = PKMVE.datas[target_moral]['DmgFromOtherPVPIncreased']
+        # print('AtkEffect------------',AtkEffect,'DefEffect------------',DefEffect)
+        return (1-AtkEffect) * (1 + DefEffect)
+
+    return 1.0
+
+def regenByNum(self, target, context, *args):
+    # 按数值治疗，不会结算暴击、攻击力、治疗加成等计算参数
+
+    arg1 = args[0] if len(args) >= 1 else 0
+    # 治疗绝对值
+    arg2 = args[1] if len(args) >= 2 else 0
+    # 是否溢出，0溢出，1不溢出，默认溢出
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与治疗衰减，1参与，0不参与，默认参与
+
+    result = regenByValueShare(self, target, context, arg1, arg2, arg3)
+
+    return result
+
+def regenByValueShare(self, target, context, *args):
+    arg1 = args[0] if len(args) >= 1 else 0
+    # 治疗数值
+    arg2 = args[1] if len(args) >= 2 else 0
+    # 是否溢出，0溢出，1不溢出，默认溢出
+    arg3 = args[2] if len(args) >= 3 else 1
+    # 是否参与治疗衰减，1参与，0不参与，默认参与
+
+    if not target:
+        return combatSkill.RegenResult()
+
+    regenNum = min(arg1, target.getProp("fullMp") - target.getProp("mp"))
+    if arg2 == 1:
+        arg1 = regenNum
+
+    result = combatSkill.RegenResult()
+    result.regenVal = arg1
+    result.isCrit = False
+    result.doSkillRegenCorrection = arg3
+
+    return result
+

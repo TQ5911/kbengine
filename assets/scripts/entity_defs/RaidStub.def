@@ -1,0 +1,615 @@
+<root>
+    <Interfaces>
+        <Interface>iBaseNoCell</Interface>
+        <Interface>iGlobal</Interface>
+        <Interface>iTimerBase</Interface>
+    </Interfaces>
+
+    <Properties>
+        <raidDic>
+            <Type>  PY_DICT     </Type>
+            <Flags>     BASE    </Flags>
+            <Default>   {}  </Default>
+        </raidDic>
+
+        <raidTeamMembersJoinRecordDic>
+            <Type>  PY_DICT     </Type>
+            <Flags> BASE    </Flags>
+            <Default>   {}  </Default>
+        </raidTeamMembersJoinRecordDic>
+
+        <raidTeamMembersInviteRecordDic>
+            <Type>  PY_DICT     </Type>
+            <Flags> BASE    </Flags>
+            <Default>   {}      </Default>
+        </raidTeamMembersInviteRecordDic>
+
+        <raidStandbyCheckerDic>
+            <Type>  PY_DICT     </Type>
+            <Flags> BASE        </Flags>
+            <Default>   {}      </Default>
+        </raidStandbyCheckerDic>
+    </Properties>
+
+    <BaseMethods>
+        <refreshRaidCache>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   AVATARGBID_LIST     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </refreshRaidCache>
+
+        <clearRaidJoinRecords>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PY_LIST     </Arg>
+        </clearRaidJoinRecords>
+
+        <getRaidApplyJoinDic>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+        </getRaidApplyJoinDic>
+
+        <clearRaidApplyJoinDic>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+        </clearRaidApplyJoinDic>
+
+        <updateRaidMemberCacheVal>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PY_DICT     </Arg>
+            <Arg>   BOOL    </Arg>
+        </updateRaidMemberCacheVal>
+
+        <getRaidAllMembersAttrs>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   AVATARGBID_LIST     </Arg>
+            <Arg>   PYTHON  </Arg>
+        </getRaidAllMembersAttrs>
+
+        <createRaid>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PY_LIST     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </createRaid>
+
+        <createRaidLonely>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PY_LIST     </Arg>
+            <Arg>   PYTHON      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   BOOL        </Arg>
+        </createRaidLonely>
+
+        <disbandRaid>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </disbandRaid>
+
+        <applyJoinRaidLonely>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PY_DICT     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </applyJoinRaidLonely>
+
+        <applyJoinRaidWithTeam>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   TEAMID  </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PY_LIST     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </applyJoinRaidWithTeam>
+
+        <replyJoinRaid>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   BOOL    </Arg>
+            <Arg>   PYTHON  </Arg>
+        </replyJoinRaid>
+
+        <onReplyJoinRaidLonely>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PY_DICT     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </onReplyJoinRaidLonely>
+
+        <onTeamReplyJoinRaidWithTeam>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   ERROR   </Arg>
+            <Arg>   PYTHON  </Arg>
+        </onTeamReplyJoinRaidWithTeam>
+
+        <onReplyJoinRaidWithTeam>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   TEAMID  </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PY_DICT     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </onReplyJoinRaidWithTeam>
+
+        <cancelRaidJoinRequest>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8      </Arg>
+            <Arg>   PYTHON      </Arg>
+        </cancelRaidJoinRequest>
+
+        <raidLeaderApplyInvitedRaid>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </raidLeaderApplyInvitedRaid>
+
+        <raidDeputyApplyInvitedRaid>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </raidDeputyApplyInvitedRaid>
+
+        <raidCaptainApplyInvitedRaid>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </raidCaptainApplyInvitedRaid>
+
+        <raidMemberApplyInvitedRaid>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </raidMemberApplyInvitedRaid>
+
+        <replyInviteRaidLonely>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PY_DICT     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UINT8   </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </replyInviteRaidLonely>
+
+        <replyInviteRaidWithTeam>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UUID    </Arg>
+            <Arg>   TEAMID  </Arg>
+            <Arg>   UINT8   </Arg>
+            <Arg>   PY_DICT     </Arg>
+            <Arg>   BOOL    </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </replyInviteRaidWithTeam>
+
+        <leaveRaid>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </leaveRaid>
+
+        <raidLeaderKickOutRaidMember>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </raidLeaderKickOutRaidMember>
+
+        <raidDeputyKickOutRaidMember>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </raidDeputyKickOutRaidMember>
+
+        <raidTeamCaptainKickOutRaidMember>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </raidTeamCaptainKickOutRaidMember>
+
+        <transferRaidLeader>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </transferRaidLeader>
+
+        <transferRaidDeputy>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </transferRaidDeputy>
+
+        <transferRaidTeamCaptain>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </transferRaidTeamCaptain>
+
+        <awardRaidTeamCaptain>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </awardRaidTeamCaptain>
+
+        <moveRaidTeamMember>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8   </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UINT8   </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON  </Arg>
+        </moveRaidTeamMember>
+
+        <setRaidTarget>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   BOOL        </Arg>
+            <Arg>   BOOL        </Arg>
+        </setRaidTarget>
+
+        <startRaidStandbyChecker>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </startRaidStandbyChecker>
+
+        <replyRaidStandbyChecker>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   BOOL        </Arg>
+            <Arg>   PYTHON      </Arg>
+        </replyRaidStandbyChecker>
+
+        <onAvatarClientDeath>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+        </onAvatarClientDeath>
+
+        <onAvatarOffline>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+        </onAvatarOffline>
+
+        <onAvatarLogin>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+        </onAvatarLogin>
+
+        <onPlayerIsOffline>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UNICODE         </Arg>
+        </onPlayerIsOffline>
+
+        <broadRaidChatMsg>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   CHAT_CHANNEL_AVATAR_INFO    </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </broadRaidChatMsg>
+
+        <switchRaidMicsMode>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   PYTHON      </Arg>
+        </switchRaidMicsMode>
+
+        <turnOnRaidMics>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </turnOnRaidMics>
+
+        <turnOffRaidMics>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </turnOffRaidMics>
+
+        <blockRaidMemberMics>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </blockRaidMemberMics>
+
+        <unblockRaidMemberMics>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </unblockRaidMemberMics>
+
+        <blockAllRaidMemberMics>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </blockAllRaidMemberMics>
+
+        <unblockAllRaidMemberMics>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </unblockAllRaidMemberMics>
+
+        <!--Raid Dungeon Start-->
+
+        <clearRaidDungeonInfo>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+        </clearRaidDungeonInfo>
+
+        <onRaidDungeonCompletedCallback>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+        </onRaidDungeonCompletedCallback>
+
+        <createAndEnterRaidDungeonPreCheck>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   DUNGEON_SRC     </Arg>
+            <Arg>   PYTHON      </Arg>
+        </createAndEnterRaidDungeonPreCheck>
+
+        <createAndEnterRaidDungeonPostCheck>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+            <Arg>   MAILBOX     </Arg>  <!--spaceBox-->
+            <Arg>   MAILBOX     </Arg>  <!--spaceMgrBox-->
+            <Arg>   DUNGEON_SRC     </Arg>
+            <Arg>   PYTHON  </Arg>
+        </createAndEnterRaidDungeonPostCheck>
+
+        <onLoadRaidDungeonSpaceReady>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+            <Arg>   MAILBOX     </Arg>  <!--spaceBox-->
+            <Arg>   MAILBOX     </Arg>  <!--spaceMgrBox-->
+            <Arg>   PYTHON  </Arg>
+        </onLoadRaidDungeonSpaceReady>
+
+        <!--Raid Dungeon Ended-->
+
+        <queryEliteMonsteBelongName>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   RAID_ID     </Arg>
+        </queryEliteMonsteBelongName>
+
+        <broadRaidMemMessage>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   PY_LIST     </Arg>
+        </broadRaidMemMessage>
+
+        <broadRaidMemMessage_localCross>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   PY_LIST     </Arg>
+        </broadRaidMemMessage_localCross>
+
+        <followRaidLeader>
+            <Arg>       MAILBOX         </Arg>
+            <Arg>       RAID_ID         </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+        </followRaidLeader>
+
+        <cancelFollowRaidLeader>
+            <Arg>       MAILBOX         </Arg>
+            <Arg>       RAID_ID         </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+        </cancelFollowRaidLeader>
+
+        <askAllMemberFollow>
+            <Arg>       MAILBOX         </Arg>
+            <Arg>       RAID_ID         </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       SPACE_NO        </Arg>
+            <Arg>       POSITION_ARG    </Arg>
+        </askAllMemberFollow>
+
+        <askOneMemberFollow>
+            <Arg>       MAILBOX         </Arg>
+            <Arg>       RAID_ID         </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+        </askOneMemberFollow>
+
+        <cancelAllMemberFollow>
+            <Arg>       MAILBOX         </Arg>
+            <Arg>       RAID_ID         </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+        </cancelAllMemberFollow>
+
+        <checkDuoHunItemRaidMemberIds>
+            <Arg>           ENTITYCALL       </Arg>
+            <Arg>           RAID_ID          </Arg>
+            <Arg>           PLAYER_GBID         </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           UINT8         </Arg>
+            <Arg>           UINT8         </Arg>
+            <Arg>           ENTITYCALL         </Arg>
+        </checkDuoHunItemRaidMemberIds>
+
+        <reCreateOrJoinRaid>
+            <Arg>       MAILBOX         </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       RAID_ID         </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       PY_LIST         </Arg>
+        </reCreateOrJoinRaid>
+
+        <getRaidLeaderName>
+            <Arg>       RAID_ID         </Arg>
+            <Arg>       MAILBOX         </Arg>
+            <Arg>       UNICODE         </Arg>
+            <Arg>       ENTITY_ID       </Arg>
+        </getRaidLeaderName>
+
+        <raidPrepareAutoMatch>
+            <Arg>           RAID_ID       </Arg>
+        </raidPrepareAutoMatch>
+
+        <raidPrepareStopAutoMatch>
+            <Arg>           RAID_ID       </Arg>
+        </raidPrepareStopAutoMatch>
+
+        <onRaidAutoMatchTimeout>
+            <Arg>           RAID_ID       </Arg>
+        </onRaidAutoMatchTimeout>
+
+        <newRaidPlayerMatched>
+            <Arg>           RAID_ID      </Arg>
+            <Arg>           PY_DICT      </Arg>
+        </newRaidPlayerMatched>
+
+        <publishRaid>
+            <Arg>       RAID_ID      </Arg>
+            <Arg>       BOOL        </Arg>
+            <Arg>       UNICODE     </Arg>
+            <Arg>       BOOL        </Arg>
+        </publishRaid>
+
+        <setRaidAutoInPlace>
+            <Arg>       RAID_ID      </Arg>
+            <Arg>       BOOL        </Arg>
+        </setRaidAutoInPlace>
+
+        <getRaidList>
+            <Arg>           ENTITYCALL   </Arg>
+            <Arg>           UINT8        </Arg>
+            <Arg>           LONGTIME     </Arg>
+            <Arg>           UINT32       </Arg>
+            <Arg>           UINT32       </Arg>
+            <Arg>           UINT32       </Arg>
+        </getRaidList>
+
+        <enterRaidChiefDungeon>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   PYTHON      </Arg>
+        </enterRaidChiefDungeon>
+
+        <addTeamMarkDataFromTeam>
+            <Arg>       RAID_ID      </Arg>
+            <Arg>       PY_LIST        </Arg>
+        </addTeamMarkDataFromTeam>
+        <reqAddRaidMarkMember>
+            <Arg>       TEAMID      </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       ENTITY_ID       </Arg>
+            <Arg>       UINT8       </Arg>
+        </reqAddRaidMarkMember>
+        <reqDelRaidMarkMember>
+            <Arg>       TEAMID      </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       ENTITY_ID       </Arg>
+        </reqDelRaidMarkMember>
+        <reqChangeRaidOnlyLeader>
+            <Arg>       TEAMID      </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       UINT8       </Arg>
+        </reqChangeRaidOnlyLeader>
+    </BaseMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+
+</root>

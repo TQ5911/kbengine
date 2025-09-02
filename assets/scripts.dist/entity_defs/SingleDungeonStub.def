@@ -1,0 +1,36 @@
+<root>
+
+    <Interfaces>
+        <Interface> iDungeonStub </Interface>
+        <Interface> iDungeonStubMonsterMixin </Interface>
+    </Interfaces>
+
+    <Properties>
+        <spaces>
+            <Type>          PY_DICT        </Type>
+            <Flags>         BASE           </Flags>
+            <Default>       {}             </Default>
+        </spaces>
+
+        <founders>
+            <Type>          SINGLE_DUNGEON_FOUNDER_INFO        </Type>
+            <Flags>         BASE                               </Flags>
+        </founders>
+    </Properties>
+
+    <BaseMethods>
+        <completeSingleDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            UINT32          </Arg>
+        </completeSingleDungeon>
+
+        <completeSingleDungeonForce>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
+            <Arg>            BOOL            </Arg>
+        </completeSingleDungeonForce>
+
+    </BaseMethods>
+</root>

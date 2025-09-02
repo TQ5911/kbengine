@@ -1,0 +1,46 @@
+<root>
+    <Properties>
+        <timerDataBase>
+            <Type>        PYTHON        </Type>
+            <Flags>        BASE        </Flags>
+            <Persistent>    false        </Persistent>
+            <Default>    {}        </Default>
+        </timerDataBase>
+
+        <datetimeTimerIdBaseCount>
+            <Type>      TIMER_ID        </Type>
+            <Flags>        BASE        </Flags>
+            <Persistent>    false        </Persistent>
+            <Default>      1         </Default>
+        </datetimeTimerIdBaseCount>
+
+        <datetimeTimerIdBase>
+            <Type>        TIMER_ID        </Type>
+            <Flags>        BASE        </Flags>
+            <Persistent>    false        </Persistent>
+            <Default>    0        </Default>
+        </datetimeTimerIdBase>
+
+        <datetimeTimerDataBase>
+            <Type>        PYTHON        </Type>
+            <Flags>        BASE        </Flags>
+            <Persistent>    false        </Persistent>
+            <Default>    {}        </Default>
+        </datetimeTimerDataBase>
+
+        <datetimeTimerDataTimeCacheBase>
+            <Type>        PYTHON        </Type>
+            <Flags>        BASE        </Flags>
+            <Persistent>    false        </Persistent>
+            <Default>    {}        </Default>
+        </datetimeTimerDataTimeCacheBase>
+
+        <datetimeTimerDataNextTBase>
+            <Type>        LONGTIME        </Type>
+            <Flags>        BASE        </Flags>
+            <Persistent>    false        </Persistent>
+            <Default>    0        </Default>
+        </datetimeTimerDataNextTBase>
+    </Properties>
+</root>
+

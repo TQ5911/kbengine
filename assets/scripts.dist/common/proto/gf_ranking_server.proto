@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+import "gf_ranking.proto";
+
+option go_package = "./proto";
+option py_generic_services = true;
+
+package gfranking;
+
+message Void {
+}
+
+message RankTypeReq {
+  uint32 rankType = 1;
+}
+
+message FinalizeRankReq {
+  uint32 rankType = 1;
+  uint32 rankNum = 2;
+}
+
+message deleteRankReq{
+  repeated uint32 data = 1;
+}
+
+message deleteRankResp{
+  repeated uint32 data = 1;
+  repeated uint32 reqdata = 2;
+}
+
+
+service RankingServer
+{
+  rpc updateTopList(updateTopReq) returns(Void);
+  rpc queryRank(queryRankReq) returns(Void);
+  rpc finalizeRank(FinalizeRankReq) returns(Void);
+  rpc registerRank(RankTypeReq) returns(Void);
+  rpc activeTick(Void) returns(Void);
+  rpc deleteRank(deleteRankReq) returns(Void);
+}
+
+// game service api
+service GameServer
+{
+  rpc onGetRank(queryRankResp) returns(Void);
+  rpc activeTickCallback(Void) returns(Void);
+  rpc onDeleteRank(deleteRankResp) returns(Void);
+}

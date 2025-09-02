@@ -1,0 +1,674 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: const/const
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    "createConst_CharLimit": _tools.RODict({
+        "ID": "createConst_CharLimit",
+        "value": 4,
+    }),
+    "createConst_BornGamePlayID": _tools.RODict({
+        "ID": "createConst_BornGamePlayID",
+        "value": 1002,
+    }),
+    "createConst_BornPos": _tools.RODict({
+        "ID": "createConst_BornPos",
+        "value": _tools.ROList([((374, 15, 96), 90)]),
+    }),
+    "defaultGamePlayID": _tools.RODict({
+        "ID": "defaultGamePlayID",
+        "value": 1001,
+    }),
+    "maxDmgAvoidance": _tools.RODict({
+        "ID": "maxDmgAvoidance",
+        "value": 0.85,
+    }),
+    "minFatalRate": _tools.RODict({
+        "ID": "minFatalRate",
+        "value": 0.1,
+    }),
+    "maxFatalRate": _tools.RODict({
+        "ID": "maxFatalRate",
+        "value": 0.6,
+    }),
+    "minFatalDmgRatio": _tools.RODict({
+        "ID": "minFatalDmgRatio",
+        "value": 1.5,
+    }),
+    "maxFatalDmgRatio": _tools.RODict({
+        "ID": "maxFatalDmgRatio",
+        "value": 2.0,
+    }),
+    "monsterMinFatalDmgRatio": _tools.RODict({
+        "ID": "monsterMinFatalDmgRatio",
+        "value": 1.2,
+    }),
+    "monsterMaxFatalDmgRatio": _tools.RODict({
+        "ID": "monsterMaxFatalDmgRatio",
+        "value": 1.25,
+    }),
+    "minHitRate": _tools.RODict({
+        "ID": "minHitRate",
+        "value": 0.2,
+    }),
+    "maxHitRate": _tools.RODict({
+        "ID": "maxHitRate",
+        "value": 1.0,
+    }),
+    "dmgAvoidanceLevelRatio": _tools.RODict({
+        "ID": "dmgAvoidanceLevelRatio",
+        "value": 13.84,
+    }),
+    "dmgAvoidanceConst": _tools.RODict({
+        "ID": "dmgAvoidanceConst",
+        "value": 31.16,
+    }),
+    "dodgeRateLevelRatio": _tools.RODict({
+        "ID": "dodgeRateLevelRatio",
+        "value": 13.84,
+    }),
+    "dodgeRateConst": _tools.RODict({
+        "ID": "dodgeRateConst",
+        "value": 31.16,
+    }),
+    "hitRateLevelRatio": _tools.RODict({
+        "ID": "hitRateLevelRatio",
+        "value": 13.84,
+    }),
+    "hitRateConst": _tools.RODict({
+        "ID": "hitRateConst",
+        "value": 31.16,
+    }),
+    "OTRatio": _tools.RODict({
+        "ID": "OTRatio",
+        "value": 1.2,
+    }),
+    "hpRecoveryInterval": _tools.RODict({
+        "ID": "hpRecoveryInterval",
+        "value": 1,
+    }),
+    "atkBlessToplimit": _tools.RODict({
+        "ID": "atkBlessToplimit",
+        "value": 9,
+    }),
+    "armorBlessToplimit": _tools.RODict({
+        "ID": "armorBlessToplimit",
+        "value": 9,
+    }),
+    "autoFightTick": _tools.RODict({
+        "ID": "autoFightTick",
+        "value": 1.0,
+    }),
+    "autoFightRange": _tools.RODict({
+        "ID": "autoFightRange",
+        "value": 30,
+    }),
+    "autoFightFollowRange": _tools.RODict({
+        "ID": "autoFightFollowRange",
+        "value": 30,
+    }),
+    "autoFightEnterTime": _tools.RODict({
+        "ID": "autoFightEnterTime",
+        "value": 0.1,
+    }),
+    "autoFightFailRetryNum": _tools.RODict({
+        "ID": "autoFightFailRetryNum",
+        "value": 10,
+    }),
+    "autoFightFailMsg": _tools.RODict({
+        "ID": "autoFightFailMsg",
+        "value": 54001519,
+    }),
+    "treatmentSkillLimit": _tools.RODict({
+        "ID": "treatmentSkillLimit",
+        "value": 0.8,
+    }),
+    "autoFightReturnRange": _tools.RODict({
+        "ID": "autoFightReturnRange",
+        "value": (400, 2500),
+    }),
+    "dropTime": _tools.RODict({
+        "ID": "dropTime",
+        "value": 3.0,
+    }),
+    "dropDelay": _tools.RODict({
+        "ID": "dropDelay",
+        "value": 2.0,
+    }),
+    "dropShareRange": _tools.RODict({
+        "ID": "dropShareRange",
+        "value": 50.0,
+    }),
+    "dropFxTime": _tools.RODict({
+        "ID": "dropFxTime",
+        "value": 0.733,
+    }),
+    "dropRewardAndBagFull_mailID": _tools.RODict({
+        "ID": "dropRewardAndBagFull_mailID",
+        "value": 37000001,
+    }),
+    "moveSkill_cameraMoveTime": _tools.RODict({
+        "ID": "moveSkill_cameraMoveTime",
+        "value": 0.5,
+    }),
+    "raidMemberLimit": _tools.RODict({
+        "ID": "raidMemberLimit",
+        "value": 40,
+    }),
+    "raidTeamLimit": _tools.RODict({
+        "ID": "raidTeamLimit",
+        "value": 8,
+    }),
+    "raidApplyLimit": _tools.RODict({
+        "ID": "raidApplyLimit",
+        "value": 50,
+    }),
+    "raidUnlcokLevel": _tools.RODict({
+        "ID": "raidUnlcokLevel",
+        "value": 40,
+    }),
+    "raidInvDeniedMsg": _tools.RODict({
+        "ID": "raidInvDeniedMsg",
+        "value": 54000111,
+    }),
+    "showNearestMonsterDistance": _tools.RODict({
+        "ID": "showNearestMonsterDistance",
+        "value": 24.0,
+    }),
+    "nearestMonsterJiantouFx": _tools.RODict({
+        "ID": "nearestMonsterJiantouFx",
+        "value": 31900005,
+    }),
+    "fightToIdleChangeTime": _tools.RODict({
+        "ID": "fightToIdleChangeTime",
+        "value": 5.0,
+    }),
+    "changeDirAngelThreshold": _tools.RODict({
+        "ID": "changeDirAngelThreshold",
+        "value": 120,
+    }),
+    "targetIsOutOfRange": _tools.RODict({
+        "ID": "targetIsOutOfRange",
+        "value": 54000134,
+    }),
+    "targetIsOutOfRange_butCasted": _tools.RODict({
+        "ID": "targetIsOutOfRange_butCasted",
+        "value": 54002242,
+    }),
+    "hitAniInterval": _tools.RODict({
+        "ID": "hitAniInterval",
+        "value": 0.0,
+    }),
+    "leisureTime": _tools.RODict({
+        "ID": "leisureTime",
+        "value": (10, 25),
+    }),
+    "leaveFightStateTime": _tools.RODict({
+        "ID": "leaveFightStateTime",
+        "value": 9.0,
+    }),
+    "leaveLockTargerTime": _tools.RODict({
+        "ID": "leaveLockTargerTime",
+        "value": 3.5,
+    }),
+    "monsterGoHomeBuffList": _tools.RODict({
+        "ID": "monsterGoHomeBuffList",
+        "value": _tools.ROList([64000203, 64000072]),
+    }),
+    "deadDisappearTime_base": _tools.RODict({
+        "ID": "deadDisappearTime_base",
+        "value": 1.0,
+    }),
+    "deadDisappearTime_max": _tools.RODict({
+        "ID": "deadDisappearTime_max",
+        "value": 3.0,
+    }),
+    "hpAlert": _tools.RODict({
+        "ID": "hpAlert",
+        "value": 0.2,
+    }),
+    "skillPreReleaseTime": _tools.RODict({
+        "ID": "skillPreReleaseTime",
+        "value": 0.5,
+    }),
+    "maxPropertiesType": _tools.RODict({
+        "ID": "maxPropertiesType",
+        "value": 11,
+    }),
+    "pickBeforeAct": _tools.RODict({
+        "ID": "pickBeforeAct",
+        "value": "idle01",
+    }),
+    "pickingAct": _tools.RODict({
+        "ID": "pickingAct",
+        "value": "beCatched01",
+    }),
+    "pickAfterAct": _tools.RODict({
+        "ID": "pickAfterAct",
+        "value": "idle02",
+    }),
+    "xuanzhongNPCMat": _tools.RODict({
+        "ID": "xuanzhongNPCMat",
+        "value": "Assets/Res/art/effectRes/Textures/other/Materials/Fresnel_shanbai.mat",
+    }),
+    "raidApplyDuration": _tools.RODict({
+        "ID": "raidApplyDuration",
+        "value": 10,
+    }),
+    "raidPressTime": _tools.RODict({
+        "ID": "raidPressTime",
+        "value": 0.1,
+    }),
+    "selectRange": _tools.RODict({
+        "ID": "selectRange",
+        "value": 100,
+    }),
+    "selectRangeInRaid": _tools.RODict({
+        "ID": "selectRangeInRaid",
+        "value": 100,
+    }),
+    "clickDistanceSqr": _tools.RODict({
+        "ID": "clickDistanceSqr",
+        "value": 900,
+    }),
+    "renameItem": _tools.RODict({
+        "ID": "renameItem",
+        "value": 30000237,
+    }),
+    "startPosIllegalMsg": _tools.RODict({
+        "ID": "startPosIllegalMsg",
+        "value": 54001551,
+    }),
+    "teleportStart": _tools.RODict({
+        "ID": "teleportStart",
+        "value": 31900019,
+    }),
+    "teleportStartLoopTime": _tools.RODict({
+        "ID": "teleportStartLoopTime",
+        "value": 1.8,
+    }),
+    "navigationWaypointMin": _tools.RODict({
+        "ID": "navigationWaypointMin",
+        "value": 30,
+    }),
+    "navigationWaypointHeightMin": _tools.RODict({
+        "ID": "navigationWaypointHeightMin",
+        "value": 5,
+    }),
+    "navigationIllegalMsg": _tools.RODict({
+        "ID": "navigationIllegalMsg",
+        "value": 54001227,
+    }),
+    "eternalItemIDList": _tools.RODict({
+        "ID": "eternalItemIDList",
+        "value": set([30050087,30001044,30001045,30001301,30001302]),
+    }),
+    "teleportStoneInvalidMsg": _tools.RODict({
+        "ID": "teleportStoneInvalidMsg",
+        "value": 54001273,
+    }),
+    "teleportCastTime": _tools.RODict({
+        "ID": "teleportCastTime",
+        "value": 3,
+    }),
+    "antiAddictAgeReminder": _tools.RODict({
+        "ID": "antiAddictAgeReminder",
+        "value": 54002000,
+    }),
+    "antiAddictPermittedTime": _tools.RODict({
+        "ID": "antiAddictPermittedTime",
+        "value": 54002001,
+    }),
+    "antiAddictForbiddenTime": _tools.RODict({
+        "ID": "antiAddictForbiddenTime",
+        "value": 54002002,
+    }),
+    "antiAddictForceLogout": _tools.RODict({
+        "ID": "antiAddictForceLogout",
+        "value": 54002003,
+    }),
+    "antiAddictAgeUnder16": _tools.RODict({
+        "ID": "antiAddictAgeUnder16",
+        "value": 54002004,
+    }),
+    "maxLevel": _tools.RODict({
+        "ID": "maxLevel",
+        "value": 70,
+    }),
+    "bankSortCooldown": _tools.RODict({
+        "ID": "bankSortCooldown",
+        "value": 10,
+    }),
+    "outOfStuckTimeLimit": _tools.RODict({
+        "ID": "outOfStuckTimeLimit",
+        "value": 60,
+    }),
+    "outOfStuckCDMsg": _tools.RODict({
+        "ID": "outOfStuckCDMsg",
+        "value": 54000031,
+    }),
+    "clientNpcAOI": _tools.RODict({
+        "ID": "clientNpcAOI",
+        "value": 50,
+    }),
+    "goalListQuantityt": _tools.RODict({
+        "ID": "goalListQuantityt",
+        "value": 8,
+    }),
+    "refreshGoalListcd": _tools.RODict({
+        "ID": "refreshGoalListcd",
+        "value": 0.5,
+    }),
+    "autoChooseTarget_FxID": _tools.RODict({
+        "ID": "autoChooseTarget_FxID",
+        "value": 31600007,
+    }),
+    "noOtherMedicinee_msgID": _tools.RODict({
+        "ID": "noOtherMedicinee_msgID",
+        "value": 54000196,
+    }),
+    "deathTimesToCancelAutoReturn": _tools.RODict({
+        "ID": "deathTimesToCancelAutoReturn",
+        "value": 3,
+    }),
+    "autoFightSettingsDefaultStatus": _tools.RODict({
+        "ID": "autoFightSettingsDefaultStatus",
+        "value": (1, 1, 0, 1, 0, 0),
+    }),
+    "autoHealHpAndMpPct": _tools.RODict({
+        "ID": "autoHealHpAndMpPct",
+        "value": (0.5, 0.5),
+    }),
+    "lackOfItem_msgID": _tools.RODict({
+        "ID": "lackOfItem_msgID",
+        "value": 54000191,
+    }),
+    "conflict_common_msgID": _tools.RODict({
+        "ID": "conflict_common_msgID",
+        "value": 54000052,
+    }),
+    "mpNotEnough_msgID": _tools.RODict({
+        "ID": "mpNotEnough_msgID",
+        "value": 54000028,
+    }),
+    "getRewardAndBagFull_mailID": _tools.RODict({
+        "ID": "getRewardAndBagFull_mailID",
+        "value": 37000002,
+    }),
+    "renameEmptyTip": _tools.RODict({
+        "ID": "renameEmptyTip",
+        "value": 54001017,
+    }),
+    "renameConfirmTip": _tools.RODict({
+        "ID": "renameConfirmTip",
+        "value": 54000807,
+    }),
+    "forbiddenContent": _tools.RODict({
+        "ID": "forbiddenContent",
+        "value": 54000814,
+    }),
+    "cameraLock_SwitchSpeed": _tools.RODict({
+        "ID": "cameraLock_SwitchSpeed",
+        "value": 0.5,
+    }),
+    "BattleCameraRotY": _tools.RODict({
+        "ID": "BattleCameraRotY",
+        "value": 26.0,
+    }),
+    "25DCameraYRotation": _tools.RODict({
+        "ID": "25DCameraYRotation",
+        "value": 13.5,
+    }),
+    "25DCameraDefault": _tools.RODict({
+        "ID": "25DCameraDefault",
+        "value": 33010015,
+    }),
+    "25DCameraRideDefault": _tools.RODict({
+        "ID": "25DCameraRideDefault",
+        "value": 33010016,
+    }),
+    "stepSoundDistance": _tools.RODict({
+        "ID": "stepSoundDistance",
+        "value": 24,
+    }),
+    "defaultArea": _tools.RODict({
+        "ID": "defaultArea",
+        "value": 0,
+    }),
+    "resetPositionSuccessMsg": _tools.RODict({
+        "ID": "resetPositionSuccessMsg",
+        "value": 54001778,
+    }),
+    "musicVolume": _tools.RODict({
+        "ID": "musicVolume",
+        "value": 0.5,
+    }),
+    "soundEffectVolume": _tools.RODict({
+        "ID": "soundEffectVolume",
+        "value": 0.5,
+    }),
+    "entitiesRefreshOnTime": _tools.RODict({
+        "ID": "entitiesRefreshOnTime",
+        "value": _tools.ROList([10001064, 20001117, 20001118, 11000001]),
+    }),
+    "formatOfLevels": _tools.RODict({
+        "ID": "formatOfLevels",
+        "value": "{0}级",
+    }),
+    "PowerChangedMsgID": _tools.RODict({
+        "ID": "PowerChangedMsgID",
+        "value": 54000152,
+    }),
+    "PropertyChangedMsgID": _tools.RODict({
+        "ID": "PropertyChangedMsgID",
+        "value": 54000154,
+    }),
+    "worldMapBgRes": _tools.RODict({
+        "ID": "worldMapBgRes",
+        "value": "Assets/Res/ui/texturenp/worldmap/worldmap_taotal_bg_img.png",
+    }),
+    "highFallingMsgID": _tools.RODict({
+        "ID": "highFallingMsgID",
+        "value": 58000023,
+    }),
+    "playerDamageOffset": _tools.RODict({
+        "ID": "playerDamageOffset",
+        "value": ((-0.7, -0.5, 0), (-0.5, -0.8, 0), (0.1, -0.8, 0)),
+    }),
+    "othersDamageOffset": _tools.RODict({
+        "ID": "othersDamageOffset",
+        "value": ((0, -0.5, 0), (0, -0.8, 0)),
+    }),
+    "playerDamageHudscale": _tools.RODict({
+        "ID": "playerDamageHudscale",
+        "value": ((0, 5.625, 9, 30, 10000), (2, 1, 1, 0.5, 0.5)),
+    }),
+    "othersDamageHudscale": _tools.RODict({
+        "ID": "othersDamageHudscale",
+        "value": ((0, 5.625, 9, 30, 10000), (2, 1, 1, 0.5, 0.5)),
+    }),
+    "beDrownLimit": _tools.RODict({
+        "ID": "beDrownLimit",
+        "value": 1.5,
+    }),
+    "itemUnboundProb": _tools.RODict({
+        "ID": "itemUnboundProb",
+        "value": 0.5,
+    }),
+    "ultimatePowerMax": _tools.RODict({
+        "ID": "ultimatePowerMax",
+        "value": 100,
+    }),
+    "uiVisibleLvLimitMsg": _tools.RODict({
+        "ID": "uiVisibleLvLimitMsg",
+        "value": 54000159,
+    }),
+    "uiVisibleTaskLimitMsg": _tools.RODict({
+        "ID": "uiVisibleTaskLimitMsg",
+        "value": 54000160,
+    }),
+    "uiVisiblePropmt": _tools.RODict({
+        "ID": "uiVisiblePropmt",
+        "value": 54001959,
+    }),
+    "leaveTheScene": _tools.RODict({
+        "ID": "leaveTheScene",
+        "value": 54001966,
+    }),
+    "taskGuideFx": _tools.RODict({
+        "ID": "taskGuideFx",
+        "value": "Assets/Res/art/effect/Prefabs/common/Common_xunluzhiyin.prefab",
+    }),
+    "taskGuideFxStep": _tools.RODict({
+        "ID": "taskGuideFxStep",
+        "value": 5,
+    }),
+    "taskGuideFxInterval": _tools.RODict({
+        "ID": "taskGuideFxInterval",
+        "value": 3.5,
+    }),
+    "taskGuideFxAfterIntrTime": _tools.RODict({
+        "ID": "taskGuideFxAfterIntrTime",
+        "value": 30,
+    }),
+    "taskGuideFxDestroyTime": _tools.RODict({
+        "ID": "taskGuideFxDestroyTime",
+        "value": 5.0,
+    }),
+    "taskGuideFxSpeed": _tools.RODict({
+        "ID": "taskGuideFxSpeed",
+        "value": 2.5,
+    }),
+    "taskGuideUICenterOffset": _tools.RODict({
+        "ID": "taskGuideUICenterOffset",
+        "value": (0, 56),
+    }),
+    "taskGuideUIEllipseSemiAxes": _tools.RODict({
+        "ID": "taskGuideUIEllipseSemiAxes",
+        "value": (607, 350),
+    }),
+    "taskGuideUIFxHighMount": _tools.RODict({
+        "ID": "taskGuideUIFxHighMount",
+        "value": 2.0,
+    }),
+    "resolution_set": _tools.RODict({
+        "ID": "resolution_set",
+        "value": 54001968,
+    }),
+    "translucentRangeCamera": _tools.RODict({
+        "ID": "translucentRangeCamera",
+        "value": (1, 2.8),
+    }),
+    "taskGuideFxNum": _tools.RODict({
+        "ID": "taskGuideFxNum",
+        "value": 20,
+    }),
+    "taskGuideFxAfterIntrInterval": _tools.RODict({
+        "ID": "taskGuideFxAfterIntrInterval",
+        "value": 4.0,
+    }),
+    "backBattleRecoveryPer": _tools.RODict({
+        "ID": "backBattleRecoveryPer",
+        "value": 10.0,
+    }),
+    "summonBcakRange": _tools.RODict({
+        "ID": "summonBcakRange",
+        "value": 30,
+    }),
+    "selectTargetTooFarMsg": _tools.RODict({
+        "ID": "selectTargetTooFarMsg",
+        "value": 54000624,
+    }),
+    "reliveTime": _tools.RODict({
+        "ID": "reliveTime",
+        "value": 2,
+    }),
+    "killMonsterLowerExpBonus": _tools.RODict({
+        "ID": "killMonsterLowerExpBonus",
+        "value": 0.04,
+    }),
+    "killMonsterHighExpBonus": _tools.RODict({
+        "ID": "killMonsterHighExpBonus",
+        "value": 0.04,
+    }),
+    "killMonsterTeamExpBonus": _tools.RODict({
+        "ID": "killMonsterTeamExpBonus",
+        "value": (1, 1.1, 1.2, 1.35, 1.5),
+    }),
+    "claimTaskTips": _tools.RODict({
+        "ID": "claimTaskTips",
+        "value": 54990062,
+    }),
+    "monsterSkillRange": _tools.RODict({
+        "ID": "monsterSkillRange",
+        "value": 2.5,
+    }),
+    "monsterSkillRangeTriggerCD": _tools.RODict({
+        "ID": "monsterSkillRangeTriggerCD",
+        "value": 3,
+    }),
+    "monsterSkillRangeCoefficient": _tools.RODict({
+        "ID": "monsterSkillRangeCoefficient",
+        "value": 0.2,
+    }),
+    "taskFuLingMsg": _tools.RODict({
+        "ID": "taskFuLingMsg",
+        "value": 54003100,
+    }),
+    "changeSceneFxId": _tools.RODict({
+        "ID": "changeSceneFxId",
+        "value": 31710002,
+    }),
+    "SelectRolePositon": _tools.RODict({
+        "ID": "SelectRolePositon",
+        "value": ((2.03, -2.4, -27.96), (2.03, -2.4, -27.96), (-1.674, 180, 0)),
+    }),
+    "BossProfileRange": _tools.RODict({
+        "ID": "BossProfileRange",
+        "value": 3600.0,
+    }),
+    "killRecordTimeLimit": _tools.RODict({
+        "ID": "killRecordTimeLimit",
+        "value": 60,
+    }),
+    "summonUnlockedLv": _tools.RODict({
+        "ID": "summonUnlockedLv",
+        "value": ((11002005, 1), (11002006, 5), (11002007, 12)),
+    }),
+    "transportcost": _tools.RODict({
+        "ID": "transportcost",
+        "value": 1000,
+    }),
+    "taskExceedReturn": _tools.RODict({
+        "ID": "taskExceedReturn",
+        "value": 50,
+    }),
+    "SummonChangeTips": _tools.RODict({
+        "ID": "SummonChangeTips",
+        "value": 54003104,
+    }),
+    "damageHeightLimit": _tools.RODict({
+        "ID": "damageHeightLimit",
+        "value": 12.0,
+    }),
+    "isMonsterTauntImmunityTime": _tools.RODict({
+        "ID": "isMonsterTauntImmunityTime",
+        "value": 10,
+    }),
+    "isBossTauntImmunityTime": _tools.RODict({
+        "ID": "isBossTauntImmunityTime",
+        "value": 30,
+    })
+})

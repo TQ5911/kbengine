@@ -1,0 +1,36 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+        <Interface> iMultiStaticSpace           </Interface>
+        <Interface> iMultiStaticSpacePlayer     </Interface>
+    </Interfaces>
+
+    <Properties>
+    </Properties>
+
+    <BaseMethods>
+        <onEnterSiegeWarSpace>
+            <Arg>           ENTITYCALL              </Arg>
+            <Arg>           GUILD_UUID              </Arg>
+        </onEnterSiegeWarSpace>
+        
+        <gmEnterSiegeWarSpace>
+            <Arg>           ENTITYCALL              </Arg>
+        </gmEnterSiegeWarSpace>
+
+        <resetSiegeWarData>
+            <Arg>       PY_DICT     </Arg>
+        </resetSiegeWarData>
+
+        <onSiegeWarGameStateChange>
+            <Arg>           INT32                   </Arg>
+            <Arg>           INT32                   </Arg>
+        </onSiegeWarGameStateChange>
+
+        <onGetWinnerDataFromCityOwnerMgr>
+            <Arg>       PY_LIST     </Arg>
+        </onGetWinnerDataFromCityOwnerMgr>
+    </BaseMethods>
+</root>

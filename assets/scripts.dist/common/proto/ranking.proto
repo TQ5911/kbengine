@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package ranking;
+
+option go_package = "./proto";
+
+message updateTopReq {
+  uint32 serverId = 1;
+  uint32 topType = 2;
+  int64 uid = 3;
+  string name = 4;
+  uint32 gender = 5;
+  uint64 value = 6;
+}
+
+message updateTopResp {
+  bool result = 1;
+}
+
+message queryRankReq {
+  uint32 topType = 1;
+  uint32 serverId = 2;
+  uint64 userArg = 3;
+  uint32 rankNum = 4;
+}
+
+message queryRankResp {
+  message rankData{
+    repeated int64 data = 1;
+  }
+  repeated rankData data = 1;
+  uint64 userArg = 2;
+}
+
+service ranking {
+  rpc updateTopList(updateTopReq) returns(updateTopResp);
+
+  rpc queryRank(queryRankReq) returns(queryRankResp);
+}

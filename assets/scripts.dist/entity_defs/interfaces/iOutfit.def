@@ -1,0 +1,85 @@
+<root>
+    <Properties>
+        <outfitExpireTimerId>
+            <Type>          TIMER_ID        </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    false           </Persistent>
+        </outfitExpireTimerId>
+
+        <!-- 已获得的外观数据 -->
+        <outfitInfo>
+            <Type>          OUTFIT_INFO     </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    true            </Persistent>
+        </outfitInfo>
+    </Properties>
+
+
+    <BaseMethods>
+        <reqEnableOutfit> <Exposed/>
+            <Arg>       UINT8           </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+        </reqEnableOutfit>
+
+        <reqExpOutfit> <Exposed/>
+            <Arg>       UINT8           </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+            <Arg>       ITEMID          </Arg>
+        </reqExpOutfit>
+
+        <reqBuyOutfit> <Exposed/>
+            <Arg>       UINT8           </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+        </reqBuyOutfit>
+        <reqClickOutfit> <Exposed/>
+            <Arg>       UINT8           </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+        </reqClickOutfit>
+
+        <updateAccountCharacterOutfit>
+            <Arg>       STRING          </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+        </updateAccountCharacterOutfit>
+
+        <onGetToplistWing>
+            <Arg>        PY_DICT                    </Arg>
+        </onGetToplistWing>
+
+        <addWingByToplist>
+            <Arg>       OUTFIT_ID           </Arg>
+            <Arg>       UINT32              </Arg>
+            <Arg>       UINT32              </Arg>
+        </addWingByToplist>
+
+    </BaseMethods>
+
+    <CellMethods>
+        <enableOutfit>
+            <Arg>       UINT8           </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+        </enableOutfit>
+
+        <reqDisableOutfit> <Exposed/>
+            <Arg>       UINT8           </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+        </reqDisableOutfit>
+
+        <checkOutfitExpired>
+            <Arg>  PYTHON   </Arg>
+        </checkOutfitExpired>
+
+        <updatePropByMount>
+            <Arg>       OUTFIT_ID       </Arg>
+            <Arg>       BOOL            </Arg>
+        </updatePropByMount>
+    </CellMethods>
+
+    <ClientMethods>
+        <onUpdateOutfitData>
+            <Arg>      ARRAY <of> CLIENT_OUTFIT_VAL    </of>    </Arg>
+        </onUpdateOutfitData>
+        <onOutfitExpired>
+            <Arg>      ARRAY <of> CLIENT_OUTFIT_EXPIRED    </of>    </Arg>
+        </onOutfitExpired>
+    </ClientMethods>
+</root>

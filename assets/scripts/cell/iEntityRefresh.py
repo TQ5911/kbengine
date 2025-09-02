@@ -1,0 +1,52 @@
+# coding: utf-8
+from KBEDebug import *
+import KBEngine
+
+import gameengine
+import formula
+import utils
+import gametimer
+import time
+import gameglobal
+
+
+class IEntityRefresh(object):
+    def __init__(self):
+        DEBUG_MSG("IEntityRefresh.__init__", self.refreshTime, self.isGroupRefresh, self.gameEntityId, self.spaceNo, self.position)
+
+    def _onEntityRefresh(self):
+        DEBUG_MSG('_onEntityRefresh')
+        self.onEntityRefresh()
+        self.safeDestroy()
+
+    def isNeedRefresh(self):
+        if self.refreshTime > 0:
+            return True
+        return False
+
+    def calculateRefreshTime(self):
+        if not self.isNeedRefresh():
+            return 0
+        # todo 和策划确认
+        # now = time.time()
+        # basicWaitTime = (now - self.birthInMem) % self.refreshTime
+        #
+        # return utils.randomDelayTime(basicWaitTime, self.refreshTime / 5)
+        return self.refreshTime
+
+    def onEntityRefresh(self, spaceNo, refreshTime):
+        if KBEngine.isShuttingDown():
+            return
+
+        if self.isGroupRefresh:
+            DEBUG_MSG("onGroupEntityRefresh ---", spaceNo, self.gameEntityId, self.position, refreshTime)
+            gameengine.getGlobalBase('WorldRefreshEntityStub').onGroupEntityRefresh(spaceNo, self.gameEntityId, refreshTime)
+            return
+
+        _space = self.getCurrentSpace()
+        if not _space:
+            ERROR_MSG('IEntityRefresh.onEntityRefresh: space not found, spaceID=%d' % self.spaceID)
+            return
+
+        _space._callback(refreshTime, 'doEntityRefresh', (self.gameEntityId, self.spaceMgrId), gametimer.TIMER_TAG_SPACE_DO_REFRESH)
+

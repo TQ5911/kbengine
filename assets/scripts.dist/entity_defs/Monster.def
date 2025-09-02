@@ -1,0 +1,166 @@
+<root>
+    <Volatile>
+        <position/>
+        <!--<position> 0 </position> Don't update-->
+        <yaw/>
+        <!--<pitch> 20 </pitch>-->
+        <optimized> false </optimized>
+    </Volatile>
+
+    <Interfaces>
+        <Interface>	   iAICombatUnit    </Interface>
+        <Interface>	   iTimerCell    </Interface>
+        <Interface>	   iEventMgr     </Interface>
+        <Interface>	   iFubenSpace    </Interface>
+        <Interface>	   iBaseWithCell    </Interface>
+        <Interface>    iMonsterGrp      </Interface>
+        <Interface>    iGameEntity      </Interface>
+        <Interface>    iEntityRefresh     </Interface>
+        <Interface>    iRoute           </Interface>
+        <Interface>    iClient          </Interface>
+    </Interfaces>
+
+    <Properties>
+        <monsterId>
+            <Type>	OBJECT_ID						</Type>
+            <Flags>	OTHER_CLIENTS					</Flags>
+        </monsterId>
+
+        <name>
+            <Type>	UNICODE							</Type>
+            <Flags>	OTHER_CLIENTS				</Flags>
+        </name>
+
+        <moveController>
+            <Type>	UINT32						</Type>
+            <Flags>	CELL_PRIVATE 			</Flags>
+        </moveController>
+
+        <hateTrapId>
+            <Type>	UINT32						</Type>
+            <Flags>	CELL_PRIVATE 			</Flags>
+        </hateTrapId>
+
+        <belongName>
+            <Type>	    UNICODE         </Type>
+            <Flags>	    OTHER_CLIENTS   </Flags>
+        </belongName>
+
+        <bornPosition>
+            <Type>	POSITION3D				</Type>
+            <Flags>	CELL_PRIVATE 			</Flags>
+        </bornPosition>
+
+        <bornRadius>
+            <Type> FLOAT </Type>
+            <Flags> CELL_PRIVATE </Flags>
+            <Default> 0.0 </Default>
+        </bornRadius>
+
+        <route>
+            <Type>      PYTHON        </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>    []            </Default>
+        </route>
+
+        <thinkTimer>
+            <Type>      TIMER_ID        </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+        </thinkTimer>
+
+        <belongGbId>
+            <Type>      PLAYER_GBID     </Type>
+            <Flags>     OTHER_CLIENTS   </Flags>
+        </belongGbId>
+
+        <belongTeamId>
+            <Type>      TEAMID          </Type>
+            <Flags>     OTHER_CLIENTS   </Flags>
+        </belongTeamId>
+
+        <belongEntityId>
+            <Type>      OBJECT_ID       </Type>
+            <Flags>     OTHER_CLIENTS   </Flags>
+        </belongEntityId>
+
+        <dropBelongId>
+            <Type>      OBJECT_ID       </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+        </dropBelongId>
+
+        <belongActId>
+            <Type>      UINT32           </Type>
+            <Default>   0               </Default>
+            <Flags>     OTHER_CLIENTS   </Flags>
+        </belongActId>
+
+        <liveStage>
+            <Type>      UINT8           </Type>
+            <Default>   0               </Default>
+            <Flags>     CELL_PRIVATE    </Flags>
+        </liveStage>
+
+        <bossDeadDisappearTime>
+            <Type>      DOUBLETIMESTAMP </Type>
+            <Default>   0               </Default>
+            <Flags>     OTHER_CLIENTS   </Flags>
+        </bossDeadDisappearTime>
+
+        <isBling>
+            <Type>      BOOL            </Type>
+            <Default>   0               </Default>
+            <Flags>     OTHER_CLIENTS   </Flags>
+        </isBling>
+
+        <soulType>
+            <Type>      UINT8            </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>   0                </Default>
+        </soulType>
+
+        <soulRefreshTime>
+            <Type>      UINT32           </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>   0                </Default>
+        </soulRefreshTime>
+
+        <beAttackAvatarIds>
+            <Type>      PY_DICT          </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+        </beAttackAvatarIds>
+
+        <lastClearBeAttackAvatarsTime>
+            <Type>          LONGTIME        </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+        </lastClearBeAttackAvatarsTime>
+        
+        <siegeWarCamp>
+            <Type>          INT32           </Type>
+            <Flags>         ALL_CLIENTS     </Flags>
+            <Default>       0               </Default>
+            <WitnessName>   true            </WitnessName>
+        </siegeWarCamp>
+    </Properties>
+
+    <BaseMethods>
+
+    </BaseMethods>
+
+    <CellMethods>
+        <setAI>
+            <Arg>        STRING        </Arg>
+            <Arg>        PYTHON        </Arg>
+        </setAI>
+
+    </CellMethods>
+
+    <ClientMethods>
+        <onDead>
+            <Arg>        OBJECT_ID        </Arg>
+        </onDead>
+
+        <onBornAction>
+        </onBornAction>
+    </ClientMethods>
+</root>
+

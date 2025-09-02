@@ -1,0 +1,83 @@
+
+<root>
+    <Properties>
+        <deathPenaltyData>
+            <Type>          DEATH_PENALTY_DATA  </Type>
+            <Flags>         BASE                </Flags>
+            <Persistent>    true                </Persistent>
+        </deathPenaltyData>
+
+        <freeRecoverDeathPenaltyTimes>
+            <Type>          UINT8               </Type>
+            <Flags>         BASE_AND_CLIENT     </Flags>
+            <Persistent>    true                </Persistent>
+            <Default>       255                 </Default>
+        </freeRecoverDeathPenaltyTimes>
+
+        <lastDeadTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         OWN_CLIENT          </Flags>
+            <Persistent>    true                </Persistent>
+        </lastDeadTime>
+
+        <curReliveCD>
+            <Type>          UINT16              </Type>
+            <Flags>         OWN_CLIENT          </Flags>
+            <Persistent>    true                </Persistent>
+        </curReliveCD>
+
+        <lastDeathPentlyTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         OWN_CLIENT          </Flags>
+            <Persistent>    true                </Persistent>
+        </lastDeathPentlyTime>
+
+        <deathPenaltyTimes>
+            <Type>          UINT16              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Persistent>    true                </Persistent>
+        </deathPenaltyTimes>
+    </Properties>
+
+    <BaseMethods>
+        <recoverDeathPenaltyExp> <Exposed/>
+            <Arg>       LONGTIME        </Arg>
+            <Arg>       ITEM_ID         </Arg>
+        </recoverDeathPenaltyExp>
+
+        <removeDeathPenaltyExp> <Exposed/>
+            <Arg>       LONGTIME        </Arg>
+        </removeDeathPenaltyExp>
+
+        <addDeathPenaltyVal>
+            <Arg>       EXP             </Arg>   
+            <Arg>       COIN            </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UNICODE         </Arg>
+            <Arg>       OP_UUID         </Arg>
+        </addDeathPenaltyVal>
+    </BaseMethods>
+
+    <CellMethods>
+        <relive>
+            <Exposed/>
+            <Arg>        UINT8                        </Arg>
+        </relive>
+    </CellMethods>
+
+    <ClientMethods>
+        <onGetDeathPenaltyExpLogin>
+            <Arg>   ARRAY   <of>    DEATH_PENALTY_EXP_VAL   </of>   </Arg>
+        </onGetDeathPenaltyExpLogin>
+
+        <onDeathPenaltyExpChange>
+            <Arg>   ARRAY   <of>    DEATH_PENALTY_EXP_VAL   </of>   </Arg>
+        </onDeathPenaltyExpChange>
+
+        <onDeathPenaltyReward>
+            <Arg>   PLAYER_GBID             </Arg>
+            <Arg>   UNICODE                 </Arg>
+            <Arg>   ARRAY   <of>    REWARD_VAL  </of>   </Arg>
+        </onDeathPenaltyReward>
+    </ClientMethods>
+</root>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Interfaces>
+        <Interface> iBase </Interface>
+    </Interfaces>
+    
+    <Properties>
+        <spaceid>
+            <Type>          SPACE_ID    </Type>
+            <Flags>         BASE        </Flags>
+        </spaceid>
+
+        <initCellCallbacks>
+            <Type>          PYTHON      </Type>
+            <Flags>         BASE        </Flags>
+            <Default>       []          </Default>
+        </initCellCallbacks>
+
+        <onLoseCellReason>
+            <Type>          UINT8       </Type>
+            <Flags>         BASE        </Flags>
+            <Default>       0           </Default>
+        </onLoseCellReason>
+    </Properties>
+
+    <BaseMethods>
+        <semiDestroy>
+        </semiDestroy>
+        
+        <delayDestroy>
+            <Arg>           BOOL            </Arg>
+        </delayDestroy>
+
+        <onRequestSpaceCell>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           SPACE_NO        </Arg>
+        </onRequestSpaceCell>
+
+        <onCellSafeDestroy>
+        </onCellSafeDestroy>
+
+        <onRequestSpaceBox>
+            <Arg>           MAILBOX         </Arg>
+            <Arg>           SPACE_NO        </Arg>
+        </onRequestSpaceBox>
+    </BaseMethods>
+</root>
+

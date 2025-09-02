@@ -1,0 +1,371 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: mail/mail
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    37000001: _tools.RODict({
+        "ID": 37000001,
+        "type": 2,
+        "title": "掉落奖励补偿",
+        "content": "由于您的背包已满，掉落的奖励无法拾取，现通过邮件发放给您。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000002: _tools.RODict({
+        "ID": 37000002,
+        "type": 2,
+        "title": "未进入背包物品补偿",
+        "content": "由于您的背包已满，获得的奖励无法领取，现通过邮件发放给您。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000003: _tools.RODict({
+        "ID": 37000003,
+        "type": 2,
+        "title": "礼包奖励",
+        "content": "由于您的背包空间不足，您的礼包奖励通过邮件发送。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000004: _tools.RODict({
+        "ID": 37000004,
+        "type": 2,
+        "title": "加入帮会通知",
+        "content": "你已被批准加入{0}帮会。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000005: _tools.RODict({
+        "ID": 37000005,
+        "type": 2,
+        "title": "帮会解散通知",
+        "content": "由于长期未运营帮会，我们遗憾的通知您，您之前所在的帮会已经解散。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000006: _tools.RODict({
+        "ID": 37000006,
+        "type": 2,
+        "title": "您已被移出了帮会",
+        "content": "您已被{0}{1}移出了帮会。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000007: _tools.RODict({
+        "ID": 37000007,
+        "type": 2,
+        "title": "创建帮会通知",
+        "content": "你已成功创建了{0}帮会",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000008: _tools.RODict({
+        "ID": 37000008,
+        "type": 2,
+        "title": "装备受损通知",
+        "content": "你的<link item id={0} gbid={1}>已受损，能量晶核遗失在<link position x={2} z={3} spaceNo={4}>。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "1",
+        "event": "",
+        "parm": ""
+    }),
+    37000009: _tools.RODict({
+        "ID": 37000009,
+        "type": 2,
+        "title": "装备修复通知",
+        "content": "受损装备<link item id={0} gbid={1}>的能量晶核已遗失，请尽快修复，否则将在<link time {2} format=yyyy-MM-dd HH:mm:ss>后彻底破碎。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "24",
+        "event": "",
+        "parm": ""
+    }),
+    37000010: _tools.RODict({
+        "ID": 37000010,
+        "type": 2,
+        "title": "装备破碎通知",
+        "content": "你的<link item id={0} gbid=0>未修复，已彻底损毁。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "24",
+        "event": "",
+        "parm": ""
+    }),
+    37000011: _tools.RODict({
+        "ID": 37000011,
+        "type": 2,
+        "title": "能量晶核退回通知",
+        "content": "<link item id={0} gbid={1}>遗失的能量晶核已被退回，该装备将在30分钟后完成修复。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000012: _tools.RODict({
+        "ID": 37000012,
+        "type": 2,
+        "title": "装备破碎通知",
+        "content": "<link item id={0} gbid=0>未修复，彻底损毁，能量晶核已消散。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001001: _tools.RODict({
+        "ID": 37001001,
+        "type": 1,
+        "title": "全服邮件",
+        "content": "全服邮件（GM发邮件使用）",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001002: _tools.RODict({
+        "ID": 37001002,
+        "type": 4,
+        "title": "账号共享邮件测试",
+        "content": "第一个登陆的角色才能获得哦！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001003: _tools.RODict({
+        "ID": 37001003,
+        "type": 4,
+        "title": "定制内容邮件",
+        "content": "定制内容邮件",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001004: _tools.RODict({
+        "ID": 37001004,
+        "type": 1,
+        "title": "新元起烽烟，群雄共逐鹿",
+        "content": "群雄逐鹿，谁与争锋？奉现任新元城城主-<color=#e4dabd>{0}</color>之命布告天下，凡自认实力超群者，皆可于接下来的5天内猎杀任意魔物，以获取魔物灵核。所得灵核将于5天后上缴至新元城府衙，上缴数量最多之帮派，便可获取本期新元城攻城令。\n<color=#dea050>{1}</color>",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001005: _tools.RODict({
+        "ID": 37001005,
+        "type": 1,
+        "title": "竞拍结束通知",
+        "content": "恭喜<color=#b69fff>[{0}]</color><color=#4f97d3>{1}</color> <color=#e4dabd>{2}</color> 出价<color=#038304>{3}</color>魔物灵核[帮]获得本期新元城攻城令归属。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001006: _tools.RODict({
+        "ID": 37001006,
+        "type": 1,
+        "title": "宣战通知",
+        "content": "<color=#fe6a6a>{0}</color>帮会对新元城宣战，此次新元城决战，攻城帮会：<color=#fe6a6a>{1}</color>，守城帮会：<color=#45a6f1>{2}</color>。<color=#038304>{3}年{4}月{5}号21点</color>，本次新元城战正式开始。烽烟再起，舍我其谁！\n<color=#dea050>{6}</color>",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001007: _tools.RODict({
+        "ID": 37001007,
+        "type": 2,
+        "title": "阵营积分排名奖励",
+        "content": "您在本次新元城战中获得了{0}积分，特予如下奖励，还请及时查收。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001008: _tools.RODict({
+        "ID": 37001008,
+        "type": 2,
+        "title": "奖赏通知",
+        "content": "您的英勇表现获得了城主的青睐，这是您的奖赏，你及时查收。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001009: _tools.RODict({
+        "ID": 37001009,
+        "type": 2,
+        "title": "被通缉通知",
+        "content": "您被通缉了。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001010: _tools.RODict({
+        "ID": 37001010,
+        "type": 1,
+        "title": "城战结束通告",
+        "content": "恭喜<color=#b69fff>[{0}]</color><color=#4f97d3>{1}</color>获得了本次新元城战的胜利，<color=#e4dabd>{2}</color>荣登城主宝座！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001011: _tools.RODict({
+        "ID": 37001011,
+        "type": 1,
+        "title": "MVP奖励",
+        "content": "您在本次新元城战中表现英勇，荣获MVP，特予如下奖励，还请及时查收。",
+        "isOpen": 1,
+        "rewardId": 40020248,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001012: _tools.RODict({
+        "ID": 37001012,
+        "type": 1,
+        "title": "竞猜返还",
+        "content": "有更高的竞价出现，拍卖行已返还您参与竞拍的攻城令，请注意查收。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001013: _tools.RODict({
+        "ID": 37001013,
+        "type": 2,
+        "title": "任命通知",
+        "content": "恭喜您被任命为{0}，请再接再厉！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001014: _tools.RODict({
+        "ID": 37001014,
+        "type": 1,
+        "title": "竞拍结束通知",
+        "content": "本期新元城攻城令已流拍。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001015: _tools.RODict({
+        "ID": 37001015,
+        "type": 1,
+        "title": "宣战通知",
+        "content": "此次新元城决战，攻城帮会：无，守城帮会：<color=#45a6f1>{0}</color>。<color=#038304>{1}年{2}月{3}号21点</color>，本次新元城战正式开始。烽烟再起，舍我其谁！\n<color=#dea050>{4}</color>",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001016: _tools.RODict({
+        "ID": 37001016,
+        "type": 1,
+        "title": "宣战通知",
+        "content": "<color=#fe6a6a>{0}</color>帮会对新元城宣战，此次新元城决战，攻城帮会：<color=#fe6a6a>{1}</color>，守城帮会：无。<color=#038304>{2}年{3}月{4}号21点</color>，本次新元城战正式开始。烽烟再起，舍我其谁！\n<color=#dea050>{5}</color>",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37990001: _tools.RODict({
+        "ID": 37990001,
+        "type": 2,
+        "title": "链接测试1",
+        "content": "<link查看任务>",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "2025-05-31-23-59",
+        "event": "Openinterface",
+        "parm": "UITaskInfoPanel"
+    })
+})
+minKey = 37000001
+maxKey = 37990001
+
+MailArgsNumMap = _tools.RODict({ 
+        37000001:0,
+        37000002:0,
+        37000003:0,
+        37000004:1,
+        37000005:0,
+        37000006:2,
+        37000007:1,
+        37000008:5,
+        37000009:3,
+        37000010:1,
+        37000011:2,
+        37000012:1,
+        37001001:0,
+        37001002:0,
+        37001003:0,
+        37001004:2,
+        37001005:4,
+        37001006:7,
+        37001007:1,
+        37001008:0,
+        37001009:0,
+        37001010:3,
+        37001011:0,
+        37001012:0,
+        37001013:1,
+        37001014:0,
+        37001015:5,
+        37001016:6,
+        37990001:0,
+})

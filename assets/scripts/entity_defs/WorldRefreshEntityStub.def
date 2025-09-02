@@ -1,0 +1,47 @@
+<root>
+
+    <Interfaces>
+        <Interface> iBaseNoCell </Interface>
+        <Interface> iGlobal     </Interface>
+        <Interface> iTimerBase </Interface>
+    </Interfaces>
+
+    <Properties>
+        <groupRefreshInfo>
+            <Type>                  PYTHON          </Type>
+            <Flags>                 BASE            </Flags>
+            <Default>               {}              </Default>
+        </groupRefreshInfo>
+        <groupEntityReady>
+            <Type>                  PYTHON          </Type>
+            <Flags>                 BASE            </Flags>
+            <Default>               {}              </Default>
+        </groupEntityReady>
+        <gameEntityIdSet>
+            <Type>                  PYTHON          </Type>
+            <Flags>                 BASE            </Flags>
+            <Default>               {}              </Default>
+        </gameEntityIdSet>
+    </Properties>
+    
+    <BaseMethods>
+        <checkAllGroupReady>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       METHOD_NAME    </Arg>
+            <Arg>       METHOD_ARGS    </Arg>
+        </checkAllGroupReady>
+
+        <loadGroupEntities>
+        </loadGroupEntities>
+
+        <onLoadGroupEntitiesAck>
+            <Arg>       PY_DICT       </Arg>
+        </onLoadGroupEntitiesAck>
+
+        <onGroupEntityRefresh>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       GAME_ENTITY_ID  </Arg>
+            <Arg>       FLOAT    </Arg>
+        </onGroupEntityRefresh>
+    </BaseMethods>
+</root>

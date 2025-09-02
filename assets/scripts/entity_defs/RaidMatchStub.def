@@ -1,0 +1,32 @@
+<root>
+
+    <Interfaces>
+        <Interface>     iBaseNoCell     </Interface>
+        <Interface>     iGlobal         </Interface>
+        <Interface>     iTimerBase      </Interface>
+    </Interfaces>
+
+    <Properties>
+    </Properties>
+
+    <BaseMethods>
+        <raidAutoMatch>
+            <Arg>           PY_DICT         </Arg>
+        </raidAutoMatch>
+        <onRaidInfoUpdate>
+            <Arg>           PY_DICT         </Arg>
+        </onRaidInfoUpdate>
+        <raidStopAutoMatch>
+            <Arg>           UINT64          </Arg>
+        </raidStopAutoMatch>
+        <raidPlayerAutoMatch>
+            <Arg>           PY_DICT         </Arg>
+        </raidPlayerAutoMatch>
+        <raidPlayerStopAutoMatch>
+            <Arg>           PLAYER_GBID     </Arg>
+        </raidPlayerStopAutoMatch>
+        <onRaidPlayerMatchInfoUpdate>
+            <Arg>           PY_DICT         </Arg>
+        </onRaidPlayerMatchInfoUpdate>
+    </BaseMethods>
+</root>
