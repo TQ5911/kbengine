@@ -20,8 +20,8 @@ class ILeaderBoard(object):
             _dur,
             gametimer.UPDATE_AVATAR_LEADERBOARD)
 
-    def getLeaderBoardList(self, leaderBoardType, leaderBoardIdx, school):
-        return gameengine.getLeaderStub(leaderBoardType).doGetLeaderBoardList(self, leaderBoardIdx, school)
+    def getLeaderBoardList(self, leaderBoardType, leaderBoardIdx, school, page):
+        return gameengine.getLeaderStub(leaderBoardType).doGetLeaderBoardList(self, leaderBoardIdx, school, page)
 
     def toLeaderBoardAvatarCache(self):
         roleInfo = gameglobal.roleCache.get(self.id, None)

@@ -4698,7 +4698,7 @@ datas = _tools.RODict({
     86090066: _tools.RODict({
         "TaskId": 86090066,
         "TaskGroup": 0,
-        "TaskName": "奇怪的文物3",
+        "TaskName": "失踪的乐乐2",
     }),
     86090067: _tools.RODict({
         "TaskId": 86090067,
@@ -4774,6 +4774,26 @@ datas = _tools.RODict({
         "TaskId": 86090081,
         "TaskGroup": 0,
         "TaskName": "包治百病",
+    }),
+    86090082: _tools.RODict({
+        "TaskId": 86090082,
+        "TaskGroup": 0,
+        "TaskName": "莫萤3",
+    }),
+    86090083: _tools.RODict({
+        "TaskId": 86090083,
+        "TaskGroup": 0,
+        "TaskName": "莫萤3",
+    }),
+    86090084: _tools.RODict({
+        "TaskId": 86090084,
+        "TaskGroup": 0,
+        "TaskName": "奇怪的文物1",
+    }),
+    86090085: _tools.RODict({
+        "TaskId": 86090085,
+        "TaskGroup": 0,
+        "TaskName": "奇怪的文物3",
     }),
     86100001: _tools.RODict({
         "TaskId": 86100001,

@@ -342,12 +342,6 @@
             <Arg>       UNICODE                 </Arg>
         </delOldName>
 
-        <useItemWithActionInternal>
-            <Arg>       UINT8                   </Arg>
-            <Arg>       ITEM_ID                 </Arg>
-            <Arg>       ENTITY_ID               </Arg>
-        </useItemWithActionInternal>
-
         <onCheckAndCostWealth>
             <Arg>       UINT8           </Arg>
             <Arg>       UINT16          </Arg>

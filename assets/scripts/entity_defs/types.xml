@@ -143,6 +143,7 @@
     <DARK_IRON>          INT64       </DARK_IRON>
     <GENIUS_QI>          INT64       </GENIUS_QI>
     <SCENE_STATE>       UINT16          </SCENE_STATE>
+    <LEADER_BOARD_PAGE>     UINT8       </LEADER_BOARD_PAGE>
 
     <FACE_DATA> FIXED_DICT
         <implementedBy>     appearanceInfo.faceDataIns     </implementedBy>

@@ -764,7 +764,8 @@
         </onGmCommandResult>
 
         <syncServerTime>
-            <Arg>       INT64      </Arg>
+            <Arg>       INT64       </Arg>
+            <Arg>       FLOAT       </Arg>
         </syncServerTime>
 
         <onTeleport>

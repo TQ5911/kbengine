@@ -640,6 +640,11 @@ Npc property state 12
 Npc property state2 13
 Npc property stunAnti 170
 Npc property stunEnh 171
+RebornPos property dunTimeFreezeFlag 4
+RebornPos property force 5
+RebornPos property gameEntityId 6
+RebornPos property rebornPosId 7
+RebornPos property spaceNo 8
 SiegeWarSpaceMgr property force 4
 SiegeWarSpaceMgr property spaceNo 5
 Space property force 5

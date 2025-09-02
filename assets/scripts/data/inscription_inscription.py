@@ -21,6 +21,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020020,
         "effect_value": (10, 1),
+        "vocation": 1002
     }),
     1001002: _tools.RODict({
         "ID": 1001002,
@@ -28,6 +29,7 @@ datas = _tools.RODict({
         "rarity": 2.0,
         "skill_id": 90020020,
         "effect_value": ((9, 2),),
+        "vocation": 1002
     }),
     1001003: _tools.RODict({
         "ID": 1001003,
@@ -35,6 +37,7 @@ datas = _tools.RODict({
         "rarity": 2.0,
         "skill_id": 90020005,
         "effect_value": ((7, 500),),
+        "vocation": 1002
     }),
     1001004: _tools.RODict({
         "ID": 1001004,
@@ -42,6 +45,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020005,
         "effect_value": ((12, 64003008),),
+        "vocation": 1002
     }),
     1001005: _tools.RODict({
         "ID": 1001005,
@@ -49,6 +53,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020010,
         "effect_value": ((6, 1),),
+        "vocation": 1002
     }),
     1001006: _tools.RODict({
         "ID": 1001006,
@@ -56,6 +61,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020010,
         "effect_value": (1, 1),
+        "vocation": 1002
     }),
     1001007: _tools.RODict({
         "ID": 1001007,
@@ -63,6 +69,7 @@ datas = _tools.RODict({
         "rarity": 3.0,
         "skill_id": 90020015,
         "effect_value": ((2, 200),),
+        "vocation": 1002
     }),
     1001008: _tools.RODict({
         "ID": 1001008,
@@ -70,6 +77,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020015,
         "effect_value": ((5, 0.01),),
+        "vocation": 1002
     }),
     1001009: _tools.RODict({
         "ID": 1001009,
@@ -77,6 +85,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020025,
         "effect_value": ((5, 0.03),),
+        "vocation": 1002
     }),
     1001010: _tools.RODict({
         "ID": 1001010,
@@ -84,6 +93,7 @@ datas = _tools.RODict({
         "rarity": 3.0,
         "skill_id": 90020025,
         "effect_value": ((5, 10),),
+        "vocation": 1002
     }),
     1001011: _tools.RODict({
         "ID": 1001011,
@@ -91,6 +101,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020025,
         "effect_value": ((6, 80),),
+        "vocation": 1002
     }),
     1001012: _tools.RODict({
         "ID": 1001012,
@@ -98,6 +109,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020030,
         "effect_value": (10, 1),
+        "vocation": 1002
     }),
     1001013: _tools.RODict({
         "ID": 1001013,
@@ -105,6 +117,7 @@ datas = _tools.RODict({
         "rarity": 4.0,
         "skill_id": 90020030,
         "effect_value": ((11, 5),),
+        "vocation": 1002
     }),
     1001014: _tools.RODict({
         "ID": 1001014,
@@ -112,6 +125,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020035,
         "effect_value": ((1, 1),),
+        "vocation": 1002
     }),
     1001015: _tools.RODict({
         "ID": 1001015,
@@ -119,6 +133,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020035,
         "effect_value": ((1, 1),),
+        "vocation": 1002
     }),
     1001016: _tools.RODict({
         "ID": 1001016,
@@ -126,6 +141,7 @@ datas = _tools.RODict({
         "rarity": 5.0,
         "skill_id": 90020040,
         "effect_value": ((13, 64003008),),
+        "vocation": 1002
     }),
     1001017: _tools.RODict({
         "ID": 1001017,
@@ -133,6 +149,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020040,
         "effect_value": ((14, 5),),
+        "vocation": 1002
     }),
     1001018: _tools.RODict({
         "ID": 1001018,
@@ -140,6 +157,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020040,
         "effect_value": ((15, 5),),
+        "vocation": 1002
     }),
     1001019: _tools.RODict({
         "ID": 1001019,
@@ -147,6 +165,7 @@ datas = _tools.RODict({
         "rarity": 3.0,
         "skill_id": 90020045,
         "effect_value": ((15, 0, 5),),
+        "vocation": 1002
     }),
     1001020: _tools.RODict({
         "ID": 1001020,
@@ -154,6 +173,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020045,
         "effect_value": (1.1,),
+        "vocation": 1002
     }),
     1001021: _tools.RODict({
         "ID": 1001021,
@@ -161,6 +181,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020045,
         "effect_value": ((10, 64000208),),
+        "vocation": 1002
     }),
     1001022: _tools.RODict({
         "ID": 1001022,
@@ -168,6 +189,7 @@ datas = _tools.RODict({
         "rarity": 4.0,
         "skill_id": 90020050,
         "effect_value": ((16, 1),),
+        "vocation": 1002
     }),
     1001023: _tools.RODict({
         "ID": 1001023,
@@ -175,6 +197,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020050,
         "effect_value": ((17, 3),),
+        "vocation": 1002
     }),
     1001024: _tools.RODict({
         "ID": 1001024,
@@ -182,6 +205,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020050,
         "effect_value": ((18, 30),),
+        "vocation": 1002
     }),
     1001025: _tools.RODict({
         "ID": 1001025,
@@ -189,6 +213,7 @@ datas = _tools.RODict({
         "rarity": 5.0,
         "skill_id": 90020055,
         "effect_value": _tools.ROList([(19, 30, 0), (1, 10)]),
+        "vocation": 1002
     }),
     1001026: _tools.RODict({
         "ID": 1001026,
@@ -196,6 +221,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020055,
         "effect_value": _tools.ROList([(19, 30, 1), (1, 10)]),
+        "vocation": 1002
     }),
     1001027: _tools.RODict({
         "ID": 1001027,
@@ -203,6 +229,7 @@ datas = _tools.RODict({
         "rarity": 5.0,
         "skill_id": 90020055,
         "effect_value": ((20, 90020060),),
+        "vocation": 1002
     }),
     1001028: _tools.RODict({
         "ID": 1001028,
@@ -210,6 +237,7 @@ datas = _tools.RODict({
         "rarity": 4.0,
         "skill_id": 90020060,
         "effect_value": ((8, 5),),
+        "vocation": 1002
     }),
     1001029: _tools.RODict({
         "ID": 1001029,
@@ -217,6 +245,7 @@ datas = _tools.RODict({
         "rarity": 2.0,
         "skill_id": 90020060,
         "effect_value": ((1, 2),),
+        "vocation": 1002
     }),
     1001030: _tools.RODict({
         "ID": 1001030,
@@ -224,6 +253,7 @@ datas = _tools.RODict({
         "rarity": 5.0,
         "skill_id": 90020065,
         "effect_value": ((5, 0.15),),
+        "vocation": 1002
     }),
     1001031: _tools.RODict({
         "ID": 1001031,
@@ -231,6 +261,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90020025,
         "effect_value": ((1, 2),),
+        "vocation": 1002
     }),
     2001001: _tools.RODict({
         "ID": 2001001,
@@ -238,6 +269,7 @@ datas = _tools.RODict({
         "rarity": 5.0,
         "skill_id": 90010015,
         "effect_value": ((15, 90010015),),
+        "vocation": 1001
     }),
     2001002: _tools.RODict({
         "ID": 2001002,
@@ -245,6 +277,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90010015,
         "effect_value": ((1, 1),),
+        "vocation": 1001
     }),
     2001003: _tools.RODict({
         "ID": 2001003,
@@ -252,6 +285,7 @@ datas = _tools.RODict({
         "rarity": 3.0,
         "skill_id": 90010015,
         "effect_value": ((8, 1),),
+        "vocation": 1001
     }),
     2001004: _tools.RODict({
         "ID": 2001004,
@@ -259,6 +293,7 @@ datas = _tools.RODict({
         "rarity": 5.0,
         "skill_id": 90010025,
         "effect_value": ((15, 90010027),),
+        "vocation": 1001
     }),
     2001005: _tools.RODict({
         "ID": 2001005,
@@ -266,6 +301,7 @@ datas = _tools.RODict({
         "rarity": 4.0,
         "skill_id": 90010025,
         "effect_value": ((8, 5),),
+        "vocation": 1001
     }),
     2001006: _tools.RODict({
         "ID": 2001006,
@@ -273,6 +309,7 @@ datas = _tools.RODict({
         "rarity": 2.0,
         "skill_id": 90010025,
         "effect_value": ((1, 1),),
+        "vocation": 1001
     }),
     2001007: _tools.RODict({
         "ID": 2001007,
@@ -280,6 +317,7 @@ datas = _tools.RODict({
         "rarity": 4.0,
         "skill_id": 90010035,
         "effect_value": ((1, 1),),
+        "vocation": 1001
     }),
     2001008: _tools.RODict({
         "ID": 2001008,
@@ -287,6 +325,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90010040,
         "effect_value": ((1, 1),),
+        "vocation": 1001
     }),
     2001009: _tools.RODict({
         "ID": 2001009,
@@ -294,6 +333,7 @@ datas = _tools.RODict({
         "rarity": 3.0,
         "skill_id": 90010055,
         "effect_value": ((10, 1),),
+        "vocation": 1001
     }),
     2001010: _tools.RODict({
         "ID": 2001010,
@@ -301,6 +341,7 @@ datas = _tools.RODict({
         "rarity": 2.0,
         "skill_id": 90010040,
         "effect_value": ((8, 1),),
+        "vocation": 1001
     }),
     3001001: _tools.RODict({
         "ID": 3001001,
@@ -308,6 +349,7 @@ datas = _tools.RODict({
         "rarity": 5.0,
         "skill_id": 90030065,
         "effect_value": ((15, 90030066),),
+        "vocation": 1003
     }),
     3001002: _tools.RODict({
         "ID": 3001002,
@@ -315,6 +357,7 @@ datas = _tools.RODict({
         "rarity": 4.0,
         "skill_id": 90030060,
         "effect_value": ((15, 90030061),),
+        "vocation": 1003
     }),
     3001003: _tools.RODict({
         "ID": 3001003,
@@ -322,6 +365,7 @@ datas = _tools.RODict({
         "rarity": 3.0,
         "skill_id": 90030015,
         "effect_value": ((15, 90030016),),
+        "vocation": 1003
     }),
     3001004: _tools.RODict({
         "ID": 3001004,
@@ -329,6 +373,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90030001,
         "effect_value": ((1, 1),),
+        "vocation": 1003
     }),
     3001005: _tools.RODict({
         "ID": 3001005,
@@ -336,6 +381,7 @@ datas = _tools.RODict({
         "rarity": 2.0,
         "skill_id": 90030005,
         "effect_value": ((5, 0.07),),
+        "vocation": 1003
     }),
     3001006: _tools.RODict({
         "ID": 3001006,
@@ -343,6 +389,7 @@ datas = _tools.RODict({
         "rarity": 2.0,
         "skill_id": 90030050,
         "effect_value": ((5, 0.01), (12, 2)),
+        "vocation": 1003
     }),
     3001007: _tools.RODict({
         "ID": 3001007,
@@ -350,6 +397,7 @@ datas = _tools.RODict({
         "rarity": 2.0,
         "skill_id": 90030015,
         "effect_value": ((5, 0.01),),
+        "vocation": 1003
     }),
     3001008: _tools.RODict({
         "ID": 3001008,
@@ -357,6 +405,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90030015,
         "effect_value": ((1, 1),),
+        "vocation": 1003
     }),
     3001009: _tools.RODict({
         "ID": 3001009,
@@ -364,6 +413,7 @@ datas = _tools.RODict({
         "rarity": 1.0,
         "skill_id": 90030040,
         "effect_value": ((5, 0.01),),
+        "vocation": 1003
     }),
     3001010: _tools.RODict({
         "ID": 3001010,
@@ -371,6 +421,7 @@ datas = _tools.RODict({
         "rarity": 2.0,
         "skill_id": 90030040,
         "effect_value": ((1, 1),),
+        "vocation": 1003
     })
 })
 minKey = 1001001

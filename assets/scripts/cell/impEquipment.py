@@ -738,3 +738,6 @@ class ImpEquipment(object):
         )
 
     ################################### drop equip end ##############################
+
+    def getInscriptionEffects(self, skillID, effectType):
+        return self.bodyEquipData.getInscriptionEffects(skillID, effectType)

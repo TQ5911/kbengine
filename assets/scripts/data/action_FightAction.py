@@ -26,7 +26,17 @@ import utils
 import creep_base
 import conflict_status_def as CCDD
 def attack(self, target, context, *args):
+    # 技能倍率
     arg1 = args[0] if len(args) >= 1 else 1.0
+    if self.IsAvatar:
+        ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO)
+        if ret:
+            DEBUG_MSG("attack ", context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO, args)
+            if len(datas) != 1:
+                ERROR_MSG("attack, args error ", context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO, args)
+            else:
+                addValue = datas[0]
+                arg1 += addValue
     # 攻击力比例伤害
     arg2 = args[1] if len(args) >= 2 else 0.0
     # 附带额外伤害
@@ -36,13 +46,13 @@ def attack(self, target, context, *args):
     # 攻击类型，1物理攻击，2法术攻击              
     arg5 = args[4] if len(args) >= 5 else 1
     # 是否结算护盾，0不结算，1结算，默认结算
-    arg6 = args[5] if len(args) >= 6 and args[5] is not None else isHit(self, target)
+    arg6 = args[5] if len(args) >= 6 and args[5] is not None else isHit(self, target, context)
     # 是否传入命中，如果传入命中的值则用，没有传或args[5] 是None时,则在这个函数里去得命中结果，并且传入到 attackShare 
     arg7 = args[6] if len(args) >= 7 else 0
     #是否传入大招充能值，不传入默认为0
     if arg6 > 0 and self.IsAvatar:
         if not hasattr(context, 'has_added_ultra_power'):
-            self.addUltraSkillPower(arg7)
+            self.addUltraSkillPower(arg7, context)
             context.has_added_ultra_power = True
             #命中时，才增加大招充能
     result = attackShare(self, target, context, arg1, arg2, 0.0, 0, arg3, arg4, arg5, 0, arg6)
@@ -63,7 +73,7 @@ def bloodSuckAttack(self, target, context, *args):
     # 攻击类型，1物理攻击，2法术攻击
     arg6 = args[5] if len(args) >= 6 else 1
     # 是否结算护盾，0不结算，1结算，默认结算
-    arg7 = args[5] if len(args) >= 6 else isHit(self, target)
+    arg7 = args[5] if len(args) >= 6 else isHit(self, target,context)
     # 是否传入命中，如果传入命中的值则用，没有传则在这个函数里去得命中结果，并且传入到 attackShare 
     result = attackShare(self, target, context, arg1, arg2, arg3, 0, arg4, arg5, arg6, 0,arg7)
 
@@ -82,7 +92,7 @@ def fatalAttack(self, target, context, *args):
     # 攻击类型，1物理攻击，2法术攻击
     arg5 = args[4] if len(args) >= 5 else 1
     # 是否结算护盾，0不结算，1结算，默认结算
-    arg6 = args[5] if len(args) >= 6 else isHit(self, target)
+    arg6 = args[5] if len(args) >= 6 else isHit(self, target,context)
     # 是否传入命中，如果传入命中的值则用，没有传则在这个函数里去得命中结果，并且传入到 attackShare 
     result = attackShare(self, target, context, arg1, arg2, 0.0, 2, arg3, arg4, arg5, 0,arg6)
 
@@ -99,7 +109,7 @@ def noFatalAttack(self, target, context, *args):
     # 攻击类型，1物理攻击，2法术攻击
     arg5 = args[4] if len(args) >= 5 else 1
     # 是否结算护盾，0不结算，1结算，默认结算
-    arg6 = args[5] if len(args) >= 6 else isHit(self, target)
+    arg6 = args[5] if len(args) >= 6 else isHit(self, target, context)
     # 是否传入命中，如果传入命中的值则用，没有传则在这个函数里去得命中结果，并且传入到 attackShare 
     result = attackShare(self, target, context, arg1, arg2, 0.0, 1, arg3, arg4, arg5, 0,arg6)
 
@@ -118,7 +128,7 @@ def armorIgnoreAttack(self, target, context, *args):
     # 攻击类型，1物理攻击，2法术攻击
     arg6 = args[5] if len(args) >= 6 else 1
     # 是否结算护盾，0不结算，1结算，默认结算
-    arg7 = args[5] if len(args) >= 6 else isHit(self, target)
+    arg7 = args[5] if len(args) >= 6 else isHit(self, target,context)
     # 是否传入命中，如果传入命中的值则用，没有传则在这个函数里去得命中结果，并且传入到 attackShare 
     result = attackShare(self, target, context, arg1, arg2, 0.0, 0, arg4, arg5, arg6, arg3,arg7)
 
@@ -164,11 +174,11 @@ def attackShare(self, target, context, *args):
         dodgeDmgRatio = 1.0
 
         # 暴击判定
-        bCrit = isCrit(self, target, arg4)
+        bCrit = isCrit(self, target,context, arg4)
 
         # 暴击伤害倍率计算
         if bCrit:
-            fatalDmgRatio = fatalDmg(self, target)
+            fatalDmgRatio = fatalDmg(self, target,context)
         else:
             fatalDmgRatio = 1.0
     else:
@@ -193,7 +203,7 @@ def attackShare(self, target, context, *args):
     dmgAvoidance = armorAvoidance(self, target, classTag, arg8)
 
     # 对象伤害倍率计算
-    realDmgRatioEx = realDmgRatio(self, target)
+    realDmgRatioEx = realDmgRatio(self, target,context)
 
     # 善恶值对伤害影响
     moralEffectRatio = moralEffect(self, target)
@@ -345,11 +355,11 @@ def healShare(self, target, context, *args):
     bCrit = False
 
     # 暴击判定
-    bCrit = isCrit(self, target, arg3)
+    bCrit = isCrit(self, target,context, arg3)
 
     # 暴击伤害倍率计算
     if bCrit:
-        fatalDmgRatio = fatalDmg(self, target)
+        fatalDmgRatio = fatalDmg(self, target,context)
     else:
         fatalDmgRatio = 1
 
@@ -427,7 +437,7 @@ def healByValueShare(self, target, context, *args):
 
     return result
 
-def isHit(self, target):
+def isHit(self, target, context):
     minHitRate = const_const.datas.get('minHitRate', {}).get('value')
     maxHitRate = const_const.datas.get('maxHitRate', {}).get('value')
     if not target:
@@ -435,13 +445,21 @@ def isHit(self, target):
     # 基础命中90%
 
     hitRatio = min(max(0.93 + (self.getProp("hit") - target.getProp("dodge") + (self.level - target.level) * 3) / 1000, 0.7), 1)
-
+    if self.IsAvatar:
+        ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO)
+        if ret:
+            DEBUG_MSG("isHit ", context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO, args)
+            if len(datas) != 1:
+                ERROR_MSG("isHit, args error ", context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO, args)
+            else:
+                addValue = datas[0]
+                hitRatio += addValue
     if random.randint(1, 100) <= hitRatio * 100:
         return True
     else:
         return False
 
-def isCrit(self, target, *args):
+def isCrit(self, target, context, *args):
     arg1 = args[0] if len(args) >= 1 else 0
     # 0计算暴击概率，1必然不暴击，2必然暴击
 
@@ -459,6 +477,15 @@ def isCrit(self, target, *args):
     minFatalRate = const_const.datas.get('minFatalRate', {}).get('value')
     maxFatalRate = const_const.datas.get('maxFatalRate', {}).get('value')
     fatalRate = min(max(0, self.getProp("fatal") - target.getProp("antiFatal") + (self.level - target.level) * 0.004 ), 0.5)
+    if self.IsAvatar:
+        ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO)
+        if ret:
+            DEBUG_MSG("isCrit ", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO, args)
+            if len(datas) != 1:
+                ERROR_MSG("isCrit, args error ", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO, args)
+            else:
+                addValue = datas[0]
+                fatalRate += addValue
     if random.randint(1, 100) <= fatalRate * 100 :
         return True
     else:
@@ -506,15 +533,23 @@ def randomAtk(self,classTag):
 
     return damage
 
-def fatalDmg(self, target):
+def fatalDmg(self, target, context):
     minFatalDmgRatio = const_const.datas.get('minFatalDmgRatio', {}).get('value')
     maxFatalDmgRatio = const_const.datas.get('maxFatalDmgRatio', {}).get('value')
     if self.IsMonster:
         minFatalDmgRatio = const_const.datas.get('monsterMinFatalDmgRatio', {}).get('value')
         maxFatalDmgRatio = const_const.datas.get('monsterMaxFatalDmgRatio', {}).get('value')
     t_antiMortal = target.getProp("antiMortal") if target else 0
-    fatalDmgRatio = min(max(1.1, 1.5 + self.getProp("mortal") - t_antiMortal),
-                        2)
+    fatalDmgRatio = min(max(1.1, 1.5 + self.getProp("mortal") - t_antiMortal), 2)
+    if self.IsAvatar:
+        ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO)
+        if ret:
+            DEBUG_MSG("fatalDmg ", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO, datas)
+            if len(datas) != 1:
+                ERROR_MSG("fatalDmg, args error ", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO, datas)
+            else:
+                addValue = datas[0]
+                fatalDmgRatio += addValue
     return fatalDmgRatio
 
 def armorAvoidance(self, target, classTag, ignoreRatio):
@@ -531,7 +566,7 @@ def armorAvoidance(self, target, classTag, ignoreRatio):
 
     return dmgAvoidance
 
-def realDmgRatio(self, target):
+def realDmgRatio(self, target, context):
     # 对象伤害倍率计算
     # maxBossDmg = const_const.datas.get('maxBossDmg', {}).get('value')
     # maxBossDmgAnti = const_const.datas.get('maxBossDmgAnti', {}).get('value')
@@ -557,7 +592,31 @@ def realDmgRatio(self, target):
             AtkDmgRatio = self.getProp("monsterDmg")
             DefDmgRatio = target.getProp("monsterDmgAnti")
 
-    realDmgRatio = min(max(1 + AtkDmgRatio - DefDmgRatio + self.getProp("finalDmg") - target.getProp("finalDmgAnti"),0.5),2)
+    finalDmg = self.getProp("finalDmg")
+    
+    if self.IsAvatar:
+        totalAddDmg = 0
+        ret, args = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE)
+        if ret:
+            DEBUG_MSG("realDmgRatio 1 ", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE, args)
+            if len(args) != 1:
+                ERROR_MSG("realDmgRatio 1, args error ", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE, args)
+            else:
+                addValue = args[0]
+                totalAddDmg += addValue
+
+        ret, args = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO)
+        if ret:
+            DEBUG_MSG("realDmgRatio 2 ", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO, args)
+            if len(args) != 1:
+                ERROR_MSG("realDmgRatio 2, args error ", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO, args)
+            else:
+                addValue = args[0]
+                totalAddDmg += round((1+addValue)*finalDmg)
+    
+        finalDmg += totalAddDmg
+
+    realDmgRatio = min(max(1 + AtkDmgRatio - DefDmgRatio + finalDmg - target.getProp("finalDmgAnti"),0.5),2)
 
     return realDmgRatio
 

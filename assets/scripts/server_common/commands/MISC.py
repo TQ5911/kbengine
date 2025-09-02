@@ -69,6 +69,9 @@ SELF = gmCommand.SELF
 GOD_GROUPS = gmCommand.GOD_GROUPS
 DEV_GROUPS = gmCommand.DEV_GROUPS
 
+IS_CELL = (KBEngine.component == 'cellapp')
+IS_BASE = (KBEngine.component == 'baseapp')
+
 import importlib
 
 def dynamic_import(module_name: str, class_name: str = None):
@@ -117,17 +120,20 @@ def gotomapdataid(su, player, mapdataid):
         mapid = str(mapdataid)[:4]
         modleName = "dun_" + mapid
         mapdata = dynamic_import(modleName)
-        x = mapdata.datas[str(mapdataid)]["PosX"]
-        y = mapdata.datas[str(mapdataid)]["PosY"]
-        z = mapdata.datas[str(mapdataid)]["PosZ"]
-        pos = (x,y,z)
-        mapidNO = int(mapid) * gameconst.SPACE_NO_INTERVAL
-        if mapidNO and mapidNO != player.spaceNo:
-            player.base.teleportByNo(mapidNO, pos, player.direction, '', ())
+        if str(mapdataid) in mapdata.datas:
+            x = mapdata.datas[str(mapdataid)]["PosX"]
+            y = mapdata.datas[str(mapdataid)]["PosY"]
+            z = mapdata.datas[str(mapdataid)]["PosZ"]
+            pos = (x,y,z)
+            mapidNO = int(mapid) * gameconst.SPACE_NO_INTERVAL
+            if mapidNO and mapidNO != player.spaceNo:
+                player.base.teleportByNo(mapidNO, pos, player.direction, '', ())
+            else:
+                player.telToPos(pos)
         else:
-            player.telToPos(pos)
+            return False, '执行失败,id不存在'
     else:
-        return False, '执行失败'
+        return False, '执行失败,id小于10000000，不是地图编辑器里的ID'
 
 @gm_cmd('$sethp', (Player("gbId/Id"), Int("hp"),), RARG(0), gameconst.CELL, '设置血量', ALLSIDE, GOD_GROUPS)
 def setPlayerHp(su, player, hp):
@@ -1381,11 +1387,14 @@ def getpropBase(su, ent, propName):
 
     su.feedbackCommandSucc('执行成功,{}:{}'.format(propName, str(getattr(ent, propName, ''))))
 
-
-@gm_cmd('$statAvatarNum', (), RONE, BASE, '统计Avatar数量', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$statAvatarNum', (), RALL, ALL, '统计Avatar数量', ALLSIDE, GOD_GROUPS)
 def statAvatarNum(su):
-    forwardCommand(su, '$_statAvatarNum-cell')
-    forwardCommand(su, '$_statAvatarNum-base')
+    componentNo = KBEngine.getComponentGroupOrder()
+    avatarNumber = len(utils.getEntityList('Avatar'))
+    if IS_BASE:
+        su.feedbackCommandSucc('执行成功,baseapp{:0>2}:{}'.format(componentNo, avatarNumber))
+    else:
+        su.feedbackCommandSucc('执行成功,cellapp{:0>2}:{}'.format(componentNo, avatarNumber))
     return
 
 
@@ -2820,6 +2829,12 @@ def addCityMoney(su, player, money):
     _stub.gmAddCityMoney(money)
     return True, '执行成功'
 
+@gm_cmd('$clearCityOwner', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '清空城池归属', ALLSIDE, GOD_GROUPS)
+def clearCityOwner(su, player):
+    _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
+    _stub.gmClearCityOwner()
+    return True, '执行成功'
+
 @gm_cmd('$changeSiegeWarState', (Player("gbId/Id"), Int('state'), Int('endTime')), RARG(0), gameconst.BASE, '修改城战状态', ALLSIDE, GOD_GROUPS)
 def gmChangeSiegeWarState(su, player, state, endTime):
     _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
@@ -2958,6 +2973,23 @@ def createCubeCowTeleport(su, player):
 
     player.spaceMgr.createTeleporterToCow(player.position)
     return True, '执行成功'
+
+
+@gm_cmd('$changeSceneStates', (Player("gbId/Id"), Str("states")), RARG(0), gameconst.CELL, '设置场景状态', ALLSIDE, GOD_GROUPS)
+def changeSceneStates(su, player, states):
+    if not formula.isWolrdBossSpace(player.spaceNo):
+        return False, '当前不在boss场景'
+
+    _state = 0
+    for i, _st in enumerate(states):
+        _st = 1 if _st == '1' else 0
+        if _st:
+            _state |= (1 << i)
+
+    DEBUG_MSG('setSceneStates', _state)
+    player.setSceneStates(_state)
+    return True, '执行成功'
+
 
 @gm_cmd('$levelUpSkill', (Player("gbId/Id"), Int("skillId"),), RARG(0), gameconst.BASE, '升级技能', ALLSIDE, GOD_GROUPS)
 def levelUpSkill(su, player, skillId):

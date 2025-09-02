@@ -297,6 +297,36 @@ class BasicEffect(EffectBase):
         else:
             ERROR_MSG('cannot get shieldId', callerInfo)
             return
+        
+        if owner.IsAvatar:
+            skillId = 0
+            if callerInfo.callerType == EffectCaller.BUFF:
+                buffVal = callerInfo.getCaller(owner)
+                if buffVal and buffVal.rootContext:
+                    if hasattr(buffVal.rootContext, 'skillId'):
+                        skillId = buffVal.rootContext.skillId
+            if skillId > 0:
+                totalAddValue = 0
+                ret, args = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO)
+                if ret:
+                    DEBUG_MSG("addShield 1 ", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, args)
+                    if len(args) != 1:
+                        ERROR_MSG("addShield 1, args error ", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, args)
+                    else:
+                        addValue = args[0]
+                        totalAddValue = value * (1+addValue)
+
+                ret, args = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE)
+                if ret:
+                    DEBUG_MSG("addShield 2 ", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, args)
+                    if len(args) != 1:
+                        ERROR_MSG("addShield 2, args error ", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, args)
+                    else:
+                        addValue = args[0]
+                        totalAddValue += addValue
+                
+                value += totalAddValue
+
         owner.addShield(shieldId, value)
         return
 

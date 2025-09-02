@@ -76,25 +76,8 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1010,
+        1026,
         1021
-      ]
-    }
-  },
-  "1010": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      20140003
-    ],
-    "buffID": [
-      64004901
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 600.0,
-    "transition": {
-      "finished": [
-        1026
       ]
     }
   },

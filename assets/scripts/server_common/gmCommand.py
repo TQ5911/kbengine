@@ -307,7 +307,7 @@ class GMAgent(GMAgentBase):
 class HTTPAgent(GMAgentBase):
     IsAvatar = False
 
-    def __init__(self, owner, tag, account, group=0, cmdUUID='', seqIdStr='', cmdStr=''):
+    def __init__(self, owner, tag, account, group=0, cmdUUID='', seqIdStr='', cmdStr='', baseAppBox=gameglobal.localBaseApp):
         self.owner = owner
         self.account = account
         self.group = group
@@ -315,6 +315,7 @@ class HTTPAgent(GMAgentBase):
         self.tag = tag
         self.seqIdStr = seqIdStr
         self.cmdStr = cmdStr
+        self.baseAppBox = baseAppBox
 
     def __getstate__(self):
         return {
@@ -325,6 +326,7 @@ class HTTPAgent(GMAgentBase):
             'tag': self.tag,
             'seqIdStr': self.seqIdStr,
             'cmdStr': self.cmdStr,
+            'baseAppBox': self.baseAppBox,
         }
 
     def __setstate__(self, state):
@@ -332,33 +334,28 @@ class HTTPAgent(GMAgentBase):
 
     def onCommandResult(self, result, retErrMsg, resultObj):
         resultObj = resultObj or {}
-        try:
-            if hasattr(resultObj, 'toJsonBytes'):
-                INFO_MSG('onCommandResult HTTPAgent toJsonBytes')
-                resultBytes = resultObj.toJsonBytes()
-            else:
-                INFO_MSG('onCommandResult HTTPAgent encode utf-8')
-                resultBytes = json.dumps(resultObj).encode('utf-8')
-        except:
-            ERROR_MSG('onCommandResult: result to json err')
-            a={}
-            resultBytes = json.dumps(a).encode('utf-8')
-
-        self.owner.replyHttpCommand(self.tag, self.cmdUUID, result, retErrMsg, resultBytes)
-        INFO_MSG('onCommandResult HTTPAgent', result, retErrMsg, resultObj, self.seqIdStr, self.cmdStr, resultBytes)
+        self.replyHttpCmd(result, retErrMsg, resultObj)
+        INFO_MSG('onCommandResult HTTPAgent', result, retErrMsg, resultObj, self.seqIdStr, self.cmdStr, resultObj)
 
         if self.seqIdStr and self.cmdStr in gameconfig.httpCmdIdempotent():
-            gamesql.recordAdminCmdSucc(self.seqIdStr, result, retErrMsg, resultBytes)
+            gamesql.recordAdminCmdSucc(self.seqIdStr, result, retErrMsg, resultObj)
 
     def feedbackCommandSucc(self, message):
-        result = json.dumps({}).encode('utf-8')
+        result = {}
         INFO_MSG('feedbackCommandSucc HTTPAgent', self.tag, self.cmdUUID, 0, message, result)
-        self.owner.replyHttpCommand(self.tag, self.cmdUUID, 0, message, result)
+        self.replyHttpCmd(0, message, result)
 
     def feedbackCommandFail(self, message):
-        result = json.dumps({}).encode('utf-8')
+        result = {}
         INFO_MSG('feedbackCommandFail HTTPAgent', self.tag, self.cmdUUID, -1, message, result)
-        self.owner.replyHttpCommand(self.tag, self.cmdUUID, -1, message, result)
+        self.replyHttpCmd(-1, message, result)
+
+    def replyHttpCmd(self, result, retErrMsg, resultBytes):
+        cmd = GM_CMDS.get(self.cmdStr)
+        if cmd.route == RALL:
+            self.baseAppBox.replyHttpCommand(self.owner, self.tag, self.cmdUUID, result, retErrMsg, resultBytes, self.cmdStr)
+        else:
+            self.owner.replyHttpCommand(self.tag, self.cmdUUID, result, retErrMsg, resultBytes)
 
 
 class IDIPGMAgent(GMAgentBase):
@@ -925,7 +922,7 @@ class GmCommand(object):
         return su.group in self.getRealGroup()
 
     def checkComponent(self):
-        return self.component == COMPONENT
+        return self.component == COMPONENT or self.component == gameconst.ALL
 
     def checkPub(self):
         if not self.pub:
@@ -1369,7 +1366,10 @@ def _isEntityExist(ent):
 def _callApps(component, func, args):
     if component == gameconst.BASE:
         gameengine.callBaseApps(func, args)
+    elif component == gameconst.CELL:
+        gameengine.callCellApps(func, args)
     else:
+        gameengine.callBaseApps(func, args)
         gameengine.callCellApps(func, args)
 
 
@@ -1419,7 +1419,7 @@ def gm_cmd(cmds, args, route, component, desc='', side=gmAdmin.INSIDE, groups=DE
     assert (type(cmds) is tuple)
     assert (type(args) is tuple)
     assert (route in (RSU, RONE, RALL, SELF) or _isRARG(route) or _isRSTUB(route))
-    assert (component in (gameconst.CELL, gameconst.BASE))
+    assert (component in (gameconst.CELL, gameconst.BASE, gameconst.ALL))
     assert (side in (gmAdmin.INSIDE, gmAdmin.OUTSIDE, gmAdmin.ALLSIDE))
     assert (pub in (True, False))
 

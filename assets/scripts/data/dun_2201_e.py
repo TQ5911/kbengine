@@ -55,7 +55,9 @@ datas ={
     "transition": {
       "finished": [
         1020,
-        1010
+        1021,
+        1031,
+        1006
       ]
     }
   },
@@ -90,25 +92,6 @@ datas ={
     "transition": {
       "finished": [
         1011
-      ]
-    }
-  },
-  "1010": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      22010001
-    ],
-    "buffID": [
-      64004901
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 600.0,
-    "transition": {
-      "finished": [
-        1021,
-        1031,
-        1006
       ]
     }
   },

@@ -36,7 +36,6 @@ import const_const as CONST
 import conflict_status_def as CCDD
 import gamePlay_gamePlay as GPGPD
 import gamePlay_set as GP_SD
-import conflict_status_def as C_S_DD
 import aureola_aureola as AAD
 import aureole
 
@@ -1320,7 +1319,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             elif state == gameconst.State.Flying:
                 self._callback(1, '_onRemoveFlyingState', (), gametimer.TIMER_TAG_ON_REMOVE_FLY_STATE)
 
-            elif state == C_S_DD.datas.duel:
+            elif state == CCDD.datas.duel:
                 self.leaveDuelState()
 
             buffTag = CSD.datas[state].get('buffTag')
@@ -1670,7 +1669,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             return
 
         skillVal.enterCDTime(self)
-        self.client.onSetAddSkillCd(skillVal.skillId, float(skillVal.getCD(self)), float(skillVal.tNextCast), False)
+        self.client.onSetAddSkillCd(skillVal.skillId, float(skillVal.getCD(self)), float(skillVal.tNextCast), False, skillVal.getTempData('releaseTime', 0), skillVal.getTempData('totalReleaseCount', 0), skillVal.getTempData('releasedCount', 0))
         if reason != gameconst.ChannelingBreak.NORMAR_END:
             skillVal.onChannelingEnd(self, isFinished)
         notifyClient and self.allClients.onBreakChannelingSkill(self.id, skillVal.skillId, reason)
@@ -3284,8 +3283,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if self.IsAvatar:
             spaceMgr = self.spaceMgr
             spaceMgr and spaceMgr.onPlayerRelive(self.base, self.gbId)
-            self.setState(C_S_DD.datas.relive)
-            self._callback(CONST.datas['reliveTime']['value'], 'removeState', (C_S_DD.datas.relive,), gametimer.TIMER_TAG_REMOVE_RELIVE_STATE)
+            self.setState(CCDD.datas.relive)
+            self._callback(CONST.datas['reliveTime']['value'], 'removeState', (CCDD.datas.relive,), gametimer.TIMER_TAG_REMOVE_RELIVE_STATE)
 
     def getDefaultReliveHp(self):
         return max(min(round(1 * 0.01 * self.fullHp), self.fullHp), 1)

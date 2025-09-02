@@ -30,12 +30,6 @@
             <Default>             []             </Default>
         </monsterIDs>
 
-        <monsterGIDs>
-            <Type>             PYTHON            </Type>
-            <Flags>            CELL_PRIVATE      </Flags>
-            <Default>             []             </Default>
-        </monsterGIDs>
-
         <hasMonsterNeedRefresh>
             <Type>             BOOL             </Type>
             <Flags>            CELL_PRIVATE     </Flags>

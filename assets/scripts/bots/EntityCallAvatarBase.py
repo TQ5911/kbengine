@@ -153,8 +153,8 @@ class AvatarBaseEntityCall(object):
     def getItemLastAndAvgPrice(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getItemLastAndAvgPrice', (arg1, )))
 
-    def getLeaderBoardList(self, arg1, arg2, arg3, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getLeaderBoardList', (arg1, arg2, arg3, )))
+    def getLeaderBoardList(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getLeaderBoardList', (arg1, arg2, arg3, arg4, )))
 
     def getPlayerBuyAuctionItemRecords(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getPlayerBuyAuctionItemRecords', (arg1, arg2, )))

@@ -364,7 +364,6 @@ def _66000024(self, target, context):
             continue
         self.attack(ent, context, 2)
 
-# 生成的技能代码
 def _66000025(self, target, context):
     import action_FightAction
     # 技能执行逻辑
@@ -372,7 +371,8 @@ def _66000025(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2.5)
+        self.attack(ent, context, 2.5) 
+        action_FightAction.pushTarget(self, ent, context, 5, 15)
 
 # 生成的技能代码
 def _66000026(self, target, context):
@@ -605,10 +605,10 @@ def _66000045_leave(self, target, context):
     self.removeBuffBySkill(target, context, 64004055)
 
 def _66000046_enter(self, target, context):
-        self.addBuffBySkill(target, context, 64004056, 1, 1.0, 10)
+        self.addBuffBySkill(target, context, 64004055, 1, 1.0, 10)
 
 def _66000046_leave(self, target, context):
-    self.removeBuffBySkill(target, context, 64004056)
+    self.removeBuffBySkill(target, context, 64004055)
 
 def _66000047_enter(self, target, context):
 
@@ -627,8 +627,8 @@ def _66000047_enter(self, target, context):
         self.addBuffBySkill(target, context, 64004051, 1, 1.0, -1)
         self.destroySelf(context, 0)
 
-def _66000047byend(self, target, context):
-    self.castSkill(target, context, 91027024, 1)
+# def _66000047byend(self, target, context):
+#     self.castSkill(target, context, 91027024, 1)
 
 def _66000048_enter(self, target, context):
 
@@ -647,8 +647,8 @@ def _66000048_enter(self, target, context):
         self.addBuffBySkill(target, context, 64004052, 1, 1.0, -1)
         self.destroySelf(context, 0)
 
-def _66000048byend(self, target, context):
-    self.castSkill(target, context, 91027024, 1)
+# def _66000048byend(self, target, context):
+#     self.castSkill(target, context, 91027024, 1)
 
 def _66000049(self, target, context):
 
@@ -885,27 +885,11 @@ def _66000073(self, target, context):
             continue
         self.attack(ent, context, 2.5)
 
-# 生成的技能代码
 def _66000074(self, target, context):
+    self.castSkill(target, context, 91029013)
 
-
-    # 技能执行逻辑
-    for tid in context.effectedEntIds:
-        ent = KBEngine.entities.get(tid)
-        if not ent:
-            continue
-        self.attack(ent, context, 3)
-
-# 生成的技能代码
 def _66000075(self, target, context):
-
-
-    # 技能执行逻辑
-    for tid in context.effectedEntIds:
-        ent = KBEngine.entities.get(tid)
-        if not ent:
-            continue
-        self.attack(ent, context, 3)
+    self.castSkill(target, context, 91029014)
 
 # 生成的技能代码
 def _66000076_enter(self, target, context):
@@ -932,27 +916,11 @@ def _66000077(self, target, context):
 def _66000078(self, target, context):
     self.castSkill(target, context, 91032008)
 
-# 生成的技能代码
 def _66000079(self, target, context):
+    self.castSkill(target, context, 91029015)
 
-
-    # 技能执行逻辑
-    for tid in context.effectedEntIds:
-        ent = KBEngine.entities.get(tid)
-        if not ent:
-            continue
-        self.attack(ent, context, 3)
-
-# 生成的技能代码
 def _66000080(self, target, context):
-
-
-    # 技能执行逻辑
-    for tid in context.effectedEntIds:
-        ent = KBEngine.entities.get(tid)
-        if not ent:
-            continue
-        self.attack(ent, context, 3)
+    self.castSkill(target, context, 91030021)
 
 # 生成的技能代码
 def _66000081(self, target, context):
@@ -965,10 +933,7 @@ def _66000081(self, target, context):
             continue
         self.attack(ent, context, 3)
 
-# 生成的技能代码
 def _66000083(self, target, context):
-
-
     # 技能执行逻辑
     for tid in context.effectedEntIds:
         ent = KBEngine.entities.get(tid)
@@ -987,7 +952,7 @@ def _66000084(self, target, context):
         self.attack(ent, context, 0.5)
 
 def _66000084byend(self, target, context):
-    self.createCreation(self, context, 66000085, 1, 1, 0, 10, 0, 0)
+    self.createCreation(self, context, 66000085)
 
 # 生成的技能代码
 def _66000085(self, target, context):
@@ -1007,6 +972,9 @@ def _66000087_enter(self, target, context):
 
 def _66000088_enter(self, target, context):
     self.spaceMgr.onAvatarGetBuffCreation(self.id, target, 64000099)
+
+def _66000092byend(self, target, context):
+    self.createCreation(self, context, 66000084)
 
 datas = _tools.RODict({ 
     65000001: _tools.RODict({
@@ -2351,7 +2319,7 @@ datas = _tools.RODict({
         "flySpeed": 0.0,
         "selectType": 1,
         "selectPar": 8,
-        "delayTime": 1.0,
+        "delayTime": 1.8,
     }),
     66000026: _tools.RODict({
         "ID": 66000026,
@@ -2960,7 +2928,7 @@ datas = _tools.RODict({
         "enterAction": _66000047_enter,
         "enterLoop": 0,
         "leaveAction": None,
-        "timeIsUpAction": _66000047byend,
+        "timeIsUpAction": None,
         "continueAction": None,
         "continueTarget": "",
         "targetNum": 0,
@@ -2988,7 +2956,7 @@ datas = _tools.RODict({
         "enterAction": _66000048_enter,
         "enterLoop": 0,
         "leaveAction": None,
-        "timeIsUpAction": _66000048byend,
+        "timeIsUpAction": None,
         "continueAction": None,
         "continueTarget": "",
         "targetNum": 0,
@@ -3232,9 +3200,9 @@ datas = _tools.RODict({
         "selectability": 0,
         "target": "Enemy",
         "areaAction": _66000057,
-        "time": 12.0,
+        "time": 5.0,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 1.0,
+        "loopIntervalTime": 0.5,
         "hurtNumber": 1,
         "areaLoop": 12,
         "enterAction": None,
@@ -3878,7 +3846,7 @@ datas = _tools.RODict({
         "areaAction": _66000080,
         "time": 6.0,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 4.0,
+        "loopIntervalTime": 10.0,
         "hurtNumber": 10,
         "areaLoop": 0,
         "enterAction": None,
@@ -3890,7 +3858,7 @@ datas = _tools.RODict({
         "targetNum": 0,
         "flySpeed": 0.0,
         "selectType": 1,
-        "selectPar": 40,
+        "selectPar": 10,
         "delayTime": 5.0,
     }),
     66000081: _tools.RODict({
@@ -3960,11 +3928,11 @@ datas = _tools.RODict({
         "selectability": 0,
         "target": "Enemy",
         "areaAction": _66000083,
-        "time": 5.0,
+        "time": 4.6,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 4.0,
-        "hurtNumber": 15,
-        "areaLoop": 0,
+        "loopIntervalTime": 1.0,
+        "hurtNumber": 99,
+        "areaLoop": 5,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
@@ -3975,7 +3943,7 @@ datas = _tools.RODict({
         "flySpeed": 0.0,
         "selectType": 1,
         "selectPar": 5,
-        "delayTime": 2.0,
+        "delayTime": 0.0,
     }),
     66000084: _tools.RODict({
         "ID": 66000084,
@@ -3988,9 +3956,9 @@ datas = _tools.RODict({
         "selectability": 0,
         "target": "Enemy",
         "areaAction": _66000084,
-        "time": 10.0,
+        "time": 6.534,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 0.5,
+        "loopIntervalTime": 1.0,
         "hurtNumber": 15,
         "areaLoop": 0,
         "enterAction": None,
@@ -4000,10 +3968,10 @@ datas = _tools.RODict({
         "continueAction": None,
         "continueTarget": "",
         "targetNum": 0,
-        "flySpeed": 2.0,
+        "flySpeed": 5.0,
         "selectType": 1,
         "selectPar": 3,
-        "delayTime": 1.0,
+        "delayTime": 0.0,
     }),
     66000085: _tools.RODict({
         "ID": 66000085,
@@ -4016,10 +3984,10 @@ datas = _tools.RODict({
         "selectability": 0,
         "target": "Enemy",
         "areaAction": _66000085,
-        "time": 3.0,
+        "time": 5.0,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 2.0,
-        "hurtNumber": 0,
+        "loopIntervalTime": 3.233,
+        "hurtNumber": 15,
         "areaLoop": 0,
         "enterAction": None,
         "enterLoop": 0,
@@ -4031,7 +3999,7 @@ datas = _tools.RODict({
         "flySpeed": 0.0,
         "selectType": 1,
         "selectPar": 5,
-        "delayTime": 1.0,
+        "delayTime": 0.0,
     }),
     66000086: _tools.RODict({
         "ID": 66000086,
@@ -4172,7 +4140,63 @@ datas = _tools.RODict({
         "selectType": 0,
         "selectPar": None,
         "delayTime": 0.0,
+    }),
+    66000091: _tools.RODict({
+        "ID": 66000091,
+        "name": "世界boss1螃蟹召唤物表现",
+        "type": "FixPosition",
+        "isAttackSkill": 0,
+        "classTag": 3,
+        "relyOnMaster": 0,
+        "inherit": 0,
+        "selectability": 0,
+        "target": "None",
+        "areaAction": None,
+        "time": 6.5,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.0,
+        "hurtNumber": 0,
+        "areaLoop": 0,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 0,
+        "selectPar": None,
+        "delayTime": 0.0,
+    }),
+    66000092: _tools.RODict({
+        "ID": 66000092,
+        "name": "世界boss1技能6水泡",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 1,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": None,
+        "time": 0.7,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.0,
+        "hurtNumber": 0,
+        "areaLoop": 0,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": _66000092byend,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 0,
+        "selectPar": None,
+        "delayTime": 0.0,
     })
 })
 minKey = 65000001
-maxKey = 66000090
+maxKey = 66000092

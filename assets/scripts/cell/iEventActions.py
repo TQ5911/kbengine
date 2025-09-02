@@ -24,16 +24,12 @@ import const_const as CONST
 import character_charData as CHD
 
 class IEventActions(object):
-    def doCombatActions(self, actionFunc, actionOwner, target, dmgSrcEntId, buildCtxFunc, inscriptionEffects = None):
+    def doCombatActions(self, actionFunc, actionOwner, target, dmgSrcEntId, buildCtxFunc):
         if self.isDestroyed:
             return
 
         combatResult = combatSkill.SkillDamges(dmgSrcEntId)
         ctx = buildCtxFunc(combatResult)
-        if inscriptionEffects:
-            for k, v in inscriptionEffects.items():
-                DEBUG_MSG("IEventActions-->doCombatActions, inscriptionEffects ", k, v)
-                ctx.setCustomVar(k, v)
         ret = None
         try:
             ret = actionFunc(actionOwner, target, ctx)
@@ -307,6 +303,17 @@ class IEventActions(object):
             prob = float(args[2])
         if len(args) >= 4:
             endTime = float(args[3])
+            if self.IsAvatar and hasattr(context, 'skillId'):
+                ret, args = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE)
+                if ret:
+                    DEBUG_MSG("addBuffBySkill ", context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE, args)
+                    if len(args) != 2:
+                        ERROR_MSG("addBuffBySkill, wrong args, ", context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE, args)
+                    else:
+                        addValue = args[0]
+                        checkBuffID = args[1] 
+                        if checkBuffID > 0 and checkBuffID == buffId:
+                            endTime += addValue
 
         if random.uniform(0, 1) > prob:
             return
@@ -369,7 +376,7 @@ class IEventActions(object):
     def teleportBySkill(self, target, context, dis):
         realDstPos = tuple(context.skillArgs[-3:])
         skill = self._getSkillByActionContext(context)
-        if sMath.distance2D(self.position, realDstPos) > skill.getRange(skill.skillId) * 1.2:
+        if sMath.distance2D(self.position, realDstPos) > skill.getRange(self, skill.skillId) * 1.2:
             WARNING_MSG('teleportBySkill distance too far')
             return False
 
@@ -408,7 +415,7 @@ class IEventActions(object):
         realDstPos = tuple(context.skillArgs[-3:])
         if not realDstPos:
             realDstPos = target.position
-        if sMath.distance2D(self.position, realDstPos) > skillVal.getRange(skillVal.skillId)*1.2:
+        if sMath.distance2D(self.position, realDstPos) > skillVal.getRange(self, skillVal.skillId)*1.2:
             WARNING_MSG('blinkToTarget distance too far')
             return False
         yaw = sMath.getYawFromPoints(self.position,realDstPos)
@@ -904,7 +911,6 @@ class IEventActions(object):
         ttl, cnt, dirOffset, posOffset, creationDirOffset = 0, 0, None, None,None
         creationLv, skillLv = 1, 0
         posOffsetNoTarget = 0
-        inscriptionEffecs = {}
 
         argsCnt = len(args)
         if argsCnt == 1:
@@ -925,8 +931,6 @@ class IEventActions(object):
             creationId, creationLv, skillLv, ttl, cnt, dirOffset, posOffset, posOffsetNoTarget = args
         elif argsCnt == 9:
             creationId, creationLv, skillLv, ttl, cnt, dirOffset, posOffset, posOffsetNoTarget, creationDirOffset = args
-        elif argsCnt == 10:
-            creationId, creationLv, skillLv, ttl, cnt, dirOffset, posOffset, posOffsetNoTarget, creationDirOffset, inscriptionEffecs = args
         else:
             raise Exception('create Creation args error: %s' % args)
 
@@ -952,7 +956,7 @@ class IEventActions(object):
         props['ttl'] = float(ttl)
         props['casterType'] = self.classname()
         props['selectedTargetId'] = target.id if target else 0
-
+        
         if self.IsAvatar:
             props['casterTeamId'] = self.teamId
         elif self.IsCreation:
@@ -980,7 +984,6 @@ class IEventActions(object):
         createCount, createRadius = 1, 0
         rawGameEntityId = 0
         if context.actionType == actionContext.ACTION_USE_SKILL:
-            DEBUG_MSG("createCreation 1 ", inscriptionEffecs)
             skill = self._getSkillByActionContext(context)
             fixedPos, fixedDir = skill.getSkillPosAndDir(self, target, context.skillArgs)
 
@@ -1002,7 +1005,6 @@ class IEventActions(object):
                 {'skillId': context.skillId})
 
         elif context.actionType == actionContext.ACTION_FLOW_CONTROLLER_CALLED:
-            DEBUG_MSG("createCreation 2 ", inscriptionEffecs, context.number)
             fixedPos = context.position
             fixedDir = Math.Vector3(0.0, 0.0, context.direction*math.pi/180)
             fixedDir.normalise()
@@ -1011,7 +1013,6 @@ class IEventActions(object):
             # 【【任务】指定位置召唤创生物、怪物（召唤物）】
             rawGameEntityId = context.rawGameEntityId
         else:
-            DEBUG_MSG("createCreation 3 ", inscriptionEffecs)
             skillDir = fixedDir or sMath.getDirFromYaw(self.direction[2])
 
         direction = (0.0, 0.0, sMath.getYawFromDirection(fixedDir)) if fixedDir else self.direction
@@ -1040,8 +1041,6 @@ class IEventActions(object):
                  'createIndex': i+1})
             creation = KBEngine.createEntity('Creation', self.spaceID, position, tuple(creationDir), props)
             creation.inheritProps(combatProps)
-            creation.setInscriptionEffects(inscriptionEffecs)
-            DEBUG_MSG('create creation', creation.creationId, position, creation.direction, inscriptionEffecs)
 
             if not creation:
                 ERROR_MSG('create Error', creationId, position, self.id)
@@ -1218,7 +1217,7 @@ class IEventActions(object):
             percent = arr[3]
             direction = Math.Vector3(arr[0], arr[1], arr[2])
             direction.normalise()
-            dstPosition = self.position + direction * percent * context.skillObj.getRange(context.skillId)
+            dstPosition = self.position + direction * percent * context.skillObj.getRange(self, context.skillId)
         if dist <= 0:
             dist = sMath.distance2D(dstPosition, target.position)
         else:
@@ -1295,7 +1294,7 @@ class IEventActions(object):
             dstPosition = tuple(context.skillArgs[-3:])
         else:
             dstPosition = target.position
-        if sMath.distance2D(self.position, dstPosition) > skillVal.getRange(skillVal.skillId)*2:
+        if sMath.distance2D(self.position, dstPosition) > skillVal.getRange(self, skillVal.skillId)*2:
             WARNING_MSG('chongfeng distance too far')
             return False
 
@@ -1555,7 +1554,7 @@ class IEventActions(object):
         _arr = utils.transformPosesToSkillArgs(
             self.position,
             _pos,
-            _skill.getRange(skillId),
+            _skill.getRange(self, skillId),
             _dir
         )
         return _arr

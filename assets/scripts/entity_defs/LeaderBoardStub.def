@@ -41,6 +41,7 @@
             <Arg>           ENTITYCALL                              </Arg>
             <Arg>           LEADER_BOARD_IDX                        </Arg>
             <Arg>           SCHOOL                                  </Arg>
+            <Arg>           LEADER_BOARD_PAGE                       </Arg>
         </doGetLeaderBoardList>
     </BaseMethods>
 </root>

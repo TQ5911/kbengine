@@ -84,7 +84,7 @@ class StateWaitAnim(StateImp):
     name = State.IDLE
 
     def tick(self, ctrl):
-        if ctrl.isOwnerWitnessed():
+        if ctrl.inHate():
             ctrl.transformPlayAnimation()
 
 

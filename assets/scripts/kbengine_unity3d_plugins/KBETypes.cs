@@ -5492,6 +5492,43 @@ namespace KBEngine
 		}
 	}
 
+	public struct LEADER_BOARD_PAGE
+	{
+		Byte value;
+
+		LEADER_BOARD_PAGE(Byte value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator Byte(LEADER_BOARD_PAGE value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator LEADER_BOARD_PAGE(Byte value)
+		{
+			Byte tvalue = (Byte)value;
+			return new LEADER_BOARD_PAGE(tvalue);
+		}
+
+		public static Byte MaxValue
+		{
+			get
+			{
+				return Byte.MaxValue;
+			}
+		}
+
+		public static Byte MinValue
+		{
+			get
+			{
+				return Byte.MinValue;
+			}
+		}
+	}
+
 	public class FACE_DATA
 	{
 		public UInt16 suitId = 0;

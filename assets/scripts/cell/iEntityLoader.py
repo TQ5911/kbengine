@@ -64,7 +64,6 @@ class IEntityLoader(object):
             _groupId = int(_groupId)
             _props = {
                 'groupId': _groupId,
-                'monsterGIDs': [i for i in _gids],
                 'spaceNo': spaceNo,
                 'spaceMgrId': spaceMgrId
             }

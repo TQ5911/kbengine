@@ -772,25 +772,8 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1182,
+        1183,
         1132
-      ]
-    }
-  },
-  "1182": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      21030001
-    ],
-    "buffID": [
-      64004901
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 600.0,
-    "transition": {
-      "finished": [
-        1183
       ]
     }
   },
@@ -844,8 +827,11 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1010,
-        1135
+        1021,
+        1135,
+        1031,
+        1051,
+        1006
       ]
     }
   },
@@ -892,26 +878,6 @@ datas ={
     "transition": {
       "finished": [
         1012
-      ]
-    }
-  },
-  "1010": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      21030002
-    ],
-    "buffID": [
-      64004901
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": 600.0,
-    "transition": {
-      "finished": [
-        1021,
-        1031,
-        1006,
-        1051
       ]
     }
   },

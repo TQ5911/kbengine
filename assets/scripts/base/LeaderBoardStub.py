@@ -124,7 +124,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             yield lambda *args: args
             _idx += 1
 
-    def doGetLeaderBoardList(self, box, leaderBoardIdx, school):
+    def doGetLeaderBoardList(self, box, leaderBoardIdx, school, page):
         if leaderBoardIdx >= self.leaderBoardIdx:
             box.client.leaderBoardNotChanged(self.leaderBoardType ,leaderBoardIdx, school)
             return
@@ -135,5 +135,9 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             _list = self.leaderBoardList.getSchoolData(school)
 
         _func = self.leaderBoardList.instaniateCls().funcName()
-        getattr(box.client, _func)(self.leaderBoardIdx, _list, school)
+        _start = page * gameconst.LEADER_BOARD_PAGE_SIZE
+        _end = _start + gameconst.LEADER_BOARD_PAGE_SIZE
+        _isEnd = _end >= len(_list)
+        _list = _list[_start : _end]
+        getattr(box.client, _func)(self.leaderBoardIdx, _list, school, page, _isEnd)
 

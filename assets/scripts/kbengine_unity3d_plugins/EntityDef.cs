@@ -7620,6 +7620,8 @@ namespace KBEngine
 			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[10077]);
 			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[3]);
+			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onLeaderBoardAvatarLevel_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onLeaderBoardAvatarLevel = new Method();
 			pAvatar_onLeaderBoardAvatarLevel.name = "onLeaderBoardAvatarLevel";
@@ -7641,6 +7643,8 @@ namespace KBEngine
 			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[10078]);
 			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[3]);
+			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onLeaderBoardAvatarScore_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_onLeaderBoardAvatarScore = new Method();
 			pAvatar_onLeaderBoardAvatarScore.name = "onLeaderBoardAvatarScore";
@@ -9507,6 +9511,9 @@ namespace KBEngine
 			pAvatar_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[13]);
 			pAvatar_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
 			pAvatar_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[2]);
+			pAvatar_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
+			pAvatar_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
+			pAvatar_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
 
 			Method pAvatar_onSetAddSkillCd = new Method();
 			pAvatar_onSetAddSkillCd.name = "onSetAddSkillCd";
@@ -12303,6 +12310,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_syncServerTime_args = new List<DATATYPE_BASE>();
 			pAvatar_syncServerTime_args.Add(EntityDef.id2datatypes[9]);
+			pAvatar_syncServerTime_args.Add(EntityDef.id2datatypes[13]);
 
 			Method pAvatar_syncServerTime = new Method();
 			pAvatar_syncServerTime.name = "syncServerTime";
@@ -13170,6 +13178,7 @@ namespace KBEngine
 			pAvatar_getLeaderBoardList_args.Add(EntityDef.id2datatypes[2]);
 			pAvatar_getLeaderBoardList_args.Add(EntityDef.id2datatypes[3]);
 			pAvatar_getLeaderBoardList_args.Add(EntityDef.id2datatypes[3]);
+			pAvatar_getLeaderBoardList_args.Add(EntityDef.id2datatypes[2]);
 
 			Method pAvatar_getLeaderBoardList = new Method();
 			pAvatar_getLeaderBoardList.name = "getLeaderBoardList";
@@ -20375,6 +20384,9 @@ namespace KBEngine
 			pMonster_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[13]);
 			pMonster_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
 			pMonster_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[2]);
+			pMonster_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
+			pMonster_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
+			pMonster_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
 
 			Method pMonster_onSetAddSkillCd = new Method();
 			pMonster_onSetAddSkillCd.name = "onSetAddSkillCd";
@@ -22556,6 +22568,9 @@ namespace KBEngine
 			pSummon_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[13]);
 			pSummon_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
 			pSummon_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[2]);
+			pSummon_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
+			pSummon_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
+			pSummon_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
 
 			Method pSummon_onSetAddSkillCd = new Method();
 			pSummon_onSetAddSkillCd.name = "onSetAddSkillCd";
@@ -25289,6 +25304,9 @@ namespace KBEngine
 			pNpc_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[13]);
 			pNpc_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
 			pNpc_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[2]);
+			pNpc_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
+			pNpc_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
+			pNpc_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
 
 			Method pNpc_onSetAddSkillCd = new Method();
 			pNpc_onSetAddSkillCd.name = "onSetAddSkillCd";
@@ -27738,6 +27756,9 @@ namespace KBEngine
 			pCreation_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[13]);
 			pCreation_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
 			pCreation_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[2]);
+			pCreation_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[14]);
+			pCreation_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
+			pCreation_onSetAddSkillCd_args.Add(EntityDef.id2datatypes[6]);
 
 			Method pCreation_onSetAddSkillCd = new Method();
 			pCreation_onSetAddSkillCd.name = "onSetAddSkillCd";
@@ -28058,13 +28079,136 @@ namespace KBEngine
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(DuelFlag), property(spaceNo / 129).");
 
 			pDuelFlagModule.useMethodDescrAlias = true;
+			ScriptModule pRebornPosModule = new ScriptModule("RebornPos");
+			EntityDef.moduledefs["RebornPos"] = pRebornPosModule;
+			EntityDef.idmoduledefs[49] = pRebornPosModule;
+
+			Property pRebornPos_position = new Property();
+			pRebornPos_position.name = "position";
+			pRebornPos_position.properUtype = 40000;
+			pRebornPos_position.properFlags = 4;
+			pRebornPos_position.aliasID = 1;
+			Vector3 RebornPos_position_defval = new Vector3();
+			pRebornPos_position.defaultVal = RebornPos_position_defval;
+			pRebornPosModule.propertys["position"] = pRebornPos_position; 
+
+			pRebornPosModule.usePropertyDescrAlias = true;
+			pRebornPosModule.idpropertys[(UInt16)pRebornPos_position.aliasID] = pRebornPos_position;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(RebornPos), property(position / 40000).");
+
+			Property pRebornPos_direction = new Property();
+			pRebornPos_direction.name = "direction";
+			pRebornPos_direction.properUtype = 40001;
+			pRebornPos_direction.properFlags = 4;
+			pRebornPos_direction.aliasID = 2;
+			Vector3 RebornPos_direction_defval = new Vector3();
+			pRebornPos_direction.defaultVal = RebornPos_direction_defval;
+			pRebornPosModule.propertys["direction"] = pRebornPos_direction; 
+
+			pRebornPosModule.usePropertyDescrAlias = true;
+			pRebornPosModule.idpropertys[(UInt16)pRebornPos_direction.aliasID] = pRebornPos_direction;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(RebornPos), property(direction / 40001).");
+
+			Property pRebornPos_spaceID = new Property();
+			pRebornPos_spaceID.name = "spaceID";
+			pRebornPos_spaceID.properUtype = 40002;
+			pRebornPos_spaceID.properFlags = 16;
+			pRebornPos_spaceID.aliasID = 3;
+			UInt32 RebornPos_spaceID_defval;
+			UInt32.TryParse("", out RebornPos_spaceID_defval);
+			pRebornPos_spaceID.defaultVal = RebornPos_spaceID_defval;
+			pRebornPosModule.propertys["spaceID"] = pRebornPos_spaceID; 
+
+			pRebornPosModule.usePropertyDescrAlias = true;
+			pRebornPosModule.idpropertys[(UInt16)pRebornPos_spaceID.aliasID] = pRebornPos_spaceID;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(RebornPos), property(spaceID / 40002).");
+
+			Property pRebornPos_dunTimeFreezeFlag = new Property();
+			pRebornPos_dunTimeFreezeFlag.name = "dunTimeFreezeFlag";
+			pRebornPos_dunTimeFreezeFlag.properUtype = 433;
+			pRebornPos_dunTimeFreezeFlag.properFlags = 128;
+			pRebornPos_dunTimeFreezeFlag.aliasID = 4;
+			Byte RebornPos_dunTimeFreezeFlag_defval;
+			Byte.TryParse("0", out RebornPos_dunTimeFreezeFlag_defval);
+			pRebornPos_dunTimeFreezeFlag.defaultVal = RebornPos_dunTimeFreezeFlag_defval;
+			pRebornPosModule.propertys["dunTimeFreezeFlag"] = pRebornPos_dunTimeFreezeFlag; 
+
+			pRebornPosModule.usePropertyDescrAlias = true;
+			pRebornPosModule.idpropertys[(UInt16)pRebornPos_dunTimeFreezeFlag.aliasID] = pRebornPos_dunTimeFreezeFlag;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(RebornPos), property(dunTimeFreezeFlag / 433).");
+
+			Property pRebornPos_force = new Property();
+			pRebornPos_force.name = "force";
+			pRebornPos_force.properUtype = 425;
+			pRebornPos_force.properFlags = 4;
+			pRebornPos_force.aliasID = 5;
+			Int32 RebornPos_force_defval;
+			Int32.TryParse("", out RebornPos_force_defval);
+			pRebornPos_force.defaultVal = RebornPos_force_defval;
+			pRebornPosModule.propertys["force"] = pRebornPos_force; 
+
+			pRebornPosModule.usePropertyDescrAlias = true;
+			pRebornPosModule.idpropertys[(UInt16)pRebornPos_force.aliasID] = pRebornPos_force;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(RebornPos), property(force / 425).");
+
+			Property pRebornPos_gameEntityId = new Property();
+			pRebornPos_gameEntityId.name = "gameEntityId";
+			pRebornPos_gameEntityId.properUtype = 432;
+			pRebornPos_gameEntityId.properFlags = 4;
+			pRebornPos_gameEntityId.aliasID = 6;
+			Int64 RebornPos_gameEntityId_defval;
+			Int64.TryParse("0", out RebornPos_gameEntityId_defval);
+			pRebornPos_gameEntityId.defaultVal = RebornPos_gameEntityId_defval;
+			pRebornPosModule.propertys["gameEntityId"] = pRebornPos_gameEntityId; 
+
+			pRebornPosModule.usePropertyDescrAlias = true;
+			pRebornPosModule.idpropertys[(UInt16)pRebornPos_gameEntityId.aliasID] = pRebornPos_gameEntityId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(RebornPos), property(gameEntityId / 432).");
+
+			Property pRebornPos_rebornPosId = new Property();
+			pRebornPos_rebornPosId.name = "rebornPosId";
+			pRebornPos_rebornPosId.properUtype = 382;
+			pRebornPos_rebornPosId.properFlags = 4;
+			pRebornPos_rebornPosId.aliasID = 7;
+			Int32 RebornPos_rebornPosId_defval;
+			Int32.TryParse("0", out RebornPos_rebornPosId_defval);
+			pRebornPos_rebornPosId.defaultVal = RebornPos_rebornPosId_defval;
+			pRebornPosModule.propertys["rebornPosId"] = pRebornPos_rebornPosId; 
+
+			pRebornPosModule.usePropertyDescrAlias = true;
+			pRebornPosModule.idpropertys[(UInt16)pRebornPos_rebornPosId.aliasID] = pRebornPos_rebornPosId;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(RebornPos), property(rebornPosId / 382).");
+
+			Property pRebornPos_spaceNo = new Property();
+			pRebornPos_spaceNo.name = "spaceNo";
+			pRebornPos_spaceNo.properUtype = 408;
+			pRebornPos_spaceNo.properFlags = 16;
+			pRebornPos_spaceNo.aliasID = 8;
+			UInt32 RebornPos_spaceNo_defval;
+			UInt32.TryParse("", out RebornPos_spaceNo_defval);
+			pRebornPos_spaceNo.defaultVal = RebornPos_spaceNo_defval;
+			pRebornPosModule.propertys["spaceNo"] = pRebornPos_spaceNo; 
+
+			pRebornPosModule.usePropertyDescrAlias = true;
+			pRebornPosModule.idpropertys[(UInt16)pRebornPos_spaceNo.aliasID] = pRebornPos_spaceNo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(RebornPos), property(spaceNo / 408).");
+
+			pRebornPosModule.useMethodDescrAlias = true;
 		}
 
 		public static void initDefTypes()
 		{
 			{
 				UInt16 utype = 2;
-				string typeName = "GUILD_LEVEL";
+				string typeName = "LEADER_BOARD_PAGE";
 				string name = "UINT8";
 				DATATYPE_BASE val = null;
 				EntityDef.datatypes.TryGetValue(name, out val);

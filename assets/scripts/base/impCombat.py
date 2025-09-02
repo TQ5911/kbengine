@@ -506,16 +506,10 @@ class ImpCombat(AvatarBuildsMixin):
             if not utils.hasBit(potion.potionState, gameconst.PotionState.AUTO):
                 continue
 
-            if utils.hasBit(potion.potionState, gameconst.PotionState.BIND):
-                bindType = gameconst.ItemBindType.BIND
-            else:
-                bindType = gameconst.ItemBindType.NORMAL
-
             if self.useItemWithActionInternal(
                     gameconst.BagType.BAG_TYPE_NORMAL,
                     potion.itemId,
-                    self.id,
-                    bindType):
+                    self.id):
                 break
 
     def autoHealMp(self):
@@ -526,16 +520,10 @@ class ImpCombat(AvatarBuildsMixin):
             if not utils.hasBit(potion.potionState, gameconst.PotionState.AUTO):
                 continue
 
-            if utils.hasBit(potion.potionState, gameconst.PotionState.BIND):
-                bindType = gameconst.ItemBindType.BIND
-            else:
-                bindType = gameconst.ItemBindType.NORMAL
-
             if self.useItemWithActionInternal(
                     gameconst.BagType.BAG_TYPE_NORMAL,
                     potion.itemId,
-                    self.id,
-                    bindType):
+                    self.id):
                 break
 
     # 快捷吃药 end ---------------------------------

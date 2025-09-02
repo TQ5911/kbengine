@@ -503,10 +503,13 @@ datas ={
             "Level": 41,
             "MapEntityScale": 0,
             "MapEntityType": "22",
+            "MonsterGroupID": "",
+            "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 20.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowMonsterGroupID": ""
           }
         },
         "11230022": {
@@ -578,10 +581,13 @@ datas ={
             "Level": 42,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": "",
+            "PathID": "",
             "Radius": 10.0,
             "RefreshNum": 5,
             "RefreshTime": 20.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowMonsterGroupID": ""
           }
         },
         "11230025": {
@@ -626,10 +632,13 @@ datas ={
             "Level": 43,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": "",
+            "PathID": "",
             "Radius": 15.0,
             "RefreshNum": 10,
             "RefreshTime": 20.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowMonsterGroupID": ""
           }
         },
         "11230027": {
@@ -873,6 +882,96 @@ datas ={
             "RefreshTime": 1,
             "Remark": "",
             "ShowMonsterGroupID": ""
+          }
+        }
+      },
+      "Npc": {
+        "11234001": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 180.0,
+          "DisplayName": "",
+          "EntityID": 18000633,
+          "ID": 11234001,
+          "Name": "\u51b7\u65e0",
+          "PosX": 246.6979,
+          "PosY": 184.8002,
+          "PosZ": 281.3255,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "11234002": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 267.5977,
+          "DisplayName": "",
+          "EntityID": 18000628,
+          "ID": 11234002,
+          "Name": "\u6807\u8bb0\u7528\u7279\u6b8a\u4efb\u52a1\u5730\u70b9",
+          "PosX": 277.2829,
+          "PosY": 187.1726,
+          "PosZ": 199.8736,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "11234003": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 251.8745,
+          "DisplayName": "",
+          "EntityID": 18000636,
+          "ID": 11234003,
+          "Name": "\u5434\u671b",
+          "PosX": 289.5722,
+          "PosY": 174.6232,
+          "PosZ": 400.7908,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "11234004": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 275.599,
+          "DisplayName": "",
+          "EntityID": 18000638,
+          "ID": 11234004,
+          "Name": "\u4e50\u4e50",
+          "PosX": 135.1963,
+          "PosY": 186.1058,
+          "PosZ": 195.4912,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
           }
         }
       },

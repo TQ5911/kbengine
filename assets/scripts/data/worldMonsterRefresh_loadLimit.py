@@ -290,6 +290,45 @@ datas = _tools.RODict({
     }),
     11204002: _tools.RODict({
         "mission": 0,
+    }),
+    11234001: _tools.RODict({
+        "mission": 0,
+    }),
+    11234002: _tools.RODict({
+        "mission": 0,
+    }),
+    11214003: _tools.RODict({
+        "mission": 0,
+    }),
+    11234003: _tools.RODict({
+        "mission": 0,
+    }),
+    11204004: _tools.RODict({
+        "mission": 0,
+    }),
+    11204005: _tools.RODict({
+        "mission": 0,
+    }),
+    11214004: _tools.RODict({
+        "mission": 0,
+    }),
+    11234004: _tools.RODict({
+        "mission": 0,
+    }),
+    10104001: _tools.RODict({
+        "mission": 0,
+    }),
+    10108051: _tools.RODict({
+        "mission": 0,
+    }),
+    11204003: _tools.RODict({
+        "mission": 0,
+    }),
+    11208057: _tools.RODict({
+        "mission": 0,
+    }),
+    11208058: _tools.RODict({
+        "mission": 0,
     })
 })
 minKey = 10014011

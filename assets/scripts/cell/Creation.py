@@ -46,7 +46,6 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         creationType = creation_creation.datas[self.creationId].get('type', '')
         self.speed = self.flySpeed
         self.cancleLockTarget = False
-        self.inscriptionEffects = {}
         self.initPosition()
 
         if creationType == 'Linar':
@@ -89,7 +88,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             self.loopTimeId = self.pyAddTimer(self.delayTime, self.loopIntervalTime, gametimer.CREATION_LOOP)
 
         if not self.ttl:
-            self.ttl = float(creation_creation.datas[self.creationId].get('time', 0))
+            self.ttl = float(self.creationLiveTime)
         self.startTTL(self.ttl)
 
 
@@ -141,11 +140,38 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
     @property
     def loopIntervalTime(self):
-        return creation_creation.datas[self.creationId].get('loopIntervalTime') or 0
+        defaultValue = creation_creation.datas[self.creationId].get('loopIntervalTime') or 0
+        skillId = self.tmpProps.get('skillId', 0)
+        if skillId > 0:
+            hostEntity = self.getHost()
+            if hostEntity and hostEntity.IsAvatar:
+                ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
+                if ret:
+                    DEBUG_MSG('loopIntervalTime, 1', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
+                else:
+                    ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
+                    if ret:
+                        DEBUG_MSG('loopIntervalTime, 2', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
+                        if self.creationLiveTime > 0:
+                            defaultValue = self.areaLoop/self.creationLiveTime
+        return defaultValue
 
     @property
     def creationLiveTime(self):
-        return float(creation_creation.datas[self.creationId].get('time') or 0)
+        defaultTime = float(creation_creation.datas[self.creationId].get('time') or 0)
+        skillId = self.tmpProps.get('skillId', 0)
+        if skillId > 0:
+            hostEntity = self.getHost()
+            if hostEntity and hostEntity.IsAvatar:
+                ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
+                if ret:
+                    DEBUG_MSG('creationLiveTime, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
+                    if len(args) == 1:
+                        addValue = args[0]
+                        defaultTime += addValue
+                    else:
+                        ERROR_MSG('creationLiveTime, wrong args, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, args)
+        return defaultTime
 
     @property
     def hurtNumber(self):
@@ -153,7 +179,27 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
     @property
     def areaLoop(self):
-        return int(creation_creation.datas[self.creationId].get('areaLoop') or 0) + self.getExtraAddAreaLoop()
+        defaultValue = int(creation_creation.datas[self.creationId].get('areaLoop') or 0)
+        skillId = self.tmpProps.get('skillId', 0)
+        if skillId > 0:
+            hostEntity = self.getHost()
+            if hostEntity and hostEntity.IsAvatar:
+                ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
+                if ret:
+                    DEBUG_MSG('areaLoop 1, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
+                    if len(args) == 1:
+                        defaultValue += args[0]
+                    else:
+                        ERROR_MSG('areaLoop, wrong args 1, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, args)
+                else:
+                    ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
+                    if ret:
+                        DEBUG_MSG('areaLoop 2, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
+                        if len(args) == 1:
+                            defaultValue += args[0]
+                        else:
+                            ERROR_MSG('areaLoop, wrong args 2, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, args)
+        return defaultValue
 
     @property
     def enterAction(self):
@@ -252,12 +298,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
     def baseBreakShieldEnhRatio(self):
         return 1.0
-
-    def getExtraAddAreaLoop(self):
-        return self.inscriptionEffects.get('addAreaLoop', 0)
-
-    def setInscriptionEffects(self, inscriptionEffects):
-        self.inscriptionEffects = inscriptionEffects
+    
     # --------------------------------------------------------------------------------------------
     #                              Callbacks
     # --------------------------------------------------------------------------------------------
@@ -372,7 +413,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 if not self.spaceMgr.hasSceneState(gameconst.WorldLineSceneState.THUNDER):
                     return
 
-        self.doCombatActions(self.areaAction, self, self, self.hostId, lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r), inscriptionEffects = self.inscriptionEffects)
+        self.doCombatActions(self.areaAction, self, self, self.hostId, lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r))
 
     def customId(self):
         _customId, _ = utils.getCustomIdAndGid(self.spaceNo, self.gameEntityId)

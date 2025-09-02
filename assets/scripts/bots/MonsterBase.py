@@ -28,7 +28,7 @@ class MonsterBase(KBEngine.Entity):
     def onRemoveBuff(self, arg0, arg1): pass
     def onRemoveRune(self, arg0, arg1): pass
     def onServerUseSkill(self, arg0): pass
-    def onSetAddSkillCd(self, arg0, arg1, arg2, arg3): pass
+    def onSetAddSkillCd(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
     def onShooterSkillCanUse(self, arg0, arg1, arg2): pass
     def onSkillDamage(self, arg0): pass
     def onSkillTeleport(self, arg0, arg1): pass

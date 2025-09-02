@@ -1448,7 +1448,6 @@ Avatar useItemAndEnterTeamDungeon BASE 30853
 Avatar useItemDone BASE 30322
 Avatar useItemToIncreaseChiefRewardNumber BASE 916
 Avatar useItemToIncreaseCrusadeRewardNumber BASE 656
-Avatar useItemWithActionInternal BASE 31355
 Avatar useLingShouEggItemBase BASE 31080
 Avatar useLingShouEquip BASE 661
 Avatar useTargetSkill CELL 23
@@ -1492,6 +1491,7 @@ BaseApp onLineReady BASE 30385
 BaseApp onWorldRefreshEntityReady BASE 31717
 BaseApp recordOfflinePlayerMailLog BASE 31244
 BaseApp renewalBase BASE 30093
+BaseApp replyHttpCommand BASE 31929
 BaseApp setStartGbId BASE 30072
 CityBattleTeleporter callMethod CELL 31568
 CityBattleTeleporter delaySafeDestroy CELL 31566
@@ -1673,6 +1673,7 @@ CrossSiegeWarStub entireDestroy BASE 31506
 CrossSiegeWarStub getSiegeWarState BASE 31505
 CrossSiegeWarStub gmAddCityMoney BASE 31152
 CrossSiegeWarStub gmChangeSiegeWarState BASE 31817
+CrossSiegeWarStub gmClearCityOwner BASE 31355
 CrossSiegeWarStub onAppointCityOfficer BASE 31738
 CrossSiegeWarStub onCityAuctionTax BASE 31737
 CrossSiegeWarStub onCrossSiegeWarEnd BASE 31713
@@ -2358,6 +2359,23 @@ RaidStub turnOnRaidMics BASE 30650
 RaidStub unblockAllRaidMemberMics BASE 30655
 RaidStub unblockRaidMemberMics BASE 30653
 RaidStub updateRaidMemberCacheVal BASE 30618
+RebornPos callMethod BASE 31961
+RebornPos callMethod CELL 31950
+RebornPos createCellNearHere BASE 31963
+RebornPos createCellNearSelf BASE 31962
+RebornPos delayDestroy BASE 31955
+RebornPos delaySafeDestroy CELL 31948
+RebornPos entireDestroy BASE 31959
+RebornPos onCellSafeDestroy BASE 31957
+RebornPos onRequestSpaceBox BASE 31958
+RebornPos onRequestSpaceCell BASE 31956
+RebornPos onTeleportNear CELL 31952
+RebornPos renewalBase BASE 31960
+RebornPos renewalCell CELL 31949
+RebornPos safeDestroy CELL 31947
+RebornPos safeTeleport CELL 31951
+RebornPos semiDestroy BASE 31954
+RebornPos setBaseGlobalIdx CELL 31953
 SiegeWarSpaceMgr addEntity CELL 31610
 SiegeWarSpaceMgr beNotifiedSpaceEvent CELL 31609
 SiegeWarSpaceMgr callMethod CELL 31596

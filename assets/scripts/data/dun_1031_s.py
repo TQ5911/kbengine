@@ -2874,17 +2874,43 @@ datas ={
           "EntityID": 11222035,
           "ID": 10310128,
           "Name": "\u5e78\u8fd0\u602a\u6d4b\u8bd5",
-          "PosX": 425.1958,
+          "PosX": 425.1959,
           "PosY": 322.5955,
           "PosZ": 545.2813,
           "Props": {
-            "GroupID": "",
+            "GroupID": 1,
             "Level": 40,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
             "PathID": "",
             "Radius": 0.0,
+            "RandomRegion": [
+              [
+                550.149353,
+                321.816772,
+                562.5818,
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                433.0174,
+                322.593536,
+                538.385742,
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                547.5091,
+                317.504028,
+                413.9129,
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
             "RefreshNum": 1,
             "RefreshTime": 1,
             "Remark": "",

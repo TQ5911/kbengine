@@ -1837,14 +1837,16 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
     # --------------------------------- 自动吃药  begin ------------------------
 
-    def useItemWithActionInternal(self, bagType, itemId, targetId, bindType):
+    def useItemWithActionInternal(self, bagType, itemId, targetId):
         bag = self.getBagByType(bagType)
         if not bag:
             return False
 
-        gridId, _ = bag.getMinGridByItemId(itemId, bindType)
+        gridId, _ = bag.getMinGridByItemId(itemId, gameconst.ItemBindType.BIND)
         if gridId<0 or bag.canUseGridItem(self, gridId, itemId, 1) != gameconst.BagOPStat.BAG_OP_STAT_OK:
-            return False
+            gridId, _ = bag.getMinGridByItemId(itemId, gameconst.ItemBindType.NORMAL)
+            if gridId<0 or bag.canUseGridItem(self, gridId, itemId, 1) != gameconst.BagOPStat.BAG_OP_STAT_OK:
+                return False
 
         useItemCtx = actionContext.UseItemCtx(targetId)
         self.baseUseItems(gridId, itemId, 1, useItemCtx, False)

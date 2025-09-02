@@ -114,14 +114,52 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.overwriteProps()
         self.lastClearBeAttackAvatarsTime = 0
 
+        """
+        大世界 monstergrp逻辑跟副本不太一样
+        大世界是先创建monstergrp 然后再创建monster，monster统一由monsterGrp管理
+        副本的话怪都是副本编辑器刷新的，怪只依赖的monsterGrp的仇恨同步
+        所以副本内做成，先创建怪物，然后再创建monsterGrp（创建之前要先判断当前场景内有没有monsterGrp）
+        """
         if self.isMonsterInGroup():
             self.addInMonsterGroup(self.monsterGroupId)
 
             if self.isNeedRefresh():
                 self.monsterGroup.hasMonsterNeedRefresh = True
 
+        elif formula.isDungeonSpace(self.spaceNo):
+            self._createMonsterGrpInDungeon()
+
         if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
             self.setBodySize((gameconst.LARGE_ENTITY_DEFAULT_AOI, gameconst.LARGE_ENTITY_DEFAULT_AOI))
+
+    def _createMonsterGrpInDungeon(self):
+        _dunData = self.dunData()
+        if not _dunData:
+            return
+
+        _monsterGrpId = _dunData.get('Props', {}).get('MonsterGroupID', 0)
+        if not _monsterGrpId:
+            return
+
+        _monsterGrp = self.spaceMgr.getEntitiyByTag('mgid_{}'.format(_monsterGrpId))
+        if not _monsterGrp:
+            _props = {
+                'groupId': _monsterGrpId,
+                'spaceNo': self.spaceNo,
+                'spaceMgrId': self.spaceMgrId
+            }
+
+            _pos = (0.0, 0.0, 0.0)
+            _dir = (0.0, 0.0, 0.0)
+
+            _monsterGrp = self.getCurrentSpace().createCellLocally(
+                'MonsterGrp',
+                _pos,
+                _dir,
+                _props)
+
+        self.monsterGroupId = _monsterGrp.id
+        self.addInMonsterGroup(self.monsterGroupId)
 
     def _initBornState(self):
         monData = creep_base.datas[self.monsterId]
@@ -289,6 +327,10 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         spaceMgr = self.spaceMgr
         if spaceMgr:
             spaceMgr.removeEntityById(self.id)
+
+        mGrp = self.monsterGroup
+        if mGrp and mGrp.canBeDestroy():
+            mGrp.safeDestroy()
         return
 
     def _postSafeDestory(self):
@@ -393,6 +435,10 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
             self.spaceMgr.onWorldBossDead()
+
+        host = utils.getHostEntity(killer)
+        if host.IsAvatar:
+            host.base.triggerAchievement(gameconst.AchieveType.KILL_MONSTER)
 
     def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx):
         DEBUG_MSG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)

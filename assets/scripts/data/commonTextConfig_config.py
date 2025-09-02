@@ -159,5 +159,10 @@ datas = _tools.RODict({
         "ID": "autoShutdownCountTime",
         "value": "{0}后自动关闭",
         "Type": "string"
+    }),
+    "AtkMulImprove": _tools.RODict({
+        "ID": "AtkMulImprove",
+        "value": "增幅",
+        "Type": "string"
     })
 })

@@ -91,8 +91,19 @@ class AdminStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             cmdResult.result = message
             client.serviceStub.replyCommand(None, cmdResult, None)
 
-    def replyHttpCommand(self, tag, cmdUUID, result, retErrMsg, bodyBytes):
-        DEBUG_MSG('in AdminStub.replyHttpCommand ', tag, cmdUUID, result, retErrMsg, bodyBytes)
+    def replyHttpCommand(self, tag, cmdUUID, result, retErrMsg, resultObj):
+        DEBUG_MSG('in AdminStub.replyHttpCommand ', tag, cmdUUID, result, retErrMsg, resultObj)
+        try:
+            if hasattr(resultObj, 'toJsonBytes'):
+                INFO_MSG('replyHttpCommand HTTPAgent toJsonBytes')
+                bodyBytes = resultObj.toJsonBytes()
+            else:
+                INFO_MSG('replyHttpCommand HTTPAgent encode utf-8')
+                bodyBytes = json.dumps(resultObj).encode('utf-8')
+        except:
+            ERROR_MSG('replyHttpCommand: result to json err')
+            a={}
+            bodyBytes = json.dumps(a).encode('utf-8')
         client = self.gmClient.get(tag, None)
         if client and client.channel.dispatcher:
             resp = HttpAPICommandResponse()
@@ -215,7 +226,7 @@ class AdminStubService(GameServer):
         INFO_MSG('_doHttpCommand', cmdName, cmdArgs, seqIdStr)
 
         agent = gmCommand.HTTPAgent(self.adminStub, self.tag, 'HTTP', gmGroup.MANAGER_GROUP_GOD, cmdUUID, seqIdStr,
-                                    cmdName.lower())
+                                    cmdName.lower(), gameglobal.localBaseApp)
         gmCommand.doCommandOutside(agent, cmdName + ' ' + cmdArgs, 'HTTP')
 
     def _reportHttpCmd(self, request, result, msg, retMsgBytes):

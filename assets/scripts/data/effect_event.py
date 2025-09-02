@@ -200,7 +200,7 @@ def _13090225(self, target, context):
     skill = self._getSkillByActionContext(context)
     avgAtk = action_FightAction.randomAtk(self)
     if skill:
-        mpVal = skill.getCostMp(skill.skillId, self.getProp("mpCostRatio"))
+        mpVal = skill.getCostMp(self,skill.skillId, self.getProp("mpCostRatio"))
         # action_FightAction.healByNum(self, target, context, math.ceil(avgAtk * context.args.ActionParam[0] * mpVal))
         self.noFatalHeal(target, context, 0, math.ceil(avgAtk * context.args.ActionParam[0] * mpVal))
 

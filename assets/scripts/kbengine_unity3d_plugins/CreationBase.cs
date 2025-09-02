@@ -323,7 +323,10 @@ namespace KBEngine
 					float onSetAddSkillCd_arg2 = stream.readFloat();
 					double onSetAddSkillCd_arg3 = stream.readDouble();
 					Byte onSetAddSkillCd_arg4 = stream.readUint8();
-					onSetAddSkillCd(onSetAddSkillCd_arg1, onSetAddSkillCd_arg2, onSetAddSkillCd_arg3, onSetAddSkillCd_arg4);
+					double onSetAddSkillCd_arg5 = stream.readDouble();
+					SByte onSetAddSkillCd_arg6 = stream.readInt8();
+					SByte onSetAddSkillCd_arg7 = stream.readInt8();
+					onSetAddSkillCd(onSetAddSkillCd_arg1, onSetAddSkillCd_arg2, onSetAddSkillCd_arg3, onSetAddSkillCd_arg4, onSetAddSkillCd_arg5, onSetAddSkillCd_arg6, onSetAddSkillCd_arg7);
 					break;
 				case 622:
 					UInt32 onShooterSkillCanUse_arg1 = stream.readUint32();

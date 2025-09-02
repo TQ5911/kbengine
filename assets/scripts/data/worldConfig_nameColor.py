@@ -62,5 +62,11 @@ datas = _tools.RODict({
     }),
     "enemychose": _tools.RODict({
         "ID": "enemychose",
+    }),
+    "playercityBattle": _tools.RODict({
+        "ID": "playercityBattle",
+    }),
+    "enemycityBattle": _tools.RODict({
+        "ID": "enemycityBattle",
     })
 })

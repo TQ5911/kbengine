@@ -175,6 +175,16 @@ datas = _tools.RODict({
         "event": "Openinterface",
         "parm": "UIEquipEnchantingPanel",
     }),
+    19000010000: _tools.RODict({
+        "ID": 19000010000,
+        "event": "Cnttask",
+        "parm": "",
+    }),
+    19000010001: _tools.RODict({
+        "ID": 19000010001,
+        "event": "",
+        "parm": "",
+    }),
     19000011000: _tools.RODict({
         "ID": 19000011000,
         "event": "Cnttask",
@@ -2640,6 +2650,26 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
+    19000251000: _tools.RODict({
+        "ID": 19000251000,
+        "event": "Cnttask",
+        "parm": "",
+    }),
+    19000251001: _tools.RODict({
+        "ID": 19000251001,
+        "event": "",
+        "parm": "",
+    }),
+    19000252000: _tools.RODict({
+        "ID": 19000252000,
+        "event": "Cnttask",
+        "parm": "",
+    }),
+    19000252001: _tools.RODict({
+        "ID": 19000252001,
+        "event": "",
+        "parm": "",
+    }),
     19100001000: _tools.RODict({
         "ID": 19100001000,
         "event": "",
@@ -4707,11 +4737,6 @@ datas = _tools.RODict({
     }),
     19300015001: _tools.RODict({
         "ID": 19300015001,
-        "event": "",
-        "parm": "",
-    }),
-    19300015002: _tools.RODict({
-        "ID": 19300015002,
         "event": "Gettask",
         "parm": "",
     }),
@@ -4812,11 +4837,6 @@ datas = _tools.RODict({
     }),
     19300022001: _tools.RODict({
         "ID": 19300022001,
-        "event": "",
-        "parm": "",
-    }),
-    19300022002: _tools.RODict({
-        "ID": 19300022002,
         "event": "Gettask",
         "parm": "",
     }),
@@ -4942,11 +4962,6 @@ datas = _tools.RODict({
     }),
     19300032001: _tools.RODict({
         "ID": 19300032001,
-        "event": "",
-        "parm": "",
-    }),
-    19300033000: _tools.RODict({
-        "ID": 19300033000,
         "event": "Gettask",
         "parm": "",
     }),
@@ -5037,7 +5052,7 @@ datas = _tools.RODict({
     }),
     19300038004: _tools.RODict({
         "ID": 19300038004,
-        "event": "Gettask",
+        "event": "Fnstalk",
         "parm": "",
     }),
     19300039000: _tools.RODict({
@@ -5062,7 +5077,7 @@ datas = _tools.RODict({
     }),
     19300039004: _tools.RODict({
         "ID": 19300039004,
-        "event": "Fnstalk",
+        "event": "Gettask",
         "parm": "",
     }),
     19300040000: _tools.RODict({
@@ -5264,10 +5279,20 @@ datas = _tools.RODict({
         "ID": 19300053002,
         "event": "Fnstalk",
         "parm": "",
+    }),
+    19300054000: _tools.RODict({
+        "ID": 19300054000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19300055000: _tools.RODict({
+        "ID": 19300055000,
+        "event": "Fnstalk",
+        "parm": "",
     })
 })
 minKey = 19000001000
-maxKey = 19300053002
+maxKey = 19300055000
 
 dialogIdMap = _tools.RODict({ 
     19000001: (
@@ -5319,6 +5344,10 @@ dialogIdMap = _tools.RODict({
         19000009000,
         19000009001,
         19000009002,
+    ),
+    19000010: (
+        19000010000,
+        19000010001,
     ),
     19000011: (
         19000011000,
@@ -6293,6 +6322,14 @@ dialogIdMap = _tools.RODict({
         19000250000,
         19000250001,
     ),
+    19000251: (
+        19000251000,
+        19000251001,
+    ),
+    19000252: (
+        19000252000,
+        19000252001,
+    ),
     19100001: (
         19100001000,
         19100001001,
@@ -6916,7 +6953,6 @@ dialogIdMap = _tools.RODict({
     19300015: (
         19300015000,
         19300015001,
-        19300015002,
     ),
     19300016: (
         19300016000,
@@ -6951,7 +6987,6 @@ dialogIdMap = _tools.RODict({
     19300022: (
         19300022000,
         19300022001,
-        19300022002,
     ),
     19300023: (
         19300023000,
@@ -6997,9 +7032,6 @@ dialogIdMap = _tools.RODict({
     19300032: (
         19300032000,
         19300032001,
-    ),
-    19300033: (
-        19300033000,
     ),
     19300034: (
         19300034000,
@@ -7103,5 +7135,11 @@ dialogIdMap = _tools.RODict({
         19300053000,
         19300053001,
         19300053002,
+    ),
+    19300054: (
+        19300054000,
+    ),
+    19300055: (
+        19300055000,
     ),
 })

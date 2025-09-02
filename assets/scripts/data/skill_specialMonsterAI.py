@@ -18,11 +18,11 @@ datas = _tools.RODict({
     92000001: _tools.RODict({
         "ID": 92000001,
         "name": "沙虫",
-        "bornAnimation": "skill1",
-        "bornAnimationTime": 3.0,
-        "resetAnimation": "skill2",
-        "resetAnimationTime": 3.0,
-        "resetCdAfterCombat": 3.0,
+        "bornAnimation": "born",
+        "bornAnimationTime": 1.8,
+        "resetAnimation": "reset",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 6.0,
         "summonID": 0,
         "summonCD": 0.0,
         "summonLimit": 0

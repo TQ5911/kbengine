@@ -119,6 +119,7 @@ class BodyEquips(userType.UserSoleType):
         for slotId, equipItem in self.equips_map.items():
             equipItem.applyEquipEffectToAvatar(owner, isLogin=isLogin)
         self.doRecalculateInscriptionEffects(owner)
+        
         return
 
     def tryLockBodyEquips(self, desp=''):
@@ -288,7 +289,7 @@ class BodyEquips(userType.UserSoleType):
         if not equipItem:
             return equipItem
         DEBUG_MSG("BodyEquips-->removeEquipItem, begin~ ", slotId, self.equips_map)
-        self.recalculateAllInscriptionEffects(owner, equipItem.equipAttr.glyphAffixes, [])
+        self.recalculateAllInscriptionEffects(owner, equipItem.equipAttr.glyphAffixes)
         DEBUG_MSG("BodyEquips-->removeEquipItem, end~", slotId, self.equips_map)
         return equipItem
     
@@ -300,18 +301,8 @@ class BodyEquips(userType.UserSoleType):
 
     def recalculateAllInscriptionEffects(self, owner, oldAffixes = None, newAffixes = None):
         DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects, begin~ ", oldAffixes, newAffixes)
-        if oldAffixes is not None and newAffixes is not None:
-            removeAffixIDs = set()
-            for oldAffix in oldAffixes:
-                flag = False
-                for newAffix in newAffixes:
-                    if oldAffix.afxId == newAffix.afxId:
-                        flag = True
-                        break
-                if not flag:
-                    removeAffixIDs.add(oldAffix.afxId)
-
-            for removeAffixID in removeAffixIDs:
+        if oldAffixes is not None:
+            for removeAffixID in oldAffixes:
                 DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects 1 ", removeAffixID)
                 skillID, effectDatas = self.getAffixInscriptionEffectDatas(removeAffixID)
                 if skillID is None or effectDatas is None:
@@ -324,13 +315,15 @@ class BodyEquips(userType.UserSoleType):
                     if effectType == gameconst.InscriptionEffectType.REPLACE_SKILL:
                         # 反向替换技能直接生效
                         owner.changeSkill(None, None, effectValue, skillID)
+                    elif effectType == gameconst.InscriptionEffectType.SKILL_LEVEL_INCREASE_VALUE:
+                        # 移除技能等级值
+                        self.addSkillLv(self, owner, [skillID], [-1*effectValue], isLogin=False)
+                        
                 DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects, end:", self.inscriptionEffect)
                     
         # 筛选出技能替换相关的记录
-        # replaceSkillsBefore = self.calculateEffectDatas(gameconst.InscriptionEffectType.REPLACE_SKILL)
         self.inscriptionEffect = {}
         self.doRecalculateInscriptionEffects(owner)
-        # replaceSkillsAfter = self.calculateEffectDatas(gameconst.InscriptionEffectType.REPLACE_SKILL)
         DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects, end~")
 
     def doRecalculateInscriptionEffects(self, owner):
@@ -351,6 +344,9 @@ class BodyEquips(userType.UserSoleType):
                 if effectType == gameconst.InscriptionEffectType.REPLACE_SKILL:
                     # 替换技能直接生效
                     owner.changeSkill(None, None, skillID, effectValue)
+                elif effectType == gameconst.InscriptionEffectType.SKILL_LEVEL_INCREASE_VALUE:
+                    # 增加技能等级值
+                    self.addSkillLv(self, owner, [skillID], [effectValue], isLogin=False)
                 effectRecord = self.inscriptionEffect.get(skillID)
                 if not effectRecord:
                     effectRecord = {}
@@ -406,3 +402,7 @@ class BodyEquips(userType.UserSoleType):
         if not effectData:
             return 0
         return effectData.get(effectType, 0)
+    
+    def getInscriptionEffects(self, skillID, effectType):
+        args = []
+        return False, args

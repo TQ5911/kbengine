@@ -1159,10 +1159,13 @@
         </onGetAureoleInfo>
 
         <onSetAddSkillCd>
-            <Arg>        SKILLID         </Arg>
-            <Arg>        FLOAT           </Arg>
-            <Arg>        DOUBLETIME      </Arg>
-            <Arg>        BOOL            </Arg>
+            <Arg>        SKILLID          </Arg>
+            <Arg>        FLOAT            </Arg>
+            <Arg>        DOUBLETIME       </Arg>
+            <Arg>        BOOL             </Arg>
+            <Arg>        DOUBLETIMESTAMP  </Arg>
+            <Arg>        INT8             </Arg>
+            <Arg>        INT8             </Arg>
         </onSetAddSkillCd>
 
         <skillTeleportBefore>

@@ -1494,7 +1494,7 @@ datas = _tools.RODict({
     54000168: _tools.RODict({
         "ID": 54000168,
         "name": "equipRepairing",
-        "Message": "<#itemId={0}>已进入修复状态，预计持续<link time {1} format=mm分>",
+        "Message": "<#itemId={0}>已进入修复状态，预计持续<link time={1} format=mm分>",
         "DisplayMode": 13,
         "defaultCountdown": 2.0,
         "confirmFunc": "",
@@ -1566,7 +1566,7 @@ datas = _tools.RODict({
     54000176: _tools.RODict({
         "ID": 54000176,
         "name": "returnAndStartRepair",
-        "Message": "装备<#itemId={0}>自动进行修复，预计持续<link time {1} format=mm分>",
+        "Message": "装备<#itemId={0}>自动进行修复，预计持续<link time={1} format=mm分>",
         "DisplayMode": 13,
         "defaultCountdown": 2.0,
         "confirmFunc": "",
@@ -7083,7 +7083,7 @@ datas = _tools.RODict({
     54990068: _tools.RODict({
         "ID": 54990068,
         "name": "TreasureBoxLocationPrompt",
-        "Message": "继续寻找下一个宝箱吧！",
+        "Message": "继续寻找下一个赃物吧！",
         "DisplayMode": 13,
         "defaultCountdown": 2.0,
         "confirmFunc": "",
@@ -7111,6 +7111,33 @@ datas = _tools.RODict({
         "ID": 54990071,
         "name": "WhereTheCriminal",
         "Message": "找出犯人的踪迹",
+        "DisplayMode": 13,
+        "defaultCountdown": 2.0,
+        "confirmFunc": "",
+        "cancelFunc": "",
+    }),
+    54990072: _tools.RODict({
+        "ID": 54990072,
+        "name": "LOCATION_OF_CULTURAL_RELICS",
+        "Message": "采集神秘文物吧",
+        "DisplayMode": 13,
+        "defaultCountdown": 2.0,
+        "confirmFunc": "",
+        "cancelFunc": "",
+    }),
+    54990073: _tools.RODict({
+        "ID": 54990073,
+        "name": "MISSING_PERSON",
+        "Message": "寻找画痴的踪迹吧",
+        "DisplayMode": 13,
+        "defaultCountdown": 2.0,
+        "confirmFunc": "",
+        "cancelFunc": "",
+    }),
+    54990074: _tools.RODict({
+        "ID": 54990074,
+        "name": "MissingPerson",
+        "Message": "在附近寻找乐乐的踪迹吧",
         "DisplayMode": 13,
         "defaultCountdown": 2.0,
         "confirmFunc": "",
@@ -7568,4 +7595,4 @@ datas = _tools.RODict({
     })
 })
 minKey = 54000000
-maxKey = 54990071
+maxKey = 54990074

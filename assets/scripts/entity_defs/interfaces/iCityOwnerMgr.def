@@ -184,6 +184,9 @@
             <Arg>           INT64                         </Arg>
         </gmAddCityMoney>
 
+        <gmClearCityOwner>
+        </gmClearCityOwner>
+
         <onGuildLeaderChange>
             <Arg>           PLAYER_GBID                 </Arg>
             <Arg>           PLAYER_GBID                 </Arg>

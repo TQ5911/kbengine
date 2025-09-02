@@ -458,7 +458,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def gmChangeSiegeWarState(self, state, endTime, *args):
         DEBUG_MSG('[lj]gm change siege war state', state, endTime, args)
         if self.siegeWarState == state and args[0] == 0:
-            ERROR_MSG('[lj]gm change siege war state failed, state is same:', self.siegeWarState)
+            WARNING_MSG('[lj]gm change siege war state failed, state is same:', self.siegeWarState)
             return
 
         endTime = utils.getNow() + 60 * 60 * 24

@@ -77,6 +77,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         self.lockDict = {}
         self.redisAttrs = {}
         self.interfaceClient = {}
+        self.gmCmdDic = {}
         self.initAysncore()
         self.accountNum = 0
         self.avatarNum = 0
@@ -625,3 +626,20 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             return
 
         gameglobal.areaData = ResMgr.loadAreaData()
+
+    def replyHttpCommand(self, box, tag, cmdUUID, result, retErrMsg, bodyBytes, cmdStr):
+        allResult = self.gmCmdDic.get(cmdUUID, [])
+        allResult.append((result, retErrMsg, bodyBytes))
+        cmd = gameglobal.GM_CMDS.get(cmdStr)
+        if cmd.component == gameconst.BASE:
+            allCount = gameconfig.baseAppCount()
+        elif cmd.component == gameconst.CELL:
+            allCount = gameconfig.cellAppCount()
+        else:
+            allCount = gameconfig.baseAppCount() + gameconfig.cellAppCount()
+        if len(allResult) == allCount:
+            allResult_dict = {"allResult": allResult}
+            box.replyHttpCommand(tag, cmdUUID, result, retErrMsg, allResult_dict)
+            self.gmCmdDic.pop(cmdUUID)
+        else:
+            self.gmCmdDic[cmdUUID] = allResult

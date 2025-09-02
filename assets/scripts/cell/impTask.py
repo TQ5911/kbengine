@@ -672,8 +672,6 @@ class ImpTask(impTalk.ImpTalk):
         if monsterTaskIds or itemSrcTaskIds:
             self.base.onTaskStepUpdate(gameconst.TaskTargetType.TASK_TARGET_MONSTERS, 0, (self.spaceNo, monsterId, monsterUID))
 
-        self.base.triggerAchievement(gameconst.AchieveType.KILL_MONSTER)
-
     def checkSameMap(self, taskID):
         DEBUG_MSG("checkSameMap ", taskID)
         taskData = dataUtils.getTaskData(taskID)

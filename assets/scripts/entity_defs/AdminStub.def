@@ -27,7 +27,7 @@
             <Arg>       STRING      </Arg>
             <Arg>       INT32       </Arg>
             <Arg>       UNICODE     </Arg>
-            <Arg>       BLOB        </Arg>
+            <Arg>       PYTHON        </Arg>
         </replyHttpCommand>
 
     </BaseMethods>

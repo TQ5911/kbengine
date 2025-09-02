@@ -5024,7 +5024,32 @@ datas = _tools.RODict({
         "isDisappear": 0,
         "isInvalid": 0,
         "rewardPool": 0
+    }),
+    16005000: _tools.RODict({
+        "ID": 16005000,
+        "name": "个人宝箱",
+        "type": 3,
+        "pickDistance": 2.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 10,
+        "isUnstoppble": 1,
+        "precheckAction": None,
+        "triggerAction": None,
+        "isUnique": 0,
+        "ifBornState": 0,
+        "rewardID": 40020509,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 1,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
     })
 })
 minKey = 16000001
-maxKey = 16003999
+maxKey = 16005000

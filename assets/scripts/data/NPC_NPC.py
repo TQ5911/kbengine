@@ -1789,7 +1789,7 @@ datas = _tools.RODict({
         "pathID": 0,
         "AI": None,
         "creepID": 0,
-        "commonDialog": 19000009,
+        "commonDialog": 19000010,
     }),
     18000150: _tools.RODict({
         "ID": 18000150,
@@ -3433,7 +3433,7 @@ datas = _tools.RODict({
         "pathID": 0,
         "AI": None,
         "creepID": 0,
-        "commonDialog": 19000179,
+        "commonDialog": 19000251,
     }),
     18000633: _tools.RODict({
         "ID": 18000633,
@@ -3517,7 +3517,7 @@ datas = _tools.RODict({
         "pathID": 0,
         "AI": None,
         "creepID": 0,
-        "commonDialog": 19000177,
+        "commonDialog": 19000252,
     }),
 })
 minKey = 18000002

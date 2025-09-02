@@ -107,7 +107,7 @@ datas = _tools.RODict({
         "ID": 37000009,
         "type": 2,
         "title": "装备修复通知",
-        "content": "受损装备<link item id={0} gbid={1}>的能量晶核已遗失，请尽快修复，否则将在<link time {2} format=yyyy-MM-dd HH:mm:ss>后彻底破碎。",
+        "content": "受损装备<link item id={0} gbid={1}>的能量晶核已遗失，请尽快修复，否则将在<link time={2} format=yyyy-MM-dd HH:mm:ss>后彻底破碎。",
         "isOpen": 1,
         "rewardId": 0,
         "period": "24",

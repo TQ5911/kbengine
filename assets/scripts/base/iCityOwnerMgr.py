@@ -35,8 +35,8 @@ class ICityOwnerMgr(object):
             self.cityDataChanged = False
             self.syncCityData()
 
-    def syncCityData(self):
-        if self.cityOwnerId == 0:
+    def syncCityData(self, force = False):
+        if self.cityOwnerId == 0 and not force:
             return
         
         cityOfficerList = []
@@ -93,6 +93,14 @@ class ICityOwnerMgr(object):
         DEBUG_MSG('[lj]gm addCityMoney', money)
         self.cityMoney += money
         self.cityDataChanged = True
+
+    def gmClearCityOwner(self):
+        DEBUG_MSG('[lj]gm clearCityOwner')
+        self.cityOwnerId = 0
+        self.cityOwnerName = ''
+        self.cityOwnerGuildUUID = 0
+        self.cityOwnerGuildName = ''
+        self.syncCityData(True)
 
     def onCityAuctionTax(self, serverId, tax):
         self.dailyCumulativeTax += tax

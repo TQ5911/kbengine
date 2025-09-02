@@ -33,7 +33,7 @@ namespace KBEngine
 		public virtual void onRemoveBuff(Int32 arg1, List<UInt64> arg2) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onRemoveRune(UInt32 arg1, Int32 arg2) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onServerUseSkill(UInt32 arg1) {} //Avatar Monster Summon Npc Creation 
-		public virtual void onSetAddSkillCd(UInt32 arg1, float arg2, double arg3, Byte arg4) {} //Avatar Monster Summon Npc Creation 
+		public virtual void onSetAddSkillCd(UInt32 arg1, float arg2, double arg3, Byte arg4, double arg5, SByte arg6, SByte arg7) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onShooterSkillCanUse(UInt32 arg1, double arg2, Byte arg3) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onSkillDamage(SKILL_DAMAGE_INFO arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onSkillTeleport(UInt32 arg1, Vector3 arg2) {} //Avatar Monster Summon Npc Creation 
@@ -88,18 +88,18 @@ namespace KBEngine
 		public virtual void onDebilityEnhChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onDmgArmorChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onDodgeChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
-		public virtual void onDunTimeFreezeFlagChanged(Byte oldValue) {}	//MonsterGrp Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation 
+		public virtual void onDunTimeFreezeFlagChanged(Byte oldValue) {}	//MonsterGrp Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation RebornPos 
 		public virtual void onExtraDmgChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onExtraDmgDefChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFatalChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFinalDmgChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFinalDmgAntiChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
-		public virtual void onForceChanged(Int32 oldValue) {}	//Space CubeSpaceMgr WonderLandSpaceMgr WorldLineSpaceMgr SiegeWarSpaceMgr DungeonSpaceMgr MonsterGrp Avatar Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation DuelFlag 
+		public virtual void onForceChanged(Int32 oldValue) {}	//Space CubeSpaceMgr WonderLandSpaceMgr WorldLineSpaceMgr SiegeWarSpaceMgr DungeonSpaceMgr MonsterGrp Avatar Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation DuelFlag RebornPos 
 		public virtual void onFrozenAntiChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFrozenEnhChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFullHpChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFullMpChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
-		public virtual void onGameEntityIdChanged(Int64 oldValue) {}	//MonsterGrp Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation 
+		public virtual void onGameEntityIdChanged(Int64 oldValue) {}	//MonsterGrp Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation RebornPos 
 		public virtual void onHitChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onHitRateChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onHostIdChanged(Int32 oldValue) {}	//Summon Creation 
@@ -139,7 +139,7 @@ namespace KBEngine
 		public virtual void onSkillCDChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onSlowAntiChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onSlowEnhChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
-		public virtual void onSpaceNoChanged(UInt32 oldValue) {}	//Space CubeSpaceMgr WonderLandSpaceMgr WorldLineSpaceMgr SiegeWarSpaceMgr DungeonSpaceMgr MonsterGrp Avatar Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation DuelFlag 
+		public virtual void onSpaceNoChanged(UInt32 oldValue) {}	//Space CubeSpaceMgr WonderLandSpaceMgr WorldLineSpaceMgr SiegeWarSpaceMgr DungeonSpaceMgr MonsterGrp Avatar Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation DuelFlag RebornPos 
 		public virtual void onSpeedChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onSpiritChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onStateChanged(Int64 oldValue) {}	//Avatar Monster Summon Npc Creation 

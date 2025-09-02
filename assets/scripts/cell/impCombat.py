@@ -1253,7 +1253,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def onGetEnemyPosInfo(self, box):
         box.onGetEnemyPosInfoResult(self.gbId, True, (self.spaceNo,))
 
-    def addUltraSkillPower(self, addVal):
+    def addUltraSkillPower(self, addVal, context = None):
         if addVal <= 0:
             return
 
@@ -1262,6 +1262,16 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return
 
         ultimatePowerMax = CONST.datas['ultimatePowerMax'].get('value')
+        # 技能那边调过来的，带着上下文数据
+        if context and self.IsAvatar and hasattr(context, 'skillId'):
+            ret, args = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE)
+            if ret:
+                DEBUG_MSG("addUltraSkillPower ", context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE, args)
+                if len(args) != 1:
+                    ERROR_MSG("addUltraSkillPower, wrong args, ", context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE, args)
+                else:
+                    extraAddValue = args[0]
+                    addVal += extraAddValue
         self.ultraSkillPower = min(ultimatePowerMax, self.ultraSkillPower + addVal)
 
     def isUltraSkillPowerMax(self):

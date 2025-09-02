@@ -228,8 +228,8 @@ class AvatarBase(KBEngine.Entity):
     def onInteractStateChange(self, arg0): pass
     def onJunXuArchitectureChanged(self, arg0): pass
     def onKillAvatar(self, arg0): pass
-    def onLeaderBoardAvatarLevel(self, arg0, arg1, arg2): pass
-    def onLeaderBoardAvatarScore(self, arg0, arg1, arg2): pass
+    def onLeaderBoardAvatarLevel(self, arg0, arg1, arg2, arg3, arg4): pass
+    def onLeaderBoardAvatarScore(self, arg0, arg1, arg2, arg3, arg4): pass
     def onLeaveSingleDungeon(self, arg0): pass
     def onLeaveTeam(self): pass
     def onLeftFreeReliveTimesChanged(self, arg0): pass
@@ -324,7 +324,7 @@ class AvatarBase(KBEngine.Entity):
     def onSendRequiredVersion(self, arg0): pass
     def onSendtoRandomLineAndArea(self, arg0, arg1, arg2, arg3, arg4): pass
     def onServerUseSkill(self, arg0): pass
-    def onSetAddSkillCd(self, arg0, arg1, arg2, arg3): pass
+    def onSetAddSkillCd(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
     def onSetAutoInPlace(self, arg0): pass
     def onSetChatCD(self, arg0, arg1): pass
     def onSetChiefDungeonAutoConfirmConfig(self, arg0): pass
@@ -464,6 +464,6 @@ class AvatarBase(KBEngine.Entity):
     def stopOfficialMessage(self, arg0): pass
     def switchBuildChangeSkills(self, arg0): pass
     def syncGuildTaskInfo(self, arg0): pass
-    def syncServerTime(self, arg0): pass
+    def syncServerTime(self, arg0, arg1): pass
     def teleportCastingPreNotify(self, arg0, arg1): pass
     def updateSkillsExtraLevel(self, arg0, arg1, arg2): pass

@@ -1032,46 +1032,46 @@ datas ={
     "TaskType": 9
   },
   "86090048": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090049": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090050": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090053": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090054": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090057": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090058": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090061": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090064": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090067": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090070": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090073": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090076": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86090077": {
-    "TaskType": 0
+    "TaskType": 9
   },
   "86100001": {
     "TaskType": 3

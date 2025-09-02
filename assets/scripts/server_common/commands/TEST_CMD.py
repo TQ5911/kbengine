@@ -18,6 +18,9 @@ import ast
 import time
 import types
 import fightProp_define as FDD
+
+# 判断当前进程类型
+IS_BASE = (KBEngine.component == 'baseapp')
 import skill_skill as SSD
 import uiConfig_uiVisible as UCUVD
 import actionContext
@@ -186,6 +189,96 @@ def delEntBuff(su, player,entid,buffid):
     ent.removeBuff(buffid)
     return su.onCommandResult(0, 'ok,获取实体buff信息成功', {})
     
+@gm_cmd('$getEntScoreinfo', (Player("gbId/Id"),Str('entlist')), RALL, gameconst.CELL, '获取实体战力信息', ALLSIDE, GOD_GROUPS)
+def getEntScoreinfo(su, player,entlist):
+    entscoredic = {}
+    entlist_parsed = ast.literal_eval(entlist)
+    for entid in entlist_parsed:
+        entid_int = int(entid)
+        ent = KBEngine.entities.get(entid_int)
+        if not ent:
+            continue  # 实体不存在，跳过
+        if not hasattr(ent, 'scoresInfo'):
+            continue  # 实体没有scoresInfo属性，跳过
+        try:
+            score_data = {
+                'totalScore': ent.scoresInfo.totalScore,
+                'rewardFightProp': ent.scoresInfo.rewardFightProp,
+                'equipments': ent.scoresInfo.equipments,
+                'level': ent.scoresInfo.level,
+                'mount': ent.scoresInfo.mount,
+                'pet': ent.scoresInfo.pet,
+                'skill': ent.scoresInfo.skill,
+            }
+            for key, value in score_data.items():
+                if hasattr(value, '__dict__'):
+                    score_data[key] = str(value)
+            
+            entscoredic[str(entid_int)] = score_data
+        except Exception as e:
+            continue
+    return su.onCommandResult(0, 'ok', entscoredic)
+
+@gm_cmd('$getEntBodyEquipmentInfo', (Player("gbId/Id"),Int('entid')), RARG(0), gameconst.CELL, '获取实体装备信息', ALLSIDE, GOD_GROUPS)
+def getEntBodyEquipmentInfo(su, player,entid):
+    bodyequipinfo = {}
+    ent = KBEngine.entities.get(entid)
+    if not hasattr(ent, 'bodyEquipData'):
+        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 没有 bodyEquipData 方法', {})
+    for equipType,equipdata in ent.bodyEquipData.equips_map.items():
+        # 为每件装备创建独立的附灵和祝福字典
+        bodyrandomAffixesInfo = {}
+        bodyblessInfo = {}
+
+        for randomAffixesInfo in equipdata.equipAttr.randomAffixes:
+            affixeid = randomAffixesInfo.toAfxClientDic().get('affixId')
+            affixValue = randomAffixesInfo.toAfxClientDic().get('affixVal')
+            affixscore = randomAffixesInfo.getAfxScore()
+            bodyrandomAffixesInfo[affixeid] = {
+                '附灵ID': affixeid,
+                '附灵的值': affixValue,
+                '附灵的战力': affixscore,
+            }
+            
+        for blessInfo in equipdata.equipAttr.blessAffixes:
+            blessId = blessInfo.toAfxClientDic().get('affixId')
+            blessValue = blessInfo.toAfxClientDic().get('affixVal')
+            blessscore = blessInfo.getAfxScore()
+            bodyblessInfo[blessId] = {
+                '祝福ID': blessId,
+                '祝福的值': blessValue,
+                '祝福的战力': blessscore,
+            }
+        if equipdata.getItemName() in bodyequipinfo:
+            bodyequipinfo[equipdata.getItemName()+'2'] = {
+            '装备名字': equipdata.getItemName(),
+            '装备品阶': equipdata.grade(),
+            '装备品质': equipdata.quality,
+            '装备战力': equipdata.getEquipScore(),
+            '装备ID': equipdata.itemId,
+            '装备基础词条':equipdata.getBaseAttrInfo(),
+            '装备的随机基础词条':equipdata.equipAttr.baseAttrsByAfxVal,
+            '装备的强化等级':equipdata.getEnhanceLevel(),
+            '装备的强化属性':equipdata.equipAttr.enhancementAttrs,
+            '装备的附灵属性':bodyrandomAffixesInfo,
+            '装备的祝福属性':bodyblessInfo
+        }
+        else:
+            bodyequipinfo[equipdata.getItemName()] = {
+                '装备名字': equipdata.getItemName(),
+                '装备品阶': equipdata.grade(),
+                '装备品质': equipdata.quality,
+                '装备战力': equipdata.getEquipScore(),
+                '装备ID': equipdata.itemId,
+                '装备基础词条':equipdata.getBaseAttrInfo(),
+                '装备的随机基础词条':equipdata.equipAttr.baseAttrsByAfxVal,
+                '装备的强化等级':equipdata.getEnhanceLevel(),
+                '装备的强化属性':equipdata.equipAttr.enhancementAttrs,
+                '装备的附灵属性':bodyrandomAffixesInfo,
+                '装备的祝福属性':bodyblessInfo
+            }
+    return su.onCommandResult(0, 'ok', bodyequipinfo)
+
     
 
 @gm_cmd('$unlockAllFunc', (Player("gbId/Id"),), RARG(0), BASE, '解锁所有功能', ALLSIDE, GOD_GROUPS)
@@ -234,71 +327,44 @@ def statDropByDunNo(su, playerStub, dunNo, count):
         su.onCommandResult(0, 'wait', {'msg': content, 'process_info': process_info})
 
 
-@gm_cmd('$refreshData', (Str('moduleName'),), RONE, BASE, '刷新表格数据', ALLSIDE, GOD_GROUPS, minArgs=0)
+@gm_cmd('$refreshData', (Str('moduleName'),), RALL, ALL, '刷新表格数据', ALLSIDE, GOD_GROUPS, minArgs=0)
 def refreshData(su, moduleName=None):
-    """刷新表格数据，转发到所有进程"""
-    # 转发到所有BaseApp和CellApp进程执行
-    if moduleName:
-        forwardCommand(su, '$refreshDataBase', moduleName)
-        forwardCommand(su, '$refreshDataCell', moduleName)
-        return su.onCommandResult(0, f'已转发刷新 {moduleName} 数据到所有进程', {})
-    else:
-        forwardCommand(su, '$refreshDataBase', '')
-        forwardCommand(su, '$refreshDataCell', '')
-        return su.onCommandResult(0, '已转发刷新所有数据到所有进程', {})
-
-@gm_cmd('$refreshDataBase', (Str('moduleName'),), RALL, BASE, '在BaseApp进程中刷新表格数据', ALLSIDE, GOD_GROUPS)
-def refreshDataBase(su, moduleName):
-    """在BaseApp进程中刷新数据"""
+    """刷新表格数据，在所有进程中执行"""
+    
+    # 确定当前进程类型
+    process_type = 'BaseApp' if IS_BASE else 'CellApp'
+    
     try:
         import gamerefresh
         if moduleName and moduleName.strip():
             gamerefresh.refreshData(moduleName)
-            print(f'BaseApp进程 {KBEngine.getComponentGroupOrder()} 刷新 {moduleName} 数据成功')
-            return True, f'BaseApp进程刷新 {moduleName} 数据成功'
+            return su.onCommandResult(0, f'{process_type}进程刷新 {moduleName} 数据成功', {})
         else:
             gamerefresh.refreshData()
-            print(f'BaseApp进程 {KBEngine.getComponentGroupOrder()} 刷新所有数据成功')
-            return True, 'BaseApp进程刷新所有数据成功'
+            return su.onCommandResult(0, f'{process_type}进程刷新所有数据成功', {})
     except Exception as e:
-        print(f'BaseApp进程刷新数据失败: {e}')
-        return False, f'BaseApp进程刷新数据失败: {e}'
+        return su.onCommandResult(1, f'{process_type}进程刷新数据失败: {str(e)}', {})
 
-@gm_cmd('$refreshDataCell', (Str('moduleName'),), RALL, CELL, '在CellApp进程中刷新表格数据', ALLSIDE, GOD_GROUPS)
-def refreshDataCell(su, moduleName):
-    """在CellApp进程中刷新数据"""
-    try:
-        import gamerefresh
-        if moduleName and moduleName.strip():
-            gamerefresh.refreshData(moduleName)
-            print(f'CellApp进程 {KBEngine.getComponentGroupOrder()} 刷新 {moduleName} 数据成功')
-            return True, f'CellApp进程刷新 {moduleName} 数据成功'
-        else:
-            gamerefresh.refreshData()
-            print(f'CellApp进程 {KBEngine.getComponentGroupOrder()} 刷新所有数据成功')
-            return True, 'CellApp进程刷新所有数据成功'
-    except Exception as e:
-        print(f'CellApp进程刷新数据失败: {e}')
-        return False, f'CellApp进程刷新数据失败: {e}'
 
-@gm_cmd('$setMemoryData', (Str('moduleName'), Str('key'), Str('attrName'), Str('value')), RONE, BASE, '修改内存数据(支持普通值和函数)', ALLSIDE, GOD_GROUPS)
+
+@gm_cmd('$setMemoryData', (Str('moduleName'), Str('key'), Str('attrName'), Str('value')), RALL, ALL, '修改内存数据(支持普通值和函数)', ALLSIDE, GOD_GROUPS)
 def setMemoryData(su, moduleName, key, attrName, value):
-    """修改内存数据，支持普通字段和函数表达式，转发到所有进程"""
+    """修改内存数据，支持普通字段和函数表达式，在所有进程中执行"""
     
-    # 转发到所有BaseApp和CellApp进程执行
-    forwardCommand(su, '$setMemoryDataBase', moduleName, key, attrName, value)
-    forwardCommand(su, '$setMemoryDataCell', moduleName, key, attrName, value)
+    # 确定当前进程类型
+    process_type = 'BaseApp' if IS_BASE else 'CellApp'
     
-    return su.onCommandResult(0, f'已转发修改 {moduleName}[{key}].{attrName} 到所有进程', {})
+    # 直接在当前进程中执行修改
+    return _setMemoryDataInProcess(su, moduleName, key, attrName, value, process_type)
 
-def _setMemoryDataInProcess(moduleName, key, attrName, value, processType):
+def _setMemoryDataInProcess(su, moduleName, key, attrName, value, processType):
     """在指定进程中修改内存数据的公共逻辑"""
     try:
         # 导入模块
         mod = importlib.import_module(moduleName)
         datas = getattr(mod, 'datas', None)
         if datas is None:
-            return False, f'{processType}进程: 模块 {moduleName} 没有 datas 属性'
+            return su.onCommandResult(1, f'{processType}进程: 模块 {moduleName} 没有 datas 属性', {})
         # 处理key类型
         if key.isdigit():
             key_cast = int(key)
@@ -306,7 +372,7 @@ def _setMemoryDataInProcess(moduleName, key, attrName, value, processType):
             key_cast = key
             
         if key_cast not in datas:
-            return False, f'{processType}进程: key {key} 不在 {moduleName}.datas 中'
+            return su.onCommandResult(1, f'{processType}进程: key {key} 不在 {moduleName}.datas 中', {})
         # 获取目标数据对象
         target_data = datas[key_cast]
         # 判断value类型并处理
@@ -326,13 +392,13 @@ def _setMemoryDataInProcess(moduleName, key, attrName, value, processType):
                         break
                 
                 if not funcName:
-                    return False, f'{processType}进程: 未找到函数定义'
+                    return su.onCommandResult(1, f'{processType}进程: 未找到函数定义', {})
                 
                 # 在原模块的全局命名空间中编译函数，保留所有导入的模块
                 exec(decoded_code, mod.__dict__)
                 
                 if funcName not in mod.__dict__:
-                    return False, f'{processType}进程: 函数{funcName}编译失败'
+                    return su.onCommandResult(1, f'{processType}进程: 函数{funcName}编译失败', {})
                 # 获取编译好的函数对象
                 new_func = mod.__dict__[funcName]
                 # 添加源码属性，用于getEntSkillDic获取源码
@@ -375,10 +441,10 @@ def _setMemoryDataInProcess(moduleName, key, attrName, value, processType):
                     except Exception as e:
                         pass  # 忽略清除缓存失败
                 
-                return True, f'{processType}进程直接内存替换函数{funcName}成功'
+                return su.onCommandResult(0, f'{processType}进程直接内存替换函数{funcName}成功', {})
                 
             except Exception as e:
-                return False, f'{processType}进程: 直接内存替换失败: {str(e)}'
+                return su.onCommandResult(1, f'{processType}进程: 直接内存替换失败: {str(e)}', {})
         
         else:
             # 普通值，尝试eval转换类型
@@ -395,23 +461,15 @@ def _setMemoryDataInProcess(moduleName, key, attrName, value, processType):
                 else:
                     target_data[attrName] = parsed_value
                     
-                return True, f'{processType}进程修改普通值成功'
+                return su.onCommandResult(0, f'{processType}进程修改普通值成功', {})
                 
             except Exception as e:
-                return False, f'{processType}进程: 值设置失败: {str(e)}'
+                return su.onCommandResult(1, f'{processType}进程: 值设置失败: {str(e)}', {})
                 
     except Exception as e:
-        return False, f'{processType}进程修改失败: {str(e)}'
+        return su.onCommandResult(1, f'{processType}进程修改失败: {str(e)}', {})
 
-@gm_cmd('$setMemoryDataBase', (Str('moduleName'), Str('key'), Str('attrName'), Str('value')), RALL, BASE, '在BaseApp进程中修改内存数据', ALLSIDE, GOD_GROUPS)
-def setMemoryDataBase(su, moduleName, key, attrName, value):
-    """在BaseApp进程中修改内存数据"""
-    return _setMemoryDataInProcess(moduleName, key, attrName, value, 'BaseApp')
 
-@gm_cmd('$setMemoryDataCell', (Str('moduleName'), Str('key'), Str('attrName'), Str('value')), RALL, CELL, '在CellApp进程中修改内存数据', ALLSIDE, GOD_GROUPS)
-def setMemoryDataCell(su, moduleName, key, attrName, value):
-    """在CellApp进程中修改内存数据"""
-    return _setMemoryDataInProcess(moduleName, key, attrName, value, 'CellApp')
 
 @gm_cmd('$reqWorkshopSetAutoMF', (Player("gbId/Id"), Int('autoMF')), RARG(0), gameconst.BASE, '测试开启自动合成制作', ALLSIDE, GOD_GROUPS)
 def reqWorkshopSetAutoMF(su, player, autoMF):

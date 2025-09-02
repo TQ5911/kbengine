@@ -730,5 +730,9 @@ datas = _tools.RODict({
     "bloodTransientTime": _tools.RODict({
         "ID": "bloodTransientTime",
         "value": 5000,
+    }),
+    "bloodInvincible": _tools.RODict({
+        "ID": "bloodInvincible",
+        "value": 64000070,
     })
 })

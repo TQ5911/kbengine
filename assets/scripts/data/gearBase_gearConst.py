@@ -205,7 +205,7 @@ datas = _tools.RODict({
     }),
     "pickListNumText": _tools.RODict({
         "ID": "pickListNumText",
-        "value": "拾取记录：{0}/{1}",
+        "value": "拾取记录  ({0}/{1})",
     }),
     "equipGrowingForbidden": _tools.RODict({
         "ID": "equipGrowingForbidden",

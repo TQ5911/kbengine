@@ -230,5 +230,13 @@ datas = _tools.RODict({
     "storageExpandCheckMsg": _tools.RODict({
         "ID": "storageExpandCheckMsg",
         "value": 54200006,
+    }),
+    "recommendScoreText": _tools.RODict({
+        "ID": "recommendScoreText",
+        "value": "推荐战力{0}",
+    }),
+    "recommendLvText": _tools.RODict({
+        "ID": "recommendLvText",
+        "value": "推荐等级{0}",
     })
 })

@@ -677,7 +677,7 @@ class AuxFunc(object):
         targetRadius = 0
         if target.IsMonster:
             targetRadius = target.getConfigData().get('attackDistanceCompensation', 0)
-        skillRange = skill.getRange(skill.skillId) + targetRadius
+        skillRange = skill.getRange(owner, skill.skillId) + targetRadius
         rng_ = math.pow(skillRange, 2)
         if dis_ > rng_ and not skill.getTarget(skill.skillId) == 'None':
             if self.machine.moveable:
@@ -834,7 +834,7 @@ class AuxFunc(object):
             maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTarget()
         else:
             _skill = self.owner.getSkill(self.skillId)
-            _range = _skill.getRange(_skill.skillId)
+            _range = _skill.getRange(owner, _skill.skillId)
             maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTargetByRange(_range)
 
         currentTargetHate = self.hateDict.getHate(owner.selectedTargetId)
@@ -1082,6 +1082,7 @@ class HateCtrl(object):
         isFirstHate = self.hateDict.isEmpty()
         targetLevel = target.level
         isInList = self.hateDict.isInHateList(targetId)
+        fromSync = kwargs.pop('fromSync', False)
 
         if isInList:
             if target.IsPet or target.IsAvatarMirror or target.IsSummon:
@@ -1106,7 +1107,7 @@ class HateCtrl(object):
                     self.hateDict.addToHateListByAttack(targetId, damage)
 
 
-        if self.isGroupMonster() and not kwargs.get('fromSync', False):
+        if self.isGroupMonster() and not fromSync:
             kwargs['fromSync'] = True
             self.syncIncreaseHateInGroup(targetId, damage=damage,
                                          isVisionTrigger=isVisionTrigger,

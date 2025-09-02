@@ -12,6 +12,7 @@
             <Arg>       UINT8                               </Arg>
             <Arg>       LEADER_BOARD_IDX                    </Arg>
             <Arg>       SCHOOL                              </Arg>
+            <Arg>       LEADER_BOARD_PAGE                              </Arg>
         </getLeaderBoardList>
 
         <onLeaderBoardRank>
@@ -35,12 +36,16 @@
             <Arg>       LEADER_BOARD_IDX                    </Arg>
             <Arg>       ARRAY   <of>        LEADER_BOARD_AVATAR_CACHE_DATA_INFO     </of>   </Arg>
             <Arg>       SCHOOL                              </Arg>
+            <Arg>       LEADER_BOARD_PAGE                              </Arg>
+            <Arg>       BOOL                                </Arg>
         </onLeaderBoardAvatarLevel>
 
         <onLeaderBoardAvatarScore>
             <Arg>       LEADER_BOARD_IDX                    </Arg>
             <Arg>       ARRAY   <of>        LEADER_BOARD_AVATAR_SCORE_DATA_INFO     </of>   </Arg>
             <Arg>       SCHOOL                              </Arg>
+            <Arg>       LEADER_BOARD_PAGE                              </Arg>
+            <Arg>       BOOL                                </Arg>
         </onLeaderBoardAvatarScore>
     </ClientMethods>
 </root>

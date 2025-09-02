@@ -3140,6 +3140,13 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList):
             params.update({
                 'creationId': _creationId,
             })
+        elif className in ('RebornPos'):
+            className = 'RebornPos'
+            _RebornPosId = _mPrm['ID']
+            params.update({
+                'name': _mPrm['DisplayName'],
+                'rebornPosId': _RebornPosId,
+            })
 
 
         needCreateBase = 0
@@ -3174,3 +3181,11 @@ def getCollisionDistance(creepBaseId, default=0):
 def getMarkLimit():
     limitConf = CCT.datas['teamMarkLimit']['value']
     return gameconst.MARK_OTHER_MAX_NUM if limitConf < gameconst.MARK_OTHER_MAX_NUM else limitConf
+
+
+def getTimeZoneOffset():
+    now = datetime.datetime.now().astimezone()
+    offset = now.utcoffset()
+    return offset.total_seconds() /3600
+
+

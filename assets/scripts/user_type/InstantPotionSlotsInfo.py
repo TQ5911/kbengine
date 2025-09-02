@@ -36,16 +36,10 @@ class InstantPotionSlotsVal(userType.UserSoleType):
             if not potion.isAuto():
                 continue
 
-            if potion.isBind():
-                bindType = gameconst.ItemBindType.BIND
-            else:
-                bindType = gameconst.ItemBindType.NORMAL
-
             avatar.useItemWithActionInternal(
                 gameconst.BagType.BAG_TYPE_NORMAL,
                 potion.itemId,
                 avatar.id,
-                bindType
             )
 
     def updateSlot(self, avatar, potion):

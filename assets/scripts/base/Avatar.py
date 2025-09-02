@@ -213,7 +213,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.kickState = gameconst.KickAvatar.none
         isCreating = self.getTempMiscProp(gameconst.AvatarProps.isCreatingAvatar, False)
 
-        self.client.syncServerTime(int(time.time() * 1000))
+        self.client.syncServerTime(int(time.time() * 1000), utils.getTimeZoneOffset())
 
         if gameconfig.enableCentralLogin():
             self.accountEntity.notifyLoginComplete()
@@ -481,7 +481,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
         elif userArg == gametimer.AVATAR_SYNC_SERVER_TIME:
-            self.client and self.client.syncServerTime(int(time.time() * 1000))
+            self.client and self.client.syncServerTime(int(time.time() * 1000), utils.getTimeZoneOffset())
         elif userArg == gametimer.AVATAR_PROPERTY_CHECK:
             checkUserType.checkProperty(self)
         elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:

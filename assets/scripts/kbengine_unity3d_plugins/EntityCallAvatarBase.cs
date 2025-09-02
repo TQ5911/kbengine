@@ -526,7 +526,7 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void getLeaderBoardList(Byte arg1, UInt16 arg2, UInt16 arg3)
+		public void getLeaderBoardList(Byte arg1, UInt16 arg2, UInt16 arg3, Byte arg4)
 		{
 			Bundle pBundle = newCall("getLeaderBoardList", 0);
 			if(pBundle == null)
@@ -535,6 +535,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint16(arg2);
 			bundle.writeUint16(arg3);
+			bundle.writeUint8(arg4);
 			sendCall(null);
 		}
 

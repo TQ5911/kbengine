@@ -17,16 +17,10 @@ class InstantPotionVal(userType.UserSoleType):
         if self.itemId != other.itemId:
             return False
 
-        if utils.hasBit(self.potionState, gameconst.PotionState.BIND) != utils.hasBit(other.potionState, gameconst.PotionState.BIND):
-            return False
-
         return True
 
     def isAuto(self):
         return utils.hasBit(self.potionState, gameconst.PotionState.AUTO)
-
-    def isBind(self):
-        return utils.hasBit(self.potionState, gameconst.PotionState.BIND)
 
     def isHp(self):
         itemData = ID_IDD.datas.get(self.itemId)

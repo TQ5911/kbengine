@@ -3168,16 +3168,19 @@ datas ={
     "Name": "\u86c7\u6cd56",
     "PosX": 437.0688,
     "PosY": 142.2101,
-    "PosZ": 544.246948,
+    "PosZ": 544.2469,
     "Props": {
       "GroupID": "",
       "Level": 30.0,
       "MapEntityScale": 0,
       "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
       "Radius": 7.0,
       "RefreshNum": 2,
       "RefreshTime": 20.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowMonsterGroupID": ""
     }
   },
   "11200166": {
@@ -5017,6 +5020,72 @@ datas ={
     "PosZ": 251.0635,
     "Props": {
       "IsOpen": 1,
+      "MapEntityType": "11",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "Remark": ""
+    }
+  },
+  "11204003": {
+    "ActivityID": 0,
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 191.9895,
+    "DisplayName": "",
+    "EntityID": 18000634,
+    "ID": 11204003,
+    "Name": "\u5f20\u8def\u4e66",
+    "PosX": 237.2914,
+    "PosY": 169.0074,
+    "PosZ": 338.2986,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": "11",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "Remark": ""
+    }
+  },
+  "11204004": {
+    "ActivityID": 0,
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 35.70857,
+    "DisplayName": "",
+    "EntityID": 18000637,
+    "ID": 11204004,
+    "Name": "\u674e\u5927\u5343",
+    "PosX": 543.053,
+    "PosY": 130.6797,
+    "PosZ": 270.2421,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": "11",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "Remark": ""
+    }
+  },
+  "11204005": {
+    "ActivityID": 0,
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 141.1684,
+    "DisplayName": "",
+    "EntityID": 18000628,
+    "ID": 11204005,
+    "Name": "\u6807\u8bb0\u7528\u7279\u6b8a\u4efb\u52a1\u5730\u70b9",
+    "PosX": 543.053,
+    "PosY": 130.6797,
+    "PosZ": 270.2421,
+    "Props": {
+      "IsOpen": 1,
       "MapEntityType": 0,
       "Radius": 0.0,
       "RefreshNum": 1,
@@ -5973,6 +6042,48 @@ datas ={
     "PosX": 243.1211,
     "PosY": 168.9881,
     "PosZ": 338.6116,
+    "Props": {
+      "IsOpen": 1,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "Remark": ""
+    }
+  },
+  "11208057": {
+    "ActivityID": 0,
+    "ClassName": "Collection",
+    "ClassNameType": 3,
+    "CustomID": "",
+    "Dir": 193.2245,
+    "DisplayName": "",
+    "EntityID": 16000084,
+    "ID": 11208057,
+    "Name": "\u795e\u79d8\u5730\u70b91",
+    "PosX": 499.3189,
+    "PosY": 145.2663,
+    "PosZ": 455.0546,
+    "Props": {
+      "IsOpen": 1,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "Remark": ""
+    }
+  },
+  "11208058": {
+    "ActivityID": 0,
+    "ClassName": "Collection",
+    "ClassNameType": 3,
+    "CustomID": "",
+    "Dir": 114.2038,
+    "DisplayName": "",
+    "EntityID": 16000082,
+    "ID": 11208058,
+    "Name": "\u795e\u79d8\u77ff\u77f3",
+    "PosX": 499.0383,
+    "PosY": 145.2782,
+    "PosZ": 455.1419,
     "Props": {
       "IsOpen": 1,
       "Radius": 0.0,

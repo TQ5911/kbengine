@@ -244,7 +244,7 @@ COPIED_SPACE_NO_START = 1 * SPACE_NO_INTERVAL
 class SpaceSubType(metaclass=UniqueIntEnum):
     World = 1
     Yanwu = 2 # 演武场
-    Boss = 3 # 大世界boss场景
+    Boss = 5 # 大世界boss场景
 
 
 class SpaceType(metaclass=UniqueIntEnum):
@@ -2217,6 +2217,10 @@ class DungeonFlowEventName(object):
 
     createRandomAppearanceNPC = 'createRandomAppearanceNPC'     # 幻化探险/创建随机外观NPC
 
+    createRebornPos = 'createRebornPos'     # 创建出生点
+    removeRebornPos = 'removeRebornPos'     # 回收出生点
+
+
 class DungeonFlowPlayerChooseType(object):
     UNKNOWN = 0
     MONSTER_CURRENT_TARGET = 1
@@ -2541,6 +2545,7 @@ class DissolveGuildReason(object):
 
 
 LEADER_BOARD_UPDATE_INTERVAL = 60 * 20
+LEADER_BOARD_PAGE_SIZE = 10
 
 
 GUILD_APPLY_CTX_CHECK_TIME_OUT = 60
@@ -3127,9 +3132,56 @@ ANCHOR_CAST_DUR = 1
 
 # 铭文效果类型
 class InscriptionEffectType(metaclass=UniqueIntEnum):
+    # 最终伤害提升百分比
+    DAMAGE_INCREASE_RATIO = 1
+    # 最终伤害提升值
+    DAMAGE_INCREASE_VALUE = 2
+    # 技能倍率提升
+    SKILL_DAMAGE_INCREASE_RATIO = 3
+    # 技能命中率
+    SKILL_HIT_INCREASE_RATIO = 4
+    # 技能暴击提升概率
+    SKILL_CRITIAL_HIT_INCREASE_RATIO = 5
+    # 技能暴击伤害提升概率
+    SKILL_CRITIAL_DAMAGE_INCREASE_RATIO = 6
+    # 护盾值提升
+    SHIELD_INCREASE_VALUE = 7
+    # 护盾值提升百分比
+    SHIELD_INCREASE_RATIO = 8
+    # 技能等级提升值
+    SKILL_LEVEL_INCREASE_VALUE = 9
+    # 技能充能提升值
+    SKILL_CHARGE_INCREASE_VALUE = 10
+    # 蓝耗减少值
+    MANA_DECREASE_VALUE = 11
+    # 附带效果
+    ATTACH_EFFECT= 12
+    # 附加buff/debuff
+    ADD_EFFECT = 13
+    # buff时间延长
+    EFFECT_TIME_ADD_VALUE = 14
+    # 增加攻击目标数
+    ATTACK_TARGET_ADD_VALUE = 15
+    # 冷却缩减
+    MODIFY_CD = 16
+    # 概率刷新CD
+    REFRESH_CD = 17
+    # 增加伤害次数
+    DAMAGE_HIT_ADD_VALUE = 18
+    # 创生物次数增加（频率改变）
+    CREATION_ADD_PHASE_WITH_FREQUENCY = 19
+    # 创生物次数增加（持续时间改变）
+    CREATION_ADD_PHASE_WITH_LAST_TIME = 20
+    # 提升释放距离
+    SKILL_RELEASE_DISTANCE_ADD_VALUE = 21
+    # 提升技能范围
+    SKILL_RELEASE_RANGE_ADD_VALUE = 22
+    # 血量条件触发
+    BLOOD_TRIGGER_RATIO = 23
     # 替换技能
-    REPLACE_SKILL = 15
-
+    REPLACE_SKILL = 24
+    # 技能释放次数提升值
+    SKILL_RELEASE_ADD_COUNT= 25
 
 BOUNTY_TASK_UI_ID = 28
 

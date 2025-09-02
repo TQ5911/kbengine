@@ -549,7 +549,7 @@ class ImpAutoCombat(object):
     def _getCombatTarget(self, skill):
         target = None
         targetType = skill.getTarget(skill.skillId)
-        skillRange = skill.getRange(skill.skillId)
+        skillRange = skill.getRange(self, skill.skillId)
         if targetType == 'Enemy':
             target = self.getNearestEnemy()
         elif targetType == 'Self':
@@ -623,7 +623,6 @@ class ImpAutoCombat(object):
 
     def getTeamTargets(self):
         _targets = []
-        _entInViews = self.entitiesInView(True)
         for playerGBID, playerBaseVal in self.teamInfo.teamPlayerDic.items():
             if playerGBID == self.gbId or not playerBaseVal.playerBox:
                 continue
@@ -636,10 +635,7 @@ class ImpAutoCombat(object):
             if not _target:
                 continue
 
-            if _target not in _entInViews:
-                continue
-
-            _targets.append(_target)
+            _targets.append(_target.id)
 
         return _targets
 
@@ -691,28 +687,6 @@ class ImpAutoCombat(object):
 
         return False
 
-
-    def _filterByTeamTargets(self, targets):
-        if not self.getCommonFlagCell(gameconst.AvatarFlagCell.TEAM_SHARE_TARGET):
-            return targets
-
-        if not self.isInTeam():
-            return targets
-
-        _teamTargets = self.getTeamTargets()
-        if not _teamTargets:
-            return targets
-
-        _filteredTargets = []
-        for _target in targets:
-            if _target in _teamTargets:
-                _filteredTargets.append(_target)
-
-        if not _filteredTargets:
-            return targets
-
-        return _filteredTargets
-
     def getNearestEnemy(self):
         # 反击模式中只能攻击反击目标
         target = None
@@ -733,16 +707,6 @@ class ImpAutoCombat(object):
         # 攻击PVP玩家(这个先不做了，太耗了)
         # 攻击仇恨目标
         _hateRecord = self.getTempMiscProp(gameconst.AvatarProps.hateRecord, {})
-        if not target and _hateRecord:
-            _minTS = math.inf
-            for _eid, _ts in _hateRecord.items():
-                _e = KBEngine.entities.get(_eid)
-                if not _e:
-                    continue
-
-                if _minTS > _ts:
-                    target = _e
-                    _minTS = _ts
 
         if not target or target.spaceNo != self.spaceNo or not target.IsCombatUnit\
                 or sMath.distance2D(target.position, self.position) > CONST.datas['autoFightRange']['value'] \
@@ -752,14 +716,15 @@ class ImpAutoCombat(object):
             #反击
             #正在打得目标
             #玩家锁定目标
-            #预选中
-            #PVP其他玩家
             #仇恨目标
             #任务目标(priorityTargetEnemyId)
             #同伴选择
             #就近
             targetsList = []
             entityIds = self.getTargetIdsByTargetType('Enemy')
+            priorityTargetEnemyId = self.autoCombatInfo.get('priorityTargetEnemyId', None)
+            _teamTargetIds = self.getTeamTargets()
+            _maxVal = None
             for eId in entityIds:
                 entity = KBEngine.entities.get(eId)
                 if not entity:
@@ -770,34 +735,31 @@ class ImpAutoCombat(object):
                     continue
                 if entity.IsCombatUnit and utils.checkCachedTargetType('Enemy', self, entity):
                     targetsList.append(entity)
+                    _val = (
+                        # 1.仇恨目标
+                        _hateRecord.get(eId, 0),
+                        # 2.任务目标
+                        1 if entity.IsMonster and entity.monsterId == priorityTargetEnemyId else 0,
+                        # 3.队伍目标
+                        1 if eId in _teamTargetIds else 0,
+                        # 4.距离
+                        -sMath.distance2DToCompareFrom3DPosition(self.position, entity.position)
+                    )
 
-            # 优先攻击任务目标(priorityTargetEnemyId)
-            priorityTargetEnemyId = self.autoCombatInfo.get('priorityTargetEnemyId', None)
-            if priorityTargetEnemyId:
-                priorityTargetsList = [entity for entity in targetsList if entity.IsMonster and entity.monsterId == priorityTargetEnemyId]
-                target = sMath.getNearestEntity(self.position, priorityTargetsList)
-                if target:
-                    self.autoCombatInfo['targetEnemyId'] = target.id
-                    return target
+                    if _maxVal is None:
+                        _maxVal = _val
+                        target = entity
 
-            # 优先攻击队友的目标
-            targetsList = self._filterByTeamTargets(targetsList)
-            target = sMath.getNearestEntity(self.position, targetsList)
+                    elif _maxVal < _val:
+                        _maxVal = _val
+                        target = entity
+
             if not target:
                 self.autoCombatInfo['targetEnemyId'] = 0
             else:
                 self.autoCombatInfo['targetEnemyId'] = target.id
+                return target
 
-        if not self.autoCombatInfo['targetEnemyId'] and self.isInTeam(self.gbId) and not self.isCaptain():
-            captainBox = self.teamInfo.getCaptainBox()
-            if captainBox:
-                captain = KBEngine.entities.get(captainBox.id, None)
-                if captain and captain.autoCombatInfo['targetEnemyId']:
-                    targetId = captain.autoCombatInfo['targetEnemyId']
-                    target = KBEngine.entities.get(targetId)
-                    DEBUG_MSG("autoCombat set enemy", targetId)
-                    if target:
-                        self.autoCombatInfo['targetEnemyId'] = targetId
         return target
 
     def getRandomTarget(self, skillRange, targetType):
@@ -835,7 +797,7 @@ class ImpAutoCombat(object):
                 continue
             if skill.inCDTime():
                 continue
-            if self.mp < skill.getCostMp(skill.skillId, self.mpCostRatio):
+            if self.mp < skill.getCostMp(self, skill.skillId, self.mpCostRatio):
                 continue
             if skill.hasTag(gameconst.SkillTag.FightStateSkill) and not self.hasState(gameconst.State.Fighting):
                 continue
@@ -956,7 +918,7 @@ class ImpAutoCombat(object):
         targetRadius = 0
         if target.IsMonster:
             targetRadius = target.getConfigData().get('attackDistanceCompensation', 0)
-        skillRange = skill.getRange(skill.skillId) + targetRadius
+        skillRange = skill.getRange(self, skill.skillId) + targetRadius
         if skillRange and sMath.distance2DToCompareFrom3DPosition(self.position, target.position) > math.pow(skillRange, 2):
             return False
         return True
@@ -965,7 +927,7 @@ class ImpAutoCombat(object):
         if not skill:
             return None
         dstPos = None
-        skillRange = skill.getRange(skill.skillId)
+        skillRange = skill.getRange(self, skill.skillId)
         mDis = max(0.2, int(skillRange * 0.9))
         return target.position, mDis
 

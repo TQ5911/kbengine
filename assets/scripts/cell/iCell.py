@@ -28,6 +28,8 @@ class ICell(KBEngine.Entity):
     IsPlunderPet = False
     IsSoulCardPillar = False
     IsDuelFlag = False
+    IsBornPos = False
+
 
     def isDestroying(self):
         return self.delayDestroyTimerID > 0
@@ -322,6 +324,16 @@ class ICell(KBEngine.Entity):
 
     def setBaseGlobalIdx(self, idx):
         self.baseGlobalIdx = idx
+
+    def dunData(self):
+        _mapId = formula.getMapId(self.spaceNo)
+        _dunData = utils.getDunModuleData(_mapId)
+        if not _dunData:
+            return None
+
+        gid, gct = utils.splitGameEntityId(self.gameEntityId)
+        gid = str(gid)
+        return _dunData.get(gid, None)
 
     def batchlyCall(self, iterableCall, batchNum, interval=0.5, callback=None):
         it = iter(iterableCall)

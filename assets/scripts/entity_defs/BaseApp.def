@@ -211,5 +211,15 @@
             <Arg>         UNICODE       </Arg>
             <Arg>         UINT32        </Arg>
         </recordOfflinePlayerMailLog>
+
+        <replyHttpCommand>
+            <Arg>       MAILBOX     </Arg>
+            <Arg>       STRING      </Arg>
+            <Arg>       STRING      </Arg>
+            <Arg>       INT32       </Arg>
+            <Arg>       UNICODE     </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       STRING      </Arg>
+        </replyHttpCommand>
     </BaseMethods>
 </root>

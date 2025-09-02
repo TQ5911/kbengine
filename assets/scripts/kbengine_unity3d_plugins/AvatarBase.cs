@@ -497,8 +497,8 @@ namespace KBEngine
 		public virtual void onInteractStateChange(UInt32 arg1) {} 
 		public virtual void onJunXuArchitectureChanged(JUN_XU_ARCHITECTURE_DATA_INFO arg1) {} 
 		public virtual void onKillAvatar(string arg1) {} 
-		public virtual void onLeaderBoardAvatarLevel(UInt16 arg1, List<LEADER_BOARD_AVATAR_CACHE_DATA_INFO> arg2, UInt16 arg3) {} 
-		public virtual void onLeaderBoardAvatarScore(UInt16 arg1, List<LEADER_BOARD_AVATAR_SCORE_DATA_INFO> arg2, UInt16 arg3) {} 
+		public virtual void onLeaderBoardAvatarLevel(UInt16 arg1, List<LEADER_BOARD_AVATAR_CACHE_DATA_INFO> arg2, UInt16 arg3, Byte arg4, Byte arg5) {} 
+		public virtual void onLeaderBoardAvatarScore(UInt16 arg1, List<LEADER_BOARD_AVATAR_SCORE_DATA_INFO> arg2, UInt16 arg3, Byte arg4, Byte arg5) {} 
 		public virtual void onLeaveSingleDungeon(UInt32 arg1) {} 
 		public virtual void onLeaveTeam() {} 
 		public virtual void onLeftFreeReliveTimesChanged(Byte arg1) {} 
@@ -709,7 +709,7 @@ namespace KBEngine
 		public virtual void stopOfficialMessage(UInt64 arg1) {} 
 		public virtual void switchBuildChangeSkills(byte[] arg1) {} 
 		public virtual void syncGuildTaskInfo(List<GUILD_ONETASK_INFO> arg1) {} 
-		public virtual void syncServerTime(Int64 arg1) {} 
+		public virtual void syncServerTime(Int64 arg1, float arg2) {} 
 		public virtual void teleportCastingPreNotify(UInt32 arg1, Vector3 arg2) {} 
 		public virtual void updateSkillsExtraLevel(Byte arg1, List<UInt32> arg2, List<Byte> arg3) {} 
 
@@ -1896,13 +1896,17 @@ namespace KBEngine
 					UInt16 onLeaderBoardAvatarLevel_arg1 = stream.readUint16();
 					List<LEADER_BOARD_AVATAR_CACHE_DATA_INFO> onLeaderBoardAvatarLevel_arg2 = ((DATATYPE_AnonymousArray_10077)method.args[1]).createFromStreamEx(stream);
 					UInt16 onLeaderBoardAvatarLevel_arg3 = stream.readUint16();
-					onLeaderBoardAvatarLevel(onLeaderBoardAvatarLevel_arg1, onLeaderBoardAvatarLevel_arg2, onLeaderBoardAvatarLevel_arg3);
+					Byte onLeaderBoardAvatarLevel_arg4 = stream.readUint8();
+					Byte onLeaderBoardAvatarLevel_arg5 = stream.readUint8();
+					onLeaderBoardAvatarLevel(onLeaderBoardAvatarLevel_arg1, onLeaderBoardAvatarLevel_arg2, onLeaderBoardAvatarLevel_arg3, onLeaderBoardAvatarLevel_arg4, onLeaderBoardAvatarLevel_arg5);
 					break;
 				case 808:
 					UInt16 onLeaderBoardAvatarScore_arg1 = stream.readUint16();
 					List<LEADER_BOARD_AVATAR_SCORE_DATA_INFO> onLeaderBoardAvatarScore_arg2 = ((DATATYPE_AnonymousArray_10078)method.args[1]).createFromStreamEx(stream);
 					UInt16 onLeaderBoardAvatarScore_arg3 = stream.readUint16();
-					onLeaderBoardAvatarScore(onLeaderBoardAvatarScore_arg1, onLeaderBoardAvatarScore_arg2, onLeaderBoardAvatarScore_arg3);
+					Byte onLeaderBoardAvatarScore_arg4 = stream.readUint8();
+					Byte onLeaderBoardAvatarScore_arg5 = stream.readUint8();
+					onLeaderBoardAvatarScore(onLeaderBoardAvatarScore_arg1, onLeaderBoardAvatarScore_arg2, onLeaderBoardAvatarScore_arg3, onLeaderBoardAvatarScore_arg4, onLeaderBoardAvatarScore_arg5);
 					break;
 				case 505:
 					UInt32 onLeaveSingleDungeon_arg1 = stream.readUint32();
@@ -2343,7 +2347,10 @@ namespace KBEngine
 					float onSetAddSkillCd_arg2 = stream.readFloat();
 					double onSetAddSkillCd_arg3 = stream.readDouble();
 					Byte onSetAddSkillCd_arg4 = stream.readUint8();
-					onSetAddSkillCd(onSetAddSkillCd_arg1, onSetAddSkillCd_arg2, onSetAddSkillCd_arg3, onSetAddSkillCd_arg4);
+					double onSetAddSkillCd_arg5 = stream.readDouble();
+					SByte onSetAddSkillCd_arg6 = stream.readInt8();
+					SByte onSetAddSkillCd_arg7 = stream.readInt8();
+					onSetAddSkillCd(onSetAddSkillCd_arg1, onSetAddSkillCd_arg2, onSetAddSkillCd_arg3, onSetAddSkillCd_arg4, onSetAddSkillCd_arg5, onSetAddSkillCd_arg6, onSetAddSkillCd_arg7);
 					break;
 				case 663:
 					Byte onSetAutoInPlace_arg1 = stream.readUint8();
@@ -3039,7 +3046,8 @@ namespace KBEngine
 					break;
 				case 45:
 					Int64 syncServerTime_arg1 = stream.readInt64();
-					syncServerTime(syncServerTime_arg1);
+					float syncServerTime_arg2 = stream.readFloat();
+					syncServerTime(syncServerTime_arg1, syncServerTime_arg2);
 					break;
 				case 728:
 					UInt32 teleportCastingPreNotify_arg1 = stream.readUint32();

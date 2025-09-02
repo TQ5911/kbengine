@@ -27,13 +27,20 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
     def __init__(self):
         iCell.ICell.__init__(self)
         INFO_MSG('create monster group: {}'.format(self.id))
-        self.initAllMonsters()
+        if formula.isDungeonSpace(self.spaceNo):
+            if self.spaceMgr:
+                self.spaceMgr.addEntity(
+                    self.id,
+                    ('mgid_{}'.format(self.groupId), self.__class__.__name__))
+
+        else:
+            self.initAllMonsters()
 
     def initAllMonsters(self):
         _mapId = formula.getMapId(self.spaceNo)
         _dunData = utils.getDunModuleData(_mapId)
         _iterGIDs = []
-        for _gid in self.monsterGIDs:
+        for _gid in self.getMonsterGIDs():
             _monData = _dunData[str(_gid)]
             _refreshNum = int(_monData['Props']['RefreshNum'])
             for i in utils.generateGameEntityId(_gid, _refreshNum):
@@ -45,6 +52,11 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
             _params['spaceMgrId'] = self.spaceMgrId
             _params['monsterGroupId'] = self.id
             KBEngine.createEntity(_className, self.spaceID, _pos, _dir, _params)
+
+    def getMonsterGIDs(self):
+        _mapId = formula.getMapId(self.spaceNo)
+        _groupData = utils.getDunGroupModuleData(_mapId)
+        return _groupData.get(str(self.groupId))
 
     def doEntityRefreshGrp(self, gameEntityId):
         _entityProps = []
