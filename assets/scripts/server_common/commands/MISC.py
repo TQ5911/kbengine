@@ -2980,11 +2980,11 @@ def changeSceneStates(su, player, states):
     if not formula.isWolrdBossSpace(player.spaceNo):
         return False, '当前不在boss场景'
 
-    _state = 0
+    _state = []
     for i, _st in enumerate(states):
         _st = 1 if _st == '1' else 0
         if _st:
-            _state |= (1 << i)
+            _state.append(i)
 
     DEBUG_MSG('setSceneStates', _state)
     player.setSceneStates(_state)
@@ -3013,3 +3013,11 @@ def gotoLinePos(su, player, spaceNo=0, x=0, y=0, z=0):
         gameengine.reportCritical('gm gotoLinePos error')
         return False, '执行失败'
     return True, '执行成功'
+
+@gm_cmd('$applyFinishGather', (Player("gbId/Id"),), RARG(0), gameconst.CELL, '主动结束采集', ALLSIDE, GOD_GROUPS)
+def applyFinishGather(su, player):
+    gatherTarget = player.getTempMiscProp(gameconst.AvatarProps.gatherTarget, None)
+    if not gatherTarget or 'timer' not in gatherTarget:
+        return False, '当前没有采集物体'
+    player.applyFinishGather(player.id, gatherTarget['targetId'])
+

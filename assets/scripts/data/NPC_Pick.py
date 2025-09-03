@@ -5049,7 +5049,32 @@ datas = _tools.RODict({
         "isDisappear": 0,
         "isInvalid": 0,
         "rewardPool": 0
+    }),
+    16005001: _tools.RODict({
+        "ID": 16005001,
+        "name": "同心村观景点",
+        "type": 4,
+        "pickDistance": 2.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 0,
+        "isUnstoppble": 0,
+        "precheckAction": None,
+        "triggerAction": None,
+        "isUnique": 0,
+        "ifBornState": 0,
+        "rewardID": 40020509,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 1,
+        "bagCheck": 0,
+        "timeCheck": 1,
+        "lifeSkillId": 0,
+        "isDisappear": 1,
+        "isInvalid": 0,
+        "rewardPool": 0
     })
 })
 minKey = 16000001
-maxKey = 16005000
+maxKey = 16005001

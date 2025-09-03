@@ -976,6 +976,18 @@ def _66000088_enter(self, target, context):
 def _66000092byend(self, target, context):
     self.createCreation(self, context, 66000084)
 
+# 生成的技能代码
+def _66000093(self, target, context):
+    import KBEngine
+    import action_FightAction
+    # 技能执行逻辑
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 2.5)
+        action_FightAction.down(self, ent, context, 1, 1, 0, 0)
+
 datas = _tools.RODict({ 
     65000001: _tools.RODict({
         "ID": 65000001,
@@ -4196,7 +4208,35 @@ datas = _tools.RODict({
         "selectType": 0,
         "selectPar": None,
         "delayTime": 0.0,
+    }),
+    66000093: _tools.RODict({
+        "ID": 66000093,
+        "name": "5003技能2创生物",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 1,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _66000093,
+        "time": 5.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 5.0,
+        "hurtNumber": 5,
+        "areaLoop": 10,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 5,
+        "delayTime": 3.0,
     })
 })
 minKey = 65000001
-maxKey = 66000092
+maxKey = 66000093

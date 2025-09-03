@@ -6271,5 +6271,26 @@ datas ={
       "RefreshTime": 1,
       "Remark": ""
     }
+  },
+  "10028124": {
+    "ActivityID": 0,
+    "ClassName": "Collection",
+    "ClassNameType": 3,
+    "CustomID": "",
+    "Dir": 230.3675,
+    "DisplayName": "",
+    "EntityID": 16005001,
+    "ID": 10028124,
+    "Name": "\u540c\u5fc3\u6751\u89c2\u666f\u70b9",
+    "PosX": 170.4772,
+    "PosY": 63.10073,
+    "PosZ": 99.97041,
+    "Props": {
+      "IsOpen": 1,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "Remark": ""
+    }
   }
 }

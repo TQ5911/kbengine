@@ -955,7 +955,7 @@ datas = _tools.RODict({
     }),
     "mulMagicArmor": _tools.RODict({
         "ID": "mulMagicArmor",
-        "name": "法术防御调整值",
+        "name": "法术防御百分比",
         "type": "float",
         "propType": 3,
         "ifSend": 1,

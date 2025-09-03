@@ -2,3 +2,7 @@ assets/res/routers/BigWorldWaypoint_1_path.bit
 assets/res/routers/BigWorldWaypoint_1_path.json
 assets/res/routers/BigWorldWaypoint_2_path.bit
 assets/res/routers/BigWorldWaypoint_2_path.json
+*.log
+*.pyc
+assets/scripts/data/.svn/
+assets/scripts/kbengine_unity3d_plugins/.svn/
