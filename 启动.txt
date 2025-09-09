@@ -1,0 +1,13 @@
+服务器:
+目录在linux下的 /mnt/hgfs/game/Server/kbeLinux/kbengine/assets下
+
+启动服务器
+bash start_server.sh
+
+关闭服务器
+bash kill_server.sh
+
+
+客户端:
+windows下的\trunk\Dev\Client
+用unity打开直接运行就行

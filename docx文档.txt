@@ -1,0 +1,9 @@
+【内部常用地址.docx】、【私服搭建流程.docx】、【新人指引.docx】文档在微盘下的,文件-》共享-》入职培训
+
+MISC.py是和gm相关的
+其中
+$modifyServertime 2025.03.21-13.00.00 就是修改服务器时间为该时间， 对应 utils.getNow()返回该时间的时间戳
+
+
+# 遍历字典dic,取出所有其 id成员不为Id的数据，然后转化为一个列表返回给myList
+myList = list(i for i in dic.values() if i.Id != Id)

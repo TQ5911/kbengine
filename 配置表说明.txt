@@ -1,0 +1,30 @@
+collect_details.py：是收集配置表，type1区分是哪一类(pvp、pve、生活)分支的收集，progress是收藏点，equipment所需装备，props所需道具
+collect_nodes.py：是收藏点对应奖励的属性信息
+prop_fightprop.py：是对应的属性信息对应的属性内容
+
+gearBase_gearBase.py：是所有装备的配置信息
+itemBatchUseUpLimit.py：背包物品的一些公共、限制等信息
+itemData_itemData.py：是所有物品的配置信息
+creep_base.py：战斗单位配置，key是monster id
+rewardData_rewardData.py：所有奖励信息,key是奖励id
+
+
+skill_skill.py：所有技能的配置
+skill_unlock.py：可解锁的技能,key是职业类型
+skillRelevant_skillConst.py：技能相关的常量配置
+skillRelevant_skillUpgrade.py：技能升级条件配置
+skillRelevant_skillScore.py：技能的积分配置
+
+taskdata.py：所有任务的配置
+taskshowopen.py：任务执行顺序的配置,但这个好像给客户端用的,服务端用的是 taskAutoClaimRelatetask
+taskAutoClaimRelatetask.py 决定服务端角色任务完成后(onTaskStateChanged方法里)的任务领取顺序,当任务状态置为 已提交(5)时,会从该表中找对应的 后续任务
+uiConfig_uiVisible.py：key就是解锁技能时需要的条件id,value是具体的解锁条件, 包括是达到指定等级 还是 完成指定任务(互斥)
+
+
+
+
+raid_raidConst.py：团队模块的常量配置,如最大团队数、总人数限制等
+raid_raidGoal.py：目前没什么用
+
+
+fightProp_define:角色相关属性的值和对应的名字的配置

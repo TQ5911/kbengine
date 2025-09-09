@@ -1,0 +1,41 @@
+1.执行脚本
+@echo off
+cd /d "%~dp0"
+@rem echo curdir:%CD%
+@rem python --version
+copy "hotReloadTemp.py" "..\scripts\server_common\hotReload.py"
+python genhotfix.py %*
+@rem for /f "delims=" %%i in ('python -c "import sys; print(sys.executable)"') do set PYTHON_EXE=%%i
+@rem echo %PYTHON_EXE%
+echo time1: %time%
+.\runScripts.exe --config=config.yaml
+echo time2: %time%
+
+2.其中copy "hotReloadTemp.py" "..\scripts\server_common\hotReload.py"
+copy一份到指定目录下
+
+3.执行 python genhotfix.py %*
+genhotfix.py用于将指定的新代码(即要更新的代码函数)复制到hotReload.py里的refreshCell()下
+将指定模块的函数指向该新函数
+
+4..\runScripts.exe --config=config.yaml
+程序里会 解析config.yaml然后执行temp.py
+temp.py 如下
+import KBEngine
+if KBEngine.component == 'cellapp':
+    import hotReload
+    import importlib
+    importlib.reload(hotReload)
+    hotReload.refreshCell()
+else:
+    import hotReload
+    import importlib
+    importlib.reload(hotReload)
+    hotReload.refreshBase()
+
+相当于 
+如若是cell下的函数热更,就是调用hotReload.refreshCell()
+相当于让模块函数重新指向了新函数
+
+
+ e:\192.168.10.155\svn\h1\trunk\Dev\Server\kbeLinux\kbengine\assets\hotReload\genhotfix.bat baseapp Avatar Avatar initFirst

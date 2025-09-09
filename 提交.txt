@@ -1,0 +1,19 @@
+类似一下命令
+
+1.搭建私服,提交服务器地址信息
+.\exportForce.cmd .\serverList-服务器列表\innerServerList-内服游戏服表.xlsx
+会在trunk\tables\data\python下更新serverList_serverList.py文件来记录更新信息
+这个是给新服务端添加私服用的,也就是更新服务器地址用的
+
+2.修改.def的协议
+如在IMount.def中添加了新的字段,需要在assets目录下面,通过.\gensdk_server.bat添加属性变量,这里是entity_defs下的PROPERTY_UID.txt
+会为变量添加一个uuid
+
+svn需要提如下
+TAPD链接：【【程序自主】开发环境搭建】
+https://www.tapd.cn/59721401/prong/stories/view/1159721401001003117
+
+--story=1003117
+--user=祝天奇
+
+其中需要TAPD上提交需求,复制对应的链接到这里,将后7位id用作story
