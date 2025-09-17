@@ -4,6 +4,7 @@ import KBEngine
 
 import gameengine
 import formula
+import random
 import utils
 import gametimer
 import time
@@ -27,12 +28,21 @@ class IEntityRefresh(object):
     def calculateRefreshTime(self):
         if not self.isNeedRefresh():
             return 0
-        # todo 和策划确认
-        # now = time.time()
-        # basicWaitTime = (now - self.birthInMem) % self.refreshTime
-        #
-        # return utils.randomDelayTime(basicWaitTime, self.refreshTime / 5)
-        return self.refreshTime
+        _dunData = self.dunData()
+        _refreshTime = _dunData.get('Props', {}).get('RefreshTime', None)
+        if _refreshTime is None:
+            return self.refreshTime
+
+        elif type(_refreshTime) is list:
+            if len(_refreshTime) == 1:
+                _refreshTime = int(int(_refreshTime[0]))
+            else:
+                _refreshTime = int(random.randint(int(_refreshTime[0]), int(_refreshTime[1])))
+
+        else:
+            _refreshTime = int(_refreshTime)
+
+        return _refreshTime
 
     def onEntityRefresh(self, spaceNo, refreshTime):
         if KBEngine.isShuttingDown():

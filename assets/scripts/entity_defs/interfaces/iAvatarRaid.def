@@ -86,9 +86,13 @@
         <!--个人创建团队-->
         <createRaidLonely>
             <Exposed/>
-            <Arg>   UINT8   </Arg>
-            <Arg>  TEAMTARGET  </Arg>
-            <Arg>  BOOL  </Arg>
+            <Arg>           UINT8           </Arg>
+            <Arg>           TEAMTARGET      </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           STRING          </Arg>
+            <Arg>           BOOL            </Arg>
         </createRaidLonely>
 
         <!--当前队伍创建团队-->
@@ -105,20 +109,22 @@
         <!--团长设置团队目标-->
         <setRaidTarget>
             <Exposed/>
-            <Arg>  TEAMTARGET  </Arg>
-            <Arg>  UINT32  </Arg>
-            <Arg>  UINT32  </Arg>
-            <Arg>  UNICODE </Arg>
-            <Arg>  BOOL    </Arg>
-            <Arg>  BOOL    </Arg>
+            <Arg>  UINT32       </Arg>
+            <Arg>  UINT32       </Arg>
+            <Arg>  UNICODE      </Arg>
+            <Arg>  STRING       </Arg>
+            <Arg>  BOOL         </Arg>
         </setRaidTarget>
 
         <onSetRaidTargetAllMemberNotify>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   STRING          </Arg>
+            <Arg>   STRING          </Arg>
+            <Arg>   BOOL            </Arg>
         </onSetRaidTargetAllMemberNotify>
 
         <!--个人申请加入团队-->
@@ -507,21 +513,7 @@
         </onCellRaidPlayerMatchedSucc>
 
         <onCellRaidPlayerAutoMatchTimeout>
-        </onCellRaidPlayerAutoMatchTimeout>
-
-        <publishRaid>
-            <Exposed/>
-            <Arg>   BOOL     </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   BOOL     </Arg>
-        </publishRaid>
-
-        <reqSetRaidAutoInPlace>
-            <Exposed/>
-            <Arg>   BOOL     </Arg>
-        </reqSetRaidAutoInPlace>
-
-        
+        </onCellRaidPlayerAutoMatchTimeout>        
         <onGetRaidListFinished>
             <Arg>           UINT32          </Arg>
             <Arg>           TEAMTARGET           </Arg>
@@ -547,6 +539,14 @@
             <Arg>           BOOL            </Arg>
         </reqChangeRaidOnlyLeader>
 
+        <reqJoinRaid> <Exposed/>
+            <Arg> RAID_ID </Arg>
+            <Arg> STRING  </Arg>
+        </reqJoinRaid>
+
+        <addRaidDungeonRewardRecord>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </addRaidDungeonRewardRecord>
     </CellMethods>
 
     <ClientMethods>
@@ -714,9 +714,12 @@
         <!--客户端设置新团队目标后回调-->
         <onSetRaidTarget>
             <Arg>   RAID_ID     </Arg>
-            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   TEAMTARGET  </Arg>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT32      </Arg>
+            <Arg>   STRING      </Arg>
+            <Arg>   STRING      </Arg>
+            <Arg>   BOOL        </Arg>
         </onSetRaidTarget>
 
         <!--团长发起全团check后客户端回调-->
@@ -814,15 +817,6 @@
         <onRaidPlayerStopAutoMatch>
         </onRaidPlayerStopAutoMatch>
 
-        <onPublishRaid>
-        	<Arg>           BOOL            </Arg>
-        	<Arg>           UNICODE         </Arg>
-        </onPublishRaid>
-
-        <onSetRaidAutoInPlace>
-        	<Arg>           BOOL            </Arg>
-        </onSetRaidAutoInPlace>
-
         <onGetRaidList>
             <Arg>           LONGTIME         </Arg>
             <Arg>           TEAMTARGET       </Arg>
@@ -831,17 +825,44 @@
         <onGetAllRaidList>
             <Arg>           TEAMTARGET       </Arg>
         </onGetAllRaidList>
-        <onRaidMemeberAttrUpdate>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UINT8       </Arg>
-            <Arg>   PLAYER_GBID </Arg>
-            <Arg>   UINT8       </Arg>
-            <Arg>   UINT64      </Arg>
-        </onRaidMemeberAttrUpdate>
 
         <onChangeRaidMark>
             <Arg>           CLIENT_TEAM_MARK_INFO           </Arg>
         </onChangeRaidMark>
+
+        <onJoinRaid>
+            <Arg>   ERRNO       </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   STRING      </Arg> 
+        </onJoinRaid>
+
+        <onUpdateRaidMemberPos>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           SPACE_NO        </Arg>
+            <Arg>           POSITION_ARG    </Arg>
+        </onUpdateRaidMemberPos>
+
+        <onUpdateRaidMemberScore>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UINT32          </Arg>
+        </onUpdateRaidMemberScore>
+
+        <onUpdateRaidMemberHP>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
+        </onUpdateRaidMemberHP>
+
+        <onUpdateRaidMemberLevel>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UINT32          </Arg>
+        </onUpdateRaidMemberLevel>
+
+        <onAddRaidDungeonRewardRecord>
+            <Arg>           RAID_ID                                                 </Arg>
+            <Arg>           PLAYER_GBID                                             </Arg>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onAddRaidDungeonRewardRecord>
     </ClientMethods>
 
 </root>

@@ -303,3 +303,7 @@ class IFlowController(object):
         """通用释放Entity事件处理（根据eventId）"""
         if self.flowController:
             self.flowController.onDungeonEntityReleaseCompleteByEventId(flagIds, fromEventId)
+
+    def flowCtrlDungeonRebornPosCreatedComplete(self, rebornPosGIDs):
+        if self.flowController:
+            self.flowController.onDungeonRebornPosCreatedComplete(rebornPosGIDs)

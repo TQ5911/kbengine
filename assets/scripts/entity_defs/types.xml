@@ -241,6 +241,15 @@
     <CHARACTER_VAL> FIXED_DICT
         <implementedBy>     characterInfo.characterValInstance </implementedBy>
         <Properties>
+            <parentID>
+                <Type>  DBID        </Type>
+            </parentID>
+            <selfDbId>
+                <Type>  DBID        </Type>
+            </selfDbId>
+            <authDbId>
+                <Type>  PLAYER_GBID </Type>
+            </authDbId>
             <gbId>
                 <Type>  PLAYER_GBID </Type>
                 <Index> INDEX       </Index>
@@ -280,6 +289,12 @@
             <characters>
                 <Type>  ARRAY   <of>    CHARACTER_VAL      </of>   </Type>
             </characters>
+            <isArchiving>
+                <Type>  BOOL  </Type>
+            </isArchiving>
+            <needArchiveAgain>
+                <Type>  BOOL  </Type>
+            </needArchiveAgain>
         </Properties>
     </CHARACTERS_INFO>
 
@@ -346,6 +361,9 @@
                 <Type>  UNICODE     </Type>
                 <DatabaseLength> 5120 </DatabaseLength>
             </attrJson>
+            <lockStatus>
+                <Type>  INT8     </Type>
+            </lockStatus>
         </Properties>
     </ITEM_VAL>
 
@@ -388,6 +406,9 @@
             <bindType>
                 <Type>  ITEM_BIND_TYPE  </Type>
             </bindType>
+            <lockStatus>
+                <Type> INT8 </Type>
+            </lockStatus>
             <auctionTime>
                 <Type>  LONGTIME        </Type>
             </auctionTime>
@@ -480,6 +501,9 @@
             <bindType>
                 <Type>  ITEM_BIND_TYPE     </Type>
             </bindType>
+            <lockStatus> 
+                <Type> INT8 </Type>
+            </lockStatus>
             <attrJson>
                 <Type>  UNICODE     </Type>
                 <DatabaseLength> 5120 </DatabaseLength>
@@ -1267,15 +1291,21 @@
             <isPublish>
                 <Type>  BOOL  </Type>
             </isPublish>
-            <autoInPlace>
-                <Type>  BOOL  </Type>
-            </autoInPlace>
             <teamMarkList>
                 <Type>  ARRAY <of>  CLIENT_TEAM_MARK_VAL </of>   </Type>
             </teamMarkList>
             <onlyCaptainCanMark>
                 <Type>  BOOL </Type>
             </onlyCaptainCanMark>
+            <memberNum>
+                <Type> UINT8 </Type>
+            </memberNum>
+            <isAutoExpedition>
+                <Type>  BOOL  </Type>
+            </isAutoExpedition>
+            <password>
+                <Type> STRING </Type>
+            </password>
         </Properties>
     </CLIENT_TEAM_INFO>
 
@@ -1425,6 +1455,15 @@
             <teamMarkList>
                 <Type>  ARRAY <of>  TEAM_MARK_VAL </of>   </Type>
             </teamMarkList>
+            <isPublish>
+                <Type>  BOOL    </Type>
+            </isPublish>
+            <isAutoExpedition>
+                <Type>  BOOL  </Type>
+            </isAutoExpedition>
+            <password>
+                <Type> STRING </Type>
+            </password>
         </Properties>
     </TEAM_INFO>
 
@@ -1721,9 +1760,6 @@
             <raidMinScore>
                 <Type> SCORE </Type>
             </raidMinScore>
-            <autoInPlace>
-                <Type>  BOOL     </Type>
-            </autoInPlace>
             <isPublish>
                 <Type>  BOOL     </Type>
             </isPublish>
@@ -1742,6 +1778,12 @@
             <raidMarkList>
                 <Type>  ARRAY    <of>    CLIENT_TEAM_MARK_VAL   </of>   </Type>
             </raidMarkList>
+            <isAutoExpedition>
+                <Type> BOOL </Type>
+            </isAutoExpedition>
+            <password>
+                <Type> STRING </Type>
+            </password>
         </Properties>
     </RAID_CLIENT_VAL>
 
@@ -2498,6 +2540,9 @@
             <bindType>
                 <Type>  ITEM_BIND_TYPE     </Type>
             </bindType>
+            <lockStatus> 
+                <Type> INT8 </Type>
+            </lockStatus>
             <attrJson>
                 <Type>  UNICODE     </Type>
                 <DatabaseLength> 5120 </DatabaseLength>
@@ -2838,6 +2883,10 @@
             <stores>
                 <Type>  ARRAY <of>  STORE_VAL </of>   </Type>
             </stores>
+
+            <limitedStores>
+                <Type>  ARRAY <of>  STORE_VAL </of>   </Type>
+            </limitedStores>
         </Properties>
     </STORE_DATA_VAL>
 
@@ -4279,5 +4328,137 @@
             </teamMarkList>
         </Properties>
     </CLIENT_TEAM_MARK_INFO>
+
+    <RED_BAG_VAL>   FIXED_DICT
+        <implementedBy>     RedBagInfo.RedBagDataInstance    </implementedBy>
+        <Properties>
+            <redbagId>
+                <Type>    UINT64  </Type>
+            </redbagId>
+            <playerGbId>
+                <Type>  PLAYER_GBID   </Type>
+            </playerGbId>
+            <playerName>
+                <Type>  UNICODE   </Type>
+            </playerName>
+            <guildUUID>
+                <Type>  GUILD_UUID   </Type>
+            </guildUUID>
+            <redbagType>
+                <Type>  UINT8   </Type>
+            </redbagType>
+            <channel>
+                <Type>  UINT8   </Type>
+            </channel>
+            <money>
+                <Type>  UINT32   </Type>
+            </money>
+            <leftMoney>
+                <Type>  UINT32   </Type>
+            </leftMoney>
+            <num>
+                <Type>  UINT32   </Type>
+            </num>
+            <leftNum>
+                <Type>  UINT32   </Type>
+            </leftNum>
+            <releaseTime>
+                <Type>  LONGTIME   </Type>
+            </releaseTime>
+            <desc>
+                <Type>  UNICODE   </Type>
+            </desc>
+        </Properties>
+    </RED_BAG_VAL>
+
+    <RED_BAG_DATA_INFO>   FIXED_DICT
+        <implementedBy>     RedBagInfo.RedBagDataInfoInstance    </implementedBy>
+        <Properties>
+            <redbags>
+                <Type>  ARRAY <of>  RED_BAG_VAL </of>   </Type>
+            </redbags>
+        </Properties>
+    </RED_BAG_DATA_INFO>
+
+    <RED_BAG_FETCH_VAL>   FIXED_DICT
+        <Properties>
+            <playerGbId>
+                <Type>  PLAYER_GBID   </Type>
+            </playerGbId>
+            <name>
+                <Type>  UNICODE   </Type>
+            </name>
+            <money>
+                <Type>  UINT32   </Type>
+            </money>
+        </Properties>
+    </RED_BAG_FETCH_VAL>
+
+    <RED_BAG_CLIENT_VAL>   FIXED_DICT
+        <Properties>
+            <redbagId>
+                <Type>    UINT64  </Type>
+            </redbagId>
+            <playerName>
+                <Type>  UNICODE   </Type>
+            </playerName>
+            <redbagType>
+                <Type>  UINT8   </Type>
+            </redbagType>
+            <channel>
+                <Type>  UINT8   </Type>
+            </channel>
+            <money>
+                <Type>  UINT32   </Type>
+            </money>
+            <leftMoney>
+                <Type>  UINT32   </Type>
+            </leftMoney>
+            <num>
+                <Type>  UINT32   </Type>
+            </num>
+            <leftNum>
+                <Type>  UINT32   </Type>
+            </leftNum>
+            <hasFetch>
+                <Type>  UINT8   </Type>
+            </hasFetch>
+        </Properties>
+    </RED_BAG_CLIENT_VAL>
+
+    <RED_BAG_FETCH_CLIENT_VAL>   FIXED_DICT
+        <Properties>
+            <redbagId>
+                <Type>    UINT64  </Type>
+            </redbagId>
+            <playerName>
+                <Type>  UNICODE   </Type>
+            </playerName>
+            <redbagType>
+                <Type>  UINT8   </Type>
+            </redbagType>
+            <channel>
+                <Type>  UINT8   </Type>
+            </channel>
+            <money>
+                <Type>  UINT32   </Type>
+            </money>
+            <leftMoney>
+                <Type>  UINT32   </Type>
+            </leftMoney>
+            <num>
+                <Type>  UINT32   </Type>
+            </num>
+            <leftNum>
+                <Type>  UINT32   </Type>
+            </leftNum>
+            <maxGbId>
+                <Type>  UINT64   </Type>
+            </maxGbId>
+            <fetchPlayerList>
+                <Type>  ARRAY <of>  RED_BAG_FETCH_VAL </of>   </Type>
+            </fetchPlayerList>
+        </Properties>
+    </RED_BAG_FETCH_CLIENT_VAL>
 
 </root>

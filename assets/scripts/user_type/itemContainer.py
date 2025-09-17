@@ -319,10 +319,9 @@ class ItemContainer(userType.UserSoleType):
                 if maxStackSize != 1:
                     ERROR_MSG('calcDeductItemsPlan: maxStackSize must be 1', gridObj.itemId)
                     return gameconst.BagOpPlan.BAG_OP_NO_PLAN, None
-                checkLock = dataUtils.checkLockAvailableStatus(gridObj.itemId)
-                if checkLock and gridObj.lockStatus == gameconst.ItemLockStatus.LOCKED :
+                if gridObj.isLocked() :
                     ERROR_MSG('calcDeductItemsPlan: item is locked', item.uniqueId, gridObj.itemId)
-                    return
+                    return gameconst.BagOpPlan.BAG_OP_NO_PLAN, gridObj.itemId
                 removeDict[gridId] = item.itemNum
 
         for itemId, itemInfo in itemsDict.items():
@@ -339,7 +338,6 @@ class ItemContainer(userType.UserSoleType):
 
     def _calcDeductSingleItemPlan(self, itemId, bindType, totalNum, planDict):
         itemGrids = self.getGridIdsByItemId(itemId)
-        checkLock = dataUtils.checkLockAvailableStatus(itemId)
         for gridId in itemGrids:
             it = self.gridId2GridObj[gridId]
             planNum = planDict.get(gridId, 0)
@@ -348,7 +346,7 @@ class ItemContainer(userType.UserSoleType):
                 continue
 
             # 开启了锁，并且已上锁
-            if checkLock and it.lockStatus == gameconst.ItemLockStatus.LOCKED:
+            if it.isLocked():
                 continue
 
             if it.itemId == itemId and not it.isExpired() and it.itemNum > planNum:

@@ -5,23 +5,14 @@ import random
 import time
 import BotClient
 import botBase
+import simpleBotBase
 import re
 # BOT_CONFIG = botBase.initBotConfig(__file__)
 
 
-class PlayerDelegate(object):
-    @property
-    def player(self): return self.robot.player()
-
-    @property
-    def base(self): return self.player.base
-
-    @property
-    def cell(self): return self.player.cell
-
+class PlayerDelegate(simpleBotBase.SimpleBotBase):
     def __init__(self, robot, botCLient):
-        self.robot = robot
-        self.botClient = botCLient
+        super(PlayerDelegate, self).__init__(robot, botCLient)
         #1002广场区域
         self.pos = [404.0721, 0.8875, 187.3936]
         self.Relive = False
@@ -36,17 +27,9 @@ class PlayerDelegate(object):
 
 
     def onBecomePlayer(self):
-        print('check_login:%s'%self.botClient.accountName)
+        #print('check_login:%s'%self.botClient.accountName)
+        self.debug(f"登录成功")
 
-
-        # self.base.runGmCommand(f'sethp 0 99999 ')
-        # self.base.runGmCommand(f'$addbuff 0 64000069 1')
-        # pos = random.choice(BOT_CONFIG['randomPos'])
-        # INFO_MSG(self.botClient.accountName, self.player.id,'登录成功')
-
-
-        #客户端等待两秒后执行 self.cell.switchPKModel(2)
-        # self.player.clientapp.callback(2,self.cell.switchPKModel(2))
 
 
     def onTeleportDone(self, *args):
@@ -54,78 +37,82 @@ class PlayerDelegate(object):
 
 
     #这里通过服务器给客户端发送聊天消息，指示机器人干什么
-    def onRecvAvatarChannelMsg(self, channelID,avatarInfo,msgId):
+    # def onRecvAvatarChannelMsg(self, channelID,avatarInfo,msgId):
 
-        #客户端GM里面。 执行自定义代码  替换下方的 GM 可直接执行对应的GM
-         #  PlayerEntity.sendChatMsg(ChatChannel.World, @"$getitems 0 0 10000 0 30000001");
-         
-        if '$' in msgId:
-            self.base.runGmCommand(msgId)
+    #     #客户端GM里面。 执行自定义代码  替换下方的 GM 可直接执行对应的GM
+    #      #  PlayerEntity.sendChatMsg(ChatChannel.World, @"$getitems 0 0 10000 0 30000001");
+    #     if '$' in msgId:
+    #         self.base.runGmCommand(msgId)
+    #     elif channelID == gameconst.ChatChannel.SYSTEM and 'self.' in msgId:
+    #         try:
+    #             exec(msgId)
+    #         except Exception as e:
+    #             self.debug(f"执行错误: {e}")
 
-        elif msgId == '升级':
-            self.base.runGmCommand(f'$setlv 0 {random.randint(20,70)}')
+    #     elif msgId == '升级':
+    #         self.base.runGmCommand(f'$setlv 0 {random.randint(20,70)}')
 
-        elif msgId == '添加血量':
-            self.base.runGmCommand(f'$adjfullHp 0 99999')
+    #     elif msgId == '添加血量':
+    #         self.base.runGmCommand(f'$adjfullHp 0 99999')
 
-        elif msgId == '跳过新手':
-            self.base.runGmCommand(f'$finishNewbie 0 0')
+    #     elif msgId == '跳过新手':
+    #         self.base.runGmCommand(f'$finishNewbie 0 0')
 
-        elif msgId == '执行指令':
-            self.base.runGmCommand(f'$setlv 0 48')
-            self.base.runGmCommand(f'$submittask 0 86050032')
-            self.base.runGmCommand(f'$submittask 0 86010048')
-            self.base.runGmCommand(f'$addEquipAnima 0 1000')
+    #     elif msgId == '执行指令':
+    #         self.base.runGmCommand(f'$setlv 0 48')
+    #         self.base.runGmCommand(f'$submittask 0 86050032')
+    #         self.base.runGmCommand(f'$submittask 0 86010048')
+    #         self.base.runGmCommand(f'$addEquipAnima 0 1000')
             
-        # 传送到坐标(36.4585,39.0038,48.3531)
-        elif msgId.startswith('传送到坐标'):
-            position = re.search(r"\((\d+\.\d+),(\d+\.\d+),(\d+\.\d+)\)", msgId)
-            if position:
-                x, y, z = position.groups()
-                x = float(x) + self.randompos()
-                y = float(y)
-                z = float(z) + self.randompos()
-                self.base.runGmCommand(f'$setpos 0 {x} {y} {z}')
+    #     # 传送到坐标(36.4585,39.0038,48.3531)
+    #     elif msgId.startswith('传送到坐标'):
+    #         position = re.search(r"\((\d+\.\d+),(\d+\.\d+),(\d+\.\d+)\)", msgId)
+    #         if position:
+    #             x, y, z = position.groups()
+    #             x = float(x) + self.randompos()
+    #             y = float(y)
+    #             z = float(z) + self.randompos()
+    #             self.base.runGmCommand(f'$setpos 0 {x} {y} {z}')
 
 
-        elif '设置善恶值' in msgId:
-            match = re.match(r'(.*?)(-?\d+)', msgId)
-            if match:
-                str = match.group(1)
-                moralValue = int(match.group(2))  # 获取后面的整数并转换为整数类型
-                self.base.runGmCommand(f'$moralValue 0 {moralValue}')
-            else:
-                self.debug('未设置成功善恶值')
+    #     elif '设置善恶值' in msgId:
+    #         match = re.match(r'(.*?)(-?\d+)', msgId)
+    #         if match:
+    #             str = match.group(1)
+    #             moralValue = int(match.group(2))  # 获取后面的整数并转换为整数类型
+    #             self.base.runGmCommand(f'$moralValue 0 {moralValue}')
+    #         else:
+    #             self.debug('未设置成功善恶值')
 
-        elif msgId == "PK模式":
-            self.cell.switchPKModel(2)
-            self.debug(f"开启PK模式")
+    #     elif msgId == "PK模式":
+    #         self.cell.switchPKModel(2)
+    #         self.debug(f"开启PK模式")
 
-        elif msgId == '随机切换一个模式':
-            self.cell.switchPKModel(random.randint(0,2))
+    #     elif msgId == '随机切换一个模式':
+    #         self.cell.switchPKModel(random.randint(0,2))
 
-        elif msgId == "关闭帮派保护":
-            self.cell.setPKProtect(2, 0)
+    #     elif msgId == "关闭帮派保护":
+    #         self.cell.setPKProtect(2, 0)
+        
+    #     elif msgId == '开启帮派保护':
+    #         self.cell.setPKProtect(2, 1)
 
-        elif msgId == '开启帮派保护':
-            self.cell.setPKProtect(2, 1)
+    #     elif msgId == '开启自动战斗':
+    #         self.cell.startAutoCombat(160)
 
-        elif msgId == '开启自动战斗':
-            self.cell.startAutoCombat(160)
+    #     elif msgId == "机器人离线":
+    #         self.player.offlineBot()
+    #     elif msgId == "复活":
+    #         self.cell.relive(2)
+    #     elif msgId == "死亡立即复活":
+    #         self.Relive = True
+    #         self.cell.relive(2)
 
-        elif msgId == "机器人离线":
-            self.player.offlineBot()
-        elif msgId == "复活":
-            self.cell.relive(2)
-        elif msgId == "死亡立即复活":
-            self.Relive = True
-            self.cell.relive(2)
-
-        elif msgId.startswith('加入队伍'):
-            itemid = re.search(r"加入队伍(\d+)", msgId).group(1)
-            self.cell.applyJoinTeam(int(itemid))
-        else:
-            self.debug(f'{msgId}输入无效')
+    #     elif msgId.startswith('加入队伍'):
+    #         itemid = re.search(r"加入队伍(\d+)", msgId).group(1)
+    #         self.cell.applyJoinTeam(int(itemid))
+    #     else:
+    #         self.debug(f'{msgId}输入无效')
 
     #死亡立即复活
     def onDead(self,*args):

@@ -214,6 +214,7 @@
         <onCrossSiegeWarEnd>
             <Arg>           PY_LIST                     </Arg>
             <Arg>           GUILD_UUID                  </Arg>
+            <Arg>           GUILD_UUID                  </Arg>
         </onCrossSiegeWarEnd>
 
         <gmChangeSiegeWarState>

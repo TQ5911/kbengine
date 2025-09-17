@@ -637,7 +637,21 @@ datas = _tools.RODict({
         "value": "taskUndertake",
         "param": "1031",
         "description": "为玩家接取特定id的任务"
+    }),
+    90: _tools.RODict({
+        "ID": 90,
+        "name": "放出单位/放出复活点",
+        "value": "createRebornPos",
+        "param": "1011,1012",
+        "description": "参数为地图编辑器中对应出生点的实例ID，即放出对应ID的出生点，支持填写多个实例ID，表示同时放出所有对应出生点，用逗号间隔。"
+    }),
+    91: _tools.RODict({
+        "ID": 91,
+        "name": "回收单位/回收复活点",
+        "value": "removeRebornPos",
+        "param": "1011",
+        "description": "参数为地图编辑器中对应出生点的实例ID，即回收（销毁）对应ID的出生点，支持填写多个实例ID，表示同时回收所有对应出生点，用逗号间隔。"
     })
 })
 minKey = 1
-maxKey = 89
+maxKey = 91

@@ -848,7 +848,9 @@ class IComplexTeleport(object):
             self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
 
         self.selfStopAutoCombat('leave raid dungeon')
-
+        # 离开团队副本了，清理奖励记录
+        if not formula.isRaidDungeonSpace(toSpaceNo):
+            gameengine.getRaidStub(raidUUID).clearRaidDungeonRewardRecord(raidUUID, self.gbId)
         return True
 
     # ----------------------------------------------------------------------
@@ -1250,7 +1252,9 @@ class IComplexTeleport(object):
         #     self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
 
         self.selfStopAutoCombat('leave team dungeon')
-
+        # 离开组队副本了，清理奖励记录
+        if not formula.isTeamDungeonSpace(toSpaceNo):
+            gameengine.getTeamStub(teamUUID).clearTeamDungeonRewardRecord(teamUUID, self.gbId)
         return True
 
     # ----------------------------------------------------------------------

@@ -323,17 +323,6 @@ datas = _tools.RODict({
         "beRolled": 0,
         "randomWeight": 10,
     }),
-    15000029: _tools.RODict({
-        "ID": 15000029,
-        "name": "花仙夜依兰",
-        "isOpen": 0,
-        "petRank": 3,
-        "prop": _tools.ROList([['adjMinPhysicalAtk', 6]]),
-        "skill": (87020045, 87020046),
-        "score": 100,
-        "beRolled": 0,
-        "randomWeight": 10,
-    }),
     15000030: _tools.RODict({
         "ID": 15000030,
         "name": "爱之魔女蜜娅",

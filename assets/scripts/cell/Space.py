@@ -17,6 +17,7 @@ import gameconfig
 import gameconst
 
 import iCell
+import iFubenSpace
 import iTimer
 import iEntityRefresh
 import gameglobal
@@ -40,7 +41,7 @@ class SpaceEntityGenerateMixin(object):
                 # break
 
 
-class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.IEntityLoader):
+class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.IEntityLoader, iFubenSpace.IFubenSpace):
     def __init__(self):
         INFO_MSG("Space#__init__", self.spaceNo, self.spaceID, self.dungeonId, KBEngine.getComponentGroupOrder())
         iEntityLoader.IEntityLoader.__init__(self)

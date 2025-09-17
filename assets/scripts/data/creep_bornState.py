@@ -19,38 +19,50 @@ datas = _tools.RODict({
         "ID": 1,
         "name": "测试",
         "refreshTime": 1.5,
-        "bornStateTime": 1.0
+        "bornStateTime": 1.0,
     }),
     2: _tools.RODict({
         "ID": 2,
         "name": "鹿死亡采集物",
         "refreshTime": 3.0,
-        "bornStateTime": 0.0
+        "bornStateTime": 0.0,
     }),
     3: _tools.RODict({
         "ID": 3,
         "name": "召唤物特效",
         "refreshTime": 0.0,
-        "bornStateTime": 0.5
+        "bornStateTime": 0.5,
     }),
     4: _tools.RODict({
         "ID": 4,
         "name": "首领3测试",
         "refreshTime": 0.5,
-        "bornStateTime": 2.2
+        "bornStateTime": 2.2,
     }),
     5: _tools.RODict({
         "ID": 5,
         "name": "新手副本怪",
         "refreshTime": 0.0,
-        "bornStateTime": 0.0
+        "bornStateTime": 0.0,
     }),
     6: _tools.RODict({
         "ID": 6,
         "name": "世界BOSS召唤怪",
         "refreshTime": 0.0,
-        "bornStateTime": 1.3
+        "bornStateTime": 1.3,
+    }),
+    7: _tools.RODict({
+        "ID": 7,
+        "name": "副本内精英怪刷新1",
+        "refreshTime": 1.0,
+        "bornStateTime": 1.0,
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "name": "副本内传送门怪物刷新",
+        "refreshTime": 1.0,
+        "bornStateTime": 1.0,
     })
 })
 minKey = 1
-maxKey = 6
+maxKey = 8

@@ -32,7 +32,7 @@ datas ={
     "EntityID": 11011005,
     "ID": 31040002,
     "Name": "\u76fe\u725b\u62185\u8bad\u7ec3",
-    "PosX": 166.2263,
+    "PosX": 166.2264,
     "PosY": 525.1471,
     "PosZ": 61.81052,
     "Props": {
@@ -40,10 +40,13 @@ datas ={
       "Level": 28.0,
       "MapEntityScale": 0,
       "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 15.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowMonsterGroupID": ""
     }
   },
   "31040013": {
@@ -2548,6 +2551,63 @@ datas ={
         600.0,
         900.0
       ],
+      "Remark": ""
+    }
+  },
+  "31048001": {
+    "ActivityID": 0,
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 31048001,
+    "Name": "\u6218\u6597\u533a",
+    "PosX": 279.5897,
+    "PosY": 525.0379,
+    "PosZ": 57.63605,
+    "Props": {
+      "AreaType": 1,
+      "Radius": 40.0,
+      "Remark": ""
+    }
+  },
+  "31048002": {
+    "ActivityID": 0,
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 31048002,
+    "Name": "\u6218\u6597\u533a",
+    "PosX": 167.3308,
+    "PosY": 524.9518,
+    "PosZ": 57.79924,
+    "Props": {
+      "AreaType": 1,
+      "Radius": 40.0,
+      "Remark": ""
+    }
+  },
+  "31048003": {
+    "ActivityID": 0,
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 31048003,
+    "Name": "\u6218\u6597\u533a",
+    "PosX": 53.81877,
+    "PosY": 525.1331,
+    "PosZ": 57.16918,
+    "Props": {
+      "AreaType": 1,
+      "Radius": 40.0,
       "Remark": ""
     }
   }

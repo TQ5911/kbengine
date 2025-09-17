@@ -50,7 +50,6 @@
             <Type>      PYTHON      </Type>
             <Flags>     BASE        </Flags>
         </avatarCounter>
-
     </Properties>
 
     <BaseMethods>
@@ -160,5 +159,15 @@
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           ARRAY   <of>    PLAYER_GBID </of>     </Arg>
         </getFriendsBox>
+
+        <getPlayerInfoOffline>
+            <Arg>           ENTITYCALL      </Arg>
+            <Arg>           PLAYER_GBID     </Arg>
+        </getPlayerInfoOffline>
+
+        <onGetMemberJob>
+            <Arg>   UINT8          </Arg>
+            <Arg>   PYTHON         </Arg>
+        </onGetMemberJob>
     </BaseMethods>
 </root>

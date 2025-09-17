@@ -101,7 +101,7 @@ datas ={
         "PosZ": 211.7785,
         "Props": {
           "Num": 0,
-          "Radius": 0.0,
+          "Radius": 6.0,
           "Remark": ""
         }
       }
@@ -122,7 +122,7 @@ datas ={
         "PosZ": 211.6716,
         "Props": {
           "Num": 0,
-          "Radius": 0.0,
+          "Radius": 6.0,
           "Remark": ""
         }
       }

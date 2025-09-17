@@ -62,16 +62,17 @@ datas ={
           "EntityID": 17100101,
           "ID": 10010003,
           "Name": "\u540c\u5fc3\u8c37",
-          "PosX": 176.7669,
+          "PosX": 176.79,
           "PosY": 0.91,
-          "PosZ": 75.05748,
+          "PosZ": 69.63,
           "Props": {
             "CameraId": 0,
+            "GateType": 0,
             "Remark": "",
             "TelDir": 0.0,
-            "TelX": 176.7661,
+            "TelX": 176.7892,
             "TelY": 1.49,
-            "TelZ": 81.01756
+            "TelZ": 75.59008
           }
         },
         "10010056": {
@@ -84,7 +85,7 @@ datas ={
           "EntityID": 17100102,
           "ID": 10010056,
           "Name": "\u65b0\u5143\u57ce\u90ca",
-          "PosX": 37.85,
+          "PosX": 34.97,
           "PosY": 0.42,
           "PosZ": 243.9698,
           "Props": {
@@ -92,7 +93,7 @@ datas ={
             "GateType": 0,
             "Remark": "",
             "TelDir": 90.0,
-            "TelX": 44.85001,
+            "TelX": 41.97002,
             "TelY": 0.56777,
             "TelZ": 243.9698
           }
@@ -2566,14 +2567,58 @@ datas ={
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
-          "Dir": 267.7557,
+          "Dir": 150.0,
           "DisplayName": "",
           "EntityID": 18000088,
           "ID": 10014111,
           "Name": "\u84dd\u6c5f",
-          "PosX": 385.1372,
-          "PosY": 0.3457639,
-          "PosZ": 182.1125,
+          "PosX": 369.4719,
+          "PosY": 4.689144,
+          "PosZ": 221.2144,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "10014112": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 106.1442,
+          "DisplayName": "",
+          "EntityID": 18000650,
+          "ID": 10014112,
+          "Name": "\u5f20\u8d1d\u5c14",
+          "PosX": 74.14515,
+          "PosY": 0.5920795,
+          "PosZ": 96.46129,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "10014113": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 269.6157,
+          "DisplayName": "",
+          "EntityID": 18000628,
+          "ID": 10014113,
+          "Name": "\u6807\u8bb0\u7528\u7279\u6b8a\u4efb\u52a1\u5730\u70b9",
+          "PosX": 359.76,
+          "PosY": 45.68,
+          "PosZ": 276.39,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
@@ -2585,405 +2630,6 @@ datas ={
         }
       },
       "Collection": {
-        "10018002": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 92.37906,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018002,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 296.23,
-          "PosY": -1.5199,
-          "PosZ": 116.74,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018004": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 265.8656,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018004,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 165.2498,
-          "PosY": 0.8906741,
-          "PosZ": 142.9042,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018006": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 267.3996,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018006,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 124.76,
-          "PosY": 1.313819,
-          "PosZ": 73.47,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018007": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 294.4955,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018007,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 85.19537,
-          "PosY": 0.5996547,
-          "PosZ": 102.9498,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018008": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 86.589,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018008,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 88.75449,
-          "PosY": 1.444719,
-          "PosZ": 139.256,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018010": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 265.9746,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018010,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 86.45764,
-          "PosY": 2.247707,
-          "PosZ": 192.2173,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018016": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 240.9185,
-          "DisplayName": "",
-          "EntityID": 16000004,
-          "ID": 10018016,
-          "Name": "\u6a59\u8272\u5b9d\u7bb1",
-          "PosX": 360.2072,
-          "PosY": 7.84,
-          "PosZ": 137.3226,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018017": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 3.778749,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018017,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 364.9677,
-          "PosY": 20.28558,
-          "PosZ": 261.5034,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018018": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 183.8981,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018018,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 374.4129,
-          "PosY": 20.28558,
-          "PosZ": 276.5725,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018020": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 270.1551,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018020,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 289.73,
-          "PosY": 1.56,
-          "PosZ": 325.07,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018021": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 269.4137,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018021,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 260.7055,
-          "PosY": 13.46839,
-          "PosZ": 258.4717,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018022": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 265.7302,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018022,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 260.8715,
-          "PosY": 13.46839,
-          "PosZ": 231.4416,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018023": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 359.6069,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018023,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 41.17,
-          "PosY": 16.85977,
-          "PosZ": 391.41,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018027": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 180.5307,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018027,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 302.37,
-          "PosY": 16.83,
-          "PosZ": 396.98,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018029": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 269.7482,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018029,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 240.23,
-          "PosY": 4.681473,
-          "PosZ": 70.11,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018030": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 271.3524,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018030,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 118.8661,
-          "PosY": 0.9658847,
-          "PosZ": 94.63897,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018031": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 90.74094,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018031,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 84.14,
-          "PosY": 1.788227,
-          "PosZ": 345.72,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018032": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 269.8391,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018032,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 216.1807,
-          "PosY": 0.4427719,
-          "PosZ": 348.7128,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
-        "10018033": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 89.8157,
-          "DisplayName": "",
-          "EntityID": 16000003,
-          "ID": 10018033,
-          "Name": "\u666e\u901a\u5b9d\u7bb1",
-          "PosX": 353.13,
-          "PosY": 4.689125,
-          "PosZ": 320.43,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 120.0,
-            "Remark": ""
-          }
-        },
         "10018036": {
           "ActivityID": 0,
           "ClassName": "Collection",
@@ -3278,27 +2924,6 @@ datas ={
             "Remark": ""
           }
         },
-        "10018053": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 259.8826,
-          "DisplayName": "",
-          "EntityID": 16001005,
-          "ID": 10018053,
-          "Name": "\u5148\u5929\u5143\u6c14(\u4efb\u52a1)",
-          "PosX": 186.5456,
-          "PosY": 2.454357,
-          "PosZ": 278.9538,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
         "10018054": {
           "ActivityID": 0,
           "ClassName": "Collection",
@@ -3438,6 +3063,48 @@ datas ={
           "PosX": 148.4044,
           "PosY": 15.37136,
           "PosZ": 275.2322,
+          "Props": {
+            "IsOpen": 1,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "10018061": {
+          "ActivityID": 0,
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 115.8906,
+          "DisplayName": "",
+          "EntityID": 16000096,
+          "ID": 10018061,
+          "Name": "\u91c7\u96c6\u7269\u7801\u5934\u4efb\u52a1",
+          "PosX": 335.8544,
+          "PosY": 0.359022,
+          "PosZ": 67.31911,
+          "Props": {
+            "IsOpen": 1,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "10018063": {
+          "ActivityID": 0,
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 269.6157,
+          "DisplayName": "",
+          "EntityID": 16000097,
+          "ID": 10018063,
+          "Name": "\u91c7\u96c6\u7269\u9152\u697c\u4efb\u52a1",
+          "PosX": 359.92,
+          "PosY": 45.82,
+          "PosZ": 276.17,
           "Props": {
             "IsOpen": 1,
             "Radius": 0.0,

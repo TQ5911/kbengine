@@ -162,17 +162,19 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
             self.setProp('baseFullHp', int(owner.getProp('baseFullHp')*self.baseFullHpRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
             self.setProp('basePhysicalArmor', int(owner.getProp('basePhysicalArmor')*self.basePhysicalArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
             self.setProp('baseMagicArmor', int(owner.getProp('baseMagicArmor')*self.baseMagicArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            self.setProp('baseMinAtk', int(owner.getProp('baseMinAtk')*self.baseMinAtkRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            self.setProp('baseMaxAtk', int(owner.getProp('baseMaxAtk')*self.baseMaxAtkRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
+            #self.setProp('baseMinAtk', int(owner.getProp('baseMinAtk')*self.baseMinAtkRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
+            #self.setProp('baseMaxAtk', int(owner.getProp('baseMaxAtk')*self.baseMaxAtkRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
 
             otherProps = ['adjFullHp', 'adjFullHpAbs', 'mulFullHp', 'adjMinPhysicalAtk', 'adjMinPhysicalAtkAbs',
                         'adjMinMagicAtk', 'adjMinMagicAtkAbs', 'adjMaxPhysicalAtk', 'adjMaxPhysicalAtkAbs', 'adjMaxMagicAtk',
                         'adjMaxMagicAtkAbs',
-                        'baseHit', 'adjHit', 'mulHit', 'baseDodge', 'adjDodge', 'mulDodge',
-                       'baseDodgeDmg', 'adjDodgeDmg', 'mulDodgeDmg', 'baseFatal', 'adjFatal', 'mulFatal', 'baseAntiFatal',
-                       'adjAntiFatal', 'mulAntiFatal', 'baseMortal', 'adjMortal', 'mulMortal', 'baseAntiMortal', 'adjAntiMortal',
-                       'mulAntiMortal']
-
+                        'baseHit', 'adjHit', 'baseDodge', 'adjDodge', 
+                       'baseFatal', 'adjFatal', 'baseAntiFatal',
+                       'adjAntiFatal', 'baseMortal', 'adjMortal', 'baseAntiMortal', 'adjAntiMortal',
+                       ]
+            # 没有被定义和使用的属性,先移出来,不然报错
+            # 'mulHit', 'mulDodge', 'baseDodgeDmg', 'adjDodgeDmg', 
+            # 'mulDodgeDmg', 'mulFatal', 'mulAntiFatal', 'mulMortal', 'mulAntiMortal'
             for propName in otherProps:
                 propVal = owner.getProp(propName)
                 tp = type(propVal)
@@ -205,7 +207,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         if radii<=0:
             return
         self.hateTrapId = self.addProximity(radii, radii, gameconst.HATE_TRAP)
-        leaveAoiRange = max(gameconst.HOME_AOI, radii)
+        leaveAoiRange = min(gameconst.HOME_AOI, self.getLeaveAlertDistance())
         self.addProximity(leaveAoiRange, 0.0, gameconst.LEAVE_AOI_TRAP)
 
     def onGetWitness(self):
@@ -285,6 +287,8 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         elif newState == gameconst.BornStateType.move:
             self.setAI(self.aiName)
             self._callback(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
+        elif newState == gameconst.BornStateType.reMove:
+            newState = gameconst.BornStateType.move
 
         self.bornState = newState
 

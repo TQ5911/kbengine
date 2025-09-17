@@ -30,6 +30,7 @@ import dungeonSrc
 import impOutfit
 import gameconfig
 import math
+import gameclass
 
 import dropAward
 import gamePlay_gamePlay as DDL
@@ -44,6 +45,7 @@ import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import dataUtils
 import actionContext
 import checkUserType
+import gamePlay_set as GP_SD
 
 import message_chatMessage as MCMD
 import iFubenSpace
@@ -75,6 +77,9 @@ import iSiegeWarCell
 import iChief
 import iNewbie
 import iCrossServer
+import gzip
+import json
+import guildAuthorization_authorization_def as GA_A_DD
 
 class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace, impTask.ImpTask, impCombat.ImpCombat,
              EventMgr.EventMgr, iComplexTeleport.IComplexTeleport, impTeam.ImpTeam, impRaid.ImpRaid,
@@ -118,7 +123,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         iScore.IScore.__init__(self)
 
         if not KBEngine.publish():
-            self.pyAddTimer(60, 30 * 60, gametimer.AVATAR_PROPERTY_CHECK)
+            self.pyAddTimer(1, 15, gametimer.AVATAR_PROPERTY_CHECK)
         self.pyAddTimer(60, 60, gametimer.CLEAR_TELEPORT_INFO_CACHE)
 
         gameglobal.roleGBIDToEntId[self.gbId] = self.id
@@ -549,7 +554,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         mapId = extraProps["mapId"]
         toPosition = extraProps["toPosition"]
         if mapId == formula.getMapId(self.spaceNo):
-            self.telToPos(toPosition)
+            self.teleportToCell(self, self.spaceNo,  toPosition, self.direction,'', ())
         else:
             self.applyEnterLineInternal(mapId, -1, toPosition, self.direction, {'fromLineNo': formula.getLineNo(self.spaceNo)})
 
@@ -792,6 +797,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.suspendAutoCombat(gameconst.SuspendAutoCombatReason.Teleport)
         self.endApplyGather(gameconst.CancelGatherReason.Teleport)
         self.cancelController('Movement')
+        # 先移除身上buff再传送
+        self.removeBuffsByTag('scenesClear')
 
     def _resetTeleportCache(self, spaceNo, callback, callbackArgs):
         if gameconfig.enableTeleportDict():
@@ -941,8 +948,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def _onTeleportSuccess(self, nearbyEntity):
         INFO_MSG('zt: onTeleportSuccess', self.gbId, self.spaceNo, self._getTeleportInfoCache())
         self.refreshAreaTaskTimer()
-        if self.teamId > 0:
-            gameengine.getTeamStub(self.teamId).updateMemberVolatileAttr(self.teamId, self.gbId, {'spaceNo':self.spaceNo})
         self.recoverAutoCombat(0, gameconst.SuspendAutoCombatReason.Teleport)
         self.base.setBaseSpaceNo(self.spaceNo)
         self.resetStateTeleport(self.lastTeleportSpaceNoRecord)
@@ -973,7 +978,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             gameengine.getLineStub(lineType).updateLinePlayerInfo(lineNo, self.base, self.gbId, upData)
 
         self.popTempMiscProp(gameconst.AvatarProps.isLightningArea)
-        self.removeBuffsByTag('scenesClear')
 
         gamelog.log('Teleport', {
             'role_id': self.gbId,
@@ -1147,6 +1151,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.viewEnterViewSet.discard(targetId)
             self.isNeedResortView = True
 
+    def checkInView(self, targetID):
+        return targetID in self.enterViewList
+
     def pySetWitnessType(self, eId, witnessType):
         self.setWitnessType(eId, witnessType)
 
@@ -1316,6 +1323,102 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if formula.spaceInWorldLine(self.spaceNo):
             return self.bigWorldRouteController
         return None
+    
+    def onDailyHealWoundsTimesRefresh(self):
+        self.dailyHealWoundsTimes = 0
+    
+    def _hasWoundsCanHeal(self):
+        for debuffId in GP_SD.datas['clearDebuffID']['value']:
+            if self.hasBuff(debuffId):
+                return True
+        return False
+    
+    def checkHealWoundsItemCond(self):
+        if self._hasWoundsCanHeal():
+            return gameconst.UseItem.TRUE
+        else:
+            self.showMsg(MMD.datas.HealingWoundsMsg2, [])
+            return gameconst.UseItem.FALSE
+        
+    @utils.isMyself
+    @gamedecorator.limitcall(1)
+    def tryHealWoundsFromNpc(self, exposed):
+        if not self._hasWoundsCanHeal():
+            self.showMsg(MMD.datas.HealingWoundsMsg2, [])
+            return
+        
+        costIdx = min(len(GP_SD.datas['HealingWoundsCost']['value']) - 1, self.dailyHealWoundsTimes)
+        cost = GP_SD.datas['HealingWoundsCost']['value'][costIdx]
+        _deductVal = dropAward.DeductWealthVal()
+        _deductVal.addWealthByItemId(
+            GP_SD.datas['HealingWoundsCostCurrency']['value'],
+            cost,
+        )
+        self.base.onCheckAndCostWealth(gameconst.CELL, AAC_AACDD.datas.BONUS_SRC_HEAL_WOUNDS, 'healWoundsFromNpcCallback', _deductVal, {})
+
+    def healWoundsFromNpcCallback(self, checkResult, args):
+        if not checkResult:
+            self.showMsg(MMD.datas.itemNotEnough, [str(GP_SD.datas['HealingWoundsCostCurrency']['value'])])
+            return
+
+        self.dailyHealWoundsTimes += 1
+        self.doHealWounds()
+
+    def doHealWounds(self):
+        for debuffId in GP_SD.datas['clearDebuffID']['value']:
+            if self.hasBuff(debuffId):
+                self.removeBuff(debuffId)
+        self.showMsg(MMD.datas.HealingWoundsMsg1, [])
+        return gameconst.UseItem.TRUE
+    
+    @utils.isMyself
+    @gamedecorator.limitcall(1)
+    def getTargetPlayerInfo(self, exposed, targetGbId):
+        gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+            [targetGbId, ], 
+            'onGetTargetPlayerInfo',
+            (self, ), 
+            self, 
+            'onGetTargetPlayerInfoOffline', 
+            None)
+        
+    def _concatPlayerInfo(self, guildJob):
+        data = {}
+        #个人信息
+        data['name'] = self.name
+        data['level'] = self.level
+        data['school'] = self.school
+        data['sex'] = self.sex
+        data['totalScore'] = self.totalScore
+        data['guildName'] = self.guildName
+        data['guildUUID'] = self.guildUUID
+        data['guildJob'] = guildJob
+        #装备
+        dic = self.bodyEquipData.toBodyEquipsClientDict()
+        data['bodyEquipList'] = dic
+
+        jsonStr = json.dumps(data).encode('ascii')
+        zStr = gzip.compress(jsonStr)
+        DEBUG_MSG("onGetTargetPlayerInfo", len(zStr), len(jsonStr), jsonStr)
+        return zStr
+
+    def onGetTargetPlayerInfo(self, src):
+        gameengine.getGlobalBase('GuildStub').callOnGuild(
+            self.guildUUID,
+            'getMemberJob',
+            (self.gbId, self, src),
+            self,
+            'onGetMemberJob',
+            (GA_A_DD.datas.BONUS_SRC_UNKNOWN, src),
+        )
+
+    def onGetMemberJob(self, job, src):
+        zStr = self._concatPlayerInfo(job)
+        src.base.streamStringProxy(zStr, '', gameconst.StreamStringID.PLAYER_INFO_DATA)
+        
+    def onGetTargetPlayerInfoOffline(self, targetGbId):
+        DEBUG_MSG("onGetTargetPlayerInfoOffline", targetGbId)
+        gameengine.getGlobalBase('PlayerStub').getPlayerInfoOffline(self.base, targetGbId)
 
 # ----------------------------------------- blazing start --------------------------------------
     @utils.isMyself

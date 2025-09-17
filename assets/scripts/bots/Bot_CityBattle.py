@@ -7,7 +7,7 @@ import BotClient
 import botBase
 import re
 import json
-
+from datetime import datetime
 # 移除命令行参数依赖，统一使用本服登录模式
 
 # BOT_CONFIG = botBase.initBotConfig(__file__)
@@ -111,7 +111,7 @@ class PlayerDelegate(object):
 
     # 这里通过服务器给客户端发送聊天消息，指示机器人干什么
     def onRecvAvatarChannelMsg(self, channelID, avatarInfo, msgId):
-
+    
         if msgId == '获取所有机器人gbid':
             gbidlist.append(self.player.gbId)
 
@@ -144,7 +144,7 @@ class PlayerDelegate(object):
                 self.base.runGmCommand(f'$setpos 0 {x} {y} {z}')
 
         elif msgId == '升级':
-            self.base.runGmCommand(f'$setlv 0 {random.randint(20,70)}')
+            self.base.runGmCommand(f'$setlv 0 70')
 
         elif msgId == '获取金币':
             self.base.runGmCommand('$getitems 0 0 100000 0 30000001')
@@ -197,7 +197,9 @@ class PlayerDelegate(object):
 
         elif msgId.startswith('加入指定帮会'):
             guildUUID = re.search(r"加入指定帮会(\d+)", msgId).group(1)
-            self.base.applyJoinGuild(int(guildUUID))
+            self.base.oneKeyGuildApply(int(guildUUID))
+            self.debug(f'加入指定帮会{guildUUID}')
+
 
         elif msgId.startswith('加入进攻帮会'):
             guildUUID = re.search(r"加入进攻帮会(\d+)", msgId).group(1)
@@ -206,6 +208,7 @@ class PlayerDelegate(object):
 
         elif msgId.startswith('加入防守帮会'):
             guildUUID = re.search(r"加入防守帮会(\d+)", msgId).group(1)
+            self.debug(f'加入防守帮会{guildUUID}')
             if self.botClient.accountName in fangshoubotlist:
                 self.base.applyJoinGuild(int(guildUUID))
 
@@ -216,7 +219,7 @@ class PlayerDelegate(object):
         elif msgId == '机器人初始化':
             self.debug("开始机器人初始化...")
             self.base.runGmCommand('$finishNewbie 0 0')  # 跳过新手
-            self.base.runGmCommand(f'$setlv 0 {random.randint(70, 80)}')  # 随机等级
+            self.base.runGmCommand(f'$setlv 0 {random.randint(65,70 )}')  # 随机等级
             self.base.runGmCommand('$getitems 0 0 100000 0 30000001')  # 获取金币
             self.base.sendWorldChatMsg('机器人初始化完成')
             
@@ -295,9 +298,11 @@ def crossServerBot():
 
 def startBot():
     """启动城战机器人 - 统一本服登录"""
+    today = datetime.now()
+    month_day = today.strftime("%m%d")
     ts = []
     fromIdx = 0
-    botCount = 100
+    botCount = 50
       # 机器人数量
     print(f'[机器人启动] 开始创建 {botCount} 个城战机器人')
     
@@ -308,14 +313,14 @@ def startBot():
     
     for i in range(botCount):
         idx = fromIdx + i
-        if i <=50:
-            account_name = f'jingong{idx}'
-            jingongavatar_name = f'进攻{idx}'
-            jingongbotlist.append(jingongavatar_name)
-        else:
-            account_name = f'fangshou{idx}'
-            avatar_name = f'防守{idx}'
-            fangshoubotlist.append(avatar_name)
+        # if i <=50:
+        account_name = f'jingong{idx}'
+        avatar_name = f'进攻{idx}-{month_day}'
+        jingongbotlist.append(avatar_name)
+        # else:
+        #     account_name = f'fangshou{idx}'
+        #     avatar_name = f'防守{idx}'
+        #     fangshoubotlist.append(avatar_name)
         
         try:
             client = BotClient.BotClient(account_name, avatar_name, 1)

@@ -164,10 +164,13 @@ datas ={
             "Level": 19,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": "",
+            "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 20.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowMonsterGroupID": ""
           }
         },
         "10110008": {
@@ -260,10 +263,13 @@ datas ={
             "Level": 19,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": "",
+            "PathID": "",
             "Radius": 6.0,
             "RefreshNum": 2,
             "RefreshTime": 20.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowMonsterGroupID": ""
           }
         },
         "10110012": {
@@ -351,102 +357,6 @@ datas ={
           "PosX": 129.1555,
           "PosY": 156.8772,
           "PosZ": 209.8988,
-          "Props": {
-            "GroupID": "",
-            "Level": 19,
-            "MapEntityScale": 0,
-            "MapEntityType": 0,
-            "Radius": 6.0,
-            "RefreshNum": 2,
-            "RefreshTime": 20.0,
-            "Remark": ""
-          }
-        },
-        "10110016": {
-          "ActivityID": 0,
-          "ClassName": "Monster",
-          "ClassNameType": 0,
-          "CustomID": "",
-          "Dir": 0.0,
-          "DisplayName": "",
-          "EntityID": 11240023,
-          "ID": 10110016,
-          "Name": "\u72d02",
-          "PosX": 192.6071,
-          "PosY": 151.0033,
-          "PosZ": 208.6625,
-          "Props": {
-            "GroupID": "",
-            "Level": 19,
-            "MapEntityScale": 0,
-            "MapEntityType": 0,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 20.0,
-            "Remark": ""
-          }
-        },
-        "10110017": {
-          "ActivityID": 0,
-          "ClassName": "Monster",
-          "ClassNameType": 0,
-          "CustomID": "",
-          "Dir": 0.0,
-          "DisplayName": "",
-          "EntityID": 11240023,
-          "ID": 10110017,
-          "Name": "\u72d02",
-          "PosX": 199.7716,
-          "PosY": 151.9746,
-          "PosZ": 204.8677,
-          "Props": {
-            "GroupID": "",
-            "Level": 19,
-            "MapEntityScale": 0,
-            "MapEntityType": 0,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 20.0,
-            "Remark": ""
-          }
-        },
-        "10110018": {
-          "ActivityID": 0,
-          "ClassName": "Monster",
-          "ClassNameType": 0,
-          "CustomID": "",
-          "Dir": 0.0,
-          "DisplayName": "",
-          "EntityID": 11240024,
-          "ID": 10110018,
-          "Name": "\u72d05",
-          "PosX": 199.9526,
-          "PosY": 152.6955,
-          "PosZ": 201.0962,
-          "Props": {
-            "GroupID": "",
-            "Level": 19,
-            "MapEntityScale": 0,
-            "MapEntityType": 0,
-            "Radius": 6.0,
-            "RefreshNum": 2,
-            "RefreshTime": 20.0,
-            "Remark": ""
-          }
-        },
-        "10110019": {
-          "ActivityID": 0,
-          "ClassName": "Monster",
-          "ClassNameType": 0,
-          "CustomID": "",
-          "Dir": 0.0,
-          "DisplayName": "",
-          "EntityID": 11240024,
-          "ID": 10110019,
-          "Name": "\u72d05",
-          "PosX": 192.0672,
-          "PosY": 151.2118,
-          "PosZ": 206.5421,
           "Props": {
             "GroupID": "",
             "Level": 19,
@@ -6639,10 +6549,11 @@ datas ={
           "PosZ": 105.2759,
           "Props": {
             "CameraId": 33101101,
+            "GateType": 0,
             "Remark": "",
             "TelDir": 340.2214,
             "TelX": 162.2224,
-            "TelY": 168.7483,
+            "TelY": 168.5293,
             "TelZ": 114.7232
           }
         },

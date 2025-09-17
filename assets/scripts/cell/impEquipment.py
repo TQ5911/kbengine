@@ -165,14 +165,7 @@ class ImpEquipment(object):
             WARNING_MSG('in cellEquipEnhance, items not enouth')
             self.client.onEquipEnhanceFailed(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId)
             return
-        equipItem = self.bodyEquipData.getEquipItem(slotId)
-        if equipItem:
-            equipItem.doEnhanceEquip(self, opUUID, enhanceLv, onBody=True)
-            self.client.onEquipEnhanceSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId,
-                                           equipItem.getEnhanceLevel(), equipItem.getEnhanceLvVal())
-            self.base.triggerAchievement(gameconst.AchieveType.ENHANCE_EQUIPMENT)
-            self.updateEquipmentScore()
-
+        self.enhanceSuccess(opUUID, slotId, enhanceLv)
             # isMaxVal and self.base.baseCheckAchievement(gameconst.AchieveTargetType.TARGET_ACTION,
             #                                             (gameconst.AchieveTargetActionId.EQUIP_ENHANCE_LEVEL_FULL, ))
             # self.base.makeEquipmentEnhanceLog(equipItem.itemId, equipItem.uniqueId, enhanceLv, oldEncVal, enhanceVal,
@@ -182,7 +175,16 @@ class ImpEquipment(object):
             # self.base.baseCheckAchievement(gameconst.AchieveTargetType.EQUIPMENT_ENHANCED, ())
             # NOTE()(ACHIEVE): 装备::装备首次达到强化等级
             # self.base.baseCheckAchievement(gameconst.AchieveTargetType.EQUIPMENT_ENHANCED_TOLVL, (enhanceLv, ))
-
+    def enhanceSuccess(self, opUUID, slotId, enhanceLv):
+        equipItem = self.bodyEquipData.getEquipItem(slotId)
+        if equipItem and equipItem.checkEnhancementValid(enhanceLv) and equipItem.doEnhanceEquip(self, opUUID, enhanceLv, onBody=True):
+            self.client.onEquipEnhanceSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId,
+                                           equipItem.getEnhanceLevel(), equipItem.getEnhanceLvVal())
+            self.base.triggerAchievement(gameconst.AchieveType.ENHANCE_EQUIPMENT)
+            self.updateEquipmentScore()
+            return True
+        return False
+    
     def unlockBodyEquips(self):
         self.bodyEquipData.doUnlockBodyEquips()
 
@@ -741,3 +743,7 @@ class ImpEquipment(object):
 
     def getInscriptionEffects(self, skillID, effectType):
         return self.bodyEquipData.getInscriptionEffects(skillID, effectType)
+
+    def modifyEquipEnhanceLevel(self, slotID, enhanceLevel):
+        INFO_MSG('in modifyEquipEnhanceLevel, slotId:', enhanceLevel)
+        return self.enhanceSuccess(0, slotID, enhanceLevel)

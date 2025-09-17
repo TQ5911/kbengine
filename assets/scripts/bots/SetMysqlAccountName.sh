@@ -4,7 +4,8 @@ DB_USER="fengyan"
 DB_PASS="123456"
 DB_NAME="game_trunk"
 # 更新 SQL 语句
-UPDATE_SQL="UPDATE kbe_accountinfos SET accountName = CASE
+UPDATE_SQL="UPDATE kbe_accountinfos SET
+accountName = CASE
     WHEN accountName NOT LIKE '1:%' THEN CONCAT('1:', accountName)
     ELSE accountName
 END,

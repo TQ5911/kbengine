@@ -16,6 +16,9 @@ import itertools
 import iBaseNoCell
 import iGlobal
 import iTimer
+import math
+import random
+import sMath
 
 import dungeonPlayMode
 
@@ -209,11 +212,11 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if not entNum:
             return
 
-    def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType):
+    def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType, reliveHp):
         raise NotImplementedError()
 
-    def _onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType):
-        INFO_MSG('onReliveInDungeon::', spaceNo, playerBox, playerGbId, reliveType)
+    def _onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType, reliveHp=0):
+        INFO_MSG('onReliveInDungeon::', spaceNo, playerBox, playerGbId, reliveType, reliveHp)
         if spaceNo not in self.spaces:
             ERROR_MSG('wl: onReliveInDungeon cannot find space:', spaceNo)
             return
@@ -246,7 +249,21 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
             rebornD, *_ = rebornPosDict.values()
             rebornPos = (rebornD['PosX'], rebornD['PosY'], rebornD['PosZ'])
-            playerBox.cell.reliveToPos(rebornPos, None, 0, None)
+            rebornDir = (0.0, 0.0, rebornD['Dir'] * math.pi / 180)
+            # 修改下复活点
+            if spaceNo in self.rebornPosCache:
+                posCache = self.rebornPosCache[spaceNo]
+                INFO_MSG('relive use rebornPosCache', spaceNo, posCache)
+                # 做个随机偏移
+                angle = random.uniform(0, 2 * math.pi)
+                radius = max(2, rebornD['Props']['Radius'])
+                offsetX = math.cos(angle) * radius
+                offsetZ = math.sin(angle) * radius
+                rebornPos = (posCache[0] + offsetX, posCache[1], posCache[2] + offsetZ)
+                # 计算方向
+                yaw = sMath.getYawFromPoints(posCache, rebornPos)
+                rebornDir = (0.0, 0.0, yaw)
+            playerBox.cell.reliveToPos(rebornPos, rebornDir, reliveHp, None)
 
         elif reliveType == gameconst.RELIVE_TYPE_DIRECTLY:
             playerBox.cell.reliveToPos(None, None, 0, None)
@@ -257,6 +274,10 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         else:
             ERROR_MSG('onReliveInDungeon::reliveType is not valid, got {}'.format(reliveType))
+    
+    def onCreateNewRebornPos(self, spaceNo, position):
+        INFO_MSG('onCreateNewRebornPos', spaceNo, position)
+        self.rebornPosCache[spaceNo] = position
 
     def onDungeonStarted(self, spaceNo, tCreate):
         """call when dungeon started"""

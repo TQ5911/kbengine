@@ -15,42 +15,54 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    92000001: _tools.RODict({
-        "ID": 92000001,
-        "name": "沙虫",
-        "bornAnimation": "born",
-        "bornAnimationTime": 1.8,
-        "resetAnimation": "reset",
-        "resetAnimationTime": 1.0,
-        "resetCdAfterCombat": 6.0,
-        "summonID": 0,
-        "summonCD": 0.0,
-        "summonLimit": 0
-    }),
-    92000002: _tools.RODict({
-        "ID": 92000002,
-        "name": "雕塑",
-        "bornAnimation": "skill1",
-        "bornAnimationTime": 3.0,
-        "resetAnimation": "skill2",
-        "resetAnimationTime": 3.0,
-        "resetCdAfterCombat": 0.0,
-        "summonID": 0,
-        "summonCD": 0.0,
-        "summonLimit": 0
-    }),
-    92000003: _tools.RODict({
-        "ID": 92000003,
+    305001: _tools.RODict({
+        "ID": 305001,
         "name": "果蝇召唤",
-        "bornAnimation": "skill1",
-        "bornAnimationTime": 3.0,
+        "bornAnimation": "born",
+        "bornAnimationTime": 2.1,
         "resetAnimation": "",
         "resetAnimationTime": 0.0,
         "resetCdAfterCombat": 0.0,
-        "summonID": 11981202,
+        "summonID": 11981205,
         "summonCD": 3.0,
         "summonLimit": 3
+    }),
+    305101: _tools.RODict({
+        "ID": 305101,
+        "name": "沙虫",
+        "bornAnimation": "born",
+        "bornAnimationTime": 1.33,
+        "resetAnimation": "reset",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 5.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0
+    }),
+    305201: _tools.RODict({
+        "ID": 305201,
+        "name": "雕塑00",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 1.66,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 0.3,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0
+    }),
+    305202: _tools.RODict({
+        "ID": 305202,
+        "name": "雕塑00",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 1.76,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 0.3,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0
     })
 })
-minKey = 92000001
-maxKey = 92000003
+minKey = 305001
+maxKey = 305202

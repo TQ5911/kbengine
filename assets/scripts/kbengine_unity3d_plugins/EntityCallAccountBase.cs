@@ -66,7 +66,7 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void reqCreateBot(string arg1, UInt16 arg2)
+		public void reqCreateBot(string arg1, UInt16 arg2, FACE_DATA arg3)
 		{
 			Bundle pBundle = newCall("reqCreateBot", 0);
 			if(pBundle == null)
@@ -74,6 +74,7 @@ namespace KBEngine
 
 			bundle.writeUnicode(arg1);
 			bundle.writeUint16(arg2);
+			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[25]).addToStreamEx(bundle, arg3);
 			sendCall(null);
 		}
 

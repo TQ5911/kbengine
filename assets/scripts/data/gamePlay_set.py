@@ -111,6 +111,10 @@ datas = _tools.RODict({
         "ID": "resurrectCDMSG",
         "value": 54000075,
     }),
+    "punishmentKillerTips": _tools.RODict({
+        "ID": "punishmentKillerTips",
+        "value": "{0}",
+    }),
     "killerTips": _tools.RODict({
         "ID": "killerTips",
         "value": "击杀者：<color=#d35a66>{0}</color>",
@@ -194,5 +198,33 @@ datas = _tools.RODict({
     "dropGearTab": _tools.RODict({
         "ID": "dropGearTab",
         "value": "装备（{0}/{1}）",
+    }),
+    "clearDebuffID": _tools.RODict({
+        "ID": "clearDebuffID",
+        "value": _tools.ROList([64000009, 64000010]),
+    }),
+    "HealingWoundsCost": _tools.RODict({
+        "ID": "HealingWoundsCost",
+        "value": _tools.ROList([0, 180]),
+    }),
+    "HealingWoundsCostCurrency": _tools.RODict({
+        "ID": "HealingWoundsCostCurrency",
+        "value": 30000001,
+    }),
+    "HealingWoundsMsg1": _tools.RODict({
+        "ID": "HealingWoundsMsg1",
+        "value": 54003121,
+    }),
+    "HealingWoundsMsg2": _tools.RODict({
+        "ID": "HealingWoundsMsg2",
+        "value": 54003122,
+    }),
+    "HealingWoundsConfirm": _tools.RODict({
+        "ID": "HealingWoundsConfirm",
+        "value": 54003123,
+    }),
+    "HealingWoundsConfirm2": _tools.RODict({
+        "ID": "HealingWoundsConfirm2",
+        "value": 54003124,
     })
 })

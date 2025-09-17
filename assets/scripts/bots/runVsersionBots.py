@@ -6,7 +6,8 @@ import pypinyin
 from pypinyin import lazy_pinyin
 from datetime import datetime
 
-modName,_school = sys.argv[1:3]
+# 添加目标服务器参数：modName, school, loginHost, loginPort
+modName, _school, _loginHost, _loginPort = sys.argv[1:5]
 const_workspace_id_h1 = "59721401"
 const_url_Alluser = f'https://api.tapd.cn/workspaces/users?workspace_id={const_workspace_id_h1}'
 const_api_username = "GLdhcEyf"
@@ -45,12 +46,16 @@ characterdict = {
     1002:{'avatarname':'法师','accountname':'fashi'},
     1003:{'avatarname':'战士','accountname':'zhanshi'},
 }
-def startBot(delegateCls,school):
+
+def startBot(delegateCls, school, loginHost, loginPort):
     today = datetime.now()
     month_day = today.strftime("%m%d")
     ts = []
+    
+    print(f'版本日机器人目标服务器: {loginHost}:{loginPort}')
+    
     Allusers = GetAllUsers()
-    for avatarName,accountName in Allusers.items():
+    for avatarName, accountName in Allusers.items():
         if school == 'all':
             # 为每个用户创建3个职业的机器人
             for school_id, info in characterdict.items():
@@ -61,7 +66,15 @@ def startBot(delegateCls,school):
                 
                 try:
                     client = BotClient.BotClient(final_account_name, final_avatar_name, school_id)
-                    robot = client.login()
+                    
+                    # 如果提供了登录服务器地址和端口，则使用指定服务器登录
+                    if loginHost and loginPort and loginHost.strip() and loginPort.strip():
+                        print(f'版本日机器人 {final_account_name} 登录到服务器: {loginHost}:{loginPort}')
+                        robot = client.login(accountType=0, loginAddr=loginHost.strip(), loginPort=int(loginPort))
+                    else:
+                        print(f'版本日机器人 {final_account_name} 登录到默认服务器')
+                        robot = client.login()
+                        
                     robot.setPlayerDelegate(delegateCls(robot, client))
                     
                     ts.append(client.tickThread)
@@ -73,14 +86,31 @@ def startBot(delegateCls,school):
         else:
             # 只创建指定职业的机器人
             final_account_name = f"{accountName}{int(month_day)}"
-            client = BotClient.BotClient(final_account_name, avatarName, int(school))
-            robot = client.login()
-            robot.setPlayerDelegate(delegateCls(robot, client))
+            final_avatarName = f"{avatarName}{int(month_day)}"
             
-            ts.append(client.tickThread)
-            time.sleep(1)
+            print(f"创建机器人 - 账号: {final_account_name}, 角色: {final_avatarName}, 职业: {school}")
+            
+            try:
+                client = BotClient.BotClient(final_account_name, final_avatarName, int(school))
+                
+                # 如果提供了登录服务器地址和端口，则使用指定服务器登录
+                if loginHost and loginPort and loginHost.strip() and loginPort.strip():
+                    print(f'版本日机器人 {final_account_name} 登录到服务器: {loginHost}:{loginPort}')
+                    robot = client.login(accountType=0, loginAddr=loginHost.strip(), loginPort=int(loginPort))
+                else:
+                    print(f'版本日机器人 {final_account_name} 登录到默认服务器')
+                    robot = client.login()
+                    
+                robot.setPlayerDelegate(delegateCls(robot, client))
+                
+                ts.append(client.tickThread)
+                time.sleep(1)
+                
+            except Exception as e:
+                print(f"创建机器人失败 - 账号: {final_account_name}, 错误: {e}")
+                continue
 
-    print(f"总共创建了 {len(ts)} 个机器人")
+    print(f"总共创建了 {len(ts)} 个版本日机器人，目标服务器: {loginHost}:{loginPort}")
     for t in ts:
         t.join()
 
@@ -89,6 +119,6 @@ if __name__ == '__main__':
     #GetAllUsers()
     time.sleep(10)
     if _school == 'all':
-        startBot(getattr(mod, 'DELEGATE_CLS'), _school)
+        startBot(getattr(mod, 'DELEGATE_CLS'), _school, str(_loginHost), str(_loginPort))
     else:
-        startBot(getattr(mod, 'DELEGATE_CLS'), int(_school))
+        startBot(getattr(mod, 'DELEGATE_CLS'), int(_school), str(_loginHost), str(_loginPort))

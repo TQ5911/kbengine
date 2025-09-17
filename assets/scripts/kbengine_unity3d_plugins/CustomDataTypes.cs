@@ -191,6 +191,9 @@ namespace KBEngine
 		public CHARACTER_VAL createFromStreamEx(MemoryStream stream)
 		{
 			CHARACTER_VAL datas = new CHARACTER_VAL();
+			datas.parentID = stream.readUint64();
+			datas.selfDbId = stream.readUint64();
+			datas.authDbId = stream.readUint64();
 			datas.gbId = stream.readUint64();
 			datas.dbId = stream.readUint64();
 			datas.name = stream.readUnicode();
@@ -205,6 +208,9 @@ namespace KBEngine
 
 		public void addToStreamEx(Bundle stream, CHARACTER_VAL v)
 		{
+			stream.writeUint64(v.parentID);
+			stream.writeUint64(v.selfDbId);
+			stream.writeUint64(v.authDbId);
 			stream.writeUint64(v.gbId);
 			stream.writeUint64(v.dbId);
 			stream.writeUnicode(v.name);
@@ -255,12 +261,16 @@ namespace KBEngine
 		{
 			CHARACTERS_INFO datas = new CHARACTERS_INFO();
 			datas.characters = characters_DataType.createFromStreamEx(stream);
+			datas.isArchiving = stream.readUint8();
+			datas.needArchiveAgain = stream.readUint8();
 			return datas;
 		}
 
 		public void addToStreamEx(Bundle stream, CHARACTERS_INFO v)
 		{
 			characters_DataType.addToStreamEx(stream, v.characters);
+			stream.writeUint8(v.isArchiving);
+			stream.writeUint8(v.needArchiveAgain);
 		}
 	}
 
@@ -399,6 +409,7 @@ namespace KBEngine
 			datas.uniqueId = stream.readUint64();
 			datas.bindType = stream.readUint8();
 			datas.attrJson = stream.readUnicode();
+			datas.lockStatus = stream.readInt8();
 			return datas;
 		}
 
@@ -411,6 +422,7 @@ namespace KBEngine
 			stream.writeUint64(v.uniqueId);
 			stream.writeUint8(v.bindType);
 			stream.writeUnicode(v.attrJson);
+			stream.writeInt8(v.lockStatus);
 		}
 	}
 
@@ -593,6 +605,7 @@ namespace KBEngine
 			datas.expireTime = stream.readUint32();
 			datas.uniqueId = stream.readUint64();
 			datas.bindType = stream.readUint8();
+			datas.lockStatus = stream.readInt8();
 			datas.auctionTime = stream.readUint32();
 			datas.fixedAffixes = fixedAffixes_DataType.createFromStreamEx(stream);
 			datas.randomAffixes = randomAffixes_DataType.createFromStreamEx(stream);
@@ -617,6 +630,7 @@ namespace KBEngine
 			stream.writeUint32(v.expireTime);
 			stream.writeUint64(v.uniqueId);
 			stream.writeUint8(v.bindType);
+			stream.writeInt8(v.lockStatus);
 			stream.writeUint32(v.auctionTime);
 			fixedAffixes_DataType.addToStreamEx(stream, v.fixedAffixes);
 			randomAffixes_DataType.addToStreamEx(stream, v.randomAffixes);
@@ -686,6 +700,7 @@ namespace KBEngine
 			datas.expireTime = stream.readUint32();
 			datas.uniqueId = stream.readUint64();
 			datas.bindType = stream.readUint8();
+			datas.lockStatus = stream.readInt8();
 			datas.attrJson = stream.readUnicode();
 			return datas;
 		}
@@ -699,6 +714,7 @@ namespace KBEngine
 			stream.writeUint32(v.expireTime);
 			stream.writeUint64(v.uniqueId);
 			stream.writeUint8(v.bindType);
+			stream.writeInt8(v.lockStatus);
 			stream.writeUnicode(v.attrJson);
 		}
 	}
@@ -1584,9 +1600,11 @@ namespace KBEngine
 			datas.teamMicsBlocked = stream.readUint8();
 			datas.recruitInfo = stream.readUnicode();
 			datas.isPublish = stream.readUint8();
-			datas.autoInPlace = stream.readUint8();
 			datas.teamMarkList = teamMarkList_DataType.createFromStreamEx(stream);
 			datas.onlyCaptainCanMark = stream.readUint8();
+			datas.memberNum = stream.readUint8();
+			datas.isAutoExpedition = stream.readUint8();
+			datas.password = stream.readString();
 			return datas;
 		}
 
@@ -1603,9 +1621,11 @@ namespace KBEngine
 			stream.writeUint8(v.teamMicsBlocked);
 			stream.writeUnicode(v.recruitInfo);
 			stream.writeUint8(v.isPublish);
-			stream.writeUint8(v.autoInPlace);
 			teamMarkList_DataType.addToStreamEx(stream, v.teamMarkList);
 			stream.writeUint8(v.onlyCaptainCanMark);
+			stream.writeUint8(v.memberNum);
+			stream.writeUint8(v.isAutoExpedition);
+			stream.writeString(v.password);
 		}
 	}
 
@@ -1871,13 +1891,14 @@ namespace KBEngine
 			datas.raidTeamList = raidTeamList_DataType.createFromStreamEx(stream);
 			datas.raidMinLevel = stream.readUint32();
 			datas.raidMinScore = stream.readInt32();
-			datas.autoInPlace = stream.readUint8();
 			datas.isPublish = stream.readUint8();
 			datas.raidAutoMatchTime = stream.readUint32();
 			datas.recruitInfo = stream.readUnicode();
 			datas.memberNum = stream.readUint8();
 			datas.onlyCaptainCanMark = stream.readUint8();
 			datas.raidMarkList = raidMarkList_DataType.createFromStreamEx(stream);
+			datas.isAutoExpedition = stream.readUint8();
+			datas.password = stream.readString();
 			return datas;
 		}
 
@@ -1896,13 +1917,14 @@ namespace KBEngine
 			raidTeamList_DataType.addToStreamEx(stream, v.raidTeamList);
 			stream.writeUint32(v.raidMinLevel);
 			stream.writeInt32(v.raidMinScore);
-			stream.writeUint8(v.autoInPlace);
 			stream.writeUint8(v.isPublish);
 			stream.writeUint32(v.raidAutoMatchTime);
 			stream.writeUnicode(v.recruitInfo);
 			stream.writeUint8(v.memberNum);
 			stream.writeUint8(v.onlyCaptainCanMark);
 			raidMarkList_DataType.addToStreamEx(stream, v.raidMarkList);
+			stream.writeUint8(v.isAutoExpedition);
+			stream.writeString(v.password);
 		}
 	}
 
@@ -2383,6 +2405,7 @@ namespace KBEngine
 			datas.expireTime = stream.readUint32();
 			datas.uniqueId = stream.readUint64();
 			datas.bindType = stream.readUint8();
+			datas.lockStatus = stream.readInt8();
 			datas.attrJson = stream.readUnicode();
 			return datas;
 		}
@@ -2396,6 +2419,7 @@ namespace KBEngine
 			stream.writeUint32(v.expireTime);
 			stream.writeUint64(v.uniqueId);
 			stream.writeUint8(v.bindType);
+			stream.writeInt8(v.lockStatus);
 			stream.writeUnicode(v.attrJson);
 		}
 	}
@@ -4709,6 +4733,125 @@ namespace KBEngine
 			stream.writeUint8(v.changeType);
 			stream.writeUint8(v.onlyCaptainCanMark);
 			teamMarkList_DataType.addToStreamEx(stream, v.teamMarkList);
+		}
+	}
+
+
+
+	public class DATATYPE_RED_BAG_FETCH_VAL : DATATYPE_BASE
+	{
+		public RED_BAG_FETCH_VAL createFromStreamEx(MemoryStream stream)
+		{
+			RED_BAG_FETCH_VAL datas = new RED_BAG_FETCH_VAL();
+			datas.playerGbId = stream.readUint64();
+			datas.name = stream.readUnicode();
+			datas.money = stream.readUint32();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, RED_BAG_FETCH_VAL v)
+		{
+			stream.writeUint64(v.playerGbId);
+			stream.writeUnicode(v.name);
+			stream.writeUint32(v.money);
+		}
+	}
+
+
+
+	public class DATATYPE_RED_BAG_CLIENT_VAL : DATATYPE_BASE
+	{
+		public RED_BAG_CLIENT_VAL createFromStreamEx(MemoryStream stream)
+		{
+			RED_BAG_CLIENT_VAL datas = new RED_BAG_CLIENT_VAL();
+			datas.redbagId = stream.readUint64();
+			datas.playerName = stream.readUnicode();
+			datas.redbagType = stream.readUint8();
+			datas.channel = stream.readUint8();
+			datas.money = stream.readUint32();
+			datas.leftMoney = stream.readUint32();
+			datas.num = stream.readUint32();
+			datas.leftNum = stream.readUint32();
+			datas.hasFetch = stream.readUint8();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, RED_BAG_CLIENT_VAL v)
+		{
+			stream.writeUint64(v.redbagId);
+			stream.writeUnicode(v.playerName);
+			stream.writeUint8(v.redbagType);
+			stream.writeUint8(v.channel);
+			stream.writeUint32(v.money);
+			stream.writeUint32(v.leftMoney);
+			stream.writeUint32(v.num);
+			stream.writeUint32(v.leftNum);
+			stream.writeUint8(v.hasFetch);
+		}
+	}
+
+
+
+	public class DATATYPE_RED_BAG_FETCH_CLIENT_VAL : DATATYPE_BASE
+	{
+		private DATATYPE__RED_BAG_FETCH_CLIENT_VAL_fetchPlayerList_ArrayType_ChildArray fetchPlayerList_DataType = new DATATYPE__RED_BAG_FETCH_CLIENT_VAL_fetchPlayerList_ArrayType_ChildArray();
+
+		public class DATATYPE__RED_BAG_FETCH_CLIENT_VAL_fetchPlayerList_ArrayType_ChildArray : DATATYPE_BASE
+		{
+			private DATATYPE_RED_BAG_FETCH_VAL itemType = new DATATYPE_RED_BAG_FETCH_VAL();
+
+			public List<RED_BAG_FETCH_VAL> createFromStreamEx(MemoryStream stream)
+			{
+				UInt32 size = stream.readUint32();
+				List<RED_BAG_FETCH_VAL> datas = new List<RED_BAG_FETCH_VAL>();
+
+				while(size > 0)
+				{
+					--size;
+					datas.Add(itemType.createFromStreamEx(stream));
+				};
+
+				return datas;
+			}
+
+			public void addToStreamEx(Bundle stream, List<RED_BAG_FETCH_VAL> v)
+			{
+				stream.writeUint32((UInt32)v.Count);
+				for(int i=0; i<v.Count; ++i)
+				{
+					itemType.addToStreamEx(stream, v[i]);
+				};
+			}
+		}
+
+		public RED_BAG_FETCH_CLIENT_VAL createFromStreamEx(MemoryStream stream)
+		{
+			RED_BAG_FETCH_CLIENT_VAL datas = new RED_BAG_FETCH_CLIENT_VAL();
+			datas.redbagId = stream.readUint64();
+			datas.playerName = stream.readUnicode();
+			datas.redbagType = stream.readUint8();
+			datas.channel = stream.readUint8();
+			datas.money = stream.readUint32();
+			datas.leftMoney = stream.readUint32();
+			datas.num = stream.readUint32();
+			datas.leftNum = stream.readUint32();
+			datas.maxGbId = stream.readUint64();
+			datas.fetchPlayerList = fetchPlayerList_DataType.createFromStreamEx(stream);
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, RED_BAG_FETCH_CLIENT_VAL v)
+		{
+			stream.writeUint64(v.redbagId);
+			stream.writeUnicode(v.playerName);
+			stream.writeUint8(v.redbagType);
+			stream.writeUint8(v.channel);
+			stream.writeUint32(v.money);
+			stream.writeUint32(v.leftMoney);
+			stream.writeUint32(v.num);
+			stream.writeUint32(v.leftNum);
+			stream.writeUint64(v.maxGbId);
+			fetchPlayerList_DataType.addToStreamEx(stream, v.fetchPlayerList);
 		}
 	}
 
@@ -7768,6 +7911,36 @@ namespace KBEngine
 		}
 
 		public void addToStreamEx(Bundle stream, List<SIEGEWAR_SEARCH_VAL> v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				itemType.addToStreamEx(stream, v[i]);
+			};
+		}
+	}
+
+
+
+	public class DATATYPE_AnonymousArray_10094 : DATATYPE_BASE
+	{
+		private DATATYPE_RED_BAG_CLIENT_VAL itemType = new DATATYPE_RED_BAG_CLIENT_VAL();
+
+		public List<RED_BAG_CLIENT_VAL> createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			List<RED_BAG_CLIENT_VAL> datas = new List<RED_BAG_CLIENT_VAL>();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(itemType.createFromStreamEx(stream));
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, List<RED_BAG_CLIENT_VAL> v)
 		{
 			stream.writeUint32((UInt32)v.Count);
 			for(int i=0; i<v.Count; ++i)

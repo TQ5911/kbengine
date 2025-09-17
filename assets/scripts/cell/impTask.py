@@ -58,13 +58,13 @@ class ImpTask(impTalk.ImpTalk):
             self.base.startTaskFailed(taskId, gameconst.TaskNotSuccReason.NPC_DIALOG)
         elif opType == gameconst.TaskOpTypeByTalkToPNC.NPC_TALK_TARGET:
             self.base.onTaskStepUpdate(gameconst.TaskTargetType.TASK_TARGET_TALK_NPC, taskId, (npcId, dialogId))
-
+    # 领取任务请求接口1
     @utils.isMyself
     def reqClaimTask(self, exposed, claimSrcType, taskId, paramStr):
         DEBUG_MSG('in reqClaimTask:', taskId)
         self.startClaimTask(taskId)
         return
-
+    # 
     def startClaimTask(self, taskId, itemMethodName='', itemArgs=(), taskCtx=None):
         DEBUG_MSG('startClaimTask:', taskId)
         if not taskCtx:
@@ -85,10 +85,10 @@ class ImpTask(impTalk.ImpTalk):
 
         taskCtx.seed = random.randint(100, 10000)
         self._contClaimTask(taskId, taskCtx)
-
+    # 
     def _contClaimTask(self, taskId, taskCtx):
         self._claimSingleTask(taskId, taskCtx)
-
+    # 通知base领取
     def _claimSingleTask(self, taskId, taskCtx):
         taskData = dataUtils.getRootTaskData(taskId)
         taskCondResult = self._checkPlayerClaimTaskCellCond(taskData)
@@ -100,20 +100,22 @@ class ImpTask(impTalk.ImpTalk):
             taskCtx.extra['pointsDic'] = pointsDic
         self.base.onCheckSingleTaskCellCondSucc(taskId, taskCtx)
         return
-
+    # 检测任务领取条件
     def _checkPlayerClaimTaskCellCond(self, taskData):
         # 自动放弃任务不可接取
         if taskData.get('IsAutoQuit'):
             return gameclass.TaskCondResult(False, playerName=self.name)
         taskId = taskData.get("TaskId", 0)
+        # 任务开放时间条件
         if not dataUtils.isTaskInOpenTime(taskId):
             return gameclass.TaskCondResult(False, playerName=self.name)
         # level condition
+        # 角色等级条件
         levelCondResult = self._checkTaskPlayerLevelCond(taskData)
         if not levelCondResult:
             return levelCondResult
 
-        # 职业
+        # 可领取的职业条件
         # openCondCheckProfres 默认值可能是 字符串 "0"、空字符串、整数0
         openCondCheckProfres = dataUtils.taskFieldVal(taskData, 'OpenCondCheckProfres')
         if openCondCheckProfres:
@@ -122,7 +124,7 @@ class ImpTask(impTalk.ImpTalk):
                 WARNING_MSG('   _checkPlayerClaimTaskCellCond, OpenCondCheckProfres failed:', openCondCheckProfres, self.school)
                 return gameclass.TaskCondResult(False, playerName=self.name)
 
-        # 性别校验
+        # 性别校验条件
         openCondCheckSex = dataUtils.taskFieldVal(taskData, 'OpenCondCheckSex')
         if openCondCheckSex and openCondCheckSex != self.sex:
             WARNING_MSG('   _checkPlayerClaimTaskCellCond, openCondCheckSex failed:', openCondCheckSex, self.sex)
@@ -156,7 +158,7 @@ class ImpTask(impTalk.ImpTalk):
                                 self.position, openCondTriggerArea)
                     return gameclass.TaskCondResult(False, playerName=self.name)
         return gameclass.TaskCondResult(True)
-
+    # 角色等级条件
     def _checkTaskPlayerLevelCond(self, taskData):
         ClaimCondLevelMin = dataUtils.taskFieldVal(taskData, 'ClaimCondLevelMin')
         ClaimCondLevelMax = dataUtils.taskFieldVal(taskData, 'ClaimCondLevelMax')
@@ -167,7 +169,7 @@ class ImpTask(impTalk.ImpTalk):
             return gameclass.TaskCondResult(False, dataUtils.taskMsgId('taskClaimAlert_Team_LevelCheck'),
                                             msgArgs=(self.name,), playerName=self.name)
         return gameclass.TaskCondResult(True)
-
+    # 获取需要到达的位置点信息
     def _getReachAreaPoints(self, taskId):
         randomPoints = {}
         randTargetTaskIds = dataUtils.getRandTargetPointTaskIds(taskId)

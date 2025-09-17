@@ -411,16 +411,17 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
             ERROR_MSG('onCreateAndEnterRaidDungeonCheckComplete:: check failed, {}'.format(err))
             return
 
-        # CASE1: 团队副本二次确认
-        if DDID.datas[dungeonNo]['teammateConfirm'] and self.raidInfo.raidPlayerNum > 1:
-            raidUUID = self.raidUUID
+        # 这次改版，需要废除这个二次standby的check流程
+        # # CASE1: 团队副本二次确认
+        # if DDID.datas[dungeonNo]['teammateConfirm'] and self.raidInfo.raidPlayerNum > 1:
+        #     raidUUID = self.raidUUID
 
-            extraProps.update({'enterDungeonNo': dungeonNo,
-                          'src': src,
-                          '_checkSrc': gameconst.RaidDungeonStandbyCheckSrcEnum.ENTER_DUNGEON})
-            gameengine.getRaidStub(raidUUID).startRaidStandbyChecker(
-                self.base, self.gbId, raidUUID, extraProps)
-            return
+        #     extraProps.update({'enterDungeonNo': dungeonNo,
+        #                   'src': src,
+        #                   '_checkSrc': gameconst.RaidDungeonStandbyCheckSrcEnum.ENTER_DUNGEON})
+        #     gameengine.getRaidStub(raidUUID).startRaidStandbyChecker(
+        #         self.base, self.gbId, raidUUID, extraProps)
+        #     return
 
         # CASE2: 直接创建团队
         self.doCreateAndEnterRaidDungeon(raidUUID, dungeonNo, src, extraProps)

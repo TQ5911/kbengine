@@ -709,7 +709,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return False
         return True
 
-    def _createTeam(self, teamId, teamTarget, teamPlayerInfoDic, startAutoMatch):
+    def _createTeam(self, teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, teamPlayerInfoDic):
         gbId = teamPlayerInfoDic['gbId']
         box = teamPlayerInfoDic['box']
         playerName = teamPlayerInfoDic['playerName']
@@ -723,19 +723,53 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         openId = teamPlayerInfoDic['openId']
         teamVal = team.TeamCacheVal(teamId, teamTarget, gbId, box, playerName, level, school, sex, picFrameId,
                                                  score=score, mountState=mountState, equipSetLv=equipSetLv, openId=openId)
-        if teamVal.teamTarget > 0:
-            teamVal.isPublish = True
+        
+        teamVal.teamMinLv = minLevel
+        teamVal.teamMinScore = minScore
+        teamVal.recruitInfo = recruitInfo
+        teamVal.password = password
+        teamVal.isAutoExpedition = isAutoExpedition
+        
+        teamVal.addMember(gbId, box, playerName, level, school, sex, picFrameId, False, True, score=score, 
+                          mountState=0, equipSetLv=equipSetLv, isDead=False, openId=openId)
+            
         self.teamDic[teamId] = teamVal
-        INFO_MSG('_createTeam', self.teamDic)
-        if startAutoMatch:
-            self.teamPrepareAutoMatch(teamId, teamPlayerInfoDic.get('guildUUID', 0))
 
-    def createTeam(self, box, teamId, teamTarget, teamPlayerInfoDic, startAutoMatch):
-        INFO_MSG('createTeam', teamId, teamTarget, teamPlayerInfoDic, startAutoMatch)
+        # 没有密码的属于公开
+        if len(teamVal.password) == 0:
+            self.isPublish = True
+            # 自由组队目标为1，不进匹配队列
+            if teamVal.teamTarget > 1:
+                self.teamPrepareAutoMatch(teamId, teamPlayerInfoDic.get('guildUUID', 0))
+        
+        # 定时启动自动检查是否自动开始
+        self.checkAutoStart(teamId)
+
+        INFO_MSG('_createTeam', self.teamDic)
+
+    def createTeam(self, box, teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, teamPlayerInfoDic):
+        INFO_MSG('createTeam', teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, teamPlayerInfoDic)
         if not self.isCanCreateTeam(teamId):
             box and box.cell and box.cell.resetTryAddTeamCD()
         else:
-            self._createTeam(teamId, teamTarget, teamPlayerInfoDic, startAutoMatch)
+            self._createTeam(teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, teamPlayerInfoDic)
+
+    def checkAutoStart(self, teamID):
+        teamVal = self.teamDic.get(teamID)
+        if not teamVal:
+            return
+        
+        if teamVal.autoStartTimer > 0:
+            self._cancelCallback(teamVal.autoStartTimer, gametimer.TIMER_TAG_TEAM_AUTO_START)
+            teamVal.autoStartTimer = 0
+
+        if teamVal.isAutoExpedition and teamVal.teamTarget > 1:
+            if teamVal.isTeamFull():
+                captainBox = teamVal.getCaptainBox()
+                if captainBox and captainBox.cell:
+                    captainBox.cell.autoStartCrusadeDungeon()
+                    return
+            teamVal.autoStartTimer = self._callback(5, 'checkAutoStart', (teamID,), gametimer.TIMER_TAG_TEAM_AUTO_START)
 
     def isCanApplyJoinTeam(self, box, teamId, gbId, level, score):
         teamVal = self.getTeamByTeamId(teamId)
@@ -1515,34 +1549,20 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         teamVal.stopAutoMatch(timeout=True)
         return
 
-    def setTeamTarget(self, teamId, teamTarget, minLv, minScore, guildUUID, recruitInfo, autoPublish, autoStartMatching):
+    def setTeamTarget(self, teamId, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition, guildUUID):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
             return
         # check team member's level and score
-
-        if not teamVal.setTarget(teamTarget, minLv, minScore):
+        if not teamVal.setTarget(teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition):
             return
-        self.publishTeam(teamId, guildUUID, autoPublish, recruitInfo, autoStartMatching)
-
-    def publishTeam(self, teamId, guildUUID, autoPublish, recruitInfo, autoStartMatching):
-        teamVal = self.getTeamByTeamId(teamId)
-        if not teamVal:
-            return
-        teamVal.reqPublishTeam(autoPublish, recruitInfo)
-        teamVal.broadcastAllMembersClient('onPublishTeam', (autoPublish, recruitInfo))
-        if autoPublish:
-            if autoStartMatching:
-                self.teamPrepareAutoMatch(teamId, guildUUID)
-                return
+        
+        # 改完队伍的目标之后，统一刷一遍匹配条件
         self.teamPrepareStopAutoMatch(teamId)
+        if self.isPublish and self.teamTarget > 1:
+            self.teamPrepareAutoMatch(teamId, guildUUID)
 
-    def setAutoInPlace(self, teamId, bAutoInPlace):
-        teamVal = self.getTeamByTeamId(teamId)
-        if not teamVal:
-            return
-        teamVal.setAutoInPlace(bAutoInPlace)
-        teamVal.broadcastAllMembersClient('onSetAutoInPlace', (bAutoInPlace, ))
+        self.checkAutoStart(teamId)
 
     def getTeamInfo(self, box, teamId):
         teamVal = self.getTeamByTeamId(teamId)
@@ -1808,4 +1828,52 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         teamVal = self.teamDic[teamId]
         teamVal.changeOnlyCaptainState(playerBox, state)
 
+    def reqJoinTeam(self, playerBox, teamID, password, playerProps):
+        err = self._reqJoinTeamCheck(teamID, password, playerProps)
+        playerBox.client.onJoinTeam(err.errno, teamID, password)
+        # 加入成功，刷新一下成员的cache
+        if err != gameconst.RaidErrno.RAID_OK:
+            ERROR_MSG("reqJoinRaid, err:", err, playerProps)
+            return
 
+    def _reqJoinTeamCheck(self, teamID, password, playerProps):
+        teamVal = self.getTeamByTeamId(teamID)
+        DEBUG_MSG('in _reqJoinTeamCheck:', teamID, playerProps, teamVal)
+        if not teamVal:
+            return None, gameconst.RaidErrno.RAID_TEAM_NOT_FOUND
+
+        # 非公开的需要检查一下密码
+        if not teamVal.isPublish:
+            if teamVal.password != password:
+                return None, gameconst.RaidErrno.RAID_PASSWORD_IS_WRONG
+
+        teamTargetInfo = TMACTD.datas.get(teamVal.teamTarget)
+        if teamTargetInfo is None:
+            ERROR_MSG("_reqJoinTeamCheck, misssing teamTarget", teamVal.teamTarget)
+            return None, gameconst.RaidErrno.UNKNOWN
+        
+        score = playerProps['score']
+        level = playerProps['level']
+        cfgMinLv = teamTargetInfo['minLevel']
+        cfgMinScore = teamTargetInfo['minScore']
+        if level < cfgMinLv:
+            return None, gameconst.RaidErrno.RAID_LEVEL_IS_LIMITED
+        if score < cfgMinScore:
+            return None, gameconst.RaidErrno.RAID_SCORE_LIMITED
+
+        _, err = self.addTeamMember(teamID, playerProps)
+        return err
+    
+    def clearTeamDungeonRewardRecord(self, teamID, gbID):
+        teamVal = self.getTeamByTeamId(teamID)
+        if not teamVal:
+            DEBUG_MSG("clearTeamDungeonRewardRecord, team is missing", teamID, gbID)
+            return
+        teamVal.clearTeamDungeonRewardRecord(gbID)
+
+    def addTeamDungeonRewardRecord(self, teamID, gbID, rewardList):
+        teamVal = self.getTeamByTeamId(teamID)
+        if not teamVal:
+            DEBUG_MSG("addTeamDungeonRewardRecord, team is missing", teamID, gbID)
+            return
+        teamVal.addTeamDungeonRewardRecord(gbID, rewardList)

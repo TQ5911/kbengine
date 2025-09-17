@@ -102,7 +102,9 @@ class AureoleMixin(object):
                 ERROR_MSG('addAureoleEffect faileed', srcEntId, aureoleId)
                 return False
 
-        self.aureoleFormOtherDic.applyAureole(aureoleId, aureoleLv, srcEntId)
+        srcHostEntId = srcEnt.getHost().id if srcEnt.getHost() is not None else None
+        self.aureoleFormOtherDic.applyAureole(aureoleId, aureoleLv, srcEntId, srcHostEntId)
+
         clientAr = aureole.ClientAureoleVal(aureoleId, aureoleLv)
         self.allClients.onAddAureoleFromOthers(clientAr.getClientData())
         return True
@@ -116,8 +118,9 @@ class AureoleMixin(object):
             # 所以这里执行action的主体先用self吧
             endAction = AAD.datas[aureoleId].get('endActionToEffectObject')
             if endAction:
+                _srcEntId = curar.srcHostEntId if curar.srcHostEntId is not None else curar.srcEntId
                 self.doCombatActions(endAction, self, self, curar.srcEntId,
-                                     lambda r: actionContext.AureoleCtx(curar.srcEntId, aureoleId, curar.level, r))
+                                     lambda r: actionContext.AureoleCtx(_srcEntId, aureoleId, curar.level, r))
 
             if self.isReal():
                 self.allClients.onRemoveAureoleFromOthers(aureoleId)
@@ -671,6 +674,16 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             return None
 
         return skill
+
+    def safePopSkill(self, skillId):
+        if skillId <= 0:
+            return
+
+        _skill = self.getSkill(skillId)
+        if _skill:
+            _skill.resetSkill(self)
+
+        return self.popSkill(skillId)
 
     def addSkill(self, skillId, skillLv, tNextCast=0):
         if skillId not in SSD.datas:
@@ -1440,7 +1453,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if ret != gameconst.UseSkillCheck.CHEKC_OK:
             target = KBEngine.entities.get(targetID)
             if not (target and target.isDie()):
-                ERROR_MSG("Spell::doUseSkill(%i):skillID=%i ret=%i tNextCast=%i" % (self.id, skillId, ret, skill.tNextCast))
+                WARNING_MSG("Spell::doUseSkill(%i):skillID=%i ret=%i tNextCast=%i" % (self.id, skillId, ret, skill.tNextCast))
             if ret & gameconst.UseSkillCheck.INVALID_TARGET and isClient:
                 targetID = 0
             else:
@@ -2239,12 +2252,21 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         self.calcHealStats(hpDelta)
 
-    def displacedBySkill(self, srcEntityId, pos, speed, timeEx):
+    def displacedBySkill(self, srcEntityId, pos, speed, timeEx, context=None):
         src = KBEngine.entities.get(srcEntityId)
         if not src:
             return False
 
-        if not self.checkConflictState(CCD.datas.bePushed, False):
+        _ret = self.checkConflictState(CCD.datas.bePushed, True)
+        if not _ret:
+            if _ret.extra == CCDD.datas.Bating:
+                skillDamges = context.getCombatResult()
+                if skillDamges:
+                    skillDamges.damageInfo.append(
+                        combatSkill.SkillDamageVal(
+                            self.id,
+                            0,
+                            gameconst.HitType.Immune))
             return False
 
         realDist = sMath.distance2D(self.position, pos)
@@ -2304,25 +2326,31 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                        'adjMinPhysicalAtk', 'adjMinPhysicalAtkAbs', 'maxPhysicalAtk', 'baseMaxPhysicalAtk', 'adjMaxPhysicalAtk',
                        'adjMaxPhysicalAtkAbs', 'minMagicAtk', 'baseMinMagicAtk', 'adjMinMagicAtk', 'adjMinMagicAtkAbs',
                        'maxMagicAtk', 'baseMaxMagicAtk', 'adjMaxMagicAtk', 'adjMaxMagicAtkAbs',
-                       'baseHit', 'adjHit', 'mulHit', 'baseDodge', 'adjDodge',
-                       'mulDodge',
-                       'baseDodgeDmg', 'adjDodgeDmg', 'mulDodgeDmg', 'adjFatal',
+                       'adjFatal',
                        'baseAntiFatal',
-                       'adjAntiFatal', 'mulAntiFatal', 'baseMortal', 'adjMortal', 'mulMortal', 'baseAntiMortal',
+                       'adjAntiFatal', 'baseMortal', 'adjMortal', 'baseAntiMortal',
                        'adjAntiMortal',
-                       'mulAntiMortal']
+                       ]
+        # 没有被定义和使用的属性,先移出来,不然报错
+        # 'mulHit', 'mulDodge', 'baseDodgeDmg', 'adjDodgeDmg', 
+        # 'mulDodgeDmg', 'mulAntiFatal', 'mulMortal', 'mulAntiMortal'
 
         for propName in inheritList:
             props[propName] = self.getProp(propName)
 
         return props
 
+    def getTargetByViewRadius(self):
+        if self.IsAvatar:
+            return self.getViewRadius()
+        return gameconst.DEFAULT_AOI
+
     def getTargetIdsByTargetType(self, targetString):
         entityIds = []
         if self.isDestroyed:
             return entityIds
         if not self.useTargetTypeCacheFlag:
-            viewRadius = self.getViewRadius() if self.IsAvatar else gameconst.DEFAULT_AOI
+            viewRadius = self.getTargetByViewRadius()
             for e in self.entitiesInRange(viewRadius):
                 if e.IsCombatUnit:
                     utils.isEnemy(self, e)

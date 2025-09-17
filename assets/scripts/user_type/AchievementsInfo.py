@@ -15,6 +15,8 @@ import AchievementValInfo
 import actionContext
 import antiAddictCategory_antiAddictCategory_def as AAC_AAC_DD
 import message_chatMessage as M_CMD
+import json
+import gzip
 
 class AchievementsVal(userType.UserSoleType):
     '''ACHIEVEMENTS_DATA_INFO'''
@@ -212,11 +214,11 @@ class AchievementsVal(userType.UserSoleType):
         avatar.client.onTakeAchievementRewards(_takeIds, self.sumPoint)
 
     def sendInitDataToClient(self, avatar):
-        avatar.client.onInitAchieveData(
-            list(self.achieveDic.values()),
-            list(self.finishedIds),
-            self.sumPoint,
-        )
+        jsonStr = json.dumps([[obj.toAchievementValSavedDict() for obj in self.achieveDic.values()], list(self.finishedIds), self.sumPoint]).encode('ascii')
+        DEBUG_MSG('in sendInitDataToClient:', len(jsonStr))
+        zStr = gzip.compress(jsonStr)
+        DEBUG_MSG('in sendInitDataToClient:', len(zStr))
+        avatar.streamStringProxy(zStr, '', gameconst.StreamStringID.ACHIEVEMENT_DATA)
 
     def __str__(self):
         return 'AchievementsVal: %s, maxVersion: %s, finishedIds: %s' % (self.achieveDic, self.maxVersion, self.finishedIds)

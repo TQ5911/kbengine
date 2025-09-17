@@ -16,6 +16,7 @@ import bagData_set as BGDSD
 import gameengine
 import gameclass
 import gametlog
+import dataUtils
 
 MAX_ROOMS_NUM = 4
 
@@ -153,3 +154,29 @@ class IWarehouse(object):
         }
         tlogParams.update(self.getTLogCommonParams())
         gametlog.build(gameconst.GameLog.LOG_WAREHOUSE_FLOW, **tlogParams).init().commit()
+
+    def reqWarehouseLockItem(self, gridId, itemId, uniqueId, lockStatus):
+        INFO_MSG('in reqWarehouseLockItem::', gridId, itemId, uniqueId, lockStatus)
+        if not dataUtils.checkLockAvailableStatus(itemId):
+            ERROR_MSG('in reqWarehouseLockItem, item locker is not opened', itemId)
+            return
+        
+        if lockStatus not in gameconst.ItemLockStatus.VALID_STATUS:
+            WARNING_MSG("in reqWarehouseLockItem, wrong arg lockStatus", lockStatus)
+            return
+        
+        itemObj = self.warehouse.getItemObjByGridId(gridId)
+        if not itemObj:
+            WARNING_MSG("in reqWarehouseLockItem, wrong arg gridId", gridId)
+            return
+
+        if itemObj.itemId != itemId:
+            WARNING_MSG("in reqWarehouseLockItem, wrong arg itemid", uniqueId, itemObj.itemId, itemId)
+            return
+        
+        if itemObj.uniqueId != uniqueId:
+            WARNING_MSG("in reqWarehouseLockItem, wrong arg uniqueId", itemObj.uniqueId, uniqueId, itemObj.itemId, itemId)
+            return
+        
+        itemObj.setLockStatus(lockStatus)
+        self.client.onWarehouseLockItemSucc(gridId, itemId, lockStatus)

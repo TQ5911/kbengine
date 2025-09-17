@@ -39,6 +39,7 @@ GLOBAL_BASE_STUB_ARCHIVE = [
     'SiegeWarStub',
     'CrossSiegeWarStub',
     'WorldBossStub',
+    'RedBagStub',
     ]
 GLOBAL_BASE_STUB_UNARCHIVE = [
     'PlayerStub', 
@@ -437,7 +438,6 @@ class AvatarProps(metaclass=UniqueIntEnum):
     spawnSummonList = 333
     fromCubeMapId = 334
 
-
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
     ShiftingSkillTopSpeed = 1000.0
@@ -490,6 +490,9 @@ class ItemBindType(object):
     BINDTYPE_NOT_SPECIFIED = 2
     VALID_BIND_TYPE = (BIND, NORMAL, BINDTYPE_NOT_SPECIFIED)
 
+class ItemExType(object):
+    NORMAL = 1
+    SELECTION = 2
 
 class GmMode(object):
     ALL_MODES = []
@@ -537,6 +540,8 @@ class StreamStringID(object):
     BODY_EQUIP_DATA = 19
     HOTFIX_DATA = 23
     PET_DRAW_CARD_RECORD = 26
+    ACHIEVEMENT_DATA = 27
+    PLAYER_INFO_DATA = 28
 
 
 class UseItem(object):
@@ -893,18 +898,19 @@ class CollectionType(object):
     ZHEN_QI = 2
     PERSONAL_BOX = 3
     VIEWPOINT = 4
+    SUMMON_OBJECT = 5 # 召唤物件
 
     VALID_RANGE_ACHIEVEMENT = (MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT)
-    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT)
+    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT, SUMMON_OBJECT)
 
 
 class CollectionPickType(object):
     Countdown_1 = 0  # 读条采集，客户端不屏蔽UI点击
     Countdown_2 = 9  # 读条采集，客户端会屏蔽UI点击
-    ClientJudge_1 = 1
+    CountdownAndClientJudge_1 = 1
 
-    CountdownTypes = (Countdown_1, Countdown_2)
-    ClientJudgeTypes = (ClientJudge_1,)
+    CountdownTypes = (Countdown_1, Countdown_2, CountdownAndClientJudge_1)
+    ClientJudgeTypes = (CountdownAndClientJudge_1,)
 
 
 class GMCommandErr(object):
@@ -1372,6 +1378,7 @@ class CampType(object):
     Friend = 3
     CreationMaster = 4
     EnemyExTarget = 5
+    Team = 6
 
 class UnsetAllHateReason(object):
     destory = 1
@@ -1416,6 +1423,10 @@ class BornStateType(object):
     6:石化状态
     7:虚影状态
     8:灵魂状态
+    9.恢复普通正常状态
+    10.born动画
+    11.boen后状态
+    12.reset动画
     '''
     none = 0
     invisible = 1
@@ -1426,9 +1437,13 @@ class BornStateType(object):
     stone = 6
     virtual = 7
     soul = 8
+    reMove = 9
+    bornAnim = 10
+    afterBornMove = 11
+    resetAnim = 12
 
     bornDoNothing = (stone, virtual, soul)
-    joinCombatTup = (move, normal)
+    joinCombatTup = (move, normal, afterBornMove)
     flowConvTup = (move, stone, virtual)
 
     # 其他类型后面扩展
@@ -1677,6 +1692,9 @@ class _RaidErrno(object):
     RAID_CHECKING_STANDBY_CHECK             = _errno(50002)     # 团队正在进行整团检查(团长发起)
     RAID_INVITE_TO_JOIN                     = _errno(50100)     # 团队邀请转变为申请
     RAID_TARGET_IS_ILLEGAL                  = _errno(50101)     # 团队目标不合法
+    RAID_PASSWORD_IS_WRONG                  = _errno(50102)     # 密码不对
+    RAID_LEVEL_IS_LIMITED                   = _errno(50103)     # 等级不足
+    RAID_SCORE_LIMITED                      = _errno(50104)     # 战力不足
 
     RAID_ERR_IGNORE                         = _errno(60000)     # 可以忽略的错误
 
@@ -2810,6 +2828,7 @@ class _AuctionErrno(object):
     AUCTION_PLAYER_MAIL_SPACE_FULL          = _errno(20040)     # 玩家邮件剩余空间不足
     AUCTION_SALED_ITEM_REJECTED             = _errno(20041)     # 交易行对应物品无法出售
     AUCTION_EQUIP_IN_DROP_REPAIR            = _errno(20042)     # 玩家装备处于掉落修复状态
+    AUCTION_ITEM_IN_BAG_LOCKED_STATUS       = _errno(20043)     # 交易行物品处于背包锁住状态
 
     AUCTION_IDIP_GM_BAN                     = _errno(20100)     # IDIP禁止
 
@@ -3234,11 +3253,12 @@ class WorldLineSceneState(object):
     LEI_JI = 2 # 雷buff会持续叠加的
 
 
-class CreationCustomType(object):
+class DunCustomId(object):
     THUNDER = '1' # 落雷
+    POS_FOR_SKILL = '2' # 用于直接让技能里面设置位置
 
 
-WORLD_BOSS_MOCK_REFRESH_TIME = 60
+WORLD_BOSS_MOCK_REFRESH_TIME = 300
 
 
 # ----------------------------- cube mock start -----------------------------
@@ -3269,10 +3289,6 @@ class ItemLockStatus(object):
     LOCKED = 1 # 已上锁
     VALID_STATUS = (UNLOCKED, LOCKED)
 
-class RaidAttrType(object):
-    # 积分
-    Score = 1
-
 class WorkshopResult(object):
     WORKSHOP_UNKNOW                         = 0     # 未知错误 
     WORKSHOP_SUCCESS                        = 1     # 成功
@@ -3289,3 +3305,17 @@ class WorkshopResult(object):
 class WorkshopOpenStatus(object):
     CLOSE = 0 # 关闭
     OPEN = 1  # 开放
+
+class ItemBelongToType(object):
+    BELONGTO_BAG = 1
+    BELONGTO_BODY = 2
+
+#
+RED_BAG_MIN_LEVEL = 9
+class RedBagType(object):
+    NORMAL = 1 # 平均红包
+    LUCKLY = 2 # 拼手气红包
+class RedBagChannel(object):
+    WORLD = 1 # 世界红包
+    GUILD = 2 # 公会红包
+RED_BAG_CHANNELS = (RedBagChannel.WORLD, RedBagChannel.GUILD)

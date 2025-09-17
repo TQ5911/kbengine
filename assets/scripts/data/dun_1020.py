@@ -36,6 +36,7 @@ datas ={
     "PosZ": 433.4436,
     "Props": {
       "CameraId": 33102002,
+      "GateType": 0,
       "Remark": "",
       "TelDir": 232.5189,
       "TelX": 385.6913,
@@ -325,10 +326,13 @@ datas ={
       "Level": 20.0,
       "MapEntityScale": 0,
       "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 2,
       "RefreshTime": 20.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowMonsterGroupID": ""
     }
   },
   "10200015": {
@@ -3565,10 +3569,94 @@ datas ={
       "Level": 22.0,
       "MapEntityScale": 0,
       "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 20.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowMonsterGroupID": ""
+    }
+  },
+  "10200150": {
+    "ActivityID": 0,
+    "ClassName": "Monster",
+    "ClassNameType": 0,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "\u6d4b\u8bd51",
+    "EntityID": 11980300,
+    "ID": 10200150,
+    "Name": "\u6c99\u866b",
+    "PosX": 515.631,
+    "PosY": 124.9285,
+    "PosZ": 347.1897,
+    "Props": {
+      "GroupID": "",
+      "Level": 40,
+      "MapEntityScale": 0,
+      "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 5.0,
+      "Remark": "",
+      "ShowMonsterGroupID": ""
+    }
+  },
+  "10200151": {
+    "ActivityID": 0,
+    "ClassName": "Monster",
+    "ClassNameType": 0,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "\u6d4b\u8bd52",
+    "EntityID": 11970309,
+    "ID": 10200151,
+    "Name": "\u725b\u5f1390_\u643a\u5e26\u51fa\u751f\u52a8\u753b1",
+    "PosX": 490.1705,
+    "PosY": 118.7729,
+    "PosZ": 300.2424,
+    "Props": {
+      "GroupID": "",
+      "Level": 40,
+      "MapEntityScale": 0,
+      "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 5.0,
+      "Remark": "",
+      "ShowMonsterGroupID": ""
+    }
+  },
+  "10200152": {
+    "ActivityID": 0,
+    "ClassName": "Monster",
+    "ClassNameType": 0,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "\u6d4b\u8bd53",
+    "EntityID": 11981211,
+    "ID": 10200152,
+    "Name": "\u866b\u5de211",
+    "PosX": 493.5782,
+    "PosY": 117.8319,
+    "PosZ": 256.5717,
+    "Props": {
+      "GroupID": "",
+      "Level": 40,
+      "MapEntityScale": 0,
+      "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 5.0,
+      "Remark": "",
+      "ShowMonsterGroupID": ""
     }
   },
   "10204001": {

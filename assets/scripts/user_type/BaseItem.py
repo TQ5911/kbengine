@@ -94,7 +94,8 @@ class PureItem(userType.UserSoleType):
             'enableTime': self.enableTime,
             'uniqueId': self.uniqueId,
             'bindType': self.bindType,
-            'attrJson': self.attrJson
+            'attrJson': self.attrJson,
+            'lockStatus': self.lockStatus,
         }
 
     def setItemBind(self, bindType=dataUtils.getItemDefaultBindType()):
@@ -105,6 +106,9 @@ class PureItem(userType.UserSoleType):
 
     def isReUseItem(self):
         return dataUtils.isReUseItem(self.itemId)
+    
+    def isLocked(self):
+        return self.lockStatus == gameconst.ItemLockStatus.LOCKED
 
 
 class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
@@ -146,7 +150,7 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
     
     def setLockStatus(self, status):
         self.lockStatus = status
-
+    
     def __setattr__(self, key, value):
         if key == "itemNum":
             raise AttributeError('itemNum can not be assigned, please use ItemAPI.setItemNum')
@@ -242,6 +246,7 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
             'uniqueId': self.uniqueId,
             'bindType': self.bindType,
             'attrJson': self.attr2Json(),
+            'lockStatus': self.lockStatus,
         }
 
     def onAddedToAvatar(self, owner):
@@ -256,3 +261,6 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
 
     def isSpiritBoardItem(self):
         return False
+    
+    def isLocked(self):
+        return self.lockStatus == gameconst.ItemLockStatus.LOCKED

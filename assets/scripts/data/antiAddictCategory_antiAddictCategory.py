@@ -797,7 +797,34 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None
+    }),
+    88: _tools.RODict({
+        "ID": 88,
+        "name": "BONUS_SRC_HEAL_WOUNDS",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    89: _tools.RODict({
+        "ID": 89,
+        "name": "BONUS_SRC_SEND_RED_PACKET_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    90: _tools.RODict({
+        "ID": 90,
+        "name": "BONUS_SRC_GET_RED_PACKET_ITEM",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
     })
 })
 minKey = 1
-maxKey = 87
+maxKey = 90

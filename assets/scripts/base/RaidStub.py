@@ -23,6 +23,7 @@ import userType
 import raid
 import raid_raidConst as RAID_CONST
 import teamMatch_matchConfig as TMMCD
+import teamMatch_activity as TMACTD
 
 class _RaidTeamMemberJoinRecordVal(userType.UserSoleType):
     def __init__(self, playerJoinVal, memberCheckDic):
@@ -191,35 +192,60 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def refreshRaidCache(self, raidUUID, playerGBIDs, extraProps):
         DEBUG_MSG('refreshRaidCache', raidUUID, playerGBIDs, extraProps)
 
-        def _check():
-            if raidUUID not in self.raidDic:
-                return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND
-            return None, gameconst.RaidErrno.RAID_OK
-        _, err = _check()
-        if err != gameconst.RaidErrno.RAID_OK:
-            ERROR_MSG('refreshRaidCache:: check failed, {}'.format(err))
+        if raidUUID not in self.raidDic:
+            ERROR_MSG('refreshRaidCache:: check failed, {}'.format(gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND))
             return
 
+        # 没人需要处理的，直接结束
+        if not playerGBIDs:
+            return
+        
         raidVal = self.raidDic[raidUUID]
         _checkBox = set(playerGBIDs)
 
-        playerRaidCacheVal = raidVal._buildPlayerRaidCacheVal()
-        playerRaidEmptyCacheVal = raid.PlayerRaidCacheVal()
-        for raidTeamVal in raidVal.raidTeamDic.values():
-            for raidPlayerVal in raidTeamVal.teamPlayerDic.values():
-                if not _checkBox:
-                    # checkBox已经没有玩家, 直接结束
-                    return
+        # 统一处理刷新逻辑
+        def _refreshRaidCacheValue(raidPlayerVal, playerRaidCacheVal, _checkBox):
+            if raidPlayerVal.bOnline and raidPlayerVal.playerBox and raidPlayerVal.playerBox.cell:
+                DEBUG_MSG('_refreshRaidCacheValue :: force fresh avatar raidCache: ', raidPlayerVal.playerGbId)
+                raidPlayerVal.playerBox.cell.onRefreshPlayerRaidCacheVal(playerRaidCacheVal)
+            _checkBox.remove(raidPlayerVal.playerGbId)
 
-                if raidPlayerVal.playerGbId in _checkBox:
-                    INFO_MSG('refreshRaidCache:: force fresh avatar raidCache: ', raidPlayerVal.playerGbId)
-                    if raidPlayerVal.bOnline and raidPlayerVal.playerBox and raidPlayerVal.playerBox.cell:
-                        raidPlayerVal.playerBox.cell.onRefreshPlayerRaidCacheVal(playerRaidCacheVal)
-                    _checkBox.remove(raidPlayerVal.playerGbId)
+        DEBUG_MSG('refreshRaidCache 0::', raidUUID, playerGBIDs, extraProps, len(_checkBox), raidVal.memberNum)
+        playerRaidCacheVal = None
+        # 1.处理检测数量大于等于团队数量的情况
+        if len(_checkBox) >= raidVal.memberNum: 
+            for raidTeamVal in raidVal.raidTeamDic.values():
+                for raidPlayerVal in raidTeamVal.teamPlayerDic.values():
+                    if not _checkBox:
+                        # checkBox已经没有玩家, 直接结束
+                        return
 
+                    if raidPlayerVal.playerGbId not in _checkBox:
+                        continue
+                    
+                    DEBUG_MSG('refreshRaidCache 1:: force fresh avatar raidCache: ', raidPlayerVal.playerGbId)
+                    # 延迟处理
+                    if not playerRaidCacheVal:
+                        playerRaidCacheVal = raidVal._buildPlayerRaidCacheVal()
+                    _refreshRaidCacheValue(raidPlayerVal, playerRaidCacheVal, _checkBox)
+        else:
+            # 2.处理检测数量小于团队数量的情况
+            playerGBIDs = list(_checkBox)
+            for playerGBID in playerGBIDs:
+                for raidTeamVal in raidVal.raidTeamDic.values():
+                    raidPlayerVal = raidTeamVal.teamPlayerDic.get(playerGBID, None)
+                    if not raidPlayerVal:
+                        continue
+                    DEBUG_MSG('refreshRaidCache 2:: force fresh avatar raidCache: ', raidPlayerVal.playerGbId)
+                    # 延迟处理
+                    if not playerRaidCacheVal:
+                        playerRaidCacheVal = raidVal._buildPlayerRaidCacheVal()
+                    _refreshRaidCacheValue(raidPlayerVal, playerRaidCacheVal, _checkBox)
+
+        # 处理不在队伍里的玩家，刷新缓存
         if _checkBox:
-            # checkBox中还存在玩家, 则这些玩家都不在该团队中, 将这些玩家的缓存刷新
-            WARNING_MSG('refreshRaidCache:: force clear last avatars raidCache: ', _checkBox)
+            playerRaidEmptyCacheVal = raid.PlayerRaidCacheVal()
+            WARNING_MSG('refreshRaidCache 3:: force clear last avatars raidCache: ', _checkBox)
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell(list(_checkBox), 'onRefreshPlayerRaidCacheVal',
                                                                   (playerRaidEmptyCacheVal, ), None, '', ())
 
@@ -460,45 +486,32 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         raidVal.broadcastAllRaidMembersClient(
             'onRaidAvatarLogin', (raidUUID, teamIDX, playerGBID), exclude=(playerGBID, ))
 
-    def updateRaidMemberCacheVal(self, raidUUID, playerGBID, playerUpdateProps, broadcastToRaidMembers):
-        DEBUG_MSG('updateRaidMemberCacheVal::', raidUUID, playerGBID, playerUpdateProps, broadcastToRaidMembers)
-        _errno = gameconst.RaidErrno
-
-        raidVal = None
-        teamIDX = 0
+    def updateRaidMemberCacheVal(self, raidUUID, playerGBID, playerUpdateProps):
+        #DEBUG_MSG('updateRaidMemberCacheVal::', raidUUID, playerGBID, playerUpdateProps)
 
         def _updateRaidMemberCacheVal():
-            nonlocal raidVal, teamIDX
-
             if raidUUID not in self.raidDic:
-                return None, _errno.RAID_RAID_ID_NOT_FOUND.initkvbody(source='updateRaidMemberCacheVal',
+                return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND.initkvbody(source='updateRaidMemberCacheVal',
                                                                       raidUUID=raidUUID)
-
             raidVal = self.raidDic[raidUUID]
             teamIDX = raidVal.getRaidTeamIDX(playerGBID)
             if not teamIDX:
-                return None, _errno.RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='updateRaidMemberCacheVal',
+                return None, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='updateRaidMemberCacheVal',
                                                                           raidUUID=raidUUID,
                                                                           teamIDX=teamIDX,
                                                                           playerGBID=playerGBID)
 
             memberVal = raidVal.raidTeamDic[teamIDX].teamPlayerDic[playerGBID]
             memberVal.updateAttr(playerUpdateProps)
-            return memberVal, _errno.RAID_OK
+            return raidVal, gameconst.RaidErrno.RAID_OK
 
-        updateMemberVal, err = _updateRaidMemberCacheVal()
-        if err != _errno.RAID_OK:
+        updateRaidVal, err = _updateRaidMemberCacheVal()
+        if err != gameconst.RaidErrno.RAID_OK:
             ERROR_MSG('updateRaidMemberCacheVal:: failed, {}'.format(err))
             return
 
-        if broadcastToRaidMembers:
-            DEBUG_MSG('updateRaidMemberCacheVal:: broadcast ~')
-            raidVal.refreshPlayerPropsValToAllPlayers(teamIDX, playerGBID, updateMemberVal, needDel=False)
-            # 先单独给积分变动做支持，后续版本优化
-            score = playerUpdateProps.get('score', 0)
-            if score > 0:
-                DEBUG_MSG('updateRaidMemberCacheVal:: broadcast onRaidMemeberAttrUpdate ', raidUUID, teamIDX, updateMemberVal.playerGbId, gameconst.RaidAttrType.Score, score)
-                raidVal.broadcastAllRaidMembersClient('onRaidMemeberAttrUpdate', (raidUUID, teamIDX, updateMemberVal.playerGbId, gameconst.RaidAttrType.Score, score))
+        DEBUG_MSG('updateRaidMemberCacheVal:: broadcast ~ ', playerGBID, playerUpdateProps)
+        updateRaidVal.updateMemberVolatileAttr(playerGBID, playerUpdateProps)
 
     def getRaidApplyJoinDic(self, srcPlayerBox, srcPlayerGBID, raidUUID):
         DEBUG_MSG('getRaidApplyJoinDic::', srcPlayerBox, srcPlayerGBID, raidUUID)
@@ -627,23 +640,31 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         return raidMemberAttrsList, gameconst.RaidErrno.RAID_OK
 
-    def createRaidLonely(self, srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, extraProps, raidTargetId, cfgMinLevel, cfgMinScore, startAutoMatch):
-        DEBUG_MSG('createRaidLonely::', srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, extraProps, raidTargetId, cfgMinLevel, cfgMinScore, startAutoMatch)
+    def createRaidLonely(self, srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, extraProps, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
+        DEBUG_MSG('createRaidLonely::', srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, extraProps, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
         raidVal, err = self._createRaid(srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList)
         if err != gameconst.RaidErrno.RAID_OK:
             ERROR_MSG('createRaid:: failed, {}'.format(err))
             return
-        raidVal.raidTarget = raidTargetId
+        raidVal.raidTarget = raidTarget
         if raidVal.raidTarget > 0:
             raidVal.isPublish = True
-        raidVal.raidMinLevel = cfgMinLevel
-        raidVal.raidMinScore = cfgMinScore
+        raidVal.raidMinLevel = minLevel
+        raidVal.raidMinScore = minScore
+        raidVal.recruitInfo = recruitInfo
+        raidVal.password = password
+        raidVal.isAutoExpedition = isAutoExpedition
+
         raidVal.refreshRaidCacheValToAllPlayers()
         raidVal.broadcastAllRaidMembersClient('onCreateRaid', (raidVal.toClientData(), ))
         raidVal.broadcastAllRaidMembersBase('onMessagePre', (RAID_CONST.datas["raidCreated_chatMsg"]["value"], []))
 
-        if startAutoMatch:
-            self.raidPrepareAutoMatch(raidUUID)
+        if len(raidVal.password) == 0:
+            raidVal.isPublish = True
+
+            if raidVal.raidTarget > 1:
+                self.raidPrepareAutoMatch(raidUUID)
+        self.checkAutoStart(raidUUID)
 
     def createRaid(self, srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, extraProps):
         DEBUG_MSG('createRaid::', srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, extraProps)
@@ -655,6 +676,23 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         raidVal.refreshRaidCacheValToAllPlayers()
         raidVal.broadcastAllRaidMembersClient('onCreateRaid', (raidVal.toClientData(), ))
         raidVal.broadcastAllRaidMembersBase('onMessagePre', (RAID_CONST.datas["raidCreated_chatMsg"]["value"], []))
+
+    def checkAutoStart(self, raidUUID):
+        raidVal = self.raidDic.get(raidUUID)
+        if not raidVal:
+            return
+        
+        if raidVal.autoStartTimer > 0:
+            self._cancelCallback(raidVal.autoStartTimer, gametimer.TIMER_TAG_RAID_AUTO_START)
+            raidVal.autoStartTimer = 0
+
+        if raidVal.isAutoExpedition and raidVal.raidTarget > 1:
+            if raidVal.isRaidFull():
+                captainBox = raidVal.getRaidLeaderBox()
+                if captainBox and captainBox.cell:
+                    captainBox.cell.autoStartChiefDungeon()
+                    return
+            raidVal.autoStartTimer = self._callback(5, 'checkAutoStart', (raidUUID,), gametimer.TIMER_TAG_RAID_AUTO_START)
 
     def _createRaid(self, srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList):
         raidLeaderBox, raidLeaderGBID = srcPlayerBox, srcPlayerGBID
@@ -925,7 +963,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if srcPlayerGBID != raidVal.raidLeaderGBID and not raidVal.isRaidDeputy(srcPlayerGBID):
             return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER_OR_DEPUTY
 
-        if raidVal.isFull():
+        if raidVal.isRaidFull():
             return None, gameconst.RaidErrno.RAID_RAID_IS_FULL
 
         playerJoinVal, err = raidVal.getRaidJoin(joinedPlayerGBID)
@@ -1158,7 +1196,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if raidVal.raidLeaderGBID != srcPlayerGBID:
                 return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER
 
-            if raidVal.isFull():
+            if raidVal.isRaidFull():
                 return None, gameconst.RaidErrno.RAID_RAID_IS_FULL
 
             return raidVal, gameconst.RaidErrno.RAID_OK
@@ -1212,7 +1250,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if not raidVal.isRaidDeputy(srcPlayerGBID):
                 return None, gameconst.RaidErrno.RAID_NOT_RAID_DEPUTY
 
-            if raidVal.isFull():
+            if raidVal.isRaidFull():
                 return None, gameconst.RaidErrno.RAID_RAID_IS_FULL
 
             return raidVal, gameconst.RaidErrno.RAID_OK
@@ -1370,7 +1408,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND
 
             _raidVal = self.raidDic[raidUUID]
-            if _raidVal.isFull():
+            if _raidVal.isRaidFull():
                 return None, gameconst.RaidErrno.RAID_RAID_IS_FULL
 
             return _raidVal, gameconst.RaidErrno.RAID_OK
@@ -1397,7 +1435,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if srcPlayerGBID != raidTeamVal.teamCaptainGBID:
                 return None, gameconst.RaidErrno.RAID_NOT_TEAM_CAPTAIN
 
-            if raidTeamVal.isFull():
+            if raidTeamVal.isRaidFull():
                 return None, gameconst.RaidErrno.RAID_RAID_TEAM_IS_FULL.initkvbody(
                     raidUUID=raidUUID, raidTeamIDX=raidTeamIDX, source='_replyInviteRaidLonely')
 
@@ -1465,7 +1503,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND
 
         raidVal = self.raidDic[raidUUID]
-        if raidVal.isFull():
+        if raidVal.isRaidFull():
             return None, gameconst.RaidErrno.RAID_RAID_IS_FULL
 
         # CASE1: 邀请者不是团队Leader; 如果调用来源是队长, 则将该队伍转到申请列表(绕过队员check)
@@ -2035,7 +2073,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             DEBUG_MSG('_moveRaidTeamMemberNoTargetPlayer:: transfer')
             # CASE1: 玩家转移至一个已经有小队的Team
             toRaidTeamVal = raidVal.raidTeamDic[toPlayerTeamIDX]
-            if toRaidTeamVal.isFull():
+            if toRaidTeamVal.isRaidFull():
                 return None, gameconst.RaidErrno.RAID_RAID_TEAM_IS_FULL
             fromPlayerVal, err = raidVal.popMember(fromPlayerTeamIDX, fromPlayerGBID)
             if err != gameconst.RaidErrno.RAID_OK:
@@ -2290,34 +2328,40 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         return {fromPlayerGBID: newFromPlayerVal, toPlayerGBID: newToPlayerVal}, gameconst.RaidErrno.RAID_OK
 
-    def setRaidTarget(self, srcPlayerBox, srcPlayerGBID, raidUUID, newRaidTargetId, minLevel, minScore, recruitInfo, autoPublish, autoStartMatching):
-        DEBUG_MSG('setRaidTarget::', srcPlayerBox, srcPlayerGBID, raidUUID, newRaidTargetId, minLevel, minScore, recruitInfo, autoPublish, autoStartMatching)
-        _, err = self._setRaidTarget(srcPlayerBox, srcPlayerGBID, raidUUID, newRaidTargetId, minLevel, minScore, recruitInfo, autoPublish, autoStartMatching, toClient=True)
+    def setRaidTarget(self, srcPlayerBox, srcPlayerGBID, raidUUID, raidTarget, minLevel, minScore, recuitInfo, password, isAutoExpedition):
+        DEBUG_MSG('setRaidTarget::', srcPlayerBox, srcPlayerGBID, raidUUID, raidTarget, minLevel, minScore, recuitInfo, password, isAutoExpedition)
+        _, err = self._setRaidTarget(srcPlayerBox, srcPlayerGBID, raidUUID, raidTarget, minLevel, minScore, recuitInfo, password, isAutoExpedition, toClient=True)
         if err != gameconst.RaidErrno.RAID_OK:
             ERROR_MSG('setRaidTarget:: failed, {}'.format(err))
             return
 
         raidVal = self.raidDic[raidUUID]
-        raidVal.broadcastAllRaidMembersCell('onSetRaidTargetAllMemberNotify', (srcPlayerGBID, raidUUID, newRaidTargetId, minLevel, minScore))
+        isPublic = len(raidVal.password) == 0
+        raidVal.broadcastAllRaidMembersCell('onSetRaidTargetAllMemberNotify', (srcPlayerGBID, raidUUID, raidTarget, minLevel, minScore, recuitInfo, password, isAutoExpedition))
+        self.checkAutoStart(raidUUID)
 
-    def _setRaidTarget(self, srcPlayerBox, srcPlayerGBID, raidUUID, newRaidTargetId, minLevel, minScore, recruitInfo, autoPublish, autoStartMatching, toClient=False):
+    def _setRaidTarget(self, srcPlayerBox, srcPlayerGBID, raidUUID, newRaidTargetId, minLevel, minScore, recruitInfo, password, isAutoExpedition, toClient=False):
         if raidUUID not in self.raidDic:
             return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND
 
         raidVal = self.raidDic[raidUUID]
-        if raidVal.raidTarget == newRaidTargetId and raidVal.raidMinLevel == minLevel and raidVal.raidMinScore == minScore:
+        if raidVal.raidTarget != newRaidTargetId:
+            return None, gameconst.RaidErrno.RAID_TARGET_IS_ILLEGAL
+        if raidVal.raidMinLevel == minLevel and raidVal.raidMinScore == minScore:
             return None, gameconst.RaidErrno.RAID_SAME_RAID_TARGET_ID
         if raidVal.raidLeaderGBID != srcPlayerGBID:
             return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER
 
         # check team member's score and level
-        if not raidVal.setTarget(newRaidTargetId, minLevel, minScore):
+        if not raidVal.setTarget(newRaidTargetId, minLevel, minScore, recruitInfo, password, isAutoExpedition):
             return None, gameconst.RaidErrno.RAID_TARGET_IS_ILLEGAL
 
         if toClient:
-            raidVal.broadcastAllRaidMembersClient('onSetRaidTarget', (raidUUID, newRaidTargetId, minLevel, minScore))
+            raidVal.broadcastAllRaidMembersClient('onSetRaidTarget', (raidUUID, newRaidTargetId, minLevel, minScore, recruitInfo, raidVal.password, raidVal.isAutoExpedition))
 
-        self.publishRaid(raidUUID, autoPublish, recruitInfo, autoStartMatching)
+        self.raidPrepareStopAutoMatch(raidUUID)
+        if raidVal.isPublish and raidVal.raidTarget > 1:
+            self.raidPrepareAutoMatch(raidUUID)
 
         return raidVal, gameconst.RaidErrno.RAID_OK
 
@@ -2910,12 +2954,9 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         raidVal = self.getRaidByRaidUUID(raidUUID)
         if not raidVal:
             return
-        if raidVal.raidTarget == 0 or raidVal.raidTarget == 1:
-            raidVal.getRaidLeaderBox().onMessagePre(TMMCD.datas['teamMatch_noGoalMsg']['value'], [])
-            return
         if not raidVal.checkRaidTarget(raidVal.raidMinLevel, raidVal.raidMinScore):
             return
-        if raidVal.isFull():
+        if raidVal.isRaidFull():
             WARNING_MSG('in raidPrepareAutoMatch, raid full:', raidVal)
             raidVal.getRaidLeaderBox().onMessagePre(TMMCD.datas['teamMatch_raidFullMsg']['value'], [])
             return
@@ -2944,32 +2985,11 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         if teamVal.addNewMember(playerProps['playerGbId'], playerProps, toClient=True):
             teamVal.getRaidLeader().playerBox.cell.onMemJoinRaidByAutoMatch(playerProps['playerGbId'])
-            if teamVal.isFull():
+            if teamVal.isRaidFull():
                 DEBUG_MSG('in newRaidPlayerMatched, raid is full, stop match ~:', raidUUID, playerProps, teamVal)
                 teamVal.stopAutoMatch()
         return
     
-
-    def publishRaid(self, raidUUID, autoPublish, recruitInfo, autoStartMatching):
-        teamVal = self.getRaidByRaidUUID(raidUUID)
-        if not teamVal:
-            return
-        teamVal.publishRaid(autoPublish, recruitInfo)
-        teamVal.broadcastAllMembersClient('onPublishRaid', (autoPublish, recruitInfo))
-        if autoPublish:
-            if autoStartMatching:
-                self.raidPrepareAutoMatch(raidUUID)
-                return
-        self.raidPrepareStopAutoMatch(raidUUID)
-        return
-    
-    def setRaidAutoInPlace(self, raidUUID, bAutoInPlace):
-        teamVal = self.getRaidByRaidUUID(raidUUID)
-        if not teamVal:
-            return
-        teamVal.setAutoInPlace(bAutoInPlace)
-        teamVal.broadcastAllMembersClient('onSetRaidAutoInPlace', (bAutoInPlace, ))
-
     def getRaidList(self, box, raidTarget, checkTime, checkTeamstubNum, sendTeamNum, startTeamStubIndex):
         DEBUG_MSG('in getRaidList:', raidTarget, checkTime, checkTeamstubNum, sendTeamNum, startTeamStubIndex)
         raidList = []
@@ -2981,7 +3001,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 break
             if raidVal.raidTarget != raidTarget:
                 continue
-            if raidVal.isFull():
+            if raidVal.isRaidFull():
                 continue
             if raidVal.isAllMembersOffline():
                 continue
@@ -3045,6 +3065,54 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         raidVal = self.raidDic[raidUUID]
         raidVal.changeRaidOnlyLeader(playerBox, bOnlyCapatain)
 
-    # 标记 end
+    def reqJoinRaid(self, playerBox, raidUUID, password, playerProps):
+        raidVal, err = self._reqJoinRaidCheck(raidUUID, password, playerProps)
+        playerBox.client.onJoinRaid(err.errno, raidUUID, password)
+        # 加入成功，刷新一下成员的cache
+        if err != gameconst.RaidErrno.RAID_OK:
+            ERROR_MSG("reqJoinRaid, err:", err, playerProps)
+            return
+        raidVal.refreshRaidCacheValToAllPlayers()
 
+    def _reqJoinRaidCheck(self, raidUUID, password, playerProps):
+        raidVal = self.getRaidByRaidUUID(raidUUID)
+        DEBUG_MSG('in _reqJoinRaidCheck:', raidUUID, playerProps, raidVal)
+        if not raidVal:
+            return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND
+
+        # 非公开的需要检查一下密码
+        if not raidVal.isPublish:
+            if raidVal.password != password:
+                return None, gameconst.RaidErrno.RAID_PASSWORD_IS_WRONG
+
+        raidTargetInfo = TMACTD.datas.get(raidVal.raidTarget)
+        if raidTargetInfo is None:
+            ERROR_MSG("_reqJoinRaidCheck, misssing raidTarget", raidVal.raidTarget)
+            return None, gameconst.RaidErrno.UNKNOWN
+        score = playerProps['score']
+        level = playerProps['level']
+        cfgMinLv = raidTargetInfo['minLevel']
+        cfgMinScore = raidTargetInfo['minScore']
+        if level < cfgMinLv:
+            return None, gameconst.RaidErrno.RAID_LEVEL_IS_LIMITED
+        if score < cfgMinScore:
+            return None, gameconst.RaidErrno.RAID_SCORE_LIMITED
+                    
+        _, err = raidVal.addNewMember(playerProps['playerGbId'], playerProps, toClient=True)
+        
+        return raidVal, err
     
+
+    def clearRaidDungeonRewardRecord(self, raidUUID, gbID):
+        raidVal = self.getRaidByRaidUUID(raidUUID)
+        if not raidVal:
+            DEBUG_MSG("clearRaidDungeonRewardRecord, team is missing", raidUUID, gbID)
+            return
+        raidVal.clearRaidDungeonRewardRecord(gbID)
+
+    def addRaidDungeonRewardRecord(self, raidUUID, gbID, rewardList):
+        raidVal = self.getRaidByRaidUUID(raidUUID)
+        if not raidVal:
+            DEBUG_MSG("addRaidDungeonRewardRecord, team is missing", raidUUID, gbID)
+            return
+        raidVal.addRaidDungeonRewardRecord(gbID, rewardList)

@@ -56,6 +56,7 @@
             <Arg>            PLAYER_GBID     </Arg>
             <Arg>            BOOL            </Arg>
             <Arg>            FLOAT           </Arg>
+            <Arg>            INT32           </Arg>
         </onSingleDungeonCompleted>
 
         <onTeamDungeonCompleted>
@@ -63,6 +64,7 @@
             <Arg>            TEAMID          </Arg>
             <Arg>            BOOL            </Arg>
             <Arg>            FLOAT           </Arg>
+            <Arg>            INT32           </Arg>
         </onTeamDungeonCompleted>
 
         <onRaidDungeonCompleted>
@@ -72,6 +74,7 @@
             <Arg>            FLOAT           </Arg>
             <Arg>            PY_DICT         </Arg>
             <Arg>            PY_LIST         </Arg>
+            <Arg>            INT32           </Arg>
         </onRaidDungeonCompleted>
 
         <doEnterTeamDungeon>

@@ -86,6 +86,7 @@ import iSiegeWarBase
 import iChief
 import iCrossServer
 import iWorkshop
+import iRedBag
 
 class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, impLine.ImpLine, iClient.IClient,
              impTask.ImpTask, iAvatarVariable.ImpAvatarVariable, impCombat.ImpCombat, impTeam.ImpTeam, IScore.IScore,
@@ -96,7 +97,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
              iHolidayPay.IHolidayPay, iGuild.IGuild, iDrawCard.IDrawCard, iGuildTrain.IGuildTrain, iWarehouse.IWarehouse,
              iLeaderBoard.ILeaderBoard, iCoinAuction.ICoinAuction, iNewbie.INewbie, iAchievement.IAchievement, 
              iEnemy.IEnemy, iWonderLandBase.IWonderLandBase, iActivityBase.IActivityBase, iCollectible.ICollectible, iSiegeWarBase.ISiegeWarBase,
-             iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop):
+             iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop, iRedBag.iRedBag):
     """
     角色实体
 
@@ -134,7 +135,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         self.pyAddTimer(10, 10, gametimer.AVATAR_SYNC_SERVER_TIME)
         if not KBEngine.publish():
-            self.pyAddTimer(60, 30 * 60, gametimer.AVATAR_PROPERTY_CHECK)
+            self.pyAddTimer(1, 15, gametimer.AVATAR_PROPERTY_CHECK)
 
         gameglobal.roleGBIDToEntId[self.gbID] = self.id
         self.serverId = gameconfig.serverId()
@@ -255,6 +256,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.mailOnLogin()
         self.collectOnLogin()
         self.welfareSignInOnLogin()
+        self.redbagOnLogin()
 
         self.setTempMiscProp(gameconst.AvatarProps.gameLengthMarkTime, utils.getNow())
         self.initPetProps()
@@ -307,8 +309,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             if outRecord is not None:
                 cellData['position'] = outRecord.position
                 cellData['direction'] = outRecord.direction
-                cellData['hp'] = outRecord.hp
-                cellData['mp'] = outRecord.mp
+                # cellData['hp'] = outRecord.hp
+                # cellData['mp'] = outRecord.mp
                 cellData['state'], cellData['state2'] = formula.setInt64VectorBit(
                     [cellData['state'], cellData['state2']], gameconst.State.Death, outRecord.isDie)
                 if formula.spaceInWorldLine(mapId):
@@ -1354,6 +1356,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerWeekEvent('onChiefWeeklyAddRewardItemNumUpdate')
         self.registerDailyEvent('_checkAchieveDailyRefresh')
         self.registerDailyEvent('_resetCubeCowDur')
+        self.registerDailyEvent('_onDailyHealWoundsTimesRefresh')
+        self.registerDailyEvent('onLimitedStoreHourlyUpdate')
 
     def reqDeleteAvatar(self):
         if gameconfig.enableOldLogout():
@@ -1433,6 +1437,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             return False
 
         return True
+    
+    def _onDailyHealWoundsTimesRefresh(self):
+        self.cell.onDailyHealWoundsTimesRefresh()
 
 # ---------------------------- switch avatar server start ----------------------------
     def switchAvatarServer(self, serverId):

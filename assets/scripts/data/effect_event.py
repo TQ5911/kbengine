@@ -568,7 +568,7 @@ def _13090313(self, target, context):
     if self.hasBuff(64003009):
         self.attackByNum(target, context,0.45 * target.getProp("maxPhysicalAtk"))
         self.addBuffBySkill(target, context, 64003005, 1, 1.0, 10)
-        self.addBuffBySkill(target, context, 64003022, 1, 1.0, 5)
+        self.addBuffBySkill(target, context, 64003022, 1, 1.0, 2)
 
 datas = _tools.RODict({ 
     13090001: _tools.RODict({

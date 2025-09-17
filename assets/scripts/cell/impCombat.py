@@ -626,6 +626,12 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         elif formula.isWonderLandSpace(self.spaceNo):
             self.addWonderLandRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
 
+        elif formula.isTeamDungeonSpace(self.spaceNo):
+            self.addTeamDungeonRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
+
+        elif formula.isRaidDungeonSpace(self.spaceNo):
+            self.addRaidDungeonRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
+
         if src == AAC_AACDD.datas.BONUS_SRC_GATHER_DROP or src == AAC_AACDD.datas.BONUS_SRC_GATHER:
             self.client and self.client.onAddGatherRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
 

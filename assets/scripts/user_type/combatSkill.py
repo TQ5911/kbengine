@@ -1782,7 +1782,6 @@ class SkillBase(userType.UserSoleType):
             self.targetIds = []
 
         owner.useSkillFinish(self.skillId)
-        owner.IsAICombatUnit and owner.aiController and owner.aiController.useSkillDone(self.skillId)
 
         target = KBEngine.entities.get(targetId)
         endAction = self.getSkillData(self.skillId).get('endSkillAction', None)
@@ -1795,6 +1794,9 @@ class SkillBase(userType.UserSoleType):
             actionCtx = actionContext.UseSkillCtx(owner.id, self.skillId, skillArgs, targetId, effectedEntIds, self,
                                                   None, isSucc=isSucc)
             endAction(owner, target, actionCtx)
+
+        # 在aiController的useSkillDone里面会把当前这个skillId pop掉，改为放在最后把
+        owner.IsAICombatUnit and owner.aiController and owner.aiController.useSkillDone(self.skillId)
 
     def getRealSkillVal(self, owner):
         if self.hasTempData('changeToSkill'):
@@ -1938,19 +1940,19 @@ class CommonSkillVal(SkillBase):
             owner.allClients.onUseSkill(isSucc, self.getNotifyClientSkillId(), targetId, skillArgs, effectTargetIds)
         else:
             owner.combatDebugMsg('beginUseSkill', self.skillId, targetId, skillArgs, compensateTime, calcDelay)
-            skillStateDuration = self.getSkillTime(self.skillId)
-            if not gameconst.SkillTag.GeneralSkill in self.getTag(self.skillId):
-                if doSetState:
-                    self._cancelTempTimer(owner, 'removeSkillStateTimer', gametimer.TIMER_TAG_REMOVE_SKILL_STATE)
-                    self.setTempData(
-                        'removeSkillStateTimer',
-                        owner._callback(
-                            skillStateDuration,
-                            'removeSkillState',
-                            (self,),
-                            gametimer.TIMER_TAG_REMOVE_SKILL_STATE
-                        )
-                    )
+            # skillStateDuration = self.getSkillTime(self.skillId)
+            # if not gameconst.SkillTag.GeneralSkill in self.getTag(self.skillId):
+            #     if doSetState:
+            #         self._cancelTempTimer(owner, 'removeSkillStateTimer', gametimer.TIMER_TAG_REMOVE_SKILL_STATE)
+            #         self.setTempData(
+            #             'removeSkillStateTimer',
+            #             owner._callback(
+            #                 skillStateDuration,
+            #                 'removeSkillState',
+            #                 (self,),
+            #                 gametimer.TIMER_TAG_REMOVE_SKILL_STATE
+            #             )
+            #         )
 
             if actionCtx.actionProgress == gameconst.ActionProgressType.startActionDone:
                 if calcDelay > 0:

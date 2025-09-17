@@ -641,5 +641,14 @@
             <Arg>       UINT64                  </Arg>
             <Arg>       PYTHON                  </Arg>
         </modifyBuildingExp>
+
+        <onSiegeWarEnd>
+        </onSiegeWarEnd>
+
+        <getMemberJob>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </getMemberJob>
     </BaseMethods>
 </root>

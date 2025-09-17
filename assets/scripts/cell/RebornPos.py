@@ -89,6 +89,5 @@ class RebornPos(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
         super(RebornPos, self)._preSafeDestory()
 
     def safeDestroy(self, forceDestroy=False):
-        self.unsetBodySize()
         super(RebornPos, self).safeDestroy(forceDestroy)
 

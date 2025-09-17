@@ -208,6 +208,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                 self.winnerCamp = self.getWinnerCamp()
                 self.loserCamp = 1 if self.winnerCamp == 2 else 2
                 self.winnerGuildUUID = self.offenseGuildUUID if self.winnerCamp == 1 else self.defenseGuildUUID
+                self.loserGuildUUID = self.defenseGuildUUID if self.winnerCamp == 1 else self.offenseGuildUUID
                 DEBUG_MSG("[lj]siegeWarState: ", self.siegeWarState, "->", SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_HAS_LOSER, "winnerCamp: ", self.winnerCamp, "loserCamp: ", self.loserCamp)
                 self.siegeWarState = SiegeWarGameState.SIEGE_WAR_STATE_BATTLE_END_AND_HAS_LOSER
                 gameengine.getGlobalBase("SiegeWarSpaceStub").onSiegeWarGameStateChange(self.siegeWarState, self.winnerCamp)
@@ -228,7 +229,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                     defenseArr,
                 ]
                 self.dataArray = copy.deepcopy(dataArray)
-                DEBUG_MSG("[lj]siegeWar dataArray", self.winnerGuildUUID, self.winnerCamp, self.mvpName, self.mvpSchool, self.dataArray)
+                DEBUG_MSG("[lj]siegeWar dataArray", self.winnerGuildUUID, self.loserGuildUUID, self.winnerCamp, self.mvpName, self.mvpSchool, self.dataArray)
                 #结算后不能攻击
                 for playerId in self.players.values():
                     playerEnt = KBEngine.entities.get(playerId)
@@ -272,7 +273,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                     'isWinner': camp == self.winnerCamp,
                 })
 
-        gameengine.getGlobalBase("CrossSiegeWarStub").onCrossSiegeWarEnd(combatResult, self.winnerGuildUUID)
+        gameengine.getGlobalBase("CrossSiegeWarStub").onCrossSiegeWarEnd(combatResult, self.winnerGuildUUID, self.loserGuildUUID)
 
     def handleSiegeWarMvp(self):
         if len(self.siegeWarscoreList[1]) > 0:
@@ -718,6 +719,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
     def siegeWarBossDelayDestroy(self):
         DEBUG_MSG("[lj]start siegeWarBossDelayDestroy")
         if siegeTp.SIEGE_BOSS in self.siegewarEntityDict:
+            self.onMinimapInfoUpdate(self.siegewarEntityDict[siegeTp.SIEGE_BOSS].id, SMT.SIEGE_BOSS, SMDT.HP, 0.0)
             self.siegewarEntityDict[siegeTp.SIEGE_BOSS].safeDestroy()
             self.siegewarEntityDict.pop(siegeTp.SIEGE_BOSS)
             DEBUG_MSG("[lj]safeDestroy siegeWarBoss over")

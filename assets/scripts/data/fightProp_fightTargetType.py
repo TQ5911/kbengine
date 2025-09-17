@@ -86,5 +86,9 @@ datas = _tools.RODict({
     "PlayerExTarget": _tools.RODict({
         "ID": "PlayerExTarget",
         "value": ((0,), (2,), (1,))
+    }),
+    "TeamPlayer": _tools.RODict({
+        "ID": "TeamPlayer",
+        "value": ((1,), (2,), (2, 6))
     })
 })

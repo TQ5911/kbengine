@@ -70,5 +70,41 @@ datas = _tools.RODict({
     "positionLinkNoLine": _tools.RODict({
         "ID": "positionLinkNoLine",
         "value": "{0}:({1},{2})",
+    }),
+    "redPacket": _tools.RODict({
+        "ID": "redPacket",
+        "value": 90,
+    }),
+    "blessingLength": _tools.RODict({
+        "ID": "blessingLength",
+        "value": 40,
+    }),
+    "sendPacketLimit": _tools.RODict({
+        "ID": "sendPacketLimit",
+        "value": 20,
+    }),
+    "sendPacketLimitMsg": _tools.RODict({
+        "ID": "sendPacketLimitMsg",
+        "value": 54000330,
+    }),
+    "receivePacketLimit": _tools.RODict({
+        "ID": "receivePacketLimit",
+        "value": 20,
+    }),
+    "receivePacketLimitMsg": _tools.RODict({
+        "ID": "receivePacketLimitMsg",
+        "value": 54000331,
+    }),
+    "returnPacketMail": _tools.RODict({
+        "ID": "returnPacketMail",
+        "value": 37000013,
+    }),
+    "displayPacketLimit": _tools.RODict({
+        "ID": "displayPacketLimit",
+        "value": 50,
+    }),
+    "returnPacketTime": _tools.RODict({
+        "ID": "returnPacketTime",
+        "value": 12,
     })
 })

@@ -135,6 +135,24 @@ CREATE TABLE IF NOT EXISTS `game_admin_cmds`
         `tWhen` int(10) NOT NULL,
         index `cmdSerial` (`cmdSerial`)
         );
+		
+CREATE TABLE IF NOT EXISTS `game_account_characters`
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`parentID` bigint(20) UNSIGNED NOT NULL,
+	`gbId` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+	`authDbId` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+	`dbId` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+	`name` varchar(255) NOT NULL DEFAULT '',
+	`school` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+	`sex` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+	`level` int(10) UNSIGNED NOT NULL DEFAULT '0',
+	`tLastOnline` int(10) UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY (`id`),
+	KEY `idx_parentID` (`parentID`),
+	KEY `idx_gbId` (`gbId`),
+	KEY `idx_authGbId` (`authDbId`)
+);
 
 
 DROP PROCEDURE IF EXISTS gamesp_record_avatar_offline_callbacks;

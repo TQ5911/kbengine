@@ -18,17 +18,14 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "dunID": 2102,
-        "needScore": 2000,
     }),
     2: _tools.RODict({
         "ID": 2,
         "dunID": 2101,
-        "needScore": 3000,
     }),
     3: _tools.RODict({
         "ID": 3,
         "dunID": 2103,
-        "needScore": 4000,
     })
 })
 minKey = 1

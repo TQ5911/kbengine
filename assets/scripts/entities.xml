@@ -54,4 +54,5 @@
 	<RaidMatchStub/>
 	<WorldRefreshEntityStub/>
 	<RebornPos hasClient="true"></RebornPos>
+	<RedBagStub/>
 </root>

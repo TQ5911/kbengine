@@ -445,7 +445,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.hasResetSpace = True
 
     #跨服通知争夺战结束todo
-    def onCrossSiegeWarEnd(self, combatResult, winnerGuildUUID):
+    def onCrossSiegeWarEnd(self, combatResult, winnerGuildUUID, loserGuildUUID):
         DEBUG_MSG('[lj]cross siege war end', combatResult)
         self.siegeWarState = gameconst.SiegeWarState.WAR_END
         self.siegeWarStateChanged = True
@@ -453,7 +453,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         #广播
         for serverID in self.GroupServerList:
             _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'SiegeWarStub')
-            _stub.onCrossSiegeWarEnd(combatResult, winnerGuildUUID, self.cityOwnerGuildUUID)
+            _stub.onCrossSiegeWarEnd(combatResult, winnerGuildUUID, loserGuildUUID, self.cityOwnerGuildUUID)
 
     def gmChangeSiegeWarState(self, state, endTime, *args):
         DEBUG_MSG('[lj]gm change siege war state', state, endTime, args)

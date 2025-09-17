@@ -619,7 +619,11 @@ def gellItemSellPrice(itemID):
 def getAIParameters(creepId):
     _aiParamId = CBD.datas[creepId]['AIParameters']
     if not _aiParamId:
-        return {}
+        _aiId = CBD.datas[creepId]['AI']
+        if not _aiId:
+            return {}
+        else:
+            _aiParamId = _aiId * 100 + 1
 
     return S_SMAD.datas[_aiParamId]
 

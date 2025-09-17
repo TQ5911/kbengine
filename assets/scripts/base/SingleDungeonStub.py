@@ -278,8 +278,8 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
         fVal.onAvatarLeave(playerGbId, True)
         self.completeSingleDungeon(spaceNo, playerGbId, False, 0)
 
-    def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType):
-        return self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType)
+    def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType, reliveHp):
+        return self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType, reliveHp)
 
     def onDungeonStarted(self, spaceNo, tCreate):
         DEBUG_MSG('onDungeonStarted::', spaceNo, tCreate)
@@ -310,7 +310,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             self._cancelCallback(sVal.completeDungeonTimer, gametimer.TIMER_TAG_ON_SINGLE_DUNGEON_COMPLETED_CALLBACK)
 
         sVal.spaceMgr.cell.destroyAllEntities()
-        sVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, playerGbId, win, 0)
+        sVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, playerGbId, win, 0, sVal.getElapsedTime())
 
         self._onSingleDungeonCompletedCallback(spaceNo, sVal.spaceUUID, playerGbId, win)
 
@@ -341,7 +341,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             return
 
         sVal.spaceMgr.cell.destroyAllEntities()
-        sVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, playerGbId, win, delay)
+        sVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, playerGbId, win, delay, sVal.getElapsedTime())
 
         if delay:
             sVal.completeDungeonTimer = self._callback(delay, '_onSingleDungeonCompletedCallback',

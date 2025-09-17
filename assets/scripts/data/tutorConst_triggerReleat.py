@@ -45,12 +45,6 @@ datas = _tools.RODict({
     242021: _tools.RODict({
         "triggerName": "UIQuickWearPanel_Self",
     }),
-    242031: _tools.RODict({
-        "triggerName": "UIMainCityPanel_Self",
-    }),
-    242032: _tools.RODict({
-        "triggerName": "UIPortableSetPanel_Self",
-    }),
     242041: _tools.RODict({
         "triggerName": "UIMainCityPanel_Self",
     }),

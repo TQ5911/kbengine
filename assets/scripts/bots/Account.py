@@ -23,7 +23,7 @@ class Account(AccountBase):
             DEBUG_MSG('reqCreateBot', self)
             d = self.clientapp.getPlayerDelegate()
             avatarName = d.botClient.avatarName
-            self.base.reqCreateBot(avatarName, d.botClient.school)
+            self.base.reqCreateBot(avatarName, d.botClient.school, d.botClient.faceData)
             return
 
         _gbId = characters['characters'][0]['gbId']
@@ -44,7 +44,7 @@ class Account(AccountBase):
             # 名字直接用uuid，拼别的会超过varchar(20)
             # 这里直接用account_name了，防止重复
 
-            self.base.reqCreateBot(avatarName, d.botClient.school)
+            self.base.reqCreateBot(avatarName, d.botClient.school, d.botClient.faceData)
         else:
             self.gbId = gbId
             self.selectAvatarGame()

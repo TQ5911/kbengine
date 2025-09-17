@@ -117,7 +117,11 @@
 
     <CellMethods>
         <applyCreateTeam> <Exposed/>
-            <Arg>           UINT8           </Arg>
+            <Arg>           TEAMTARGET      </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           STRING          </Arg>
             <Arg>           BOOL            </Arg>
         </applyCreateTeam>
 
@@ -364,11 +368,10 @@
         <onPlayerAutoMatchTimeout>
         </onPlayerAutoMatchTimeout>
         <reqSetTeamTarget><Exposed/>
-            <Arg>           TEAMTARGET       </Arg>
             <Arg>           UINT32           </Arg>
             <Arg>           UINT32           </Arg>
             <Arg>           UNICODE          </Arg>
-            <Arg>           BOOL             </Arg>
+            <Arg>           STRING           </Arg>
             <Arg>           BOOL             </Arg>
         </reqSetTeamTarget>
         <reqGetTeamInfo><Exposed/>
@@ -491,18 +494,6 @@
         <turnOffTeamMicsByForbidVoiceChat>
         </turnOffTeamMicsByForbidVoiceChat>
 
-        <reqPublishTeam>
-            <Exposed/>
-            <Arg>   BOOL     </Arg>
-            <Arg>   UNICODE  </Arg>
-            <Arg>   BOOL     </Arg>
-        </reqPublishTeam>
-
-        <reqSetAutoInPlace>
-            <Exposed/>
-            <Arg>   BOOL     </Arg>
-        </reqSetAutoInPlace>
-
         <reqAddMarkMember> <Exposed/>
             <Arg>           ENTITY_ID           </Arg>
             <Arg>           BOOL            </Arg>
@@ -514,6 +505,14 @@
             <Arg>           BOOL            </Arg>
         </reqChangeOnlyCaptain>
         
+        <reqJoinTeam> <Exposed/>
+            <Arg> TEAMID  </Arg>
+            <Arg> STRING  </Arg>
+        </reqJoinTeam>
+
+        <addTeamDungeonRewardRecord>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </addTeamDungeonRewardRecord>
     </CellMethods>
 
     <ClientMethods>
@@ -665,6 +664,9 @@
             <Arg>           TEAMTARGET       </Arg>
             <Arg>           UINT32           </Arg>
             <Arg>           UINT32           </Arg>
+            <Arg>           STRING           </Arg>
+            <Arg>           BOOL             </Arg>
+            <Arg>           UNICODE          </Arg>
         </onSetTeamTarget>
         <onApplyJoinTeamFailed>
             <Arg>           TEAMID       </Arg>
@@ -742,16 +744,7 @@
             <Arg>           SPACE_NO        </Arg>
             <Arg>           POSITION_ARG    </Arg>
         </onGetCaptainFollowInfo>
-
-        <onPublishTeam>
-        	<Arg>           BOOL            </Arg>
-        	<Arg>           UNICODE         </Arg>
-        </onPublishTeam>
-
-        <onSetAutoInPlace>
-        	<Arg>           BOOL            </Arg>
-        </onSetAutoInPlace>
-
+        
         <onDelTeamMember>
             <Arg>           PLAYER_GBID     </Arg>
         </onDelTeamMember>
@@ -760,5 +753,16 @@
             <Arg>           CLIENT_TEAM_MARK_INFO           </Arg>
         </onChangeTeamMark>
 
+        <onJoinTeam>
+            <Arg>   ERRNO       </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   STRING      </Arg> 
+        </onJoinTeam>
+
+        <onAddTeamDungeonRewardRecord>
+            <Arg>           TEAMID                                                  </Arg>
+            <Arg>           PLAYER_GBID                                             </Arg>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onAddTeamDungeonRewardRecord>
     </ClientMethods>
 </root>

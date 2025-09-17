@@ -13,8 +13,9 @@
     <CellMethods>
         <enterCrusadeDungeon>
             <Exposed/>
-            <Arg>   LEVEL   </Arg>
         </enterCrusadeDungeon>
+        <autoStartCrusadeDungeon>
+        </autoStartCrusadeDungeon>
     </CellMethods>
 
     <BaseMethods>

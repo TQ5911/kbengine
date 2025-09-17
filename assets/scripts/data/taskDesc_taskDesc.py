@@ -508,57 +508,57 @@ datas = _tools.RODict({
     86020023: _tools.RODict({
         "TaskId": 86020023,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020024: _tools.RODict({
         "TaskId": 86020024,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "解决委托",
     }),
     86020025: _tools.RODict({
         "TaskId": 86020025,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020026: _tools.RODict({
         "TaskId": 86020026,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020027: _tools.RODict({
         "TaskId": 86020027,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020028: _tools.RODict({
         "TaskId": 86020028,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020029: _tools.RODict({
         "TaskId": 86020029,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "解决委托",
     }),
     86020030: _tools.RODict({
         "TaskId": 86020030,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020031: _tools.RODict({
         "TaskId": 86020031,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020032: _tools.RODict({
         "TaskId": 86020032,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020033: _tools.RODict({
         "TaskId": 86020033,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020034: _tools.RODict({
         "TaskId": 86020034,
@@ -568,27 +568,27 @@ datas = _tools.RODict({
     86020035: _tools.RODict({
         "TaskId": 86020035,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020036: _tools.RODict({
         "TaskId": 86020036,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020037: _tools.RODict({
         "TaskId": 86020037,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020038: _tools.RODict({
         "TaskId": 86020038,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020039: _tools.RODict({
         "TaskId": 86020039,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "探究地点",
     }),
     86020040: _tools.RODict({
         "TaskId": 86020040,
@@ -643,67 +643,67 @@ datas = _tools.RODict({
     86020050: _tools.RODict({
         "TaskId": 86020050,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020051: _tools.RODict({
         "TaskId": 86020051,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020052: _tools.RODict({
         "TaskId": 86020052,
         "TaskGroup": 0,
-        "TaskName": "附灵任务",
+        "TaskName": "击败魔物",
     }),
     86020053: _tools.RODict({
         "TaskId": 86020053,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020054: _tools.RODict({
         "TaskId": 86020054,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020055: _tools.RODict({
         "TaskId": 86020055,
         "TaskGroup": 0,
-        "TaskName": "附灵任务",
+        "TaskName": "击败魔物",
     }),
     86020056: _tools.RODict({
         "TaskId": 86020056,
         "TaskGroup": 0,
-        "TaskName": "附灵任务",
+        "TaskName": "击败魔物",
     }),
     86020057: _tools.RODict({
         "TaskId": 86020057,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020058: _tools.RODict({
         "TaskId": 86020058,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020059: _tools.RODict({
         "TaskId": 86020059,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020060: _tools.RODict({
         "TaskId": 86020060,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020061: _tools.RODict({
         "TaskId": 86020061,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020062: _tools.RODict({
         "TaskId": 86020062,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020063: _tools.RODict({
         "TaskId": 86020063,
@@ -728,12 +728,12 @@ datas = _tools.RODict({
     86020067: _tools.RODict({
         "TaskId": 86020067,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020068: _tools.RODict({
         "TaskId": 86020068,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020069: _tools.RODict({
         "TaskId": 86020069,
@@ -743,77 +743,77 @@ datas = _tools.RODict({
     86020070: _tools.RODict({
         "TaskId": 86020070,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "收集物资",
     }),
     86020071: _tools.RODict({
         "TaskId": 86020071,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020072: _tools.RODict({
         "TaskId": 86020072,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "收集物资",
     }),
     86020073: _tools.RODict({
         "TaskId": 86020073,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020074: _tools.RODict({
         "TaskId": 86020074,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020075: _tools.RODict({
         "TaskId": 86020075,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "探究地点",
     }),
     86020076: _tools.RODict({
         "TaskId": 86020076,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020077: _tools.RODict({
         "TaskId": 86020077,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020078: _tools.RODict({
         "TaskId": 86020078,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020079: _tools.RODict({
         "TaskId": 86020079,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020080: _tools.RODict({
         "TaskId": 86020080,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020081: _tools.RODict({
         "TaskId": 86020081,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020082: _tools.RODict({
         "TaskId": 86020082,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020083: _tools.RODict({
         "TaskId": 86020083,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020084: _tools.RODict({
         "TaskId": 86020084,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "采集真气",
     }),
     86020085: _tools.RODict({
         "TaskId": 86020085,
@@ -823,17 +823,17 @@ datas = _tools.RODict({
     86020086: _tools.RODict({
         "TaskId": 86020086,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020087: _tools.RODict({
         "TaskId": 86020087,
         "TaskGroup": 0,
-        "TaskName": "月光海港",
+        "TaskName": "击败魔物",
     }),
     86020088: _tools.RODict({
         "TaskId": 86020088,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "收集物资",
     }),
     86020089: _tools.RODict({
         "TaskId": 86020089,
@@ -843,17 +843,17 @@ datas = _tools.RODict({
     86020090: _tools.RODict({
         "TaskId": 86020090,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020091: _tools.RODict({
         "TaskId": 86020091,
         "TaskGroup": 0,
-        "TaskName": "附灵任务",
+        "TaskName": "击败魔物",
     }),
     86020092: _tools.RODict({
         "TaskId": 86020092,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "收集物资",
     }),
     86020093: _tools.RODict({
         "TaskId": 86020093,
@@ -868,17 +868,17 @@ datas = _tools.RODict({
     86020095: _tools.RODict({
         "TaskId": 86020095,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020096: _tools.RODict({
         "TaskId": 86020096,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020097: _tools.RODict({
         "TaskId": 86020097,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020098: _tools.RODict({
         "TaskId": 86020098,
@@ -888,22 +888,22 @@ datas = _tools.RODict({
     86020099: _tools.RODict({
         "TaskId": 86020099,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020100: _tools.RODict({
         "TaskId": 86020100,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020101: _tools.RODict({
         "TaskId": 86020101,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020102: _tools.RODict({
         "TaskId": 86020102,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020103: _tools.RODict({
         "TaskId": 86020103,
@@ -913,17 +913,17 @@ datas = _tools.RODict({
     86020104: _tools.RODict({
         "TaskId": 86020104,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020105: _tools.RODict({
         "TaskId": 86020105,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020106: _tools.RODict({
         "TaskId": 86020106,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020107: _tools.RODict({
         "TaskId": 86020107,
@@ -933,12 +933,12 @@ datas = _tools.RODict({
     86020108: _tools.RODict({
         "TaskId": 86020108,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020109: _tools.RODict({
         "TaskId": 86020109,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020110: _tools.RODict({
         "TaskId": 86020110,
@@ -948,17 +948,17 @@ datas = _tools.RODict({
     86020111: _tools.RODict({
         "TaskId": 86020111,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020112: _tools.RODict({
         "TaskId": 86020112,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020113: _tools.RODict({
         "TaskId": 86020113,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020114: _tools.RODict({
         "TaskId": 86020114,
@@ -968,22 +968,22 @@ datas = _tools.RODict({
     86020115: _tools.RODict({
         "TaskId": 86020115,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020116: _tools.RODict({
         "TaskId": 86020116,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020117: _tools.RODict({
         "TaskId": 86020117,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020118: _tools.RODict({
         "TaskId": 86020118,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020119: _tools.RODict({
         "TaskId": 86020119,
@@ -993,12 +993,12 @@ datas = _tools.RODict({
     86020120: _tools.RODict({
         "TaskId": 86020120,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020121: _tools.RODict({
         "TaskId": 86020121,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "采集真气",
     }),
     86020122: _tools.RODict({
         "TaskId": 86020122,
@@ -1008,27 +1008,27 @@ datas = _tools.RODict({
     86020123: _tools.RODict({
         "TaskId": 86020123,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020124: _tools.RODict({
         "TaskId": 86020124,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020125: _tools.RODict({
         "TaskId": 86020125,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020126: _tools.RODict({
         "TaskId": 86020126,
         "TaskGroup": 0,
-        "TaskName": "附灵任务",
+        "TaskName": "击败魔物",
     }),
     86020127: _tools.RODict({
         "TaskId": 86020127,
         "TaskGroup": 0,
-        "TaskName": "附灵任务",
+        "TaskName": "击败魔物",
     }),
     86020128: _tools.RODict({
         "TaskId": 86020128,
@@ -1038,17 +1038,17 @@ datas = _tools.RODict({
     86020129: _tools.RODict({
         "TaskId": 86020129,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020130: _tools.RODict({
         "TaskId": 86020130,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020131: _tools.RODict({
         "TaskId": 86020131,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020132: _tools.RODict({
         "TaskId": 86020132,
@@ -1058,22 +1058,22 @@ datas = _tools.RODict({
     86020133: _tools.RODict({
         "TaskId": 86020133,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020134: _tools.RODict({
         "TaskId": 86020134,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "采集真气",
     }),
     86020135: _tools.RODict({
         "TaskId": 86020135,
         "TaskGroup": 0,
-        "TaskName": "附灵任务",
+        "TaskName": "寻找宝箱",
     }),
     86020136: _tools.RODict({
         "TaskId": 86020136,
         "TaskGroup": 0,
-        "TaskName": "精灵村外",
+        "TaskName": "解决委托",
     }),
     86020137: _tools.RODict({
         "TaskId": 86020137,
@@ -1083,12 +1083,12 @@ datas = _tools.RODict({
     86020138: _tools.RODict({
         "TaskId": 86020138,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020139: _tools.RODict({
         "TaskId": 86020139,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020140: _tools.RODict({
         "TaskId": 86020140,
@@ -1098,12 +1098,12 @@ datas = _tools.RODict({
     86020141: _tools.RODict({
         "TaskId": 86020141,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020142: _tools.RODict({
         "TaskId": 86020142,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020143: _tools.RODict({
         "TaskId": 86020143,
@@ -1113,12 +1113,12 @@ datas = _tools.RODict({
     86020144: _tools.RODict({
         "TaskId": 86020144,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020145: _tools.RODict({
         "TaskId": 86020145,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020146: _tools.RODict({
         "TaskId": 86020146,
@@ -1128,17 +1128,17 @@ datas = _tools.RODict({
     86020147: _tools.RODict({
         "TaskId": 86020147,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020148: _tools.RODict({
         "TaskId": 86020148,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020149: _tools.RODict({
         "TaskId": 86020149,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020150: _tools.RODict({
         "TaskId": 86020150,
@@ -1153,12 +1153,12 @@ datas = _tools.RODict({
     86020152: _tools.RODict({
         "TaskId": 86020152,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020153: _tools.RODict({
         "TaskId": 86020153,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "采集真气",
     }),
     86020154: _tools.RODict({
         "TaskId": 86020154,
@@ -1168,32 +1168,32 @@ datas = _tools.RODict({
     86020155: _tools.RODict({
         "TaskId": 86020155,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020156: _tools.RODict({
         "TaskId": 86020156,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020157: _tools.RODict({
         "TaskId": 86020157,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020158: _tools.RODict({
         "TaskId": 86020158,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020159: _tools.RODict({
         "TaskId": 86020159,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020160: _tools.RODict({
         "TaskId": 86020160,
         "TaskGroup": 0,
-        "TaskName": "附灵任务",
+        "TaskName": "击败魔物",
     }),
     86020161: _tools.RODict({
         "TaskId": 86020161,
@@ -1203,12 +1203,12 @@ datas = _tools.RODict({
     86020162: _tools.RODict({
         "TaskId": 86020162,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020163: _tools.RODict({
         "TaskId": 86020163,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020164: _tools.RODict({
         "TaskId": 86020164,
@@ -1218,22 +1218,22 @@ datas = _tools.RODict({
     86020165: _tools.RODict({
         "TaskId": 86020165,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020166: _tools.RODict({
         "TaskId": 86020166,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020167: _tools.RODict({
         "TaskId": 86020167,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020168: _tools.RODict({
         "TaskId": 86020168,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020169: _tools.RODict({
         "TaskId": 86020169,
@@ -1243,17 +1243,17 @@ datas = _tools.RODict({
     86020170: _tools.RODict({
         "TaskId": 86020170,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020171: _tools.RODict({
         "TaskId": 86020171,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020172: _tools.RODict({
         "TaskId": 86020172,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020173: _tools.RODict({
         "TaskId": 86020173,
@@ -1263,17 +1263,17 @@ datas = _tools.RODict({
     86020174: _tools.RODict({
         "TaskId": 86020174,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020175: _tools.RODict({
         "TaskId": 86020175,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "探究地点",
     }),
     86020176: _tools.RODict({
         "TaskId": 86020176,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020177: _tools.RODict({
         "TaskId": 86020177,
@@ -1283,12 +1283,12 @@ datas = _tools.RODict({
     86020178: _tools.RODict({
         "TaskId": 86020178,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020179: _tools.RODict({
         "TaskId": 86020179,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020180: _tools.RODict({
         "TaskId": 86020180,
@@ -1298,12 +1298,12 @@ datas = _tools.RODict({
     86020181: _tools.RODict({
         "TaskId": 86020181,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020182: _tools.RODict({
         "TaskId": 86020182,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020183: _tools.RODict({
         "TaskId": 86020183,
@@ -1313,12 +1313,12 @@ datas = _tools.RODict({
     86020184: _tools.RODict({
         "TaskId": 86020184,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020185: _tools.RODict({
         "TaskId": 86020185,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020186: _tools.RODict({
         "TaskId": 86020186,
@@ -1328,12 +1328,12 @@ datas = _tools.RODict({
     86020187: _tools.RODict({
         "TaskId": 86020187,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020188: _tools.RODict({
         "TaskId": 86020188,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020189: _tools.RODict({
         "TaskId": 86020189,
@@ -1343,32 +1343,32 @@ datas = _tools.RODict({
     86020190: _tools.RODict({
         "TaskId": 86020190,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020191: _tools.RODict({
         "TaskId": 86020191,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020192: _tools.RODict({
         "TaskId": 86020192,
         "TaskGroup": 0,
-        "TaskName": "新元城郊",
+        "TaskName": "击败魔物",
     }),
     86020193: _tools.RODict({
         "TaskId": 86020193,
         "TaskGroup": 0,
-        "TaskName": "新元城郊",
+        "TaskName": "击败魔物",
     }),
     86020194: _tools.RODict({
         "TaskId": 86020194,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020195: _tools.RODict({
         "TaskId": 86020195,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020196: _tools.RODict({
         "TaskId": 86020196,
@@ -1378,12 +1378,12 @@ datas = _tools.RODict({
     86020197: _tools.RODict({
         "TaskId": 86020197,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020198: _tools.RODict({
         "TaskId": 86020198,
         "TaskGroup": 0,
-        "TaskName": "月光海港一层",
+        "TaskName": "击败魔物",
     }),
     86020199: _tools.RODict({
         "TaskId": 86020199,
@@ -1433,112 +1433,112 @@ datas = _tools.RODict({
     86020208: _tools.RODict({
         "TaskId": 86020208,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020209: _tools.RODict({
         "TaskId": 86020209,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020210: _tools.RODict({
         "TaskId": 86020210,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020211: _tools.RODict({
         "TaskId": 86020211,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020212: _tools.RODict({
         "TaskId": 86020212,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020213: _tools.RODict({
         "TaskId": 86020213,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020214: _tools.RODict({
         "TaskId": 86020214,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020215: _tools.RODict({
         "TaskId": 86020215,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020216: _tools.RODict({
         "TaskId": 86020216,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020217: _tools.RODict({
         "TaskId": 86020217,
         "TaskGroup": 0,
-        "TaskName": "月光海港一层",
+        "TaskName": "击败魔物",
     }),
     86020218: _tools.RODict({
         "TaskId": 86020218,
         "TaskGroup": 0,
-        "TaskName": "月光海港一层",
+        "TaskName": "击败魔物",
     }),
     86020219: _tools.RODict({
         "TaskId": 86020219,
         "TaskGroup": 0,
-        "TaskName": "月光海港一层",
+        "TaskName": "击败魔物",
     }),
     86020220: _tools.RODict({
         "TaskId": 86020220,
         "TaskGroup": 0,
-        "TaskName": "月光海港二层",
+        "TaskName": "击败魔物",
     }),
     86020221: _tools.RODict({
         "TaskId": 86020221,
         "TaskGroup": 0,
-        "TaskName": "月光海港二层",
+        "TaskName": "击败魔物",
     }),
     86020222: _tools.RODict({
         "TaskId": 86020222,
         "TaskGroup": 0,
-        "TaskName": "月光海港二层",
+        "TaskName": "击败魔物",
     }),
     86020223: _tools.RODict({
         "TaskId": 86020223,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020224: _tools.RODict({
         "TaskId": 86020224,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020225: _tools.RODict({
         "TaskId": 86020225,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020226: _tools.RODict({
         "TaskId": 86020226,
         "TaskGroup": 0,
-        "TaskName": "新元城郊",
+        "TaskName": "击败魔物",
     }),
     86020227: _tools.RODict({
         "TaskId": 86020227,
         "TaskGroup": 0,
-        "TaskName": "新元城郊",
+        "TaskName": "击败魔物",
     }),
     86020228: _tools.RODict({
         "TaskId": 86020228,
         "TaskGroup": 0,
-        "TaskName": "新元城郊",
+        "TaskName": "击败魔物",
     }),
     86020229: _tools.RODict({
         "TaskId": 86020229,
         "TaskGroup": 0,
-        "TaskName": "同心谷",
+        "TaskName": "击败魔物",
     }),
     86020230: _tools.RODict({
         "TaskId": 86020230,
@@ -1548,12 +1548,12 @@ datas = _tools.RODict({
     86020231: _tools.RODict({
         "TaskId": 86020231,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020232: _tools.RODict({
         "TaskId": 86020232,
         "TaskGroup": 0,
-        "TaskName": "月光海港一层",
+        "TaskName": "击败魔物",
     }),
     86020233: _tools.RODict({
         "TaskId": 86020233,
@@ -1563,12 +1563,12 @@ datas = _tools.RODict({
     86020234: _tools.RODict({
         "TaskId": 86020234,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020235: _tools.RODict({
         "TaskId": 86020235,
         "TaskGroup": 0,
-        "TaskName": "月光海港一层",
+        "TaskName": "击败魔物",
     }),
     86020236: _tools.RODict({
         "TaskId": 86020236,
@@ -1578,12 +1578,12 @@ datas = _tools.RODict({
     86020237: _tools.RODict({
         "TaskId": 86020237,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020238: _tools.RODict({
         "TaskId": 86020238,
         "TaskGroup": 0,
-        "TaskName": "月光海港一层",
+        "TaskName": "击败魔物",
     }),
     86020239: _tools.RODict({
         "TaskId": 86020239,
@@ -1593,12 +1593,12 @@ datas = _tools.RODict({
     86020240: _tools.RODict({
         "TaskId": 86020240,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020241: _tools.RODict({
         "TaskId": 86020241,
         "TaskGroup": 0,
-        "TaskName": "月光海港二层",
+        "TaskName": "击败魔物",
     }),
     86020242: _tools.RODict({
         "TaskId": 86020242,
@@ -1608,12 +1608,12 @@ datas = _tools.RODict({
     86020243: _tools.RODict({
         "TaskId": 86020243,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020244: _tools.RODict({
         "TaskId": 86020244,
         "TaskGroup": 0,
-        "TaskName": "月光海港二层",
+        "TaskName": "击败魔物",
     }),
     86020245: _tools.RODict({
         "TaskId": 86020245,
@@ -1623,12 +1623,12 @@ datas = _tools.RODict({
     86020246: _tools.RODict({
         "TaskId": 86020246,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020247: _tools.RODict({
         "TaskId": 86020247,
         "TaskGroup": 0,
-        "TaskName": "月光海港二层",
+        "TaskName": "击败魔物",
     }),
     86020248: _tools.RODict({
         "TaskId": 86020248,
@@ -1638,12 +1638,12 @@ datas = _tools.RODict({
     86020249: _tools.RODict({
         "TaskId": 86020249,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020250: _tools.RODict({
         "TaskId": 86020250,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020251: _tools.RODict({
         "TaskId": 86020251,
@@ -1653,12 +1653,12 @@ datas = _tools.RODict({
     86020252: _tools.RODict({
         "TaskId": 86020252,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020253: _tools.RODict({
         "TaskId": 86020253,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020254: _tools.RODict({
         "TaskId": 86020254,
@@ -1668,12 +1668,12 @@ datas = _tools.RODict({
     86020255: _tools.RODict({
         "TaskId": 86020255,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020256: _tools.RODict({
         "TaskId": 86020256,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020257: _tools.RODict({
         "TaskId": 86020257,
@@ -1683,47 +1683,47 @@ datas = _tools.RODict({
     86020258: _tools.RODict({
         "TaskId": 86020258,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "寻找宝箱",
     }),
     86020259: _tools.RODict({
         "TaskId": 86020259,
         "TaskGroup": 0,
-        "TaskName": "新元城",
+        "TaskName": "解决委托",
     }),
     86020260: _tools.RODict({
         "TaskId": 86020260,
         "TaskGroup": 0,
-        "TaskName": "新元城郊",
+        "TaskName": "解决委托",
     }),
     86020261: _tools.RODict({
         "TaskId": 86020261,
         "TaskGroup": 0,
-        "TaskName": "新元城郊",
+        "TaskName": "击败魔物",
     }),
     86020262: _tools.RODict({
         "TaskId": 86020262,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020263: _tools.RODict({
         "TaskId": 86020263,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020264: _tools.RODict({
         "TaskId": 86020264,
         "TaskGroup": 0,
-        "TaskName": "石窟走廊",
+        "TaskName": "击败魔物",
     }),
     86020265: _tools.RODict({
         "TaskId": 86020265,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020266: _tools.RODict({
         "TaskId": 86020266,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020267: _tools.RODict({
         "TaskId": 86020267,
@@ -1733,22 +1733,22 @@ datas = _tools.RODict({
     86020268: _tools.RODict({
         "TaskId": 86020268,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020269: _tools.RODict({
         "TaskId": 86020269,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020270: _tools.RODict({
         "TaskId": 86020270,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020271: _tools.RODict({
         "TaskId": 86020271,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020272: _tools.RODict({
         "TaskId": 86020272,
@@ -1758,12 +1758,12 @@ datas = _tools.RODict({
     86020273: _tools.RODict({
         "TaskId": 86020273,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020274: _tools.RODict({
         "TaskId": 86020274,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020275: _tools.RODict({
         "TaskId": 86020275,
@@ -1773,12 +1773,12 @@ datas = _tools.RODict({
     86020276: _tools.RODict({
         "TaskId": 86020276,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020277: _tools.RODict({
         "TaskId": 86020277,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020278: _tools.RODict({
         "TaskId": 86020278,
@@ -1788,12 +1788,12 @@ datas = _tools.RODict({
     86020279: _tools.RODict({
         "TaskId": 86020279,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020280: _tools.RODict({
         "TaskId": 86020280,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020281: _tools.RODict({
         "TaskId": 86020281,
@@ -1803,12 +1803,12 @@ datas = _tools.RODict({
     86020282: _tools.RODict({
         "TaskId": 86020282,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020283: _tools.RODict({
         "TaskId": 86020283,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020284: _tools.RODict({
         "TaskId": 86020284,
@@ -1818,12 +1818,12 @@ datas = _tools.RODict({
     86020285: _tools.RODict({
         "TaskId": 86020285,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020286: _tools.RODict({
         "TaskId": 86020286,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020287: _tools.RODict({
         "TaskId": 86020287,
@@ -1833,12 +1833,12 @@ datas = _tools.RODict({
     86020288: _tools.RODict({
         "TaskId": 86020288,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020289: _tools.RODict({
         "TaskId": 86020289,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020290: _tools.RODict({
         "TaskId": 86020290,
@@ -1848,12 +1848,12 @@ datas = _tools.RODict({
     86020291: _tools.RODict({
         "TaskId": 86020291,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020292: _tools.RODict({
         "TaskId": 86020292,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020293: _tools.RODict({
         "TaskId": 86020293,
@@ -1863,12 +1863,12 @@ datas = _tools.RODict({
     86020294: _tools.RODict({
         "TaskId": 86020294,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020295: _tools.RODict({
         "TaskId": 86020295,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020296: _tools.RODict({
         "TaskId": 86020296,
@@ -1878,12 +1878,12 @@ datas = _tools.RODict({
     86020297: _tools.RODict({
         "TaskId": 86020297,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020298: _tools.RODict({
         "TaskId": 86020298,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020299: _tools.RODict({
         "TaskId": 86020299,
@@ -1893,12 +1893,12 @@ datas = _tools.RODict({
     86020300: _tools.RODict({
         "TaskId": 86020300,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020301: _tools.RODict({
         "TaskId": 86020301,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020302: _tools.RODict({
         "TaskId": 86020302,
@@ -1908,12 +1908,12 @@ datas = _tools.RODict({
     86020303: _tools.RODict({
         "TaskId": 86020303,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020304: _tools.RODict({
         "TaskId": 86020304,
         "TaskGroup": 0,
-        "TaskName": "五毒石窟一层",
+        "TaskName": "击败魔物",
     }),
     86020305: _tools.RODict({
         "TaskId": 86020305,
@@ -1923,17 +1923,17 @@ datas = _tools.RODict({
     86020306: _tools.RODict({
         "TaskId": 86020306,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020307: _tools.RODict({
         "TaskId": 86020307,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020308: _tools.RODict({
         "TaskId": 86020308,
         "TaskGroup": 0,
-        "TaskName": "祖珂地堡一层",
+        "TaskName": "击败魔物",
     }),
     86020309: _tools.RODict({
         "TaskId": 86020309,
@@ -1943,17 +1943,17 @@ datas = _tools.RODict({
     86020310: _tools.RODict({
         "TaskId": 86020310,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020311: _tools.RODict({
         "TaskId": 86020311,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020312: _tools.RODict({
         "TaskId": 86020312,
         "TaskGroup": 0,
-        "TaskName": "新元城郊",
+        "TaskName": "击败魔物",
     }),
     86020313: _tools.RODict({
         "TaskId": 86020313,
@@ -1963,17 +1963,17 @@ datas = _tools.RODict({
     86020314: _tools.RODict({
         "TaskId": 86020314,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "寻找宝箱",
     }),
     86020315: _tools.RODict({
         "TaskId": 86020315,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020316: _tools.RODict({
         "TaskId": 86020316,
         "TaskGroup": 0,
-        "TaskName": "飞沙要塞",
+        "TaskName": "解决委托",
     }),
     86020317: _tools.RODict({
         "TaskId": 86020317,
@@ -4548,7 +4548,7 @@ datas = _tools.RODict({
     86090036: _tools.RODict({
         "TaskId": 86090036,
         "TaskGroup": 0,
-        "TaskName": "珍珠的消息",
+        "TaskName": "侠之大者2",
     }),
     86090037: _tools.RODict({
         "TaskId": 86090037,
@@ -4794,6 +4794,246 @@ datas = _tools.RODict({
         "TaskId": 86090085,
         "TaskGroup": 0,
         "TaskName": "奇怪的文物3",
+    }),
+    86090086: _tools.RODict({
+        "TaskId": 86090086,
+        "TaskGroup": 0,
+        "TaskName": "寻找赃物",
+    }),
+    86090087: _tools.RODict({
+        "TaskId": 86090087,
+        "TaskGroup": 0,
+        "TaskName": "侠之大者",
+    }),
+    86090088: _tools.RODict({
+        "TaskId": 86090088,
+        "TaskGroup": 0,
+        "TaskName": "侠之大者",
+    }),
+    86090089: _tools.RODict({
+        "TaskId": 86090089,
+        "TaskGroup": 0,
+        "TaskName": "侠之大者",
+    }),
+    86090090: _tools.RODict({
+        "TaskId": 86090090,
+        "TaskGroup": 0,
+        "TaskName": "一夜暴富",
+    }),
+    86090091: _tools.RODict({
+        "TaskId": 86090091,
+        "TaskGroup": 0,
+        "TaskName": "一夜暴富",
+    }),
+    86090092: _tools.RODict({
+        "TaskId": 86090092,
+        "TaskGroup": 0,
+        "TaskName": "一夜暴富",
+    }),
+    86090093: _tools.RODict({
+        "TaskId": 86090093,
+        "TaskGroup": 0,
+        "TaskName": "一夜暴富",
+    }),
+    86090094: _tools.RODict({
+        "TaskId": 86090094,
+        "TaskGroup": 0,
+        "TaskName": "宝箱传闻",
+    }),
+    86090095: _tools.RODict({
+        "TaskId": 86090095,
+        "TaskGroup": 0,
+        "TaskName": "宝箱传闻",
+    }),
+    86090096: _tools.RODict({
+        "TaskId": 86090096,
+        "TaskGroup": 0,
+        "TaskName": "宝箱传闻",
+    }),
+    86090097: _tools.RODict({
+        "TaskId": 86090097,
+        "TaskGroup": 0,
+        "TaskName": "最讨厌的蛇",
+    }),
+    86090098: _tools.RODict({
+        "TaskId": 86090098,
+        "TaskGroup": 0,
+        "TaskName": "吃遍天下",
+    }),
+    86090099: _tools.RODict({
+        "TaskId": 86090099,
+        "TaskGroup": 0,
+        "TaskName": "海妖族的踪迹",
+    }),
+    86090100: _tools.RODict({
+        "TaskId": 86090100,
+        "TaskGroup": 0,
+        "TaskName": "海妖族的踪迹",
+    }),
+    86090101: _tools.RODict({
+        "TaskId": 86090101,
+        "TaskGroup": 0,
+        "TaskName": "海妖族的踪迹",
+    }),
+    86090102: _tools.RODict({
+        "TaskId": 86090102,
+        "TaskGroup": 0,
+        "TaskName": "海妖族的踪迹",
+    }),
+    86090103: _tools.RODict({
+        "TaskId": 86090103,
+        "TaskGroup": 0,
+        "TaskName": "海妖族的踪迹",
+    }),
+    86090104: _tools.RODict({
+        "TaskId": 86090104,
+        "TaskGroup": 0,
+        "TaskName": "来袭的魔物",
+    }),
+    86090105: _tools.RODict({
+        "TaskId": 86090105,
+        "TaskGroup": 0,
+        "TaskName": "黄金国1",
+    }),
+    86090106: _tools.RODict({
+        "TaskId": 86090106,
+        "TaskGroup": 0,
+        "TaskName": "黄金国1",
+    }),
+    86090107: _tools.RODict({
+        "TaskId": 86090107,
+        "TaskGroup": 0,
+        "TaskName": "黄金国1",
+    }),
+    86090108: _tools.RODict({
+        "TaskId": 86090108,
+        "TaskGroup": 0,
+        "TaskName": "黄金国1",
+    }),
+    86090109: _tools.RODict({
+        "TaskId": 86090109,
+        "TaskGroup": 0,
+        "TaskName": "黄金国2",
+    }),
+    86090110: _tools.RODict({
+        "TaskId": 86090110,
+        "TaskGroup": 0,
+        "TaskName": "黄金国2",
+    }),
+    86090111: _tools.RODict({
+        "TaskId": 86090111,
+        "TaskGroup": 0,
+        "TaskName": "黄金国2",
+    }),
+    86090112: _tools.RODict({
+        "TaskId": 86090112,
+        "TaskGroup": 0,
+        "TaskName": "黄金国2",
+    }),
+    86090113: _tools.RODict({
+        "TaskId": 86090113,
+        "TaskGroup": 0,
+        "TaskName": "黄金国3",
+    }),
+    86090114: _tools.RODict({
+        "TaskId": 86090114,
+        "TaskGroup": 0,
+        "TaskName": "黄金国3",
+    }),
+    86090115: _tools.RODict({
+        "TaskId": 86090115,
+        "TaskGroup": 0,
+        "TaskName": "黄金国3",
+    }),
+    86090116: _tools.RODict({
+        "TaskId": 86090116,
+        "TaskGroup": 0,
+        "TaskName": "黄金国3",
+    }),
+    86090117: _tools.RODict({
+        "TaskId": 86090117,
+        "TaskGroup": 0,
+        "TaskName": "黄金国4",
+    }),
+    86090118: _tools.RODict({
+        "TaskId": 86090118,
+        "TaskGroup": 0,
+        "TaskName": "黄金国4",
+    }),
+    86090119: _tools.RODict({
+        "TaskId": 86090119,
+        "TaskGroup": 0,
+        "TaskName": "好人有好报",
+    }),
+    86090120: _tools.RODict({
+        "TaskId": 86090120,
+        "TaskGroup": 0,
+        "TaskName": "黄金国4",
+    }),
+    86090121: _tools.RODict({
+        "TaskId": 86090121,
+        "TaskGroup": 0,
+        "TaskName": "奇怪的魔物",
+    }),
+    86090122: _tools.RODict({
+        "TaskId": 86090122,
+        "TaskGroup": 0,
+        "TaskName": "奇怪的魔物",
+    }),
+    86090123: _tools.RODict({
+        "TaskId": 86090123,
+        "TaskGroup": 0,
+        "TaskName": "奇怪的魔物",
+    }),
+    86090124: _tools.RODict({
+        "TaskId": 86090124,
+        "TaskGroup": 0,
+        "TaskName": "贪婪的老农",
+    }),
+    86090125: _tools.RODict({
+        "TaskId": 86090125,
+        "TaskGroup": 0,
+        "TaskName": "少爷的挑战2",
+    }),
+    86090126: _tools.RODict({
+        "TaskId": 86090126,
+        "TaskGroup": 0,
+        "TaskName": "侠之大者2",
+    }),
+    86090127: _tools.RODict({
+        "TaskId": 86090127,
+        "TaskGroup": 0,
+        "TaskName": "侠之大者2",
+    }),
+    86090128: _tools.RODict({
+        "TaskId": 86090128,
+        "TaskGroup": 0,
+        "TaskName": "好人有好报2",
+    }),
+    86090129: _tools.RODict({
+        "TaskId": 86090129,
+        "TaskGroup": 0,
+        "TaskName": "好人有好报2",
+    }),
+    86090130: _tools.RODict({
+        "TaskId": 86090130,
+        "TaskGroup": 0,
+        "TaskName": "好人有好报2",
+    }),
+    86090131: _tools.RODict({
+        "TaskId": 86090131,
+        "TaskGroup": 0,
+        "TaskName": "寻找赃物2",
+    }),
+    86090132: _tools.RODict({
+        "TaskId": 86090132,
+        "TaskGroup": 0,
+        "TaskName": "寻找赃物2",
+    }),
+    86090133: _tools.RODict({
+        "TaskId": 86090133,
+        "TaskGroup": 0,
+        "TaskName": "寻找赃物2",
     }),
     86100001: _tools.RODict({
         "TaskId": 86100001,

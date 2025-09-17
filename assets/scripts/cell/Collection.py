@@ -17,7 +17,7 @@ import gameconst
 import gametimer
 import formula
 import gameglobal
-
+import const_const as CONST
 import NPC_Pick as NPD
 import NPC_pickConst as NPCST
 import NPC_pickTimes as NPPT
@@ -85,7 +85,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         if not pickData:
             return 0
         return pickData['pickTimes']
-    
+
     def getSpecialPickTimes(self, collectionId):
         collData = NPD.datas.get(collectionId, None)
         if not collData:
@@ -112,7 +112,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             gameengine.getLineStub(lineType).onCollectionBeCollectAndDestroyed(self.spaceNo, self.posIndex, self.gameEntityId)
         # TODO:: 处理非线空间的Entity
 
-        self.delaySafeDestroy()
+        self.delaySafeDestroy(CONST.datas.get("chestOpened", {}).get("value", 0.3))
 
     def onEquipDropDestroy(self, dropEquipId):
         if self.dropEquipId != dropEquipId:
@@ -227,7 +227,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
     def getGatherPickTimes(self, gbId):
         if self.type not in (gameconst.CollectionType.PERSONAL_BOX, gameconst.CollectionType.VIEWPOINT):
             return self.gatherAvatars.get('gatherCnt', 0), self.getPickTimes(self.collectionId)
-        
+
         return self.gatherAvatars.get(gbId, 0), self.getSpecialPickTimes(self.collectionId)
 
     def setSpecialGatherAvatar(self, avatarId, gbId, gatherCnt):
@@ -248,4 +248,4 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
 
     def onEntityRefresh(self):
         # 解耦，spaceNo在iCell， posIndex 在iGameEntity
-        super().onEntityRefresh(self.spaceNo, self.refreshTime)
+        super().onEntityRefresh(self.spaceNo, self.calculateRefreshTime())

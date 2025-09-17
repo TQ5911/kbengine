@@ -47,7 +47,7 @@
 
         <todayCubeCowDur>
             <Type>          UINT32                      </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
+            <Flags>         OWN_CLIENT                  </Flags>
             <Default>       0                           </Default>
             <Persistent>    true                        </Persistent>
         </todayCubeCowDur>

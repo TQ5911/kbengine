@@ -302,17 +302,6 @@ def getForbidLoginProp(accountName, callback):
 #     KBEngine.executeRawDatabaseCommand(sql)
 
 
-def forbidCharacter(gbId, forbidType, forbidTime, forbidReason):
-    sql = "update tbl_Account_characters_characters set sm_forbidFlag = {},sm_forbidType = {},sm_forbidTime = {},sm_forbidReason = {} WHERE sm_gbId = {} ".format(
-        1, forbidType, forbidTime, utils.escape_string(forbidReason), gbId)
-    KBEngine.executeRawDatabaseCommand(sql)
-
-
-def unforbidCharacter(gbId):
-    sql = "update tbl_Account_characters_characters set sm_forbidFlag = 0 WHERE sm_gbId = {} ".format(gbId)
-    KBEngine.executeRawDatabaseCommand(sql)
-
-
 def forbidVoiceChat(accountName, forbidType, forbidTime, forbidReason):
     sql = "update tbl_Account set sm_forbidVoiceChatFlag = 1,sm_forbidVoiceChatType = {},sm_forbidVoiceChatTime = {},sm_forbidVoiceChatReason = {} WHERE id = (select entityDBID from kbe_accountinfos where accountName = {}) ".format(
         forbidType, forbidTime, utils.escape_string(forbidReason), utils.escape_string(accountName))
@@ -335,13 +324,6 @@ def unforbidChat(accountName):
     sql = "update tbl_Account set sm_forbidChatFlag = 0 WHERE id = (select entityDBID from kbe_accountinfos where accountName = {}) ".format(
         utils.escape_string(accountName))
     KBEngine.executeRawDatabaseCommand(sql)
-
-
-def getForbidInfo(gbId, callback):
-    sql = "select a.sm_accountName, acc.sm_forbidFlag, acc.sm_forbidType, acc.sm_forbidTime, acc.sm_forbidReason \
-    from tbl_Account_characters_characters as acc, tbl_Avatar as a \
-    WHERE acc.sm_gbId = {} and a.sm_gbID={}".format(gbId, gbId)
-    KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def queryAccountDBID(platId, accountName, callback):
@@ -370,12 +352,6 @@ ItemDataSqlClass = collections.namedtuple('ItemDataSqlClass', itemDataSqlKeys)
 
 
 
-def getAvatarInfoByAccountDbId(dbId, callback):
-    sql = f'SELECT acc.sm_gbId, acc.sm_dbId, av.sm_obId FROM tbl_Account_characters_characters acc, tbl_Avatar av where acc.parentID = {dbId} and av.sm_gbID=acc.sm_gbId'
-    INFO_MSG(sql)
-    KBEngine.executeRawDatabaseCommand(sql, callback)
-
-
 def queryAvatarLoginTimeByAccountName(accountName, callback):
     sql = f"select sm_tLoginBase from tbl_Avatar where sm_accountName = '{accountName}'"
     INFO_MSG(sql)
@@ -402,12 +378,6 @@ def queryAvatarObId(gbId, callback):
 def deleteCrossServerGameAccountInfo(entityDBID):
     sql = f"DELETE FROM `kbe_accountinfos` WHERE entityDBID={entityDBID}"
     KBEngine.executeRawDatabaseCommand(sql)
-
-
-def getGbIdSchoolFromAccount(dbId, callback):
-    sql = f'SELECT sm_gbId, sm_school FROM tbl_Account_characters_characters where parentID = {dbId}'
-    INFO_MSG(sql)
-    KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def dbCommandCallback(ret, num, insertId, err, detail):
@@ -789,3 +759,48 @@ def getAvatarTotalScoreAndSpaceNo(gbId, callback):
     _sql = f'SELECT sm_totalScore, sm_spaceNo FROM tbl_Avatar WHERE sm_gbID={gbId}'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
+def getAvatarPersonalInfo(gbId, callback):
+    _sql = f"""SELECT a.sm_name, a.sm_level, a.sm_school, a.sm_totalScore, eq.sm_gridId, eq.sm_attrJson
+        FROM tbl_Avatar_bodyEquipData_bodyEquipList eq
+        RIGHT JOIN (SELECT id, sm_name, sm_level, sm_school, sm_totalScore FROM tbl_Avatar WHERE sm_gbID={gbId}) a ON a.id = eq.parentID"""
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+# --------------------------- auth avatar start --------------------------------
+
+# CREATE TABLE IF NOT EXISTS `game_account_characters`
+# (
+# 	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+# 	`parentID` bigint(20) UNSIGNED NOT NULL,
+# 	`gbId` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+# 	`authDbId` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+# 	`dbId` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+# 	`name` varchar(255) NOT NULL DEFAULT '',
+# 	`school` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+# 	`sex` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+# 	`level` int(10) UNSIGNED NOT NULL DEFAULT '0',
+# 	`tLastOnline` int(10) UNSIGNED NOT NULL DEFAULT '0',
+# 	PRIMARY KEY (`id`),
+# 	KEY `idx_parentID` (`parentID`),
+# 	KEY `idx_gbId` (`gbId`)
+# );
+
+def loadCharacterFromDB(parentID, callback):
+    sql = f'SELECT id, gbId, authDbId, dbId, name, school, sex, level, tLastOnline FROM game_account_characters WHERE parentID={parentID}'
+    KBEngine.executeRawDatabaseCommand(sql, callback)
+
+
+def loadBorrowedCharacterFromDB(authDbId, callback):
+    sql = f'SELECT id, parentID, gbId, authDbId, dbId, name, school, sex, level, tLastOnline FROM game_account_characters WHERE authDbId={authDbId}'
+    KBEngine.executeRawDatabaseCommand(sql, callback)
+
+
+def removeCharaterFromDB(dbid, callback):
+    sql = f'DELETE FROM game_account_characters WHERE id={dbid}'
+    KBEngine.executeRawDatabaseCommand(sql, callback)
+
+
+def lendAvatar(gbId, otherDbId, callback):
+    _sql = f'UPDATE game_account_characters SET authDbId={otherDbId} WHERE gbId={gbId} and authDbId=0'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+# --------------------------- auth avatar end --------------------------------

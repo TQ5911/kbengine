@@ -159,7 +159,17 @@ def getEntBuffinfo(su, player,entid):
     if not hasattr(ent, 'buffDic'):
         return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 没有 buffDic 方法', {})
     for buffid,buffmap in ent.buffDic.items():
-        buffdict = buffmap.get(0)
+        if not buffmap:
+            continue  
+        buffdict = None
+        for buffSrcKey, buffVal in buffmap.items():
+            if buffVal:
+                buffdict = buffVal
+                break
+                
+        if buffdict is None:
+            continue  
+            
         entbuffdic[buffid] = {
             'buffid': int(buffid),  # 确保是普通int
             'name': str(datas[buffid].get('name', None)) if datas[buffid].get('name') else None,
@@ -226,7 +236,6 @@ def getEntBodyEquipmentInfo(su, player,entid):
     if not hasattr(ent, 'bodyEquipData'):
         return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 没有 bodyEquipData 方法', {})
     for equipType,equipdata in ent.bodyEquipData.equips_map.items():
-        # 为每件装备创建独立的附灵和祝福字典
         bodyrandomAffixesInfo = {}
         bodyblessInfo = {}
 
@@ -333,7 +342,6 @@ def refreshData(su, moduleName=None):
     
     # 确定当前进程类型
     process_type = 'BaseApp' if IS_BASE else 'CellApp'
-    
     try:
         import gamerefresh
         if moduleName and moduleName.strip():
@@ -480,4 +488,257 @@ def reqWorkshopSetAutoMF(su, player, autoMF):
 def reqWorkshopMF(su, player, itemID, batchCount):
     INFO_MSG("GM: reqWorkshopMF ~ ", itemID, batchCount)
     return player.reqWorkshopMF(itemID, batchCount)
+
+@gm_cmd('$getServerAllEntities', (), RALL, ALL, '获取服务器所有实体', ALLSIDE, GOD_GROUPS)
+def getServerAllEntities(su):
+    """获取服务器所有实体，按进程类型分类返回"""
+    
+    # 获取当前进程信息
+    componentNo = KBEngine.getComponentGroupOrder()
+    process_type = 'BaseApp' if IS_BASE else 'CellApp'
+    process_name = f'{process_type.lower()}{componentNo:02d}'
+    
+    # 收集当前进程中的所有实体
+    entity_classes = {}
+    total_entity_count = 0
+    
+    # 定义需要限制显示ID数量的实体类型
+    limited_types = {''}
+    
+    for entity in KBEngine.entities.values():
+        class_name = entity.className
+        
+        if class_name not in entity_classes:
+            entity_classes[class_name] = {
+                'count': 0,
+                'entity_ids': [],
+                'is_limited': class_name in limited_types
+            }
+        
+        entity_classes[class_name]['count'] += 1
+        
+        # 对于数量较多的实体类型，只保存少量ID作为示例
+        if class_name in limited_types:
+            if len(entity_classes[class_name]['entity_ids']) < 3:
+                entity_classes[class_name]['entity_ids'].append(entity.id)
+        else:
+            # 其他类型保存所有ID
+            entity_classes[class_name]['entity_ids'].append(entity.id)
+            
+        total_entity_count += 1
+    
+    # 构造返回数据
+    result_data = {
+        'process_info': {
+            'process_name': process_name,
+            'process_type': process_type,
+            'component_order': componentNo
+        },
+        'entity_summary': {
+            'total_entity_count': total_entity_count,
+            'unique_entity_types': len(entity_classes)
+        },
+        'entity_details': entity_classes,
+        'limited_types': list(limited_types)
+    }
+    
+    return su.onCommandResult(0, f'{process_name}进程实体统计完成', result_data)
+
+
+@gm_cmd('$getStubAllProp', (Str("processType"), Int('entityId'), Str('attrPath')), RALL, ALL, '获取指定进程实体属性', ALLSIDE, GOD_GROUPS, minArgs=2)
+def getStubAllProp(su, processType, entityId, attrPath=""):
+    """获取指定实体的所有属性，按类型分类显示"""
+    try:
+        # 解析目标进程
+        if processType.startswith('base'):
+            target_type, target_component = 'baseapp', int(processType[4:]) if len(processType) > 4 else 1
+        elif processType.startswith('cell'):
+            target_type, target_component = 'cellapp', int(processType[4:]) if len(processType) > 4 else 1
+        else:
+            return su.onCommandResult(1, f'无效的进程类型: {processType}', {})
+
+        # 检查是否为目标进程
+        current_type = KBEngine.component
+        current_component = KBEngine.getComponentGroupOrder()
+        if current_type != target_type or current_component != target_component:
+            return su.onCommandResult(0, '', {})  # 非目标进程返回空数据
+
+        # 获取实体
+        entity = KBEngine.entities.get(entityId)
+        if not entity:
+            return su.onCommandResult(1, f'实体{entityId}不存在', {
+                "process_info": {"type": current_type, "component": current_component, "process_name": processType, "matched": True},
+                "target_info": {"path": f"entity.{entityId}", "object_type": "Unknown"},
+                "attributes": {"公共": {"error": "实体不存在"}, "私有": {}, "函数/方法": {}, "特殊属性": {}}
+            })
+
+        # 获取目标对象
+        if attrPath:
+            try:
+                target_obj = eval(f"entity.{attrPath}", {"__builtins__": {}}, {'entity': entity})
+                current_path = f"entity.{attrPath}"
+            except Exception as e:
+                return su.onCommandResult(1, f'路径访问失败: {attrPath}, 错误: {str(e)}', {})
+        else:
+            target_obj = entity
+            current_path = "entity"
+
+        # 获取分类属性并返回结果
+        classified_attrs = _get_entity_attributes_classified(target_obj, processType)
+        return su.onCommandResult(0, f'获取实体{entityId}属性完成', {
+            "process_info": {"type": current_type, "component": current_component, "process_name": processType, "matched": True},
+            "target_info": {"path": current_path, "object_type": type(target_obj).__name__},
+            "attributes": classified_attrs
+        })
+        
+    except Exception as e:
+        import traceback
+        return su.onCommandResult(1, f"获取实体属性时出错: {str(e)}\n{traceback.format_exc()}", {})
+
+
+def _get_entity_attributes_classified(target_obj, process_name):
+    """获取对象的分类属性"""
+    classified = {"公共": {}, "私有": {}, "函数/方法": {}, "特殊属性": {}}
+    
+    try:
+        # 处理容器类型：字典、RODict、列表
+        if isinstance(target_obj, dict) or type(target_obj).__name__ == 'RODict':
+            # 字典类型展开键值对
+            items_iter = None
+            try:
+                items_iter = target_obj.items()
+            except:
+                try:
+                    items_iter = [(k, target_obj[k]) for k in target_obj]
+                except:
+                    pass
+            
+            if items_iter:
+                for key, value in items_iter:
+                    try:
+                        classified["公共"][str(key)] = _get_simple_value(value)
+                    except:
+                        classified["公共"][str(key)] = "<error>"
+            return classified
+        
+        elif isinstance(target_obj, (list, tuple)):
+            # 列表类型展开索引值对
+            for i, value in enumerate(target_obj):
+                try:
+                    classified["公共"][str(i)] = _get_simple_value(value)
+                except:
+                    classified["公共"][str(i)] = "<error>"
+            return classified
+        
+        # 普通对象：按属性名分类
+        skip_attrs = {'canDestroy', 'destroy', 'destroyEntity', 'writeToDB', 'createCellEntity', 'destroyCellEntity', 'teleport', 'addTimer', 'delTimer', 'giveClientTo'}
+        
+        for attr_name in dir(target_obj):
+            if attr_name in skip_attrs:
+                continue
+                
+            try:
+                attr_value = getattr(target_obj, attr_name)
+                simple_value = _get_simple_value(attr_value)
+                
+                # 按名称分类
+                if attr_name.startswith('__') and attr_name.endswith('__'):
+                    classified["特殊属性"][attr_name] = simple_value
+                elif attr_name.startswith('_'):
+                    classified["私有"][attr_name] = simple_value
+                elif callable(attr_value):
+                    classified["函数/方法"][attr_name] = simple_value
+                else:
+                    classified["公共"][attr_name] = simple_value
+            except:
+                classified["公共"][attr_name] = "<无法访问>"
+                
+    except:
+        classified["公共"]["error"] = "获取属性时出错"
+    
+    return classified
+
+
+def _get_simple_value(value):
+    """获取属性值的简化字符串表示"""
+    try:
+        if value is None:
+            return 'None'
+        elif isinstance(value, bool):
+            return str(value)
+        elif isinstance(value, (int, float)):
+            return str(value)
+        elif isinstance(value, str):
+            return f'"{value[:50]}..."' if len(value) > 50 else f'"{value}"'
+        elif isinstance(value, (list, tuple)):
+            # 列表和元组也可以展开查看内容
+            return f"{type(value).__name__}[{len(value)}] [可展开]"
+        elif isinstance(value, dict):
+            # 字典也可以展开查看内容
+            return f"dict[{len(value)}] [可展开]"
+        elif callable(value):
+            return f"<{type(value).__name__}>"
+        else:
+            # 检查常见的游戏类型
+            class_name = type(value).__name__
+            
+            # Vector3 类型特殊处理
+            if class_name == 'Vector3':
+                try:
+                    if hasattr(value, 'x') and hasattr(value, 'y') and hasattr(value, 'z'):
+                        return f"Vector3({value.x}, {value.y}, {value.z}) [可展开]"
+                except:
+                    pass
+            
+            # MAILBOX 类型特殊处理
+            elif class_name == 'MAILBOX':
+                try:
+                    if hasattr(value, 'id'):
+                        return f"MAILBOX(id={value.id}) [可展开]"
+                except:
+                    pass
+            
+            # RODict 类型特殊处理
+            elif class_name == 'RODict':
+                try:
+                    return f"RODict[{len(value)}] [可展开]"
+                except:
+                    pass
+            
+            # 检查是否是可展开的复杂对象
+            if (hasattr(value, '__dict__') and 
+                not isinstance(value, (str, int, float, bool, list, tuple, dict)) and
+                hasattr(value, '__class__')):
+                # 这是一个自定义类实例，可以展开
+                return f"<{class_name}> [可展开]"
+            else:
+                return f"<{class_name}>"
+    except Exception:
+        return "<unknown>"
+
+
+@gm_cmd('$broadcastSystemMsg', (Str('message'),), RONE, BASE, '向系统频道广播消息', ALLSIDE, GOD_GROUPS)
+def broadcastSystemMsg(su, message):
+    #给机器人广播使用
+    try:
+        strmessage = base64.b64decode(message).decode('utf-8')
+        system_avatar_info = {
+            'gbId': 0, 
+            'name': '系统',
+            'level': 0,
+            'vipLevel': 0,
+            'school': 0,
+            'sex': 0
+        }
+        
+        # 只在一个BaseApp进程中执行，然后向所有BaseApp广播
+        gameengine.broadcastBaseapp('broadcastToAllAvatar',
+                                    (gameconst.BASE, 'onRecvChannelMsg',
+                                     (gameconst.ChatChannel.SYSTEM, system_avatar_info, strmessage), ()))
+        
+        return su.onCommandResult(0, f'系统消息广播成功: {strmessage}', {})
+        
+    except Exception as e:
+        return su.onCommandResult(1, f'系统消息广播失败: {str(e)}', {})
+
 

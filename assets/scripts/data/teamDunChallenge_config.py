@@ -78,5 +78,29 @@ datas = _tools.RODict({
     "useShanglingdingMsg": _tools.RODict({
         "ID": "useShanglingdingMsg",
         "value": "54001264",
+    }),
+    "raid_startCountdown": _tools.RODict({
+        "ID": "raid_startCountdown",
+        "value": 54000903,
+    }),
+    "raid_inTeamRecreate": _tools.RODict({
+        "ID": "raid_inTeamRecreate",
+        "value": 54000904,
+    }),
+    "raid_changeBossRecreate": _tools.RODict({
+        "ID": "raid_changeBossRecreate",
+        "value": 54000905,
+    }),
+    "raid_changeTeam": _tools.RODict({
+        "ID": "raid_changeTeam",
+        "value": 54000906,
+    }),
+    "raid_createTeam": _tools.RODict({
+        "ID": "raid_createTeam",
+        "value": 54000907,
+    }),
+    "raid_startAutoTeleport": _tools.RODict({
+        "ID": "raid_startAutoTeleport",
+        "value": 54000908,
     })
 })

@@ -7,6 +7,7 @@
 
 import os
 import sys
+args = sys.argv
 import threading
 import random
 import time
@@ -150,7 +151,7 @@ class PlayerDelegate(botBase.BotBase):
         if not self._isInMainServer():
             self.tagPrint('=== 检测到跨服环境，进攻方自动进入城战模式 ===')
             # 如果城战还没开始，且是进攻0未创建帮会，优先进入创建帮会状态
-            if not self.siege_war_started and '进攻0' in self.botClient.avatarName and not self.guild_broadcast_sent:
+            if not self.siege_war_started and 'jingong0' in self.botClient.avatarName and not self.guild_broadcast_sent:
                 self.tagPrint('进攻0在跨服环境，但城战未开始，等待城战开始信号')
                 self._state = BotState.IDLE
             else:
@@ -176,11 +177,11 @@ class PlayerDelegate(botBase.BotBase):
         if state == 1:  # 城战开始
             self._handleSiegeWarStart()
         elif state == 2:
-            if '进攻0' in self.botClient.avatarName:
+            if 'jingong0' in self.botClient.avatarName:
                 self.tagPrint('进攻0城战状态变化: state=2')
                 self.base.runGmCommand('$changeSiegeWarState 0 3 0')
         elif state == 3:
-            if '进攻0' in self.botClient.avatarName:
+            if 'jingong0' in self.botClient.avatarName:
                 self.tagPrint('进攻0城战状态变化: state=3')
                 self.base.runGmCommand('$changeSiegeWarState 0 4 0')
         elif state == 4:  # 进入战场
@@ -192,13 +193,14 @@ class PlayerDelegate(botBase.BotBase):
 
         # 进攻0进入帮会创建状态
         self.tagPrint(f'检查进攻0条件: avatarName={self.botClient.avatarName}, guild_broadcast_sent={self.guild_broadcast_sent}')
-        if '进攻0' in self.botClient.avatarName and not self.guild_broadcast_sent:
+        if 'jingong0' in self.botClient.avatarName and not self.guild_broadcast_sent:
             self.tagPrint('进攻0开始创建帮会流程')
             self._state = BotState.CREATING_GUILD  # 切换到帮会创建状态
+            self.base.runGmCommand('$RemoveCityOwnerFlag 0')
+            self.base.runGmCommand('$clearCityOwner 0')
             self.siege_war_started = True  # 标记城战已开始
             self.tagPrint('=== 城战开始，订阅竞拍状态 ===')
             self.base.subscribeSiegeWarBiddingState(True, 0)
-            #self.onSiegeWarBiddingDataUpdate([], [], [1], 1)
             self.bidding_executed = False  # 重置竞拍标志
         else:
             self.tagPrint('不是进攻0或已经广播过帮会信息')
@@ -221,33 +223,20 @@ class PlayerDelegate(botBase.BotBase):
         self.setResult(uuid)
         # 不在这里处理帮会创建逻辑，交给状态机处理
             
-    def onSiegeWarBiddingDataUpdate(self, guildNameList, nameList, cntList, signUpDelayTime):
+    def onSiegeWarBiddingDataUpdate(self, startIdx, nameList, cntList, signUpDelayTime):
+        self.tagPrint(f'收到竞拍数据更新: guildNameList={startIdx}, nameList={nameList}, cntList={cntList}, signUpDelayTime={signUpDelayTime}')
         """竞拍数据更新回调"""
-        if '进攻0' in self.botClient.avatarName and cntList:
+        if 'jingong0' in self.botClient.avatarName and cntList:
+            if len(cntList) + startIdx >= 2:
+                self.base.runGmCommand('$changeSiegeWarState 0 2 0')
+                return
             # 确保帮会已经创建完成才能竞拍
             if self.guild_broadcast_sent:
                 self.tagPrint('帮会已创建，开始竞拍')
                 self._handleBidding()
-                time.sleep(5)   
-                self.base.runGmCommand('$changeSiegeWarState 0 2 0')
             else:
                 self.tagPrint('帮会还未创建完成，标记为待处理竞拍')
                 self.pending_bidding = True  # 标记为待处理
-
-    def onSiegeWarSignUpBiddingResult(self, success):
-        """竞拍结果回调"""
-        self.tagPrint(f'收到竞拍结果: success={success}')
-        if '进攻0' in self.botClient.avatarName and self.attack_bidding_started:
-            if success:
-                self.tagPrint('进攻方竞拍成功！推进到阶段2')
-                self.base.sendWorldChatMsg(f'进攻帮会竞拍成功{CITY_BATTLE_CONFIG["bidding_amount"]}')
-                # 竞拍成功后推进到阶段2
-                self.base.runGmCommand('$changeSiegeWarState 0 2 0')
-            else:
-                self.tagPrint('进攻方竞拍失败')
-                self.base.sendWorldChatMsg('进攻帮会竞拍失败')
-            # 处理完成后重置标记
-            self.attack_bidding_started = False
 
     def onSiegeWarMinimapInfoUpdate(self, buildingInfos):
         """城战小地图信息更新回调"""
@@ -353,10 +342,11 @@ class PlayerDelegate(botBase.BotBase):
         GL_TOKEN_DICT[self.botClient.accountName] = {
             'token': token,
             'spaceNo': spaceNo,
-            'crossServerId': crossServerId
+            'crossServerId': crossServerId,
+            'times': 0
         }
         self.tagPrint(f'收到跨服token: {token}, spaceNo: {spaceNo}, crossServerId: {crossServerId}')
-        self._startCrossServerLogin()
+        self.botClient.close()
 
     def onRecvAvatarChannelMsg(self, sender, msgId, msg):
         """接收聊天消息回调"""
@@ -366,8 +356,12 @@ class PlayerDelegate(botBase.BotBase):
     def onBecomePlayer(self):
         self.base.runGmCommand('$setlv 0 70')
         PlayerDelegate.loginFinishNum += 1
-        if PlayerDelegate.loginFinishNum % 5 == 0:
-            self.base.sendWorldChatMsg(f'机器人登录完成{PlayerDelegate.loginFinishNum}')
+        self.base.sendWorldChatMsg(f'机器人登录完成{PlayerDelegate.loginFinishNum}')
+        
+        if self.is_cross_server:
+            self.tagPrint('跨服登录完成')
+            self._state = BotState.CITY_BATTLE
+            self.auto_mode = True
 
     def onDead(self, objId):
         self.base.sendWorldChatMsg(f'机器人死亡{objId}')
@@ -430,7 +424,7 @@ class PlayerDelegate(botBase.BotBase):
     def _handleBidding(self):
         """处理竞拍逻辑"""
         try:
-            if '进攻0' in self.botClient.avatarName:
+            if 'jingong0' in self.botClient.avatarName:
                 self.tagPrint(f'开始竞拍，金额: {CITY_BATTLE_CONFIG["bidding_amount"]}')
                 self.base.runGmCommand(f'$fastBidding 0 {CITY_BATTLE_CONFIG["bidding_amount"]}')
                 self.base.sendWorldChatMsg(f'进攻帮会开始竞拍{CITY_BATTLE_CONFIG["bidding_amount"]}')
@@ -450,36 +444,10 @@ class PlayerDelegate(botBase.BotBase):
             self._state = BotState.WAITING_TOKEN
         except Exception as e:
             self.tagPrint(f'请求跨服token失败: {e}')
-    
-    def _startCrossServerLogin(self):
-        """开始跨服登录"""
-        def cross_login():
-            try:
-                account_name = self.botClient.accountName
-                if account_name in GL_TOKEN_DICT:
-                    token_info = GL_TOKEN_DICT[account_name]
-                    cross_config = CROSS_SERVER_CONFIG['cross_server']
-                    self.tagPrint(f'开始跨服登录: {cross_config["ip"]}:{cross_config["port"]}')
-                    self.tagPrint(f'使用token: {token_info["token"]}, spaceNo: {token_info["spaceNo"]}')
-                    self.botClient.crossServerLogin(
-                        token_info['token'], 
-                        cross_config['ip'], 
-                        cross_config['port']
-                    )
-            except Exception as e:
-                self.tagPrint(f'跨服登录失败: {e}')
-        
-        thread = threading.Thread(target=cross_login)
-        thread.daemon = True
-        thread.start()
 
     def _isInMainServer(self):
         """检查是否在本服"""
-        try:
-            space_no = getattr(self.player, 'spaceNo', 0)
-            return int(space_no // 10000) != 6000
-        except:
-            return True
+        return not self.is_cross_server
 
     # ========================= 状态机核心 =========================
     
@@ -489,7 +457,7 @@ class PlayerDelegate(botBase.BotBase):
         
         while True:
             try:
-                self.tagPrint(f'当前状态: {self._state} {self.botClient.avatarName}')
+                self.tagPrint(f'当前状态: {self._state} {self.botClient.avatarName} {self.is_cross_server}')
                 if self._state == BotState.IDLE:
                     self._handleIdleState()
                 elif self._state == BotState.INITIALIZING:
@@ -508,13 +476,11 @@ class PlayerDelegate(botBase.BotBase):
                     self._handleDeadState()
                 else:
                     self.tagPrint(f'未知状态: {self._state}')
-                    time.sleep(1)
                     
                 time.sleep(1)  # 主循环间隔
                 
             except Exception as e:
                 self.tagPrint(f'状态机运行异常: {e}')
-                time.sleep(5)
 
     def _handleIdleState(self):
         """处理空闲状态"""
@@ -534,8 +500,6 @@ class PlayerDelegate(botBase.BotBase):
             self._state = BotState.CITY_BATTLE
             self.auto_mode = True
             return
-        
-        time.sleep(5)
 
     def _handleInitializingState(self):
         """处理初始化状态"""
@@ -554,7 +518,7 @@ class PlayerDelegate(botBase.BotBase):
     def _handleCreatingGuildState(self):
         """处理创建帮会状态"""
         self.tagPrint('进入创建帮会状态处理')
-        if '进攻0' in self.botClient.avatarName:
+        if 'jingong0' in self.botClient.avatarName:
             if not self.guild_broadcast_sent:
                 # 检查是否已经有帮会UUID
                 current_uuid = getattr(self.player, 'guildUUID', 0)
@@ -618,7 +582,6 @@ class PlayerDelegate(botBase.BotBase):
         if not self._preparing_logged:
             self.tagPrint('进攻方准备跨服中...')
             self._preparing_logged = True
-        time.sleep(5)
 
     def _handleWaitingTokenState(self):
         """处理等待token状态"""
@@ -1014,7 +977,7 @@ class PlayerDelegate(botBase.BotBase):
     
     def _handleChatCommand(self, command, sender):
         """处理聊天命令"""
-        self.tagPrint(f'[聊天消息] 收到命令: {command}')
+        self.tagPrint(f'[聊天消息] 收到命令: {command} {self.is_cross_server}')
         
         # 获取命令处理方法
         action = CHAT_COMMANDS.get(command)
@@ -1050,7 +1013,7 @@ class PlayerDelegate(botBase.BotBase):
     def _handleGuildBroadcast(self, message):
         """处理帮会广播消息"""
         try:
-            if '进攻' in self.botClient.avatarName and '进攻0' not in self.botClient.avatarName:
+            if '进攻' in self.botClient.avatarName and 'jingong0' not in self.botClient.avatarName:
                 guild_uuid = message.split('_')[1]
                 self._joinAttackGuild(guild_uuid)
         except Exception as e:
@@ -1154,14 +1117,14 @@ class PlayerDelegate(botBase.BotBase):
         
     def _cmd_manual_create_guild(self):
         """手动创建帮会命令"""
-        if '进攻0' in self.botClient.avatarName:
+        if 'jingong0' in self.botClient.avatarName:
             self._createAttackGuild()
         else:
             self.tagPrint('只有进攻0可以创建帮会')
             
     def _cmd_manual_bidding(self):
         """手动竞拍命令"""
-        if '进攻0' in self.botClient.avatarName:
+        if 'jingong0' in self.botClient.avatarName:
             self._handleBidding()
         else:
             self.tagPrint('只有进攻0可以执行竞拍')
@@ -1270,7 +1233,7 @@ def getCityBattleTarget(target_type="弩车"):
 def crossServerBot():
     """跨服机器人监控线程"""
     print("[跨服监控] 启动进攻方跨服token监控线程...")
-    
+
     while True:
         time.sleep(2)
         
@@ -1278,8 +1241,11 @@ def crossServerBot():
             print(f"[跨服监控] 发现 {len(GL_TOKEN_DICT)} 个待跨服token")
             
             for account_name in list(GL_TOKEN_DICT.keys()):
-                token_info = GL_TOKEN_DICT.pop(account_name)
-                
+                token_info = GL_TOKEN_DICT[account_name]
+                token_info['times'] += 1
+                if token_info['times'] > 1:
+                    GL_TOKEN_DICT.pop(account_name)
+
                 print(f'[跨服登录] 开始跨服登录: {account_name}')
                 
                 try:
@@ -1310,7 +1276,7 @@ def startAttackBot():
     minutes_seconds = today.strftime("%M%S")
     ts = []
     fromIdx = 0
-    botCount = 45
+    botCount = 10
     num = random.randint(0,9)
     print(f'[机器人启动] 开始创建 {botCount} 个进攻城战机器人')
     
@@ -1322,10 +1288,9 @@ def startAttackBot():
     for i in range(botCount):
         idx = fromIdx + i
         account_name = f'jingong{idx}'
-        avatar_name = f'进攻{idx}'
         
         try:
-            client = BotClient.BotClient(account_name, avatar_name, 1)
+            client = BotClient.BotClient(account_name, account_name, 1)
             # 统一使用本服登录 (accountType=0)
             robot = client.login(0, server_config['ip'], server_config['port'])
             robot.setPlayerDelegate(PlayerDelegate(robot, client))
@@ -1385,12 +1350,9 @@ if __name__ == '__main__':
     print("• 死亡自动复活")
     print("• 灵活的聊天指令控制")
     print("=============================")
-    
-    # 启动跨服监控线程
-    cross_thread = threading.Thread(target=crossServerBot)
-    cross_thread.daemon = True
-    cross_thread.start()
-    print("[跨服监控] 跨服监控线程已启动")
-    
     # 启动进攻机器人
+
+    thread = threading.Thread(target=crossServerBot)
+    thread.start()
+
     startAttackBot()

@@ -459,7 +459,12 @@ datas = _tools.RODict({
         "ID": 89,
         "missionID": 0,
         "lvLimit": 10,
+    }),
+    90: _tools.RODict({
+        "ID": 90,
+        "missionID": 0,
+        "lvLimit": 9,
     })
 })
 minKey = 1
-maxKey = 89
+maxKey = 90

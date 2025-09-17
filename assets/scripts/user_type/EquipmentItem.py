@@ -106,7 +106,6 @@ class EquipmentItem(BaseItem.BaseItem):
         extra = {}
         if self.auctionTime > 0:
             extra["auctionTime"] = self.auctionTime
-        extra["lockStatus"] = self.lockStatus
         return self.equipAttr.toJson(extraAttrs=extra)
 
     def attr2Dict(self):
@@ -124,6 +123,7 @@ class EquipmentItem(BaseItem.BaseItem):
             'slotId': slotId,
             'uniqueId': self.uniqueId,
             'bindType': self.bindType,
+            'lockStatus' : self.lockStatus,
             'attrJson': self.attr2Json(),
         }
 

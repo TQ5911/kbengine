@@ -73,6 +73,7 @@ Avatar property cubeEnterFloor 158
 Avatar property cubeUseCoinTimes 94
 Avatar property cubeUseItemTimes 95
 Avatar property curReliveCD 87
+Avatar property dailyHealWoundsTimes 162
 Avatar property darkIron 155
 Avatar property debilityAnti 213
 Avatar property debilityEnh 214
@@ -185,6 +186,7 @@ Avatar property stunEnh 178
 Avatar property summonSlotIdx 157
 Avatar property tGreyNameStart 61
 Avatar property teamId 34
+Avatar property todayCubeCowDur 161
 Avatar property totalScore 43
 Avatar property ultraSkillPower 71
 Avatar property wonderLandAddTimes 63

@@ -164,5 +164,10 @@ datas = _tools.RODict({
         "ID": "AtkMulImprove",
         "value": "增幅",
         "Type": "string"
+    }),
+    "selectedMonsterLv": _tools.RODict({
+        "ID": "selectedMonsterLv",
+        "value": "等级：{0}",
+        "Type": "string"
     })
 })

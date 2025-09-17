@@ -185,7 +185,7 @@ class BehaveCtrl(object):
 
     def restart(self):
         self.clearHate()
-        self.machine.transform(State.IDLE)
+        self.machine.transform(self, State.IDLE)
         if self.owner.hasBuff(64000072):
             self.owner.removeBuff(64000072)
         # 触发一下主动怪的intrap
@@ -197,7 +197,7 @@ class BehaveCtrl(object):
 
     def turnAndRestart(self):
         self.clearHate()
-        self.machine.transform(State.IDLE)
+        self.machine.transform(self, State.IDLE)
         self.owner.direction = self.owner.bornDirection
         if self.owner.hasBuff(64000072):
             self.owner.removeBuff(64000072)
@@ -208,12 +208,12 @@ class BehaveCtrl(object):
             for ent in owner.entitiesInRange(min(rng, 30)):
                 owner.onEnterTrap(ent, 0, 0, 0, gameconst.HATE_TRAP)
 
-    def stand(self):
+    def stand(self, reDir=True):
         owner = self.owner
         if owner.isMoving():
             owner.cancelMoveController()
-        self.machine.transform(State.STAND)
-        if hasattr(owner, 'bornDirection'):
+        self.machine.transform(self, State.STAND)
+        if reDir and hasattr(owner, 'bornDirection'):
             owner.direction = owner.bornDirection
 
     def inRoutePatrolTime(self):
@@ -227,14 +227,14 @@ class BehaveCtrl(object):
         pos = owner.getRandomPosition(owner.nextPoint(), owner.patrolRadii)
 
         self.moveToPos(pos)
-        self.machine.transform(State.PATROL)
+        self.machine.transform(self, State.PATROL)
 
     def patrol(self):
         owner = self.owner
         pos = owner.getRandomPosition(owner.bornPosition, owner.patrolRadii)
 
         self.moveToPos(pos)
-        self.machine.transform(State.PATROL)
+        self.machine.transform(self, State.PATROL)
 
     def destroyAllVassal(self):
         owner = self.owner
@@ -262,16 +262,15 @@ class BehaveCtrl(object):
     def clearHateAndGoHome(self):
         self.clearHateAndResetSkill()
         self.moveToPos(self.owner.bornPosition, 0, gamemove.AI_GO_HOME_MOVE_OVER)
-        self.machine.transform(State.BACK)
+        self.machine.transform(self, State.BACK)
 
-    def clearHateAndPlayResetAnim(self):
+    def clearHateAndTelBack(self):
         self.clearHateAndResetSkill()
         self.owner.telToPos(self.owner.bornPosition)
-        self.machine.transform(State.RESET_ANIM)
 
     def clearHateAndRestart(self):
         self.clearHateAndResetSkill()
-        self.machine.transform(State.RESTART)
+        self.machine.transform(self, State.RESTART)
 
     def clearHateAndStand(self):
         owner = self.owner
@@ -279,7 +278,7 @@ class BehaveCtrl(object):
         owner.setSelectedTargetId(0)
         if owner.isMoving():
             owner.cancelMoveController()
-        self.machine.transform(State.STAND)
+        self.machine.transform(self, State.STAND)
         
     def clearHateAndRoute(self):
         # 清理仇恨并回继续巡逻
@@ -292,7 +291,7 @@ class BehaveCtrl(object):
         owner = self.owner
 
         self.moveToPos(owner.bornPosition, 0, gamemove.AI_GO_HOME_MOVE_OVER)
-        self.machine.transform(State.BACK)
+        self.machine.transform(self, State.BACK)
 
     def goSelfStateFighting(self):
         owner = self.owner
@@ -309,7 +308,7 @@ class BehaveCtrl(object):
             if owner.id != target.id and self.machine.turnable:
                 yaw = sMath.getYawFromDirection(direction)
                 owner.direction = (0.0, 0.0, yaw)
-        self.machine.transform(State.IDLE)
+        self.machine.transform(self, State.IDLE)
 
     def useRandomSkill(self, msgid=0):
         owner = self.owner
@@ -447,7 +446,7 @@ class BehaveCtrl(object):
             return
 
         self.moveToPos(posList[0])
-        self.machine.transform(State.MOVE)
+        self.machine.transform(self, State.MOVE)
 
     def getBattlePoint(self):
         owner = self.owner
@@ -514,10 +513,10 @@ class BehaveCtrl(object):
         return False
 
     def combat(self):
-        self.machine.transform(State.ANGRY)
+        self.machine.transform(self, State.ANGRY)
 
     def follow(self):
-        self.machine.transform(State.MOVE)
+        self.machine.transform(self, State.MOVE)
 
     def chooseMonsterTarget(self):
         owner = self.owner
@@ -556,7 +555,7 @@ class BehaveCtrl(object):
         else:
             owner.continueRouting()
 
-        self.machine.transform(State.PATROL)
+        self.machine.transform(self, State.PATROL)
 
     def startRoutingMove(self):
         owner = self.owner
@@ -724,7 +723,7 @@ class AuxFunc(object):
             else:
                 owner.doUseSkill(skill.skillId, targetId, skillArgs)
 
-        self.machine.transform(State.ANGRY)
+        self.machine.transform(self, State.ANGRY)
 
     def getGoodPos(self, target, distance):
         owner = self.owner
@@ -1250,9 +1249,9 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         if spaceMgr is not None and spaceMgr.isSpaceMarkCompleted() and (isSummonedEnt and not owner.hostId):
             return False
 
-        if (formula.isDungeonSpace(owner.spaceNo) or formula.isSiegeWarSpace(owner.spaceNo)) and owner.IsMonster and spaceMgr and spaceMgr.players and CB.datas[
-            owner.monsterId].get('checkWitness', 0):
-            return True
+        if owner.IsMonster and CB.datas[owner.monsterId].get('checkWitness', 0):
+            if not formula.isSiegeWarSpace(owner.spaceNo) or (spaceMgr and spaceMgr.players):
+                return True
 
         # 战斗和脱战时总是tick
         if self.machine.tell() == State.ANGRY or self.machine.tell() == State.BACK:
@@ -1340,7 +1339,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         dmg = self.hateDict.damageToHate(damage * hateRatio * skillHateRatio, '+')
         self.increaseHate(targetId, damage=dmg)
         if self.machine.onBeAttack:
-            self.machine.transform(State.ON_BE_ATTACK)
+            self.machine.transform(self, State.ON_BE_ATTACK)
         else:
             self.doForceTask(Task(Event.ATTACK, False, False, None))
 
@@ -1384,22 +1383,24 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         self.skillId = 0
         self.targetId = 0
         if self.curForce and self.curForce.type == Event.SKILL and self.curForce.data['skill'] == skillId:
+            # pop skill放在 onDealTaskCompleted 之前，
+            # 因为可能需要在 onDealTaskCompleted 执行的新的技能
+            self.owner.safePopSkill(skillId)
             self.onDealTaskCompleted(True)
-            self.owner.popSkill(skillId)
 
     def useSkillFail(self, skillId):
         self.skillId = 0
         self.targetId = 0
         if self.curForce and self.curForce.type == Event.SKILL and self.curForce.data['skill'] == skillId:
+            self.owner.safePopSkill(skillId)
             self.onDealTaskCompleted(False)
-            self.owner.popSkill(skillId)
 
     def onCastingInterrupted(self, skillId):
         self.skillId = 0
         self.targetId = 0
         if self.curForce and self.curForce.type == Event.SKILL and self.curForce.data['skill'] == skillId:
+            self.owner.safePopSkill(skillId)
             self.onDealTaskCompleted(False)
-            self.owner.popSkill(skillId)
 
     def chooseRandomSkill(self):
         self.selectRandomSkill()
@@ -1516,8 +1517,14 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def enableTurnRound(self):
         return self.machine.turnable
 
+    def changeBornState(self, state):
+        self.owner.changeBornState(state)
+
     def transformPlayAnimation(self):
-        self.machine.transform(State.PLAY_ANIM)
+        self.machine.transform(self, State.PLAY_ANIM)
+
+    def isOwnerAlerting(self):
+        return len(self.owner.enemyCacheSet) > 0
 
     def isOwnerWitnessed(self):
         return self.owner.isWitnessed
@@ -1532,7 +1539,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def trasformAngrySpawn(self):
         self.owner.enableSpawnSummonByAI()
         self.owner.initAISpawnSummon()
-        self.machine.transform(State.ANGRY)
+        self.machine.transform(self, State.ANGRY)
 
     def getAnimationDuration(self):
         # 获取出生动画的时间
@@ -1540,10 +1547,16 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
 
     def isAnimationEnd(self):
         return self.machine.elapsedTime() >= self.getAnimationDuration()
+    
+    def getLeftAnimationTime(self):
+        return self.getAnimationDuration() - self.machine.elapsedTime()  + 0.1
 
     def backEgg(self):
         self.owner.destroyAllSummon()
-        self.machine.transform(State.IDLE)
+        self.restart()
+
+    def backWait(self):
+        self.restart()
 
     def onLoseWitnessed(self):
         self.machine.doLoseWitnessTask(self)
@@ -1575,12 +1588,40 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         _dur = self.owner.getAIParam().get('resetCdAfterCombat', 0)
         return self.machine.elapsedTime() >= _dur
 
+    def getLeftFinishWaitResetAnimTime(self):
+        _dur = self.owner.getAIParam().get('resetCdAfterCombat', 0)
+        return _dur - self.machine.elapsedTime() + 0.1
+    
     def transformResetAnim(self):
-        self.machine.transform(State.RESET_ANIM)
+        self.machine.transform(self, State.RESET_ANIM)
+
+    def transformBack(self):
+        self.machine.transform(self, State.BACK)
 
     def isFinishResetAnim(self):
         # 重置动画是否播完
         _dur = self.owner.getAIParam().get('resetAnimationTime', 0)
         return self.machine.elapsedTime() >= _dur
 
+    def getLeftFinishResetAnimTime(self):
+        _dur = self.owner.getAIParam().get('resetAnimationTime', 0)
+        return  _dur - self.machine.elapsedTime() + 0.1
 
+    def cancelTickCallBack(self, timer):
+        if not timer:
+            return
+        self.owner._cancelCallback(timer, gametimer.TIMER_TAG_TICK_CALL_BACK)
+        self.machine.setChangeTimer(0)
+
+    def getTickCallBackTimer(self):
+        return self.machine.getChangeTimer()
+    
+    def setTickCallBack(self, t):
+        self.machine.setChangeTimer(self.owner._callback(t, 'tickCallBack', (), gametimer.TIMER_TAG_TICK_CALL_BACK))
+ 
+    def tickCallBack(self):
+        self.cancelTickCallBack(self.getTickCallBackTimer())
+        self.owner.tickAI()
+
+    def isInTickCallBack(self):
+        return self.machine.getChangeTimer() != 0

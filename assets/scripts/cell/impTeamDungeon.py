@@ -295,7 +295,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         if _goodManActId:
             extra["goodManActId"] = _goodManActId
 
-        teammateConfirm = self._getPrmBydungeonNo(dungeonNo, 'teammateConfirm')
+        teammateConfirm = False#self._getPrmBydungeonNo(dungeonNo, 'teammateConfirm')
         if teammateConfirm and not _allTeammateAutoComplete:
             DEBUG_MSG('onCheckTeamDungeonConditions:: need confirm...')
             fnName, args, timeout = self.getTeamDungeonTeammateConfimFunction(dungeonNo, dungeonPlayMode, _allMeregueIdDict, _goodManList)

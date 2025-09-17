@@ -109,6 +109,14 @@ class ImpTeam(object):
         #         teamPlayerUploadCacheDict['mountState'] = newMountState
 
         if playerUpdateDic:
+            excludedPlayerIDs = (self.gbId,)
+            if 'spaceNo' is playerUpdateDic and 'position' in playerUpdateDic:
+                for playerGBID, playerBaseVal in self.teamInfo.teamPlayerDic.items():
+                    if playerGBID == self.gbId or not playerBaseVal.playerBox:
+                        continue
+                    if self.checkInView(playerBaseVal.playerBox.id):
+                        excludedPlayerIDs += (playerGBID,)
+            playerUpdateDic['excludedGbIDs'] = excludedPlayerIDs
             gameengine.getTeamStub(self.teamId).updateMemberVolatileAttr(self.teamId, self.gbId, playerUpdateDic)
 
         if self.followCaptain in (gameconst.TeamFollowState.Follow, gameconst.TeamFollowState.Suspending):
@@ -143,14 +151,20 @@ class ImpTeam(object):
         else:
             self.client.onLeaveTeam()
 
-    def isCanCreateTeam(self, teamTarget):
+    def isCanCreateTeam(self, teamTarget, minLevel, minScore):
         if self.isInTeam(self.gbId):
+            ERROR_MSG("isReachTeamMisCanCreateTeam player is already in team")
             return False
         if self.isInRaid():
+            ERROR_MSG("isReachTeamMisCanCreateTeam player is already in raid")
             return False
         if not self.isReachTeamMemMinScore(teamTarget):
+            ERROR_MSG("isReachTeamMisCanCreateTeam minscore check fail")
             return False
-        return self.isReachTeamMemMinLevel()
+        if not self.isReachTeamMemMinLevel():
+            ERROR_MSG("isReachTeamMisCanCreateTeam minlevel check fail")
+            return False
+        return True
 
     def _getTeamPlayerInfoDic(self):
         return {
@@ -173,29 +187,47 @@ class ImpTeam(object):
     @utils.isMyself
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     @gamedecorator.limitcall(3)
-    def applyCreateTeam(self, exposed, teamTarget, startAutoMatch):
+    def applyCreateTeam(self, exposed, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         INFO_MSG('applyCreateTeam', teamTarget)
 
+        if teamTarget <=0:
+            ERROR_MSG("applyCreateTeam, illegal teamTarget", teamTarget)
+            return
+        
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if teamTargetInfo is None:
-            ERROR_MSG("applyCreateTeam, misssing teamTarget", teamTarget)
+            ERROR_MSG("applyCreateTeam, invalid teamTarget", teamTarget)
             return
-            
+        
+        # 非自由组队的，检查下活动类型是否是组队    
         if teamTarget > 1:
             actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
             if not actData or gameconst.ActivityControlType.TEAM != int(actData['needTeam']):
                 ERROR_MSG("applyCreateTeam, wrong activity control need team type", teamTarget)
                 return
+            
+        cfgMinLv = teamTargetInfo['minLevel']
+        if minLevel < cfgMinLv:
+            WARNING_MSG("applyCreateTeam, invalid minLevel", minLevel, cfgMinLv)
+            minLevel = cfgMinLv
+
+        cfgMinScore = teamTargetInfo['minScore']
+        if minScore < cfgMinScore:
+            WARNING_MSG("applyCreateTeam, invalid minScore", minScore, cfgMinScore)
+            minScore = cfgMinScore
         
-        if not self.isCanCreateTeam(teamTarget):
+        if not self.isCanCreateTeam(teamTarget, minLevel, minScore):
             return
+        
+        # 这里其实是为了给去team stub上进行rpc调用留出时间
         if self.isInTryAddTeamCD():
             WARNING_MSG('applyCreateTeam, is trying add team')
             return
+        # 挂一个cd
+        self.refreshTryAddTeamCD(timeout=5)
 
         teamId = KBEngine.genUUID64()
-        gameengine.getTeamStub(teamId).createTeam(self.base, teamId, teamTarget, self._getTeamPlayerInfoDic(), startAutoMatch)
-        self.refreshTryAddTeamCD(timeout=10)
+        gameengine.getTeamStub(teamId).createTeam(self.base, teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, self._getTeamPlayerInfoDic())
 
     def refreshTryAddTeamCD(self, timeout):
         return self._lockRaidProcess(timeout=timeout)
@@ -1743,10 +1775,12 @@ class ImpTeam(object):
     @gamedecorator.limitcall(int(TMMCD.datas['goToTheCaptainCD']['value']))
     def reqCaptainFollowInfo(self, exposed):
         DEBUG_MSG('reqCaptainFollowInfo')
-        if self.teamId <= 0 and self.raidUUID <= 0:
+        # 检查是否在队伍或者团队里面
+        if not self.isInTeam(self.gbId) and not self.isInRaid():
             ERROR_MSG('reqCaptainFollowInfo error not in team or raid', self.teamId, self.raidUUID)
             return
-
+        
+        # 检查自己是否是队长或者团长
         if self.isCaptain() or self.isRaidLeader():
             ERROR_MSG('reqCaptainFollowInfo error is captain', self.teamId, self.raidUUID)
             return
@@ -1876,8 +1910,6 @@ class ImpTeam(object):
                     gameengine.getTeamStub(self.teamId).cancelFollowTeamCaptain(self.base, self.teamId, self.gbId)
 
         self.setTeamCaptainFlag(self.isCaptain())
-        gameengine.getTeamStub(self.teamId).updateMemberVolatileAttr(self.teamId, self.gbId, {'spaceNo': self.spaceNo})
-
         self.startTeamTimer()
         if formula.isLineSpace(self.spaceNo):
             lineType = formula.getMapId(self.spaceNo)
@@ -2135,67 +2167,44 @@ class ImpTeam(object):
         return
 
     @utils.isMyself
-    def reqSetTeamTarget(self, exposed, teamTarget, minLv, minScore, recruitInfo, autoPulish, autoStartMatching):
-        DEBUG_MSG("reqSetTeamTarget:", teamTarget, minLv, minScore, recruitInfo, autoPulish, autoStartMatching)
-        if not autoPulish and autoStartMatching:
-            ERROR_MSG("reqSetTeamTarget, wrong args, ", teamTarget, minLv, minScore, recruitInfo, autoPulish, autoStartMatching)
-            return
+    def reqSetTeamTarget(self, exposed, minLv, minScore, recruitInfo, password, isAutoExpedition):
+        DEBUG_MSG("reqSetTeamTarget:", minLv, minScore, recruitInfo, isAutoExpedition)
         if not self.isInTeam(self.gbId):
+            ERROR_MSG("reqSetTeamTarget, not in team")
             return
+        
         if not self.isCaptain():
+            ERROR_MSG("reqSetTeamTarget, not captain")
             return
+        
+        teamTarget = self.teamInfo.teamTarget
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if teamTargetInfo is None:
             ERROR_MSG("reqSetTeamTarget, misssing teamTarget", teamTarget)
             return
         
-        actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
-        if not actData:
-            if teamTarget == 0:
-                gameengine.getTeamStub(self.teamId).setTeamTarget(self.teamId, 0, 0, 0, self.guildUUID, recruitInfo, autoPulish, autoStartMatching)
-                return
-        else:
-            if gameconst.ActivityControlType.TEAM != int(actData['needTeam']):
+        if teamTarget > 1:
+            actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
+            if not actData or gameconst.ActivityControlType.TEAM != int(actData['needTeam']):
                 ERROR_MSG("reqSetTeamTarget, wrong activity control need team type", teamTargetInfo)
                 return
             
         cfgMinLv = teamTargetInfo['minLevel']
         if minLv < cfgMinLv:
-            minLv = cfgMinLv
+            ERROR_MSG("reqSetTeamTarget, minLv is not enough", minLv, cfgMinLv)
+            return
 
         cfgMinScore = teamTargetInfo['minScore']
         if minScore < cfgMinScore:
-            ERROR_MSG("reqSetTeamTarget, minScore not enough", minScore, cfgMinScore)
+            ERROR_MSG("reqSetTeamTarget, minScore is not enough", minScore, cfgMinScore)
             return
 
         if self.getTotalScore() < minScore:
             ERROR_MSG("reqSetTeamTarget, totalScore not enough")
             return
-        gameengine.getTeamStub(self.teamId).setTeamTarget(self.teamId, teamTarget, minLv, minScore, self.guildUUID, recruitInfo, autoPulish, autoStartMatching)
+        
+        gameengine.getTeamStub(self.teamId).setTeamTarget(self.teamId, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition, self.guildUUID)
         return
-
-    @utils.isMyself
-    def reqPublishTeam(self, exposed, bPublish, recruitInfo, autoStartMatching):
-        DEBUG_MSG("reqPublishTeam:", bPublish, recruitInfo, autoStartMatching)
-        if not bPublish and autoStartMatching:
-            ERROR_MSG("reqPublishTeam, wrong args, ", bPublish, recruitInfo, autoStartMatching)
-            return
-        if not self.isInTeam(self.gbId):
-            return
-        if not self.isCaptain():
-            return
-
-        gameengine.getTeamStub(self.teamId).publishTeam(self.teamId, self.guildUUID, bPublish, recruitInfo, autoStartMatching)
-
-    @utils.isMyself
-    def reqSetAutoInPlace(self, exposed, bAutoInPlace):
-        DEBUG_MSG('reqSetAutoInPlace', bAutoInPlace)
-        if not self.isInTeam(self.gbId):
-            return
-        if not self.isCaptain():
-            return
-
-        gameengine.getTeamStub(self.teamId).setAutoInPlace(self.teamId, bAutoInPlace)
 
     @utils.isMyself
     def reqGetTeamInfo(self, exposed, checkTeamId):
@@ -2581,3 +2590,24 @@ class ImpTeam(object):
         gameengine.getTeamStub(self.teamId).reqChangeOnlyCaptain(self.teamId, self.base, state)
 
     #------------------------------------------- 队伍标记  end -----------------------------------------------
+    @utils.isMyself
+    @gamedecorator.limitcall(3)
+    @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    def reqJoinTeam(self, teamID, password):
+        INFO_MSG('reqJoinTeam::', teamID, password)
+        _, err = self._onJoinRaidCheck(teamID)
+        if err != gameconst.RaidErrno.RAID_OK:
+            ERROR_MSG('onJoinPlayerReplyJoinRaidLonely::, check failed, {}'.format(err))
+            self.client.onJoinTeam(err.errno, teamID, password)
+        else:
+            playerProps = self._getTeamPlayerInfoDic()
+            gameengine.getTeamStub(teamID).reqJoinTeam(self.base, teamID, password, playerProps)
+    
+    def _onJoinTeamCheck(self):
+        _errno = gameconst.RaidErrno
+        if self.isInRaid():
+            return _errno.RAID_ALREADY_IN_RAID.initkvbody(source='_onJoinRaidCheck')
+        if self.isInTeam(self.gbId):
+            return _errno.RAID_ALREADY_IN_TEAM.initkvbody(source='_onJoinRaidCheck')
+
+        return _errno.RAID_OK

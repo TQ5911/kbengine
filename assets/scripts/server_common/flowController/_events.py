@@ -70,6 +70,7 @@ __all__ = [
     'AnyPlayerCinemaPlayEndedEvent',
 
     'get_common_release_key',
+    'DungeonRebornPosReleaseEvent',
 ]
 
 
@@ -1580,3 +1581,28 @@ class _CommonCreateRandomlyEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotRelo
     def buildDefaultCreateEntityExtra(self):
         return {'eventId': self.id, 'checkCreateUniqueness': True}
 
+class DungeonRebornPosReleaseEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):
+    __self_params__ = ('rebornPosGIDs', 'rebornPosNum')
+    __ref_params__ = ('dungeonNo', 'spaceNo')
+
+    def __init__(self, event_id, controller, rebornPosGIDs, event_handler=None, **kwargs):
+        super(DungeonRebornPosReleaseEvent, self).__init__(event_id, controller, event_handler, **kwargs)
+        self.add_param('rebornPosGIDs', rebornPosGIDs)
+
+    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
+        dungeonNo = ref_params['dungeonNo']
+        spaceNo = ref_params['spaceNo']
+        rebornPosGIDs = self.get_param('rebornPosGIDs', [])
+        rebornPosNum = self.get_param('rebornPosNum', 1)
+        stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
+        stub.createEntityInDungeonByGameEntityId(spaceNo, rebornPosGIDs, rebornPosNum, 0,
+                                                 {'eventId': self.id})
+        super(DungeonRebornPosReleaseEvent, self).handle_be_triggered(
+            src_e, src_idx, idx, obj, **ref_params)
+
+    def get_waiting_key(self, ctx):
+        return self.get_coll_release_key(self.id, self.get_param('rebornPosGIDs', []))
+
+    @staticmethod
+    def get_coll_release_key(eventId, rebornPosGIDs):
+        return get_common_release_key(eventId, rebornPosGIDs)

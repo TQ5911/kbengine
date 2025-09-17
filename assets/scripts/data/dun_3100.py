@@ -67,6 +67,28 @@ datas ={
       "Remark": ""
     }
   },
+  "31004002": {
+    "ActivityID": 0,
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 225.2796,
+    "DisplayName": "",
+    "EntityID": 18000651,
+    "ID": 31004002,
+    "Name": "\u54ea\u90fd\u901a",
+    "PosX": 74.55658,
+    "PosY": 3.723316,
+    "PosZ": 69.56284,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "Remark": ""
+    }
+  },
   "31008001": {
     "ActivityID": 0,
     "ClassName": "Collection",

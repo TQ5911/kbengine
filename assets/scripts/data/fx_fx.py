@@ -625,6 +625,16 @@ datas = _tools.RODict({
         "traceDistance": 0.0,
         "traceTime": 0.0
     }),
+    31500015: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31500016: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
     31500030: _tools.RODict({
         "bulletTimeScale": 1.0,
         "traceDistance": 0.0,
@@ -2235,6 +2245,16 @@ datas = _tools.RODict({
         "traceDistance": 0.0,
         "traceTime": 0.0
     }),
+    31611256: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611257: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
     31609999: _tools.RODict({
         "bulletTimeScale": 0.0,
         "traceDistance": 0.0,
@@ -2335,6 +2355,11 @@ datas = _tools.RODict({
         "traceDistance": 0.0,
         "traceTime": 0.0
     }),
+    31710006: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
     31719999: _tools.RODict({
         "bulletTimeScale": 0.0,
         "traceDistance": 0.0,
@@ -2356,6 +2381,11 @@ datas = _tools.RODict({
         "traceTime": 0.0
     }),
     31900003: _tools.RODict({
+        "bulletTimeScale": 0.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31900004: _tools.RODict({
         "bulletTimeScale": 0.0,
         "traceDistance": 0.0,
         "traceTime": 0.0
@@ -2432,6 +2462,16 @@ datas = _tools.RODict({
     }),
     31940003: _tools.RODict({
         "bulletTimeScale": 0.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31950000: _tools.RODict({
+        "bulletTimeScale": 0.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31950001: _tools.RODict({
+        "bulletTimeScale": 1.0,
         "traceDistance": 0.0,
         "traceTime": 0.0
     })

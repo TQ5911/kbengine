@@ -137,22 +137,28 @@ class ICollectible(object):
             return False
         deductWealthVal = dropAward.DeductWealthVal()
         # 是否是装备，是否达到了强化的等级
+        bagItem = self.bagData.getItemObjByGridId(bagGridID)
+        if not bagItem:
+            WARNING_MSG('     in _completeCollect, item not found:', bagGridID)
+            return False
+        
+        if bagItem.uniqueId != itemUniqueID:
+            WARNING_MSG('     in _completeCollect, uniqueId not matched:', bagItem.uniqueId, 'given ', itemUniqueID)
+            return False
+        
+        if bagItem.isLocked():
+            WARNING_MSG('     in _completeCollect, item is locked:', bagGridID)
+            return False
+        
         if enhanceLevel:
-            bagEquipItem = self.bagData.getItemObjByGridId(bagGridID)
-            if not bagEquipItem:
-                WARNING_MSG('     in _completeCollect, item not found:', bagGridID)
-                return False
-            if bagEquipItem.uniqueId != itemUniqueID:
-                WARNING_MSG('     in _completeCollect, uniqueId not matched:', bagEquipItem.uniqueId, 'given ', itemUniqueID)
-                return False
-            if bagEquipItem.getEnhanceLevel() != enhanceLevel:
-                WARNING_MSG('     in _completeCollect, getEnhanceLevel() not matched:', bagEquipItem.getEnhanceLevel(), ' item level', enhanceLevel)
+            if bagItem.getEnhanceLevel() != enhanceLevel:
+                WARNING_MSG('     in _completeCollect, getEnhanceLevel() not matched:', bagItem.getEnhanceLevel(), ' item level', enhanceLevel)
                 return False
             # 装备每个格子都只有一个
-            if bagEquipItem.itemNum != itemCount:
-                WARNING_MSG('     in _completeCollect, bagEquipItem.itemCount() not matched:', bagEquipItem.itemNum, ' itemCount', itemCount)
+            if bagItem.itemNum != itemCount:
+                WARNING_MSG('     in _completeCollect, bagItem.itemCount() not matched:', bagItem.itemNum, ' itemCount', itemCount)
                 return False
-            deductWealthVal.addWealthByObjList([bagEquipItem])
+            deductWealthVal.addWealthByObjList([bagItem])
         else:
             DEBUG_MSG(' try use item ', itemID, ' itemCount ', itemCount, ' useBind', useBind)
             if useBind == gameconst.ItemBindType.BIND:

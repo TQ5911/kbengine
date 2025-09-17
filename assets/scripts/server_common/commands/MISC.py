@@ -161,28 +161,33 @@ def Alladdbuff(su, player, buffid):
                 e.addBuff(buffid,1,e.id)
     return True, '执行成功'
 
-@gm_cmd('$AllsetskillLV', (Player("gbId/Id"),), RARG(0), gameconst.CELL, '所有人技能升级', ALLSIDE, GOD_GROUPS)
-def AllsetskillLV(su, player):
+@gm_cmd('$AllsetskillLV', (Player("gbId/Id"), Int("level")), RALL, gameconst.CELL, '所有人技能升级', ALLSIDE, GOD_GROUPS)
+def AllsetskillLV(su, player, level):
     import skillRelevant_skillUpgrade as SRSUD
     skill_dicts = {
     1001: {},  
     1002: {},  
     1003: {}  }
 
-    #这里定义条件 这个函数以后想通用可能要改，只是为了得到 skill_dicts这个数据结构       
-    def assign_skill_level(skill_id, level_limit):
-        if 60 not in level_limit and len(level_limit) > 4:
-            return 10
-        elif 60 in level_limit:
-            return 4
-        elif len(level_limit) < 5:
-            return 2
-        return 1  
+    #根据角色等级和技能levelLimit确定技能最多能升多少级      
+    def assign_skill_level(skill_id, level_limit, player_level):
+        if not level_limit:
+            return 1
+        
+        # 找到角色等级能达到的最高技能等级
+        max_skill_level = 1
+        for skill_level_index, required_player_level in enumerate(level_limit):
+            if player_level >= required_player_level:
+                max_skill_level = skill_level_index + 1
+            else:
+                break
+        
+        return max_skill_level
     
     for skill_id, skill_info in SRSUD.datas.items():
         school_id = 1000 + int(str(skill_info.get('ID'))[3])  # 提取学校 ID
         if  school_id in skill_dicts:
-            skill_dicts[school_id][skill_id] = assign_skill_level(skill_id, skill_info.get('levelLimit', []))
+            skill_dicts[school_id][skill_id] = assign_skill_level(skill_id, skill_info.get('levelLimit', []), level)
 
     def update_skill_levels(self, skill_dict):
         skill_id_list = []
@@ -253,9 +258,9 @@ def deductHp(su, player, damage, eid=0):
     # 返回执行成功的消息，包含实际扣除的血量
     return True, '成功扣除%d点血量，目标剩余血量: %d' % (actual_damage, e.hp)
 
-@gm_cmd('$createmonster', (Player("gbId/Id"), Int('monster id'), Int('level'), Int('monsterNum'), Float('radius')), RARG(0), CELL,
+@gm_cmd('$createmonster', (Player("gbId/Id"), Int('monster id'), Int('level'), Int('monsterNum'), Float('radius'), Int('force')), RARG(0), CELL,
         '创建怪物，可指定数量和半径', ALLSIDE, GOD_GROUPS, minArgs=3)
-def createMonster(su, player, monsterId, level, monsterNum=1, radius=0):
+def createMonster(su, player, monsterId, level, monsterNum=1, radius=0, force=0):
     # 检查怪物ID和等级是否有效
     if monsterId not in MD.datas or level < 1 or monsterNum < 1:
         return False, '执行失败'  
@@ -295,7 +300,8 @@ def createMonster(su, player, monsterId, level, monsterNum=1, radius=0):
             'spaceNo': player.spaceNo,
             'position': monster_position,
             'direction': player.direction,  # 可以让怪物面向与玩家相同的方向
-            'level': level
+            'level': level,
+            'force': force,
         }
         # 创建一个怪物
         KBEngine.createEntity(
@@ -1831,6 +1837,34 @@ def loadallentity(su, player):
 
                 player.base.callMethod('gmCreateEntityHasBase', ('Barrier', params))
 
+        elif className == 'RebornPos':
+
+            _rebornPosId = _mPrm['EntityID']
+
+
+            params.update({
+
+                'name': _mPrm['Name'],
+
+                'rebornPosId': _rebornPosId,
+
+            })
+
+            count_ = 1
+
+            for i in utils.generateGameEntityId(entityId, count_):
+                params.update({
+
+                    'gameEntityId': i,
+
+                })
+
+                gid, gct = utils.splitGameEntityId(i)
+
+                tmpProps['createIndex'] = gct
+
+                player.base.callMethod('gmCreateEntityHasBase', ('RebornPos', params))
+
     return True, '执行成功'
 
 
@@ -2835,6 +2869,11 @@ def clearCityOwner(su, player):
     _stub.gmClearCityOwner()
     return True, '执行成功'
 
+@gm_cmd('$RemoveCityOwnerFlag', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '移除帮会标记', ALLSIDE, GOD_GROUPS)
+def RemoveCityOwnerFlag(su, player):
+    player.guildBox.onChangeCityOwnerFlag(False)
+    return True, '执行成功'
+
 @gm_cmd('$changeSiegeWarState', (Player("gbId/Id"), Int('state'), Int('endTime')), RARG(0), gameconst.BASE, '修改城战状态', ALLSIDE, GOD_GROUPS)
 def gmChangeSiegeWarState(su, player, state, endTime):
     _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
@@ -3021,3 +3060,24 @@ def applyFinishGather(su, player):
         return False, '当前没有采集物体'
     player.applyFinishGather(player.id, gatherTarget['targetId'])
 
+@gm_cmd('$clearPickedCollections', (Player("gbId/Id"), Int("collection id"),), RARG(0), gameconst.CELL, '主动结束采集', ALLSIDE, GOD_GROUPS)
+def clearPickedCollections(su, player, collectionId):
+    curAOI = player.getViewRadius()
+    for m in player.entitiesInRange(curAOI, 'Collection'):
+        if m.collectionId != collectionId:
+            continue
+
+        player.pickedCollections.pop(collectionId, None)
+        m.gatherAvatars.pop(player.gbId, None)
+        player.checkCollectionGatherFlag(m.id)
+        if m.type == gameconst.CollectionType.VIEWPOINT:
+            player.checkRelationType(m)
+
+    return True, '执行成功'
+
+@gm_cmd('$modifyEquipEnhanceLevel', (Player("gbId/Id"), Int("slotID"), Int("enhanceLevel")), RARG(0), gameconst.CELL, '修改装备强化等级', ALLSIDE, GOD_GROUPS)
+def modifyEquipEnhanceLevel(su, player, slotID, enhanceLevel):
+    ret = player.modifyEquipEnhanceLevel(slotID, enhanceLevel)
+    if not ret:
+        return False, '执行失败'
+    return True, '执行成功'

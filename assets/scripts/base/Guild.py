@@ -1639,6 +1639,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         box.onSiegeWarGuildWinnerData(data)
 
+    def onSiegeWarEnd(self):
+        self.siegeWarDeclared = False
+
     def onChangeCityOwnerFlag(self, flag):
         self.isCityOwner = flag
         DEBUG_MSG('[lj]onChangeCityOwnerFlag', self.guildName, self.guildUUID, flag)
@@ -1660,6 +1663,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         cache['startEG'] = self._checkHasPermission(gbId, GA_AI_DD.datas.cityBattleSiegeEnginesStart)
 
         box.onGetSiegeWarGuildCacheData(cache)
+
+    def getMemberJob(self, gbId, box, args):
+        _gmVal = self.members.get(gbId)
+        if not _gmVal:
+            box.onGetMemberJob(GA_A_DD.datas.BONUS_SRC_UNKNOWN, args)
+            return
+
+        box.onGetMemberJob(_gmVal.job, args)
 
     # ------------------------------------- cross data start -------------------------------------
     def _toCrossData(self):

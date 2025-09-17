@@ -105,7 +105,10 @@ class IEntityLoader(object):
                         if not _d.get('IsOpen', True):
                             WARNING_MSG('_initEntities::Skip not isOpen Monster', id_)
                             continue
-                        count_ = int(_d.get('RefreshNum', 1)) or 1
+                        count_ = int(_d.get('RefreshNum', 1))
+
+                        if not count_:
+                            continue
 
                         if count_ > 999:
                             ERROR_MSG('_initEntities::RefreshNum too large', count_)

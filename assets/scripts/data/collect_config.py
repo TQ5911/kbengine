@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "difficultyTab": _tools.RODict({
         "ID": "difficultyTab",
-        "value": _tools.ROList(['<color=#d9d9d9>全部</color>', '<color=#4f97d3>精美</color>', '<color=#a76af1>珍藏</color>', '<color=#dfbe46>至臻</color>']),
+        "value": _tools.ROList(['<color=#c1c1c1>全部</color>', '<color=#739cc9>精美</color>', '<color=#a677c6>珍藏</color>', '<color=#beab67>至臻</color>']),
     }),
     "interfaceScaling": _tools.RODict({
         "ID": "interfaceScaling",

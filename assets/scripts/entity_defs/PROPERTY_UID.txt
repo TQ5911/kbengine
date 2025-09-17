@@ -283,6 +283,7 @@ Avatar cycleEventCheckTimerId 30398
 Avatar dailyAwardDic 30387
 Avatar dailyChaseExpFactorUpdateTime 30032
 Avatar dailyFreeReliveTimes 30116
+Avatar dailyHealWoundsTimes 375
 Avatar dailyUseLimitDic 30388
 Avatar darkIron 245
 Avatar datetimeTimerDataBase 30377
@@ -295,6 +296,8 @@ Avatar datetimeTimerIdBase 30376
 Avatar datetimeTimerIdBaseCount 30375
 Avatar datetimeTimerIdCell 30382
 Avatar datetimeTimerIdCellCount 30381
+Avatar dayFetchRbNum 31993
+Avatar dayReleaseRbNum 31992
 Avatar dbId 30307
 Avatar deathPenaltyData 31269
 Avatar deathPenaltyTimes 31270
@@ -327,6 +330,7 @@ Avatar extraDmg 461
 Avatar extraDmgDef 462
 Avatar fatal 16
 Avatar fbEntityId 30887
+Avatar fetchRedBagDict 31996
 Avatar fightBackTarget 31435
 Avatar fightBackTimerId 31434
 Avatar finalDmg 471
@@ -496,9 +500,11 @@ Avatar realDmgDef 460
 Avatar recoverGuildAssistTimerId 31396
 Avatar recoverQixieAssistTimerId 31852
 Avatar redNameKillTime 30995
+Avatar redbagDayNo 31994
 Avatar regenTimer 30099
 Avatar relationTypeDic 30101
 Avatar relationTypeList 30100
+Avatar releaseRedBagDict 31995
 Avatar relogCnt 30317
 Avatar replyFollowCaptainTimer 30538
 Avatar replyTeamCaptainTimer 30529
@@ -602,6 +608,7 @@ Avatar viewCrossServerSet 31683
 Avatar viewEnterViewSet 30352
 Avatar viewLeaveViewSet 30353
 Avatar viewNameSet 30351
+Avatar viewRadius 31987
 Avatar warehouse 31386
 Avatar welfareSignInInfo 31220
 Avatar wonderLandAddTimes 106
@@ -1027,6 +1034,7 @@ Creation trapId 31132
 Creation ttl 31242
 Creation type 286
 Creation useTargetTypeCacheFlag 31182
+Creation viewRadius 31991
 CrossDataStub birthInDB 31833
 CrossDataStub centralServerDic 31844
 CrossDataStub connectSuccessTimes 31631
@@ -1637,6 +1645,7 @@ Monster timerDataCell 30577
 Monster tmpProps 30715
 Monster ttl 30716
 Monster useTargetTypeCacheFlag 30703
+Monster viewRadius 31988
 MonsterGrp baseGlobalIdx 30424
 MonsterGrp birthInDB 30533
 MonsterGrp birthInMem 30419
@@ -1948,6 +1957,7 @@ Npc timerDataCell 30180
 Npc tmpProps 30147
 Npc ttl 30148
 Npc useTargetTypeCacheFlag 30558
+Npc viewRadius 31990
 PlayerStub account2box 30066
 PlayerStub avatarCounter 30069
 PlayerStub birthInDB 30073
@@ -1979,6 +1989,7 @@ RaidDungeonStub datetimeTimerIdBaseCount 30831
 RaidDungeonStub dungeonNo 30823
 RaidDungeonStub isDestroying 30826
 RaidDungeonStub methodPoolBase 30828
+RaidDungeonStub rebornPosCache 31986
 RaidDungeonStub spaces 30821
 RaidDungeonStub tempMiscPropsBase 30829
 RaidDungeonStub timerDataBase 30830
@@ -2040,6 +2051,19 @@ RebornPos tempMiscPropsBase 32032
 RebornPos timerDataCell 32020
 RebornPos tmpProps 32015
 RebornPos ttl 32016
+RedBagStub birthInDB 32001
+RedBagStub datetimeTimerDataBase 32007
+RedBagStub datetimeTimerDataNextTBase 32009
+RedBagStub datetimeTimerDataTimeCacheBase 32008
+RedBagStub datetimeTimerIdBase 32006
+RedBagStub datetimeTimerIdBaseCount 32005
+RedBagStub fetchDict 31999
+RedBagStub isDestroying 32000
+RedBagStub lastReleaseTime 31998
+RedBagStub methodPoolBase 32002
+RedBagStub redbagDict 31997
+RedBagStub tempMiscPropsBase 32003
+RedBagStub timerDataBase 32004
 SiegeWarSpaceMgr aiController 31812
 SiegeWarSpaceMgr aiEventListener 31816
 SiegeWarSpaceMgr aiEvents 31815
@@ -2131,6 +2155,7 @@ SingleDungeonStub dungeonNo 30807
 SingleDungeonStub founders 30806
 SingleDungeonStub isDestroying 30810
 SingleDungeonStub methodPoolBase 30812
+SingleDungeonStub rebornPosCache 31985
 SingleDungeonStub spaces 30805
 SingleDungeonStub tempMiscPropsBase 30813
 SingleDungeonStub timerDataBase 30814
@@ -2431,6 +2456,7 @@ Summon timerDataCell 31090
 Summon tmpProps 31085
 Summon ttl 31086
 Summon useTargetTypeCacheFlag 31026
+Summon viewRadius 31989
 TeamDungeonStub argsCache 30709
 TeamDungeonStub birthInDB 30711
 TeamDungeonStub crtGameEntityIdentifyID 30804
@@ -2443,6 +2469,7 @@ TeamDungeonStub datetimeTimerIdBaseCount 30799
 TeamDungeonStub dungeonNo 30707
 TeamDungeonStub isDestroying 30710
 TeamDungeonStub methodPoolBase 30796
+TeamDungeonStub rebornPosCache 31971
 TeamDungeonStub spaces 30706
 TeamDungeonStub tempMiscPropsBase 30797
 TeamDungeonStub timerDataBase 30798

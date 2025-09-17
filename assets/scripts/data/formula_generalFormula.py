@@ -176,11 +176,11 @@ datas = _tools.RODict({
     }),
     34000005: _tools.RODict({
         "ID": 34000005,
-        'serverFormula':lambda lv: 3 + lv * 0.1,
+        'serverFormula':lambda lv: 2 + lv * 0.1,
     }),
     34000006: _tools.RODict({
         "ID": 34000006,
-        'serverFormula':lambda lv: lv * 1000,
+        'serverFormula':lambda lv: lv * 1250,
     }),
     34000007: _tools.RODict({
         "ID": 34000007,
@@ -188,11 +188,11 @@ datas = _tools.RODict({
     }),
     34000008: _tools.RODict({
         "ID": 34000008,
-        'serverFormula':lambda exp: int(exp/1000),
+        'serverFormula':lambda exp: int(exp/500+2000),
     }),
     34000009: _tools.RODict({
         "ID": 34000009,
-        'serverFormula':lambda exp: int(exp/10000),
+        'serverFormula':lambda exp: int(exp/580000+2),
     }),
     34000010: _tools.RODict({
         "ID": 34000010,

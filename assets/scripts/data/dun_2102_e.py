@@ -45,7 +45,8 @@ datas ={
         1004,
         1013,
         1086,
-        1141
+        1141,
+        1151
       ]
     }
   },
@@ -256,8 +257,7 @@ datas ={
     "transition": {
       "finished": [
         1089,
-        1090,
-        1110
+        1090
       ]
     }
   },
@@ -266,7 +266,11 @@ datas ={
     "entityID": [
       21028018
     ],
-    "transition": {}
+    "transition": {
+      "finished": [
+        1110
+      ]
+    }
   },
   "1090": {
     "type": "createMonster",
@@ -477,7 +481,6 @@ datas ={
     "transition": {
       "finished": [
         1111,
-        1112,
         1120
       ]
     }
@@ -495,7 +498,11 @@ datas ={
     "entityID": [
       20128019
     ],
-    "transition": {}
+    "transition": {
+      "finished": [
+        1112
+      ]
+    }
   },
   "1112": {
     "type": "createAirWall",
@@ -693,7 +700,7 @@ datas ={
     "entityID": [
       20128021
     ],
-    "num": 0,
+    "num": 1,
     "transition": {}
   },
   "1184": {
@@ -722,7 +729,11 @@ datas ={
     "transition": {
       "finished": [
         1182,
-        1186
+        1186,
+        1143,
+        1144,
+        1145,
+        1146
       ]
     }
   },
@@ -799,7 +810,11 @@ datas ={
     "transition": {
       "finished": [
         1092,
-        1188
+        1188,
+        1147,
+        1148,
+        1149,
+        1150
       ]
     }
   },
@@ -941,8 +956,7 @@ datas ={
       21024001,
       21024002,
       21024003,
-      21024004,
-      21024005
+      21024004
     ],
     "num": 1,
     "lv": "25",
@@ -955,6 +969,91 @@ datas ={
       21024002
     ],
     "dialogID": 19900211,
+    "transition": {}
+  },
+  "1143": {
+    "type": "removeNPC",
+    "entityID": [
+      21024001,
+      21024002,
+      21024003,
+      21024004
+    ],
+    "transition": {}
+  },
+  "1144": {
+    "type": "createNPC",
+    "entityID": [
+      21024005,
+      21020006,
+      21024007,
+      21024008,
+      21024009
+    ],
+    "num": 0,
+    "lv": "20",
+    "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1145": {
+    "type": "removeRebornPos",
+    "entityID": [
+      21028002
+    ],
+    "transition": {}
+  },
+  "1146": {
+    "type": "createRebornPos",
+    "entityID": [
+      21028022
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1147": {
+    "type": "removeNPC",
+    "entityID": [
+      21024006,
+      21024007,
+      21024008,
+      21024009
+    ],
+    "transition": {}
+  },
+  "1148": {
+    "type": "createNPC",
+    "entityID": [
+      21024011,
+      21024012,
+      21024013,
+      21024014
+    ],
+    "num": 0,
+    "lv": "20",
+    "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1149": {
+    "type": "removeRebornPos",
+    "entityID": [
+      21028022
+    ],
+    "transition": {}
+  },
+  "1150": {
+    "type": "createRebornPos",
+    "entityID": [
+      21028023
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1151": {
+    "type": "createRebornPos",
+    "entityID": [
+      21028002
+    ],
+    "num": 1,
     "transition": {}
   }
 }

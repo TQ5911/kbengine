@@ -13,11 +13,22 @@
             <Arg>   ARRAY <of> STOREID </of>  </Arg>
         </reqGetStoreList>
 
+        <reqGetStoreLimitedItemList><Exposed/>
+            <Arg>   ARRAY <of> STOREID </of>  </Arg>
+        </reqGetStoreLimitedItemList>
+
         <reqBuyItemsInStore><Exposed/>
             <Arg>       STOREID     </Arg>
             <Arg>       ITEMID      </Arg>
             <Arg>       UINT32      </Arg>
         </reqBuyItemsInStore>
+
+        <reqBuyItemsInStoreWithSelection><Exposed/>
+            <Arg>       STOREID     </Arg>
+            <Arg>       ITEMID      </Arg>
+            <Arg>       UINT32      </Arg>
+            <Arg>       UINT8       </Arg>
+        </reqBuyItemsInStoreWithSelection>
 
         <makeMallFlowLog>
             <Arg>       UINT64         </Arg>
@@ -34,6 +45,10 @@
         <onGetStoreList>
             <Arg>   ARRAY <of> CLIENT_STORE_VAL </of>  </Arg>
         </onGetStoreList>
+
+        <onGetStoreLimitedItemList>
+            <Arg> CLIENT_STORE_VAL </Arg>
+        </onGetStoreLimitedItemList>
 
         <onBuyStoreItems>
             <Arg>       STOREID     </Arg>

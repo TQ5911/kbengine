@@ -2,6 +2,7 @@
 import KBEngine
 from KBEDebug import *
 import time
+import gameconst
 
 
 # 事件枚举
@@ -82,30 +83,42 @@ class StateIdleNoMove(StateImp):
 class StateWaitAnim(StateImp):
     '''无法移动'''
     name = State.IDLE
+    mask = Event.ATTACK
 
     def tick(self, ctrl):
         if ctrl.inHate():
             ctrl.transformPlayAnimation()
-
+            ctrl.changeBornState(gameconst.BornStateType.bornAnim)
+            ctrl.tickOnce()
 
 @withName('playAnim')
 class StatePlayAnim(StateImp):
     '''无法移动'''
     name = State.PLAY_ANIM
+    mask = Event.ATTACK
 
     def tick(self, ctrl):
         if ctrl.isAnimationEnd():
             ctrl.trasformAngrySpawn()
+            ctrl.changeBornState(gameconst.BornStateType.afterBornMove)
+            ctrl.tickOnce()
+        elif not ctrl.isInTickCallBack():
+            ctrl.setTickCallBack(ctrl.getLeftAnimationTime())
 
 
 @withName('playAnimAndAngry')
 class StatePlayAnimAndAngry(StateImp):
     '''无法移动'''
     name = State.PLAY_ANIM
+    mask = Event.ATTACK
 
     def tick(self, ctrl):
         if ctrl.isAnimationEnd():
             ctrl.combat()
+            ctrl.changeBornState(gameconst.BornStateType.afterBornMove)
+            ctrl.tickOnce()
+        elif not ctrl.isInTickCallBack():
+            ctrl.setTickCallBack(ctrl.getLeftAnimationTime())
 
 
 @withName('angrySpawn')
@@ -157,16 +170,24 @@ class StateStandWaitResetAnim(StateImp):
         elif ctrl.finishWaitResetAnimTime():
             ctrl.addContinueBuff()
             ctrl.transformResetAnim()
+            ctrl.changeBornState(gameconst.BornStateType.resetAnim)
+            ctrl.tickOnce()
+        elif not ctrl.isInTickCallBack():
+            ctrl.setTickCallBack(ctrl.getLeftFinishWaitResetAnimTime())
 
 
 @withName('resetAnim')
 class StateResetAnim(StateImp):
     '''播放重启动画'''
-    name = State.STAND
+    name = State.RESET_ANIM
+    mask = Event.ATTACK
 
     def tick(self, ctrl):
         if ctrl.isFinishResetAnim():
             ctrl.restart()
+            ctrl.changeBornState(gameconst.BornStateType.reMove)
+        elif not ctrl.isInTickCallBack():
+            ctrl.setTickCallBack(ctrl.getLeftFinishResetAnimTime())
 
 
 @withName('patrol')
@@ -205,18 +226,17 @@ class StateAngry(StateImp):
 class StateAngryAndBlink(StateImp):
     '''激怒后瞬移回去（会脱战）'''
     name = State.ANGRY
-    mask = Event.ATTACK
 
     def tick(self, ctrl):
         if ctrl.farFromHome():
-            ctrl.destroyAllVassal()
-            ctrl.clearHateAndPlayResetAnim()
+            ctrl.stand(False)
+            ctrl.tickOnce()
             return
         if ctrl.inHate():
             ctrl.useRandomSkill()
         else:
-            ctrl.destroyAllVassal()
-            ctrl.clearHateAndPlayResetAnim()
+            ctrl.stand(False)
+            ctrl.tickOnce()
 
 
 @withName('angryEx')
@@ -246,21 +266,32 @@ class StateBack(StateImp):
         elif not ctrl.inMoving():
             ctrl.clearHateAndGoHome()
 
-
-@withName('backAndResetAnim')
-class StateBackAndResetAnim(StateImp):
+@withName('telBackAfterResetAnim')
+class StateTelBackAfterResetAnim(StateImp):
     '''通用脱战'''
     name = State.BACK
+    mask = Event.ATTACK
 
     def tick(self, ctrl):
-        if ctrl.getHome():
-            ctrl.addContinueBuff()
-            ctrl.addHomeBuff()
-            ctrl.transformResetAnim()
+        if ctrl.isFinishResetAnim():
+            ctrl.clearHateAndTelBack()
+            ctrl.restart()
+            ctrl.changeBornState(gameconst.BornStateType.reMove)
+        elif not ctrl.isInTickCallBack():
+            ctrl.setTickCallBack(ctrl.getLeftFinishResetAnimTime())
 
-        elif not ctrl.inMoving():
-            ctrl.clearHateAndGoHome()
+@withName('standAndResetAnim')
+class StateStandAndResetAnim(StateImp):
+    '''驻守等待放重启动画'''
+    name = State.STAND
+    mask = Event.ATTACK
 
+    def tick(self, ctrl):
+        ctrl.destroyAllVassal()
+        ctrl.addContinueBuff()
+        ctrl.transformBack()
+        ctrl.changeBornState(gameconst.BornStateType.resetAnim)
+        ctrl.tickOnce()
 
 @withName('restart')
 class StateRestart(StateImp):
@@ -765,7 +796,7 @@ class MachineImp(object):
         if not ctrl.dealForceQue():
             self.state.tick(ctrl)
 
-    def transform(self, name):
+    def transform(self, ctrl, name):
         if name in self.stateMap and self.state.name != name:
             self.state = self.stateMap[name]
 
@@ -783,19 +814,27 @@ class MachineWithChangeTime(MachineImp):
     def __init__(self, stMap):
         super(MachineWithChangeTime, self).__init__(stMap)
         self.changeStateTime = 0
+        self.changeTimer = 0
 
-    def transform(self, name):
-        super(MachineWithChangeTime, self).transform(name)
+    def transform(self, ctrl, name):
+        super(MachineWithChangeTime, self).transform(ctrl, name)
         self.changeStateTime = time.time()
+        ctrl.cancelTickCallBack(self.changeTimer)
+        self.changeTimer = 0
 
     def elapsedTime(self):
         return time.time() - self.changeStateTime
+    
+    def setChangeTimer(self, timerId):
+        self.changeTimer = timerId
 
+    def getChangeTimer(self):
+        return self.changeTimer
 
 class MachineBlank(MachineImp):
     def __init__(self): pass
     def tick(self, ctrl): pass
-    def transform(self, name): pass
+    def transform(self, ctrl, name): pass
     def tell(self): pass
     def testEvent(self, event): return False
 
@@ -1237,6 +1276,7 @@ class Machine3050(MachineWithChangeTime):
 
     def doLoseWitnessTask(self, ctrl):
         ctrl.backEgg()
+        ctrl.changeBornState(gameconst.BornStateType.reMove)
 
 
 class Machine3051(MachineWithChangeTime):
@@ -1257,7 +1297,8 @@ class Machine3051(MachineWithChangeTime):
         self.moveable = False
 
     def doLoseWitnessTask(self, ctrl):
-        pass
+        ctrl.backWait()
+        ctrl.changeBornState(gameconst.BornStateType.reMove)
 
 
 class Machine3052(MachineWithChangeTime):
@@ -1272,12 +1313,13 @@ class Machine3052(MachineWithChangeTime):
             State.IDLE: 'waitAnim',
             State.PLAY_ANIM: 'playAnimAndAngry',
             State.ANGRY: 'angryAndBlink',
-            State.RESET_ANIM: 'resetAnim'
+            State.STAND: 'standAndResetAnim',
+            State.BACK: 'telBackAfterResetAnim'
         })
-        self.moveable = False
 
     def doLoseWitnessTask(self, ctrl):
-        pass
+        ctrl.backWait()
+        ctrl.changeBornState(gameconst.BornStateType.reMove)
 
 
 _machineDic = {

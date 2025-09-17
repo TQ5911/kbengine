@@ -372,7 +372,7 @@ datas = _tools.RODict({
     }),
     92: _tools.RODict({
         "ID": 92,
-        "name": "specialMonsterSkill",
+        "name": "",
         "source": ""
     }),
     93: _tools.RODict({

@@ -40,10 +40,13 @@ datas ={
       "Level": 26.0,
       "MapEntityScale": 0,
       "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 15.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowMonsterGroupID": ""
     }
   },
   "31010013": {
@@ -2474,46 +2477,126 @@ datas ={
     "ActivityID": 0,
     "ClassName": "Teleporter",
     "ClassNameType": 2,
-    "CustomID": "31038001",
+    "CustomID": "3103",
     "Dir": 351.4495,
     "DisplayName": "",
     "EntityID": 17310101,
     "ID": 31018001,
     "Name": "\u7ecf\u9a8c\u2160",
-    "PosX": 172.6275,
-    "PosY": 524.9518,
-    "PosZ": 21.20863,
+    "PosX": 176.3511,
+    "PosY": 529.3194,
+    "PosZ": -1.598299,
     "Props": {
       "CameraId": 0,
-      "GateType": 0,
+      "GateType": 4,
       "Remark": "",
       "TelDir": 351.4495,
-      "TelX": 166.2714,
-      "TelY": 524.9518,
-      "TelZ": 102.2241
+      "TelX": 169.995,
+      "TelY": 529.3194,
+      "TelZ": 79.41718
     }
   },
   "31018002": {
     "ActivityID": 0,
     "ClassName": "Teleporter",
     "ClassNameType": 2,
-    "CustomID": "31128001",
+    "CustomID": "3112",
     "Dir": 8.957646,
     "DisplayName": "",
     "EntityID": 17310102,
     "ID": 31018002,
     "Name": "\u9ec4\u91d1\u2160",
-    "PosX": 162.983,
-    "PosY": 524.9518,
-    "PosZ": 21.47214,
+    "PosX": 160.0529,
+    "PosY": 529.3194,
+    "PosZ": 2.583445,
     "Props": {
       "CameraId": 0,
-      "GateType": 0,
+      "GateType": 4,
       "Remark": "",
       "TelDir": 8.957646,
-      "TelX": 162.983,
-      "TelY": 524.9518,
-      "TelZ": 21.47214
+      "TelX": 160.0529,
+      "TelY": 529.3194,
+      "TelZ": 2.583445
+    }
+  },
+  "31018003": {
+    "ActivityID": 0,
+    "ClassName": "Teleporter",
+    "ClassNameType": 2,
+    "CustomID": "3117",
+    "Dir": 48.73955,
+    "DisplayName": "",
+    "EntityID": 17310103,
+    "ID": 31018003,
+    "Name": "\u5c01\u5370",
+    "PosX": 151.165,
+    "PosY": 529.2293,
+    "PosZ": 10.14911,
+    "Props": {
+      "CameraId": 0,
+      "GateType": 4,
+      "Remark": "",
+      "TelDir": 48.73955,
+      "TelX": 151.165,
+      "TelY": 529.2293,
+      "TelZ": 10.14911
+    }
+  },
+  "31018004": {
+    "ActivityID": 0,
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 31018004,
+    "Name": "\u6218\u6597\u533a",
+    "PosX": 167.7337,
+    "PosY": 524.9518,
+    "PosZ": 57.81527,
+    "Props": {
+      "AreaType": 1,
+      "Radius": 40.0,
+      "Remark": ""
+    }
+  },
+  "31018005": {
+    "ActivityID": 0,
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 31018005,
+    "Name": "\u6218\u6597\u533a",
+    "PosX": 55.74089,
+    "PosY": 525.1331,
+    "PosZ": 58.05989,
+    "Props": {
+      "AreaType": 1,
+      "Radius": 40.0,
+      "Remark": ""
+    }
+  },
+  "31018006": {
+    "ActivityID": 0,
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 31018006,
+    "Name": "\u6218\u6597\u533a",
+    "PosX": 279.5206,
+    "PosY": 525.0379,
+    "PosZ": 57.65615,
+    "Props": {
+      "AreaType": 1,
+      "Radius": 40.0,
+      "Remark": ""
     }
   }
 }

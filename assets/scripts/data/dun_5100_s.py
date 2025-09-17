@@ -3988,7 +3988,7 @@ datas ={
           "PosZ": 61.22395,
           "Props": {
             "IsOpen": 1,
-            "MapEntityType": 0,
+            "MapEntityType": "14",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,

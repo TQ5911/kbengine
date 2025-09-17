@@ -174,6 +174,10 @@ class IDungeonStubMonster(object):
                 _gen = self._getTelDefArgs(dunAllDatas, spaceNo, flagId, sVal, num, targetEntityGID, trapRange, extraVal=extraVal)
                 gens.append(_gen)
 
+            elif className == 'RebornPos':
+                _gen = self._getRebornPosDefArgs(dunAllDatas, spaceNo, flagId, sVal, num, extraVal=extraVal)
+                gens.append(_gen)
+                
             else:
                 ERROR_MSG('createEntityInDungeonByGameEntityId:: entityType not support',
                           spaceNo, flagId)
@@ -468,6 +472,32 @@ class IDungeonStubMonster(object):
             props['tmpProps'].update(extraVal.get('tmpProps', {}))
 
         return self._buildDefArgsGen(props, flagId, className, dunDataProps, collNum)
+    
+    def _getRebornPosDefArgs(self, dunAllDatas, spaceNo, flagId, spaceVal, collNum, extraVal=None):
+        dunCollData = dunAllDatas[str(flagId)]
+        dunDataProps = dunCollData.get('Props', {})
+
+        rebornPosId = dunCollData['EntityID']
+        className = 'RebornPos'
+
+        props = {'spaceNo': spaceNo,
+                 'rebornPosId': rebornPosId,
+                 'spaceMgrId': spaceVal.spaceMgr.id,
+                 'spaceMgrBox': spaceVal.spaceMgr,
+                 'position': (dunCollData['PosX'],
+                              dunCollData['PosY'],
+                              dunCollData['PosZ']),
+                 'direction': (0.0, 0.0, dunCollData['Dir'] * math.pi / 180),
+                 'name': dunCollData['Name'],
+                 'dungeonFlagId': flagId,
+                 'gameEntityId': 0,
+                 'gameEntityIdentifyID': 0}
+
+        props.setdefault('tmpProps', {})
+        if extraVal and 'tmpProps' in extraVal:
+            props['tmpProps'].update(extraVal.get('tmpProps', {}))
+
+        return self._buildDefArgsGen(props, flagId, className, dunDataProps, collNum)
 
 
     # =========================================
@@ -552,6 +582,8 @@ class IDungeonStubMonster(object):
             sVal.spaceMgr.cell.flowCtrlDungeonAirWallReleaseComplete(flagIds)
         elif className == 'Teleporter':
             sVal.spaceMgr.cell.flowCtrlDungeonTeleporterCreatedComplete(flagIds)
+        elif className == 'RebornPos':
+            sVal.spaceMgr.cell.flowCtrlDungeonRebornPosCreatedComplete(flagIds)
 
     # =========================================
     # KILL COUNT METHODS

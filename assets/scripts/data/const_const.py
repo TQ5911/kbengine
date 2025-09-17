@@ -259,6 +259,10 @@ datas = _tools.RODict({
         "ID": "pickAfterAct",
         "value": "idle02",
     }),
+    "pickingOpening": _tools.RODict({
+        "ID": "pickingOpening",
+        "value": "opening",
+    }),
     "xuanzhongNPCMat": _tools.RODict({
         "ID": "xuanzhongNPCMat",
         "value": "Assets/Res/art/effectRes/Textures/other/Materials/Fresnel_shanbai.mat",
@@ -561,7 +565,7 @@ datas = _tools.RODict({
     }),
     "taskGuideUIFxHighMount": _tools.RODict({
         "ID": "taskGuideUIFxHighMount",
-        "value": 2.0,
+        "value": 0.5,
     }),
     "resolution_set": _tools.RODict({
         "ID": "resolution_set",
@@ -687,6 +691,10 @@ datas = _tools.RODict({
         "ID": "selectedListReselect",
         "value": 3,
     }),
+    "selectedTargetMonster": _tools.RODict({
+        "ID": "selectedTargetMonster",
+        "value": "Assets/Res/ui/texture/maincity/target_monster_icon.png",
+    }),
     "nearbyListLimit": _tools.RODict({
         "ID": "nearbyListLimit",
         "value": 15,
@@ -734,5 +742,41 @@ datas = _tools.RODict({
     "bloodInvincible": _tools.RODict({
         "ID": "bloodInvincible",
         "value": 64000070,
+    }),
+    "chestOpened": _tools.RODict({
+        "ID": "chestOpened",
+        "value": 0.3,
+    }),
+    "followRadius": _tools.RODict({
+        "ID": "followRadius",
+        "value": 3,
+    }),
+    "basicStaTitle1": _tools.RODict({
+        "ID": "basicStaTitle1",
+        "value": "基础属性",
+    }),
+    "basicStaTitle2": _tools.RODict({
+        "ID": "basicStaTitle2",
+        "value": "进阶属性",
+    }),
+    "basicStaTitle3": _tools.RODict({
+        "ID": "basicStaTitle3",
+        "value": "控制属性",
+    }),
+    "basicStaTitle4": _tools.RODict({
+        "ID": "basicStaTitle4",
+        "value": "附加属性",
+    }),
+    "homepageMe": _tools.RODict({
+        "ID": "homepageMe",
+        "value": "我的信息",
+    }),
+    "homepageOthers": _tools.RODict({
+        "ID": "homepageOthers",
+        "value": "他人信息",
+    }),
+    "messageDelayAfterDeath": _tools.RODict({
+        "ID": "messageDelayAfterDeath",
+        "value": 600,
     })
 })

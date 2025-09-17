@@ -99,6 +99,18 @@ datas = _tools.RODict({
         "ID": "resolveConfirm_msgID",
         "value": 54001098,
     }),
+    "resolveAllConfirm_msgID": _tools.RODict({
+        "ID": "resolveAllConfirm_msgID",
+        "value": 54001099,
+    }),
+    "autoResolveOn_msgID": _tools.RODict({
+        "ID": "autoResolveOn_msgID",
+        "value": 54001100,
+    }),
+    "resolveRareConfirm_msgID": _tools.RODict({
+        "ID": "resolveRareConfirm_msgID",
+        "value": 54001101,
+    }),
     "synthesisItemNotEnough": _tools.RODict({
         "ID": "synthesisItemNotEnough",
         "value": 54001527,
@@ -238,5 +250,25 @@ datas = _tools.RODict({
     "recommendLvText": _tools.RODict({
         "ID": "recommendLvText",
         "value": "推荐等级{0}",
+    }),
+    "packShowText": _tools.RODict({
+        "ID": "packShowText",
+        "value": "可能获得",
+    }),
+    "findNearestDrugstore": _tools.RODict({
+        "ID": "findNearestDrugstore",
+        "value": 12,
+    }),
+    "potionBagStorageLimit": _tools.RODict({
+        "ID": "potionBagStorageLimit",
+        "value": 10,
+    }),
+    "potionMaxLimitMsgID": _tools.RODict({
+        "ID": "potionMaxLimitMsgID",
+        "value": 54003125,
+    }),
+    "potionMaxLimitMailID": _tools.RODict({
+        "ID": "potionMaxLimitMailID",
+        "value": 37000014,
     })
 })

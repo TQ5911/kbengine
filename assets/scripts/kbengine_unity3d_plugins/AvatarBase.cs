@@ -109,6 +109,8 @@ namespace KBEngine
 		public virtual void onCubeUseItemTimesChanged(Byte oldValue) {}
 		public UInt16 curReliveCD = 0;
 		public virtual void onCurReliveCDChanged(UInt16 oldValue) {}
+		public Byte dailyHealWoundsTimes = 0;
+		public virtual void onDailyHealWoundsTimesChanged(Byte oldValue) {}
 		public Int64 darkIron = 0;
 		public virtual void onDarkIronChanged(Int64 oldValue) {}
 		public Int32 debilityAnti = 0;
@@ -276,6 +278,8 @@ namespace KBEngine
 		public virtual void onTGreyNameStartChanged(UInt32 oldValue) {}
 		
 		public virtual void onTeamIdChanged(UInt64 oldValue) {}
+		public UInt32 todayCubeCowDur = 0;
+		public virtual void onTodayCubeCowDurChanged(UInt32 oldValue) {}
 		public Int64 totalScore = 0;
 		public virtual void onTotalScoreChanged(Int64 oldValue) {}
 		public Byte ultraSkillPower = 0;
@@ -312,7 +316,9 @@ namespace KBEngine
 		public virtual void onAddLevelAwards(List<UInt32> arg1) {} 
 		public virtual void onAddNewEquipDrop(EQUIP_DROP_DATA_INFO arg1) {} 
 		public virtual void onAddNewRaidMember(UInt64 arg1, Byte arg2, UInt64 arg3, CLIENT_TEAM_MEMBER_VAL arg4) {} 
+		public virtual void onAddRaidDungeonRewardRecord(UInt64 arg1, UInt64 arg2, List<BAG_ITEM_BRIEF_VAL> arg3) {} 
 		public virtual void onAddTeam(CLIENT_TEAM_INFO arg1) {} 
+		public virtual void onAddTeamDungeonRewardRecord(UInt64 arg1, UInt64 arg2, List<BAG_ITEM_BRIEF_VAL> arg3) {} 
 		public virtual void onAddTeamMember(CLIENT_TEAM_MEMBER_VAL arg1) {} 
 		public virtual void onAddWonderLandRewardRecord(List<BAG_ITEM_BRIEF_VAL> arg1) {} 
 		public virtual void onAffixWashingFailed() {} 
@@ -393,7 +399,7 @@ namespace KBEngine
 		public virtual void onDropAward(Int32 arg1, Int32 arg2, List<AWARD_ITEM_VAL> arg3) {} 
 		public virtual void onDuelFlagsChanged(Byte arg1) {} 
 		public virtual void onDuelResult(UInt64 arg1, string arg2, Byte arg3) {} 
-		public virtual void onDungeonCompleted(UInt32 arg1, Byte arg2) {} 
+		public virtual void onDungeonCompleted(UInt32 arg1, Byte arg2, Int32 arg3) {} 
 		public virtual void onEnemyDatas(List<RELATION_ENEMY_DATA_INFO> arg1) {} 
 		public virtual void onEnterSingleDungeon(UInt32 arg1) {} 
 		public virtual void onEquipAffixWashingSucc(Byte arg1, UInt16 arg2, List<AFFIX_VAL> arg3) {} 
@@ -456,9 +462,12 @@ namespace KBEngine
 		public virtual void onGetRaidApplyJoinList(UInt64 arg1, List<RAID_APPLY_JOIN_CLIENT_VAL> arg2) {} 
 		public virtual void onGetRaidData(RAID_CLIENT_VAL arg1) {} 
 		public virtual void onGetRaidList(UInt32 arg1, Byte arg2, List<RAID_CLIENT_VAL> arg3) {} 
+		public virtual void onGetRedBagMyList(List<RED_BAG_CLIENT_VAL> arg1) {} 
+		public virtual void onGetRedBagRankList(List<RED_BAG_CLIENT_VAL> arg1) {} 
 		public virtual void onGetServerLevel(UInt32 arg1) {} 
 		public virtual void onGetServerOpenTime(UInt32 arg1) {} 
 		public virtual void onGetSpaceState(Byte arg1) {} 
+		public virtual void onGetStoreLimitedItemList(CLIENT_STORE_VAL arg1) {} 
 		public virtual void onGetStoreList(List<CLIENT_STORE_VAL> arg1) {} 
 		public virtual void onGetSynthesisUpgradeNum(List<CLIENT_RANDOM_SYNTHESIS_NUM_VAL> arg1) {} 
 		public virtual void onGetTaskReward(UInt32 arg1, List<AWARD_DISPLAY_SINGLE_VAL> arg2) {} 
@@ -495,6 +504,8 @@ namespace KBEngine
 		public virtual void onInitEnemyRecord(Byte arg1, List<ENEMY_RECORD_DATA_LIST> arg2) {} 
 		public virtual void onInitEquipDropData(EQUIP_DROP_MGR_DATA_INFO arg1) {} 
 		public virtual void onInteractStateChange(UInt32 arg1) {} 
+		public virtual void onJoinRaid(UInt32 arg1, UInt64 arg2, string arg3) {} 
+		public virtual void onJoinTeam(UInt32 arg1, UInt64 arg2, string arg3) {} 
 		public virtual void onJunXuArchitectureChanged(JUN_XU_ARCHITECTURE_DATA_INFO arg1) {} 
 		public virtual void onKillAvatar(string arg1) {} 
 		public virtual void onLeaderBoardAvatarLevel(UInt16 arg1, List<LEADER_BOARD_AVATAR_CACHE_DATA_INFO> arg2, UInt16 arg3, Byte arg4, Byte arg5) {} 
@@ -502,7 +513,7 @@ namespace KBEngine
 		public virtual void onLeaveSingleDungeon(UInt32 arg1) {} 
 		public virtual void onLeaveTeam() {} 
 		public virtual void onLeftFreeReliveTimesChanged(Byte arg1) {} 
-		public virtual void onLockItemSucc(Byte arg1, UInt16 arg2) {} 
+		public virtual void onLockItemSucc(Byte arg1, UInt16 arg2, UInt32 arg3, SByte arg4) {} 
 		public virtual void onModifyNameResult(Byte arg1, string arg2) {} 
 		public virtual void onMultiNumResourceChanged(List<UInt32> arg1, List<UInt32> arg2) {} 
 		public virtual void onNewApplyGuildUnion(GUILD_APPLY_UNION_DATA_INFO arg1) {} 
@@ -522,8 +533,6 @@ namespace KBEngine
 		public virtual void onPlayerStopAutoMatch() {} 
 		public virtual void onPopDialog(Int32 arg1) {} 
 		public virtual void onPopRaidTeamMember(UInt64 arg1, Byte arg2, UInt64 arg3) {} 
-		public virtual void onPublishRaid(Byte arg1, string arg2) {} 
-		public virtual void onPublishTeam(Byte arg1, string arg2) {} 
 		public virtual void onQixieChanged(JUN_XU_QI_XIE_DATA_INFO arg1) {} 
 		public virtual void onQueryItemLink(UInt64 arg1, ITEM_VAL arg2) {} 
 		public virtual void onQueryPlayerLink(CHAT_CHANNEL_AVATAR_INFO arg1) {} 
@@ -533,7 +542,6 @@ namespace KBEngine
 		public virtual void onQuerySiegeWarSignUped(Byte arg1) {} 
 		public virtual void onRaidAvatarLogin(UInt64 arg1, Byte arg2, UInt64 arg3) {} 
 		public virtual void onRaidAvatarOffline(UInt64 arg1, Byte arg2, UInt64 arg3) {} 
-		public virtual void onRaidMemeberAttrUpdate(UInt64 arg1, Byte arg2, UInt64 arg3, Byte arg4, UInt64 arg5) {} 
 		public virtual void onRaidPlayerStartAutoMatch() {} 
 		public virtual void onRaidPlayerStopAutoMatch() {} 
 		public virtual void onRaidStartAutoMatch(UInt32 arg1) {} 
@@ -577,7 +585,7 @@ namespace KBEngine
 		public virtual void onSearchCoinAuctionItemsByItemId(ITEMID_LIST arg1, UInt32 arg2, UInt32 arg3, AUCTION_ITEM_LIST arg4, UInt64 arg5) {} 
 		public virtual void onSearchFriends(Byte arg1, List<FRIEND_SEARCH_VAL> arg2) {} 
 		public virtual void onSelfInteractStateChange(UInt32 arg1, UInt32 arg2) {} 
-		public virtual void onSellItemSucc(Byte arg1, UInt16 arg2) {} 
+		public virtual void onSellItemSucc(Byte arg1, UInt16 arg2, UInt32 arg3, UInt32 arg4) {} 
 		public virtual void onSendCommonFlagCellInfo(Byte arg1) {} 
 		public virtual void onSendForbidChat(Int32 arg1, string arg2) {} 
 		public virtual void onSendForbidVoiceChat(Int32 arg1, string arg2) {} 
@@ -585,19 +593,18 @@ namespace KBEngine
 		public virtual void onSendLevelRewardInfo(List<UInt32> arg1) {} 
 		public virtual void onSendRequiredVersion(string arg1) {} 
 		public virtual void onSendtoRandomLineAndArea(Int32 arg1, UInt16 arg2, UInt32 arg3, UInt16 arg4, UInt32 arg5) {} 
-		public virtual void onSetAutoInPlace(Byte arg1) {} 
 		public virtual void onSetChatCD(Byte arg1, UInt32 arg2) {} 
 		public virtual void onSetChiefDungeonAutoConfirmConfig(UInt32 arg1) {} 
 		public virtual void onSetCrusadeDungeonAutoConfirmConfig(UInt32 arg1) {} 
 		public virtual void onSetInstantPotionSlots(INSTANT_POTION_DATA_INFO arg1) {} 
-		public virtual void onSetRaidAutoInPlace(Byte arg1) {} 
 		public virtual void onSetRaidDeputy(UInt64 arg1, UInt64 arg2) {} 
 		public virtual void onSetRaidDungeonInfo(UInt32 arg1, UInt32 arg2) {} 
 		public virtual void onSetRaidLeader(UInt64 arg1, UInt64 arg2) {} 
-		public virtual void onSetRaidTarget(UInt64 arg1, Byte arg2, UInt32 arg3, UInt32 arg4) {} 
+		public virtual void onSetRaidTarget(UInt64 arg1, Byte arg2, UInt32 arg3, UInt32 arg4, string arg5, string arg6, Byte arg7) {} 
 		public virtual void onSetRaidTeamCaptain(UInt64 arg1, Byte arg2, UInt64 arg3) {} 
-		public virtual void onSetTeamTarget(UInt64 arg1, Byte arg2, UInt32 arg3, UInt32 arg4) {} 
+		public virtual void onSetTeamTarget(UInt64 arg1, Byte arg2, UInt32 arg3, UInt32 arg4, string arg5, Byte arg6, string arg7) {} 
 		public virtual void onShowPopReward(UInt16 arg1, List<POP_REWARD_ITEM_VAL> arg2, string arg3) {} 
+		public virtual void onShowRedBagInfo(Int64 arg1, Int32 arg2, RED_BAG_FETCH_CLIENT_VAL arg3) {} 
 		public virtual void onSiegeWarBattleEnd(UInt64 arg1, Int32 arg2, string arg3, UInt16 arg4, List<SIEGEWAR_BATTLE_END_DATA_VAL> arg5, UInt64 arg6, string arg7, UInt16 arg8, Byte arg9) {} 
 		public virtual void onSiegeWarBiddingDataUpdate(Int32 arg1, List<string> arg2, List<string> arg3, List<Int32> arg4) {} 
 		public virtual void onSiegeWarDeclareWarResult(Byte arg1, Int32 arg2) {} 
@@ -665,6 +672,10 @@ namespace KBEngine
 		public virtual void onUpdateMemberAttr(UInt64 arg1, string arg2, UInt32 arg3, Int32 arg4, UInt16 arg5, Byte arg6, Byte arg7, Byte arg8) {} 
 		public virtual void onUpdateOutfitData(List<CLIENT_OUTFIT_VAL> arg1) {} 
 		public virtual void onUpdatePetBattleListName(Byte arg1, string arg2) {} 
+		public virtual void onUpdateRaidMemberHP(UInt64 arg1, UInt32 arg2, UInt32 arg3) {} 
+		public virtual void onUpdateRaidMemberLevel(UInt64 arg1, UInt32 arg2) {} 
+		public virtual void onUpdateRaidMemberPos(UInt64 arg1, UInt32 arg2, Vector3 arg3) {} 
+		public virtual void onUpdateRaidMemberScore(UInt64 arg1, UInt32 arg2) {} 
 		public virtual void onUpdateRecentData(List<FRIEND_RECENT_VAL> arg1) {} 
 		public virtual void onUpdateSkillBuildInfo(BUILD_INFO arg1) {} 
 		public virtual void onUpdateSkillLevel(List<UInt32> arg1, List<UInt32> arg2) {} 
@@ -683,6 +694,7 @@ namespace KBEngine
 		public virtual void onUseStageSkill(UInt32 arg1, Byte arg2, double arg3) {} 
 		public virtual void onVariableChanged(List<UInt32> arg1, List<Int32> arg2) {} 
 		public virtual void onWarehouseInItems(Byte arg1, List<BAG_ITEM_VAL> arg2) {} 
+		public virtual void onWarehouseLockItemSucc(UInt16 arg1, UInt32 arg2, Byte arg3) {} 
 		public virtual void onWarehouseOutItems(Byte arg1, UInt32 arg2) {} 
 		public virtual void onWonderLandBossInfo(List<Int32> arg1) {} 
 		public virtual void onWonderLandLeftTime(UInt32 arg1) {} 
@@ -928,6 +940,12 @@ namespace KBEngine
 					UInt32 onAddPassiveSkill_arg2 = stream.readUint32();
 					onAddPassiveSkill(onAddPassiveSkill_arg1, onAddPassiveSkill_arg2);
 					break;
+				case 1031:
+					UInt64 onAddRaidDungeonRewardRecord_arg1 = stream.readUint64();
+					UInt64 onAddRaidDungeonRewardRecord_arg2 = stream.readUint64();
+					List<BAG_ITEM_BRIEF_VAL> onAddRaidDungeonRewardRecord_arg3 = ((DATATYPE_AnonymousArray_10025)method.args[2]).createFromStreamEx(stream);
+					onAddRaidDungeonRewardRecord(onAddRaidDungeonRewardRecord_arg1, onAddRaidDungeonRewardRecord_arg2, onAddRaidDungeonRewardRecord_arg3);
+					break;
 				case 205:
 					UInt32 onAddSkill_arg1 = stream.readUint32();
 					UInt32 onAddSkill_arg2 = stream.readUint32();
@@ -947,6 +965,12 @@ namespace KBEngine
 				case 351:
 					CLIENT_TEAM_INFO onAddTeam_arg1 = ((DATATYPE_CLIENT_TEAM_INFO)method.args[0]).createFromStreamEx(stream);
 					onAddTeam(onAddTeam_arg1);
+					break;
+				case 1030:
+					UInt64 onAddTeamDungeonRewardRecord_arg1 = stream.readUint64();
+					UInt64 onAddTeamDungeonRewardRecord_arg2 = stream.readUint64();
+					List<BAG_ITEM_BRIEF_VAL> onAddTeamDungeonRewardRecord_arg3 = ((DATATYPE_AnonymousArray_10025)method.args[2]).createFromStreamEx(stream);
+					onAddTeamDungeonRewardRecord(onAddTeamDungeonRewardRecord_arg1, onAddTeamDungeonRewardRecord_arg2, onAddTeamDungeonRewardRecord_arg3);
 					break;
 				case 350:
 					CLIENT_TEAM_MEMBER_VAL onAddTeamMember_arg1 = ((DATATYPE_CLIENT_TEAM_MEMBER_VAL)method.args[0]).createFromStreamEx(stream);
@@ -1384,7 +1408,8 @@ namespace KBEngine
 				case 102:
 					UInt32 onDungeonCompleted_arg1 = stream.readUint32();
 					Byte onDungeonCompleted_arg2 = stream.readUint8();
-					onDungeonCompleted(onDungeonCompleted_arg1, onDungeonCompleted_arg2);
+					Int32 onDungeonCompleted_arg3 = stream.readInt32();
+					onDungeonCompleted(onDungeonCompleted_arg1, onDungeonCompleted_arg2, onDungeonCompleted_arg3);
 					break;
 				case 859:
 					List<RELATION_ENEMY_DATA_INFO> onEnemyDatas_arg1 = ((DATATYPE_AnonymousArray_10083)method.args[0]).createFromStreamEx(stream);
@@ -1719,6 +1744,14 @@ namespace KBEngine
 					List<RAID_CLIENT_VAL> onGetRaidList_arg3 = ((DATATYPE_AnonymousArray_10053)method.args[2]).createFromStreamEx(stream);
 					onGetRaidList(onGetRaidList_arg1, onGetRaidList_arg2, onGetRaidList_arg3);
 					break;
+				case 1035:
+					List<RED_BAG_CLIENT_VAL> onGetRedBagMyList_arg1 = ((DATATYPE_AnonymousArray_10094)method.args[0]).createFromStreamEx(stream);
+					onGetRedBagMyList(onGetRedBagMyList_arg1);
+					break;
+				case 1034:
+					List<RED_BAG_CLIENT_VAL> onGetRedBagRankList_arg1 = ((DATATYPE_AnonymousArray_10094)method.args[0]).createFromStreamEx(stream);
+					onGetRedBagRankList(onGetRedBagRankList_arg1);
+					break;
 				case 199:
 					UInt32 onGetServerLevel_arg1 = stream.readUint32();
 					onGetServerLevel(onGetServerLevel_arg1);
@@ -1730,6 +1763,10 @@ namespace KBEngine
 				case 515:
 					Byte onGetSpaceState_arg1 = stream.readUint8();
 					onGetSpaceState(onGetSpaceState_arg1);
+					break;
+				case 1037:
+					CLIENT_STORE_VAL onGetStoreLimitedItemList_arg1 = ((DATATYPE_CLIENT_STORE_VAL)method.args[0]).createFromStreamEx(stream);
+					onGetStoreLimitedItemList(onGetStoreLimitedItemList_arg1);
 					break;
 				case 696:
 					List<CLIENT_STORE_VAL> onGetStoreList_arg1 = ((DATATYPE_AnonymousArray_10059)method.args[0]).createFromStreamEx(stream);
@@ -1884,6 +1921,18 @@ namespace KBEngine
 					UInt32 onInteractStateChange_arg1 = stream.readUint32();
 					onInteractStateChange(onInteractStateChange_arg1);
 					break;
+				case 1029:
+					UInt32 onJoinRaid_arg1 = stream.readUint32();
+					UInt64 onJoinRaid_arg2 = stream.readUint64();
+					string onJoinRaid_arg3 = stream.readString();
+					onJoinRaid(onJoinRaid_arg1, onJoinRaid_arg2, onJoinRaid_arg3);
+					break;
+				case 1027:
+					UInt32 onJoinTeam_arg1 = stream.readUint32();
+					UInt64 onJoinTeam_arg2 = stream.readUint64();
+					string onJoinTeam_arg3 = stream.readString();
+					onJoinTeam(onJoinTeam_arg1, onJoinTeam_arg2, onJoinTeam_arg3);
+					break;
 				case 940:
 					JUN_XU_ARCHITECTURE_DATA_INFO onJunXuArchitectureChanged_arg1 = ((DATATYPE_JUN_XU_ARCHITECTURE_DATA_INFO)method.args[0]).createFromStreamEx(stream);
 					onJunXuArchitectureChanged(onJunXuArchitectureChanged_arg1);
@@ -1922,7 +1971,9 @@ namespace KBEngine
 				case 1005:
 					Byte onLockItemSucc_arg1 = stream.readUint8();
 					UInt16 onLockItemSucc_arg2 = stream.readUint16();
-					onLockItemSucc(onLockItemSucc_arg1, onLockItemSucc_arg2);
+					UInt32 onLockItemSucc_arg3 = stream.readUint32();
+					SByte onLockItemSucc_arg4 = stream.readInt8();
+					onLockItemSucc(onLockItemSucc_arg1, onLockItemSucc_arg2, onLockItemSucc_arg3, onLockItemSucc_arg4);
 					break;
 				case 79:
 					Int32 onMessage_arg1 = stream.readInt32();
@@ -2031,16 +2082,6 @@ namespace KBEngine
 					UInt64 onPopRaidTeamMember_arg3 = stream.readUint64();
 					onPopRaidTeamMember(onPopRaidTeamMember_arg1, onPopRaidTeamMember_arg2, onPopRaidTeamMember_arg3);
 					break;
-				case 921:
-					Byte onPublishRaid_arg1 = stream.readUint8();
-					string onPublishRaid_arg2 = stream.readUnicode();
-					onPublishRaid(onPublishRaid_arg1, onPublishRaid_arg2);
-					break;
-				case 579:
-					Byte onPublishTeam_arg1 = stream.readUint8();
-					string onPublishTeam_arg2 = stream.readUnicode();
-					onPublishTeam(onPublishTeam_arg1, onPublishTeam_arg2);
-					break;
 				case 960:
 					JUN_XU_QI_XIE_DATA_INFO onQixieChanged_arg1 = ((DATATYPE_JUN_XU_QI_XIE_DATA_INFO)method.args[0]).createFromStreamEx(stream);
 					onQixieChanged(onQixieChanged_arg1);
@@ -2087,14 +2128,6 @@ namespace KBEngine
 					Byte onRaidAvatarOffline_arg2 = stream.readUint8();
 					UInt64 onRaidAvatarOffline_arg3 = stream.readUint64();
 					onRaidAvatarOffline(onRaidAvatarOffline_arg1, onRaidAvatarOffline_arg2, onRaidAvatarOffline_arg3);
-					break;
-				case 1012:
-					UInt64 onRaidMemeberAttrUpdate_arg1 = stream.readUint64();
-					Byte onRaidMemeberAttrUpdate_arg2 = stream.readUint8();
-					UInt64 onRaidMemeberAttrUpdate_arg3 = stream.readUint64();
-					Byte onRaidMemeberAttrUpdate_arg4 = stream.readUint8();
-					UInt64 onRaidMemeberAttrUpdate_arg5 = stream.readUint64();
-					onRaidMemeberAttrUpdate(onRaidMemeberAttrUpdate_arg1, onRaidMemeberAttrUpdate_arg2, onRaidMemeberAttrUpdate_arg3, onRaidMemeberAttrUpdate_arg4, onRaidMemeberAttrUpdate_arg5);
 					break;
 				case 913:
 					onRaidPlayerStartAutoMatch();
@@ -2302,7 +2335,9 @@ namespace KBEngine
 				case 1006:
 					Byte onSellItemSucc_arg1 = stream.readUint8();
 					UInt16 onSellItemSucc_arg2 = stream.readUint16();
-					onSellItemSucc(onSellItemSucc_arg1, onSellItemSucc_arg2);
+					UInt32 onSellItemSucc_arg3 = stream.readUint32();
+					UInt32 onSellItemSucc_arg4 = stream.readUint32();
+					onSellItemSucc(onSellItemSucc_arg1, onSellItemSucc_arg2, onSellItemSucc_arg3, onSellItemSucc_arg4);
 					break;
 				case 201:
 					Byte onSendCommonFlagCellInfo_arg1 = stream.readUint8();
@@ -2352,10 +2387,6 @@ namespace KBEngine
 					SByte onSetAddSkillCd_arg7 = stream.readInt8();
 					onSetAddSkillCd(onSetAddSkillCd_arg1, onSetAddSkillCd_arg2, onSetAddSkillCd_arg3, onSetAddSkillCd_arg4, onSetAddSkillCd_arg5, onSetAddSkillCd_arg6, onSetAddSkillCd_arg7);
 					break;
-				case 663:
-					Byte onSetAutoInPlace_arg1 = stream.readUint8();
-					onSetAutoInPlace(onSetAutoInPlace_arg1);
-					break;
 				case 496:
 					Byte onSetChatCD_arg1 = stream.readUint8();
 					UInt32 onSetChatCD_arg2 = stream.readUint32();
@@ -2372,10 +2403,6 @@ namespace KBEngine
 				case 883:
 					INSTANT_POTION_DATA_INFO onSetInstantPotionSlots_arg1 = ((DATATYPE_INSTANT_POTION_DATA_INFO)method.args[0]).createFromStreamEx(stream);
 					onSetInstantPotionSlots(onSetInstantPotionSlots_arg1);
-					break;
-				case 923:
-					Byte onSetRaidAutoInPlace_arg1 = stream.readUint8();
-					onSetRaidAutoInPlace(onSetRaidAutoInPlace_arg1);
 					break;
 				case 886:
 					UInt64 onSetRaidDeputy_arg1 = stream.readUint64();
@@ -2397,7 +2424,10 @@ namespace KBEngine
 					Byte onSetRaidTarget_arg2 = stream.readUint8();
 					UInt32 onSetRaidTarget_arg3 = stream.readUint32();
 					UInt32 onSetRaidTarget_arg4 = stream.readUint32();
-					onSetRaidTarget(onSetRaidTarget_arg1, onSetRaidTarget_arg2, onSetRaidTarget_arg3, onSetRaidTarget_arg4);
+					string onSetRaidTarget_arg5 = stream.readString();
+					string onSetRaidTarget_arg6 = stream.readString();
+					Byte onSetRaidTarget_arg7 = stream.readUint8();
+					onSetRaidTarget(onSetRaidTarget_arg1, onSetRaidTarget_arg2, onSetRaidTarget_arg3, onSetRaidTarget_arg4, onSetRaidTarget_arg5, onSetRaidTarget_arg6, onSetRaidTarget_arg7);
 					break;
 				case 439:
 					UInt64 onSetRaidTeamCaptain_arg1 = stream.readUint64();
@@ -2410,7 +2440,10 @@ namespace KBEngine
 					Byte onSetTeamTarget_arg2 = stream.readUint8();
 					UInt32 onSetTeamTarget_arg3 = stream.readUint32();
 					UInt32 onSetTeamTarget_arg4 = stream.readUint32();
-					onSetTeamTarget(onSetTeamTarget_arg1, onSetTeamTarget_arg2, onSetTeamTarget_arg3, onSetTeamTarget_arg4);
+					string onSetTeamTarget_arg5 = stream.readString();
+					Byte onSetTeamTarget_arg6 = stream.readUint8();
+					string onSetTeamTarget_arg7 = stream.readUnicode();
+					onSetTeamTarget(onSetTeamTarget_arg1, onSetTeamTarget_arg2, onSetTeamTarget_arg3, onSetTeamTarget_arg4, onSetTeamTarget_arg5, onSetTeamTarget_arg6, onSetTeamTarget_arg7);
 					break;
 				case 236:
 					UInt32 onShooterSkillCanUse_arg1 = stream.readUint32();
@@ -2423,6 +2456,12 @@ namespace KBEngine
 					List<POP_REWARD_ITEM_VAL> onShowPopReward_arg2 = ((DATATYPE_AnonymousArray_10006)method.args[1]).createFromStreamEx(stream);
 					string onShowPopReward_arg3 = stream.readUnicode();
 					onShowPopReward(onShowPopReward_arg1, onShowPopReward_arg2, onShowPopReward_arg3);
+					break;
+				case 1036:
+					Int64 onShowRedBagInfo_arg1 = stream.readInt64();
+					Int32 onShowRedBagInfo_arg2 = stream.readInt32();
+					RED_BAG_FETCH_CLIENT_VAL onShowRedBagInfo_arg3 = ((DATATYPE_RED_BAG_FETCH_CLIENT_VAL)method.args[2]).createFromStreamEx(stream);
+					onShowRedBagInfo(onShowRedBagInfo_arg1, onShowRedBagInfo_arg2, onShowRedBagInfo_arg3);
 					break;
 				case 959:
 					UInt64 onSiegeWarBattleEnd_arg1 = stream.readUint64();
@@ -2796,6 +2835,28 @@ namespace KBEngine
 					string onUpdatePetBattleListName_arg2 = stream.readUnicode();
 					onUpdatePetBattleListName(onUpdatePetBattleListName_arg1, onUpdatePetBattleListName_arg2);
 					break;
+				case 920:
+					UInt64 onUpdateRaidMemberHP_arg1 = stream.readUint64();
+					UInt32 onUpdateRaidMemberHP_arg2 = stream.readUint32();
+					UInt32 onUpdateRaidMemberHP_arg3 = stream.readUint32();
+					onUpdateRaidMemberHP(onUpdateRaidMemberHP_arg1, onUpdateRaidMemberHP_arg2, onUpdateRaidMemberHP_arg3);
+					break;
+				case 921:
+					UInt64 onUpdateRaidMemberLevel_arg1 = stream.readUint64();
+					UInt32 onUpdateRaidMemberLevel_arg2 = stream.readUint32();
+					onUpdateRaidMemberLevel(onUpdateRaidMemberLevel_arg1, onUpdateRaidMemberLevel_arg2);
+					break;
+				case 518:
+					UInt64 onUpdateRaidMemberPos_arg1 = stream.readUint64();
+					UInt32 onUpdateRaidMemberPos_arg2 = stream.readUint32();
+					Vector3 onUpdateRaidMemberPos_arg3 = stream.readVector3();
+					onUpdateRaidMemberPos(onUpdateRaidMemberPos_arg1, onUpdateRaidMemberPos_arg2, onUpdateRaidMemberPos_arg3);
+					break;
+				case 579:
+					UInt64 onUpdateRaidMemberScore_arg1 = stream.readUint64();
+					UInt32 onUpdateRaidMemberScore_arg2 = stream.readUint32();
+					onUpdateRaidMemberScore(onUpdateRaidMemberScore_arg1, onUpdateRaidMemberScore_arg2);
+					break;
 				case 714:
 					List<FRIEND_RECENT_VAL> onUpdateRecentData_arg1 = ((DATATYPE_AnonymousArray_10048)method.args[0]).createFromStreamEx(stream);
 					onUpdateRecentData(onUpdateRecentData_arg1);
@@ -2905,6 +2966,12 @@ namespace KBEngine
 					Byte onWarehouseInItems_arg1 = stream.readUint8();
 					List<BAG_ITEM_VAL> onWarehouseInItems_arg2 = ((DATATYPE_AnonymousArray_10076)method.args[1]).createFromStreamEx(stream);
 					onWarehouseInItems(onWarehouseInItems_arg1, onWarehouseInItems_arg2);
+					break;
+				case 1024:
+					UInt16 onWarehouseLockItemSucc_arg1 = stream.readUint16();
+					UInt32 onWarehouseLockItemSucc_arg2 = stream.readUint32();
+					Byte onWarehouseLockItemSucc_arg3 = stream.readUint8();
+					onWarehouseLockItemSucc(onWarehouseLockItemSucc_arg1, onWarehouseLockItemSucc_arg2, onWarehouseLockItemSucc_arg3);
 					break;
 				case 770:
 					Byte onWarehouseOutItems_arg1 = stream.readUint8();
@@ -4080,6 +4147,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 375:
+						Byte oldval_dailyHealWoundsTimes = dailyHealWoundsTimes;
+						dailyHealWoundsTimes = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onDailyHealWoundsTimesChanged(oldval_dailyHealWoundsTimes);
+						}
+						else
+						{
+							if(inWorld)
+								onDailyHealWoundsTimesChanged(oldval_dailyHealWoundsTimes);
+						}
+
+						break;
 					case 245:
 						Int64 oldval_darkIron = darkIron;
 						darkIron = stream.readInt64();
@@ -4194,7 +4277,7 @@ namespace KBEngine
 						break;
 					case 133:
 						DUEL_ATTR_DATA_INFO oldval_duelAttr = duelAttr;
-						duelAttr = ((DATATYPE_DUEL_ATTR_DATA_INFO)EntityDef.id2datatypes[318]).createFromStreamEx(stream);
+						duelAttr = ((DATATYPE_DUEL_ATTR_DATA_INFO)EntityDef.id2datatypes[319]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -4210,7 +4293,7 @@ namespace KBEngine
 						break;
 					case 441:
 						ENEMY_MGR_DATA_INFO oldval_enemyMgr = enemyMgr;
-						enemyMgr = ((DATATYPE_ENEMY_MGR_DATA_INFO)EntityDef.id2datatypes[311]).createFromStreamEx(stream);
+						enemyMgr = ((DATATYPE_ENEMY_MGR_DATA_INFO)EntityDef.id2datatypes[312]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -4738,7 +4821,7 @@ namespace KBEngine
 						break;
 					case 115:
 						INSTANT_POTION_SLOTS_DATA_INFO oldval_instantPotionSlots = instantPotionSlots;
-						instantPotionSlots = ((DATATYPE_INSTANT_POTION_SLOTS_DATA_INFO)EntityDef.id2datatypes[316]).createFromStreamEx(stream);
+						instantPotionSlots = ((DATATYPE_INSTANT_POTION_SLOTS_DATA_INFO)EntityDef.id2datatypes[317]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -5905,6 +5988,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onTeamIdChanged(oldval_teamId);
+						}
+
+						break;
+					case 31941:
+						UInt32 oldval_todayCubeCowDur = todayCubeCowDur;
+						todayCubeCowDur = stream.readUint32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onTodayCubeCowDurChanged(oldval_todayCubeCowDur);
+						}
+						else
+						{
+							if(inWorld)
+								onTodayCubeCowDurChanged(oldval_todayCubeCowDur);
 						}
 
 						break;
@@ -7292,6 +7391,27 @@ namespace KBEngine
 					else
 					{
 						onCurReliveCDChanged(oldval_curReliveCD);
+					}
+				}
+			}
+
+			Byte oldval_dailyHealWoundsTimes = dailyHealWoundsTimes;
+			Property prop_dailyHealWoundsTimes = pdatas[162];
+			if(prop_dailyHealWoundsTimes.isBase())
+			{
+				if(inited && !inWorld)
+					onDailyHealWoundsTimesChanged(oldval_dailyHealWoundsTimes);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_dailyHealWoundsTimes.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onDailyHealWoundsTimesChanged(oldval_dailyHealWoundsTimes);
 					}
 				}
 			}
@@ -9686,6 +9806,27 @@ namespace KBEngine
 					else
 					{
 						onTeamIdChanged(oldval_teamId);
+					}
+				}
+			}
+
+			UInt32 oldval_todayCubeCowDur = todayCubeCowDur;
+			Property prop_todayCubeCowDur = pdatas[161];
+			if(prop_todayCubeCowDur.isBase())
+			{
+				if(inited && !inWorld)
+					onTodayCubeCowDurChanged(oldval_todayCubeCowDur);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_todayCubeCowDur.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onTodayCubeCowDurChanged(oldval_todayCubeCowDur);
 					}
 				}
 			}

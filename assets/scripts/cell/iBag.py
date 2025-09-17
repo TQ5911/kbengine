@@ -22,6 +22,7 @@ import gamePlay_singleSceneData as GPSSDD
 import gamePlay_set as GPSD
 import taskClass_taskTarget as TCCTD
 import PKData_PKData as PKD
+import gearBase_gearBase as GBGBD
 
 import actionContext
 import dataUtils
@@ -473,6 +474,9 @@ class IBag(object):
         self.suspendFollow(gameconst.SuspendFollowReason.ApplyGather)
         self.suspendAutoCombat(gameconst.SuspendAutoCombatReason.ApplyGather)
         self.setTempMiscProp(gameconst.AvatarProps.gatherTarget, gatherTargetInfo)
+        applyAction = pickData['applyAction']
+        if applyAction and callable(applyAction):
+            applyAction(self, self, actionContext.ACTION_CONTEXT_DEFAULT)
 
         if pickData['isUnique']:
             target.canGather = False
@@ -604,6 +608,9 @@ class IBag(object):
 
         self.recoverFollow(self.spaceNo, gameconst.SuspendFollowReason.ApplyGather)
         self.recoverAutoCombat(self.spaceNo, gameconst.SuspendAutoCombatReason.ApplyGather)
+        unApplyAction = pickData['unApplyAction']
+        if unApplyAction and callable(unApplyAction):
+           unApplyAction(self, self, actionContext.ACTION_CONTEXT_DEFAULT)
         return
 
     def giveGatherAwardCell(self, collectionId):
@@ -940,3 +947,25 @@ class IBag(object):
         self.base.delOldName(_oldName)
         self.pyWriteToDB()
 
+    def bodyItemLock(self, equipIn, equipPos, itemId, uniqueId, lockStatus):
+        INFO_MSG('in bodyItemLock::', equipIn, equipPos, itemId, uniqueId, lockStatus)
+        if itemId not in GBGBD.datas:
+            WARNING_MSG("in bodyItemLock, wrong arg item Id 1", itemId)
+            return
+
+        if lockStatus not in gameconst.ItemLockStatus.VALID_STATUS:
+            WARNING_MSG("in bodyItemLock, wrong arg lockStatus", lockStatus)
+            return
+
+        equipItem = self.bodyEquipData.getEquipItem(equipPos)
+        if equipItem.uniqueId != uniqueId:
+            WARNING_MSG("in bodyItemLock, wrong arg unique Id", equipItem.uniqueId, uniqueId)
+            return
+
+        if equipItem.itemId != itemId:
+            WARNING_MSG("in bodyItemLock, wrong arg item Id 2", equipItem.itemId, itemId)
+            return
+
+        equipItem.setLockStatus(lockStatus)
+
+        self.client.onLockItemSucc(equipIn, equipPos, itemId, lockStatus)

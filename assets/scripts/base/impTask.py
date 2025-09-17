@@ -179,7 +179,8 @@ class TaskProgress(object):
                 return
             self.taskInfo.onTaskStepUpdate(self, taskType, taskIds, args)
         elif taskType == gameconst.TaskTargetType.TASK_TARGET_MONSTERS:
-            monsterId = args[1]
+            _, monsterId, _ = args
+            self.taskInfo.doAddTgtItemByRelateAction(self, monsterId, 0)
             taskIds = TMD.datas.get(str(monsterId))
             if not taskIds:
                 return
@@ -230,9 +231,8 @@ class ImpTask(TaskProgress, TaskEvent):
                 tgt.srcIdList = [int(srcId) for srcId in srcIdList]
                 tgt.srcRatio = int(100 * srcRatio)
                 tgt.state = 0
-
+    # 提交任务请求接口
     def reqSubmitTask(self, taskIds):
-        # 提交任务
         popRewardUUID = KBEngine.genUUID64()
         taskIdSet = set()
         DEBUG_MSG('in reqSubmitTask1:', taskIds)
@@ -323,7 +323,7 @@ class ImpTask(TaskProgress, TaskEvent):
 
     def sendUpdateTasksToClient(self):
         self.taskInfo.doSendUpdateTasksToClient(self)
-
+    # cell领取任务检测
     def onCheckSingleTaskCellCondSucc(self, taskId, taskCtx):
         # 对于单人任务，base领取任务的条件还没有检查
         self.baseTaskClaim(taskId, taskCtx)

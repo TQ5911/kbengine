@@ -242,9 +242,9 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         founderVal = sVal.founders.getFounderVal(playerGbId)    # type: dungeon.RaidDungeonFounderVal
         founderVal.onAvatarLeave(playerGbId, isOffline=True)
 
-    def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType):
+    def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType, reliveHp):
         """玩家复活时回调"""
-        self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType)
+        self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType, reliveHp)
 
     def onDungeonStarted(self, spaceNo, tCreate):
         """副本开始时回调"""
@@ -297,7 +297,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             return
 
         sVal.spaceMgr.cell.destroyAllEntities()
-        sVal.spaceMgr.cell.onRaidDungeonCompleted(spaceNo, raidUUID, win, delay, sVal.dungeonCreepBaseKillDic, sVal.getAllPlayerGbidAndNamePair())
+        sVal.spaceMgr.cell.onRaidDungeonCompleted(spaceNo, raidUUID, win, delay, sVal.dungeonCreepBaseKillDic, sVal.getAllPlayerGbidAndNamePair(), sVal.getElapsedTime())
 
         # 副本完成后倒计时
         if delay > 0:

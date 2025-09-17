@@ -57,11 +57,11 @@ datas = _tools.RODict({
     }),
     "guildCreateLevelRequire": _tools.RODict({
         "key": "guildCreateLevelRequire",
-        "value": 10,
+        "value": 17,
     }),
     "guildJoinLevelRequire": _tools.RODict({
         "key": "guildJoinLevelRequire",
-        "value": 10,
+        "value": 17,
     }),
     "guildMoneyToCoinRatio": _tools.RODict({
         "key": "guildMoneyToCoinRatio",

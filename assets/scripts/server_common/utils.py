@@ -2521,20 +2521,43 @@ def entIsCacheFriend(src, e, *args):
 def entIsCacheEnemyExTarget(src, e, target):
     return e.id != target.id
 
+def entIsTeam(src, e, target):
+    # 不包括自己
+    if src.id == target.id:
+        return False
+    
+    src = getEntityRealEntity(src)
+    if src.id == target.id:
+        return True
+    
+    if not (src.isReal() and target.isReal()):
+        return False
+    
+    if src.IsAvatar and target.IsAvatar and isEnemy(src, target):
+        return False
+    
+    if src.teamId != 0 and src.teamId == target.teamId:
+        return True
+    if src.raidId != 0 and src.raidId == target.raidId:
+        return True
+
+    return False
 
 TARGET_FUNC_MAP = {gameconst.CampType.All: entIsAll,
                    gameconst.CampType.Enemy: entIsEnemy,
                    gameconst.CampType.Friend: entIsFriend,
                    gameconst.CampType.Self: entIsSelf,
                    gameconst.CampType.CreationMaster: entIsCreationMaster,
-                   gameconst.CampType.EnemyExTarget: entIsEnemyExTarget}
+                   gameconst.CampType.EnemyExTarget: entIsEnemyExTarget,
+                   gameconst.CampType.Team: entIsTeam}
 
 CACHE_TARGET_FUNC_MAP = {gameconst.CampType.All: entIsAll,
                          gameconst.CampType.Enemy: entIsCacheEnemy,
                          gameconst.CampType.Friend: entIsCacheFriend,
                          gameconst.CampType.Self: entIsSelf,
                          gameconst.CampType.CreationMaster: entIsCreationMaster,
-                         gameconst.CampType.EnemyExTarget: entIsCacheEnemyExTarget}
+                         gameconst.CampType.EnemyExTarget: entIsCacheEnemyExTarget,
+                         gameconst.CampType.Team: entIsTeam}
 
 
 @functools.lru_cache(16)
@@ -3039,9 +3062,6 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList):
                 count = int(_pP['RefreshNum'])
                 tmpProps['createCount'] = count
 
-                if count == 0:
-                    continue
-
                 if count > 1000:
                     raise TypeError('Monster count must lower than 1000')
 
@@ -3062,7 +3082,9 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList):
             if 'Level' in _pP:
                 params['level'] = int(_pP['Level'])
 
-            if 'RandomRegion' in _pP and _pP.get('IsForSkill', 0):
+            if 'RandomRegion' in _pP \
+                    and not (_pP.get('IsForSkill', 0) \
+                             or _mPrm.get('CustomID') == gameconst.DunCustomId.POS_FOR_SKILL):
                 #存在随机区域，则改变出生位置
                 randomRegion = _pP['RandomRegion']
                 
@@ -3140,14 +3162,16 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList):
             params.update({
                 'creationId': _creationId,
             })
-        elif className in ('RebornPos'):
-            className = 'RebornPos'
-            _RebornPosId = _mPrm['ID']
+        elif className == 'RebornPos':
+            _RebornPosId = _mPrm['EntityID']
             params.update({
-                'name': _mPrm['DisplayName'],
+                'name': _mPrm['Name'],
                 'rebornPosId': _RebornPosId,
             })
 
+        else:
+            WARNING_MSG('could not create entity type', className)
+            continue
 
         needCreateBase = 0
         data = (gameEntityId, spaceNo, className, needCreateBase, bornPosition, bornDirection, params, 0)

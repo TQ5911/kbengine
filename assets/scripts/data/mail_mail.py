@@ -147,6 +147,28 @@ datas = _tools.RODict({
         "event": "",
         "parm": ""
     }),
+    37000013: _tools.RODict({
+        "ID": 37000013,
+        "type": 2,
+        "title": "红包过期退回",
+        "content": "您发放的红包超过12小时未被领取",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000014: _tools.RODict({
+        "ID": 37000014,
+        "type": 2,
+        "title": "未进入背包药水寄存",
+        "content": "由于您背包内可持有的回天甘露总量已超过{0}瓶，新获得的无法领取，现通过邮件发放给您。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
     37001001: _tools.RODict({
         "ID": 37001001,
         "type": 1,
@@ -351,6 +373,8 @@ MailArgsNumMap = _tools.RODict({
         37000010:1,
         37000011:2,
         37000012:1,
+        37000013:0,
+        37000014:1,
         37001001:0,
         37001002:0,
         37001003:0,

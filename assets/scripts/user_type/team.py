@@ -472,20 +472,18 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
         self.teamFollowQueue = []
         self.enemyGuildLeaderMirrorInfo = {}
         self.isPublish = False
-        self.autoInPlace = True
         self.recruitInfo = ''
         self.tCreated = utils.getNow()
         self.captainOfflineTimer = 0
         #-------------------------------
         self.teamMarkDic = {}
         self.onlyCaptainCanMark = False
+        self.isAutoExpedition = False
+        self.password = ''
+        self.autoStartTimer = 0
+        self.teamMemberList = []
+        self.teamRewardDatas = {}
         # endregion
-
-        # NOTE(): 所有属性定义都需要定义在上面，以下为逻辑代码
-        if teamCaptainGbId != 0:
-            self.addMember(teamCaptainGbId, playerBox, playerName, level, school, sex, picFrameId, bFollow,
-                           bOnline, score=score, mountState=mountState, equipSetLv=equipSetLv, isDead=isDead,
-                           openId=openId)
 
     def _lateReload(self):
         super(TeamCacheVal, self)._lateReload()
@@ -518,6 +516,8 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
         self.teamMicsSwitch = savedDataDict['teamMicsSwitch']
         self.teamMicsBlocked = savedDataDict['teamMicsBlocked']
         self.recruitInfo = savedDataDict['recruitInfo']
+        self.isAutoExpedition = savedDataDict['isAutoExpedition']
+        self.password = savedDataDict['password']
         for i in savedDataDict['teamDungeonList']:
             self.teamDungeonDic[i.dungeonNo] = i
 
@@ -543,40 +543,33 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
             self.teamPlayerDic[playerGbId] = TeamMemberCacheVal(playerGbId, playerBox, playerName, level, school, sex, picFrameId,
                                                             bFollow, bOnline, spaceNo, position, hp, fullHp,
                                                             score=score, mountState=mountState, isDead=isDead, openId=openId)
-            
-        teamMarkList = savedDataDict['teamMarkList']
-        for teamMarkDict in teamMarkList:
-            entId = teamMarkDict['entId']
-            markType = teamMarkDict['markType']
-            isPlayer = teamMarkDict['isPlayer']
-            spaceNo = teamMarkDict['spaceNo']
-            markTimestamp = teamMarkDict['markTimestamp']
-            self.teamMarkDic[entId] = TeamMarkMemberCacheVal(entId, markType, isPlayer, spaceNo, markTimestamp)
 
     def toSavedDict(self):
-        savedDict = {'teamId': self.teamId, 'teamTarget': self.teamTarget, 'teamAutoMatchTime':self.teamAutoMatchTime,
-                     'teamMinLv':self.teamMinLv,  'teamMinScore': self.teamMinScore, 'teamCaptainGbId': self.teamCaptainGbId,
-                     'banditKillerInfo': self.banditKillerInfo.toSaveBCVal(), 'teamMemberList': [],
+        savedDict = {
+            'teamId': self.teamId, 
+                     'teamTarget': self.teamTarget, 
+                     'teamAutoMatchTime':self.teamAutoMatchTime,
+                     'teamMinLv':self.teamMinLv,  
+                     'teamMinScore': self.teamMinScore, 
+                     'teamCaptainGbId': self.teamCaptainGbId,
+                     'banditKillerInfo': self.banditKillerInfo.toSaveBCVal(), 
+                     'teamMemberList': [i.toSavedDict() for i in self.teamPlayerDic.values()],
                      'teamDungeonList': [_ for _ in self.teamDungeonDic.values()],
-                     'guildBanditId': self.guildBanditId, 'randQimoInfo': self.randQimoInfo.toSaveBCVal(),
-                     'teamHonorPKMatchTime': self.teamHonorPKMatchTime, 'isSilent':self.isSilent,
-                     'teamMicsSwitch': self.teamMicsSwitch, 'teamMicsBlocked': self.teamMicsBlocked,
-                     'guildBanditGuild': self.guildBanditGuild, 'recruitInfo': self.recruitInfo,
-                     'teamMarkList': [],
+                     'guildBanditId': self.guildBanditId, 
+                     'randQimoInfo': self.randQimoInfo.toSaveBCVal(),
+                     'teamHonorPKMatchTime': self.teamHonorPKMatchTime, 
+                     'isSilent':self.isSilent,
+                     'teamMicsSwitch': self.teamMicsSwitch, 
+                     'teamMicsBlocked': self.teamMicsBlocked,
+                     'guildBanditGuild': self.guildBanditGuild, 
+                     'recruitInfo': self.recruitInfo,
+                     'isAutoExpedition': self.isAutoExpedition,
+                     'password': self.password,
+                     'isPublish': self.isPublish,
+                     'teamMarkList': [i.toSavedDict() for i in self.teamMarkDic.values()],
                      }
-        for gbId in self.teamPlayerDic:
-            teamMemberObj = self.teamPlayerDic[gbId]
-            teamMemberDic = teamMemberObj.toSavedDict()
-            savedDict['teamMemberList'].append(teamMemberDic)
-            
-        # 暂时不用这个数据
-        # for entId in self.teamMarkDic:
-        #     teamMarkObj = self.teamMarkDic[entId]
-        #     teamMarkDic = teamMarkObj.toSavedDict()
-        #     savedDict['teamMarkList'].append(teamMarkDic)
-
         return savedDict
-
+    
     @property
     def averageLevel(self):
         levels = [i.level for i in self.teamPlayerDic.values()]
@@ -608,18 +601,23 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
             'teamMicsBlocked': self.teamMicsBlocked,
             'recruitInfo': self.recruitInfo,
             'isPublish': self.isPublish,
-            'autoInPlace': self.autoInPlace,
             'teamMarkList': teamMarkList,
             'onlyCaptainCanMark': self.onlyCaptainCanMark,
+            'isAutoExpedition': self.isAutoExpedition,
+            'password': self.password,
+            'memberNum': self.getTeamMemberNum(),
         }
         return clientData
+    
+    def getTeamMemberNum(self):
+        return len(self.teamPlayerDic)
 
     def addMember(self, playerGbId, playerBox, playerName, level, school, sex, picFrameId, bFollow=False,
                   bOnline=True, score=0, mountState=0, equipSetLv=0, isDead=False, openId=0):
         if self.isTeamFull():
             WARNING_MSG('addMember isTeamFull', playerGbId, playerBox, playerName, level, school, picFrameId,
                         bFollow, bOnline, score, equipSetLv, isDead, openId)
-            return False
+            return False, gameconst.RaidErrno.RAID_RAID_TEAM_IS_FULL
 
         isBlockMics = False
         if self.teamMicsBlocked:
@@ -662,7 +660,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
             #队长创建队伍
             self.getCaptainBox().onMessagePre(TMMCD.datas['teamChannel_createTeamMsg']['value'], [])
         self.teamMatchInfoUpdate()
-        return True
+        return True, gameconst.RaidErrno.RAID_OK
 
     def delMember(self, playerGbId, notifySelf=True):
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
@@ -903,10 +901,12 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
             if not box.client:
                 continue
 
-            if 'spaceNo' in attrDic or 'position' in attrDic:
-                box.client.onUpdateTeamMemberPos(playerGbId, memberInfo.spaceNo, memberInfo.position)
+            if 'spaceNo' in attrDic and 'position' in attrDic:
+                excludedGbIDs = attrDic.get('excludedGbIDs', None)
+                if not excludedGbIDs or gbId not in excludedGbIDs:
+                    box.client.onUpdateTeamMemberPos(playerGbId, memberInfo.spaceNo, memberInfo.position)
 
-            if 'hp' in attrDic or 'fullHp' in attrDic:
+            if 'hp' in attrDic and 'fullHp' in attrDic:
                 box.client.onUpdateTeamMemberHp(playerGbId, memberInfo.hp, memberInfo.fullHp)
 
             if 'score' in attrDic:
@@ -931,6 +931,8 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
 
     def broadcastAllMembersClient(self, func, args, exclude=None):
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
+            if exclude and gbId in exclude:
+                continue
             box = teamPlayerVal.playerBox
             if not teamPlayerVal.bOnline:
                 continue
@@ -1090,9 +1092,6 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
         self.broadcastAllMembersClient('onUpdateTeamRandQimo', (self.randQimoInfo.toSaveBCVal(), ))
 
     def startAutoMatch(self, guildUUID):
-        if 0 == self.teamTarget or 1 == self.teamTarget:
-            self.getCaptainBox().onMessagePre(TMMCD.datas['teamMatch_noGoalMsg']['value'], [])
-            return
         if self.isTeamFull():
             self.getCaptainBox().onMessagePre(TMMCD.datas['teamMatch_fullMsg']['value'], [])
             return
@@ -1144,16 +1143,23 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
         gameengine.getGlobalBase('TeamMatchStub').teamStopAutoMatch(self.teamId)
         return
 
-    def setTarget(self, target, minLv, minScore):
-        DEBUG_MSG('in setTarget:', target, minLv, minScore)
-        if target == self.teamTarget and minLv == self.teamMinLv and minScore == self.teamMinScore:
+    def setTarget(self, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition):
+        DEBUG_MSG('in setTarget:', teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
+        if teamTarget != self.teamTarget:
+            return False
+        if minLv == self.teamMinLv and minScore == self.teamMinScore and recruitInfo == self.recruitInfo and password == self.password:
             return False
         if not self.checkTeamTarget(minLv, minScore):
             return False    
-        self.teamTarget = target
+        self.teamTarget = teamTarget
         self.teamMinLv = minLv
         self.teamMinScore = minScore
-        self.broadcastAllMembersClient('onSetTeamTarget', (self.teamId, self.teamTarget, minLv, minScore))
+        self.recruitInfo = recruitInfo
+        self.password = password
+        self.isAutoExpedition = isAutoExpedition
+        if len(self.password) == 0:
+            self.isPublish = False
+        self.broadcastAllMembersClient('onSetTeamTarget', (self.teamId, self.teamTarget, self.teamMinLv, self.teamMinScore, self.password, self.isAutoExpedition, self.recruitInfo))
         return True
     
     def checkTeamTarget(self, minLevel, minScore):
@@ -1164,13 +1170,6 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
                 self.getCaptainBox().onMessagePre(TMMCD.datas['team_TargetCondition']['value'], [])
                 return False
         return True
-
-    def reqPublishTeam(self, bPublish, recruitInfo):
-        self.isPublish = bPublish
-        self.recruitInfo = recruitInfo
-
-    def setAutoInPlace(self, bAutoInPlace):
-        self.autoInPlace = bAutoInPlace
 
     def setSilentFlag(self, isSilent):
         self.isSilent = isSilent
@@ -1431,6 +1430,21 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
                 'spaceNo': 0,
             })
         return teamMarkList
+    
+    def clearTeamDungeonRewardRecord(self, gbID):
+        self.teamRewardDatas.pop(gbID, None)
+
+    def addTeamDungeonRewardRecord(self, gbID, rewardList):
+        datas = self.teamRewardDatas.setdefault(gbID, {})
+        for _data in rewardList:
+            _itemId = _data['itemId']
+            _bindType = _data['bindType']
+            _itemNum = _data['itemNum']
+            a = datas.setdefault(_itemId, {})
+            b = a.setdefault(_bindType, 0)
+            a[_bindType] = b + _itemNum
+
+        self.broadcastAllMembersClient('onAddTeamDungeonRewardRecord', (self.teamId, gbID, rewardList))
 
 
 class PlayerTeamMemberCacheVal(userType.UserSoleType):

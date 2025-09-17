@@ -41,10 +41,11 @@ class Player(object):
         self.playerType = playerType
 
 class BotClient(object):
-    def __init__(self, accountName,avatarName,school):
+    def __init__(self, accountName, avatarName, school, faceData = None):
         self.accountName = accountName
         self.avatarName = avatarName
         self.school = school
+        self.faceData = faceData
         self.client = None
         self.playerAvatar = None
         self.playerAccount = None

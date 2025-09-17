@@ -193,6 +193,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                 self.initBornAction()
             self.setAI(self.aiName)
             self._callback(1, '_addTrap', (), gametimer.TIMER_TAG_ADD_TRAP)
+        elif newState == gameconst.BornStateType.reMove:
+            newState = gameconst.BornStateType.move
 
         self.bornState = newState
 
@@ -290,7 +292,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if radii <= 0:
             return
         self.hateTrapId = self.addProximity(radii, radii, gameconst.HATE_TRAP)
-        leaveAoiRange = max(gameconst.HOME_AOI, radii)
+        leaveAoiRange = min(gameconst.HOME_AOI, self.getLeaveAlertDistance())
         self.addProximity(leaveAoiRange, 0.0, gameconst.LEAVE_AOI_TRAP)
 
     def onGetWitness(self):
@@ -420,7 +422,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         # 城战处理逻辑，内部会判断是否在城战场景
         self.notifySiegeWarOnDead(killer)
 
-        if self.isNeedRefresh():
+        if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
+            self.spaceMgr.onWorldBossDead(self.refreshTime)
+        elif self.isNeedRefresh():
             self.onEntityRefresh()
 
         # DEFAULT TO DESTROY
@@ -432,9 +436,6 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.delaySafeDestroy(delay)
         if self.isMonsterInGroup():
             self.rmFromMonsterGroup()
-
-        if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
-            self.spaceMgr.onWorldBossDead()
 
         host = utils.getHostEntity(killer)
         if host.IsAvatar:

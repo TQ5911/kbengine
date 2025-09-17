@@ -57,23 +57,22 @@
         </clearRaidApplyJoinDic>
 
         <updateRaidMemberCacheVal>
-            <Arg>   RAID_ID     </Arg>
+            <Arg>   RAID_ID         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   PY_DICT     </Arg>
-            <Arg>   BOOL    </Arg>
+            <Arg>   PY_DICT         </Arg>
         </updateRaidMemberCacheVal>
 
         <getRaidAllMembersAttrs>
-            <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
+            <Arg>   MAILBOX             </Arg>
+            <Arg>   PLAYER_GBID         </Arg>
+            <Arg>   RAID_ID             </Arg>
             <Arg>   AVATARGBID_LIST     </Arg>
-            <Arg>   PYTHON  </Arg>
+            <Arg>   PYTHON              </Arg>
         </getRaidAllMembersAttrs>
 
         <createRaid>
             <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
             <Arg>   RAID_ID     </Arg>
             <Arg>   UINT8       </Arg>
             <Arg>   PY_LIST     </Arg>
@@ -81,40 +80,42 @@
         </createRaid>
 
         <createRaidLonely>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UINT8       </Arg>
-            <Arg>   PY_LIST     </Arg>
-            <Arg>   PYTHON      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   BOOL        </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   UINT8           </Arg>
+            <Arg>   PY_LIST         </Arg>
+            <Arg>   PYTHON          </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   STRING          </Arg>
+            <Arg>   BOOL            </Arg>
         </createRaidLonely>
 
         <disbandRaid>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   PYTHON      </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   PYTHON          </Arg>
         </disbandRaid>
 
         <applyJoinRaidLonely>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   PY_DICT     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   PYTHON      </Arg>
+            <Arg>   PY_DICT         </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   PYTHON          </Arg>
         </applyJoinRaidLonely>
 
         <applyJoinRaidWithTeam>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID  </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   PY_LIST     </Arg>
-            <Arg>   PYTHON      </Arg>
+            <Arg>   TEAMID          </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   PY_LIST         </Arg>
+            <Arg>   PYTHON          </Arg>
         </applyJoinRaidWithTeam>
 
         <replyJoinRaid>
@@ -299,15 +300,15 @@
         </moveRaidTeamMember>
 
         <setRaidTarget>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   BOOL        </Arg>
-            <Arg>   BOOL        </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   STRING          </Arg>
+            <Arg>   BOOL            </Arg>
         </setRaidTarget>
 
         <startRaidStandbyChecker>
@@ -558,18 +559,6 @@
             <Arg>           PY_DICT      </Arg>
         </newRaidPlayerMatched>
 
-        <publishRaid>
-            <Arg>       RAID_ID      </Arg>
-            <Arg>       BOOL        </Arg>
-            <Arg>       UNICODE     </Arg>
-            <Arg>       BOOL        </Arg>
-        </publishRaid>
-
-        <setRaidAutoInPlace>
-            <Arg>       RAID_ID      </Arg>
-            <Arg>       BOOL        </Arg>
-        </setRaidAutoInPlace>
-
         <getRaidList>
             <Arg>           ENTITYCALL   </Arg>
             <Arg>           UINT8        </Arg>
@@ -607,9 +596,23 @@
             <Arg>       MAILBOX        </Arg>
             <Arg>       UINT8       </Arg>
         </reqChangeRaidOnlyLeader>
+
+        <reqJoinRaid>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   STRING      </Arg>
+            <Arg>   PY_DICT     </Arg>
+        </reqJoinRaid>
+
+        <addRaidDungeonRewardRecord>
+            <Arg>           RAID_ID                                                 </Arg>
+            <Arg>           PLAYER_GBID                                             </Arg>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </addRaidDungeonRewardRecord>
+
+        <clearRaidDungeonRewardRecord>
+            <Arg>           RAID_ID                                                 </Arg>
+            <Arg>           PLAYER_GBID                                             </Arg>
+        </clearRaidDungeonRewardRecord>
     </BaseMethods>
-
-    <ClientMethods>
-    </ClientMethods>
-
 </root>

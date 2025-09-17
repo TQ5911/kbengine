@@ -5565,6 +5565,9 @@ namespace KBEngine
 
 	public class CHARACTER_VAL
 	{
+		public UInt64 parentID = 0;
+		public UInt64 selfDbId = 0;
+		public UInt64 authDbId = 0;
 		public UInt64 gbId = 0;
 		public UInt64 dbId = 0;
 		public string name = "";
@@ -5580,6 +5583,8 @@ namespace KBEngine
 	public class CHARACTERS_INFO
 	{
 		public List<CHARACTER_VAL> characters = new List<CHARACTER_VAL>();
+		public Byte isArchiving = 0;
+		public Byte needArchiveAgain = 0;
 
 	}
 
@@ -5615,6 +5620,7 @@ namespace KBEngine
 		public UInt64 uniqueId = 0;
 		public Byte bindType = 0;
 		public string attrJson = "";
+		public SByte lockStatus = 0;
 
 	}
 
@@ -5632,6 +5638,7 @@ namespace KBEngine
 		public UInt32 expireTime = 0;
 		public UInt64 uniqueId = 0;
 		public Byte bindType = 0;
+		public SByte lockStatus = 0;
 		public UInt32 auctionTime = 0;
 		public List<AFFIX_VAL> fixedAffixes = new List<AFFIX_VAL>();
 		public List<AFFIX_VAL> randomAffixes = new List<AFFIX_VAL>();
@@ -5672,6 +5679,7 @@ namespace KBEngine
 		public UInt32 expireTime = 0;
 		public UInt64 uniqueId = 0;
 		public Byte bindType = 0;
+		public SByte lockStatus = 0;
 		public string attrJson = "";
 
 	}
@@ -5886,9 +5894,11 @@ namespace KBEngine
 		public Byte teamMicsBlocked = 0;
 		public string recruitInfo = "";
 		public Byte isPublish = 0;
-		public Byte autoInPlace = 0;
 		public List<CLIENT_TEAM_MARK_VAL> teamMarkList = new List<CLIENT_TEAM_MARK_VAL>();
 		public Byte onlyCaptainCanMark = 0;
+		public Byte memberNum = 0;
+		public Byte isAutoExpedition = 0;
+		public string password = "";
 
 	}
 
@@ -5943,13 +5953,14 @@ namespace KBEngine
 		public List<RAID_TEAM_CLIENT_VAL> raidTeamList = new List<RAID_TEAM_CLIENT_VAL>();
 		public UInt32 raidMinLevel = 0;
 		public Int32 raidMinScore = 0;
-		public Byte autoInPlace = 0;
 		public Byte isPublish = 0;
 		public UInt32 raidAutoMatchTime = 0;
 		public string recruitInfo = "";
 		public Byte memberNum = 0;
 		public Byte onlyCaptainCanMark = 0;
 		public List<CLIENT_TEAM_MARK_VAL> raidMarkList = new List<CLIENT_TEAM_MARK_VAL>();
+		public Byte isAutoExpedition = 0;
+		public string password = "";
 
 	}
 
@@ -6125,6 +6136,7 @@ namespace KBEngine
 		public UInt32 expireTime = 0;
 		public UInt64 uniqueId = 0;
 		public Byte bindType = 0;
+		public SByte lockStatus = 0;
 		public string attrJson = "";
 
 	}
@@ -6775,6 +6787,43 @@ namespace KBEngine
 		public Byte changeType = 0;
 		public Byte onlyCaptainCanMark = 0;
 		public List<CLIENT_TEAM_MARK_VAL> teamMarkList = new List<CLIENT_TEAM_MARK_VAL>();
+
+	}
+
+	public class RED_BAG_FETCH_VAL
+	{
+		public UInt64 playerGbId = 0;
+		public string name = "";
+		public UInt32 money = 0;
+
+	}
+
+	public class RED_BAG_CLIENT_VAL
+	{
+		public UInt64 redbagId = 0;
+		public string playerName = "";
+		public Byte redbagType = 0;
+		public Byte channel = 0;
+		public UInt32 money = 0;
+		public UInt32 leftMoney = 0;
+		public UInt32 num = 0;
+		public UInt32 leftNum = 0;
+		public Byte hasFetch = 0;
+
+	}
+
+	public class RED_BAG_FETCH_CLIENT_VAL
+	{
+		public UInt64 redbagId = 0;
+		public string playerName = "";
+		public Byte redbagType = 0;
+		public Byte channel = 0;
+		public UInt32 money = 0;
+		public UInt32 leftMoney = 0;
+		public UInt32 num = 0;
+		public UInt32 leftNum = 0;
+		public UInt64 maxGbId = 0;
+		public List<RED_BAG_FETCH_VAL> fetchPlayerList = new List<RED_BAG_FETCH_VAL>();
 
 	}
 

@@ -201,7 +201,7 @@ datas ={
     "entityID": [
       20170004
     ],
-    "skillID": 19017004,
+    "skillID": 91020037,
     "lv": "1",
     "forceToUse": 1,
     "transition": {
@@ -432,7 +432,7 @@ datas ={
     "entityID": [
       20170004
     ],
-    "dialogID": 19017001,
+    "dialogID": 19017003,
     "transition": {}
   },
   "1093": {
@@ -440,7 +440,7 @@ datas ={
     "entityID": [
       20170004
     ],
-    "dialogID": 19017001,
+    "dialogID": 19017004,
     "transition": {}
   },
   "1094": {

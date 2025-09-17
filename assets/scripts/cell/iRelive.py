@@ -6,6 +6,7 @@ import gameconst
 import utils
 import math
 
+import cube_config
 import gameengine
 import formula
 import dungeonSrc
@@ -162,16 +163,18 @@ class IRelive(object):
         _type = formula.whatSpaceType(resSceneId)
         if _type == gameconst.SpaceType.SpaceLine:
             _src = dungeonSrc.BasicDungeonSrc()
-            _enterPos = formula.whatSpaceBornPoint(resSceneId)
-            self.doEnterWorldLine(resSceneId, 0, _src, 0, _enterPos, self.direction)
+            _enterPos, _enterDir = formula.whatSpaceBornPosAndDir(resSceneId)
+            if _enterDir is not None:
+                _enterDir = (0, 0, _enterDir[2] * math.pi / 180)
+            self.doEnterWorldLine(resSceneId, 0, _src, 0, _enterPos, _enterDir)
             return True
 
         elif _type == gameconst.SpaceType.SpaceCube:
             # _src = dungeonSrc.BasicDungeonSrc()
             # _enterPos = formula.whatSpaceBornPoint(resSceneId)
             # self.doEnterWorldCube(resSceneId, 0, _src, 0, _enterPos, self.direction)
-            _cubeFloor = cube_room.datas[resSceneId]['floor']
-            gameengine.getCubeStub(_cubeFloor).reliveToCubeRoom(self.base, resSceneId, self.gbId, {})
+            _mapId = cube_config.datas['cube_hall']['value']
+            gameengine.getGlobalBase('CubeStub').reliveToCubeRoom(self.base, _mapId, self.gbId, {})
 
         return False
 
@@ -196,7 +199,12 @@ class IRelive(object):
         reliveHp = int(self.fullHp * GP_SD.datas['resurrectHP']['value'] / 100)
         if formula.isSiegeWarSpace(self.spaceNo):
             reliveHp = self.fullHp
-        self.reliveToPos(_pos, _dir, reliveHp, None)
+
+        if formula.isDungeonSpace(self.spaceNo) and reliveType == gameconst.RELIVE_TYPE_TO_NEAR:
+            stub = gameengine.getDungeonStubBySpaceNo(self.spaceNo)
+            stub.onReliveInDungeon(self.spaceNo, self.base, self.gbId, reliveType, reliveHp)
+        else:
+            self.reliveToPos(_pos, _dir, reliveHp, None)
         if self.teamId > 0:
             self.updateAttrToStub({'isDead': False})
 

@@ -13,15 +13,16 @@ import sMath
 import utils
 
 class AureoleFromOtherVal(userType.UserSoleType):
-    def __init__(self, aid, level, srcEntId):
+    def __init__(self, aid, level, srcEntId, srcHostEntId=None):
         self.aureoleId = aid
         self.level = level
         self.srcEntId = srcEntId
+        self.srcHostEntId = srcHostEntId
 
 
 class AureolesFromOhters(userType.UserDictType):
-    def applyAureole(self, aureoleId, level, srcEntId):
-        aureole = AureoleFromOtherVal(aureoleId, level, srcEntId)
+    def applyAureole(self, aureoleId, level, srcEntId, srcHostEntId=None):
+        aureole = AureoleFromOtherVal(aureoleId, level, srcEntId, srcHostEntId)
         self[aureoleId] = aureole
 
     def _lateReload(self):

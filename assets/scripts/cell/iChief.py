@@ -9,13 +9,13 @@ import gameengine
 import dungeonSrc
 import dungeonPlayMode
 
+import teamMatch_activity as TMACTD
 import raidBossChallenge_basicInfo as RBC_BI
 
 class IChief(object):
-
 	@utils.isMyself
-	def enterChiefDungeon(self, exposed, level):
-		DEBUG_MSG('enterChiefDungeon::', level)
+	def enterChiefDungeon(self, exposed):
+		DEBUG_MSG('enterChiefDungeon::')
 
 		if not self.isInRaid():
 			ERROR_MSG('enterChiefDungeon:: not in raid', self.gbId)
@@ -27,19 +27,27 @@ class IChief(object):
 		
 		src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
 
-		self._enterRaidChiefDungeon(level, src)
+		self._enterRaidChiefDungeon(src)
+	
+	def autoStartChiefDungeon(self):
+		src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
+		self._enterRaidChiefDungeon(src)
 
-	def _enterRaidChiefDungeon(self, dunLevel, src):
-		if dunLevel not in RBC_BI.datas:
-			ERROR_MSG('_enterRaidChiefDungeon:: level not found', dunLevel)
+	def _enterRaidChiefDungeon(self, src):
+		raidTarget = self.raidInfo.raidTarget
+		targetInfo = TMACTD.datas.get(raidTarget)
+		if not targetInfo:
+			ERROR_MSG('in _enterRaidChiefDungeon, raidTarget error')
 			return
-
-		cfgData = RBC_BI.datas[dunLevel]
-		dungeonNo = cfgData['dunID']
-		if not dungeonNo:
-			ERROR_MSG('_enterRaidChiefDungeon::dungeonNo not found', dunLevel)
+		dungeonNo = targetInfo['enterDunID']
+		if not dungeonNo or dungeonNo == 0:
+			ERROR_MSG('in _enterRaidChiefDungeon, dungeonNo 1 error')
 			return
-
+		dunLevel = self.getRaidDunLevel(dungeonNo)
+		if dunLevel == 0:
+			ERROR_MSG('in _enterRaidChiefDungeon, dungeonNo 2 error')
+			return
+		
 		result = self._enterRaidDungeonPreCheck(dungeonNo)
 		if not result:
 			WARNING_MSG('_enterRaidChiefDungeon::_enterRaidDungeonPreCheck fail')
@@ -53,3 +61,12 @@ class IChief(object):
 		raidStub = gameengine.getRaidStub(self.raidId)
 		raidStub.enterRaidChiefDungeon(self, self.gbId, self.raidId, dungeonNo, extra)
 		# self.resetStatisticsData()
+	
+	def getRaidDunLevel(self, dungenNo):
+		for key, value in RBC_BI.datas.items():
+			if dungenNo == value['dunID']:
+				return key
+		return 0
+
+	def addRaidDungeonRewardRecord(self, rewardList):
+		gameengine.getRaidStub(self.raidId).addRaidDungeonRewardRecord(self.raidId, self.gbId, rewardList)

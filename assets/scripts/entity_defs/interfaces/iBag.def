@@ -354,6 +354,7 @@
             <Arg>       UINT8       </Arg>
             <Arg>       GRIDID      </Arg>
             <Arg>       ITEM_ID     </Arg>
+            <Arg>       UNIQUE_ID   </Arg>
             <Arg>       UINT8       </Arg>
         </reqLockItem>
 
@@ -361,7 +362,7 @@
             <Arg>       UINT8       </Arg>
             <Arg>       GRIDID      </Arg>
             <Arg>       ITEM_ID     </Arg>
-            <Arg>       UINT32      </Arg>
+            <Arg>       UINT32       </Arg>
         </reqSellItem>
 
         <reqMultiItemDisassemble><Exposed/>
@@ -460,6 +461,14 @@
             <Arg>       PENDING_USE_ID              </Arg>
             <Arg>       UNICODE                     </Arg>
         </onPendingUseRenameItemResult>
+
+        <bodyItemLock>
+            <Arg>       UINT8       </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UNIQUE_ID   </Arg>
+            <Arg>       UINT8       </Arg>
+        </bodyItemLock>
     </CellMethods>
 
     <ClientMethods>
@@ -658,11 +667,15 @@
         <onLockItemSucc>
             <Arg>       UINT8       </Arg>
             <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       INT8        </Arg>
         </onLockItemSucc>
 
         <onSellItemSucc>
             <Arg>       UINT8       </Arg>
             <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT32      </Arg>
         </onSellItemSucc>
 
     </ClientMethods>

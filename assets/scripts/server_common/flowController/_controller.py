@@ -501,6 +501,10 @@ class _FlowControllerBeTriggeredMixin(object):
                 if (e, e_ctx) in i_list:
                     i_list.remove((e, e_ctx))
 
+    def onDungeonRebornPosCreatedComplete(self, rebornPosGIDs):
+        gameengine.reportCritical("onDungeonRebornPosCreatedComplete::deprecated",
+                                  rebornPosGIDs, self.owner.spaceNo)
+
 
 class _FlowControllerCustomEventsMixin(object):
 
@@ -1541,7 +1545,22 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSoleType,
                                event_handler=handleTimeFreezeEnd,
                                name=gameconst.DungeonFlowEventName.timeFreezeEnd)
         return e
+    
+    def buildReleaseDungeonRebornPosEvent(self, eventId, rebornPosGIDs, rebornPosNum):
+        """释放复活点事件"""
+        e = self.build_element(DungeonRebornPosReleaseEvent, element_id=eventId,
+                               rebornPosGIDs=rebornPosGIDs, event_handler=handleReleaseRebornPos,
+                               name=gameconst.DungeonFlowEventName.createRebornPos)
+        e.add_param('rebornPosNum', rebornPosNum)
+        return e
 
+    def buildRecycleDungeonRebornPosEvent(self, eventId, rebornPosGIDs):
+        """回收复活点事件"""
+        e = self.build_element(FlowEvent, element_id=eventId,
+                               event_handler=handleRecycleRebornPos,
+                               name=gameconst.DungeonFlowEventName.removeRebornPos)
+        e.add_param('rebornPosGIDs', rebornPosGIDs)
+        return e
 
 def _createNoHostCreation(spaceID, target, context, *args, spaceMgrId=0, spaceNo=0, extraProps=None):
     ttl, cnt, dirOffset, posOffset = 0, 0, None, None
@@ -3155,3 +3174,12 @@ def handleReleaseAppearanceNPC(e, src_e, ctx, **ref_params):
     randomType = e.get_param('randomType')
     WARNING_MSG('DUNGEON FLOW -- EVENT[{}]: release npc -> {}:{}'.format(e.id, npcId, randomType))
 
+def handleReleaseRebornPos(e, src_e, ctx, **ref_params):
+    rebornPosGIDs = e.get_param('rebornPosGIDs', [])
+    rebornPosNum = e.get_param('rebornPosNum', 0)
+    WARNING_MSG('DUNGEON FLOW -- EVENT[{}]: release reborn point -> {}:{}'.format(e.id, rebornPosGIDs, rebornPosNum))
+
+def handleRecycleRebornPos(e, src_e, ctx, **ref_params):
+    rebornPosGIDs = e.get_param('rebornPosGIDs', [])
+    WARNING_MSG('DUNGEON FLOW -- EVENT[{}]: recycle reborn point -> {}'.format(e.id, rebornPosGIDs))
+    _handleRecycleInDungeon(e, rebornPosGIDs)

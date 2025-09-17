@@ -162,5 +162,25 @@ datas ={
       "RefreshTime": 600.0,
       "Remark": ""
     }
+  },
+  "31158002": {
+    "ActivityID": 0,
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 31158002,
+    "Name": "\u6218\u6597\u533a",
+    "PosX": 69.0065,
+    "PosY": 3.825063,
+    "PosZ": 80.6,
+    "Props": {
+      "AreaType": 0,
+      "Length": 60.0,
+      "Remark": "",
+      "Width": 80.0
+    }
   }
 }

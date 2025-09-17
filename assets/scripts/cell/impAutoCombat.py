@@ -657,6 +657,12 @@ class ImpAutoCombat(object):
             return
 
         _ent = utils.getHostEntity(_ent)
+        if _ent.id == self.id:
+            return
+
+        if not _ent.isAttackable(self):
+            return
+
         self.fightBackTarget = _ent.id
         self.setSelectedTargetId(_ent.id)
 

@@ -8,14 +8,13 @@ import gameengine
 
 import dungeonSrc
 import dungeonPlayMode
-
+import teamMatch_activity as TMACTD
 import teamDunChallenge_basicInfo as TDC_BI
 
 class ICrusade(object):
-
 	@utils.isMyself
-	def enterCrusadeDungeon(self, exposed, level):
-		DEBUG_MSG('enterCrusadeDungeon::', level)
+	def enterCrusadeDungeon(self, exposed):
+		DEBUG_MSG('enterCrusadeDungeon::')
 
 		if not self.isCaptain():
 			ERROR_MSG('enterCrusadeDungeon:: u r not captain', self.gbId)
@@ -25,20 +24,28 @@ class ICrusade(object):
 		if not self.isInTeam(self.gbId):
 			ERROR_MSG('enterCrusadeDungeon:: not in team', self.gbId)
 			return
+		
+		self._enterTeamCrusadeDungeon(src)
 
-		self._enterTeamCrusadeDungeon(level, src)
+	def autoStartCrusadeDungeon(self):
+		src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
+		self._enterTeamCrusadeDungeon(src)
 
-	def _enterTeamCrusadeDungeon(self, dunLevel, src):
-		if dunLevel not in TDC_BI.datas:
-			ERROR_MSG('_enterTeamCrusadeDungeon:: level not found', dunLevel)
+	def _enterTeamCrusadeDungeon(self, src):
+		teamTarget = self.teamInfo.teamTarget
+		targetInfo = TMACTD.datas.get(teamTarget)
+		if not targetInfo:
+			ERROR_MSG('in enterCrusadeDungeon, teamTarget error')
 			return
-
-		cfgData = TDC_BI.datas[dunLevel]
-		dungeonNo = cfgData['dunID']
-		if not dungeonNo:
-			ERROR_MSG('_enterTeamCrusadeDungeon::dungeonNo not found', dunLevel)
+		dungeonNo = targetInfo['enterDunID']
+		if not dungeonNo or dungeonNo == 0:
+			ERROR_MSG('in enterCrusadeDungeon, dungeonNo 1 error')
 			return
-
+		dunLevel = self.getTeamDunLevel(dungeonNo)
+		if dunLevel == 0:
+			ERROR_MSG('in enterCrusadeDungeon, dungeonNo 2 error')
+			return
+		
 		result = self._checkEnterTeamDungeon(dungeonNo)
 		if not result:
 			WARNING_MSG('_enterTeamCrusadeDungeon::_checkEnterTeamDungeon fail')
@@ -52,3 +59,13 @@ class ICrusade(object):
 		teamStub = gameengine.getTeamStub(self.teamId)
 		teamStub.enterTeamCrusadeDungeon(self.base, self.gbId, self.teamId, dungeonNo, extra)
 		# self.resetStatisticsData()
+
+	def getTeamDunLevel(self, dungenNo):
+		for key, value in TDC_BI.datas.items():
+			if dungenNo == value['dunID']:
+				return key
+		return 0
+	
+	def addTeamDungeonRewardRecord(self, rewardList):
+		gameengine.getTeamStub(self.teamId).addTeamDungeonRewardRecord(self.teamId, self.gbId, rewardList)
+	

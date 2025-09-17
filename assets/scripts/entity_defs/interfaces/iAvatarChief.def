@@ -13,8 +13,10 @@
     <CellMethods>
         <enterChiefDungeon>
             <Exposed/>
-            <Arg>   LEVEL   </Arg>
         </enterChiefDungeon>
+
+        <autoStartChiefDungeon>
+        </autoStartChiefDungeon>
     </CellMethods>
 
     <BaseMethods>

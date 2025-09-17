@@ -298,10 +298,14 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
     def baseBreakShieldEnhRatio(self):
         return 1.0
-    
+
     # --------------------------------------------------------------------------------------------
     #                              Callbacks
     # --------------------------------------------------------------------------------------------
+    def getTargetByViewRadius(self):
+        if not self.viewRadius:
+            return gameconst.DEFAULT_AOI
+        return self.viewRadius
 
     def getHost(self):
         return KBEngine.entities.get(self.hostId, None)
@@ -321,6 +325,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         #但enterAction只能在圆形区域时用,矩形区域由于矩形是有旋转角度的，所以加的trap是矩形的包围正方形
         #无法做进入触发了
         if radii:
+            self.viewRadius = radii
             self.trapId = self.addProximity(radii, radii, self.TRAP_BOUND_BOX)
 
         # for e in self.entitiesInRange(radii):
@@ -408,7 +413,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         if not self.areaAction:
             return
 
-        if self.customId() == gameconst.CreationCustomType.THUNDER:
+        if self.customId() == gameconst.DunCustomId.THUNDER:
             if formula.isWolrdBossSpace(self.spaceNo):
                 if not self.spaceMgr.hasSceneState(gameconst.WorldLineSceneState.THUNDER):
                     return

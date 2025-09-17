@@ -366,5 +366,9 @@ datas = _tools.RODict({
     "team_lackChallengNums": _tools.RODict({
         "ID": "team_lackChallengNums",
         "value": 54001744,
+    }),
+    "team_leave": _tools.RODict({
+        "ID": "team_leave",
+        "value": 54000902,
     })
 })

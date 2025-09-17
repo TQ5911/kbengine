@@ -442,6 +442,16 @@ class AwardMixin(object):
             DEBUG_MSG('add wonderland brief:', _briefList)
             self.cell.addWonderLandRewardRecord(_briefList)
 
+        elif formula.isTeamDungeonSpace(awardCtx.extra.get('monsterSpaceNo', 0)):
+            _briefList = awardVal.toBriefList()
+            DEBUG_MSG('add team dungeon brief:', _briefList)
+            self.cell.addTeamDungeonRewardRecord(_briefList)
+
+        elif formula.isRaidDungeonSpace(awardCtx.extra.get('monsterSpaceNo', 0)):
+            _briefList = awardVal.toBriefList()
+            DEBUG_MSG('add raid dungeon brief:', _briefList)
+            self.cell.addRaidDungeonRewardRecord(_briefList)
+
         self.onGetRewardRecord(srcType, awardVal, awardCtx)
 
         return
@@ -977,16 +987,20 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         DEBUG_MSG('in recycleItems::', bagType, gridId, itemId)
         bag = self.getBagByType(bagType)
         if bag.isLocked():
-            WARNING_MSG('in recycleItems, bag locked')
+            WARNING_MSG('in recycleItems, bag is locked')
             return
 
         bagItem = bag.getItemObjByGridId(gridId)
         if not bagItem or bagItem.itemId != itemId:
             return
+        
+        if bagItem.isLocked():
+            WARNING_MSG('in recycleItems, item is locked ', itemId)
+            return 
 
         itemData = dataUtils.getCommItemData(itemId)
         recycleType = itemData.get('recycleType')
-        if not recycleType and not bagItem.isExpired():
+        if not recycleType and not bagItem.isExpired() :
             WARNING_MSG('item cannot recycle', itemId)
             return
 
@@ -1552,12 +1566,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         opUUID = KBEngine.genUUID64()
         detail = gameclass.AwardDetail(collectionId=collectionId)
-        if formula.isCubeSpace(spaceNo):
-            _monsterSpaceNo = spaceNo
-        elif formula.isWonderLandSpace(spaceNo):
-            _monsterSpaceNo = spaceNo
-        else:
-            _monsterSpaceNo = 0
+        # 这里通用的收集入口，直接记录，到需要处理的入口，统一分业务处理
+        _monsterSpaceNo = spaceNo
 
         if rewardID:
             if pickData['displayMode']:
@@ -2346,6 +2356,12 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 ERROR_MSG('reqRandomSynthesis not find item', gridId)
                 self.client.onRandomSynthesis(itemIdList)
                 return
+            
+            if item.isLocked():
+                ERROR_MSG('reqRandomSynthesis item is locked', gridId, item)
+                self.client.onRandomSynthesis(itemIdList)
+                return
+            
             itemId = item.itemId
             bindType = item.bindType
             realItemInfoList.append((itemId, itemNum, bindType))
@@ -2603,30 +2619,39 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.capacity = newCapacity
         self.client.onUnlockGrids(gameconst.BagOPStat.BAG_OP_STAT_OK, newCapacity)
 
-    def reqLockItem(self, bagType, gridId, itemId, lockStatus):
-        INFO_MSG('in reqLockItem::', bagType, gridId, itemId, lockStatus)
-        bag = self.getBagByType(bagType)
-        if not bag:
-            WARNING_MSG("reqLockItem, wrong bag type", bagType)
-            return
-        itemObj = bag.getItemObjByGridId(gridId)
-        if not itemObj:
-            WARNING_MSG("reqLockItem, wrong arg gridId", gridId)
-            return
-        if itemObj.itemId != itemId:
-            WARNING_MSG("reqLockItem, wrong arg itemId", itemId)
-            return
-        if lockStatus not in gameconst.ItemLockStatus.VALID_STATUS:
-            WARNING_MSG("reqLockItem, wrong arg lockStatus", lockStatus)
-            return
+    def reqLockItem(self, equipIn, equipPos, itemId, uniqueId, lockStatus):
+        INFO_MSG('in reqLockItem::', equipIn, equipPos, itemId, uniqueId, lockStatus)
         if not dataUtils.checkLockAvailableStatus(itemId):
             ERROR_MSG('reqLockItem, item locker is not opened', itemId)
-            return 
-        
-        if not itemObj.setLockStatus(lockStatus):
-            WARNING_MSG("reqLockItem, wrong arg setLockStatus", bagType, gridId, itemId, lockStatus)
             return
-        self.client.onLockItemSucc(bagType, gridId)
+        
+        if lockStatus not in gameconst.ItemLockStatus.VALID_STATUS:
+            WARNING_MSG("in reqLockItem, wrong arg lockStatus", lockStatus)
+            return
+        
+        if equipIn == gameconst.ItemBelongToType.BELONGTO_BAG:
+            self.bagLockItem(equipIn, equipPos, itemId, uniqueId, lockStatus)
+        elif equipIn == gameconst.ItemBelongToType.BELONGTO_BODY:
+            self.cell.bodyItemLock(equipIn, equipPos, itemId, uniqueId, lockStatus)
+            
+    def bagLockItem(self, equipIn, gridId, itemId, uniqueId, lockStatus):
+        INFO_MSG('in bagLockItem::', equipIn, gridId, itemId, uniqueId, lockStatus)
+        itemObj = self.bagData.getItemObjByGridId(gridId)
+        if not itemObj:
+            WARNING_MSG("bagLockItem, wrong arg gridId", gridId)
+            return
+
+        if itemObj.itemId != itemId:
+            WARNING_MSG("bagLockItem, wrong arg itemid", uniqueId, itemObj.itemId, itemId)
+            return
+        
+        if itemObj.uniqueId != uniqueId:
+            WARNING_MSG("bagLockItem, wrong arg uniqueId", itemObj.uniqueId, uniqueId, itemObj.itemId, itemId)
+            return
+        
+        itemObj.setLockStatus(lockStatus)
+
+        self.client.onLockItemSucc(equipIn, gridId, itemId, lockStatus)
 
     def reqSellItem(self, bagType, gridId, itemId, itemNum):
         INFO_MSG('in reqSellItem::', bagType, gridId, itemId, itemNum)
@@ -2638,19 +2663,26 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if not itemObj:
             WARNING_MSG("reqSellItem, wrong arg gridId", gridId)
             return
+
         if itemObj.itemId != itemId:
             WARNING_MSG("reqSellItem, wrong arg itemId 1 ", itemId)
             return
+
+        if itemObj.isLocked():
+            WARNING_MSG("reqSellItem, item is locked ", itemId)
+            return
+        
         sellPrice = dataUtils.gellItemSellPrice(itemId)
         if sellPrice is None:
             WARNING_MSG("reqSellItem, wrong arg itemId 2 ", itemId)
             return
-        if sellPrice == 0:
-            WARNING_MSG("reqSellItem, invalid item ", itemId)
+        if sellPrice <= 0:
+            WARNING_MSG("reqSellItem, invalid item price ", itemId)
             return
         if itemObj.isEquipmentItem() and not itemObj.isGood():
             WARNING_MSG("reqSellItem, equipment item is broken ", itemId)
             return
+        
         # 扣除道具
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(itemId, itemNum)
@@ -2658,17 +2690,25 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if not self.canDeductWealth(deductWealthVal):
             WARNING_MSG("reqSellItem, item is not enough", itemId, itemNum)
             return
+        
+        # 加入铜币
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_RECYCLE_ITEM
-        detail = gameclass.AwardDetail(itemId=itemId, itemNum=itemNum)
-        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
-        # 加入铜币
-        detail = gameclass.AwardDetail(itemId=gameconst.ItemId.COIN, itemNum=sellPrice)
-        awardVal = dropAward.AwardVal()
-        awardVal.addWealthByItemId(gameconst.ItemId.COIN, sellPrice)
-        self.addWealth(srcType, awardVal, opUUID, detail)
+        addWealthVal = dropAward.AwardVal()
+        addWealthVal.addWealthByItemId(gameconst.ItemId.COIN, sellPrice * itemNum)
+
+        # 加入操作检查
+        if not self.canAddWealthVal(srcType, addWealthVal):
+            WARNING_MSG("reqSellItem ~ bag space is not enough")
+            return
+
+        deductDetail = gameclass.AwardDetail(itemId=itemId, itemNum=itemNum)
+        self.deductWealth(srcType, deductWealthVal, opUUID, deductDetail)
+
+        addDetail = gameclass.AwardDetail(itemId=gameconst.ItemId.COIN, itemNum=itemNum, sellPrice = sellPrice)
+        self.addWealth(srcType, addWealthVal, opUUID, addDetail)
         
-        self.client.onSellItemSucc(bagType, gridId)
+        self.client.onSellItemSucc(bagType, gridId, itemId, itemNum)
 
     

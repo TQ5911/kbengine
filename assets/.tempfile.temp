@@ -23,40 +23,40 @@
         <enableAdminServer> 0 </enableAdminServer>
         <enableRouterServer> 1 </enableRouterServer>
         <gm>
-            <item ip='192.168.10.31' port='2040' httpApi='8080'/>
+            <item ip='192.168.10.13' port='2040' httpApi='8080'/>
         </gm>
         <gmHttpSecret> 8nvkguc7w7igpyituowk8pusi56r41mp </gmHttpSecret>
         <centralServersInfo>
-            <item centralServerId='1' ip='192.168.10.31' port='2030'></item>
+            <item centralServerId='1' ip='192.168.10.13' port='2030'></item>
         </centralServersInfo>
 
         <routerServersInfo>
-            <item routerServerId='1' ip='192.168.10.31' port='2060'></item>
+            <item routerServerId='1' ip='192.168.10.13' port='2060'></item>
         </routerServersInfo>
 
         <dropServersInfo>
-            <item dropServerId='1' ip='192.168.10.31' port='2120'></item>
+            <item dropServerId='1' ip='192.168.10.13' port='2120'></item>
         </dropServersInfo>
 
         <socialTokenKey> 19ee0530b20a6ba84d1567280a2210a6 </socialTokenKey>
 
         <crossDataServerInfo>
-                        <item crossDataServerId='1' ip='192.168.10.31' port='2140'></item>
+                        <item crossDataServerId='1' ip='192.168.10.13' port='2140'></item>
         </crossDataServerInfo>
 		
-        <mapleAllServerUrl> http://192.168.10.31:9527/getAllServer </mapleAllServerUrl>
+        <mapleAllServerUrl> http://192.168.10.13:9527/getAllServer </mapleAllServerUrl>
         
         <crossSiegeWarServerInfo>
                 <item crossServerId='20228'></item>
         </crossSiegeWarServerInfo>
 
-        <auctionServerHost> 192.168.10.31:2010 </auctionServerHost>
+        <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
         <enableGlobalAuction> 1 </enableGlobalAuction>
 
-        <redisServer> 192.168.10.31 </redisServer>
+        <redisServer> 192.168.10.13 </redisServer>
         <redisPort> 6379 </redisPort>
 
-        <elasticServer> 192.168.10.31 </elasticServer>
+        <elasticServer> 192.168.10.13 </elasticServer>
         <elasticPort> 9200 </elasticPort>
 
         <gmVerifyByGroup> 0 </gmVerifyByGroup>

@@ -19,6 +19,7 @@ datas = _tools.RODict({
         "ID": 10012,
         "charID": 1001,
         "sex": 2,
+        "type": 2,
         "isOpen": 1,
         "appearance": ((2, 2, 1, 2, 3, 1), (4, 4, 1, 4, 3, 2)),
     }),
@@ -26,6 +27,7 @@ datas = _tools.RODict({
         "ID": 10031,
         "charID": 1003,
         "sex": 1,
+        "type": 1,
         "isOpen": 1,
         "appearance": ((2, 2, 1, 1, 3, 1), (4, 4, 1, 4, 3, 1)),
     }),
@@ -33,6 +35,7 @@ datas = _tools.RODict({
         "ID": 10022,
         "charID": 1002,
         "sex": 2,
+        "type": 2,
         "isOpen": 1,
         "appearance": ((2, 2, 1, 1, 3, 1), (4, 4, 1, 4, 3, 1)),
     })

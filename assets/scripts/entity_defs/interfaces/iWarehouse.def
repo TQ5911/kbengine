@@ -28,6 +28,13 @@
 
         <reqWarehouseSort><Exposed/>
         </reqWarehouseSort>
+
+        <reqWarehouseLockItem><Exposed/>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UNIQUE_ID   </Arg>
+            <Arg>       UINT8       </Arg>
+        </reqWarehouseLockItem>
     </BaseMethods>
 
     <ClientMethods>
@@ -46,6 +53,11 @@
             <Arg>     UINT32    </Arg>
         </onWarehouseOutItems>
 
+        <onWarehouseLockItemSucc>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT8       </Arg>
+        </onWarehouseLockItemSucc>
     </ClientMethods>
 </root>
 

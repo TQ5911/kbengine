@@ -925,3 +925,90 @@ class PlayerBuyAuctionItemRecord(object):
         if _crtidx > 0:
             key = cls._getKey(gbId)
             gameglobal.localBaseApp.getRedisClient().ltrim(key, 0, _crtidx)
+
+class RedBagUtils:  
+    @classmethod
+    def redbagRankKey(cls):
+        return 'RB_RANK_{}'.format(gameconfig.serverId())
+    
+    @classmethod
+    def redbagFetchKey(cls, redbagId):
+        return 'RB_FETCH_{}_{}'.format(gameconfig.serverId(), redbagId)
+    
+    @classmethod
+    def redbagFetchInfoKey(cls, redbagId):
+        return 'RB_FETCH_INFO_{}'.format(redbagId)
+    
+    @classmethod
+    def getRedBagRankList(cls, cb=None):
+        # gameglobal.localBaseApp.getRedisClient().getRangeByScore(cls.redbagRankKey(), 0, utils.getNow(), 0, 100, False, None, 
+        #     functools.partial(cls.callbackGetRankList, cb))
+        gameglobal.localBaseApp.getRedisClient().getRange(cls.redbagRankKey(), 0, 100, True, False, None,
+                                                          functools.partial(cls.callbackGetRankList, cb))
+
+    @classmethod
+    def callbackGetRankList(cls, cb, cid, error, result):
+        if error != "":
+            ERROR_MSG("callbackGetRankList::cache missing", error)
+            return
+        cb and cb(result)
+    
+    @classmethod
+    def createRedBagRank(cls, redbagId, timestamp, cb=None):
+        key = cls.redbagRankKey()
+        gameglobal.localBaseApp.getRedisClient().add(cls.redbagRankKey(), {redbagId: timestamp},
+                                                     functools.partial(cls.callbackAddRedBagRankData, redbagId, cb))
+    
+    @classmethod
+    def callbackAddRedBagRankData(cls, redbagId, cb, cid, error, result):
+        if error != "":
+            ERROR_MSG("callbackAddRedBagRankData::cache missing", error)
+
+        cb and cb(error)
+
+    @classmethod
+    def removeRedBagRankData(cls, redbagIds, timestamp, cb=None):
+        if type(redbagIds) == int:
+            redbagIds = [redbagIds]
+        gameglobal.localBaseApp.getRedisClient().delete(cls.redbagRankKey(), redbagIds,
+                                                         functools.partial(cls.callbackRemoveRedBagRankData, redbagIds, cb))
+
+    @classmethod
+    def callbackRemoveRedBagRankData(cls, redbagIds, cb, cid, error, result):
+        if error != "":
+            ERROR_MSG("callbackRemoveRedBagRankData::cache missing", error)
+            return
+        cb and cb(error)
+    
+    @classmethod
+    def getRedBagFetchInfo(cls, redbagId, cb=None):
+        # HashTableUtils.hget(cls.redbagFetchKey(), cls.redbagFetchInfoKey(redbagId),
+        #                      functools.partial(cls.callbackGetRedBagFetchInfo, redbagId, cb))
+
+        HashTableUtils.loadAllFromRedis(cls.redbagFetchKey(redbagId),
+                                        functools.partial(cls.callbackGetRedBagFetchInfo, redbagId, cb))
+
+    @classmethod
+    def callbackGetRedBagFetchInfo(cls, redbagId, cb, result):
+        cb and cb(result)
+
+    @classmethod
+    def addRedBagFetchInfo(cls, redbagId, playerGbId, fetchInfo, cb=None):
+        HashTableUtils.hset(cls.redbagFetchKey(redbagId), str(playerGbId), fetchInfo,
+                             functools.partial(cls.callbackAddRedBagFetchInfo, redbagId, cb))
+
+    @classmethod
+    def callbackAddRedBagFetchInfo(cls, redbagId, cb, key, value):
+        cb and cb()
+
+    @classmethod
+    def removeRedBagFetch(cls, redbagId, cb=None):
+        HashTableUtils.delete(cls.redbagFetchKey(redbagId),
+                              functools.partial(cls.callbackRemoveRedBagFetch, redbagId, cb))
+    
+    @classmethod
+    def callbackRemoveRedBagFetch(cls, redbagId, cb, cid, error, result):
+        if error != "":
+            ERROR_MSG("callbackRemoveRedBagFetch::cache missing", error)
+        cb and cb(error)
+    

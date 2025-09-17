@@ -118,5 +118,13 @@ datas = _tools.RODict({
     "redNameSuffix": _tools.RODict({
         "ID": "redNameSuffix",
         "value": "[{0}]",
+    }),
+    "RedScreenWarningBlood": _tools.RODict({
+        "ID": "RedScreenWarningBlood",
+        "value": 25,
+    }),
+    "RedScreenWarningResPath": _tools.RODict({
+        "ID": "RedScreenWarningResPath",
+        "value": "Assets/Res/ui/effect/prefab/common/fx_ui_com_hongpingbaojing.prefab",
     })
 })

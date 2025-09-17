@@ -19,8 +19,12 @@
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
             <Arg>           TEAMTARGET      </Arg>
-            <Arg>           PY_DICT         </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           STRING          </Arg>
             <Arg>           BOOL            </Arg>
+            <Arg>           PY_DICT         </Arg>
         </createTeam>
 
         <applyJoinTeam>
@@ -444,10 +448,10 @@
             <Arg>           TEAMTARGET   </Arg>
             <Arg>           UINT32       </Arg>
             <Arg>           UINT32       </Arg>
-            <Arg>           GUILD_UUID   </Arg>
-            <Arg>           UNICODE          </Arg>
-            <Arg>           BOOL             </Arg>
+            <Arg>           UNICODE      </Arg>
+            <Arg>           STRING       </Arg>
             <Arg>           BOOL         </Arg>
+            <Arg>           GUILD_UUID   </Arg>
         </setTeamTarget>
 
         <getTeamInfo>
@@ -631,19 +635,6 @@
             <Arg>       ENTITY_ID       </Arg>
         </getCaptainName>
 
-        <publishTeam>
-            <Arg>       TEAMID      </Arg>
-            <Arg>       UINT64      </Arg>
-            <Arg>       BOOL        </Arg>
-            <Arg>       UNICODE     </Arg>
-            <Arg>       BOOL        </Arg>
-        </publishTeam>
-
-        <setAutoInPlace>
-            <Arg>       TEAMID      </Arg>
-            <Arg>       BOOL        </Arg>
-        </setAutoInPlace>
-
         <reqAddMarkMember>
             <Arg>       TEAMID      </Arg>
             <Arg>       MAILBOX        </Arg>
@@ -660,5 +651,22 @@
             <Arg>       MAILBOX        </Arg>
             <Arg>       UINT8       </Arg>
         </reqChangeOnlyCaptain>
+        <reqJoinTeam>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   STRING      </Arg>
+            <Arg>   PY_DICT     </Arg>
+        </reqJoinTeam>
+
+        <addTeamDungeonRewardRecord>
+            <Arg>           TEAMID                                                  </Arg>
+            <Arg>           PLAYER_GBID                                             </Arg>
+            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </addTeamDungeonRewardRecord>
+
+        <clearTeamDungeonRewardRecord>
+            <Arg>       TEAMID          </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+        </clearTeamDungeonRewardRecord>
     </BaseMethods>
 </root>

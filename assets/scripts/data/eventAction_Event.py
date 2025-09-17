@@ -165,6 +165,18 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "HealingWounds": _tools.RODict({
+        "ID": "HealingWounds",
+        "EventID": 10025,
+        "sendType": 0,
+        "npcId": None
+    }),
+    "viewPointMovie": _tools.RODict({
+        "ID": "viewPointMovie",
+        "EventID": 10026,
+        "sendType": 0,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,

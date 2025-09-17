@@ -108,7 +108,6 @@ class IRoute(object):
         escortSpeedOverwriteData.clear()
 
     def interruptRouting(self, reason=gameconst.RouteSuspendReason.NORMAL):
-        DEBUG_MSG('interruptRouting', self.routeState)
         if self.routeState != gameconst.RouteState.ROUTE_STATE_MOVING:
             return
 
@@ -121,7 +120,6 @@ class IRoute(object):
             self.flowCtrlEntityRoutingMissingEscort(entityGID, self.pathId)
 
     def continueRouting(self):
-        DEBUG_MSG('continueRouting', self.routeState)
         if self.routeState != gameconst.RouteState.ROUTE_STATE_SUSPEND:
             return False
 
@@ -149,7 +147,6 @@ class IRoute(object):
         return next_pointIndex
 
     def startRouting(self):
-        DEBUG_MSG('startRouting', self.routeState, self.pathId, self.pointIndex)
         if not self.pathId or self.pointIndex >= len(path_path.datas[self.pathId]['pointList']):
             return False
 

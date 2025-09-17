@@ -288,11 +288,11 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onCrossSiegeWarGetGuildInfos(self, guildUUID):
         DEBUG_MSG('[lj]on cross siege war get guild infos', guildUUID)
 
-    def onCrossSiegeWarEnd(self, combatResult, winnerGuildUUID, lastCityOwnerGuildUUID):
+    def onCrossSiegeWarEnd(self, combatResult, winnerGuildUUID, loserGuildUUID, lastCityOwnerGuildUUID):
         if gameconfig.isCrossServer():
             DEBUG_MSG('[lj]ignore SiegeWarEnd in cross server')
             return
-        DEBUG_MSG('[lj]on cross siege war end', combatResult, winnerGuildUUID, lastCityOwnerGuildUUID)
+        DEBUG_MSG('[lj]on cross siege war end', combatResult, winnerGuildUUID, loserGuildUUID, lastCityOwnerGuildUUID)
         rewardLevels = []
         for key, value in CBRR.datas.items():
             arr = []
@@ -343,6 +343,25 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 'removeCityOwnerFlag',
                 ()
             )
+
+        #城战结束处理
+        gameengine.getGlobalBase('GuildStub').callOnGuild(
+            winnerGuildUUID,
+            'onSiegeWarEnd',
+            (),
+            None,
+            '',
+            (),
+        )
+
+        gameengine.getGlobalBase('GuildStub').callOnGuild(
+            loserGuildUUID,
+            'onSiegeWarEnd',
+            (),
+            None,
+            '',
+            (),
+        )
 
     def onSiegeWarWinnerGetGuildBox(self, guildBox):
         if not guildBox:

@@ -29,6 +29,7 @@ class WorldBossStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self._onTimer(tid, userArg)
 
     def addCreateWorldBossTimer(self, spaceNo, createTime):
+        DEBUG_MSG('addCreateWorldBossTimer', spaceNo, createTime)
         self._datetimeCallback(
             createTime,
             '_notifyCreateWorldBoss',

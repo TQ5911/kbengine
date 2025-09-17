@@ -4,10 +4,7 @@ datas ={
     "entityID": [
       21010001,
       21010002,
-      21010003,
-      21010004,
-      21010005,
-      21010006
+      21010003
     ],
     "num": 0,
     "lv": "33",
@@ -43,7 +40,8 @@ datas ={
         1004,
         1013,
         1096,
-        1134
+        1134,
+        1144
       ]
     }
   },
@@ -55,12 +53,7 @@ datas ={
   "1009": {
     "type": "monsterRestNum",
     "monsterID": [
-      21010001,
-      21010002,
-      21010003,
-      21010004,
-      21010005,
-      21010006
+      -1
     ],
     "compare": 1,
     "restNum": 0,
@@ -88,8 +81,6 @@ datas ={
   "1096": {
     "type": "createAirWall",
     "entityID": [
-      21018003,
-      21018004,
       21018005,
       21018006,
       21018007,
@@ -101,7 +92,16 @@ datas ={
       21018013,
       21018014,
       21018015,
-      21018016
+      21018016,
+      21018017,
+      21018018,
+      21018019,
+      21018020,
+      21018021,
+      21018022,
+      21018023,
+      21018024,
+      21018025
     ],
     "num": 1,
     "transition": {}
@@ -109,14 +109,12 @@ datas ={
   "1099": {
     "type": "createMonster",
     "entityID": [
+      21010004,
+      21010005,
+      21010006,
       21010007,
       21010008,
-      21010009,
-      21010010,
-      21010010,
-      21010011,
-      21010012,
-      21010013
+      2101009
     ],
     "num": 0,
     "lv": "33",
@@ -152,7 +150,6 @@ datas ={
   "1101": {
     "type": "createMonster",
     "entityID": [
-      21010014,
       21010015,
       21010016,
       21010017,
@@ -162,8 +159,10 @@ datas ={
       21010021,
       21010022,
       21010023,
-      21010024,
-      21010025
+      21010010,
+      21010012,
+      21010013,
+      21010014
     ],
     "num": 0,
     "lv": "34",
@@ -199,6 +198,9 @@ datas ={
   "1103": {
     "type": "createMonster",
     "entityID": [
+      21010024,
+      21010025,
+      21010026,
       21010027,
       21010028,
       21010029,
@@ -206,7 +208,8 @@ datas ={
       21010031,
       21010032,
       21010033,
-      21010034
+      21010034,
+      21010035
     ],
     "num": 0,
     "lv": "34",
@@ -242,11 +245,9 @@ datas ={
   "1105": {
     "type": "createMonster",
     "entityID": [
-      21010035,
       21010036,
       21010037,
-      21010038,
-      21010039
+      21010038
     ],
     "num": 0,
     "lv": "35",
@@ -275,69 +276,16 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1107,
         1109
       ]
     }
   },
-  "1107": {
-    "type": "removeAirWall",
-    "entityID": [
-      21018014,
-      21018015
-    ],
-    "transition": {}
-  },
   "1109": {
     "type": "createMonster",
     "entityID": [
+      21010039,
       21010040,
-      21010041,
-      21010042,
-      21010043,
-      21010044,
-      21010045,
-      21010046,
-      21010047,
-      21010048
-    ],
-    "num": 0,
-    "lv": "35",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1110
-      ]
-    }
-  },
-  "1110": {
-    "type": "monsterRestNum",
-    "monsterID": [
-      -1
-    ],
-    "compare": 1,
-    "restNum": 0,
-    "usePrototypeID": 0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1111
-      ]
-    }
-  },
-  "1111": {
-    "type": "createMonster",
-    "entityID": [
-      21010049,
-      21010050,
-      21010051
+      21010041
     ],
     "num": 0,
     "lv": "35",
@@ -373,15 +321,15 @@ datas ={
   "1113": {
     "type": "createMonster",
     "entityID": [
-      21010052,
-      21010053,
-      21010054,
-      21010055,
-      21010056,
-      21010057,
-      21010058,
-      21010059,
-      21010060
+      21010042,
+      21010043,
+      21010044,
+      21010045,
+      21010046,
+      21010047,
+      21010048,
+      21010049,
+      21010050
     ],
     "num": 0,
     "lv": "35",
@@ -394,51 +342,7 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1114
-      ]
-    }
-  },
-  "1114": {
-    "type": "monsterRestNum",
-    "monsterID": [
-      -1
-    ],
-    "compare": 1,
-    "restNum": 0,
-    "usePrototypeID": 0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1115
-      ]
-    }
-  },
-  "1115": {
-    "type": "createMonster",
-    "entityID": [
-      21010061,
-      21010062,
-      21010063,
-      21010064,
-      21010065,
-      21010066,
-      21010067,
-      21010068,
-      21010069
-    ],
-    "num": 0,
-    "lv": "35",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1116
+        1190
       ]
     }
   },
@@ -454,14 +358,15 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1117
+        1146,
+        1159
       ]
     }
   },
   "1117": {
     "type": "createMonster",
     "entityID": [
-      21010070
+      21010051
     ],
     "num": 0,
     "lv": "35",
@@ -481,7 +386,7 @@ datas ={
   "1120": {
     "type": "monsterRestNum",
     "monsterID": [
-      21010070
+      21010051
     ],
     "compare": 1,
     "restNum": 0,
@@ -491,7 +396,7 @@ datas ={
     "transition": {
       "finished": [
         1121,
-        1122,
+        1124,
         1011
       ]
     }
@@ -503,57 +408,16 @@ datas ={
     ],
     "transition": {}
   },
-  "1122": {
-    "type": "createMonster",
-    "entityID": [
-      21010072,
-      21010073,
-      21010074,
-      21010075,
-      21010076,
-      21010077,
-      21010078
-    ],
-    "num": 0,
-    "lv": "36",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1123
-      ]
-    }
-  },
-  "1123": {
-    "type": "monsterRestNum",
-    "monsterID": [
-      -1
-    ],
-    "compare": 1,
-    "restNum": 0,
-    "usePrototypeID": 0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1124
-      ]
-    }
-  },
   "1124": {
     "type": "createMonster",
     "entityID": [
-      21010079,
-      21010080,
-      21010081,
-      21010082,
-      21010083,
-      21010084
+      21010052,
+      21010053,
+      21010054,
+      21010055,
+      21010056,
+      21010057,
+      21010058
     ],
     "num": 0,
     "lv": "36",
@@ -566,7 +430,7 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1125
+        1151
       ]
     }
   },
@@ -589,12 +453,14 @@ datas ={
   "1126": {
     "type": "createMonster",
     "entityID": [
-      21010085,
-      21010086,
-      21010087,
-      21010088,
-      21010089,
-      21010090
+      21010059,
+      21010060,
+      21010061,
+      21010062,
+      21010063,
+      21010064,
+      21010065,
+      21010066
     ],
     "num": 0,
     "lv": "36",
@@ -623,14 +489,14 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1128
+        1153
       ]
     }
   },
   "1128": {
     "type": "createMonster",
     "entityID": [
-      21010091
+      21010082
     ],
     "num": 0,
     "lv": "36",
@@ -652,7 +518,10 @@ datas ={
     "entityID": [
       21014001,
       21014002,
-      21014003
+      21014003,
+      21014004,
+      21014005,
+      21014006
     ],
     "num": 1,
     "lv": "",
@@ -662,7 +531,7 @@ datas ={
   "1136": {
     "type": "monsterInBattle",
     "monsterID": [
-      21010035
+      21010036
     ],
     "checkNow": 0,
     "checkOnce": 0,
@@ -675,7 +544,7 @@ datas ={
   "1137": {
     "type": "popupdialog",
     "entityID": [
-      21010070
+      21010036
     ],
     "dialogID": 19900195,
     "transition": {
@@ -687,7 +556,7 @@ datas ={
   "1138": {
     "type": "monsterInBattle",
     "monsterID": [
-      21010049
+      21010041
     ],
     "checkNow": 0,
     "checkOnce": 0,
@@ -700,7 +569,7 @@ datas ={
   "1139": {
     "type": "popupdialog",
     "entityID": [
-      21010049
+      21010041
     ],
     "dialogID": 19900197,
     "transition": {
@@ -710,10 +579,13 @@ datas ={
     }
   },
   "1140": {
-    "type": "monsterInBattle",
+    "type": "monsterRestNum",
     "monsterID": [
-      21010085
+      -1
     ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -725,7 +597,7 @@ datas ={
   "1141": {
     "type": "popupdialog",
     "entityID": [
-      21010085
+      21010081
     ],
     "dialogID": 19900191,
     "transition": {
@@ -737,21 +609,23 @@ datas ={
   "1118": {
     "type": "monsterInBattle",
     "monsterID": [
-      21010070
+      21010051
     ],
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
         1119,
-        1022
+        1022,
+        1147,
+        1148
       ]
     }
   },
   "1119": {
     "type": "popupdialog",
     "entityID": [
-      21010070
+      21010051
     ],
     "dialogID": 19019001,
     "transition": {
@@ -782,7 +656,7 @@ datas ={
   "1025": {
     "type": "castSkill",
     "entityID": [
-      21010070
+      21010051
     ],
     "skillID": 91025015,
     "lv": "1",
@@ -792,7 +666,7 @@ datas ={
   "1142": {
     "type": "popupdialog",
     "entityID": [
-      21010070
+      21010051
     ],
     "dialogID": 19019005,
     "transition": {
@@ -810,7 +684,7 @@ datas ={
   "1006": {
     "type": "monsterRestNum",
     "monsterID": [
-      21010091
+      21010082
     ],
     "compare": 1,
     "restNum": 0,
@@ -826,21 +700,23 @@ datas ={
   "1014": {
     "type": "monsterInBattle",
     "monsterID": [
-      21010091
+      21010082
     ],
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
         1010,
-        1021
+        1021,
+        1191,
+        1999
       ]
     }
   },
   "1010": {
     "type": "popupdialog",
     "entityID": [
-      21010091
+      21010082
     ],
     "dialogID": 19900195,
     "transition": {
@@ -852,9 +728,9 @@ datas ={
   "1015": {
     "type": "popupdialog",
     "entityID": [
-      21010091
+      21010082
     ],
-    "dialogID": 19900194,
+    "dialogID": 20020004,
     "transition": {
       "finished": [
         1027
@@ -864,7 +740,7 @@ datas ={
   "1019": {
     "type": "castSkill",
     "entityID": [
-      21010091
+      21010082
     ],
     "skillID": 91026008,
     "lv": "1",
@@ -878,7 +754,7 @@ datas ={
   "1024": {
     "type": "createMonster",
     "entityID": [
-      21010092
+      21010083
     ],
     "num": 1,
     "lv": "20",
@@ -910,7 +786,7 @@ datas ={
   "1023": {
     "type": "monsterHp",
     "monsterID": [
-      21010092
+      21010083
     ],
     "compare": 1,
     "hpPercent": 0.0,
@@ -955,9 +831,9 @@ datas ={
   "1026": {
     "type": "popupdialog",
     "entityID": [
-      21010091
+      21010082
     ],
-    "dialogID": 19019002,
+    "dialogID": 20020002,
     "transition": {
       "finished": [
         1019
@@ -979,9 +855,9 @@ datas ={
   "1030": {
     "type": "popupdialog",
     "entityID": [
-      21010091
+      21010082
     ],
-    "dialogID": 19019005,
+    "dialogID": 20020002,
     "transition": {
       "finished": [
         1032,
@@ -992,7 +868,7 @@ datas ={
   "1032": {
     "type": "createMonster",
     "entityID": [
-      21010092
+      21010083
     ],
     "num": 1,
     "lv": "20",
@@ -1012,7 +888,7 @@ datas ={
   "1035": {
     "type": "monsterHp",
     "monsterID": [
-      21010092
+      21010083
     ],
     "compare": 1,
     "hpPercent": 0.0,
@@ -1027,7 +903,7 @@ datas ={
   "1037": {
     "type": "addBuffToMonster",
     "monsterID": [
-      21010091
+      21010083
     ],
     "buffID": [
       64004040
@@ -1040,10 +916,313 @@ datas ={
   "1143": {
     "type": "removeBuffFromMonster",
     "monsterID": [
-      21010091
+      21010083
     ],
     "buffID": [
       64004040
+    ],
+    "transition": {}
+  },
+  "1144": {
+    "type": "createRebornPos",
+    "entityID": [
+      21018002
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1190": {
+    "type": "monsterInBattle",
+    "monsterID": [
+      21010047
+    ],
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1145
+      ]
+    }
+  },
+  "1145": {
+    "type": "popupdialog",
+    "entityID": [
+      21010048
+    ],
+    "dialogID": 19900197,
+    "transition": {
+      "finished": [
+        1116
+      ]
+    }
+  },
+  "1146": {
+    "type": "popupdialog",
+    "entityID": [
+      21010048
+    ],
+    "dialogID": 19900197,
+    "transition": {
+      "finished": [
+        1117
+      ]
+    }
+  },
+  "1147": {
+    "type": "removeRebornPos",
+    "entityID": [
+      21018002
+    ],
+    "transition": {
+      "finished": [
+        1149
+      ]
+    }
+  },
+  "1148": {
+    "type": "removeNPC",
+    "entityID": [
+      21014001,
+      21014002,
+      21014003,
+      21014004,
+      21014005,
+      21014006
+    ],
+    "transition": {
+      "finished": [
+        1150
+      ]
+    }
+  },
+  "1149": {
+    "type": "createRebornPos",
+    "entityID": [
+      21018003
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1150": {
+    "type": "createNPC",
+    "entityID": [
+      21014007,
+      21014008,
+      21014009,
+      21014010,
+      21014011
+    ],
+    "num": 1,
+    "lv": "35",
+    "ifSetBoss": 1,
+    "transition": {}
+  },
+  "1151": {
+    "type": "monsterInBattle",
+    "monsterID": [
+      21010056
+    ],
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1152
+      ]
+    }
+  },
+  "1152": {
+    "type": "popupdialog",
+    "entityID": [
+      21010056
+    ],
+    "dialogID": 19900197,
+    "transition": {
+      "finished": [
+        1125
+      ]
+    }
+  },
+  "1153": {
+    "type": "createMonster",
+    "entityID": [
+      21010067,
+      21010068,
+      21010069,
+      21010070,
+      21010071,
+      21010072,
+      21010073,
+      21010074,
+      21010075,
+      21010076
+    ],
+    "num": 0,
+    "lv": "36",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 1,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1154
+      ]
+    }
+  },
+  "1154": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      -1
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1155
+      ]
+    }
+  },
+  "1155": {
+    "type": "createMonster",
+    "entityID": [
+      21010077,
+      21010078,
+      21010079,
+      21010080,
+      21010081
+    ],
+    "num": 0,
+    "lv": "36",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 1,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1156
+      ]
+    }
+  },
+  "1156": {
+    "type": "monsterInBattle",
+    "monsterID": [
+      21010081
+    ],
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1157
+      ]
+    }
+  },
+  "1157": {
+    "type": "popupdialog",
+    "entityID": [
+      21010056
+    ],
+    "dialogID": 19900197,
+    "transition": {
+      "finished": [
+        1163
+      ]
+    }
+  },
+  "1191": {
+    "type": "removeRebornPos",
+    "entityID": [
+      21018003
+    ],
+    "transition": {
+      "finished": [
+        1998
+      ]
+    }
+  },
+  "1998": {
+    "type": "createRebornPos",
+    "entityID": [
+      21018004
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1999": {
+    "type": "removeNPC",
+    "entityID": [
+      21014008,
+      21014009,
+      21014010,
+      21014011
+    ],
+    "transition": {
+      "finished": [
+        1158
+      ]
+    }
+  },
+  "1158": {
+    "type": "createNPC",
+    "entityID": [
+      21014013,
+      21014014,
+      21014015,
+      21014016,
+      21014012
+    ],
+    "num": 1,
+    "lv": "35",
+    "ifSetBoss": 1,
+    "transition": {}
+  },
+  "1159": {
+    "type": "removeAirWall",
+    "entityID": [
+      21018025
+    ],
+    "transition": {
+      "finished": [
+        1160
+      ]
+    }
+  },
+  "1160": {
+    "type": "createAirWall",
+    "entityID": [
+      21018026
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1163": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      -1
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1128,
+        1164
+      ]
+    }
+  },
+  "1164": {
+    "type": "removeAirWall",
+    "entityID": [
+      21018026
     ],
     "transition": {}
   }

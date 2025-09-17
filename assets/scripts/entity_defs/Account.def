@@ -8,7 +8,6 @@
         <characters>
             <Type>          CHARACTERS_INFO         </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>        true                </Persistent>
         </characters>
 
         <accountType>
@@ -251,8 +250,9 @@
 
         <reqCreateBot>
             <Exposed/>
-            <Arg>   UNICODE </Arg>  <!-- name -->
-            <Arg>   SCHOOL  </Arg>  <!-- school -->
+            <Arg>   UNICODE     </Arg>  <!-- name -->
+            <Arg>   SCHOOL      </Arg>  <!-- school -->
+            <Arg>   FACE_DATA   </Arg>  <!-- face data -->
         </reqCreateBot>
 
         <reqRemoveAvatar>

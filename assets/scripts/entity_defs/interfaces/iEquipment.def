@@ -382,6 +382,11 @@
             <Arg>      UINT64       </Arg>
             <Arg>      UINT32       </Arg>
         </sendItemLinkInfoCell>
+
+        <modifyEquipEnhanceLevel>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT8   </Arg>
+        </modifyEquipEnhanceLevel>
     </CellMethods>
 
     <ClientMethods>

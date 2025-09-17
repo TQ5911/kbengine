@@ -154,7 +154,7 @@ class ImpRaid(object):
         DEBUG_MSG('onRefreshPlayerRaidMemberCacheVal::', raidUUID, teamIDX, playerGBID, needDel)
         raidTeamMemberVal, err = self._onRefreshPlayerRaidMemberCacheVal(raidUUID, teamIDX, playerGBID, propsDic, needDel)
         if err != gameconst.RaidErrno.RAID_OK:
-            ERROR_MSG('onRefreshPlayerRaidMemberCacheVal:: failed, {}'.format(err))
+            WARNING_MSG('onRefreshPlayerRaidMemberCacheVal:: failed, {}'.format(err))
             return
 
     def _onRefreshPlayerRaidMemberCacheVal(self, raidUUID, teamIDX, playerGBID, newRaidTeamMemberCacheValDic, needDel):
@@ -276,38 +276,40 @@ class ImpRaid(object):
             return
 
         modified = False
-        broadcastToRaidMembers = False
         lastRecord = self.raidAvatarPropsCache
 
         if 'level' not in lastRecord or lastRecord['level'] != self.level:
             lastRecord['level'] = self.level
             modified = True
-        if 'spaceNo' not in lastRecord or lastRecord['spaceNo'] != self.spaceNo:
-            lastRecord['spaceNo'] = self.spaceNo
-            modified = broadcastToRaidMembers = True
         pos = tuple(self.position)
-        if 'position' not in lastRecord or lastRecord['position'] != pos:
+        if 'spaceNo' not in lastRecord or lastRecord['spaceNo'] != self.spaceNo or 'position' not in lastRecord or lastRecord['position'] != pos:
+            lastRecord['spaceNo'] = self.spaceNo
             lastRecord['position'] = pos
             modified = True
-        if 'hp' not in lastRecord or lastRecord['hp'] != self.hp:
+        if 'hp' not in lastRecord or lastRecord['hp'] != self.hp or 'fullHp' not in lastRecord or lastRecord['fullHp'] != self.fullHp:
             lastRecord['hp'] = self.hp
-            modified = True
-        if 'fullHp' not in lastRecord or lastRecord['fullHp'] != self.fullHp:
             lastRecord['fullHp'] = self.fullHp
             modified = True
         if 'playerName' not in lastRecord or lastRecord['playerName'] != self.name:
             lastRecord['playerName'] = self.name
             modified = True
+
         oldScore = lastRecord.get('score', 0)
         newScore = self.getTotalScore()
         if 'score' not in lastRecord or oldScore != newScore:
             DEBUG_MSG("in raidTick, score updated:", oldScore, newScore)
             lastRecord['score'] = newScore
-            modified = broadcastToRaidMembers = True
 
         if modified:
-            gameengine.getRaidStub(self.raidId).updateRaidMemberCacheVal(
-                self.raidId, self.gbId, lastRecord, broadcastToRaidMembers)
+            excludedPlayerIDs = (self.gbId,)
+            if 'spaceNo' in lastRecord and 'position' in lastRecord:
+                for teamIDX, memberGBID, memberVal in self.raidInfo.iterGetRaidMember():
+                    if memberGBID == self.gbId or not memberVal.playerBox:
+                        continue
+                    if self.checkInView(memberVal.playerBox.id):
+                        excludedPlayerIDs += (memberGBID,)
+            lastRecord['excludedGbIDs'] = excludedPlayerIDs
+            gameengine.getRaidStub(self.raidId).updateRaidMemberCacheVal(self.raidId, self.gbId, lastRecord)
 
         if self.followCaptain in (gameconst.TeamFollowState.Follow, gameconst.TeamFollowState.Suspending):
             self.followCaptainCheck()
@@ -558,43 +560,51 @@ class ImpRaid(object):
             self.base, self.gbId, self.teamId, needCreatedRaidUUID, capacity, extraProps)
 
     @utils.isMyself
+    @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     @lockRaid(timeout=3)
-    def createRaidLonely(self, exposed, capacity, raidTargetId, startAutoMatch):
+    @gamedecorator.limitcall(3)
+    def createRaidLonely(self, exposed, capacity, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         """API: 创建一个团队(单人)"""
-        INFO_MSG('createRaidLonely::~', capacity, raidTargetId, startAutoMatch)
+        INFO_MSG('createRaidLonely::~', capacity, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
         _, err = self._createRaidLonelyCheck(capacity)
         if err != gameconst.RaidErrno.RAID_OK:
             ERROR_MSG('createRaidLonely:: check failed, {}'.format(
                 err.initkvbody(source=self._createRaidLonelyCheck.__name__)))
             return
 
-        teamTargetInfo = TMACTD.datas.get(raidTargetId)
-        if teamTargetInfo is None:
-            ERROR_MSG("createRaidLonely, misssing teamTarget", raidTargetId)
+        if raidTarget <=0:
+            ERROR_MSG("createRaidLonely, illegal teamTarget", raidTarget)
             return
         
-        if raidTargetId > 1:
+        teamTargetInfo = TMACTD.datas.get(raidTarget)
+        if teamTargetInfo is None:
+            ERROR_MSG("createRaidLonely, misssing teamTarget", raidTarget)
+            return
+        
+        if raidTarget > 1:
             actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
             if not actData or gameconst.ActivityControlType.RAID != int(actData['needTeam']):
-                ERROR_MSG("createRaidLonely, wrong activity control need team type", raidTargetId)
+                ERROR_MSG("createRaidLonely, wrong activity control need team type", raidTarget)
                 return
 
         cfgMinScore = teamTargetInfo['minScore']
-
-        if self.getTotalScore() < cfgMinScore:
-            ERROR_MSG("createRaidLonely, min score not enough", raidTargetId, self.getTotalScore(), cfgMinScore)
-            return
+        if minScore < cfgMinScore:
+            WARNING_MSG("createRaidLonely, invalid minScore", minScore, cfgMinScore)
+            minScore = cfgMinScore
         
         cfgMinLevel = teamTargetInfo['minLevel']
-        if self.level < cfgMinLevel:
-            ERROR_MSG("createRaidLonely, min level not enough", raidTargetId, self.level, cfgMinLevel)
+        if minLevel < cfgMinLevel:
+            WARNING_MSG("createRaidLonely, invalid minLevel", minLevel, cfgMinLevel)
+            minLevel = cfgMinLevel
+        
+        if not self.isCanCreateTeam(raidTarget, minLevel, minScore):
             return
 
         raidUUID = KBEngine.genUUID64()
         INFO_MSG('createRaidLonely::raidUUID: ', raidUUID)
         leaderProps = self._getAvatarPropsForRaid().toSavedDict()
         gameengine.getRaidStub(raidUUID).createRaidLonely(
-            self.base, self.gbId, raidUUID, capacity, [leaderProps, ], {}, raidTargetId, cfgMinLevel, cfgMinScore, startAutoMatch)
+            self.base, self.gbId, raidUUID, capacity, [leaderProps, ], {}, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
         return True
 
     def _createRaidLonelyCheck(self, capacity):
@@ -1733,50 +1743,48 @@ class ImpRaid(object):
 
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
-    def setRaidTarget(self, exposed, raidTargetId, minLevel, minScore, recuitInfo, autoPublish, autoStartMatching):
-        DEBUG_MSG("setRaidTarget, ", raidTargetId, minLevel, minScore, recuitInfo, autoPublish, autoStartMatching)
-        if not autoPublish and autoStartMatching:
-            ERROR_MSG("setRaidTarget, wrong args, ", raidTargetId, minLevel, minScore, recuitInfo, autoPublish, autoStartMatching)
-            return
+    def setRaidTarget(self, exposed, minLevel, minScore, recuitInfo, password, isAutoExpedition):
+        DEBUG_MSG("setRaidTarget, ", minLevel, minScore, recuitInfo, password, isAutoExpedition)
         """API: 团长设置全团目标"""
         if not self.isInRaid():
+            ERROR_MSG("setRaidTarget, not in team")
             return
         if not self.isRaidLeader():
-            return
-            
-        teamTargetInfo = TMACTD.datas.get(raidTargetId)
-        if teamTargetInfo is None:
-            ERROR_MSG("setRaidTarget, misssing teamTarget", raidTargetId)
+            ERROR_MSG("setRaidTarget, not raid leader")
             return
         
-        actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
-        if not actData:
-            if raidTargetId == 0:
-                gameengine.getRaidStub(self.raidUUID).setRaidTarget(self.base, self.gbId, self.raidUUID, 0, 0, 0, recuitInfo, autoPublish, autoStartMatching)
-                return
-        else:
-            if gameconst.ActivityControlType.RAID != int(actData['needTeam']):
-                ERROR_MSG("setRaidTarget, wrong activity control need team type", raidTargetId, minLevel, minScore)
+        raidTarget = self.raidInfo.raidTarget
+        raidTargetInfo = TMACTD.datas.get(raidTarget)
+        if raidTargetInfo is None:
+            ERROR_MSG("setRaidTarget, misssing teamTarget", raidTarget)
+            return
+        
+        if raidTarget > 1:
+            actData = AC_ADD.datas.get(int(raidTargetInfo['pareActivity']))
+            if not actData or gameconst.ActivityControlType.RAID != int(actData['needTeam']):
+                ERROR_MSG("setRaidTarget, wrong activity control need team type", raidTarget, minLevel, minScore)
                 return
         
-        cfgMinLv = teamTargetInfo['minLevel']
+        cfgMinLv = raidTargetInfo['minLevel']
         if minLevel < cfgMinLv:
-            ERROR_MSG("setRaidTarget, minLevel not enough", raidTargetId, minLevel, cfgMinLv)
+            ERROR_MSG("setRaidTarget, minLevel not enough", raidTarget, minLevel, cfgMinLv)
             return
 
-        cfgMinScore = teamTargetInfo['minScore']
+        cfgMinScore = raidTargetInfo['minScore']
         if minScore < cfgMinScore:
-            ERROR_MSG("setRaidTarget, minScore not enough", raidTargetId, minScore, cfgMinScore)
+            ERROR_MSG("setRaidTarget, minScore not enough", raidTarget, minScore, cfgMinScore)
             return
 
         if self.getTotalScore() < minScore:
-            ERROR_MSG("setRaidTarget, totalScore not enough", raidTargetId, self.getTotalScore(), minScore, cfgMinScore)
+            ERROR_MSG("setRaidTarget, totalScore not enough", raidTarget, self.getTotalScore(), minScore, cfgMinScore)
             return
-        gameengine.getRaidStub(self.raidUUID).setRaidTarget(self.base, self.gbId, self.raidUUID, raidTargetId, minLevel, minScore, recuitInfo, autoPublish, autoStartMatching)
-
-    def onSetRaidTargetAllMemberNotify(self, srcPlayerGBID, raidUUID, newTargetId, minLevel, minScore):
+        
+        gameengine.getRaidStub(self.raidUUID).setRaidTarget(self.base, self.gbId, self.raidUUID, raidTarget, minLevel, minScore, recuitInfo, password, isAutoExpedition)
+        return
+    
+    def onSetRaidTargetAllMemberNotify(self, srcPlayerGBID, raidUUID, newTargetId, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         """设置全团目标后全团回调"""
-        INFO_MSG('onSetRaidTargetAllMemberNotify::', srcPlayerGBID, raidUUID, newTargetId, minLevel, minScore)
+        INFO_MSG('onSetRaidTargetAllMemberNotify::', srcPlayerGBID, raidUUID, newTargetId, minLevel, minScore, recruitInfo, password, isAutoExpedition)
 
         def _check():
             if not self.isInRaid():
@@ -1795,44 +1803,33 @@ class ImpRaid(object):
         self.raidInfo.raidTarget = newTargetId
         self.raidInfo.raidMinLevel = minLevel
         self.raidInfo.raidMinScore = minScore
-
-    @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
-    def publishRaid(self, exposed, autoPublish, recruitInfo, autoStartMatching):
-        DEBUG_MSG("publishRaid:", autoPublish, recruitInfo, autoStartMatching)
-        if not autoPublish and autoStartMatching:
-            ERROR_MSG("publishRaid, wrong args, ", autoPublish, recruitInfo, autoStartMatching)
-            return
-        if not self.isInRaid():
-            return
-        if not self.isRaidLeader():
-            return
-
-        gameengine.getRaidStub(self.raidUUID).publishRaid(self.raidUUID, autoPublish, recruitInfo, autoStartMatching)
-
+        self.raidInfo.recruitInfo = recruitInfo
+        self.raidInfo.password = password
+        self.raidInfo.isAutoExpedition = isAutoExpedition
+        
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
     def startRaidStandbyChecker(self, exposed):
         """API: 团长发起全团检查"""
         INFO_MSG('startRaidStandbyChecker::~')
 
-        def _check():
-            if not self.isInRaid():
-                return None, gameconst.RaidErrno.RAID_NOT_IN_RAID
-            if not self.isRaidLeader() and not self.isRaidDeputy():
-                return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER_OR_DEPUTY
+        # def _check():
+        #     if not self.isInRaid():
+        #         return None, gameconst.RaidErrno.RAID_NOT_IN_RAID
+        #     if not self.isRaidLeader() and not self.isRaidDeputy():
+        #         return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER_OR_DEPUTY
             
-            return None, gameconst.RaidErrno.RAID_OK
+        #     return None, gameconst.RaidErrno.RAID_OK
 
-        _, err = _check()
-        if err != gameconst.RaidErrno.RAID_OK:
-            ERROR_MSG('startRaidStandbyChecker:: failed, {}'.format(err))
-            return
+        # _, err = _check()
+        # if err != gameconst.RaidErrno.RAID_OK:
+        #     ERROR_MSG('startRaidStandbyChecker:: failed, {}'.format(err))
+        #     return
 
-        raidUUID = self.raidUUID
-        extraProps = {}
-        gameengine.getRaidStub(raidUUID).startRaidStandbyChecker(
-            self.base, self.gbId, raidUUID, extraProps)
+        # raidUUID = self.raidUUID
+        # extraProps = {}
+        # gameengine.getRaidStub(raidUUID).startRaidStandbyChecker(
+        #     self.base, self.gbId, raidUUID, extraProps)
 
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
@@ -1840,22 +1837,22 @@ class ImpRaid(object):
         """API: 团队成员回应团长检查"""
         INFO_MSG('replyRaidStandbyChecker::', raidUUID, beAgreed)
 
-        def _check():
-            if not self.isInRaid():
-                return None, gameconst.RaidErrno.RAID_NOT_IN_RAID
-            if raidUUID != self.raidInfo.raidUUID:
-                return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_MATCH
-            return None, gameconst.RaidErrno.RAID_OK
+        # def _check():
+        #     if not self.isInRaid():
+        #         return None, gameconst.RaidErrno.RAID_NOT_IN_RAID
+        #     if raidUUID != self.raidInfo.raidUUID:
+        #         return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_MATCH
+        #     return None, gameconst.RaidErrno.RAID_OK
 
-        _, err = _check()
-        if err != gameconst.RaidErrno.RAID_OK:
-            ERROR_MSG('replyRaidStandbyChecker:: failed, {}'.format(err))
-            return
+        # _, err = _check()
+        # if err != gameconst.RaidErrno.RAID_OK:
+        #     ERROR_MSG('replyRaidStandbyChecker:: failed, {}'.format(err))
+        #     return
 
-        raidUUID = self.raidUUID
-        extraProps = {}
-        gameengine.getRaidStub(raidUUID).replyRaidStandbyChecker(
-            self.base, self.gbId, raidUUID, beAgreed, extraProps)
+        # raidUUID = self.raidUUID
+        # extraProps = {}
+        # gameengine.getRaidStub(raidUUID).replyRaidStandbyChecker(
+        #     self.base, self.gbId, raidUUID, beAgreed, extraProps)
 
     # --------------------------------------------------------------------
     # RAID MICS
@@ -2231,17 +2228,6 @@ class ImpRaid(object):
         self.client.onRaidPlayerStopAutoMatch()
         self.showMsg(TMMCD.datas['leaveMatch_timeOverMsg']['value'], [])
         return
-    
-    @utils.isMyself
-    def reqSetRaidAutoInPlace(self, exposed, bAutoInPlace):
-        DEBUG_MSG('reqSetRaidAutoInPlace', bAutoInPlace)
-        if not self.isInRaid():
-            return
-        if not self.isRaidLeader():
-            return
-
-        gameengine.getRaidStub(self.raidUUID).setRaidAutoInPlace(self.raidUUID, bAutoInPlace)
-
 
     @utils.isMyself
     def reqGetRaidList(self, exposed, lastTime, raidTarget):
@@ -2339,4 +2325,24 @@ class ImpRaid(object):
         
         gameengine.getRaidStub(self.raidUUID).reqChangeRaidOnlyLeader(self.raidUUID, self.base, state)
 
-    # 标记 end
+    @utils.isMyself
+    @gamedecorator.limitcall(2)
+    @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
+    def reqJoinRaid(self, exposed, raidUUID, password):
+        INFO_MSG('reqJoinRaid::', raidUUID, password)
+        _, err = self._onJoinRaidCheck(raidUUID)
+        if err != gameconst.RaidErrno.RAID_OK:
+            ERROR_MSG('onJoinPlayerReplyJoinRaidLonely::, check failed, {}'.format(err))
+            self.client.onJoinRaid(err.errno, raidUUID, password)
+        else:
+            playerProps = self._getAvatarPropsForRaid().toSavedDict()
+            gameengine.getRaidStub(raidUUID).reqJoinRaid(self.base, raidUUID, password, playerProps)
+    
+    def _onJoinRaidCheck(self):
+        _errno = gameconst.RaidErrno
+        if self.isInRaid():
+            return _errno.RAID_ALREADY_IN_RAID.initkvbody(source='_onJoinRaidCheck')
+        if self.isInTeam(self.gbId):
+            return _errno.RAID_ALREADY_IN_TEAM.initkvbody(source='_onJoinRaidCheck')
+
+        return _errno.RAID_OK

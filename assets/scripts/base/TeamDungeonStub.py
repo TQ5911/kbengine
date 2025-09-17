@@ -142,8 +142,8 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
         _teamStub = gameengine.getTeamStub(sVal.teamUUID)
         _teamStub.onAvatarOffline(playerGbId, sVal.teamUUID, self.dungeonNo)
 
-    def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType):
-        return self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType)
+    def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType, reliveHp):
+        return self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType, reliveHp)
 
     def onDungeonStarted(self, spaceNo, tCreate):
         DEBUG_MSG('onDungeonStarted::', spaceNo, tCreate)
@@ -184,7 +184,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             return
 
         sVal.spaceMgr.cell.destroyAllEntities()
-        sVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, teamUUID, win, delay)
+        sVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, teamUUID, win, delay, sVal.getElapsedTime())
 
         if delay:
             sVal.completeDungeonTimer = self._callback(

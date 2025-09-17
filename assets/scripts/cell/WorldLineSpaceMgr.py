@@ -82,7 +82,7 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
             _state = _state | (1 << i)
 
         self.worldLineSceneState = _state
-
+        DEBUG_MSG('setSceneStates', self.spaceNo, states, self.worldLineSceneState)
         self.syncPlayer(lambda box: box.client.onSceneState(self.worldLineSceneState))
 
     def onPlayerEnter(self, eid):
@@ -91,13 +91,22 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
             return
 
         ent = self.getEntityById(eid)
+        DEBUG_MSG('onPlayerEnter', self.spaceNo, self.worldLineSceneState)
         ent and ent.client.onSceneState(self.worldLineSceneState)
+
+    def onPlayerRelogin(self, player, gbId):
+        if not formula.isWolrdBossSpace(self.spaceNo):
+            return
+
+        DEBUG_MSG('onPlayerEnter', self.spaceNo, self.worldLineSceneState)
+        player.client.onSceneState(self.worldLineSceneState)
 
     def hasSceneState(self, st):
         return (self.worldLineSceneState & (1 << st)) > 0
 
-    def onWorldBossDead(self):
-        _nextCreateTime = utils.getNow() + gameconst.WORLD_BOSS_MOCK_REFRESH_TIME
+    def onWorldBossDead(self, refreshTime):
+        DEBUG_MSG('onWorldBossDead', self.spaceNo, refreshTime)
+        _nextCreateTime = utils.getNow() + refreshTime
         gameengine.getGlobalBase('WorldBossStub').onWorldBossDeadAddTimer(self.spaceNo, _nextCreateTime)
 
         self.setSceneStates([

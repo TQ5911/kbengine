@@ -61,6 +61,7 @@
         <Interface>         iAvatarChief                </Interface>
         <Interface>         iNewbie                     </Interface>
         <Interface>         iWorkshop                   </Interface>
+        <Interface>         iRedBag                     </Interface>
     </Interfaces>
 
     <Properties>
@@ -496,6 +497,13 @@
             <Flags>    BASE_AND_CLIENT                        </Flags>
             <Persistent>    true                    </Persistent>
         </blazeIds>
+
+        <dailyHealWoundsTimes>
+            <Type>          UINT8               </Type>
+            <Flags>         OWN_CLIENT          </Flags>
+            <Persistent>    true                </Persistent>
+            <Default>       0                    </Default>
+        </dailyHealWoundsTimes>
     </Properties>
 
     <BaseMethods>
@@ -755,6 +763,34 @@
 
         <removeMapBuff> <Exposed/>
         </removeMapBuff>
+
+        <tryHealWoundsFromNpc> <Exposed/>
+        </tryHealWoundsFromNpc>
+
+        <onDailyHealWoundsTimesRefresh>
+        </onDailyHealWoundsTimesRefresh>
+
+        <healWoundsFromNpcCallback>
+            <Arg>       BOOL            </Arg>
+            <Arg>       PY_DICT         </Arg>
+        </healWoundsFromNpcCallback>
+
+        <getTargetPlayerInfo> <Exposed/>
+            <Arg>   PLAYER_GBID     </Arg>
+        </getTargetPlayerInfo>
+
+        <onGetTargetPlayerInfo>
+            <Arg>   ENTITYCALL     </Arg>
+        </onGetTargetPlayerInfo>
+
+        <onGetTargetPlayerInfoOffline>
+            <Arg>   PLAYER_GBID    </Arg>
+        </onGetTargetPlayerInfoOffline>
+
+        <onGetMemberJob>
+            <Arg>   UINT8          </Arg>
+            <Arg>   ENTITYCALL     </Arg>
+        </onGetMemberJob>
     </CellMethods>
 
     <ClientMethods>
@@ -835,6 +871,7 @@
             <!-- isWin Flag -->
             <Arg>       DUNGEON_NO      </Arg>
             <Arg>       BOOL            </Arg>
+            <Arg>       INT32           </Arg>           
         </onDungeonCompleted>
         <notifyClientSelfBigWorldLineCachedPos>
             <Arg> POSITION_ARG </Arg>

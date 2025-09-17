@@ -123,6 +123,8 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
             if pathId:
                 self._callback(1, 'setRoute', (pathId, True if self.aiController else False),
                                gametimer.TIMER_TAG_SET_ROUTE)
+        elif state == gameconst.BornStateType.reMove:
+            self.bornState = gameconst.BornStateType.move
         elif state == gameconst.BornStateType.afterDialog:
             self.stopThink()
             self.interruptRouting()
@@ -173,7 +175,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         if radii<=0:
             return
         self.hateTrapId = self.addProximity(radii, radii, gameconst.HATE_TRAP)
-        leaveAoiRange = max(gameconst.HOME_AOI, radii)
+        leaveAoiRange = min(gameconst.HOME_AOI, self.getLeaveAlertDistance())
         self.addProximity(leaveAoiRange, 0.0, gameconst.LEAVE_AOI_TRAP)
 
     def onBeAttacked(self, arg):

@@ -293,6 +293,9 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 return
             gameengine.getDungeonStubBySpaceNo(self.spaceNo).onEntityCreated(
                 self.spaceNo, self.spaceUUID, entId, ent.gameEntityIdentifyID)
+            
+        if 'RebornPos' in tags:
+            gameengine.getDungeonStubBySpaceNo(self.spaceNo).onCreateNewRebornPos(self.spaceNo, ent.position)
 
     def onPlayerDead(self, box, playerGbId):
         super(DungeonSpaceMgr, self).onPlayerDead(box, playerGbId)
@@ -333,9 +336,9 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         # tlogProps['iTeamMemNum'] = pEnt.teamInfo.howManyMember() if pEnt.isInTeam(pEnt.gbId) else 0
         # pEnt.base.handleDungeonFlowTlog(spaceNo, tlogProps)
 
-    def onSingleDungeonCompleted(self, spaceNo, playerGbId, win, delay):
-        DEBUG_MSG('onSingleDungeonCompleted::', spaceNo, playerGbId, win, delay)
-        self._onDungeonCompleted(spaceNo, win, delay)
+    def onSingleDungeonCompleted(self, spaceNo, playerGbId, win, delay, elapsedTime):
+        DEBUG_MSG('onSingleDungeonCompleted::', spaceNo, playerGbId, win, delay, elapsedTime)
+        self._onDungeonCompleted(spaceNo, win, delay, elapsedTime)
         self._onSingleDungeonCompleted(spaceNo, playerGbId, win)
 
     def _onSingleDungeonCompleted(self, spaceNo, playerGbId, win):
@@ -353,9 +356,9 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             _tlogDungeonFlowCommon.update(dict(iRoundTime=max(0, now - pEnt.getSpaceEnterT())))
             self._handlePlayerDungeonFlowTlogWithExtra(pEnt, spaceNo, _tlogDungeonFlowCommon)
 
-    def onTeamDungeonCompleted(self, spaceNo, teamUUID, win, delay):
-        DEBUG_MSG('onTeamDungeonCompleted::', spaceNo, teamUUID, win, delay)
-        self._onDungeonCompleted(spaceNo, win, delay)
+    def onTeamDungeonCompleted(self, spaceNo, teamUUID, win, delay, elapsedTime):
+        DEBUG_MSG('onTeamDungeonCompleted::', spaceNo, teamUUID, win, delay, elapsedTime)
+        self._onDungeonCompleted(spaceNo, win, delay, elapsedTime)
         self._onTeamDungeonCompleted(spaceNo, teamUUID, win)
 
     def _onTeamDungeonCompleted(self, spaceNo, teamUUID, win):
@@ -373,9 +376,9 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             _tlogDungeonFlowCommon.update(dict(iRoundTime=max(0, now - pEnt.getSpaceEnterT())))
             self._handlePlayerDungeonFlowTlogWithExtra(pEnt, spaceNo, _tlogDungeonFlowCommon)
 
-    def onRaidDungeonCompleted(self, spaceNo, raidUUID, win, delay, creepBaseKillDic, playerGbidAndNameList):
-        DEBUG_MSG('onRaidDungeonCompleted::', spaceNo, raidUUID, win, delay, creepBaseKillDic, len(playerGbidAndNameList))
-        self._onDungeonCompleted(spaceNo, win, delay)
+    def onRaidDungeonCompleted(self, spaceNo, raidUUID, win, delay, creepBaseKillDic, playerGbidAndNameList, elapsedTime):
+        DEBUG_MSG('onRaidDungeonCompleted::', spaceNo, raidUUID, win, delay, creepBaseKillDic, len(playerGbidAndNameList), elapsedTime)
+        self._onDungeonCompleted(spaceNo, win, delay, elapsedTime)
         self._onRaidDungeonCompleted(spaceNo, raidUUID, win, creepBaseKillDic, playerGbidAndNameList)
 
     def _onRaidDungeonCompleted(self, spaceNo, raidUUID, win, creepBaseKillDic, playerGbidAndNameList):
@@ -393,14 +396,12 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             _tlogDungeonFlowCommon.update(dict(iRoundTime=max(0, now - pEnt.getSpaceEnterT())))
             self._handlePlayerDungeonFlowTlogWithExtra(pEnt, spaceNo, _tlogDungeonFlowCommon)
 
-    def _onDungeonCompleted(self, spaceNo, win, delay):
+    def _onDungeonCompleted(self, spaceNo, win, delay, elapsedTime):
         self.isDungeonWin = win
 
         _now = utils.getNow()
         _endT = int(_now + delay)
         _pEntList = []
-        _minSpaceEnterT=utils.getNow()
-
         _allPlayersAreGoodMan = False
 
         for pid in list(self.players):
@@ -414,7 +415,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                     pEnt.showMsg(ACCD.datas["msgId_goodMan_noHelpTarget"]["value"], [])
 
                 dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
-                pEnt.client.onDungeonCompleted(dungeonNo, win)
+                pEnt.client.onDungeonCompleted(dungeonNo, win, elapsedTime)
                 pEnt.client.changeDungeonRemainTime(spaceNo, _endT)
 
                 _pEntList.append(pEnt)

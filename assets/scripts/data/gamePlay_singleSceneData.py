@@ -108,7 +108,7 @@ datas = _tools.RODict({
         "sceneName": "月光海港七层",
         "defaultMapID": 1036,
         "returnPos": None,
-        "tmxRes": "yuRenDong_06",
+        "tmxRes": "yueGuangHaiGang_07",
         "weatherType": 0,
     }),
     "field_wudushiku_01": _tools.RODict({

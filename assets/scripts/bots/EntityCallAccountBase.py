@@ -15,8 +15,8 @@ class AccountBaseEntityCall(object):
     def reqCreateAvatar(self, arg1, arg2, arg3, arg4, arg5, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqCreateAvatar', (arg1, arg2, arg3, arg4, arg5, )))
 
-    def reqCreateBot(self, arg1, arg2, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqCreateBot', (arg1, arg2, )))
+    def reqCreateBot(self, arg1, arg2, arg3, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqCreateBot', (arg1, arg2, arg3, )))
 
     def reqRemoveAvatar(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqRemoveAvatar', (arg1, )))

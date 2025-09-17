@@ -77,6 +77,9 @@ class DungeonSpaceVal(userType.UserSoleType):
     def clearCompleteTimer(self):
         self.completeDungeonTimer = 0
 
+    def getElapsedTime(self):
+        return utils.getNow() - self.tCreate
+
 # ======================================================
 # Dungeon Monster Creator TimeLine Structure
 # ======================================================

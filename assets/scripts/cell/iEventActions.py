@@ -344,7 +344,14 @@ class IEventActions(object):
             buffId = int(str(args[0]))
 
         if buffId:
-            srckeys = (self._getBuffSrcKey(buffId),)
+            srckeys = None
+            # 光环需要找到原来释放的entity
+            if context.actionType == 7:
+                ent = KBEngine.entities.get(context.srcEntId)
+                if ent:
+                    srckeys = (ent._getBuffSrcKey(buffId),)
+            if srckeys is None:
+                srckeys = (self._getBuffSrcKey(buffId),)
             target and target.removeBuff(buffId, srckeys, removeType=gameconst.RemoveType.EndByAction)
 
         return True
@@ -387,6 +394,52 @@ class IEventActions(object):
         self.topSpeed = gameconst.TopSpeedType.NormalTopSpeed
 
         return True
+
+    def telByDunRandomRegion(self, target, context, regionId):
+        _dunData = self.dunData()
+        if not _dunData:
+            return False
+
+        if _dunData['CustomID'] != gameconst.DunCustomId.POS_FOR_SKILL:
+            ERROR_MSG('telByDunRandomRegion wrong custom id', _dunData['CustomID'])
+            return False
+
+        _regions = _dunData.get('Props', {}).get('RandomRegion', [])
+        if regionId >= len(_regions):
+            ERROR_MSG('telByDunRandomRegion wrong region id', regionId)
+            return False
+
+        _region = _regions[regionId]
+        _pos = (_region[0], _region[1], _region[2])
+
+        self.topSpeed = gameconst.TopSpeedType.TeleportSkillTopSpeed
+        self.setNeedUpdateWitnessPosDir(0)
+        self.telToPos(_pos)
+        self.setNeedUpdateWitnessPosDir(1)
+        self.topSpeed = gameconst.TopSpeedType.NormalTopSpeed
+        return True
+
+    def getNearstRandomRegion(self):
+        _dunData = self.dunData()
+        if not _dunData:
+            ERROR_MSG('getNearstRandomRegion no dunData')
+            return None
+
+        if _dunData['CustomID'] != gameconst.DunCustomId.POS_FOR_SKILL:
+            ERROR_MSG('getNearstRandomRegion wrong custom id', _dunData['CustomID'])
+            return None
+
+        _regions = _dunData.get('Props', {}).get('RandomRegion', [])
+        _idx = 0
+        _minDis = math.inf
+        for i, _region in enumerate(_regions):
+            _pos = (_region[0], _region[1], _region[2])
+            _dis = sMath.distance2DToCompareFrom3DPosition(self.position, _pos)
+            if _dis < _minDis:
+                _minDis = _dis
+                _idx = i
+
+        return _idx
 
     def _checkBlinkToTarget(self, target):
         #blink到目标身后一点距离
@@ -664,6 +717,10 @@ class IEventActions(object):
             ignoreReasons = gameconst.UseSkillCheck.STATE_CONFLICT|gameconst.UseSkillCheck.OUT_OF_RANGE|gameconst.UseSkillCheck.ULTRA_SKILL_POWER_NOT_ENOUGH
 
             direction = sMath.vector3WithoutY(target.position - self.position) if target else sMath.getDirFromYaw(self.direction[2])
+            if not direction:
+                # 走到这里，说明target 跟self 是同一个，这时候会导致direction为0，0，0，000是无法被normalize的，所以需要手动设置为self的direction
+                direction = sMath.getDirFromYaw(self.direction[2])
+
             skillArgs = skill.getSkillArr(self, target, direction)
 
         if skill.hasTag(gameconst.SkillTag.Casting):
@@ -1174,7 +1231,7 @@ class IEventActions(object):
         dstPosition = sMath.getForwardPos(target.position, sMath.getYawFromPoints(target.position, self.position), dist)
         dstPosition = utils.getSurfacePos(self.spaceID, dstPosition)
         realDstPos = utils.getRaycastPos(self.spaceID, target.position, dstPosition)
-        target.displacedBySkill(self.id, realDstPos, speed, timeEx)
+        target.displacedBySkill(self.id, realDstPos, speed, timeEx, context)
 
     def dragTarget(self, target, context, *args):
         if not target or target.isDie() or target.isDestroyed:
@@ -1196,7 +1253,7 @@ class IEventActions(object):
         realDstPos = utils.getRaycastPos(self.spaceID, target.position, dstPosition)
         DEBUG_MSG('drag target', self.position, realDstPos, target.position)
 
-        return target.displacedBySkill(self.id, realDstPos, speed, timeEx)
+        return target.displacedBySkill(self.id, realDstPos, speed, timeEx, context)
 
     def dragTargetToPos(self, target, context, *args):
         if not target or target.isDie() or target.isDestroyed:
@@ -1231,7 +1288,7 @@ class IEventActions(object):
         realDstPos = utils.getRaycastPos(self.spaceID, target.position, dstPosition)
         DEBUG_MSG('drag target to pos', dstPosition, realDstPos, target.position)
 
-        target.displacedBySkill(self.id, realDstPos, speed, timeEx)
+        target.displacedBySkill(self.id, realDstPos, speed, timeEx, context)
 
     def immuneDeath(self, target, context, *args):
         immuneDuration, deadAfterimmuning = args

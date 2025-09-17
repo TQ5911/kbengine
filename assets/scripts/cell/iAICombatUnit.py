@@ -280,6 +280,12 @@ class IAICombatUnit(SkillManager.SkillManager):
     def getAlertDistance(self):
         return self.getConfigData().get('alertRange', 0)
 
+    def getLeaveAlertDistance(self):
+        range = self.getConfigData().get('leaveAlertRange', gameconst.HOME_AOI)
+        if not range or range <= 0:
+            range = gameconst.HOME_AOI
+        return range
+
     def getEscapeDistance(self):
         return self.getConfigData().get('escapeRange', 0)
 
@@ -837,3 +843,8 @@ class IAICombatUnit(SkillManager.SkillManager):
     def followPlayer(self):
         if self.IsAvatarMirror:
             return KBEngine.entities.get(self.teamRobotHostId)
+
+    def tickCallBack(self):
+        if not self.aiController:
+            return
+        self.aiController.tickCallBack()

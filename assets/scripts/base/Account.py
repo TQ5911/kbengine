@@ -63,7 +63,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.serverId = gameconfig.serverId()
 
         self.onDailyEvent()
-        self._hasLoadAppearance = False
+        self._hasLoadData = False # 先加载角色数据，再加载appearance数据
 
         devicePlatId = clientData.get('devicePlatId', 0)
         channelId = clientData.get('channelId', 0)
@@ -86,6 +86,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         self.callbackList = []
         self._callback(0.1, 'loadSwitchServerRecrod', (), gametimer.TIMER_TAG_LOAD_SWITCH_SERVER_RECORD)
+
+        _interval = 5 * 60
+        self.pyAddTimer(_interval, _interval, gametimer.ACCOUNT_WRITE_CHAR)
 
     def loadSwitchServerRecrod(self):
         INFO_MSG('loadSwitchServerRecrod:', self.accountFullName())
@@ -133,7 +136,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             _name = utils.getStringFromBytes(_name)
             _level = int(_level)
             _birthInDB = int(_birthInDB)
-            self.characters.addCharacter(_gbId, _dbId, _school, _name, _sex, _level, _birthInDB)
+            self.characters.addCharacter(self.databaseID, 0, 0, _gbId, _dbId, _school, _name, _sex, _level, _birthInDB)
             gbIdList.append(_gbId)
 
         _cbList = self.callbackList
@@ -151,6 +154,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self._onTimerCallback(tid)
         elif userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
             self.onCycleEventTick()
+        elif userArg == gametimer.ACCOUNT_WRITE_CHAR:
+            self._writeCharacters(True)
 
     @property
     def avatar(self):
@@ -281,9 +286,19 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.avatarID = avatar.id
             self.accountStatus = AccountStatus.avatarLoaded
             self.avatarDatabaseID = avatar.databaseID
-            self.characters.addCharacter(avatar.gbID, avatar.databaseID, props["school"], props["name"],
-                                         props['sex'], 1, props['birthInDB'], charAppearance=props['appearance'])
-            self.pyWriteToDB()
+            self.characters.addCharacter(
+                self.databaseID,
+                0,
+                0,
+                avatar.gbID, 
+                avatar.databaseID, 
+                props["school"], 
+                props["name"],
+                props['sex'], 
+                1,
+                props['birthInDB'], 
+                charAppearance=props['appearance'])
+            self._writeCharacters(False)
             if gameconfig.enableCentralLogin():
                 createInfo = (self.accountType, self.accountName, avatar.gbID, props['name'], props['school'], props['sex'])
                 stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
@@ -386,7 +401,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         INFO_MSG('create avatar begin：', self.accountName, name)
 
     @gamedecorator.limitcall(1)
-    def reqCreateBot(self, name, school):
+    def reqCreateBot(self, name, school, faceData):
         import character_roleData_r_school
 
         _datas = {}
@@ -400,8 +415,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             _school = random.choice(list(_datas.keys()))
             _sex = _datas[_school]
 
-        props = {"name": name, "gbId": 0, "checkCnt": 0, 'isBotBase': True, 'sex': _sex, 'school': _school,
-                 "faceData": appearance.FaceDataVal(suitId=2,hairIdFaceId=257)}
+        props = {"name": name, "gbId": 0, "checkCnt": 0, 'isBotBase': True, 'sex': _sex, 'school': _school, "faceData": faceData}
         DEBUG_MSG("reqCreateBot: ", props)
         self.checkNameDuplicate(props, self.onCheckNameDuplicate)
 
@@ -441,7 +455,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             ERRRO_MSG('removeAvatarCallBack: err:', err)
             return
 
-        self.characters.removeCharacter(gbId)
+        _cVal = self.characters.removeCharacter(gbId)
+        if _cVal:
+            gamesql.removeCharaterFromDB(_cVal.selfDbId, None)
         self.client.onRemoveAvatar(gbId)
 
     @gamedecorator.limitcall(1)
@@ -589,21 +605,18 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
             gameclass.DuplicatedCallList(stubs).onAccountLogin(self.accountName, self.devicePlatId, self,
                                                                self.accountType)
-        self._beginLoadCharacterAppearance()
+        self._loadCharacterFromDB()
 
     def _beginLoadCharacterAppearance(self):
-        if len(self.characters)>0 and not self._hasLoadAppearance:
-            gbIdList = [gbId for gbId in self.characters]
-            if gbIdList:
-                gamesql.loadAvatarAppearanceDataFromDB(gbIdList, lambda ret, num, insertId, err: self._onLoadCharacterAppearance(ret, num, insertId, err))
-                return
-        self.afterLoadCharacterAppearance()
+        gbIdList = [gbId for gbId in self.characters]
+        gamesql.loadAvatarAppearanceDataFromDB(gbIdList, lambda ret, num, insertId, err: self._onLoadCharacterAppearance(ret, num, insertId, err))
 
     def _onLoadCharacterAppearance(self, ret, num, insertId, err):
         INFO_MSG('_onLoadCharacterAppearance', ret, num, err)
         if err:
             ERROR_MSG('_onLoadCharacterAppearance err:', err)
             return
+
         parentIDDic= {}
         for data in ret:
             parentID = int(data[0])
@@ -612,9 +625,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             _appearance = appearance.Appearance()
             _appearance.updateFromAvatarAppearanceDBData(data, 6)
             self.characters[gbId].birthInDB = birthInDB
-            self.characters[gbId].level = int(data[5])
+            self.characters[gbId].setLevel(int(data[5]))
             self.characters[gbId].setAppearance(_appearance)
             parentIDDic[parentID] = gbId
+
         gamesql.loadAvatarOutfitDataFromDB(parentIDDic.keys(), lambda ret, num, insertId, err, parentIDDic=parentIDDic: self._onLoadCharacterOutfitData(ret, num, insertId, err, parentIDDic))
 
     def _onLoadCharacterOutfitData(self, ret, num, insertId, err, parentIDDic):
@@ -622,6 +636,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if err:
             ERROR_MSG('_onLoadCharacterOutfitData err:', err)
             return
+
         for parentID, sm_outfitType, sm_outfitId, sm_expireTime in ret:
             parentID = int(parentID)
             outfitType = int(sm_outfitType)
@@ -629,11 +644,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             expireTime = int(sm_expireTime)
             gbId = parentIDDic[parentID]
             self.characters[gbId].charAppearance.resetOutfitData(outfitType, outfitId, expireTime)
-        self._hasLoadAppearance = True
-        self.afterLoadCharacterAppearance()
 
-    def afterLoadCharacterAppearance(self):
-        self._sendAvatarList()
+        self._loadFinish()
 
     def _sendAvatarList(self):
         if self.callbackList is not None:
@@ -835,6 +847,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                                                              self.centralServerId, self.channelId)
 
         gameglobal.localAccountCache.pop(self.__ACCOUNT_NAME__, None)
+        self._writeCharacters(False)
 
     def _onAvatarLoaded(self, baseRef, dbid, wasActive):
         """
@@ -872,7 +885,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
     def updateCharacterLevel(self, dbid, level, tLoginBase):
         if dbid in self.characters:
             cVal = self.characters[dbid]
-            cVal.level = level
+            cVal.setLevel(level)
 
             if gameconfig.enableCentralLogin():
                 createInfo = (cVal.gbId, cVal.name, tLoginBase, False, cVal.school, level, cVal.sex)
@@ -1040,8 +1053,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 # ---------------------------- switch avatar server start ----------------------------
     def onAvatarSwitchServer(self, avatar):
         _charVal = self.characters.get(avatar.gbID)
-        self.characters.removeCharacter(avatar.gbID)
-
+        _cVal = self.characters.removeCharacter(avatar.gbID)
+        if _cVal:
+            gamesql.removeCharaterFromDB(_cVal.selfDbId, None)
         self.switchServerAvatars[avatar.gbID] = _charVal.toSavedData()
 
     def recoverSwitchAvatar(self, gbId):
@@ -1078,7 +1092,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             ERROR_MSG('onAvatarModifiedName but not has character')
             return
 
-        charInfo.name = name
+        charInfo.setName(name)
 
     def getAvatarDetailForAccount(self, gbId):
         _ctx = {
@@ -1136,6 +1150,177 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             _guildName,
             gameconfig.serverId(),
         )
+
+# --------------------------- auth avatar start --------------------------------
+    def _loadCharacterFromDB(self):
+        DEBUG_MSG('authChar _loadCharacterFromDB')
+        if self._hasLoadData:
+            self._sendAvatarList()
+            return
+
+        gamesql.loadCharacterFromDB(self.databaseID, self._onLoadCharacterFromDB)
+
+    def _onLoadCharacterFromDB(self, ret, num, insertId, err):
+        DEBUG_MSG('authChar _onLoadCharacterFromDB', ret, num, insertId, err)
+        if err:
+            ERROR_MSG('_onLoadCharacterFromDB', err)
+            return
+
+        for _id, _gbId, _authDbId, _dbId, _name, _school, _sex, _level, _tLastOnline in ret:
+            _id = int(_id)
+            _gbId = int(_gbId)
+            _authDbId = int(_authDbId)
+            _dbId = int(_dbId)
+            _name = utils.getStringFromBytes(_name)
+            _school = int(_school)
+            _sex = int(_sex)
+            _level = int(_level)
+
+            self.characters.addCharacter(
+                self.databaseID,
+                _id,
+                _authDbId,
+                _gbId, 
+                _dbId, 
+                _school, 
+                _name, 
+                _sex, 
+                _level, 
+                0,
+            )
+
+        gamesql.loadBorrowedCharacterFromDB(self.databaseID, self._onLoadBorrowedCharacterFromDB)
+
+    def _onLoadBorrowedCharacterFromDB(self, ret, num, insertId, err):
+        DEBUG_MSG('authChar _onLoadBorrowedCharacterFromDB', ret, num, insertId, err)
+        if err:
+            ERROR_MSG('_onLoadBorrowedCharacterFromDB', err)
+            return
+
+        for _id, parentID, _gbId, _authDbId, _dbId, _name, _school, _sex, _level, _tLastOnline in ret:
+            _id = int(_id)
+            _parentID = int(parentID)
+            _gbId = int(_gbId)
+            _authDbId = int(_authDbId)
+            _dbId = int(_dbId)
+            _name = utils.getStringFromBytes(_name)
+            _school = int(_school)
+            _sex = int(_sex)
+            _level = int(_level)
+
+            self.characters.addCharacter(
+                _parentID, 
+                _id, 
+                _authDbId, 
+                _gbId, 
+                _dbId, 
+                _school, 
+                _name, 
+                _sex, 
+                _level, 
+                0,
+            )
+
+        if not len(self.characters):
+            self._loadFinish()
+            return
+
+        self._beginLoadCharacterAppearance()
+ 
+    def _writeCharacters(self, ignoreDirty):
+        DEBUG_MSG('authChar _writeCharacters', self.characters.isArchiving)
+        if self.characters.isArchiving:
+            self.characters.needArchiveAgain = True
+            return
+
+        self.characters.isArchiving = True
+
+        sql = self.characters.genWriteToDBSql(ignoreDirty)
+        if not sql:
+            self._characterArchiveFinish()
+            return
+
+        KBEngine.executeRawDatabaseCommand(sql, self._onWriteCharacters)
+
+    def _onWriteCharacters(self, ret, num, insertId, err):
+        DEBUG_MSG('authChar _onWriteCharacters', ret, num, insertId, err)
+        if err:
+            ERROR_MSG('_onWriteCharacters', err)
+            self._characterArchiveFinish()
+            return
+
+        if KBEngine.isShuttingDown():
+            return
+
+        DEBUG_MSG('authChar _onWriteCharacters', ret, insertId)
+        _gbIds = self.characters.getZeroSelfDbIdGbIds()
+        if not _gbIds:
+            self._characterArchiveFinish()
+            return
+
+        _sql = 'SELECT id, gbId tLastOnline FROM game_account_characters WHERE gbId IN ({})'.format(','.join(str(_gbId) for _gbId in _gbIds))
+        KBEngine.executeRawDatabaseCommand(_sql, self._onLoadDBIDForZero)
+
+    def _onLoadDBIDForZero(self, ret, num, insertId, err):
+        DEBUG_MSG('authChar _onLoadDBIDForZero', ret, num, insertId, err)
+        if err:
+            ERROR_MSG('_onLoadCharacterFromDB', err)
+            self._characterArchiveFinish()
+            return
+
+        if not ret:
+            ERROR_MSG('_onLoadDBIDForZero', ret)
+            self._characterArchiveFinish()
+            return
+
+        DEBUG_MSG('_onLoadDBIDForZero', ret)
+
+        for _id, _gbId in ret:
+            _id = int(_id)
+            _gbId = int(_gbId)
+            self.characters.setSelfDbId(_gbId, _id)
+
+        self._characterArchiveFinish()
+
+    def _characterArchiveFinish(self):
+        DEBUG_MSG('authChar _characterArchiveFinish')
+        self.characters.isArchiving = False
+        if self.characters.needArchiveAgain:
+            self.characters.needArchiveAgain = False
+            self._writeCharacters(False)
+
+    def _loadFinish(self):
+        DEBUG_MSG('authChar _loadFinish')
+        self._hasLoadData = True
+        self._sendAvatarList()
+
+    def lendAvatar(self, gbId, otherDbId):
+        INFO_MSG('lendAvatar', gbId, otherDbId)
+        _cVal = self.characters.get(gbId)
+        if not _cVal:
+            ERROR_MSG('lendAvatar not find character', gbId)
+            return
+
+        if _cVal.authDbId != 0:
+            ERROR_MSG('lendAvatar has auth', gbId, _cVal.authDbId)
+            return
+
+        gamesql.lendAvatar(gbId, otherDbId, functools.partial(self._onLendAvatar, gbId, otherDbId))
+
+    def _onLendAvatar(self, gbId, otherDbId, ret, num, insertId, err):
+        INFO_MSG('_onLendAvatar', ret, num, insertId, err)
+        if err:
+            ERROR_MSG('_onLendAvatar', err)
+            return
+
+        _cVal = self.characters.get(gbId)
+        if not _cVal:
+            ERROR_MSG('_onLendAvatar', gbId)
+            return
+
+        _cVal.setAuthDbId(otherDbId)
+
+# --------------------------- auth avatar end --------------------------------
 
 
 

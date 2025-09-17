@@ -909,6 +909,10 @@
             <Type>          FLOAT          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
         </adjSkillCD>
+        <viewRadius>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </viewRadius>
     </Properties>
 
     <CellMethods>

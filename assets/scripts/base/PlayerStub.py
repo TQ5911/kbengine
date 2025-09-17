@@ -15,6 +15,10 @@ import iTimer
 import gametimer
 import gameglobal
 import gamelog
+import json
+import gzip
+import guildAuthorization_authorization_def as GA_A_DD
+import collections
 
 
 class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
@@ -24,7 +28,7 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.avatarCounter = globalDataSum.GloalDataSum(gameconst.GLOBALDATA_KEY_TOTAL_ONLINE_NUM,
                                                         gameglobal.localBaseApp.registerBaseappDataCallback,
                                                         globalDataSum.DATA_BASEAPP, cd=10)
-
+        self.PlayerInfoCache = collections.OrderedDict()
         return
 
     def doNext(self):
@@ -280,3 +284,72 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             return
 
         box.onAvatarReceiveMail(mailVal, True)
+
+    def getPlayerInfoOffline(self, srcBase, tarGbId):
+        # 缓存60秒
+        if tarGbId in self.PlayerInfoCache:
+            cacheTime, zStr = self.PlayerInfoCache[tarGbId]
+            if utils.getNow() - cacheTime < 60:
+                DEBUG_MSG('getPlayerInfoOffline cache hit', tarGbId)
+                srcBase.streamStringProxy(zStr, '', gameconst.StreamStringID.PLAYER_INFO_DATA)
+                return
+            else:
+                self.PlayerInfoCache.pop(tarGbId)
+
+        gamesql.getAvatarPersonalInfo(tarGbId,
+                                      lambda ret, num, insertId, err, tarGbId=tarGbId, srcBase=srcBase: self._onGetPlayerInfoOffline(
+                                        ret, num, insertId, err, tarGbId, srcBase))
+        
+    def _onGetPlayerInfoOffline(self, ret, num, insertId, err, tarGbId, srcBase):
+        if err:
+            ERROR_MSG('getPlayerInfoOffline error:', err)
+            return
+        
+        if not ret:
+            ERROR_MSG('getPlayerInfoOffline ret is empty:', ret, num, insertId, err, srcBase)
+            return
+        
+        redisUtils.RedisUtils.getSingleUserInfo(
+            tarGbId,
+            lambda fcVal: self._onRedisGetSingleUserInfo(fcVal, ret, srcBase))
+        
+    def _onRedisGetSingleUserInfo(self, fcVal, ret, srcBase):
+        guildUUID = fcVal.guildUUID
+        guildName = fcVal.guildName
+        gbId = fcVal.gbId
+        gameengine.getGlobalBase('GuildStub').callOnGuild(
+            guildUUID,
+            'getMemberJob',
+            (gbId, self, (ret, srcBase)),
+            self,
+            'onGetMemberJob',
+            (GA_A_DD.datas.BONUS_SRC_UNKNOWN, (ret, guildUUID, guildName, gbId, srcBase)),
+        )
+        
+    def onGetMemberJob(self, job, args):
+        ret, guildUUID, guildName, tarGbId, srcBase = args
+        data = {}
+        #个人信息
+        data['name'] = ret[0][0].decode()
+        data['level'] = ret[0][1].decode()
+        data['school'] = ret[0][2].decode()
+        data['totalScore'] = ret[0][3].decode()
+        data['guildName'] = guildName
+        data['guildUUID'] = guildUUID
+        data['guildJob'] = job
+        data['bodyEquipList'] = []
+        if len(ret[0]) > 4:
+            for d in ret:
+                data['bodyEquipList'].append({
+                    'slotId': d[4].decode(),
+                    'attrJson': d[5].decode(),
+                })
+
+        jsonStr = json.dumps(data).encode('ascii')
+        zStr = gzip.compress(jsonStr)
+        self.PlayerInfoCache[tarGbId] = (utils.getNow(), zStr)
+        self.PlayerInfoCache.move_to_end(tarGbId)
+        if len(self.PlayerInfoCache) > 1024:
+            self.PlayerInfoCache.popitem(last=False)
+        DEBUG_MSG("_onGetPlayerInfoOffline", len(zStr), len(jsonStr), len(self.PlayerInfoCache), jsonStr)
+        srcBase.streamStringProxy(zStr, '', gameconst.StreamStringID.PLAYER_INFO_DATA)
