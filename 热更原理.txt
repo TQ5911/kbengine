@@ -39,3 +39,79 @@ else:
 
 
  e:\192.168.10.155\svn\h1\trunk\Dev\Server\kbeLinux\kbengine\assets\hotReload\genhotfix.bat baseapp Avatar Avatar initFirst
+
+
+
+
+热更配置命令
+import gamerefresh
+gamerefresh.refreshData()
+或者更新指定配置
+import gamerefresh
+gamerefresh.refreshData(('gacha_gachaPool',))
+
+其中refreshData()的定义如下
+def refreshData(includeModules=None):
+    INFO_MSG('refreshData with args:', includeModules)
+    try:
+        _refreshData(includeModules)
+    finally:
+        _RELOADED_MODULES.clear()
+
+# 判断模块是否为配置文件
+def _isData(module):
+    # __file__属性来确定是否有对应的物理文件(.py或者库模块)
+    # 且路径中包含'data'字符串(即是data配置文件目录的文件)
+    # 且模块中包含datas属性
+    return hasattr(module, '__file__') and 'data' in module.__file__ and hasattr(module, 'datas')
+
+默认不传任何参数是全部配置更新,否则更新对应的配置
+_refreshData如下
+sys.modules 会存储当前服务已经加载(导入)过的所有模块信息,即通过import导入的模块
+
+def _refreshData(includeModules):
+    globalAttrCacheList = {
+        'gacha_gachaPool': ('expiredDrawCardPoolCache',),
+    }
+    clearGlobalAttrCacheList = []
+
+    import sys
+    for moduleName, module in sys.modules.items():
+        if includeModules:
+            if moduleName not in includeModules:
+                continue
+        # 获取模块文件的路径
+        modulePath = getattr(module, '__file__', '')
+        # 判断是否为配置文件
+        if modulePath and _isData(module):
+            DEBUG_MSG('_refreshData::reload({})'.format(moduleName))
+            # 通过importlib.reload来重新动态加载该模块,并且直接更新sys.modules 中对应的模块对象
+            new_module = importlib.reload(module)
+            # 缓存一下
+            # add to reloaded modules
+            _RELOADED_MODULES[moduleName] = new_module
+            if moduleName in globalAttrCacheList:
+                for attrName in globalAttrCacheList[moduleName]:
+                    clearGlobalAttrCacheList.append(getattr(sys.modules['gameglobal'], attrName, None))
+    # 清理全局变量
+    DEBUG_MSG('_refreshData::clearDataCache', clearGlobalAttrCacheList)
+    gameglobal.clearDataCache(clearGlobalAttrCacheList)
+
+    # 需要清理缓存的模块
+    # clear ai controller poll when refresh ai_ai data cfg
+    cacheList = [
+        ('aiControllerPool', 'pool', 'clearAllPool'),
+        ('combatSkill', 'SkillBase', 'clearAllCache'),
+        ('buff', 'Buff', 'clearAllCache'),
+        ('dataUtils', 'getTaskData', 'cache_clear'),
+    ]
+    # 设置一个清理缓存的回调
+    KBEngine.addTimer(0.1, 0.1, functools.partial(clearCacheInTick, cacheList))
+    # 这个暂时不看
+    for moduleName, module in sys.modules.items():
+        for r_name, r_module in _RELOADED_MODULES.items():
+            _module = getattr(module, r_name, None)
+            if _module and _module is not r_module:
+                DEBUG_MSG('_refreshData::reReference({}, {})'.format(
+                    moduleName, r_name))
+                setattr(module, r_name, r_module)
