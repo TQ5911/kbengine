@@ -2848,17 +2848,17 @@ datas = _tools.RODict({
     86060001: _tools.RODict({
         "TaskId": 86060001,
         "TaskGroup": 0,
-        "TaskName": "村庄异变",
+        "TaskName": "同心试炼",
     }),
     86060002: _tools.RODict({
         "TaskId": 86060002,
         "TaskGroup": 0,
-        "TaskName": "村庄异变",
+        "TaskName": "同心试炼",
     }),
     86060003: _tools.RODict({
         "TaskId": 86060003,
         "TaskGroup": 0,
-        "TaskName": "村庄异变",
+        "TaskName": "同心试炼",
     }),
     86060004: _tools.RODict({
         "TaskId": 86060004,
@@ -2969,6 +2969,266 @@ datas = _tools.RODict({
         "TaskId": 86060048,
         "TaskGroup": 0,
         "TaskName": "新手任务测试",
+    }),
+    86060049: _tools.RODict({
+        "TaskId": 86060049,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060050: _tools.RODict({
+        "TaskId": 86060050,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060051: _tools.RODict({
+        "TaskId": 86060051,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060052: _tools.RODict({
+        "TaskId": 86060052,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060053: _tools.RODict({
+        "TaskId": 86060053,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060054: _tools.RODict({
+        "TaskId": 86060054,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060055: _tools.RODict({
+        "TaskId": 86060055,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060056: _tools.RODict({
+        "TaskId": 86060056,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060057: _tools.RODict({
+        "TaskId": 86060057,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060059: _tools.RODict({
+        "TaskId": 86060059,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060060: _tools.RODict({
+        "TaskId": 86060060,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060061: _tools.RODict({
+        "TaskId": 86060061,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060062: _tools.RODict({
+        "TaskId": 86060062,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060063: _tools.RODict({
+        "TaskId": 86060063,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060064: _tools.RODict({
+        "TaskId": 86060064,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060065: _tools.RODict({
+        "TaskId": 86060065,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060066: _tools.RODict({
+        "TaskId": 86060066,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060067: _tools.RODict({
+        "TaskId": 86060067,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060068: _tools.RODict({
+        "TaskId": 86060068,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060069: _tools.RODict({
+        "TaskId": 86060069,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060070: _tools.RODict({
+        "TaskId": 86060070,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060071: _tools.RODict({
+        "TaskId": 86060071,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060072: _tools.RODict({
+        "TaskId": 86060072,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060073: _tools.RODict({
+        "TaskId": 86060073,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060074: _tools.RODict({
+        "TaskId": 86060074,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060075: _tools.RODict({
+        "TaskId": 86060075,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060076: _tools.RODict({
+        "TaskId": 86060076,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060077: _tools.RODict({
+        "TaskId": 86060077,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060078: _tools.RODict({
+        "TaskId": 86060078,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060079: _tools.RODict({
+        "TaskId": 86060079,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060080: _tools.RODict({
+        "TaskId": 86060080,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060081: _tools.RODict({
+        "TaskId": 86060081,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060082: _tools.RODict({
+        "TaskId": 86060082,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060083: _tools.RODict({
+        "TaskId": 86060083,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060084: _tools.RODict({
+        "TaskId": 86060084,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060085: _tools.RODict({
+        "TaskId": 86060085,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060086: _tools.RODict({
+        "TaskId": 86060086,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060087: _tools.RODict({
+        "TaskId": 86060087,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060088: _tools.RODict({
+        "TaskId": 86060088,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060089: _tools.RODict({
+        "TaskId": 86060089,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060090: _tools.RODict({
+        "TaskId": 86060090,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060091: _tools.RODict({
+        "TaskId": 86060091,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060092: _tools.RODict({
+        "TaskId": 86060092,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060093: _tools.RODict({
+        "TaskId": 86060093,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060094: _tools.RODict({
+        "TaskId": 86060094,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060095: _tools.RODict({
+        "TaskId": 86060095,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060096: _tools.RODict({
+        "TaskId": 86060096,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060097: _tools.RODict({
+        "TaskId": 86060097,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060098: _tools.RODict({
+        "TaskId": 86060098,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060099: _tools.RODict({
+        "TaskId": 86060099,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060100: _tools.RODict({
+        "TaskId": 86060100,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060101: _tools.RODict({
+        "TaskId": 86060101,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
     }),
     86070001: _tools.RODict({
         "TaskId": 86070001,
@@ -5034,6 +5294,226 @@ datas = _tools.RODict({
         "TaskId": 86090133,
         "TaskGroup": 0,
         "TaskName": "寻找赃物2",
+    }),
+    86090134: _tools.RODict({
+        "TaskId": 86090134,
+        "TaskGroup": 0,
+        "TaskName": "神秘高人1",
+    }),
+    86090135: _tools.RODict({
+        "TaskId": 86090135,
+        "TaskGroup": 0,
+        "TaskName": "神秘高人1",
+    }),
+    86090136: _tools.RODict({
+        "TaskId": 86090136,
+        "TaskGroup": 0,
+        "TaskName": "神秘高人1",
+    }),
+    86090137: _tools.RODict({
+        "TaskId": 86090137,
+        "TaskGroup": 0,
+        "TaskName": "神秘高人2",
+    }),
+    86090138: _tools.RODict({
+        "TaskId": 86090138,
+        "TaskGroup": 0,
+        "TaskName": "神秘高人2",
+    }),
+    86090139: _tools.RODict({
+        "TaskId": 86090139,
+        "TaskGroup": 0,
+        "TaskName": "神秘高人2",
+    }),
+    86090140: _tools.RODict({
+        "TaskId": 86090140,
+        "TaskGroup": 0,
+        "TaskName": "神秘高人2",
+    }),
+    86090141: _tools.RODict({
+        "TaskId": 86090141,
+        "TaskGroup": 0,
+        "TaskName": "七步之内的解药",
+    }),
+    86090142: _tools.RODict({
+        "TaskId": 86090142,
+        "TaskGroup": 0,
+        "TaskName": "七步之内的解药",
+    }),
+    86090143: _tools.RODict({
+        "TaskId": 86090143,
+        "TaskGroup": 0,
+        "TaskName": "七步之内的解药",
+    }),
+    86090144: _tools.RODict({
+        "TaskId": 86090144,
+        "TaskGroup": 0,
+        "TaskName": "士兵的委托1",
+    }),
+    86090145: _tools.RODict({
+        "TaskId": 86090145,
+        "TaskGroup": 0,
+        "TaskName": "士兵的委托2",
+    }),
+    86090146: _tools.RODict({
+        "TaskId": 86090146,
+        "TaskGroup": 0,
+        "TaskName": "士兵的委托2",
+    }),
+    86090147: _tools.RODict({
+        "TaskId": 86090147,
+        "TaskGroup": 0,
+        "TaskName": "士兵的委托2",
+    }),
+    86090148: _tools.RODict({
+        "TaskId": 86090148,
+        "TaskGroup": 0,
+        "TaskName": "魔物与地貌",
+    }),
+    86090149: _tools.RODict({
+        "TaskId": 86090149,
+        "TaskGroup": 0,
+        "TaskName": "魔物与地貌",
+    }),
+    86090150: _tools.RODict({
+        "TaskId": 86090150,
+        "TaskGroup": 0,
+        "TaskName": "魔物与地貌",
+    }),
+    86090151: _tools.RODict({
+        "TaskId": 86090151,
+        "TaskGroup": 0,
+        "TaskName": "魔物与地貌",
+    }),
+    86090152: _tools.RODict({
+        "TaskId": 86090152,
+        "TaskGroup": 0,
+        "TaskName": "渔夫的委托1",
+    }),
+    86090153: _tools.RODict({
+        "TaskId": 86090153,
+        "TaskGroup": 0,
+        "TaskName": "渔夫的委托1",
+    }),
+    86090154: _tools.RODict({
+        "TaskId": 86090154,
+        "TaskGroup": 0,
+        "TaskName": "渔夫的委托1",
+    }),
+    86090155: _tools.RODict({
+        "TaskId": 86090155,
+        "TaskGroup": 0,
+        "TaskName": "渔夫的委托1",
+    }),
+    86090156: _tools.RODict({
+        "TaskId": 86090156,
+        "TaskGroup": 0,
+        "TaskName": "渔夫的委托1",
+    }),
+    86090157: _tools.RODict({
+        "TaskId": 86090157,
+        "TaskGroup": 0,
+        "TaskName": "渔夫的委托2",
+    }),
+    86090158: _tools.RODict({
+        "TaskId": 86090158,
+        "TaskGroup": 0,
+        "TaskName": "渔夫的委托2",
+    }),
+    86090159: _tools.RODict({
+        "TaskId": 86090159,
+        "TaskGroup": 0,
+        "TaskName": "渔夫的委托2",
+    }),
+    86090160: _tools.RODict({
+        "TaskId": 86090160,
+        "TaskGroup": 0,
+        "TaskName": "护送货郎",
+    }),
+    86090161: _tools.RODict({
+        "TaskId": 86090161,
+        "TaskGroup": 0,
+        "TaskName": "护送货郎",
+    }),
+    86090162: _tools.RODict({
+        "TaskId": 86090162,
+        "TaskGroup": 0,
+        "TaskName": "护送货郎",
+    }),
+    86090163: _tools.RODict({
+        "TaskId": 86090163,
+        "TaskGroup": 0,
+        "TaskName": "护送货郎",
+    }),
+    86090164: _tools.RODict({
+        "TaskId": 86090164,
+        "TaskGroup": 0,
+        "TaskName": "护送货郎",
+    }),
+    86090165: _tools.RODict({
+        "TaskId": 86090165,
+        "TaskGroup": 0,
+        "TaskName": "护送货郎",
+    }),
+    86090166: _tools.RODict({
+        "TaskId": 86090166,
+        "TaskGroup": 0,
+        "TaskName": "相亲的士兵2",
+    }),
+    86090167: _tools.RODict({
+        "TaskId": 86090167,
+        "TaskGroup": 0,
+        "TaskName": "画痴",
+    }),
+    86090168: _tools.RODict({
+        "TaskId": 86090168,
+        "TaskGroup": 0,
+        "TaskName": "画痴",
+    }),
+    86090169: _tools.RODict({
+        "TaskId": 86090169,
+        "TaskGroup": 0,
+        "TaskName": "画痴",
+    }),
+    86090170: _tools.RODict({
+        "TaskId": 86090170,
+        "TaskGroup": 0,
+        "TaskName": "城郊之殇",
+    }),
+    86090171: _tools.RODict({
+        "TaskId": 86090171,
+        "TaskGroup": 0,
+        "TaskName": "城郊之殇",
+    }),
+    86090172: _tools.RODict({
+        "TaskId": 86090172,
+        "TaskGroup": 0,
+        "TaskName": "城郊之殇",
+    }),
+    86090173: _tools.RODict({
+        "TaskId": 86090173,
+        "TaskGroup": 0,
+        "TaskName": "城郊之殇",
+    }),
+    86090174: _tools.RODict({
+        "TaskId": 86090174,
+        "TaskGroup": 0,
+        "TaskName": "城郊之殇",
+    }),
+    86090175: _tools.RODict({
+        "TaskId": 86090175,
+        "TaskGroup": 0,
+        "TaskName": "城郊之殇",
+    }),
+    86090176: _tools.RODict({
+        "TaskId": 86090176,
+        "TaskGroup": 0,
+        "TaskName": "魔物与地貌",
+    }),
+    86090177: _tools.RODict({
+        "TaskId": 86090177,
+        "TaskGroup": 0,
+        "TaskName": "神秘高人1",
     }),
     86100001: _tools.RODict({
         "TaskId": 86100001,

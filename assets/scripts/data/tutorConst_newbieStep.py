@@ -17,10 +17,10 @@ import crontab
 datas = _tools.RODict({ 
     100100: _tools.RODict({
         "ID": 100100,
-        "startTask": 86060034,
-        "taskTag": 86060034,
+        "startTask": 86060049,
+        "taskTag": 86060049,
         "lockDun": 4002,
-        "bornPos": (79.53254, 40.4816, 48.57558),
+        "bornPos": (767.0632, 33.99687, 419.8018),
         "bornRotation": 0,
         "setValue": None,
         "rewardTag": 0,
@@ -28,10 +28,10 @@ datas = _tools.RODict({
     }),
     100101: _tools.RODict({
         "ID": 100101,
-        "startTask": 86060035,
-        "taskTag": 86060035,
+        "startTask": 86060052,
+        "taskTag": 86060052,
         "lockDun": 4002,
-        "bornPos": (43.0325, 22.03841, 155.6417),
+        "bornPos": (763.0052, 34.13293, 349.4834),
         "bornRotation": 20,
         "setValue": None,
         "rewardTag": 0,
@@ -39,10 +39,10 @@ datas = _tools.RODict({
     }),
     100102: _tools.RODict({
         "ID": 100102,
-        "startTask": 86060036,
-        "taskTag": 86060036,
+        "startTask": 86060054,
+        "taskTag": 86060054,
         "lockDun": 4002,
-        "bornPos": (48.96558, 35.2641, 171.4726),
+        "bornPos": (699.362, 43.44896, 360.8443),
         "bornRotation": 30,
         "setValue": None,
         "rewardTag": 0,
@@ -50,10 +50,10 @@ datas = _tools.RODict({
     }),
     100103: _tools.RODict({
         "ID": 100103,
-        "startTask": 86060037,
-        "taskTag": 86060037,
-        "lockDun": 4001,
-        "bornPos": (178.3822, 63.0602, 101.0684),
+        "startTask": 86060060,
+        "taskTag": 86060060,
+        "lockDun": 4002,
+        "bornPos": (680.1704, 55.15317, 293.6203),
         "bornRotation": 0,
         "setValue": None,
         "rewardTag": 0,
@@ -61,6 +61,72 @@ datas = _tools.RODict({
     }),
     100104: _tools.RODict({
         "ID": 100104,
+        "startTask": 86060070,
+        "taskTag": 86060070,
+        "lockDun": 4002,
+        "bornPos": (576.9481, 69.18136, 295.5733),
+        "bornRotation": 0,
+        "setValue": None,
+        "rewardTag": 0,
+        "allowleave": 0
+    }),
+    100105: _tools.RODict({
+        "ID": 100105,
+        "startTask": 86060077,
+        "taskTag": 86060077,
+        "lockDun": 4002,
+        "bornPos": (534.1964, 80.68373, 331.3875),
+        "bornRotation": 0,
+        "setValue": None,
+        "rewardTag": 0,
+        "allowleave": 0
+    }),
+    100106: _tools.RODict({
+        "ID": 100106,
+        "startTask": 86060084,
+        "taskTag": 86060084,
+        "lockDun": 4002,
+        "bornPos": (458.7985, 81.92803, 348.1135),
+        "bornRotation": 0,
+        "setValue": None,
+        "rewardTag": 0,
+        "allowleave": 0
+    }),
+    100107: _tools.RODict({
+        "ID": 100107,
+        "startTask": 86060087,
+        "taskTag": 86060087,
+        "lockDun": 4002,
+        "bornPos": (349.3233, 89.93559, 348.5515),
+        "bornRotation": 0,
+        "setValue": None,
+        "rewardTag": 0,
+        "allowleave": 0
+    }),
+    100108: _tools.RODict({
+        "ID": 100108,
+        "startTask": 86060097,
+        "taskTag": 86060097,
+        "lockDun": 4002,
+        "bornPos": (349.3233, 89.93559, 348.5515),
+        "bornRotation": 0,
+        "setValue": None,
+        "rewardTag": 0,
+        "allowleave": 0
+    }),
+    100109: _tools.RODict({
+        "ID": 100109,
+        "startTask": 86060099,
+        "taskTag": 86060099,
+        "lockDun": 4002,
+        "bornPos": (349.3233, 89.93559, 348.5515),
+        "bornRotation": 0,
+        "setValue": None,
+        "rewardTag": 0,
+        "allowleave": 0
+    }),
+    100110: _tools.RODict({
+        "ID": 100110,
         "startTask": 0,
         "taskTag": 0,
         "lockDun": 0,
@@ -72,4 +138,4 @@ datas = _tools.RODict({
     })
 })
 minKey = 100100
-maxKey = 100104
+maxKey = 100110

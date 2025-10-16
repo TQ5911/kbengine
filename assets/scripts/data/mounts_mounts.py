@@ -86,7 +86,16 @@ datas = _tools.RODict({
         "speedEnhance": 64000008,
         "prop": _tools.ROList([['adjAntiMortal', 0.03]]),
         "isOpen": 1
+    }),
+    9: _tools.RODict({
+        "ID": 9,
+        "mountsID": 88000009,
+        "name": "普通熊",
+        "quality": 1,
+        "speedEnhance": 64000008,
+        "prop": _tools.ROList([['adjPVPDmgAnti', 0.02]]),
+        "isOpen": 1
     })
 })
 minKey = 1
-maxKey = 8
+maxKey = 9

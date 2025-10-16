@@ -78,17 +78,17 @@ datas = _tools.RODict({
     41: _tools.RODict({
         "ID": 41,
         "glyphCraftGoldCost": ((30000013, 300),),
-        "glyphCraftItem": ((30000232, 1),)
+        "glyphCraftItem": ((30000233, 1),)
     }),
     42: _tools.RODict({
         "ID": 42,
         "glyphCraftGoldCost": ((30000013, 300),),
-        "glyphCraftItem": ((30000232, 2),)
+        "glyphCraftItem": ((30000233, 2),)
     }),
     43: _tools.RODict({
         "ID": 43,
         "glyphCraftGoldCost": ((30000013, 300),),
-        "glyphCraftItem": ((30000232, 3),)
+        "glyphCraftItem": ((30000233, 3),)
     }),
     51: _tools.RODict({
         "ID": 51,

@@ -303,6 +303,11 @@ def clearCacheInTick(cacheList, timerId):
 
 
 def _refreshData(includeModules):
+    globalAttrCacheList = {
+        'gacha_gachaPool': ('expiredDrawCardPoolCache',),
+    }
+    clearGlobalAttrCacheList = []
+
     import sys
     for moduleName, module in sys.modules.items():
         if includeModules:
@@ -314,6 +319,11 @@ def _refreshData(includeModules):
             new_module = importlib.reload(module)
             # add to reloaded modules
             _RELOADED_MODULES[moduleName] = new_module
+            if moduleName in globalAttrCacheList:
+                for attrName in globalAttrCacheList[moduleName]:
+                    clearGlobalAttrCacheList.append(getattr(sys.modules['gameglobal'], attrName, None))
+    DEBUG_MSG('_refreshData::clearDataCache', clearGlobalAttrCacheList)
+    gameglobal.clearDataCache(clearGlobalAttrCacheList)
 
     # clear ai controller poll when refresh ai_ai data cfg
     cacheList = [

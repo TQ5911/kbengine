@@ -24,6 +24,9 @@ class AccountBaseEntityCall(object):
     def selectAvatarGame(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'selectAvatarGame', (arg1, )))
 
+    def stopCharacterAuth(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'stopCharacterAuth', (arg1, )))
+
 
 class AccountCellEntityCall(object):
     def __init__(self, buffer:list):

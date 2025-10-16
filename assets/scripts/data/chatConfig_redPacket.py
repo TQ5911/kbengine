@@ -15,22 +15,26 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    1: _tools.RODict({
-        "ID": 1,
-        "moneyLimitMin": 100,
-        "moneyLimitMax": 20000,
+    2: _tools.RODict({
+        "ID": 2,
+        "singleMoneyMin": 5,
+        "singleMoneyMax": 50,
+        "totalMoneyMin": 100,
+        "totalMoneyMax": 10000,
         "countLimitMin": 20,
         "countLimitMax": 200,
         "charges": 10
     }),
-    2: _tools.RODict({
-        "ID": 2,
-        "moneyLimitMin": 100,
-        "moneyLimitMax": 5000,
+    3: _tools.RODict({
+        "ID": 3,
+        "singleMoneyMin": 5,
+        "singleMoneyMax": 100,
+        "totalMoneyMin": 100,
+        "totalMoneyMax": 5000,
         "countLimitMin": 10,
         "countLimitMax": 100,
         "charges": 20
     })
 })
-minKey = 1
-maxKey = 2
+minKey = 2
+maxKey = 3

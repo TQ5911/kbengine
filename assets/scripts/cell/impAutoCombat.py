@@ -453,6 +453,14 @@ class ImpAutoCombat(object):
                 if e.IsCombatUnit:
                     utils.isEnemy(self, e)
                     utils.isFriend(self, e)
+
+            if self.spaceMgr:
+                _ents = self.spaceMgr.getEntitiesByTag('largeEnt')
+                for e in _ents:
+                    if e.IsCombatUnit:
+                        utils.isEnemy(self, e)
+                        utils.isFriend(self, e)
+
             self.useTargetTypeCacheFlag = True
             self.stopCacheTargetTypeTimeId = self._callback(30, 'resetTargetTypeCacheFlag', (),
                                                         gametimer.TIMER_TAG_SET_TARGET_TYPE_CACHE_FLAG, 'stopCacheTargetTypeTimeId')
@@ -696,7 +704,8 @@ class ImpAutoCombat(object):
     def getNearestEnemy(self):
         # 反击模式中只能攻击反击目标
         target = None
-        if self.getCommonFlagCell(gameconst.AvatarFlagCell.FIGHT_BACK):
+        _inFightBack = self.getCommonFlagCell(gameconst.AvatarFlagCell.FIGHT_BACK)
+        if _inFightBack:
             target = KBEngine.entities.get(self.fightBackTarget)
 
         # 攻击正在打得目标
@@ -731,6 +740,7 @@ class ImpAutoCombat(object):
             priorityTargetEnemyId = self.autoCombatInfo.get('priorityTargetEnemyId', None)
             _teamTargetIds = self.getTeamTargets()
             _maxVal = None
+            target = None
             for eId in entityIds:
                 entity = KBEngine.entities.get(eId)
                 if not entity:
@@ -738,6 +748,9 @@ class ImpAutoCombat(object):
                 if entity.id == self.id:
                     continue
                 if not utils.checkCombatRangeY(self, entity):
+                    continue
+                if _inFightBack and eId not in _hateRecord:
+                    # 反击过程中，不攻击非仇恨目标
                     continue
                 if entity.IsCombatUnit and utils.checkCachedTargetType('Enemy', self, entity):
                     targetsList.append(entity)

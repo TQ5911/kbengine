@@ -26,7 +26,7 @@ datas = _tools.RODict({
         "ID": 2,
         "quality": 2,
         "reforgeCount": 100,
-        "totalAffixNum": 3,
+        "totalAffixNum": 2,
         "rarityLevel": 0
     }),
     3: _tools.RODict({
@@ -40,35 +40,35 @@ datas = _tools.RODict({
         "ID": 4,
         "quality": 3,
         "reforgeCount": 100,
-        "totalAffixNum": 3,
+        "totalAffixNum": 2,
         "rarityLevel": 0
     }),
     5: _tools.RODict({
         "ID": 5,
         "quality": 4,
         "reforgeCount": 10,
-        "totalAffixNum": 3,
+        "totalAffixNum": 2,
         "rarityLevel": 0
     }),
     6: _tools.RODict({
         "ID": 6,
         "quality": 4,
         "reforgeCount": 100,
-        "totalAffixNum": 4,
+        "totalAffixNum": 2,
         "rarityLevel": 0
     }),
     7: _tools.RODict({
         "ID": 7,
         "quality": 5,
         "reforgeCount": 10,
-        "totalAffixNum": 3,
+        "totalAffixNum": 2,
         "rarityLevel": 0
     }),
     8: _tools.RODict({
         "ID": 8,
         "quality": 5,
         "reforgeCount": 100,
-        "totalAffixNum": 4,
+        "totalAffixNum": 2,
         "rarityLevel": 0
     }),
     9: _tools.RODict({

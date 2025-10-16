@@ -21,15 +21,15 @@ namespace KBEngine
 
 		public float PVPDmg = 0f;
 		public float PVPDmgAnti = 0f;
-		public float adjAntiFatal = 0f;
+		public Int32 adjAntiFatal = 0;
 		public float adjAntiMortal = 0f;
 		public float adjBloodSuck = 0f;
 		
 		public Int32 adjDebilityAnti = 0;
 		public Int32 adjDebilityEnh = 0;
-		public Int32 adjDmgArmor = 0;
+		public float adjDmgArmor = 0f;
 		public Int32 adjDodge = 0;
-		public float adjFatal = 0f;
+		public Int32 adjFatal = 0;
 		public Int32 adjFullHp = 0;
 		public Int32 adjFullHpAbs = 0;
 		public Int32 adjFullMp = 0;
@@ -44,10 +44,10 @@ namespace KBEngine
 		public Int32 adjSilentEnh = 0;
 		public Int32 adjStunAnti = 0;
 		public Int32 adjStunEnh = 0;
-		public float antiFatal = 0f;
+		public Int32 antiFatal = 0;
 		public float antiMortal = 0f;
 		public Int32 atkBless = 0;
-		public Int32 baseDmgArmor = 0;
+		public float baseDmgArmor = 0f;
 		public float baseIgnoreArmor = 0f;
 		public float bePushedSpeed = 0f;
 		public Int32 bindedEntityId = 0;
@@ -58,12 +58,13 @@ namespace KBEngine
 		public Int32 debilityEnh = 0;
 		
 		public virtual void onDieWithHostChanged(Byte oldValue) {}
-		public Int32 dmgArmor = 0;
+		public float dmgArmor = 0f;
 		public Int32 dodge = 0;
+		public Int32 drugsQuantity = 0;
 		
 		public float extraDmg = 0f;
 		public float extraDmgDef = 0f;
-		public float fatal = 0f;
+		public Int32 fatal = 0;
 		public float finalDmg = 0f;
 		public float finalDmgAnti = 0f;
 		
@@ -84,10 +85,13 @@ namespace KBEngine
 		public Int32 knockAnti = 0;
 		public Int32 knockEnh = 0;
 		
-		public Int32 magicArmor = 0;
+		public Int32 maxMagicArmor = 0;
 		public Int32 maxMagicAtk = 0;
+		public Int32 maxPhysicalArmor = 0;
 		public Int32 maxPhysicalAtk = 0;
+		public Int32 minMagicArmor = 0;
 		public Int32 minMagicAtk = 0;
+		public Int32 minPhysicalArmor = 0;
 		public Int32 minPhysicalAtk = 0;
 		public float monsterDmg = 0f;
 		public float monsterDmgAnti = 0f;
@@ -101,7 +105,6 @@ namespace KBEngine
 		public float mulFullMp = 0f;
 		public float mulHp = 0f;
 		
-		public Int32 physicalArmor = 0;
 		public Int32 realDmg = 0;
 		public Int32 realDmgDef = 0;
 		
@@ -272,9 +275,9 @@ namespace KBEngine
 					onDead(onDead_arg1);
 					break;
 				case 538:
-					List<float> onDropRuneIds_arg1 = ((DATATYPE_AnonymousArray_10007)method.args[0]).createFromStreamEx(stream);
+					List<float> onDropRuneIds_arg1 = ((DATATYPE_AnonymousArray_10008)method.args[0]).createFromStreamEx(stream);
 					Int32 onDropRuneIds_arg2 = stream.readInt32();
-					List<Int32> onDropRuneIds_arg3 = ((DATATYPE_AnonymousArray_10013)method.args[2]).createFromStreamEx(stream);
+					List<Int32> onDropRuneIds_arg3 = ((DATATYPE_AnonymousArray_10014)method.args[2]).createFromStreamEx(stream);
 					onDropRuneIds(onDropRuneIds_arg1, onDropRuneIds_arg2, onDropRuneIds_arg3);
 					break;
 				case 555:
@@ -300,7 +303,7 @@ namespace KBEngine
 					Byte onMultiAtkStage_arg1 = stream.readUint8();
 					UInt32 onMultiAtkStage_arg2 = stream.readUint32();
 					Int32 onMultiAtkStage_arg3 = stream.readInt32();
-					List<float> onMultiAtkStage_arg4 = ((DATATYPE_AnonymousArray_10007)method.args[3]).createFromStreamEx(stream);
+					List<float> onMultiAtkStage_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onMultiAtkStage_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
 					onMultiAtkStage(onMultiAtkStage_arg1, onMultiAtkStage_arg2, onMultiAtkStage_arg3, onMultiAtkStage_arg4, onMultiAtkStage_arg5);
 					break;
@@ -319,7 +322,7 @@ namespace KBEngine
 					break;
 				case 546:
 					Int32 onRemoveBuff_arg1 = stream.readInt32();
-					List<UInt64> onRemoveBuff_arg2 = ((DATATYPE_AnonymousArray_10014)method.args[1]).createFromStreamEx(stream);
+					List<UInt64> onRemoveBuff_arg2 = ((DATATYPE_AnonymousArray_10015)method.args[1]).createFromStreamEx(stream);
 					onRemoveBuff(onRemoveBuff_arg1, onRemoveBuff_arg2);
 					break;
 				case 539:
@@ -376,7 +379,7 @@ namespace KBEngine
 					Int32 onUseCasting_arg1 = stream.readInt32();
 					UInt32 onUseCasting_arg2 = stream.readUint32();
 					Int32 onUseCasting_arg3 = stream.readInt32();
-					List<float> onUseCasting_arg4 = ((DATATYPE_AnonymousArray_10007)method.args[3]).createFromStreamEx(stream);
+					List<float> onUseCasting_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onUseCasting_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
 					onUseCasting(onUseCasting_arg1, onUseCasting_arg2, onUseCasting_arg3, onUseCasting_arg4, onUseCasting_arg5);
 					break;
@@ -384,7 +387,7 @@ namespace KBEngine
 					Int32 onUseChanneling_arg1 = stream.readInt32();
 					UInt32 onUseChanneling_arg2 = stream.readUint32();
 					Int32 onUseChanneling_arg3 = stream.readInt32();
-					List<float> onUseChanneling_arg4 = ((DATATYPE_AnonymousArray_10007)method.args[3]).createFromStreamEx(stream);
+					List<float> onUseChanneling_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onUseChanneling_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
 					Int32 onUseChanneling_arg6 = stream.readInt32();
 					onUseChanneling(onUseChanneling_arg1, onUseChanneling_arg2, onUseChanneling_arg3, onUseChanneling_arg4, onUseChanneling_arg5, onUseChanneling_arg6);
@@ -393,7 +396,7 @@ namespace KBEngine
 					Byte onUseSkill_arg1 = stream.readUint8();
 					UInt32 onUseSkill_arg2 = stream.readUint32();
 					Int32 onUseSkill_arg3 = stream.readInt32();
-					List<float> onUseSkill_arg4 = ((DATATYPE_AnonymousArray_10007)method.args[3]).createFromStreamEx(stream);
+					List<float> onUseSkill_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onUseSkill_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
 					onUseSkill(onUseSkill_arg1, onUseSkill_arg2, onUseSkill_arg3, onUseSkill_arg4, onUseSkill_arg5);
 					break;
@@ -495,8 +498,8 @@ namespace KBEngine
 
 						break;
 					case 244:
-						float oldval_adjAntiFatal = adjAntiFatal;
-						adjAntiFatal = stream.readFloat();
+						Int32 oldval_adjAntiFatal = adjAntiFatal;
+						adjAntiFatal = stream.readInt32();
 
 						if(prop.isBase())
 						{
@@ -591,8 +594,8 @@ namespace KBEngine
 
 						break;
 					case 520:
-						Int32 oldval_adjDmgArmor = adjDmgArmor;
-						adjDmgArmor = stream.readInt32();
+						float oldval_adjDmgArmor = adjDmgArmor;
+						adjDmgArmor = stream.readFloat();
 
 						if(prop.isBase())
 						{
@@ -623,8 +626,8 @@ namespace KBEngine
 
 						break;
 					case 176:
-						float oldval_adjFatal = adjFatal;
-						adjFatal = stream.readFloat();
+						Int32 oldval_adjFatal = adjFatal;
+						adjFatal = stream.readInt32();
 
 						if(prop.isBase())
 						{
@@ -863,8 +866,8 @@ namespace KBEngine
 
 						break;
 					case 243:
-						float oldval_antiFatal = antiFatal;
-						antiFatal = stream.readFloat();
+						Int32 oldval_antiFatal = antiFatal;
+						antiFatal = stream.readInt32();
 
 						if(prop.isBase())
 						{
@@ -911,8 +914,8 @@ namespace KBEngine
 
 						break;
 					case 519:
-						Int32 oldval_baseDmgArmor = baseDmgArmor;
-						baseDmgArmor = stream.readInt32();
+						float oldval_baseDmgArmor = baseDmgArmor;
+						baseDmgArmor = stream.readFloat();
 
 						if(prop.isBase())
 						{
@@ -1071,8 +1074,8 @@ namespace KBEngine
 
 						break;
 					case 518:
-						Int32 oldval_dmgArmor = dmgArmor;
-						dmgArmor = stream.readInt32();
+						float oldval_dmgArmor = dmgArmor;
+						dmgArmor = stream.readFloat();
 
 						if(prop.isBase())
 						{
@@ -1099,6 +1102,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onDodgeChanged(oldval_dodge);
+						}
+
+						break;
+					case 621:
+						Int32 oldval_drugsQuantity = drugsQuantity;
+						drugsQuantity = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onDrugsQuantityChanged(oldval_drugsQuantity);
+						}
+						else
+						{
+							if(inWorld)
+								onDrugsQuantityChanged(oldval_drugsQuantity);
 						}
 
 						break;
@@ -1151,8 +1170,8 @@ namespace KBEngine
 
 						break;
 					case 173:
-						float oldval_fatal = fatal;
-						fatal = stream.readFloat();
+						Int32 oldval_fatal = fatal;
+						fatal = stream.readInt32();
 
 						if(prop.isBase())
 						{
@@ -1470,19 +1489,19 @@ namespace KBEngine
 						}
 
 						break;
-					case 522:
-						Int32 oldval_magicArmor = magicArmor;
-						magicArmor = stream.readInt32();
+					case 618:
+						Int32 oldval_maxMagicArmor = maxMagicArmor;
+						maxMagicArmor = stream.readInt32();
 
 						if(prop.isBase())
 						{
 							if(inited)
-								onMagicArmorChanged(oldval_magicArmor);
+								onMaxMagicArmorChanged(oldval_maxMagicArmor);
 						}
 						else
 						{
 							if(inWorld)
-								onMagicArmorChanged(oldval_magicArmor);
+								onMaxMagicArmorChanged(oldval_maxMagicArmor);
 						}
 
 						break;
@@ -1502,6 +1521,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 616:
+						Int32 oldval_maxPhysicalArmor = maxPhysicalArmor;
+						maxPhysicalArmor = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMaxPhysicalArmorChanged(oldval_maxPhysicalArmor);
+						}
+						else
+						{
+							if(inWorld)
+								onMaxPhysicalArmorChanged(oldval_maxPhysicalArmor);
+						}
+
+						break;
 					case 251:
 						Int32 oldval_maxPhysicalAtk = maxPhysicalAtk;
 						maxPhysicalAtk = stream.readInt32();
@@ -1518,6 +1553,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 617:
+						Int32 oldval_minMagicArmor = minMagicArmor;
+						minMagicArmor = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMinMagicArmorChanged(oldval_minMagicArmor);
+						}
+						else
+						{
+							if(inWorld)
+								onMinMagicArmorChanged(oldval_minMagicArmor);
+						}
+
+						break;
 					case 252:
 						Int32 oldval_minMagicAtk = minMagicAtk;
 						minMagicAtk = stream.readInt32();
@@ -1531,6 +1582,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onMinMagicAtkChanged(oldval_minMagicAtk);
+						}
+
+						break;
+					case 615:
+						Int32 oldval_minPhysicalArmor = minPhysicalArmor;
+						minPhysicalArmor = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMinPhysicalArmorChanged(oldval_minPhysicalArmor);
+						}
+						else
+						{
+							if(inWorld)
+								onMinPhysicalArmorChanged(oldval_minPhysicalArmor);
 						}
 
 						break;
@@ -1739,22 +1806,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onNameChanged(oldval_name);
-						}
-
-						break;
-					case 521:
-						Int32 oldval_physicalArmor = physicalArmor;
-						physicalArmor = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onPhysicalArmorChanged(oldval_physicalArmor);
-						}
-						else
-						{
-							if(inWorld)
-								onPhysicalArmorChanged(oldval_physicalArmor);
 						}
 
 						break;
@@ -2103,7 +2154,7 @@ namespace KBEngine
 				}
 			}
 
-			float oldval_adjAntiFatal = adjAntiFatal;
+			Int32 oldval_adjAntiFatal = adjAntiFatal;
 			Property prop_adjAntiFatal = pdatas[5];
 			if(prop_adjAntiFatal.isBase())
 			{
@@ -2229,7 +2280,7 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_adjDmgArmor = adjDmgArmor;
+			float oldval_adjDmgArmor = adjDmgArmor;
 			Property prop_adjDmgArmor = pdatas[93];
 			if(prop_adjDmgArmor.isBase())
 			{
@@ -2271,7 +2322,7 @@ namespace KBEngine
 				}
 			}
 
-			float oldval_adjFatal = adjFatal;
+			Int32 oldval_adjFatal = adjFatal;
 			Property prop_adjFatal = pdatas[13];
 			if(prop_adjFatal.isBase())
 			{
@@ -2586,7 +2637,7 @@ namespace KBEngine
 				}
 			}
 
-			float oldval_antiFatal = antiFatal;
+			Int32 oldval_antiFatal = antiFatal;
 			Property prop_antiFatal = pdatas[28];
 			if(prop_antiFatal.isBase())
 			{
@@ -2649,7 +2700,7 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_baseDmgArmor = baseDmgArmor;
+			float oldval_baseDmgArmor = baseDmgArmor;
 			Property prop_baseDmgArmor = pdatas[95];
 			if(prop_baseDmgArmor.isBase())
 			{
@@ -2859,7 +2910,7 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_dmgArmor = dmgArmor;
+			float oldval_dmgArmor = dmgArmor;
 			Property prop_dmgArmor = pdatas[97];
 			if(prop_dmgArmor.isBase())
 			{
@@ -2897,6 +2948,27 @@ namespace KBEngine
 					else
 					{
 						onDodgeChanged(oldval_dodge);
+					}
+				}
+			}
+
+			Int32 oldval_drugsQuantity = drugsQuantity;
+			Property prop_drugsQuantity = pdatas[7];
+			if(prop_drugsQuantity.isBase())
+			{
+				if(inited && !inWorld)
+					onDrugsQuantityChanged(oldval_drugsQuantity);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_drugsQuantity.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onDrugsQuantityChanged(oldval_drugsQuantity);
 					}
 				}
 			}
@@ -2964,7 +3036,7 @@ namespace KBEngine
 				}
 			}
 
-			float oldval_fatal = fatal;
+			Int32 oldval_fatal = fatal;
 			Property prop_fatal = pdatas[46];
 			if(prop_fatal.isBase())
 			{
@@ -3384,23 +3456,23 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_magicArmor = magicArmor;
-			Property prop_magicArmor = pdatas[103];
-			if(prop_magicArmor.isBase())
+			Int32 oldval_maxMagicArmor = maxMagicArmor;
+			Property prop_maxMagicArmor = pdatas[27];
+			if(prop_maxMagicArmor.isBase())
 			{
 				if(inited && !inWorld)
-					onMagicArmorChanged(oldval_magicArmor);
+					onMaxMagicArmorChanged(oldval_maxMagicArmor);
 			}
 			else
 			{
 				if(inWorld)
 				{
-					if(prop_magicArmor.isOwnerOnly() && !isPlayer())
+					if(prop_maxMagicArmor.isOwnerOnly() && !isPlayer())
 					{
 					}
 					else
 					{
-						onMagicArmorChanged(oldval_magicArmor);
+						onMaxMagicArmorChanged(oldval_maxMagicArmor);
 					}
 				}
 			}
@@ -3426,6 +3498,27 @@ namespace KBEngine
 				}
 			}
 
+			Int32 oldval_maxPhysicalArmor = maxPhysicalArmor;
+			Property prop_maxPhysicalArmor = pdatas[30];
+			if(prop_maxPhysicalArmor.isBase())
+			{
+				if(inited && !inWorld)
+					onMaxPhysicalArmorChanged(oldval_maxPhysicalArmor);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_maxPhysicalArmor.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMaxPhysicalArmorChanged(oldval_maxPhysicalArmor);
+					}
+				}
+			}
+
 			Int32 oldval_maxPhysicalAtk = maxPhysicalAtk;
 			Property prop_maxPhysicalAtk = pdatas[66];
 			if(prop_maxPhysicalAtk.isBase())
@@ -3447,6 +3540,27 @@ namespace KBEngine
 				}
 			}
 
+			Int32 oldval_minMagicArmor = minMagicArmor;
+			Property prop_minMagicArmor = pdatas[32];
+			if(prop_minMagicArmor.isBase())
+			{
+				if(inited && !inWorld)
+					onMinMagicArmorChanged(oldval_minMagicArmor);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_minMagicArmor.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMinMagicArmorChanged(oldval_minMagicArmor);
+					}
+				}
+			}
+
 			Int32 oldval_minMagicAtk = minMagicAtk;
 			Property prop_minMagicAtk = pdatas[68];
 			if(prop_minMagicAtk.isBase())
@@ -3464,6 +3578,27 @@ namespace KBEngine
 					else
 					{
 						onMinMagicAtkChanged(oldval_minMagicAtk);
+					}
+				}
+			}
+
+			Int32 oldval_minPhysicalArmor = minPhysicalArmor;
+			Property prop_minPhysicalArmor = pdatas[37];
+			if(prop_minPhysicalArmor.isBase())
+			{
+				if(inited && !inWorld)
+					onMinPhysicalArmorChanged(oldval_minPhysicalArmor);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_minPhysicalArmor.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMinPhysicalArmorChanged(oldval_minPhysicalArmor);
 					}
 				}
 			}
@@ -3737,27 +3872,6 @@ namespace KBEngine
 					else
 					{
 						onNameChanged(oldval_name);
-					}
-				}
-			}
-
-			Int32 oldval_physicalArmor = physicalArmor;
-			Property prop_physicalArmor = pdatas[106];
-			if(prop_physicalArmor.isBase())
-			{
-				if(inited && !inWorld)
-					onPhysicalArmorChanged(oldval_physicalArmor);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_physicalArmor.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onPhysicalArmorChanged(oldval_physicalArmor);
 					}
 				}
 			}

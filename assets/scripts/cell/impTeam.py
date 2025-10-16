@@ -40,7 +40,129 @@ class FollowState(object):
     FOLLOW = 2    # 跟随状态
     SUSPEND = 3   # 打断状态
 
-class ImpTeam(object):
+class AvatarTeamStatisticMixin(object):
+    
+    def getRealTeamId(self):
+        if self.teamId > 0:
+            return self.teamId
+        elif self.raidUUID > 0:
+            return self.raidUUID
+        return 0
+        
+    def getRealTeamStub(self):
+        if self.teamId > 0:
+            return gameengine.getTeamStub(self.teamId)
+        elif self.raidUUID > 0:
+            return gameengine.getRaidStub(self.raidUUID)
+        return None
+
+    def checkTeamStaticLimit(self):
+
+        if self.getRealTeamId() > 0 and formula.isDungeonSpace(self.spaceNo):
+            dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+            _dunType = DDID.datas[dungeonNo]['type']
+            _dunEnterType = gameengine.getDungeonEnterTypeBySpaceNo(self.spaceNo)
+            if self.teamId > 0 and not gameconst.DungeonType.isTeamDungeon(_dunType, _dunEnterType):
+                return False
+
+            if self.raidUUID > 0 and not gameconst.DungeonType.isRaidDungeon(_dunType, _dunEnterType):
+                return False
+            return True
+        
+        return False
+        
+
+    def addTeamStatisticPlayerVal(self, type, val):       
+        if not self.checkTeamStaticLimit():
+            return
+        
+        stub = self.getRealTeamStub()
+        if stub:
+            stub.addTeamStatisticPlayerVal(self.getRealTeamId(), self.gbId, type, val)
+
+    @utils.isMyself
+    @gamedecorator.limitcall(2)
+    def reqGetTeamStatisticData(self, exposed):
+        if not self.checkTeamStaticLimit():
+            return
+        
+        stub = self.getRealTeamStub()
+        if stub:
+            stub.getTeamStatisticData(self.base, self.getRealTeamId())
+
+    @utils.isMyself
+    @gamedecorator.limitcall(2)
+    def reqClearTeamStatisticData(self, exposed):
+        if not self.checkTeamStaticLimit():
+            return
+        
+        # 获取暂存数据
+        dataRecord = self.getTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord, {})
+
+        dataDict = {}
+        for val in dataRecord['dmgList']:
+            gbId = val['gbId']
+            if gbId not in dataDict:
+                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0}
+            dataDict[gbId]['dmg'] += val['value']
+
+        for val in dataRecord['healList']:
+            gbId = val['gbId']
+            if gbId not in dataDict:
+                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0}
+            dataDict[gbId]['heal'] += val['value']
+
+        for val in dataRecord['hurtList']:
+            gbId = val['gbId']
+            if gbId not in dataDict:
+                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0}
+            dataDict[gbId]['hurt'] += val['value']
+
+        # 结构化之后存储
+        self.setTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict, dataDict)
+
+        # 同步一下
+        self._onGetTeamStatisticData(dataRecord)
+
+    def onGetTeamStatisticData(self, data):
+        # 先暂存
+        self.setTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord, data)
+
+        self._onGetTeamStatisticData(data)
+
+    def _onGetTeamStatisticData(self, data):
+
+        self.tempStatisticData = self.getTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict, {})
+
+        for val in data['dmgList']:
+            if val['gbId'] in self.tempStatisticData:
+                val['value'] -= self.tempStatisticData[val['gbId']].get('dmg', 0)
+
+        for val in data['healList']:
+            if val['gbId'] in self.tempStatisticData:
+                val['value'] -= self.tempStatisticData[val['gbId']].get('heal', 0)
+
+        for val in data['hurtList']:
+            if val['gbId'] in self.tempStatisticData:
+                val['value'] -= self.tempStatisticData[val['gbId']].get('hurt', 0)
+
+        self.client.sendTeamStatisticData(data)
+
+        INFO_MSG('onGetTeamStatisticData::', self.tempStatisticData, data)
+
+    def clearStatisticDataRecord(self):
+        INFO_MSG('clearStatisticDataRecord::', self.spaceNo)
+        self.popTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord)
+
+    def gmShowTeamStatisticData(self):
+        if not self.checkTeamStaticLimit():
+            return
+        stub = self.getRealTeamStub()
+        if stub:
+            stub.gmShowStatisticData()
+
+
+class ImpTeam(AvatarTeamStatisticMixin):
     def __init__(self):
         self.teammateEntIdInAoiList = []
         self.guildUUID = 0
@@ -55,69 +177,50 @@ class ImpTeam(object):
         return self.popTempMiscProp(gameconst.AvatarProps.teamPlayerUploadCacheDict)
 
     def teamTick(self):
-        if self.teamId <= 0:
-            WARNING_MSG('no team, but exist team timer')
+        if not self.isInTeam():
+            ERROR_MSG('teamTick:: not in team')
+            self.stopTeamTimer()
             return
 
-        teamPlayerUploadCacheDict = self.teamPlayerUploadCacheDict
-        playerUpdateDic = {}
+        modified = False
+        lastRecord = self.teamPlayerUploadCacheDict
 
-        oldPos = teamPlayerUploadCacheDict.get('oldPos', None)
-        if self.bTeamCaptain:
-            if (oldPos is None) or oldPos[0] != int(self.position[0]) or oldPos[2] != int(self.position[2]) or oldPos[1] != int(self.position[1]):
-                playerUpdateDic['position'] = self.position
-                teamPlayerUploadCacheDict['oldPos'] = (int(self.position[0]), int(self.position[1]), int(self.position[2]))
-        else:
-            if (oldPos is None) or oldPos[0] != int(self.position[0]) or oldPos[2] != int(self.position[2]):
-                playerUpdateDic['position'] = self.position
-                teamPlayerUploadCacheDict['oldPos'] = (int(self.position[0]), 0, int(self.position[2]))
+        if 'level' not in lastRecord or lastRecord['level'] != self.level:
+            lastRecord['level'] = self.level
+            modified = True
+        pos = tuple(self.position)
+        if 'spaceNo' not in lastRecord or lastRecord['spaceNo'] != self.spaceNo or 'position' not in lastRecord or lastRecord['position'] != pos:
+            lastRecord['spaceNo'] = self.spaceNo
+            lastRecord['position'] = pos
+            modified = True
+        if 'hp' not in lastRecord or lastRecord['hp'] != self.hp or 'fullHp' not in lastRecord or lastRecord['fullHp'] != self.fullHp:
+            lastRecord['hp'] = self.hp
+            lastRecord['fullHp'] = self.fullHp
+            modified = True
+        if 'equipSetLv' not in lastRecord or lastRecord['equipSetLv'] != self.equipSetLv:
+            lastRecord['equipSetLv'] = self.equipSetLv
+            modified = True
 
-        oldHp = teamPlayerUploadCacheDict.get('oldHp', None)
-        if (oldHp is None) or oldHp != self.hp:
-            playerUpdateDic['hp'] = self.hp
-            playerUpdateDic['fullHp'] = self.fullHp
-            teamPlayerUploadCacheDict['oldHp'] = self.hp
-
-        oldSpaceNo = teamPlayerUploadCacheDict.get('oldSpaceNo', None)
-        if (oldSpaceNo is None) or oldSpaceNo != self.spaceNo:
-            playerUpdateDic['spaceNo'] = self.spaceNo
-            teamPlayerUploadCacheDict['oldSpaceNo'] = self.spaceNo
-
-        oldScore = teamPlayerUploadCacheDict.get('oldScore', None)
+        oldScore = lastRecord.get('score', 0)
         newScore = self.getTotalScore()
-        if (oldScore is None) or oldScore != newScore:
+
+        if 'score' not in lastRecord or oldScore != newScore:
             DEBUG_MSG("in teamTick, score updated:", oldScore, newScore)
-            playerUpdateDic['score'] = newScore
-            teamPlayerUploadCacheDict['oldScore'] = newScore
+            lastRecord['score'] = newScore
+            modified = True
 
-        # oldEquipSetLv = teamPlayerUploadCacheDict.get('oldEquipSetLv', None)
-        # if (oldEquipSetLv is None) or oldEquipSetLv != self.equipSetLv:
-        #     playerUpdateDic['equipSetLv'] = self.equipSetLv
-        #     teamPlayerUploadCacheDict['oldEquipSetLv'] = self.equipSetLv
-
-        oldRaidUUID = teamPlayerUploadCacheDict.get('oldRaidUUID', None)
-        raidUUID = self.raidUUID
-        if (oldRaidUUID is None) or oldRaidUUID != raidUUID:
-            playerUpdateDic['raidUUID'] = raidUUID
-            teamPlayerUploadCacheDict['oldRaidUUID'] = raidUUID
-
-        # if self.bTeamCaptain:
-        #     oldMountState = teamPlayerUploadCacheDict.get('mountState', None)
-        #     newMountState = self.getMountState()
-        #     if (oldMountState is None) or oldMountState != newMountState:
-        #         playerUpdateDic['mountState'] = newMountState
-        #         teamPlayerUploadCacheDict['mountState'] = newMountState
-
-        if playerUpdateDic:
+        if modified:
             excludedPlayerIDs = (self.gbId,)
-            if 'spaceNo' is playerUpdateDic and 'position' in playerUpdateDic:
+            if 'spaceNo' is lastRecord and 'position' in lastRecord:
                 for playerGBID, playerBaseVal in self.teamInfo.teamPlayerDic.items():
                     if playerGBID == self.gbId or not playerBaseVal.playerBox:
                         continue
-                    if self.checkInView(playerBaseVal.playerBox.id):
-                        excludedPlayerIDs += (playerGBID,)
-            playerUpdateDic['excludedGbIDs'] = excludedPlayerIDs
-            gameengine.getTeamStub(self.teamId).updateMemberVolatileAttr(self.teamId, self.gbId, playerUpdateDic)
+                    # 当只有spaceNo和position两个一起更新时，做一下筛选，视野范围内的就不需要通知了
+                    if 'spaceNo' in lastRecord and 'position' in lastRecord and len(lastRecord) == 2:
+                        if self.checkInView(playerBaseVal.playerBox.id):
+                            excludedPlayerIDs += (playerGBID,)
+            lastRecord['excludedGbIDs'] = excludedPlayerIDs
+            gameengine.getTeamStub(self.teamId).updateMemberVolatileAttr(self.teamId, self.gbId, lastRecord)
 
         if self.followCaptain in (gameconst.TeamFollowState.Follow, gameconst.TeamFollowState.Suspending):
             self.followCaptainCheck()
@@ -440,10 +543,23 @@ class ImpTeam(object):
         if self.isInTryAddTeamCD():
             WARNING_MSG('createAndAddTeamMember, is in add team cd')
             return
-        teamTarget = 0
+        teamTarget = 1
+        teamTargetInfo = TMACTD.datas.get(teamTarget)
+        if teamTargetInfo is None:
+            ERROR_MSG("createAndAddTeamMember, invalid teamTarget", teamTarget)
+            return
+            
+        cfgMinLv = teamTargetInfo['minLevel']
+
+        cfgMinScore = teamTargetInfo['minScore']
+        
+        if not self.isCanCreateTeam(teamTarget, cfgMinLv, cfgMinScore):
+            return
+        
         teamId = KBEngine.genUUID64()
-        INFO_MSG('createAndAddTeamMember', teamId, teamPlayerInfoDic)
-        gameengine.getTeamStub(teamId).createTeam(self.base, teamId, teamTarget, self._getTeamPlayerInfoDic(), False)
+        INFO_MSG('createAndAddTeamMember', teamId, teamTarget, cfgMinLv, cfgMinScore, "", "", False, teamPlayerInfoDic)
+
+        gameengine.getTeamStub(teamId).createTeam(self.base, teamId, teamTarget, cfgMinLv, cfgMinScore, "", "", False, self._getTeamPlayerInfoDic())
         gameengine.getTeamStub(teamId).addTeamMember(teamId, teamPlayerInfoDic)
         self.refreshTryAddTeamCD(timeout=10)
 
@@ -502,6 +618,7 @@ class ImpTeam(object):
             lineNo = formula.getLineNo(self.spaceNo)
             gameengine.getLineStub(lineType).updateLinePlayerInfo(lineNo, self.base, self.gbId, {'changeTeam':(oldTeamId, 0, False)})
         self.resetTryAddTeamCD()
+        self.clearStatisticDataRecord()
 
     def isCanKickTeamMember(self, gbId):
         if not self.isInTeam(gbId):
@@ -525,6 +642,7 @@ class ImpTeam(object):
 
     @utils.isMyself
     def applyTransferCaptain(self, exposed, gbId):
+        DEBUG_MSG("applyTransferCaptain::", exposed, gbId)
         if not self.isCanTransferCaptain(gbId):
             return
 
@@ -593,6 +711,7 @@ class ImpTeam(object):
         self.resetTryAddTeamCD()
         self.resetAllTargetTypeCache()
         self.cancelAllTeamAndRaidJoinRequest()
+        self.clearStatisticDataRecord()
 
     def _cancelAllTeamJoinRequest(self):
         for teamId in self.getTempMiscProp(gameconst.AvatarProps.teamJoinRecord, {}):
@@ -2557,26 +2676,26 @@ class ImpTeam(object):
 
     #------------------------------------------- 队伍标记  start -----------------------------------------------
     @utils.isMyself
-    def reqAddMarkMember(self, exposed, entId, markType):
+    def reqAddMarkMember(self, exposed, type, index, name, gbId, entId, pos):
         """API: 请求增加标记"""
-        INFO_MSG('reqAddMarkMember', entId, markType)
+        INFO_MSG('reqAddMarkMember', self.teamId, type, index, name, gbId, entId, pos)
         
         # 检查
-        if self.teamId <= 0:
-            DEBUG_MSG('reqAddMarkMember error no team')
+        if index <= 0 or index > gameconst.TEAM_MARK_MAX_SLOT or self.teamId <= 0:
+            # DEBUG_MSG('reqAddMarkMember error no team')
             return
-        gameengine.getTeamStub(self.teamId).reqAddMarkMember(self.teamId, self.base, entId, markType)
+        gameengine.getTeamStub(self.teamId).reqAddMarkMember(self.teamId, self.base, type, index, name, gbId, entId, pos)
         
     @utils.isMyself
-    def reqDelMarkMember(self, exposed, entId):
+    def reqDelMarkMember(self, exposed, type, index):
         """API: 请求删除标记"""
-        INFO_MSG('reqDelMarkMember', entId)
+        INFO_MSG('reqDelMarkMember', self.teamId, type, index)
         
-        if entId <= 0 or self.teamId <= 0:
-            DEBUG_MSG('reqDelMarkMember error', entId, self.teamId)
+        if index <= 0 or index > gameconst.TEAM_MARK_MAX_SLOT or self.teamId <= 0:
+            DEBUG_MSG('reqDelMarkMember error', self.teamId)
             return
 
-        gameengine.getTeamStub(self.teamId).reqDelMarkMember(self.teamId, self.base, entId)
+        gameengine.getTeamStub(self.teamId).reqDelMarkMember(self.teamId, self.base, type, index)
         
     @utils.isMyself
     @gamedecorator.limitcall(2)

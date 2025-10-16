@@ -20,8 +20,10 @@ ON DUPLICATE KEY UPDATE
 
 
 class CharacterVal(userType.UserSoleType):
-    def __init__(self, gbId, dbId, school, name, sex, level, birthInDB, tLastOnline, charAppearance, selfDbId, authDbId, parentID):
+    def __init__(self, gbId=0, dbId=0, school=0, name='', sex=0, level=0, birthInDB=0,
+                 tLastOnline=0, charAppearance=None, selfDbId=0, authDbId=0, authExpire=0, parentID=0):
         self.gbId = gbId
+        # avatar的dbid
         self.dbId = dbId
         self.school = school
         self.name = name
@@ -29,12 +31,16 @@ class CharacterVal(userType.UserSoleType):
         self.level = level
         self.tLastOnline = tLastOnline
         self.birthInDB = birthInDB
+        # game_account_characters 中的 数据的dbid
         self.selfDbId = selfDbId
+        # 代理人的account的dbid
         self.authDbId = authDbId
+        self.authExpire = authExpire
         if not charAppearance:
             weapon, breast = appearance.getDefaultAppearanceEquipPartId()
             charAppearance = appearance.Appearance(weapon=weapon, breast=breast)
         self.charAppearance = charAppearance
+        # account 的 dbid
         self.parentID = parentID
         self._dirty = False
 
@@ -46,16 +52,32 @@ class CharacterVal(userType.UserSoleType):
         self.name = name
         self._dirty = True
 
-    def setAuthDbId(self, authDbId):
+    def setAuthDbId(self, authDbId, authExpire):
         self.authDbId = authDbId
+        self.authExpire = authExpire
 
     def dirty(self):
         return self._dirty
 
+    def clone(self):
+        return CharacterVal(
+            self.gbId,
+            self.dbId,
+            self.school,
+            self.name,
+            self.sex,
+            self.level,
+            self.birthInDB,
+            self.tLastOnline,
+            self.charAppearance.clone(),
+            self.selfDbId,
+            self.authDbId,
+            self.authExpire,
+            self.parentID
+        )
+
     @staticmethod
     def fromSavedData(data):
-        charAppearance = appearance.Appearance()
-        charAppearance.initFromDict(data['charAppearance'])
         return CharacterVal(
             data['gbId'],
             data['dbId'],
@@ -65,9 +87,10 @@ class CharacterVal(userType.UserSoleType):
             data['level'],
             data['birthInDB'],
             data['tLastOnline'],
-            charAppearance,
+            data['charAppearance'],
             data['selfDbId'],
             data['authDbId'],
+            data['authExpire'],
             data['parentID']
         )
 
@@ -84,6 +107,7 @@ class CharacterVal(userType.UserSoleType):
             'charAppearance': self.charAppearance,
             'selfDbId': self.selfDbId,
             'authDbId': self.authDbId,
+            'authExpire': self.authExpire,
             'parentID': self.parentID
         }
 
@@ -100,8 +124,18 @@ class CharacterVal(userType.UserSoleType):
 
 
 class Characters(userType.UserDictType):
-    def addCharacter(self, parentID, selfDbId, authDbId, gbId, dbId, school, name, sex, level, birthInDB,  charAppearance = None):
-        self[gbId] = CharacterVal(gbId, dbId, school, name, sex, level, birthInDB, 0, charAppearance, selfDbId, authDbId, parentID)
+    def addCharacter(self, parentID=0, selfDbId=0, authDbId=0, authExpire=0,
+            gbId=0, dbId=0, school=0, name='', sex=0, level=0, birthInDB=0,
+            charAppearance = None):
+
+        self[gbId] = CharacterVal(
+            gbId=gbId, dbId=dbId, school=school, name=name, sex=sex, level=level, birthInDB=birthInDB,
+            tLastOnline=0, charAppearance=charAppearance, selfDbId=selfDbId, authDbId=authDbId, authExpire=authExpire, parentID=parentID)
+
+    def addByCharObj(self, gbId, charObj):
+        # 这里需要clone，因为很可能两个account是在同个进程，
+        # 如果在同个进程，修改一个，另一个也会受影响
+        self[gbId] = charObj.clone()
 
     def genWriteToDBSql(self, ignoreDirty=False):
         values = []

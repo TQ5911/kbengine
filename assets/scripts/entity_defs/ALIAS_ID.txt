@@ -2,7 +2,6 @@ Account method onAvatarDetailInAccount 4
 Account method onCreateAvatarFailed 1
 Account method onCreateAvatarResult 2
 Account method onGameConfigChanged 5
-Account method onGameConfigChangedByName 6
 Account method onKickAnotherAccount 8
 Account method onKickAnotherAvatar 9
 Account method onMessage 10
@@ -46,10 +45,10 @@ Avatar property antiFatal 65
 Avatar property antiMortal 67
 Avatar property appearance 11
 Avatar property atkBless 64
+Avatar property authPermission 160
 Avatar property autoAskTeam 18
 Avatar property autoCombat 35
 Avatar property autoCombatReliveReturnTimes 117
-Avatar property autoMF 160
 Avatar property autoMatchTarget 19
 Avatar property autoRaidMatchTarget 84
 Avatar property bTeamCaptain 20
@@ -80,6 +79,7 @@ Avatar property debilityEnh 214
 Avatar property dmgArmor 130
 Avatar property dodge 76
 Avatar property dropRate 150
+Avatar property drugsQuantity 163
 Avatar property duelAttr 82
 Avatar property enemyMgr 123
 Avatar property exp 80
@@ -125,12 +125,15 @@ Avatar property leftCubeTimes 96
 Avatar property leftGuildTS 100
 Avatar property level 5
 Avatar property lingShouId 37
-Avatar property magicArmor 136
+Avatar property maxMagicArmor 164
 Avatar property maxMagicAtk 77
+Avatar property maxPhysicalArmor 165
 Avatar property maxPhysicalAtk 79
 Avatar property maxZedPoint 99
 Avatar property medicineRate 153
+Avatar property minMagicArmor 166
 Avatar property minMagicAtk 83
+Avatar property minPhysicalArmor 167
 Avatar property minPhysicalAtk 85
 Avatar property miningRate 154
 Avatar property money 13
@@ -153,7 +156,6 @@ Avatar property newbieGuideIds 104
 Avatar property nextRecoverGuildAssistTime 112
 Avatar property nextRecoverQixieAssistTime 146
 Avatar property obId 62
-Avatar property physicalArmor 139
 Avatar property pkModel 45
 Avatar property pkModelBefore 55
 Avatar property pkProtect 56
@@ -301,6 +303,7 @@ Creation property debilityAnti 41
 Creation property debilityEnh 42
 Creation property dmgArmor 94
 Creation property dodge 43
+Creation property drugsQuantity 4
 Creation property dunTimeFreezeFlag 44
 Creation property extraDmg 95
 Creation property extraDmgDef 96
@@ -323,10 +326,13 @@ Creation property isWitnessComplete 57
 Creation property knockAnti 58
 Creation property knockEnh 59
 Creation property level 60
-Creation property magicArmor 100
+Creation property maxMagicArmor 7
 Creation property maxMagicAtk 62
+Creation property maxPhysicalArmor 27
 Creation property maxPhysicalAtk 64
+Creation property minMagicArmor 30
 Creation property minMagicAtk 66
+Creation property minPhysicalArmor 32
 Creation property minPhysicalAtk 68
 Creation property monsterDmg 101
 Creation property monsterDmgAnti 102
@@ -339,7 +345,6 @@ Creation property mulFullHp 74
 Creation property mulFullMp 75
 Creation property mulHp 76
 Creation property name 77
-Creation property physicalArmor 103
 Creation property realDmg 104
 Creation property realDmgDef 105
 Creation property selectedTargetId 78
@@ -445,6 +450,7 @@ Monster property debilityAnti 207
 Monster property debilityEnh 208
 Monster property dmgArmor 50
 Monster property dodge 69
+Monster property drugsQuantity 22
 Monster property dunTimeFreezeFlag 191
 Monster property extraDmg 51
 Monster property extraDmgDef 54
@@ -467,10 +473,13 @@ Monster property isWitnessComplete 87
 Monster property knockAnti 210
 Monster property knockEnh 211
 Monster property level 88
-Monster property magicArmor 59
+Monster property maxMagicArmor 23
 Monster property maxMagicAtk 35
+Monster property maxPhysicalArmor 34
 Monster property maxPhysicalAtk 37
+Monster property minMagicArmor 36
 Monster property minMagicAtk 42
+Monster property minPhysicalArmor 41
 Monster property minPhysicalAtk 44
 Monster property monsterDmg 61
 Monster property monsterDmgAnti 62
@@ -485,7 +494,6 @@ Monster property mulFullHp 114
 Monster property mulFullMp 115
 Monster property mulHp 117
 Monster property name 12
-Monster property physicalArmor 67
 Monster property realDmg 68
 Monster property realDmgDef 70
 Monster property routeState 32
@@ -585,6 +593,7 @@ Npc property debilityAnti 199
 Npc property debilityEnh 200
 Npc property dmgArmor 55
 Npc property dodge 68
+Npc property drugsQuantity 23
 Npc property dunTimeFreezeFlag 5
 Npc property extraDmg 56
 Npc property extraDmgDef 57
@@ -606,10 +615,13 @@ Npc property isWitnessComplete 85
 Npc property knockAnti 202
 Npc property knockEnh 203
 Npc property level 86
-Npc property magicArmor 66
+Npc property maxMagicArmor 25
 Npc property maxMagicAtk 41
+Npc property maxPhysicalArmor 34
 Npc property maxPhysicalAtk 43
+Npc property minMagicArmor 37
 Npc property minMagicAtk 45
+Npc property minPhysicalArmor 42
 Npc property minPhysicalAtk 49
 Npc property monsterDmg 67
 Npc property monsterDmgAnti 69
@@ -624,7 +636,6 @@ Npc property mulFullMp 112
 Npc property mulHp 114
 Npc property name 7
 Npc property npcId 8
-Npc property physicalArmor 70
 Npc property realDmg 71
 Npc property realDmgDef 73
 Npc property routeState 32
@@ -729,6 +740,7 @@ Summon property debilityEnh 42
 Summon property dieWithHost 43
 Summon property dmgArmor 97
 Summon property dodge 44
+Summon property drugsQuantity 7
 Summon property dunTimeFreezeFlag 45
 Summon property extraDmg 98
 Summon property extraDmgDef 99
@@ -752,10 +764,13 @@ Summon property isWitnessComplete 59
 Summon property knockAnti 60
 Summon property knockEnh 61
 Summon property level 62
-Summon property magicArmor 103
+Summon property maxMagicArmor 27
 Summon property maxMagicAtk 64
+Summon property maxPhysicalArmor 30
 Summon property maxPhysicalAtk 66
+Summon property minMagicArmor 32
 Summon property minMagicAtk 68
+Summon property minPhysicalArmor 37
 Summon property minPhysicalAtk 70
 Summon property monsterDmg 104
 Summon property monsterDmgAnti 105
@@ -769,7 +784,6 @@ Summon property mulFullHp 77
 Summon property mulFullMp 78
 Summon property mulHp 79
 Summon property name 80
-Summon property physicalArmor 106
 Summon property realDmg 107
 Summon property realDmgDef 108
 Summon property selectedTargetId 81

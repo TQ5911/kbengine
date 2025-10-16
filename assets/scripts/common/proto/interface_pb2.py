@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='gameInterface',
   syntax='proto3',
   serialized_options=_b('\220\001\001'),
-  serialized_pb=_b('\n\x0finterface.proto\x12\rgameInterface\"\x06\n\x04Void\"&\n\tConfigVal\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03val\x18\x02 \x01(\t\"\x17\n\x07ListVal\x12\x0c\n\x04vals\x18\x01 \x03(\t\"\x17\n\x06IntVal\x12\r\n\x05value\x18\x01 \x01(\r2\xe4\x03\n\tInterface\x12K\n\x1agameConfigChangedOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12\x45\n\x14\x63\x61\x63heConfigOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12I\n\x18syncCacheConfigOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12\x36\n\nactiveTick\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12;\n\x0finterfaceReload\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12\x42\n\x13interfaceDataReload\x12\x16.gameInterface.ListVal\x1a\x13.gameInterface.Void\x12?\n\x11syncRegisterCount\x12\x15.gameInterface.IntVal\x1a\x13.gameInterface.Void2\x92\x01\n\x07\x42\x61seApp\x12>\n\x12\x61\x63tiveTickCallback\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12G\n\x1breqSyncCacheConfigOnBaseapp\x12\x13.gameInterface.Void\x1a\x13.gameInterface.VoidB\x03\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0finterface.proto\x12\rgameInterface\"\x06\n\x04Void\"&\n\tConfigVal\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03val\x18\x02 \x01(\t\"\x17\n\x07ListVal\x12\x0c\n\x04vals\x18\x01 \x03(\t\"\x17\n\x06IntVal\x12\r\n\x05value\x18\x01 \x01(\r\"J\n\x11SetAccountCompVal\x12\x13\n\x0b\x61\x63\x63ountName\x18\x01 \x01(\t\x12\x0e\n\x06\x63ompID\x18\x02 \x01(\x04\x12\x10\n\x08\x65ntityID\x18\x03 \x01(\r\"8\n\x14SetAccountCompResult\x12\x0e\n\x06result\x18\x01 \x01(\r\x12\x10\n\x08\x65ntityID\x18\x02 \x01(\r2\xad\x04\n\tInterface\x12K\n\x1agameConfigChangedOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12\x45\n\x14\x63\x61\x63heConfigOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12I\n\x18syncCacheConfigOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12\x36\n\nactiveTick\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12;\n\x0finterfaceReload\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12\x42\n\x13interfaceDataReload\x12\x16.gameInterface.ListVal\x1a\x13.gameInterface.Void\x12?\n\x11syncRegisterCount\x12\x15.gameInterface.IntVal\x1a\x13.gameInterface.Void\x12G\n\x0esetAccountComp\x12 .gameInterface.SetAccountCompVal\x1a\x13.gameInterface.Void2\xe4\x01\n\x07\x42\x61seApp\x12>\n\x12\x61\x63tiveTickCallback\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12G\n\x1breqSyncCacheConfigOnBaseapp\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12P\n\x14setAccountCompResult\x12#.gameInterface.SetAccountCompResult\x1a\x13.gameInterface.VoidB\x03\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -150,10 +150,95 @@ _INTVAL = _descriptor.Descriptor(
   serialized_end=130,
 )
 
+
+_SETACCOUNTCOMPVAL = _descriptor.Descriptor(
+  name='SetAccountCompVal',
+  full_name='gameInterface.SetAccountCompVal',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='accountName', full_name='gameInterface.SetAccountCompVal.accountName', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='compID', full_name='gameInterface.SetAccountCompVal.compID', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='entityID', full_name='gameInterface.SetAccountCompVal.entityID', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=132,
+  serialized_end=206,
+)
+
+
+_SETACCOUNTCOMPRESULT = _descriptor.Descriptor(
+  name='SetAccountCompResult',
+  full_name='gameInterface.SetAccountCompResult',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='result', full_name='gameInterface.SetAccountCompResult.result', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='entityID', full_name='gameInterface.SetAccountCompResult.entityID', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=208,
+  serialized_end=264,
+)
+
 DESCRIPTOR.message_types_by_name['Void'] = _VOID
 DESCRIPTOR.message_types_by_name['ConfigVal'] = _CONFIGVAL
 DESCRIPTOR.message_types_by_name['ListVal'] = _LISTVAL
 DESCRIPTOR.message_types_by_name['IntVal'] = _INTVAL
+DESCRIPTOR.message_types_by_name['SetAccountCompVal'] = _SETACCOUNTCOMPVAL
+DESCRIPTOR.message_types_by_name['SetAccountCompResult'] = _SETACCOUNTCOMPRESULT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Void = _reflection.GeneratedProtocolMessageType('Void', (_message.Message,), dict(
@@ -184,6 +269,20 @@ IntVal = _reflection.GeneratedProtocolMessageType('IntVal', (_message.Message,),
   ))
 _sym_db.RegisterMessage(IntVal)
 
+SetAccountCompVal = _reflection.GeneratedProtocolMessageType('SetAccountCompVal', (_message.Message,), dict(
+  DESCRIPTOR = _SETACCOUNTCOMPVAL,
+  __module__ = 'interface_pb2'
+  # @@protoc_insertion_point(class_scope:gameInterface.SetAccountCompVal)
+  ))
+_sym_db.RegisterMessage(SetAccountCompVal)
+
+SetAccountCompResult = _reflection.GeneratedProtocolMessageType('SetAccountCompResult', (_message.Message,), dict(
+  DESCRIPTOR = _SETACCOUNTCOMPRESULT,
+  __module__ = 'interface_pb2'
+  # @@protoc_insertion_point(class_scope:gameInterface.SetAccountCompResult)
+  ))
+_sym_db.RegisterMessage(SetAccountCompResult)
+
 
 DESCRIPTOR._options = None
 
@@ -193,8 +292,8 @@ _INTERFACE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=133,
-  serialized_end=617,
+  serialized_start=267,
+  serialized_end=824,
   methods=[
   _descriptor.MethodDescriptor(
     name='gameConfigChangedOnBaseapp',
@@ -259,6 +358,15 @@ _INTERFACE = _descriptor.ServiceDescriptor(
     output_type=_VOID,
     serialized_options=None,
   ),
+  _descriptor.MethodDescriptor(
+    name='setAccountComp',
+    full_name='gameInterface.Interface.setAccountComp',
+    index=7,
+    containing_service=None,
+    input_type=_SETACCOUNTCOMPVAL,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_INTERFACE)
 
@@ -271,8 +379,8 @@ _BASEAPP = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=620,
-  serialized_end=766,
+  serialized_start=827,
+  serialized_end=1055,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTickCallback',
@@ -289,6 +397,15 @@ _BASEAPP = _descriptor.ServiceDescriptor(
     index=1,
     containing_service=None,
     input_type=_VOID,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='setAccountCompResult',
+    full_name='gameInterface.BaseApp.setAccountCompResult',
+    index=2,
+    containing_service=None,
+    input_type=_SETACCOUNTCOMPRESULT,
     output_type=_VOID,
     serialized_options=None,
   ),

@@ -164,7 +164,7 @@ datas ={
   "1204": {
     "type": "castSkill",
     "entityID": [
-      20180002
+      22020002
     ],
     "skillID": 91024014,
     "lv": "-1",
@@ -189,7 +189,7 @@ datas ={
   "1206": {
     "type": "createCreationInFixedPosition",
     "monsterID": [
-      20180002
+      22020002
     ],
     "entityID": [
       22028004
@@ -1441,7 +1441,7 @@ datas ={
   "1174": {
     "type": "monsterHp",
     "monsterID": [
-      20180001
+      22020001
     ],
     "compare": 5,
     "hpPercent": 0.01,

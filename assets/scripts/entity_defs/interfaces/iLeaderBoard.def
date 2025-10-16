@@ -38,6 +38,7 @@
             <Arg>       SCHOOL                              </Arg>
             <Arg>       LEADER_BOARD_PAGE                              </Arg>
             <Arg>       BOOL                                </Arg>
+            <Arg>       RANK                                </Arg>
         </onLeaderBoardAvatarLevel>
 
         <onLeaderBoardAvatarScore>
@@ -46,6 +47,15 @@
             <Arg>       SCHOOL                              </Arg>
             <Arg>       LEADER_BOARD_PAGE                              </Arg>
             <Arg>       BOOL                                </Arg>
+            <Arg>       RANK                                </Arg>
         </onLeaderBoardAvatarScore>
+
+        <onLeaderBoardGuild>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+            <Arg>       ARRAY   <of>        LEADER_BOARD_GUILD_DATA_INFO            </of>   </Arg>
+            <Arg>       LEADER_BOARD_PAGE                              </Arg>
+            <Arg>       BOOL                                </Arg>
+            <Arg>       RANK                                </Arg>
+        </onLeaderBoardGuild>
     </ClientMethods>
 </root>

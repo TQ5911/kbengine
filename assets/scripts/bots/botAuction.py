@@ -8,12 +8,12 @@ import botBase
 import re
 import gameconst
 import auction_auctionCategory
-
+import simpleBotBase
 # 压测相关导入
 from auction_stress_test_config import exception_collector, StressTestConfig, global_purchased_manager, global_sold_manager
 
 
-class PlayerDelegate(object):
+class PlayerDelegate(simpleBotBase.SimpleBotBase):
     @property
     def player(self): return self.robot.player()
 
@@ -24,8 +24,7 @@ class PlayerDelegate(object):
     def cell(self): return self.player.cell
 
     def __init__(self, robot, botCLient):
-        self.robot = robot
-        self.botClient = botCLient
+        super(PlayerDelegate, self).__init__(robot, botCLient)
         
         # 交易行相关属性
         self.auction_items = []  # 存储查询到的交易行道具
@@ -1250,7 +1249,10 @@ class PlayerDelegate(object):
             
         elif msgId == '生成报告':
             self.generate_stress_test_report()
-
+            
+        else:
+            super().onRecvAvatarChannelMsg(channelID, avatarInfo, msgId)
+            
 
 # 导出委托类，供外部使用
 DELEGATE_CLS = PlayerDelegate

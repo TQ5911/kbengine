@@ -365,7 +365,7 @@ class Bag(BaseBag.BaseBag):
 
         if self.isLocked():
             return gameconst.BagOPStat.BAG_OP_BAG_LOCKED
-        
+
         # 道具本身被上锁了
         if gridObj.isLocked():
             return gameconst.BagOPStat.BAG_OP_ITEM_LOCKED

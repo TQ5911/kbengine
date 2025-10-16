@@ -57,7 +57,7 @@ class ImpAvatarPet(object):
     def _sendBattleListData(self):
         self.lingShouInfo.sendBattleListData(self)
 
-    def setFollowPet(self, bFollow, petId):
+    def setFollowPet(self, exposed, bFollow, petId):
         pet = self.lingShouInfo.getLingShouByPetId(petId)
         if not pet:
             ERROR_MSG("setFollowPet pet not found", petId)
@@ -65,7 +65,7 @@ class ImpAvatarPet(object):
 
         self.cell.setFollowPet(bFollow, petId)
 
-    def updateLingShouBattleList(self, battleIndex, petId, slotId):
+    def updateLingShouBattleList(self, exposed, battleIndex, petId, slotId):
         DEBUG_MSG('updateLingShouBattleList', battleIndex, petId, slotId)
         myLevel = gameglobal.roleCache[self.id]['level']
         unlockRank = PDUD.datas[slotId+1]['unlockRank']
@@ -164,7 +164,7 @@ class ImpAvatarPet(object):
 
         return _dic.get(quality, 0)
 
-    def modifyPetBattleListName(self, battleIndex, name):
+    def modifyPetBattleListName(self, exposed, battleIndex, name):
         if not self.lingShouInfo.isBattleIndexValid(battleIndex):
             ERROR_MSG("modifyPetBattleListName battleIndex invalid", battleIndex)
             return
@@ -180,7 +180,7 @@ class ImpAvatarPet(object):
         return self.lingShouInfo.getTotalPetScore(self)
 
     @gamedecorator.limitcall(PDSD.datas['petTeamSwitchCD']['value'])
-    def setBattleIndex(self, battleIndex):
+    def setBattleIndex(self, exposed, battleIndex):
         if not self.lingShouInfo.isBattleIndexValid(battleIndex):
             ERROR_MSG("setBattleIndex battleIndex invalid", battleIndex)
             return
@@ -227,7 +227,7 @@ class ImpAvatarPet(object):
         # self.onMessagePre(MMD.datas.petEggHatchTip, [])
         self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
 
-    def useLingShouEquip(self, gridId, petId, slotId):
+    def useLingShouEquip(self, exposed, gridId, petId, slotId):
         DEBUG_MSG("useLingShouEquip ", gridId, petId, slotId)
         pet = self.lingShouInfo.getLingShouByPetId(petId)
         if not pet:

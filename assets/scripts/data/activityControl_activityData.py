@@ -19,6 +19,7 @@ datas = _tools.RODict({
     32000001: _tools.RODict({
         "ID": 32000001,
         "name": "首领讨伐",
+        "membersRequire": 15,
         "isOpen": 1,
         "needTeam": 2,
         "refreshMode": 0,
@@ -33,6 +34,7 @@ datas = _tools.RODict({
     32000002: _tools.RODict({
         "ID": 32000002,
         "name": "混沌回廊",
+        "membersRequire": 0,
         "isOpen": 1,
         "needTeam": 0,
         "refreshMode": 0,
@@ -47,6 +49,7 @@ datas = _tools.RODict({
     32000003: _tools.RODict({
         "ID": 32000003,
         "name": "试炼峰",
+        "membersRequire": 0,
         "isOpen": 1,
         "needTeam": 0,
         "refreshMode": 0,
@@ -61,6 +64,7 @@ datas = _tools.RODict({
     32000004: _tools.RODict({
         "ID": 32000004,
         "name": "普通讨伐",
+        "membersRequire": 5,
         "isOpen": 1,
         "needTeam": 1,
         "refreshMode": 0,

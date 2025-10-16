@@ -31,24 +31,24 @@ class ImpStore(object):
         DEBUG_MSG('in onLimitedStoreHourlyUpdate:', args)
         self.storeData.updateLimitedStoreHourly(self)
 
-    def reqGetStoreList(self, storeIds):
+    def reqGetStoreList(self, exposed, storeIds):
         DEBUG_MSG('in reqGetStoreList:', storeIds)
         self.storeData.sendStoreList(self, storeIds)
         return
     
-    def reqGetStoreLimitedItemList(self, storeId):
-        DEBUG_MSG('in reqGetStoreLimitedItemList:', storeId)
+    def reqGetStoreLimitedItemList(self, exposed, storeId):
+        DEBUG_MSG('in reqGetStoreLimitedItemList:', exposed, storeId)
         self.storeData.sendStoreLimitedItemList(self, storeId)
 
     @gamedecorator.limitcall(1)
     # itemId: mall_coinPrice.datas.ID 不是物品ID
-    def reqBuyItemsInStore(self, storeId, itemId, itemNum):
+    def reqBuyItemsInStore(self, exposed, storeId, itemId, itemNum):
         DEBUG_MSG('in reqBuyItemsInStore:', storeId, itemId, itemNum)
         self._buyItemsInStore(storeId, itemId, itemNum)
 
     @gamedecorator.limitcall(1)
-    def reqBuyItemsInStoreWithSelection(self, storeId, itemId, itemNum, propSlot):
-        DEBUG_MSG('in reqBuyItemsInStoreWithSelection:', storeId, itemId, itemNum, propSlot)
+    def reqBuyItemsInStoreWithSelection(self, exposed, storeId, itemId, itemNum, propSlot):
+        DEBUG_MSG('in reqBuyItemsInStoreWithSelection:', exposed, storeId, itemId, itemNum, propSlot)
         self._buyItemsInStore(storeId, itemId, itemNum, propSlot)
 
     def _buyItemsInStore(self, storeId, itemId, itemNum, propSlot=0):

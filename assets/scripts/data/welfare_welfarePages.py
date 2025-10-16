@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "unlockID": 70,
+        "unlockID": "SevenSign",
     })
 })
 minKey = 1

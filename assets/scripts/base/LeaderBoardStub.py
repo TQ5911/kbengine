@@ -78,38 +78,40 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         _cacheDic = self.toCacheDic()
         lbList = list(_cacheDic.values())
 
-        sortedList = sorted(lbList, key=self.leaderBoardList.instaniateCls().sortKeyFunc())
+        _cls = self.leaderBoardList.instaniateCls()
+        sortedList = sorted(lbList, key=_cls.sortKeyFunc())
         self.leaderBoardList.clear()
-
         _maxNum = R_RD.datas[self.leaderBoardType]['displayNum']
-        _schoolsData = {}
-        for _school in C_CDD.datas:
-            _schoolsData[_school] = []
+        self.leaderBoardList.extend(sortedList[:_maxNum])
 
-        for _lbcVal in sortedList:
-            if len(self.leaderBoardList) >= _maxNum\
-                    and not _schoolsData:
-                break
+        # 玩家数据需要考虑根据不同职业的分榜，其他如帮会数据就不需要
+        if _cls.calcSchool():
+            _schoolsData = {}
+            for _school in C_CDD.datas:
+                _schoolsData[_school] = []
 
-            if len(self.leaderBoardList) < _maxNum:
-                self.leaderBoardList.append(_lbcVal)
+            for _lbcVal in sortedList:
+                if not _schoolsData:
+                    break
 
-            if _lbcVal.school not in _schoolsData:
-                continue
+                if _lbcVal.school not in _schoolsData:
+                    continue
 
-            _schoolsData[_lbcVal.school].append(_lbcVal)
-            if len(_schoolsData[_lbcVal.school]) >= _maxNum:
-                self.leaderBoardList.replaceSchoolData(_lbcVal.school, _schoolsData[_lbcVal.school])
-                _schoolsData.pop(_lbcVal.school)
+                _schoolsData[_lbcVal.school].append(_lbcVal)
+                if len(_schoolsData[_lbcVal.school]) >= _maxNum:
+                    self.leaderBoardList.replaceSchoolData(_lbcVal.school, _schoolsData[_lbcVal.school])
+                    _schoolsData.pop(_lbcVal.school)
 
-        for _school, _listData in _schoolsData.items():
-            self.leaderBoardList.replaceSchoolData(_school, _listData)
+            for _school, _listData in _schoolsData.items():
+                self.leaderBoardList.replaceSchoolData(_school, _listData)
 
         self.leaderBoardCache = {}
         self.leaderBoardIdx += 1
 
-        _iter = self._sendLeaderBoardRankIdx()
-        self.batchlyCall(_iter, 1, 0.1)
+        # 玩家数据需要计算成就，所以要通知到每个玩家
+        if _cls.calcSchool():
+            _iter = self._sendLeaderBoardRankIdx()
+            self.batchlyCall(_iter, 1, 0.1)
 
     def _sendLeaderBoardRankIdx(self):
         _idx = 0
@@ -124,9 +126,46 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             yield lambda *args: args
             _idx += 1
 
-    def doGetLeaderBoardList(self, box, leaderBoardIdx, school, page):
+    def _getRankIdx(self, key, lbList):
+        if not key:
+            return 0, None
+
+        for _idx, _lbcVal in enumerate(lbList):
+            if _lbcVal.key == key:
+                return _idx + 1, _lbcVal
+
+        return 0, None
+
+    def doGetLeaderBoardGuildList(self, box, leaderBoardIdx, guildUUID, page):
         if leaderBoardIdx >= self.leaderBoardIdx:
-            box.client.leaderBoardNotChanged(self.leaderBoardType ,leaderBoardIdx, school)
+            box.client.leaderBoardNotChanged(self.leaderBoardType, leaderBoardIdx, 0)
+            return
+
+        _list = self.leaderBoardList
+
+        if page == 0:
+            # 第一页特殊处理一下，把玩家排名塞里面
+            # 1.如果玩家在排行榜，那么第一页额外在最后一位塞当前玩家数据
+            _rank, _lbcVal = self._getRankIdx(guildUUID, _list)
+
+        else:
+            _rank, _lbcVal = 0, None
+
+        _func = self.leaderBoardList.instaniateCls().funcName()
+        _start = page * gameconst.LEADER_BOARD_PAGE_SIZE
+        _end = _start + gameconst.LEADER_BOARD_PAGE_SIZE
+        _isEnd = _end >= len(_list)
+        _list = _list[_start : _end]
+
+        if _lbcVal is not None:
+            _list.append(_lbcVal)
+
+        getattr(box.client, _func)(self.leaderBoardIdx, _list, page, _isEnd, _rank)
+
+
+    def doGetLeaderBoardList(self, box, gbId, leaderBoardIdx, school, page):
+        if leaderBoardIdx >= self.leaderBoardIdx:
+            box.client.leaderBoardNotChanged(self.leaderBoardType, leaderBoardIdx, school)
             return
 
         if not school:
@@ -134,10 +173,22 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         else:
             _list = self.leaderBoardList.getSchoolData(school)
 
+        if page == 0:
+            # 第一页特殊处理一下，把玩家排名塞里面
+            # 1.如果玩家在排行榜，那么第一页额外在最后一位塞当前玩家数据
+            _rank, _lbcVal = self._getRankIdx(gbId, _list)
+
+        else:
+            _rank, _lbcVal = 0, None
+
         _func = self.leaderBoardList.instaniateCls().funcName()
         _start = page * gameconst.LEADER_BOARD_PAGE_SIZE
         _end = _start + gameconst.LEADER_BOARD_PAGE_SIZE
         _isEnd = _end >= len(_list)
         _list = _list[_start : _end]
-        getattr(box.client, _func)(self.leaderBoardIdx, _list, school, page, _isEnd)
+
+        if _lbcVal is not None:
+            _list.append(_lbcVal)
+
+        getattr(box.client, _func)(self.leaderBoardIdx, _list, school, page, _isEnd, _rank)
 

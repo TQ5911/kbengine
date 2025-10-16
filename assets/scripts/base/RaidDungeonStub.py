@@ -209,7 +209,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             WARNING_MSG('_tryDestroyRaidDungeonDelay:: already mark destroyed', spaceNo, spaceUUID)
             return spaceVal, gameconst.RaidDungeonErrno.RAIDDUN_SKIP
 
-        if spaceVal.isCompleted() or spaceVal.getRemainTime() <= 0:
+        if spaceVal.isCompleted():
             spaceVal.tMarkDestroy = utils.getNow() + self.delayDestroyTimeout
             spaceVal.toDestoryDungeon()
             return spaceVal, gameconst.RaidDungeonErrno.RAIDDUN_OK
@@ -330,8 +330,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         sVal.completeDungeon(win)
         self._kickOutAllFounders(spaceNo)
         # clear dungeonCache in raid with raidDungeon completed
-        gameengine.getRaidStub(sVal.raidUUID).onRaidDungeonCompletedCallback(
-            sVal.raidUUID, self.dungeonNo, spaceNo, sVal.spaceUUID)
+        gameengine.getRaidStub(sVal.raidUUID).onRaidDungeonCompletedCallback(sVal.raidUUID, self.dungeonNo, spaceNo, sVal.spaceUUID)
 
     def doEnterDungeon(self, box, gbId, raidUUID, spaceNo, extra):
         """玩家执行进入副本时调用"""

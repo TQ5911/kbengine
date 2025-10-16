@@ -3,9 +3,11 @@ if [ -d "tsssdk_log" ]; then
     rm tsssdk_log/*
 fi
 ./kill_server.sh
+ulimit -c unlimited
+ulimit -c
 
 timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
-
+chmod +x ../kbe/bin/server/*
 # 创建一个以时间戳命名的文件
 #touch "$timestamp"
 dir="/tmp/log_$timestamp"

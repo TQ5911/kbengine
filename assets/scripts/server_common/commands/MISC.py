@@ -2724,7 +2724,7 @@ def ALLfinishNewbie(su,player, step):
     return True, '执行成功'
 
 
-def getItems(school, quality, level, awardCtx):
+def _getItems(school, quality, level, awardCtx):
     _targetList = []
     for k, v in GBE.auctionDic.items():
         # k : (1, 1001), v: [(1, 11), (2, 21), (3, 31), (4, 41)]
@@ -2732,6 +2732,8 @@ def getItems(school, quality, level, awardCtx):
             continue
 
         _targetList.extend(v)
+
+    print('_targetList', _targetList)
 
     _itemIds = []
     for k, v in GBG.auctionDic.items():
@@ -2742,7 +2744,11 @@ def getItems(school, quality, level, awardCtx):
             continue
 
         for i in v:
-            if i % 10 == level:
+            if i < 80814001:
+                continue
+
+            grade = GBG.datas[i]['grade']
+            if grade == level:
                 _itemIds.append(i)
                 if k[0] == 6 or k[0] == 7:
                     _itemIds.append(i)
@@ -2760,7 +2766,7 @@ def dropEquip(su, player, slotId):
 
 @gm_cmd('$dropWithoutDress', (Player("gbId/Id"), Int('count')), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
 def dropWithoutDress(su, player, count):
-    _items = getItems(player.school, 3, 3, awardContext.CommonContext(0))
+    _items = _getItems(player.school, 3, 3, awardContext.CommonContext(0))
     for _item in _items[:count]:
         player.dropEquipByItem(_item, player.name)
 
@@ -2789,7 +2795,7 @@ def gmGetEquipment(su, player, school, quality, level):
         if school == 0:
             DEBUG_MSG('gmGetEquipment: failed to fetch school from role cache, school=0')
             return False, '执行失败，玩家门派未知'
-    _items = getItems(school, quality, level, awardCtx)
+    _items = _getItems(school, quality, level, awardCtx)
 
     awardVal.addWealthByObjList(_items)
     player.addWealth(
@@ -2976,28 +2982,6 @@ def setProp(su, player,propName,value):
         return True, '执行成功'
     return False, f'检查propName:{propName}'
 
-@gm_cmd('$addEquipAnima', (Player('gbId/Id'), Int('addAnimaNum')), RARG(0), BASE, '添加灵气', ALLSIDE, GOD_GROUPS)
-def addEquipWashAnima(su, player, addAnimaNum):
-    if addAnimaNum <= 0:
-        return False, '参数错误，执行失败'
-    if gmCommand.isRawPlayer(player):
-        gbId, name, accountName, dbId = player
-        gamesql.recordAvatarOfflineCallback(gbId, 'gmAddAnima', (addAnimaNum,))
-    else:
-        player.gmAddAnima(addAnimaNum)
-    return True, '执行成功'
-
-@gm_cmd('$deductEquipAnima', (Player('gbId/Id'), Int('deductAnimaNum')), RARG(0), BASE, '扣除灵气', ALLSIDE, GOD_GROUPS)
-def deductEquipAnima(su, player, deductAnimaNum):
-    if deductAnimaNum <= 0:
-        return False, '参数错误，执行失败'
-    if gmCommand.isRawPlayer(player):
-        gbId, name, accountName, dbId = player
-        gamesql.recordAvatarOfflineCallback(gbId, 'gmDeductAnima', (deductAnimaNum,))
-    else:
-        player.gmDeductAnima(deductAnimaNum)
-    return True, '执行成功'
-
 @gm_cmd('$enterCubeRoom', (Player("gbId/Id"), Int("mapId"),), RARG(0), gameconst.CELL, '进入魔方阵指定房间', ALLSIDE, GOD_GROUPS)
 def enterCubeRoom(su, player, mapId):
     if player.gmEnterCubeRoom(mapId):
@@ -3077,7 +3061,14 @@ def clearPickedCollections(su, player, collectionId):
 
 @gm_cmd('$modifyEquipEnhanceLevel', (Player("gbId/Id"), Int("slotID"), Int("enhanceLevel")), RARG(0), gameconst.CELL, '修改装备强化等级', ALLSIDE, GOD_GROUPS)
 def modifyEquipEnhanceLevel(su, player, slotID, enhanceLevel):
-    ret = player.modifyEquipEnhanceLevel(slotID, enhanceLevel)
+    ret = player.gmModifyEquipEnhanceLevel(slotID, enhanceLevel)
+    if not ret:
+        return False, '执行失败'
+    return True, '执行成功'
+
+@gm_cmd('$dressAllEquipments', (Player("gbId/Id"), ), RARG(0), gameconst.CELL, '穿戴所有装备', ALLSIDE, GOD_GROUPS)
+def dressAllEquipments(su, player):
+    ret = player.gmDressEquips()
     if not ret:
         return False, '执行失败'
     return True, '执行成功'

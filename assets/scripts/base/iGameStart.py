@@ -63,6 +63,24 @@ class IGameStart(object):
             self.onGetAllBaseApps()
 
             self.createLocalStubs()
+            self.pyAddTimer(0.1, 0, gametimer.CREATE_LEADER_BOARD_STUB)
+
+        elif userArg == gametimer.CREATE_LEADER_BOARD_STUB:
+            if gameglobal.isBootstrap:
+                self.createLeaderBoardStub()
+            self.pyAddTimer(0.2, 0, gametimer.WAIT_LEADER_BOARD_STUB_READY)
+
+        elif userArg == gametimer.WAIT_LEADER_BOARD_STUB_READY:
+            for _lbType in gameconst.LeaderBoardType.ALL_KEYS:
+                _stub = gameengine.getLeaderStub(_lbType)
+                if not _stub:
+                    INFO_MSG('startwatting: waiting for leaderBoardStub ready', _lbType)
+                    self.pyAddTimer(0.1, 0, gametimer.WAIT_LEADER_BOARD_STUB_READY)
+                    return
+
+            self.pyAddTimer(0.1, 0, gametimer.CREATE_GLOBAL_STUBS)
+
+        elif userArg == gametimer.CREATE_GLOBAL_STUBS:
             if gameglobal.isBootstrap:
                 self.createGlobalStubs()
 
@@ -254,20 +272,6 @@ class IGameStart(object):
 
             gamesql.setServerStateInfo('server_start_time', utils.getNow(), _callback)
             gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_BASEAPP_READY, KBEngine.getComponentGroupOrder())
-            self.pyAddTimer(1, 0, gametimer.CREATE_LEADER_BOARD_STUB)
-
-        elif userArg == gametimer.CREATE_LEADER_BOARD_STUB:
-            if gameglobal.isBootstrap:
-                self.createLeaderBoardStub()
-            self.pyAddTimer(1, 0, gametimer.WAIT_LEADER_BOARD_STUB_READY)
-
-        elif userArg == gametimer.WAIT_LEADER_BOARD_STUB_READY:
-            for _lbType in gameconst.LeaderBoardType.ALL_KEYS:
-                _stub = gameengine.getLeaderStub(_lbType)
-                if not _stub:
-                    INFO_MSG('startwatting: waiting for leaderBoardStub ready', _lbType)
-                    self.pyAddTimer(1, 0, gametimer.WAIT_LEADER_BOARD_STUB_READY)
-                    return
             self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CREATE_WORLD_REFRESH_ENTITIES)
 
         elif userArg == gametimer.BASESTUB_TIMER_CREATE_WORLD_REFRESH_ENTITIES:

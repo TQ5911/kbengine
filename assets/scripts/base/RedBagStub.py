@@ -16,27 +16,53 @@ import gameengine
 import RedBagInfo
 import dropAward
 import mailAssistor
-import chatConfig_chatConfig as CC_CC
-
+import chatConfig_chatConfig as CC_CCD
+import iCycleEvent
     
 
-class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
+class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer, iCycleEvent.ICycleEvent):
     def __init__(self):
+        iCycleEvent.ICycleEvent.__init__(self)
         self.fetchCacheDict = {}
 
         # 排行缓存列表
         self.rankCacheList = []
         self.lastGetRankTime = 0
+        self._callback(2, 'doReg', (), gametimer.TIMER_TAG_RED_BAG_REG)
 
+    def reloadScript(self):
+        for pName, pVal in self.__dict__.items():
+            if pName.startswith('__'):
+                continue
+
+            if hasattr(pVal, 'reloadScript'):
+                pVal.reloadScript()
      
     def doNext(self):
         super().doNext()
 
+    def doReg(self):
+        self.registerDailyEvent('onRedBagDailyCheck')
+
+        self.onDailyEvent()
+
     def onTimer(self, tid, userArg):
-        if utils.isBelongTimerTag(userArg):
+        self._onTimer(tid, userArg)
+        if userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
+            self.onCycleEventTick()
+            
+        elif utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
         else:
-            self._onTimer(tid, userArg)
+            pass
+            
+    def onRedBagDailyCheck(self):
+        INFO_MSG('onRedBagDailyCheck')
+        try:
+            for redbagId in self.redbagDict.keys():
+                self.checkExpire(redbagId)
+        except Exception as e:
+            ERROR_MSG('onRedBagDailyCheck exception:', e)
 
     # 获取顺序红包列表
     def doGetRedBagRankList(self, playerbox, guildUUID, playerFetchList):
@@ -85,7 +111,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
                 canFetchList.append(data)
 
         rankList = canFetchList + hasFetchList + emptyList
-        maxNum = CC_CC.datas['displayPacketLimit']['value']
+        maxNum = CC_CCD.datas['displayPacketLimit']['value']
         if len(rankList) > maxNum:
             rankList = rankList[:maxNum]
             
@@ -166,7 +192,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         self.writeToDB(self.onSave)
 
         # 回调通知 box
-        playerbox.onReleaseRedBag(_RbVal.redbagId, _RbVal.redbagType, _RbVal.channel, _RbVal.releaseTime, _RbVal.desc)
+        playerbox.onReleaseRedBag(_RbVal.redbagId, _RbVal.redbagType, _RbVal.channel, _RbVal.money, _RbVal.releaseTime, _RbVal.desc)
 
     def onSave(self, ok, entity):
         DEBUG_MSG('in _onWriteToDB:', entity, entity.databaseID, self.databaseID)
@@ -174,7 +200,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             ERROR_MSG('zt: fail to write DB:{}'.format(self.classname()))
 
 
-    def doFetchRedBag(self, playerbox, redbagId, playerGbId, guildUUID, name):
+    def doFetchRedBag(self, playerbox, redbagId, playerGbId, guildUUID, name, showOnly=False):
         # INFO_MSG('doFetchRedBag: redbagId=%d, playerGbId=%d, guildUUID=%d, name=%s' % (redbagId, playerGbId, guildUUID, name))
         if redbagId not in self.redbagDict:
             DEBUG_MSG('doFetchRedBag: redbagId=%d not exist' % redbagId)
@@ -184,13 +210,13 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             DEBUG_MSG('doFetchRedBag: redbagId=%d not in fetchCacheDict' % redbagId)
             # 从缓存获取
             redisUtils.RedBagUtils.getRedBagFetchInfo(redbagId,
-                                                      functools.partial(self.doLoadCachewithFetchRedBag, playerbox, redbagId, playerGbId, guildUUID, name))
+                                                      functools.partial(self.doLoadCachewithFetchRedBag, playerbox, redbagId, playerGbId, guildUUID, name, showOnly))
             return
 
-        self._doFetchRedBag(playerbox, redbagId, playerGbId, guildUUID, name)
+        self._doFetchRedBag(playerbox, redbagId, playerGbId, guildUUID, name, showOnly)
 
 
-    def doLoadCachewithFetchRedBag(self, playerbox, redbagId, playerGbId, guildUUID, name, result):
+    def doLoadCachewithFetchRedBag(self, playerbox, redbagId, playerGbId, guildUUID, name, showOnly, result):
         if result is None or result == '':
             # 没有记录，创建一个
             _FcVal = RedBagInfo.RedBagFetchVal()
@@ -198,9 +224,9 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             _FcVal = RedBagInfo.RedBagFetchVal().toDecodeData(result)
         self.fetchCacheDict[redbagId] = _FcVal
 
-        self._doFetchRedBag(playerbox, redbagId, playerGbId, guildUUID, name)
+        self._doFetchRedBag(playerbox, redbagId, playerGbId, guildUUID, name, showOnly)
 
-    def _doFetchRedBag(self, playerbox, redbagId, playerGbId, guildUUID, name):
+    def _doFetchRedBag(self, playerbox, redbagId, playerGbId, guildUUID, name, showOnly=False):
         # INFO_MSG('_doFetchRedBag: redbagId=%d playerGbId=%d guildUUID=%d name=%s' % (redbagId, playerGbId, guildUUID, name))
 
         if self.checkExpire(redbagId):
@@ -208,6 +234,11 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             # 更新数据
             playerbox.getRedBagRankList()
             return
+        if showOnly:
+            # 只查看信息
+            self.showRedBagFetchInfo(playerbox, redbagId, 0)
+            return
+        
         _RbVal = self.redbagDict[redbagId]
         if _RbVal.leftNum <= 0 or _RbVal.leftMoney <= 0:
             DEBUG_MSG('_doFetchRedBag fail: redbagId={} leftNum={} leftMoney={}'.format(redbagId, _RbVal.leftNum, _RbVal.leftMoney))
@@ -239,16 +270,18 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
 
         # 先修改内存，再同步缓存
         redisUtils.RedBagUtils.addRedBagFetchInfo(redbagId, playerGbId, _FpVal.toEncodeData(),
-                                                  functools.partial(self._onAddRedbagFetchInfo, playerbox, redbagId, _money))
+                                                  functools.partial(self._onAddRedbagFetchInfo, playerbox, redbagId, _money, _RbVal.releaseTime))
         
         if len(_FcVal.fetchPlayerDict) % 20 == 0 or _RbVal.leftNum == 0:
             self.writeToDB()
         
-    def _onAddRedbagFetchInfo(self, playerbox, redbagId, _money):
+    def _onAddRedbagFetchInfo(self, playerbox, redbagId, _money, releaseTime):
         INFO_MSG('_onAddRedbagFetchInfo: redbagId={} _money={}'.format(redbagId, _money))
 
         self.showRedBagFetchInfo(playerbox, redbagId, _money)
-        
+
+        # 设置过期时间
+        redisUtils.RedBagUtils.setRedBagFetchExpire(redbagId, releaseTime + CC_CCD.datas['returnPacketTime']['value'] * 3600 * 2)
 
     def showRedBagFetchInfo(self, playerbox, redbagId, _money=0):
         # 回调通知 box
@@ -259,7 +292,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         rbData = _RbVal.toClientDict()
         fcData.update(rbData)
 
-        playerbox.onFetchRedBag(redbagId, _money, _FcVal.releaseTime, fcData)
+        playerbox.onFetchRedBag(redbagId, _money, _RbVal.releaseTime, fcData)
 
     def checkExpire(self, redbagId):
         if redbagId not in self.redbagDict:
@@ -285,7 +318,8 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             DEBUG_MSG('_removeFetchInfoCallback error: redbagId={} error={}'.format(redbagId, error))
             return
 
-        self.fetchCacheDict.pop(redbagId)
+        if redbagId in self.fetchCacheDict:
+            self.fetchCacheDict.pop(redbagId)
         _RbVal = self.redbagDict.pop(redbagId)
         self._doReturnRedBag(_RbVal)
 
@@ -300,7 +334,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         playerGbId = _RbVal.playerGbId
 
         # 邮件返还
-        _mailId = CC_CC.datas['returnPacketMail']['value']
+        _mailId = CC_CCD.datas['returnPacketMail']['value']
         addWealthVal = dropAward.MailWealthVal()
         addWealthVal.addWealthByItemId(gameconst.ItemId.MONEY, leftMoney)
         mailAssistor.sendMailToPlayers(

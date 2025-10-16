@@ -116,7 +116,7 @@ datas = _tools.RODict({
     }),
     10: _tools.RODict({
         "ID": 10,
-        "name": "测试-兑换类型1",
+        "name": "普通兑换商店",
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -127,7 +127,7 @@ datas = _tools.RODict({
     }),
     11: _tools.RODict({
         "ID": 11,
-        "name": "测试-兑换类型2",
+        "name": "选择兑换商店",
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,

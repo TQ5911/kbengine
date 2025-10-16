@@ -11,6 +11,7 @@ import re
 import datetime
 import gametimer
 import hashlib
+import copy
 from decimal import Decimal
 from KBEDebug import *
 
@@ -35,6 +36,7 @@ import cityBattle_config as CBC
 import conflict_status_def as C_S_DD
 import NPC_Pick as NPD
 import creep_base as CBD
+import gacha_gachaPool as GGP
 
 import KBEngine
 from KBEDebug import *
@@ -238,7 +240,11 @@ def isJoinCombat(entity, src):
             gameconst.BornStateType.joinCombatTup:
         return False
 
-    if src.hasState(C_S_DD.datas.relive):
+    if entity.IsAICombatUnit and entity.aiController and entity.bornState in \
+            gameconst.BornStateType.speialAIInvalidCombatTup and entity.aiController.isSpecialMonsterAI():
+        return False
+
+    if entity.hasState(C_S_DD.datas.relive) or src.hasState(C_S_DD.datas.relive):
         return False
 
     return True
@@ -429,6 +435,15 @@ def randomDelayTime(T, rdmRange=1.0):
 
     return _r if _r > 0.00 else 0.00
 
+
+def isDiffHour(nowTime, lastTime, cycleTime):
+    nowTime += gameconst.ONE_HOUR_SECONDES - cycleTime
+    lastTime += gameconst.ONE_HOUR_SECONDES - cycleTime
+    stNowTime = time.localtime(nowTime)
+    stLastTime = time.localtime(lastTime)
+    if stNowTime.tm_hour == stLastTime.tm_hour:
+        return False
+    return True
 
 def isDiffDay(nowTime, lastTime, cycleTime):
     # 这里如果-cycleTime,如果碰到lastTime传0,则会变为负值,会导致localTime报错,所以都往后进行推算
@@ -621,7 +636,7 @@ def escape_string(value, mapping=None):
 def isMyself(fn):
     @functools.wraps(fn)
     def __(self, *args, **kwargs):
-        if self.id != args[0]:
+        if self.id != abs(args[0]):
             return
         return fn(self, *args, **kwargs)
 
@@ -2533,13 +2548,14 @@ def entIsTeam(src, e, target):
     if not (src.isReal() and target.isReal()):
         return False
     
-    if src.IsAvatar and target.IsAvatar and isEnemy(src, target):
-        return False
-    
-    if src.teamId != 0 and src.teamId == target.teamId:
-        return True
-    if src.raidId != 0 and src.raidId == target.raidId:
-        return True
+    if src.IsAvatar and target.IsAvatar:
+        if isEnemy(src, target):
+            return False
+        
+        if src.teamId != 0 and src.teamId == target.teamId:
+            return True
+        if src.raidId != 0 and src.raidId == target.raidId:
+            return True
 
     return False
 
@@ -2821,6 +2837,40 @@ def checkCanChangeSceneAndShowMsg(avatar, fromSpaceNo, toSpaceNo):
 def getSkillLvParam(skillId):
     return combatSkill.SkillBase.getSkillLvParam(skillId)
 
+def checkDrawCardPoolTimeLimit(curTimestamp, checkType):
+    poolsInfo = {}
+    if checkType == gameconst.DrawCardPoolMacro.CHECK_TIME_LIMIT_TYPE_LOGIN:
+        poolsInfo = copy.deepcopy(gameglobal.expiredDrawCardPoolCache)
+    elif checkType == gameconst.DrawCardPoolMacro.CHECK_TIME_LIMIT_TYPE_TIMER:
+        for pool, poolData in GGP.datas.items():
+            if pool in gameglobal.expiredDrawCardPoolCache:
+                continue
+            if not poolData.get('timeLimit', 0):
+                continue
+            startTimestamp = getIntTimestamp(poolData['startTime'])
+            endTimestamp = getIntTimestamp(poolData['endTime'])
+            #DEBUG_MSG('poolData id:%i, groupId:%i, timeLimit:%i, startTime:%s(%i), endTime:%s(%i)' % 
+            #            (pool, poolData['poolGroupId'],  poolData['timeLimit'], 
+            #            getNowTimeStr(startTimestamp), startTimestamp,
+            #            getNowTimeStr(endTimestamp), endTimestamp))
+            if not startTimestamp and not endTimestamp:
+                #DEBUG_MSG('checkDrawCardPoolTimeLimit not TimeLimit', curTimestamp, pool, endTimestamp)
+                continue
+            if startTimestamp <= curTimestamp and curTimestamp <= endTimestamp:
+                #DEBUG_MSG('checkDrawCardPoolTimeLimit in TimeLimit', curTimestamp, pool, endTimestamp)
+                continue
+
+            if startTimestamp > curTimestamp:
+                #DEBUG_MSG('checkDrawCardPoolTimeLimit before TimeLimit', curTimestamp, pool, endTimestamp)
+                continue
+
+            INFO_MSG('checkDrawCardPoolTimeLimit after TimeLimit', curTimestamp, pool, endTimestamp)
+            poolsInfo[pool] = endTimestamp
+
+        gameglobal.expiredDrawCardPoolCache.update(poolsInfo)
+    #DEBUG_MSG('checkDrawCardPoolTimeLimit', curTimestamp, poolsInfo, gameglobal.expiredDrawCardPoolCache, checkType)
+    return poolsInfo
+
 def getSiegeWarFirstTimeInfo():
     firstTime = 0
     firstTimeValid = False
@@ -3015,8 +3065,18 @@ def getRandomPositionFromMultiRegion(randomRegion, entityIDs=[], gid=0, RandomRe
             index = randomByWeight(chooseRegionWeight)
 
     return getRandomPos(chooseRegion[index], chooseRadii[index])
+
+def getForceComponentID(accountName):
+    _cache = gameglobal.accountCompIdCache.get(accountName)
+    if not _cache:
+        return 0
+
+    if getNow() > _cache[0]:
+        return 0
+
+    return _cache[1]
  
-def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList):
+def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = False):
     if not entityIDs:
         return
 
@@ -3050,6 +3110,12 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList):
 
         if 'Props' in _mPrm:
             _pP = _mPrm['Props']
+            # 非刷新情况下
+            if not isRefresh:
+                # 初始不加载
+                initLoad = _pP.get('InitLoad', None)
+                if initLoad is not None and initLoad == 0:
+                    continue
 
             if 'liveTimer' in _pP:
                 params['liveTime'] = _pP['liveTimer']
@@ -3098,6 +3164,7 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList):
             params.update({
                 'monsterId': _monsterId,
                 'name': _mPrm['DisplayName'],
+                'instanceId': _mPrm['ID'],
             })
 
         elif className == 'Teleporter':
@@ -3212,4 +3279,50 @@ def getTimeZoneOffset():
     offset = now.utcoffset()
     return offset.total_seconds() /3600
 
+def checkInCombatArea(monsterID, srcPos, propsData):
+    areaCentralPosition = propsData[0]
+    areaCentralRotation = propsData[1]
+    areaType = propsData[2]
+    if areaType == gameconst.DungeonCustomAreaType.CIRCLE:
+        radius = propsData[3]
+        return calculatePointIn2DCircle(monsterID, srcPos[0], srcPos[2], areaCentralPosition[0], areaCentralPosition[2], radius)
+    elif areaType == gameconst.DungeonCustomAreaType.RECTANGLE:
+        length = propsData[3]
+        width = propsData[4]
+        return calculatePointIn2DRectangle(monsterID, srcPos[0], srcPos[2], areaCentralPosition[0], areaCentralPosition[2], length, width, areaCentralRotation)
+    return True
 
+def calculatePointIn2DCircle(monsterID, x, z, x1, z1, r, precision=1e-10):
+    dx = x-x1
+    dz = z-z1
+    r1 = (dx *dx + dz * dz)
+    r2 = (r * r - precision)
+    DEBUG_MSG("calculatePointIn2DCircle ", monsterID, x, z, x1, z1, r, precision, r1, r2)
+    return r1 < r2 
+
+def calculatePointIn2DRectangle(monsterID, x, z, x1, z1, l, w, t, precision=1e-10):
+    dx = x - x1
+    dz = z - z1
+    
+    cos_angle = math.cos(-t)
+    sin_angle = math.sin(-t)
+    rotated_x = dx * cos_angle - dz * sin_angle
+    rotated_z = dx * sin_angle + dz * cos_angle
+    
+    half_length = l / 2.0 - precision
+    half_width = w / 2.0 - precision
+    
+    absX = abs(rotated_x)
+    absZ = abs(rotated_z)
+    DEBUG_MSG("calculatePointIn2DRectangle ", monsterID, x, z, x1, z1, l, w, t, precision, absX, absZ, half_length, half_width)
+    return absX < half_length and absZ < half_width
+
+@functools.lru_cache(maxsize=256)
+def getInscriptionKey(skillId, inscriptionType):
+    return skillId * 100 * 1000 + inscriptionType
+
+@functools.lru_cache(maxsize=256)
+def splitInscriptionKey(dataKey):
+    skillId = dataKey // (1000 * 100)
+    inscriptionType = dataKey - skillId * 1000 * 100
+    return skillId, inscriptionType

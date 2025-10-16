@@ -175,7 +175,7 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
         if radii<=0:
             return
         self.hateTrapId = self.addProximity(radii, radii, gameconst.HATE_TRAP)
-        leaveAoiRange = min(gameconst.HOME_AOI, self.getLeaveAlertDistance())
+        leaveAoiRange = self.getLeaveAlertDistance()
         self.addProximity(leaveAoiRange, 0.0, gameconst.LEAVE_AOI_TRAP)
 
     def onBeAttacked(self, arg):

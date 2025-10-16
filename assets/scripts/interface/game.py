@@ -129,7 +129,7 @@ def _onCheckWhiteList(result, error, isNewAccount, realAccountName, password, da
         cfgNum = int(gameconfig.getServerRegLimit())
         if isNewAccount and nowNum >= cfgNum:
             INFO_MSG('_onCheckWhiteList check server limit error.', nowNum, cfgNum)
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', KBEngine.SERVER_ERR_USER5)
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER5)
             return
         clientData = utils.decodeClientData(dataBytes)
         # accountType, accountName = utils.getAccountTypeAndName(clientData.get(''))
@@ -141,7 +141,7 @@ def _onCheckWhiteList(result, error, isNewAccount, realAccountName, password, da
             "account_id": realAccountName
         })
         if not gameconfig.permitLogin():
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', KBEngine.SERVER_ERR_USER2)
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER2)
             return
 
     _requestAccountLogin(realAccountName, password, dataBytes)
@@ -154,13 +154,13 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
     if len(result) == 0:
         isNewAccount = True
         if not loginManager:
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', KBEngine.SERVER_ERR_USER2)
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER2)
             return
 
         switch = int(gameconfig.getServerRegSwitch())
         if not switch:
             INFO_MSG('_onCheckBanAccount check server switch error.', switch)
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', KBEngine.SERVER_ERR_USER5)
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER5)
             return
     else:
         # forbidLoginFlag = int(result[0][0])
@@ -171,7 +171,7 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
         if isDelete:
             INFO_MSG('reject login,account delete', isDelete, realAccountName)
             fmtMessage = MMD.datas[LSD.datas['accountCancellation']['value']]['Message']
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'),
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'), 0,
                                           KBEngine.SERVER_ERR_USER6)
             return
 
@@ -213,14 +213,15 @@ def onRequestAccountLogin(realAccountName, password, dataBytes):
     """
     INFO_MSG('onRequestAccountLogin: registerName', realAccountName, dataBytes)
     accountType, accountName = utils.getAccountTypeAndName(realAccountName)
+    _forceCompId = utils.getForceComponentID(realAccountName)
 
     clientData = utils.decodeClientData(dataBytes)
     if accountType == centralLogin.ACCOUNT_CROSS_SERVER and clientData.get('crossServerToken'):
-        KBEngine.accountLoginResponse(realAccountName, realAccountName, dataBytes, KBEngine.SERVER_SUCCESS)
+        KBEngine.accountLoginResponse(realAccountName, realAccountName, dataBytes, _forceCompId, KBEngine.SERVER_SUCCESS)
         return
 
     if not gameconfig.interfaceEnableLogin():
-        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', KBEngine.SERVER_ERR_SRV_STARTING)
+        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', _forceCompId, KBEngine.SERVER_ERR_SRV_STARTING)
         INFO_MSG('reject login, recovring cellapps')
         return
 
@@ -242,7 +243,7 @@ def _requestAccountLogin(realAccountName, password, dataBytes):
     clientData = utils.decodeClientData(dataBytes)
     centralServerId = clientData.get('loginServerId', 0)
     if not loginManager:
-        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', KBEngine.SERVER_ERR_USER2)
+        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER2)
         return
 
     loginManager.checkPlayerLogin(realAccountName, dataBytes, centralServerId)

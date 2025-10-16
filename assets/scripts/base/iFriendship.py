@@ -1,8 +1,8 @@
 # coding:utf-8
-from sys import setswitchinterval
 from KBEDebug import *
 import gameengine
 import gameglobal
+import functools
 import gamesql
 import utils
 import gametimer
@@ -12,6 +12,7 @@ import elasticUtils
 import actionContext
 import Friendship
 import relationConfig_relationConfig as RC_RCD
+import AuthClsWraper
 
 
 class IFriendship(object):
@@ -195,10 +196,11 @@ class IFriendship(object):
         else:
             self.setTempMiscProp(gameconst.AvatarProps.friendInitStatus, 0)
 
-    def sendFriendRequest(self, gbId):
+    @AuthClsWraper.onlyHost
+    def sendFriendRequest(self, exposed, gbId):
         INFO_MSG("IFriends::sendFriendRequest gbId={}".format(gbId))
         if self.friendship.isRecvReq(gbId):
-            self.acceptRequest(gbId)
+            self._acceptRequest(gbId)
             return
 
         if self.friendship.isFriendFull():
@@ -294,7 +296,8 @@ class IFriendship(object):
         _clientData = self.friendship.addReceiveReq(senderData, timestamp)
         self.client.onFriendRequests([_clientData])
 
-    def rejectRequest(self, gbId):
+    @AuthClsWraper.onlyHost
+    def rejectRequest(self, exposed, gbId):
         INFO_MSG("IFriends::rejectRequest gbId={}".format(gbId))
         if not self.friendship.isRecvReq(gbId):
             ERROR_MSG("IFriends::rejectRequest not receive request", gbId)
@@ -302,16 +305,18 @@ class IFriendship(object):
 
         self._removeRecvRequest(gbId)
 
-    def acceptAllRequest(self):
+    @AuthClsWraper.onlyHost
+    def acceptAllRequest(self, exposed):
         INFO_MSG("IFriends::acceptAllRequest")
         _gbIds = self.friendship.getRecvReqGbIds()
         def _iter():
             for _gbId in _gbIds:
-                yield lambda: self.acceptRequest(_gbId)
+                yield lambda: self._acceptRequest(_gbId)
 
         self.batchlyCall(_iter(), 1, 0.1)
 
-    def rejectAllRequest(self):
+    @AuthClsWraper.onlyHost
+    def rejectAllRequest(self, exposed):
         INFO_MSG("IFriends::rejectAllRequest")
         redisUtils.FriendUtils.rejectAllRequest(self.gbID, self._rejectAllRequestAfterDelRedis)
 
@@ -324,8 +329,12 @@ class IFriendship(object):
         self.friendship.clearReceiveReq()
         self.client.onRemoveFriendRequests(_gbIds)
 
-    def acceptRequest(self, gbId):
+    @AuthClsWraper.onlyHost
+    def acceptRequest(self, exposed, gbId):
         INFO_MSG("IFriends::acceptRequest gbId={}".format(gbId))
+        self._acceptRequest(gbId)
+
+    def _acceptRequest(self, gbId):
         if self.friendship.isFriendFull():
             self.onMessagePre(RC_RCD.datas['msgId_relationFriendNumMax_self']['value'], [])
             return
@@ -346,7 +355,7 @@ class IFriendship(object):
             self.gbID,
             gbId, lambda ret, num, insertId, err: self._acceptRequestOnGetTwoFriendsNum(ret, err, gbId))
 
-    def updateFriend(self):
+    def updateFriend(self, exposed):
         _gbIds = self.friendship.getFriendGbIds()
         if _gbIds:
             redisUtils.RedisUtils.getUsersInfo(_gbIds, self._updateFriendOnGetUserInfo)
@@ -435,7 +444,7 @@ class IFriendship(object):
             self.client.onUpdateFriendsFull([_fVal.toClientData(self.friendship)])
 
         _msg = '<link message id={}>'.format(RC_RCD.datas['msgId_relationBeFriendMsg']['value'])
-        self.sendFriendMsg(gbIds[0], _msg)
+        self._sendFriendMsg(gbIds[0], _msg)
 
         gamesql.recordAvatarOfflineCallback(gbIds[0], '_offlineTriggerAchieve', ())
 
@@ -520,13 +529,13 @@ class IFriendship(object):
 
         if src == gameconst.FriendOnlineSrc.MAKE_FRIENDS2:
             _msg = '<link message id={}>'.format(RC_RCD.datas['msgId_relationBeFriendMsg']['value'])
-            self.sendFriendMsg(gbId, _msg)
+            self._sendFriendMsg(gbId, _msg)
 
     def searchFriendAll(self, name):
         INFO_MSG("IFriends::searchFriend name={}".format(name))
         gamesql.searchFriendTemp(self._searchFriendTemp)
 
-    def searchFriend(self, name):
+    def searchFriend(self, exposed, name):
         INFO_MSG("IFriends::searchElastic name={}".format(name))
         elasticUtils.ElasticUtils.searchAvatarByName(
             name,
@@ -595,7 +604,8 @@ class IFriendship(object):
         self._addPacketSendTask(_iter(_sendList))
         # self.client.onSearchFriends(_sendList)
 
-    def removeFriend(self, gbId):
+    @AuthClsWraper.onlyHost
+    def removeFriend(self, exposed, gbId):
         INFO_MSG("IFriends::removeFriend gbId={}".format(gbId))
         self._removeFriend(gbId, gameconst.FriendRemoveReason.CLIENT_REMOVE)
 
@@ -623,7 +633,7 @@ class IFriendship(object):
         )
 
         if self.friendship.isInRecent(gbId) and reason == gameconst.FriendRemoveReason.CLIENT_REMOVE:
-            self.removeRecent(gbId)
+            self._removeRecent(gbId)
 
         # 通知对方
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -654,7 +664,8 @@ class IFriendship(object):
         self.client.onUpdateStrangerData([_data])
 
     # -------------------------------- block list start ------------------------
-    def blockPlayer(self, gbId):
+    @AuthClsWraper.onlyHost
+    def blockPlayer(self, exposed, gbId):
         INFO_MSG("IFriends::blockPlayer gbId={}".format(gbId))
         if self.friendship.isBlock(gbId):
             ERROR_MSG("IFriends::blockPlayer already block", gbId)
@@ -679,10 +690,10 @@ class IFriendship(object):
             self._removeFriend(gbId, gameconst.FriendRemoveReason.BLOCK)
 
         if self.friendship.isRecvReq(gbId):
-            self.rejectRequest(gbId)
+            self._removeRecvRequest(gbId)
 
         if self.friendship.isInRecent(gbId):
-            self.removeRecent(gbId)
+            self._removeRecent(gbId)
 
         redisUtils.RedisUtils.getSingleUserInfo(gbId, self._blockPlayerOnGetUserInfo)
 
@@ -690,7 +701,8 @@ class IFriendship(object):
         _clientData = self.friendship.updateBlock(fcVal)
         self.client.onUpdateBlocks([_clientData])
 
-    def removeFromBlock(self, gbId):
+    @AuthClsWraper.onlyHost
+    def removeFromBlock(self, exposed, gbId):
         INFO_MSG("IFriends::removeFromBlock gbId={}".format(gbId))
         if not self.friendship.isBlock(gbId):
             ERROR_MSG("IFriends::removeFromBlock not block", gbId)
@@ -713,8 +725,11 @@ class IFriendship(object):
 
     # ------------------------------- msg start -------------------------------
 
-    def sendFriendMsg(self, gbId, msg):
+    def sendFriendMsg(self, exposed, gbId, msg):
         INFO_MSG("IFriends::sendFriendMsg gbId={} msg={}".format(gbId, msg))
+        self._sendFriendMsg(gbId, msg)
+
+    def _sendFriendMsg(self, gbId, msg):
         if len(msg) > gameconst.FRIEND_MSG_MAX_LEN:
             ERROR_MSG("IFriends::sendFriendMsg msg too long", gbId, msg)
             return
@@ -791,7 +806,7 @@ class IFriendship(object):
         self.friendship.recordRecent(gbId, ts, self)
         self.friendship.recordMsg(gbId, msg, ts, gameconst.FriendMsgDir.RECV, self)
 
-    def getFriendMsgs(self, gbId):
+    def getFriendMsgs(self, exposed, gbId):
         INFO_MSG('IFriends::getFriendMsgs gbId={}'.format(gbId))
         _msgs = self.friendship.getMsgs(gbId)
         _status = None
@@ -809,15 +824,19 @@ class IFriendship(object):
 
             self.client.onGetFriendMsgs(_status, gbId, _sendData)
 
-    def removeFriendMsgs(self, gbId, ts):
+    def removeFriendMsgs(self, exposed, gbId, ts):
         if self.friendship.removeFriendMsgs(gbId, ts, self):
             redisUtils.FriendUtils.clearFriendMsg(gbId, self.gbID, self._onRemoveFriendMsgs)
 
     def _onRemoveFriendMsgs(self, *args):
         INFO_MSG("IFriends::_onRemoveFriendMsgs", args)
 
-    def removeRecent(self, gbId):
+    @AuthClsWraper.onlyHost
+    def removeRecent(self, exposed, gbId):
         INFO_MSG("IFriends::removeRecent gbId={}".format(gbId))
+        self._removeRecent(gbId)
+
+    def _removeRecent(self, gbId):
         redisUtils.FriendUtils.removeRecent(
             self.gbID,
             gbId,
@@ -864,7 +883,7 @@ class IFriendship(object):
 
         redisUtils.RedisUtils.onModifyAttr(self.gbID, dataDict)
 
-    def getAvatarInterInfo(self, gbId):
+    def getAvatarInterInfo(self, exposed, gbId):
         DEBUG_MSG('ckz: getAvatarInterInfo ', gbId)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase\
             ([gbId], 'onGetAvatarInterInfoBase', (self, ), self, 'getInterInfoOffline', ())
@@ -909,3 +928,110 @@ class IFriendship(object):
                 'raidAmount': 0,
             })
         redisUtils.RedisUtils.getSingleUserInfo(gbId, __tmp)
+
+    # ------------------------ 角色授权开始 ---------------------------------------
+    def authorizeRole(self, exposed, gbId, days):
+        INFO_MSG('authorizeRole', gbId)
+        if self.accountEntity.checkHasAuth(self.gbID):
+            ERROR_MSG('IFriends::authorizeRole already authorized')
+            return
+
+        if days > gameconst.AUTH_AVATAR_LEND_EXPIRE_TIME:
+            ERROR_MSG('IFriends::authorizeRole days too long', days)
+            return
+
+        _fVal = self.friendship.getFriend(gbId)
+        if not _fVal:
+            ERROR_MSG("IFriends::authorizeRole gbId={} not your friend".format(gbId))
+            return
+
+        if utils.isBoxOffline(_fVal.box):
+            ERROR_MSG("IFriends::authorizeRole gbId={} is offline".format(gbId))
+            return
+
+        self.setTempMiscProp(gameconst.AvatarProps.authRoleInfo, (gbId, utils.getNow(), days))
+        _fVal.box.onRecvAuthRole(self.gbID)
+
+    def onRecvAuthRole(self, gbId):
+        _fVal = self.friendship.getFriend(gbId)
+        if not _fVal:
+            ERROR_MSG("IFriends::onRecvAuthRole gbId={} not your friend".format(gbId))
+            return
+
+        _gbId, _ts = self.getTempMiscProp(gameconst.AvatarProps.recvAuthRoleInfo, (0, 0))
+        _now = utils.getNow()
+        if _ts + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME > _now:
+            WARNING_MSG("IFriends::onRecvAuthRole gbId={} auth role info expired".format(gbId))
+            return
+
+        self.setTempMiscProp(gameconst.AvatarProps.recvAuthRoleInfo, (gbId, _now))
+        self.client.onRecvAuthRoleClient(gbId)
+
+    def dealAuthRole(self, exposed, isAccept):
+        INFO_MSG('dealAuthRole', isAccept)
+        _gbId, _ts = self.popTempMiscProp(gameconst.AvatarProps.recvAuthRoleInfo, (0, 0))
+        _now = utils.getNow()
+        # +5 留出容错时间
+        if not isAccept:
+            return
+
+        if _ts + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < _now:
+            ERROR_MSG('IFriends::dealAuthRole auth role info expired')
+            return
+
+        _fVal = self.friendship.getFriend(_gbId)
+        if not _fVal:
+            ERROR_MSG('IFriends::dealAuthRole not your friend', _gbId)
+            return
+
+        if utils.isBoxOffline(_fVal.box):
+            ERROR_MSG('IFriends::dealAuthRole gbId={} is offline'.format(_gbId))
+            return
+
+        _accountDBID = self.accountEntity.databaseID
+        _fVal.box.onAgreeAuthRole(self.gbID, _accountDBID)
+
+    def onAgreeAuthRole(self, gbId, dbid):
+        if self.accountEntity.checkHasAuth(self.gbID):
+            ERROR_MSG('IFriends::onAgreeAuthRole already authorized')
+            return
+
+        _gbId, _stTime, _days = self.getTempMiscProp(gameconst.AvatarProps.authRoleInfo, (0, 0, 0))
+        if _gbId != gbId:
+            ERROR_MSG('IFriends::onAgreeAuthRole not your friend', _gbId)
+            return
+
+        if _stTime + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < utils.getNow():
+            ERROR_MSG('IFriends::onAgreeAuthRole auth role info expired')
+            return
+
+        self.accountEntity.lendAvatar(
+            self.gbID,
+            dbid,
+            _days,
+            functools.partial(self._onAgreeAuthRoleResult, gbId))
+
+    def _onAgreeAuthRoleResult(self, gbId, ret):
+        if not ret:
+            ERROR_MSG('_onAgreeAuthRoleResult failed', ret)
+            return
+
+        _fVal = self.friendship.getFriend(gbId)
+        if not _fVal:
+            ERROR_MSG('IFriends::_onAgreeAuthRoleResult not your friend', gbId)
+            return
+
+        if utils.isBoxOffline(_fVal.box):
+            ERROR_MSG('IFriends::_onAgreeAuthRoleResult gbId={} is offline'.format(gbId))
+            return
+
+        _char = self.accountEntity.getCharVal(self.gbID)
+        _fVal.box.onAgreeAuthRoleSuccess(self.gbID, _char)
+
+    def onAgreeAuthRoleSuccess(self, gbId, char):
+        self.accountEntity.addOtherCharVal(gbId, char)
+
+    def hasAuthPermission(self, permission):
+        return utils.hasBit(self.authPermission.permission, permission)
+    # ------------------------ 角色授权结束 ---------------------------------------
+

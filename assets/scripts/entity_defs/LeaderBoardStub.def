@@ -37,8 +37,16 @@
         <onFirstCreate>
         </onFirstCreate>
 
+        <doGetLeaderBoardGuildList>
+            <Arg>           ENTITYCALL                              </Arg>
+            <Arg>           LEADER_BOARD_IDX                        </Arg>
+            <Arg>           GUILD_UUID                              </Arg>
+            <Arg>           LEADER_BOARD_PAGE                       </Arg>
+        </doGetLeaderBoardGuildList>
+
         <doGetLeaderBoardList>
             <Arg>           ENTITYCALL                              </Arg>
+            <Arg>           PLAYER_GBID                             </Arg>
             <Arg>           LEADER_BOARD_IDX                        </Arg>
             <Arg>           SCHOOL                                  </Arg>
             <Arg>           LEADER_BOARD_PAGE                       </Arg>

@@ -638,13 +638,18 @@
         <reqAddMarkMember>
             <Arg>       TEAMID      </Arg>
             <Arg>       MAILBOX        </Arg>
-            <Arg>       ENTITY_ID       </Arg>
             <Arg>       UINT8       </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UNICODE     </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       ENTITY_ID           </Arg>
+            <Arg>       POSITION_ARG    </Arg>
         </reqAddMarkMember>
         <reqDelMarkMember>
             <Arg>       TEAMID      </Arg>
             <Arg>       MAILBOX        </Arg>
-            <Arg>       ENTITY_ID       </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UINT8       </Arg>
         </reqDelMarkMember>
         <reqChangeOnlyCaptain>
             <Arg>       TEAMID      </Arg>
@@ -668,5 +673,21 @@
             <Arg>       TEAMID          </Arg>
             <Arg>       PLAYER_GBID     </Arg>
         </clearTeamDungeonRewardRecord>
+
+        <teamDungeonFinished>
+            <Arg>           TEAMID          </Arg>
+        </teamDungeonFinished>
+
+        <addTeamStatisticPlayerVal>
+            <Arg>       TEAMID          </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT32          </Arg>
+        </addTeamStatisticPlayerVal>
+
+        <getTeamStatisticData>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       TEAMID          </Arg>
+        </getTeamStatisticData>
     </BaseMethods>
 </root>

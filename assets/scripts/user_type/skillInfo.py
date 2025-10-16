@@ -36,7 +36,6 @@ serverPassiveSkillsInstance = ServerPassiveSkillsInfo()
 
 class ServerSkillsInfo(object):
     def createObjFromDict(self, dict):
-        DEBUG_MSG("ServerSkillsInfo ", dict)
         skills = combatSkill.ServerSkills()
         for sVal in dict['skills']:
             skillId = sVal['skillId']

@@ -9,6 +9,7 @@ import gameglobal
 import time
 import socket
 import gameconst
+import visible_visible as UVVD
 from KBEDebug import *
 
 CONFIG = {}
@@ -96,14 +97,14 @@ def config(convFunc, default, desc, flags=(ConfigFlag.NONE,)):
             if ConfigFlag.CLIENT in flags:
                 cid = configId
                 configId += 1
-                CID2CONFIG[cid] = name.lower()
+                CID2CONFIG[cid] = name
                 # 默认值从表里读时无法做diff，每次都发给玩家
                 if ConfigFlag.ALWAYS_SEND_CLIENT in flags:
                     CLIENT_CONFIG_DIFF[cid] = defaultv
             else:
                 cid = 0
 
-            CONFIG[name.lower()] = (name, convFunc, defaultStr, defaultv, desc, cid, flags)
+            CONFIG[name] = (name, convFunc, defaultStr, defaultv, desc, cid, flags)
 
         def _func():
             return KBEngine.globalData['CONFIG'][name]
@@ -112,6 +113,16 @@ def config(convFunc, default, desc, flags=(ConfigFlag.NONE,)):
 
     return _config
 
+def initVisibleConfig():
+    visibleSet = set()
+    for key, data in UVVD.datas.items():
+        visibleSet.add(data['type'])
+    for key in visibleSet:
+        def _config():
+            return 1
+        _config.__name__ = key
+        config(Bool, None, key, (ConfigFlag.CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))(_config)
+initVisibleConfig()
 
 # ----------------------  自定义配置项,修改后会存到数据库中  ----------------------
 def isReady():
@@ -165,7 +176,7 @@ def loadCustomConfig(data):
     DEBUG_MSG('loadCustomConfig', len(data))
 
     for name, value in data:
-        v = CONFIG.get(utils.getStringFromBytes(name).lower())
+        v = CONFIG.get(utils.getStringFromBytes(name))
         if not v:
             sql = "DELETE FROM game_config WHERE name='%s'" % (utils.getStringFromBytes(name),)
             KBEngine.executeRawDatabaseCommand(sql)
@@ -202,7 +213,7 @@ def onGameConfigChanged(name, value, fromBaseappGroupdOrder):
 
 
 def gmSetCutomConfig(name, value, isMasterBaseapp=True):
-    info = CONFIG.get(name.lower())
+    info = CONFIG.get(name)
     if not info:
         return "cannot find config [%s]" % name, False
 
@@ -216,7 +227,7 @@ def gmSetCutomConfig(name, value, isMasterBaseapp=True):
 
 
 def gmGetCutomConfig(name):
-    info = CONFIG.get(name.lower())
+    info = CONFIG.get(name)
     if not info:
         return "cannot find config [%s]" % name, False
 
@@ -229,7 +240,7 @@ def setCustomConfig(name, value, isMasterBaseapp=True, isInitSet=False):
     import utils
 
     INFO_MSG('setCustomConfig', name, value)
-    info = CONFIG.get(name.lower())
+    info = CONFIG.get(name)
     if not info:
         return "cannot find config [%s]" % name, False
 
@@ -256,11 +267,9 @@ def setCustomConfig(name, value, isMasterBaseapp=True, isInitSet=False):
     elif KBEngine.component == 'interfaces':
         KBEngine.globalData['CONFIG'][configName] = value
 
+    enable = False if not value else True
     cid and gameglobal.localBaseApp and gameglobal.localBaseApp.onBroadcastToAllClients('onGameConfigChanged',
-                                                                                        ([cid], [str(value).lower()]))
-    configName and gameglobal.localBaseApp and gameglobal.localBaseApp.onBroadcastToAllClients(
-        'onGameConfigChangedByName',
-        ([configName], [str(value).lower()]))
+                                                                                        ([CID2CONFIG[cid]], [enable]))
 
     return 'config [%s] to [%s] success' % (name, value), True
 
@@ -284,18 +293,17 @@ def getCacheConfig(name):
 
 
 def sendClientConfig(playerBox):
-    cidList = []
     vList = []
     cfgNameList = []
+    #登录时只发关闭的功能
     for cid, v in CLIENT_CONFIG_DIFF.items():
-        cidList.append(cid)
-        vList.append(str(v).lower())
-        cfgName = CID2CONFIG[cid]
-        cfgNameList.append(cfgName)
+        if not v:
+            vList.append(False)
+            cfgName = CID2CONFIG[cid]
+            cfgNameList.append(cfgName)
 
-    if cidList:
-        playerBox.client.onGameConfigChanged(cidList, vList)
-        playerBox.client.onGameConfigChangedByName(cfgNameList, vList)
+    if cfgNameList:
+        playerBox.client.onGameConfigChanged(cfgNameList, vList)
 
 
 def packInterfaceDiffCache():
@@ -886,8 +894,9 @@ def auctionServerHost():
 def isCrossServer():
     return getCrossServerId() == serverId()
 
-def disableSiegeWarStateAutoChange():
-    return False
+@config(Bool, 'true', '是否开启城战')
+def enableSiegeWar():
+    return True
 
 @cache
 def httpCmdIdempotent():
@@ -906,6 +915,15 @@ def debugErrorLogHost():
         host = ''
 
     return host
+
+@cache
+def wxReportUrl():
+    try:
+        host = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/errReportUrl')
+    except:
+        host = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=92de3ed1-9bfe-4428-afc6-f1488f9bb452'
+    return host
+
 
 @config(Bool, None, '是否开启工坊制造', (ConfigFlag.CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
 def enableWorkshop():

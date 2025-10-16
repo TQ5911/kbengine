@@ -84,6 +84,7 @@
         <yidunCaptchaID> db604d47a72143138935bc0505761ff9 </yidunCaptchaID>
         <yidunSecurityID> bbd7f829b62ebf34529a349bdd221299 </yidunSecurityID>
         <yidunSecurityKey> 7b7415d07b06badd4134470d4385e7bd </yidunSecurityKey>
+        <errReportUrl> https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=92de3ed1-9bfe-4428-afc6-f1488f9bb452 </errReportUrl>
     </game>
     
     <platform>
@@ -120,7 +121,7 @@
         <enableBotLogin> 1 </enableBotLogin>
         <callbackNumThreshold> 100 </callbackNumThreshold>
         <enableCentralLogin> 1 </enableCentralLogin>
-        <debugErrorLogHost> 192.168.10.31:58080 </debugErrorLogHost>
+        <debugErrorLogHost> 192.168.10.13:58080 </debugErrorLogHost>
     </debug>
 
     <enable_packet_history> 1 </enable_packet_history>

@@ -14,7 +14,7 @@ import utils
 
 import message_Message_def as MMD
 import raid_raidConst as RAID_CONST
-import uiConfig_uiVisible as UCUVD
+import visible_visible as UVVD
 import teamMatch_matchConfig as TMMCD
 import activityControl_activityData as AC_ADD
 import teamMatch_activity as TMACTD
@@ -197,7 +197,7 @@ class ImpRaid(object):
             self.raidAuth = self.raidPermission
 
     def isUIVisible(self, value):
-        lvLimit = UCUVD.datas.get(value, {}).get('lvLimit', utils.getPlayerMaxLevel()+1)
+        lvLimit = UVVD.datas.get(value, {}).get('level', utils.getPlayerMaxLevel()+1)
         return self.level >= lvLimit
 
     @property
@@ -296,9 +296,11 @@ class ImpRaid(object):
 
         oldScore = lastRecord.get('score', 0)
         newScore = self.getTotalScore()
+
         if 'score' not in lastRecord or oldScore != newScore:
             DEBUG_MSG("in raidTick, score updated:", oldScore, newScore)
             lastRecord['score'] = newScore
+            modified = True
 
         if modified:
             excludedPlayerIDs = (self.gbId,)
@@ -306,8 +308,10 @@ class ImpRaid(object):
                 for teamIDX, memberGBID, memberVal in self.raidInfo.iterGetRaidMember():
                     if memberGBID == self.gbId or not memberVal.playerBox:
                         continue
-                    if self.checkInView(memberVal.playerBox.id):
-                        excludedPlayerIDs += (memberGBID,)
+                    # 当只有spaceNo和position两个一起更新时，做一下筛选，视野范围内的就不需要通知了
+                    if 'spaceNo' in lastRecord and 'position' in lastRecord and len(lastRecord) == 2:
+                        if self.checkInView(memberVal.playerBox.id):
+                            excludedPlayerIDs += (memberGBID,)
             lastRecord['excludedGbIDs'] = excludedPlayerIDs
             gameengine.getRaidStub(self.raidId).updateRaidMemberCacheVal(self.raidId, self.gbId, lastRecord)
 
@@ -2291,26 +2295,26 @@ class ImpRaid(object):
 
     # 标记 begin
     @utils.isMyself
-    def reqAddRaidMarkMember(self, exposed, entId, markType):
+    def reqAddRaidMarkMember(self, exposed, type, index, name, gbId, entId, pos):
         """ API: 加入raid标记 """
-        INFO_MSG('reqAddRaidMarkMember: ', entId, markType)
+        INFO_MSG('reqAddRaidMarkMember: ', type, index, name, gbId, entId, pos)
 
         # 检查
-        if self.raidUUID <= 0:
+        if index <= 0 or index > gameconst.TEAM_MARK_MAX_SLOT or self.raidUUID <= 0:
             return
         
-        gameengine.getRaidStub(self.raidUUID).reqAddRaidMarkMember(self.raidUUID, self.base, entId, markType)
+        gameengine.getRaidStub(self.raidUUID).reqAddRaidMarkMember(self.raidUUID, self.base, type, index, name, gbId, entId, pos)
 
     @utils.isMyself
-    def reqDelRaidMarkMember(self, exposed, entId):
+    def reqDelRaidMarkMember(self, exposed, type, index):
         """ API: 移除raid标记 """
-        INFO_MSG('reqDelRaidMarkMember: ', entId)
+        INFO_MSG('reqDelRaidMarkMember: ', self.raidUUID, type, index)
 
         # 检查
-        if entId <= 0 or self.raidUUID <= 0:
+        if index <= 0 or index > gameconst.TEAM_MARK_MAX_SLOT or self.raidUUID <= 0:
             return
         
-        gameengine.getRaidStub(self.raidUUID).reqDelRaidMarkMember(self.raidUUID, self.base, entId)
+        gameengine.getRaidStub(self.raidUUID).reqDelRaidMarkMember(self.raidUUID, self.base, type, index)
 
     @utils.isMyself
     @gamedecorator.limitcall(2)

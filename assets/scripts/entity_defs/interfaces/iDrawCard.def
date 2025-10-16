@@ -27,6 +27,10 @@
         <reqPetDrawCardRecord> <Exposed/>
             <Arg>   UINT32      </Arg>
         </reqPetDrawCardRecord>
+
+        <triggerTimeLimitGuaranteedReward>
+            <Arg>   ARRAY <of> UINT32 </of>    </Arg>
+        </triggerTimeLimitGuaranteedReward>
     </BaseMethods>
 
     <CellMethods>

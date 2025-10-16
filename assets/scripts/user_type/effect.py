@@ -209,6 +209,11 @@ class BasicEffect(EffectBase):
         if owner.checkConflictState(dataUtils.getStateEventId(status)):
             owner.setState(status)
 
+    def checkEvent(self, owner, callerInfo):
+        effectDict = self.getEffectDict(owner, callerInfo)
+        eventId = effectDict.get('EventId')
+        owner.checkConflictState(eventId, False, True)
+
     def undoSetStatus(self, owner, callerInfo, isOverleap):
         if not isOverleap:
             effectDict = self.getEffectDict(owner, callerInfo)
@@ -297,7 +302,7 @@ class BasicEffect(EffectBase):
         else:
             ERROR_MSG('cannot get shieldId', callerInfo)
             return
-        
+
         if owner.IsAvatar:
             skillId = 0
             if callerInfo.callerType == EffectCaller.BUFF:
@@ -324,7 +329,7 @@ class BasicEffect(EffectBase):
                     else:
                         addValue = args[0]
                         totalAddValue += addValue
-                
+
                 value += totalAddValue
 
         owner.addShield(shieldId, value)
@@ -400,7 +405,7 @@ class EventEffect(EffectBase):
         if not effectData or not effectDict:
             return
 
-        if owner.isDie():
+        if owner.isDie() and 'onDeadLater' != event.name:
             return
 
         if self.tNextTime and time.time() < self.tNextTime:

@@ -15,4 +15,14 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
+    1031: _tools.RODict({
+        "mapID": 1031,
+        "combatAreaID": 10318056,
+        "refreshMonsterID": _tools.ROList([10310129, 10310135]),
+        "countLimit": 15,
+        "countMonsterID": _tools.ROList([11222015, 11222016]),
+        "countResetTime": 30
+    })
 })
+minKey = 1031
+maxKey = 1031

@@ -91,14 +91,7 @@ class ImpEquipment(object):
         bodyEquipItem.removeEquipEffectToAvatar(self)
         self.bodyEquipData.dressEquip(self, slotId, bagEquipItem)
         self.client.onDressEquipment(bagEquipItem.toClientBodyEquipItemDict(slotId))
-        oldBodyEquipDic = bodyEquipItem.toItemSavedDict()
-        self.base.replaceEquipment(opUUID, gameconst.DressEquipOpStat.EQUIP_OP_REPLACED,
-                                   oldBodyEquipDic)
-
-        if 'attrJson' in oldBodyEquipDic:
-            attrJson = oldBodyEquipDic['attrJson']
-            attrDict = json.loads(attrJson)
-            enhanceLv = attrDict.get('enhanceLv', 0)
+        self.base.replaceEquipment(opUUID, gameconst.DressEquipOpStat.EQUIP_OP_REPLACED, bodyEquipItem.toItemSavedDict())
 
     def cellUndressEquipment(self, slotId):
         if self.isBodyEquipsLocked():
@@ -175,9 +168,10 @@ class ImpEquipment(object):
             # self.base.baseCheckAchievement(gameconst.AchieveTargetType.EQUIPMENT_ENHANCED, ())
             # NOTE()(ACHIEVE): 装备::装备首次达到强化等级
             # self.base.baseCheckAchievement(gameconst.AchieveTargetType.EQUIPMENT_ENHANCED_TOLVL, (enhanceLv, ))
-    def enhanceSuccess(self, opUUID, slotId, enhanceLv):
+    def enhanceSuccess(self, opUUID, slotId, enhanceLv, isGM = False):
         equipItem = self.bodyEquipData.getEquipItem(slotId)
-        if equipItem and equipItem.checkEnhancementValid(enhanceLv) and equipItem.doEnhanceEquip(self, opUUID, enhanceLv, onBody=True):
+        if equipItem and equipItem.checkEnhancementValid(enhanceLv, isGM):
+            equipItem.doEnhanceEquip(self, opUUID, enhanceLv, onBody=True, isGM = isGM)
             self.client.onEquipEnhanceSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId,
                                            equipItem.getEnhanceLevel(), equipItem.getEnhanceLvVal())
             self.base.triggerAchievement(gameconst.AchieveType.ENHANCE_EQUIPMENT)
@@ -192,62 +186,135 @@ class ImpEquipment(object):
         return self.bodyEquipData.isBodyEquipsBeLocked()
 
     @utils.isMyself
-    def reqEquipAffixWashing(self, exposed, equipIn, equipPos, uniqueId):
-        DEBUG_MSG('in reqEquipAffixWashing:', equipIn, equipPos, uniqueId)
+    def reqEquipSpiritWashing(self, exposed, equipIn, equipPos, uniqueId, spiritPos):
+        DEBUG_MSG('in reqEquipSpiritWashing:', equipIn, equipPos, uniqueId, spiritPos)
         if equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
-            self.base.bagEquipAffixWashing(equipPos, uniqueId)
+            self.base.bagEquipSpiritWashing(equipPos, uniqueId, spiritPos)
         elif equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
             equipItem = self.bodyEquipData.getEquipItem(equipPos)
             if equipItem.uniqueId != uniqueId:
                 return
 
             if dataUtils.checkEquipGrowingForbidden(equipItem):
-                ERROR_MSG('   in reqEquipAffixWashing, equipment can not be growing, equipment:', equipItem)
+                ERROR_MSG('   in reqEquipSpiritWashing, equipment can not be growing, equipment:', equipItem)
                 return
 
             ret = dataUtils.checkEquipmentSpiritType(equipItem.equipAttr.equipType)
             if not ret:
-                ERROR_MSG('   in reqEquipAffixWashing, equipment can not affix, equipment:', equipItem)
+                ERROR_MSG('   in reqEquipSpiritWashing, equipment can not affix, equipment:', equipItem)
                 return False
 
-            if not self.bodyEquipData.tryLockBodyEquips(desp='reqEquipAffixWashing'):
-                WARNING_MSG('   in reqEquipAffixWashing, locked')
+            if not self.bodyEquipData.tryLockBodyEquips(desp='reqEquipSpiritWashing'):
+                WARNING_MSG('   in reqEquipSpiritWashing, locked')
                 return
-            costItemDic = equipItem.affixWashingNeedItems()
+            
+            if not equipItem.checkSpiritNum(spiritPos):
+                ERROR_MSG('    in reqEquipSpiritWashing, slot is empty')
+                return
+            
+            costItemDic = equipItem.spiritWashingNeedItems()
             opUUID = KBEngine.genUUID64()
             src = AAC_AACDD.datas.BONUS_SRC_EQUIP_AFFIX_WASHING
             detail = gameclass.AwardDetail(itemId=equipItem.uniqueId)
             self.base.baseEquipDeductItems(costItemDic, opUUID, src, detail, self,
-                                  'cellEquipAffixWashing', (opUUID, equipPos, uniqueId), False, True)
+                                  'cellEquipSpiritWashing', (opUUID, equipPos, uniqueId, spiritPos), False, True)
         return
 
-    def cellEquipAffixWashing(self, opStat, opUUID, slotId, uniqueId):
-        DEBUG_MSG('in cellEquipAffixWashing:', opStat, slotId, uniqueId)
+    def cellEquipSpiritWashing(self, opStat, opUUID, slotId, uniqueId, spiritPos):
+        DEBUG_MSG('in cellEquipSpiritWashing:', opStat, slotId, uniqueId)
         self.unlockBodyEquips()
         if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
-            DEBUG_MSG('     in cellEquipAffixWashing, cost items not enough')
+            DEBUG_MSG('     in cellEquipSpiritWashing, cost items not enough')
             return
         equipItem = self.bodyEquipData.getEquipItem(slotId)
         if equipItem.uniqueId != uniqueId:
             return
         equipItem.removeEquipEffectToAvatar(self)
-        ret, oldRandomAffixes = equipItem.doEquipAffixWashing(self, self.name, self.gbId, True)
+        ret, _, _ = equipItem.doEquipSpiritWashing(self, spiritPos)
         if ret:
-            randomAffixes = []
-            for oneAffix in equipItem.equipAttr.randomAffixes:
-                randomAffixes.append(oneAffix.toAfxClientDic())
-            self.client.onEquipAffixWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, randomAffixes)
-            # self.base.baseCheckAchievement(gameconst.AchieveTargetType.EQUIP_AFFIX_WASHING, ())
+            spiritData = equipItem.equipAttr.spiritDatas[spiritPos]
+            self.client.onEquipSpiritWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, spiritData.toClientData())
         equipItem.applyEquipEffectToAvatar(self)
 
         self.updateEquipmentScore()
         return
 
     @utils.isMyself
-    def reqEquipGlyphWashing(self, exposed, equipIn, equipPos, uniqueId):
-        DEBUG_MSG('in reqEquipGlyphWashing:', equipIn, equipPos, uniqueId)
+    def reqEquipGlyphApply(self, exposed, equipIn, equipPos, groupId, uniqueId):
+        DEBUG_MSG('in reqEquipGlyphApply:', equipIn, equipPos, groupId, uniqueId)
         if equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
-            self.base.bagEquipGlyphWashing(equipPos, uniqueId)
+            self.base.bagEquipGlyphApply(equipPos, uniqueId, groupId)
+        elif equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
+            equipItem = self.bodyEquipData.getEquipItem(equipPos)
+            if equipItem.uniqueId != uniqueId:
+                return
+
+            if dataUtils.checkEquipGrowingForbidden(equipItem):
+                ERROR_MSG('   in reqEquipGlyphApply, equipment can not be growing, equipment:', equipItem)
+                return
+
+            ret = dataUtils.checkEquipmentGlyphType(equipItem.equipAttr.equipType)
+            if not ret:
+                ERROR_MSG('   in reqEquipGlyphApply, equipment can not glyph, equipment:', equipItem)
+                return False
+
+            if not self.bodyEquipData.tryLockBodyEquips(desp='reqEquipGlyphApply'):
+                WARNING_MSG('   in reqEquipGlyphApply, locked')
+                return
+
+            if not equipItem.checkGlyphApplyGroupId(groupId):
+                ERROR_MSG('   in reqEquipGlyphApply groupId is wrong')
+                return
+            self.unlockBodyEquips()
+            equipItem.removeEquipEffectToAvatar(self)
+            ret = equipItem.doApplyGlyphGroupId(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, groupId)
+            # 只要存在变动就更新
+            if ret:
+                self.bodyEquipData.recalculateAllInscriptionEffects(self)
+            self.client.onEquipGlyphApplySucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, groupId)
+            equipItem.applyEquipEffectToAvatar(self)
+            self.updateEquipmentScore()
+        return
+    
+    @utils.isMyself
+    def reqEquipSpiritApply(self, exposed, equipIn, equipPos, groupId, uniqueId):
+        DEBUG_MSG('in reqEquipSpiritApply:', equipIn, equipPos, groupId, uniqueId)
+        if equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
+            self.base.bagEquipGlyphApply(equipPos, uniqueId, groupId)
+        elif equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
+            equipItem = self.bodyEquipData.getEquipItem(equipPos)
+            if equipItem.uniqueId != uniqueId:
+                return
+
+            if dataUtils.checkEquipGrowingForbidden(equipItem):
+                ERROR_MSG('   in reqEquipSpiritApply, equipment can not be growing, equipment:', equipItem)
+                return
+
+            ret = dataUtils.checkEquipmentSpiritType(equipItem.equipAttr.equipType)
+            if not ret:
+                ERROR_MSG('   in reqEquipSpiritApply, equipment can not glyph, equipment:', equipItem)
+                return False
+
+            if not self.bodyEquipData.tryLockBodyEquips(desp='reqEquipSpiritApply'):
+                WARNING_MSG('   in reqEquipSpiritApply, locked')
+                return
+
+            if not equipItem.checkSpiritApplyGroupId(groupId):
+                ERROR_MSG('   in reqEquipSpiritApply groupId is wrong')
+                return
+            self.unlockBodyEquips()
+            equipItem.removeEquipEffectToAvatar(self)
+            equipItem.doApplySpiritGroupId(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, groupId)
+            self.client.onEquipSpiritApplySucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, groupId)
+            equipItem.applyEquipEffectToAvatar(self)
+            self.updateEquipmentScore()
+        return
+
+    @utils.isMyself
+    def reqEquipGlyphWashing(self, exposed, equipIn, equipPos, glyphPos, uniqueId):
+        DEBUG_MSG('in reqEquipGlyphWashing:', equipIn, equipPos, glyphPos, uniqueId)
+        if equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
+            self.base.bagEquipGlyphWashing(equipPos, uniqueId, glyphPos)
         elif equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
             equipItem = self.bodyEquipData.getEquipItem(equipPos)
             if equipItem.uniqueId != uniqueId:
@@ -266,7 +333,7 @@ class ImpEquipment(object):
                 WARNING_MSG('   in reqEquipGlyphWashing, locked')
                 return
 
-            if not equipItem.checkSlotNum():
+            if not equipItem.checkGlyphNum(glyphPos):
                 ERROR_MSG('in reqEquipGlyphWashing slot is empty')
                 return
 
@@ -275,11 +342,11 @@ class ImpEquipment(object):
             src = AAC_AACDD.datas.BONUS_SRC_WEAPON_GLYPH_WASHING
             detail = gameclass.AwardDetail(itemId=equipItem.uniqueId)
             self.base.baseEquipDeductItems(costItemDic, opUUID, src, detail, self,
-                                           'cellEquipGlyphWashing', (opUUID, equipPos, uniqueId), False, True)
+                                           'cellEquipGlyphWashing', (opUUID, equipPos, uniqueId, glyphPos), False, True)
         return
 
-    def cellEquipGlyphWashing(self, opStat, opUUID, slotId, uniqueId):
-        DEBUG_MSG('in cellEquipGlyphWashing:', opStat, slotId, uniqueId)
+    def cellEquipGlyphWashing(self, opStat, opUUID, slotId, uniqueId, glyphPos):
+        DEBUG_MSG('in cellEquipGlyphWashing:', opStat, slotId, uniqueId, glyphPos)
         self.unlockBodyEquips()
         if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
             DEBUG_MSG('     in cellEquipGlyphWashing, cost items not enough')
@@ -288,18 +355,13 @@ class ImpEquipment(object):
         if equipItem.uniqueId != uniqueId:
             return
         equipItem.removeEquipEffectToAvatar(self)
-        ret, oldGlyphAffixes = equipItem.doEquipGlyphWashing(self)
+        ret, _, _ = equipItem.doEquipGlyphWashing(self, glyphPos)
         if ret:
-            glyphAffixes = []
-            for oneAffix in equipItem.equipAttr.glyphAffixes:
-                glyphAffixes.append(oneAffix.toAfxClientDic())
-            self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, glyphAffixes)
-
+            glyphData = equipItem.equipAttr.glyphDatas[glyphPos]
+            self.bodyEquipData.recalculateAllInscriptionEffects(self)
+            self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, glyphPos, glyphData.toClientData())
         equipItem.applyEquipEffectToAvatar(self)
-
         self.updateEquipmentScore()
-        self.bodyEquipData.recalculateAllInscriptionEffects(self, oldGlyphAffixes, equipItem.equipAttr.glyphAffixes)
-        return
 
     @utils.isMyself
     def reqEquipBless(self, exposed, equipIn, equipPos, uniqueId):
@@ -417,10 +479,10 @@ class ImpEquipment(object):
         return
 
     def getBodyEquipExtraSkillLv(self, skillId):
-        return self.bodyEquipData.getEquipsAddSkillLv(skillId)
+        return self.bodyEquipData.getEquipsAddSkillLv(self, skillId)
 
-    def getSkillInciptionEffect(self, skillID, effectType):
-        return self.bodyEquipData.getSkillInciptionEffect(skillID, effectType)
+    def getInscriptionEffects(self, skillID, effectType):
+        return self.bodyEquipData.getInscriptionEffects(skillID, effectType)
 
     def addPropByGear(self, target, context, propList, startIdx=0, endIdx=-1):
         if context.actionType == actionContext.ACTION_EQUIP:
@@ -480,139 +542,6 @@ class ImpEquipment(object):
 
     ################################## Gm cmd ###################################
 
-    def gmEquipEnhanceToMaxLv(self):
-        enhanceMaxLvs = 5
-        if len(self.bodyEquipData.equips_map) == 0:
-            return
-        self.bodyEquipData.removeBodyEquipsProps(self)
-        clientData = []
-        for slotId, equipObj in self.bodyEquipData.equips_map.items():
-            equipObj.equipAttr.enhanceLv = enhanceMaxLvs
-            equipObj.equipAttr.calcScore()
-            clientData.append(equipObj.toClientBodyEquipItemDict(slotId))
-        self.bodyEquipData.applyBodyEquipsProps(self)
-        self.updateEquipmentScore()
-        self.sendBodyEquipData()
-        return
-
-    def gmEquipEnhanceToLevel(self, level, full):
-        pass
-        # import random
-        # if len(self.bodyEquipData.equips_map) == 0:
-        #     return
-
-        # self.bodyEquipData.removeBodyEquipsProps(self)
-        # if level <= 0 or level > max(GEGUD.datas.keys()):
-        #     return False
-        # clientData = []
-        # for slotId, equipObj in self.bodyEquipData.equips_map.items():
-        #     equipObj.equipAttr.enhanceLv = 5
-        #     equipObj.equipAttr.calcScore()
-        #     clientData.append(equipObj.toClientBodyEquipItemDict(slotId))
-        # self.bodyEquipData.applyBodyEquipsProps(self)
-        # self.updateEquipmentScore()
-        # self.sendBodyEquipData()
-        # return True
-
-    def gmEquipFullBaseAttr(self):
-        # gm指令不考虑对avatar身上的属性影响，重新登陆即可更新
-        clientData = []
-        if len(self.bodyEquipData.equips_map) == 0:
-            return
-        self.bodyEquipData.removeBodyEquipsProps(self)
-        for slotId, equipObj in self.bodyEquipData.equips_map.items():
-            equipObj.equipAttr.calcBaseAttrs()
-            clientData.append(equipObj.toClientBodyEquipItemDict(slotId))
-            equipObj.equipAttr.calcScore()
-        self.bodyEquipData.applyBodyEquipsProps(self)
-        self.updateEquipmentScore()
-        self.sendBodyEquipData()
-        return
-
-    def gmEquipSetAffixNum(self, affixNum):
-        clientData = []
-        if len(self.bodyEquipData.equips_map) == 0:
-            return
-        self.bodyEquipData.removeBodyEquipsProps(self)
-        for slotId, equipObj in self.bodyEquipData.equips_map.items():
-            equipObj.equipAttr.gmSetAffixesNum(affixNum)
-            equipObj.onEquipAffixChanged()
-            clientData.append(equipObj.toClientBodyEquipItemDict(slotId))
-            equipObj.equipAttr.calcScore()
-        self.bodyEquipData.applyBodyEquipsProps(self)
-        self.updateEquipmentScore()
-        self.sendBodyEquipData()
-        return
-
-    def gmEquipAddOneAffix(self, affixId):
-        clientData = []
-        if len(self.bodyEquipData.equips_map) == 0:
-            return False
-        if affixId not in AFAFTWD.datas:
-            DEBUG_MSG('in gmEquipAddOneAffix, equip no this affix:', affixId)
-            return False
-
-        self.bodyEquipData.removeBodyEquipsProps(self)
-        for slotId, equipObj in self.bodyEquipData.equips_map.items():
-            equipObj.equipAttr.gmAddOneAffix(affixId)
-            equipObj.onEquipAffixChanged()
-            clientData.append(equipObj.toClientBodyEquipItemDict(slotId))
-            equipObj.equipAttr.calcScore()
-        self.bodyEquipData.applyBodyEquipsProps(self)
-        self.updateEquipmentScore()
-        self.sendBodyEquipData()
-        return True
-
-    def gmEquipReplaceOneAffix(self, affixId):
-        clientData = []
-        if len(self.bodyEquipData.equips_map) == 0:
-            return False
-        if affixId not in AFAFTWD.datas:
-            DEBUG_MSG('in gmEquipReplaceOneAffix, equip no this affix:', affixId)
-            return False
-
-        self.bodyEquipData.removeBodyEquipsProps(self)
-        for slotId, equipObj in self.bodyEquipData.equips_map.items():
-            equipObj.equipAttr.gmReplaceOneAffix(affixId)
-            equipObj.onEquipAffixChanged()
-            clientData.append(equipObj.toClientBodyEquipItemDict(slotId))
-            equipObj.equipAttr.calcScore()
-        self.bodyEquipData.applyBodyEquipsProps(self)
-        self.updateEquipmentScore()
-        self.sendBodyEquipData()
-        return True
-
-    def gmEquipOnlyOneAffix(self, affixId):
-        clientData = []
-        if len(self.bodyEquipData.equips_map) == 0:
-            return False
-        if affixId not in AFAFTWD.datas:
-            DEBUG_MSG('in gmEquipOnlyOneAffix, equip no this affix:', affixId)
-            return False
-
-        self.bodyEquipData.removeBodyEquipsProps(self)
-        for slotId, equipObj in self.bodyEquipData.equips_map.items():
-            equipObj.equipAttr.gmOnlyOneAffix(affixId)
-            equipObj.onEquipAffixChanged()
-            clientData.append(equipObj.toClientBodyEquipItemDict(slotId))
-            equipObj.equipAttr.calcScore()
-        self.bodyEquipData.applyBodyEquipsProps(self)
-        self.updateEquipmentScore()
-        self.sendBodyEquipData()
-        return True
-
-    def gmDressEquipsByQuality(self, quality, enhanceLv):
-        dressSlotIds = []
-        for slotId in range(1, 10):
-            it = self.bodyEquipData.getEquipItem(slotId)
-            if not it:
-                dressSlotIds.append(slotId)
-                continue
-            if it.quality != quality or it.equipAttr.getEnhanceLv() != enhanceLv:
-                dressSlotIds.append(slotId)
-                continue
-        self.base.gmBaseDressEquipsByQuality(quality, enhanceLv, dressSlotIds)
-
     def gmDressEquips(self):
         dressSlotIds = []
         for slotId in range(1, 10):
@@ -620,25 +549,15 @@ class ImpEquipment(object):
             if not it:
                 dressSlotIds.append(slotId)
                 continue
-
+        
+        if len(dressSlotIds) == 0:
+            return False
         self.base.gmBaseDressEquips(dressSlotIds)
+        return True
 
-    def gmPrintBodyEquipsEnhanceInfo(self):
-        DEBUG_MSG('gmPrintBodyEquipsEnhanceInfo')
-        import gearEnhance_setEffect as GESED
-        for equipObj in self.bodyEquipData.equips_map.values():
-            DEBUG_MSG('#################################################')
-            gearData = dataUtils.getEquipItemData(equipObj.itemId)
-            itemId = equipObj.itemId
-            DEBUG_MSG(itemId, gearData['name'], 'enhanceInfo:', equipObj.equipAttr.enhanceLv)
-            enhanceLv = equipObj.equipAttr.getEnhanceLv()
-            DEBUG_MSG('     强化数据:', equipObj.equipAttr.enhanceLv)
-            DEBUG_MSG('     强化等级:', enhanceLv)
-            for setLv, oneData in GESED.datas.items():
-                if enhanceLv >= oneData['gearGrade']:
-                    DEBUG_MSG('     check setLv:', oneData['gearGrade'])
-        return
-
+    def gmModifyEquipEnhanceLevel(self, slotID, enhanceLevel):
+        INFO_MSG('in modifyEquipEnhanceLevel, slotId:', slotID, enhanceLevel)
+        return self.enhanceSuccess(0, slotID, enhanceLevel, True)
     ################################## gm cmd end ###################################
 
     ################################### drop equip start ##############################
@@ -742,8 +661,5 @@ class ImpEquipment(object):
     ################################### drop equip end ##############################
 
     def getInscriptionEffects(self, skillID, effectType):
-        return self.bodyEquipData.getInscriptionEffects(skillID, effectType)
+        return self.glyphEquipData.getInscriptionEffects(skillID, effectType)
 
-    def modifyEquipEnhanceLevel(self, slotID, enhanceLevel):
-        INFO_MSG('in modifyEquipEnhanceLevel, slotId:', enhanceLevel)
-        return self.enhanceSuccess(0, slotID, enhanceLevel)

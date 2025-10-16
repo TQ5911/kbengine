@@ -142,14 +142,9 @@ namespace KBEngine
 					onCreateAvatarResult(onCreateAvatarResult_arg1, onCreateAvatarResult_arg2);
 					break;
 				case 14:
-					List<UInt16> onGameConfigChanged_arg1 = ((DATATYPE_AnonymousArray_10002)method.args[0]).createFromStreamEx(stream);
-					List<string> onGameConfigChanged_arg2 = ((DATATYPE_AnonymousArray_10003)method.args[1]).createFromStreamEx(stream);
+					List<string> onGameConfigChanged_arg1 = ((DATATYPE_AnonymousArray_10002)method.args[0]).createFromStreamEx(stream);
+					List<Byte> onGameConfigChanged_arg2 = ((DATATYPE_AnonymousArray_10003)method.args[1]).createFromStreamEx(stream);
 					onGameConfigChanged(onGameConfigChanged_arg1, onGameConfigChanged_arg2);
-					break;
-				case 15:
-					List<string> onGameConfigChangedByName_arg1 = ((DATATYPE_AnonymousArray_10003)method.args[0]).createFromStreamEx(stream);
-					List<string> onGameConfigChangedByName_arg2 = ((DATATYPE_AnonymousArray_10003)method.args[1]).createFromStreamEx(stream);
-					onGameConfigChangedByName(onGameConfigChangedByName_arg1, onGameConfigChangedByName_arg2);
 					break;
 				case 17:
 					onKickAnotherAccount();

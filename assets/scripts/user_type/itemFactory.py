@@ -13,13 +13,10 @@ import Item
 import gameengine
 import lingShouEgg
 import EquipmentItem
-import SpiritBoardItem
-
 
 class ItemFactory(object):
     NormalItemClassMap = {
         gameconst.ItemSubType.Equipment: EquipmentItem.EquipmentItem,
-        gameconst.ItemSubType.SpiritBoard: SpiritBoardItem.SpiritBoardItem,
     }
 
     LingShouItemClassMap = {

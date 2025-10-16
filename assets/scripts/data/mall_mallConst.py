@@ -21,7 +21,7 @@ datas = _tools.RODict({
     }),
     "limitText": _tools.RODict({
         "key": "limitText",
-        "value": ('终生限购', '日限购', '周限购', '月限购'),
+        "value": ('终生限购', '日限购', '周限购', '月限购', '', '限购'),
     }),
     "mall_storeClosed_msg": _tools.RODict({
         "key": "mall_storeClosed_msg",

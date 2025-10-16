@@ -760,9 +760,15 @@ def getAvatarTotalScoreAndSpaceNo(gbId, callback):
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 def getAvatarPersonalInfo(gbId, callback):
-    _sql = f"""SELECT a.sm_name, a.sm_level, a.sm_school, a.sm_totalScore, eq.sm_gridId, eq.sm_attrJson
+    _sql = f"""SELECT a.sm_name, a.sm_level, a.sm_school, a.sm_totalScore, eq.sm_gridId, eq.sm_attrJson, a.sm_sex,
+		  a.sm_appearance_weapon, a.sm_appearance_breast, a.sm_appearance_outfitData_hairId, a.sm_appearance_outfitData_clothesId,
+		  a.sm_appearance_outfitData_picFrameId, a.sm_appearance_outfitData_wingId, a.sm_appearance_outfitData_mountId, a.sm_appearance_faceData_suitId,
+		  a.sm_appearance_faceData_hairIdFaceId, a.sm_appearance_faceData_hairColorIdSkinColorId
         FROM tbl_Avatar_bodyEquipData_bodyEquipList eq
-        RIGHT JOIN (SELECT id, sm_name, sm_level, sm_school, sm_totalScore FROM tbl_Avatar WHERE sm_gbID={gbId}) a ON a.id = eq.parentID"""
+        RIGHT JOIN (SELECT id, sm_name, sm_level, sm_school, sm_totalScore, sm_sex, sm_appearance_weapon, sm_appearance_breast, sm_appearance_outfitData_hairId,
+		  sm_appearance_outfitData_clothesId, sm_appearance_outfitData_picFrameId, sm_appearance_outfitData_wingId, sm_appearance_outfitData_mountId,
+		  sm_appearance_faceData_suitId, sm_appearance_faceData_hairIdFaceId, sm_appearance_faceData_hairColorIdSkinColorId
+		   FROM tbl_Avatar WHERE sm_gbID={gbId}) a ON a.id = eq.parentID"""
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 # --------------------------- auth avatar start --------------------------------
@@ -779,18 +785,21 @@ def getAvatarPersonalInfo(gbId, callback):
 # 	`sex` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
 # 	`level` int(10) UNSIGNED NOT NULL DEFAULT '0',
 # 	`tLastOnline` int(10) UNSIGNED NOT NULL DEFAULT '0',
+#   `authExpire` int(10) UNSIGNED NOT NULL DEFAULT '0',
 # 	PRIMARY KEY (`id`),
 # 	KEY `idx_parentID` (`parentID`),
 # 	KEY `idx_gbId` (`gbId`)
 # );
 
+SELECT_PARAMS = 'authDbId, dbId, name, school, sex, level, tLastOnline, authExpire'
+
 def loadCharacterFromDB(parentID, callback):
-    sql = f'SELECT id, gbId, authDbId, dbId, name, school, sex, level, tLastOnline FROM game_account_characters WHERE parentID={parentID}'
+    sql = f'SELECT id, gbId, {SELECT_PARAMS} FROM game_account_characters WHERE parentID={parentID}'
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
 def loadBorrowedCharacterFromDB(authDbId, callback):
-    sql = f'SELECT id, parentID, gbId, authDbId, dbId, name, school, sex, level, tLastOnline FROM game_account_characters WHERE authDbId={authDbId}'
+    sql = f'SELECT id, parentID, gbId, {SELECT_PARAMS} FROM game_account_characters WHERE authDbId={authDbId}'
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
@@ -799,8 +808,13 @@ def removeCharaterFromDB(dbid, callback):
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
-def lendAvatar(gbId, otherDbId, callback):
-    _sql = f'UPDATE game_account_characters SET authDbId={otherDbId} WHERE gbId={gbId} and authDbId=0'
+def lendAvatar(gbId, otherDbId, authExpire, callback):
+    _sql = f'UPDATE game_account_characters SET authDbId={otherDbId}, authExpire={authExpire} WHERE gbId={gbId} and authDbId=0'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def stopLendAvatar(gbId, callback):
+    _sql = f'UPDATE game_account_characters SET authDbId=0, authExpire=0 WHERE gbId={gbId} and authDbId>0'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 # --------------------------- auth avatar end --------------------------------

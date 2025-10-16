@@ -223,8 +223,8 @@ datas = _tools.RODict({
         "tmxRes": "chengZhan",
         "weatherType": 0,
     }),
-    "field_xinshoufuben": _tools.RODict({
-        "sceneRes": "field_xinshoufuben",
+    "field_xinshoufuben_new": _tools.RODict({
+        "sceneRes": "field_xinshoufuben_new",
         "sceneName": "新手副本",
         "defaultMapID": 4002,
         "returnPos": ((394, 7.8, 141),),

@@ -17,15 +17,15 @@ import crontab
 datas = _tools.RODict({ 
     10101: _tools.RODict({
         "ID": 10101,
-        "title": "<color=#a53131>传说品质精灵</color><color=#9e9886>召唤获得概率2%</color>",
+        "title": "<color=#967100>传说品质精灵</color><color=#9e9886>召唤获得概率2%</color>",
         "percentage": "召唤获得概率2%",
-        "petList": 15000030
+        "petList": (15000030, 15000031, 15000032, 15000033)
     }),
     10102: _tools.RODict({
         "ID": 10102,
         "title": "<color=#763e9b>史诗品质精灵</color><color=#9e9886>召唤获得概率4%</color>",
         "percentage": "召唤获得概率4%",
-        "petList": (15000021, 15000022, 15000026, 15000027)
+        "petList": (15000021, 15000022, 15000023, 15000024, 15000025, 15000026, 15000027, 15000028)
     }),
     10103: _tools.RODict({
         "ID": 10103,
@@ -41,15 +41,15 @@ datas = _tools.RODict({
     }),
     10201: _tools.RODict({
         "ID": 10201,
-        "title": "<color=#a53131>传说品质精灵</color><color=#9e9886>召唤获得概率2%</color>",
+        "title": "<color=#967100>传说品质精灵</color><color=#9e9886>召唤获得概率2%</color>",
         "percentage": "召唤获得概率2%",
-        "petList": 15000030
+        "petList": (15000030, 15000031, 15000032, 15000033)
     }),
     10202: _tools.RODict({
         "ID": 10202,
         "title": "<color=#763e9b>史诗品质精灵</color><color=#9e9886>召唤获得概率4%</color>",
         "percentage": "召唤获得概率4%",
-        "petList": (15000021, 15000022, 15000026, 15000027)
+        "petList": (15000021, 15000022, 15000023, 15000024, 15000025, 15000026, 15000027, 15000028)
     }),
     10203: _tools.RODict({
         "ID": 10203,

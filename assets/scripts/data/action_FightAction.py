@@ -160,10 +160,8 @@ def attackShare(self, target, context, *args):
     skill = self._getSkillByActionContext(context)
     buff = self._getBuffByActionContext(context)
 
-    realHurt = 0
     dodgeDmgRatio = 1.0
     fatalDmgRatio = 1.0
-    bIsHit = True
     bCrit = False
 
     # 命中判定
@@ -183,7 +181,7 @@ def attackShare(self, target, context, *args):
             fatalDmgRatio = 1.0
     else:
         dodgeDmgRatio = 0
-        
+
     if arg6 is not None:
         classTag = arg6
     else:
@@ -209,7 +207,10 @@ def attackShare(self, target, context, *args):
     moralEffectRatio = moralEffect(self, target)
 
     # 实际伤害计算
-    realHurt =max((((realAtk - dmgAvoidance) * arg1 + arg2) * fatalDmgRatio * realDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef") + realAtk * self.getProp("extraDmg") - dmgAvoidance * target.getProp("extraDmgDef"))* moralEffectRatio,0.1 * realAtk + 1) * dodgeDmgRatio
+    if dodgeDmgRatio == 0:
+        realHurt = 0
+    else:
+        realHurt =max((((realAtk - dmgAvoidance) * arg1 + arg2) * fatalDmgRatio * realDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef"))* moralEffectRatio, 0.1 * realAtk + 1)
     if target.IsMonster:
         if not hasattr(context, "ignoreMaxDamage"):
             maxDamage = creep_base.datas.get(target.monsterId, {}).get("MaxDamage", -1)
@@ -444,7 +445,7 @@ def isHit(self, target, context):
         return False
     # 基础命中90%
 
-    hitRatio = min(max(0.93 + (self.getProp("hit") - target.getProp("dodge") + (self.level - target.level) * 3) / 1000, 0.7), 1)
+    hitRatio = min(max(90 + (self.getProp("hit") - target.getProp("dodge") - min(max((target.level - self.level), 0), 10) * 3) / 100, minHitRate), maxHitRate)
     if self.IsAvatar:
         ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO)
         if ret:
@@ -476,7 +477,7 @@ def isCrit(self, target, context, *args):
 
     minFatalRate = const_const.datas.get('minFatalRate', {}).get('value')
     maxFatalRate = const_const.datas.get('maxFatalRate', {}).get('value')
-    fatalRate = min(max(0, self.getProp("fatal") - target.getProp("antiFatal") + (self.level - target.level) * 0.004 ), 0.5)
+    fatalRate = min(max(minFatalRate, (self.getProp("fatal") - target.getProp("antiFatal") - min(max((target.level - self.level),0), 10))/100), maxFatalRate)
     if self.IsAvatar:
         ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO)
         if ret:
@@ -495,41 +496,29 @@ def randomAtk(self,classTag):
     # 攻击在大小攻范围内浮动，受幸运值影响
     # 随机区间取小数点后2位
     atkBlessToplimit = const_const.datas.get('atkBlessToplimit', {}).get('value')
-    blessing_value = self.getProp("atkBless")
-    import action_RandomAtk as ARD
-    import utils
-    
-    probabilityList = ARD.datas[blessing_value]['probability']
-    randNode = utils.randomByWeight(probabilityList)
+    atkBless = self.getProp("atkBless")
  
     if classTag == 1:
         #物理攻击
         min_damage = self.getProp("minPhysicalAtk")
         max_damage = self.getProp("maxPhysicalAtk")
-
     if classTag == 2:
         #法术攻击
         min_damage = self.getProp("minMagicAtk")
         max_damage = self.getProp("maxMagicAtk")
 
-    if blessing_value >= atkBlessToplimit:
+    if atkBless >= atkBlessToplimit:
         # 当祝福值超过9时，必然得到最大值
         return max_damage
     elif min_damage >= max_damage:
         return max_damage
-    
-    if randNode == 0:
-        damage = min_damage
-    elif randNode == 1:
-        damage = (max_damage-min_damage)*0.2 + min_damage
-    elif randNode == 2:
-        damage = (max_damage-min_damage)*0.4 + min_damage
-    elif randNode == 3:
-        damage = (max_damage-min_damage)*0.6 + min_damage 
-    elif randNode == 4:
-        damage = (max_damage-min_damage)*0.8 + min_damage
-    elif randNode == 5:
-        damage = max_damage
+
+    atkBless = min(atkBless, 9)
+    maxDamagePct = 1/(10-atkBless) - 0.1 + atkBless * 0.0125
+    if random.uniform(0, 1) <= maxDamagePct:
+        return max_damage
+    else:
+        damage = random.randint(min_damage, max_damage)
 
     return damage
 
@@ -556,13 +545,19 @@ def armorAvoidance(self, target, classTag, ignoreRatio):
     # 防御计算
     if classTag == 2:
         # 法术防御
-        t_armor = target.getProp("magicArmor") if target else 0
+        minArmor = target.getProp("minMagicArmor") if target else 0
+        maxArmor = target.getProp("maxMagicArmor") if target else 0
     else:
         # 物理防御，辅助技能保护（如果3的技能action里有attack则当做物攻）
-        t_armor = target.getProp("physicalArmor") if target else 0
+        minArmor = target.getProp("minPhysicalArmor") if target else 0
+        maxArmor = target.getProp("maxPhysicalArmor") if target else 0
 
-    ignoreArmor = min(max(t_armor * self.getProp("ignoreArmor") - target.getProp("dmgArmor"),0),0.5*t_armor)
-    dmgAvoidance = t_armor - ignoreArmor
+    dmgAvoidance = random.randint(minArmor, maxArmor)
+
+    ignoreArmor = self.getProp('ignoreArmor')
+    dmgArmor = target.getProp('dmgArmor')
+
+    dmgAvoidance = int(max(dmgAvoidance*(1 - max(ignoreArmor - dmgArmor, 0)), 0.3 * dmgAvoidance))
 
     return dmgAvoidance
 

@@ -160,10 +160,10 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         owner = self.getHost()
         if self.inheritPropRatio>0 and owner and not owner.isDestroyed:
             self.setProp('baseFullHp', int(owner.getProp('baseFullHp')*self.baseFullHpRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            self.setProp('basePhysicalArmor', int(owner.getProp('basePhysicalArmor')*self.basePhysicalArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            self.setProp('baseMagicArmor', int(owner.getProp('baseMagicArmor')*self.baseMagicArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            #self.setProp('baseMinAtk', int(owner.getProp('baseMinAtk')*self.baseMinAtkRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
-            #self.setProp('baseMaxAtk', int(owner.getProp('baseMaxAtk')*self.baseMaxAtkRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
+            self.setProp('baseMinPhysicalArmor', int(owner.getProp('baseMinPhysicalArmor')*self.basePhysicalArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
+            self.setProp('baseMinMagicArmor', int(owner.getProp('baseMinMagicArmor')*self.baseMagicArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
+            self.setProp('baseMaxPhysicalArmor', int(owner.getProp('baseMaxPhysicalArmor')*self.basePhysicalArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
+            self.setProp('baseMaxMagicArmor', int(owner.getProp('baseMaxMagicArmor')*self.baseMagicArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
 
             otherProps = ['adjFullHp', 'adjFullHpAbs', 'mulFullHp', 'adjMinPhysicalAtk', 'adjMinPhysicalAtkAbs',
                         'adjMinMagicAtk', 'adjMinMagicAtkAbs', 'adjMaxPhysicalAtk', 'adjMaxPhysicalAtkAbs', 'adjMaxMagicAtk',
@@ -207,7 +207,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         if radii<=0:
             return
         self.hateTrapId = self.addProximity(radii, radii, gameconst.HATE_TRAP)
-        leaveAoiRange = min(gameconst.HOME_AOI, self.getLeaveAlertDistance())
+        leaveAoiRange = self.getLeaveAlertDistance()
         self.addProximity(leaveAoiRange, 0.0, gameconst.LEAVE_AOI_TRAP)
 
     def onGetWitness(self):

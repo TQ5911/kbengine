@@ -299,20 +299,20 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         gamesql.getAvatarPersonalInfo(tarGbId,
                                       lambda ret, num, insertId, err, tarGbId=tarGbId, srcBase=srcBase: self._onGetPlayerInfoOffline(
                                         ret, num, insertId, err, tarGbId, srcBase))
-        
+
     def _onGetPlayerInfoOffline(self, ret, num, insertId, err, tarGbId, srcBase):
         if err:
             ERROR_MSG('getPlayerInfoOffline error:', err)
             return
-        
+
         if not ret:
             ERROR_MSG('getPlayerInfoOffline ret is empty:', ret, num, insertId, err, srcBase)
             return
-        
+
         redisUtils.RedisUtils.getSingleUserInfo(
             tarGbId,
             lambda fcVal: self._onRedisGetSingleUserInfo(fcVal, ret, srcBase))
-        
+
     def _onRedisGetSingleUserInfo(self, fcVal, ret, srcBase):
         guildUUID = fcVal.guildUUID
         guildName = fcVal.guildName
@@ -320,26 +320,45 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             guildUUID,
             'getMemberJob',
-            (gbId, self, (ret, srcBase)),
+            (gbId, self, (ret, guildUUID, guildName, gbId, srcBase)),
             self,
             'onGetMemberJob',
             (GA_A_DD.datas.BONUS_SRC_UNKNOWN, (ret, guildUUID, guildName, gbId, srcBase)),
         )
-        
+
+    def concatAppearanceJson(self, ret):
+        appearance = {}
+        appearance['weapon'] = ret[0][7].decode()
+        appearance['breast'] = ret[0][8].decode()
+        appearance['outfitData'] = {}
+        appearance['outfitData']['hairId'] = ret[0][9].decode()
+        appearance['outfitData']['clothesId'] = ret[0][10].decode()
+        appearance['outfitData']['picFrameId'] = ret[0][11].decode()
+        appearance['outfitData']['wingId'] = ret[0][12].decode()
+        appearance['outfitData']['mountId'] = ret[0][13].decode()
+        appearance['faceData'] = {}
+        appearance['faceData']['suitId'] = ret[0][14].decode()
+        appearance['faceData']['hairIdFaceId'] = ret[0][15].decode()
+        appearance['faceData']['hairColorIdSkinColorId'] = ret[0][16].decode()
+        return json.dumps(appearance)
+
     def onGetMemberJob(self, job, args):
         ret, guildUUID, guildName, tarGbId, srcBase = args
         data = {}
         #个人信息
+        data['gbId'] = tarGbId
         data['name'] = ret[0][0].decode()
         data['level'] = ret[0][1].decode()
         data['school'] = ret[0][2].decode()
         data['totalScore'] = ret[0][3].decode()
+        data['sex'] = ret[0][6].decode()
         data['guildName'] = guildName
         data['guildUUID'] = guildUUID
         data['guildJob'] = job
+        data['appearance'] = self.concatAppearanceJson(ret)
         data['bodyEquipList'] = []
-        if len(ret[0]) > 4:
-            for d in ret:
+        for d in ret:
+            if d[4]:
                 data['bodyEquipList'].append({
                     'slotId': d[4].decode(),
                     'attrJson': d[5].decode(),

@@ -23,8 +23,6 @@ class BodyEquips(userType.UserSoleType):
         self.lockData = {}
         self._resetSetInfo()
         self.addSkillLvDic = {}
-        # 技能ID-->铭文效果列表
-        self.inscriptionEffect = {}
 
     def _lateReload(self):
         super(BodyEquips, self)._lateReload()
@@ -52,12 +50,10 @@ class BodyEquips(userType.UserSoleType):
             except Exception as e:
                 ERROR_MSG('ERRRRRRRRROR!!! in initObjFromSavedDict:', e, equipDic)
                 continue
-        self.lockedTime = dataDic.get('lockedTime', 0)
-        self.lockedDesp = dataDic.get('lockedDesp', '')
         self.lockData = dataDic.get('lockData', {})
         self.setInfo = dataDic.get('setInfo', {})
         self.addSkillLvDic = dataDic.get('addSkillLvDic', {})
-        self.inscriptionEffect = dataDic.get('inscriptionEffect', {})
+
         if not self.setInfo:
             self._resetSetInfo()
 
@@ -72,12 +68,9 @@ class BodyEquips(userType.UserSoleType):
             bodyEquipList.append(equipDic)
         return {
                     'bodyEquipList':bodyEquipList,
-                    'lockedTime':self.lockedTime,
-                    'lockedDesp':self.lockedDesp,
                     'lockData':self.lockData,
                     'setInfo':self.setInfo,
                     'addSkillLvDic':self.addSkillLvDic,
-                    'inscriptionEffect':self.inscriptionEffect,
                 }
 
     def toBodyEquipsClientDict(self):
@@ -107,20 +100,18 @@ class BodyEquips(userType.UserSoleType):
         return
 
     def loadEquipItem(self, slotId, equipItem):
-        DEBUG_MSG("BodyEquips-->loadEquipItem, begin~")
         self.equips_map[slotId] = equipItem
-        DEBUG_MSG("BodyEquips-->loadEquipItem, end~")
     
     def hasEquip(self):
         return bool(self.equips_map)
 
     def applyBodyEquipsProps(self, owner, isLogin=False):
+        DEBUG_MSG("BodyEquips-->applyBodyEquipsProps, begin~ islogin:", isLogin)
         self.addSkillLvDic = {}
         for slotId, equipItem in self.equips_map.items():
             equipItem.applyEquipEffectToAvatar(owner, isLogin=isLogin)
-        self.doRecalculateInscriptionEffects(owner)
-        
-        return
+        self.recalculateAllInscriptionEffects(owner)
+        DEBUG_MSG("BodyEquips-->applyBodyEquipsProps, end~ ")
 
     def tryLockBodyEquips(self, desp=''):
         if self.isBodyEquipsBeLocked():
@@ -289,100 +280,27 @@ class BodyEquips(userType.UserSoleType):
         if not equipItem:
             return equipItem
         DEBUG_MSG("BodyEquips-->removeEquipItem, begin~ ", slotId, self.equips_map)
-        self.recalculateAllInscriptionEffects(owner, equipItem.equipAttr.glyphAffixes)
+        self.recalculateAllInscriptionEffects(owner)
         DEBUG_MSG("BodyEquips-->removeEquipItem, end~", slotId, self.equips_map)
         return equipItem
     
     def addEquipItem(self, owner, slotId, equipItem):
         DEBUG_MSG("BodyEquips-->addEquipItem, begin~")
         self.equips_map[slotId] = equipItem
-        self.calculateInscriptionEffects(owner, equipItem)
+        
         DEBUG_MSG("BodyEquips-->addEquipItem, end~")
 
-    def recalculateAllInscriptionEffects(self, owner, oldAffixes = None, newAffixes = None):
-        DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects, begin~ ", oldAffixes, newAffixes)
-        if oldAffixes is not None:
-            for removeAffixID in oldAffixes:
-                DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects 1 ", removeAffixID)
-                skillID, effectDatas = self.getAffixInscriptionEffectDatas(removeAffixID)
-                if skillID is None or effectDatas is None:
-                    continue
-                DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects, before:", self.inscriptionEffect)
-                for effectData in effectDatas:
-                    DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects 2 ", effectData)
-                    effectType, effectValue = effectData
-                    # 替换技能直接生效
-                    if effectType == gameconst.InscriptionEffectType.REPLACE_SKILL:
-                        # 反向替换技能直接生效
-                        owner.changeSkill(None, None, effectValue, skillID)
-                    elif effectType == gameconst.InscriptionEffectType.SKILL_LEVEL_INCREASE_VALUE:
-                        # 移除技能等级值
-                        self.addSkillLv(self, owner, [skillID], [-1*effectValue], isLogin=False)
-                        
-                DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects, end:", self.inscriptionEffect)
-                    
-        # 筛选出技能替换相关的记录
-        self.inscriptionEffect = {}
-        self.doRecalculateInscriptionEffects(owner)
-        DEBUG_MSG("BodyEquips-->recalculateAllInscriptionEffects, end~")
-
-    def doRecalculateInscriptionEffects(self, owner):
+    def recalculateAllInscriptionEffects(self, owner):
         for equipItem in self.equips_map.values():
-            self.calculateInscriptionEffects(owner, equipItem)
+            owner.glyphEquipData.calculateAllInscriptionEffects(owner, equipItem.getGlyphAffixes())
+        owner.glyphEquipData.applyInscriptionEffects(owner)
 
-    def calculateInscriptionEffects(self, owner, equipItem):
-        DEBUG_MSG("BodyEquips-->calculateInscriptionDatas ", equipItem)
-        insciptionDatas = equipItem.equipAttr.glyphAffixes
-        for insciptionData in insciptionDatas:
-            skillID, effectDatas = self.getAffixInscriptionEffectDatas(insciptionData.afxId)
-            if skillID is None or effectDatas is None:
-                continue
-            DEBUG_MSG("BodyEquips-->calculateInscriptionDatas, before:", self.inscriptionEffect)
-            for effectData in effectDatas:
-                effectType, effectValue = effectData
-                # 替换技能直接生效
-                if effectType == gameconst.InscriptionEffectType.REPLACE_SKILL:
-                    # 替换技能直接生效
-                    owner.changeSkill(None, None, skillID, effectValue)
-                elif effectType == gameconst.InscriptionEffectType.SKILL_LEVEL_INCREASE_VALUE:
-                    # 增加技能等级值
-                    self.addSkillLv(self, owner, [skillID], [effectValue], isLogin=False)
-                effectRecord = self.inscriptionEffect.get(skillID)
-                if not effectRecord:
-                    effectRecord = {}
-                    self.inscriptionEffect[skillID] = effectRecord
-                effectRecord[effectType] = effectRecord.get(effectType, 0) + effectValue
-                DEBUG_MSG("BodyEquips-->calculateInscriptionDatas, skillID:{}, effectType:{}, effectValu:{}", skillID, effectType, effectValue)
-            DEBUG_MSG("BodyEquips-->calculateInscriptionDatas, after:", self.inscriptionEffect)
-
-    def calculateEffectDatas(self, effectType):
-        replaceSkills = {}
-        for skillID, effectDatas in self.inscriptionEffect.items():
-            for effectType, effectValue in effectDatas.items():
-                if effectType == gameconst.InscriptionEffectType.REPLACE_SKILL:
-                    replaceSkills[skillID] = effectValue
-        return replaceSkills
-    
-    def getAffixInscriptionEffectDatas(self, affixID):
-        affixData = AFAFD.datas.get(affixID)
-        if not affixData:
-            ERROR_MSG('BodyEquips-->getAffixInscriptionEffectDatas, missing affix data ', affixID)
-            return None, None
-        if affixData['event'] != 'onDress':
-            return None, None
-        ininData = ININD.datas.get(affixData['inscription'])
-        if not ininData:
-            WARNING_MSG('BodyEquips-->getAffixInscriptionEffectDatas, missing inscription data ', affixData['inscription'])
-            return None, None
-        effecDatas = ininData['effect_value']
-        if not effecDatas:
-            WARNING_MSG('BodyEquips-->getAffixInscriptionEffectDatas, missing effect data ', effecDatas, affixData['inscription'])
-            return None, None
-        skillID = ininData['skill_id']
-        return skillID, effecDatas
-
-    def getEquipsAddSkillLv(self, skillId):
-        return self.addSkillLvDic.get(skillId, 0) + self.addSkillLvDic.get(gameconst.ClassSkillID, 0)
+    def getEquipsAddSkillLv(self, owner, skillId):
+        inscriptionAddLevel = 0
+        ret, args = owner.glyphEquipData.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_LEVEL_INCREASE_VALUE)
+        if ret:
+            inscriptionAddLevel = args[0]
+        return self.addSkillLvDic.get(skillId, 0) + self.addSkillLvDic.get(gameconst.ClassSkillID, 0) + inscriptionAddLevel
 
     def addSkillLv(self, owner, skillIdList, addLvList, isLogin=False):
         DEBUG_MSG('in bodyEquips:addSkillLv:', skillIdList, addLvList, self.addSkillLvDic)
@@ -396,13 +314,4 @@ class BodyEquips(userType.UserSoleType):
         if not isLogin:
             owner.client.updateSkillsExtraLevel(gameconst.SkillUpdateSrc.Equip, skillIdList, newSkillLv)
         return
-
-    def getSkillInciptionEffect(self, skillID, effectType):
-        effectData = self.inscriptionEffect.get(skillID)
-        if not effectData:
-            return 0
-        return effectData.get(effectType, 0)
     
-    def getInscriptionEffects(self, skillID, effectType):
-        args = []
-        return False, args

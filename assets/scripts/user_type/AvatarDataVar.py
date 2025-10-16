@@ -11,13 +11,6 @@ import itemData_itemData as IDIDD
 
 def getAvatarBaseAttrVarValue(owner, varId):
     attrName = VLVLD.datas[varId]['charProp']
-    # 暂时从avater身上剥离自动属性
-    if attrName == "equipWashNum":
-        gridID, itemObj = owner.getAnimaItemObj()
-        if gridID < 0 or not itemObj:
-            return 0
-        return itemObj.getAnima()
-    
     value = getattr(owner, attrName, None)
     if value is None:
         gameengine.reportCritical('getAvatarBaseAttrVarValue error, no this attr:', varId, attrName)
@@ -30,7 +23,4 @@ def getVarValueFromAvatarDic(owner, varId):
 
 AvatarDataVarFunDic = {
     'vitality': getAvatarBaseAttrVarValue,
-    'equipWashNum': getAvatarBaseAttrVarValue,
-
-    # 'level':getAvatarLevelValue,
 }

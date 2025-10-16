@@ -26,7 +26,7 @@ import value_value as VLVLD
 import gearManufacture_details as GMDD
 import gearManufacture_config as GMCDD
 import gearBase_gearConst as GBGCD
-import gearEnhance_replacement as GER
+import gearManufacture_replacement as GER
 
 import _pickle as cPickle
 from proto.gameServerDrop_pb2 import DropResult_SUCCESS,\
@@ -40,21 +40,12 @@ class ImpEquipment(object):
     def __init__(self):
         super(ImpEquipment, self).__init__()
 
-    def getAnimaItemObj(self):
-        gridID, itemObj = self.getItemObjByItemID(gameconst.ItemId.SPIRIT_BOARD, gameconst.ItemBindType.BIND)
-        if gridID < 0 or not itemObj:
-            gridID, itemObj = self.getItemObjByItemID(gameconst.ItemId.SPIRIT_BOARD, gameconst.ItemBindType.NORMAL)
-        if gridID < 0 or not itemObj:
-            return -1, None
-        return gridID, itemObj
-
     def baseEquipDeductItems(self, costItemDic, opUUID, srcType, detail, box,  methodName, args, autoBuy, sendMsg):
         DEBUG_MSG('in baseEquipDeductItems:', costItemDic, methodName, args, autoBuy)
         if self.bagData.isLocked():
             WARNING_MSG('   in baseEquipDeductItems, bagData locked!')
             box and methodName and getattr(box, methodName)(gameconst.BagOPStat.BAG_OP_BAG_LOCKED, *args)
             return
-        costRune = costItemDic.pop('costRune', 0)
         deductWealthVal = dropAward.DeductWealthVal()
         gridId = costItemDic.pop('gridId', 0)
         if gridId:
@@ -69,20 +60,6 @@ class ImpEquipment(object):
 
         #非自动购买情况下，才需要发送物品不足message
         if self.canDeductWealth(deductWealthVal, not autoBuy):
-            if methodName == 'cellEquipAffixWashing' or methodName == 'bagEquipAffixWashingDeductItemsCB':
-                if costRune > 0:
-                    gridID, itemObj = self.getAnimaItemObj()
-
-                    if gridID < 0 or not itemObj:
-                        ERROR_MSG('baseEquipDeductItems anima item is not existed !')
-                        return
-
-                    if not itemObj.deductAnima(self, gridID, costRune):
-                        ERROR_MSG('baseEquipDeductItems anima is less than or equal with zero !')
-                        return
-
-                self.onAvatarVarValueChanged([VLVLD.AvatarDataVarPropDic['equipWashNum']], [itemObj.getAnima()])
-
             self.deductWealth(srcType, deductWealthVal, opUUID, detail)
             box and methodName and getattr(box, methodName)(gameconst.BagOPStat.BAG_OP_STAT_OK, *args)
             return
@@ -169,7 +146,7 @@ class ImpEquipment(object):
         return
 
     @gamedecorator.crossServer
-    def dressEquipment(self, gridId, dressType, dstSlotId):
+    def dressEquipment(self, exposed, gridId, dressType, dstSlotId):
         INFO_MSG('in dressEquipment:', gridId, dressType, dstSlotId, self.baseSpaceNo)
         self.bagData.doDressEquip(self, gridId, dressType, dstSlotId)
 
@@ -188,7 +165,7 @@ class ImpEquipment(object):
         self.bagData.doDressEquipCB(self, uniqId, result, oldBodyEquipDic)
 
     @gamedecorator.crossServer
-    def undressEquipment(self, slotId):
+    def undressEquipment(self, exposed, slotId):
         INFO_MSG("in undressEquipment:", slotId, self.baseSpaceNo)
         if self.bagData.isFull():
             self.onMessagePre(MMD.datas.bagFullGeneralMessage, [])
@@ -266,8 +243,8 @@ class ImpEquipment(object):
         # self.baseCheckAchievement(gameconst.AchieveTargetType.EQUIPMENT_ENHANCED_TOLVL, (enhanceLv, ))
         return
 
-    def bagEquipGlyphWashing(self, gridId, uniqueId):
-        DEBUG_MSG('in bagEquipGlyphWashing:', gridId)
+    def bagEquipGlyphWashing(self, gridId, uniqueId, glyphPos):
+        DEBUG_MSG('in bagEquipGlyphWashing:', gridId, uniqueId, glyphPos)
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
         if bagEquipItem.uniqueId != uniqueId:
             return
@@ -281,7 +258,7 @@ class ImpEquipment(object):
             ERROR_MSG('in bagEquipGlyphWashing, equipment can not glyph, equipment:', bagEquipItem)
             return False
         
-        if not bagEquipItem.checkSlotNum():
+        if not bagEquipItem.checkGlyphNum(glyphPos):
             ERROR_MSG('in bagEquipGlyphWashing slot is empty')
             return
         
@@ -289,26 +266,70 @@ class ImpEquipment(object):
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_WEAPON_GLYPH_WASHING
         detail = gameclass.AwardDetail(bodyId=gridId, uniqueId=uniqueId)
-        args = (opUUID, gridId, )
+        args = (opUUID, gridId, glyphPos)
         self.baseEquipDeductItems(costItemDic, opUUID, srcType, detail, self, 'bagEquipGlyphWashingDeductItemsCB', args,
                                   False, True)
         return
 
-    def bagEquipGlyphWashingDeductItemsCB(self, opStat, opUUID, gridId):
-        DEBUG_MSG('in bagEquipGlyphWashingDeductItemsCB:', opStat, gridId)
+    def bagEquipGlyphWashingDeductItemsCB(self, opStat, opUUID, gridId, glyphPos):
+        DEBUG_MSG('in bagEquipGlyphWashingDeductItemsCB:', opStat, opUUID, gridId, glyphPos)
         if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
             WARNING_MSG('   in bagEquipGlyphWashingDeductItemsCB, deduct items error')
             return
 
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
-        ret, _ = bagEquipItem.doEquipGlyphWashing(self)
+        ret, _, _ = bagEquipItem.doEquipGlyphWashing(self, glyphPos)
         if ret:
-            glyphAffixes = []
-            for oneAffix in bagEquipItem.equipAttr.glyphAffixes:
-                glyphAffixes.append(oneAffix.toAfxClientDic())
-            self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, glyphAffixes)
+            glyphData = bagEquipItem.equipAttr.glyphDatas[glyphPos]
+            self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, glyphPos, glyphData.toClientData())
         return
 
+    def bagEquipGlyphApply(self, gridId, uniqueId, groupId):
+        DEBUG_MSG('in bagEquipGlyphApply:', gridId, uniqueId, groupId)
+        bagEquipItem = self.bagData.getItemObjByGridId(gridId)
+        if bagEquipItem.uniqueId != uniqueId:
+            return
+
+        if dataUtils.checkEquipGrowingForbidden(bagEquipItem):
+            ERROR_MSG('in bagEquipGlyphApply, equipment can not be growing, equipment:', bagEquipItem)
+            return
+        
+        ret = dataUtils.checkEquipmentGlyphType(bagEquipItem.equipAttr.equipType)
+        if not ret:
+            ERROR_MSG('in bagEquipGlyphApply, equipment can not glyph, equipment:', bagEquipItem)
+            return False
+        
+        if not bagEquipItem.checkGlyphApplyGroupId(groupId):
+            ERROR_MSG('in bagEquipGlyphApply groupId is wrong')
+            return
+        
+        bagEquipItem.doApplyGlyphGroupId(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, groupId)
+        self.client.onEquipGlyphApplySucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, groupId)
+        return
+    
+    def bagEquipSpiritApply(self, gridId, uniqueId, groupId):
+        DEBUG_MSG('in bagEquipSpiritApply:', gridId, uniqueId, groupId)
+        bagEquipItem = self.bagData.getItemObjByGridId(gridId)
+        if bagEquipItem.uniqueId != uniqueId:
+            return
+
+        if dataUtils.checkEquipGrowingForbidden(bagEquipItem):
+            ERROR_MSG('in bagEquipSpiritApply, equipment can not be growing, equipment:', bagEquipItem)
+            return
+        
+        ret = dataUtils.checkEquipmentSpiritType(bagEquipItem.equipAttr.equipType)
+        if not ret:
+            ERROR_MSG('in bagEquipSpiritApply, equipment can not glyph, equipment:', bagEquipItem)
+            return False
+        
+        if not bagEquipItem.checkSpiritApplyGroupId(groupId):
+            ERROR_MSG('in bagEquipSpiritApply groupId is wrong')
+            return
+        
+        bagEquipItem.doApplySpiritGroupId(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, groupId)
+        self.client.onEquipSpiritApplySucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, groupId)
+        return
+    
     def bagEquipBless(self, gridId, uniqueId):
         DEBUG_MSG('in bagEquipBless:', gridId)
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
@@ -379,50 +400,51 @@ class ImpEquipment(object):
                                              bagEquipItem.equipAttr.maxBlessLv,
                                              bagEquipItem.equipAttr.blessLvRate)
 
-    def bagEquipAffixWashing(self, gridId, uniqueId):
-        DEBUG_MSG('in bagEquipAffixWashing:', gridId)
+    def bagEquipSpiritWashing(self, gridId, uniqueId, spiritPos):
+        DEBUG_MSG('in bagEquipSpiritWashing:', gridId, uniqueId, spiritPos)
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
         if bagEquipItem.uniqueId != uniqueId:
             return
         
         if dataUtils.checkEquipGrowingForbidden(bagEquipItem):
-            ERROR_MSG('bagEquipAffixWashing, equipment can not be growing, equipment:', bagEquipItem)
+            ERROR_MSG('bagEquipSpiritWashing, equipment can not be growing, equipment:', bagEquipItem)
             return
         
         ret = dataUtils.checkEquipmentSpiritType(bagEquipItem.equipAttr.equipType)
         if not ret:
-            ERROR_MSG('bagEquipAffixWashing, equipment can not affix, equipment:', bagEquipItem)
+            ERROR_MSG('bagEquipSpiritWashing, equipment can not affix, equipment:', bagEquipItem)
             return False
         
-        costItemDic = bagEquipItem.affixWashingNeedItems()
+        if not bagEquipItem.checkSpiritNum(spiritPos):
+            ERROR_MSG('bagEquipSpiritWashing slot is empty')
+            return
+        
+        costItemDic = bagEquipItem.spiritWashingNeedItems()
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_AFFIX_WASHING
         detail = gameclass.AwardDetail(bodyId=gridId, uniqueId=uniqueId)
-        self.baseEquipDeductItems(costItemDic, opUUID, srcType, detail, self, 'bagEquipAffixWashingDeductItemsCB', (opUUID, gridId),
+        self.baseEquipDeductItems(costItemDic, opUUID, srcType, detail, self, 'bagEquipSpiritWashingDeductItemsCB', (opUUID, gridId, spiritPos),
                                   False, True)
         return
 
-    def bagEquipAffixWashingDeductItemsCB(self, opStat, opUUID, gridId):
-        DEBUG_MSG('in bagEquipAffixWashingDeductItemsCB:', opStat, gridId)
+    def bagEquipSpiritWashingDeductItemsCB(self, opStat, opUUID, gridId, spiritPos):
+        DEBUG_MSG('in bagEquipSpiritWashingDeductItemsCB:', opStat, gridId, spiritPos)
         if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
-            WARNING_MSG('   in bagEquipAffixWashingDeductItemsCB, deduct items error')
+            WARNING_MSG('   in bagEquipSpiritWashingDeductItemsCB, deduct items error')
             return
 
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
-        ownerName = gameglobal.roleCache.get(self.id, {}).get('name', '')
-        ret, _ = bagEquipItem.doEquipAffixWashing(self, ownerName, self.gbID, False)
+        ret, _, _ = bagEquipItem.doEquipSpiritWashing(self, spiritPos)
         if ret:
-            randomAffixes = []
-            for oneAffix in bagEquipItem.equipAttr.randomAffixes:
-                randomAffixes.append(oneAffix.toAfxClientDic())
-            self.client.onEquipAffixWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, randomAffixes)
+            spiritData = bagEquipItem.equipAttr.spiritDatas[spiritPos]
+            self.client.onEquipSpiritWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, spiritData.toClientData())
             self.achievementInfo.triggerAchieveByType(
                 self, 
                 gameconst.AchieveType.EQUIPMENT_WITH_SPIRIT, 
                 actionContext.AchievementCtx())
         return
 
-    def reqMultiEquipDisassemble(self, gridIdList, uniqueIdList):
+    def reqMultiEquipDisassemble(self, exposed, gridIdList, uniqueIdList):
         DEBUG_MSG('reqMultiEquipDisassemble:', gridIdList, uniqueIdList)
         self.bagData.doBagEquipDisassemble(self, gridIdList, uniqueIdList)
 
@@ -458,7 +480,8 @@ class ImpEquipment(object):
                 return False
         return True
 
-    def reqMakeEquipment(self, itemId, gridIdList, makeType):
+    @gamedecorator.limitcall(1)
+    def reqMakeEquipment(self, exposed, itemId, gridIdList, makeType):
         DEBUG_MSG('reqMakeEquipment:', itemId, gridIdList, makeType)
         itemData = dataUtils.getEquipItemData(itemId)
         if not itemData:
@@ -479,6 +502,7 @@ class ImpEquipment(object):
         isOpen = cfgData.get('isOpen')
         if not isOpen:
             ERROR_MSG('in reqMakeEquipment not open:', itemId)
+            self.client.onEquipMakeFailed()
             return
 
         if self.bagData.isFull():
@@ -500,47 +524,78 @@ class ImpEquipment(object):
             ERROR_MSG('in reqMakeEquipment unknow equipment manufacture type:', itemId, makeType)
             return
 
-        deductVal = dropAward.DeductWealthVal()
-        curGridIndex = 0
+        # 收集
+        needGridIdList = {}
+        needCostItems = {}
+        okCount = 0
+        bindValue = 0
+        # 先处理配置表的道具消耗数据，防止重复配置错误
         for val in consumeItem:
             costItemId, itemNum = val
-            if dataUtils.isEquipItemByItemId(costItemId):
-                gridId = gridIdList[curGridIndex]
-                curGridIndex += 1
-                bagEquipItem = self.bagData.getItemObjByGridId(gridId)
-                if bagEquipItem.itemId != costItemId:
-                    ERROR_MSG('in reqMakeEquipment, itemId not matched:', itemId, costItemId)
-                    return
-                deductVal.addWealthByObjList([bagEquipItem])
-            else:
-                deductVal.addWealthByItemId(costItemId, itemNum)
+            needCostItems[costItemId] = needCostItems.get(costItemId, 0) + itemNum
+        # 分析并计算需要消耗的格子上的道具数量
+        for gridId in gridIdList:
+            bagEquipItem = self.bagData.getItemObjByGridId(gridId)
+            if not bagEquipItem:
+                continue
+            # 检查指定格子材料是否足够
+            for costItemID, costItemNum in needCostItems.items():
+                if costItemNum <= 0:
+                    continue
+                if costItemID == bagEquipItem.itemId:
+                    if costItemNum > bagEquipItem.itemNum:
+                        needCostItems[costItemID] = costItemNum - bagEquipItem.itemNum
+                        needGridIdList[gridId] = needGridIdList.get(gridId, 0) + bagEquipItem.itemNum
+                        if bagEquipItem.bindType == gameconst.ItemBindType.BIND:
+                            bindValue += bagEquipItem.itemNum
+                    else:
+                        needCostItems[costItemID] = 0
+                        needGridIdList[gridId] = needGridIdList.get(gridId, 0) + costItemNum
+                        if bagEquipItem.bindType == gameconst.ItemBindType.BIND:
+                            bindValue += costItemNum
+                        okCount += 1
 
+        if okCount != len(needCostItems):
+            ERROR_MSG('in reqMakeEquipment wrong args:', itemId, makeType, needGridIdList, needCostItems, okCount)
+            self.client.onEquipMakeFailed()
+            return
+        # 开始扣除道具    
+        deductVal = dropAward.DeductWealthVal()
+        # 扣除消耗的货币
         consumeMoney = cfgData.get('consumeMoney')
         if consumeMoney:
             for val in consumeMoney:
                 costItemId, itemNum = val
                 deductVal.addWealthByItemId(costItemId, itemNum)
-
         # 如果消耗的资源为空，不允许制造
-        if deductVal.isEmpty():
+        if len(needGridIdList) == 0 and deductVal.isEmpty():
             ERROR_MSG('in reqMakeEquipment, consume item is empty, equipment manufacture is forbidden:', itemId)
+            self.client.onEquipMakeFailed()
             return
         
         if not self.canDeductWealth(deductVal, sendMsg=True):
             ERROR_MSG('in reqMakeEquipment, canDeductWealth fail:', itemId)
+            self.client.onEquipMakeFailed()
             return
-
+        
         opUUID = KBEngine.genUUID64()
-        src = AAC_AACDD.datas.BONUS_SRC_EQUIP_MANUFACTURE
+        srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_MANUFACTURE
         detail = gameclass.AwardDetail(itemId=itemId)
-        self.deductWealth(src, deductVal, opUUID, detail)
+        # 扣货币
+        self.deductWealth(srcType, deductVal, opUUID, detail)
+        # 扣指定格子指定数量的道具
+        self.bagData.deductItemsByGrid(self, needGridIdList, opUUID, srcType, detail)
 
+        # 获得制造好的道具
         gearManufUnboundProb = GMCDD.datas['gearManufUnboundProb']['value']
         bindType = gameconst.ItemBindType.NORMAL if random.uniform(0, 1) <= gearManufUnboundProb else gameconst.ItemBindType.BIND
         equipItem = itemFactory.ItemFactory.createItem(itemId, 1, bindType=bindType)
-        opStat, _ = self.bagData.addItemsWithPlan(self, [equipItem, ], opUUID, src, detail, notify=False)
+        # 设置绑定值
+        equipItem.setBindValue(bindValue)
+
+        opStat, _ = self.bagData.addItemsWithPlan(self, [equipItem, ], opUUID, srcType, detail, notify=False)
         if opStat == gameconst.BagOPStat.BAG_OP_STAT_OK:
-            self.makeEquipmentGetLog(src, equipItem)
+            self.makeEquipmentGetLog(srcType, equipItem)
             data = equipItem.toClientEquipItemDict()
             DEBUG_MSG('in reqMakeEquipment, addItemsWithPlan success:', opStat, data)
             self.client.onEquipMakeSucc(data)
@@ -548,17 +603,14 @@ class ImpEquipment(object):
             ERROR_MSG('in reqMakeEquipment, addItemsWithPlan fail:', opStat, itemId)
             self.client.onEquipMakeFailed()
 
-        self.achievementInfo.triggerAchieveByType(
-            self, 
-            gameconst.AchieveType.MAKE_EQUIPMENT, 
-            actionContext.AchievementCtx())
+        self.achievementInfo.triggerAchieveByType(self, gameconst.AchieveType.MAKE_EQUIPMENT, actionContext.AchievementCtx())
 
     @gamedecorator.limitcall(1)
-    def reqEquipReplace(self, cfgId, gridId, uniqueId, autoBuy):
+    def reqEquipReplace(self, exposed, cfgId, gridId, uniqueId, autoBuy):
         DEBUG_MSG('reqEquipReplace:', cfgId, gridId, uniqueId, autoBuy)
         cfgData = GER.datas.get(cfgId)
         if not cfgData:
-            ERROR_MSG('in reqEquipReplace, gearEnhance_replacement not found:', cfgId)
+            ERROR_MSG('in reqEquipReplace, gearManufacture_replacement not found:', cfgId)
             return
         
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
@@ -575,12 +627,12 @@ class ImpEquipment(object):
             return
         
         if cfgData["gearID"] != bagEquipItem.itemId:
-            ERROR_MSG('in reqEquipReplace, gearEnhance_replacement wrong cfg', cfgData["gearID"], bagEquipItem.itemId)
+            ERROR_MSG('in reqEquipReplace, gearManufacture_replacement wrong cfg', cfgData["gearID"], bagEquipItem.itemId)
             return
         
         targetItemId = cfgData["acquireID"]
         if not targetItemId:
-            ERROR_MSG('in reqEquipReplace, gearEnhance_replacement is missing acquireID:', bagEquipItem.itemId)
+            ERROR_MSG('in reqEquipReplace, gearManufacture_replacement is missing acquireID:', bagEquipItem.itemId)
             return 
         
         targetItemData = dataUtils.getEquipItemData(targetItemId)
@@ -598,7 +650,7 @@ class ImpEquipment(object):
 
         consumeItem = cfgData.get('costCurrency')
         if consumeItem is None or len(consumeItem) == 0:
-            ERROR_MSG('in reqEquipReplace, gearEnhance_replacement wrong config, missing costCurrency:', bagEquipItem.itemId)
+            ERROR_MSG('in reqEquipReplace, gearManufacture_replacement wrong config, missing costCurrency:', bagEquipItem.itemId)
             return
         
         deductVal = dropAward.DeductWealthVal()
@@ -803,7 +855,8 @@ class ImpEquipment(object):
                 break
         return
 
-    def gmBaseDressEquips(self,bodyDressSlotIds):
+    def gmBaseDressEquips(self, bodyDressSlotIds):
+        INFO_MSG("gmBaseDressEquips ", bodyDressSlotIds)
         myLevel = gameglobal.roleCache[self.id]['level']
         myClass = gameglobal.roleCache[self.id]['school']
         for gridId, it in self.bagData.gridId2GridObj.items():
@@ -821,43 +874,21 @@ class ImpEquipment(object):
             for slotId in slotIds:
                 if slotId in bodyDressSlotIds:
                     bodyDressSlotIds.remove(slotId)
-                    self._callback(0.2, 'gmSendDressEquips', (gridId, slotId), gametimer.TIMER_TAG_GM_SEND_DRESS_EQUIPS)
+                    self._callback(0.2, 'gmSendDressEquips', (gridId, slotId, it), gametimer.TIMER_TAG_GM_SEND_DRESS_EQUIPS)
                     break
             if len(bodyDressSlotIds) == 0:
                 break
         return
 
-    def gmSendDressEquips(self, gridId, slotId):
+    def gmSendDressEquips(self, gridId, slotId, equipItem):
+        INFO_MSG("gmSendDressEquips ", gridId, slotId, equipItem)
         self.unlockBag()
-        self.bagData.doDressEquip(self, gridId, 0, 0, slotId)
+        self.bagData.doDressEquip(self, gridId, 0, slotId)
 
     def gmResetBagEquip(self, uniqueId):
         _, equipItem = self.bagData.getItemByUniqueId(uniqueId)
         equipItem and equipItem.gmResetEncAttr()
 
-    @gamedecorator.offlineCallback
-    def gmAddAnima(self, animaCount):
-        if animaCount <= 0:
-            ERROR_MSG("gmAddAnima args error, ", animaCount)
-            return
-        gridID, itemObj = self.getAnimaItemObj()
-        if gridID < 0 or not itemObj:
-            equipAnimaGetExceptions = GBGCD.datas['equipAnimaGetExceptions']['value']
-            self.onMessagePre(equipAnimaGetExceptions, [str(animaCount)])
-            return
-        itemObj.addAnima(self, gridID, animaCount)
-
-    @gamedecorator.offlineCallback
-    def gmDeductAnima(self, animaCount):
-        if animaCount <= 0:
-            ERROR_MSG("gmDeductAnima args error, ", animaCount)
-            return
-        gridID, itemObj = self.getAnimaItemObj()
-        if gridID < 0 or not itemObj:
-            equipAnimaGetExceptions = GBGCD.datas['equipAnimaGetExceptions']['value']
-            self.onMessagePre(equipAnimaGetExceptions, [str(animaCount)])
-            return
-        itemObj.deductAnima(self, gridID, animaCount)
 ################################## gm cmd end ###################################
 
     ################################### drop equip start ##############################
@@ -1033,7 +1064,7 @@ class ImpEquipment(object):
             GBGCD.datas['pickOthersDropEquip_msgID']['value'], 
             [str(equipItem.itemId)])
 
-    def giveUpDropEquip(self, uniqueId):
+    def giveUpDropEquip(self, exposed, uniqueId):
         INFO_MSG('giveUpDropEquip:', uniqueId)
         if not self.equipDropData.hasTakeDrop(uniqueId):
             ERROR_MSG('giveUpDropEquip not found take:', uniqueId)
@@ -1041,7 +1072,7 @@ class ImpEquipment(object):
 
         gameengine.getGlobalBase('DropStub').giveUpDropEquip(self.gbID, uniqueId, self)
 
-    def redeemEquipDrop(self, uniqueId):
+    def redeemEquipDrop(self, exposed, uniqueId):
         INFO_MSG('redeemEquipDrop:', uniqueId)
         _dropVal = self.equipDropData.getDropVal(uniqueId)
         if not _dropVal:
@@ -1117,7 +1148,7 @@ class ImpEquipment(object):
         self.equipDropData.addTakerWait(uniqueId, _takerVal.equip, _takerVal.endTime, _takerVal.price)
         self.client.onEquipDropStateChange(uniqueId, gameconst.DropType.TYPE_REDEEM)
 
-    def getTakerWaitReward(self, uniqueId):
+    def getTakerWaitReward(self, exposed, uniqueId):
         _takerVal = self.equipDropData.removeTakerWait(self, uniqueId)
         if not _takerVal:
             ERROR_MSG('getTakerWaitReward not found takerWait:', uniqueId)

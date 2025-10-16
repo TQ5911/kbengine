@@ -438,8 +438,67 @@ class BanditCacheVal(userType.UserSoleType):
     def getBanditCacheVal(dataDict):
         return BanditCacheVal(**dataDict)
 
+# ---------------------------- 统计相关 ----------------------------
+class TeamStatisticMixin(object):
+    def __init__(self):
+        self.teamStatistic = TeamStatisticCacheVal()
 
-class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
+    def getPlayerDic(self):
+        if hasattr(self, 'teamPlayerDic'):
+            return self.teamPlayerDic
+        elif hasattr(self, 'raidTeamDic'):
+            return self.getRaidAllMembersDict()
+        return {}
+
+    def addTeamStatisticValue(self, gbId, type, val):
+        if gbId not in self.getPlayerDic():
+            return
+        
+        if type == gameconst.TeamStatisticType.DAMAGE:
+            self.teamStatistic.addStatisticDmg(gbId, val)
+        elif type == gameconst.TeamStatisticType.HEAL:
+            self.teamStatistic.addStatisticHeal(gbId, val)
+        elif type == gameconst.TeamStatisticType.HURT:
+            self.teamStatistic.addStatisticHurt(gbId, val)
+        
+        INFO_MSG('addTeamStatisticValue', gbId, type, val)
+
+    def getTeamStatisticData(self):
+        dmgList = []
+        healList = []
+        hurtList = []
+        teamPlayerDic = self.getPlayerDic()
+
+        for gbId in teamPlayerDic:
+            playerInfo = teamPlayerDic[gbId]
+            pData = {
+                'gbId': gbId,
+                'name': playerInfo.playerName,
+                'school': playerInfo.school,
+                'value': 0,
+                }
+            if gbId in self.teamStatistic.dmgDict:
+                pData['value'] = self.teamStatistic.dmgDict[gbId]
+            dmgList.append(copy.copy(pData))
+
+            if gbId in self.teamStatistic.healDict:
+                pData['value'] = self.teamStatistic.healDict[gbId]
+            healList.append(copy.copy(pData))
+
+            if gbId in self.teamStatistic.hurtDict:
+                pData['value'] = self.teamStatistic.hurtDict[gbId]
+            hurtList.append(copy.copy(pData))
+
+        return {
+            'dmgList': dmgList,
+            'healList': healList,
+            'hurtList': hurtList,
+        }
+    def showStatisticData(self):
+        INFO_MSG('showStatisticData', self.teamStatistic.dmgDict, self.teamStatistic.healDict, self.teamStatistic.hurtDict)
+    
+
+class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
     def __init__(self, teamId=0, teamTarget=0, teamCaptainGbId=0, playerBox=None, playerName='', level=0, school=0,
                  sex=0, picFrameId=0, bFollow=False, bOnline=True, score=0, mountState=0, equipSetLv=0, isDead=False,
                  openId='', teamMicsSwitch=gameconst.TeamMicsMode.OFF, teamMicsBlocked=False):
@@ -476,7 +535,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
         self.tCreated = utils.getNow()
         self.captainOfflineTimer = 0
         #-------------------------------
-        self.teamMarkDic = {}
+        self.teamMark = TeamMarkCacheVal()
         self.onlyCaptainCanMark = False
         self.isAutoExpedition = False
         self.password = ''
@@ -484,6 +543,8 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
         self.teamMemberList = []
         self.teamRewardDatas = {}
         # endregion
+
+        TeamStatisticMixin.__init__(self)
 
     def _lateReload(self):
         super(TeamCacheVal, self)._lateReload()
@@ -495,6 +556,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
 
         self.teamDungeonDic.reloadScript()
         self.teamDuelData.reloadScript()
+        self.teamMark.reloadScript()
         return
 
     def initFromDict(self, savedDataDict):
@@ -566,7 +628,6 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
                      'isAutoExpedition': self.isAutoExpedition,
                      'password': self.password,
                      'isPublish': self.isPublish,
-                     'teamMarkList': [i.toSavedDict() for i in self.teamMarkDic.values()],
                      }
         return savedDict
     
@@ -585,9 +646,8 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
             teamMembers.append(teamPlayerVal.toClientData())
         
-        teamMarkList = []
-        for gbId, markVal in self.teamMarkDic.items():
-            teamMarkList.append(markVal.toClientData())
+        teamMarkInfo = self.teamMark.toClientData()
+        teamMarkInfo['onlyCaptainCanMark'] = self.onlyCaptainCanMark
 
         clientData = {
             'teamId': self.teamId,
@@ -601,8 +661,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
             'teamMicsBlocked': self.teamMicsBlocked,
             'recruitInfo': self.recruitInfo,
             'isPublish': self.isPublish,
-            'teamMarkList': teamMarkList,
-            'onlyCaptainCanMark': self.onlyCaptainCanMark,
+            'teamMarkInfo': teamMarkInfo,
             'isAutoExpedition': self.isAutoExpedition,
             'password': self.password,
             'memberNum': self.getTeamMemberNum(),
@@ -704,6 +763,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
         self.notifyApplyJoinInfo(captainGbId)
         self.stopAutoMatch()
         captainBox = None
+        captainPlayerVal = None
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
             box = teamPlayerVal.playerBox
             if not teamPlayerVal.bOnline:
@@ -718,6 +778,23 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
                 ERROR_MSG('setCaptainGbId teamMember is not online', gbId)
             if self.teamCaptainGbId == gbId:
                 captainBox = box
+                captainPlayerVal = teamPlayerVal
+        # 由于玩家不在线，被过滤了，这里重新找一遍
+        if not captainPlayerVal:
+            for gbId, teamPlayerVal in self.teamPlayerDic.items():
+                if self.teamCaptainGbId == gbId:
+                    captainPlayerVal = teamPlayerVal
+        # 队长放在第一个
+        tmpTeamPlayerDic = {}
+        if captainPlayerVal:
+            tmpTeamPlayerDic[captainPlayerVal.playerGbId] = captainPlayerVal
+        # 后续按照入队顺序进来
+        for gbId, teamPlayerVal in self.teamPlayerDic.items():
+            if self.teamCaptainGbId == gbId:
+                continue
+            tmpTeamPlayerDic[gbId] = teamPlayerVal
+        # 替换旧队列
+        self.teamPlayerDic = tmpTeamPlayerDic
 
         if oldCaptainGbId in self.teamPlayerDic:
             self.turnOffTeamMemberMics(captainGbId, oldCaptainGbId,
@@ -874,13 +951,8 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
                                           memberInfo.school, memberInfo.bFollow, memberInfo.bOnline, memberInfo.picFrameId))
 
     def updateMemberVolatileAttr(self, playerGbId, attrDic):
-
         if playerGbId not in self.teamPlayerDic:
             return
-
-        if 'spaceNo' in attrDic:
-            oldSpaceNo = self.teamPlayerDic[playerGbId].spaceNo
-            newSpaceNo = attrDic['spaceNo']
 
         self.teamPlayerDic[playerGbId].updateAttr(attrDic)
         memberInfo = self.teamPlayerDic[playerGbId]
@@ -1322,69 +1394,33 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
         return memberVal, ""
     # --------------------------------------------------------------------
     # ---------------------------- 标记相关 -------------------------------
-    def addMarkMember(self, owner, entId, markType, spaceNo=0):
-        INFO_MSG('addMarkMember: ', owner, entId, markType)
+    def addMarkMember(self, owner, type, index, name, gbId, entId, pos, spaceNo=0):
+        INFO_MSG('addMarkMember: ', owner, entId, type, index, name, gbId, pos, spaceNo, self.onlyCaptainCanMark, self.getCaptainBox().id)
         if self.onlyCaptainCanMark and owner and owner.id != self.getCaptainBox().id:
             return
-        if entId in self.teamMarkDic:
-            self.updateMarkMember(owner, entId, markType)
-            return
-            
-        markLimit = utils.getMarkLimit()
-        if len(self.teamMarkDic) >= markLimit:
-            self.delMarkMember(owner, 0) # 删一个最久远的
-
-        self.teamMarkDic[entId] = TeamMarkMemberCacheVal(entId, markType, False, spaceNo)
+        ret = False
+        if type == gameconst.TeamMarkType.MARK_SCENE:
+            ret = self.teamMark.addSceneMark(type, index, name, gbId, entId, pos, spaceNo)
+        else:
+            ret = self.teamMark.addPlayerMark(type, index, name, gbId, entId, pos, spaceNo)
         
         # sync data
-        self.onChangeTeamMarkInfo(entId, gameconst.TeamMarkChangeType.ADD)
-        
-    def updateMarkMember(self, owner, entId, markType):
-        INFO_MSG('updateMarkMember: ', entId, markType)
-        mVal = self.teamMarkDic[entId]
-        if mVal is None:
-            return
-        
-        if markType == gameconst.TeamMarkType.MARK_NONE:
-            self.delMarkMember(owner, entId)
-            return
-        
-        if mVal.markType == markType:
-            return
-        mVal.markType = markType
-        
-        # sync data
-        self.onChangeTeamMarkInfo(entId, gameconst.TeamMarkChangeType.MODIFY)
+        if ret:
+            self.onChangeTeamMarkInfo(gameconst.TeamMarkChangeType.ADD)
             
-    def delMarkMember(self, owner, entId=0):
+    def delMarkMember(self, owner, type, index):
         if self.onlyCaptainCanMark and owner and owner.id != self.getCaptainBox().id:
             return
         
-        if entId > 0:
-            if entId not in self.teamMarkDic:
-                return False
-            self.teamMarkDic.pop(entId)
-            self.onChangeTeamMarkInfo(entId, gameconst.TeamMarkChangeType.DELETE)
-            return True
-        
-        # 下面执行 删除最久远的entId
-        if len(self.teamMarkDic) <= 0:
-            return False
-        minTime = 0
-        pickId = None
-        for tempId, mVal in self.teamMarkDic.items():
-            # 找到第一个，给minTime初始化
-            if minTime == 0:
-                minTime = mVal.markTimestamp
-                pickId = tempId
+        ret = False
+        if type == gameconst.TeamMarkType.MARK_SCENE:
+            ret = self.teamMark.delSceneMark(index)
+        else:
+            ret = self.teamMark.delPlayerMark(index)
 
-            if mVal.markTimestamp < minTime:
-                minTime = mVal.markTimestamp
-                pickId = tempId
-        if pickId:
-            self.teamMarkDic.pop(pickId)
-            self.onChangeTeamMarkInfo(pickId, gameconst.TeamMarkChangeType.DELETE)
-        return True
+        if ret:
+            self.onChangeTeamMarkInfo(gameconst.TeamMarkChangeType.DELETE)
+        return ret
             
     def changeOnlyCaptainState(self, owner, state):
         if state == self.onlyCaptainCanMark:
@@ -1394,19 +1430,13 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
             return
         
         self.onlyCaptainCanMark = state
-        self.onChangeTeamMarkInfo(0, gameconst.TeamMarkChangeType.CAPTAIN)
+        self.onChangeTeamMarkInfo(gameconst.TeamMarkChangeType.CAPTAIN)
         
     # 同步客户端数据
-    def onChangeTeamMarkInfo(self, entId=0, changeType=gameconst.TeamMarkChangeType.NONE):
-        markInfoDict = {
-            'entId': entId,
-            'changeType': changeType,
-            'onlyCaptainCanMark': self.onlyCaptainCanMark,
-            'teamMarkList': [],
-        }
-        if changeType != gameconst.TeamMarkChangeType.CAPTAIN:
-            markInfoDict['teamMarkList'] = self.getMarkClientData(entId)
-            
+    def onChangeTeamMarkInfo(self, changeType=gameconst.TeamMarkChangeType.NONE):
+        markInfoDict = self.teamMark.toClientData()
+        markInfoDict['onlyCaptainCanMark'] = self.onlyCaptainCanMark
+
         for gbId, teamPlayerVal in self.teamPlayerDic.items():
             box = teamPlayerVal.playerBox
             if not teamPlayerVal.bOnline:
@@ -1414,22 +1444,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
             box.client.onChangeTeamMark(markInfoDict)
         
         INFO_MSG('onChangeTeamMarkInfo', markInfoDict)
-        
-    def getMarkClientData(self, entId=0):
-        teamMarkList = []
-        if entId == 0:
-            for tempId, mVal in self.teamMarkDic.items():
-                teamMarkList.append(mVal.toClientData())
-        elif entId in self.teamMarkDic:
-            teamMarkList.append(self.teamMarkDic[entId].toClientData())
-        else:
-            teamMarkList.append({
-                'entId': entId,
-                'markType': gameconst.TeamMarkType.MARK_NONE,
-                #'isPlayer': self.isPlayer,
-                'spaceNo': 0,
-            })
-        return teamMarkList
+
     
     def clearTeamDungeonRewardRecord(self, gbID):
         self.teamRewardDatas.pop(gbID, None)
@@ -1445,7 +1460,6 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin):
             a[_bindType] = b + _itemNum
 
         self.broadcastAllMembersClient('onAddTeamDungeonRewardRecord', (self.teamId, gbID, rewardList))
-
 
 class PlayerTeamMemberCacheVal(userType.UserSoleType):
     def __init__(self, playerGbId, playerBox, bFollow, spaceNo=0,
@@ -1716,46 +1730,120 @@ class PlayerTeamCacheVal(userType.UserSoleType):
             v.reloadScript()
         return
 
-class TeamMarkMemberCacheVal(userType.UserSoleType):
-    def __init__(self, entId, markType, isPlayer=False, spaceNo=0,
-                 markTimestamp=0):
-        self.entId = entId
-        self.markType = markType
-        self.isPlayer = isPlayer
-        self.spaceNo = spaceNo
-        self.markTimestamp = markTimestamp
-        if markTimestamp == 0:
-            self.markTimestamp = utils.getNow()
+class TeamMarkCacheVal(userType.UserSoleType):
+    def __init__(self):
+        super().__init__()
+        self.playerDict = {}  # type: {int: TeamMarkMemberCacheVal}
+        self.sceneDict = {}  # type: {int: TeamMarkMemberCacheVal}
+        self.playerCache = {} # entId -> index
+    
+    def addPlayerMark(self, type, index, name, gbId, entId, pos=None, spaceNo=0):
+        if entId in self.playerCache:
+            if self.playerCache[entId] == index:
+                return False
+            idx = self.playerCache.pop(entId)
+            if idx in self.playerDict:
+                self.playerDict.pop(idx)
+
+        self.playerDict[index] = TeamMarkMemberCacheVal(type, index, name, gbId, entId, pos, spaceNo)
+        self.playerCache[entId] = index
+
+        return True
+
+    def delPlayerMark(self, index):
+        if index not in self.playerDict:
+            return False
+        memberVal = self.playerDict.pop(index)
+        entId = memberVal.entId
+        if entId in self.playerCache:
+            self.playerCache.pop(entId)
+
+        return True
 
 
-    def initFromDict(self, saveDataDict):
-        self.entId = saveDataDict['entId']
-        self.markType = saveDataDict['markType']
-        self.isPlayer = saveDataDict['isPlayer']
-        self.spaceNo = saveDataDict['spaceNo']
-        self.markTimestamp = saveDataDict['markTimestamp']
-        
-    def toSavedDict(self):
+    def addSceneMark(self, type, index, name, gbId, entId, pos, spaceNo=0):
+        self.sceneDict[index] = TeamMarkMemberCacheVal(type, index, name, gbId, entId, pos, spaceNo)
+        return True
+
+    def delSceneMark(self, index):
+        if index not in self.sceneDict:
+            return False
+        self.sceneDict.pop(index)
+        return True
+    
+    def toClientData(self):
+        playerList = []
+        for mVal in self.playerDict.values():
+            playerList.append(mVal.toClientData())
+            
+        sceneList = []
+        for mVal in self.sceneDict.values():
+            sceneList.append(mVal.toClientData())
+            
         return {
-            'entId': self.entId,
-            'markType': self.markType,
-            'isPlayer': self.isPlayer,
-            'spaceNo': self.spaceNo,
-            'markTimestamp': self.markTimestamp,
+            'playerList': playerList,
+            'sceneList': sceneList,
         }
+    
+    def initFromClientData(self, markInfoDict):
+        for pDic in markInfoDict.get('playerList', []):
+            mVal = TeamMarkMemberCacheVal(pDic['type'], pDic['index'], pDic['name'], pDic['gbId'], pDic['entId'], pDic.get('pos'), pDic.get('spaceNo', 0))
+            self.playerDict[mVal.index] = mVal
+            self.playerCache[mVal.entId] = mVal.index
+            
+        for sDic in markInfoDict.get('sceneList', []):
+            mVal = TeamMarkMemberCacheVal(sDic['type'], sDic['index'], sDic['name'], sDic['gbId'], sDic['entId'], sDic.get('pos'), sDic.get('spaceNo', 0))
+            self.sceneDict[mVal.index] = mVal
+        return self
+
+
+class TeamMarkMemberCacheVal(userType.UserSoleType):
+    def __init__(self, type, index, name, gbId, entId, pos=None, spaceNo=0):
+        self.entId = entId
+        self.gbId = gbId
+        self.type = type
+        self.index = index
+        self.name = name
+        self.spaceNo = spaceNo
+        self.pos = pos
         
     def toClientData(self):
         return {
+                'type': self.type,
+                'index': self.index,
+                'name': self.name,
+                'gbId': self.gbId,
                 'entId': self.entId,
-                'markType': self.markType,
-                #'isPlayer': self.isPlayer,
+                'pos': self.pos,
                 'spaceNo': self.spaceNo,
             }
 
     def updateAttr(self, arrDic):
         for attrName, attrVal in arrDic.items():
             if hasattr(self, attrName):
-                setattr(self, attrName, attrVal)
+                setattr(self, attrName, attrVal)      
 
+class TeamStatisticCacheVal(userType.UserSoleType):
+    def __init__(self):
+        super().__init__()
+        self.dmgDict = {}  # type: {int: int}
+        self.healDict = {}  # type: {int: int}
+        self.hurtDict = {}  # type: {int: int}
+
+    def addStatisticDmg(self, gbId, dmg):
+        if gbId not in self.dmgDict:
+            self.dmgDict[gbId] = 0
+        self.dmgDict[gbId] += dmg
+
+    def addStatisticHeal(self, gbId, heal):
+        if gbId not in self.healDict:
+            self.healDict[gbId] = 0
+        self.healDict[gbId] += heal
+
+    def addStatisticHurt(self, gbId, hurt):
+        if gbId not in self.hurtDict:
+            self.hurtDict[gbId] = 0
+        self.hurtDict[gbId] += hurt
+    
             
     

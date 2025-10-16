@@ -212,9 +212,10 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.onSiegeWarDeclareWar(self.serverId, box, isOffensive, gbId, guildName, guildUUID, declaration, srcName)
 
-    def onSiegeWarDeclareWarCrossServerResult(self, box, success, ec):
-        DEBUG_MSG('[lj]on siege war declare war cross server result', box, success, ec)
-        box.onSiegeWarDeclareWarCrossServerResult(success, ec)
+    def onSiegeWarDeclareWarCrossServerResult(self, box, success, ec, srcGbId):
+        DEBUG_MSG('[lj]on siege war declare war cross server result', box, success, ec, srcGbId)
+        playerStub = gameengine.getGlobalBase('PlayerStub')
+        playerStub.doOnOthersBase([srcGbId], 'onSiegeWarDeclareWarCrossServerResult', (success, ec), None, '', ())
 
     #正式宣战
     def onSiegeWarDeclareWarOfficial(self, guildName, guildUUID, offensiveGuildUUID, defensiveGuildUUID, offensiveName, defensiveName, officialWarStartTime, srcName):

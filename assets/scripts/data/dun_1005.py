@@ -424,22 +424,22 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "10028073",
-    "Dir": 73.35289,
+    "Dir": 62.3196,
     "DisplayName": "",
     "EntityID": 17100501,
     "ID": 10058001,
     "Name": "\u540c\u5fc3\u8c37",
-    "PosX": 37.2403,
-    "PosY": 138.2281,
-    "PosZ": 150.9474,
+    "PosX": 35.93,
+    "PosY": 141.7527,
+    "PosZ": 150.87,
     "Props": {
       "CameraId": 0,
       "GateType": 0,
       "Remark": "",
-      "TelDir": 66.22988,
-      "TelX": 43.1012,
-      "TelY": 138.2281,
-      "TelZ": 153.0234
+      "TelDir": 29.94634,
+      "TelX": 45.10838,
+      "TelY": 142.3228,
+      "TelZ": 154.5555
     }
   },
   "10058002": {
@@ -447,7 +447,7 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "10068003",
-    "Dir": 36.99736,
+    "Dir": 35.01904,
     "DisplayName": "",
     "EntityID": 17100502,
     "ID": 10058002,
@@ -457,11 +457,12 @@ datas ={
     "PosZ": 210.2707,
     "Props": {
       "CameraId": 0,
+      "GateType": 0,
       "Remark": "",
-      "TelDir": 0.0,
-      "TelX": 244.4858,
-      "TelY": 171.4863,
-      "TelZ": 204.9533
+      "TelDir": 164.4909,
+      "TelX": 237.2565,
+      "TelY": 168.1863,
+      "TelZ": 193.8405
     }
   },
   "10058003": {

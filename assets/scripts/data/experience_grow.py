@@ -23,9 +23,12 @@ datas = _tools.RODict({
         "baseMinPhysicalAtkGrow": 34010010,
         "baseMaxMagicAtkGrow": 34010013,
         "baseMinMagicAtkGrow": 34010016,
-        "basePhysicalArmorGrow": 34010019,
-        "baseMagicArmorGrow": 34010022,
-        "baseSpiritGrow": 34010025
+        "baseMinPhysicalArmorGrow": 34010019,
+        "baseMaxPhysicalArmorGrow": 34010031,
+        "baseMinMagicArmorGrow": 34010022,
+        "baseMaxMagicArmorGrow": 34010034,
+        "baseHitGrow": 34010025,
+        "baseDodgeGrow": 34010028
     }),
     1002: _tools.RODict({
         "ID": 1002,
@@ -35,9 +38,12 @@ datas = _tools.RODict({
         "baseMinPhysicalAtkGrow": 34010011,
         "baseMaxMagicAtkGrow": 34010014,
         "baseMinMagicAtkGrow": 34010017,
-        "basePhysicalArmorGrow": 34010020,
-        "baseMagicArmorGrow": 34010023,
-        "baseSpiritGrow": 34010026
+        "baseMinPhysicalArmorGrow": 34010020,
+        "baseMaxPhysicalArmorGrow": 34010032,
+        "baseMinMagicArmorGrow": 34010023,
+        "baseMaxMagicArmorGrow": 34010035,
+        "baseHitGrow": 34010026,
+        "baseDodgeGrow": 34010029
     }),
     1003: _tools.RODict({
         "ID": 1003,
@@ -47,9 +53,12 @@ datas = _tools.RODict({
         "baseMinPhysicalAtkGrow": 34010012,
         "baseMaxMagicAtkGrow": 34010015,
         "baseMinMagicAtkGrow": 34010018,
-        "basePhysicalArmorGrow": 34010021,
-        "baseMagicArmorGrow": 34010024,
-        "baseSpiritGrow": 34010027
+        "baseMinPhysicalArmorGrow": 34010021,
+        "baseMaxPhysicalArmorGrow": 34010033,
+        "baseMinMagicArmorGrow": 34010024,
+        "baseMaxMagicArmorGrow": 34010036,
+        "baseHitGrow": 34010027,
+        "baseDodgeGrow": 34010030
     })
 })
 minKey = 1001

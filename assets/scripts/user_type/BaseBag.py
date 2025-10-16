@@ -32,8 +32,6 @@ class BaseBag(itemContainer.ItemContainer):
         super(BaseBag, self).initFromDict(savedDataDict)
         self.bagType = savedDataDict['bagType']
         self.lastSortBag = savedDataDict.get('lastSortBag', 0)
-        self.lockedTime = 0
-        self.lockDesc = savedDataDict.get('lockDesc', '')
 
     def toBagSavedDict(self):
         containerData = super(BaseBag, self).toBagSavedDict()
@@ -41,8 +39,6 @@ class BaseBag(itemContainer.ItemContainer):
         bagData = {
             'bagType': self.bagType,
             'lastSortBag': self.lastSortBag,
-            'lockedTime': 0,
-            'lockDesc': self.lockDesc,
         }
         containerData.update(bagData)
 
@@ -54,8 +50,6 @@ class BaseBag(itemContainer.ItemContainer):
         bagData = {
             'bagType': self.bagType,
             'lastSortBag': self.lastSortBag,
-            'lockedTime': self.lockedTime,
-            'lockDesc': self.lockDesc,
         }
         containerData.update(bagData)
 

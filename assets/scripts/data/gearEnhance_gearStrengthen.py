@@ -22,8 +22,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
         "costItem": ((30000223, 30),),
         "costCurrency": ((30000013, 40),),
-        "slot": 0,
-        "strengProp": 0
+        "strengProp": 0,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     101: _tools.RODict({
         "ID": 101,
@@ -32,8 +33,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
         "costItem": ((30000223, 40),),
         "costCurrency": ((30000013, 100),),
-        "slot": 0,
-        "strengProp": 52002001
+        "strengProp": 52002001,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     102: _tools.RODict({
         "ID": 102,
@@ -42,8 +44,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
         "costItem": ((30000223, 80),),
         "costCurrency": ((30000013, 200),),
+        "strengProp": 52002002,
         "slot": 1,
-        "strengProp": 52002002
+        "fuLingGroup": 1
     }),
     103: _tools.RODict({
         "ID": 103,
@@ -52,8 +55,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
         "costItem": ((30000223, 240),),
         "costCurrency": ((30000013, 400),),
+        "strengProp": 52002003,
         "slot": 1,
-        "strengProp": 52002003
+        "fuLingGroup": 1
     }),
     104: _tools.RODict({
         "ID": 104,
@@ -62,8 +66,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
         "costItem": ((30000224, 10),),
         "costCurrency": ((30000013, 1200),),
+        "strengProp": 52002004,
         "slot": 1,
-        "strengProp": 52002004
+        "fuLingGroup": 1
     }),
     105: _tools.RODict({
         "ID": 105,
@@ -72,8 +77,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
         "costItem": ((30000224, 40),),
         "costCurrency": ((30000013, 2400),),
-        "slot": 2,
-        "strengProp": 52002005
+        "strengProp": 52002005,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     106: _tools.RODict({
         "ID": 106,
@@ -82,8 +88,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
         "costItem": ((30000224, 80),),
         "costCurrency": ((30000013, 4800),),
+        "strengProp": 52002006,
         "slot": 2,
-        "strengProp": 52002006
+        "fuLingGroup": 2
     }),
     107: _tools.RODict({
         "ID": 107,
@@ -92,8 +99,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
         "costItem": ((30000224, 120),),
         "costCurrency": ((30000013, 7200),),
-        "slot": 2,
-        "strengProp": 52002007
+        "strengProp": 52002007,
+        "slot": 3,
+        "fuLingGroup": 2
     }),
     108: _tools.RODict({
         "ID": 108,
@@ -102,8 +110,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
         "costItem": ((30000225, 6),),
         "costCurrency": ((30000013, 14400),),
-        "slot": 3,
-        "strengProp": 52002008
+        "strengProp": 52002008,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     109: _tools.RODict({
         "ID": 109,
@@ -112,8 +121,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
         "costItem": ((30000225, 12),),
         "costCurrency": ((30000013, 28800),),
-        "slot": 3,
-        "strengProp": 52002009
+        "strengProp": 52002009,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     110: _tools.RODict({
         "ID": 110,
@@ -122,8 +132,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
         "costItem": ((30000225, 24),),
         "costCurrency": ((30000013, 31680),),
-        "slot": 3,
-        "strengProp": 52002010
+        "strengProp": 52002010,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     111: _tools.RODict({
         "ID": 111,
@@ -132,8 +143,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
         "costItem": ((30000226, 4),),
         "costCurrency": ((30000013, 34210),),
-        "slot": 3,
-        "strengProp": 52002011
+        "strengProp": 52002011,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     112: _tools.RODict({
         "ID": 112,
@@ -142,8 +154,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
         "costItem": ((30000226, 8),),
         "costCurrency": ((30000013, 36260),),
-        "slot": 3,
-        "strengProp": 52002012
+        "strengProp": 52002012,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     113: _tools.RODict({
         "ID": 113,
@@ -152,8 +165,9 @@ datas = _tools.RODict({
         "effect": 0,
         "costItem": 0,
         "costCurrency": ((30000013, 0),),
-        "slot": 3,
-        "strengProp": 52002013
+        "strengProp": 52002013,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     200: _tools.RODict({
         "ID": 200,
@@ -162,8 +176,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
         "costItem": ((30000223, 30),),
         "costCurrency": ((30000013, 40),),
-        "slot": 0,
-        "strengProp": 0
+        "strengProp": 0,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     201: _tools.RODict({
         "ID": 201,
@@ -172,8 +187,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
         "costItem": ((30000223, 40),),
         "costCurrency": ((30000013, 100),),
-        "slot": 0,
-        "strengProp": 52002014
+        "strengProp": 52002014,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     202: _tools.RODict({
         "ID": 202,
@@ -182,8 +198,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
         "costItem": ((30000223, 80),),
         "costCurrency": ((30000013, 200),),
+        "strengProp": 52002015,
         "slot": 1,
-        "strengProp": 52002015
+        "fuLingGroup": 1
     }),
     203: _tools.RODict({
         "ID": 203,
@@ -192,8 +209,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
         "costItem": ((30000223, 240),),
         "costCurrency": ((30000013, 400),),
+        "strengProp": 52002016,
         "slot": 1,
-        "strengProp": 52002016
+        "fuLingGroup": 1
     }),
     204: _tools.RODict({
         "ID": 204,
@@ -202,8 +220,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
         "costItem": ((30000224, 10),),
         "costCurrency": ((30000013, 1200),),
+        "strengProp": 52002017,
         "slot": 1,
-        "strengProp": 52002017
+        "fuLingGroup": 1
     }),
     205: _tools.RODict({
         "ID": 205,
@@ -212,8 +231,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
         "costItem": ((30000224, 40),),
         "costCurrency": ((30000013, 2400),),
-        "slot": 2,
-        "strengProp": 52002018
+        "strengProp": 52002018,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     206: _tools.RODict({
         "ID": 206,
@@ -222,8 +242,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
         "costItem": ((30000224, 80),),
         "costCurrency": ((30000013, 4800),),
+        "strengProp": 52002019,
         "slot": 2,
-        "strengProp": 52002019
+        "fuLingGroup": 2
     }),
     207: _tools.RODict({
         "ID": 207,
@@ -232,8 +253,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
         "costItem": ((30000224, 120),),
         "costCurrency": ((30000013, 7200),),
-        "slot": 2,
-        "strengProp": 52002020
+        "strengProp": 52002020,
+        "slot": 3,
+        "fuLingGroup": 2
     }),
     208: _tools.RODict({
         "ID": 208,
@@ -242,8 +264,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
         "costItem": ((30000225, 6),),
         "costCurrency": ((30000013, 14400),),
-        "slot": 3,
-        "strengProp": 52002021
+        "strengProp": 52002021,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     209: _tools.RODict({
         "ID": 209,
@@ -252,8 +275,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
         "costItem": ((30000225, 12),),
         "costCurrency": ((30000013, 28800),),
-        "slot": 3,
-        "strengProp": 52002022
+        "strengProp": 52002022,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     210: _tools.RODict({
         "ID": 210,
@@ -262,8 +286,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
         "costItem": ((30000225, 24),),
         "costCurrency": ((30000013, 31680),),
-        "slot": 3,
-        "strengProp": 52002023
+        "strengProp": 52002023,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     211: _tools.RODict({
         "ID": 211,
@@ -272,8 +297,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
         "costItem": ((30000226, 4),),
         "costCurrency": ((30000013, 34210),),
-        "slot": 3,
-        "strengProp": 52002024
+        "strengProp": 52002024,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     212: _tools.RODict({
         "ID": 212,
@@ -282,8 +308,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
         "costItem": ((30000226, 8),),
         "costCurrency": ((30000013, 36260),),
-        "slot": 3,
-        "strengProp": 52002025
+        "strengProp": 52002025,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     213: _tools.RODict({
         "ID": 213,
@@ -292,8 +319,9 @@ datas = _tools.RODict({
         "effect": 0,
         "costItem": 0,
         "costCurrency": ((30000013, 0),),
-        "slot": 3,
-        "strengProp": 52002026
+        "strengProp": 52002026,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     300: _tools.RODict({
         "ID": 300,
@@ -302,8 +330,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
         "costItem": ((30000223, 30),),
         "costCurrency": ((30000013, 40),),
-        "slot": 0,
-        "strengProp": 0
+        "strengProp": 0,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     301: _tools.RODict({
         "ID": 301,
@@ -312,8 +341,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
         "costItem": ((30000223, 40),),
         "costCurrency": ((30000013, 100),),
-        "slot": 0,
-        "strengProp": 52002027
+        "strengProp": 52002027,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     302: _tools.RODict({
         "ID": 302,
@@ -322,8 +352,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
         "costItem": ((30000223, 80),),
         "costCurrency": ((30000013, 200),),
+        "strengProp": 52002028,
         "slot": 1,
-        "strengProp": 52002028
+        "fuLingGroup": 1
     }),
     303: _tools.RODict({
         "ID": 303,
@@ -332,8 +363,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
         "costItem": ((30000223, 240),),
         "costCurrency": ((30000013, 400),),
+        "strengProp": 52002029,
         "slot": 1,
-        "strengProp": 52002029
+        "fuLingGroup": 1
     }),
     304: _tools.RODict({
         "ID": 304,
@@ -342,8 +374,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
         "costItem": ((30000224, 10),),
         "costCurrency": ((30000013, 1200),),
+        "strengProp": 52002030,
         "slot": 1,
-        "strengProp": 52002030
+        "fuLingGroup": 1
     }),
     305: _tools.RODict({
         "ID": 305,
@@ -352,8 +385,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
         "costItem": ((30000224, 40),),
         "costCurrency": ((30000013, 2400),),
-        "slot": 2,
-        "strengProp": 52002031
+        "strengProp": 52002031,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     306: _tools.RODict({
         "ID": 306,
@@ -362,8 +396,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
         "costItem": ((30000224, 80),),
         "costCurrency": ((30000013, 4800),),
+        "strengProp": 52002032,
         "slot": 2,
-        "strengProp": 52002032
+        "fuLingGroup": 2
     }),
     307: _tools.RODict({
         "ID": 307,
@@ -372,8 +407,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
         "costItem": ((30000224, 120),),
         "costCurrency": ((30000013, 7200),),
-        "slot": 2,
-        "strengProp": 52002033
+        "strengProp": 52002033,
+        "slot": 3,
+        "fuLingGroup": 2
     }),
     308: _tools.RODict({
         "ID": 308,
@@ -382,8 +418,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
         "costItem": ((30000225, 6),),
         "costCurrency": ((30000013, 14400),),
-        "slot": 3,
-        "strengProp": 52002034
+        "strengProp": 52002034,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     309: _tools.RODict({
         "ID": 309,
@@ -392,8 +429,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
         "costItem": ((30000225, 12),),
         "costCurrency": ((30000013, 28800),),
-        "slot": 3,
-        "strengProp": 52002035
+        "strengProp": 52002035,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     310: _tools.RODict({
         "ID": 310,
@@ -402,8 +440,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
         "costItem": ((30000225, 24),),
         "costCurrency": ((30000013, 31680),),
-        "slot": 3,
-        "strengProp": 52002036
+        "strengProp": 52002036,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     311: _tools.RODict({
         "ID": 311,
@@ -412,8 +451,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
         "costItem": ((30000226, 4),),
         "costCurrency": ((30000013, 34210),),
-        "slot": 3,
-        "strengProp": 52002037
+        "strengProp": 52002037,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     312: _tools.RODict({
         "ID": 312,
@@ -422,8 +462,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
         "costItem": ((30000226, 8),),
         "costCurrency": ((30000013, 36260),),
-        "slot": 3,
-        "strengProp": 52002038
+        "strengProp": 52002038,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     313: _tools.RODict({
         "ID": 313,
@@ -432,8 +473,9 @@ datas = _tools.RODict({
         "effect": 0,
         "costItem": 0,
         "costCurrency": ((30000013, 0),),
-        "slot": 3,
-        "strengProp": 52002039
+        "strengProp": 52002039,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     400: _tools.RODict({
         "ID": 400,
@@ -442,8 +484,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
         "costItem": ((30000223, 30),),
         "costCurrency": ((30000013, 40),),
-        "slot": 0,
-        "strengProp": 0
+        "strengProp": 0,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     401: _tools.RODict({
         "ID": 401,
@@ -452,8 +495,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
         "costItem": ((30000223, 40),),
         "costCurrency": ((30000013, 100),),
-        "slot": 0,
-        "strengProp": 52002040
+        "strengProp": 52002040,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     402: _tools.RODict({
         "ID": 402,
@@ -462,8 +506,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
         "costItem": ((30000223, 80),),
         "costCurrency": ((30000013, 200),),
+        "strengProp": 52002041,
         "slot": 1,
-        "strengProp": 52002041
+        "fuLingGroup": 1
     }),
     403: _tools.RODict({
         "ID": 403,
@@ -472,8 +517,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
         "costItem": ((30000223, 240),),
         "costCurrency": ((30000013, 400),),
+        "strengProp": 52002042,
         "slot": 1,
-        "strengProp": 52002042
+        "fuLingGroup": 1
     }),
     404: _tools.RODict({
         "ID": 404,
@@ -482,8 +528,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
         "costItem": ((30000224, 10),),
         "costCurrency": ((30000013, 1200),),
+        "strengProp": 52002043,
         "slot": 1,
-        "strengProp": 52002043
+        "fuLingGroup": 1
     }),
     405: _tools.RODict({
         "ID": 405,
@@ -492,8 +539,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
         "costItem": ((30000224, 40),),
         "costCurrency": ((30000013, 2400),),
-        "slot": 2,
-        "strengProp": 52002044
+        "strengProp": 52002044,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     406: _tools.RODict({
         "ID": 406,
@@ -502,8 +550,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
         "costItem": ((30000224, 80),),
         "costCurrency": ((30000013, 4800),),
+        "strengProp": 52002045,
         "slot": 2,
-        "strengProp": 52002045
+        "fuLingGroup": 2
     }),
     407: _tools.RODict({
         "ID": 407,
@@ -512,8 +561,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
         "costItem": ((30000224, 120),),
         "costCurrency": ((30000013, 7200),),
-        "slot": 2,
-        "strengProp": 52002046
+        "strengProp": 52002046,
+        "slot": 3,
+        "fuLingGroup": 2
     }),
     408: _tools.RODict({
         "ID": 408,
@@ -522,8 +572,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
         "costItem": ((30000225, 6),),
         "costCurrency": ((30000013, 14400),),
-        "slot": 3,
-        "strengProp": 52002047
+        "strengProp": 52002047,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     409: _tools.RODict({
         "ID": 409,
@@ -532,8 +583,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
         "costItem": ((30000225, 12),),
         "costCurrency": ((30000013, 28800),),
-        "slot": 3,
-        "strengProp": 52002048
+        "strengProp": 52002048,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     410: _tools.RODict({
         "ID": 410,
@@ -542,8 +594,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
         "costItem": ((30000225, 24),),
         "costCurrency": ((30000013, 31680),),
-        "slot": 3,
-        "strengProp": 52002049
+        "strengProp": 52002049,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     411: _tools.RODict({
         "ID": 411,
@@ -552,8 +605,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
         "costItem": ((30000226, 4),),
         "costCurrency": ((30000013, 34210),),
-        "slot": 3,
-        "strengProp": 52002050
+        "strengProp": 52002050,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     412: _tools.RODict({
         "ID": 412,
@@ -562,8 +616,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
         "costItem": ((30000226, 8),),
         "costCurrency": ((30000013, 36260),),
-        "slot": 3,
-        "strengProp": 52002051
+        "strengProp": 52002051,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     413: _tools.RODict({
         "ID": 413,
@@ -572,8 +627,9 @@ datas = _tools.RODict({
         "effect": 0,
         "costItem": 0,
         "costCurrency": ((30000013, 0),),
-        "slot": 3,
-        "strengProp": 52002052
+        "strengProp": 52002052,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     500: _tools.RODict({
         "ID": 500,
@@ -582,8 +638,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
         "costItem": ((30000223, 30),),
         "costCurrency": ((30000013, 40),),
-        "slot": 0,
-        "strengProp": 0
+        "strengProp": 0,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     501: _tools.RODict({
         "ID": 501,
@@ -592,8 +649,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
         "costItem": ((30000223, 40),),
         "costCurrency": ((30000013, 100),),
-        "slot": 0,
-        "strengProp": 52002079
+        "strengProp": 52002079,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     502: _tools.RODict({
         "ID": 502,
@@ -602,8 +660,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
         "costItem": ((30000223, 80),),
         "costCurrency": ((30000013, 200),),
+        "strengProp": 52002080,
         "slot": 1,
-        "strengProp": 52002080
+        "fuLingGroup": 1
     }),
     503: _tools.RODict({
         "ID": 503,
@@ -612,8 +671,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
         "costItem": ((30000223, 240),),
         "costCurrency": ((30000013, 400),),
+        "strengProp": 52002081,
         "slot": 1,
-        "strengProp": 52002081
+        "fuLingGroup": 1
     }),
     504: _tools.RODict({
         "ID": 504,
@@ -622,8 +682,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
         "costItem": ((30000224, 10),),
         "costCurrency": ((30000013, 1200),),
+        "strengProp": 52002082,
         "slot": 1,
-        "strengProp": 52002082
+        "fuLingGroup": 1
     }),
     505: _tools.RODict({
         "ID": 505,
@@ -632,8 +693,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
         "costItem": ((30000224, 40),),
         "costCurrency": ((30000013, 2400),),
-        "slot": 2,
-        "strengProp": 52002083
+        "strengProp": 52002083,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     506: _tools.RODict({
         "ID": 506,
@@ -642,8 +704,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
         "costItem": ((30000224, 80),),
         "costCurrency": ((30000013, 4800),),
+        "strengProp": 52002084,
         "slot": 2,
-        "strengProp": 52002084
+        "fuLingGroup": 2
     }),
     507: _tools.RODict({
         "ID": 507,
@@ -652,8 +715,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
         "costItem": ((30000224, 120),),
         "costCurrency": ((30000013, 7200),),
-        "slot": 2,
-        "strengProp": 52002085
+        "strengProp": 52002085,
+        "slot": 3,
+        "fuLingGroup": 2
     }),
     508: _tools.RODict({
         "ID": 508,
@@ -662,8 +726,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
         "costItem": ((30000225, 6),),
         "costCurrency": ((30000013, 14400),),
-        "slot": 3,
-        "strengProp": 52002086
+        "strengProp": 52002086,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     509: _tools.RODict({
         "ID": 509,
@@ -672,8 +737,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
         "costItem": ((30000225, 12),),
         "costCurrency": ((30000013, 28800),),
-        "slot": 3,
-        "strengProp": 52002087
+        "strengProp": 52002087,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     510: _tools.RODict({
         "ID": 510,
@@ -682,8 +748,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
         "costItem": ((30000225, 24),),
         "costCurrency": ((30000013, 31680),),
-        "slot": 3,
-        "strengProp": 52002088
+        "strengProp": 52002088,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     511: _tools.RODict({
         "ID": 511,
@@ -692,8 +759,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
         "costItem": ((30000226, 4),),
         "costCurrency": ((30000013, 34210),),
-        "slot": 3,
-        "strengProp": 52002089
+        "strengProp": 52002089,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     512: _tools.RODict({
         "ID": 512,
@@ -702,8 +770,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
         "costItem": ((30000226, 8),),
         "costCurrency": ((30000013, 36260),),
-        "slot": 3,
-        "strengProp": 52002090
+        "strengProp": 52002090,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     513: _tools.RODict({
         "ID": 513,
@@ -712,8 +781,9 @@ datas = _tools.RODict({
         "effect": 0,
         "costItem": 0,
         "costCurrency": ((30000013, 0),),
-        "slot": 3,
-        "strengProp": 52002091
+        "strengProp": 52002091,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     600: _tools.RODict({
         "ID": 600,
@@ -722,8 +792,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
         "costItem": ((30000223, 30),),
         "costCurrency": ((30000013, 40),),
-        "slot": 0,
-        "strengProp": 0
+        "strengProp": 0,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     601: _tools.RODict({
         "ID": 601,
@@ -732,8 +803,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
         "costItem": ((30000223, 40),),
         "costCurrency": ((30000013, 100),),
-        "slot": 0,
-        "strengProp": 52002066
+        "strengProp": 52002066,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     602: _tools.RODict({
         "ID": 602,
@@ -742,8 +814,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
         "costItem": ((30000223, 80),),
         "costCurrency": ((30000013, 200),),
+        "strengProp": 52002067,
         "slot": 1,
-        "strengProp": 52002067
+        "fuLingGroup": 1
     }),
     603: _tools.RODict({
         "ID": 603,
@@ -752,8 +825,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
         "costItem": ((30000223, 240),),
         "costCurrency": ((30000013, 400),),
+        "strengProp": 52002068,
         "slot": 1,
-        "strengProp": 52002068
+        "fuLingGroup": 1
     }),
     604: _tools.RODict({
         "ID": 604,
@@ -762,8 +836,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
         "costItem": ((30000224, 10),),
         "costCurrency": ((30000013, 1200),),
+        "strengProp": 52002069,
         "slot": 1,
-        "strengProp": 52002069
+        "fuLingGroup": 1
     }),
     605: _tools.RODict({
         "ID": 605,
@@ -772,8 +847,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
         "costItem": ((30000224, 40),),
         "costCurrency": ((30000013, 2400),),
-        "slot": 2,
-        "strengProp": 52002070
+        "strengProp": 52002070,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     606: _tools.RODict({
         "ID": 606,
@@ -782,8 +858,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
         "costItem": ((30000224, 80),),
         "costCurrency": ((30000013, 4800),),
+        "strengProp": 52002071,
         "slot": 2,
-        "strengProp": 52002071
+        "fuLingGroup": 2
     }),
     607: _tools.RODict({
         "ID": 607,
@@ -792,8 +869,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
         "costItem": ((30000224, 120),),
         "costCurrency": ((30000013, 7200),),
-        "slot": 2,
-        "strengProp": 52002072
+        "strengProp": 52002072,
+        "slot": 3,
+        "fuLingGroup": 2
     }),
     608: _tools.RODict({
         "ID": 608,
@@ -802,8 +880,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
         "costItem": ((30000225, 6),),
         "costCurrency": ((30000013, 14400),),
-        "slot": 3,
-        "strengProp": 52002073
+        "strengProp": 52002073,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     609: _tools.RODict({
         "ID": 609,
@@ -812,8 +891,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
         "costItem": ((30000225, 12),),
         "costCurrency": ((30000013, 28800),),
-        "slot": 3,
-        "strengProp": 52002074
+        "strengProp": 52002074,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     610: _tools.RODict({
         "ID": 610,
@@ -822,8 +902,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
         "costItem": ((30000225, 24),),
         "costCurrency": ((30000013, 31680),),
-        "slot": 3,
-        "strengProp": 52002075
+        "strengProp": 52002075,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     611: _tools.RODict({
         "ID": 611,
@@ -832,8 +913,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
         "costItem": ((30000226, 4),),
         "costCurrency": ((30000013, 34210),),
-        "slot": 3,
-        "strengProp": 52002076
+        "strengProp": 52002076,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     612: _tools.RODict({
         "ID": 612,
@@ -842,8 +924,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
         "costItem": ((30000226, 8),),
         "costCurrency": ((30000013, 36260),),
-        "slot": 3,
-        "strengProp": 52002077
+        "strengProp": 52002077,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     613: _tools.RODict({
         "ID": 613,
@@ -852,8 +935,9 @@ datas = _tools.RODict({
         "effect": 0,
         "costItem": 0,
         "costCurrency": ((30000013, 0),),
-        "slot": 3,
-        "strengProp": 52002078
+        "strengProp": 52002078,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     700: _tools.RODict({
         "ID": 700,
@@ -862,8 +946,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
         "costItem": ((30000223, 30),),
         "costCurrency": ((30000013, 40),),
-        "slot": 0,
-        "strengProp": 0
+        "strengProp": 0,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     701: _tools.RODict({
         "ID": 701,
@@ -872,8 +957,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
         "costItem": ((30000223, 40),),
         "costCurrency": ((30000013, 100),),
-        "slot": 0,
-        "strengProp": 52002053
+        "strengProp": 52002053,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     702: _tools.RODict({
         "ID": 702,
@@ -882,8 +968,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
         "costItem": ((30000223, 80),),
         "costCurrency": ((30000013, 200),),
+        "strengProp": 52002054,
         "slot": 1,
-        "strengProp": 52002054
+        "fuLingGroup": 1
     }),
     703: _tools.RODict({
         "ID": 703,
@@ -892,8 +979,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
         "costItem": ((30000223, 240),),
         "costCurrency": ((30000013, 400),),
+        "strengProp": 52002055,
         "slot": 1,
-        "strengProp": 52002055
+        "fuLingGroup": 1
     }),
     704: _tools.RODict({
         "ID": 704,
@@ -902,8 +990,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
         "costItem": ((30000224, 10),),
         "costCurrency": ((30000013, 1200),),
+        "strengProp": 52002056,
         "slot": 1,
-        "strengProp": 52002056
+        "fuLingGroup": 1
     }),
     705: _tools.RODict({
         "ID": 705,
@@ -912,8 +1001,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
         "costItem": ((30000224, 40),),
         "costCurrency": ((30000013, 2400),),
-        "slot": 2,
-        "strengProp": 52002057
+        "strengProp": 52002057,
+        "slot": 1,
+        "fuLingGroup": 1
     }),
     706: _tools.RODict({
         "ID": 706,
@@ -922,8 +1012,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
         "costItem": ((30000224, 80),),
         "costCurrency": ((30000013, 4800),),
+        "strengProp": 52002058,
         "slot": 2,
-        "strengProp": 52002058
+        "fuLingGroup": 2
     }),
     707: _tools.RODict({
         "ID": 707,
@@ -932,8 +1023,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
         "costItem": ((30000224, 120),),
         "costCurrency": ((30000013, 7200),),
-        "slot": 2,
-        "strengProp": 52002059
+        "strengProp": 52002059,
+        "slot": 3,
+        "fuLingGroup": 2
     }),
     708: _tools.RODict({
         "ID": 708,
@@ -942,8 +1034,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
         "costItem": ((30000225, 6),),
         "costCurrency": ((30000013, 14400),),
-        "slot": 3,
-        "strengProp": 52002060
+        "strengProp": 52002060,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     709: _tools.RODict({
         "ID": 709,
@@ -952,8 +1045,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
         "costItem": ((30000225, 12),),
         "costCurrency": ((30000013, 28800),),
-        "slot": 3,
-        "strengProp": 52002061
+        "strengProp": 52002061,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     710: _tools.RODict({
         "ID": 710,
@@ -962,8 +1056,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
         "costItem": ((30000225, 24),),
         "costCurrency": ((30000013, 31680),),
-        "slot": 3,
-        "strengProp": 52002062
+        "strengProp": 52002062,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     711: _tools.RODict({
         "ID": 711,
@@ -972,8 +1067,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
         "costItem": ((30000226, 4),),
         "costCurrency": ((30000013, 34210),),
-        "slot": 3,
-        "strengProp": 52002063
+        "strengProp": 52002063,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     712: _tools.RODict({
         "ID": 712,
@@ -982,8 +1078,9 @@ datas = _tools.RODict({
         "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
         "costItem": ((30000226, 8),),
         "costCurrency": ((30000013, 36260),),
-        "slot": 3,
-        "strengProp": 52002064
+        "strengProp": 52002064,
+        "slot": 4,
+        "fuLingGroup": 2
     }),
     713: _tools.RODict({
         "ID": 713,
@@ -992,9 +1089,164 @@ datas = _tools.RODict({
         "effect": 0,
         "costItem": 0,
         "costCurrency": ((30000013, 0),),
+        "strengProp": 52002065,
+        "slot": 4,
+        "fuLingGroup": 2
+    }),
+    800: _tools.RODict({
+        "ID": 800,
+        "type": 8,
+        "level": 0,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 0, 100]]),
+        "costItem": ((30000223, 30),),
+        "costCurrency": ((30000013, 40),),
+        "strengProp": 0,
+        "slot": 1,
+        "fuLingGroup": 1
+    }),
+    801: _tools.RODict({
+        "ID": 801,
+        "type": 8,
+        "level": 1,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 5, 95]]),
+        "costItem": ((30000223, 40),),
+        "costCurrency": ((30000013, 100),),
+        "strengProp": 52002001,
+        "slot": 1,
+        "fuLingGroup": 1
+    }),
+    802: _tools.RODict({
+        "ID": 802,
+        "type": 8,
+        "level": 2,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 20, 80]]),
+        "costItem": ((30000223, 80),),
+        "costCurrency": ((30000013, 200),),
+        "strengProp": 52002002,
+        "slot": 1,
+        "fuLingGroup": 1
+    }),
+    803: _tools.RODict({
+        "ID": 803,
+        "type": 8,
+        "level": 3,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 25, 75]]),
+        "costItem": ((30000223, 240),),
+        "costCurrency": ((30000013, 400),),
+        "strengProp": 52002003,
+        "slot": 1,
+        "fuLingGroup": 1
+    }),
+    804: _tools.RODict({
+        "ID": 804,
+        "type": 8,
+        "level": 4,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 30, 70]]),
+        "costItem": ((30000224, 10),),
+        "costCurrency": ((30000013, 1200),),
+        "strengProp": 52002004,
+        "slot": 1,
+        "fuLingGroup": 1
+    }),
+    805: _tools.RODict({
+        "ID": 805,
+        "type": 8,
+        "level": 5,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 10, 30, 60]]),
+        "costItem": ((30000224, 40),),
+        "costCurrency": ((30000013, 2400),),
+        "strengProp": 52002005,
+        "slot": 1,
+        "fuLingGroup": 1
+    }),
+    806: _tools.RODict({
+        "ID": 806,
+        "type": 8,
+        "level": 6,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 20, 30, 50]]),
+        "costItem": ((30000224, 80),),
+        "costCurrency": ((30000013, 4800),),
+        "strengProp": 52002006,
+        "slot": 2,
+        "fuLingGroup": 2
+    }),
+    807: _tools.RODict({
+        "ID": 807,
+        "type": 8,
+        "level": 7,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 30, 30, 40]]),
+        "costItem": ((30000224, 120),),
+        "costCurrency": ((30000013, 7200),),
+        "strengProp": 52002007,
         "slot": 3,
-        "strengProp": 52002065
+        "fuLingGroup": 2
+    }),
+    808: _tools.RODict({
+        "ID": 808,
+        "type": 8,
+        "level": 8,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 0, 70, 30]]),
+        "costItem": ((30000225, 6),),
+        "costCurrency": ((30000013, 14400),),
+        "strengProp": 52002008,
+        "slot": 4,
+        "fuLingGroup": 2
+    }),
+    809: _tools.RODict({
+        "ID": 809,
+        "type": 8,
+        "level": 9,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 50, 30, 20]]),
+        "costItem": ((30000225, 12),),
+        "costCurrency": ((30000013, 28800),),
+        "strengProp": 52002009,
+        "slot": 4,
+        "fuLingGroup": 2
+    }),
+    810: _tools.RODict({
+        "ID": 810,
+        "type": 8,
+        "level": 10,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 0, 66, 18, 16]]),
+        "costItem": ((30000225, 24),),
+        "costCurrency": ((30000013, 31680),),
+        "strengProp": 52002010,
+        "slot": 4,
+        "fuLingGroup": 2
+    }),
+    811: _tools.RODict({
+        "ID": 811,
+        "type": 8,
+        "level": 11,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [0, 40, 45, 3, 12]]),
+        "costItem": ((30000226, 4),),
+        "costCurrency": ((30000013, 34210),),
+        "strengProp": 52002011,
+        "slot": 4,
+        "fuLingGroup": 2
+    }),
+    812: _tools.RODict({
+        "ID": 812,
+        "type": 8,
+        "level": 12,
+        "effect": _tools.ROList([[-3, -2, -1, 0, 1], [60, 0, 30, 2, 8]]),
+        "costItem": ((30000226, 8),),
+        "costCurrency": ((30000013, 36260),),
+        "strengProp": 52002012,
+        "slot": 4,
+        "fuLingGroup": 2
+    }),
+    813: _tools.RODict({
+        "ID": 813,
+        "type": 8,
+        "level": 13,
+        "effect": 0,
+        "costItem": 0,
+        "costCurrency": ((30000013, 0),),
+        "strengProp": 52002013,
+        "slot": 4,
+        "fuLingGroup": 2
     })
 })
 minKey = 100
-maxKey = 713
+maxKey = 813

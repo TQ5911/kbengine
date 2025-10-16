@@ -106,5 +106,13 @@ datas = _tools.RODict({
     "100rollGapTime": _tools.RODict({
         "ID": "100rollGapTime",
         "value": 3,
+    }),
+    "poolEndMsg": _tools.RODict({
+        "ID": "poolEndMsg",
+        "value": 54000959,
+    }),
+    "PoolEndMailID": _tools.RODict({
+        "ID": "PoolEndMailID",
+        "value": 37000015,
     })
 })

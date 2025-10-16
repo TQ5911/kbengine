@@ -77,7 +77,7 @@
             <Default>       []                      </Default>
         </stateList>
         <fatal>
-            <Type>          FLOAT        </Type>
+            <Type>          INT32        </Type>
             <Flags>         OWN_CLIENT     </Flags>
         </fatal>
         <mortal>
@@ -89,7 +89,7 @@
             <Flags>         OWN_CLIENT     </Flags>
         </hit>
         <adjFatal>
-            <Type>          FLOAT        </Type>
+            <Type>          INT32        </Type>
             <Flags>         OWN_CLIENT     </Flags>
         </adjFatal>
 
@@ -347,12 +347,12 @@
             <Default>       []               </Default>
         </creationList>
         <antiFatal>
-            <Type>          FLOAT            </Type>
+            <Type>          INT32          </Type>
             <Flags>         OWN_CLIENT     </Flags>
             <Default>       0              </Default>
         </antiFatal>
         <adjAntiFatal>
-            <Type>          FLOAT            </Type>
+            <Type>          INT32            </Type>
             <Flags>         OWN_CLIENT     </Flags>
             <Default>       0              </Default>
         </adjAntiFatal>
@@ -372,17 +372,17 @@
             <Default>       0              </Default>
         </adjIgnoreArmor>
         <dmgArmor>
-            <Type>          INT32            </Type>
+            <Type>          FLOAT            </Type>
             <Flags>         OWN_CLIENT     </Flags>
             <Default>       0              </Default>
         </dmgArmor>
         <baseDmgArmor>
-            <Type>          INT32            </Type>
+            <Type>          FLOAT            </Type>
             <Flags>         OWN_CLIENT     </Flags>
             <Default>       0              </Default>
         </baseDmgArmor>
         <adjDmgArmor>
-            <Type>          INT32            </Type>
+            <Type>          FLOAT            </Type>
             <Flags>         OWN_CLIENT     </Flags>
             <Default>       0              </Default>
         </adjDmgArmor>
@@ -520,11 +520,11 @@
         </stopCacheTargetTypeTimeId>
 
         <baseFatal>
-            <Type>          FLOAT          </Type>
+            <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
         </baseFatal>
         <baseAntiFatal>
-            <Type>          FLOAT            </Type>
+            <Type>          INT32            </Type>
             <Flags>         CELL_PRIVATE   </Flags>
             <Default>       0              </Default>
         </baseAntiFatal>
@@ -650,47 +650,89 @@
             <Flags>         CELL_PRIVATE   </Flags>
         </mulMaxMagicAtk>
 
-        <physicalArmor>
+        <minPhysicalArmor>
             <Type>          INT32          </Type>
             <Flags>         OWN_CLIENT     </Flags>
-        </physicalArmor>
-        <basePhysicalArmor>
+        </minPhysicalArmor>
+        <baseMinPhysicalArmor>
             <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
-        </basePhysicalArmor>
-        <adjPhysicalArmor>
+        </baseMinPhysicalArmor>
+        <adjMinPhysicalArmor>
             <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
-        </adjPhysicalArmor>
-        <adjPhysicalArmorAbs>
+        </adjMinPhysicalArmor>
+        <adjMinPhysicalArmorAbs>
             <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
-        </adjPhysicalArmorAbs>
-        <mulPhysicalArmor>
+        </adjMinPhysicalArmorAbs>
+        <mulMinPhysicalArmor>
             <Type>          FLOAT          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
-        </mulPhysicalArmor>
+        </mulMinPhysicalArmor>
 
-        <magicArmor>
+        <maxPhysicalArmor>
             <Type>          INT32          </Type>
             <Flags>         OWN_CLIENT     </Flags>
-        </magicArmor>
-        <baseMagicArmor>
+        </maxPhysicalArmor>
+        <baseMaxPhysicalArmor>
             <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
-        </baseMagicArmor>
-        <adjMagicArmor>
+        </baseMaxPhysicalArmor>
+        <adjMaxPhysicalArmor>
             <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
-        </adjMagicArmor>
-        <adjMagicArmorAbs>
+        </adjMaxPhysicalArmor>
+        <adjMaxPhysicalArmorAbs>
             <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
-        </adjMagicArmorAbs>
-        <mulMagicArmor>
+        </adjMaxPhysicalArmorAbs>
+        <mulMaxPhysicalArmor>
             <Type>          FLOAT          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
-        </mulMagicArmor>
+        </mulMaxPhysicalArmor>
+
+        <minMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </minMagicArmor>
+        <baseMinMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </baseMinMagicArmor>
+        <adjMinMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMinMagicArmor>
+        <adjMinMagicArmorAbs>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMinMagicArmorAbs>
+        <mulMinMagicArmor>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </mulMinMagicArmor>
+
+        <maxMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </maxMagicArmor>
+        <baseMaxMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </baseMaxMagicArmor>
+        <adjMaxMagicArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMaxMagicArmor>
+        <adjMaxMagicArmorAbs>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMaxMagicArmorAbs>
+        <mulMaxMagicArmor>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </mulMaxMagicArmor>
 
         <atkBless>
             <Type>          INT32          </Type>
@@ -913,6 +955,19 @@
             <Type>          FLOAT          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
         </viewRadius>
+
+        <drugsQuantity>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </drugsQuantity>
+        <baseDrugsQuantity>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </baseDrugsQuantity>
+        <adjDrugsQuantity>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjDrugsQuantity>
     </Properties>
 
     <CellMethods>

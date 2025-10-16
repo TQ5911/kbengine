@@ -20,6 +20,8 @@ import drop_drop_package as DDP
 import drop_drop_sub_package as DDS
 import awardContext
 import gameglobal
+import itemData_itemData_set as IDIDS
+import copy
 
 
 class WealthUnit(userType.UserSoleType):
@@ -152,6 +154,31 @@ class WealthItem(WealthUnit):
                 'subType'] == gameconst.ItemSubType.ExtractReward:
                 extractRewardItemsDic[itemId] = self.data.pop(itemId)
         return extractRewardItemsDic
+
+    def popRemainBagLimitItems(self, canAddNum):
+        bagLimitItemsDic = {}
+        for itemId in list(self.data.keys()):
+            if itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
+                totalNum = sum(self.data[itemId].values())
+                if canAddNum >= totalNum:
+                    canAddNum -= totalNum
+                elif canAddNum > 0:
+                    popLeft = copy.deepcopy(self.data[itemId])
+                    for bindType in popLeft.keys():
+                        popLeft[bindType] = 0
+                    for bindType, num in self.data[itemId].items():
+                        if canAddNum >= num:
+                            canAddNum -= num
+                        else:
+                            self.data[itemId][bindType] = canAddNum
+                            popLeft[bindType] = num - canAddNum
+                            canAddNum = 0
+                    bagLimitItemsDic[itemId] = popLeft
+                else:
+                    bagLimitItemsDic[itemId] = self.data.pop(itemId)
+        if bagLimitItemsDic:
+            DEBUG_MSG('popRemainBagLimitItems:', bagLimitItemsDic, canAddNum)
+        return bagLimitItemsDic
 
     def clear(self):
         self.data = {}

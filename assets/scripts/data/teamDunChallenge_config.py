@@ -102,5 +102,9 @@ datas = _tools.RODict({
     "raid_startAutoTeleport": _tools.RODict({
         "ID": "raid_startAutoTeleport",
         "value": 54000908,
+    }),
+    "raid_joinCityBattle": _tools.RODict({
+        "ID": "raid_joinCityBattle",
+        "value": 54000909,
     })
 })

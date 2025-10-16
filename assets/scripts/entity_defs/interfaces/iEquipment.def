@@ -45,6 +45,12 @@
             <Flags>         BASE                </Flags>
             <Default>       0                   </Default>
         </pickDropEquipLockTime>
+
+        <glyphEquipData>
+            <Type>          GLYPH_EQUIP_INFO          </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Persistent>    true                </Persistent>
+        </glyphEquipData>
     </Properties>
 
     <BaseMethods>
@@ -107,19 +113,23 @@
             <Arg>   ITEM_VAL     </Arg>
         </cellUndressEquipmentSucc>
 
-        <bagEquipAffixWashing>
+        <bagEquipSpiritWashing>
             <Arg>      GRIDID    </Arg>
             <Arg>      UUID      </Arg>
-        </bagEquipAffixWashing>
-        <bagEquipAffixWashingDeductItemsCB>
-            <Arg>      OP_STAT    </Arg>
-            <Arg>      UUID    </Arg>
-            <Arg>      GRIDID     </Arg>
-        </bagEquipAffixWashingDeductItemsCB>
+            <Arg>      UINT8     </Arg>
+        </bagEquipSpiritWashing>
+
+        <bagEquipSpiritWashingDeductItemsCB>
+            <Arg>      OP_STAT      </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UINT8        </Arg>
+        </bagEquipSpiritWashingDeductItemsCB>
 
         <bagEquipGlyphWashing>
             <Arg>      GRIDID    </Arg>
             <Arg>      UUID      </Arg>
+            <Arg>      INT8      </Arg>
         </bagEquipGlyphWashing>
 
         <bagEquipBless>
@@ -136,6 +146,18 @@
             <Arg>      UINT32   </Arg>
             <Arg>      UINT64   </Arg>
         </bagEquipSell>
+
+        <bagEquipGlyphApply>
+            <Arg>      GRIDID    </Arg>
+            <Arg>      UUID      </Arg>
+            <Arg>      INT8      </Arg>
+        </bagEquipGlyphApply>
+
+        <bagEquipSpiritApply>
+            <Arg>      GRIDID    </Arg>
+            <Arg>      UUID      </Arg>
+            <Arg>      INT8      </Arg>
+        </bagEquipSpiritApply>
 
         <reqMultiEquipDisassemble> <Exposed/>
             <Arg>      ARRAY <of> GRIDID </of>  </Arg>
@@ -290,7 +312,7 @@
         <onGetDropNotifyList>
             <Arg>      ARRAY <of> DROP_NOTIFY_DATA_INFO </of> </Arg>
         </onGetDropNotifyList>
-
+        
         <reqEquipReplace> <Exposed/>
             <Arg>      UINT32  </Arg>
             <Arg>      GRIDID       </Arg>
@@ -328,28 +350,32 @@
         <unlockBodyEquips>
         </unlockBodyEquips>
 
-        <reqEquipAffixWashing> <Exposed/>
+        <reqEquipSpiritWashing> <Exposed/>
             <Arg>      UINT8   </Arg>
             <Arg>      UINT32  </Arg>
             <Arg>      UINT64  </Arg>
-        </reqEquipAffixWashing>
-        <cellEquipAffixWashing>
+        </reqEquipSpiritWashing>
+
+        <cellEquipSpiritWashing>
             <Arg>   UINT32      </Arg>
-            <Arg>   UUID      </Arg>
+            <Arg>   UUID        </Arg>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT64      </Arg>
-        </cellEquipAffixWashing>
+            <Arg>   UINT8       </Arg>
+        </cellEquipSpiritWashing>
 
         <reqEquipGlyphWashing> <Exposed/>
             <Arg>      UINT8   </Arg>
-            <Arg>      UINT32  </Arg>
+            <Arg>      UINT16  </Arg>
+            <Arg>      UINT8   </Arg>
             <Arg>      UINT64  </Arg>
         </reqEquipGlyphWashing>
         <cellEquipGlyphWashing>
             <Arg>   UINT32      </Arg>
-            <Arg>   UUID      </Arg>
+            <Arg>   UUID        </Arg>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT64      </Arg>
+            <Arg>   UINT8       </Arg>
         </cellEquipGlyphWashing>
 
         <reqEquipBless> <Exposed/>
@@ -383,10 +409,24 @@
             <Arg>      UINT32       </Arg>
         </sendItemLinkInfoCell>
 
-        <modifyEquipEnhanceLevel>
+        <reqEquipGlyphApply> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT16  </Arg>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT64  </Arg>
+        </reqEquipGlyphApply>
+
+        <reqEquipSpiritApply> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT16  </Arg>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT64  </Arg>
+        </reqEquipSpiritApply>
+
+        <gmModifyEquipEnhanceLevel>
             <Arg>      UINT8   </Arg>
             <Arg>      UINT8   </Arg>
-        </modifyEquipEnhanceLevel>
+        </gmModifyEquipEnhanceLevel>
     </CellMethods>
 
     <ClientMethods>
@@ -417,16 +457,17 @@
             <Arg>      CLI_EQUIP_ITEM_VAL   </Arg>
         </onEquipBaseAttrWashingSucc>
 
-        <onEquipAffixWashingSucc>
+        <onEquipSpiritWashingSucc>
             <Arg>      UINT8    </Arg>
             <Arg>      GRIDID   </Arg>
-            <Arg>      ARRAY <of>  AFFIX_VAL </of> </Arg>
-        </onEquipAffixWashingSucc>
+            <Arg>      CLI_SPIRIT_INFO </Arg>
+        </onEquipSpiritWashingSucc>
 
         <onEquipGlyphWashingSucc>
-            <Arg>      UINT8    </Arg>
-            <Arg>      GRIDID   </Arg>
-            <Arg>      ARRAY <of>  AFFIX_VAL </of> </Arg>
+            <Arg>      UINT8         </Arg>
+            <Arg>      GRIDID        </Arg>
+            <Arg>      UINT8         </Arg>
+            <Arg>      CLI_GLYPH_INFO </Arg>
         </onEquipGlyphWashingSucc>
 
         <onEquipBlessSucc>
@@ -514,6 +555,18 @@
 
         <onEquipMakeFailed>
         </onEquipMakeFailed>
+
+        <onEquipGlyphApplySucc>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT64  </Arg>
+            <Arg>      UINT8   </Arg>
+        </onEquipGlyphApplySucc>
+
+        <onEquipSpiritApplySucc>
+            <Arg>      UINT8   </Arg>
+            <Arg>      UINT64  </Arg>
+            <Arg>      UINT8   </Arg>
+        </onEquipSpiritApplySucc>
     </ClientMethods>
 </root>
 

@@ -143,7 +143,7 @@ class IEntityLoader(object):
 
     def doEntityRefresh(self, gameEntityId, spaceMgrId):
         _entityProps = []
-        utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps)
+        utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps, True)
         for _, _, _className, _, _pos, _dir, _params, _ in _entityProps:
             if spaceMgrId:
                 _params['spaceMgrId'] = spaceMgrId

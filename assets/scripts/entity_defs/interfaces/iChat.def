@@ -178,6 +178,7 @@
         </handleAvatarChannelMsg>
         <handleTeamChannelMatchTeamMsg>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
+            <Arg>           INT8                        </Arg>
             <Arg>           UNICODE                     </Arg>
         </handleTeamChannelMatchTeamMsg>
 

@@ -18,9 +18,7 @@ import chatConfig_redPacket as CC_RPD
 import message_Message_def as MMD
 
 
-class iRedBag(object):
-    timeOffset = 0
-
+class IRedBag(object):
     def __init__(self):
         pass
 
@@ -34,6 +32,9 @@ class iRedBag(object):
 
     def redbagOnLogin(self):
         try:
+            # 同步数据
+            self._reqRedBagPlayerInfo()
+
             self.checkRedBagExpire()
         except Exception as e:
             ERROR_MSG('startCheckAccountRedbags exception:', e)
@@ -53,42 +54,34 @@ class iRedBag(object):
                 deleteList.append(redbagId)
         for redbagId in deleteList:
             self.fetchRedBagDict.pop(redbagId)
-        
-
-    # 获取当前红包天号
-    def getRedBagDayNo(self):
-        return utils.getDayOffsetFromEpoch(self.timeOffset + utils.getNow())
-
-    def checkRedBagDayNo(self):
-        dayNo = self.getRedBagDayNo()
-        if dayNo != self.redbagDayNo:
-            INFO_MSG('onRedBagDayNo change: %d -> %d' % (self.redbagDayNo, dayNo))
-            self.redbagDayNo = dayNo
-            self.dayReleaseRbNum = 0
-            self.dayFetchRbNum = 0
 
     def checkPlayerLimit(self, notity=True):
         level = self.getAvatarLevel()
-        if level < gameconst.RED_BAG_MIN_LEVEL:
+        levelLimit = CC_CCD.datas['usePacketLvLimit']['value']
+        if level < levelLimit:
             # 等级不足
             if notity:
-                _msg = MMD.datas.uiVisibleLvLimit
-                self.onMessagePre(_msg, [str(gameconst.RED_BAG_MIN_LEVEL),])
+                _msg = CC_CCD.datas['usePacketLvLimitMsg']['value']
+                self.onMessagePre(_msg, [str(levelLimit),])
             return False
 
-        # 检查天号
-        self.checkRedBagDayNo()
         return True
 
     # 获取最新红包信息
-    def getRedBagRankList(self):
+    def getRedBagRankList(self, exposed):
+        self._getRedBagRankList()
+
+    def _getRedBagRankList(self):
         if not self.checkPlayerLimit():
             return
         gameengine.getGlobalBase('RedBagStub').doGetRedBagRankList(self, self.guildUUIDBase, list(self.fetchRedBagDict.keys()))
         
 
     # 获取我发的红包信息
-    def getRedBagMyList(self):
+    def getRedBagMyList(self, exposed):
+        self._getRedBagMyList()
+
+    def _getRedBagMyList(self):
         if not self.checkPlayerLimit():
             return
         if len(self.releaseRedBagDict) <= 0:
@@ -105,7 +98,7 @@ class iRedBag(object):
         if not self.checkPlayerLimit():
             return False
         
-        if self.dayReleaseRbNum >= CC_CCD.datas['sendPacketLimit']['value']:
+        if self.getDailyData(gameconst.AvatarDailyProps.releaseRbNum, 0) >= CC_CCD.datas['sendPacketLimit']['value']:
             # 今日发布次数超过上限
             _msg = CC_CCD.datas['sendPacketLimitMsg']['value']
             self.onMessagePre(_msg, [])
@@ -119,6 +112,7 @@ class iRedBag(object):
         if channel == gameconst.RedBagChannel.GUILD and self.guildUUIDBase == 0:
             # 未加入公会
             DEBUG_MSG("reqReleaseRedBag error not in guild: ", self.gbID, redbagType, channel, money, num)
+            self.onMessagePre(MMD.datas.guildTrain_notInGuild, [])
             return False
         
         # 屏蔽字检查客户端做，这里只做长度检查
@@ -133,16 +127,33 @@ class iRedBag(object):
             # 数量超过上限
             DEBUG_MSG("reqReleaseRedBag error num: ", self.gbID, redbagType, channel, money, num)
             return False
-        if money < channelConfig['moneyLimitMin'] or money > channelConfig['moneyLimitMax']:
+        if money < channelConfig.get('totalMoneyMin', 100) or money > channelConfig.get('totalMoneyMax', 5000):
             # 金额超过上限
             DEBUG_MSG("reqReleaseRedBag error money: ", self.gbID, redbagType, channel, money, num)
             return False
 
+        # 人均金额检查
+        if redbagType == gameconst.RedBagType.NORMAL:
+            avgMoney = money // num
+            if avgMoney * num != money:
+                # 不能整除
+                DEBUG_MSG("reqReleaseRedBag error avgMoney not int: ", self.gbID, redbagType, channel, money, num)
+                return False
+            avgMin = channelConfig.get('singleMoneyMin', 5)
+            avgMax = channelConfig.get('singleMoneyMax', 100)
+            if avgMoney < avgMin or avgMoney > avgMax:
+                # 人均金额超过上限
+                DEBUG_MSG("reqReleaseRedBag error avgMoney: ", self.gbID, redbagType, channel, money, num, avgMoney, avgMin, avgMax)
+                return False
+        
         return True
 
 
     # 发布红包
-    def reqReleaseRedBag(self, redbagType, channel, money, num, desc):
+    def reqReleaseRedBag(self, exposed, redbagType, channel, money, num, desc):
+        self._reqReleaseRedBag(redbagType, channel, money, num, desc)
+
+    def _reqReleaseRedBag(self, redbagType, channel, money, num, desc):
         #
         if not self._checkReleaseLimit(redbagType, channel, money, num, desc):
             return
@@ -165,24 +176,21 @@ class iRedBag(object):
 
         gameengine.getGlobalBase('RedBagStub').doCreateRedBag(self, redbagId, self.gbID, self.characterName, self.guildUUIDBase, redbagType, channel, money, num, desc)
 
-    def onReleaseRedBag(self, redbagId, redbagType, channel, releaseTime, desc):
-        INFO_MSG("onReleaseRedBag:", redbagId, redbagType, channel, releaseTime, desc)
+    def onReleaseRedBag(self, redbagId, redbagType, channel, money, releaseTime, desc):
+        INFO_MSG("onReleaseRedBag:", redbagId, redbagType, channel, money, releaseTime, desc)
         # 
-        self.dayReleaseRbNum += 1
+        self.addDailyData(gameconst.AvatarDailyProps.releaseRbNum, 1)
         # 保存数据
         self.releaseRedBagDict[redbagId] = releaseTime
         #
         self.popTempMiscProp(redbagId)
 
-        _msg = 'RedBag|' + str(redbagId) + '|' + desc
-        # 发送消息
-        if channel == gameconst.RedBagChannel.WORLD:  
-            self.sendWorldChatMsg(_msg)
-        else:
-            self.sendGuildChatMsg(_msg)
+        # 通知客户端
+        # self.client.onReleaseRedBagMsg(redbagId, redbagType, channel, money, desc)
+        self.sendReleaseRedbagMsg(redbagId, redbagType, channel, money, desc)
 
         # 重新拉一遍我的红包列表
-        self.getRedBagMyList()
+        self._getRedBagMyList()
 
     def onReleaseRedBagFail(self, redbagId, money):
         # 发布失败
@@ -197,11 +205,14 @@ class iRedBag(object):
         return self.fetchRedBagDict.get(redbagId, 0)
 
     # 请求领取红包
-    def reqFetchRedBag(self, redbagId):
+    def reqFetchRedBag(self, exposed, redbagId):
+        self._reqFetchRedBag(redbagId)
+
+    def _reqFetchRedBag(self, redbagId):
         # INFO_MSG("reqFetchRedBag: %s" % redbagId)
         if not self.checkPlayerLimit():
             return
-        if self.dayFetchRbNum >= CC_CCD.datas['receivePacketLimit']['value']:
+        if self.getDailyData(gameconst.AvatarDailyProps.fetchRbNum, 0) >= CC_CCD.datas['receivePacketLimit']['value']:
             # 今日领取次数超过上限
             _msg = CC_CCD.datas['receivePacketLimitMsg']['value']
             self.onMessagePre(_msg, [])
@@ -211,14 +222,14 @@ class iRedBag(object):
         if self.getFetchRedBagTime(redbagId) > 0:
             return
 
-        gameengine.getGlobalBase('RedBagStub').doFetchRedBag(self, redbagId, self.gbID, self.guildUUIDBase, self.characterName)
+        gameengine.getGlobalBase('RedBagStub').doFetchRedBag(self, redbagId, self.gbID, self.guildUUIDBase, self.characterName, False)
 
     def onFetchRedBag(self, redbagId, money, releaseTime, fetchDict):
         INFO_MSG("onFetchRedBag: {} {} {}".format(redbagId, money, fetchDict))
 
         # 领红包
         if money > 0:
-            self.dayFetchRbNum += 1
+            self.addDailyData(gameconst.AvatarDailyProps.fetchRbNum, 1)
             self.fetchRedBagDict[redbagId] = releaseTime   # 保存的红包发放时间，方便清理
             # 发钱
             src = AAC_AACDD.datas.BONUS_SRC_GET_RED_PACKET_ITEM
@@ -236,9 +247,14 @@ class iRedBag(object):
         self.fetchRedBagDict[redbagId] = releastTime
 
     # 查看红包信息
-    def reqRedBagFetchInfo(self, redbagId):
+    def reqRedBagFetchInfo(self, exposed, redbagId):
+        self._reqRedBagFetchInfo(redbagId)
+
+    def _reqRedBagFetchInfo(self, redbagId):
+        if not self.checkPlayerLimit():
+            return
         # 用领取的同一个接口
-        gameengine.getGlobalBase('RedBagStub').doFetchRedBag(self, redbagId, self.gbID, self.guildUUIDBase, self.characterName)
+        gameengine.getGlobalBase('RedBagStub').doFetchRedBag(self, redbagId, self.gbID, self.guildUUIDBase, self.characterName, True)
     
     # 被动删除红包缓存
     def onDelRedBagCache(self, delList):
@@ -247,18 +263,32 @@ class iRedBag(object):
                 INFO_MSG("onDelRedBagCache: {} {}".format(self.gbID, redbagId))
                 self.releaseRedBagDict.pop(redbagId)
 
+    # 获取玩家信息
+    def reqRedBagPlayerInfo(self, exposed):
+        self._reqRedBagPlayerInfo()
+
+    def _reqRedBagPlayerInfo(self):
+        if not self.checkPlayerLimit(notity=False):
+            return
+        #INFO_MSG("reqRedBagPlayerInfo: ", self.gbID)
+        dailyReleaseNum = self.getDailyData(gameconst.AvatarDailyProps.releaseRbNum, 0)
+        dailyFetchNum = self.getDailyData(gameconst.AvatarDailyProps.fetchRbNum, 0)
+
+        self.client.onRedBagPlayerInfo(dailyReleaseNum, dailyFetchNum)
 
     def gmCreateRedBag(self, redbagType, channel, money, num, desc):
-        self.reqReleaseRedBag(redbagType, channel, money, num, desc)
+        self._reqReleaseRedBag(redbagType, channel, money, num, desc)
 
     def gmFetchRedBag(self, redbagId):
-        self.reqFetchRedBag(redbagId)
+        self._reqFetchRedBag(redbagId)
 
     def gmShowData(self):
         INFO_MSG('gmPlayerShowReleaseData: ', self.releaseRedBagDict.keys())
         INFO_MSG('gmPlayerShowFetchData: ', self.fetchRedBagDict.keys())
 
         gameengine.getGlobalBase('RedBagStub').showData()
+
+        self.gmGetDateData()
 
         
 

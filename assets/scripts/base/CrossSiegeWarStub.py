@@ -64,9 +64,6 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         #gm相关
         self.gmDisableStateAutoChange = False
-        if gameconfig.disableSiegeWarStateAutoChange():
-            self.gmDisableStateAutoChange = True
-            WARNING_MSG('[lj]gm disable siege war state auto change!!!!')
 
         #数据库初始值是0，要计算下当前状态
         if self.siegeWarState == gameconst.SiegeWarState.NOT_OPEN:
@@ -170,7 +167,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     #计算当前状态
     def updateSiegeWarStateAndEndTime(self):
         #gm禁止了自动切阶段
-        if self.gmDisableStateAutoChange:
+        if self.gmDisableStateAutoChange or not gameconfig.enableSiegeWar():
             return
 
         if not self.checkIsOpen():
@@ -370,13 +367,13 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if self.siegeWarState != gameconst.SiegeWarState.PREPARE_WAR:
             DEBUG_MSG('[lj]declare war failed, now state:', self.siegeWarState)
             if _stub:
-                _stub.onSiegeWarDeclareWarCrossServerResult(box, False, gameconst.SiegeWarDeclareWarResult.WRONG_TIME)
+                _stub.onSiegeWarDeclareWarCrossServerResult(box, False, gameconst.SiegeWarDeclareWarResult.WRONG_TIME, gbId)
             return
         
         if self.isInspecialBlackDay(utils.getNow()):
             DEBUG_MSG('[lj]declare war failed, now is special time:', time.strftime("%Y-%m-%d", time.localtime(utils.getNow())))
             if _stub:
-                _stub.onSiegeWarDeclareWarCrossServerResult(box, False, gameconst.SiegeWarDeclareWarResult.SPECIAL_DAY)
+                _stub.onSiegeWarDeclareWarCrossServerResult(box, False, gameconst.SiegeWarDeclareWarResult.SPECIAL_DAY, gbId)
             return
         
         DEBUG_MSG('[lj]declare war, src server id:', srcServerId)
@@ -413,7 +410,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.changeDeclaration(False, 0, declaration)
             
         if _stub:
-            _stub.onSiegeWarDeclareWarCrossServerResult(box, True, gameconst.SiegeWarDeclareWarResult.SUCCESS)
+            _stub.onSiegeWarDeclareWarCrossServerResult(box, True, gameconst.SiegeWarDeclareWarResult.SUCCESS, gbId)
 
         #广播邮件
         for serverID in self.GroupServerList:
@@ -432,7 +429,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         })
 
     def checkBattleStart(self):
-        if self.gmDisableStateAutoChange:
+        if self.gmDisableStateAutoChange or not gameconfig.enableSiegeWar():
             return
         if self.siegeWarState != gameconst.SiegeWarState.WAR_COUNT_DOWN:
             self.hasResetSpace = False

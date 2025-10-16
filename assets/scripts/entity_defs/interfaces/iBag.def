@@ -350,6 +350,16 @@
             <Arg>       PY_DICT         </Arg>
         </onCheckAndCostWealth>
 
+        <bagExpansion>
+            <Arg>       UINT16      </Arg>
+            <Arg>       UINT16      </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT16      </Arg>
+            <Arg>       UUID        </Arg>
+            <Arg>       PYTHON      </Arg>
+        </bagExpansion>
+
         <reqLockItem><Exposed/>
             <Arg>       UINT8       </Arg>
             <Arg>       GRIDID      </Arg>

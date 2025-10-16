@@ -17,7 +17,7 @@ class IPay(object):
     def __init__(self):
         self.tlogArgsDic = {}
 
-    def clientBuyGoods(self, buyCreditId):
+    def clientBuyGoods(self, exposed, buyCreditId):
         INFO_MSG('clientBuyGoods', buyCreditId)
         cfgData = BC_BCD.datas.get(buyCreditId)
         if not cfgData:

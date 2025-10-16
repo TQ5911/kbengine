@@ -51,7 +51,7 @@ class AvatarBuildsMixin(object):
         return skillId if skillId else None
 
     # 技能升级
-    def levelUpSkill(self, skillId, levelDelta):
+    def levelUpSkill(self, exposed, skillId, levelDelta):
         INFO_MSG('levelUpSkill', skillId, levelDelta)
         _skillId = dataUtils.getSkillIdByMorphState(skillId, self.morphState)
         self._levelUpSkill(_skillId, levelDelta)
@@ -158,7 +158,7 @@ class AvatarBuildsMixin(object):
 
     # 拖技能到build
     @gamedecorator.crossServer
-    def updateSkills(self, skillSlotInfos):
+    def updateSkills(self, exposed, skillSlotInfos):
         INFO_MSG("updateSkills ", skillSlotInfos)
         self._updateSkills(skillSlotInfos, True, True)
 
@@ -254,7 +254,7 @@ class ImpCombat(AvatarBuildsMixin):
     def refreshFreeRecoverDeathPenaltyTimes(self):
         self.freeRecoverDeathPenaltyTimes = GP_SD.datas['freeExpRecCount']['value']
 
-    def recoverDeathPenaltyExp(self, expireTime, itemId):
+    def recoverDeathPenaltyExp(self, exposed, expireTime, itemId):
         INFO_MSG('recoverDeathPenaltyExp:', expireTime, itemId)
         if expireTime < utils.getNow():
             ERROR_MSG('recoverDeathPenaltyExp expireTime invalid:', expireTime, self.gbID)
@@ -304,7 +304,7 @@ class ImpCombat(AvatarBuildsMixin):
 
         self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
 
-    def removeDeathPenaltyExp(self, expireTime):
+    def removeDeathPenaltyExp(self, exposed, expireTime):
         INFO_MSG('removeDeathPenaltyExp:', expireTime)
         if self.deathPenaltyData.removeDeathPenaltyVal(expireTime):
             self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
@@ -446,7 +446,7 @@ class ImpCombat(AvatarBuildsMixin):
 
     # 快捷吃药 start ---------------------------------
 
-    def setInstantPotionSlots(self, potion):
+    def setInstantPotionSlots(self, exposed, potion):
         INFO_MSG('setInstantPotionSlots', potion)
         _oldAutoHealHp = self.instantPotionSlots._hasAutoHealHp()
         _oldAutoHealMp = self.instantPotionSlots._hasAutoHealMp()
@@ -492,7 +492,7 @@ class ImpCombat(AvatarBuildsMixin):
         self.pyDelTimer(self.autoDrinkPotionTimerId, gametimer.AUTO_DRINK_POTION_TIMER)
         self.autoDrinkPotionTimerId = 0
 
-    def unsetInstantPotionSlots(self, slotId):
+    def unsetInstantPotionSlots(self, exposed, slotId):
         INFO_MSG('unsetInstantPotionSlots', slotId)
         self.instantPotionSlots.unsetSlot(slotId)
 
@@ -532,7 +532,10 @@ class ImpCombat(AvatarBuildsMixin):
         INFO_MSG('initSummonSlotIdx', self.summonSlotIdxBase)
         self.cell.setSummonSlotIdx(self.summonSlotIdxBase)
 
-    def setSummonSlotIdx(self, slotIdx):
+    def setSummonSlotIdx(self, exposed, slotIdx):
+        self._setSummonSlotIdx(slotIdx)
+
+    def _setSummonSlotIdx(self, slotIdx):
         if slotIdx == self.summonSlotIdxBase:
             INFO_MSG('base setSummonSlotIdx same idx', slotIdx)
             return
@@ -563,7 +566,7 @@ class ImpCombat(AvatarBuildsMixin):
 
         if self.summonSlotIdxBase == 0:
             INFO_MSG('base updateSkillLevelSetSummonSlotIdx1', skillId, skillLevel)
-            self.setSummonSlotIdx(SRSU.minKey)
+            self._setSummonSlotIdx(SRSU.minKey)
             return
 
         slotIdx = 0

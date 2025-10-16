@@ -85,6 +85,7 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
             'monsterId': _bossData['EntityID'],
             'level': int(_bossData['Props']['Level']),
             'spaceMgrId': self.id,
+            'instanceId': _bossData['ID'],
         }
 
         _boss = KBEngine.createEntity('Monster', self.spaceID, _pos, _dir, _params)

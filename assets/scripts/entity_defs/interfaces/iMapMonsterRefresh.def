@@ -1,0 +1,33 @@
+<root>
+    <Properties>
+        <refreshCount>
+            <Type>          INT16               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </refreshCount>
+        <killOrDestroyMonsterIDs>
+            <Type>          PY_DICT             </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       {}                  </Default>
+        </killOrDestroyMonsterIDs>
+        <waitForNextRefresh>
+            <Type>          BOOL                </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       false               </Default>
+        </waitForNextRefresh>
+        <lastRecordTime>
+            <Type>          UINT32              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0               </Default>
+        </lastRecordTime>
+    </Properties>
+
+    <CellMethods>
+        <onMonsterDestroy>
+            <Arg> OBJECT_ID </Arg>
+            <Arg> OBJECT_ID </Arg>
+            <Arg> OBJECT_ID </Arg>
+            <Arg> OBJECT_ID </Arg>
+        </onMonsterDestroy>
+    </CellMethods>
+</root>

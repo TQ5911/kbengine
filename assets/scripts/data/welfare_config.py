@@ -29,7 +29,7 @@ datas = _tools.RODict({
     }),
     "SevenSignInsRewardTips2": _tools.RODict({
         "ID": "SevenSignInsRewardTips2",
-        "value": "赠送<color=#4f97d3><size=42>蘑菇巫师</size></color>",
+        "value": "赠送<color=#739cc9><size=42>蘑菇巫师</size></color>",
     }),
     "SevenSignInsRewardCard": _tools.RODict({
         "ID": "SevenSignInsRewardCard",

@@ -126,6 +126,11 @@ class IDungeonStubMonster(object):
                 continue
 
             dunData = dunAllDatas[sFlagId]
+            # 初始不加载
+            initLoad = dunData.get('Props', {}).get('InitLoad', None)
+            if initLoad is not None and initLoad == 0:
+                continue
+            
             className = dunData['ClassName']
             extraVal = {'overwriteProps': extra.get('overwriteProps', {}),
                         'tmpProps': extra.get('tmpProps', {})}
@@ -299,7 +304,9 @@ class IDungeonStubMonster(object):
                   'isBoss': monsterVal.get('ifSetBoss', False),
                   'bornState': gameconst.BornStateType.flowConvTup[initState] if initState else gameconst.BornStateType.none,
                   'isBossHasSetFlag': True,
-                  'belongActId': dunData.get('ActivityID', 0)}
+                  'belongActId': dunData.get('ActivityID', 0),
+                  'instanceId': dunData.get('ID'),
+                  }
 
         mProps.setdefault('tmpProps', {})
         mProps['tmpProps'].update(monsterVal.get('tmpProps', {}))

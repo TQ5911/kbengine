@@ -30,7 +30,7 @@ import mailAssistor
 import elasticUtils
 
 from proto.interface_pb2 import BaseApp as BaseAppService
-from proto.interface_pb2 import Void, Interface_Stub, ConfigVal, ListVal, IntVal
+from proto.interface_pb2 import Void, Interface_Stub, ConfigVal, ListVal, IntVal, SetAccountCompVal
 
 from rpc import RpcChannel
 
@@ -58,6 +58,18 @@ class InterfaceBaseappClient(BaseAppService):
             configVal = ConfigVal()
             configVal.name, configVal.val = nameStr, valueStr
             self.interfaceStub.syncCacheConfigOnBaseapp(None, configVal, None)
+
+    def setAccountCompResult(self, rpc_controller, reply, done):
+        if not reply.result:
+            ERROR_MSG('setAccountCompResult', reply.entityID)
+            return
+
+        _ent = KBEngine.entities.get(reply.entityID)
+        if not _ent:
+            ERROR_MSG('setAccountCompResult', 'entity not found', reply.entityID)
+            return
+
+        _ent.onSetAccountCompSuccess()
 
 
 class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcastEvent, iGameStart.IGameStart, iRouter.IRouter):
@@ -98,6 +110,8 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         self.pyAddTimer(self.INITIAL_INIT + random.random(), 0, gametimer.BASEAPP_TIMER_INIT)
 
         #self.pyAddTimer(1, gameconst.AuctionCollection.CHECK_TIP_INTERVAL, gametimer.CHECK_TIP_PLAYER_AUCTION_COLLECTION)
+
+        self.pyAddTimer(1, gameconst.DrawCardPoolMacro.CHECK_TIME_LIMIT_INTERVAL, gametimer.CHECK_DRAW_CARD_POOL_TIME_LIMIT)
 
         if gameconfig.elasticServer() and gameglobal.isBootstrap:
             self._callback(1, 'initElastic', (), gametimer.TIMER_TAG_INIT_ELASTIC)
@@ -197,6 +211,9 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         elif userData == gametimer.CHECK_TIP_PLAYER_AUCTION_COLLECTION:
             self._checkTipPlayerAuctionCollection()
 
+        elif userData == gametimer.CHECK_DRAW_CARD_POOL_TIME_LIMIT:
+            self._checkDrawCardPoolTimeLimit()
+
         else:
             iGameStart.IGameStart.onTimer(self, timerID, userData)
 
@@ -246,6 +263,17 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         copyNewAuctionCache = copy.deepcopy(newAuctionCache)
         self.broadcastToAllAvatar(gameconst.BASE, 'tipPlayerAuctionCollection', (copyNewAuctionCache,))
         newAuctionCache.clear()
+
+    def _checkDrawCardPoolTimeLimit(self):
+        curTimestamp = utils.getNow()
+        lastTimestamp = self.lastCheckDrawCardPoolTimestamp
+        self.lastCheckDrawCardPoolTimestamp = curTimestamp
+
+        poolsInfo = utils.checkDrawCardPoolTimeLimit(curTimestamp, gameconst.DrawCardPoolMacro.CHECK_TIME_LIMIT_TYPE_TIMER)
+
+        if len(poolsInfo):
+            INFO_MSG('_checkDrawCardPoolTimeLimit', lastTimestamp, curTimestamp, poolsInfo)
+            self.broadcastToAllAvatar(gameconst.BASE, 'triggerTimeLimitGuaranteedReward', (poolsInfo,))
 
     # 以归档模式创建base实体，首先查询数据库中是否存在该实体，若存在则调用createBaseLocallyFromDB来创建
     # 否则，使用gamebase.createGlobal的方式直接创建
@@ -643,3 +671,14 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             self.gmCmdDic.pop(cmdUUID)
         else:
             self.gmCmdDic[cmdUUID] = allResult
+
+    def setAccountCompIdToInterface(self, accountName, compId, entId):
+        _req = SetAccountCompVal()
+        _req.accountName = accountName
+        _req.compID = compId
+        _req.entityID = entId
+
+        for client in self.interfaceClient.values():
+            if client and client.channel.dispatcher:
+                client.interfaceStub.setAccountComp(None, _req, None)
+

@@ -936,10 +936,6 @@ class RedBagUtils:
         return 'RB_FETCH_{}_{}'.format(gameconfig.serverId(), redbagId)
     
     @classmethod
-    def redbagFetchInfoKey(cls, redbagId):
-        return 'RB_FETCH_INFO_{}'.format(redbagId)
-    
-    @classmethod
     def getRedBagRankList(cls, cb=None):
         # gameglobal.localBaseApp.getRedisClient().getRangeByScore(cls.redbagRankKey(), 0, utils.getNow(), 0, 100, False, None, 
         #     functools.partial(cls.callbackGetRankList, cb))
@@ -979,12 +975,10 @@ class RedBagUtils:
             ERROR_MSG("callbackRemoveRedBagRankData::cache missing", error)
             return
         cb and cb(error)
-    
+
+
     @classmethod
     def getRedBagFetchInfo(cls, redbagId, cb=None):
-        # HashTableUtils.hget(cls.redbagFetchKey(), cls.redbagFetchInfoKey(redbagId),
-        #                      functools.partial(cls.callbackGetRedBagFetchInfo, redbagId, cb))
-
         HashTableUtils.loadAllFromRedis(cls.redbagFetchKey(redbagId),
                                         functools.partial(cls.callbackGetRedBagFetchInfo, redbagId, cb))
 
@@ -1000,6 +994,18 @@ class RedBagUtils:
     @classmethod
     def callbackAddRedBagFetchInfo(cls, redbagId, cb, key, value):
         cb and cb()
+
+    @classmethod
+    def setRedBagFetchExpire(cls, redbagId, expireTime, cb=None):
+        gameglobal.localBaseApp.getRedisClient().expireat(cls.redbagFetchKey(redbagId), expireTime, 
+                                                          functools.partial(cls.callbackSetRedBagFetchExpire, redbagId, cb))
+        
+    @classmethod
+    def callbackSetRedBagFetchExpire(cls, redbagId, cb, cid, error, result):
+        if error != "":
+            ERROR_MSG("callbackSetRedBagFetchExpire::cache missing", error)
+            return
+        cb and cb(error)
 
     @classmethod
     def removeRedBagFetch(cls, redbagId, cb=None):

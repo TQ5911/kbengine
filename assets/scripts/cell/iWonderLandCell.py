@@ -171,6 +171,7 @@ class IWonderLandCell(object):
             'monsterId': _bossId,
             'level': int(_monData['Props']['Level']),
             'spaceMgrId': self.spaceMgrId,
+            'instanceId': _monData['ID'],
         }
 
         self.spaceMgr.setCollToBoss(collectionId, _bossId)

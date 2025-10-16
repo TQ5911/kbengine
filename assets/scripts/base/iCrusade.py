@@ -32,7 +32,7 @@ class ICrusade(object):
         self.crusadeInfo.resetUseItemAddRewardNumber()
         self.crusadeInfo = self.crusadeInfo
 
-    def useItemToIncreaseCrusadeRewardNumber(self, useNum):
+    def useItemToIncreaseCrusadeRewardNumber(self, exposed, useNum):
         DEBUG_MSG('useItemToIncreaseCrusadeRewardNumber::', useNum)
         if useNum <= 0:
             ERROR_MSG('useItemToIncreaseCrusadeRewardNumber:: invalid useNum', useNum)
@@ -45,7 +45,7 @@ class ICrusade(object):
 
         self._useItemToIncreaseCrusadeRewardNumber(itemId, useNum, {})
 
-    def useCoinToIncreaseCrusadeRewardNumber(self, useNum):
+    def useCoinToIncreaseCrusadeRewardNumber(self, exposed, useNum):
         DEBUG_MSG('useCoinToIncreaseCrusadeRewardNumber::', useNum)
         if useNum <= 0:
             ERROR_MSG('useCoinToIncreaseCrusadeRewardNumber:: invalid useNum', useNum)
@@ -112,7 +112,7 @@ class ICrusade(object):
         self.onEnterDungeon(spaceNo, spaceMgrBox, extra)
         self.activityComplete(TDC_CFG.datas['teamDunChallengeActID']['value'])
 
-    def setCrusadeDungeonAutoConfirmConfig(self, storyLevel):
+    def setCrusadeDungeonAutoConfirmConfig(self, exposed, storyLevel):
         self.setPersistentMiscProp(gameconst.AvatarProps.CrusadeDunAutoConfirmConfig, storyLevel)
         self.client.onSetCrusadeDungeonAutoConfirmConfig(storyLevel)
 

@@ -156,18 +156,20 @@ class ICentralLogin(object):
         dataBytes = utils.encodeClientData(clientData)
 
         tid and KBEngine.delTimer(tid)
+        _forceCompId = utils.getForceComponentID(realAccountName)
 
         if banAccountTime and (banAccountTime > utils.getNow() or banAccountTime == -1):
             fmtMessage = MMD.datas[LSD.datas['idip_accountBanned_msg']['value']]['Message']
             if banAccountTime == -1:
                 KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(
                     fmtMessage.format(banAccountReason, LSD.datas['foreverText']['value']), encoding='utf-8'),
+                                              _forceCompId,
                                               KBEngine.SERVER_ERR_USER3)
             else:
                 KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(
                     fmtMessage.format(banAccountReason,
                                       time.strftime("%Y年%m月%d日%H时%M分%S秒", time.localtime(banAccountTime))),
-                    encoding='utf-8'), KBEngine.SERVER_ERR_USER3)
+                    encoding='utf-8'), _forceCompId, KBEngine.SERVER_ERR_USER3)
             return
         if resCode == VerifyAccountReply.VERIFY_ACCOUNT_OK:
 
@@ -176,9 +178,9 @@ class ICentralLogin(object):
             else:
                 responseCode = KBEngine.SERVER_SUCCESS
 
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, dataBytes, responseCode)
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, dataBytes, _forceCompId, responseCode)
             return
-        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', KBEngine.SERVER_ERR_USER7)
+        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', _forceCompId, KBEngine.SERVER_ERR_USER7)
 
     # 将在interfaces进程上执行账号验证相关逻辑
     def checkPlayerLogin(self, realAccountName, data, centralServerId):
@@ -238,7 +240,7 @@ class ICentralLogin(object):
 
         tid, token, data = userInfo
         realAccountName = utils.getRealAccountName(accountType, accountName)
-        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', KBEngine.SERVER_ERR_USER4)
+        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER4)
 
     def registerServer(self, centralServerId):
         serverId = gameconfig.serverId()

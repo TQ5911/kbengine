@@ -148,11 +148,38 @@ CREATE TABLE IF NOT EXISTS `game_account_characters`
 	`sex` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
 	`level` int(10) UNSIGNED NOT NULL DEFAULT '0',
 	`tLastOnline` int(10) UNSIGNED NOT NULL DEFAULT '0',
+	`authExpire` int(10) UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`),
 	KEY `idx_parentID` (`parentID`),
 	KEY `idx_gbId` (`gbId`),
 	KEY `idx_authGbId` (`authDbId`)
 );
+
+-- 用来migrate 添加 authExpire字段
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `sp_add_expireTime_if_not_exists`$$
+CREATE PROCEDURE `sp_add_expireTime_if_not_exists`()
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM information_schema.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME   = 'game_account_characters'
+          AND COLUMN_NAME  = 'authExpire'
+    ) THEN
+        ALTER TABLE `game_account_characters`
+        ADD COLUMN `authExpire` int(10) UNSIGNED NOT NULL DEFAULT '0'
+        AFTER `tLastOnline`;
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- 执行迁移
+CALL `sp_add_expireTime_if_not_exists`;
+
+-- 清理（可选）
+DROP PROCEDURE `sp_add_expireTime_if_not_exists`;
 
 
 DROP PROCEDURE IF EXISTS gamesp_record_avatar_offline_callbacks;

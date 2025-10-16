@@ -2740,6 +2740,16 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def onRaidDungeonCompletedCallback(self, raidUUID, dungeonNo, spaceNo, spaceUUID):
         self.clearRaidDungeonInfo(raidUUID, dungeonNo, spaceNo, spaceUUID)
+        # 解散团队
+        delRaidVal = self.raidDic.get(raidUUID, None)
+        if not delRaidVal:
+            ERROR_MSG('onRaidDungeonCompletedCallback:: failed, missing raid')
+            return
+
+        self.doDisbandRaid(raidUUID, {})
+
+        delRaidVal.clearRaidCacheValToAllPlayers()
+        delRaidVal.broadcastAllRaidMembersClient('onDisbandRaid', (raidUUID, ))
 
     def clearRaidDungeonInfo(self, raidUUID, dungeonNo, spaceNo, spaceUUID):
         _, err = self._clearRaidDungeonInfo(raidUUID, dungeonNo, spaceNo, spaceUUID)
@@ -3005,8 +3015,6 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 continue
             if raidVal.isAllMembersOffline():
                 continue
-            if not raidVal.isPublish:
-                continue
             raidList.append(raidVal.toClientData())
         box.client.onGetRaidList(checkTime, raidTarget, raidList)
         checkTeamstubNum += 1
@@ -3031,31 +3039,29 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         })
         
     # ------------------------ 标记相关 --------------------------
-    def addTeamMarkDataFromTeam(self, raidUUID, markDataList):
-        INFO_MSG('addTeamMarkDataFromTeam: ', raidUUID, markDataList)
+    def addTeamMarkDataFromTeam(self, raidUUID, markDataInfo):
+        INFO_MSG('addTeamMarkDataFromTeam: ', raidUUID, markDataInfo)
         if raidUUID not in self.raidDic:
-            return
-        if len(markDataList) <= 0:
             return
         
         raidVal = self.raidDic[raidUUID]
-        raidVal.addRaidMarkMemberFromData(markDataList)
+        raidVal.addRaidMarkMemberFromData(markDataInfo)
     
-    def reqAddRaidMarkMember(self, raidUUID, playerBox, entId, markType):
-        INFO_MSG('reqAddRaidMarkMember: ', raidUUID, playerBox, entId, markType)
+    def reqAddRaidMarkMember(self, raidUUID, playerBox, type, index, name, gbId, entId, pos):
+        INFO_MSG('reqAddRaidMarkMember: ', raidUUID, playerBox, type, index, name, gbId, entId, pos)
         if raidUUID not in self.raidDic:
             return
 
         raidVal = self.raidDic[raidUUID]
-        raidVal.addRaidMarkMember(playerBox, entId, markType)
+        raidVal.addRaidMarkMember(playerBox, type, index, name, gbId, entId, pos)
 
-    def reqDelRaidMarkMember(self, raidUUID, playerBox, entId):
-        INFO_MSG('reqDelRaidMarkMember: ', raidUUID, playerBox, entId)
+    def reqDelRaidMarkMember(self, raidUUID, playerBox, type, index):
+        INFO_MSG('reqDelRaidMarkMember: ', raidUUID, playerBox, type, index)
         if raidUUID not in self.raidDic:
             return
         
         raidVal = self.raidDic[raidUUID]
-        raidVal.delRaidMarkMember(playerBox, entId)
+        raidVal.delRaidMarkMember(playerBox, type, index)
 
     def reqChangeRaidOnlyLeader(self, raidUUID, playerBox, bOnlyCapatain):
         INFO_MSG('reqChangeRaidOnlyLeader: ', raidUUID, playerBox, bOnlyCapatain)
@@ -3116,3 +3122,23 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             DEBUG_MSG("addRaidDungeonRewardRecord, team is missing", raidUUID, gbID)
             return
         raidVal.addRaidDungeonRewardRecord(gbID, rewardList)
+
+    # ----------------------------- 统计相关 --------------------------------
+    def addTeamStatisticPlayerVal(self, raidUUID, playerGbId, type, value):
+        raidVal = self.getRaidByRaidUUID(raidUUID)
+        if not raidVal:
+            DEBUG_MSG("addTeamStatisticPlayerVal, team is missing", raidUUID, playerGbId, type, value)
+            return
+
+        raidVal.addTeamStatisticValue(playerGbId, type, value)
+
+    def getTeamStatisticData(self, playerbox, raidUUID):
+        raidVal = self.getRaidByRaidUUID(raidUUID)
+        if not raidVal:
+            DEBUG_MSG("getTeamStatisticData, team is missing", raidUUID)
+            return {}
+        
+        raidVal.showStatisticData()
+
+        data = raidVal.getTeamStatisticData()
+        playerbox.cell.onGetTeamStatisticData(data)

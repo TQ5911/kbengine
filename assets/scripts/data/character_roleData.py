@@ -21,7 +21,7 @@ datas = _tools.RODict({
         "sex": 2,
         "type": 2,
         "isOpen": 1,
-        "appearance": ((2, 2, 1, 2, 3, 1), (4, 4, 1, 4, 3, 2)),
+        "appearance": ((2, 2, 1, 202, 3, 1), (4, 4, 1, 4, 3, 2)),
     }),
     10031: _tools.RODict({
         "ID": 10031,
@@ -29,7 +29,7 @@ datas = _tools.RODict({
         "sex": 1,
         "type": 1,
         "isOpen": 1,
-        "appearance": ((2, 2, 1, 1, 3, 1), (4, 4, 1, 4, 3, 1)),
+        "appearance": ((2, 2, 1, 204, 3, 1), (4, 4, 1, 4, 3, 1)),
     }),
     10022: _tools.RODict({
         "ID": 10022,
@@ -37,7 +37,7 @@ datas = _tools.RODict({
         "sex": 2,
         "type": 2,
         "isOpen": 1,
-        "appearance": ((2, 2, 1, 1, 3, 1), (4, 4, 1, 4, 3, 1)),
+        "appearance": ((2, 2, 1, 202, 3, 1), (4, 4, 1, 4, 3, 1)),
     })
 })
 minKey = 10012

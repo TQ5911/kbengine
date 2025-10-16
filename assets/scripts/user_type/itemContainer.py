@@ -233,10 +233,6 @@ class ItemContainer(userType.UserSoleType):
         totalNum = item.itemNum
         maxStackSize = item.maxStackSize(item.itemId)
         oldGrids = self.getGridIdsByItemId(item.itemId)
-        # 引灵盘，一个玩家只能持有一个
-        if item.itemId == gameconst.ItemId.SPIRIT_BOARD:
-            if len(oldGrids) > 0:
-                return gameconst.BagOpPlan.BAG_OP_NO_PLAN, totalNum
         for gridId in oldGrids:
             it = self.gridId2GridObj[gridId]
             planItems = planDict['old'].get(gridId, [])

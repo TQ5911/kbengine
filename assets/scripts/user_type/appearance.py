@@ -21,6 +21,12 @@ class FaceDataVal(userType.UserSoleType):
         self.hairIdFaceId = hairIdFaceId
         self.hairColorIdSkinColorId = hairColorIdSkinColorId
 
+    def clone(self):
+        return FaceDataVal(
+            suitId=self.suitId,
+            hairIdFaceId=self.hairIdFaceId,
+            hairColorIdSkinColorId=self.hairColorIdSkinColorId)
+
     def reset(self):
         self.suitId = 0
         self.hairIdFaceId = 0
@@ -53,6 +59,14 @@ class OutfitDataVal(userType.UserSoleType):
         self.picFrameId = picFrameId
         self.wingId = wingId
         self.mountId = mountId
+
+    def clone(self):
+        return OutfitDataVal(
+            hairId=self.hairId,
+            clothesId=self.clothesId,
+            picFrameId=self.picFrameId,
+            wingId=self.wingId,
+            mountId=self.mountId)
 
     def toSavedDict(self):
         return {
@@ -107,6 +121,13 @@ class Appearance(userType.UserSoleType):
         self.faceData = faceData or FaceDataVal()
         return
 
+    def clone(self):
+        return Appearance(
+            weapon=self.weapon,
+            breast=self.breast,
+            outfitData=self.outfitData.clone(),
+            faceData=self.faceData.clone())
+
     def toSavedDict(self):
         return {
             'weapon': self.weapon,
@@ -117,7 +138,9 @@ class Appearance(userType.UserSoleType):
 
     def toJsonString(self):
         return "{\"outfitData\":" + self.outfitData.toJsonString() + "," \
-            + "\"faceData\":" + self.faceData.toJsonString() + "}"
+            + "\"faceData\":" + self.faceData.toJsonString() + "," \
+            + "\"weapon\":" + str(self.weapon) + "," \
+            + "\"breast\":" + str(self.breast) + "}"
 
     def _lateReload(self):
         super(Appearance, self)._lateReload()
@@ -154,13 +177,13 @@ class Appearance(userType.UserSoleType):
                 realVal, _ = getDefaultAppearanceEquipPartId()
             self.weapon = realVal
             owner.allClients.onAppearanceUpdated(part, realVal)
-            owner.base.updateAccountCharacterAppearance({'weapon':val})
+            owner.base.updateAccountCharacterAppearance({'weapon':realVal})
         elif part == gameconst.BodyEquipSlot.EQUIP_CLOTHES_SLOT:
             if 0 == realVal:
                 _, realVal = getDefaultAppearanceEquipPartId()
             self.breast = realVal
             owner.allClients.onAppearanceUpdated(part, realVal)
-            owner.base.updateAccountCharacterAppearance({'breast':val})
+            owner.base.updateAccountCharacterAppearance({'breast':realVal})
 
     def getItemIdByOutFitId(self, outFitId):
         return AMRD.datas[outFitId].get('itemId')

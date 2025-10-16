@@ -147,12 +147,6 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
-    "OpeninterfaceConfigID": _tools.RODict({
-        "ID": "OpeninterfaceConfigID",
-        "EventID": 10022,
-        "sendType": 0,
-        "npcId": None
-    }),
     "shakeCamera": _tools.RODict({
         "ID": "shakeCamera",
         "EventID": 10023,

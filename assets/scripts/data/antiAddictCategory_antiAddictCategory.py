@@ -31,7 +31,7 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001985,
-        "rewardMessage": ('<color=&color18>任务完成</color>', '完成<color=&color18>{0}</color>任务<color=&color18>{1}</color>，获得奖励：', '完成任务，获得奖励：', '<color=&color8>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>任务完成</color>', '完成<color=&color57>{0}</color>任务<color=&color57>{1}</color>，获得奖励：', '完成任务，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -67,7 +67,7 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001984,
-        "rewardMessage": ('开启礼包，获得道具：', '<color=&color8>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('开启礼包，获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     7: _tools.RODict({
         "ID": 7,
@@ -148,7 +148,7 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001987,
-        "rewardMessage": ('<color=&color18>邮件附件</color>', '查收邮件，获得奖励：', '<color=&color8>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>邮件附件</color>', '查收邮件，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     16: _tools.RODict({
         "ID": 16,
@@ -193,7 +193,7 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001990,
-        "rewardMessage": ('<color=&color18>购买成功</color>', '获得道具：', '<color=&color8>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>购买成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     21: _tools.RODict({
         "ID": 21,
@@ -418,7 +418,7 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001990,
-        "rewardMessage": ('<color=&color18>购买成功</color>', '获得道具：', '<color=&color8>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>购买成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     46: _tools.RODict({
         "ID": 46,
@@ -607,7 +607,7 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001986,
-        "rewardMessage": ('<color=&color18>成就达成</color>', '达成<color=&color18>{0}</color>成就，获得奖励：', '达成成就，获得奖励：', '<color=&color8>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>成就达成</color>', '达成<color=&color57>{0}</color>成就，获得奖励：', '达成成就，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     67: _tools.RODict({
         "ID": 67,
@@ -688,7 +688,7 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001988,
-        "rewardMessage": ('<color=&color18>活动奖励</color>', '参与活动，获得奖励：', '<color=&color8>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>活动奖励</color>', '参与活动，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     76: _tools.RODict({
         "ID": 76,
@@ -824,7 +824,16 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None
+    }),
+    91: _tools.RODict({
+        "ID": 91,
+        "name": "BONUS_SRC_EXCHANGE_STORE_ITEMS",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001992,
+        "rewardMessage": ('<color=&color211>兑换成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     })
 })
 minKey = 1
-maxKey = 90
+maxKey = 91

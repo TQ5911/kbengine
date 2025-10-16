@@ -8,7 +8,6 @@ class AccountBase(KBEngine.Entity):
     def onCreateAvatarFailed(self, arg0): pass
     def onCreateAvatarResult(self, arg0, arg1): pass
     def onGameConfigChanged(self, arg0, arg1): pass
-    def onGameConfigChangedByName(self, arg0, arg1): pass
     def onKickAnotherAccount(self): pass
     def onKickAnotherAvatar(self): pass
     def onMessage(self, arg0, arg1): pass

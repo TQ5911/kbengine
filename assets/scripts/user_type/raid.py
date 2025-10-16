@@ -69,7 +69,7 @@ class RaidDungeonCacheVal(userType.UserSTDSoleType):
 # -----------------------------------------------------------------------
 
 
-class RaidVal(userType.UserSTDSoleType):
+class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
     def __init__(self, raidUUID=0, raidCapacity=0,
                  raidLeaderGBID=0, raidLeaderTeamIDX=0, 
                  raidDeputyGBID=0, raidDeputyTeamIDX=0, 
@@ -116,13 +116,15 @@ class RaidVal(userType.UserSTDSoleType):
         self.isPublish = False
         self.recruitInfo = ''
         #
-        self.raidMarkDic = {}
+        self.raidMark = team.TeamMarkCacheVal()
         self.onlyCaptainCanMark = False
 
         self.isAutoExpedition = False
         self.password = ''
         self.autoStartTimer = 0
         self.raidRewardDatas = {}
+
+        team.TeamStatisticMixin.__init__(self)
 
     @property
     def memberNum(self):
@@ -209,6 +211,9 @@ class RaidVal(userType.UserSTDSoleType):
         return self
 
     def toClientData(self):
+        raidMarkInfo = self.raidMark.toClientData()
+        raidMarkInfo['onlyCaptainCanMark'] = self.onlyCaptainCanMark
+
         clientData = {
             'raidUUID': self.raidUUID,
             'raidCapacity': self.raidCapacity,
@@ -227,12 +232,24 @@ class RaidVal(userType.UserSTDSoleType):
             'recruitInfo': self.recruitInfo,
             'isPublish': self.isPublish,
             'memberNum': self.memberNum,
-            'onlyCaptainCanMark': self.onlyCaptainCanMark,
-            'raidMarkList': [i.toClientData() for i in self.raidMarkDic.values()],
+            'raidMarkInfo': raidMarkInfo,
             'isAutoExpedition': self.isAutoExpedition,
             'password': self.password,
             }
         return clientData
+    
+    def _lateReload(self):
+        super(RaidVal, self)._lateReload()
+
+        for v in self.raidTeamDic.values():
+            v.reloadScript()
+        for v in self.raidApplyJoinDic.values():
+            v.reloadScript()
+        for v in self.raidDungeonRecords.values():
+            v.reloadScript()
+
+        self.raidMark.reloadScript()
+        return
 
     def _buildPlayerRaidCacheVal(self):
         _playerRaidTeamDic = {}
@@ -1323,82 +1340,41 @@ class RaidVal(userType.UserSTDSoleType):
         return _raidLeader.playerBox
     
     # ------ 标记 -----
-    def addRaidMarkMember(self, owner, entId, markType, spaceNo=0):
-        INFO_MSG('addRaidMarkMember', owner, entId, markType)
-        if self.onlyCaptainCanMark and owner and owner.id != self.getRaidLeaderBox().id:
-            return
-        if entId in self.raidMarkDic:
-            self.updateRaidMarkMember(owner, entId, markType)
-            return
-        
-        markLimit = utils.getMarkLimit()
-        if len(self.raidMarkDic) >= markLimit:
-            self.delMarkMember(owner, 0) # 删一个最久远的
-            
-        self.raidMarkDic[entId] = RaidMarkMemberVal(entId, markType, False, spaceNo)
-        
-        # sync data
-        self.onChangeRaidMarkInfo(entId, gameconst.TeamMarkChangeType.ADD)
-    
-    def addRaidMarkMemberFromData(self, markDataList):
-        for data in markDataList:
-            self._setRaidMarkMember(data)
-            
-        # 全量通知
-        self.onChangeRaidMarkInfo(0, gameconst.TeamMarkChangeType.ADD)
-        
-    def _setRaidMarkMember(self, props):
-        INFO_MSG('_setRaidMarkMember', props)
-        entId = props['entId']
-        
-        self.raidMarkDic[entId] = RaidMarkMemberVal(**props)
-        
-    def updateRaidMarkMember(self, owner, entId, markType):      
-        mVal = self.raidMarkDic[entId]
-        if mVal is None:
-            return
-        
-        if markType == gameconst.TeamMarkType.MARK_NONE:
-            self.delRaidMarkMember(owner, entId)
-            return
-        
-        if mVal.markType == markType:
-            return
-        mVal.markType = markType
-        
-        # sync data
-        self.onChangeRaidMarkInfo(entId, gameconst.TeamMarkChangeType.MODIFY)
-        
-    def delRaidMarkMember(self, owner, entId=0):
+    def addRaidMarkMember(self, owner, type, index, name, gbId, entId, pos, spaceNo=0):
+        INFO_MSG('addRaidMarkMember', owner, type, index, name, gbId, entId, pos, spaceNo)
         if self.onlyCaptainCanMark and owner and owner.id != self.getRaidLeaderBox().id:
             return
         
-        if entId > 0:
-            if entId not in self.raidMarkDic:
-                return False
-            self.raidMarkDic.pop(entId)
-            self.onChangeRaidMarkInfo(entId, gameconst.TeamMarkChangeType.DELETE)
-            return True
-        
-        # 下面执行 删除最久远的entId
-        if len(self.raidMarkDic) <= 0:
-            return False
-        minTime = 0
-        pickId = None
-        for tempId, mVal in self.raidMarkDic.items():
-            # 找到第一个，给minTime初始化
-            if minTime == 0:
-                minTime = mVal.markTimestamp
-                pickId = tempId
+        ret = False
+        if type == gameconst.TeamMarkType.MARK_SCENE:
+            ret = self.raidMark.addSceneMark(type, index, name, gbId, entId, pos, spaceNo)
+        else:
+            ret = self.raidMark.addPlayerMark(type, index, name, gbId, entId, pos, spaceNo)
 
-            if mVal.markTimestamp < minTime:
-                minTime = mVal.markTimestamp
-                pickId = tempId
-        if pickId:
-            INFO_MSG('delRaidMarkMember far away from now', pickId)
-            self.raidMarkDic.pop(pickId)
-            self.onChangeRaidMarkInfo(pickId, gameconst.TeamMarkChangeType.DELETE)
-        return True
+        # sync data
+        if ret:
+            self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.ADD)
+    
+    def addRaidMarkMemberFromData(self, markDataInfo):
+        INFO_MSG('addRaidMarkMemberFromData', markDataInfo)
+        self.raidMark.initFromClientData(markDataInfo)
+        self.onlyCaptainCanMark = markDataInfo.get('onlyCaptainCanMark', False)
+        # 全量通知
+        self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.ADD)
+        
+    def delRaidMarkMember(self, owner, type, index):
+        if self.onlyCaptainCanMark and owner and owner.id != self.getRaidLeaderBox().id:
+            return False
+        
+        ret = False
+        if type == gameconst.TeamMarkType.MARK_SCENE:
+            ret = self.raidMark.delSceneMark(index)
+        else:
+            ret = self.raidMark.delPlayerMark(index)
+        
+        if ret:
+            self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.DELETE)
+        return ret
     
     def changeRaidOnlyLeader(self, owner, state):
         if state == self.onlyCaptainCanMark:
@@ -1408,17 +1384,11 @@ class RaidVal(userType.UserSTDSoleType):
             return
             
         self.onlyCaptainCanMark = state
-        self.onChangeRaidMarkInfo(0, gameconst.TeamMarkChangeType.CAPTAIN)
+        self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.CAPTAIN)
         
-    def onChangeRaidMarkInfo(self, entId=0, changeType=gameconst.TeamMarkChangeType.NONE):
-        markInfoDict = {
-            'entId': entId,
-            'changeType': changeType,
-            'onlyCaptainCanMark': self.onlyCaptainCanMark,
-            'teamMarkList': [],
-        }
-        if changeType != gameconst.TeamMarkChangeType.CAPTAIN:
-            markInfoDict['teamMarkList'] = self.getRaidMarkClientData(entId)
+    def onChangeRaidMarkInfo(self, changeType=gameconst.TeamMarkChangeType.NONE):
+        markInfoDict = self.raidMark.toClientData()
+        markInfoDict['onlyCaptainCanMark'] = self.onlyCaptainCanMark
             
         for teamIDX, teamVal in self.raidTeamDic.items():
             for gbId, teamPlayerVal in teamVal.teamPlayerDic.items():
@@ -1428,23 +1398,7 @@ class RaidVal(userType.UserSTDSoleType):
                 box.client.onChangeRaidMark(markInfoDict)
 
         INFO_MSG('onChangeRaidMarkInfo', markInfoDict)
-        
-    def getRaidMarkClientData(self, entId=0):
-        teamMarkList = []
-        if entId == 0:
-            for tempId, mVal in self.raidMarkDic.items():
-                teamMarkList.append(mVal.toClientData())
-        elif entId in self.raidMarkDic:
-            teamMarkList.append(self.raidMarkDic[entId].toClientData())
-        else:
-            teamMarkList.append({
-                'entId': entId,
-                'markType': gameconst.TeamMarkType.MARK_NONE,
-                #'isPlayer': self.isPlayer,
-                'spaceNo': 0,
-            })
-            
-        return teamMarkList
+
     
     def updateMemberVolatileAttr(self, playerGBID, playerUpdateProps):
         if 'spaceNo' in playerUpdateProps and 'position' in playerUpdateProps:
@@ -1454,15 +1408,15 @@ class RaidVal(userType.UserSTDSoleType):
             if not excludedGbIDs:
                 excludedGbIDs = ()
             self.broadcastAllRaidMembersClient(fn, args, exclude=excludedGbIDs)
-        elif 'score' in playerUpdateProps:
+        if 'score' in playerUpdateProps:
             fn = "onUpdateRaidMemberScore"
             args = (playerGBID, playerUpdateProps['score'])
             self.broadcastAllRaidMembersClient(fn, args)
-        elif 'fullHp' in playerUpdateProps and 'hp' in playerUpdateProps:
+        if 'fullHp' in playerUpdateProps and 'hp' in playerUpdateProps:
             fn = "onUpdateRaidMemberHP"
             args = (playerGBID, playerUpdateProps['fullHp'], playerUpdateProps['hp'])
             self.broadcastAllRaidMembersClient(fn, args)
-        elif 'level' in playerUpdateProps:
+        if 'level' in playerUpdateProps:
             fn = "onUpdateRaidMemberLevel"
             args = (playerGBID, playerUpdateProps['level'])
             self.broadcastAllRaidMembersClient(fn, args)
@@ -1481,6 +1435,12 @@ class RaidVal(userType.UserSTDSoleType):
             a[_bindType] = b + _itemNum
 
         self.broadcastAllMembersClient('onAddRaidDungeonRewardRecord', (self.raidUUID, gbID, rewardList))
+
+    def getRaidAllMembersDict(self):
+        allMembersDict = {}
+        for teamVal in self.raidTeamDic.values():
+            allMembersDict.update(teamVal.teamPlayerDic)  # Corrected to use update instead of +=
+        return allMembersDict
  
     
 class RaidTeamVal(userType.UserSTDSoleType):
@@ -1616,7 +1576,6 @@ class RaidTeamVal(userType.UserSTDSoleType):
 
 RaidTeamMemberVal = team.TeamMemberCacheVal
 
-RaidMarkMemberVal = team.TeamMarkMemberCacheVal
 
 class RaidApplyJoinPlayerVal(userType.UserSTDSoleType):
 

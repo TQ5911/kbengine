@@ -110,6 +110,30 @@ class BehaveCtrl(object):
     提供给状态机调用的函数
     '''
 
+    def navigationTimeTag(self):
+        return "navTime"
+    
+    def navigationTimeTagWithTarget(self, targetId):
+        return self.navigationTimeTag() + str(targetId)
+    
+    def checkNavigationTimeExpire(self, targetId):
+        owner = self.owner
+        _navigationTimeTag = self.navigationTimeTagWithTarget(targetId)
+        nTime = owner.actGetVar(_navigationTimeTag, None)
+        if nTime and nTime + CONST.datas['monsterResetTimer']['value'] < utils.getNow():
+            return True
+        return False
+    
+    def clearNavigationTimes(self):
+        owner = self.owner
+        delList = []
+        for key in owner.aiVars:
+            if key.startswith(self.navigationTimeTag()):
+                delList.append(key)
+
+        for key in delList:
+            owner.actDelVar(key)
+
     def inMoving(self):
         return self.owner.isMoving()
 
@@ -121,11 +145,17 @@ class BehaveCtrl(object):
             target = KBEngine.entities.get(eid)
             if target and not target.isDie() and owner.spaceNo == target.spaceNo and utils.isEnemy(owner, target):
                 if owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt):
-                    flag = True
+                    if not self.checkNavigationTimeExpire(eid):
+                        flag = True
+                    else:
+                        removeEnt.append(eid)
             else:
                 removeEnt.append(eid)
         for eid in removeEnt:
             self.hateDict.removeHate(eid)
+        if self.checkNavigationTimeExpire(0):
+            self.hateDict._hateDict.clear()
+            flag = False
         return flag
 
     def haveSkill(self):
@@ -171,7 +201,7 @@ class BehaveCtrl(object):
             target = KBEngine.entities.get(self.targetId)
         if not target or target.isDie(): return False
 
-        if sMath.distance2D(target.position, owner.position)  >= math.pow(
+        if sMath.distance2D(target.position, owner.position) >= math.pow(
                 owner.getEscapeDistance(), 2):
             return True
         return False
@@ -180,6 +210,9 @@ class BehaveCtrl(object):
         owner = self.owner
         if sMath.distance2DToCompareFrom3DPosition(owner.position, owner.bornPosition) >= math.pow(
                 owner.getEscapeDistance(), 2):
+            return True
+        # 非战斗区则视为脱战
+        if not owner.checkInCombatArea(owner.position):
             return True
         return False
 
@@ -216,6 +249,8 @@ class BehaveCtrl(object):
         if reDir and hasattr(owner, 'bornDirection'):
             owner.direction = owner.bornDirection
 
+        self.clearNavigationTimes()
+
     def inRoutePatrolTime(self):
         owner = self.owner
         if hasattr(owner, 'nextRouteTime'):
@@ -235,6 +270,8 @@ class BehaveCtrl(object):
 
         self.moveToPos(pos)
         self.machine.transform(self, State.PATROL)
+
+        self.clearNavigationTimes()
 
     def destroyAllVassal(self):
         owner = self.owner
@@ -324,6 +361,15 @@ class BehaveCtrl(object):
 
         if not skill or not target:
             self.useSkillFail(self.skillId)
+
+            # 找不到目标时，设置一个0的tag的计时
+            if not target:
+                _navigationTimeTag = self.navigationTimeTagWithTarget(0)
+                if not owner.actGetVar(_navigationTimeTag, None):
+                    # 先把其他的全部清除
+                    self.clearNavigationTimes()
+                    owner.actDefVar(_navigationTimeTag, utils.getNow())
+
             return
         if owner.IsPet:
             host = owner.getHost()
@@ -664,13 +710,14 @@ class AuxFunc(object):
 
     def moveToPos(self, pos, dis=0, extra=None):
         owner = self.owner
-        if not owner or not pos or not owner.checkConflictState(CCD.datas.move, False): return
+        if not owner or not pos or not owner.checkConflictState(CCD.datas.move, False): return False
 
-        owner.navigateToPosition(pos, dis, extra)
+        return owner.navigateToPosition(pos, dis, extra)
 
     def attackTarget(self, skill, target, msgid=0, moveOver=False):
         owner = self.owner
         self.targetId = target.id
+        _navigationTimeTag = self.navigationTimeTagWithTarget(self.targetId)
 
         dis_ = sMath.distance2DToCompareFrom3DPosition(target.position, owner.position)
         targetRadius = 0
@@ -679,12 +726,27 @@ class AuxFunc(object):
         skillRange = skill.getRange(owner, skill.skillId) + targetRadius
         rng_ = math.pow(skillRange, 2)
         if dis_ > rng_ and not skill.getTarget(skill.skillId) == 'None':
+            _needNavTime = True
             if self.machine.moveable:
                 mDis = max(0.5, skillRange * 0.9)
-                self.moveToPos(target.position,mDis)
+                if self.moveToPos(target.position,mDis):
+                    _needNavTime = False
+                    # 可以寻路时，清除计时
+                    self.clearNavigationTimes()
             else:
                 self.targetId = 0
+
+                radii = owner.getAlertDistance()
+                if radii <= 0 or dis_ <= radii:
+                    _needNavTime = False
+
+            if _needNavTime and not owner.actGetVar(_navigationTimeTag, None):
+                # 先把其他的全部清除
+                self.clearNavigationTimes()
+                owner.actDefVar(_navigationTimeTag, utils.getNow())
         else:
+            self.clearNavigationTimes()
+
             if not self.canUseSkill(skill):
                 return
 
@@ -692,7 +754,7 @@ class AuxFunc(object):
             if self.machine.moveable and skillRange <= CONST.datas['monsterSkillRange']['value']\
                     and _now >= owner.nextKeepDistanceTime:
                 mDis = max(0.5, skillRange * CONST.datas['monsterSkillRangeCoefficient']['value']) 
-                if dis_ < math.pow(mDis, 2) and self.moveToRandPosAroundCircle(target.position, skillRange):
+                if dis_ < math.pow(mDis, 2) and self.moveToRandPosAroundCircle(target.position, skillRange * 0.9):
                     owner.nextKeepDistanceTime = _now + CONST.datas['monsterSkillRangeTriggerCD']['value']
                     return
 
@@ -1173,6 +1235,8 @@ class HateCtrl(object):
         self.targetId = 0
         self.hateDict.clearHate(self.owner)
 
+        self.clearNavigationTimes()
+
     def clearSourceHate(self):
         self.hateDict.clearSourceHate(self.owner)
 
@@ -1625,3 +1689,6 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
 
     def isInTickCallBack(self):
         return self.machine.getChangeTimer() != 0
+
+    def isSpecialMonsterAI(self):
+        return False if not self.owner.getAIParam() else True

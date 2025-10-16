@@ -11,6 +11,7 @@ from collections.abc import Iterable
 import itemData_itemData as IDID
 import message_Message_def as MMD
 import conflict_conflict_def as CCD
+import NPC_pickConst as NPCST
 import const_const as CONST
 import NPC_Pick as NPD
 import itemData_set as IDS
@@ -204,6 +205,7 @@ class IBag(object):
             self.base.useItemDone(True, opUUID)
 
     def setPendingUseId(self, opUUID, useItemCtx):
+        DEBUG_MSG("setPendingUseId 1", opUUID, useItemCtx)
         pendingIdDict = self.getTempMiscProp(gameconst.AvatarProps.pendingUseItem, {})
         if pendingIdDict:
             pid = max(pendingIdDict.keys()) + 1
@@ -214,7 +216,7 @@ class IBag(object):
         useItemCtx.pendingOpId = pid
         tid = self._callback(15, '_pendingUseExpired', (pid,), gametimer.TIMER_TAG_PENDING_USE_EXPIRED)
         pendingIdDict[pid] = (useItemCtx, opUUID, tid)
-
+        DEBUG_MSG("setPendingUseId 2", opUUID, pid)
         return pid
 
     def _pendingUseExpired(self, pid):
@@ -226,6 +228,7 @@ class IBag(object):
             self.popTempMiscProp(gameconst.AvatarProps.pendingUseItem)
 
     def onPendingUseItem(self, pendingId, useResult):
+        DEBUG_MSG("onPendingUseItem", pendingId, type(pendingId), useResult)
         pendingIdDict = self.getTempMiscProp(gameconst.AvatarProps.pendingUseItem, {})
         if pendingId not in pendingIdDict:
             ERROR_MSG('invalid pending check id', pendingId)
@@ -443,6 +446,7 @@ class IBag(object):
                 return False
             DEBUG_MSG('_prepareApplyGather, continuous collection', targetId)
         elif not target.canGather:
+            self.showMsg(MMD.datas.collectionWarning, [])
             WARNING_MSG('_prepareApplyGather, target can not gather', targetId, target.collectionId)
             return False
 
@@ -969,3 +973,13 @@ class IBag(object):
         equipItem.setLockStatus(lockStatus)
 
         self.client.onLockItemSucc(equipIn, equipPos, itemId, lockStatus)
+
+    def bagExpansion(self, gridNum, gridId, itemId, useNum, opUUID, context):
+        pendingUseId = self.setPendingUseId(opUUID, context)
+        self.base.bagExpansion(pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
+        return gameconst.UseItem.PENDING
+
+    def warehouseExpansion(self, gridNum, gridId, itemId, useNum, opUUID, context):
+        pendingUseId = self.setPendingUseId(opUUID, context)
+        self.base.warehouseExpansion(pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
+        return gameconst.UseItem.PENDING

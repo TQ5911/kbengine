@@ -54,10 +54,10 @@ class ISiegeWarCell(object):
         _lContext = {}
         _src = dungeonSrc.BasicDungeonSrc()
         _context = {
-            'e':{'spaceBox':spaceBox, 
-            'spaceMgrId':spaceMgrCellId}, 
-            'l':_lContext, 
-            'src':_src, 
+            'e':{'spaceBox':spaceBox,
+            'spaceMgrId':spaceMgrCellId},
+            'l':_lContext,
+            'src':_src,
             'hasCast':True
         }
         _options = complexTeleportOption.ComplexTeleportOptions(teleportType=(gameconst.ComplexTeleportType.ENTER))
@@ -67,7 +67,7 @@ class ISiegeWarCell(object):
             return
         fromSpaceNo = self.spaceNo if isGm else 0
         self.teleportFromSpaceToSpace(fromSpaceNo, spaceNo, options=_options, context=_context)
-        
+
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def leaveSiegeWarSpace(self, exposed):
@@ -76,7 +76,7 @@ class ISiegeWarCell(object):
             return
 
         self._leaveSiegeWarSpace(gameconst.DungeonSrcEnum.FROM_CLIENT)
-        
+
     def onSiegeWarKickout(self):
         if not formula.isSiegeWarSpace(self.spaceNo):
             return
@@ -113,12 +113,12 @@ class ISiegeWarCell(object):
     def collectionCheckSiegeWar(self, *args):
         DEBUG_MSG("[lj]onCollectionCheckSiegeWar", args)
         return CollectionCheckContext.CollectionCheckSiegeWar(*args)
-    
+
     def siegeWarPrecheckCollection(self, *args):
         DEBUG_MSG("[lj]siege war precheck collection", args)
         collectionId = args[0]
         return self.spaceMgr.siegeWarPrecheckCollection(self, collectionId)
-    
+
     def siegeWarOpenGate(self, *args):
         DEBUG_MSG("[lj]siege war open gate", args)
         self.spaceMgr.onSiegeWarOpenGate(self)
@@ -135,7 +135,7 @@ class ISiegeWarCell(object):
 
     def onSiegeWarEnterDataUpdate(self, offenseGuildUUID, defenseGuildUUID, startTime):
         self.client.onSiegeWarEnterDataUpdate(offenseGuildUUID, defenseGuildUUID, startTime)
-        
+
     def siegewarMinimapSignalChange(self, exposed, dataDict):
         DEBUG_MSG("[lj]siegewarMinimapSignalChange", dataDict)
         tp = dataDict['tp']

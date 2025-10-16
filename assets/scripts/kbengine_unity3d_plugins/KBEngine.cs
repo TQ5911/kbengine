@@ -97,7 +97,7 @@ namespace KBEngine
 		public string serverScriptVersion = "";
 		public string clientScriptVersion = "0.1.0";
 		public string serverProtocolMD5 = "00C842919090D3FD4897D0C953C8FBA9";
-		public string serverEntitydefMD5 = "02D16E45FACC6E536A42D4F569AAC01B";
+		public string serverEntitydefMD5 = "9B3713C72CCC6F072B970A833238D49F";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -1330,7 +1330,14 @@ namespace KBEngine
         {
             Int32 eid = stream.readInt32();
             if (entity_id > 0 && entity_id != eid)
+            {
+                if (_entityIDAliasIDList.Contains(eid))
+                {
+                    Dbg.DEBUG_MSG("KBEngine::Client_onEntityEnterWorld: entity(" + eid + ") already exists!");
+                    return;
+                }
                 _entityIDAliasIDList.Add(eid);
+            }
 
             UInt16 uentityType;
             if (EntityDef.idmoduledefs.Count > 255)

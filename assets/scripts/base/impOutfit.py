@@ -21,7 +21,7 @@ class ImpOutfit(object):
         self.client.onUpdateOutfitData(self.outfitInfo.toClientData())
 
     @gamedecorator.limitcall(0.5)
-    def reqEnableOutfit(self, outfitType, outfitId):
+    def reqEnableOutfit(self, exposed, outfitType, outfitId):
         DEBUG_MSG('reqEnableOutfit:', outfitType, outfitId)
         outfit = self.outfitInfo.getOutfitInfo(outfitType, outfitId)
         if not outfit:
@@ -30,7 +30,7 @@ class ImpOutfit(object):
         self.cell.enableOutfit(outfitType, outfitId)
         return
 
-    def reqExpOutfit(self, outfitType, outfitId, itemId):
+    def reqExpOutfit(self, exposed, outfitType, outfitId, itemId):
         DEBUG_MSG('reqExpOutfit:', outfitType, outfitId, itemId)
         if not dataUtils.checkOutfitOpen(outfitType, outfitId):
             WARNING_MSG('reqExpOutfit, not open', outfitId, outfitType)
@@ -79,7 +79,7 @@ class ImpOutfit(object):
         costItemNum = configData.get('price')
         return costItemNum
 
-    def reqBuyOutfit(self, outfitType, outfitId):
+    def reqBuyOutfit(self, exposed, outfitType, outfitId):
         DEBUG_MSG('reqBuyOutfit:', outfitType, outfitId)
         if not dataUtils.checkOutfitOpen(outfitType, outfitId):
             WARNING_MSG('reqBuyOutfit, not open', outfitId, outfitType)
@@ -109,7 +109,7 @@ class ImpOutfit(object):
         self.addOutfitByReason(outfitType, outfitId, 0, gameconst.AddOutfitReason.BUY)
         return
 
-    def reqClickOutfit(self, outfitType, outfitId):
+    def reqClickOutfit(self, exposed, outfitType, outfitId):
         ret = self.outfitInfo.setClickOutfit(outfitType, outfitId)
         if not ret:
             return

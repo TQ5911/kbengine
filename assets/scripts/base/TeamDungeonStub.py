@@ -215,12 +215,16 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
 
         sVal.completeDungeon(win)
         _teamStub = gameengine.getTeamStub(sVal.teamUUID)
-        extraInfo = {'tCreate': sVal.tCreate,
-                     'tState': sVal.state,
-                     'forceDestroy': True,
-                     }
+        extraInfo = {
+            'tCreate': sVal.tCreate,
+            'tState': sVal.state,
+            'forceDestroy': True,
+            }
+                     
         _teamStub.TeamDungeonCompletedAfter(sVal.teamUUID, self.dungeonNo, spaceNo ,win)
         _teamStub.destroyTeamDungeonDelay(sVal.teamUUID, self.dungeonNo, spaceNo, reason, extraInfo)
+        # 解散队伍
+        _teamStub.teamDungeonFinished(sVal.teamUUID)
 
     def doEnterDungeon(self, box, gbId, teamUUID, spaceNo, extra):
         if spaceNo not in self.spaces:

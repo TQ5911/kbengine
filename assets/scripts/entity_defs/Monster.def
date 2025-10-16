@@ -23,6 +23,11 @@
     </Interfaces>
 
     <Properties>
+        <instanceId>
+            <Type>	OBJECT_ID						</Type>
+            <Flags>	CELL_PRIVATE					</Flags>
+        </instanceId>
+
         <monsterId>
             <Type>	OBJECT_ID						</Type>
             <Flags>	OTHER_CLIENTS					</Flags>
@@ -54,15 +59,15 @@
         </bornPosition>
 
         <bornRadius>
-            <Type> FLOAT </Type>
-            <Flags> CELL_PRIVATE </Flags>
-            <Default> 0.0 </Default>
+            <Type>    FLOAT        </Type>
+            <Flags>   CELL_PRIVATE </Flags>
+            <Default> 0.0          </Default>
         </bornRadius>
 
         <route>
-            <Type>      PYTHON        </Type>
+            <Type>      PYTHON          </Type>
             <Flags>     CELL_PRIVATE    </Flags>
-            <Default>    []            </Default>
+            <Default>    []             </Default>
         </route>
 
         <thinkTimer>
@@ -92,8 +97,8 @@
 
         <belongActId>
             <Type>      UINT32           </Type>
-            <Default>   0               </Default>
-            <Flags>     OTHER_CLIENTS   </Flags>
+            <Default>   0                </Default>
+            <Flags>     OTHER_CLIENTS    </Flags>
         </belongActId>
 
         <liveStage>
@@ -132,7 +137,7 @@
         </beAttackAvatarIds>
 
         <lastClearBeAttackAvatarsTime>
-            <Type>          LONGTIME        </Type>
+            <Type>          LONGTIME         </Type>
             <Flags>         CELL_PRIVATE     </Flags>
         </lastClearBeAttackAvatarsTime>
 
@@ -142,6 +147,19 @@
             <Default>       0               </Default>
             <WitnessName>   true            </WitnessName>
         </siegeWarCamp>
+
+        <needCountRefresh>
+            <Type>      BOOL             </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>   0                </Default>
+        </needCountRefresh>
+
+        <needCountNum>
+            <Type>      BOOL             </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>   0                </Default>
+        </needCountNum>
+        
     </Properties>
 
     <BaseMethods>

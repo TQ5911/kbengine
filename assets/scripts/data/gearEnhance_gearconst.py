@@ -137,15 +137,15 @@ datas = _tools.RODict({
     }),
     "gearButtonAction_enhance": _tools.RODict({
         "ID": "gearButtonAction_enhance",
-        "value": "findNearestEntityByTempleteId,18000067",
+        "value": "Openinterface,UIEquipTrainingPanel,1",
     }),
     "gearButtonAction_rune": _tools.RODict({
         "ID": "gearButtonAction_rune",
-        "value": "findNearestEntityByTempleteId,18000067",
+        "value": "Openinterface,UIEquipTrainingPanel,2",
     }),
     "gearButtonAction_bless": _tools.RODict({
         "ID": "gearButtonAction_bless",
-        "value": "findNearestEntityByTempleteId,18000067",
+        "value": "Openinterface,UIEquipTrainingPanel,3",
     }),
     "gearButtonAction_identify": _tools.RODict({
         "ID": "gearButtonAction_identify",
@@ -153,19 +153,19 @@ datas = _tools.RODict({
     }),
     "gearButtonLimitID_enhance": _tools.RODict({
         "ID": "gearButtonLimitID_enhance",
-        "value": 17,
+        "value": "UIEquipTrainingPanel",
     }),
     "gearButtonLimitID_rune": _tools.RODict({
         "ID": "gearButtonLimitID_rune",
-        "value": 17,
+        "value": "UIEquipTrainingPanel",
     }),
     "gearButtonLimitID_bless": _tools.RODict({
         "ID": "gearButtonLimitID_bless",
-        "value": 17,
+        "value": "UIEquipTrainingPanel",
     }),
     "gearButtonLimitID_identify": _tools.RODict({
         "ID": "gearButtonLimitID_identify",
-        "value": 18,
+        "value": "UIEquipEnchantingPanel",
     }),
     "gearStrengthenMax": _tools.RODict({
         "ID": "gearStrengthenMax",
@@ -246,5 +246,9 @@ datas = _tools.RODict({
     "glyphExplain": _tools.RODict({
         "ID": "glyphExplain",
         "value": "<color=#fffbd7>{0}：</color>{1}",
+    }),
+    "gearWeaponGlyphNumWeight": _tools.RODict({
+        "ID": "gearWeaponGlyphNumWeight",
+        "value": (90, 10),
     })
 })

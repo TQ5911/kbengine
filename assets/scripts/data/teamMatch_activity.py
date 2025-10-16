@@ -33,15 +33,6 @@ datas = _tools.RODict({
         "enterDunID": 0,
         "isCrossServer": 0
     }),
-    101: _tools.RODict({
-        "ID": 101,
-        "value": "深海禁地",
-        "pareActivity": 32000004,
-        "minScore": 5500,
-        "minLevel": 0,
-        "enterDunID": 2101,
-        "isCrossServer": 0
-    }),
     102: _tools.RODict({
         "ID": 102,
         "value": "祖珂祭坛",
@@ -49,6 +40,15 @@ datas = _tools.RODict({
         "minScore": 7500,
         "minLevel": 0,
         "enterDunID": 2102,
+        "isCrossServer": 0
+    }),
+    101: _tools.RODict({
+        "ID": 101,
+        "value": "深海禁地",
+        "pareActivity": 32000004,
+        "minScore": 5500,
+        "minLevel": 0,
+        "enterDunID": 2101,
         "isCrossServer": 0
     }),
     103: _tools.RODict({

@@ -806,11 +806,19 @@ namespace KBEngine
             }
         }
 
-        public override void onPhysicalArmorChanged(Int32 oldValue)
+        public override void onMinPhysicalArmorChanged(Int32 oldValue)
         {
             if (isPlayer())
             {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.PhysicalArmor, oldValue);
+                PropCalculator.Instance.SetServerValue(PropDataConsant.MinPhysicalArmor, oldValue);
+            }
+        }
+
+        public override void onMaxPhysicalArmorChanged(Int32 oldValue)
+        {
+            if (isPlayer())
+            {
+                PropCalculator.Instance.SetServerValue(PropDataConsant.MaxPhysicalArmor, oldValue);
             }
         }
 
@@ -830,11 +838,19 @@ namespace KBEngine
             }
         }
 
-        public override void onMagicArmorChanged(Int32 oldValue)
+        public override void onMinMagicArmorChanged(Int32 oldValue)
         {
             if (isPlayer())
             {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MagicArmor, oldValue);
+                PropCalculator.Instance.SetServerValue(PropDataConsant.MinMagicArmor, oldValue);
+            }
+        }
+
+        public override void onMaxMagicArmorChanged(Int32 oldValue)
+        {
+            if (isPlayer())
+            {
+                PropCalculator.Instance.SetServerValue(PropDataConsant.MaxMagicArmor, oldValue);
             }
         }
 
@@ -870,7 +886,7 @@ namespace KBEngine
             }
         }
 
-        public override void onFatalChanged(float oldValue)
+        public override void onFatalChanged(int oldValue)
         {
             if (isPlayer())
             {
@@ -878,7 +894,7 @@ namespace KBEngine
             }
         }
 
-        public override void onAntiFatalChanged(float oldValue)
+        public override void onAntiFatalChanged(int oldValue)
         {
             if (isPlayer())
             {
@@ -894,7 +910,7 @@ namespace KBEngine
             }
         }
 
-        public override void onDmgArmorChanged(Int32 oldValue)
+        public override void onDmgArmorChanged(float oldValue)
         {
             if (isPlayer())
             {
@@ -1091,6 +1107,14 @@ namespace KBEngine
             if (isPlayer())
             {
                 PropCalculator.Instance.SetServerValue(PropDataConsant.SlowAnti, oldValue);
+            }
+        }
+
+        public override void onDrugsQuantityChanged(Int32 oldValue)
+        {
+            if (isPlayer())
+            {
+                PropCalculator.Instance.SetServerValue(PropDataConsant.DrugsQuantity, oldValue);
             }
         }
 

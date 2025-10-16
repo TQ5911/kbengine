@@ -201,11 +201,11 @@ datas = _tools.RODict({
     }),
     "itemTipsBagCountText": _tools.RODict({
         "ID": "itemTipsBagCountText",
-        "value": "背包库存：",
+        "value": "背包数量：",
     }),
     "itemTipsWarehouseCountText": _tools.RODict({
         "ID": "itemTipsWarehouseCountText",
-        "value": "仓库库存：",
+        "value": "仓库数量：",
     }),
     "itemExpirationDate": _tools.RODict({
         "ID": "itemExpirationDate",
@@ -270,5 +270,25 @@ datas = _tools.RODict({
     "potionMaxLimitMailID": _tools.RODict({
         "ID": "potionMaxLimitMailID",
         "value": 37000014,
+    }),
+    "usageAndSourceText": _tools.RODict({
+        "ID": "usageAndSourceText",
+        "value": "来源用途",
+    }),
+    "itemDetailsText": _tools.RODict({
+        "ID": "itemDetailsText",
+        "value": "物品详情",
+    }),
+    "sourceWaysText": _tools.RODict({
+        "ID": "sourceWaysText",
+        "value": "获取途径",
+    }),
+    "usageWaysText": _tools.RODict({
+        "ID": "usageWaysText",
+        "value": "使用途径",
+    }),
+    "sellingAmountText": _tools.RODict({
+        "ID": "sellingAmountText",
+        "value": "出售数量：",
     })
 })

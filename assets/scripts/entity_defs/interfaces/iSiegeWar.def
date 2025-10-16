@@ -12,7 +12,7 @@
             <Flags>         CELL            </Flags>
             <Default>       1               </Default>
         </siegeWarCanAttack>
-        
+
         <siegeWarUnionGuildUUID>
             <Type>          GUILD_UUID      </Type>
             <Flags>         BASE            </Flags>
@@ -57,7 +57,7 @@
 
         <querySiegeWarBiddingWinnerData> <Exposed/>
         </querySiegeWarBiddingWinnerData>
-        
+
         <cityDataRequest> <Exposed/>
         </cityDataRequest>
 
@@ -216,12 +216,12 @@
 
         <gmEnterSiegeWarSpace>
         </gmEnterSiegeWarSpace>
-        
+
         <beginEnterSiegeWarSpace>
             <Arg>           ENTITYCALL              </Arg>
             <Arg>           OBJECT_ID               </Arg>
-            <Arg>           SPACE_NO                </Arg> 
-            <Arg>           BOOL                    </Arg> 
+            <Arg>           SPACE_NO                </Arg>
+            <Arg>           BOOL                    </Arg>
         </beginEnterSiegeWarSpace>
 
         <setSiegeWarCamp>
@@ -266,7 +266,7 @@
             <Arg>          UINT8                        </Arg>
             <Arg>          LONGTIME                     </Arg>
         </onSiegeWarLoginDataChanged>
-        
+
         <onQuerySiegeWarSignUped>
             <Arg>          BOOL                         </Arg>
         </onQuerySiegeWarSignUped>

@@ -1,5 +1,11 @@
 <root>
     <Properties>
+        <tLastHourUpdateTimeDict>
+            <Type>          PY_DICT            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}                 </Default>
+        </tLastHourUpdateTimeDict>
+
         <tLastDayUpdateTimeDict>
             <Type>          PY_DICT            </Type>
             <Flags>         BASE                </Flags>

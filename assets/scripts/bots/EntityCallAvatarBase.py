@@ -33,6 +33,9 @@ class AvatarBaseEntityCall(object):
     def appointCityOfficer(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'appointCityOfficer', (arg1, arg2, )))
 
+    def authorizeRole(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'authorizeRole', (arg1, arg2, )))
+
     def biddingFailRedPointCheck(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'biddingFailRedPointCheck', ()))
 
@@ -65,6 +68,9 @@ class AvatarBaseEntityCall(object):
 
     def createGuild(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'createGuild', (arg1, )))
+
+    def dealAuthRole(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'dealAuthRole', (arg1, )))
 
     def dealGuildApply(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'dealGuildApply', (arg1, arg2, )))
@@ -414,6 +420,9 @@ class AvatarBaseEntityCall(object):
     def reqRedBagFetchInfo(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqRedBagFetchInfo', (arg1, )))
 
+    def reqRedBagPlayerInfo(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqRedBagPlayerInfo', ()))
+
     def reqReleaseRedBag(self, arg1, arg2, arg3, arg4, arg5, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqReleaseRedBag', (arg1, arg2, arg3, arg4, arg5, )))
 
@@ -453,8 +462,8 @@ class AvatarBaseEntityCall(object):
     def reqWelfareSignIn(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqWelfareSignIn', (arg1, )))
 
-    def reqWorkshopSetAutoMF(self, arg1, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqWorkshopSetAutoMF', (arg1, )))
+    def reqWorkshopMF(self, arg1, arg2, arg3, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqWorkshopMF', (arg1, arg2, arg3, )))
 
     def resetGuildTrain(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'resetGuildTrain', ()))
@@ -890,11 +899,11 @@ class AvatarCellEntityCall(object):
     def replyRaidStandbyChecker(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'replyRaidStandbyChecker', (arg1, arg2, )))
 
-    def reqAddMarkMember(self, arg1, arg2, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqAddMarkMember', (arg1, arg2, )))
+    def reqAddMarkMember(self, arg1, arg2, arg3, arg4, arg5, arg6, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqAddMarkMember', (arg1, arg2, arg3, arg4, arg5, arg6, )))
 
-    def reqAddRaidMarkMember(self, arg1, arg2, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqAddRaidMarkMember', (arg1, arg2, )))
+    def reqAddRaidMarkMember(self, arg1, arg2, arg3, arg4, arg5, arg6, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqAddRaidMarkMember', (arg1, arg2, arg3, arg4, arg5, arg6, )))
 
     def reqCaptainFollowInfo(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqCaptainFollowInfo', ()))
@@ -914,20 +923,20 @@ class AvatarCellEntityCall(object):
     def reqClaimTask(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqClaimTask', (arg1, arg2, arg3, )))
 
-    def reqDelMarkMember(self, arg1, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqDelMarkMember', (arg1, )))
+    def reqClearTeamStatisticData(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqClearTeamStatisticData', ()))
 
-    def reqDelRaidMarkMember(self, arg1, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqDelRaidMarkMember', (arg1, )))
+    def reqDelMarkMember(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqDelMarkMember', (arg1, arg2, )))
+
+    def reqDelRaidMarkMember(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqDelRaidMarkMember', (arg1, arg2, )))
 
     def reqDisableOutfit(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqDisableOutfit', (arg1, arg2, )))
 
     def reqDuel(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqDuel', (arg1, )))
-
-    def reqEquipAffixWashing(self, arg1, arg2, arg3, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipAffixWashing', (arg1, arg2, arg3, )))
 
     def reqEquipBackBless(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipBackBless', (arg1, arg2, arg3, )))
@@ -938,11 +947,20 @@ class AvatarCellEntityCall(object):
     def reqEquipEnhance(self, arg1, arg2, arg3, arg4, arg5, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipEnhance', (arg1, arg2, arg3, arg4, arg5, )))
 
-    def reqEquipGlyphWashing(self, arg1, arg2, arg3, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipGlyphWashing', (arg1, arg2, arg3, )))
+    def reqEquipGlyphApply(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipGlyphApply', (arg1, arg2, arg3, arg4, )))
+
+    def reqEquipGlyphWashing(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipGlyphWashing', (arg1, arg2, arg3, arg4, )))
 
     def reqEquipSell(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipSell', (arg1, arg2, arg3, )))
+
+    def reqEquipSpiritApply(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipSpiritApply', (arg1, arg2, arg3, arg4, )))
+
+    def reqEquipSpiritWashing(self, arg1, arg2, arg3, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipSpiritWashing', (arg1, arg2, arg3, )))
 
     def reqGetRaidList(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqGetRaidList', (arg1, arg2, )))
@@ -952,6 +970,9 @@ class AvatarCellEntityCall(object):
 
     def reqGetTeamList(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqGetTeamList', (arg1, arg2, )))
+
+    def reqGetTeamStatisticData(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqGetTeamStatisticData', ()))
 
     def reqJoinRaid(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqJoinRaid', (arg1, arg2, )))

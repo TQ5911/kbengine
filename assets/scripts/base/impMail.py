@@ -23,6 +23,9 @@ import gameconfig
 import gametlog
 import KBEngine
 import gameclass
+import itemData_set as IDSD
+import itemData_itemData_set as IDIDS
+import AuthClsWraper
 
 
 class ImpMail(object):
@@ -342,7 +345,7 @@ class ImpMail(object):
             WARNING_MSG('   deleteOldMailsCallback failed:', err, oldMailTime)
         return
 
-    def reqReadOneMail(self, mailGBID):
+    def reqReadOneMail(self, exposed, mailGBID):
         DEBUG_MSG('in reqReadOneMail:', mailGBID)
         gamesql.setMailHasRead(self.gbID, mailGBID, lambda ret, num, insertId, err, mailGBID=mailGBID:
                                             self.setMailHasReadCallback(ret, num, insertId, err, mailGBID))
@@ -355,7 +358,7 @@ class ImpMail(object):
         self.mailCacheData.readMail(mailGBID)
         self.client.onReadOneMail(mailGBID)
 
-    def reqGetOneMailAttach(self, mailGBID):
+    def reqGetOneMailAttach(self, exposed, mailGBID):
         DEBUG_MSG('in reqGetOneMailAttach:', mailGBID)
         mail = self.mailCacheData.getMailByGBID(mailGBID)
         if not mail:
@@ -363,7 +366,7 @@ class ImpMail(object):
         self.getMailAttachByMailList([mail])
 
     @gamedecorator.limitcall(2)
-    def reqGetAllMailsAttach(self):
+    def reqGetAllMailsAttach(self, exposed):
         DEBUG_MSG('in reqGetAllMailsAttach')
         mailList = self.mailCacheData.getMailsWithAttachHasNotGet()
         if not mailList:
@@ -394,6 +397,18 @@ class ImpMail(object):
                     if tryAddResult.extra == gameconst.BagOPStat.BAG_OP_NO_SPACE:
                         self.onMessagePre(MMD.datas.bagFullGeneralMessage, [])
                 continue
+
+            # 背包数量限制物品
+            if not tryWealthVal.isEmpty():
+                totalLimitItemNum = 0
+                for item in tryWealthVal.itemWealth.getItemObjs():
+                    if item.itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
+                        totalLimitItemNum += item.itemNum
+                if totalLimitItemNum != 0 and self.checkBagItemLimitNoItemId(totalLimitItemNum):
+                    if len(mailList) == 1:
+                        self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(IDSD.datas['potionBagStorageLimit']['value'])])
+                    continue
+
             totalWealthVal = tryWealthVal
             mailGBIDList.append(mail.mailGBID)
         if not mailGBIDList:
@@ -468,7 +483,8 @@ class ImpMail(object):
         INFO_MSG('resetMailAttachStateCallback, reset mail attach state succ:', mailGBIDList)
         return
 
-    def reqDelMails(self, mailGBIDList):
+    @AuthClsWraper.onlyHost
+    def reqDelMails(self, exposed, mailGBIDList):
         # 删除选中的邮件
         DEBUG_MSG('in reqDelMails:', mailGBIDList)
         if not mailGBIDList:
@@ -496,7 +512,8 @@ class ImpMail(object):
         self.onMailsDeleted({mailGBID:self.mailCacheData.getMailByGBID(mailGBID)}, srcType=AAC_AACDD.datas.BONUS_SRC_CLIENT_DELETE_MAIL, desc='from client')
         return
 
-    def reqDelAllMails(self):
+    @AuthClsWraper.onlyHost
+    def reqDelAllMails(self, exposed):
         DEBUG_MSG('in reqDelAllMails')
         delMailGBIDList = self.mailCacheData.getMailListCanDelete()
         if not delMailGBIDList:

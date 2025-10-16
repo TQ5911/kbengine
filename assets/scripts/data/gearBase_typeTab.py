@@ -37,7 +37,7 @@ datas = _tools.RODict({
         "ID": 4,
         "blessAffixID": 0,
         "auctionCategory": 303,
-        "deathDropWeight": 12
+        "deathDropWeight": 10
     }),
     5: _tools.RODict({
         "ID": 5,
@@ -49,23 +49,30 @@ datas = _tools.RODict({
         "ID": 6,
         "blessAffixID": 0,
         "auctionCategory": 402,
-        "deathDropWeight": 12
+        "deathDropWeight": 10
     }),
     7: _tools.RODict({
         "ID": 7,
         "blessAffixID": 0,
         "auctionCategory": 403,
-        "deathDropWeight": 12
+        "deathDropWeight": 10
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "blessAffixID": 0,
+        "auctionCategory": 304,
+        "deathDropWeight": 6
     })
 })
 minKey = 1
-maxKey = 7
+maxKey = 8
 
 AuctionCategoryDic = _tools.RODict({ 
         2:1,
         301:2,
         302:3,
         303:4,
+        304:8,
         401:5,
         402:6,
         403:7,

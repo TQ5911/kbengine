@@ -17,6 +17,13 @@
             <Type>          PY_LIST                 </Type>
             <Flags>         BASE                    </Flags>
         </packetSendList>
+
+        <authPermission>
+            <Type>          AUTH_PERMISSION_DATA_INFO   </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+            <CrossServer>   false                       </CrossServer>
+        </authPermission>
     </Properties>
 
     <BaseMethods>
@@ -132,6 +139,28 @@
         <onGetAvatarInterInfoBase>
             <Arg>           ENTITYCALL              </Arg>
         </onGetAvatarInterInfoBase>
+
+        <onRecvAuthRole>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onRecvAuthRole>
+
+        <onAgreeAuthRole>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           DBID                    </Arg>
+        </onAgreeAuthRole>
+
+        <onAgreeAuthRoleSuccess>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           CHARACTER_VAL           </Arg>
+        </onAgreeAuthRoleSuccess>
+
+        <authorizeRole> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+        </authorizeRole>
+        <dealAuthRole> <Exposed/>
+            <Arg>           BOOL                    </Arg>
+        </dealAuthRole>
     </BaseMethods>
 
     <CellMethods>
@@ -198,9 +227,13 @@
             <Arg>           MSG_CNT                 </Arg>
             <Arg>           MSG_TS                  </Arg>
         </onFriendMsgChanged>
-        
+
         <onGetInterInfoClient>
             <Arg>           AVATAR_INTER_VAL      </Arg>
         </onGetInterInfoClient>
+
+        <onRecvAuthRoleClient>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onRecvAuthRoleClient>
     </ClientMethods>
 </root>

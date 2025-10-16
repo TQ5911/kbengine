@@ -17,6 +17,7 @@ import gameengine
 import gameclass
 import gametlog
 import dataUtils
+import itemData_set as IDSD
 
 MAX_ROOMS_NUM = 4
 
@@ -42,23 +43,25 @@ class IWarehouse(object):
         self.streamStringProxy(zStr, '', gameconst.StreamStringID.WAREHOUSE_INFO)
         return
 
-    def warehouseExpansion(self, gridNum, gridId, itemId, useNum, opUUID, context):
-        DEBUG_MSG("warehouseExpansion ", gridNum, gridId, itemId, useNum, opUUID, context)
+    def warehouseExpansion(self, pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context):
+        DEBUG_MSG("warehouseExpansion ", pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
         bankCapacity = BagDataSet.datas['bankCapacity']['value']
-        if self.capacity >= bankCapacity:
-            WARNING_MSG('   in warehouseExpansion, reach limit 1:', self.capacity)
+        if self.warehouse.capacity >= bankCapacity:
+            WARNING_MSG('   in warehouseExpansion, reach limit 1:', self.warehouse.capacity)
+            self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
             return
-        newCapacity = self.capacity + gridNum
+        newCapacity = self.warehouse.capacity + gridNum
         if newCapacity > bankCapacity:
             WARNING_MSG('   in warehouseExpansion, reach limit 2:', newCapacity)
             newCapacity = bankCapacity
-        self.capacity = newCapacity
+        self.warehouse.capacity = newCapacity
+        self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
         self.client.onUnlockWarehouseGrids(gameconst.BagOPStat.BAG_OP_STAT_OK, newCapacity)
 
-    def reqGetWarehouse(self):
+    def reqGetWarehouse(self, exposed):
         self.sendWarehouseData()
 
-    def reqUnlockWarehouse(self, gridNum):
+    def reqUnlockWarehouse(self, exposed, gridNum):
         DEBUG_MSG('in reqUnlockWarehouse', gridNum)
         if gridNum <= 0:
             ERROR_MSG('reqUnlockWarehouse error:', gridNum)
@@ -69,7 +72,7 @@ class IWarehouse(object):
             self.client.onUnlockWarehouseGrids(gameconst.BagOPStat.BAG_OP_STAT_OK, newCapacity)
         return
 
-    def reqMoveItemToWarehouse(self, gridId, itemId):
+    def reqMoveItemToWarehouse(self, exposed, gridId, itemId):
         DEBUG_MSG('in reqMoveItemToWarehouse:', gridId, itemId)
         if self.bagData.isLocked():
             WARNING_MSG('     in reqMoveItemToWarehouse, bag locked')
@@ -102,7 +105,7 @@ class IWarehouse(object):
         self.client.onWarehouseInItems(opStat, self.warehouse._getClientDataFromPlanDic(planDic))
         # self.makeWarehouseFlow(bagItem.itemId, bagItem.itemNum, bagItem.uniqueId, bagItem.bindType, 0, '')
 
-    def reqMoveItemToBag(self, gridId, itemId):
+    def reqMoveItemToBag(self, exposed, gridId, itemId):
         DEBUG_MSG('in moveItemToBag:', gridId, itemId)
         if self.bagData.isLocked():
             WARNING_MSG('     in moveItemToBag, bag locked')
@@ -110,6 +113,15 @@ class IWarehouse(object):
 
         if self.bagData.isFull():
             self.onMessagePre(BGDSD.datas['takeOutFail_bagFull_msg']['value'], [])
+            return
+        
+        itemObj = self.warehouse.getItemObjByGridId(gridId)
+        if not itemObj:
+            WARNING_MSG("in reqWarehouseLockItem, wrong arg gridId", gridId)
+            return
+        
+        if self.checkBagItemLimit(itemObj.itemId, itemObj.itemNum):
+            self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(IDSD.datas['potionBagStorageLimit']['value'])])
             return
 
         opUUID = KBEngine.genUUID64()
@@ -123,7 +135,7 @@ class IWarehouse(object):
         self.client.onWarehouseOutItems(opStat, gridId)
         # self.makeWarehouseFlow(roomItem.itemId, roomItem.itemNum, roomItem.uniqueId, roomItem.bindType, 1, '')
 
-    def reqWarehouseSort(self):
+    def reqWarehouseSort(self, exposed):
         DEBUG_MSG('in reqWarehouseSort:')
         if self.warehouse.doBagSort(self):
             dic = self.warehouse.toBagSavedDict()
@@ -155,7 +167,7 @@ class IWarehouse(object):
         tlogParams.update(self.getTLogCommonParams())
         gametlog.build(gameconst.GameLog.LOG_WAREHOUSE_FLOW, **tlogParams).init().commit()
 
-    def reqWarehouseLockItem(self, gridId, itemId, uniqueId, lockStatus):
+    def reqWarehouseLockItem(self, exposed, gridId, itemId, uniqueId, lockStatus):
         INFO_MSG('in reqWarehouseLockItem::', gridId, itemId, uniqueId, lockStatus)
         if not dataUtils.checkLockAvailableStatus(itemId):
             ERROR_MSG('in reqWarehouseLockItem, item locker is not opened', itemId)

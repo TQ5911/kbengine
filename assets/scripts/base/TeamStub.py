@@ -21,9 +21,9 @@ import gamePlay_gamePlay as DDL
 import gamePlay_set as GP_S
 import teamMatch_matchConfig as TMMCD
 import teamMatch_activity as TMACTD
-import uiConfig_uiVisible as UCUVD
 import raid_raidConst as RAID_CONST
 import teamDunChallenge_config as TDC_CFG
+import visible_visible as UVVD
 
 
 class DungeonStubMixin(object):
@@ -494,13 +494,13 @@ class RaidMixin(object):
             gameengine.getRaidStub(raidUUID).createRaid(
                 captainBox, captainGBID, raidUUID, capacity, memberDataList, extraProps)
             
-            try:
-                markDataList = []
-                for markVal in teamVal.teamMarkDic.values():
-                    markDataList.append(markVal.toSavedDict())
-                gameengine.getRaidStub(raidUUID).addTeamMarkDataFromTeam(raidUUID, markDataList)
-            except Exception as exc:
-                gameengine.reportCritital("addTeamMarkDataFromTeam::error", exc)
+            try:               
+                markDataInfo = teamVal.teamMark.toClientData()
+                markDataInfo['onlyCaptainCanMark'] = teamVal.onlyCaptainCanMark
+                
+                gameengine.getRaidStub(raidUUID).addTeamMarkDataFromTeam(raidUUID, markDataInfo)
+            except Exception as e:
+                DEBUG_MSG("addTeamMarkDataFromTeam::error", e)
 
             return None, gameconst.RaidErrno.RAID_OK
 
@@ -526,7 +526,7 @@ class RaidMixin(object):
             if captainGBID != teamVal.getCaptainGbId():
                 return None, gameconst.RaidErrno.RAID_NOT_TEAM_CAPTAIN
 
-            lvLimit = UCUVD.datas.get(RAID_CONST.datas["raidUIVisibleId"]["value"], {}).get('lvLimit', utils.getPlayerMaxLevel()+1)
+            lvLimit = UVVD.datas.get(RAID_CONST.datas["raidUIVisibleId"]["value"], {}).get('level', utils.getPlayerMaxLevel()+1)
             for memberVal in teamVal.teamPlayerDic.values():
                 memberDataList.append(memberVal.toSavedDict())
                 if memberVal.level < lvLimit:
@@ -592,7 +592,7 @@ class RaidMixin(object):
             if invitedTeamUUID not in self.teamDic:
                 return None, gameconst.RaidErrno.RAID_TEAM_NOT_FOUND
 
-            lvLimit = UCUVD.datas.get(RAID_CONST.datas["raidUIVisibleId"]["value"], {}).get('lvLimit', utils.getPlayerMaxLevel()+1)
+            lvLimit = UVVD.datas.get(RAID_CONST.datas["raidUIVisibleId"]["value"], {}).get('level', utils.getPlayerMaxLevel()+1)
             teamVal = self.teamDic[invitedTeamUUID]
             for memberVal in teamVal.teamPlayerDic.values():
                 if memberVal.raidUUID and memberVal.raidUUID != raidUUID:
@@ -737,7 +737,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         # 没有密码的属于公开
         if len(teamVal.password) == 0:
-            self.isPublish = True
+            teamVal.isPublish = True
             # 自由组队目标为1，不进匹配队列
             if teamVal.teamTarget > 1:
                 self.teamPrepareAutoMatch(teamId, teamPlayerInfoDic.get('guildUUID', 0))
@@ -932,6 +932,9 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self._disbandTeam(teamId)
 
         # todo 自动匹配列表中删除
+
+    def teamDungeonFinished(self, teamId):
+        self._disbandTeam(teamId)
 
     def isCanInviteTeam(self, box, srcTeamId, srcPlayerGbId, invitedPlayerGbId):
         if srcTeamId not in self.teamDic:
@@ -1559,7 +1562,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         
         # 改完队伍的目标之后，统一刷一遍匹配条件
         self.teamPrepareStopAutoMatch(teamId)
-        if self.isPublish and self.teamTarget > 1:
+        if teamVal.isPublish and teamVal.teamTarget > 1:
             self.teamPrepareAutoMatch(teamId, guildUUID)
 
         self.checkAutoStart(teamId)
@@ -1584,8 +1587,6 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if teamVal.isTeamFull():
                 continue
             if teamVal.isAllMembersOffline():
-                continue
-            if not teamVal.isPublish:
                 continue
             teamList.append(teamVal.getClientData())
         box.client.onGetTeamList(checkTime, teamTarget, teamList)
@@ -1806,20 +1807,20 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         
     
     # 标记相关
-    def reqAddMarkMember(self, teamId, playerBox, entId, markType):
-        INFO_MSG('reqAddMarkMember', teamId, entId, markType)
+    def reqAddMarkMember(self, teamId, playerBox, type, index, name, gbId, entId, pos):
+        INFO_MSG('reqAddMarkMember', teamId, type, index, name, gbId, entId, pos)
         if teamId not in self.teamDic:
             return
         teamVal = self.teamDic[teamId]
-        teamVal.addMarkMember(playerBox, entId, markType)
+        teamVal.addMarkMember(playerBox, type, index, name, gbId, entId, pos)
         
-    def reqDelMarkMember(self, teamId, playerBox, entId):
-        INFO_MSG('reqDelMarkMember', teamId, entId)
+    def reqDelMarkMember(self, teamId, playerBox, type, index):
+        INFO_MSG('reqDelMarkMember', teamId, type, index)
         if teamId not in self.teamDic:
             return
         teamVal = self.teamDic[teamId]
         
-        teamVal.delMarkMember(playerBox, entId)
+        teamVal.delMarkMember(playerBox, type, index)
         
     def reqChangeOnlyCaptain(self, teamId, playerBox, state):
         INFO_MSG('reqChangeOnlyCaptain', teamId, state)
@@ -1877,3 +1878,24 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             DEBUG_MSG("addTeamDungeonRewardRecord, team is missing", teamID, gbID)
             return
         teamVal.addTeamDungeonRewardRecord(gbID, rewardList)
+
+    # ----------------------------- 统计相关 --------------------------------
+    def addTeamStatisticPlayerVal(self, teamId, playerGbId, type, value):
+        teamVal = self.getTeamByTeamId(teamId)
+        if not teamVal:
+            DEBUG_MSG("addTeamStatisticPlayerVal, team is missing", teamId, playerGbId, type, value)
+            return
+
+        teamVal.addTeamStatisticValue(playerGbId, type, value)
+
+    def getTeamStatisticData(self, playerbox, teamId):
+        teamVal = self.getTeamByTeamId(teamId)
+        if not teamVal:
+            DEBUG_MSG("getTeamStatisticData, team is missing", teamId)
+            return {}
+        
+        teamVal.showStatisticData()
+
+        data = teamVal.getTeamStatisticData()
+        playerbox.cell.onGetTeamStatisticData(data)
+

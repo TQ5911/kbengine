@@ -21,7 +21,7 @@ def _getEntityLogInfo():
     while f != None and n < 2:
         f = f.f_back
         n = n + 1
-        
+
     # 获取到最近的包含self的一帧，解析出id和ename
     eid, ename, gbId = 0, "", 0
     iterDepth = 20

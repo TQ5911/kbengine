@@ -52,7 +52,7 @@ class ICollectible(object):
         self.client.onGetCollectInfo(clientData)
         DEBUG_MSG('call sendCollectInfo done', self.collectibleData.collectibleDict.items())
 
-    def reqMark(self, collectID, isMark):
+    def reqMark(self, exposed, collectID, isMark):
         # 标记收集项高亮显示
         DEBUG_MSG('begin reqMark collectID', collectID, ' isMark', isMark)
         info = PDETAIL.datas.get(collectID, None)
@@ -64,7 +64,7 @@ class ICollectible(object):
         self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
         DEBUG_MSG('call reqMark done', self.collectibleData.collectibleDict[collectID].toSavedDict())
 
-    def reqCollect(self, bagType, bagGridID, itemUniqueID, useBind, collectID, collectGridID):
+    def reqCollect(self, exposed, bagType, bagGridID, itemUniqueID, useBind, collectID, collectGridID):
         # 获取收集项的要求
         DEBUG_MSG('begin reqCollect bagType', bagType, ' bagGridID', bagGridID, ' itemUniqueID', itemUniqueID, ' collectID', collectID, ' collectGridID', collectGridID)
         info = PDETAIL.datas.get(collectID, None)
@@ -141,15 +141,15 @@ class ICollectible(object):
         if not bagItem:
             WARNING_MSG('     in _completeCollect, item not found:', bagGridID)
             return False
-        
+
         if bagItem.uniqueId != itemUniqueID:
             WARNING_MSG('     in _completeCollect, uniqueId not matched:', bagItem.uniqueId, 'given ', itemUniqueID)
             return False
-        
+
         if bagItem.isLocked():
             WARNING_MSG('     in _completeCollect, item is locked:', bagGridID)
             return False
-        
+
         if enhanceLevel:
             if bagItem.getEnhanceLevel() != enhanceLevel:
                 WARNING_MSG('     in _completeCollect, getEnhanceLevel() not matched:', bagItem.getEnhanceLevel(), ' item level', enhanceLevel)

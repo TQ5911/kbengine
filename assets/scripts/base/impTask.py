@@ -27,7 +27,6 @@ import value_value as VLVLD
 import gamelog
 import gameclass
 import taskdata as TDD
-import uiConfig_uiVisible as UC_UVD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 
@@ -107,15 +106,6 @@ class TaskEvent(object):
         opUUID = KBEngine.genUUID64()
         self._innerSetVariable(gameconst.VarChangeSrc.VAR_SRC_COMM_ACTION, varId, fmlId, paramsStr, opUUID, '')
         return
-
-    def _eventActionAddEquipWashAnima(self, eventActionSrc, addNum, *args, **kwargs):
-        INFO_MSG('_eventActionAddEquipWashAnima:', addNum)
-        gridID, itemObj = self.getAnimaItemObj()
-        if gridID < 0 or not itemObj:
-            equipAnimaGetExceptions = GBGCD.datas['equipAnimaGetExceptions']['value']
-            self.onMessagePre(equipAnimaGetExceptions, [str(addNum)])
-            return
-        itemObj.addAnima(self, gridID, int(addNum))
 
 class TaskProgress(object):
     def onTaskAvatarDie(self, spaceNo):
@@ -231,8 +221,9 @@ class ImpTask(TaskProgress, TaskEvent):
                 tgt.srcIdList = [int(srcId) for srcId in srcIdList]
                 tgt.srcRatio = int(100 * srcRatio)
                 tgt.state = 0
-    # 提交任务请求接口
-    def reqSubmitTask(self, taskIds):
+
+    def reqSubmitTask(self, exposed, taskIds):
+        # 提交任务
         popRewardUUID = KBEngine.genUUID64()
         taskIdSet = set()
         DEBUG_MSG('in reqSubmitTask1:', taskIds)
@@ -245,7 +236,7 @@ class ImpTask(TaskProgress, TaskEvent):
             DEBUG_MSG('in reqSubmitTask2:', popRewardUUID, taskIdsInfo)
         return
 
-    def reqDeductTaskTargetItems(self, taskId):
+    def reqDeductTaskTargetItems(self, exposed, taskId):
         DEBUG_MSG('in reqDeductTaskTargetItems:', taskId)
         if self.taskInfo.deductTaskTgtItems(self, taskId):
             self.sendUpdateTasksToClient()
@@ -253,7 +244,7 @@ class ImpTask(TaskProgress, TaskEvent):
     def initNoviceHookRewardTask(self):
         self.taskInfo.initNoviceHookRewardTask()
 
-    def reqQuitTask(self, taskId):
+    def reqQuitTask(self, exposed, taskId):
         DEBUG_MSG('in reqQuitTask:', taskId)
         if not self.taskInfo.canQuitTaskManual(taskId):
             WARNING_MSG('   in reqQuitTask, cant quit taskId:', taskId)
@@ -323,7 +314,7 @@ class ImpTask(TaskProgress, TaskEvent):
 
     def sendUpdateTasksToClient(self):
         self.taskInfo.doSendUpdateTasksToClient(self)
-    # cell领取任务检测
+
     def onCheckSingleTaskCellCondSucc(self, taskId, taskCtx):
         # 对于单人任务，base领取任务的条件还没有检查
         self.baseTaskClaim(taskId, taskCtx)
@@ -385,7 +376,7 @@ class ImpTask(TaskProgress, TaskEvent):
         if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
             WARNING_MSG('rem task items err:', rmTaskItemDic)
 
-    def reqDropTaskItem(self, gridId, itemId):
+    def reqDropTaskItem(self, exposed, gridId, itemId):
         gridObj = self.taskBagData.getItemObjByGridId(gridId)
         if not gridObj or gridObj.itemId != itemId:
             gameengine.reportCritical('in reqDropTaskItem, no task item:', gridId)
@@ -483,7 +474,7 @@ class ImpTask(TaskProgress, TaskEvent):
             self.taskInfo.doTaskLeaveDungeon(self, taskId)
         self.sendUpdateTasksToClient()
     # ------------------- 其他更新任务进度或状态的接口 -------------------------------------------------
-    def reqCompleteTaskNoTarget(self, taskId):
+    def reqCompleteTaskNoTarget(self, exposed, taskId):
         DEBUG_MSG('in reqCompleteTaskNoTarget:', taskId)
         self.doCompleteTaskNoTarget(taskId)
 
@@ -491,7 +482,7 @@ class ImpTask(TaskProgress, TaskEvent):
         self.taskInfo.completeTaskNoTarget(self, taskId)
         return
 
-    def reqTaskCompleteTarget(self, taskId, tgtType, tgtId):
+    def reqTaskCompleteTarget(self, exposed, taskId, tgtType, tgtId):
         # 客户端检测的任务目标完成接口；目前有两种任务目标：完成一个行为(目前只有使用技能行为)目标 和 完成播放剧情任务目标
         # 完成播放剧情任务目标 已经废弃
         DEBUG_MSG('in reqTaskCompleteTarget:', taskId, tgtType, tgtId)
@@ -651,7 +642,7 @@ class ImpTask(TaskProgress, TaskEvent):
         if taskCtx.claimSrc == gameconst.ClaimTaskSrc.REWARD_TASK:
             self.taskInfo.removeRewardTaskCache(taskId)
 
-    def reqEnterTaskTargetDungeon(self, taskId, dungeonNo):
+    def reqEnterTaskTargetDungeon(self, exposed, taskId, dungeonNo):
         DEBUG_MSG('reqEnterTaskTargetDungeon:', taskId, dungeonNo)
         if self.taskInfo.isTaskTryingEnterDungeon(dungeonNo):
             return
@@ -767,7 +758,7 @@ class ImpTask(TaskProgress, TaskEvent):
         self.taskFlowLog(taskId, "TaskSubmit", opUUID=opUUID)
         return True, [(taskId, 1)]
 
-    def reqTaskEnterSpace(self, taskId):
+    def reqTaskEnterSpace(self, exposed, taskId):
         DEBUG_MSG('reqTaskEnterSpace:', taskId)
         task = self.taskInfo.getTask(taskId)
         if not task:

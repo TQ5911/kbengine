@@ -21,7 +21,7 @@ datas = _tools.RODict({
         "subType": 0,
         "sort": 10,
         "antiStudio": 1,
-        "auctionCategory": 8
+        "auctionCategory": 802
     }),
     1: _tools.RODict({
         "ID": 1,
@@ -29,7 +29,7 @@ datas = _tools.RODict({
         "subType": 1,
         "sort": 9,
         "antiStudio": 1,
-        "auctionCategory": 8
+        "auctionCategory": 801
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -37,7 +37,7 @@ datas = _tools.RODict({
         "subType": 2,
         "sort": 9,
         "antiStudio": 1,
-        "auctionCategory": 8
+        "auctionCategory": 801
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -45,7 +45,7 @@ datas = _tools.RODict({
         "subType": 3,
         "sort": 8,
         "antiStudio": 1,
-        "auctionCategory": 8
+        "auctionCategory": 802
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -133,7 +133,7 @@ datas = _tools.RODict({
         "subType": 14,
         "sort": 9,
         "antiStudio": 1,
-        "auctionCategory": 8
+        "auctionCategory": 801
     }),
     15: _tools.RODict({
         "ID": 15,
@@ -174,6 +174,14 @@ datas = _tools.RODict({
         "sort": 1,
         "antiStudio": 1,
         "auctionCategory": 0
+    }),
+    19: _tools.RODict({
+        "ID": 19,
+        "type": 0,
+        "subType": 19,
+        "sort": 9,
+        "antiStudio": 1,
+        "auctionCategory": 801
     }),
     1000: _tools.RODict({
         "ID": 1000,
@@ -303,6 +311,7 @@ ItemTypeSortDic = _tools.RODict({
         16:10,
         17:10,
         18:4,
+        19:9,
         52:1,
         1000:1,
         1001:1,
@@ -324,5 +333,6 @@ AuctionCategoryDic = _tools.RODict({
         5:[(0, 11)],
         6:[(0, 7), (0, 8), (0, 9), (0, 10), (0, 18)],
         7:[(0, 6), (0, 12), (0, 13)],
-        8:[(0, 0), (0, 1), (0, 2), (0, 3), (0, 14)],
+        801:[(0, 1), (0, 2), (0, 14), (0, 19)],
+        802:[(0, 0), (0, 3)],
 })

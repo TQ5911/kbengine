@@ -35,6 +35,16 @@
             <Arg>       UNIQUE_ID   </Arg>
             <Arg>       UINT8       </Arg>
         </reqWarehouseLockItem>
+
+        <warehouseExpansion>
+            <Arg>       UINT16      </Arg>
+            <Arg>       UINT16      </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT16      </Arg>
+            <Arg>       UUID        </Arg>
+            <Arg>       PYTHON      </Arg>
+        </warehouseExpansion>
     </BaseMethods>
 
     <ClientMethods>

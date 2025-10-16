@@ -281,9 +281,9 @@ class IAICombatUnit(SkillManager.SkillManager):
         return self.getConfigData().get('alertRange', 0)
 
     def getLeaveAlertDistance(self):
-        range = self.getConfigData().get('leaveAlertRange', gameconst.HOME_AOI)
+        range = self.getConfigData().get('leaveAlertRange', 0)
         if not range or range <= 0:
-            range = gameconst.HOME_AOI
+            range = max(gameconst.HOME_AOI, self.getAlertDistance())
         return range
 
     def getEscapeDistance(self):
@@ -848,3 +848,12 @@ class IAICombatUnit(SkillManager.SkillManager):
         if not self.aiController:
             return
         self.aiController.tickCallBack()
+
+    def checkInCombatArea(self, srcPos):
+        if not self.IsMonster:
+            return True
+        combatAreaDatas = self.tmpProps.get("combatAreaDatas", None)
+        if not combatAreaDatas:
+            return True
+        # 检测是否在战斗区内
+        return utils.checkInCombatArea(self.creepBaseId, srcPos, combatAreaDatas)

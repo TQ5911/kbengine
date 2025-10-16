@@ -11,9 +11,9 @@ datas ={
         "EntityID": 0,
         "ID": 10040004,
         "Name": "\u51fa\u751f\u70b9",
-        "PosX": 96.57565,
-        "PosY": 143.9669,
-        "PosZ": 171.7448,
+        "PosX": 39.73882,
+        "PosY": 139.8291,
+        "PosZ": 150.9764,
         "Props": {
           "Num": 0,
           "Radius": 0.0,
@@ -36,9 +36,9 @@ datas ={
         "EntityID": 0,
         "ID": 10040005,
         "Name": "\u590d\u6d3b\u70b9",
-        "PosX": 96.49312,
-        "PosY": 143.9669,
-        "PosZ": 172.3682,
+        "PosX": 39.68217,
+        "PosY": 140.284,
+        "PosZ": 150.9549,
         "Props": {
           "Num": 0,
           "Radius": 0.0,
@@ -433,21 +433,22 @@ datas ={
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10028073",
-          "Dir": 131.1374,
+          "Dir": 62.3196,
           "DisplayName": "",
           "EntityID": 17100501,
           "ID": 10058001,
           "Name": "\u540c\u5fc3\u8c37",
-          "PosX": 96.43594,
-          "PosY": 143.828,
-          "PosZ": 172.3308,
+          "PosX": 35.93,
+          "PosY": 141.7527,
+          "PosZ": 150.87,
           "Props": {
             "CameraId": 0,
+            "GateType": 0,
             "Remark": "",
-            "TelDir": 124.0144,
-            "TelX": 101.3168,
-            "TelY": 143.828,
-            "TelZ": 168.4789
+            "TelDir": 29.94634,
+            "TelX": 45.10838,
+            "TelY": 142.3228,
+            "TelZ": 154.5555
           }
         },
         "10058002": {
@@ -455,7 +456,7 @@ datas ={
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10068003",
-          "Dir": 36.99736,
+          "Dir": 35.01904,
           "DisplayName": "",
           "EntityID": 17100502,
           "ID": 10058002,
@@ -465,11 +466,12 @@ datas ={
           "PosZ": 210.2707,
           "Props": {
             "CameraId": 0,
+            "GateType": 0,
             "Remark": "",
-            "TelDir": 0.0,
-            "TelX": 244.4858,
-            "TelY": 171.4863,
-            "TelZ": 204.9533
+            "TelDir": 164.4909,
+            "TelX": 237.2565,
+            "TelY": 168.1863,
+            "TelZ": 193.8405
           }
         }
       }

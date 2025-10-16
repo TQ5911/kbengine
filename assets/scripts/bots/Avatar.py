@@ -282,7 +282,7 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
     def offlineBot(self):
         print("offlineBot:", self.gbId)
         if self.cell:
-            self.cell.offline(gameconst.AVATAR_OFFLINE_REASON_MANNUALLY)
+            self.cell.offline(self.id, gameconst.AVATAR_OFFLINE_REASON_MANNUALLY)
 
     def gmfinishNewbie(self):
         DEBUG_MSG("gmfinishNewbie ")

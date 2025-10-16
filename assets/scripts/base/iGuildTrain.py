@@ -18,7 +18,7 @@ import antiAddictCategory_antiAddictCategory_def as AAC_AAC_DD
 
 
 class IGuildTrain(object):
-    def resetGuildTrain(self):
+    def resetGuildTrain(self, exposed):
         INFO_MSG('resetGuildTrain:', self.gbID)
         if not self.trainDic:
             WARNING_MSG('resetGuildTrain but train is empty', self.gbID)
@@ -118,7 +118,7 @@ class IGuildTrain(object):
 
         return dwVal
 
-    def upgradeTrainLevel(self, trainId, targetLevel):
+    def upgradeTrainLevel(self, exposed, trainId, targetLevel):
         INFO_MSG('upgradeTrainLevel:', trainId, targetLevel)
         gtuData = GT_GTUD.datas.get(targetLevel)
         if self._checkCanUpgradeTrainLevel(trainId, targetLevel, gtuData) is None:

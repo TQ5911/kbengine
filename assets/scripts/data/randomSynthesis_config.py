@@ -38,5 +38,29 @@ datas = _tools.RODict({
     "msgId_syntheticFailed": _tools.RODict({
         "ID": "msgId_syntheticFailed",
         "value": 54000080,
+    }),
+    "typeName": _tools.RODict({
+        "ID": "typeName",
+        "value": ('合成一', '合成二'),
+    }),
+    "synthesisIntervalTime": _tools.RODict({
+        "ID": "synthesisIntervalTime",
+        "value": 0.5,
+    }),
+    "synthesisRecordDes": _tools.RODict({
+        "ID": "synthesisRecordDes",
+        "value": "第{0}轮结果",
+    }),
+    "synthesisButtonText1": _tools.RODict({
+        "ID": "synthesisButtonText1",
+        "value": "退出合成",
+    }),
+    "synthesisButtonText2": _tools.RODict({
+        "ID": "synthesisButtonText2",
+        "value": "终止合成",
+    }),
+    "synthesisAutoQuality": _tools.RODict({
+        "ID": "synthesisAutoQuality",
+        "value": _tools.ROList([2, 3, 4]),
     })
 })

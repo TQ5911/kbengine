@@ -578,18 +578,23 @@
 
         <addTeamMarkDataFromTeam>
             <Arg>       RAID_ID      </Arg>
-            <Arg>       PY_LIST        </Arg>
+            <Arg>       CLIENT_TEAM_MARK_INFO        </Arg>
         </addTeamMarkDataFromTeam>
         <reqAddRaidMarkMember>
             <Arg>       TEAMID      </Arg>
             <Arg>       MAILBOX        </Arg>
-            <Arg>       ENTITY_ID       </Arg>
             <Arg>       UINT8       </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UNICODE     </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       ENTITY_ID           </Arg>
+            <Arg>       POSITION_ARG    </Arg>
         </reqAddRaidMarkMember>
         <reqDelRaidMarkMember>
             <Arg>       TEAMID      </Arg>
             <Arg>       MAILBOX        </Arg>
-            <Arg>       ENTITY_ID       </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UINT8       </Arg>
         </reqDelRaidMarkMember>
         <reqChangeRaidOnlyLeader>
             <Arg>       TEAMID      </Arg>
@@ -614,5 +619,18 @@
             <Arg>           RAID_ID                                                 </Arg>
             <Arg>           PLAYER_GBID                                             </Arg>
         </clearRaidDungeonRewardRecord>
+
+        <addTeamStatisticPlayerVal>
+            <Arg>       TEAMID          </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT32          </Arg>
+        </addTeamStatisticPlayerVal>
+
+        <getTeamStatisticData>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       TEAMID          </Arg>
+        </getTeamStatisticData>
+        
     </BaseMethods>
 </root>

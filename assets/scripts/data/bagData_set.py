@@ -55,6 +55,10 @@ datas = _tools.RODict({
         "ID": "bagExpansionSuccess_msgID",
         "value": 54000026,
     }),
+    "bagExpansionOverflow_msgID": _tools.RODict({
+        "ID": "bagExpansionOverflow_msgID",
+        "value": 54000382,
+    }),
     "noCheckedConditions_msgID": _tools.RODict({
         "ID": "noCheckedConditions_msgID",
         "value": 54000034,
@@ -98,6 +102,10 @@ datas = _tools.RODict({
     "bankExpansionSuccess_msgID": _tools.RODict({
         "ID": "bankExpansionSuccess_msgID",
         "value": 54000199,
+    }),
+    "bankExpansionOverflow_msgID": _tools.RODict({
+        "ID": "bankExpansionOverflow_msgID",
+        "value": 54000383,
     }),
     "bagItemAuctionCD": _tools.RODict({
         "ID": "bagItemAuctionCD",

@@ -529,11 +529,16 @@
         </onPlayerMatchedRaid>
 
         <reqAddRaidMarkMember> <Exposed/>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           PLAYER_GBID     </Arg>
             <Arg>           ENTITY_ID           </Arg>
-            <Arg>           BOOL            </Arg>
+            <Arg>           POSITION_ARG    </Arg>
         </reqAddRaidMarkMember>
         <reqDelRaidMarkMember> <Exposed/>
-            <Arg>           ENTITY_ID           </Arg>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UINT8           </Arg>
         </reqDelRaidMarkMember>
         <reqChangeRaidOnlyLeader> <Exposed/>
             <Arg>           BOOL            </Arg>

@@ -106,6 +106,7 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     BONUS_SRC_HEAL_WOUNDS = 88
     BONUS_SRC_SEND_RED_PACKET_COST = 89
     BONUS_SRC_GET_RED_PACKET_ITEM = 90
+    BONUS_SRC_EXCHANGE_STORE_ITEMS = 91
     addictList = {
         BONUS_SRC_KILL_MONSTER,
         BONUS_SRC_COMPLETE_TASK,

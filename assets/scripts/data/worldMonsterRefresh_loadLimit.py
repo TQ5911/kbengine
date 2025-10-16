@@ -57,6 +57,18 @@ datas = _tools.RODict({
     40024012: _tools.RODict({
         "mission": 0,
     }),
+    40024013: _tools.RODict({
+        "mission": 0,
+    }),
+    40024014: _tools.RODict({
+        "mission": 0,
+    }),
+    40024015: _tools.RODict({
+        "mission": 0,
+    }),
+    40024016: _tools.RODict({
+        "mission": 0,
+    }),
     40014001: _tools.RODict({
         "mission": 0,
     }),
@@ -372,7 +384,7 @@ datas = _tools.RODict({
     10364001: _tools.RODict({
         "mission": 0,
     }),
-    10028126: _tools.RODict({
+    10028135: _tools.RODict({
         "mission": 0,
     }),
     10024068: _tools.RODict({
@@ -385,6 +397,81 @@ datas = _tools.RODict({
         "mission": 0,
     }),
     10014113: _tools.RODict({
+        "mission": 0,
+    }),
+    10114004: _tools.RODict({
+        "mission": 0,
+    }),
+    10114005: _tools.RODict({
+        "mission": 0,
+    }),
+    10118090: _tools.RODict({
+        "mission": 0,
+    }),
+    10114006: _tools.RODict({
+        "mission": 0,
+    }),
+    10118091: _tools.RODict({
+        "mission": 0,
+    }),
+    10118092: _tools.RODict({
+        "mission": 0,
+    }),
+    10118093: _tools.RODict({
+        "mission": 0,
+    }),
+    10114009: _tools.RODict({
+        "mission": 0,
+    }),
+    10114010: _tools.RODict({
+        "mission": 0,
+    }),
+    10114011: _tools.RODict({
+        "mission": 0,
+    }),
+    10114012: _tools.RODict({
+        "mission": 0,
+    }),
+    10114013: _tools.RODict({
+        "mission": 0,
+    }),
+    10114014: _tools.RODict({
+        "mission": 0,
+    }),
+    10114015: _tools.RODict({
+        "mission": 0,
+    }),
+    10114016: _tools.RODict({
+        "mission": 0,
+    }),
+    10114017: _tools.RODict({
+        "mission": 0,
+    }),
+    10114018: _tools.RODict({
+        "mission": 0,
+    }),
+    10114019: _tools.RODict({
+        "mission": 0,
+    }),
+    10114020: _tools.RODict({
+        "mission": 0,
+    }),
+    40028002: _tools.RODict({
+        "mission": 0,
+    }),
+    40028003: _tools.RODict({
+        "mission": 0,
+    }),
+    40028004: _tools.RODict({
+        "mission": 0,
+    }),
+    40028005: _tools.RODict({
+        "mission": 0,
+    }),
+    40028006: _tools.RODict({
+        "mission": 0,
+    }),
+    40028007: _tools.RODict({
         "mission": 0,
     })
 })

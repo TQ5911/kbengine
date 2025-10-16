@@ -54,7 +54,7 @@ datas = _tools.RODict({
     58000007: _tools.RODict({
         "ID": 58000007,
         "name": "petQuality4Broadcast",
-        "Message": "<link player name={0} gbid={1}>获得<color=#a53131>传说</color>精灵<color=#a53131>{2}</color>！",
+        "Message": "<link player name={0} gbid={1}>获得<color=#967100>传说</color>精灵<color=#967100>{2}</color>！",
         "channelID": (2, 99)
     }),
     58000008: _tools.RODict({
@@ -234,7 +234,7 @@ datas = _tools.RODict({
     58000108: _tools.RODict({
         "ID": 58000108,
         "name": "petQuality4Broadcast",
-        "Message": "<link player name={0} gbid={1}>获得<color=#967100>神话</color>精灵<color=#967100>{2}</color>！",
+        "Message": "<link player name={0} gbid={1}>获得<color=#a53131>神话</color>精灵<color=#a53131>{2}</color>！",
         "channelID": (2, 99)
     })
 })

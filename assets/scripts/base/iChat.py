@@ -16,10 +16,10 @@ import message_Message_def as MMD
 import raid_raidConst as RAID_CONST
 import message_Message as MM
 import message_chatMessage as MCM
-
+import activityControl_activityData as AC_ADD
 
 class IChat(object):
-    def setChatChannel(self, channel):
+    def setChatChannel(self, exposed, channel):
         DEBUG_MSG('setChatChannel', channel)
         if channel >= gameconst.ChatChannel.MAX:
             return
@@ -30,7 +30,7 @@ class IChat(object):
         newChannel = self.chatChannel | (1 << channel)
         self.chatChannel = newChannel
 
-    def removeChatChannel(self, channel):
+    def removeChatChannel(self, exposed, channel):
         DEBUG_MSG('removeChatChannel', channel)
         if channel >= gameconst.ChatChannel.MAX:
             return
@@ -47,7 +47,7 @@ class IChat(object):
         else:
             return False
 
-    def sendWorldChatMsg(self, msg):
+    def sendWorldChatMsg(self, exposed, msg):
         DEBUG_MSG('sendWorldChatMsg', msg)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason, utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
@@ -79,7 +79,7 @@ class IChat(object):
                                      (gameconst.ChatChannel.WORLD, self._getChatChannelAvatarInfo(), originalMsg), ()))
         # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannel.WORLD)
 
-    def sendSiegeWarChatMsg(self, msg):
+    def sendSiegeWarChatMsg(self, exposed, msg):
         DEBUG_MSG('sendSiegeWarChatMsg', msg)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason, utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
@@ -98,7 +98,7 @@ class IChat(object):
                                      (gameconst.ChatChannel.SIEGE_WAR, self._getChatChannelAvatarInfo(), msg, self.cell), ()))
 
     @gamedecorator.forwardToLocal
-    def sendGuildChatMsg(self, msg):
+    def sendGuildChatMsg(self, exposed, msg):
         DEBUG_MSG('sendGuildChatMsg', msg)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
@@ -165,7 +165,7 @@ class IChat(object):
         self.sendGuildMsgTime = now
         self.guildBoxBase.doSendGuildPickChatMsg(self,self._getChatChannelAvatarInfo(), messageId)
 
-    def sendTeamChatMsg(self, teamIdDeprecated, msg):
+    def sendTeamChatMsg(self, exposed, teamIdDeprecated, msg):
         teamId = self.teamIdBase
         DEBUG_MSG('sendTeamChatMsg', teamId, msg)
         if not teamId:
@@ -199,7 +199,7 @@ class IChat(object):
         # if not self.isSilentChat(gameconst.SilentSpeakScene.CHAT):
         #     self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannel.TEAM)
 
-    def sendNearbyChatMsg(self, msg):
+    def sendNearbyChatMsg(self, exposed, msg):
         DEBUG_MSG('sendNearbyChatMsg', msg)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
@@ -229,7 +229,7 @@ class IChat(object):
 
     #@gamedecorator.crossServer
     #@gamedecorator.forwardToLocal
-    def sendRaidChatMsg(self, raidUUIDDeprecated, msg):
+    def sendRaidChatMsg(self, exposed, raidUUIDDeprecated, msg):
         raidUUID = self.raidUUIDBase
         DEBUG_MSG('sendRaidChatMsg::', msg)
         if not raidUUID:
@@ -262,7 +262,7 @@ class IChat(object):
             gameengine.getRaidStub(raidUUID).broadRaidChatMsg(self, self.gbID, raidUUID, avatarInfo, originalMsg, extraProps)
             # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannel.RAID)
 
-    def useTrumpetItem(self, itemId, msg):
+    def useTrumpetItem(self, exposed, itemId, msg):
         DEBUG_MSG('useTrumpetItem', itemId, msg)
         if self.isSilentChat(gameconst.SilentSpeakScene.CHAT):
             self.client.onRecvTrumpetMsg(self._getChatChannelAvatarInfo(), itemId, msg)
@@ -270,6 +270,20 @@ class IChat(object):
             gameengine.broadcastBaseapp('onBroadcastToAllClients',
                                      ('onRecvTrumpetMsg', (self._getChatChannelAvatarInfo(), itemId, msg)))
             # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannel.WORLD)
+
+    def sendReleaseRedbagMsg(self, redbagId, redbagType, channel, money, desc):
+        INFO_MSG("sendReleaseRedbagMsg:", redbagId, redbagType, channel, money, desc)
+        _avatarInfo = self._getChatChannelAvatarInfo()
+        # 发送消息
+        if self.isSilentChat(gameconst.SilentSpeakScene.CHAT):
+            self.client.onReleaseRedBagMsg(redbagId, redbagType, channel, money, desc, _avatarInfo)
+        elif channel == gameconst.RedBagChannel.WORLD:
+            gameengine.broadcastBaseapp('onBroadcastToAllClients',
+                                        ('onReleaseRedBagMsg', (redbagId, redbagType, channel, money, desc, _avatarInfo)))
+        elif channel == gameconst.RedBagChannel.GUILD and self.guildBox:
+            # self.sendGuildChatMsg()
+            self.guildBox.doSendGuildRedBagMsg(redbagId, redbagType, channel, money, desc, _avatarInfo)
+            
 
     def checkUseTrumpetBase(self, pendingCheckId,msg):
         DEBUG_MSG("checkUseTrumpetBase ",pendingCheckId)
@@ -290,7 +304,7 @@ class IChat(object):
     #     else:
     #         self.onMessagePre(MMD.datas.channel_noItem, [])
 
-    def registerItemLink(self, itemIdList, uniqueIdList):
+    def registerItemLink(self, exposed, itemIdList, uniqueIdList):
         DEBUG_MSG('registerItemLink', itemIdList, uniqueIdList)
 
         if len(itemIdList) != len(uniqueIdList):
@@ -301,7 +315,7 @@ class IChat(object):
         #     if item and (item.isLingShouEggItem() or item.isDuoHunItem()):
         #         gameengine.getGlobalBase('ItemLinkStub').uploadItemInfo(uniqueIdList[i], item.toItemSavedDict())
 
-    def queryItemLink(self, uniqueId, itemId, gbId):
+    def queryItemLink(self, exposed, uniqueId, itemId, gbId):
         DEBUG_MSG('queryItemLink', uniqueId, itemId, gbId)
         if not gbId:
             ERROR_MSG('queryItemLink but invalid gbId', gbId)
@@ -317,7 +331,7 @@ class IChat(object):
         self.onMessagePre(MMD.datas.channel_noItem, [])
 
     @gamedecorator.crossServer
-    def queryPlayerLink(self, gbId):
+    def queryPlayerLink(self, exposed, gbId):
         self.getAvatarInterInfo(gbId)
 
     def handleQueryPlayerLink(self, box):
@@ -347,22 +361,44 @@ class IChat(object):
     #         return
     #     self.transportGoodsInfo.lookCurTransportGoods(box, actId, gbId, helpNum)
 
-    def sendTeamMatchMessage(self, teamId, content, teamTarget, curNum, channel):
+    def sendTeamMatchMessage(self, exposed, teamId, content, teamTarget, curNum, channel):
         DEBUG_MSG('in sendTeamMatchMessage:', teamId, content, teamTarget, curNum, channel)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
             self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
             return
 
+        # 只处理自身目标和具体活动目标
+        if teamTarget < 1:
+            ERROR_MSG('in sendTeamMatchMessage, teamTarget error 1')
+            return
+        
         targetInfo = TMACTD.datas.get(teamTarget)
         if not targetInfo:
-            ERROR_MSG('in sendTeamMatchMessage, teamTarget error')
+            ERROR_MSG('in sendTeamMatchMessage, teamTarget error 2')
             return
-
+        
+        actData = AC_ADD.datas.get(int(targetInfo['pareActivity']))
+        if not actData:
+            ERROR_MSG("in sendTeamMatchMessage, cfg is missing in activity control", teamTarget, targetInfo['pareActivity'])
+            return
+        
+        chatMsgKey = ''
+        teamMemberCount = 0
+        recruitTips = None
+        if gameconst.ActivityControlType.TEAM == int(actData['needTeam']):
+            chatMsgKey = 'teamChannel_applyTeamMsg'
+            teamMemberCount = gameconst.TEAM_MEMBER_MAX_NUM
+        elif gameconst.ActivityControlType.RAID == int(actData['needTeam']):
+            chatMsgKey = 'teamChannel_applyRaidMsg'
+            teamMemberCount = gameconst.RAID_MEMBER_MAX_NUM
+        else:
+            ERROR_MSG("in sendTeamMatchMessage, cfg is wrong in activity control", teamTarget, targetInfo['pareActivity'], actData['needTeam'])
+            return
+        
         #活动：%s%d-%d级%s的队伍正在招募:<link team name=申请加入 teamId=%d>
-        avtInfo = self._getChatChannelAvatarInfo()
-        msg = MCM.datas[TMMCD.datas['teamChannel_applyTeamMsg']['value']]['Message'].format(targetInfo['value'], content, curNum,
-                                                                                 gameconst.TEAM_MEMBER_MAX_NUM, teamId)
+        msg = MCM.datas[TMMCD.datas[chatMsgKey]['value']]['Message'].format(targetInfo['value'], content, curNum, teamMemberCount, teamId)
+
         now = utils.getNow()
         if gameconst.ChatChannel.GUILD == channel:
             guildMsgCD = TMMCD.datas.get('guildChannelCD', {}).get('value', 0)
@@ -371,22 +407,22 @@ class IChat(object):
                 return
             self.sendMatchTeamGuildMsgTime = now
             self._sendMsgToGuild(msg, includeMe=True, isTeamZhaomu=True)
-        elif gameconst.ChatChannel.RECRUIT == channel or gameconst.ChatChannel.TEAM == channel:
+        elif gameconst.ChatChannel.RECRUIT == channel or gameconst.ChatChannel.TEAM == channel or gameconst.ChatChannel.RAID == channel:
             zhaomuChannelCD = TMMCD.datas.get('zhaomuChannelCD', {}).get('value', 0)
             if self.sendMatchTeamRecruitMsgTime + zhaomuChannelCD > now:
                 self.onMessagePre(MMD.datas.zhaomuMessageCD, [str(self.sendMatchTeamRecruitMsgTime + zhaomuChannelCD - now)])
                 return
             self.sendMatchTeamRecruitMsgTime = now
-            self.sendTeamMatchRecruitMsg(msg)
-            self.onMessagePre(MMD.datas.zhaomuTeamSent, [])
+            self.sendTeamMatchRecruitMsg(channel, msg)
+            self.onMessagePre(MMD.datas.recruitSent, [])
 
-    def sendTeamMatchRecruitMsg(self, msg):
+    def sendTeamMatchRecruitMsg(self, channel, msg):
         if self.isSilentChat(gameconst.SilentSpeakScene.CHAT):
-            self.cell.handleTeamChannelMatchTeamMsg(self._getChatChannelAvatarInfo(), msg)
+            self.cell.handleTeamChannelMatchTeamMsg(self._getChatChannelAvatarInfo(), channel, msg)
         else:
             gameengine.broadcastBaseapp('broadcastToAllAvatar',
                                         (gameconst.CELL, 'handleTeamChannelMatchTeamMsg',
-                                         (self._getChatChannelAvatarInfo(), msg)))
+                                         (self._getChatChannelAvatarInfo(), channel, msg)))
 
     # 调用前检查对应分享限制条件
     def sendChannelShareMsg(self, channel, msg):

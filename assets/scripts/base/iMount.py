@@ -62,7 +62,7 @@ class IMount(object):
                 gameconst.AchieveType.UNLOCK_MOUNT, 
                 actionContext.AchievementCtx())
 
-    def setCurMount(self, mountId):
+    def setCurMount(self, exposed, mountId):
         INFO_MSG(' set cur mount:', mountId)
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitType.mount, mountId)
         if outfit is None:

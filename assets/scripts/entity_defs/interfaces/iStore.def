@@ -5,6 +5,12 @@
             <Flags>         BASE             </Flags>
             <Persistent>    true             </Persistent>
         </storeData>
+
+        <limitStoreRefreshDict>
+            <Type>          PY_DICT          </Type>
+            <Flags>         BASE             </Flags>
+            <Persistent>    true             </Persistent>
+        </limitStoreRefreshDict>
     </Properties>
 
 
@@ -14,7 +20,7 @@
         </reqGetStoreList>
 
         <reqGetStoreLimitedItemList><Exposed/>
-            <Arg>   ARRAY <of> STOREID </of>  </Arg>
+            <Arg>   STOREID  </Arg>
         </reqGetStoreLimitedItemList>
 
         <reqBuyItemsInStore><Exposed/>
@@ -47,7 +53,8 @@
         </onGetStoreList>
 
         <onGetStoreLimitedItemList>
-            <Arg> CLIENT_STORE_VAL </Arg>
+            <Arg>       CLIENT_STORE_VAL    </Arg>
+            <Arg>       LONGTIME            </Arg>
         </onGetStoreLimitedItemList>
 
         <onBuyStoreItems>

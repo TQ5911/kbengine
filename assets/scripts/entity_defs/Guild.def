@@ -210,6 +210,11 @@
             <Persistent>    true                </Persistent>
             <Default>       false               </Default>
         </biddingFailRedPointUnchecked>
+
+        <leaderBoardGuildCache>
+            <Type>          LEADER_BOARD_GUILD_DATA_INFO        </Type>
+            <Flags>         BASE                                </Flags>
+        </leaderBoardGuildCache>
     </Properties>
 
     <BaseMethods>
@@ -650,5 +655,15 @@
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       PYTHON                  </Arg>
         </getMemberJob>
+
+        <doSendGuildRedBagMsg>
+            <Arg>           UINT64           </Arg>
+            <Arg>           UINT8            </Arg>
+            <Arg>           UINT8            </Arg>
+            <Arg>           UINT32           </Arg>
+            <Arg>           UNICODE          </Arg>
+            <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
+        </doSendGuildRedBagMsg>
+
     </BaseMethods>
 </root>

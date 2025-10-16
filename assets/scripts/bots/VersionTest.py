@@ -63,7 +63,9 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
     #         self.base.runGmCommand(f'$submittask 0 86050032')
     #         self.base.runGmCommand(f'$submittask 0 86010048')
     #         self.base.runGmCommand(f'$addEquipAnima 0 1000')
-            
+    # self.debug(f'{self.botClient.accountName}指令{msgId}已完成')
+
+
     #     # 传送到坐标(36.4585,39.0038,48.3531)
     #     elif msgId.startswith('传送到坐标'):
     #         position = re.search(r"\((\d+\.\d+),(\d+\.\d+),(\d+\.\d+)\)", msgId)

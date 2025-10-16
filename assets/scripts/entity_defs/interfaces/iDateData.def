@@ -1,0 +1,31 @@
+<root>
+    <Properties>
+        <dateTimeDataDict>
+            <Type>          PY_DICT                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       {}                       </Default>
+        </dateTimeDataDict>
+        <dateDailyDataDict>
+            <Type>          PY_DICT                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       {}                       </Default>
+        </dateDailyDataDict>
+        <dateWeeklyDataDict>
+            <Type>          PY_DICT                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       {}                      </Default>
+        </dateWeeklyDataDict>
+    </Properties>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

@@ -113,6 +113,6 @@ datas = _tools.RODict({
     }),
     "NewBeeLevel": _tools.RODict({
         "ID": "NewBeeLevel",
-        "value": 8,
+        "value": "NewBeePerformance",
     })
 })

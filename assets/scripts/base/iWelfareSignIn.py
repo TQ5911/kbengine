@@ -12,7 +12,7 @@ import welfare_serverLogin   as WSLCONFIG
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 class IWelfareSignIn(object):
-    def reqWelfareSignIn(self, signInDayNo):
+    def reqWelfareSignIn(self, exposed, signInDayNo):
         INFO_MSG('call reqWelfareSignIn')
         if not self.welfareSignInInfo.welfareSignInDay:
             ERROR_MSG('call reqWelfareSignIn: not lock')

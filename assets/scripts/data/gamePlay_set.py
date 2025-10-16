@@ -57,7 +57,7 @@ datas = _tools.RODict({
     }),
     "leaveDunVisibleID": _tools.RODict({
         "ID": "leaveDunVisibleID",
-        "value": 5,
+        "value": "ExitDun",
     }),
     "resurrectTime": _tools.RODict({
         "ID": "resurrectTime",
@@ -117,7 +117,7 @@ datas = _tools.RODict({
     }),
     "killerTips": _tools.RODict({
         "ID": "killerTips",
-        "value": "击杀者：<color=#d35a66>{0}</color>",
+        "value": "击杀者：<color=#beab67>{0}</color>",
     }),
     "dropsCloseTimeout": _tools.RODict({
         "ID": "dropsCloseTimeout",

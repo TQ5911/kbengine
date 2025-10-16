@@ -486,10 +486,7 @@ def _13090295(self, target, context):
     #    self.removeBuffBySkill(target, context,*context.args.ActionParam)
 
 def _13090296(self, target, context):
-    skill = self._getSkillByActionContext(context)
-    if skill.hasTag(46) and skill.inCDTime():
-        print(f"没减CD前的  下次释放时间  {skill.tNextCast} ")
-        skill.changeNextCast(self,context.args.ActionParam[0])
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090297(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -502,18 +499,7 @@ def _13090299(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090300(self, target, context):
-
-    if target:
-
-        if target.hasBuff(context.args.ActionParam[0]):
-
-            NewBuffLv = min(target.getBuffLv(context.args.ActionParam[0]) + 1, 5)
-
-            self.addBuffBySkill(target, context, context.args.ActionParam[0], int(NewBuffLv), 1.0,)
-
-        else:
-
-            self.addBuffBySkill(target, context, context.args.ActionParam[0], 1, 1.0,)
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090301(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -531,10 +517,10 @@ def _13090303(self, target, context):
         self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090304(self, target, context):
-    self.removeBuffBySkill(target, context, 64000002)
+  self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090305(self, target, context):
-    self.removeBuffBySkill(target, context, 64000001)
+   self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090306(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -569,6 +555,110 @@ def _13090313(self, target, context):
         self.attackByNum(target, context,0.45 * target.getProp("maxPhysicalAtk"))
         self.addBuffBySkill(target, context, 64003005, 1, 1.0, 10)
         self.addBuffBySkill(target, context, 64003022, 1, 1.0, 2)
+
+def _13090314(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090315(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090316(self, target, context):
+    if target.isDie():
+        fullHp = target.getProp("fullHp") or 0
+        hp =fullHp * 0.25
+        self.doReliveToPos(target, context, None, hp)
+
+def _13090317(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090318(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090319(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090320(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090321(self, target, context):
+    # 只对玩家角色生效
+    if not getattr(self, "IsAvatar", False):
+        return
+    # 防止重复触发
+    if hasattr(context, "has_added_ultra_power"):
+        return
+    # 默认大招充能值
+    value = 1
+    if hasattr(context, "args") and hasattr(context.args, "ActionParam"):
+        if context.args.ActionParam and len(context.args.ActionParam) > 0:
+            try:
+                value = int(context.args.ActionParam[0])  # 强制转 int
+            except Exception:
+                value = 1  # 转 int 失败，使用默认值
+    self.addUltraSkillPower(value, self)
+    context.has_added_ultra_power = True
+
+    # 调试信息
+    print(f"[DEBUG] effect 13090321 triggered for Avatar({self.id}), value={value}")
+
+def _13090322(self, target, context):
+    self.healByNum(self, context, *context.args.ActionParam)
+
+def _13090323(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090324(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090325(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090326(self, target, context):
+    if self.getProp("hp") >= (self.getProp("fullHp") * 0.7):
+        self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090327(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090328(self, target, context):
+    skill = self._getSkillByActionContext(context)
+    if not skill:
+        return
+
+    # 判断技能是否带有 tag 46（闪避tag）
+    if skill.hasTag(46):
+        self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090329(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090330(self, target, context):
+    skill = self._getSkillByActionContext(context)
+    if skill.hasTag(46) and skill.inCDTime():
+        print(f"没减CD前的  下次释放时间  {skill.tNextCast} ")
+        skill.changeNextCast(self,context.args.ActionParam[0])
+
+def _13090331(self, target, context):
+    if self.getProp("hp") <= (self.getProp("fullHp") * 0.3):
+        self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090332(self, target, context):
+    skill = self._getSkillByActionContext(context)
+    if not skill:
+        return
+
+    # 判断技能是否带有 tag 100（大招tag）
+    if skill.hasTag(100):
+        self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090333(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090334(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090335(self, target, context):
+    self.healByPct(target, context, *context.args.ActionParam)
 
 datas = _tools.RODict({ 
     13090001: _tools.RODict({
@@ -1234,14 +1324,14 @@ datas = _tools.RODict({
         "Event": "onHit",
         "Action": _13090292,
         "Target": "self",
-        "EventCD": 30.0
+        "EventCD": 0.0
     }),
     13090293: _tools.RODict({
         "ID": 13090293,
-        "Event": "onFlashBeat",
+        "Event": "onBeat",
         "Action": _13090293,
         "Target": "self",
-        "EventCD": 10.0
+        "EventCD": 30.0
     }),
     13090294: _tools.RODict({
         "ID": 13090294,
@@ -1262,14 +1352,14 @@ datas = _tools.RODict({
         "Event": "onSkill",
         "Action": _13090296,
         "Target": "self",
-        "EventCD": 0.0
+        "EventCD": 60.0
     }),
     13090297: _tools.RODict({
         "ID": 13090297,
         "Event": "onSkill",
         "Action": _13090297,
         "Target": "self",
-        "EventCD": 30.0
+        "EventCD": 80.0
     }),
     13090298: _tools.RODict({
         "ID": 13090298,
@@ -1283,14 +1373,14 @@ datas = _tools.RODict({
         "Event": "onHit",
         "Action": _13090299,
         "Target": "other",
-        "EventCD": 30.0
+        "EventCD": 20.0
     }),
     13090300: _tools.RODict({
         "ID": 13090300,
         "Event": "onHit",
         "Action": _13090300,
         "Target": "self",
-        "EventCD": 0.0
+        "EventCD": 40.0
     }),
     13090301: _tools.RODict({
         "ID": 13090301,
@@ -1304,7 +1394,7 @@ datas = _tools.RODict({
         "Event": "onHit",
         "Action": _13090302,
         "Target": "other",
-        "EventCD": 10.0
+        "EventCD": 30.0
     }),
     13090303: _tools.RODict({
         "ID": 13090303,
@@ -1315,17 +1405,17 @@ datas = _tools.RODict({
     }),
     13090304: _tools.RODict({
         "ID": 13090304,
-        "Event": "onSelfBuff",
+        "Event": "onBeat",
         "Action": _13090304,
         "Target": "self",
-        "EventCD": 120.0
+        "EventCD": 60.0
     }),
     13090305: _tools.RODict({
         "ID": 13090305,
-        "Event": "onSelfBuff",
+        "Event": "onBeat",
         "Action": _13090305,
         "Target": "self",
-        "EventCD": 120.0
+        "EventCD": 60.0
     }),
     13090306: _tools.RODict({
         "ID": 13090306,
@@ -1343,10 +1433,10 @@ datas = _tools.RODict({
     }),
     13090308: _tools.RODict({
         "ID": 13090308,
-        "Event": "onFlashBeat",
+        "Event": "onHit",
         "Action": _13090308,
         "Target": "self",
-        "EventCD": 15.0
+        "EventCD": 30.0
     }),
     13090309: _tools.RODict({
         "ID": 13090309,
@@ -1382,7 +1472,161 @@ datas = _tools.RODict({
         "Action": _13090313,
         "Target": "other",
         "EventCD": 0.0
+    }),
+    13090314: _tools.RODict({
+        "ID": 13090314,
+        "Event": "onHit",
+        "Action": _13090314,
+        "Target": "self",
+        "EventCD": 60.0
+    }),
+    13090315: _tools.RODict({
+        "ID": 13090315,
+        "Event": "onBeat",
+        "Action": _13090315,
+        "Target": "self",
+        "EventCD": 120.0
+    }),
+    13090316: _tools.RODict({
+        "ID": 13090316,
+        "Event": "onDeadLater",
+        "Action": _13090316,
+        "Target": "self",
+        "EventCD": 120.0
+    }),
+    13090317: _tools.RODict({
+        "ID": 13090317,
+        "Event": "onBeat",
+        "Action": _13090317,
+        "Target": "self",
+        "EventCD": 180.0
+    }),
+    13090318: _tools.RODict({
+        "ID": 13090318,
+        "Event": "onHit",
+        "Action": _13090318,
+        "Target": "self",
+        "EventCD": 30.0
+    }),
+    13090319: _tools.RODict({
+        "ID": 13090319,
+        "Event": "onHit",
+        "Action": _13090319,
+        "Target": "self",
+        "EventCD": 30.0
+    }),
+    13090320: _tools.RODict({
+        "ID": 13090320,
+        "Event": "onBeat",
+        "Action": _13090320,
+        "Target": "self",
+        "EventCD": 30.0
+    }),
+    13090321: _tools.RODict({
+        "ID": 13090321,
+        "Event": "onSkill",
+        "Action": _13090321,
+        "Target": "self",
+        "EventCD": 20.0
+    }),
+    13090322: _tools.RODict({
+        "ID": 13090322,
+        "Event": "onBeat",
+        "Action": _13090322,
+        "Target": "self",
+        "EventCD": 0.0
+    }),
+    13090323: _tools.RODict({
+        "ID": 13090323,
+        "Event": "onBeat",
+        "Action": _13090323,
+        "Target": "self",
+        "EventCD": 60.0
+    }),
+    13090324: _tools.RODict({
+        "ID": 13090324,
+        "Event": "onFlashBeat",
+        "Action": _13090324,
+        "Target": "self",
+        "EventCD": 30.0
+    }),
+    13090325: _tools.RODict({
+        "ID": 13090325,
+        "Event": "onHit",
+        "Action": _13090325,
+        "Target": "self",
+        "EventCD": 60.0
+    }),
+    13090326: _tools.RODict({
+        "ID": 13090326,
+        "Event": "onHPModify",
+        "Action": _13090326,
+        "Target": "self",
+        "EventCD": 30.0
+    }),
+    13090327: _tools.RODict({
+        "ID": 13090327,
+        "Event": "onBeat",
+        "Action": _13090327,
+        "Target": "self",
+        "EventCD": 30.0
+    }),
+    13090328: _tools.RODict({
+        "ID": 13090328,
+        "Event": "onSkill",
+        "Action": _13090328,
+        "Target": "self",
+        "EventCD": 30.0
+    }),
+    13090329: _tools.RODict({
+        "ID": 13090329,
+        "Event": "onBeat",
+        "Action": _13090329,
+        "Target": "self",
+        "EventCD": 40.0
+    }),
+    13090330: _tools.RODict({
+        "ID": 13090330,
+        "Event": "onSkill",
+        "Action": _13090330,
+        "Target": "self",
+        "EventCD": 60.0
+    }),
+    13090331: _tools.RODict({
+        "ID": 13090331,
+        "Event": "onHPModify",
+        "Action": _13090331,
+        "Target": "self",
+        "EventCD": 60.0
+    }),
+    13090332: _tools.RODict({
+        "ID": 13090332,
+        "Event": "onBeat",
+        "Action": _13090332,
+        "Target": "self",
+        "EventCD": 60.0
+    }),
+    13090333: _tools.RODict({
+        "ID": 13090333,
+        "Event": "onHit",
+        "Action": _13090333,
+        "Target": "self",
+        "EventCD": 30.0
+    }),
+    13090334: _tools.RODict({
+        "ID": 13090334,
+        "Event": "onHit",
+        "Action": _13090334,
+        "Target": "self",
+        "EventCD": 30.0
+    }),
+    13090335: _tools.RODict({
+        "ID": 13090335,
+        "Event": "onDeadLater",
+        "Action": _13090335,
+        "Target": "self",
+        "EventCD": 120.0
     })
 })
 minKey = 13090001
-maxKey = 13090313
+maxKey = 13090335

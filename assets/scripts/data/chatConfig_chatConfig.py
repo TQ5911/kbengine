@@ -73,11 +73,11 @@ datas = _tools.RODict({
     }),
     "redPacket": _tools.RODict({
         "ID": "redPacket",
-        "value": 90,
+        "value": "UIRedPacketPanel",
     }),
     "blessingLength": _tools.RODict({
         "ID": "blessingLength",
-        "value": 40,
+        "value": 16,
     }),
     "sendPacketLimit": _tools.RODict({
         "ID": "sendPacketLimit",
@@ -95,6 +95,10 @@ datas = _tools.RODict({
         "ID": "receivePacketLimitMsg",
         "value": 54000331,
     }),
+    "receivePacketEmptyMsg": _tools.RODict({
+        "ID": "receivePacketEmptyMsg",
+        "value": 54000332,
+    }),
     "returnPacketMail": _tools.RODict({
         "ID": "returnPacketMail",
         "value": 37000013,
@@ -106,5 +110,33 @@ datas = _tools.RODict({
     "returnPacketTime": _tools.RODict({
         "ID": "returnPacketTime",
         "value": 12,
+    }),
+    "usePacketLvLimit": _tools.RODict({
+        "ID": "usePacketLvLimit",
+        "value": 9,
+    }),
+    "usePacketLvLimitMsg": _tools.RODict({
+        "ID": "usePacketLvLimitMsg",
+        "value": 54000333,
+    }),
+    "sendPacketCoin": _tools.RODict({
+        "ID": "sendPacketCoin",
+        "value": 30000001,
+    }),
+    "redPacketType1": _tools.RODict({
+        "ID": "redPacketType1",
+        "value": "平均红包",
+    }),
+    "redPacketType2": _tools.RODict({
+        "ID": "redPacketType2",
+        "value": "拼手气红包",
+    }),
+    "receivePacketThankMsg": _tools.RODict({
+        "ID": "receivePacketThankMsg",
+        "value": ('<color=&color13>{0}</color> 老板大气！祝你爆神装！', '多谢 <color=&color13>{0}</color> 的红包，大佬霸气！', '<color=&color13>{0}</color>红包给力！小弟拜谢！', '感谢 <color=&color13>{0}</color> 的红包！战力+10086！', '<color=&color13>{0}</color> 红包威武，小弟拜谢！'),
+    }),
+    "sendPacketMsg": _tools.RODict({
+        "ID": "sendPacketMsg",
+        "value": "恭喜发财，大吉大利！#祝福收下，好运连连！#手气最佳，非你莫属！#财源广进，万事如意！",
     })
 })

@@ -1,7 +1,7 @@
 {
     "target_path": "res/server/kbengine.xml",
     "backup_path": "backup_xml",
-    "url": "http://192.168.10.31:3000/central/template/download",
-    "net_card": "ens33"
-
+    "url": "http://192.168.10.13:3000/central/template/download",
+    "net_card": "ens33",
+    "template_id": "1"
 }

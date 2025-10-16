@@ -62,7 +62,13 @@ datas = _tools.RODict({
         "name": "副本内传送门怪物刷新",
         "refreshTime": 1.0,
         "bornStateTime": 1.0,
+    }),
+    9: _tools.RODict({
+        "ID": 9,
+        "name": "召唤物特效5004",
+        "refreshTime": 0.0,
+        "bornStateTime": 1.3,
     })
 })
 minKey = 1
-maxKey = 8
+maxKey = 9

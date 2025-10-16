@@ -32,7 +32,7 @@ class IChief(object):
         self.chiefInfo.resetUseItemAddRewardNumber()
         self.chiefInfo = self.chiefInfo
 
-    def useItemToIncreaseChiefRewardNumber(self, useNum):
+    def useItemToIncreaseChiefRewardNumber(self, exposed, useNum):
         DEBUG_MSG('useItemToIncreaseChiefRewardNumber::', useNum)
         if useNum <= 0:
             ERROR_MSG('useItemToIncreaseChiefRewardNumber:: invalid useNum', useNum)
@@ -45,7 +45,7 @@ class IChief(object):
 
         self._useItemToIncreaseChiefRewardNumber(itemId, useNum, {})
 
-    def useCoinToIncreaseChiefRewardNumber(self, useNum):
+    def useCoinToIncreaseChiefRewardNumber(self, exposed, useNum):
         DEBUG_MSG('useCoinToIncreaseChiefRewardNumber::', useNum)
         if useNum <= 0:
             ERROR_MSG('useCoinToIncreaseChiefRewardNumber:: invalid useNum', useNum)
@@ -113,7 +113,7 @@ class IChief(object):
         self.activityComplete(RBC_CFG.datas['raidBossChallengeActID']['value'])
 
 
-    def setChiefDungeonAutoConfirmConfig(self, storyLevel):
+    def setChiefDungeonAutoConfirmConfig(self, exposed, storyLevel):
         self.setPersistentMiscProp(gameconst.AvatarProps.ChiefDunAutoConfirmConfig, storyLevel)
         self.client.onSetChiefDungeonAutoConfirmConfig(storyLevel)
 

@@ -16,8 +16,8 @@ class IChat(object):
 
                 e.client.onRecvAvatarChannelMsg(gameconst.ChatChannel.NEARBY, avatarInfo, msg)
 
-    def handleTeamChannelMatchTeamMsg(self, avatarInfo, msg):
-        self.client.onRecvAvatarChannelMsg(gameconst.ChatChannel.RECRUIT, avatarInfo, msg)
+    def handleTeamChannelMatchTeamMsg(self, avatarInfo, channel, msg):
+        self.client.onRecvAvatarChannelMsg(channel, avatarInfo, msg)
 
     def _getChatChannelAvatarInfo(self):
         return utils.buildChatChannelAvatarInfo(

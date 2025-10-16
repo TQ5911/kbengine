@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+    <Interfaces>
+        <Interface> iAvatarStatistic   </Interface>
+    </Interfaces>
     <Properties>
         <teamId>
             <Type>          TEAMID          </Type>
@@ -495,11 +498,16 @@
         </turnOffTeamMicsByForbidVoiceChat>
 
         <reqAddMarkMember> <Exposed/>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           PLAYER_GBID     </Arg>
             <Arg>           ENTITY_ID           </Arg>
-            <Arg>           BOOL            </Arg>
+            <Arg>           POSITION_ARG    </Arg>
         </reqAddMarkMember>
         <reqDelMarkMember> <Exposed/>
-            <Arg>           ENTITY_ID           </Arg>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UINT8           </Arg>
         </reqDelMarkMember>
         <reqChangeOnlyCaptain> <Exposed/>
             <Arg>           BOOL            </Arg>

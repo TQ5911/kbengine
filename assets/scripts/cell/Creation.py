@@ -577,6 +577,9 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 if e.isDestroyed:
                     continue
 
+                if not utils.checkCombatRangeY(self, e):
+                    continue
+
                 if utils.checkTargetType(self.target, self, e):
                     entIds.append(eid)
 

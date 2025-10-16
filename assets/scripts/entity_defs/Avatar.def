@@ -62,6 +62,7 @@
         <Interface>         iNewbie                     </Interface>
         <Interface>         iWorkshop                   </Interface>
         <Interface>         iRedBag                     </Interface>
+        <Interface>         iDateData                   </Interface>
     </Interfaces>
 
     <Properties>
@@ -82,17 +83,27 @@
             <DatabaseLength>  50                    </DatabaseLength>
         </accountName>
 
-		<accountType>
-			<Type>			UINT8  		</Type>
-			<Flags>			BASE		</Flags>
-			<Persistent>	true		</Persistent>
-		</accountType>
+        <accountType>
+            <Type>          UINT8       </Type>
+            <Flags>         BASE        </Flags>
+            <Persistent>    true        </Persistent>
+        </accountType>
 
         <accountDBID>
-			<Type>			DBID  		</Type>
-			<Flags>			BASE		</Flags>
-			<Persistent>	true		</Persistent>
-		</accountDBID>
+            <Type>          DBID        </Type>
+            <Flags>         BASE        </Flags>
+            <Persistent>    true        </Persistent>
+        </accountDBID>
+
+        <mainAccountCache>
+            <Type>          ACCOUNT_CACHE_DATA_INFO     </Type>
+            <Flags>         BASE                        </Flags>
+        </mainAccountCache>
+
+        <subAccountCache>
+            <Type>          ACCOUNT_CACHE_DATA_INFO     </Type>
+            <Flags>         BASE                        </Flags>
+        </subAccountCache>
 
         <roleAccount>
             <Type>     STRING                      </Type>
@@ -639,14 +650,14 @@
             <Arg>   SPACE_NO     </Arg>
         </onKillOtherAvatar>
 
-		<setCliConfigData> <Exposed/>
+        <setCliConfigData> <Exposed/>
             <Arg>       ARRAY    <of>    UINT16        </of>   </Arg>
             <Arg>       ARRAY    <of>    UINT32        </of>   </Arg>
-		</setCliConfigData>
+        </setCliConfigData>
 
-		<delCliConfigData> <Exposed/>
+        <delCliConfigData> <Exposed/>
             <Arg>       ARRAY    <of>    UINT16        </of>   </Arg>
-		</delCliConfigData>
+        </delCliConfigData>
 
         <addBlazeId> <Exposed/>
             <Arg>        OBJECT_ID                   </Arg>
@@ -825,14 +836,9 @@
         </onGetServerOpenTime>
 
         <onGameConfigChanged>
-            <Arg>    ARRAY    <of>   UINT16    </of> </Arg>
             <Arg>    ARRAY    <of>   STRING    </of> </Arg>
+            <Arg>    ARRAY    <of>   BOOL      </of> </Arg>
         </onGameConfigChanged>
-
-        <onGameConfigChangedByName>
-            <Arg>    ARRAY    <of>   STRING    </of> </Arg>
-            <Arg>    ARRAY    <of>   STRING    </of> </Arg>
-        </onGameConfigChangedByName>
 
         <onClientDataSyncFinished>
         </onClientDataSyncFinished>
@@ -871,7 +877,8 @@
             <!-- isWin Flag -->
             <Arg>       DUNGEON_NO      </Arg>
             <Arg>       BOOL            </Arg>
-            <Arg>       INT32           </Arg>           
+            <Arg>       INT32           </Arg>
+            <Arg>       INT32           </Arg>
         </onDungeonCompleted>
         <notifyClientSelfBigWorldLineCachedPos>
             <Arg> POSITION_ARG </Arg>

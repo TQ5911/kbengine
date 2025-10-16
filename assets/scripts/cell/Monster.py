@@ -33,6 +33,8 @@ import iClient
 import gamePlay_gamePlay as GP_GP
 import sMath
 import iSiegeWarMonster
+import message_Message_def as M_M_D
+import creep_countRefresh as CCR
 
 
 class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFubenSpace,
@@ -45,6 +47,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
     MOVE_METHOD_MOVE = 2
 
     def __init__(self):
+        DEBUG_MSG("Monster::__init__", self.instanceId, self.dungeonFlagId)
         if not self.level:
             self.level = gameconst.MIN_LEVEL
         elif self.level > utils.getPlayerMaxLevel():
@@ -79,12 +82,20 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         self.baseDodge = 0
 
+        self.needCountRefresh = False
+        self.needCountNum = False
+
         self.initPosition()
 
         if formula.spaceInWorldLine(self.spaceNo):
             self.spaceMgrId = self.getCurrentSpace().spaceMgrId
 
         spaceMgr = self.spaceMgr
+        _isLarge = False
+        if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
+            _isLarge = True
+            self.setBodySize((gameconst.LARGE_ENTITY_DEFAULT_AOI, gameconst.LARGE_ENTITY_DEFAULT_AOI))
+
         if formula.isDungeonSpace(self.spaceNo):
             gid = utils.getGidFromGameEntityId(self.gameEntityId)
             if spaceMgr:
@@ -93,10 +104,13 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                 self.isBoss and spaceMgr.setBossEntity(self.id)
         #     spaceMgr.addEntity(self.id, (str(self.monsterId), self.__class__.__name__))
         #     self.isBoss and spaceMgr.setBossEntity(self.id)
-        else:
-            if spaceMgr:
-                spaceMgr.addEntity(self.id, (str(self.monsterId), self.__class__.__name__))
-                self.isBoss and spaceMgr.setBossEntity(self.id)
+        elif spaceMgr:
+            if _isLarge:
+                _args = (str(self.monsterId), self.__class__.__name__, 'largeEnt')
+            else:
+                _args = (str(self.monsterId), self.__class__.__name__)
+            spaceMgr.addEntity(self.id, _args)
+            self.isBoss and spaceMgr.setBossEntity(self.id)
 
         self.triggeredFlowControllerRestNumIncreased()
 
@@ -128,9 +142,83 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         elif formula.isDungeonSpace(self.spaceNo):
             self._createMonsterGrpInDungeon()
+        # 初始化战斗区
+        self._initCombatAreas()
+        # 初始化计算刷新
+        self._initCountRefresh()
 
-        if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
-            self.setBodySize((gameconst.LARGE_ENTITY_DEFAULT_AOI, gameconst.LARGE_ENTITY_DEFAULT_AOI))
+    def _checkCombatArea(self, combatAreaData):
+        posX = combatAreaData["PosX"]
+        posY = combatAreaData["PosY"]
+        posZ = combatAreaData["PosZ"]
+        rotate = combatAreaData["Dir"]
+        targetPos = (posX, posY, posZ)
+        dunPropsData = combatAreaData["Props"]
+        areaType = dunPropsData["AreaType"]
+        propsData = None
+        if areaType == gameconst.DungeonCustomAreaType.CIRCLE:
+            radius = gameconst.DungeonCustomAreaType.getCircleRadius(dunPropsData)
+            propsData = (targetPos, rotate, areaType, radius)
+        elif areaType == gameconst.DungeonCustomAreaType.RECTANGLE:
+            length, width = gameconst.DungeonCustomAreaType.getRectangleVal(dunPropsData)
+            propsData = (targetPos, rotate, areaType, length, width)
+
+        if propsData:
+            # 检测是否在战斗区内
+            if utils.checkInCombatArea(self.creepBaseId, self.bornPosition, propsData):
+                return True, propsData
+        return False, propsData
+
+    def _checkCombatAreas(self, combatAreaIDs = None):
+        mapId = formula.getMapId(self.spaceNo)
+        dunData = utils.getDunStructureModuleData(mapId)
+
+        initEntities = dunData.get('InitEntities', None)
+        if not initEntities:
+            return False, None
+
+        combatAreaDatas = initEntities.get('CombatArea', None)
+        if not combatAreaDatas:
+            return False, None
+
+        if combatAreaIDs:
+            for combatAreaID in combatAreaIDs:
+                combatAreaData = combatAreaDatas.get(str(combatAreaID))
+                clsType = combatAreaData.get('ClassName', None)
+                if clsType != 'CombatArea':
+                    continue
+                ret, propsData = self._checkCombatArea(combatAreaData)
+                if ret:
+                    return ret, propsData
+        else:
+            for combatAreaData in combatAreaDatas.values():
+                clsType = combatAreaData.get('ClassName', None)
+                if clsType != 'CombatArea':
+                    continue
+                ret, propsData = self._checkCombatArea(combatAreaData)
+                if ret:
+                    return ret, propsData
+        return False, None
+
+    def _initCombatAreas(self):
+        ret, propsData = self._checkCombatAreas()
+        if ret:
+            self.tmpProps["combatAreaDatas"] = propsData
+
+    def _initCountRefresh(self):
+        mapID = formula.getMapId(self.spaceNo)
+        countRefreshData = CCR.datas.get(mapID, None)
+        if not countRefreshData:
+            return
+
+        if self.instanceId in self.spaceMgr.refreshMonsterIDs(self.spaceNo):
+            self.needCountRefresh = True
+
+        combatAreaID = countRefreshData['combatAreaID']
+        if combatAreaID:
+            ret, _ = self._checkCombatAreas([combatAreaID])
+            if ret:
+                self.needCountNum = True
 
     def _createMonsterGrpInDungeon(self):
         _dunData = self.dunData()
@@ -292,7 +380,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if radii <= 0:
             return
         self.hateTrapId = self.addProximity(radii, radii, gameconst.HATE_TRAP)
-        leaveAoiRange = min(gameconst.HOME_AOI, self.getLeaveAlertDistance())
+        leaveAoiRange = self.getLeaveAlertDistance()
         self.addProximity(leaveAoiRange, 0.0, gameconst.LEAVE_AOI_TRAP)
 
     def onGetWitness(self):
@@ -319,6 +407,11 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if not isWitnessed and self.aiController:
             self.aiController.onLoseWitnessed()
 
+        if not isWitnessed:
+            if self.needCountRefresh:
+                self.doMonsterDestroy()
+                self.spaceMgr.onMonsterDestroy(self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId)
+
     def _preSafeDestory(self):
         """
         KBEngine method.
@@ -329,6 +422,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         spaceMgr = self.spaceMgr
         if spaceMgr:
             spaceMgr.removeEntityById(self.id)
+            if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
+                _msgId = M_M_D.datas.messageAfterDeath
+                spaceMgr.syncPlayer(lambda playerEnt: playerEnt.showMsg(_msgId, []))
 
         mGrp = self.monsterGroup
         if mGrp and mGrp.canBeDestroy():
@@ -379,13 +475,25 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             return
         return
 
-    def onDead(self, killer, *args, **kwargs):
-        DEBUG_MSG("Monster-->onDead 1 ", killer, args, kwargs)
-        super(Monster, self).onDead(killer)
+    def doMonsterDestroy(self):
         self.removeAllBuff()
         self.cancelMoveController()
         self.destroySummonOnDead()
         self.cancelRouting()
+        self.triggeredFlowControllerRestNumDecreased()
+        # DEFAULT TO DESTROY
+        delay = self.getDestroyDelay()
+        if creep_base.datas[self.monsterId]['ifDeadDisappear']:
+            delay += CCD.datas['deadDisappearTime_max']['value']
+            self.bossDeadDisappearTime = round(time.time(), 2) + delay
+        self.delaySafeDestroy(delay)
+        if self.isMonsterInGroup():
+            self.rmFromMonsterGroup()
+
+    def onDead(self, killer, *args, **kwargs):
+        DEBUG_MSG("Monster-->onDead 1 ", killer, args, kwargs)
+        super(Monster, self).onDead(killer)
+        self.doMonsterDestroy()
 
         if killer:
 
@@ -417,29 +525,23 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】
         self.addDungeonKillCount()
 
-        self.triggeredFlowControllerRestNumDecreased()
-
         # 城战处理逻辑，内部会判断是否在城战场景
         self.notifySiegeWarOnDead(killer)
 
         if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
             self.spaceMgr.onWorldBossDead(self.refreshTime)
         elif self.isNeedRefresh():
-            self.onEntityRefresh()
-
-        # DEFAULT TO DESTROY
-        delay = self.getDestroyDelay()
-        if creep_base.datas[self.monsterId]['ifDeadDisappear']:
-            delay += CCD.datas['deadDisappearTime_max']['value']
-            self.bossDeadDisappearTime = round(time.time(), 2) + delay
-
-        self.delaySafeDestroy(delay)
-        if self.isMonsterInGroup():
-            self.rmFromMonsterGroup()
+            # 非计数刷新才需要在这里做立即刷新
+            if not self.needCountRefresh:
+                self.onEntityRefresh()
 
         host = utils.getHostEntity(killer)
         if host.IsAvatar:
             host.base.triggerAchievement(gameconst.AchieveType.KILL_MONSTER)
+
+        # 需要计数或者刷新的怪物:
+        if self.needCountRefresh or self.needCountNum:
+            self.spaceMgr.onMonsterDestroy(self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId)
 
     def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx):
         DEBUG_MSG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)

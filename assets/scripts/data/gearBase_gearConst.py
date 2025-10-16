@@ -226,5 +226,17 @@ datas = _tools.RODict({
     "equipAnimaGetExceptions": _tools.RODict({
         "ID": "equipAnimaGetExceptions",
         "value": 54000303,
+    }),
+    "equipSlotText": _tools.RODict({
+        "ID": "equipSlotText",
+        "value": "穿戴中",
+    }),
+    "equipSlot1Text": _tools.RODict({
+        "ID": "equipSlot1Text",
+        "value": "栏位一",
+    }),
+    "equipSlot2Text": _tools.RODict({
+        "ID": "equipSlot2Text",
+        "value": "栏位二",
     })
 })

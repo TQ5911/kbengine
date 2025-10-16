@@ -5,7 +5,8 @@ import requests
 import pypinyin
 from pypinyin import lazy_pinyin
 from datetime import datetime
-
+import random
+from simpleBotBase import FACE_DATA
 # 添加目标服务器参数：modName, school, loginHost, loginPort
 modName, _school, _loginHost, _loginPort = sys.argv[1:5]
 const_workspace_id_h1 = "59721401"
@@ -55,6 +56,7 @@ def startBot(delegateCls, school, loginHost, loginPort):
     print(f'版本日机器人目标服务器: {loginHost}:{loginPort}')
     
     Allusers = GetAllUsers()
+    faceData = FACE_DATA()
     for avatarName, accountName in Allusers.items():
         if school == 'all':
             # 为每个用户创建3个职业的机器人
@@ -85,13 +87,22 @@ def startBot(delegateCls, school, loginHost, loginPort):
                     continue
         else:
             # 只创建指定职业的机器人
+            if school == 0:
+                schoollist = list(characterdict.keys())
+                botschool = random.choice(schoollist)
+                faceData.random_set_face_data_by_id(botschool)
+                face_dict = faceData.toSavedDict()
+            else:
+                botschool = school
+                faceData.random_set_face_data_by_id(botschool)
+                face_dict = faceData.toSavedDict()
             final_account_name = f"{accountName}{int(month_day)}"
             final_avatarName = f"{avatarName}{int(month_day)}"
             
-            print(f"创建机器人 - 账号: {final_account_name}, 角色: {final_avatarName}, 职业: {school}")
+            print(f"创建机器人 - 账号: {final_account_name}, 角色: {final_avatarName}, 职业: {botschool}")
             
             try:
-                client = BotClient.BotClient(final_account_name, final_avatarName, int(school))
+                client = BotClient.BotClient(final_account_name, final_avatarName, int(botschool), face_dict)
                 
                 # 如果提供了登录服务器地址和端口，则使用指定服务器登录
                 if loginHost and loginPort and loginHost.strip() and loginPort.strip():

@@ -223,7 +223,7 @@ class ICrossServer(object):
         if self.endCrossServerTimerId:
             self._cancelCallback(self.endCrossServerTimerId, gametimer.TIMER_TAG_END_CROSS_SERVER)
             self.endCrossServerTimerId = 0
-        self.disconnect()
+        self.disconnect(gameconst.ClientCallChannel.MAIN_CHANNEL)
         self.cell.onCrossServerSuc(self.crossServerDic["reasonNo"])
 
     def crossServerCallBack(self, callbackComponent, callbackName, args, extra):

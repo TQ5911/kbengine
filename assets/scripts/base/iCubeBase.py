@@ -74,7 +74,7 @@ class ICubeBase(object):
     def addRoomDurationFailedRewindTimes(self):
         self.leftCubeTimes += 1
 
-    def reqUseItemAddCubeTimes(self, itemId, num, isAddDuration):
+    def reqUseItemAddCubeTimes(self, exposed, itemId, num, isAddDuration):
         INFO_MSG('reqUseItemAddCubeTimes: {} {}'.format(itemId, num), isAddDuration)
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']) and isAddDuration:
             self.onMessagePre(AC_CD.datas['activity_notOpen']['value'], [])

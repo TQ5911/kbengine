@@ -19,8 +19,18 @@ import actionContext
 import utils
 import gamedecorator
 import dataUtils
+import mailAssistor
 
 class IDrawCard(object):
+	def drawCardOnLogin(self):
+		curTimestamp = utils.getNow()
+
+		poolsInfo = utils.checkDrawCardPoolTimeLimit(curTimestamp, gameconst.DrawCardPoolMacro.CHECK_TIME_LIMIT_TYPE_LOGIN)
+		INFO_MSG('call drawCardOnLogin', curTimestamp, poolsInfo)
+
+		if len(poolsInfo):
+			self.triggerTimeLimitGuaranteedReward(poolsInfo)
+
 	def sendDrawCardInfo(self):
 		clientData = []
 		for pool, info in self.drawCardInfo.cardPoolInfoDict.items():
@@ -44,30 +54,33 @@ class IDrawCard(object):
 			ERROR_MSG('call checkGachaPoolVaild pool None')
 			return False
 		
-		timeLimit = poolData['timeLimit']
-		if not timeLimit:
-			INFO_MSG('call checkGachaPoolVaild not timeLimit')
-			return True
-		
 		startTime = utils.getIntTimestamp(poolData['startTime'])
 		endTime = utils.getIntTimestamp(poolData['endTime'])
+		if not startTime and not endTime:
+			INFO_MSG('call checkGachaPoolVaild not timeLimit')
+			return True
 		#startTime, endTime = (endTime, startTime) if startTime > endTime else (startTime, endTime)
 		curTimestamp = utils.getNow()
 		INFO_MSG('call checkGachaPoolVaild', curTimestamp, startTime, endTime)
-		if startTime <= curTimestamp and curTimestamp < endTime:
+		if startTime <= curTimestamp and curTimestamp <= endTime:
 			INFO_MSG('call checkGachaPoolVaild in timeLimit')
 			return True
 		
-		WARNING_MSG('call checkGachaPoolVaild not in timeLimit')
+		if startTime > curTimestamp:
+			self.onMessagePre(GGS.datas['poolEndMsg']['value'], [])
+			WARNING_MSG('call checkGachaPoolVaild before timeLimit')
+		else:
+			self.onMessagePre(GGS.datas['poolEndMsg']['value'], [])
+			WARNING_MSG('call checkGachaPoolVaild after timeLimit')
 		return False
 
-	def reqRandomSummonPet(self, pool, summonNum):
+	def reqRandomSummonPet(self, exposed, pool, summonNum):
 		INFO_MSG('call reqRandomSummonPet', pool, summonNum)
 		if not self.checkGachaPoolVaild(pool):
 			return
 		
-		curPoolInfo = self.drawCardInfo.setdefault(pool)
 		poolData = GGP.datas[pool]
+		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
 			
 		if curPoolInfo.guaranteed >= GGS.datas['maxStack']['value']:
 			self.onMessagePre(GGS.datas['guaranteeMaxFull']['value'], [])
@@ -132,8 +145,8 @@ class IDrawCard(object):
 		pool = poolData.get('pool', 0)
 		summonNum = poolData.get('summonNum', 1)
 		realRollNum = poolData.get('realRollNum', 1)
-		curPoolInfo = self.drawCardInfo.setdefault(pool)
 		poolData = GGP.datas[pool]
+		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
 		
 		curPoolInfo.dailyNum += summonNum
 		curPoolInfo.num += summonNum
@@ -188,15 +201,15 @@ class IDrawCard(object):
 		
 		#items = [(itemId, 1) for itemId in itemIdList]
 		items = [itemId for itemId in itemIdList]
-		self.drawCardRecord.appendRecord(pool, items)
+		self.drawCardRecord.appendRecord(poolData.get('poolGroupId', pool), items)
 
-	def reqGetGuaranteedPetEgg(self, pool):
+	def reqGetGuaranteedPetEgg(self, exposed, pool):
 		INFO_MSG('call reqGetGuaranteedPetEgg', pool)
 		if not self.checkGachaPoolVaild(pool):
 			return
 
-		curPoolInfo = self.drawCardInfo.setdefault(pool)
 		poolData = GGP.datas[pool]
+		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
 
 		if curPoolInfo.guaranteed <= 0:
 			ERROR_MSG('call reqGetGuaranteedPetEgg guaranteed not enough', curPoolInfo.guaranteed)
@@ -215,7 +228,7 @@ class IDrawCard(object):
 		self.client.onGetGuaranteedPetEgg(pool, pityReward, guaranteed)
 
 	@gamedecorator.limitcall(1)
-	def reqPetDrawCardRecord(self, pool):
+	def reqPetDrawCardRecord(self, exposed, pool):
 		INFO_MSG('call petDrawCardRecord', pool)
 		#if not self.checkGachaPoolVaild(pool):
 		#	return
@@ -224,5 +237,26 @@ class IDrawCard(object):
 			ERROR_MSG('call reqPetDrawCardRecord pool None')
 			return
 
-		data = self.drawCardRecord.getStreamRecordData(pool)
+		data = self.drawCardRecord.getStreamRecordData(poolData.get('poolGroupId', pool))
 		self.streamStringProxy(data, '', gameconst.StreamStringID.PET_DRAW_CARD_RECORD)
+
+	def triggerTimeLimitGuaranteedReward(self, poolsInfo):
+		INFO_MSG('call triggerTimeLimitGuaranteedReward', self.gbID, poolsInfo)
+		for pool, _ in poolsInfo.items():
+			poolData = GGP.datas[pool]
+			curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
+
+			guaranteed = curPoolInfo.guaranteed
+			num = curPoolInfo.num
+			dailyNum = curPoolInfo.dailyNum
+			curPoolInfo.guaranteed = 0
+			curPoolInfo.num = 0
+			curPoolInfo.dailyNum = 0
+
+			if guaranteed <= 0:
+				continue
+
+			pityReward = poolData.get('pityReward', 0)
+			mailWealth = dropAward.MailWealthVal()
+			mailWealth.addWealthByItemId(pityReward, guaranteed)
+			mailAssistor.sendMailToPlayers([self.gbID], GGS.datas['PoolEndMailID']['value'], extraAttach=mailWealth, despArgs=())

@@ -4,10 +4,20 @@ import KBEngine
 from KBEDebug import *
 import gameconfig
 import utils
+import gameconst
 import gameglobal
 
 from rpc import RpcChannel, TcpServer
-from proto.interface_pb2 import Interface, BaseApp_Stub, Void
+from proto.interface_pb2 import Interface, BaseApp_Stub, Void, SetAccountCompResult
+
+
+def clearAccountCompIdCache(accountName):
+    _cache = gameglobal.accountCompIdCache.get(accountName)
+    if not _cache:
+        return
+
+    if _cache[0] < utils.getNow():
+        gameglobal.accountCompIdCache.pop(accountName)
 
 
 class Baseapp2InterfaceRpcService(Interface):
@@ -54,6 +64,20 @@ class Baseapp2InterfaceRpcService(Interface):
     def activeTick(self, rpc_controller, request, done):
         self.tLastTick = utils.getNow()
         self.baseappStub.activeTickCallback(None, Void(), None)
+
+    def setAccountComp(self, rpc_controller, request, done):
+        INFO_MSG('setAccountComp:', request)
+        _expire = utils.getNow() + gameconst.AUTH_AVATAR_LOGIN_EXPIRE_TIME
+        gameglobal.accountCompIdCache[request.accountName] = (_expire, request.compID)
+
+        # +5 是为了留点容错时间
+        _delay = gameconst.AUTH_AVATAR_LOGIN_EXPIRE_TIME + 5
+        KBEngine.addTimer(_delay, 0, lambda *args: clearAccountCompIdCache(request.accountName))
+
+        _resp = SetAccountCompResult()
+        _resp.result = 1
+        _resp.entityID = request.entityID
+        self.baseappStub.setAccountCompResult(None, _resp, None)
 
 
 class BaseappClientMgr(object):

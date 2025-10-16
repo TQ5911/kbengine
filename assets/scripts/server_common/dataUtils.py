@@ -483,7 +483,7 @@ def getCreepMD(creepId):
     return CBD.datas.get(creepId, {}).get('magicDrop', 0)
 
 def getPropBaseScore(propName):
-    cfgData = FDD.datas[propName]
+    cfgData = FDD.datas.get(propName, None)
     if not cfgData:
         ERROR_MSG("getPropScore cfgData not found:", propName)
         return 0
@@ -557,11 +557,11 @@ def checkEquipmentEnhancementType(equipType):
                         gameconst.EquipTypes.MAIN_TYPE_SHOE,
                         gameconst.EquipTypes.MAIN_TYPE_NECKLACE,
                         gameconst.EquipTypes.MAIN_TYPE_RING,
-                        gameconst.EquipTypes.MAIN_TYPE_BRACELET,)
+                        gameconst.EquipTypes.MAIN_TYPE_BRACELET,
+                        gameconst.EquipTypes.MAIN_TYPE_BELT)
 
 def checkEquipmentGlyphType(equipType):
-    return equipType in (gameconst.EquipTypes.MAIN_TYPE_WEAPON,
-                        gameconst.EquipTypes.MAIN_TYPE_CLOTHES,)
+    return equipType in (gameconst.EquipTypes.MAIN_TYPE_WEAPON,)
 
 def checkEquipmentBlessType(equipType):
     return equipType in (gameconst.EquipTypes.MAIN_TYPE_WEAPON,)
@@ -573,7 +573,8 @@ def checkEquipmentSpiritType(equipType):
                         gameconst.EquipTypes.MAIN_TYPE_SHOE,
                         gameconst.EquipTypes.MAIN_TYPE_NECKLACE,
                         gameconst.EquipTypes.MAIN_TYPE_RING,
-                        gameconst.EquipTypes.MAIN_TYPE_BRACELET,)
+                        gameconst.EquipTypes.MAIN_TYPE_BRACELET,
+                        gameconst.EquipTypes.MAIN_TYPE_BELT)
 
 def checkEquipGrowingForbidden(equipItem):
     isForbidden = equipItem.itemId in GBGCD.datas['equipGrowingForbidden']['value']
@@ -583,10 +584,6 @@ def checkEquipGrowingForbidden(equipItem):
     if isBroken:
         return True
     return False
-
-def isSpiritBoardItemByItemId(itemId):
-    itemData = getCommItemData(itemId)
-    return itemData and itemData['subType'] == gameconst.ItemSubType.SpiritBoard
 
 def getAuctionItemDealCDTime(itemID):
     itemData = GBGBD.datas.get(itemID, None)
@@ -625,7 +622,7 @@ def getAIParameters(creepId):
         else:
             _aiParamId = _aiId * 100 + 1
 
-    return S_SMAD.datas[_aiParamId]
+    return S_SMAD.datas.get(_aiParamId, {})
 
 
 def isCubeCow(mapId):

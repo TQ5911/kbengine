@@ -41,6 +41,9 @@ import cityBattle_config as G_CBD
 import message_Message_def as M_M_DD
 import iRouter
 import gameconfig
+import LeaderBoardGuildInfo
+
+
 class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
     # type hint
     junXuArchitecture: JunXuArchitectureInfo.JunXuArchitectureVal
@@ -211,6 +214,29 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             _newScore += _gmVal.score
 
         self.guildScore = _newScore
+
+        self._updateDataToLeaderBoard()
+
+    def toLeaderBoardGuildVal(self):
+        _gmVal = self.members.get(self.leaderGbId)
+
+        return LeaderBoardGuildInfo.LeaderBoardGuildVal(
+            self.guildUUID,
+            self.guildName,
+            _gmVal.name,
+            self.guildLevel,
+            self.guildScore,
+        )
+
+    def _updateDataToLeaderBoard(self):
+        _cache = self.toLeaderBoardGuildVal()
+        if _cache == self.leaderBoardGuildCache:
+            return
+
+        _stub = gameengine.getLeaderStub(gameconst.LeaderBoardType.GUILD)
+        if _stub:
+            _stub.onGetLeaderBoardCache(_cache)
+            self.leaderBoardGuildCache = _cache
 
     def maxMemberNum(self):
         return G_XFED.datas[self.guildBuilding.xiangFang.level]['memberLimit']
@@ -973,6 +999,11 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             avatarInfo['gbId']
         )
 
+    def doSendGuildRedBagMsg(self, redbagId, redbagType, channel, money, desc, avatarInfo):
+        self._braodcastAsync(
+            lambda box: box.client.onReleaseRedBagMsg(redbagId, redbagType, channel, money, desc, avatarInfo),
+            None
+        )
     def addGuildExp(self, delta, src, opUUID, detail):
         DEBUG_MSG('addGuildExp', delta, src, opUUID, detail)
         if delta < 0:

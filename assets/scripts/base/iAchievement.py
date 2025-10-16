@@ -8,7 +8,7 @@ class IAchievement(object):
     def _sendAchievementInitData(self):
         self.achievementInfo.sendInitDataToClient(self)
 
-    def takeAchievementRewards(self, achievementIds):
+    def takeAchievementRewards(self, exposed, achievementIds):
         INFO_MSG('takeAchievementRewards:', achievementIds)
         self.achievementInfo.takeAllAchievementRewards(achievementIds, self)
 

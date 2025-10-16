@@ -42,7 +42,7 @@ import gamelog
 import message_chatMessage as MCMD
 import tutorConst_newbieCreate as TCNCD
 import message_Message_def as MMD
-import uiConfig_uiVisible as UCUVD
+import visible_visible as UVVD
 import impTask
 import iAvatarVariable
 import impCombat
@@ -87,6 +87,8 @@ import iChief
 import iCrossServer
 import iWorkshop
 import iRedBag
+import iDateData
+
 
 class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, impLine.ImpLine, iClient.IClient,
              impTask.ImpTask, iAvatarVariable.ImpAvatarVariable, impCombat.ImpCombat, impTeam.ImpTeam, IScore.IScore,
@@ -97,7 +99,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
              iHolidayPay.IHolidayPay, iGuild.IGuild, iDrawCard.IDrawCard, iGuildTrain.IGuildTrain, iWarehouse.IWarehouse,
              iLeaderBoard.ILeaderBoard, iCoinAuction.ICoinAuction, iNewbie.INewbie, iAchievement.IAchievement, 
              iEnemy.IEnemy, iWonderLandBase.IWonderLandBase, iActivityBase.IActivityBase, iCollectible.ICollectible, iSiegeWarBase.ISiegeWarBase,
-             iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop, iRedBag.iRedBag):
+             iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop, 
+             iRedBag.IRedBag, iDateData.IDateData):
     """
     角色实体
 
@@ -127,7 +130,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self._initEquipDrop()
 
         self.shouldAutoBackup = False
-        self.accountEntity = None
         self.destroyTimer = 0
         self.tLoginBase = utils.getNow()
         self.initFirst()
@@ -195,7 +197,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def characterName(self):
         return self.getRoleCacheAttr('name', '')
 
-    def onClientEnabled(self):
+    def onClientEnabled(self, chn):
         """
         KBEngine method.
         该entity被正式激活为可使用， 此时entity已经建立了client对应实体， 可以在此创建它的
@@ -217,21 +219,27 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.client.syncServerTime(int(time.time() * 1000), utils.getTimeZoneOffset())
 
         if gameconfig.enableCentralLogin():
-            self.accountEntity.notifyLoginComplete()
+            self.getAccountByChn(chn).notifyLoginComplete()
 
         if not self.cell and not isCreating:
             self.createCell()
             self.setTempMiscProp(gameconst.AvatarProps.isCreatingAvatar, True)
 
-        if self.accountEntity:
-            self.accountEntity.doAllAvatarClientEnableCB()
+        if self.getAccountByChn(chn):
+            self.getAccountByChn(chn).doAllAvatarClientEnableCB()
         else:
             ERROR_MSG('client enable but not has account:', self.gbID)
 
         if self.isCrossServerInLocalServer:
             self.onReloginInCrossServerState()
 
-        self.clientIP = self.clientAddr[0]
+        self.clientIP = self.clientAddr(chn)[0]
+
+    def getAccountByChn(self, chn):
+        if chn == gameconst.ClientCallChannel.MAIN_CHANNEL:
+            return self.accountEntity
+        elif chn == gameconst.ClientCallChannel.SUB_CHANNEL:
+            return self.subAccount
 
     def getClientIp(self):
         try:
@@ -256,6 +264,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.mailOnLogin()
         self.collectOnLogin()
         self.welfareSignInOnLogin()
+        self.drawCardOnLogin()
         self.redbagOnLogin()
 
         self.setTempMiscProp(gameconst.AvatarProps.gameLengthMarkTime, utils.getNow())
@@ -505,43 +514,43 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         else:
             super(Avatar, self).onTimer(tid, userArg)
 
-    def kickAvatar(self):
-        INFO_MSG('kickAvatar', self.hasClient, self.baseSpaceNo)
-        if self.hasClient:
+    def kickAvatar(self, chn):
+        INFO_MSG('kickAvatar', self.hasChnClient(chn), self.baseSpaceNo, chn)
+        if self.hasChnClient(chn):
             self.kickState = gameconst.KickAvatar.kicking
             self.canRelogin = True
-            self.client.onAnotherClientLogin()
-            self.disconnect()
+            self.getClient(chn).onAnotherClientLogin()
+            self.disconnect(chn)
 
-    def doRelogin(self):
+    def doRelogin(self, accountEid):
+        accountEnt = KBEngine.entities.get(accountEid)
+        _chn = self.getAccountChn(accountEid)
         if self.isDestroying or self.isDestroyed or self.isDestroyingCell:
             INFO_MSG('relogin failed: destroyed', self.isDestroying)
-            self.accountEntity.loginAccount(True)
+            accountEnt.loginAccount(True)
             return False
 
         INFO_MSG('reloginAvatar', self.kickState)
-        if not self.hasClient:
+        if not self.hasChnClient(_chn):
             self.kickState = gameconst.KickAvatar.kicked
 
         if self.kickState == gameconst.KickAvatar.kicking:
-            self._callback(0.2, 'doRelogin', (), gametimer.TIMER_TAG_DO_RELOGIN)
+            self._callback(0.2, 'doRelogin', (accountEid, ), gametimer.TIMER_TAG_DO_RELOGIN)
             return False
 
-        if not self.accountEntity.hasClient:
+        if not accountEnt.hasClient:
             ERROR_MSG('accountEntity has no client')
             return False
 
-        self.accountEntity.giveClientTo(self)
-
-
+        self.giveClientToMe(accountEnt)
         return True
 
-    def onClientDeath(self):
+    def onClientDeath(self, chn):
         """
         KBEngine method.
         entity丢失了客户端实体
         """
-        INFO_MSG("Avatar[%i].onClientDeath", self.id, self.gbID, self.cell)
+        INFO_MSG("Avatar[%i].onClientDeath", self.id, self.gbID, self.cell, chn)
         if self.kickState == gameconst.KickAvatar.kicking:
             self.kickState = gameconst.KickAvatar.kicked
         if self.cell:
@@ -588,7 +597,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         if isRelogin:
             pass
         else:
-            self.accountEntity.onAvatarLogonSucc(self.gbID)
+            #self.accountEntity.onAvatarLogonSucc(self.gbID)
+            pass
 
     # 这里客户端每次连上来都会调用到，包括第一次登录和后面断线后重连
     # 所以只能做一些向客户端同步数据的事情，base进程自己的数据放到__init__或者onGetCell（如果依赖cell）中初始化
@@ -676,7 +686,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def backSelectCharacterBase(self):
         INFO_MSG('backSelectCharacterBase')
-        if self.isDestroying or not self.accountEntity:
+        if self.isDestroying or not (self.accountEntity or self.subAccount):
             ERROR_MSG('backSelectCharacterBase failed!')
             return
 
@@ -684,23 +694,14 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.setTempMiscProp(gameconst.AvatarProps.backAccount, True)
         self.cell.offline(gameconst.AVATAR_OFFLINE_REASON_SELECT_CHARACTER)
 
-    def setAccountInfo(self, accountEnt):
-        self.accountEntity = accountEnt
-        if accountEnt:
-            self.deviceUniqueIdentifier = self.accountEntity.deviceUniqueIdentifier
-
-            self.crossServerState = gameconst.CrossServerState.IN_CROSS_SERVER if self.accountEntity.isCrossServer \
-                else gameconst.CrossServerState.IN_CURRENT_SERVER
-            self.otherServerAvatarBox = self.accountEntity.otherServerAvatarBox
-            # newLv = self.getAvatarLevel()
-            # if newLv == 1:
-            #     self.accountEntity.updateCharacterLevel(self.gbID, newLv, self.tLoginBase)
-                # self.onTaskAvatarLvUp(0, newLv)
-
     def _clearAccountInfo(self):
         if self.accountEntity != None:
             self.accountEntity.onAvatarDestroy()
-            self.setAccountInfo(None)
+            self.setAccountInfo(0, False)
+
+        if self.subAccount != None:
+            self.subAccount.onAvatarDestroy()
+            self.setSubAccount(0, False)
 
     def _removePendingEnter(self):
         spaceNo = self.getCellData('spaceNo', 0)
@@ -723,7 +724,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         INFO_MSG('onCellAppDeath')
         self.isDestroying = True
         self.offlineReason = gameconst.AVATAR_OFFLINE_REASON_CELLAPP_DEATH
-        self.disconnect()
+        self.disconnect(gameconst.ClientCallChannel.ALL_CHANNEL)
         self.popRoleCache(self.offlineReason)
         return
 
@@ -850,7 +851,20 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                 gameengine.getRaidStub(raidId).onAvatarOffline(raidId, 0, self.gbID)
 
             if self.getTempMiscProp(gameconst.AvatarProps.backAccount, False):
-                self.giveClientTo(self.accountEntity)
+                if self.getClient(gameconst.ClientCallChannel.MAIN_CHANNEL):
+                    self.giveClientTo(
+                        self.accountEntity,
+                        gameconst.ClientCallChannel.MAIN_CHANNEL,
+                        gameconst.ClientCallChannel.MAIN_CHANNEL,
+                    )
+
+                if self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL):
+                    self.giveClientTo(
+                        self.subAccount,
+                        gameconst.ClientCallChannel.SUB_CHANNEL,
+                        gameconst.ClientCallChannel.MAIN_CHANNEL,
+                    )
+
         except Exception as e:
             gameengine.reportCritical('_preEntireDestroy error:', self.id, str(e))
 
@@ -953,7 +967,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             super(Avatar, self).postReloadScript()
 
     @gamedecorator.crossServer
-    def runGmCommand(self, command):
+    def runGmCommand(self, exposed, command):
         if self.gmMode or not gameconfig.gmVerifyByGroup() or self.group:
             gmCommand.doCommandInside(self, command)
 
@@ -1120,12 +1134,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.client.onMessage(msgId, args)
 
     # 用来存储只有客户端用到的数据
-    def setCliConfigData(self, keys, vals):
+    def setCliConfigData(self, exposed, keys, vals):
         for key, val in zip(keys, vals):
             self.cliConfigDic[key] = val
             self.addCollectionItemIdList(key, val)
 
-    def delCliConfigData(self, keys):
+    def delCliConfigData(self, exposed, keys):
         for key in keys:
             val = self.cliConfigDic.pop(key, 0)
             self.removeCollectionItemIdList(key, val)
@@ -1137,7 +1151,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         # DEBUG_MSG('in sendCliConfigData, gzipStr:', len(zStr))
         self.streamStringProxy(zStr, '', gameconst.StreamStringID.CLIENT_CONFIG_RECORD)
 
-    def clientLogAfterLogin(self, logId, jsonStr):
+    def clientLogAfterLogin(self, exposed, logId, jsonStr):
         jsonData = json.loads(jsonStr)
         if jsonData is None:
             WARNING_MSG('clientLogAfterLogin:', logId)
@@ -1357,14 +1371,14 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('_checkAchieveDailyRefresh')
         self.registerDailyEvent('_resetCubeCowDur')
         self.registerDailyEvent('_onDailyHealWoundsTimesRefresh')
-        self.registerDailyEvent('onLimitedStoreHourlyUpdate')
+        self.registerHourlyEvent('onLimitedStoreHourlyUpdate')
 
-    def reqDeleteAvatar(self):
+    def reqDeleteAvatar(self, exposed):
         if gameconfig.enableOldLogout():
             if self.accountEntity:
                 self.accountEntity.delAccount()
 
-    def uploadClientData(self, dataType, dataJson):
+    def uploadClientData(self, exposed, dataType, dataJson):
         if len(dataJson) > 2048:
             WARNING_MSG('uploadClientData: large json obj', dataType, dataJson[:2048])
             return
@@ -1421,25 +1435,90 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def getCommonFlag(self, flagType):
         return utils.hasBit(self.commonFlag, flagType)
-
+    
     def isUIVisible(self, uiId):
-        uiData = UCUVD.datas.get(uiId)
+        uiData = UVVD.datas.get(uiId)
         if not uiData:
             return False
 
-        missionID = uiData['missionID']
+        missionID = uiData['task']
         if missionID and not self.isTaskComplete(missionID):
             return False
 
-        lvLimit = uiData['lvLimit']
+        lvLimit = uiData['level']
         myRoleCache = gameglobal.roleCache.get(self.id)
         if lvLimit and myRoleCache['level'] < lvLimit:
             return False
 
         return True
-    
+
     def _onDailyHealWoundsTimesRefresh(self):
         self.cell.onDailyHealWoundsTimesRefresh()
+# ---------------------------- auth avatar start ----------------------------
+    def isHost(self, eid):
+        if eid > 0:
+            return self.mainAccountCache.isHost
+        else:
+            return self.subAccountCache.isHost
+
+    def giveClientToMe(self, account):
+        if account.id == self.mainAccountCache.eid:
+            account.giveClientTo(
+                self,
+                gameconst.ClientCallChannel.MAIN_CHANNEL,
+                gameconst.ClientCallChannel.MAIN_CHANNEL,
+            )
+
+        elif account.id == self.subAccountCache.eid:
+            account.giveClientTo(
+                self,
+                gameconst.ClientCallChannel.MAIN_CHANNEL,
+                gameconst.ClientCallChannel.SUB_CHANNEL,
+            )
+
+    @property
+    def accountEntity(self):
+        return KBEngine.entities.get(self.mainAccountCache.eid)
+
+    def setAccountInfo(self, eid, isHost):
+        self.mainAccountCache.eid = eid
+        self.mainAccountCache.isHost = isHost
+        if self.accountEntity:
+            self.deviceUniqueIdentifier = self.accountEntity.deviceUniqueIdentifier
+
+            self.crossServerState = gameconst.CrossServerState.IN_CROSS_SERVER if self.accountEntity.isCrossServer \
+                else gameconst.CrossServerState.IN_CURRENT_SERVER
+            self.otherServerAvatarBox = self.accountEntity.otherServerAvatarBox
+            # newLv = self.getAvatarLevel()
+            # if newLv == 1:
+            #     self.accountEntity.updateCharacterLevel(self.gbID, newLv, self.tLoginBase)
+                # self.onTaskAvatarLvUp(0, newLv)
+
+    def getAccountChn(self, accountEid):
+        if accountEid == self.mainAccountCache.eid:
+            return gameconst.ClientCallChannel.MAIN_CHANNEL
+        elif accountEid == self.subAccountCache.eid:
+            return gameconst.ClientCallChannel.SUB_CHANNEL
+
+        return gameconst.ClientCallChannel.NONE
+
+    def getAvaliableClientChn(self):
+        if not self.getClient(gameconst.ClientCallChannel.MAIN_CHANNEL):
+            return gameconst.ClientCallChannel.MAIN_CHANNEL
+
+        if not self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL):
+            return gameconst.ClientCallChannel.SUB_CHANNEL
+
+        return None
+
+    @property
+    def subAccount(self):
+        return KBEngine.entities.get(self.subAccountCache.eid)
+
+    def setSubAccount(self, eid, isHost):
+        self.subAccountCache.eid = eid
+        self.subAccountCache.isHost = isHost
+# ---------------------------- auth avatar end ----------------------------
 
 # ---------------------------- switch avatar server start ----------------------------
     def switchAvatarServer(self, serverId):
@@ -1463,7 +1542,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 # ---------------------------- switch avatar server end ----------------------------
 
 # ---------------------------- blaze start ----------------------------
-    def addBlazeId(self, blazeId):
+    def addBlazeId(self, exposed, blazeId):
         if blazeId in self.blazeIds:
             WARNING_MSG('addBlazeId: blazeId already exist')
             return
@@ -1475,3 +1554,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.blazeIds.append(blazeId)
         self.client.onNewBlazeId(blazeId)
 # ---------------------------- blaze end ----------------------------
+
+#
+def onExpireDailyData(self, key, val):
+    super(Avatar, self).onExpireDailyData(key, val)
+
+def onExpireWeeklyData(self, key, val):
+    super(Avatar, self).onExpireWeeklyData(key, val)

@@ -14,8 +14,8 @@ import gametimer
 
 
 class EventType(object):
-    typeAmount = 4
-    EVENT_NONE, EVENT_DAY, EVENT_WEEK, EVENT_MONTH = range(typeAmount)
+    typeAmount = 5
+    EVENT_NONE, EVENT_DAY, EVENT_WEEK, EVENT_MONTH, EVENT_HOUR = range(typeAmount)
 
 
 class IBaseCycleEvent(object):
@@ -51,6 +51,24 @@ class IBaseCycleEvent(object):
 class CmpCycleEvent(IBaseCycleEvent):
     def __init__(self, updateTime):
         self.tUpdateTime = updateTime
+
+
+class HourCycleEvent(IBaseCycleEvent):
+    """
+    hour cycle event class
+    """
+    eventType = EventType.EVENT_HOUR
+
+    def getUpdateDict(self, owner):
+        return owner.tLastHourUpdateTimeDict
+
+    def _calcNextCBTime(self):
+        tUpdate = utils.getCurrentHourTS(offsetSec=self.cycleTime)
+        tNow = time.time()
+        if tNow < tUpdate:
+            self.tUpdateTime = tUpdate
+        else:
+            self.tUpdateTime = tUpdate + gameconst.ONE_HOUR_SECONDES
 
 
 class DayCycleEvent(IBaseCycleEvent):
@@ -154,7 +172,10 @@ class ICycleEvent(object):
         if self.tLastUpdateTime > 0:
             for eventObj in self.schemeEvent:
                 bNeedUpdate = False
-                if eventObj.eventType == EventType.EVENT_DAY:
+                if eventObj.eventType == EventType.EVENT_HOUR:
+                    if utils.isDiffHour(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
+                        bNeedUpdate = True
+                elif eventObj.eventType == EventType.EVENT_DAY:
                     if utils.isDiffDay(nowTime, self.tLastUpdateTime, eventObj.cycleTime):
                         bNeedUpdate = True
                 elif eventObj.eventType == EventType.EVENT_WEEK:
@@ -241,7 +262,9 @@ class ICycleEvent(object):
                                                              'cycleEventCheckTimerId')
 
     def register_Event(self, eventType, cbFunc, cbArg=(), cycleTime=gameconst.COMMON_CYCLE_TIME):
-        if eventType == EventType.EVENT_DAY:
+        if eventType == EventType.EVENT_HOUR:
+            evetObj = HourCycleEvent(self, cbFunc, cbArg, cycleTime)
+        elif eventType == EventType.EVENT_DAY:
             evetObj = DayCycleEvent(self, cbFunc, cbArg, cycleTime)
         elif eventType == EventType.EVENT_WEEK:
             evetObj = WeekCycleEvent(self, cbFunc, cbArg, cycleTime)
@@ -251,6 +274,9 @@ class ICycleEvent(object):
             return
 
         heapq.heappush(self.schemeEvent, evetObj)
+
+    def registerHourlyEvent(self, cbFunc, cbArg=(), cycleTime=0):
+        self.register_Event(EventType.EVENT_HOUR, cbFunc, cbArg, cycleTime)
 
     def registerDailyEvent(self, cbFunc, cbArg=(), cycleTime=gameconst.COMMON_CYCLE_TIME):
         self.register_Event(EventType.EVENT_DAY, cbFunc, cbArg, cycleTime)

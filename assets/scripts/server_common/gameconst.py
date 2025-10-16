@@ -42,15 +42,15 @@ GLOBAL_BASE_STUB_ARCHIVE = [
     'RedBagStub',
     ]
 GLOBAL_BASE_STUB_UNARCHIVE = [
-    'PlayerStub', 
-    'TeamMatchStub', 
-    'RaidStub', 
-    'ItemLinkStub', 
-    'CrossServerStub', 
-    'GuildStub', 
-    'DropStub', 
+    'PlayerStub',
+    'TeamMatchStub',
+    'RaidStub',
+    'ItemLinkStub',
+    'CrossServerStub',
+    'GuildStub',
+    'DropStub',
     'ActStub',
-    'RaidMatchStub', 
+    'RaidMatchStub',
     'CrossDataStub',
     'WorldRefreshEntityStub',
     'CubeStub',
@@ -109,6 +109,7 @@ AVATAR_OFFLINE_REASON_IDIP_DELETE_ACCOUNT = 17
 AVATAR_OFFLINE_REASON_IDIP_PLAT_AUTHOR_CHANGE = 18
 AVATAR_OFFLINE_REASON_SWITCH_SERVER = 19
 AVATAR_OFFLINE_REASON_NEWBIE_KICKOUT = 20
+AVATAR_OFFLINE_REASON_STOP_AUTH = 21
 
 CENTRAL_SERVER_HEARTBEAT_INTERVAL = 10
 
@@ -314,8 +315,6 @@ class ItemSubType(object):
     HEAL_MP = 2
     Equipment = 4
     ExtractReward = 52
-    SpiritBoard = 15
-
 
 class AvatarProps(metaclass=UniqueIntEnum):
     commonCastCtx = 4
@@ -410,7 +409,7 @@ class AvatarProps(metaclass=UniqueIntEnum):
     wonderLandSwitch = 260
     wonderLandDurStatus = 261
     wonderLandRewardList = 262
-    
+
     raidTickTimerId = 300
     raidCreateRaidTeamCheck = 301
     raidBeInvitedRecord = 302
@@ -437,6 +436,15 @@ class AvatarProps(metaclass=UniqueIntEnum):
     spawnSummonByAI = 332
     spawnSummonList = 333
     fromCubeMapId = 334
+    # 自己发送给别人的授权申请信息
+    authRoleInfo = 335
+    # 自己收到别人发送的授权申请信息
+    recvAuthRoleInfo = 336
+
+    teamStatisticDataRecord = 340
+    teamStatisticDataDict = 341
+
+    deadLaterCallbackInfo = 350
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
@@ -479,8 +487,6 @@ class ItemId(object):
     GUILD_FUND = IDSD.datas['itemID_guildCoin']['value']
     GUILD_EXP = IDSD.datas['itemID_guildExp']['value']
     COLL_SKIP_MSG_HANDLE = ()
-    # 引灵盘
-    SPIRIT_BOARD = 30000016
     # 真气
     GENIUS_QI = 30000100
 
@@ -1444,6 +1450,7 @@ class BornStateType(object):
 
     bornDoNothing = (stone, virtual, soul)
     joinCombatTup = (move, normal, afterBornMove)
+    speialAIInvalidCombatTup = (move,)
     flowConvTup = (move, stone, virtual)
 
     # 其他类型后面扩展
@@ -1555,6 +1562,7 @@ TEAM_LIST_MAX_NUM = 15
 RAIDSTUB_CONFIG_NUM = 5
 RAID_TEAM_MEMBER_MAX_NUM = 5
 RAID_LSIT_MAX_NUM = 15
+RAID_MEMBER_MAX_NUM = 15
 
 class TeamMicsMode(object):
     OFF = 0
@@ -1583,13 +1591,12 @@ class TeamType(object):
     TEAM = 1
     RAID = 2
 
-MARK_OTHER_MAX_NUM = 15    # 最大标记数量
+TEAM_MARK_MAX_SLOT = 8
 class TeamMarkType(object):
     MARK_NONE = 0
-    MARK_RED = 1
-    MARK_BLUE = 2
-    MARK_PURPLE = 3
-    MARK_ORANGE = 4
+    MARK_TEAMMATE = 1
+    MARK_ENEMY = 2
+    MARK_SCENE = 3
 
 class TeamMarkChangeType(object):
     NONE = 0
@@ -1597,7 +1604,13 @@ class TeamMarkChangeType(object):
     MODIFY = 2
     DELETE = 3
     CAPTAIN = 4
-    
+
+class TeamStatisticType(object):
+    NONE = 0
+    DAMAGE = 1
+    HEAL = 2
+    HURT = 3
+
 class _RaidErrno(object):
     from userType import Error as _errno
 
@@ -1686,7 +1699,7 @@ class _RaidErrno(object):
     RAID_NOT_RAID_CANNOT_KICK_DEPUTY        = _errno(10068)     # 不能踢副团长
     RAID_NOT_RAID_CANNOT_MOVE_LEADER        = _errno(10069)     # 不能移动团长
     RAID_NOT_RAID_UNKNOWN_TEAM_MEMBER       = _errno(10070)     # 小队人数不支持
-    
+
     RAID_CHECKING_TEAM_JOIN                 = _errno(50000)     # 团队正在检查组队加入(申请通过)
     RAID_CHECKING_TEAM_INVITE               = _errno(50001)     # 团队正在检查组队加入(邀请通过)
     RAID_CHECKING_STANDBY_CHECK             = _errno(50002)     # 团队正在进行整团检查(团长发起)
@@ -1840,7 +1853,7 @@ class DungeonEntityLoadStatus(object):
 
 class DungeonPlayModeEnum(object):
     UNKNOWN = 0
-    CRUSADE = 1 
+    CRUSADE = 1
     CHIEF = 2
 
     COLL_ALL = (CRUSADE, CHIEF)
@@ -2391,6 +2404,7 @@ class EquipTypes(object):
     MAIN_TYPE_NECKLACE = 5
     MAIN_TYPE_RING = 6
     MAIN_TYPE_BRACELET = 7
+    MAIN_TYPE_BELT = 8
 
     #subType
     SUBTYPE_WEAPON_MONK = 11
@@ -2414,17 +2428,22 @@ class EquipTypes(object):
     SUBTYPE_BRACELET_PHYSIC = 78
     SUBTYPE_BRACELET_MAGIC = 79
     SUBTYPE_BRACELET_DEFENCE = 80
+    SUBTYPE_BELT_MONK = 81
+    SUBTYPE_BELT_MAGE = 82
+    SUBTYPE_BELT_WARRIOR = 83
 
     SUBTYPE_ORNAMENTS_RING = (SUBTYPE_RING_PHYSIC, SUBTYPE_RING_MAGIC, SUBTYPE_RING_MONK)
     SUBTYPE_ORNAMENTS_BRACELET = (SUBTYPE_BRACELET_PHYSIC, SUBTYPE_BRACELET_MAGIC, SUBTYPE_BRACELET_DEFENCE)
 
-    ALL_MAINTYPES = (MAIN_TYPE_WEAPON, MAIN_TYPE_CLOTHES, MAIN_TYPE_HEAD, MAIN_TYPE_SHOE, MAIN_TYPE_NECKLACE, MAIN_TYPE_RING, MAIN_TYPE_BRACELET)
+    ALL_MAINTYPES = (MAIN_TYPE_WEAPON, MAIN_TYPE_CLOTHES, MAIN_TYPE_HEAD, MAIN_TYPE_SHOE, MAIN_TYPE_NECKLACE,
+                     MAIN_TYPE_RING, MAIN_TYPE_BRACELET, MAIN_TYPE_BELT)
     ALL_SUBTYPES = (
         SUBTYPE_WEAPON_MONK, SUBTYPE_WEAPON_MAGE, SUBTYPE_WEAPON_WARRIOR,
         SUBTYPE_CLOTHES_MONK, SUBTYPE_CLOTHES_MAGE, SUBTYPE_CLOTHES_WARRIOR,
         SUBTYPE_HEAD_MONK, SUBTYPE_HEAD_MAGE, SUBTYPE_HEAD_WARRIOR,
         SUBTYPE_SHOE_MONK, SUBTYPE_SHOE_MAGE, SUBTYPE_SHOE_WARRIOR,
         SUBTYPE_NECKLACE_PHYSIC, SUBTYPE_NECKLACE_MAGIC,
+        SUBTYPE_BELT_MONK, SUBTYPE_BELT_MAGE, SUBTYPE_BELT_WARRIOR
                    ) + SUBTYPE_ORNAMENTS_RING + SUBTYPE_ORNAMENTS_BRACELET
 
 class BodyEquipSlot(object):
@@ -2437,6 +2456,7 @@ class BodyEquipSlot(object):
     EQUIP_RING_RIGHT_SLOT = 7
     EQUIP_BRACELET_LEFT_SLOT = 8
     EQUIP_BRACELET_RIGHT_SLOT = 9
+    EQUIP_BELT_SLOT = 10
 
 class EquipAttrConst(object):
     AFFIX_DEFAULT_LEVEL_GAP = 5
@@ -2553,8 +2573,9 @@ class GuildFlags(object):
 class LeaderBoardType(object):
     AVATAR_LEVEL = 1
     AVATAR_SCORE = 2
+    GUILD = 3
 
-    ALL_KEYS = (AVATAR_LEVEL, AVATAR_SCORE)
+    ALL_KEYS = (AVATAR_LEVEL, AVATAR_SCORE, GUILD)
 
 
 class DissolveGuildReason(object):
@@ -2657,7 +2678,7 @@ class JoinGuildEvent(object):
     FULL = 5
     NOT_ELIGIBLE = 6
     HAS_APPLY = 7
-    
+
 class CrossServerState(object):
     IN_CURRENT_SERVER = 1
     GOTO_CROSS_SERVER = 2
@@ -2867,6 +2888,11 @@ DROP_REMOTE_CACHE_EXPIRE_TIME = 60
 DROP_DROP_EXPIRE_DELAY = 5
 DROP_PICK_EXPIRE_DELAY = 10
 
+class DrawCardPoolMacro(object):
+    CHECK_TIME_LIMIT_INTERVAL = 3
+    CHECK_TIME_LIMIT_TYPE_LOGIN = 1
+    CHECK_TIME_LIMIT_TYPE_TIMER = 2
+
 class DropType(object):
     TYPE_DROP   = 1 #// 掉落
     TYPE_TAKE   = 2 #// 有人捡起了这个掉落
@@ -2881,7 +2907,7 @@ class DropWayType(object):
     DROP_WAY_TYPE_1 = 1 # 一个库内，不放回，随出若干件道具，不重复
     DROP_WAY_TYPE_2 = 2 # 一个库内，放回，随出若干件道具，可以重复
     DROP_WAY_TYPE_3 = 3 # 库内的道具全部掉落，无视权重
-    DROP_WAY_TYPE_4 = 4 # 库内道具依次单独判定是否掉落，每个道具的掉落概率 = 该道具权重 / 10000 
+    DROP_WAY_TYPE_4 = 4 # 库内道具依次单独判定是否掉落，每个道具的掉落概率 = 该道具权重 / 10000
     DROP_WAY_TYPE_5 = 5 # 库内道具从上到下挨个判定，每个对象的掉落概率 = 该道具权重 / 10000，当判定成功掉落时，停止随机
 
 class DropConditionType(object):
@@ -2889,7 +2915,7 @@ class DropConditionType(object):
     DROP_CONDITION_TYPE_2 = 2 # 职业
     DROP_CONDITION_TYPE_3 = 3 # 任务
     DROP_CONDITION_TYPE_4 = 4 # 城战灵核
-    
+
 
 class DropTatgerType(object):
     ITEM = 1 # 物品
@@ -2931,7 +2957,7 @@ class DungeonCustomAreaType(object):
     @staticmethod
     def getLineVal(data):
         return data['Length']
-    
+
 
 class LogOnEnterType(object):
     NONE = 0
@@ -3039,7 +3065,7 @@ class SiegeWarBiddingResult(object):
     NOT_ENOUGH_MONEY = 1
     SAME_GUILD = 2
     OUTBID = 3
-    
+
 
 class SiegeWarSignUpResult(object):
     SUCCESS = 0
@@ -3202,7 +3228,7 @@ class InscriptionEffectType(metaclass=UniqueIntEnum):
     # 技能释放次数提升值
     SKILL_RELEASE_ADD_COUNT= 25
 
-BOUNTY_TASK_UI_ID = 28
+BOUNTY_TASK_UI_ID = 'UIRewardTaskPanel'
 
 class CharacterType(object):
     # 道士
@@ -3280,9 +3306,36 @@ class CubeRoomType(object):
 
 
 # ----------------------------- cube mock end -----------------------------
-
+class ClientCallChannel:
+    MAIN_CHANNEL = 0
+    SUB_CHANNEL = 1
+    ALL_CHANNEL = 2
+    NONE = 3
 # ----------------------------- AI mock start -----------------------------
 # ----------------------------- AI mock end -----------------------------
+
+# ----------------------------- auth avatar start ---------------------------
+AUTH_AVATAR_LOGIN_EXPIRE_TIME = 30 # 30seconds 由于需要跨进程，30秒内跨进程登录
+AUTH_ROLE_INFO_EXPIRE_TIME = 30 # 30seconds 这是发出授权申请，到对方接受
+AUTH_AVATAR_LEND_EXPIRE_TIME = 30 #角色授权后，对方能登录30天
+
+class AuthPerFlags(object):
+# 1.	商城（默认：关闭）
+# 2.	交易行（默认：关闭）
+# 3.	仓库提取（默认：开启）
+# 4.	装备制造、培养（默认：开启）
+# 5.	道具制造、合成（默认：开启）
+# 6.	精灵抽卡（默认：开启）
+# 7.	帮会（默认：开启）
+    MALL = 1 # 商城
+    TRADE = 2 # 交易行
+    WAREHOUSE = 3 # 仓库提取
+    EQUIPMENT = 4 # 装备制造、培养
+    PROP = 5 # 道具制造、合成
+    POKER = 6 # 精灵抽卡
+    GUILD = 7 # 帮会
+# ----------------------------- auth avatar end ---------------------------
+
 
 class ItemLockStatus(object):
     UNLOCKED = 0 # 未上锁
@@ -3290,7 +3343,7 @@ class ItemLockStatus(object):
     VALID_STATUS = (UNLOCKED, LOCKED)
 
 class WorkshopResult(object):
-    WORKSHOP_UNKNOW                         = 0     # 未知错误 
+    WORKSHOP_UNKNOW                         = 0     # 未知错误
     WORKSHOP_SUCCESS                        = 1     # 成功
     WORKSHOP_FAIL                           = 2     # 失败
     WORKSHOP_LIMIT_FUNC_NOT_OPEN            = 10000 # 功能未开放
@@ -3311,11 +3364,30 @@ class ItemBelongToType(object):
     BELONGTO_BODY = 2
 
 #
-RED_BAG_MIN_LEVEL = 9
 class RedBagType(object):
     NORMAL = 1 # 平均红包
     LUCKLY = 2 # 拼手气红包
 class RedBagChannel(object):
-    WORLD = 1 # 世界红包
-    GUILD = 2 # 公会红包
+    WORLD = 2 # 世界红包
+    GUILD = 3 # 公会红包
 RED_BAG_CHANNELS = (RedBagChannel.WORLD, RedBagChannel.GUILD)
+
+#特殊药品类增加总携带数量上限
+BAG_LIMIT_ITEM_TYPE_DATA = (0, 19)
+
+class AvatarDailyProps(metaclass=UniqueIntEnum):
+    dailyTest = 0
+    releaseRbNum = 1  # 今日已发红包数量
+    fetchRbNum = 2   # 今日已领红包数量
+
+class AvatarWeeklyProps(metaclass=UniqueIntEnum):
+    weeklyTest = 0
+
+
+class GlyphState(metaclass=UniqueIntEnum):
+    # 未解锁
+    LOCKED = 1
+    # 可打造
+    MAKEABLE = 2
+    # 已打造
+    MADE = 3

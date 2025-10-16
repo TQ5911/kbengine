@@ -6,7 +6,6 @@ import Bag
 
 class BagInfo(object):
     def createObjFromDict(self, dataDict):
-        DEBUG_MSG("bag createObjFromDict")
         bag = Bag.Bag()
         bag.initFromDict(dataDict)
         return bag

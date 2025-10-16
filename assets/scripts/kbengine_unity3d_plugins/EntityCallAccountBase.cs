@@ -98,6 +98,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void stopCharacterAuth(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("stopCharacterAuth", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
 	}
 
 	public class EntityCellEntityCall_AccountBase : EntityCall

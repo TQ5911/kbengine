@@ -204,14 +204,9 @@
         </onMessage>
 
         <onGameConfigChanged>
-            <Arg>    ARRAY    <of>   UINT16    </of> </Arg>
             <Arg>    ARRAY    <of>   STRING    </of> </Arg>
+            <Arg>    ARRAY    <of>   BOOL      </of> </Arg>
         </onGameConfigChanged>
-
-        <onGameConfigChangedByName>
-            <Arg>    ARRAY    <of>   STRING    </of> </Arg>
-            <Arg>    ARRAY    <of>   STRING    </of> </Arg>
-        </onGameConfigChangedByName>
 
         <onKickAnotherAvatar>
         </onKickAnotherAvatar>
@@ -297,6 +292,10 @@
             <Arg>    PYTHON    </Arg>
             <Arg>    PYTHON    </Arg>
         </onGetGuildsCacheDataAccount>
+
+        <stopCharacterAuth> <Exposed/>
+            <Arg>    PLAYER_GBID    </Arg>
+        </stopCharacterAuth>
     </BaseMethods>
 
     <CellMethods>

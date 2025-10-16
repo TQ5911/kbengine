@@ -60,7 +60,7 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
 
     def doEntityRefreshGrp(self, gameEntityId):
         _entityProps = []
-        utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps)
+        utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps, True)
         for _, _, _className, _, _pos, _dir, _params, _ in _entityProps:
             _params['spaceMgrId'] = self.spaceMgrId
             _params['monsterGroupId'] = self.id

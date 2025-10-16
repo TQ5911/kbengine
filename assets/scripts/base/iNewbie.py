@@ -145,7 +145,7 @@ class INewbie(object):
         DEBUG_MSG('_claimTaskByNewbieStep:', startTask)
         self.baseTaskClaim(startTask, None, False)
 
-    def addNewbieGuideId(self, newbieGuideId):
+    def addNewbieGuideId(self, exposed, newbieGuideId):
         if len(self.newbieGuideIds) > 1000:
             ERROR_MSG('addNewbieGuideId meet max')
             return

@@ -17,7 +17,7 @@ def checkProperty(owner):
     propDic = KBEngine.getUserTypeProperties('Avatar')
     for pName in propDic:
         if hasattr(owner, pName):
-            DEBUG_MSG("checkProperty            pName ", pName)
+            # DEBUG_MSG("checkProperty            pName ", pName)
             pObj = getattr(owner, pName)
             dict = propDic[pName].getDictFromObj(pObj)
             checkObj = propDic[pName].createObjFromDict(dict)

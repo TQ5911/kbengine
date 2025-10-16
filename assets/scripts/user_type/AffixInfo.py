@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-
-import KBEngine
-
 import dataUtils
 from KBEDebug import *
 import userType
@@ -10,19 +7,23 @@ import affix_affix as AFAFD
 import math
 import random
 import gameengine
-
+import inscriptionEffectInfo
 
 class Affix(userType.UserSoleType):
-    def __init__(self, affixId, affixLv=1):
+    def __init__(self, affixId = 0, affixLv=1):
         self.afxId = affixId
         self.lv = max(affixLv, 1)
         self.affixVal = 0
+
+    def _lateReload(self):
+        super(Affix, self)._lateReload()
 
     def toAffixValList(self):
         val = [self.afxId, self.lv, self.affixVal]
         return val
 
     def fromAffixValList(self, val):
+        self.afxId = val[0]
         self.lv = val[1]
         self.affixVal = val[2]
 
@@ -43,6 +44,51 @@ class Affix(userType.UserSoleType):
         else:
             propScore = 0
         return int(propScore + score_data)
+    
+    def getAffixId(self):
+        return self.afxId
+    
+class GlyphAffix(Affix):
+    def __init__(self, affixId = 0, affixLv=1):
+        super(GlyphAffix, self).__init__(affixId, affixLv)
+        self.effectValues = []
+        self.effectTypes = []
+        self.effectSkillIds = []
+        self.effectQualitys = []
+    
+    def applyEffects(self):
+        if self.afxId <= 0:
+            return
+        affixData = AFAFD.datas.get(self.afxId)
+        if not affixData:
+            return
+        inscriptionIds = affixData['inscription']
+        if inscriptionIds:
+            if type(inscriptionIds) is int:
+                self.analysisEffects(inscriptionIds)
+            else:
+                for inscriptionId in inscriptionIds:
+                    self.analysisEffects(inscriptionId)
+
+    def analysisEffects(self, inscriptionId):
+        ret, effectSkillId, effectQuality, effectType, effectValue = inscriptionEffectInfo.InscriptionEffectInfo.getEffectValue(inscriptionId)
+        if not ret:
+            return
+        self.effectValues.append(effectValue)
+        self.effectTypes.append(effectType)
+        self.effectSkillIds.append(effectSkillId)
+        self.effectQualitys.append(effectQuality)
+
+    def _lateReload(self):
+        super(GlyphAffix, self)._lateReload()
+
+    def fromAffixValList(self, val):
+        super().fromAffixValList(val)
+        self.applyEffects()
+    
+    def iterGlyphEffect(self):
+        for i in range(len(self.effectSkillIds)):
+            yield self.effectTypes[i], self.effectSkillIds[i], self.effectQualitys[i], self.effectValues[i]
 
 class AffixAdjustType(object):
     AFFIX_ADJUST_EQUIP_DROP = 0
@@ -74,12 +120,16 @@ def genFixedAffix(iLevel, affixId, rate):
 
     return affixObj
 
-def genRandomAffix(affixId, iLevel, val):
+def genRandomAffix(affixId, iLevel, val, isGlyph):
     affixData = AFAFD.datas.get(affixId)
     levelGap = affixData.get('levelGap', gameconst.EquipAttrConst.AFFIX_DEFAULT_LEVEL_GAP)
     affixLv = min(max(math.ceil(iLevel/levelGap), 1), affixData['maxLevel'])
 
-    affixObj = Affix(affixId, affixLv=affixLv)
+    # 铭文类型
+    if isGlyph:
+        affixObj = GlyphAffix(affixId, affixLv=affixLv)
+    else:
+        affixObj = Affix(affixId, affixLv=affixLv)
     affixObj.affixVal = val
     return affixObj
 

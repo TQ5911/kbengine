@@ -1,24 +1,5 @@
 <root>
     <Properties>
-        <dayReleaseRbNum>
-            <Type>          INT8                </Type>
-            <Flags>         BASE                    </Flags>
-            <Persistent>    true                    </Persistent>
-            <Default>       0                       </Default>
-        </dayReleaseRbNum>
-        <dayFetchRbNum>
-            <Type>          INT8                </Type>
-            <Flags>         BASE                    </Flags>
-            <Persistent>    true                    </Persistent>
-            <Default>       0                       </Default>
-        </dayFetchRbNum>
-        <redbagDayNo>
-            <Type>          INT32                </Type>
-            <Flags>         BASE                    </Flags>
-            <Persistent>    true                    </Persistent>
-            <Default>       0                       </Default>
-        </redbagDayNo>
-
         <releaseRedBagDict>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
@@ -46,7 +27,7 @@
             <Arg>           INT8            </Arg>
             <Arg>           INT32           </Arg>
             <Arg>           INT16           </Arg>
-            <Arg>           STRING          </Arg>
+            <Arg>           UNICODE          </Arg>
         </reqReleaseRedBag>
 
         <onReleaseRedBag>
@@ -54,7 +35,8 @@
             <Arg>           INT8            </Arg>
             <Arg>           INT8            </Arg>
             <Arg>           INT32            </Arg>
-            <Arg>           STRING          </Arg>
+            <Arg>           INT32            </Arg>
+            <Arg>           UNICODE          </Arg>
         </onReleaseRedBag>
 
         <onReleaseRedBagFail>
@@ -86,6 +68,9 @@
             <Arg>           PY_LIST            </Arg>
         </onDelRedBagCache>
 
+        <reqRedBagPlayerInfo> <Exposed/>
+        </reqRedBagPlayerInfo>
+
     </BaseMethods>
 
     <CellMethods>
@@ -105,5 +90,17 @@
             <Arg>           INT32            </Arg>
             <Arg>           RED_BAG_FETCH_CLIENT_VAL            </Arg>
         </onShowRedBagInfo>
+        <onRedBagPlayerInfo>
+            <Arg>           UINT8            </Arg>
+            <Arg>           UINT8            </Arg>
+        </onRedBagPlayerInfo>
+        <onReleaseRedBagMsg>
+            <Arg>           UINT64           </Arg>
+            <Arg>           UINT8            </Arg>
+            <Arg>           UINT8            </Arg>
+            <Arg>           UINT32           </Arg>
+            <Arg>           UNICODE          </Arg>
+            <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
+        </onReleaseRedBagMsg>
     </ClientMethods>
 </root>

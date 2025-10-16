@@ -248,6 +248,7 @@
             <Arg>          ENTITYCALL                    </Arg>
             <Arg>          BOOL                          </Arg>
             <Arg>          INT32                         </Arg>
+            <Arg>          PLAYER_GBID                   </Arg>
         </onSiegeWarDeclareWarCrossServerResult>
 
         <onSiegeWarDeclareWarOfficial>

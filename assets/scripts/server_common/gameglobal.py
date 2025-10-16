@@ -37,6 +37,11 @@ def clearCommandsCache():
     GM_CMD_ARG_PERMISSION_CHECKER.clear()
 
 newAuctionCache = {}
+expiredDrawCardPoolCache = {}
+
+def clearDataCache(clearGlobalAttrCacheList):
+    for attrCache in clearGlobalAttrCacheList:
+        attrCache and attrCache.clear()
 
 staticCell = None
 
@@ -108,5 +113,7 @@ guildRelationDic = {}
 guildRelationVersion = 0
 
 curServerAlias = ''
+
+accountCompIdCache = {}
 
 

@@ -25,7 +25,6 @@ import gamePlay_gamePlay as DDL
 import conflict_conflict_def as CCD
 import const_const as CONST
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import teamDunChallenge_basicInfo as TDC_BI
 import teamDunChallenge_config as TDC_CFG
 import message_Message as M_MD
 
@@ -130,9 +129,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         # PLAY_MODE: Heroic story, check team level
         dungeonPlayMode = extra.get('dungeonPlayMode')
         if dungeonPlayMode and dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
-            dunLevel = dungeonPlayMode.dunLevel
-            needScore = TDC_BI.datas[dunLevel]['needScore']
-            if self.totalScore < needScore:
+            if self.totalScore < extra.get('score'):
                 _extra = {'reason': gameconst.TeamDungeonCheckConditionErrno.SCORE_CHECK_FAIL,
                           'name': self.name}
                 self.onCheckTeamDungeonConditions(
@@ -186,9 +183,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         # PLAY_MODE: Heroic story, check team score
         dungeonPlayMode = extra.get('dungeonPlayMode')
         if dungeonPlayMode and dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
-            dunLevel = dungeonPlayMode.dunLevel
-            needScore = TDC_BI.datas[dunLevel]['needScore']
-            if self.totalScore < needScore:
+            if self.totalScore < extra.get('score'):
                 _extra = {'reason': gameconst.TeamDungeonCheckConditionErrno.SCORE_CHECK_FAIL,
                           'name': self.name}
                 captainBox.cell.onCheckTeamDungeonConditions(

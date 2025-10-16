@@ -53,6 +53,7 @@ import itemData_synthesis as IDS
 import rewardData_sharerewardData as RD_SRD
 import tutorConst_newbieCreate as TC_NCD
 import bagData_set as BagDataSet
+import itemData_set as IDSD
 
 class AwardMixin(object):
     def __init__(self):
@@ -408,6 +409,22 @@ class AwardMixin(object):
                 rwdNum = sum(list(itemInfo.values()))
                 self.addAwards(srcType, itemData['pickUpReward'], rwdNum, opUUID, detail, awardCtx)
 
+        # 背包数量限制类物品超出上限部分发邮件
+        limitItemNum = self.getBagLimitItemNum()
+        popRemainBagLimitItems = awardVal.itemWealth.popRemainBagLimitItems(ID_SET.datas['potionBagStorageLimit']['value'] - limitItemNum)
+        if popRemainBagLimitItems:
+            mailId = ID_SET.datas['potionMaxLimitMailID']['value']
+            bagLimitItemList = []
+            for itemId, awardInfo in popRemainBagLimitItems.items():
+                for bindType, num in awardInfo.items():
+                    if not num:
+                        continue
+                    bagLimitItemList.extend(itemFactory.ItemFactory.createItemList(itemId, num, bindType))
+            mailWealth = dropAward.MailWealthVal(itemObjs=bagLimitItemList)
+            mailAssistor.sendMailToPlayers([self.gbID], mailId, extraAttach=mailWealth, opUUID=opUUID, despArgs=(ID_SET.datas['potionBagStorageLimit']['value'],))
+
+        self.onGetRewardRecord(srcType, awardVal, awardCtx)
+
         itemsList = awardVal.itemWealth.getItemObjs()
         petItemList = awardVal.petItemWealth.getItemObjs()
 
@@ -451,8 +468,6 @@ class AwardMixin(object):
             _briefList = awardVal.toBriefList()
             DEBUG_MSG('add raid dungeon brief:', _briefList)
             self.cell.addRaidDungeonRewardRecord(_briefList)
-
-        self.onGetRewardRecord(srcType, awardVal, awardCtx)
 
         return
 
@@ -636,7 +651,7 @@ class AwardMixin(object):
 
         return True, inBagItemList
 
-    def pickUpItems(self, sourceId, itemId, pickNum):
+    def pickUpItems(self, exposed, sourceId, itemId, pickNum):
         INFO_MSG('pickUpItems', sourceId, itemId, pickNum)
         # TODO:BAG: 增加提示
         if dataUtils.isEquipItemByItemId(itemId):
@@ -780,7 +795,7 @@ class CoinBillMixin(object):
 
     # Exposed
     @gamedecorator.limitcall(1, keyFunc=lambda x: '{}-{}-{}'.format(*x))
-    def reqAvatarCoinBill(self, coinType, tabIndex, tabCount):
+    def reqAvatarCoinBill(self, exposed, coinType, tabIndex, tabCount):
         DEBUG_MSG('reqAvatarCoinBill~', coinType, tabIndex, tabCount)
         tabCount = min(tabCount, 16)
         stIdx = tabIndex * tabCount
@@ -874,7 +889,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             return
         return bag
 
-    def reqGetOnlineTimeReward(self, rewardIdx):
+    def reqGetOnlineTimeReward(self, exposed, rewardIdx):
         return
 
     def baseUseItems(self, gridId, itemId, useNum, useItemCtx, isBaseAct=False):
@@ -972,7 +987,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         bag = self.getBagByType(bagType)
         bag.onUseItemDone(self, isSucceed, opUUID)
 
-    def reqBindItem(self, bagType, gridId, itemId):
+    def reqBindItem(self, exposed, bagType, gridId, itemId):
         INFO_MSG('in reqBindItem::', bagType, gridId, itemId)
         bag = self.getBagByType(bagType)
         itemObj = bag.getItemObjByGridId(gridId)
@@ -983,7 +998,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         return
 
     @gamedecorator.limitcall(1)
-    def recycleItems(self, bagType, gridId, itemId):
+    def recycleItems(self, exposed, bagType, gridId, itemId):
         DEBUG_MSG('in recycleItems::', bagType, gridId, itemId)
         bag = self.getBagByType(bagType)
         if bag.isLocked():
@@ -1030,7 +1045,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         return
 
     @gamedecorator.limitcall(1)
-    def recycleMultipleItems(self, bagType, gridIds):
+    def recycleMultipleItems(self, exposed, bagType, gridIds):
         DEBUG_MSG('in recycleMultipleItems::', bagType, gridIds)
         bag = self.getBagByType(bagType)
         if bag.isLocked():
@@ -1073,7 +1088,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         return
 
     @gamedecorator.limitcall(1)
-    def reqBagSort(self, bagType):
+    def reqBagSort(self, exposed, bagType):
         DEBUG_MSG('in bagSort:', bagType)
         # 目前只有普通背包使用该接口整理背包
         bag = self.getBagByType(bagType)
@@ -1089,7 +1104,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         DEBUG_MSG('in sendStreamBagData, gzipStr:', len(zStr))
         self.streamStringProxy(zStr, '', stringStringID)
 
-    def unlockGrids(self, gridNum):
+    def unlockGrids(self, exposed, gridNum):
         DEBUG_MSG('in unlockGrids', gridNum)
         if gridNum <= 0:
             ERROR_MSG('unlockGrids error:', gridNum)
@@ -1671,7 +1686,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         pass
     
     @gamedecorator.limitcall(1)
-    def reqMultiItemDisassemble(self, gridIdList, uniqueIdList):
+    def reqMultiItemDisassemble(self, exposed, gridIdList, uniqueIdList):
         # 要么全部分解，要么都不分解
         DEBUG_MSG('in reqMultiItemDisassemble:', gridIdList, uniqueIdList)
         gridIDCount = len(gridIdList)
@@ -1725,7 +1740,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         return
 
     @gamedecorator.limitcall(1)
-    def reqItemDisassemble(self, gridId, costItemId, costItemNum):
+    def reqItemDisassemble(self, exposed, gridId, costItemId, costItemNum):
         DEBUG_MSG('in reqItemDisassemble:', gridId, costItemId, costItemNum)
         if gridId <= 0 or costItemNum <= 0 or costItemId <= 0:
             ERROR_MSG('reqItemDisassemble, args error:', gridId, costItemId, costItemNum)
@@ -1923,7 +1938,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
     ################################## gm cmd end ###################################
 
-    def addSignInAwards(self, signInDay):
+    def addSignInAwards(self, exposed, signInDay):
         if signInDay > self.signInDay:
             DEBUG_MSG("not sign in", signInDay)
             return
@@ -1952,7 +1967,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     def sendLevelRewardInfo(self):
         self.client.onSendLevelRewardInfo(self.levelRewardList)
 
-    def addLevelAwards(self, level):
+    def addLevelAwards(self, exposed, level):
         myLevel = gameglobal.roleCache[self.id]['level']
         if level > myLevel:
             DEBUG_MSG("no enough level", level, myLevel)
@@ -1978,7 +1993,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.addAwards(AAC_AACDD.datas.BONUS_SRC_LEVEL_REWARDS, rewardId, 1, opUUID, 'level ' + str(level) + ' award',
                        awardCtx)
 
-    def exchangeItem(self, exchangeId, bindNum, unBindNum):
+    def exchangeItem(self, exposed, exchangeId, bindNum, unBindNum):
         DEBUG_MSG('exchangeItem ', exchangeId, bindNum, unBindNum)
         if self.bagData.isFull():
             self.onMessagePre(MMD.datas.bagFullGeneralMessage, [])
@@ -2035,6 +2050,12 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             wealthVal.addWealthByItemId(targetItemId, awardBindItemNum, gameconst.ItemBindType.BIND)
         if awardNormalItemNum > 0:
             wealthVal.addWealthByItemId(targetItemId, awardNormalItemNum, gameconst.ItemBindType.NORMAL)
+
+        #背包数量限制类物品
+        if self.checkBagItemLimit(targetItemId, awardBindItemNum + awardNormalItemNum):
+            self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(IDSD.datas['potionBagStorageLimit']['value'])])
+            return
+
         if self.canAddWealthVal(srcType, wealthVal, bMsg=True):
             self.deductWealth(srcType, deductWealthVal, opUUID, None)
             self.addWealth(srcType, wealthVal, opUUID, None,
@@ -2101,7 +2122,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     def collectHolyArtifactFragment(self, holyArtifactType, fragmentIdx):
         DEBUG_MSG('collectHolyArtifactFragment:', holyArtifactType, fragmentIdx)
 
-    def openNChoiceGift(self, gridId, itemId, choiceStr):
+    def openNChoiceGift(self, exposed, gridId, itemId, choiceStr):
         itemObj = self.bagData.getItemObjByGridId(gridId)
         if not itemObj or itemId != itemObj.itemId:
             INFO_MSG('openNChoiceGift:: itemId not match', itemId, itemObj)
@@ -2286,7 +2307,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             if replaceItem:
                 self.bagData.addItemsToNewGrid(self, replaceItem, uuid, srcType, detail, gridId=gridId)
 
-    def reqShareReward(self, shareChannelId):
+    def reqShareReward(self, exposed, shareChannelId):
         INFO_MSG("reqShareReward", shareChannelId, self.gbID)
         if shareChannelId in RD_SRD.datas:
             rewardId = RD_SRD.datas.get(shareChannelId).get('rewardID')
@@ -2330,7 +2351,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         return gameconst.UseItem.TRUE
 
-    def reqRandomSynthesis(self, bagType, itemInfoList):
+    def reqRandomSynthesis(self, exposed, bagType, itemInfoList):
         DEBUG_MSG("reqRandomSynthesis", bagType, itemInfoList)
         if not itemInfoList:
             return
@@ -2478,7 +2499,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.client.onUpdateSynthesisUpgradeNum(synthesisUpgradeNumList)
         self.client.onRandomSynthesis(itemIdList)
 
-    def reqUpgradeSynthesis(self, key):
+    def reqUpgradeSynthesis(self, exposed, key):
         DEBUG_MSG("reqUpgradeSynthesis", key)
         if self.bagData.isFull():
             self.onMessagePre(MMD.datas.bagFullGeneralMessage, [])
@@ -2537,6 +2558,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.client.onUpgradeSynthesis(ranItemId)
 
     def checkRenameBase(self, pendingCheckId, newName):
+        if not self.mainAccountCache.isHost:
+            self.cell.onPendingCheckItem(pendingCheckId, gameconst.UseItem.FALSE)
+            return
+
         gameglobal.localBaseApp.getRedisClient().hget(
             gameconst.RedisKey.avatarNameTbl,
             newName,
@@ -2606,20 +2631,22 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             WARNING_MSG("delOldNameResult failed", oldName, cid, err)
             return
 
-    def bagExpansion(self, gridNum, gridId, itemId, useNum, opUUID, context):
-        DEBUG_MSG("bagExpansion ", gridNum, gridId, itemId, useNum, opUUID, context)
+    def bagExpansion(self, pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context):
+        DEBUG_MSG("bagExpansion ", pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
         commonBagCapacity = BagDataSet.datas['commonBagCapacity']['value']
-        if self.capacity >= commonBagCapacity:
-            WARNING_MSG('   in bagExpansion, reach limit 1:', self.capacity)
+        if self.bagData.capacity >= commonBagCapacity:
+            WARNING_MSG('   in bagExpansion, reach limit 1:', self.bagData.capacity)
+            self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
             return
-        newCapacity = self.capacity + gridNum
+        newCapacity = self.bagData.capacity + gridNum
         if newCapacity > commonBagCapacity:
             WARNING_MSG('   in bagExpansion, reach limit 2:', newCapacity)
             newCapacity = commonBagCapacity
-        self.capacity = newCapacity
+        self.bagData.capacity = newCapacity
+        self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
         self.client.onUnlockGrids(gameconst.BagOPStat.BAG_OP_STAT_OK, newCapacity)
 
-    def reqLockItem(self, equipIn, equipPos, itemId, uniqueId, lockStatus):
+    def reqLockItem(self, exposed, equipIn, equipPos, itemId, uniqueId, lockStatus):
         INFO_MSG('in reqLockItem::', equipIn, equipPos, itemId, uniqueId, lockStatus)
         if not dataUtils.checkLockAvailableStatus(itemId):
             ERROR_MSG('reqLockItem, item locker is not opened', itemId)
@@ -2653,7 +2680,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         self.client.onLockItemSucc(equipIn, gridId, itemId, lockStatus)
 
-    def reqSellItem(self, bagType, gridId, itemId, itemNum):
+    def reqSellItem(self, exposed, bagType, gridId, itemId, itemNum):
         INFO_MSG('in reqSellItem::', bagType, gridId, itemId, itemNum)
         bag = self.getBagByType(bagType)
         if not bag:
@@ -2712,3 +2739,18 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.client.onSellItemSucc(bagType, gridId, itemId, itemNum)
 
     
+    def getBagLimitItemNum(self):
+        itemNum = 0
+        for itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
+            itemNum += self.getItemNum(itemId)
+        return itemNum
+    
+    def checkBagItemLimit(self, itemId, addNum):
+        DEBUG_MSG("checkBagItemLimit", itemId, addNum)
+        if itemId not in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
+            return False
+        return self.getBagLimitItemNum() + addNum > ID_SET.datas['potionBagStorageLimit']['value']
+
+    def checkBagItemLimitNoItemId(self, addNum):
+        DEBUG_MSG("checkBagItemLimitNoItemId", addNum)
+        return self.getBagLimitItemNum() + addNum > ID_SET.datas['potionBagStorageLimit']['value']

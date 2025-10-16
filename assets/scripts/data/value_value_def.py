@@ -16,5 +16,4 @@ import crontab
 
 class datas(object, metaclass=_tools.VarNameDefinedMeta):
     BONUS_SRC_UNKNOWN = 0
-    equipWashNum = 70200001
 

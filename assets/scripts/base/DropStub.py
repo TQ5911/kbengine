@@ -262,7 +262,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
     def onGetBackEquip(self, reply):
         DEBUG_MSG('Drop onGetBackEquip', reply)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-            [reply.dropGbId, ], 
+            [reply.dropGbId, ],
             'onGetBackDropEquip',
             (reply.uniqueId, reply.equipInfo, reply.isSelfTake),
             None, '', ())
@@ -314,11 +314,11 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         self.remoteCallCache.pop(reply.uuid)
         _box = _cache.get('box')
         _box.onRedeemResult(reply.uniqueId, reply.result)
-    
+
     def onDropTypeChange(self, reply):
         DEBUG_MSG('Drop onDropTypeChange', reply)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-            [reply.gbId, ], 
+            [reply.gbId, ],
             'onDropTypeChangeToAvatar',
             (reply.uniqueId, reply.dropType),
             None, '', ())
@@ -474,7 +474,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
     def onRemoveDropInfoNotifyTaker(self, reply):
         DEBUG_MSG('Drop onRemoveDropInfoNotifyTaker', reply)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-            [reply.gbId, ], 
+            [reply.gbId, ],
             'onOtherRemoveDropEquip',
             (reply.uniqueId,),
             None, '', ())
@@ -554,7 +554,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
     def onAddDropNotify(self, reply):
         DEBUG_MSG('Drop onAddDropNotify', reply)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-            [reply.gbId, ], 
+            [reply.gbId, ],
             'onAddDropNotify',
             (),
             None, '', ())
@@ -570,7 +570,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         if not _client:
             ERROR_MSG('Drop getDropNotifyList no client', gbId)
             return
-        
+
         self.remoteCallCache[_uuid] = {
             'gbId': gbId,
             'ts': utils.getNow(),

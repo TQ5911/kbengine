@@ -30,6 +30,7 @@ import dungeonSrc
 import impOutfit
 import gameconfig
 import math
+import iLargeEnt
 import gameclass
 
 import dropAward
@@ -71,7 +72,7 @@ import iGuildCell
 import iGuildTrainCell
 import iLeaderBoardCell
 import cell.iWonderLandCell as iWonderLandCell
-import iCollectible 
+import iCollectible
 import iDuelCell
 import iSiegeWarCell
 import iChief
@@ -86,9 +87,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              impAutoCombat.ImpAutoCombat, iScore.IScore, impAvatarPK.ImpAvatarPK, iChat.IChat,
              impTeamDungeon.ImpTeamDungeon, impSingleDungeon.ImpSingleDungeon, impRaidDungeon.ImpRaidDungeon,
              iMonsterGrp.IMonsterGrp, impOutfit.ImpOutfit, iMount.IMount, impAvatarPet.ImpAvatarPet,
-             impEquipment.ImpEquipment, iCrusade.ICrusade, iRelive.IRelive, 
+             impEquipment.ImpEquipment, iCrusade.ICrusade, iRelive.IRelive,
              iCubeCell.ICubeCell, iGuildCell.IGuildCell, iGuildTrainCell.IGuildTrainCell,
-             iLeaderBoardCell.ILeaderBoardCell, iWonderLandCell.IWonderLandCell, 
+             iLeaderBoardCell.ILeaderBoardCell, iWonderLandCell.IWonderLandCell,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief,
              iNewbie.INewbie, iCrossServer.ICrossServer):
     IsAvatar = True
@@ -233,7 +234,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def offline(self, exposed, reason):
         if not self._isMyself(exposed):
             return
-        
+
         if self.isCrossServerInOtherServer and reason and reason != gameconst.AVATAR_OFFLINE_REASON_END_CROSS_SERVER:
             self.base.gobackServer(gameconst.CrossServerCallbackComponent.CELL,
                                    'offlineFromCrossServer', (reason, ))
@@ -314,7 +315,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             curAOI = self.getViewRadius()
             for m in self.entitiesInRange(curAOI, 'Collection'):
                 self.checkCollectionGatherFlag(m.id)
-        
+
         self.handleCrossServerWaitingClientInitReason()
 
     # 客户端加载完成的回调
@@ -691,7 +692,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def onEnteredView(self, e):
         if e.IsAvatar and e.isCrossServerInLocalServer:
             return
-        
+
         if self.spaceNo != e.spaceNo:
             ERROR_MSG("onEnteredView, self.spaceNo != e.spaceNo", self.spaceNo, e.spaceNo)
             self._callback(0.1, 'onEnteredViewCallback', (e.id,), gametimer.TIMER_TAG_ON_ENTERED_VIEW)
@@ -789,7 +790,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def beforeTeleport(self, toSpaceNo):
         if self.spaceNo != toSpaceNo:
             if self.petList:
-                #有道士召唤的狼切成状态3 
+                #有道士召唤的狼切成状态3
                 self.changeMorphState(None, None, 3)
             self.destroyAllSummon()
             self.clearAllTargetTypeCache(True)
@@ -1255,7 +1256,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         ctx.setCastTimer(self._callback(ctx.getCastTime(castType), '_onCommonCastTimer', (castType, funcName, args),
                          gametimer.TIMER_TAG_ON_COMMON_CAST))
-        
+
 
     def _stopCommonCast(self):
         ctx = self.popTempMiscProp(gameconst.AvatarProps.commonCastCtx)
@@ -1323,30 +1324,30 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if formula.spaceInWorldLine(self.spaceNo):
             return self.bigWorldRouteController
         return None
-    
+
     def onDailyHealWoundsTimesRefresh(self):
         self.dailyHealWoundsTimes = 0
-    
+
     def _hasWoundsCanHeal(self):
         for debuffId in GP_SD.datas['clearDebuffID']['value']:
             if self.hasBuff(debuffId):
                 return True
         return False
-    
+
     def checkHealWoundsItemCond(self):
         if self._hasWoundsCanHeal():
             return gameconst.UseItem.TRUE
         else:
             self.showMsg(MMD.datas.HealingWoundsMsg2, [])
             return gameconst.UseItem.FALSE
-        
+
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def tryHealWoundsFromNpc(self, exposed):
         if not self._hasWoundsCanHeal():
             self.showMsg(MMD.datas.HealingWoundsMsg2, [])
             return
-        
+
         costIdx = min(len(GP_SD.datas['HealingWoundsCost']['value']) - 1, self.dailyHealWoundsTimes)
         cost = GP_SD.datas['HealingWoundsCost']['value'][costIdx]
         _deductVal = dropAward.DeductWealthVal()
@@ -1370,21 +1371,22 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 self.removeBuff(debuffId)
         self.showMsg(MMD.datas.HealingWoundsMsg1, [])
         return gameconst.UseItem.TRUE
-    
+
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def getTargetPlayerInfo(self, exposed, targetGbId):
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
-            [targetGbId, ], 
+            [targetGbId, ],
             'onGetTargetPlayerInfo',
-            (self, ), 
-            self, 
-            'onGetTargetPlayerInfoOffline', 
+            (self, ),
+            self,
+            'onGetTargetPlayerInfoOffline',
             None)
-        
+
     def _concatPlayerInfo(self, guildJob):
         data = {}
         #个人信息
+        data['gbId'] = self.gbId
         data['name'] = self.name
         data['level'] = self.level
         data['school'] = self.school
@@ -1393,6 +1395,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         data['guildName'] = self.guildName
         data['guildUUID'] = self.guildUUID
         data['guildJob'] = guildJob
+        data['appearance'] = self.appearance.toJsonString()
         #装备
         dic = self.bodyEquipData.toBodyEquipsClientDict()
         data['bodyEquipList'] = dic
@@ -1415,7 +1418,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def onGetMemberJob(self, job, src):
         zStr = self._concatPlayerInfo(job)
         src.base.streamStringProxy(zStr, '', gameconst.StreamStringID.PLAYER_INFO_DATA)
-        
+
     def onGetTargetPlayerInfoOffline(self, targetGbId):
         DEBUG_MSG("onGetTargetPlayerInfoOffline", targetGbId)
         gameengine.getGlobalBase('PlayerStub').getPlayerInfoOffline(self.base, targetGbId)
@@ -1429,7 +1432,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         _fastMoveData = _dunData.get(str(blazeId))
         if not _fastMoveData:
             ERROR_MSG('blaze:: blazeId not exist', blazeId)
-            return  
+            return
 
         _checkOk = False
         for _subPointData in _fastMoveData['Props']['SubPoints']:
@@ -1454,7 +1457,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if self.blazeStartTime != startTime:
             return
 
-        ERROR_MSG('_blazeTimeOut:: blaze timeout', self.blazeStartTime, self.blazeId)
+        WARNING_MSG('_blazeTimeOut:: blaze timeout', self.blazeStartTime, self.blazeId)
         self.blazeStartTime = 0
         self.blazeId = 0
         self.removeState(C_S_DD.datas.blazing)
@@ -1466,7 +1469,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         _dunData = utils.getDunModuleData(_mapId)
         _d = _dunData.get(str(self.blazeId))
         if not _d:
-            ERROR_MSG('blazeEnd:: blazeId not exist')
+            WARNING_MSG('blazeEnd:: blazeId not exist')
             return
 
         _targetPos = (_d['PosX'], _d['PosY'], _d['PosZ'])

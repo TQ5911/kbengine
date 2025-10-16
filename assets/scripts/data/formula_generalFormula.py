@@ -104,59 +104,77 @@ def _34000017(lv):
         sum = a
     return sum
 def _34010001(e):
-    return int(e.level*10+190)
+    return int(e.level*20+380)
 def _34010002(e):
-    return int(e.level*10+190)
+    return int(e.level*20+380)
 def _34010003(e):
-    return int(e.level*10+230)
+    return int(e.level*20+380)
 def _34010004(e):
-    return int(e.level*4+97)
+    return int(e.level*4+76)
 def _34010005(e):
-    return int(e.level*4+117)
+    return int(e.level*4+76)
 def _34010006(e):
-    return int(e.level*4+97)
+    return int(e.level*4+76)
 def _34010007(e):
-    return int((4+int((e.level+1)/2)+2)/2+5)
+    return 7
 def _34010008(e):
     return 7
 def _34010009(e):
-    return 4+int((e.level+1)/2+5)
+    return int(e.level*3+60)
 def _34010010(e):
-    return int((2+int(e.level/2)+1)/2+5)
+    return 6
 def _34010011(e):
     return 6
 def _34010012(e):
-    return 2+int(e.level/2+5)
+    return int(e.level+ 20)
 def _34010013(e):
-    return int((4+int((e.level+1)/2)+2)/2+5)
+    return int(e.level*3 + 60)
 def _34010014(e):
-    return 4+int((e.level+1)/2+5)
+    return int(e.level*3 + 60)
 def _34010015(e):
     return 7
 def _34010016(e):
-    return int((2+int(e.level/2)+1)/2+5)
+     return int(e.level + 20)
 def _34010017(e):
-    return 2+int(e.level/2+5)
+    return int(e.level + 20)
 def _34010018(e):
     return 6
 def _34010019(e):
-    return int((e.level + 1)/2)
+    return int(e.level*0.6 + 8)
 def _34010020(e):
-    return int((e.level + 1)/2)
+    return int(e.level*0.6 + 8)
 def _34010021(e):
-    return int((e.level + 1)/2)+1
+    return int(e.level*0.6 + 8)
 def _34010022(e):
-    return int(e.level / 2)
+    return int(e.level*0.6 + 8)
 def _34010023(e):
-    return int(e.level / 2) + 3
+    return int(e.level*0.6 + 8)
 def _34010024(e):
-     return int(e.level / 2)
+     return int(e.level*0.6 + 8)
 def _34010025(e):
-    return int(e.level / 5) * 2 + 2
+    return int(e.level*1)
 def _34010026(e):
-    return int(e.level / 5) * 2
+    return int(e.level*1)
 def _34010027(e):
-    return int(e.level / 5) * 2
+     return int(e.level*1)
+def _34010028(e):
+     return int(e.level*1)
+def _34010029(e):
+     return int(e.level*1)
+def _34010030(e):
+    return int(e.level*1)
+def _34010031(e):
+    return int(e.level*1.2 + 23)
+def _34010032(e):
+    return int(e.level*1.2 + 23)
+def _34010033(e):
+    return int(e.level*1.2 + 23)
+def _34010034(e):
+    return int(e.level*1.2 + 23)
+def _34010035(e):
+    return int(e.level*1.2 + 23)
+def _34010036(e):
+     return int(e.level*1.2 + 23)
 datas = _tools.RODict({ 
     34000001: _tools.RODict({
         "ID": 34000001,
@@ -357,6 +375,42 @@ datas = _tools.RODict({
     34010027: _tools.RODict({
         "ID": 34010027,
         'serverFormula':_34010027,
+    }),
+    34010028: _tools.RODict({
+        "ID": 34010028,
+        'serverFormula':_34010028,
+    }),
+    34010029: _tools.RODict({
+        "ID": 34010029,
+        'serverFormula':_34010029,
+    }),
+    34010030: _tools.RODict({
+        "ID": 34010030,
+        'serverFormula':_34010030,
+    }),
+    34010031: _tools.RODict({
+        "ID": 34010031,
+        'serverFormula':_34010031,
+    }),
+    34010032: _tools.RODict({
+        "ID": 34010032,
+        'serverFormula':_34010032,
+    }),
+    34010033: _tools.RODict({
+        "ID": 34010033,
+        'serverFormula':_34010033,
+    }),
+    34010034: _tools.RODict({
+        "ID": 34010034,
+        'serverFormula':_34010034,
+    }),
+    34010035: _tools.RODict({
+        "ID": 34010035,
+        'serverFormula':_34010035,
+    }),
+    34010036: _tools.RODict({
+        "ID": 34010036,
+        'serverFormula':_34010036,
     })
 })
 minKey = 34000001

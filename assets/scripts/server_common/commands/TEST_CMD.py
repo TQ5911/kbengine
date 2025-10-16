@@ -22,10 +22,9 @@ import fightProp_define as FDD
 # 判断当前进程类型
 IS_BASE = (KBEngine.component == 'baseapp')
 import skill_skill as SSD
-import uiConfig_uiVisible as UCUVD
+import visible_visible as UVVD
 import actionContext
 import gamerefresh
-from test import dropTest
 
 callApps = gmCommand._callApps
 forwardCommand = gmCommand.forwardCommand
@@ -46,12 +45,14 @@ def getAllPlayers(su):
         return
     gameengine.callBaseApps("utils.getAllAvatarByGm", (su, gameglobal.localBaseApp))
 
-@gm_cmd('$getAvatarAoiMonster', (Player("gbId/Id"),), RARG(0), CELL, '获取玩家AOI附近怪物', ALLSIDE, GOD_GROUPS)
-def getAvatarAoiMonster(su, player):
+@gm_cmd('$getAvatarAoiMonster', (Player("gbId/Id"), Int("range")), RARG(0), CELL, '获取玩家AOI附近怪物', ALLSIDE, GOD_GROUPS, minArgs=1)
+def getAvatarAoiMonster(su, player, range=30):
     monsterdata = []
-    for ent in player.entitiesInRange(30, 'Monster'):
+    for ent in player.entitiesInRange(range, 'Monster'):
         monsterdata.append({'entityId': ent.id, 'MonsterName': ent.name})
-    for ent in player.entitiesInRange(30, 'Summon'):
+    for ent in player.entitiesInRange(range, 'Summon'):
+        monsterdata.append({'entityId': ent.id, 'MonsterName': ent.name})
+    for ent in player.entitiesInRange(range, 'Creation'):
         monsterdata.append({'entityId': ent.id, 'MonsterName': ent.name})
     return su.onCommandResult(0, 'ok' , {"data": monsterdata})
 
@@ -92,7 +93,7 @@ def setEntProp(su, player,entid,propName,value):
 
 @gm_cmd('$getEntSkillDic', (Player("gbId/Id"),Int('entid')), RARG(0), gameconst.CELL, '获取实体技能信息', ALLSIDE, GOD_GROUPS)
 def getEntSkillDic(su, player, entid):
-
+    
     mod = importlib.import_module('skill_skill')
     ent = KBEngine.entities.get(entid)
     datas = getattr(mod, 'datas', None)
@@ -108,18 +109,7 @@ def getEntSkillDic(su, player, entid):
         try:
             action_func = datas.get(skill_id, {}).get('action', None)
             if action_func:
-                # 尝试获取源码
-                try:
-                    if hasattr(action_func, '__source_code__'):
-                        # 动态函数，有源码属性
-                        skillaction = action_func.__source_code__
-                    else:
-                        # 普通函数，用inspect获取源码
-                        import inspect
-                        skillaction = inspect.getsource(action_func).strip()
-                except:
-                    # 无法获取源码，显示函数名和类型
-                    skillaction = f"<函数: {getattr(action_func, '__name__', 'unknown')} - {type(action_func).__name__}>"
+                skillaction = _getTableValue(action_func)
             else:
                 skillaction = "None"
         except Exception as e:
@@ -239,7 +229,7 @@ def getEntBodyEquipmentInfo(su, player,entid):
         bodyrandomAffixesInfo = {}
         bodyblessInfo = {}
 
-        for randomAffixesInfo in equipdata.equipAttr.randomAffixes:
+        for randomAffixesInfo in equipdata.equipAttr.spiritAffixes:
             affixeid = randomAffixesInfo.toAfxClientDic().get('affixId')
             affixValue = randomAffixesInfo.toAfxClientDic().get('affixVal')
             affixscore = randomAffixesInfo.getAfxScore()
@@ -292,13 +282,12 @@ def getEntBodyEquipmentInfo(su, player,entid):
 
 @gm_cmd('$unlockAllFunc', (Player("gbId/Id"),), RARG(0), BASE, '解锁所有功能', ALLSIDE, GOD_GROUPS)
 def unlockAllFunc(su, player):
-    import uiConfig_uiVisible as UCUVD
     import actionContext
     maxLv = 0
     forwardCommand(su,"$SkipNewbieTask", player.id)
-    for _, data in UCUVD.datas.items():
-        lvLimit = data.get('lvLimit', 0)
-        taskId = data.get('missionID', 0)
+    for _, data in UVVD.datas.items():
+        lvLimit = data.get('level', 0)
+        taskId = data.get('task', 0)
         if taskId > 0:
             rootTaskId = dataUtils.getRootTaskId(taskId)
             player.baseTaskClaim(rootTaskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.GM), needCheck=False)
@@ -335,6 +324,38 @@ def statDropByDunNo(su, playerStub, dunNo, count):
     else:
         su.onCommandResult(0, 'wait', {'msg': content, 'process_info': process_info})
 
+@gm_cmd('$hookModuleFunc', (Str("moduleName"), Str("prefix")), RALL, ALL, 
+    'hook模块方法，输出入参和回参', ALLSIDE, GOD_GROUPS, minArgs=1)
+def hookModuleFunc(su, moduleName, prefix=''):
+    from test import functionHooker
+    import sys
+    mod = sys.modules.get(moduleName)
+    if mod is None:
+        return su.onCommandResult(1, f'module {moduleName} not found', {})
+    functionHooker.hook_specific_module(moduleName, prefix=prefix or '[hook]', verbose=True)
+    return su.onCommandResult(0, f'hook module {moduleName} success', {})
+
+@gm_cmd('$hookClassFunc', (Str("moduleName"), Str("className"), Str("prefix")), RALL, ALL, 
+    'hook类方法，输出入参和回参', ALLSIDE, GOD_GROUPS, minArgs=2)
+def hookClassFunc(su, moduleName, className, prefix=''):
+    from test import functionHooker
+    import sys
+    mod = sys.modules.get(moduleName)
+    if mod is None:
+        return su.onCommandResult(1, f'module {moduleName} not found', {})
+    functionHooker.hook_specific_class(moduleName, className, prefix=prefix or '[hook]', verbose=True)
+    return su.onCommandResult(0, f'hook class {className} in module {moduleName} success', {})
+
+@gm_cmd('$hookFunc', (Str("moduleName"), Str("className"), Str("funcName"), Int("traceDepth"), Str("prefix")), RALL, ALL, 
+    'hook指定函数，输出入参和回参', ALLSIDE, GOD_GROUPS, minArgs=3)
+def hookFunc(su, moduleName, className, funcName, traceDepth=0, prefix=''):
+    from test import functionHooker
+    import sys
+    mod = sys.modules.get(moduleName)
+    if mod is None:
+        return su.onCommandResult(1, f'module {moduleName} not found', {})
+    functionHooker.hook_specific_class_method(moduleName, className, funcName, prefix=prefix or '[hook]', show_traceback=bool(traceDepth), traceback_depth=traceDepth, verbose=True)
+    return su.onCommandResult(0, f'hook class {className} func {funcName} in module {moduleName} success', {})
 
 @gm_cmd('$refreshData', (Str('moduleName'),), RALL, ALL, '刷新表格数据', ALLSIDE, GOD_GROUPS, minArgs=0)
 def refreshData(su, moduleName=None):
@@ -355,129 +376,174 @@ def refreshData(su, moduleName=None):
 
 
 
-@gm_cmd('$setMemoryData', (Str('moduleName'), Str('key'), Str('attrName'), Str('value')), RALL, ALL, '修改内存数据(支持普通值和函数)', ALLSIDE, GOD_GROUPS)
-def setMemoryData(su, moduleName, key, attrName, value):
+@gm_cmd('$setdata', (Str('moduleName'), Str('key'), Str('attrName'), Str('value'), Int('isBase64')), RALL, ALL, '修改内存数据(支持普通值和函数)', ALLSIDE, GOD_GROUPS, minArgs=4)
+def setMemoryData(su, moduleName, key, attrName, value, isBase64=0):
     """修改内存数据，支持普通字段和函数表达式，在所有进程中执行"""
-    
     # 确定当前进程类型
     process_type = 'BaseApp' if IS_BASE else 'CellApp'
-    
     # 直接在当前进程中执行修改
-    return _setMemoryDataInProcess(su, moduleName, key, attrName, value, process_type)
+    return _setMemoryDataInProcess(su, moduleName, key, attrName, value, isBase64, process_type)
 
-def _setMemoryDataInProcess(su, moduleName, key, attrName, value, processType):
+def _translateValue(value, valueType, module_dict=None):
+    """根据valueType转换value"""
+    try:
+        DEBUG_MSG(f'_translateValue:: {value} {type(value)} to {valueType}')
+        import ast
+        if valueType == 'int':
+            if type(value) is bool:
+                value = 1 if value else 0
+            else:
+                value = int(value)
+        elif valueType == 'float':
+            value = float(value)
+        elif valueType == 'str':
+            value = str(value)
+        elif valueType == 'bool':
+            value = value.lower() in ('true', '1', 'yes')
+        elif valueType == 'list':
+            value = ast.literal_eval(value) if isinstance(value, str) else list(value)
+        elif valueType == 'dict':
+            value = ast.literal_eval(value) if isinstance(value, str) else dict(value)
+        elif valueType == 'tuple':
+            value = ast.literal_eval(value) if isinstance(value, str) else tuple(value)
+        elif valueType == 'function':
+            # 解析函数名
+            rootNode = ast.parse(value)
+            funcName = None
+            for node in ast.walk(rootNode):
+                if isinstance(node, ast.FunctionDef):
+                    funcName = node.name
+                    break
+            if not funcName:
+                return False, '函数定义不正确，无法找到函数名', None
+            # 在原模块的全局命名空间中编译函数，保留所有导入的模块
+            exec(value, module_dict)
+            if funcName not in module_dict:
+                return False, f'函数 {funcName} 编译失败', None
+            # 获取编译好的函数对象
+            new_func = module_dict[funcName]
+            # 添加源码属性，用于getEntSkillDic获取源码
+            new_func.__source_code__ = value
+            value = new_func
+        else:
+            # 默认尝试eval
+            value = eval(value)
+        return True, "转换成功", value
+    except Exception as e:
+        return False, f"转换失败: {str(e)}", value
+
+def _setMemoryDataInProcess(su, moduleName, key, attrName, value, isBase64, processType):
     """在指定进程中修改内存数据的公共逻辑"""
     try:
         # 导入模块
-        mod = importlib.import_module(moduleName)
+        import sys
+        mod = sys.modules.get(moduleName)
+        if mod is None:
+            return su.onCommandResult(1, f'{processType}进程: 模块 {moduleName} 未加载', {})
+        # 获取模块的datas属性
         datas = getattr(mod, 'datas', None)
         if datas is None:
             return su.onCommandResult(1, f'{processType}进程: 模块 {moduleName} 没有 datas 属性', {})
         # 处理key类型
-        if key.isdigit():
-            key_cast = int(key)
-        else:
-            key_cast = key
-            
+        ori_keys = datas.keys()
+        ori_key_type = type(next(iter(ori_keys))) if ori_keys else str
+        _, _, key_cast = _translateValue(key, ori_key_type.__name__)
         if key_cast not in datas:
             return su.onCommandResult(1, f'{processType}进程: key {key} 不在 {moduleName}.datas 中', {})
         # 获取目标数据对象
         target_data = datas[key_cast]
+        # 根据目标属性的当前值类型进行转换
+        valueType = type(target_data.get(attrName, None)).__name__
+        if valueType is None:
+            for _, v in datas.items():
+                tmp_value = v.get(attrName, None)
+                if tmp_value is not None:
+                    valueType = type(tmp_value).__name__
+                    break
         # 判断value类型并处理
-        if value.startswith('base64:'):
+        if isBase64 :
             # 直接内存替换方案 - 不编译，直接创建函数对象
             try:
-                from user_type.combatSkill import SkillBase
-                SkillBase.clearAllCache()
-                decoded_code = base64.b64decode(value[7:]).decode('utf-8')
-                # 解析函数名
-                import ast
-                rootNode = ast.parse(decoded_code)
-                funcName = None
-                for node in ast.walk(rootNode):
-                    if isinstance(node, ast.FunctionDef):
-                        funcName = node.name
-                        break
-                
-                if not funcName:
-                    return su.onCommandResult(1, f'{processType}进程: 未找到函数定义', {})
-                
-                # 在原模块的全局命名空间中编译函数，保留所有导入的模块
-                exec(decoded_code, mod.__dict__)
-                
-                if funcName not in mod.__dict__:
-                    return su.onCommandResult(1, f'{processType}进程: 函数{funcName}编译失败', {})
-                # 获取编译好的函数对象
-                new_func = mod.__dict__[funcName]
-                # 添加源码属性，用于getEntSkillDic获取源码
-                new_func.__source_code__ = decoded_code
-                if hasattr(target_data, '_data'):
-                    # RODict类型，直接修改内部的_data
-                    target_data._data[attrName] = new_func
-                else:
-                    # 普通字典
-                    target_data[attrName] = new_func
-            
-                # 如果是技能，强制清除所有缓存和引用
-                if moduleName == 'skill_skill' and attrName == 'action':
-                    try:
-                        # 强力清除所有可能的SkillBase缓存
-                        import gc
-                        import sys
-                        cleared_count = 0
-                        # 1. 清除所有SkillBase类对象的缓存
-                        for obj in gc.get_objects():
-                            if isinstance(obj, type) and obj.__name__ == 'SkillBase':
-                                try:
-                                    if hasattr(obj, 'clearAllCache'):
-                                        obj.clearAllCache()
-                                        cleared_count += 1
-                                except Exception as e:
-                                    pass  # 忽略清除失败
-                        # 2. 清除模块级别的functools.lru_cache
-                        if 'user_type.combatSkill' in sys.modules:
-                            module = sys.modules['user_type.combatSkill']
-                            for attr_name in dir(module):
-                                attr = getattr(module, attr_name)
-                                if hasattr(attr, 'cache_clear'):
-                                    try:
-                                        attr.cache_clear()
-                                    except Exception as e:
-                                        pass  # 忽略清除失败
-                        # 3. 强制垃圾回收
-                        gc.collect()
-                    except Exception as e:
-                        pass  # 忽略清除缓存失败
-                
-                return su.onCommandResult(0, f'{processType}进程直接内存替换函数{funcName}成功', {})
-                
+                value = base64.b64decode(value).decode('utf-8')
             except Exception as e:
-                return su.onCommandResult(1, f'{processType}进程: 直接内存替换失败: {str(e)}', {})
-        
-        else:
-            # 普通值，尝试eval转换类型
-            try:
-                # 先尝试eval，如果失败就作为字符串
-                try:
-                    parsed_value = eval(value)
-                except:
-                    parsed_value = value
-                
-                # 设置到数据中
-                if hasattr(target_data, '_data'):
-                    target_data._data[attrName] = parsed_value
-                else:
-                    target_data[attrName] = parsed_value
-                    
-                return su.onCommandResult(0, f'{processType}进程修改普通值成功', {})
-                
-            except Exception as e:
-                return su.onCommandResult(1, f'{processType}进程: 值设置失败: {str(e)}', {})
-                
+                return su.onCommandResult(1, f'{processType}进程: base64解码失败: {str(e)}', {})
+        try:
+            ret, msg, parsed_value = _translateValue(value, valueType, mod.__dict__)
+            if not ret:
+                return su.onCommandResult(1, f'{processType}进程: {msg}', {})
+            # 设置到数据中
+            if hasattr(target_data, '_data'):
+                target_data._data[attrName] = parsed_value
+            else:
+                target_data[attrName] = parsed_value
+        except Exception as e:
+            return su.onCommandResult(1, f'{processType}进程: 值设置失败: {str(e)}', {})
+        import gamerefresh
+        gamerefresh.refreshData(' ') # 主要为了调用clearCacheInTick
+        return su.onCommandResult(0, f'{processType}进程修改 {moduleName}.datas[{key_cast}].{attrName} 成功 {target_data[attrName]}', {attrName: value})
     except Exception as e:
         return su.onCommandResult(1, f'{processType}进程修改失败: {str(e)}', {})
 
+def _getTableValue(value):
+    """递归获取表格值，处理函数和自定义类"""
+    value_type = type(value).__name__
+    if callable(value):
+        # 尝试获取源码
+        try:
+            if hasattr(value, '__source_code__'):
+                # 动态函数，有源码属性
+                func_source = value.__source_code__
+            else:
+                # 普通函数，用inspect获取源码
+                import inspect
+                func_source = inspect.getsource(value).strip()
+        except:
+            # 无法获取源码，显示函数名和类型
+            func_source = f"<func: {getattr(value, '__name__', 'unknown')} - {type(value).__name__}>"
+        return func_source
+    elif value_type == 'RODict':
+        # 处理自定义类，提取_data属性
+        return {k: _getTableValue(v) for k, v in value._data.items()}
+    elif value_type == 'ROList':
+        # 处理自定义类，提取_data属性
+        return [_getTableValue(v) for v in value._data]
+    elif value_type == 'ROSet':
+        # 处理自定义类，提取_data属性
+        return set([_getTableValue(v) for v in value._data])
+    return value
 
+@gm_cmd('$getdata', (Str('moduleName'), Str('key'), Str('attrName')), RONE, CELL, '获取内存数据', ALLSIDE, GOD_GROUPS, minArgs=2)
+def getMemoryData(su, moduleName, key, attrName=None):
+    # 导入模块
+    import sys
+    mod = sys.modules.get(moduleName)
+    if mod is None:
+        return su.onCommandResult(1, f' 模块 {moduleName} 未加载', {})
+    # 获取模块的datas属性
+    datas = getattr(mod, 'datas', None)
+    if datas is None:
+        return su.onCommandResult(1, f' 模块 {moduleName} 没有 datas 属性', {})
+    # 处理key类型
+    ori_keys = datas.keys()
+    ori_key_type = type(next(iter(ori_keys))) if ori_keys else str
+    _, _, key_cast = _translateValue(key, ori_key_type.__name__)
+    if key_cast not in datas:
+        return su.onCommandResult(1, f'key {key} 不在 {moduleName}.datas 中', {})
+    # 获取目标数据对象
+    target_data = datas[key_cast]
+    if attrName:
+        if attrName not in target_data:
+            return su.onCommandResult(1, f'属性 {attrName} 不在 {moduleName}.datas[{key}]. 中', {})
+        value = _getTableValue(target_data[attrName])
+        return su.onCommandResult(0, 'ok', {attrName: value})
+    else:
+        # rodict类型，提取_data, 否则无法json序列化
+        if hasattr(target_data, '_data'):
+            new_data = {k: _getTableValue(v) for k, v in target_data._data.items()}
+        else:
+            new_data = {k: _getTableValue(v) for k, v in target_data.items()}
+        DEBUG_MSG("GM: getMemoryData ~ ", new_data)
+        return su.onCommandResult(0, 'ok', new_data)
 
 @gm_cmd('$reqWorkshopSetAutoMF', (Player("gbId/Id"), Int('autoMF')), RARG(0), gameconst.BASE, '测试开启自动合成制作', ALLSIDE, GOD_GROUPS)
 def reqWorkshopSetAutoMF(su, player, autoMF):

@@ -506,7 +506,9 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             curVal = self.getProp(propName)
             if type(curVal) is int and type(curVal) != type(value):
                 gameengine.reportCritical('setProp type error', propName, curVal, value)
-
+            # 初始化的日志太多了
+            if src != gameconst.SourceType.Init:
+                self.combatDebugMsg('setProp: propName:%s, oldValue:%s, value:%s, sourceType:%s', propName, curVal, value, src)
         # hasattr判断先拿掉，好像有点慢
         oldVal = getattr(self, propName)
         func = type(oldVal)
@@ -1437,7 +1439,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
     def _useSkillBySkillObj(self, skill, targetID, arr, isClient=False, compensateTime=0):
         skillId = skill.skillId
-        self.combatDebugMsg('_useSkillBySkillObj', skillId, targetID, arr)
+        self.combatDebugMsg('_useSkillBySkillObj: skillId:%s, targetId:%s, skillArgs:%s', skillId, targetID, arr)
         # 走到这里如果不是Avatar，则一定是吟唱成功，如果是Avatar暂且认为吟唱过程成功，在canUse里会做校验
         castingSkillVal = self.getCastingSkillInfo()
         if castingSkillVal and self.hasState(gameconst.State.Casting):
@@ -1457,7 +1459,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             if ret & gameconst.UseSkillCheck.INVALID_TARGET and isClient:
                 targetID = 0
             else:
-                self.combatDebugMsg('doUseSkill fail:', targetID, ret, arr)
+                self.combatDebugMsg('_useSkillBySkillObj doUseSkill fail: targetId:%s, ret:%s, skillArgs:%s', targetID, ret, arr)
                 self.client.onUseSkill(False, skillId, targetID, [], [])
                 return False
 
@@ -1530,7 +1532,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             ERROR_MSG("_castingSkillObjInternal: invalid skill")
             return
 
-        self.combatDebugMsg("castingSkillInternal", skillObj.skillId, targetID, arr)
+        self.combatDebugMsg("_castingSkillObjInternal: skillId:%s, targetId:%s, skillArgs:%s", skillObj.skillId, targetID, arr)
 
         if self.hasState(gameconst.State.Casting):
             return
@@ -1618,13 +1620,13 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         isMoveSkill = skillObj.isMovingSkill(skillId)
         if sMath.distance2DToCompareFrom3DPosition(self.position, channelPos) > 1.0 and not isMoveSkill:
-            self.combatDebugMsg('channelingSkillCr move', self.position, channelPos)
+            self.combatDebugMsg('channelingSkillTick move: position:%s, channelPos:%s', self.position, channelPos)
             self.killChannelingSkill(gameconst.ChannelingBreak.MOVE)
             return
 
         target = KBEngine.entities.get(targetID)
         if skillObj.needReleaseTarget() and ((target and target.isDie()) or (targetID > 0 and not target)):
-            self.combatDebugMsg('channelingSkillCr target is invalid', self.position, channelPos)
+            self.combatDebugMsg('channelingSkillTick target is invalid: targetId:%s', targetID)
             self.killChannelingSkill(gameconst.ChannelingBreak.TARGET_DIE)
             return
 
@@ -1661,8 +1663,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                                                                               actionCtx),
                                      gametimer.TIMER_TAG_CHANNELING_CALC)
             skillObj.setTempData('channelingCalcTimer', timerId)
-        self.combatDebugMsg('channelingSkillTick ', skillId, self.state, targetID, skillObj.channelCount,
-                            channelInterval, isFinished)
+        self.combatDebugMsg('channelingSkillTick done: skillId:%s, state:%s, targetId:%s, channelCount:%s, channelInterval:%s, isFinished:%s',
+                            skillId, self.state, targetID, skillObj.channelCount, channelInterval, isFinished)
         return
 
     def channelingSkillEffect(self, skillObj, targetId, skillArgs, actionCtx, calcDelay, channelPos):
@@ -1671,8 +1673,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         isFinished = skillObj.channelCount >= skillObj.getChannelTime(skillObj.skillId)
 
         if isFinished:
-            self.combatDebugMsg('channelingSkillCr end ', skillObj.channelCount, skillObj.getChannelTime(
-                skillObj.skillId))
+            self.combatDebugMsg('channelingSkillEffect end: channelCount:%s, channelTime:%s',
+                                skillObj.channelCount, skillObj.getChannelTime(skillObj.skillId))
             skillObj.onChannlingEffectEnd(self)
             return
 
@@ -1692,7 +1694,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if not skillVal:
             return
 
-        self.combatDebugMsg('_endChannelingSkill', skillVal.skillId)
+        self.combatDebugMsg('_endChannelingSkill: skillId:%s', skillVal.skillId)
         self.popTempMiscProp(gameconst.AvatarProps.currentChannelSkill)
 
     def _executeSkillAction(self, skillId, context, calcDelay, actionFunc, target, duration=0):
@@ -1896,27 +1898,33 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         return self
 
-    def calcAtkStats(self, dmg):
+    def calcAtkStats(self, target, context, dmg):
         if not dmg:
             return
 
         if self.IsAvatarMirror or self.IsSummon or self.IsCreation:
             host = self.getHost()
-            host and host.IsAvatar and host.calcAtkStats(dmg)
+            host and host.IsAvatar and host.calcAtkStats(target, context, dmg)
         elif self.IsPet:
             host = self.getHost()
             host and host.IsAvatar and host.calcPetAtkStats(dmg)
 
     def calcBeHurtStats(self, target, context, dmgResult):
-        pass
+        if not dmgResult.hurtDmg:
+            return
+        
+        if self.IsSummon:
+            host = self.getHost()
+            host and host.IsAvatar and host.calcBeHurtStats(target, context, dmgResult)
+        
 
-    def calcHealStats(self, hpDelta):
+    def calcHealStats(self, target, context, hpDelta):
         if not hpDelta:
             return
 
         if self.IsAvatarMirror or self.IsSummon or self.IsCreation:
             host = self.getHost()
-            host and host.IsAvatar and host.calcHealStats(hpDelta)
+            host and host.IsAvatar and host.calcHealStats(target, context, hpDelta)
 
     def _transferHostDmg(self, dmgSrcEnt, toEnt, context, totalDmg):
         if not toEnt or not toEnt.IsCombatUnit:
@@ -1930,7 +1938,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         return transferDmg
 
     def applyDmgActionResult(self, target, context, dmgResult):
-        self.combatDebugMsg('applyDmgActionResult', target.id, context, dmgResult)
+        self.combatDebugMsg('applyDmgActionResult: targetId:%s, context:%s, dmgResult:%s', target.id, context, dmgResult)
         skillDamges = context.getCombatResult()
         if not skillDamges:
             ERROR_MSG('unexpected heal action context', context)
@@ -1943,7 +1951,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         dmgResult.dmgType = int(dmgResult.dmgType)
         dmgResult.atkType = int(dmgResult.atkType)
         DEBUG_MSG("applyDmgActionResult", dmgResult.dmg, dmgResult.hurtDmg, dmgResult.hpSuck, dmgResult.dmgType, dmgResult.atkType, dmgResult.calcShield)
-
         # 如果血量被锁定了，就不分摊伤害吸血什么的，也不跳数字了
         if target.getTempMiscProp(gameconst.AvatarProps.isHpLocked, False):
             return
@@ -2007,9 +2014,13 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             if _realHpDelta < 0:
                 host = utils.getHostEntity(self)
                 targetHost = utils.getHostEntity(target)
-                if targetHost and not host.isDie() and host.id != targetHost.id and context.getDmgSourceType() == gameconst.SourceType.Skill:
+                if targetHost \
+                        and not host.isDie() \
+                        and not host.hasState(CCDD.datas.relive) \
+                        and host.id != targetHost.id \
+                        and context.getDmgSourceType() == gameconst.SourceType.Skill:
                     host.setState(gameconst.State.Fighting)
-                    if not targetHost.isDie():
+                    if not (targetHost.isDie() or targetHost.hasState(CCDD.datas.relive)):
                         targetHost.setState(gameconst.State.Fighting)
 
             if dmgResult.atkType == gameconst.SkillAttackType.ATTACK_NORMAL:
@@ -2064,9 +2075,9 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 recordDmgVal = 0
             # report to battleFieldDungeon
 
-        target.calcBeHurtStats(target, context, dmgResult)
-        dmgSrcEnt.calcAtkStats(dmg)
-        dmgSrcEnt.calcHealStats(suckHpVal)
+        target.calcBeHurtStats(dmgSrcEnt, context, dmgResult)
+        dmgSrcEnt.calcAtkStats(target, context, dmg)
+        dmgSrcEnt.calcHealStats(dmgSrcEnt, context, suckHpVal)
 
         self.sendDmgMsgs(target, context, dmgResult, absorbDamageDetail, realDmgVal)
 
@@ -2089,7 +2100,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         ctx = context or context.parentContext
         dmgDesc = gameconst.SKILL_DMG_DESC[dmgResult.dmgType]
 
-        self.combatDebugMsg('sendDmgMsg', target.id, ctx, dmgResult, absorbDamageDetail, realDmgVal)
+        self.combatDebugMsg('sendDmgMsg: targetId:%s, context:%s, dmgResult:%s, absorbDamageDetail:%s, realDmgVal:%s',
+                            target.id, ctx, dmgResult, absorbDamageDetail, realDmgVal)
 
         if ctx.actionType == actionContext.ACTION_USE_SKILL:
             skillName = context.skillObj.getSkillName(context.skillObj.skillId)
@@ -2250,7 +2262,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                     skillDamges.damageInfo.append(
                         combatSkill.SkillDamageVal(target.id, hpDelta, gameconst.HitType.Heal))
 
-        self.calcHealStats(hpDelta)
+        self.calcHealStats(target, context, hpDelta)
 
     def displacedBySkill(self, srcEntityId, pos, speed, timeEx, context=None):
         src = KBEngine.entities.get(srcEntityId)
@@ -2284,7 +2296,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         self.moveToPoint(pos, speed, 0, (), False, 0)
 
         # 不能完全依赖onMoveOver恢复，过程中可能传送或者被别的打断，如果没恢复过来客户端就完全操作不了了
-        if realDist == 0 or speed == 0:
+        if realDist <= 0 or speed <= 0:
             pushTime = timeEx
         else:
             pushTime = realDist / speed + timeEx
@@ -3282,9 +3294,15 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
     def _onRemoveInvisible(self, byConfilictState):
         self._trapInViews()
 
+    # 为了让日志更可读以及减少字符拼接开销，必须以 'skillId:%s', skillId 这种形式传入
     def combatDebugMsg(self, *args):
         if gameconfig.enableCombatDebugLog():
-            INFO_MSG(*args)
+            if len(args) <= 1:
+                msg = args[0]
+            else:
+                msg = args[0] % args[1:]
+            msg = '[%s][combatDebug] ' % getattr(self, 'name', '') + msg
+            INFO_MSG(msg)
 
     def reliveToPos(self, pos, toDir, hp, context):
         """在指定位置复活
@@ -3306,13 +3324,21 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         self._trapInViews()
 
         if context is not None:
-            self.client.onReliveByOthers(context.casterEntId)
+            srcEntId = None
+            if hasattr(context, 'casterEntId'):
+                srcEntId = context.casterEntId
+            elif hasattr(context, 'srcEntId'):
+                srcEntId = context.srcEntId
+            if srcEntId:
+                self.client.onReliveByOthers(srcEntId)
 
         if self.IsAvatar:
             spaceMgr = self.spaceMgr
             spaceMgr and spaceMgr.onPlayerRelive(self.base, self.gbId)
             self.setState(CCDD.datas.relive)
             self._callback(CONST.datas['reliveTime']['value'], 'removeState', (CCDD.datas.relive,), gametimer.TIMER_TAG_REMOVE_RELIVE_STATE)
+
+        self.popTempMiscProp(gameconst.AvatarProps.isLightningArea)
 
     def getDefaultReliveHp(self):
         return max(min(round(1 * 0.01 * self.fullHp), self.fullHp), 1)

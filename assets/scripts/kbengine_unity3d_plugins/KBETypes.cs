@@ -5529,6 +5529,80 @@ namespace KBEngine
 		}
 	}
 
+	public struct RANK
+	{
+		UInt16 value;
+
+		RANK(UInt16 value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator UInt16(RANK value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator RANK(UInt16 value)
+		{
+			UInt16 tvalue = (UInt16)value;
+			return new RANK(tvalue);
+		}
+
+		public static UInt16 MaxValue
+		{
+			get
+			{
+				return UInt16.MaxValue;
+			}
+		}
+
+		public static UInt16 MinValue
+		{
+			get
+			{
+				return UInt16.MinValue;
+			}
+		}
+	}
+
+	public struct AUTH_PERMISSION
+	{
+		UInt16 value;
+
+		AUTH_PERMISSION(UInt16 value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator UInt16(AUTH_PERMISSION value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator AUTH_PERMISSION(UInt16 value)
+		{
+			UInt16 tvalue = (UInt16)value;
+			return new AUTH_PERMISSION(tvalue);
+		}
+
+		public static UInt16 MaxValue
+		{
+			get
+			{
+				return UInt16.MaxValue;
+			}
+		}
+
+		public static UInt16 MinValue
+		{
+			get
+			{
+				return UInt16.MinValue;
+			}
+		}
+	}
+
 	public class FACE_DATA
 	{
 		public UInt16 suitId = 0;
@@ -5568,6 +5642,7 @@ namespace KBEngine
 		public UInt64 parentID = 0;
 		public UInt64 selfDbId = 0;
 		public UInt64 authDbId = 0;
+		public UInt32 authExpire = 0;
 		public UInt64 gbId = 0;
 		public UInt64 dbId = 0;
 		public string name = "";
@@ -5631,6 +5706,32 @@ namespace KBEngine
 
 	}
 
+	public class GLYPH_INFO
+	{
+		public SByte glyphState = 0;
+		public List<AFFIX_VAL> glyphAffixes = new List<AFFIX_VAL>();
+
+	}
+
+	public class CLI_GLYPH_INFO
+	{
+		public SByte glyphState = 0;
+		public List<AFFIX_VAL> glyphAffixes = new List<AFFIX_VAL>();
+
+	}
+
+	public class SPIRIT_INFO
+	{
+		public List<AFFIX_VAL> spiritAffixes = new List<AFFIX_VAL>();
+
+	}
+
+	public class CLI_SPIRIT_INFO
+	{
+		public List<AFFIX_VAL> spiritAffixes = new List<AFFIX_VAL>();
+
+	}
+
 	public class CLI_EQUIP_ITEM_VAL
 	{
 		public UInt32 itemId = 0;
@@ -5640,9 +5741,8 @@ namespace KBEngine
 		public Byte bindType = 0;
 		public SByte lockStatus = 0;
 		public UInt32 auctionTime = 0;
-		public List<AFFIX_VAL> fixedAffixes = new List<AFFIX_VAL>();
-		public List<AFFIX_VAL> randomAffixes = new List<AFFIX_VAL>();
-		public List<AFFIX_VAL> glyphAffixes = new List<AFFIX_VAL>();
+		public List<SPIRIT_INFO> spiritDatas = new List<SPIRIT_INFO>();
+		public List<GLYPH_INFO> glyphDatas = new List<GLYPH_INFO>();
 		public List<UInt32> radomEnhTimes = new List<UInt32>();
 		public Byte enhanceLv = 0;
 		public Byte enhanceLvRate = 0;
@@ -5653,6 +5753,9 @@ namespace KBEngine
 		public UInt16 blessLvRate = 0;
 		public UInt32 dropFixEndTime = 0;
 		public Int64 score = 0;
+		public UInt16 bindValue = 0;
+		public Byte glyphGroup = 0;
+		public Byte spiritGroup = 0;
 
 	}
 
@@ -5875,9 +5978,21 @@ namespace KBEngine
 
 	public class CLIENT_TEAM_MARK_VAL
 	{
+		public Byte type = 0;
+		public Byte index = 0;
+		public string name = "";
+		public UInt64 gbId = 0;
 		public Int32 entId = 0;
-		public Byte markType = 0;
+		public Vector3 pos = new Vector3(0f, 0f, 0f);
 		public UInt32 spaceNo = 0;
+
+	}
+
+	public class CLIENT_TEAM_MARK_INFO
+	{
+		public List<CLIENT_TEAM_MARK_VAL> playerList = new List<CLIENT_TEAM_MARK_VAL>();
+		public List<CLIENT_TEAM_MARK_VAL> sceneList = new List<CLIENT_TEAM_MARK_VAL>();
+		public Byte onlyCaptainCanMark = 0;
 
 	}
 
@@ -5894,8 +6009,7 @@ namespace KBEngine
 		public Byte teamMicsBlocked = 0;
 		public string recruitInfo = "";
 		public Byte isPublish = 0;
-		public List<CLIENT_TEAM_MARK_VAL> teamMarkList = new List<CLIENT_TEAM_MARK_VAL>();
-		public Byte onlyCaptainCanMark = 0;
+		public CLIENT_TEAM_MARK_INFO teamMarkInfo = new CLIENT_TEAM_MARK_INFO();
 		public Byte memberNum = 0;
 		public Byte isAutoExpedition = 0;
 		public string password = "";
@@ -5957,8 +6071,7 @@ namespace KBEngine
 		public UInt32 raidAutoMatchTime = 0;
 		public string recruitInfo = "";
 		public Byte memberNum = 0;
-		public Byte onlyCaptainCanMark = 0;
-		public List<CLIENT_TEAM_MARK_VAL> raidMarkList = new List<CLIENT_TEAM_MARK_VAL>();
+		public CLIENT_TEAM_MARK_INFO raidMarkInfo = new CLIENT_TEAM_MARK_INFO();
 		public Byte isAutoExpedition = 0;
 		public string password = "";
 
@@ -6781,15 +6894,6 @@ namespace KBEngine
 
 	}
 
-	public class CLIENT_TEAM_MARK_INFO
-	{
-		public Int32 entId = 0;
-		public Byte changeType = 0;
-		public Byte onlyCaptainCanMark = 0;
-		public List<CLIENT_TEAM_MARK_VAL> teamMarkList = new List<CLIENT_TEAM_MARK_VAL>();
-
-	}
-
 	public class RED_BAG_FETCH_VAL
 	{
 		public UInt64 playerGbId = 0;
@@ -6801,6 +6905,7 @@ namespace KBEngine
 	public class RED_BAG_CLIENT_VAL
 	{
 		public UInt64 redbagId = 0;
+		public UInt64 playerGbId = 0;
 		public string playerName = "";
 		public Byte redbagType = 0;
 		public Byte channel = 0;
@@ -6808,6 +6913,7 @@ namespace KBEngine
 		public UInt32 leftMoney = 0;
 		public UInt32 num = 0;
 		public UInt32 leftNum = 0;
+		public string desc = "";
 		public Byte hasFetch = 0;
 
 	}
@@ -6815,6 +6921,7 @@ namespace KBEngine
 	public class RED_BAG_FETCH_CLIENT_VAL
 	{
 		public UInt64 redbagId = 0;
+		public UInt64 playerGbId = 0;
 		public string playerName = "";
 		public Byte redbagType = 0;
 		public Byte channel = 0;
@@ -6824,6 +6931,40 @@ namespace KBEngine
 		public UInt32 leftNum = 0;
 		public UInt64 maxGbId = 0;
 		public List<RED_BAG_FETCH_VAL> fetchPlayerList = new List<RED_BAG_FETCH_VAL>();
+
+	}
+
+	public class AUTH_PERMISSION_DATA_INFO
+	{
+		public UInt16 permission = 0;
+		public UInt64 dailyMoney = 0;
+
+	}
+
+	public class LEADER_BOARD_GUILD_DATA_INFO
+	{
+		public UInt64 guildUUID = 0;
+		public string guildName = "";
+		public Byte guildLevel = 0;
+		public Int32 guildScore = 0;
+		public string leaderName = "";
+
+	}
+
+	public class TEAM_STATISTIC_PLAYER_VAL
+	{
+		public UInt64 gbId = 0;
+		public string name = "";
+		public UInt16 school = 0;
+		public Int32 value = 0;
+
+	}
+
+	public class TEAM_STATISTIC_CLIENT_VAL
+	{
+		public List<TEAM_STATISTIC_PLAYER_VAL> dmgList = new List<TEAM_STATISTIC_PLAYER_VAL>();
+		public List<TEAM_STATISTIC_PLAYER_VAL> healList = new List<TEAM_STATISTIC_PLAYER_VAL>();
+		public List<TEAM_STATISTIC_PLAYER_VAL> hurtList = new List<TEAM_STATISTIC_PLAYER_VAL>();
 
 	}
 

@@ -296,7 +296,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         # calculate tDungeonLostTime to client
         endTime = int(spaceVal.tCreate + DDI.datas[self.dungeonNo]['timeOut'] * 60 + 1)
         if spaceVal.isCompleted():
-            box.client.onDungeonCompleted(self.dungeonNo, not spaceVal.isFailed())
+            box.client.onDungeonCompleted(self.dungeonNo, not spaceVal.isFailed(), spaceVal.getElapsedTime(), endTime)
         box.client.changeDungeonRemainTime(spaceNo, endTime)
 
     def requestSpaceCell(self, requestBox, spaceNo):

@@ -108,6 +108,11 @@
             <Flags>         BASE            </Flags>
         </globalDataListener>
 
+        <lastCheckDrawCardPoolTimestamp>
+            <Type>          TIMESTAMP       </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </lastCheckDrawCardPoolTimestamp>
     </Properties>
     
     <BaseMethods>

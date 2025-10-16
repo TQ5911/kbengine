@@ -258,9 +258,6 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
     def isExpiredReplaceItem(self):
         itemData = dataUtils.getCommItemData(self.itemId)
         return itemData.get("recycleForm", 0)
-
-    def isSpiritBoardItem(self):
-        return False
     
     def isLocked(self):
         return self.lockStatus == gameconst.ItemLockStatus.LOCKED

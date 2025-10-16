@@ -397,6 +397,12 @@ def _13080067(self, target, context):
 def _13080068(self, target, context):
     self.castSkill(target, context, 90010052)
 
+def _13080069(self, target, context):
+    #self.addMpByPct(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.addMpByPct(target, context, *context.args.ActionParam)
+
 datas = _tools.RODict({ 
     13080000: _tools.RODict({
         "ID": 13080000,
@@ -637,7 +643,11 @@ datas = _tools.RODict({
     13080068: _tools.RODict({
         "ID": 13080068,
         "Action": _13080068
+    }),
+    13080069: _tools.RODict({
+        "ID": 13080069,
+        "Action": _13080069
     })
 })
 minKey = 13080000
-maxKey = 13080068
+maxKey = 13080069

@@ -1,8 +1,9 @@
 <root>
     <Interfaces>
-        <Interface>     iCell           </Interface>
-        <Interface>     iSpaceMgr       </Interface>
-        <Interface>     iTimerCell       </Interface>
+        <Interface>     iCell                   </Interface>
+        <Interface>     iSpaceMgr               </Interface>
+        <Interface>     iTimerCell              </Interface>
+        <Interface>     iMapMonsterRefresh      </Interface>
     </Interfaces>
 
     <Properties>

@@ -1,6 +1,7 @@
 import sys
 import time
 import os
+from simpleBotBase import FACE_DATA
 
 # 添加loginserver参数：modName, botPrefix, numAll, numPerSec, fromIdx, avatarName, school, loginHost, loginPort
 modName, _botNamePrefix, _numAll, _numPerSec, _fromIdx, _avatarName, _school, _loginHost, _loginPort = sys.argv[1:10]
@@ -20,11 +21,16 @@ def startBot(delegateCls, botPrefix, numAll, numPerSec, fromIdx, avatarName, sch
     ts = []
     print('start bot from', fromIdx)
     print(f'target login server: {loginHost}:{loginPort}')
-    
+    import random
+    faceData = FACE_DATA()
     for i in range(numAll):
         idx = fromIdx + i
-        client = BotClient.BotClient('%s%d' % (botPrefix, idx), '%s%d' % (avatarName, idx), school)
-        
+        random_school = school
+        if random_school == 0:
+            random_school = random.choice([1001,1002,1003])
+            print(f"{'%s%d' % (avatarName, idx)}机器人随机选择职业{random_school}")
+        faceData.random_set_face_data_by_id(random_school)
+        client = BotClient.BotClient('%s%d' % (botPrefix, idx), '%s%d' % (avatarName, idx), random_school,faceData.toSavedDict())
         # 如果提供了登录服务器地址和端口，则使用指定服务器登录
         if loginHost and loginPort and loginHost.strip() and loginPort.strip():
             print(f'bot {idx} logging to server: {loginHost}:{loginPort}')

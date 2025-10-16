@@ -452,28 +452,28 @@ def _87020003_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002009)
 
 def _87020004(self, target, context):
-    self.addPropByPassiveSkill([["adjMedicineRate",0.05]])
+    self.addPropByPassiveSkill([["adjMedicineRate",0.02]])
 
 def _87020004_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMedicineRate",0.05]])
+    self.removePropByPassiveSkill([["adjMedicineRate",0.02]])
 
 def _87020005(self, target, context):
-    self.addPropByPassiveSkill([["adjCopper",0.05]])
+    self.addPropByPassiveSkill([["adjCopper",0.025]])
 
 def _87020005_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjCopper",0.05]])
+    self.removePropByPassiveSkill([["adjCopper",0.025]])
 
 def _87020006(self, target, context):
-    self.addPropByPassiveSkill([["adjMiningRate",0.05]])
+    self.addPropByPassiveSkill([["adjExpGrow",0.01]])
 
 def _87020006_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMiningRate",0.05]])
+    self.removePropByPassiveSkill([["adjExpGrow",0.01]])
 
 def _87020007(self, target, context):
-    self.addPropByPassiveSkill([["adjDropRate",0.005]])
+    self.addPropByPassiveSkill([["adjPVPDmg",0.01]])
 
 def _87020007_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjDropRate",0.005]])
+    self.removePropByPassiveSkill([["adjPVPDmg",0.01]])
 
 def _87020008(self, target, context):
     self.addBuffBySkill(target, context, 64002011, 1)
@@ -488,22 +488,22 @@ def _87020009_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002013)
 
 def _87020010(self, target, context):
-    self.addPropByPassiveSkill([["adjGatherRate",0.05]])
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.01]])
 
 def _87020010_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjGatherRate",0.05]])
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.01]])
 
 def _87020011(self, target, context):
-    self.addPropByPassiveSkill([["adjGatherRate",0.1]])
+    self.addPropByPassiveSkill([["adjFatal",2]])
 
 def _87020011_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjGatherRate",0.1]])
+    self.removePropByPassiveSkill([["adjFatal",2]])
 
 def _87020012(self, target, context):
-    self.addPropByPassiveSkill([["adjMedicineRate",0.1]])
+    self.addPropByPassiveSkill([["adjMedicineRate",0.04]])
 
 def _87020012_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMedicineRate",0.1]])
+    self.removePropByPassiveSkill([["adjMedicineRate",0.04]])
 
 def _87020013(self, target, context):
     self.addBuffBySkill(target, context, 64002015, 1)
@@ -518,10 +518,10 @@ def _87020014_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002017)
 
 def _87020015(self, target, context):
-    self.addPropByPassiveSkill([["adjDropRate",0.01]])
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.02]])
 
 def _87020015_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjDropRate",0.01]])
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.02]])
 
 def _87020016(self, target, context):
     self.addBuffBySkill(target, context, 64002019, 1)
@@ -530,10 +530,10 @@ def _87020016_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002019)
 
 def _87020017(self, target, context):
-    self.addPropByPassiveSkill([["adjCopper",0.1]])
+    self.addPropByPassiveSkill([["adjPVPDmg",0.02]])
 
 def _87020017_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjCopper",0.1]])
+    self.removePropByPassiveSkill([["adjPVPDmg",0.02]])
 
 def _87020018(self, target, context):
     self.addBuffBySkill(target, context, 64002021, 1)
@@ -548,10 +548,10 @@ def _87020019_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002023)
 
 def _87020020(self, target, context):
-    self.addPropByPassiveSkill([["adjCopper",0.1]])
+    self.addPropByPassiveSkill([["adjCopper",0.05]])
 
 def _87020020_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjCopper",0.1]])
+    self.removePropByPassiveSkill([["adjCopper",0.05]])
 
 def _87020021(self, target, context):
     self.addBuffBySkill(target, context, 64002025, 1)
@@ -560,10 +560,10 @@ def _87020021_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002025)
 
 def _87020022(self, target, context):
-    self.addPropByPassiveSkill([["adjIgnoreArmor",0.01]])
+    self.addPropByPassiveSkill([["adjMortal",0.05]])
 
 def _87020022_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjIgnoreArmor",0.01]])
+    self.removePropByPassiveSkill([["adjMortal",0.05]])
 
 def _87020023(self, target, context):
     self.addBuffBySkill(target, context, 64002045, 1)
@@ -572,16 +572,16 @@ def _87020023_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002045)
 
 def _87020024(self, target, context):
-    self.addPropByPassiveSkill([["adjAntiFatal",0.02]])
+    self.addPropByPassiveSkill([["adjFatal",5]])
 
 def _87020024_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjAntiFatal",0.02]])
+    self.removePropByPassiveSkill([["adjFatal",5]])
 
 def _87020025(self, target, context):
-    self.addBuffBySkill(target, context, 64002046, 1)
+    self.addBuffBySkill(target, context, 64002047, 1)
 
 def _87020025_remove(self, target, context):
-    self.removeBuffBySkill(target, context, 64002046)
+    self.removeBuffBySkill(target, context, 64002047)
 
 def _87020026(self, target, context):
     self.addPropByPassiveSkill([["adjAntiMortal",0.05]])
@@ -596,10 +596,10 @@ def _87020027_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002027)
 
 def _87020028(self, target, context):
-    self.addPropByPassiveSkill([["adjDodge",10]])
+    self.addPropByPassiveSkill([["adjDodge",3]])
 
 def _87020028_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjDodge",10]])
+    self.removePropByPassiveSkill([["adjDodge",3]])
 
 def _87020029(self, target, context):
     self.addBuffBySkill(target, context, 64002029, 1)
@@ -608,10 +608,10 @@ def _87020029_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002029)
 
 def _87020030(self, target, context):
-    self.addPropByPassiveSkill([["mulFullMp",0.05]])
+    self.addPropByPassiveSkill([["adjHit",3]])
 
 def _87020030_remove(self, target, context):
-    self.removePropByPassiveSkill([["mulFullMp",0.05]])
+    self.removePropByPassiveSkill([["adjHit",3]])
 
 def _87020031(self, target, context):
     self.addBuffBySkill(target, context, 64002031, 1)
@@ -620,10 +620,10 @@ def _87020031_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002031)
 
 def _87020032(self, target, context):
-    self.addPropByPassiveSkill([["adjHit",10]])
+    self.addPropByPassiveSkill([["adjStunEnh",10]])
 
 def _87020032_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjHit",10]])
+    self.removePropByPassiveSkill([["adjStunEnh",10]])
 
 def _87020033(self, target, context):
     self.addBuffBySkill(target, context, 64002033, 1)
@@ -632,10 +632,10 @@ def _87020033_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002033)
 
 def _87020034(self, target, context):
-    self.addPropByPassiveSkill([["adjSkillCD",0.02]])
+    self.addPropByPassiveSkill([["adjExpGrow",0.05]])
 
 def _87020034_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjSkillCD",0.02]])
+    self.removePropByPassiveSkill([["adjExpGrow",0.05]])
 
 def _87020035(self, target, context):
     self.addBuffBySkill(target, context, 64002035, 1)
@@ -644,10 +644,10 @@ def _87020035_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002035)
 
 def _87020036(self, target, context):
-    self.addPropByPassiveSkill([["adjFullHp",15]])
+    self.addPropByPassiveSkill([["adjPVPDmg",0.05]])
 
 def _87020036_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjFullHp",15]])
+    self.removePropByPassiveSkill([["adjPVPDmg",0.05]])
 
 def _87020037(self, target, context):
     self.addBuffBySkill(target, context, 64002037, 1)
@@ -656,10 +656,10 @@ def _87020037_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002037)
 
 def _87020038(self, target, context):
-    self.addPropByPassiveSkill([["mulSpeed",0.03]])
+    self.addPropByPassiveSkill([["adjExpGrow",0.1]])
 
 def _87020038_remove(self, target, context):
-    self.removePropByPassiveSkill([["mulSpeed",0.03]])
+    self.removePropByPassiveSkill([["adjExpGrow",0.1]])
 
 def _87020039(self, target, context):
     self.addBuffBySkill(target, context, 64002039, 1)
@@ -668,22 +668,22 @@ def _87020039_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002039)
 
 def _87020040(self, target, context):
-    self.addPropByPassiveSkill([["adjMortal",0.1]])
+    self.addPropByPassiveSkill([["adjSkillCD",0.05]])
 
 def _87020040_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMortal",0.1]])
+    self.removePropByPassiveSkill([["adjSkillCD",0.05]])
 
 def _87020041(self, target, context):
-    self.addBuffBySkill(target, context, 64002043, 1)
+    self.addPropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15],["adjMaxMagicArmor",15],["adjMinMagicArmor",15]])
 
 def _87020041_remove(self, target, context):
-    self.removeBuffBySkill(target, context, 64002043)
+    self.removePropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15],["adjMaxMagicArmor",15],["adjMinMagicArmor",15]])
 
 def _87020042(self, target, context):
-    self.addPropByPassiveSkill([["adjDebilityEnh",10]])
+    self.addPropByPassiveSkill([["adjFullHp",300],["adjFullMp",60]])
 
 def _87020042_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjDebilityEnh",10]])
+    self.removePropByPassiveSkill([["adjFullHp",300],["adjFullMp",60]])
 
 def _87020043(self, target, context):
     self.addBuffBySkill(target, context, 64002041, 1)
@@ -692,10 +692,10 @@ def _87020043_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002041)
 
 def _87020044(self, target, context):
-    self.addPropByPassiveSkill([["adjIgnoreArmor",0.02]])
+    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.1]])
 
 def _87020044_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjIgnoreArmor",0.02]])
+    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.1]])
 
 def _87020045(self, target, context):
     self.addPropByPassiveSkill([["adjFullHp",50]])
@@ -708,6 +708,192 @@ def _87020046(self, target, context):
 
 def _87020046_remove(self, target, context):
     self.removePropByPassiveSkill([["adjIgnoreArmor",0.02]])
+
+def _87020047(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmg",0.1]])
+
+def _87020047_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmg",0.1]])
+
+def _87020048(self, target, context):
+    self.addPropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15],["adjMaxMagicArmor",15],["adjMinMagicArmor",15]])
+
+def _87020048_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15],["adjMaxMagicArmor",15],["adjMinMagicArmor",15]])
+
+def _87020049(self, target, context):
+    self.addBuffBySkill(target, context, 64002053, 1)
+
+def _87020049_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002053)
+
+def _87020050(self, target, context):
+    self.addPropByPassiveSkill([["adjSlowAnti",10],["adjFrozenEnh",10]])
+
+def _87020050_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjSlowAnti",10],["adjFrozenEnh",10]])
+
+def _87020051(self, target, context):
+    self.addPropByPassiveSkill([["adjMortal",0.01]])
+
+def _87020051_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMortal",0.01]])
+
+def _87020052(self, target, context):
+    self.addBuffBySkill(target, context, 64002057, 1)
+
+def _87020052_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002057)
+
+def _87020053(self, target, context):
+    self.addBuffBySkill(target, context, 64002087, 1)
+
+def _87020053_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002087)
+
+def _87020054(self, target, context):
+    self.addBuffBySkill(target, context, 64002059, 1)
+
+def _87020054_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002059)
+
+def _87020055(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmg",0.01]])
+
+def _87020055_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmg",0.01]])
+
+def _87020056(self, target, context):
+    self.addPropByPassiveSkill([["adjMortal",0.02]])
+
+def _87020056_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMortal",0.02]])
+
+def _87020057(self, target, context):
+    self.addBuffBySkill(target, context, 64002065, 1)
+
+def _87020057_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002065)
+
+def _87020058(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmg",0.02]])
+
+def _87020058_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmg",0.02]])
+
+def _87020059(self, target, context):
+    self.addBuffBySkill(target, context, 64002089, 1)
+
+def _87020059_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002089)
+
+def _87020060(self, target, context):
+    self.addPropByPassiveSkill([["adjExpGrow",0.02]])
+
+def _87020060_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjExpGrow",0.02]])
+
+def _87020061(self, target, context):
+    self.addBuffBySkill(target, context, 64002067, 1)
+
+def _87020061_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002067)
+
+def _87020062(self, target, context):
+    self.addPropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15]])
+
+def _87020062_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMaxPhysicalArmor",15],["adjMinPhysicalArmor",15]])
+
+def _87020063(self, target, context):
+    self.addBuffBySkill(target, context, 64002069, 1)
+
+def _87020063_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002069)
+
+def _87020064(self, target, context):
+    self.addPropByPassiveSkill([["adjMaxMagicArmor",15],["adjMinMagicArmor",15]])
+
+def _87020064_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMaxMagicArmor",15],["adjMinMagicArmor",15]])
+
+def _87020065(self, target, context):
+    self.addBuffBySkill(target, context, 64002071, 1)
+
+def _87020065_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002071)
+
+def _87020066(self, target, context):
+    self.addPropByPassiveSkill([["adjMinPhysicalAtk",15],["adjMaxPhysicalAtk",15]])
+
+def _87020066_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMinPhysicalAtk",15],["adjMaxPhysicalAtk",15]])
+
+def _87020067(self, target, context):
+    self.addBuffBySkill(target, context, 64002073, 1)
+
+def _87020067_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002073)
+
+def _87020068(self, target, context):
+    self.addPropByPassiveSkill([["adjMinMagicAtk",15],["adjMaxMagicAtk",15]])
+
+def _87020068_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMinMagicAtk",15],["adjMaxMagicAtk",15]])
+
+def _87020069(self, target, context):
+    self.addBuffBySkill(target, context, 64002075, 1)
+
+def _87020069_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002075)
+
+def _87020070(self, target, context):
+    self.addPropByPassiveSkill([["adjPVPDmg",0.1]])
+
+def _87020070_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPVPDmg",0.1]])
+
+def _87020071(self, target, context):
+    self.addPropByPassiveSkill([["adjFrozenEnh",10],["adjSlowEnh",10]])
+
+def _87020071_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFrozenEnh",10],["adjSlowEnh",10]])
+
+def _87020072(self, target, context):
+    self.addBuffBySkill(target, context, 64002079, 1)
+
+def _87020072_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002079)
+
+def _87020073(self, target, context):
+    self.addPropByPassiveSkill([["adjExpGrow",0.1]])
+
+def _87020073_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjExpGrow",0.1]])
+
+def _87020074(self, target, context):
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.1]])
+
+def _87020074_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.1]])
+
+def _87020075(self, target, context):
+    self.addBuffBySkill(target, context, 64002083, 1)
+
+def _87020075_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002083)
+
+def _87020076(self, target, context):
+    self.addPropByPassiveSkill([["adjMinPhysicalAtk",60],["adjMaxPhysicalAtk",60],["adjMinMagicAtk",60],["adjMaxMagicAtk",60]])
+
+def _87020076_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjMinPhysicalAtk",60],["adjMaxPhysicalAtk",60],["adjMinMagicAtk",60],["adjMaxMagicAtk",60]])
+
+def _87020077(self, target, context):
+    self.addPropByPassiveSkill([["adjHit",10]])
+
+def _87020077_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjHit",10]])
 
 datas = _tools.RODict({ 
     87000101: _tools.RODict({
@@ -1436,7 +1622,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020004,
         "removeAction": _87020004_remove,
-        "propList": _tools.ROList([['adjMedicineRate', 0.05]]),
+        "propList": _tools.ROList([['adjMedicineRate', 0.02]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1446,7 +1632,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020005,
         "removeAction": _87020005_remove,
-        "propList": _tools.ROList([['adjCopper', 0.05]]),
+        "propList": _tools.ROList([['adjCopper', 0.025]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1456,7 +1642,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020006,
         "removeAction": _87020006_remove,
-        "propList": _tools.ROList([['adjMiningRate', 0.05]]),
+        "propList": _tools.ROList([['adjExpGrow', 0.01]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1466,7 +1652,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020007,
         "removeAction": _87020007_remove,
-        "propList": _tools.ROList([['adjDropRate', 0.005]]),
+        "propList": _tools.ROList([['adjPVPDmg', 0.01]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1496,7 +1682,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020010,
         "removeAction": _87020010_remove,
-        "propList": _tools.ROList([['adjGatherRate', 0.05]]),
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.01]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1506,7 +1692,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020011,
         "removeAction": _87020011_remove,
-        "propList": _tools.ROList([['adjGatherRate', 0.1]]),
+        "propList": _tools.ROList([['adjFatal', 2]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1516,7 +1702,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020012,
         "removeAction": _87020012_remove,
-        "propList": _tools.ROList([['adjMedicineRate', 0.1]]),
+        "propList": _tools.ROList([['adjMedicineRate', 0.04]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1546,7 +1732,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020015,
         "removeAction": _87020015_remove,
-        "propList": _tools.ROList([['adjDropRate', 0.01]]),
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.02]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1566,7 +1752,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020017,
         "removeAction": _87020017_remove,
-        "propList": _tools.ROList([['adjCopper', 0.1]]),
+        "propList": _tools.ROList([['adjPVPDmg', 0.02]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1596,7 +1782,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020020,
         "removeAction": _87020020_remove,
-        "propList": _tools.ROList([['adjCopper', 0.1]]),
+        "propList": _tools.ROList([['adjCopper', 0.05]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1616,7 +1802,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020022,
         "removeAction": _87020022_remove,
-        "propList": _tools.ROList([['adjIgnoreArmor', 0.01]]),
+        "propList": _tools.ROList([['adjMortal', 0.05]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1636,7 +1822,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020024,
         "removeAction": _87020024_remove,
-        "propList": _tools.ROList([['adjAntiFatal', 0.02]]),
+        "propList": _tools.ROList([['adjFatal', 5]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1647,7 +1833,7 @@ datas = _tools.RODict({
         "action": _87020025,
         "removeAction": _87020025_remove,
         "propList": None,
-        "desBuff": 64002046,
+        "desBuff": 64002047,
         "score": 100
     }),
     87020026: _tools.RODict({
@@ -1676,7 +1862,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020028,
         "removeAction": _87020028_remove,
-        "propList": _tools.ROList([['adjDodge', 10]]),
+        "propList": _tools.ROList([['adjDodge', 3]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1696,7 +1882,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020030,
         "removeAction": _87020030_remove,
-        "propList": _tools.ROList([['mulFullMp', 0.05]]),
+        "propList": _tools.ROList([['adjHit', 3]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1716,7 +1902,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020032,
         "removeAction": _87020032_remove,
-        "propList": _tools.ROList([['adjHit', 10]]),
+        "propList": _tools.ROList([['adjStunEnh', 10]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1736,7 +1922,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020034,
         "removeAction": _87020034_remove,
-        "propList": _tools.ROList([['adjSkillCD', 0.02]]),
+        "propList": _tools.ROList([['adjExpGrow', 0.05]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1756,7 +1942,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020036,
         "removeAction": _87020036_remove,
-        "propList": _tools.ROList([['adjFullHp', 15]]),
+        "propList": _tools.ROList([['adjPVPDmg', 0.05]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1776,7 +1962,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020038,
         "removeAction": _87020038_remove,
-        "propList": _tools.ROList([['mulSpeed', 0.03]]),
+        "propList": _tools.ROList([['adjExpGrow', 0.1]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1796,7 +1982,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020040,
         "removeAction": _87020040_remove,
-        "propList": _tools.ROList([['adjMortal', 0.1]]),
+        "propList": _tools.ROList([['adjSkillCD', 0.05]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1806,8 +1992,8 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020041,
         "removeAction": _87020041_remove,
-        "propList": None,
-        "desBuff": 64002043,
+        "propList": _tools.ROList([['adjMaxPhysicalArmor', 15], ['adjMinPhysicalArmor', 15], ['adjMaxMagicArmor', 15], ['adjMinMagicArmor', 15]]),
+        "desBuff": None,
         "score": 100
     }),
     87020042: _tools.RODict({
@@ -1816,7 +2002,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020042,
         "removeAction": _87020042_remove,
-        "propList": _tools.ROList([['adjDebilityEnh', 10]]),
+        "propList": _tools.ROList([['adjFullHp', 300], ['adjFullMp', 60]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1836,7 +2022,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020044,
         "removeAction": _87020044_remove,
-        "propList": _tools.ROList([['adjIgnoreArmor', 0.02]]),
+        "propList": _tools.ROList([['adjPVPDmgAnti', 0.1]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1859,7 +2045,317 @@ datas = _tools.RODict({
         "propList": _tools.ROList([['adjIgnoreArmor', 0.02]]),
         "desBuff": None,
         "score": 0
+    }),
+    87020047: _tools.RODict({
+        "ID": 87020047,
+        "name": "爱之魔女蜜娅技能3",
+        "level": 0,
+        "action": _87020047,
+        "removeAction": _87020047_remove,
+        "propList": _tools.ROList([['adjMonsterDmg', 0.1]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020048: _tools.RODict({
+        "ID": 87020048,
+        "name": "剑之主宰技能3",
+        "level": 0,
+        "action": _87020048,
+        "removeAction": _87020048_remove,
+        "propList": _tools.ROList([['adjMaxPhysicalArmor', 15], ['adjMinPhysicalArmor', 15], ['adjMaxMagicArmor', 15], ['adjMinMagicArmor', 15]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020049: _tools.RODict({
+        "ID": 87020049,
+        "name": "朱雀使者陵光技能3",
+        "level": 0,
+        "action": _87020049,
+        "removeAction": _87020049_remove,
+        "propList": None,
+        "desBuff": 64002053,
+        "score": 0
+    }),
+    87020050: _tools.RODict({
+        "ID": 87020050,
+        "name": "玄虎使者摄提技能3",
+        "level": 0,
+        "action": _87020050,
+        "removeAction": _87020050_remove,
+        "propList": _tools.ROList([['adjSlowAnti', 10], ['adjFrozenEnh', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020051: _tools.RODict({
+        "ID": 87020051,
+        "name": "金达莱花麦麦",
+        "level": 0,
+        "action": _87020051,
+        "removeAction": _87020051_remove,
+        "propList": _tools.ROList([['adjMortal', 0.01]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020052: _tools.RODict({
+        "ID": 87020052,
+        "name": "不倒翁茶伯",
+        "level": 0,
+        "action": _87020052,
+        "removeAction": _87020052_remove,
+        "propList": None,
+        "desBuff": 64002057,
+        "score": 0
+    }),
+    87020053: _tools.RODict({
+        "ID": 87020053,
+        "name": "海龟壳爷爷",
+        "level": 0,
+        "action": _87020053,
+        "removeAction": _87020053_remove,
+        "propList": None,
+        "desBuff": 64002087,
+        "score": 0
+    }),
+    87020054: _tools.RODict({
+        "ID": 87020054,
+        "name": "害羞辣椒爆爆",
+        "level": 0,
+        "action": _87020054,
+        "removeAction": _87020054_remove,
+        "propList": None,
+        "desBuff": 64002059,
+        "score": 0
+    }),
+    87020055: _tools.RODict({
+        "ID": 87020055,
+        "name": "抱冰瓢虫小智",
+        "level": 0,
+        "action": _87020055,
+        "removeAction": _87020055_remove,
+        "propList": _tools.ROList([['adjMonsterDmg', 0.01]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020056: _tools.RODict({
+        "ID": 87020056,
+        "name": "圆头哥基米",
+        "level": 0,
+        "action": _87020056,
+        "removeAction": _87020056_remove,
+        "propList": _tools.ROList([['adjMortal', 0.02]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020057: _tools.RODict({
+        "ID": 87020057,
+        "name": "小僵尸晃晃",
+        "level": 0,
+        "action": _87020057,
+        "removeAction": _87020057_remove,
+        "propList": None,
+        "desBuff": 64002065,
+        "score": 0
+    }),
+    87020058: _tools.RODict({
+        "ID": 87020058,
+        "name": "熊猫石方方",
+        "level": 0,
+        "action": _87020058,
+        "removeAction": _87020058_remove,
+        "propList": _tools.ROList([['adjMonsterDmg', 0.02]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020059: _tools.RODict({
+        "ID": 87020059,
+        "name": "持盾牛牛穆恩",
+        "level": 0,
+        "action": _87020059,
+        "removeAction": _87020059_remove,
+        "propList": None,
+        "desBuff": 64002089,
+        "score": 0
+    }),
+    87020060: _tools.RODict({
+        "ID": 87020060,
+        "name": "鼹鼠矿工黄金",
+        "level": 0,
+        "action": _87020060,
+        "removeAction": _87020060_remove,
+        "propList": _tools.ROList([['adjExpGrow', 0.02]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020061: _tools.RODict({
+        "ID": 87020061,
+        "name": "负壤玄龟技能1",
+        "level": 0,
+        "action": _87020061,
+        "removeAction": _87020061_remove,
+        "propList": None,
+        "desBuff": 64002067,
+        "score": 0
+    }),
+    87020062: _tools.RODict({
+        "ID": 87020062,
+        "name": "负壤玄龟技能2",
+        "level": 0,
+        "action": _87020062,
+        "removeAction": _87020062_remove,
+        "propList": _tools.ROList([['adjMaxPhysicalArmor', 15], ['adjMinPhysicalArmor', 15]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020063: _tools.RODict({
+        "ID": 87020063,
+        "name": "独角幻兽月蚀技能1",
+        "level": 0,
+        "action": _87020063,
+        "removeAction": _87020063_remove,
+        "propList": None,
+        "desBuff": 64002069,
+        "score": 0
+    }),
+    87020064: _tools.RODict({
+        "ID": 87020064,
+        "name": "独角幻兽月蚀技能2",
+        "level": 0,
+        "action": _87020064,
+        "removeAction": _87020064_remove,
+        "propList": _tools.ROList([['adjMaxMagicArmor', 15], ['adjMinMagicArmor', 15]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020065: _tools.RODict({
+        "ID": 87020065,
+        "name": "堕命飞马英招技能1",
+        "level": 0,
+        "action": _87020065,
+        "removeAction": _87020065_remove,
+        "propList": None,
+        "desBuff": 64002071,
+        "score": 0
+    }),
+    87020066: _tools.RODict({
+        "ID": 87020066,
+        "name": "堕命飞马英招技能2",
+        "level": 0,
+        "action": _87020066,
+        "removeAction": _87020066_remove,
+        "propList": _tools.ROList([['adjMinPhysicalAtk', 15], ['adjMaxPhysicalAtk', 15]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020067: _tools.RODict({
+        "ID": 87020067,
+        "name": "九尾冰狐技能1",
+        "level": 0,
+        "action": _87020067,
+        "removeAction": _87020067_remove,
+        "propList": None,
+        "desBuff": 64002073,
+        "score": 0
+    }),
+    87020068: _tools.RODict({
+        "ID": 87020068,
+        "name": "九尾冰狐技能2",
+        "level": 0,
+        "action": _87020068,
+        "removeAction": _87020068_remove,
+        "propList": _tools.ROList([['adjMinMagicAtk', 15], ['adjMaxMagicAtk', 15]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020069: _tools.RODict({
+        "ID": 87020069,
+        "name": "画中仙子婵娟技能1",
+        "level": 0,
+        "action": _87020069,
+        "removeAction": _87020069_remove,
+        "propList": None,
+        "desBuff": 64002075,
+        "score": 0
+    }),
+    87020070: _tools.RODict({
+        "ID": 87020070,
+        "name": "画中仙子婵娟技能2",
+        "level": 0,
+        "action": _87020070,
+        "removeAction": _87020070_remove,
+        "propList": _tools.ROList([['adjPVPDmg', 0.1]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020071: _tools.RODict({
+        "ID": 87020071,
+        "name": "画中仙子婵娟技能3",
+        "level": 0,
+        "action": _87020071,
+        "removeAction": _87020071_remove,
+        "propList": _tools.ROList([['adjFrozenEnh', 10], ['adjSlowEnh', 10]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020072: _tools.RODict({
+        "ID": 87020072,
+        "name": "水晶龙奥尔技能1",
+        "level": 0,
+        "action": _87020072,
+        "removeAction": _87020072_remove,
+        "propList": None,
+        "desBuff": 64002079,
+        "score": 0
+    }),
+    87020073: _tools.RODict({
+        "ID": 87020073,
+        "name": "水晶龙奥尔技能2",
+        "level": 0,
+        "action": _87020073,
+        "removeAction": _87020073_remove,
+        "propList": _tools.ROList([['adjExpGrow', 0.1]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020074: _tools.RODict({
+        "ID": 87020074,
+        "name": "水晶龙奥尔技能3",
+        "level": 0,
+        "action": _87020074,
+        "removeAction": _87020074_remove,
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.1]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020075: _tools.RODict({
+        "ID": 87020075,
+        "name": "吞噬者贝希摩斯技能",
+        "level": 0,
+        "action": _87020075,
+        "removeAction": _87020075_remove,
+        "propList": None,
+        "desBuff": 64002083,
+        "score": 0
+    }),
+    87020076: _tools.RODict({
+        "ID": 87020076,
+        "name": "吞噬者贝希摩斯技能2",
+        "level": 0,
+        "action": _87020076,
+        "removeAction": _87020076_remove,
+        "propList": _tools.ROList([['adjMinPhysicalAtk', 60], ['adjMaxPhysicalAtk', 60], ['adjMinMagicAtk', 60], ['adjMaxMagicAtk', 60]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020077: _tools.RODict({
+        "ID": 87020077,
+        "name": "吞噬者贝希摩斯技能3",
+        "level": 0,
+        "action": _87020077,
+        "removeAction": _87020077_remove,
+        "propList": _tools.ROList([['adjHit', 10]]),
+        "desBuff": None,
+        "score": 0
     })
 })
 minKey = 87000101
-maxKey = 87020046
+maxKey = 87020077

@@ -13,6 +13,7 @@ import actionContext
 import gameclass
 import gameconfig
 import dataUtils
+import effectEventCtx
 
 
 import character_charData as CHD
@@ -134,9 +135,11 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.baseMaxMagicAtk = CHD.datas[self.school].get('baseMaxMagicAtk', 0)
         self.baseHit = CHD.datas[self.school].get('baseHit', 0)
         self.baseDodge = CHD.datas[self.school].get('baseDodge', 0)
-        self.basePhysicalArmor = CHD.datas[self.school].get('basePhysicalArmor', 0)
-        self.baseMagicArmor = CHD.datas[self.school].get('baseMagicArmor', 0)
-        self.baseSpirit = CHD.datas[self.school].get('baseSpirit', 0)
+        self.baseMinPhysicalArmor = CHD.datas[self.school].get('baseMinPhysicalArmor', 0)
+        self.baseMaxPhysicalArmor = CHD.datas[self.school].get('baseMaxPhysicalArmor', 0)
+        self.baseMinMagicArmor = CHD.datas[self.school].get('baseMinMagicArmor', 0)
+        self.baseMaxMagicArmor = CHD.datas[self.school].get('baseMaxMagicArmor', 0)
+        self.baseDrugsQuantity = CHD.datas[self.school].get('baseDrugsQuantity', 0)
 
 
     def restoreBuffs(self):
@@ -363,7 +366,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             elif val == 2 and remConflctState:
                 remState.append(state)
             elif val == 3:
-                INFO_MSG('Avatar.checkConflictState', eventId, state)
+                DEBUG_MSG('Avatar.checkConflictState', eventId, state)
                 return gameclass.BoolResult(False, state)
             elif MSG.datas.get(val, None):
                 bMsg and self.client and self.showMsg(val, [])
@@ -387,8 +390,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return
 
         if self.hasState(CSDD.datas.serverControl):
-            ERROR_MSG('clientSetState but in server control')
-            return
+            if state != gameconst.State.Sprinting:
+                ERROR_MSG('clientSetState but in server control')
+                return
 
         if state == gameconst.State.Idle and not self.hasState(gameconst.State.Moving):
             return
@@ -486,6 +490,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def _relive(self):
         self.removeState(gameconst.State.Death)
+        self.cancelDeadLaterCallback()
 
     def _trapInViews(self):
         aoi = DDL.datas[formula.getMapId(self.spaceNo)]['AOI']
@@ -494,6 +499,19 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         for c in self.entitiesInRange(aoi):
             if c.IsAICombatUnit and sMath.distance2D(self.position, c.position) <= c.getAlertDistance():
                 c.onEnterTrap(self, 0, 0, 0, gameconst.HATE_TRAP)
+
+    def cancelDeadLaterCallback(self):
+        onDeadLaterTimer = self.popTempMiscProp(gameconst.AvatarProps.deadLaterCallbackInfo, None)
+        if onDeadLaterTimer:
+            self._cancelCallback(onDeadLaterTimer, gametimer.TIMER_TAG_ON_DEAD_LATER_TIMER)
+
+    def _onDeadLaterCallback(self, killerId):
+        self.cancelDeadLaterCallback()
+
+        if not self.hasState(gameconst.State.Death):
+            return
+        
+        self.onEffectEvent('onDeadLater', killerId, self.id, effectEventCtx.EE_DEFAULT_CONTEXT)
 
     def enterFightingState(self):
         if not self.hasBuff(64000067):
@@ -566,6 +584,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                 self.showMsg(PKD.datas['beKilledByOtherUnit']['value'], [dmgHostEnt.name])
 
             dmgHostEnt.showMsg(PKD.datas['killPlayer']['value'], [self.name, str(self.gbId)])
+
+        onDeadLaterTime = CONST.datas.get('OnDeadLaterTime', 0).get('value')
+        self.setTempMiscProp(gameconst.AvatarProps.deadLaterCallbackInfo, self._callback(onDeadLaterTime, '_onDeadLaterCallback', (killer.id,),  gametimer.TIMER_TAG_ON_DEAD_LATER_TIMER))
 
         super(ImpCombat, self).goDie(killer, srcType, srcId, forceDead, context)
 
@@ -998,20 +1019,45 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def getCommonFlagCell(self, flagType):
         return utils.hasBit(self.commonFlagCell, flagType)
+    
+    def doCalcTeamStatistic(self, target, context, valType, deltaVal):
+        
+        if utils.isEnemy(self, target):
+            # target不能是玩家，host也不能是玩家
+            if target.IsAvatarMirror or target.IsSummon or target.IsCreation:
+                tHost = target.getHost()
+                if not tHost or not tHost.IsAvatar:
+                    self.addTeamStatisticPlayerVal(valType, deltaVal)
+            elif not target.IsAvatar:
+                self.addTeamStatisticPlayerVal(valType, deltaVal)
 
-    def calcAtkStats(self, dmg):
+        # 友方治疗
+        elif valType == gameconst.TeamStatisticType.HEAL:
+            srcType = context.getDmgSourceType()
+            if srcType != gameconst.SourceType.Item and context.parentContext:
+                srcType = context.parentContext.getDmgSourceType()
+            if srcType != gameconst.SourceType.Item:
+                self.addTeamStatisticPlayerVal(valType, deltaVal)
+
+    def calcAtkStats(self, target, context, dmg):
+        self.doCalcTeamStatistic(target, context, gameconst.TeamStatisticType.DAMAGE, dmg)
+
         if not gameconfig.enableStatistic():
             return
 
         self.statisticsDmg += dmg
 
-    def calcBeHurtStats(self, target, context, dmgResult):
+    def calcBeHurtStats(self, srcEnt, context, dmgResult):
+        self.doCalcTeamStatistic(srcEnt, context, gameconst.TeamStatisticType.HURT, dmgResult.hurtDmg)
+
         if not gameconfig.enableStatistic():
             return
 
         self.statisticsHurt += dmgResult.hurtDmg
 
-    def calcHealStats(self, hpDelta):
+    def calcHealStats(self, srcEnt, context, hpDelta):      
+        self.doCalcTeamStatistic(srcEnt, context, gameconst.TeamStatisticType.HEAL, hpDelta)
+
         if not gameconfig.enableStatistic():
             return
 

@@ -29,7 +29,7 @@ import dungeonPlayMode
 import gamePlay_gamePlay as DDI
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import activityControl_config as ACCD
-
+import iMapMonsterRefresh
 
 class DungeonPlayerReliveRecordMixin(object):
     def __init__(self):
@@ -50,12 +50,13 @@ class DungeonPlayerReliveRecordMixin(object):
         self.dungeonPlayerReliveRecordDic.clear()
 
 
-class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPlayerReliveRecordMixin):
+class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPlayerReliveRecordMixin, iMapMonsterRefresh.IMapMonsterRefresh):
     def __init__(self):
         INFO_MSG("DungeonSpaceMgr#__init__", self.spaceNo, self.spaceID)
 
         iCell.ICell.__init__(self)
         iSpaceMgr.ISpaceMgr.__init__(self)
+        iMapMonsterRefresh.IMapMonsterRefresh.__init__(self)
 
         if not self.dungeonPlayMode:
             self.dungeonPlayMode = dungeonPlayMode.UnknownDungeonPlayMode()
@@ -415,7 +416,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                     pEnt.showMsg(ACCD.datas["msgId_goodMan_noHelpTarget"]["value"], [])
 
                 dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
-                pEnt.client.onDungeonCompleted(dungeonNo, win, elapsedTime)
+                pEnt.client.onDungeonCompleted(dungeonNo, win, elapsedTime, _endT)
                 pEnt.client.changeDungeonRemainTime(spaceNo, _endT)
 
                 _pEntList.append(pEnt)

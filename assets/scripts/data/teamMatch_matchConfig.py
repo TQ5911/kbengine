@@ -231,8 +231,8 @@ datas = _tools.RODict({
         "ID": "zhaomuMessageCD",
         "value": 54000623,
     }),
-    "zhaomuTeamSent": _tools.RODict({
-        "ID": "zhaomuTeamSent",
+    "recruitSent": _tools.RODict({
+        "ID": "recruitSent",
         "value": 54000644,
     }),
     "zhaomuGuildSent": _tools.RODict({
@@ -370,5 +370,13 @@ datas = _tools.RODict({
     "team_leave": _tools.RODict({
         "ID": "team_leave",
         "value": 54000902,
+    }),
+    "teamSettingChange": _tools.RODict({
+        "ID": "teamSettingChange",
+        "value": 54000910,
+    }),
+    "onlyPublicTeamCanMatch": _tools.RODict({
+        "ID": "onlyPublicTeamCanMatch",
+        "value": 54000911,
     })
 })

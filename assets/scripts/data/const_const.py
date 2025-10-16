@@ -37,15 +37,15 @@ datas = _tools.RODict({
     }),
     "minFatalRate": _tools.RODict({
         "ID": "minFatalRate",
-        "value": 0.1,
+        "value": 0.0,
     }),
     "maxFatalRate": _tools.RODict({
         "ID": "maxFatalRate",
-        "value": 0.6,
+        "value": 1.0,
     }),
     "minFatalDmgRatio": _tools.RODict({
         "ID": "minFatalDmgRatio",
-        "value": 1.5,
+        "value": 1.1,
     }),
     "maxFatalDmgRatio": _tools.RODict({
         "ID": "maxFatalDmgRatio",
@@ -137,7 +137,7 @@ datas = _tools.RODict({
     }),
     "autoFightReturnRange": _tools.RODict({
         "ID": "autoFightReturnRange",
-        "value": (20, 50),
+        "value": (40, 100),
     }),
     "dropTime": _tools.RODict({
         "ID": "dropTime",
@@ -277,15 +277,15 @@ datas = _tools.RODict({
     }),
     "selectRange": _tools.RODict({
         "ID": "selectRange",
-        "value": 100,
+        "value": 80,
     }),
     "selectRangeInRaid": _tools.RODict({
         "ID": "selectRangeInRaid",
-        "value": 100,
+        "value": 80,
     }),
     "clickDistanceSqr": _tools.RODict({
         "ID": "clickDistanceSqr",
-        "value": 900,
+        "value": 600,
     }),
     "renameItem": _tools.RODict({
         "ID": "renameItem",
@@ -641,7 +641,7 @@ datas = _tools.RODict({
     }),
     "BossProfileRange": _tools.RODict({
         "ID": "BossProfileRange",
-        "value": 3600.0,
+        "value": 6400.0,
     }),
     "killRecordTimeLimit": _tools.RODict({
         "ID": "killRecordTimeLimit",
@@ -681,7 +681,7 @@ datas = _tools.RODict({
     }),
     "popupNotificationAutoClose": _tools.RODict({
         "ID": "popupNotificationAutoClose",
-        "value": "<color=#b35b00>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口",
+        "value": "<color=#e4dabd>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口",
     }),
     "selectedDuration": _tools.RODict({
         "ID": "selectedDuration",
@@ -743,6 +743,10 @@ datas = _tools.RODict({
         "ID": "bloodInvincible",
         "value": 64000070,
     }),
+    "bloodCycle": _tools.RODict({
+        "ID": "bloodCycle",
+        "value": (216, 220, 221, 222),
+    }),
     "chestOpened": _tools.RODict({
         "ID": "chestOpened",
         "value": 0.3,
@@ -775,8 +779,48 @@ datas = _tools.RODict({
         "ID": "homepageOthers",
         "value": "他人信息",
     }),
+    "homepageNoGuild": _tools.RODict({
+        "ID": "homepageNoGuild",
+        "value": "暂无帮会",
+    }),
+    "homepageOthersNoGuild": _tools.RODict({
+        "ID": "homepageOthersNoGuild",
+        "value": 54000379,
+    }),
+    "copyNameSuccess": _tools.RODict({
+        "ID": "copyNameSuccess",
+        "value": 54000380,
+    }),
     "messageDelayAfterDeath": _tools.RODict({
         "ID": "messageDelayAfterDeath",
         "value": 600,
+    }),
+    "pathFindingTargetScope": _tools.RODict({
+        "ID": "pathFindingTargetScope",
+        "value": 5,
+    }),
+    "pathFindingTargetSceneChange": _tools.RODict({
+        "ID": "pathFindingTargetSceneChange",
+        "value": 54000716,
+    }),
+    "pathFindingFinish": _tools.RODict({
+        "ID": "pathFindingFinish",
+        "value": 54000717,
+    }),
+    "pathFindingInterrupt": _tools.RODict({
+        "ID": "pathFindingInterrupt",
+        "value": 54000718,
+    }),
+    "monsterResetTimer": _tools.RODict({
+        "ID": "monsterResetTimer",
+        "value": 15,
+    }),
+    "systemSwitch": _tools.RODict({
+        "ID": "systemSwitch",
+        "value": 54481003,
+    }),
+    "OnDeadLaterTime": _tools.RODict({
+        "ID": "OnDeadLaterTime",
+        "value": 2,
     })
 })

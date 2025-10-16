@@ -86,7 +86,7 @@ class RedBagFetchVal(userType.UserSoleType):
         return playerGbId in self.fetchPlayerDict
 
     def doFetch(self, playerGbId, name, _money):
-        INFO_MSG('doFetch: redbagId=%d playerGbId=%d name=%s _money=%d' % (self.redbagId, playerGbId, name, _money))
+        INFO_MSG('doFetch: playerGbId=%d name=%s _money=%d' % (playerGbId, name, _money))
 
         if self.hasFetched(playerGbId):
             DEBUG_MSG('doFetch: playerGbId=%d already fetch' % playerGbId)
@@ -157,11 +157,14 @@ class RedBagVal(userType.UserSoleType):
     def doFetchRedBag(self, playerGbId):
         _money = 0
         if self.redbagType == gameconst.RedBagType.NORMAL:
-            #_money = self.money // self.num
-            _money = int(self.money / self.num + 0.5) # 四舍五入
+            _money = int(self.money // self.num)
+            #_money = int(self.money / self.num + 0.5) # 四舍五入
         elif self.redbagType == gameconst.RedBagType.LUCKLY:
-            _money = random.randint(1, self.leftMoney)
-            _money = min(_money, self.leftMoney // self.leftNum * 2) 
+            _money = min(self.leftMoney // self.leftNum * 2, self.leftMoney)
+            if _money > 1:
+                _money = random.randint(1, _money)
+            # 保证剩余的次数，每次至少可领一块钱
+            _money = min(_money, self.leftMoney - self.leftNum + 1)
 
         if self.leftNum == 1:
             _money = self.leftMoney

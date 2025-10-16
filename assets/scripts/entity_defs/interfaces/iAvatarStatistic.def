@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Properties>
+    </Properties>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <CellMethods>
+        <reqGetTeamStatisticData> <Exposed/>
+        </reqGetTeamStatisticData>
+        <reqClearTeamStatisticData> <Exposed/>
+        </reqClearTeamStatisticData>
+        <onGetTeamStatisticData>
+            <Arg>           TEAM_STATISTIC_CLIENT_VAL          </Arg>
+        </onGetTeamStatisticData>
+    </CellMethods>
+
+    <ClientMethods>
+        <sendTeamStatisticData>
+            <Arg>           TEAM_STATISTIC_CLIENT_VAL          </Arg>
+        </sendTeamStatisticData>
+    </ClientMethods>
+</root>

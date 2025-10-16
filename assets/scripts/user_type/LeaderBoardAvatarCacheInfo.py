@@ -31,6 +31,10 @@ class LeaderBoardAvatarCacheVal(userType.UserSoleType):
     def funcName():
         return 'onLeaderBoardAvatarLevel'
 
+    @staticmethod
+    def calcSchool():
+        return True
+
     def toLeaderBoardCacheSavedDict(self):
         # 通用名字不能变
         return {

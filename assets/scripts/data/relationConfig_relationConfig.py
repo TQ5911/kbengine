@@ -214,5 +214,9 @@ datas = _tools.RODict({
     "enemyResearchResult": _tools.RODict({
         "ID": "enemyResearchResult",
         "value": 54001924,
+    }),
+    "relationSentFriendRequest": _tools.RODict({
+        "ID": "relationSentFriendRequest",
+        "value": 54000433,
     })
 })

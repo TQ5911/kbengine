@@ -60,7 +60,7 @@ class ISiegeWarBase(object):
         self.client.onSiegeWarLoginDataChanged(state, timestamp)
 
     #客户端查询城战报名状态
-    def querySiegeWarSignUpState(self):
+    def querySiegeWarSignUpState(self, exposed):
         DEBUG_MSG('[lj]query siege war sign up state')
         if not self.guildBox:
             WARNING_MSG("[lj]signUpBidding: guildBox is None.")
@@ -68,7 +68,7 @@ class ISiegeWarBase(object):
         self.guildBox.querySiegeWarSignUped(self, self.siegeWarQueryFromClient)
 
     #客户端订阅竞拍状态
-    def subscribeSiegeWarBiddingState(self, isSubscribe, startIndex):
+    def subscribeSiegeWarBiddingState(self, exposed, isSubscribe, startIndex):
         self.startIndex = startIndex
         gameengine.getGlobalBase('SiegeWarStub').onSiegeWarBiddingAvatarSubscribed(self.gbID, isSubscribe)
 
@@ -80,7 +80,7 @@ class ISiegeWarBase(object):
             self.onSiegeWarTryBiddingQuerySignUped(ret, guildName, guildUUID)
 
     #报名竞拍
-    def siegeWarSignUpBidding(self):
+    def siegeWarSignUpBidding(self, exposed):
         if self.siegeWarState != gameconst.SiegeWarState.SIGN_UP:
             DEBUG_MSG('[lj]sign up bidding not in sign up state')
             self.onMessagePre(CBC.datas["cityBattle_noSignTime"]["value"], [])
@@ -90,7 +90,7 @@ class ISiegeWarBase(object):
             DEBUG_MSG("[lj]signUpBidding: guildBox is None")
             self.onMessagePre(CBC.datas["cityBattle_noPermission1"]["value"], [getGuildAuthNameStr(GA_ADID.datas.cityBattleSignUp)])
             return
-        
+
         self.guildBox.doSiegeWarSignUpBidding(self.gbID, self)
 
     def onSiegeWarSignUpBiddingResult(self, success, ec):
@@ -110,7 +110,7 @@ class ISiegeWarBase(object):
             self.client.onSiegeWarSignUpBiddingResult(False)
 
     @gamedecorator.limitcall(1)
-    def siegeWarTryBidding(self, cnt):
+    def siegeWarTryBidding(self, exposed, cnt):
         if cnt <= 0:
             DEBUG_MSG('[lj]siege war try bidding cnt <= 0')
             self.onMessagePre(CBC.datas["cityBattle_noProp"]["value"], [""])
@@ -131,7 +131,7 @@ class ISiegeWarBase(object):
         if not ret:
             DEBUG_MSG('[lj]on siege war try bidding query not sign uped')
             return
-        
+
         self.guildBox.tryDeductCityBattleToken(self, self.siegeWarBiddingCnt, guildName, guildUUID)
 
     #帮会扣完城战令牌后
@@ -154,7 +154,7 @@ class ISiegeWarBase(object):
         self.startIndex = len(guildNameList)
 
     #宣战
-    def onSiegeWarDeclareWar(self, isOffensive, declaration):
+    def onSiegeWarDeclareWar(self, exposed, isOffensive, declaration):
         DEBUG_MSG('[lj]on siege war declare war', isOffensive, declaration)
         self.siegeWarDeclareWarOffensive = isOffensive
         self.siegeWarDeclareWarDeclaration = declaration
@@ -193,14 +193,14 @@ class ISiegeWarBase(object):
         self.client.onSiegeWarDeclareWarResult(True, gameconst.SiegeWarDeclareWarResult.SUCCESS)
 
     #倒计时查询攻守方
-    def querySiegeWarDefenderAndOffensive(self):
+    def querySiegeWarDefenderAndOffensive(self, exposed):
         DEBUG_MSG('[lj]query siege war defender and offensive')
         gameengine.getGlobalBase('SiegeWarStub').onQuerySiegeWarDefenderAndOffensive(self)
 
     def onQuerySiegeWarDefenderAndOffensiveResult(self, offensiveGuildUUID, defensiveGuildUUID, offensiveName, defensiveName):
         DEBUG_MSG('[lj]on query siege war defender and offensive result', offensiveGuildUUID, defensiveGuildUUID, offensiveName, defensiveName)
         gameengine.getGlobalBase('GuildStub').getGuildsCacheData([offensiveGuildUUID, defensiveGuildUUID], self, 'onQuerySiegeWarDefenderAndOffensiveResultFromGuildStub', (offensiveName, defensiveName))
-    
+
     def onQuerySiegeWarDefenderAndOffensiveResultFromGuildStub(self, dataList, offensiveName, defensiveName):
         DEBUG_MSG('[lj]on query siege war defender and offensive result', dataList, offensiveName, defensiveName)
         offensiveUUID = dataList[0]['guildUUID'] if 'guildUUID' in dataList[0] else 0
@@ -224,7 +224,7 @@ class ISiegeWarBase(object):
             'icon': defensiveIcon})
         self.client.onQuerySiegeWarDefenderAndOffensiveResult(res)
 
-    def querySiegeWarBiddingWinnerData(self):
+    def querySiegeWarBiddingWinnerData(self, exposed):
         DEBUG_MSG('[lj]query siege war bidding winner data')
         gameengine.getGlobalBase('SiegeWarStub').onQuerySiegeWarBiddingWinnerData(self)
 
@@ -235,7 +235,7 @@ class ISiegeWarBase(object):
         redisUtils.RedisUtils.getSingleUserInfo(
             gbId,
             lambda fcVal: self._onQuerySiegeWarBiddingWinnerDataResult(fcVal, gbId, guildName, name, cnt))
-        
+
     def _onQuerySiegeWarBiddingWinnerDataResult(self, fcVal, gbId, guildName, name, cnt):
         school = fcVal.school
         sex = fcVal.sex
@@ -243,11 +243,11 @@ class ISiegeWarBase(object):
         DEBUG_MSG('[lj]on query siege war bidding winner data result', gbId, school, sex, level, guildName, name, cnt)
         self.client.onQuerySiegeWarBiddingWinnerDataResult(gbId, school, sex, level, guildName, name, cnt)
 
-    def cityDataRequest(self):
+    def cityDataRequest(self, exposed):
         gameengine.getGlobalBase('SiegeWarStub').onCityDataRequest(self.gbID)
 
     #任命官职
-    def appointCityOfficer(self, officerType, officerId):
+    def appointCityOfficer(self, exposed, officerType, officerId):
         DEBUG_MSG('[lj]appoint city officer', officerType, officerId)
         redisUtils.RedisUtils.getSingleUserInfo(
             officerId,
@@ -258,28 +258,28 @@ class ISiegeWarBase(object):
         sex = fcVal.sex
         school = fcVal.school
         DEBUG_MSG('[lj]on appoint city officer', officerType, officerId, name, sex, school)
-        
+
         self.onMessagePre(CBC.datas["cityBattle_AppointSuccess"]["value"], [])
 
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.onAppointCityOfficer(gameconfig.serverId(), self.gbID, officerType, officerId, name, sex, school)
 
-    def onSiegeWarSpaceEnter(self):
+    def onSiegeWarSpaceEnter(self, exposed):
         DEBUG_MSG('[lj]on siege war space enter')
         self.cell.enterSiegeWarSpace()
 
-    def enterCrossServerSiegeWarSpace(self):
+    def enterCrossServerSiegeWarSpace(self, exposed):
         DEBUG_MSG('[lj]enter cross server siege war space', gameconfig.crossSiegeWarServerInfo()['crossServerId'])
-        
+
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'SiegeWarSpaceStub')
         _stub.getWarGuildUUIDBeforeEnter(gameconfig.serverId(), self.gbID)
-        
+
     def onGetWarGuildUUIDBeforeEnter(self, offenseGuildUUID, defenseGuildUUID):
         DEBUG_MSG('[lj]on get war guild uuid before enter', offenseGuildUUID, defenseGuildUUID)
         if not self.guildBox:
             self.onMessagePre(CBC.datas["cityBattle_noEntryQualification"]["value"], [])
             return
-        
+
         self.siegeWarUnionGuildUUID = 0
         if utils.getGuildRelation(self.guildUUIDBase, offenseGuildUUID) == gameconst.GuildRelationType.UNION:
             self.siegeWarUnionGuildUUID = offenseGuildUUID
@@ -289,7 +289,7 @@ class ISiegeWarBase(object):
                 self.onMessagePre(CBC.datas["cityBattle_prohibitEnterBattle"]["value"], [])
                 return
             self.siegeWarUnionGuildUUID = defenseGuildUUID
-        
+
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'SiegeWarSpaceStub')
         DEBUG_MSG('[lj]start check can enter siege war space', self.gbID, utils.getAvatarByGbId(self.gbID), self.siegeWarUnionGuildUUID)
         _stub.checkCanEnterSiegeWarSpace(gameconfig.serverId(), self.gbID, self.guildUUIDBase, self.siegeWarUnionGuildUUID)
@@ -313,20 +313,20 @@ class ISiegeWarBase(object):
                             gameconst.CrossServerCallbackComponent.BASE,
                             "onEnterCrossSiegeWarSpaceRemotely",
                             (serverId, {"guildUUID": self.guildUUIDBase, "unionUUID": self.siegeWarUnionGuildUUID, "guildCache": dataDict}), _timeout)
-    
+
     def onEnterCrossSiegeWarSpaceRemotely(self, serverId, extra):
         DEBUG_MSG('[lj]on enter cross siege war space remotely', serverId, extra)
         gameengine.getGlobalBase("SiegeWarSpaceStub").onEnterSiegeWarSpace(self.cell, extra["guildUUID"], extra["unionUUID"], extra["guildCache"])
 
-    def leaveCrossServerSiegeWarSpace(self):
+    def leaveCrossServerSiegeWarSpace(self, exposed):
         self.cell.crossServerSiegeWarLeave()
         DEBUG_MSG('[lj]leave cross server siege war space')
         self.gobackServer(gameconst.CrossServerCallbackComponent.NONE, '', ())
 
     #颁布政令
-    def useCityOfficerPrivilege(self, orderId, targetGbId):
+    def useCityOfficerPrivilege(self, exposed, orderId, targetGbId):
         DEBUG_MSG('[lj]use city officer privilege', orderId, targetGbId)
-        
+
         self.lastOrderId = orderId
         if targetGbId == 0:
             _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
@@ -335,10 +335,10 @@ class ISiegeWarBase(object):
             redisUtils.RedisUtils.getUsersInfo([targetGbId], self._useCityOfficerPrivilege)
 
     #守城宣言
-    def siegeWarDefenseDeclaration(self, declaration):
+    def siegeWarDefenseDeclaration(self, exposed, declaration):
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.changeDeclaration(True, self.gbID, declaration)
-        
+
     def _useCityOfficerPrivilege(self, fcValList):
         if len(fcValList) != 1:
             WARNING_MSG('[lj]use city officer privilege fcValList len != 1', fcValList)
@@ -364,15 +364,15 @@ class ISiegeWarBase(object):
         if len(dataList) == 0:
             DEBUG_MSG('[lj]on city data response len == 0')
             return
-        
+
         dataList = dataList[:17]
         self.client.onCityDataResponse(*dataList)
 
-    def changeCityMoneyToGuildMoney(self, val):
+    def changeCityMoneyToGuildMoney(self, exposed, val):
         DEBUG_MSG('[lj]change city money to guild money', val)
         if not self.guildBox:
             return
-        
+
         if val <= 0:
             DEBUG_MSG('[lj]change city money to guild money val <= 0', val)
             return
@@ -383,14 +383,14 @@ class ISiegeWarBase(object):
         if not canChange:
             DEBUG_MSG('[lj]no permission to change city money to guild money')
             return
-        
+
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.changeCityMoneyToGuildMoney(gameconfig.serverId(), self.gbID, self.getRoleCacheAttr('name'), guildUUID, self, val)
 
-    def querySiegeWarCityFundUseRecord(self):
+    def querySiegeWarCityFundUseRecord(self, exposed):
         gameengine.getGlobalBase('SiegeWarStub').querySiegeWarCityFundUseRecord(self)
 
-    def onSiegeWarSearchTarget(self, name):
+    def onSiegeWarSearchTarget(self, exposed, name):
         DEBUG_MSG('[lj]on siege war search target', name)
         elasticUtils.ElasticUtils.searchAvatarByName(
             name,
@@ -404,7 +404,7 @@ class ISiegeWarBase(object):
         gbIds = [gbId for gbId in gbIds if gbId != self.gbID]
 
         redisUtils.RedisUtils.getUsersInfo(gbIds, self._onSiegeWarSearchTargetOnGetUserInfo)
-        
+
     def _onSiegeWarSearchTargetOnGetUserInfo(self, fcValList):
         _sendList = []
         for _fcVal in fcValList:
@@ -445,11 +445,11 @@ class ISiegeWarBase(object):
             WARNING_MSG('[lj]gm fast bidding: guildBox is None')
             return
         self.guildBox.modifyGuildFund(100000, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_SIGN_UP, self.gbID, gameclass.AwardDetail())
-        self.siegeWarSignUpBidding()
+        self.siegeWarSignUpBidding(self)
         self.guildBox.doDonateCityBattleToken(self.gbID, self, cnt, KBEngine.genUUID64())
-        self.siegeWarTryBidding(cnt)
+        self.siegeWarTryBidding(self, cnt)
 
-    def biddingFailRedPointCheck(self):
+    def biddingFailRedPointCheck(self, exposed):
         if not self.guildBox:
             WARNING_MSG('[lj]bidding fail red point check: guildBox is None')
             return
@@ -457,6 +457,6 @@ class ISiegeWarBase(object):
 
     def onSiegeWarRename(self, newName):
         DEBUG_MSG('[lj]on siege war rename', newName)
-        
+
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.onSiegeWarRename(self.gbID, newName)

@@ -59,9 +59,11 @@ class IFeiShu():
             },
         }
         self.msgList = []
-        url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=92de3ed1-9bfe-4428-afc6-f1488f9bb452"
-        if gameconfig.serverId() == 10001:
-            url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=72713252-20ea-4ef8-976a-0befb867d20f"
+        url = gameconfig.wxReportUrl()
+        if not url:
+            return
+        # if gameconfig.serverId() == 10001:
+        #     url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=72713252-20ea-4ef8-976a-0befb867d20f"
 
         cbFunc = lambda httpcode, data, headers, success, url: \
             self.onReportResult(httpcode, data, headers, success, url)

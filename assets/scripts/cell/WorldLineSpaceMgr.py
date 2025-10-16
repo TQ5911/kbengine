@@ -9,11 +9,13 @@ import gameconst
 import iTimer
 import formula
 import creep_base
+import const_const as CONST
+import iMapMonsterRefresh
 
-
-class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
+class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMapMonsterRefresh.IMapMonsterRefresh):
     def __init__(self):
-        DEBUG_MSG('WorldLineSpaceMgr init', self.spaceNo)
+        INFO_MSG('WorldLineSpaceMgr init', self.spaceNo, self.spaceID)
+        iMapMonsterRefresh.IMapMonsterRefresh.__init__(self)
         if formula.isWolrdBossSpace(self.spaceNo):
             self._initCreateBoss(0)
             self._initWorldBossGid()
@@ -109,8 +111,7 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
         _nextCreateTime = utils.getNow() + refreshTime
         gameengine.getGlobalBase('WorldBossStub').onWorldBossDeadAddTimer(self.spaceNo, _nextCreateTime)
 
-        self.setSceneStates([
-            gameconst.WorldLineSceneState.LEI_JI
-        ])
+        _delay = CONST.datas['messageDelayAfterDeath']['value']
+        self._callback(_delay, 'setSceneStates', ([gameconst.WorldLineSceneState.LEI_JI],), gametimer.TIMER_TAG_BOSS_DEAD_SET_SCENE_STATE)
 
 

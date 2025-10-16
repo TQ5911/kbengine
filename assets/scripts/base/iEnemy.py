@@ -16,12 +16,12 @@ class IEnemy(object):
     def onDeadAddEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score):
         self.enemyMgr.addEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score)
 
-    def reqRemoveEnemy(self, gbId):
+    def reqRemoveEnemy(self, exposed, gbId):
         self.enemyMgr.removeEnemy(gbId)
         self.client.onRemoveEnemy([gbId])
 
     @gamedecorator.limitcall(60)
-    def getEnemyFreshInfo(self):
+    def getEnemyFreshInfo(self, exposed):
         WARNING_MSG('getEnemyFreshInfo')
         _gbIds = self.enemyMgr.getEnemyGbIds()
 
@@ -32,7 +32,7 @@ class IEnemy(object):
         self.enemyMgr.updateByFcVals(usersInfo)
         self.client.onGetEnemyFreshInfo(self.enemyMgr.getEnemyFreshInfo())
 
-    def getEnemyPosInfo(self, gbId):
+    def getEnemyPosInfo(self, exposed, gbId):
         if not self.enemyMgr.isEnemy(gbId):
             self.client.sendEnemyPosInfoToClient(gbId, False, 0)
             return

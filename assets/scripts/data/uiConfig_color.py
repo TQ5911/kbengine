@@ -37,13 +37,13 @@ datas = _tools.RODict({
     }),
     4: _tools.RODict({
         "ID": 4,
-        "color2": "#a53131",
-        "color3": "<color=#a53131>{0}</color>"
+        "color2": "#967100",
+        "color3": "<color=#967100>{0}</color>"
     }),
     5: _tools.RODict({
         "ID": 5,
-        "color2": "#967100",
-        "color3": "<color=#967100>{0}</color>"
+        "color2": "#a53131",
+        "color3": "<color=#a53131>{0}</color>"
     }),
     6: _tools.RODict({
         "ID": 6,
@@ -137,13 +137,13 @@ datas = _tools.RODict({
     }),
     24: _tools.RODict({
         "ID": 24,
-        "color2": "#d35a66",
-        "color3": "<color=#d35a66>{0}</color>"
+        "color2": "#beab67",
+        "color3": "<color=#beab67>{0}</color>"
     }),
     25: _tools.RODict({
         "ID": 25,
-        "color2": "#beab67",
-        "color3": "<color=#beab67>{0}</color>"
+        "color2": "#d35a66",
+        "color3": "<color=#d35a66>{0}</color>"
     }),
     26: _tools.RODict({
         "ID": 26,
@@ -622,18 +622,18 @@ datas = _tools.RODict({
     }),
     215: _tools.RODict({
         "ID": 215,
-        "color2": "#28B716",
-        "color3": "<color=#28B716>{0}</color>"
+        "color2": "#5EFF45",
+        "color3": "<color=#5EFF45>{0}</color>"
     }),
     216: _tools.RODict({
         "ID": 216,
-        "color2": "#E9202C",
-        "color3": "<color=#E9202C>{0}</color>"
+        "color2": "#FF3D55",
+        "color3": "<color=#FF3D55>{0}</color>"
     }),
     217: _tools.RODict({
         "ID": 217,
-        "color2": "#1669B7",
-        "color3": "<color=#1669B7>{0}</color>"
+        "color2": "#61C3FF",
+        "color3": "<color=#61C3FF>{0}</color>"
     }),
     218: _tools.RODict({
         "ID": 218,
@@ -647,24 +647,29 @@ datas = _tools.RODict({
     }),
     220: _tools.RODict({
         "ID": 220,
-        "color2": "#FF960F",
-        "color3": "<color=#ff960f>{0}</color>"
+        "color2": "#FF9955",
+        "color3": "<color=#FF9955>{0}</color>"
     }),
     221: _tools.RODict({
         "ID": 221,
-        "color2": "#A32697",
-        "color3": "<color=#a32697>{0}</color>"
+        "color2": "#FF5BAC",
+        "color3": "<color=#FF5BAC>{0}</color>"
     }),
     222: _tools.RODict({
         "ID": 222,
-        "color2": "#FFD900",
-        "color3": "<color=#ffd900>{0}</color>"
+        "color2": "#9F5AFF",
+        "color3": "<color=#9F5AFF>{0}</color>"
     }),
     223: _tools.RODict({
         "ID": 223,
-        "color2": "#FF0000",
-        "color3": "<color=#ff0000>{0}</color>"
+        "color2": "#FFE95B",
+        "color3": "<color=#FFE95B>{0}</color>"
+    }),
+    224: _tools.RODict({
+        "ID": 224,
+        "color2": "#F072FD",
+        "color3": "<color=#f072fd>{0}</color>"
     })
 })
 minKey = 0
-maxKey = 223
+maxKey = 224

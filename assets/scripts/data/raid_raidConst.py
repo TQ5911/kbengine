@@ -33,7 +33,7 @@ datas = _tools.RODict({
     }),
     "raidUIVisibleId": _tools.RODict({
         "ID": "raidUIVisibleId",
-        "value": 43,
+        "value": "Raid",
     }),
     "raidInvDeniedMsg": _tools.RODict({
         "ID": "raidInvDeniedMsg",

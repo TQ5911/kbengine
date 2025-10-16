@@ -123,7 +123,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     # player cache data about
 
     # @@AuctionAPI
-    def getCoinAuctionPlayerInfo(self):
+    def getCoinAuctionPlayerInfo(self, exposed):
         """API: 客户端获取玩家CoinAuction上架物品信息"""
         INFO_MSG("getCoinAuctionPlayerInfo::~")
         self._getCoinAuctionPlayerInfo()
@@ -155,7 +155,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
     # @@AuctionAPI
     @gamedecorator.limitcall(0.2)
-    def searchCoinAuctionItemsByItemId(self, itemIds, limit, offset, jumpSpecialAuctionUUID):
+    def searchCoinAuctionItemsByItemId(self, exposed, itemIds, limit, offset, jumpSpecialAuctionUUID):
         """API: 根据物品ID从CoinAuction中获取所有在售物品信息"""
         INFO_MSG("searchCoinAuctionItemsByItemId::", itemIds, limit, offset, jumpSpecialAuctionUUID)
         if not gameconfig.enableAuction():
@@ -191,7 +191,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
     # @@AuctionAPI
     @lockCoinAuction(timeout=2)
-    def saleItemInCoinAuction(self, itemId, uniqueId, totalPrice, number, bagType):
+    def saleItemInCoinAuction(self, exposed, itemId, uniqueId, totalPrice, number, bagType):
         INFO_MSG("saleItemInCoinAuction::", itemId, uniqueId, totalPrice, number, bagType)
         (m_itemObj, m_gridDict), m_errno = self._saleItemInCoinAuctionCheck(
             itemId, uniqueId, totalPrice, number, bagType)
@@ -320,7 +320,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
     # @@AuctionAPI
     @lockCoinAuction(timeout=2)
-    def buyItemInCoinAuctionByAuctionItemUUID(self, auctionItemUUID, number):
+    def buyItemInCoinAuctionByAuctionItemUUID(self, exposed, auctionItemUUID, number):
         INFO_MSG("buyItemInCoinAuctionByAuctionItemUUID::", auctionItemUUID, number)
         _, m_errno = self._buyItemInCoinAuctionCheck()
         if m_errno != gameconst.AuctionErrno.AUCTION_OK:
@@ -496,7 +496,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
     # @@AuctionAPI
     @lockCoinAuction(timeout=2)
-    def cancelSaleItemInCoinAuction(self, auctionItemUUID, needReSale):
+    def cancelSaleItemInCoinAuction(self, exposed, auctionItemUUID, needReSale):
         """API: 玩家从CoinAution中下架出售的商品"""
         INFO_MSG("cancelSaleItemInCoinAuction::", auctionItemUUID, needReSale)
         _, m_errno = self._cancelSaleItemInCoinAuction(auctionItemUUID)
@@ -679,7 +679,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
     # @@AuctionAPI
     @gamedecorator.limitcall(1)
-    def getPlayerCoinAuctionRecords(self, number, getAll=False):
+    def getPlayerCoinAuctionRecords(self, exposed, number, getAll=False):
         """API: 客户端获取玩家交易记录"""
         INFO_MSG("getPlayerCoinAuctionRecords::~", number, getAll)
         if not gameconfig.enableAuction():
@@ -699,7 +699,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     # ---------------------------------------------------------------
 
     # @@AuctionAPI
-    def getItemLastAndAvgPrice(self, itemId):
+    def getItemLastAndAvgPrice(self, exposed, itemId):
         """API: 客户端根据ItemId获取最近售价和昨日平均售价"""
         INFO_MSG("getItemLastAndAvgPrice::", itemId)
         if not gameconfig.enableAuction():
@@ -729,7 +729,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     # ---------------------------------------------------------------
 
     # @@AuctionAPI
-    def getCurrentSaleItemInfo(self, itemId):
+    def getCurrentSaleItemInfo(self, exposed, itemId):
         """API: 客户端根据ItemId获取系统当前最低售价的3个物品和最近成交单价和昨日平均单价"""
         INFO_MSG("getCurrentSaleItemInfo::", itemId)
         if not gameconfig.enableAuction():
@@ -759,7 +759,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     # ---------------------------------------------------------------
 
     # @@AuctionAPI
-    def getAuctionItemNumByCategoryId(self, categoryId, school, quality):
+    def getAuctionItemNumByCategoryId(self, exposed, categoryId, school, quality):
         INFO_MSG("getAuctionItemNumByCategoryId::", categoryId, school, quality)
         if not gameconfig.enableAuction():
             INFO_MSG("getAuctionItemNumByCategoryId not enableAuction")
@@ -816,7 +816,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         DEBUG_MSG("onGetItemNumByCategoryIdResp::", categoryId, itemIds, itemNums, prices)
         self.client.onGetItemNumByCategoryIdResp(categoryId, itemIds, itemNums, prices)
 
-    def getAuctionItemNumByItemIdList(self, itemIdList):
+    def getAuctionItemNumByItemIdList(self, exposed, itemIdList):
         INFO_MSG("getAuctionItemNumByItemIdList::", itemIdList)
         self.stub.getAuctionItemNumByCategoryId(self.gbID, 1, itemIdList)
 
@@ -956,7 +956,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     #     return True
     # @@AuctionAPI
     @gamedecorator.limitcall(1)
-    def getPlayerBuyAuctionItemRecords(self, number, getAll=False):
+    def getPlayerBuyAuctionItemRecords(self, exposed, number, getAll=False):
         INFO_MSG("getPlayerBuyAuctionItemRecords::~", number, getAll)
         if not gameconfig.enableAuction():
             INFO_MSG("getPlayerCoinAuctionRecords not enableAuction")
@@ -968,7 +968,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     def _getPlayerBuyAuctionItemRecords(self, number):
         redisUtils.PlayerBuyAuctionItemRecord.getMessageRecord(self, self.gbID, number=number)
 
-    def getAuctionSaleItemMoney(self):
+    def getAuctionSaleItemMoney(self, exposed):
         INFO_MSG("getAuctionSaleItemMoney::")
         if self.saleItemMoney <= 0:
             ERROR_MSG('getAuctionSaleItemMoney:: saleItemMoney <= 0')

@@ -44,7 +44,7 @@ class IWonderLandBase(object):
         #试炼峰进入
         self.completeGuildTask(gameconst.GuildTaskType.ENTERMAP,WL_CD.datas['wonderLandActID']['value'])
 
-    def addWonderLandTicket(self, itemId, num, isAddDuration):
+    def addWonderLandTicket(self, exposed, itemId, num, isAddDuration):
         INFO_MSG('IWonderLandBase::addWonderLandTicket: itemId: {}, num: {}, isAddDuration: {}'.format(itemId, num, isAddDuration))
         if not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']) and isAddDuration:
             self.onMessagePre(AC_CD.datas['activity_notOpen']['value'], [])

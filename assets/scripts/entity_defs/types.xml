@@ -144,6 +144,8 @@
     <GENIUS_QI>          INT64       </GENIUS_QI>
     <SCENE_STATE>       UINT16          </SCENE_STATE>
     <LEADER_BOARD_PAGE>     UINT8       </LEADER_BOARD_PAGE>
+    <RANK>              UINT16          </RANK>
+    <AUTH_PERMISSION>   UINT16          </AUTH_PERMISSION>
 
     <FACE_DATA> FIXED_DICT
         <implementedBy>     appearanceInfo.faceDataIns     </implementedBy>
@@ -250,6 +252,9 @@
             <authDbId>
                 <Type>  PLAYER_GBID </Type>
             </authDbId>
+            <authExpire>
+                <Type>  LONGTIME    </Type>
+            </authExpire>
             <gbId>
                 <Type>  PLAYER_GBID </Type>
                 <Index> INDEX       </Index>
@@ -389,6 +394,44 @@
         </Properties>
     </ATTR_VAL>
 
+    <GLYPH_INFO> FIXED_DICT
+        <Properties>
+            <glyphState>
+                <Type>  INT8   </Type>
+            </glyphState>
+            <glyphAffixes>
+                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
+            </glyphAffixes>
+        </Properties>
+    </GLYPH_INFO>
+
+    <CLI_GLYPH_INFO> FIXED_DICT
+        <Properties>
+            <glyphState>
+                <Type>  INT8   </Type>
+            </glyphState>
+            <glyphAffixes>
+                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
+            </glyphAffixes>
+        </Properties>
+    </CLI_GLYPH_INFO>
+
+    <SPIRIT_INFO>   FIXED_DICT
+        <Properties>
+            <spiritAffixes>
+                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
+            </spiritAffixes>
+        </Properties>
+    </SPIRIT_INFO>
+
+    <CLI_SPIRIT_INFO> FIXED_DICT
+        <Properties>
+            <spiritAffixes>
+                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
+            </spiritAffixes>
+        </Properties>
+    </CLI_SPIRIT_INFO>
+
     <CLI_EQUIP_ITEM_VAL> FIXED_DICT
         <Properties>
             <itemId>
@@ -412,15 +455,12 @@
             <auctionTime>
                 <Type>  LONGTIME        </Type>
             </auctionTime>
-            <fixedAffixes>
-                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
-            </fixedAffixes>
-            <randomAffixes>
-                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
-            </randomAffixes>
-            <glyphAffixes>
-                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
-            </glyphAffixes>
+            <spiritDatas>
+                <Type>  ARRAY <of>  SPIRIT_INFO </of>   </Type>
+            </spiritDatas>
+            <glyphDatas>
+                <Type>  ARRAY <of>  GLYPH_INFO </of>   </Type>
+            </glyphDatas>
             <radomEnhTimes>
                 <Type>  ARRAY <of>  UINT32   </of>   </Type>
             </radomEnhTimes>
@@ -451,6 +491,15 @@
             <score>
                 <Type>  INT64  </Type>
             </score>
+            <bindValue>
+                <Type>  UINT16  </Type>
+            </bindValue>
+            <glyphGroup>
+                <Type> UINT8 </Type>
+            </glyphGroup>
+            <spiritGroup>
+                <Type> UINT8 </Type>
+            </spiritGroup>
         </Properties>
     </CLI_EQUIP_ITEM_VAL>    
     
@@ -535,12 +584,6 @@
             <lastSortBag>
                 <Type>  LONGTIME    </Type>
             </lastSortBag>
-            <lockedTime>
-                <Type>  LONGTIME    </Type>
-            </lockedTime>
-            <lockDesc>
-                <Type>  UNICODE    </Type>
-            </lockDesc>
             <itemCDList>
                 <Type>  PY_LIST   </Type>
             </itemCDList>
@@ -1230,17 +1273,42 @@
     </CLIENT_TEAM_MEMBER_VAL>
     <CLIENT_TEAM_MARK_VAL> FIXED_DICT
         <Properties>
+            <type>
+                <Type>  UINT8       </Type>
+            </type>
+            <index>
+                <Type>  UINT8      </Type>
+            </index>
+            <name>
+                <Type>  UNICODE     </Type>
+            </name>
+            <gbId>
+                <Type>  PLAYER_GBID </Type>
+            </gbId>
             <entId>
                 <Type>  ENTITY_ID     </Type>
             </entId>
-            <markType>
-                <Type>  UINT8           </Type>
-            </markType>
+            <pos>
+                <Type>  POSITION_ARG    </Type>
+            </pos>
             <spaceNo>
                 <Type>  SPACE_NO        </Type>
             </spaceNo>
         </Properties>
     </CLIENT_TEAM_MARK_VAL>
+    <CLIENT_TEAM_MARK_INFO>   FIXED_DICT
+        <Properties>
+            <playerList>
+                <Type>  ARRAY <of>  CLIENT_TEAM_MARK_VAL </of>   </Type>
+            </playerList>
+            <sceneList>
+                <Type>  ARRAY <of>  CLIENT_TEAM_MARK_VAL </of>   </Type>
+            </sceneList>
+            <onlyCaptainCanMark>
+                <Type>  BOOL   </Type>
+            </onlyCaptainCanMark>
+        </Properties>
+    </CLIENT_TEAM_MARK_INFO>
 
     <BANDIT_CACHE_VAL> FIXED_DICT
         <Properties>
@@ -1291,12 +1359,9 @@
             <isPublish>
                 <Type>  BOOL  </Type>
             </isPublish>
-            <teamMarkList>
-                <Type>  ARRAY <of>  CLIENT_TEAM_MARK_VAL </of>   </Type>
-            </teamMarkList>
-            <onlyCaptainCanMark>
-                <Type>  BOOL </Type>
-            </onlyCaptainCanMark>
+            <teamMarkInfo>
+                <Type>  CLIENT_TEAM_MARK_INFO   </Type>
+            </teamMarkInfo>
             <memberNum>
                 <Type> UINT8 </Type>
             </memberNum>
@@ -1452,9 +1517,6 @@
             <recruitInfo>
                 <Type>  UNICODE  </Type>
             </recruitInfo>
-            <teamMarkList>
-                <Type>  ARRAY <of>  TEAM_MARK_VAL </of>   </Type>
-            </teamMarkList>
             <isPublish>
                 <Type>  BOOL    </Type>
             </isPublish>
@@ -1772,12 +1834,9 @@
             <memberNum>
                 <Type>  UINT8    </Type>
             </memberNum>
-            <onlyCaptainCanMark>
-                <Type> BOOL     </Type>
-            </onlyCaptainCanMark>
-            <raidMarkList>
-                <Type>  ARRAY    <of>    CLIENT_TEAM_MARK_VAL   </of>   </Type>
-            </raidMarkList>
+            <raidMarkInfo>
+                <Type>  CLIENT_TEAM_MARK_INFO   </Type>
+            </raidMarkInfo>
             <isAutoExpedition>
                 <Type> BOOL </Type>
             </isAutoExpedition>
@@ -2499,12 +2558,6 @@
             <bodyEquipList>
                 <Type>  ARRAY <of>  BAG_ITEM_VAL </of>   </Type>
             </bodyEquipList>
-            <lockedTime>
-                <Type>  LONGTIME   </Type>
-            </lockedTime>
-            <lockedDesp>
-                <Type>  UNICODE   </Type>
-            </lockedDesp>
             <lockData>
                 <Type>  PY_DICT   </Type>
             </lockData>
@@ -3496,10 +3549,6 @@
             <capacity>
                 <Type>  UINT32   </Type>
             </capacity>
-            <lockedTime>
-                <Type>  LONGTIME    </Type>
-                <Persistent>      false      </Persistent>
-            </lockedTime>
             <itemsList>
                 <Type>  ARRAY <of>  BAG_ITEM_VAL </of>   </Type>
             </itemsList>
@@ -4311,23 +4360,6 @@
             </srcType>
         </Properties>
     </KILLER_DATA>
-    
-    <CLIENT_TEAM_MARK_INFO>   FIXED_DICT
-        <Properties>
-            <entId>
-                <Type>  ENTITY_ID  </Type>
-            </entId>
-            <changeType>
-                <Type>  UINT8   </Type>
-            </changeType>
-            <onlyCaptainCanMark>
-                <Type>  BOOL   </Type>
-            </onlyCaptainCanMark>
-            <teamMarkList>
-                <Type>  ARRAY <of>  CLIENT_TEAM_MARK_VAL </of>   </Type>
-            </teamMarkList>
-        </Properties>
-    </CLIENT_TEAM_MARK_INFO>
 
     <RED_BAG_VAL>   FIXED_DICT
         <implementedBy>     RedBagInfo.RedBagDataInstance    </implementedBy>
@@ -4399,6 +4431,9 @@
             <redbagId>
                 <Type>    UINT64  </Type>
             </redbagId>
+            <playerGbId>
+                <Type>  PLAYER_GBID   </Type>
+            </playerGbId>
             <playerName>
                 <Type>  UNICODE   </Type>
             </playerName>
@@ -4420,6 +4455,9 @@
             <leftNum>
                 <Type>  UINT32   </Type>
             </leftNum>
+            <desc>
+                <Type> UNICODE </Type>
+            </desc>
             <hasFetch>
                 <Type>  UINT8   </Type>
             </hasFetch>
@@ -4431,6 +4469,9 @@
             <redbagId>
                 <Type>    UINT64  </Type>
             </redbagId>
+            <playerGbId>
+                <Type>  PLAYER_GBID   </Type>
+            </playerGbId>
             <playerName>
                 <Type>  UNICODE   </Type>
             </playerName>
@@ -4461,4 +4502,102 @@
         </Properties>
     </RED_BAG_FETCH_CLIENT_VAL>
 
+
+    <AUTH_PERMISSION_DATA_INFO> FIXED_DICT
+        <implementedBy>     AuthPermissionInfo.AuthPermissionInstance    </implementedBy>
+        <Properties>
+            <permission>
+                <Type>  AUTH_PERMISSION         </Type>
+            </permission>
+            <dailyMoney>
+                <Type>  MONEY                   </Type>
+            </dailyMoney>
+        </Properties>
+    </AUTH_PERMISSION_DATA_INFO>
+    <GLYPH_EQUIP_INFO> FIXED_DICT
+        <implementedBy>     GlyphEquipInfo.glyphInfoInstance    </implementedBy>
+        <Properties>
+            <inscriptionEffects> 
+                <Type>  PYTHON  </Type>
+            </inscriptionEffects>
+            <inscriptionRecords>
+                <Type>  PYTHON  </Type>
+            </inscriptionRecords>
+        </Properties>
+    </GLYPH_EQUIP_INFO>
+
+    <ACCOUNT_CACHE_DATA_INFO> FIXED_DICT
+        <implementedBy>     AccountCacheInfo.AccountCacheInstance    </implementedBy>
+        <Properties>
+            <eid>
+                <Type>  OBJECT_ID               </Type>
+            </eid>
+            <isHost>
+                <Type>  BOOL                    </Type>
+            </isHost>
+        </Properties>
+    </ACCOUNT_CACHE_DATA_INFO>
+
+    <LEADER_BOARD_GUILD_DATA_INFO> FIXED_DICT
+        <implementedBy>     LeaderBoardGuildInfo.LeaderBoardGuildInstance    </implementedBy>
+        <Properties>
+            <guildUUID>
+                <Type>  GUILD_UUID              </Type>
+            </guildUUID>
+            <guildName>
+                <Type>  UNICODE                 </Type>
+            </guildName>
+            <guildLevel>
+                <Type>  GUILD_LEVEL             </Type>
+            </guildLevel>
+            <guildScore>
+                <Type>  SCORE                   </Type>
+            </guildScore>
+            <leaderName>
+                <Type>  UNICODE                 </Type>
+            </leaderName>
+        </Properties>
+    </LEADER_BOARD_GUILD_DATA_INFO>
+
+    <AUTH_STATISTICS_DATA_INFO> FIXED_DICT
+        <implementedBy>     AuthStatisticsInfo.AuthStatisticsInstance    </implementedBy>
+        <Properties>
+            <oldLevel>
+                <Type>  LEVEL                   </Type>
+            </oldLevel>
+            <oldCoin>
+                <Type>  COIN                    </Type>
+            </oldCoin>
+        </Properties>
+    </AUTH_STATISTICS_DATA_INFO>
+
+    <TEAM_STATISTIC_PLAYER_VAL> FIXED_DICT
+        <Properties>
+            <gbId>
+                <Type>  PLAYER_GBID         </Type>
+            </gbId>
+            <name>
+                <Type>  UNICODE             </Type>
+            </name>
+            <school>
+                <Type>  SCHOOL              </Type>
+            </school>
+            <value>
+                <Type>  INT32               </Type>
+            </value>
+        </Properties>
+    </TEAM_STATISTIC_PLAYER_VAL>
+    <TEAM_STATISTIC_CLIENT_VAL> FIXED_DICT
+        <Properties>
+            <dmgList>
+                <Type>  ARRAY <of> TEAM_STATISTIC_PLAYER_VAL </of>   </Type>
+            </dmgList>
+            <healList>
+                <Type>  ARRAY <of> TEAM_STATISTIC_PLAYER_VAL </of>   </Type>
+            </healList>
+            <hurtList>
+                <Type>  ARRAY <of> TEAM_STATISTIC_PLAYER_VAL </of>   </Type>
+            </hurtList>
+        </Properties>
+    </TEAM_STATISTIC_CLIENT_VAL>
 </root>

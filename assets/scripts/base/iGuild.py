@@ -103,7 +103,7 @@ class IGuild(object):
 
         guildBox.onMemberOnline(self.gbID, self)
 
-    def createGuild(self, createData):
+    def createGuild(self, exposed, createData):
         INFO_MSG("IGuild::createGuild:", createData)
         if self.getRoleCacheAttr('level') < G_GCD.datas['guildCreateLevelRequire']['value']:
             ERROR_MSG("IGuild::createGuild: level < guildCreateLevelRequire.")
@@ -262,11 +262,11 @@ class IGuild(object):
 
         self.guildBox.doSendGuildClientData(self.gbID, self)
 
-    def getGuildList(self):
+    def getGuildList(self, exposed):
         INFO_MSG("IGuild::getGuildList")
         gameengine.getGlobalBase('GuildStub').doGetGuildList(self)
 
-    def exitGuild(self):
+    def exitGuild(self, exposed):
         INFO_MSG("IGuild::exitGuild", self.guildBox, self.guildInitStatus)
         if not self.guildInitStatus:
             self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'exitGuild', ())
@@ -371,7 +371,7 @@ class IGuild(object):
 
         return True
 
-    def applyJoinGuild(self, guildUUID):
+    def applyJoinGuild(self, exposed, guildUUID):
         INFO_MSG("IGuild::applyJoinGuild:", guildUUID)
         if not self._checkJoinGuild():
             return
@@ -399,7 +399,7 @@ class IGuild(object):
 
         self._applyJoinGuild()
 
-    def oneKeyGuildApply(self, guildUUIDs):
+    def oneKeyGuildApply(self, exposed, guildUUIDs):
         INFO_MSG("IGuild::oneKeyGuildApply")
         if not self._checkJoinGuild():
             return
@@ -465,7 +465,7 @@ class IGuild(object):
         }
         _guild['box'].doApplyJoinGuild(self.gbID, self, _joinData)
 
-    def deleteApplyedGuild(self, guildUUID):
+    def deleteApplyedGuild(self, exposed, guildUUID):
         INFO_MSG("IGuild::deleteApplyedGuild:", guildUUID)
         self.applyedGuilds.pop(guildUUID, None)
         self.client.onRemoveApplyedGuilds([guildUUID])
@@ -508,7 +508,7 @@ class IGuild(object):
     def setLeftGuildTS(self, ts):
         self.leftGuildTS = ts
 
-    def modifyJoinCond(self, joinCond):
+    def modifyJoinCond(self, exposed, joinCond):
         INFO_MSG("IGuild::modifyJoinCond:", joinCond)
         if not self.guildInitStatus:
             self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'modifyJoinCond', (joinCond,))
@@ -522,7 +522,7 @@ class IGuild(object):
 
         self.guildBox.modifyGuildJoinCond(self.gbID, self, joinCond)
 
-    def dealGuildApply(self, gbId, isAgree):
+    def dealGuildApply(self, exposed, gbId, isAgree):
         INFO_MSG("IGuild::dealGuildApply:", gbId)
         if not self.guildInitStatus:
             self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'dealGuildApply', (gbId,))
@@ -537,7 +537,7 @@ class IGuild(object):
         self.guildBox.doDealGuildApply(self.gbID, self, gbId, isAgree)
 
     @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
-    def getGuildDetailInfo(self, guildUUID):
+    def getGuildDetailInfo(self, exposed, guildUUID):
         INFO_MSG("IGuild::getGuildDetailInfo:", guildUUID)
         gameengine.getGlobalBase('GuildStub').getGuildBox(
             self,
@@ -546,7 +546,7 @@ class IGuild(object):
             ()
         )
 
-    def editJobPermissions(self, job, permissions):
+    def editJobPermissions(self, exposed, job, permissions):
         INFO_MSG("IGuild::editJobPermissions:", job, permissions)
         if not self.guildBox:
             WARNING_MSG("IGuild::editJobPermissions: guildBox is None.")
@@ -561,7 +561,7 @@ class IGuild(object):
 
         guildBox.doSendGuildDetailInfo(self)
 
-    def modifyGuildDesc(self, desc):
+    def modifyGuildDesc(self, exposed, desc):
         INFO_MSG("IGuild::modifyGuildDesc:", desc)
         if not self.guildInitStatus:
             self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'modifyGuildDesc', (desc,))
@@ -575,7 +575,7 @@ class IGuild(object):
 
         self.guildBox.doModifyGuildDesc(self.gbID, self, desc)
 
-    def modifyMemberJob(self, gbId, job):
+    def modifyMemberJob(self, exposed, gbId, job):
         INFO_MSG("IGuild::modifyMemberJob:", gbId, job)
         if not self.guildInitStatus:
             self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'modifyMemberJob', (gbId, job))
@@ -589,7 +589,7 @@ class IGuild(object):
 
         self.guildBox.doModifyMemberJob(self.gbID, self, gbId, job)
 
-    def resign(self):
+    def resign(self, exposed):
         INFO_MSG("IGuild::resign")
         if not self.guildInitStatus:
             self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'resign', ())
@@ -603,7 +603,7 @@ class IGuild(object):
 
         self.guildBox.doResign(self.gbID, self)
 
-    def kickMember(self, gbId):
+    def kickMember(self, exposed, gbId):
         INFO_MSG("IGuild::kickMember:", gbId)
         if not self.guildInitStatus:
             self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'kickMember', (gbId,))
@@ -645,7 +645,7 @@ class IGuild(object):
         return True
 
     # ------------------------------------- assist start --------------------------------
-    def guildAssist(self, buildingId):
+    def guildAssist(self, exposed, buildingId):
         INFO_MSG('Guild::guildAssist:', self.guildUUIDBase, buildingId)
         if not self.guildBox:
             ERROR_MSG('Guild::guildAssist: guildBox is None')
@@ -721,7 +721,7 @@ class IGuild(object):
 
     # ------------------------------------- assist end --------------------------------
 
-    def upgradeGuildBuilding(self, buildingId):
+    def upgradeGuildBuilding(self, exposed, buildingId):
         INFO_MSG('IGuild::upgradeGuildBuilding:', buildingId)
         if not self.guildBox:
             ERROR_MSG('IGuild::upgradeGuildBuilding: guildBox is None')
@@ -729,7 +729,7 @@ class IGuild(object):
 
         self.guildBox.doUpgradeGuildBuilding(self.gbID, self, buildingId)
 
-    def transformGuildMoneyToFund(self, num):
+    def transformGuildMoneyToFund(self, exposed, num):
         INFO_MSG('IGuild::transformGuildMoneyToFund:', num)
         if not self.guildBox:
             ERROR_MSG('IGuild::transformGuildMoneyToFund: guildBox is None')
@@ -737,7 +737,7 @@ class IGuild(object):
 
         self.guildBox.doTransformGuildMoneyToFund(self.gbID, self, num)
 
-    def modifyGuildName(self, name, dspFlag):
+    def modifyGuildName(self, exposed, name, dspFlag):
         INFO_MSG('IGuild::modifyGuildName:', name)
         if not self.guildBox:
             ERROR_MSG('IGuild::modifyGuildName: guildBox is None')
@@ -776,7 +776,7 @@ class IGuild(object):
             _awardVal.addWealthByItemId(_itemId, 1)
             self.addWealth(_src, _awardVal, _opUUID, _detail, notify=False)
 
-    def modifyGuildIcon(self, icon):
+    def modifyGuildIcon(self, exposed, icon):
         INFO_MSG('IGuild::modifyGuildIcon:', icon)
         if not self.guildBox:
             ERROR_MSG('IGuild::modifyGuildIcon: guildBox is None')
@@ -784,7 +784,7 @@ class IGuild(object):
 
         self.guildBox.doModifyGuildIcon(self.gbID, self, icon)
 
-    def guildDonate(self, itemId, num):
+    def guildDonate(self, exposed, itemId, num):
         INFO_MSG('IGuild::guildDonate:', itemId, num)
         if not self.guildBox:
             ERROR_MSG('IGuild::guildDonate: guildBox is None')
@@ -851,7 +851,7 @@ class IGuild(object):
             self.addWealth(_src, _awardVal, _opUUID, _detail)
             self.completeGuildTask(gameconst.GuildTaskType.DONATION,ctx['itemId'],ctx['num'])
 
-    def guildRecruit(self):
+    def guildRecruit(self, exposed):
         INFO_MSG('IGuild::guildRecruit:')
         if not self.guildBox:
             ERROR_MSG('IGuild::guildRecruit: guildBox is None')
@@ -859,7 +859,7 @@ class IGuild(object):
 
         self.guildBox.doGuildRecruit(self.gbID, self)
 
-    def modifyGuildDisp(self, dispFlag):
+    def modifyGuildDisp(self, exposed, dispFlag):
         INFO_MSG('IGuild::modifyGuildDisp:', dispFlag)
         if not self.guildBox:
             ERROR_MSG('IGuild::modifyGuildDisp: guildBox is None')
@@ -867,7 +867,7 @@ class IGuild(object):
 
         self.guildBox.doModifyGuildDisp(self.gbID, self, dispFlag)
 
-    def inviteJoinGuild(self, gbId):
+    def inviteJoinGuild(self, exposed, gbId):
         INFO_MSG('IGuild::inviteJoinGuild:', gbId)
         if not self.guildBox:
             ERROR_MSG('IGuild::inviteJoinGuild: guildBox is None')
@@ -893,7 +893,7 @@ class IGuild(object):
         if _data['ts'] == ts:
             self.inviteCache.pop(gbId)
 
-    def dealGuildInvite(self, gbId, isAgree):
+    def dealGuildInvite(self, exposed, gbId, isAgree):
         INFO_MSG('IGuild::dealGuildInvite:', gbId, isAgree)
         if self.guildUUIDBase:
             WARNING_MSG('IGuild::dealGuildInvite: already in guild.')
@@ -935,7 +935,7 @@ class IGuild(object):
         self._applyJoinGuild()
 
     # -------------------------------------- cross data start --------------------------------------
-    def getGuildInfosFromCrossData(self):
+    def getGuildInfosFromCrossData(self, exposed):
         INFO_MSG('IGuild::getGuildInfosFromCrossData:')
         if not self.guildBox:
             ERROR_MSG('IGuild::getGuildInfosFromCrossData: guildBox is None')
@@ -948,7 +948,7 @@ class IGuild(object):
         self.client.onGuildInfoFromCrossData(guildDatas)
 
     @gamedecorator.limitcall(1)
-    def applyGuildUnion(self, guildUUID):
+    def applyGuildUnion(self, exposed, guildUUID):
         INFO_MSG('IGuild::applyGuildUnion:', guildUUID)
         if not self.guildBox:
             ERROR_MSG('IGuild::applyGuildUnion: guildBox is None')
@@ -956,7 +956,7 @@ class IGuild(object):
 
         self.guildBox.doApplyGuildUnion(self.gbID, self, guildUUID)
 
-    def dealGuildUnionApply(self, guildUUID, agree):
+    def dealGuildUnionApply(self, exposed, guildUUID, agree):
         INFO_MSG('IGuild::dealGuildUnionApply:', guildUUID, agree)
         if not self.guildBox:
             ERROR_MSG('IGuild::dealGuildUnionApply: guildBox is None')
@@ -964,7 +964,7 @@ class IGuild(object):
 
         self.guildBox.doDealGuildUnionApply(self.gbID, self, guildUUID, agree)
 
-    def cancelGuildUnion(self, guildUUID):
+    def cancelGuildUnion(self, exposed, guildUUID):
         INFO_MSG('IGuild::cancelGuildUnion:', guildUUID)
         if not self.guildBox:
             ERROR_MSG('IGuild::cancelGuildUnion: guildBox is None')
@@ -982,7 +982,7 @@ class IGuild(object):
         else:
             WARNING_MSG('IGuild::cancelGuildUnion: guildUUID is not union', guildUUID)
 
-    def qixieAssist(self, qixieType):
+    def qixieAssist(self, exposed, qixieType):
         INFO_MSG('IGuild::qixieAssist:', qixieType)
         if not self.guildBox:
             ERROR_MSG('IGuild::qixieAssist: guildBox is None')
@@ -1064,7 +1064,7 @@ class IGuild(object):
             self.nextRecoverQixieAssistTime += G_GCD.datas['equipmentAssistTimesRecIntvl']['value']
             self.startRecoverQixieAssistTimer()
 
-    def upgradeQixie(self, qixieType):
+    def upgradeQixie(self, exposed, qixieType):
         INFO_MSG('IGuild::upgradeQixie:', qixieType)
         if not self.guildBox:
             ERROR_MSG('IGuild::upgradeQixie: guildBox is None')
@@ -1072,7 +1072,7 @@ class IGuild(object):
 
         self.guildBox.doUpgradeQixie(self.gbID, self, qixieType)
 
-    def declareEnemy(self, guildUUID):
+    def declareEnemy(self, exposed, guildUUID):
         INFO_MSG('IGuild::declareEnemy:', guildUUID)
         if not self.guildBox:
             ERROR_MSG('IGuild::declareEnemy: guildBox is None')
@@ -1081,7 +1081,7 @@ class IGuild(object):
         self.guildBox.doDeclareEnemy(self.gbID, self, guildUUID)
 
     @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
-    def getGuildInfosByRelationType(self, relationType):
+    def getGuildInfosByRelationType(self, exposed, relationType):
         INFO_MSG('IGuild::getGuildInfosByRelationType:', relationType)
         if not self.guildUUIDBase:
             ERROR_MSG('IGuild::getGuildInfosByRelationType: guildBox is None')
@@ -1104,7 +1104,7 @@ class IGuild(object):
     def onGetGuildInfosByRelationType(self, guildDatas, relationType):
         self.client.onGuildInfosByRelationType(guildDatas, relationType)
 
-    def donateCityBattleToken(self, num):
+    def donateCityBattleToken(self, exposed, num):
         INFO_MSG('IGuild::donateCityBattleToken:', num)
         if not self.guildBox:
             ERROR_MSG('IGuild::donateCityBattleToken: guildBox is None')
@@ -1134,7 +1134,7 @@ class IGuild(object):
         _num *= G_GCD.datas['guildDonateTokenToGuildMoney']['value']
         self.guildBox.doDonateCityBattleToken(self.gbID, self, _num, _opUUID)
 
-    def getGuildUnionApplySender(self):
+    def getGuildUnionApplySender(self, exposed):
         INFO_MSG('IGuild::getGuildUnionApplySender:')
         if not self.guildBox:
             ERROR_MSG('IGuild::getGuildUnionApplySender: guildBox is None')
@@ -1142,7 +1142,7 @@ class IGuild(object):
 
         self.guildBox.doGetGuildUnionApplySender(self.gbID, self)
 
-    def cancelApplyGuildUnion(self, guildUUID):
+    def cancelApplyGuildUnion(self, exposed, guildUUID):
         INFO_MSG('IGuild::cancelApplyGuildUnion:', guildUUID)
         if not self.guildBox:
             ERROR_MSG('IGuild::cancelApplyGuildUnion: guildBox is None')
@@ -1151,7 +1151,7 @@ class IGuild(object):
         self.guildBox.doCancelApplyGuildUnion(self.gbID, self, guildUUID)
 
     @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
-    def getGuildDetailOtherServer(self, guildUUID):
+    def getGuildDetailOtherServer(self, exposed, guildUUID):
         INFO_MSG('IGuild::getGuildDetailOtherServer:', guildUUID)
         gameengine.getGlobalBase('CrossDataStub').getCrossServerGuildDetail(
             guildUUID,
@@ -1201,7 +1201,7 @@ class IGuild(object):
                 return True
         return False
     
-    def getGuildTaskReward(self,taskIDs):
+    def getGuildTaskReward(self, exposed,taskIDs):
         for taskID in taskIDs:
             self._getGuildTaskReward(taskID)
     def _getGuildTaskReward(self,taskID):
