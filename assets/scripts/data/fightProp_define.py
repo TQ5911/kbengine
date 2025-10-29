@@ -318,8 +318,8 @@ datas = _tools.RODict({
         "formulaMonster": None,
         "defaultValue": 0.0,
         "changeAffactProp": "speed",
-        "propertiesType": 0,
-        "isPercent": 0,
+        "propertiesType": 1,
+        "isPercent": 1,
         "relatedKey": "speed",
         "perPropertyScore": 0.0
     }),
@@ -1720,7 +1720,7 @@ datas = _tools.RODict({
     }),
     "stunEnh": _tools.RODict({
         "ID": "stunEnh",
-        "name": "晕厥穿透",
+        "name": "眩晕穿透",
         "type": "int",
         "propType": 3,
         "ifSend": 1,
@@ -1735,7 +1735,7 @@ datas = _tools.RODict({
     }),
     "baseStunEnh": _tools.RODict({
         "ID": "baseStunEnh",
-        "name": "基础晕厥穿透",
+        "name": "基础眩晕穿透",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
@@ -1750,7 +1750,7 @@ datas = _tools.RODict({
     }),
     "adjStunEnh": _tools.RODict({
         "ID": "adjStunEnh",
-        "name": "晕厥穿透调整值",
+        "name": "眩晕穿透调整值",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
@@ -1765,7 +1765,7 @@ datas = _tools.RODict({
     }),
     "stunAnti": _tools.RODict({
         "ID": "stunAnti",
-        "name": "晕厥抵抗",
+        "name": "眩晕抵抗",
         "type": "int",
         "propType": 3,
         "ifSend": 1,
@@ -1780,7 +1780,7 @@ datas = _tools.RODict({
     }),
     "baseStunAnti": _tools.RODict({
         "ID": "baseStunAnti",
-        "name": "基础晕厥抵抗",
+        "name": "基础眩晕抵抗",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
@@ -1795,7 +1795,7 @@ datas = _tools.RODict({
     }),
     "adjStunAnti": _tools.RODict({
         "ID": "adjStunAnti",
-        "name": "晕厥抵抗调整值",
+        "name": "眩晕抵抗调整值",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
@@ -2451,7 +2451,7 @@ datas = _tools.RODict({
         "propertiesType": 2,
         "isPercent": 0,
         "relatedKey": "",
-        "perPropertyScore": 540.0
+        "perPropertyScore": 0.0
     }),
     "baseDrugsQuantity": _tools.RODict({
         "ID": "baseDrugsQuantity",
@@ -2462,7 +2462,7 @@ datas = _tools.RODict({
         "formulaPlayer": None,
         "formulaMonster": None,
         "defaultValue": 0.0,
-        "changeAffactProp": "",
+        "changeAffactProp": "drugsQuantity",
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "drugsQuantity",
@@ -2496,7 +2496,7 @@ datas = _tools.RODict({
         "propertiesType": 1,
         "isPercent": 0,
         "relatedKey": "",
-        "perPropertyScore": 7.8
+        "perPropertyScore": 0.0
     }),
     "baseMinPhysicalArmor": _tools.RODict({
         "ID": "baseMinPhysicalArmor",
@@ -2571,7 +2571,7 @@ datas = _tools.RODict({
         "propertiesType": 1,
         "isPercent": 0,
         "relatedKey": "",
-        "perPropertyScore": 7.8
+        "perPropertyScore": 0.0
     }),
     "baseMaxPhysicalArmor": _tools.RODict({
         "ID": "baseMaxPhysicalArmor",
@@ -2646,7 +2646,7 @@ datas = _tools.RODict({
         "propertiesType": 1,
         "isPercent": 0,
         "relatedKey": "",
-        "perPropertyScore": 7.8
+        "perPropertyScore": 0.0
     }),
     "baseMinMagicArmor": _tools.RODict({
         "ID": "baseMinMagicArmor",
@@ -2721,7 +2721,7 @@ datas = _tools.RODict({
         "propertiesType": 1,
         "isPercent": 0,
         "relatedKey": "",
-        "perPropertyScore": 7.8
+        "perPropertyScore": 0.0
     }),
     "baseMaxMagicArmor": _tools.RODict({
         "ID": "baseMaxMagicArmor",

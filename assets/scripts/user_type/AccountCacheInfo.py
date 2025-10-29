@@ -2,18 +2,22 @@
 # coding: utf-8
 
 import userType
+import gameconst
 
 
 class AccountCacheVal(userType.UserSoleType):
     '''ACCOUNT_CACHE_DATA_INFO'''
-    def __init__(self, eid=0, isHost=False):
+    def __init__(self, eid=0, actHostType=gameconst.AccountHostType.NONE):
         self.eid = eid
-        self.isHost = isHost
+        self.actHostType = actHostType
+
+    def isAccountHost(self):
+        return self.actHostType == gameconst.AccountHostType.HOST
 
     def toAccountCacheSavedDict(self):
         return {
             'eid': self.eid,
-            'isHost': self.isHost
+            'actHostType': self.actHostType
         }
 
 

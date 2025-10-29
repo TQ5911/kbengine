@@ -9878,9 +9878,9 @@ datas ={
           "CustomID": "",
           "Dir": 142.3828,
           "DisplayName": "",
-          "EntityID": 18000004,
+          "EntityID": 18000662,
           "ID": 51004001,
-          "Name": "\u5e38\u767e\u8349",
+          "Name": "\u4f55\u7075\u4e39",
           "PosX": 96.47581,
           "PosY": 2.060215,
           "PosZ": 68.72614,
@@ -14470,6 +14470,27 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1200.0,
+            "Remark": ""
+          }
+        }
+      },
+      "CombatArea": {
+        "51008328": {
+          "ActivityID": 0,
+          "ClassName": "CombatArea",
+          "ClassNameType": 21,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 0,
+          "ID": 51008328,
+          "Name": "\u6218\u6597\u533a",
+          "PosX": 184.6,
+          "PosY": 37.2212,
+          "PosZ": 245.9,
+          "Props": {
+            "AreaType": 1,
+            "Radius": 30.0,
             "Remark": ""
           }
         }

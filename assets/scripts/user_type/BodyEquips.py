@@ -35,6 +35,10 @@ class BodyEquips(userType.UserSoleType):
                 v['equipItem'].reloadScript()
         return
 
+    @classmethod
+    def _checkIgnores_(cls):
+        return 'lockedTime', 'lockedDesp'
+    
     def onBodyEquipsDailyUpdate(self, owner):
         updateSlotIds = []
         for slotId, equipItem in self.equips_map.items():
@@ -272,6 +276,9 @@ class BodyEquips(userType.UserSoleType):
         owner.client.onUndressEquipment(slotId)
         return equipItem
 
+    def getAllEquipItems(self):
+        return self.equips_map
+    
     def getEquipItem(self, slotId):
         return self.equips_map.get(slotId, None)
 
@@ -291,6 +298,7 @@ class BodyEquips(userType.UserSoleType):
         DEBUG_MSG("BodyEquips-->addEquipItem, end~")
 
     def recalculateAllInscriptionEffects(self, owner):
+        owner.glyphEquipData.cleanInscriptionEffects(owner)
         for equipItem in self.equips_map.values():
             owner.glyphEquipData.calculateAllInscriptionEffects(owner, equipItem.getGlyphAffixes())
         owner.glyphEquipData.applyInscriptionEffects(owner)

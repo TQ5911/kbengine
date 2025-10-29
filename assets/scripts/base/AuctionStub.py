@@ -300,7 +300,7 @@ class AuctionStubService(GameServer):
         request = ServerInfoMessage()
         request.serverId = gameconfig.serverId()
         request.compId = KBEngine.getComponentGroupOrder()
-        request.serverName = gameconfig.serverName()
+        request.serverName = gameglobal.curServerName
 
         self.serviceStub.registerServer(None, request, None)
 
@@ -599,7 +599,7 @@ class AuctionStubService(GameServer):
                 (fromPlayerGBID, 'onPlayerGlobalAuctionItemBeSaledOffline',
                  (auctionItem, number, auctionItem.price, now, totalPriceInDeductTax, extra)))
 
-        
+
         crossSiegeWarServerInfo = gameconfig.crossSiegeWarServerInfo()
         _stub = iRouter.RemoteServerStubEntityCall(crossSiegeWarServerInfo['crossServerId'], 'CrossSiegeWarStub')
         _stub.onCityAuctionTax(gameconfig.serverId(), totalPriceTax)
@@ -676,11 +676,11 @@ class AuctionStubService(GameServer):
         extra = json.loads(request.extra)
         DEBUG_MSG("replyDoBuyItemByItemId", playerGBID, errno, itemId, number, price, remainNum, itemData, totalPrice,
                   extra)
-        
+
         cdTime = dataUtils.getAuctionItemDealCDTime(itemId)
         if cdTime > 0:
             extra["dealCDTime"] = utils.getNow() + cdTime
-            
+
         if playerGBID != 0:
             if totalPrice > 0:
                 now = utils.getNow()

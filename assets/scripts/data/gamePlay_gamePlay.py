@@ -61,6 +61,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "新元城",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1002: _tools.RODict({
         "ID": 1002,
@@ -108,6 +110,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "同心谷",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1003: _tools.RODict({
         "ID": 1003,
@@ -155,6 +159,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "占坑大世界场景",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1004: _tools.RODict({
         "ID": 1004,
@@ -202,6 +208,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "飞沙要塞",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1005: _tools.RODict({
         "ID": 1005,
@@ -249,6 +257,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "精灵之村",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1006: _tools.RODict({
         "ID": 1006,
@@ -296,6 +306,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "精灵宝殿",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1010: _tools.RODict({
         "ID": 1010,
@@ -343,6 +355,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "石窟走廊",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1011: _tools.RODict({
         "ID": 1011,
@@ -390,6 +404,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "新元城郊",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1020: _tools.RODict({
         "ID": 1020,
@@ -437,6 +453,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "祖珂地堡一层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1021: _tools.RODict({
         "ID": 1021,
@@ -484,6 +502,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "祖珂地堡二层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1022: _tools.RODict({
         "ID": 1022,
@@ -531,10 +551,12 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "祖珂地堡三层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1024: _tools.RODict({
         "ID": 1024,
-        "name": "祖珂地堡五层",
+        "name": "祖珂地堡三层",
         "sceneType": 4,
         "type": 6,
         "subType": 1,
@@ -576,12 +598,14 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "祖珂地堡五层",
+        "fullName": "祖珂地堡三层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1026: _tools.RODict({
         "ID": 1026,
-        "name": "祖珂地堡七层",
+        "name": "祖珂地堡五层",
         "sceneType": 4,
         "type": 6,
         "subType": 1,
@@ -625,6 +649,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "祖珂地堡五层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1030: _tools.RODict({
         "ID": 1030,
@@ -672,6 +698,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "月光海港一层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1031: _tools.RODict({
         "ID": 1031,
@@ -719,10 +747,12 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "月光海港二层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1035: _tools.RODict({
         "ID": 1035,
-        "name": "月光海港五层",
+        "name": "月光海港四层",
         "sceneType": 4,
         "type": 6,
         "subType": 1,
@@ -764,12 +794,14 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "月光海港五层",
+        "fullName": "月光海港四层",
         "addbufflist": _tools.ROList([64004953]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1036: _tools.RODict({
         "ID": 1036,
-        "name": "月光海港六层",
+        "name": "月光海港五层",
         "sceneType": 4,
         "type": 6,
         "subType": 5,
@@ -811,8 +843,10 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "月光海港六层",
+        "fullName": "月光海港五层",
         "addbufflist": _tools.ROList([64004953]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1101: _tools.RODict({
         "ID": 1101,
@@ -860,6 +894,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教廷一层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1102: _tools.RODict({
         "ID": 1102,
@@ -907,6 +943,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教廷二层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1103: _tools.RODict({
         "ID": 1103,
@@ -954,6 +992,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教廷三层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1110: _tools.RODict({
         "ID": 1110,
@@ -1001,6 +1041,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "流沙故城一层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1111: _tools.RODict({
         "ID": 1111,
@@ -1048,6 +1090,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "流沙故城二层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1112: _tools.RODict({
         "ID": 1112,
@@ -1095,6 +1139,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "流沙故城三层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1120: _tools.RODict({
         "ID": 1120,
@@ -1142,6 +1188,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "五毒石窟一层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1121: _tools.RODict({
         "ID": 1121,
@@ -1189,6 +1237,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "五毒石窟二层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1122: _tools.RODict({
         "ID": 1122,
@@ -1236,6 +1286,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "五毒石窟三层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     1123: _tools.RODict({
         "ID": 1123,
@@ -1283,6 +1335,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "五毒石窟四层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2001: _tools.RODict({
         "ID": 2001,
@@ -1330,6 +1384,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "新手村(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2002: _tools.RODict({
         "ID": 2002,
@@ -1377,6 +1433,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "新手村(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2013: _tools.RODict({
         "ID": 2013,
@@ -1424,6 +1482,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2014: _tools.RODict({
         "ID": 2014,
@@ -1471,6 +1531,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2015: _tools.RODict({
         "ID": 2015,
@@ -1518,6 +1580,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2016: _tools.RODict({
         "ID": 2016,
@@ -1565,6 +1629,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2017: _tools.RODict({
         "ID": 2017,
@@ -1612,6 +1678,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2018: _tools.RODict({
         "ID": 2018,
@@ -1659,6 +1727,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2019: _tools.RODict({
         "ID": 2019,
@@ -1706,6 +1776,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2020: _tools.RODict({
         "ID": 2020,
@@ -1753,6 +1825,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2021: _tools.RODict({
         "ID": 2021,
@@ -1800,6 +1874,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2022: _tools.RODict({
         "ID": 2022,
@@ -1847,6 +1923,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2101: _tools.RODict({
         "ID": 2101,
@@ -1894,6 +1972,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "深海禁地",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2102: _tools.RODict({
         "ID": 2102,
@@ -1941,6 +2021,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "杜格祭坛",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2103: _tools.RODict({
         "ID": 2103,
@@ -1988,6 +2070,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "冰蜈蚣巢穴",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2201: _tools.RODict({
         "ID": 2201,
@@ -2035,6 +2119,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "小鬼钟馗",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2202: _tools.RODict({
         "ID": 2202,
@@ -2082,6 +2168,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "双生海妖",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     2203: _tools.RODict({
         "ID": 2203,
@@ -2129,6 +2217,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "熔岩三头蛟",
         "addbufflist": _tools.ROList([64004963]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3100: _tools.RODict({
         "ID": 3100,
@@ -2176,6 +2266,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊大厅",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3101: _tools.RODict({
         "ID": 3101,
@@ -2223,6 +2315,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-训练Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3102: _tools.RODict({
         "ID": 3102,
@@ -2270,6 +2364,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-训练Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3103: _tools.RODict({
         "ID": 3103,
@@ -2317,6 +2413,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-经验Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3104: _tools.RODict({
         "ID": 3104,
@@ -2364,6 +2462,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-经验Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3105: _tools.RODict({
         "ID": 3105,
@@ -2411,6 +2511,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-经验Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3106: _tools.RODict({
         "ID": 3106,
@@ -2458,6 +2560,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-魔物",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3107: _tools.RODict({
         "ID": 3107,
@@ -2505,6 +2609,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3108: _tools.RODict({
         "ID": 3108,
@@ -2552,6 +2658,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3109: _tools.RODict({
         "ID": 3109,
@@ -2599,6 +2707,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3110: _tools.RODict({
         "ID": 3110,
@@ -2646,6 +2756,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-白银Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3111: _tools.RODict({
         "ID": 3111,
@@ -2693,6 +2805,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-白银Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3112: _tools.RODict({
         "ID": 3112,
@@ -2740,6 +2854,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-黄金Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3113: _tools.RODict({
         "ID": 3113,
@@ -2787,6 +2903,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-黄金Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3114: _tools.RODict({
         "ID": 3114,
@@ -2834,6 +2952,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-黄金Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3115: _tools.RODict({
         "ID": 3115,
@@ -2881,6 +3001,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-守护",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3116: _tools.RODict({
         "ID": 3116,
@@ -2928,6 +3050,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-协助",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3117: _tools.RODict({
         "ID": 3117,
@@ -2975,6 +3099,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-封印",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3118: _tools.RODict({
         "ID": 3118,
@@ -3022,6 +3148,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-黑铁",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3119: _tools.RODict({
         "ID": 3119,
@@ -3069,6 +3197,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-真气",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3120: _tools.RODict({
         "ID": 3120,
@@ -3116,6 +3246,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3121: _tools.RODict({
         "ID": 3121,
@@ -3163,6 +3295,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3200: _tools.RODict({
         "ID": 3200,
@@ -3210,6 +3344,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-入口",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3201: _tools.RODict({
         "ID": 3201,
@@ -3257,6 +3393,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-训练Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3202: _tools.RODict({
         "ID": 3202,
@@ -3304,6 +3442,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-训练Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3203: _tools.RODict({
         "ID": 3203,
@@ -3351,6 +3491,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-经验Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3204: _tools.RODict({
         "ID": 3204,
@@ -3398,6 +3540,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-经验Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3205: _tools.RODict({
         "ID": 3205,
@@ -3445,6 +3589,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-经验Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3206: _tools.RODict({
         "ID": 3206,
@@ -3492,6 +3638,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-魔物",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3207: _tools.RODict({
         "ID": 3207,
@@ -3539,6 +3687,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3208: _tools.RODict({
         "ID": 3208,
@@ -3586,6 +3736,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3209: _tools.RODict({
         "ID": 3209,
@@ -3633,6 +3785,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3210: _tools.RODict({
         "ID": 3210,
@@ -3680,6 +3834,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-白银Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3211: _tools.RODict({
         "ID": 3211,
@@ -3727,6 +3883,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-白银Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3212: _tools.RODict({
         "ID": 3212,
@@ -3774,6 +3932,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-黄金Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3213: _tools.RODict({
         "ID": 3213,
@@ -3821,6 +3981,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-黄金Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3214: _tools.RODict({
         "ID": 3214,
@@ -3868,6 +4030,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-黄金Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3215: _tools.RODict({
         "ID": 3215,
@@ -3915,6 +4079,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-守护",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3216: _tools.RODict({
         "ID": 3216,
@@ -3962,6 +4128,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-协助",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3217: _tools.RODict({
         "ID": 3217,
@@ -4009,6 +4177,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-封印",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3218: _tools.RODict({
         "ID": 3218,
@@ -4056,6 +4226,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-黑铁",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3219: _tools.RODict({
         "ID": 3219,
@@ -4103,6 +4275,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-真气",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3220: _tools.RODict({
         "ID": 3220,
@@ -4150,6 +4324,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊2层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3221: _tools.RODict({
         "ID": 3221,
@@ -4197,6 +4373,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3300: _tools.RODict({
         "ID": 3300,
@@ -4244,6 +4422,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-入口",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3301: _tools.RODict({
         "ID": 3301,
@@ -4291,6 +4471,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-训练Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3302: _tools.RODict({
         "ID": 3302,
@@ -4338,6 +4520,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-训练Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3303: _tools.RODict({
         "ID": 3303,
@@ -4385,6 +4569,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-经验Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3304: _tools.RODict({
         "ID": 3304,
@@ -4432,6 +4618,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-经验Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3305: _tools.RODict({
         "ID": 3305,
@@ -4479,6 +4667,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-经验Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3306: _tools.RODict({
         "ID": 3306,
@@ -4526,6 +4716,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-魔物",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3307: _tools.RODict({
         "ID": 3307,
@@ -4573,6 +4765,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3308: _tools.RODict({
         "ID": 3308,
@@ -4620,6 +4814,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3309: _tools.RODict({
         "ID": 3309,
@@ -4667,6 +4863,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3310: _tools.RODict({
         "ID": 3310,
@@ -4714,6 +4912,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-白银Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3311: _tools.RODict({
         "ID": 3311,
@@ -4761,6 +4961,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-白银Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3312: _tools.RODict({
         "ID": 3312,
@@ -4808,6 +5010,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-黄金Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3313: _tools.RODict({
         "ID": 3313,
@@ -4855,6 +5059,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-黄金Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3314: _tools.RODict({
         "ID": 3314,
@@ -4902,6 +5108,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-黄金Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3315: _tools.RODict({
         "ID": 3315,
@@ -4949,6 +5157,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-守护",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3316: _tools.RODict({
         "ID": 3316,
@@ -4996,6 +5206,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-协助",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3317: _tools.RODict({
         "ID": 3317,
@@ -5043,6 +5255,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-封印",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3318: _tools.RODict({
         "ID": 3318,
@@ -5090,6 +5304,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-黑铁",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3319: _tools.RODict({
         "ID": 3319,
@@ -5137,6 +5353,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-真气",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3320: _tools.RODict({
         "ID": 3320,
@@ -5184,6 +5402,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊3层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3321: _tools.RODict({
         "ID": 3321,
@@ -5231,6 +5451,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3400: _tools.RODict({
         "ID": 3400,
@@ -5278,6 +5500,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-入口",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3401: _tools.RODict({
         "ID": 3401,
@@ -5325,6 +5549,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-训练Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3402: _tools.RODict({
         "ID": 3402,
@@ -5372,6 +5598,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-训练Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3403: _tools.RODict({
         "ID": 3403,
@@ -5419,6 +5647,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-经验Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3404: _tools.RODict({
         "ID": 3404,
@@ -5466,6 +5696,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-经验Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3405: _tools.RODict({
         "ID": 3405,
@@ -5513,6 +5745,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-经验Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3406: _tools.RODict({
         "ID": 3406,
@@ -5560,6 +5794,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-魔物",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3407: _tools.RODict({
         "ID": 3407,
@@ -5607,6 +5843,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3408: _tools.RODict({
         "ID": 3408,
@@ -5654,6 +5892,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3409: _tools.RODict({
         "ID": 3409,
@@ -5701,6 +5941,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3410: _tools.RODict({
         "ID": 3410,
@@ -5748,6 +5990,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-白银Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3411: _tools.RODict({
         "ID": 3411,
@@ -5795,6 +6039,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-白银Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3412: _tools.RODict({
         "ID": 3412,
@@ -5842,6 +6088,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-黄金Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3413: _tools.RODict({
         "ID": 3413,
@@ -5889,6 +6137,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-黄金Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3414: _tools.RODict({
         "ID": 3414,
@@ -5936,6 +6186,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-黄金Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3415: _tools.RODict({
         "ID": 3415,
@@ -5983,6 +6235,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-守护",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3416: _tools.RODict({
         "ID": 3416,
@@ -6030,6 +6284,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-协助",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3417: _tools.RODict({
         "ID": 3417,
@@ -6077,6 +6333,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-封印",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3418: _tools.RODict({
         "ID": 3418,
@@ -6124,6 +6382,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-黑铁",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3419: _tools.RODict({
         "ID": 3419,
@@ -6171,6 +6431,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-真气",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3420: _tools.RODict({
         "ID": 3420,
@@ -6218,6 +6480,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊4层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3421: _tools.RODict({
         "ID": 3421,
@@ -6265,6 +6529,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3500: _tools.RODict({
         "ID": 3500,
@@ -6312,6 +6578,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-入口",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3501: _tools.RODict({
         "ID": 3501,
@@ -6359,6 +6627,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-训练Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3502: _tools.RODict({
         "ID": 3502,
@@ -6406,6 +6676,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-训练Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3503: _tools.RODict({
         "ID": 3503,
@@ -6453,6 +6725,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-经验Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3504: _tools.RODict({
         "ID": 3504,
@@ -6500,6 +6774,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-经验Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3505: _tools.RODict({
         "ID": 3505,
@@ -6547,6 +6823,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-经验Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3506: _tools.RODict({
         "ID": 3506,
@@ -6594,6 +6872,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-魔物",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3507: _tools.RODict({
         "ID": 3507,
@@ -6641,6 +6921,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3508: _tools.RODict({
         "ID": 3508,
@@ -6688,6 +6970,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3509: _tools.RODict({
         "ID": 3509,
@@ -6735,6 +7019,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3510: _tools.RODict({
         "ID": 3510,
@@ -6782,6 +7068,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-白银Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3511: _tools.RODict({
         "ID": 3511,
@@ -6829,6 +7117,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-白银Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3512: _tools.RODict({
         "ID": 3512,
@@ -6876,6 +7166,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-黄金Ⅰ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3513: _tools.RODict({
         "ID": 3513,
@@ -6923,6 +7215,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-黄金Ⅱ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3514: _tools.RODict({
         "ID": 3514,
@@ -6970,6 +7264,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-黄金Ⅲ",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3515: _tools.RODict({
         "ID": 3515,
@@ -7017,6 +7313,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-守护",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3516: _tools.RODict({
         "ID": 3516,
@@ -7064,6 +7362,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-协助",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3517: _tools.RODict({
         "ID": 3517,
@@ -7111,6 +7411,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-封印",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3518: _tools.RODict({
         "ID": 3518,
@@ -7158,6 +7460,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-黑铁",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3519: _tools.RODict({
         "ID": 3519,
@@ -7205,6 +7509,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-真气",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3520: _tools.RODict({
         "ID": 3520,
@@ -7252,6 +7558,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊5层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     3521: _tools.RODict({
         "ID": 3521,
@@ -7299,6 +7607,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     4001: _tools.RODict({
         "ID": 4001,
@@ -7346,10 +7656,12 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "同心谷(副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     4002: _tools.RODict({
         "ID": 4002,
-        "name": "山洞1（新手副本）",
+        "name": "新手试炼（新手副本）",
         "sceneType": 2,
         "type": 2,
         "subType": 0,
@@ -7358,7 +7670,7 @@ datas = _tools.RODict({
         "AOI": 100,
         "enterType": 3,
         "teammateConfirm": 0,
-        "breakAwayStuckPos": _tools.ROList([(79.53254, 40.4816, 48.57558)]),
+        "breakAwayStuckPos": _tools.ROList([(767.0632, 33.99687, 419.8018)]),
         "ifSafeArea": 1,
         "ifEnemy": 1,
         "deathPenaltyID": 1,
@@ -7393,6 +7705,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "山洞1（新手副本）",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 1
     }),
     4003: _tools.RODict({
         "ID": 4003,
@@ -7440,6 +7754,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "同心谷(任务副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     4004: _tools.RODict({
         "ID": 4004,
@@ -7487,6 +7803,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "月光海港(任务副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     4005: _tools.RODict({
         "ID": 4005,
@@ -7534,6 +7852,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "祖珂地堡（任务副本）",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     4006: _tools.RODict({
         "ID": 4006,
@@ -7581,6 +7901,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "山洞3（新手副本）",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     4007: _tools.RODict({
         "ID": 4007,
@@ -7628,6 +7950,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "新元城郊(任务副本)",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     5100: _tools.RODict({
         "ID": 5100,
@@ -7675,6 +7999,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "试炼峰一层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     5101: _tools.RODict({
         "ID": 5101,
@@ -7722,6 +8048,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "试炼峰二层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     5102: _tools.RODict({
         "ID": 5102,
@@ -7769,6 +8097,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "试炼峰三层",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     6000: _tools.RODict({
         "ID": 6000,
@@ -7816,6 +8146,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "新元城战",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     }),
     7000: _tools.RODict({
         "ID": 7000,
@@ -7863,6 +8195,8 @@ datas = _tools.RODict({
         "isDmgDataInvsbnew": 0,
         "fullName": "演武场",
         "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0
     })
 })
 minKey = 1001

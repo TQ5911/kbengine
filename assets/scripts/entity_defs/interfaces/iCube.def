@@ -57,10 +57,17 @@
             <Flags>         CELL_PRIVATE                </Flags>
             <Default>       0                           </Default>
         </cubeCowTimerId>
+
+        <cubeQuota>
+            <Type>          CUBE_QUOTA_DATA_INFO        </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Persistent>    true                        </Persistent>
+        </cubeQuota>
     </Properties>
 
     <BaseMethods>
         <beforeEnterCubeDecrementCnt>
+            <Arg>           SPACE_NO                </Arg>
             <Arg>           PYTHON                  </Arg>
         </beforeEnterCubeDecrementCnt>
 
@@ -89,6 +96,7 @@
 
         <autoRenewCubeRoom>
             <Arg>           CUBE_SWITCH             </Arg>
+            <Arg>           BOOL                    </Arg>
         </autoRenewCubeRoom>
 
         <afterEnterCubeDeductTimes>
@@ -134,6 +142,7 @@
         <directlyAddCubeRoomDuration>
             <Arg>           STRING                  </Arg>
             <Arg>           PYTHON                  </Arg>
+            <Arg>           PYTHON                  </Arg>
         </directlyAddCubeRoomDuration>
 
         <setEnterCubeFloor> <Exposed/>
@@ -145,6 +154,10 @@
 
         <resetCubeCowDur>
         </resetCubeCowDur>
+
+        <leaveCubeInternal>
+            <Arg>           UINT8                   </Arg>
+        </leaveCubeInternal>
     </CellMethods>
 
     <ClientMethods>

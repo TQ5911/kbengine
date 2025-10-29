@@ -241,7 +241,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_GUILD_CREATE_DATA)EntityDef.id2datatypes[197]).addToStreamEx(bundle, arg1);
+			((DATATYPE_GUILD_CREATE_DATA)EntityDef.id2datatypes[194]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -737,7 +737,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_GUILD_JOIN_COND_DATA_INFO)EntityDef.id2datatypes[196]).addToStreamEx(bundle, arg1);
+			((DATATYPE_GUILD_JOIN_COND_DATA_INFO)EntityDef.id2datatypes[193]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -1336,7 +1336,7 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void reqMakeEquipment(UInt32 arg1, List<UInt16> arg2, SByte arg3)
+		public void reqMakeEquipment(UInt32 arg1, List<UInt16> arg2, List<UInt16> arg3, SByte arg4)
 		{
 			Bundle pBundle = newCall("reqMakeEquipment", 0);
 			if(pBundle == null)
@@ -1344,7 +1344,8 @@ namespace KBEngine
 
 			bundle.writeUint32(arg1);
 			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg2);
-			bundle.writeInt8(arg3);
+			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg3);
+			bundle.writeInt8(arg4);
 			sendCall(null);
 		}
 
@@ -1869,7 +1870,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_INSTANT_POTION_DATA_INFO)EntityDef.id2datatypes[323]).addToStreamEx(bundle, arg1);
+			((DATATYPE_INSTANT_POTION_DATA_INFO)EntityDef.id2datatypes[320]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -3146,7 +3147,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_CUBE_SWITCH)EntityDef.id2datatypes[223]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CUBE_SWITCH)EntityDef.id2datatypes[220]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -3177,7 +3178,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_WONDER_LAND_SWITCH)EntityDef.id2datatypes[224]).addToStreamEx(bundle, arg2);
+			((DATATYPE_WONDER_LAND_SWITCH)EntityDef.id2datatypes[221]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -3257,6 +3258,19 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void reqEquipBindValueWashing(Byte arg1, UInt16 arg2, UInt64 arg3, UInt32 arg4)
+		{
+			Bundle pBundle = newCall("reqEquipBindValueWashing", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint16(arg2);
+			bundle.writeUint64(arg3);
+			bundle.writeUint32(arg4);
+			sendCall(null);
+		}
+
 		public void reqEquipBless(Byte arg1, UInt32 arg2, UInt64 arg3)
 		{
 			Bundle pBundle = newCall("reqEquipBless", 0);
@@ -3269,7 +3283,7 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void reqEquipEnhance(Byte arg1, UInt16 arg2, UInt64 arg3, UInt32 arg4, Byte arg5)
+		public void reqEquipEnhance(Byte arg1, UInt16 arg2, UInt64 arg3, Byte arg4)
 		{
 			Bundle pBundle = newCall("reqEquipEnhance", 0);
 			if(pBundle == null)
@@ -3278,8 +3292,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint16(arg2);
 			bundle.writeUint64(arg3);
-			bundle.writeUint32(arg4);
-			bundle.writeUint8(arg5);
+			bundle.writeUint8(arg4);
 			sendCall(null);
 		}
 
@@ -3334,7 +3347,7 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void reqEquipSpiritWashing(Byte arg1, UInt32 arg2, UInt64 arg3)
+		public void reqEquipSpiritWashing(Byte arg1, UInt32 arg2, UInt64 arg3, Byte arg4)
 		{
 			Bundle pBundle = newCall("reqEquipSpiritWashing", 0);
 			if(pBundle == null)
@@ -3343,6 +3356,21 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint32(arg2);
 			bundle.writeUint64(arg3);
+			bundle.writeUint8(arg4);
+			sendCall(null);
+		}
+
+		public void reqEquipUpgrade(Byte arg1, UInt16 arg2, UInt64 arg3, Byte arg4, Byte arg5)
+		{
+			Bundle pBundle = newCall("reqEquipUpgrade", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint16(arg2);
+			bundle.writeUint64(arg3);
+			bundle.writeUint8(arg4);
+			bundle.writeUint8(arg5);
 			sendCall(null);
 		}
 
@@ -3728,7 +3756,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL)EntityDef.id2datatypes[246]).addToStreamEx(bundle, arg1);
+			((DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL)EntityDef.id2datatypes[243]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 

@@ -1247,9 +1247,8 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             self.debug(f"手动清理购买记录完成: 清理了{cleaned_count}个记录")
             self.debug(f"清理后统计: 总记录={stats['total_purchased']}, 活跃记录={stats['active_records']}")
             
-        elif msgId == '生成报告':
             self.generate_stress_test_report()
-            
+
         else:
             super().onRecvAvatarChannelMsg(channelID, avatarInfo, msgId)
             

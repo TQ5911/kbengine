@@ -349,23 +349,6 @@ def serverId():
 
 
 @cache
-def serverName():
-    # try:
-    #     name = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/serverName')
-    # except:
-    #     name = '无名服务器'
-    # return name
-    try:
-        import serverList_serverList
-        sid = serverId()
-        if sid in serverList_serverList.datas:
-            return serverList_serverList.datas[sid]['serverName']
-        return '无名服务器'
-    except:
-        return '无名服务器'
-
-
-@cache
 def gmHostList():
     try:
         gmServers = ResMgr.getStringContentListForPath(ResMgr.kbengineConfig(), 'game/gm')
@@ -570,15 +553,14 @@ def gmVerifyByGroup():
         v = 0
     return v
 
-
-@cache
-def worldLineCnt():
+@functools.lru_cache(64)
+def branchLineCnt(branchType):
     try:
-        v = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/worldLineCnt'))
+        cnt = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/branchLineCnt/subType' + str(branchType)))
     except:
-        v = 2
-    return v
-
+        ERROR_MSG('branchLineCnt load fail', branchType)
+        cnt = 2
+    return cnt
 
 @cache
 def combatMsgFlag():
@@ -701,8 +683,9 @@ def serverMaximumLoginAccount():
     try:
         _val = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/maximumLoginAccount'))
     except:
-        _val = 200 * worldLineCnt() * cellAppCount()
+        _val = 200 * cellAppCount()
     return _val
+
 
 
 @cache

@@ -20,6 +20,10 @@ class BaseBag(itemContainer.ItemContainer):
         self.lockDesc = ''
         self.lastSortBag = 0
 
+    @classmethod
+    def _checkIgnores_(cls):
+        return 'lockedTime', 'lockDesc'
+    
     def _lateReload(self):
         try:
             super(BaseBag, self)._lateReload()

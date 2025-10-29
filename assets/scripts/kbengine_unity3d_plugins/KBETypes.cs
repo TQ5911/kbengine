@@ -5706,23 +5706,18 @@ namespace KBEngine
 
 	}
 
-	public class GLYPH_INFO
+	public class GLYPH_VAL
 	{
-		public SByte glyphState = 0;
-		public List<AFFIX_VAL> glyphAffixes = new List<AFFIX_VAL>();
+		public UInt32 affixId = 0;
+		public float affixVal = 0f;
+		public string affixEffect = "";
 
 	}
 
 	public class CLI_GLYPH_INFO
 	{
-		public SByte glyphState = 0;
-		public List<AFFIX_VAL> glyphAffixes = new List<AFFIX_VAL>();
-
-	}
-
-	public class SPIRIT_INFO
-	{
-		public List<AFFIX_VAL> spiritAffixes = new List<AFFIX_VAL>();
+		public Byte glyphPos = 0;
+		public List<GLYPH_VAL> glyphAffixes = new List<GLYPH_VAL>();
 
 	}
 
@@ -5741,8 +5736,8 @@ namespace KBEngine
 		public Byte bindType = 0;
 		public SByte lockStatus = 0;
 		public UInt32 auctionTime = 0;
-		public List<SPIRIT_INFO> spiritDatas = new List<SPIRIT_INFO>();
-		public List<GLYPH_INFO> glyphDatas = new List<GLYPH_INFO>();
+		public List<CLI_SPIRIT_INFO> spiritDatas = new List<CLI_SPIRIT_INFO>();
+		public List<CLI_GLYPH_INFO> glyphInfo = new List<CLI_GLYPH_INFO>();
 		public List<UInt32> radomEnhTimes = new List<UInt32>();
 		public Byte enhanceLv = 0;
 		public Byte enhanceLvRate = 0;
@@ -5756,6 +5751,7 @@ namespace KBEngine
 		public UInt16 bindValue = 0;
 		public Byte glyphGroup = 0;
 		public Byte spiritGroup = 0;
+		public Byte grade = 0;
 
 	}
 
@@ -5913,7 +5909,7 @@ namespace KBEngine
 	{
 		public Int32 targetId = 0;
 		public Int32 hurt = 0;
-		public Int32 hitType = 0;
+		public Byte hitType = 0;
 
 	}
 
@@ -5969,7 +5965,6 @@ namespace KBEngine
 		public Vector3 position = new Vector3(0f, 0f, 0f);
 		public Int32 hp = 0;
 		public Int32 fullHp = 0;
-		public Byte equipSetLv = 0;
 		public Byte enableMics = 0;
 		public Byte isBlockMics = 0;
 		public string openId = "";
@@ -6930,6 +6925,7 @@ namespace KBEngine
 		public UInt32 num = 0;
 		public UInt32 leftNum = 0;
 		public UInt64 maxGbId = 0;
+		public string desc = "";
 		public List<RED_BAG_FETCH_VAL> fetchPlayerList = new List<RED_BAG_FETCH_VAL>();
 
 	}
@@ -6948,6 +6944,7 @@ namespace KBEngine
 		public Byte guildLevel = 0;
 		public Int32 guildScore = 0;
 		public string leaderName = "";
+		public UInt32 ts = 0;
 
 	}
 

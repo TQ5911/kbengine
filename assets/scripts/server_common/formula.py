@@ -117,6 +117,11 @@ def isCubeSpace(spaceNo):
     return whatSpaceType(spaceNo) == gameconst.SpaceType.SpaceCube
 
 
+def isCubeReady(spaceNo):
+    _mapId = getMapId(spaceNo)
+    return _mapId == 3100
+
+
 def isWonderLandSpace(spaceNo):
     return whatSpaceType(spaceNo) == gameconst.SpaceType.SpaceWonderLand
 
@@ -168,10 +173,6 @@ def getLineType(spaceNo):
         return 0
 
     return spaceNo // gameconst.SPACE_NO_INTERVAL
-
-
-def getWorldLineStubIdx(lineNo):
-    return lineNo // gameconst.getWorldLineCnt() + 1
 
 
 def getDungeonNoBySpaceNo(spaceNo):
@@ -279,11 +280,6 @@ def getGameEntityId(entId):
 
 def getEntityId(gameEntityId):
     return gameEntityId // 1000
-
-
-def getLineStubIndexBySpaceNo(spaceNo):
-    lineNo = getLineNo(spaceNo)
-    return getWorldLineStubIdx(lineNo)
 
 def isDungeonSpace(spaceNo):
     return whatSpaceType(spaceNo) in (gameconst.SpaceType.SpaceWorldDungeon,

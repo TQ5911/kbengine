@@ -444,7 +444,6 @@ class ItemContainer(userType.UserSoleType):
         for gridId, itemId in deductDic.items():
             self.cleanGridByGridId(owner, gridId, itemId, opUUID, src, detail)
 
-        self.lockedTime = 0
         self.gridId2GridObj = {}
         self.itemId2gridIds = {}
 
@@ -452,3 +451,90 @@ class ItemContainer(userType.UserSoleType):
         for gridId, item in self.gridId2GridObj.items():
             if item.itemId == itemId:
                 return item.uniqueId
+    
+    # 这里有限消耗绑定的
+    def getGridIDsWithConds(self, itemId, bindType, count, args = None, excludedGridIDs = None):
+        if count <= 0:
+            return False, None
+        if bindType not in gameconst.ItemBindType.VALID_BIND_TYPE:
+            return False, None
+        gridIDs = self.itemId2gridIds.get(itemId, None)
+        if not gridIDs:
+            return False, None
+        bindCount = 0
+        bindGridIDs = {}
+        normalCount = 0
+        normalGridIDs = {}
+        for gridID in gridIDs:
+            if excludedGridIDs and gridID in excludedGridIDs:
+                continue
+            item = self.gridId2GridObj.get(gridID)
+            if item.isLocked():
+                continue
+            if bindType != gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED and bindType != item.bindType:
+                continue
+            isGot = True
+            if args:
+                for key, value in args.items():
+                    data = item.getattr(key, None)
+                    if data is None:
+                        isGot = False
+                        break
+                    if data != value:
+                        isGot = False
+                        break
+            if isGot:
+                if bindType == gameconst.ItemBindType.BIND:
+                    if item.itemNum >= count:
+                        bindGridIDs[gridID] = count
+                        return True, bindGridIDs
+                    else:
+                        count -= item.itemNum
+                        bindGridIDs[gridID] = item.itemNum
+                        if count == 0:
+                            return True, bindGridIDs
+
+                    bindCount += item.itemNum
+                elif bindType == gameconst.ItemBindType.NORMAL:
+                    if item.itemNum >= count:
+                        normalGridIDs[gridID] = count
+                        return True, normalGridIDs
+                    else:
+                        count -= item.itemNum
+                        normalGridIDs[gridID] = item.itemNum
+                        if count == 0:
+                            return True, normalGridIDs
+                        
+                    normalCount += item.itemNum
+                elif bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
+                    if item.bindType == gameconst.ItemBindType.BIND:
+                        bindGridIDs[gridID] = item.itemNum
+                        bindCount += item.itemNum
+                    elif item.bindType == gameconst.ItemBindType.NORMAL:
+                        normalGridIDs[gridID] = item.itemNum
+                        normalCount += item.itemNum
+        # 同时满足的, 优先使用绑定的, 再使用未绑定的, 需要计算一遍
+        if bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
+            results = {}
+            for gridID, itemNum in bindGridIDs.items():
+                if itemNum > count:
+                    results[gridID] = count
+                    return True, results
+                else:
+                    count -= itemNum
+                    results[gridID] = itemNum
+                    if count == 0:
+                        return True, normalGridIDs
+                    
+            for gridID, itemNum in normalGridIDs.items():
+                if itemNum > count:
+                    results[gridID] = count
+                    return True, results
+                else:
+                    count -= itemNum
+                    results[gridID] = itemNum
+                    if count == 0:
+                        return True, normalGridIDs
+
+        return False, None
+        

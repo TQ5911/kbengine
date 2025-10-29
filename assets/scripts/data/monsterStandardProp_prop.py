@@ -17,804 +17,364 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "normalExp": 20
+        "normalExp": 10
     }),
     2: _tools.RODict({
         "ID": 2,
-        "normalExp": 22
+        "normalExp": 10
     }),
     3: _tools.RODict({
         "ID": 3,
-        "normalExp": 24
+        "normalExp": 10
     }),
     4: _tools.RODict({
         "ID": 4,
-        "normalExp": 26
+        "normalExp": 10
     }),
     5: _tools.RODict({
         "ID": 5,
-        "normalExp": 28
+        "normalExp": 10
     }),
     6: _tools.RODict({
         "ID": 6,
-        "normalExp": 31
+        "normalExp": 12
     }),
     7: _tools.RODict({
         "ID": 7,
-        "normalExp": 34
+        "normalExp": 14
     }),
     8: _tools.RODict({
         "ID": 8,
-        "normalExp": 37
+        "normalExp": 16
     }),
     9: _tools.RODict({
         "ID": 9,
-        "normalExp": 40
+        "normalExp": 18
     }),
     10: _tools.RODict({
         "ID": 10,
-        "normalExp": 44
+        "normalExp": 20
     }),
     11: _tools.RODict({
         "ID": 11,
-        "normalExp": 48
+        "normalExp": 22
     }),
     12: _tools.RODict({
         "ID": 12,
-        "normalExp": 52
+        "normalExp": 24
     }),
     13: _tools.RODict({
         "ID": 13,
-        "normalExp": 57
+        "normalExp": 26
     }),
     14: _tools.RODict({
         "ID": 14,
-        "normalExp": 62
+        "normalExp": 28
     }),
     15: _tools.RODict({
         "ID": 15,
-        "normalExp": 68
+        "normalExp": 31
     }),
     16: _tools.RODict({
         "ID": 16,
-        "normalExp": 74
+        "normalExp": 34
     }),
     17: _tools.RODict({
         "ID": 17,
-        "normalExp": 81
+        "normalExp": 37
     }),
     18: _tools.RODict({
         "ID": 18,
-        "normalExp": 88
+        "normalExp": 40
     }),
     19: _tools.RODict({
         "ID": 19,
-        "normalExp": 96
+        "normalExp": 44
     }),
     20: _tools.RODict({
         "ID": 20,
-        "normalExp": 105
+        "normalExp": 48
     }),
     21: _tools.RODict({
         "ID": 21,
-        "normalExp": 114
+        "normalExp": 52
     }),
     22: _tools.RODict({
         "ID": 22,
-        "normalExp": 124
+        "normalExp": 57
     }),
     23: _tools.RODict({
         "ID": 23,
-        "normalExp": 135
+        "normalExp": 62
     }),
     24: _tools.RODict({
         "ID": 24,
-        "normalExp": 147
+        "normalExp": 68
     }),
     25: _tools.RODict({
         "ID": 25,
-        "normalExp": 160
+        "normalExp": 74
     }),
     26: _tools.RODict({
         "ID": 26,
-        "normalExp": 174
+        "normalExp": 81
     }),
     27: _tools.RODict({
         "ID": 27,
-        "normalExp": 190
+        "normalExp": 88
     }),
     28: _tools.RODict({
         "ID": 28,
-        "normalExp": 207
+        "normalExp": 96
     }),
     29: _tools.RODict({
         "ID": 29,
-        "normalExp": 226
+        "normalExp": 105
     }),
     30: _tools.RODict({
         "ID": 30,
-        "normalExp": 246
+        "normalExp": 114
     }),
     31: _tools.RODict({
         "ID": 31,
-        "normalExp": 268
+        "normalExp": 124
     }),
     32: _tools.RODict({
         "ID": 32,
-        "normalExp": 292
+        "normalExp": 135
     }),
     33: _tools.RODict({
         "ID": 33,
-        "normalExp": 318
+        "normalExp": 147
     }),
     34: _tools.RODict({
         "ID": 34,
-        "normalExp": 347
+        "normalExp": 160
     }),
     35: _tools.RODict({
         "ID": 35,
-        "normalExp": 378
+        "normalExp": 174
     }),
     36: _tools.RODict({
         "ID": 36,
-        "normalExp": 412
+        "normalExp": 190
     }),
     37: _tools.RODict({
         "ID": 37,
-        "normalExp": 449
+        "normalExp": 207
     }),
     38: _tools.RODict({
         "ID": 38,
-        "normalExp": 489
+        "normalExp": 226
     }),
     39: _tools.RODict({
         "ID": 39,
-        "normalExp": 533
+        "normalExp": 246
     }),
     40: _tools.RODict({
         "ID": 40,
-        "normalExp": 581
+        "normalExp": 268
     }),
     41: _tools.RODict({
         "ID": 41,
-        "normalExp": 633
+        "normalExp": 292
     }),
     42: _tools.RODict({
         "ID": 42,
-        "normalExp": 690
+        "normalExp": 318
     }),
     43: _tools.RODict({
         "ID": 43,
-        "normalExp": 752
+        "normalExp": 347
     }),
     44: _tools.RODict({
         "ID": 44,
-        "normalExp": 820
+        "normalExp": 378
     }),
     45: _tools.RODict({
         "ID": 45,
-        "normalExp": 894
+        "normalExp": 412
     }),
     46: _tools.RODict({
         "ID": 46,
-        "normalExp": 974
+        "normalExp": 449
     }),
     47: _tools.RODict({
         "ID": 47,
-        "normalExp": 1062
+        "normalExp": 489
     }),
     48: _tools.RODict({
         "ID": 48,
-        "normalExp": 1158
+        "normalExp": 533
     }),
     49: _tools.RODict({
         "ID": 49,
-        "normalExp": 1262
+        "normalExp": 581
     }),
     50: _tools.RODict({
         "ID": 50,
-        "normalExp": 1376
+        "normalExp": 633
     }),
     51: _tools.RODict({
         "ID": 51,
-        "normalExp": 1500
+        "normalExp": 690
     }),
     52: _tools.RODict({
         "ID": 52,
-        "normalExp": 1635
+        "normalExp": 752
     }),
     53: _tools.RODict({
         "ID": 53,
-        "normalExp": 1782
+        "normalExp": 820
     }),
     54: _tools.RODict({
         "ID": 54,
-        "normalExp": 1942
+        "normalExp": 894
     }),
     55: _tools.RODict({
         "ID": 55,
-        "normalExp": 2117
+        "normalExp": 974
     }),
     56: _tools.RODict({
         "ID": 56,
-        "normalExp": 2308
+        "normalExp": 1062
     }),
     57: _tools.RODict({
         "ID": 57,
-        "normalExp": 2516
+        "normalExp": 1158
     }),
     58: _tools.RODict({
         "ID": 58,
-        "normalExp": 2742
+        "normalExp": 1262
     }),
     59: _tools.RODict({
         "ID": 59,
-        "normalExp": 2989
+        "normalExp": 1376
     }),
     60: _tools.RODict({
         "ID": 60,
-        "normalExp": 3258
+        "normalExp": 1500
     }),
     61: _tools.RODict({
         "ID": 61,
-        "normalExp": 3551
+        "normalExp": 1635
     }),
     62: _tools.RODict({
         "ID": 62,
-        "normalExp": 3871
+        "normalExp": 1782
     }),
     63: _tools.RODict({
         "ID": 63,
-        "normalExp": 4219
+        "normalExp": 1942
     }),
     64: _tools.RODict({
         "ID": 64,
-        "normalExp": 4599
+        "normalExp": 2117
     }),
     65: _tools.RODict({
         "ID": 65,
-        "normalExp": 5013
+        "normalExp": 2308
     }),
     66: _tools.RODict({
         "ID": 66,
-        "normalExp": 5464
+        "normalExp": 2516
     }),
     67: _tools.RODict({
         "ID": 67,
-        "normalExp": 5956
+        "normalExp": 2742
     }),
     68: _tools.RODict({
         "ID": 68,
-        "normalExp": 6492
+        "normalExp": 2989
     }),
     69: _tools.RODict({
         "ID": 69,
-        "normalExp": 7076
+        "normalExp": 3258
     }),
     70: _tools.RODict({
         "ID": 70,
-        "normalExp": 7713
+        "normalExp": 3551
     }),
     71: _tools.RODict({
         "ID": 71,
-        "normalExp": 1000
+        "normalExp": 3871
     }),
     72: _tools.RODict({
         "ID": 72,
-        "normalExp": 1000
+        "normalExp": 4219
     }),
     73: _tools.RODict({
         "ID": 73,
-        "normalExp": 1000
+        "normalExp": 4599
     }),
     74: _tools.RODict({
         "ID": 74,
-        "normalExp": 1000
+        "normalExp": 5013
     }),
     75: _tools.RODict({
         "ID": 75,
-        "normalExp": 1000
+        "normalExp": 5464
     }),
     76: _tools.RODict({
         "ID": 76,
-        "normalExp": 1000
+        "normalExp": 5956
     }),
     77: _tools.RODict({
         "ID": 77,
-        "normalExp": 1000
+        "normalExp": 6492
     }),
     78: _tools.RODict({
         "ID": 78,
-        "normalExp": 1000
+        "normalExp": 7076
     }),
     79: _tools.RODict({
         "ID": 79,
-        "normalExp": 1000
+        "normalExp": 7713
     }),
     80: _tools.RODict({
         "ID": 80,
-        "normalExp": 1000
+        "normalExp": 8407
     }),
     81: _tools.RODict({
         "ID": 81,
-        "normalExp": 1000
+        "normalExp": 9164
     }),
     82: _tools.RODict({
         "ID": 82,
-        "normalExp": 1000
+        "normalExp": 9989
     }),
     83: _tools.RODict({
         "ID": 83,
-        "normalExp": 1000
+        "normalExp": 10888
     }),
     84: _tools.RODict({
         "ID": 84,
-        "normalExp": 1000
+        "normalExp": 11868
     }),
     85: _tools.RODict({
         "ID": 85,
-        "normalExp": 1000
+        "normalExp": 12936
     }),
     86: _tools.RODict({
         "ID": 86,
-        "normalExp": 1000
+        "normalExp": 14100
     }),
     87: _tools.RODict({
         "ID": 87,
-        "normalExp": 1000
+        "normalExp": 15369
     }),
     88: _tools.RODict({
         "ID": 88,
-        "normalExp": 1000
+        "normalExp": 16752
     }),
     89: _tools.RODict({
         "ID": 89,
-        "normalExp": 1000
+        "normalExp": 18260
     }),
     90: _tools.RODict({
         "ID": 90,
-        "normalExp": 1000
-    }),
-    91: _tools.RODict({
-        "ID": 91,
-        "normalExp": 1000
-    }),
-    92: _tools.RODict({
-        "ID": 92,
-        "normalExp": 1000
-    }),
-    93: _tools.RODict({
-        "ID": 93,
-        "normalExp": 1000
-    }),
-    94: _tools.RODict({
-        "ID": 94,
-        "normalExp": 1000
-    }),
-    95: _tools.RODict({
-        "ID": 95,
-        "normalExp": 1000
-    }),
-    96: _tools.RODict({
-        "ID": 96,
-        "normalExp": 1000
-    }),
-    97: _tools.RODict({
-        "ID": 97,
-        "normalExp": 1000
-    }),
-    98: _tools.RODict({
-        "ID": 98,
-        "normalExp": 1000
-    }),
-    99: _tools.RODict({
-        "ID": 99,
-        "normalExp": 1000
-    }),
-    100: _tools.RODict({
-        "ID": 100,
-        "normalExp": 1000
-    }),
-    101: _tools.RODict({
-        "ID": 101,
-        "normalExp": 1000
-    }),
-    102: _tools.RODict({
-        "ID": 102,
-        "normalExp": 1000
-    }),
-    103: _tools.RODict({
-        "ID": 103,
-        "normalExp": 1000
-    }),
-    104: _tools.RODict({
-        "ID": 104,
-        "normalExp": 1000
-    }),
-    105: _tools.RODict({
-        "ID": 105,
-        "normalExp": 1000
-    }),
-    106: _tools.RODict({
-        "ID": 106,
-        "normalExp": 1000
-    }),
-    107: _tools.RODict({
-        "ID": 107,
-        "normalExp": 1000
-    }),
-    108: _tools.RODict({
-        "ID": 108,
-        "normalExp": 1000
-    }),
-    109: _tools.RODict({
-        "ID": 109,
-        "normalExp": 1000
-    }),
-    110: _tools.RODict({
-        "ID": 110,
-        "normalExp": 1000
-    }),
-    111: _tools.RODict({
-        "ID": 111,
-        "normalExp": 1000
-    }),
-    112: _tools.RODict({
-        "ID": 112,
-        "normalExp": 1000
-    }),
-    113: _tools.RODict({
-        "ID": 113,
-        "normalExp": 1000
-    }),
-    114: _tools.RODict({
-        "ID": 114,
-        "normalExp": 1000
-    }),
-    115: _tools.RODict({
-        "ID": 115,
-        "normalExp": 1000
-    }),
-    116: _tools.RODict({
-        "ID": 116,
-        "normalExp": 1000
-    }),
-    117: _tools.RODict({
-        "ID": 117,
-        "normalExp": 1000
-    }),
-    118: _tools.RODict({
-        "ID": 118,
-        "normalExp": 1000
-    }),
-    119: _tools.RODict({
-        "ID": 119,
-        "normalExp": 1000
-    }),
-    120: _tools.RODict({
-        "ID": 120,
-        "normalExp": 1000
-    }),
-    121: _tools.RODict({
-        "ID": 121,
-        "normalExp": 1000
-    }),
-    122: _tools.RODict({
-        "ID": 122,
-        "normalExp": 1000
-    }),
-    123: _tools.RODict({
-        "ID": 123,
-        "normalExp": 1000
-    }),
-    124: _tools.RODict({
-        "ID": 124,
-        "normalExp": 1000
-    }),
-    125: _tools.RODict({
-        "ID": 125,
-        "normalExp": 1000
-    }),
-    126: _tools.RODict({
-        "ID": 126,
-        "normalExp": 1000
-    }),
-    127: _tools.RODict({
-        "ID": 127,
-        "normalExp": 1000
-    }),
-    128: _tools.RODict({
-        "ID": 128,
-        "normalExp": 1000
-    }),
-    129: _tools.RODict({
-        "ID": 129,
-        "normalExp": 1000
-    }),
-    130: _tools.RODict({
-        "ID": 130,
-        "normalExp": 1000
-    }),
-    131: _tools.RODict({
-        "ID": 131,
-        "normalExp": 1000
-    }),
-    132: _tools.RODict({
-        "ID": 132,
-        "normalExp": 1000
-    }),
-    133: _tools.RODict({
-        "ID": 133,
-        "normalExp": 1000
-    }),
-    134: _tools.RODict({
-        "ID": 134,
-        "normalExp": 1000
-    }),
-    135: _tools.RODict({
-        "ID": 135,
-        "normalExp": 1000
-    }),
-    136: _tools.RODict({
-        "ID": 136,
-        "normalExp": 1000
-    }),
-    137: _tools.RODict({
-        "ID": 137,
-        "normalExp": 1000
-    }),
-    138: _tools.RODict({
-        "ID": 138,
-        "normalExp": 1000
-    }),
-    139: _tools.RODict({
-        "ID": 139,
-        "normalExp": 1000
-    }),
-    140: _tools.RODict({
-        "ID": 140,
-        "normalExp": 1000
-    }),
-    141: _tools.RODict({
-        "ID": 141,
-        "normalExp": 1000
-    }),
-    142: _tools.RODict({
-        "ID": 142,
-        "normalExp": 1000
-    }),
-    143: _tools.RODict({
-        "ID": 143,
-        "normalExp": 1000
-    }),
-    144: _tools.RODict({
-        "ID": 144,
-        "normalExp": 1000
-    }),
-    145: _tools.RODict({
-        "ID": 145,
-        "normalExp": 1000
-    }),
-    146: _tools.RODict({
-        "ID": 146,
-        "normalExp": 1000
-    }),
-    147: _tools.RODict({
-        "ID": 147,
-        "normalExp": 1000
-    }),
-    148: _tools.RODict({
-        "ID": 148,
-        "normalExp": 1000
-    }),
-    149: _tools.RODict({
-        "ID": 149,
-        "normalExp": 1000
-    }),
-    150: _tools.RODict({
-        "ID": 150,
-        "normalExp": 1000
-    }),
-    151: _tools.RODict({
-        "ID": 151,
-        "normalExp": 1000
-    }),
-    152: _tools.RODict({
-        "ID": 152,
-        "normalExp": 1000
-    }),
-    153: _tools.RODict({
-        "ID": 153,
-        "normalExp": 1000
-    }),
-    154: _tools.RODict({
-        "ID": 154,
-        "normalExp": 1000
-    }),
-    155: _tools.RODict({
-        "ID": 155,
-        "normalExp": 1000
-    }),
-    156: _tools.RODict({
-        "ID": 156,
-        "normalExp": 1000
-    }),
-    157: _tools.RODict({
-        "ID": 157,
-        "normalExp": 1000
-    }),
-    158: _tools.RODict({
-        "ID": 158,
-        "normalExp": 1000
-    }),
-    159: _tools.RODict({
-        "ID": 159,
-        "normalExp": 1000
-    }),
-    160: _tools.RODict({
-        "ID": 160,
-        "normalExp": 1000
-    }),
-    161: _tools.RODict({
-        "ID": 161,
-        "normalExp": 1000
-    }),
-    162: _tools.RODict({
-        "ID": 162,
-        "normalExp": 1000
-    }),
-    163: _tools.RODict({
-        "ID": 163,
-        "normalExp": 1000
-    }),
-    164: _tools.RODict({
-        "ID": 164,
-        "normalExp": 1000
-    }),
-    165: _tools.RODict({
-        "ID": 165,
-        "normalExp": 1000
-    }),
-    166: _tools.RODict({
-        "ID": 166,
-        "normalExp": 1000
-    }),
-    167: _tools.RODict({
-        "ID": 167,
-        "normalExp": 1000
-    }),
-    168: _tools.RODict({
-        "ID": 168,
-        "normalExp": 1000
-    }),
-    169: _tools.RODict({
-        "ID": 169,
-        "normalExp": 1000
-    }),
-    170: _tools.RODict({
-        "ID": 170,
-        "normalExp": 1000
-    }),
-    171: _tools.RODict({
-        "ID": 171,
-        "normalExp": 1000
-    }),
-    172: _tools.RODict({
-        "ID": 172,
-        "normalExp": 1000
-    }),
-    173: _tools.RODict({
-        "ID": 173,
-        "normalExp": 1000
-    }),
-    174: _tools.RODict({
-        "ID": 174,
-        "normalExp": 1000
-    }),
-    175: _tools.RODict({
-        "ID": 175,
-        "normalExp": 1000
-    }),
-    176: _tools.RODict({
-        "ID": 176,
-        "normalExp": 1000
-    }),
-    177: _tools.RODict({
-        "ID": 177,
-        "normalExp": 1000
-    }),
-    178: _tools.RODict({
-        "ID": 178,
-        "normalExp": 1000
-    }),
-    179: _tools.RODict({
-        "ID": 179,
-        "normalExp": 1000
-    }),
-    180: _tools.RODict({
-        "ID": 180,
-        "normalExp": 1000
-    }),
-    181: _tools.RODict({
-        "ID": 181,
-        "normalExp": 1000
-    }),
-    182: _tools.RODict({
-        "ID": 182,
-        "normalExp": 1000
-    }),
-    183: _tools.RODict({
-        "ID": 183,
-        "normalExp": 1000
-    }),
-    184: _tools.RODict({
-        "ID": 184,
-        "normalExp": 1000
-    }),
-    185: _tools.RODict({
-        "ID": 185,
-        "normalExp": 1000
-    }),
-    186: _tools.RODict({
-        "ID": 186,
-        "normalExp": 1000
-    }),
-    187: _tools.RODict({
-        "ID": 187,
-        "normalExp": 1000
-    }),
-    188: _tools.RODict({
-        "ID": 188,
-        "normalExp": 1000
-    }),
-    189: _tools.RODict({
-        "ID": 189,
-        "normalExp": 1000
-    }),
-    190: _tools.RODict({
-        "ID": 190,
-        "normalExp": 1000
-    }),
-    191: _tools.RODict({
-        "ID": 191,
-        "normalExp": 1000
-    }),
-    192: _tools.RODict({
-        "ID": 192,
-        "normalExp": 1000
-    }),
-    193: _tools.RODict({
-        "ID": 193,
-        "normalExp": 1000
-    }),
-    194: _tools.RODict({
-        "ID": 194,
-        "normalExp": 1000
-    }),
-    195: _tools.RODict({
-        "ID": 195,
-        "normalExp": 1000
-    }),
-    196: _tools.RODict({
-        "ID": 196,
-        "normalExp": 1000
-    }),
-    197: _tools.RODict({
-        "ID": 197,
-        "normalExp": 1000
-    }),
-    198: _tools.RODict({
-        "ID": 198,
-        "normalExp": 1000
-    }),
-    199: _tools.RODict({
-        "ID": 199,
-        "normalExp": 1000
-    }),
-    200: _tools.RODict({
-        "ID": 200,
-        "normalExp": 1000
+        "normalExp": 19903
     })
 })
 minKey = 1
-maxKey = 200
+maxKey = 90

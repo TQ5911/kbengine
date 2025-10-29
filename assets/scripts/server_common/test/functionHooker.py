@@ -19,6 +19,9 @@ from typing import Any, Dict, List, Set, Optional, Union, Callable
 from KBEDebug import *
 
 class FunctionHooker:
+
+    _instance = None
+    
     def __init__(self, 
                  prefix: str = "",
                  show_traceback: bool = False,
@@ -51,6 +54,18 @@ class FunctionHooker:
         self.hooked_classes: Set[type] = set()
         self.hooked_methods: Set[tuple] = set()  # (class, method_name)
     
+    @classmethod
+    def get_instance(cls, **kwargs):
+        if cls._instance is None:
+            cls._instance = cls(**kwargs)
+        else:
+            # 更新现有实例的参数
+            for key, value in kwargs.items():
+                if hasattr(cls._instance, key) and value is not None:
+                    setattr(cls._instance, key, value)
+        return cls._instance
+
+
     def _format_traceback(self, limit: int = None) -> str:
         """Format call stack information"""
         if limit is None:
@@ -83,8 +98,7 @@ class FunctionHooker:
         
         # Show function information
         func_name = getattr(func, '__qualname__', func.__name__)
-        module_name = getattr(func, '__module__', 'unknownModule')
-        lines.append(f"Function call: {module_name}.{func_name}")
+        lines.append(f"Function call: {func_name}")
         
         # Show argument information
         if self.show_args:
@@ -92,7 +106,10 @@ class FunctionHooker:
                 sig = inspect.signature(func)
                 bound_args = sig.bind(*args, **kwargs)
                 bound_args.apply_defaults()
-                lines.append(f"Argument mapping: {dict(bound_args.arguments)}")
+                args = str({k: str(v) for k,v in dict(bound_args.arguments).items()}) # 把自定义str的类都展开一下
+                if len(args) > 1300: # 防止参数过长导致日志被截断
+                    args = str(dict(bound_args.arguments))
+                lines.append(f"Argument mapping: {args}")
             except Exception as e:
                 lines.append(f"Argument parsing failed: {e}")
                 lines.append(f"Positional args: {args}")
@@ -107,7 +124,14 @@ class FunctionHooker:
     def _format_function_return(self, func: FunctionType, result: Any) -> str:
         """Format function return information"""
         func_name = getattr(func, '__qualname__', func.__name__)
-        lines = [f"Function return: {func_name} -> {result}"]
+        result_str = str(result)
+        if isinstance(result, (list, set, tuple)):
+            result_str = str([str(item) for item in result])
+        elif isinstance(result, dict):
+            result_str = str({k: str(v) for k,v in result.items()})
+        if len(result_str) > 1300: # 防止返回值过长导致日志被截断
+            result_str = str(result)
+        lines = [f"Function return: {func_name} -> {result_str}"]
         return " ".join(lines)
 
     def _format_function_error(self, func: FunctionType, error: Exception) -> str:
@@ -130,6 +154,8 @@ class FunctionHooker:
     
     def _print(self, message: str) -> None:
         """Print log information"""
+        if not self.verbose:
+            return
         message = f"{self.prefix}[hook] {message}"
         DEBUG_MSG(message)
 
@@ -260,7 +286,7 @@ def hook_specific_class_method(module_name: str,
         cls = getattr(module, class_name)
         
         # Create Hooker and hook specified method
-        hooker = FunctionHooker(**hook_options)
+        hooker = FunctionHooker.get_instance(**hook_options)
         hooker.hook_method(cls, method_name)
         
         DEBUG_MSG(f"Hook succeeded: {module_name}.{class_name}.{method_name}")
@@ -300,7 +326,7 @@ def hook_specific_class(module_name: str,
         cls = getattr(module, class_name)
         
         # Create Hooker and hook class
-        hooker = FunctionHooker(**hook_options)
+        hooker = FunctionHooker.get_instance(**hook_options)
         hooker.hook_class(cls, method_filter)
 
         DEBUG_MSG(f"Hook succeeded: {module_name}.{class_name}")
@@ -333,7 +359,7 @@ def hook_specific_module(module_name: str,
             module = importlib.import_module(module_name)
         
         # Create Hooker and hook module
-        hooker = FunctionHooker(**hook_options)
+        hooker = FunctionHooker.get_instance(**hook_options)
         hooker.hook_module(module, class_filter, method_filter)
 
         DEBUG_MSG(f"Hook succeeded: {module_name}")
@@ -342,7 +368,13 @@ def hook_specific_module(module_name: str,
     except Exception as e:
         DEBUG_MSG(f"Hook failed: {e}")
         return False
-    
+
+def hook_print_open(is_print: bool):
+    hooker = FunctionHooker.get_instance()
+    hooker.verbose = is_print
+    DEBUG_MSG(f"Hook print is open: {is_print}")
+    return True
+
 """
     hook_specific_class_method(
         "test_module.py",

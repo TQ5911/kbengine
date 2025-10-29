@@ -2,6 +2,7 @@ import sys
 import time
 import os
 from simpleBotBase import FACE_DATA
+import http_service
 
 # 添加loginserver参数：modName, botPrefix, numAll, numPerSec, fromIdx, avatarName, school, loginHost, loginPort
 modName, _botNamePrefix, _numAll, _numPerSec, _fromIdx, _avatarName, _school, _loginHost, _loginPort = sys.argv[1:10]
@@ -18,6 +19,10 @@ if not hasattr(mod, 'DELEGATE_CLS'):
 
 
 def startBot(delegateCls, botPrefix, numAll, numPerSec, fromIdx, avatarName, school, loginHost, loginPort):
+    print(f'listen on {loginHost}:{loginPort}')
+    httpd, http_thread = http_service.start_http_server('0.0.0.0', 49527)
+    host, port = httpd.server_address
+    print(f'http service started at http://{host}:{port}')
     ts = []
     print('start bot from', fromIdx)
     print(f'target login server: {loginHost}:{loginPort}')
@@ -38,7 +43,7 @@ def startBot(delegateCls, botPrefix, numAll, numPerSec, fromIdx, avatarName, sch
         else:
             print(f'bot {idx} logging to default server')
             robot = client.login()
-            
+
         robot.setPlayerDelegate(delegateCls(robot, client))
         ts.append(client.tickThread)
 
@@ -49,8 +54,19 @@ def startBot(delegateCls, botPrefix, numAll, numPerSec, fromIdx, avatarName, sch
     for t in ts:
         t.join()
 
+    # 关闭并等待HTTP线程，确保在runBot流程内join
+    try:
+        httpd.shutdown()
+    except Exception:
+        pass
+    try:
+        httpd.server_close()
+    except Exception:
+        pass
+    http_thread.join()
+
 
 if __name__ == '__main__':
     time.sleep(10)
-    startBot(getattr(mod, 'DELEGATE_CLS'), _botNamePrefix, int(_numAll), int(_numPerSec), 
+    startBot(getattr(mod, 'DELEGATE_CLS'), _botNamePrefix, int(_numAll), int(_numPerSec),
              int(_fromIdx), str(_avatarName), int(_school), str(_loginHost), str(_loginPort))

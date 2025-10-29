@@ -710,5 +710,9 @@ datas = _tools.RODict({
     "cityBattle_campColorID": _tools.RODict({
         "ID": "cityBattle_campColorID",
         "value": _tools.ROList([24, 22]),
+    }),
+    "cityBattle_cityGatePassageArea": _tools.RODict({
+        "ID": "cityBattle_cityGatePassageArea",
+        "value": _tools.ROList([514.5, 10.5, 609.7, 10, 30, 12]),
     })
 })

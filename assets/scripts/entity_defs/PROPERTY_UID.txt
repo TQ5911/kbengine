@@ -208,7 +208,6 @@ Avatar baseHpRecovery 30726
 Avatar baseIgnoreArmor 445
 Avatar baseKnockAnti 30273
 Avatar baseKnockEnh 30272
-Avatar baseMaxEquipSetLv 31264
 Avatar baseMaxMagicArmor 32077
 Avatar baseMaxMagicAtk 30920
 Avatar baseMaxPhysicalArmor 32069
@@ -283,6 +282,7 @@ Avatar crossServerTickStartTime 31191
 Avatar crusadeInfo 413
 Avatar cubeCowTimerId 31942
 Avatar cubeEnterFloor 349
+Avatar cubeQuota 31488
 Avatar cubeRoomLeftTime 30993
 Avatar cubeRoomTimerId 31330
 Avatar cubeUseCoinTimes 423
@@ -329,7 +329,6 @@ Avatar enemyCacheSet 30440
 Avatar enemyMgr 441
 Avatar enterViewList 30349
 Avatar equipDropData 31480
-Avatar equipSetLv 31262
 Avatar escortDistance 30042
 Avatar escortLeaveDistance 30043
 Avatar escortTrapId 30044
@@ -423,6 +422,7 @@ Avatar leftGuildTS 426
 Avatar level 5
 Avatar limitStoreRefreshDict 32061
 Avatar lingShouBattleList 31130
+Avatar lingShouEffectEventInfo 31487
 Avatar lingShouId 275
 Avatar lingShouInfo 31128
 Avatar loadMailCDTime 31272
@@ -430,7 +430,6 @@ Avatar loadMailTimerId 31273
 Avatar logInfo 30360
 Avatar mailLogInfoDic 31271
 Avatar mainAccountCache 32064
-Avatar maxEquipSetLv 31263
 Avatar maxMagicArmor 379
 Avatar maxMagicAtk 101
 Avatar maxPhysicalArmor 376

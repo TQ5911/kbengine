@@ -20,6 +20,7 @@ import outsideRecord
 import complexTeleportOption
 import gameconfig
 
+import cube_config
 import gamePlay_gamePlay as GP_GP
 import conflict_conflict_def as CCD
 import gamePlay_singleSceneData as GPSSDD
@@ -1349,11 +1350,17 @@ class IComplexTeleport(object):
         self.spaceMgrId = context['e']['spaceMgrId']
         self.spaceMgr.onPlayerEnter(self.id)
 
-        gameengine.getGlobalBase('CubeStub').onEnterCubeSuccess(self.gbId, toSpaceNo)
+        gameengine.getCubeStubBySpaceNo(toSpaceNo).onEnterCubeSuccess(self.gbId, toSpaceNo)
 
         _extra = context['cube']
-        if _extra.get('needSetLeftTime'):
-            self.onEnterCubeSetTime()
+        _type = _extra.get('enterCubeType')
+
+        if _type == gameconst.ENTER_CUBE_DEDUCT_TIMES:
+            _dur = cube_config.datas['cubeNumTime']['value'] * 60
+            self.cubeQuota.addLeftTime(self, _dur)
+            self.base.afterEnterCubeDeductTimes()
+
+        self._dealWithCubeTimer(fromSpaceNo, toSpaceNo)
 
         _toMapId = formula.getMapId(toSpaceNo)
         if dataUtils.isCubeCow(_toMapId):
@@ -1383,17 +1390,15 @@ class IComplexTeleport(object):
         _spaceMgrCell.onPlayerLeave(self.gbId, self.id, self.base)
 
         self.spaceMgrId = 0
-        gameengine.getGlobalBase('CubeStub').onLeaveCube(self.gbId, fromSpaceNo, toSpaceNo)
+        gameengine.getCubeStubBySpaceNo(fromSpaceNo).onLeaveCube(self.gbId, fromSpaceNo, toSpaceNo)
         if not formula.isCubeSpace(toSpaceNo):
             if self.getTempMiscProp(gameconst.AvatarProps.cubeAutoRenewSwitch) is not None:
                 self._changeCubeAutoRenewSwitch(False, {})
 
-            self.setCubeRoomLeftTime(0)
-
-            if self.cubeRoomTimerId:
-                self._cancelDatetimeCallback(self.cubeRoomTimerId, gametimer.TIMER_TAG_CUBE_ROOM)
-
             self.clearCubeRoomRewardRecord()
+
+        if not formula.isCubeSpace(toSpaceNo):
+            self._dealWithCubeTimer(fromSpaceNo, toSpaceNo)
 
         return True
     # ----------------------------------------------------------------------
@@ -1460,13 +1465,13 @@ class IComplexTeleport(object):
 
         _dir = self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
 
-        
+
         dunSData = utils.getDunStructureModuleData(formula.getMapId(toSpaceNo))
         if camp == 1:
             d, *_ = dunSData['attackRevive'].values()
         elif camp == 2:
             d, *_ = dunSData['defendRevive'].values()
-        
+
         context['position'] = (d['PosX'], d['PosY'], d['PosZ'])
         context['direction'] = (0, 0, _dir * math.pi / 180) if _dir is not None else self.direction
         context['spaceNo'] = toSpaceNo

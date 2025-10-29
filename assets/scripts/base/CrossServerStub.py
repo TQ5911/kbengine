@@ -9,6 +9,7 @@ import iTimer
 import gametimer
 import SwitchServer
 import utils
+import gameglobal
 
 
 class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
@@ -92,14 +93,13 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def doGmModifyServertime(self, su, modifyTime):
         INFO_MSG("doGmModifyServertime", su, modifyTime)
         import gameconfig
-        import serverList_serverList as SLSL
         import iRouter
         import gmCommand
-        if gameconfig.serverId() not in SLSL.datas:
-            ERROR_MSG("onGmModifyAllServertimeInCrossGroup gameconfig.serverId() not in SLSL.datas", gameconfig.serverId())
+        if gameconfig.serverId() not in gameglobal.mapleServerInfo:
+            ERROR_MSG("onGmModifyAllServertimeInCrossGroup gameconfig.serverId() not in maple", gameconfig.serverId())
             return
-        
-        
+
+
         if KBEngine.publish():
             ERROR_MSG("onGmModifyAllServertimeInCrossGroup KBEngine.publish()", KBEngine.publish())
             return
@@ -115,12 +115,11 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onGmModifyAllServertimeInCrossGroup(self, su, modifyTime):
         INFO_MSG("onGmModifyAllServertimeInCrossGroup", su, modifyTime)
         import gameconfig
-        import serverList_serverList as SLSL
         import iRouter
 
-        crossServerGroupID = SLSL.datas[gameconfig.serverId()]['groupID']
-        groupServerList = SLSL.group2ServerIds[crossServerGroupID]
-        
+        crossServerGroupID = gameglobal.mapleServerInfo[gameconfig.serverId()]['server_group']
+        groupServerList = utils.group2ServerIds(crossServerGroupID)
+
         for serverID in groupServerList:
             _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'CrossServerStub')
             _stub.onGmModifyAllServertimeInCrossGroupResp(su, modifyTime)

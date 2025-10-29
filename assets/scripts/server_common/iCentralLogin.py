@@ -38,6 +38,7 @@ class LoginService(GameServer):
         self.loginMgr.onCentralServerDisonnected()
 
     def onVerifyLogin(self, rpc_controller, reply, done):
+        INFO_MSG('ZTQ onVerifyLogin')
         accountType = reply.accountType
         accountName = reply.accountName
         channelId = reply.channelId
@@ -141,7 +142,7 @@ class ICentralLogin(object):
         if not userInfo:
             return
 
-        INFO_MSG('onVerifyLogin:', accountType, accountName, resCode, userInfo)
+        INFO_MSG('ZTQ onVerifyLogin:', accountType, accountName, resCode, userInfo)
 
         tid, token, dataBytes = userInfo
 
@@ -158,6 +159,7 @@ class ICentralLogin(object):
         tid and KBEngine.delTimer(tid)
         _forceCompId = utils.getForceComponentID(realAccountName)
 
+        # 还在封禁中
         if banAccountTime and (banAccountTime > utils.getNow() or banAccountTime == -1):
             fmtMessage = MMD.datas[LSD.datas['idip_accountBanned_msg']['value']]['Message']
             if banAccountTime == -1:
@@ -171,6 +173,7 @@ class ICentralLogin(object):
                                       time.strftime("%Y年%m月%d日%H时%M分%S秒", time.localtime(banAccountTime))),
                     encoding='utf-8'), _forceCompId, KBEngine.SERVER_ERR_USER3)
             return
+        # 登录成功
         if resCode == VerifyAccountReply.VERIFY_ACCOUNT_OK:
 
             if accountType == centralLogin.ACCOUNT_PASSWD:
@@ -191,17 +194,20 @@ class ICentralLogin(object):
         cacheKeyName = utils.getRealAccountName(accountType, accountName)
         if not gameconfig.enableCentralLogin():
             self.accountCache[cacheKeyName] = (0, '', data)
+            INFO_MSG('ZTQ _checkPlayerLoginOnCentralServer1')
             self.onVerifyPlayerLogin(accountType, accountName, VerifyAccountReply.VERIFY_ACCOUNT_OK)
             return
 
         if accountType == centralLogin.ACCOUNT_UNKNOW:
             if gameconfig.enableBotLogin():
                 self.accountCache[cacheKeyName] = (0, '', data)
+                INFO_MSG('ZTQ _checkPlayerLoginOnCentralServer2')
                 self.onVerifyPlayerLogin(accountType, accountName, VerifyAccountReply.VERIFY_ACCOUNT_OK)
                 return
             else:
                 ERROR_MSG('check login err:', accountName)
                 self.accountCache[cacheKeyName] = (0, '', data)
+                INFO_MSG('ZTQ _checkPlayerLoginOnCentralServer3')
                 self.onVerifyPlayerLogin(accountType, accountName, VerifyAccountReply.VERIFY_ACCOUNT_FAIL)
                 return
 
@@ -218,12 +224,14 @@ class ICentralLogin(object):
 
         loginClient = self.loginClientDic.get(centralServerId)
         if not loginClient:
+            INFO_MSG('ZTQ _checkPlayerLoginOnCentralServer4')
             ERROR_MSG("_checkPlayerLoginOnCentralServer:: invalid centralServerId", accountName, centralServerId,
                       clientData)
             self.accountCache[cacheKeyName] = (0, token, data)
             self.onVerifyPlayerLogin(accountType, accountName, VerifyAccountReply.VERIFY_ACCOUNT_FAIL)
             return
 
+        INFO_MSG('ZTQ _checkPlayerLoginOnCentralServer5', clientData)
         loginClient.centralServerStub.verifyLogin(None, verifyRequest, None)
 
         tid = KBEngine.addTimer(7, 0, lambda tid: self._checkPlayerLoginTimeout(accountType, accountName))
@@ -232,6 +240,7 @@ class ICentralLogin(object):
 
     # 将在interfaces进程上执行账号验证相关逻辑
     def _checkPlayerLoginTimeout(self, accountType, accountName):
+        INFO_MSG('ZTQ _checkPlayerLoginTimeout')
         realAccountName = utils.getRealAccountName(accountType, accountName)
         userInfo = self.accountCache.pop(realAccountName, None)
         if not userInfo:

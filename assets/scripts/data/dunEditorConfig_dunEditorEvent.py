@@ -651,7 +651,14 @@ datas = _tools.RODict({
         "value": "removeRebornPos",
         "param": "1011",
         "description": "参数为地图编辑器中对应出生点的实例ID，即回收（销毁）对应ID的出生点，支持填写多个实例ID，表示同时回收所有对应出生点，用逗号间隔。"
+    }),
+    92: _tools.RODict({
+        "ID": 92,
+        "name": "传送后到指定地图指定位置",
+        "value": "transferToTheDesignatedMap",
+        "param": "3005,1085,1086,1087,1088",
+        "description": "传送玩家到指定地图指定坐标"
     })
 })
 minKey = 1
-maxKey = 91
+maxKey = 92

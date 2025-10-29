@@ -38,7 +38,7 @@ datas = _tools.RODict({
         "value": "祖珂祭坛",
         "pareActivity": 32000004,
         "minScore": 7500,
-        "minLevel": 0,
+        "minLevel": 20,
         "enterDunID": 2102,
         "isCrossServer": 0
     }),
@@ -47,7 +47,7 @@ datas = _tools.RODict({
         "value": "深海禁地",
         "pareActivity": 32000004,
         "minScore": 5500,
-        "minLevel": 0,
+        "minLevel": 30,
         "enterDunID": 2101,
         "isCrossServer": 0
     }),
@@ -56,7 +56,7 @@ datas = _tools.RODict({
         "value": "冰蜈蚣巢穴",
         "pareActivity": 32000004,
         "minScore": 10500,
-        "minLevel": 0,
+        "minLevel": 40,
         "enterDunID": 2103,
         "isCrossServer": 0
     }),
@@ -65,7 +65,7 @@ datas = _tools.RODict({
         "value": "小鬼钟馗",
         "pareActivity": 32000001,
         "minScore": 5900,
-        "minLevel": 0,
+        "minLevel": 20,
         "enterDunID": 2201,
         "isCrossServer": 0
     }),
@@ -74,7 +74,7 @@ datas = _tools.RODict({
         "value": "双生海妖",
         "pareActivity": 32000001,
         "minScore": 8300,
-        "minLevel": 0,
+        "minLevel": 30,
         "enterDunID": 2202,
         "isCrossServer": 0
     }),
@@ -83,7 +83,7 @@ datas = _tools.RODict({
         "value": "熔岩三头蛟",
         "pareActivity": 32000001,
         "minScore": 12000,
-        "minLevel": 0,
+        "minLevel": 40,
         "enterDunID": 2203,
         "isCrossServer": 0
     })

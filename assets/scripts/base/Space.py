@@ -66,7 +66,7 @@ class Space(iBase.IBase):
         INFO_MSG("space onLoseCell ", self.spaceno, reason)
         if formula.isCubeSpace(self.spaceno):
             if not KBEngine.isShuttingDown():
-                gameengine.getGlobalBase('CubeStub').onSpaceCellAppDeath(self.spaceno)
+                gameengine.getCubeStubBySpaceNo(self.spaceno).onSpaceCellAppDeath(self.spaceno)
 
         elif formula.isWonderLandSpace(self.spaceno):
             if not KBEngine.isShuttingDown():
@@ -118,7 +118,7 @@ class Space(iBase.IBase):
             lineType = formula.getMapId(self.spaceno)
             gameengine.getLineStub(lineType).onLineSpaceReady(self.spaceno)
         elif formula.isCubeSpace(self.spaceno):
-            gameengine.getGlobalBase('CubeStub').onStaticSpaceReady(self.spaceno)
+            gameengine.getCubeStubBySpaceNo(self.spaceno).onStaticSpaceReady(self.spaceno)
         elif formula.isWonderLandSpace(self.spaceno):
             gameengine.getWonderLandStubBySpaceNo(self.spaceno).onStaticSpaceReady(self.spaceno)
         elif formula.isSiegeWarSpace(self.spaceno):

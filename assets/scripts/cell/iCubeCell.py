@@ -11,6 +11,7 @@ import gameconst
 import gameengine
 import dungeonSrc
 import utils
+import actionContext
 import cube_floor
 import gametimer
 import cube_config
@@ -84,20 +85,76 @@ class ICubeCell(object):
 
         self.cubeEnterFloor = floor
 
+    def _needTimerOn(self, spaceNo):
+        if not formula.isCubeSpace(spaceNo):
+            return False
+
+        return not formula.isCubeReady(spaceNo)
+
+    def _dealWithCubeTimer(self, fromSpaceNo, toSpaceNo):
+        _fromNeed = self._needTimerOn(fromSpaceNo)
+        _toNeed = self._needTimerOn(toSpaceNo)
+
+        if _fromNeed == _toNeed:
+            return
+
+        if _toNeed:
+            self.cubeQuota.setCubeEnterTime(self, utils.getNow())
+            self._startCubeTimeOutTimer()
+
+        else:
+            if self.cubeRoomTimerId:
+                self._cancelDatetimeCallback(self.cubeRoomTimerId, gametimer.TIMER_TAG_CUBE_ROOM)
+                self.cubeRoomTimerId = 0
+
+            self.cubeQuota.checkout()
+
+    def _onCubeOffline(self):
+        if not self._needTimerOn(self.spaceNo):
+            return
+
+        if self.cubeRoomTimerId:
+            self._cancelDatetimeCallback(self.cubeRoomTimerId, gametimer.TIMER_TAG_CUBE_ROOM)
+            self.cubeRoomTimerId = 0
+
+        self.cubeQuota.checkout()
+
     @utils.isMyself
     def enterCube(self, exposed):
         INFO_MSG('ICubeCell::enterCube')
+        floor = 1
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']):
             self.showMsg(AC_CD.datas['activity_notOpen']['value'], [])
             return
 
+        if formula.isCubeSpace(self.spaceNo):
+            WARNING_MSG('enterCube but already in cube:', self.spaceNo)
+            return
+
         # 这里直接选取大厅作为check能否进入的参考层
-        _mapId = cube_config.datas['cube_hall']['value']
+        _mapId = cube_room.floorTypeMapDic[floor][gameconst.CubeRoomType.READY][0]
         _targetSpaceNo = formula.getLineSpaceNo(_mapId, 0)
         if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, _targetSpaceNo):
             return
 
-        self.base.beforeEnterCubeDecrementCnt({})
+        if self.cubeQuota.cubeDurState == gameconst.CubeDurStatus.ENTER:
+            ERROR_MSG('ICubeCell::enterCube: has entered')
+            return
+
+        if self.cubeQuota.leftTime <= 0:
+            self.base.beforeEnterCubeDecrementCnt(_targetSpaceNo, {})
+            return
+
+        extra = {'enterCubeType': gameconst.ENTER_CUBE_HAS_LEFT_TIME}
+        gameengine.getCubeStubBySpaceNo(_targetSpaceNo).doEnterCube(
+            self.base, cube_config.datas['cube_hall']['value'], self.gbId, extra)
+
+    def randomCubeRoom(self):
+        if not formula.isCubeSpace(self.spaceNo):
+            ERROR_MSG('randomCubeRoom but not in cube', self.spaceNo)
+            return
+
+        gameengine.getCubeStubBySpaceNo(self.spaceNo).enterRandomRoom(self.base, self.gbId, {})
 
     def enterCubeByFloorConfig(self):
         INFO_MSG('ICubeCell::enterCubeByFloorConfig: {}'.format(self.cubeEnterFloor))
@@ -138,7 +195,8 @@ class ICubeCell(object):
             ERROR_MSG('cube cow full')
             return
 
-        gameengine.getGlobalBase('CubeStub').doEnterCube(
+        _floor = cube_room.datas[_mapId]['floor']
+        gameengine.getCubeStub(_floor).doEnterCube(
             self.base, _mapId, self.gbId, {})
 
     @utils.isMyself
@@ -159,7 +217,7 @@ class ICubeCell(object):
             return
 
         _mapId = formula.getMapId(_spaceNo)
-        gameengine.getGlobalBase('CubeStub').doEnterCube(
+        gameengine.getCubeStubBySpaceNo(_spaceNo).doEnterCube(
             self.base, _mapId, self.gbId, {'followPos': _pos})
 
     def gmEnterCubeRoom(self, mapId):
@@ -177,9 +235,13 @@ class ICubeCell(object):
 
     @utils.isMyself
     def leaveCube(self, exposed):
-        self._leaveCube(gameconst.DungeonSrcEnum.FROM_CLIENT)
+        self.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_CLIENT)
 
-    def _leaveCube(self, srcId):
+    def leaveCubeInternal(self, srcId):
+        if not formula.isCubeSpace(self.spaceNo):
+            INFO_MSG('leaveCubeInternal but not cube space: {}'.format(self.spaceNo))
+            return
+
         _src = dungeonSrc.BasicDungeonSrc(srcId=srcId)
         _l = {}
         _context = {
@@ -222,51 +284,36 @@ class ICubeCell(object):
 
         self.teleportFromSpaceToSpace(self.spaceNo, spaceNo, options=_options, context=_context)
 
-    def onEnterCubeSetTime(self):
-        _dur = cube_config.datas['cubeNumTime']['value'] * 60
-        self.setCubeRoomLeftTime(utils.getNow() + _dur)
-        self._startRenewTimer()
-        self.base.afterEnterCubeDeductTimes()
-
-    def _startRenewTimer(self):
+    def _startCubeTimeOutTimer(self):
         if self.cubeRoomTimerId:
             self._cancelDatetimeCallback(self.cubeRoomTimerId, gametimer.TIMER_TAG_CUBE_ROOM)
 
-        _fireTime = self.cubeRoomLeftTime - 60
-        _fireTime = max(utils.getNow() + 1, _fireTime)
-        self.cubeRoomTimerId = self._datetimeCallback(_fireTime, 'autoRenewCB', (), gametimer.TIMER_TAG_CUBE_ROOM, 'cubeRoomTimerId')
-        self.cubeDurStatus = gameconst.RenewDurStatus.WAIT_AUTO
+        _fireTime = utils.getNow() + max(1, self.cubeQuota.calcLeftTime())
+        self.cubeRoomTimerId = self._datetimeCallback(_fireTime, '_onCubeTimeOut', (), gametimer.TIMER_TAG_CUBE_ROOM, 'cubeRoomTimerId')
 
-    def autoRenewCB(self):
-        INFO_MSG('ICubeCell::autoRenewCB: {}'.format(self.spaceNo))
+    def _onCubeTimeOut(self):
+        INFO_MSG('ICubeCell::_onCubeTimeOut: {}'.format(self.spaceNo))
         if not formula.isCubeSpace(self.spaceNo):
             return
 
-        _fireTime = max(utils.getNow() + 5, self.cubeRoomLeftTime)
-        self.cubeRoomTimerId = self._datetimeCallback(_fireTime, 'onCubeRoomEndTimeCB', (), gametimer.TIMER_TAG_CUBE_ROOM, 'cubeRoomTimerId')
-        self.cubeDurStatus = gameconst.RenewDurStatus.WAIT_END
         _switchVal = self.getTempMiscProp(gameconst.AvatarProps.cubeAutoRenewSwitch)
 
         if _switchVal is None:
+            self.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
             return
 
         if not _switchVal.canAddTimes():
+            self.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
             return
 
         if not self._checkAddCubeRoomDurationCondition():
+            self.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
             return
 
         _switchVal.addTimes()
-        self.base.autoRenewCubeRoom(_switchVal.toClientData())
+        _ctx = actionContext.CubeDurCtx(self.base, True)
+        self.base.autoRenewCubeRoom(_switchVal.toClientData(), _ctx)
         self.client.onCubeAutoRenewSwitch(True, _switchVal.toClientData())
-
-    def onCubeRoomEndTimeCB(self):
-        if not formula.isCubeSpace(self.spaceNo):
-            return
-
-        INFO_MSG('ICubeCell::onCubeRoomEndTime: {}'.format(self.spaceNo))
-        self._leaveCube(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
-        self.cubeDurStatus = 0
 
     def _checkAddCubeRoomDurationCondition(self):
         _curMapId = formula.getMapId(self.spaceNo)
@@ -275,15 +322,11 @@ class ICubeCell(object):
             WARNING_MSG('ICubeCell::checkAddCubeRoomDurationCondition: floor not found: {}'.format(_curMapId))
             return False
 
-        if self.cubeRoomLeftTime - utils.getNow() > cube_config.datas['cubeNumTime']['value'] * 60:
+        if self.cubeQuota.calcLeftTime() > cube_config.datas['cubeNumTime']['value'] * 60:
             WARNING_MSG('ICubeCell::checkAddCubeRoomDurationCondition: duration beyond max', self.cubeRoomLeftTime)
             return False
 
         return True
-
-    def setCubeRoomLeftTime(self, leftTime):
-        self.cubeRoomLeftTime = leftTime
-        self.client.onCubeRoomEndTime(leftTime)
 
     def checkAddCubeRoomDurationCondition(self, itemId, num):
         if not self._checkAddCubeRoomDurationCondition():
@@ -291,16 +334,16 @@ class ICubeCell(object):
 
         self.base.useItemAddCubeTimes(itemId, num, True, True, gameconst.CubeAddTimesReason.CHECK_COND)
 
-    def directlyAddCubeRoomDuration(self, func, args):
+    def directlyAddCubeRoomDuration(self, func, args, cubeDurCtx):
         if not self._checkAddCubeRoomDurationCondition():
             getattr(self.base, func)(*args)
+            cubeDurCtx.done(False)
             return
 
         _dur = cube_config.datas['cubeNumTime']['value'] * 60
-        _now = utils.getNow()
-        self.setCubeRoomLeftTime(max(self.cubeRoomLeftTime, _now) + _dur)
+        self.cubeQuota.addLeftTime(self, _dur)
         self.base.activityComplete(cube_config.datas['cubeActID']['value'])
-        self._startRenewTimer()
+        self._startCubeTimeOutTimer()
 
     def addCubeRoomRewardRecord(self, rewardList):
         _dic = self.getTempMiscProp(gameconst.AvatarProps.cubeRoomRewardList, {})
@@ -339,8 +382,11 @@ class ICubeCell(object):
         INFO_MSG('ICubeCell::onLogonEnterCubeCB: {}'.format(spaceMgrId))
         self.spaceMgrId = spaceMgrId
         self.spaceMgr.onPlayerEnter(self.id)
-        gameengine.getGlobalBase('CubeStub').onEnterCubeSuccess(self.gbId, self.spaceNo)
-        self._startRenewTimer()
+        gameengine.getCubeStubBySpaceNo(self.spaceNo).onEnterCubeSuccess(self.gbId, self.spaceNo)
+
+        if self._needTimerOn(self.spaceNo):
+            self.cubeQuota.setCubeEnterTime(self, utils.getNow())
+            self._startCubeTimeOutTimer()
 
         _mapId = formula.getMapId(self.spaceNo)
         if dataUtils.isCubeCow(_mapId):
@@ -366,9 +412,6 @@ class ICubeCell(object):
         self.setTempMiscProp(gameconst.AvatarProps.cubeAutoRenewSwitch, _switchVal)
         self.client.onCubeAutoRenewSwitch(True, switchData)
 
-        if self.cubeDurStatus == gameconst.RenewDurStatus.WAIT_END:
-            self._startRenewTimer()
-
     @property
     def cubeRandRoomCD(self):
         return self.getTempMiscProp(gameconst.AvatarProps.cubeRandRoomCD, 0)
@@ -380,14 +423,4 @@ class ICubeCell(object):
         else:
             self.setTempMiscProp(gameconst.AvatarProps.cubeRandRoomCD, val)
 
-    @property
-    def cubeDurStatus(self):
-        return self.getTempMiscProp(gameconst.AvatarProps.cubeDurStatus, 0)
-
-    @cubeDurStatus.setter
-    def cubeDurStatus(self, val):
-        if not val:
-            self.popTempMiscProp(gameconst.AvatarProps.cubeDurStatus)
-        else:
-            self.setTempMiscProp(gameconst.AvatarProps.cubeDurStatus, val)
     # ------------------------ props end ------------------------

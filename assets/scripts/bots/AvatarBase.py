@@ -40,6 +40,7 @@ class AvatarBase(KBEngine.Entity):
     def onAddTeamMember(self, arg0): pass
     def onAddWonderLandRewardRecord(self, arg0): pass
     def onAffixWashingFailed(self): pass
+    def onAllAliasIds(self, arg0): pass
     def onAllApplyGuildUnion(self, arg0): pass
     def onAnotherClientLogin(self): pass
     def onAppearanceOutfitUpdated(self, arg0, arg1): pass
@@ -126,6 +127,8 @@ class AvatarBase(KBEngine.Entity):
     def onEnterSingleDungeon(self, arg0): pass
     def onEquipBackBlessSucc(self, arg0, arg1, arg2, arg3, arg4): pass
     def onEquipBaseAttrWashingSucc(self, arg0, arg1, arg2): pass
+    def onEquipBindValueWashingFailed(self, arg0, arg1): pass
+    def onEquipBindValueWashingSucc(self, arg0, arg1, arg2): pass
     def onEquipBlessSucc(self, arg0, arg1, arg2, arg3, arg4): pass
     def onEquipDisassemble(self, arg0, arg1, arg2): pass
     def onEquipDropStateChange(self, arg0, arg1): pass
@@ -139,7 +142,9 @@ class AvatarBase(KBEngine.Entity):
     def onEquipReplaceSucc(self, arg0, arg1): pass
     def onEquipSell(self, arg0, arg1, arg2): pass
     def onEquipSpiritApplySucc(self, arg0, arg1, arg2): pass
-    def onEquipSpiritWashingSucc(self, arg0, arg1, arg2): pass
+    def onEquipSpiritWashingSucc(self, arg0, arg1, arg2, arg3): pass
+    def onEquipUpgradeFailed(self, arg0, arg1): pass
+    def onEquipUpgradeSucc(self, arg0, arg1, arg2): pass
     def onEventTips(self, arg0, arg1): pass
     def onExchangeRaidTeamMember(self, arg0, arg1, arg2, arg3, arg4): pass
     def onExitGuildClient(self): pass
@@ -432,7 +437,6 @@ class AvatarBase(KBEngine.Entity):
     def onUpdateStrangerData(self, arg0): pass
     def onUpdateSynthesisUpgradeNum(self, arg0): pass
     def onUpdateTeamMembeSex(self, arg0, arg1): pass
-    def onUpdateTeamMemberEquipSetlv(self, arg0, arg1): pass
     def onUpdateTeamMemberHp(self, arg0, arg1, arg2): pass
     def onUpdateTeamMemberPos(self, arg0, arg1, arg2): pass
     def onUpdateTeamMemberScore(self, arg0, arg1): pass
@@ -479,4 +483,5 @@ class AvatarBase(KBEngine.Entity):
     def syncGuildTaskInfo(self, arg0): pass
     def syncServerTime(self, arg0, arg1): pass
     def teleportCastingPreNotify(self, arg0, arg1): pass
+    def triggerNewbieGuide(self, arg0): pass
     def updateSkillsExtraLevel(self, arg0, arg1, arg2): pass

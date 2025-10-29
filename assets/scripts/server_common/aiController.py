@@ -27,6 +27,7 @@ import creep_base as CB
 import petData_set as PDS
 import conflict_status_def as CSDD
 import creep_set as CSD
+import cityBattle_config as CBC
 
 TempSkillVal = collections.namedtuple(
     'TempSkillVal',
@@ -363,7 +364,7 @@ class BehaveCtrl(object):
             self.useSkillFail(self.skillId)
 
             # 找不到目标时，设置一个0的tag的计时
-            if not target:
+            if not target and not self.isSiegeWarMonster():
                 _navigationTimeTag = self.navigationTimeTagWithTarget(0)
                 if not owner.actGetVar(_navigationTimeTag, None):
                     # 先把其他的全部清除
@@ -806,6 +807,57 @@ class AuxFunc(object):
         if not self.skillId:
             self.skillId = owner.getRandomSkill()
         return owner.getSkill(self.skillId)
+    
+    def isSiegeWarMonster(self):
+        owner = self.owner
+        if owner.IsMonster:
+            if owner.isSiegeWarBow() or owner.isSiegeWarBoss():
+                return True
+        return False
+    
+    def selectSiegeWarTarget(self):
+        owner = self.owner
+        spaceMgr = owner.spaceMgr
+        if not spaceMgr:
+            return None
+
+        if owner.isSiegeWarBoss():
+            self.targetId = 0
+            target = spaceMgr.getSiegeWarMainGate()
+            if target and not target.isDie() and self.hateDict.isInHateList(target.id):
+                owner.setSelectedTargetId(target.id)
+                return target
+            else:
+                return None
+
+        if owner.isSiegeWarBow():
+            if self.targetId and self.hateDict.isInHateList(self.targetId):
+                target = KBEngine.entities.get(self.targetId)
+                if target and not target.isDie():
+                    if (not sMath.inRectRange2D(owner.getAlertDistance(), owner.position, target.position)) or (not utils.checkCombatRangeY(owner, target)):
+                        self.hateDict.removeHate(self.targetId)
+                        self.targetId = 0
+
+            self.targetId = 0
+            target = spaceMgr.getSiegeWarBoss()
+            if target and not target.isDie() and self.hateDict.isInHateList(target.id):
+                owner.setSelectedTargetId(target.id)
+                return target
+
+        _skill = self.owner.getSkill(self.skillId)
+        _range = _skill.getRange(owner, _skill.skillId)
+
+        x, y, z, dx, dz, dy = CBC.datas["cityBattle_cityGatePassageArea"]["value"]
+        withOutArea = (Math.Vector3(x - dx / 2, y, z - dz / 2), Math.Vector3(x + dx / 2, y + dy, z + dz / 2))
+
+        maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTargetByRange(_range, withOutArea)
+
+        if not maxHateTargetId or not maxHateTargetHate:
+            owner.setSelectedTargetId(0)
+
+        owner.setSelectedTargetId(maxHateTargetId)
+
+        return KBEngine.entities.get(owner.selectedTargetId)
 
     def selectTarget(self):
         owner = self.owner
@@ -815,27 +867,8 @@ class AuxFunc(object):
             # owner.setSelectedTargetId(0)
             return None
         
-        #城战怪物逻辑
-        if owner.IsMonster:
-            if owner.isSiegeWarBow():
-                if self.targetId and self.hateDict.isInHateList(self.targetId):
-                    target = KBEngine.entities.get(self.targetId)
-                    if target and not target.isDie():
-                        if (not sMath.inRectRange2D(owner.getAlertDistance(), owner.position, target.position)) or (not utils.checkCombatRangeY(owner, target)):
-                            self.hateDict.removeHate(self.targetId)
-                            self.targetId = 0
-
-            if owner.isSiegeWarBow() or owner.isSiegeWarBoss():
-                self.targetId = 0
-                spaceMgr = owner.spaceMgr
-                if spaceMgr:
-                    target = spaceMgr.getSiegeWarBoss() if owner.isSiegeWarBow() else spaceMgr.getSiegeWarMainGate()
-                    if target and not target.isDie() and self.hateDict.isInHateList(target.id):
-                        owner.setSelectedTargetId(target.id)
-                        return target
-
-                    if owner.isSiegeWarBoss():
-                        return None
+        if self.isSiegeWarMonster():
+            return self.selectSiegeWarTarget()
 
         if skill.hasTag(gameconst.SkillTag.randomTarget):
             randomTargetId = self.hateDict.getRandomHateTarget()
@@ -1338,7 +1371,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             owner._cancelCallback(self.iTimerDict[targetId], gametimer.TIMER_TAG_MODIFY_OUT_VISION_HATE_CB)
             self.iTimerDict.pop(targetId, None)
 
-        if (self.isActive and (owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt))):
+        if (self.isActive and (owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt))) and not self.hateDict.isInHateList(targetId):
             isFirstHate = True if self.hateDict.length == 0 else False
             self.increaseHate(targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
             owner.setState(gameconst.State.Fighting, False)

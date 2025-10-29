@@ -8,6 +8,7 @@ GameInit.init()
 import os
 import sys
 import threading
+import time
 import logging
 import KBEngine
 import random
@@ -17,6 +18,7 @@ from EntityCallAccountBase import AccountBaseEntityCall, AccountCellEntityCall
 from EntityCallAvatarBase import AvatarBaseEntityCall, AvatarCellEntityCall
 from Account import Account
 from RemoteMethod import EntityMethodType
+import global_data as GD
 
 class RepeatTimer(threading.Thread):
     def __init__(self, delay, interval, onTimerCall, stopEvent):
@@ -52,8 +54,13 @@ class BotClient(object):
         self.remoteCallBuffer = []
         self.stopEvent = threading.Event()
         self.tickThread = None
+        GD.client_dic[accountName] = self
+        self.tickTime = time.time()
 
     def clientTick(self):
+        if GD.feature_switches.get('debugClient', False):
+            self.client.debugClient(1)
+
         if not self.client:
             return
 
@@ -74,6 +81,7 @@ class BotClient(object):
                 entityCall = self.client.player().base
 
             try:
+                GD.rpc_call_statistics[rpc.methodName] = GD.rpc_call_statistics.get(rpc.methodName, 0) + 1
                 getattr(entityCall, rpc.methodName)(*rpc.args)
             except Exception as e:
                 logging.error('call method error: %s %s'%(rpc, e))
@@ -97,6 +105,9 @@ class BotClient(object):
         self.tickThread.start()
         return self.client
 
+    def updateTickTime(self):
+        self.tickTime = time.time()
+
     @property
     def player(self):
         if not self.client:
@@ -117,4 +128,5 @@ class BotClient(object):
         self.playerAccount = None
         self.remoteCallBuffer.clear()
         self.stopEvent.set()
+        GD.client_dic.pop(self.accountName, None)
 

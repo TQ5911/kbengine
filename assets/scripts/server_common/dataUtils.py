@@ -22,7 +22,6 @@ import conflict_status as CSD
 import value_value as VVD
 import formula_generalFormula as FMLGD
 import antiAddictCategory_antiAddictCategory as AACADCD
-import serverList_serverList as SLSL
 import taskdata as TSKD
 import taskEditorConfig_taskEditorInfo as TECTEID
 import taskClass_taskMsg as TCTMD
@@ -161,10 +160,6 @@ def isInCrontabDatetimeRange(t, startList, endedList):
     if nextStart >= nextEnded:
         return True
     return False
-
-
-def getServerInfo(serverId, default=None):
-    return SLSL.datas.get(serverId, default)
 
 
 def getRealRewardId(rewardId, context, timeStamp=0):
@@ -575,6 +570,9 @@ def checkEquipmentSpiritType(equipType):
                         gameconst.EquipTypes.MAIN_TYPE_RING,
                         gameconst.EquipTypes.MAIN_TYPE_BRACELET,
                         gameconst.EquipTypes.MAIN_TYPE_BELT)
+
+def checkEquipmentUpgradeType(equipType):
+    return True
 
 def checkEquipGrowingForbidden(equipItem):
     isForbidden = equipItem.itemId in GBGCD.datas['equipGrowingForbidden']['value']

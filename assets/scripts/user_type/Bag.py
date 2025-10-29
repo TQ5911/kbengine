@@ -59,7 +59,7 @@ class Bag(BaseBag.BaseBag):
 
     @classmethod
     def _checkIgnores_(cls):
-        return 'itemsCDDic', 'groupCDDic', 'item2timer'
+        return 'itemsCDDic', 'groupCDDic', 'item2timer', 'lockedTime', 'lockDesc'
 
     def initFromDict(self, savedDataDict):
         super(Bag, self).initFromDict(savedDataDict)

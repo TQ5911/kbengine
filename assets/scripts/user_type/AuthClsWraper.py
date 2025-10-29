@@ -31,7 +31,7 @@ def authClsWraper(clsName):
 def onlyHost(fn):
     @wraps(fn)
     def __(self, exposed, *args, **kwargs):
-        if not self.isHost(exposed):
+        if not self.isHostAccount(exposed):
             return
 
         return fn(self, exposed, *args, **kwargs)
@@ -43,7 +43,7 @@ def authWithPermission(permission):
     def _decorator(fn):
         @wraps(fn)
         def __(self, exposed, *args, **kwargs):
-            if not self.isHost(exposed):
+            if not self.isHostAccount(exposed):
                 if not self.hasAuthPermission(permission):
                     return
 

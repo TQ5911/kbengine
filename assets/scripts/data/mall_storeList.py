@@ -18,6 +18,7 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "name": "药铺",
+        "type": 4,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -29,6 +30,7 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "name": "杂货铺",
+        "type": 2,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -40,6 +42,7 @@ datas = _tools.RODict({
     3: _tools.RODict({
         "ID": 3,
         "name": "秘境商店",
+        "type": 3,
         "isTimeLimit": 1,
         "openTime": _tools.ROList([[[0], [0], [5], [11], [], [2022]]]),
         "closeTime": _tools.ROList([[[0], [0], [7], [7], [], [2099]]]),
@@ -51,6 +54,7 @@ datas = _tools.RODict({
     4: _tools.RODict({
         "ID": 4,
         "name": "帮会商店",
+        "type": 2,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -62,6 +66,7 @@ datas = _tools.RODict({
     5: _tools.RODict({
         "ID": 5,
         "name": "铁匠铺",
+        "type": 4,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -73,6 +78,7 @@ datas = _tools.RODict({
     6: _tools.RODict({
         "ID": 6,
         "name": "交易盒兑换",
+        "type": 4,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -84,6 +90,7 @@ datas = _tools.RODict({
     7: _tools.RODict({
         "ID": 7,
         "name": "服装店",
+        "type": 4,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -95,6 +102,7 @@ datas = _tools.RODict({
     8: _tools.RODict({
         "ID": 8,
         "name": "首饰店",
+        "type": 4,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -106,6 +114,7 @@ datas = _tools.RODict({
     9: _tools.RODict({
         "ID": 9,
         "name": "武器店",
+        "type": 4,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -117,6 +126,7 @@ datas = _tools.RODict({
     10: _tools.RODict({
         "ID": 10,
         "name": "普通兑换商店",
+        "type": 3,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
@@ -128,6 +138,7 @@ datas = _tools.RODict({
     11: _tools.RODict({
         "ID": 11,
         "name": "选择兑换商店",
+        "type": 5,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,

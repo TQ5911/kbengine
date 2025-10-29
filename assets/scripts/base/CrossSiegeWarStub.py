@@ -16,22 +16,23 @@ import datetime
 import gametimer
 import utils
 import cityBattle_firstTime as CBFT
-import serverList_serverList as SLSL
 import cityBattle_config as CBC
 import gameengine
 import iCityOwnerMgr
 import iCycleEvent
 import calendar
+import gameglobal
+
 
 #城战
 class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCityOwnerMgr.ICityOwnerMgr, iCycleEvent.ICycleEvent):
     def __init__(self):
         self.crossServerGroupID = 2
-        if gameconfig.serverId() in SLSL.datas:
-            self.crossServerGroupID = SLSL.datas[gameconfig.serverId()]['groupID']
+        if gameconfig.serverId() in gameglobal.mapleServerInfo:
+            self.crossServerGroupID = gameglobal.mapleServerInfo[gameconfig.serverId()]['server_group']
         else:
             WARNING_MSG('[lj]cross siege war stub init, server id not found:', gameconfig.serverId())
-        self.GroupServerList = SLSL.group2ServerIds[self.crossServerGroupID]
+        self.GroupServerList = utils.group2ServerIds(self.crossServerGroupID)
         self.siegeWarStateChanged = True
         self.biddingTime = CBC.datas['cityBattle_biddingTime']['value'] * 24 * 60 * 60
         self.needBroadcastBiddingData = False
@@ -71,7 +72,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         iCityOwnerMgr.ICityOwnerMgr.__init__(self)
         iCycleEvent.ICycleEvent.__init__(self)
-        
+
         self.registerDailyEvent('_onCityOwnerDailyEvent')
         self.onDailyEvent()
 
@@ -104,7 +105,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         # DEBUG_MSG('[lj]next monthly start time:', time.strftime("%Y-%m-%d", time.localtime(nextStartTime)), 'limit time:',
         #           time.strftime("%Y-%m-%d", time.localtime(self.limitTime)))
         return nextStartTime
-    
+
     #获取当前月度报名开始时间(保证now在当前周期)
     def getNowMonthlyStartTime(self):
         now = utils.getNow()
@@ -117,7 +118,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 m = 12
             nowStartTime = int(time.mktime(datetime.datetime(int(y), int(m), self.startDayEveryMonth, 0, 0, 0).timetuple()))
         return nowStartTime
-    
+
     #开关关闭、首次活动开启前为活动未开放状态
     def checkIsOpen(self):
         if self.systemSwitch == 0:
@@ -128,7 +129,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if utils.getNow() < self.getFirstMonthlyStartTime():
                 return False
         return True
-    
+
     #检查是否在报名时间段
     def checkIsSignUpTime(self):
         now = utils.getNow()
@@ -140,13 +141,13 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         #DEBUG_MSG('[lj]check is sign up time', now, self.firstTime, self.firstTime + self.biddingTime + self.signUpDelayTime)
         if now > self.firstTime + biddingStartHour and now < self.firstTime + self.biddingTime + self.signUpDelayTime + biddingEndHour:
             return True, self.firstTime + self.biddingTime + self.signUpDelayTime + biddingEndHour
-        
+
         #在月度报名时间内
         nowMonthlyStartTime = self.getNowMonthlyStartTime()
         if now > nowMonthlyStartTime + biddingStartHour and now < nowMonthlyStartTime + self.biddingTime + self.signUpDelayTime + biddingEndHour:
             return True, nowMonthlyStartTime + self.biddingTime + self.signUpDelayTime + biddingEndHour
         return False, 0
-    
+
     def resetSignUpData(self):
         self.nowBiddingCnt = self.biddingBasePrice
         self.biddingGuildList = []
@@ -177,7 +178,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 self.siegeWarStateChanged = True
             #未开放
             return
-        
+
         ret, endTime = self.checkIsSignUpTime()
         if ret:
             self.siegeWarStateEndTime = endTime
@@ -210,7 +211,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
             limitDay = lastDay - CBC.datas['cityBattle_countdownBattle']['value']
             limitTime = int(time.mktime(datetime.datetime(year, month, limitDay, 23, 59, 59).timetuple()))
-            
+
             self.siegeWarStateEndTime = limitTime
             self.siegeWarStateChanged = True
 
@@ -219,7 +220,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             #处理竞拍结果
             self.handleBiddingResult()
             return
-        
+
         #宣战倒计时阶段
         if self.siegeWarState == gameconst.SiegeWarState.WAR_COUNT_DOWN:
             remainTime = self.officialWarStartTime - utils.getNow()
@@ -230,7 +231,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 self.siegeWarStateEndTime = self.officialWarStartTime + CBC.datas['cityBattle_fightTime']['value'] * 60
                 self.siegeWarStateChanged = True
             return
-        
+
         #时间到了强制宣战
         if self.siegeWarState == gameconst.SiegeWarState.PREPARE_WAR:
             if len(self.biddingGuildList) > 0:
@@ -279,7 +280,7 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             WARNING_MSG('[lj]do bidding failed, wrong state:', self.siegeWarState)
             _stub.onBiddingResult(guildUUID, cnt, False, 0)
             return
-        
+
         nextBiddingMinValue = int(self.nowBiddingCnt * self.biddingIncrease)
         #第一次不乘
         if len(self.biddingGuildList) == 0:
@@ -288,12 +289,12 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             DEBUG_MSG('[lj]do bidding failed, cnt:', cnt, 'min value:', nextBiddingMinValue)
             _stub.onBiddingResult(guildUUID, cnt, False, 1)
             return
-        
+
         if len(self.biddingGuildList) > 0 and self.biddingGuildList[-1] == guildName:
             DEBUG_MSG('[lj]do bidding failed, guild name is same as last:', guildName, self.biddingGuildList[-1])
             _stub.onBiddingResult(guildUUID, cnt, False, 2)
             return
-        
+
         #竞拍成功
         DEBUG_MSG('[lj]do bidding success', self.nowBiddingCnt, '->', cnt, "avatar:", self.avatarGBID, self.avatarName, "->", avatarGBID, name)
 
@@ -369,13 +370,13 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if _stub:
                 _stub.onSiegeWarDeclareWarCrossServerResult(box, False, gameconst.SiegeWarDeclareWarResult.WRONG_TIME, gbId)
             return
-        
+
         if self.isInspecialBlackDay(utils.getNow()):
             DEBUG_MSG('[lj]declare war failed, now is special time:', time.strftime("%Y-%m-%d", time.localtime(utils.getNow())))
             if _stub:
                 _stub.onSiegeWarDeclareWarCrossServerResult(box, False, gameconst.SiegeWarDeclareWarResult.SPECIAL_DAY, gbId)
             return
-        
+
         DEBUG_MSG('[lj]declare war, src server id:', srcServerId)
         self.declareWarTime = utils.getNow()
         if self.declareWarTime > self.siegeWarStateEndTime:
@@ -406,9 +407,9 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             DEBUG_MSG('[lj]declare war, no city owner')
         DEBUG_MSG('[lj]declare war, offensive:', self.warOffensiveGuildName, self.warOffensiveGuildUUID,
                   'defensive:', self.warDefensiveGuildName, self.warDefensiveGuildUUID)
-        
+
         self.changeDeclaration(False, 0, declaration)
-            
+
         if _stub:
             _stub.onSiegeWarDeclareWarCrossServerResult(box, True, gameconst.SiegeWarDeclareWarResult.SUCCESS, gbId)
 

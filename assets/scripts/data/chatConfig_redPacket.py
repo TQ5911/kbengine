@@ -22,17 +22,17 @@ datas = _tools.RODict({
         "totalMoneyMin": 100,
         "totalMoneyMax": 10000,
         "countLimitMin": 20,
-        "countLimitMax": 200,
+        "countLimitMax": 100,
         "charges": 10
     }),
     3: _tools.RODict({
         "ID": 3,
         "singleMoneyMin": 5,
         "singleMoneyMax": 100,
-        "totalMoneyMin": 100,
+        "totalMoneyMin": 50,
         "totalMoneyMax": 5000,
         "countLimitMin": 10,
-        "countLimitMax": 100,
+        "countLimitMax": 50,
         "charges": 20
     })
 })

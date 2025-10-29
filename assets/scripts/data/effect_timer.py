@@ -388,11 +388,13 @@ def _13080067(self, target, context):
     if not buffSrc:
         return
     elif not self.hasBuff(64003005):
-        buffSrc.attackByNum(target, context, dmgRatio, levelDmg, 0)
+        BuffDmg = dmgRatio + levelDmg
+        buffSrc.attackByNum(target, context, BuffDmg, 0)
     elif self.hasBuff(64003005):
-        dmgRatio = 1.2*(1+self.getProp("spirit")/2000) * context.args.ActionParam[0]
-        levelDmg = 1.2*(1+self.getProp("spirit")/2000) * context.args.ActionParam[1]
-        buffSrc.attackByNum(target, context, dmgRatio, levelDmg, 0)
+        dmgRatio = 1.2 * context.args.ActionParam[0]
+        levelDmg = 1.2 * context.args.ActionParam[1]
+        BuffDmg = dmgRatio + levelDmg
+        buffSrc.attackByNum(target, context, BuffDmg, 0)
 
 def _13080068(self, target, context):
     self.castSkill(target, context, 90010052)

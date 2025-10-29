@@ -106,5 +106,53 @@ datas = _tools.RODict({
     "raid_joinCityBattle": _tools.RODict({
         "ID": "raid_joinCityBattle",
         "value": 54000909,
+    }),
+    "raidStats_win": _tools.RODict({
+        "ID": "raidStats_win",
+        "value": "讨伐胜利",
+    }),
+    "raidStats_lose": _tools.RODict({
+        "ID": "raidStats_lose",
+        "value": "讨伐失败",
+    }),
+    "raidStats_winTitle": _tools.RODict({
+        "ID": "raidStats_winTitle",
+        "value": "{0}完成",
+    }),
+    "raidStats_loseTitle": _tools.RODict({
+        "ID": "raidStats_loseTitle",
+        "value": "{0}挑战失败，提升战力后再来试试吧",
+    }),
+    "raidStats_reward": _tools.RODict({
+        "ID": "raidStats_reward",
+        "value": "讨伐奖励",
+    }),
+    "raidStats_score": _tools.RODict({
+        "ID": "raidStats_score",
+        "value": "讨伐分数:",
+    }),
+    "raidStats_time": _tools.RODict({
+        "ID": "raidStats_time",
+        "value": "完成时间:",
+    }),
+    "raidStats_countdown": _tools.RODict({
+        "ID": "raidStats_countdown",
+        "value": "{0}后，自动回到先前位置",
+    }),
+    "raidStats_mine": _tools.RODict({
+        "ID": "raidStats_mine",
+        "value": "我的获得情况",
+    }),
+    "raidStats_other": _tools.RODict({
+        "ID": "raidStats_other",
+        "value": "队伍获得情况",
+    }),
+    "teamMembersNum": _tools.RODict({
+        "ID": "teamMembersNum",
+        "value": 5,
+    }),
+    "dunDailyTimesInfo": _tools.RODict({
+        "ID": "dunDailyTimesInfo",
+        "value": 36,
     })
 })

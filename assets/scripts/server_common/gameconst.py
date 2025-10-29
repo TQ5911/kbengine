@@ -12,6 +12,7 @@ import gearBase_gearConst as GBGCD
 import gamePlay_gamePlay as GGD
 import character_charData as CCDD
 import wonderLand_floor as WL_FD
+import branchData_branchData as BD_BDD
 
 # baseapp和cellapp上都有的数据key
 GLOBALDATA_KEY_SPACE_TO_ITS_BASE = 'kSpaceTobase'
@@ -53,7 +54,6 @@ GLOBAL_BASE_STUB_UNARCHIVE = [
     'RaidMatchStub',
     'CrossDataStub',
     'WorldRefreshEntityStub',
-    'CubeStub',
     ]
 GLOBAL_BASE_STUB_TEAMSTUB = 'TeamStub'
 
@@ -232,6 +232,7 @@ class RemoveStateReason(metaclass=UniqueIntEnum):
     CONFLICT = 2
     TELEPORT = 3
     EXIT_DUEL = 4
+    SKILL_DONE = 5
 
 
 class LineSubType(metaclass=UniqueIntEnum):
@@ -395,7 +396,6 @@ class AvatarProps(metaclass=UniqueIntEnum):
     cubeAutoRenewSwitch = 244 # 立方房间自动续费开关
     cubeRoomRewardList = 245 # 立方房间奖励列表
     cubeRandRoomCD = 246 # 立方房间随机房间CD
-    cubeDurStatus = 247 # 立方房间持续状态
     friendInitStatus = 248
     friendInitEvent = 249
     guildInitEvent = 250
@@ -969,9 +969,9 @@ class MapRefreshType(object):
             return 0
 
 
-class STORE_TYPE(metaclass=UniqueIntEnum):
-    MONEY_STORE_TYPE = 1
-    COIN_STORE_TYPE = 10
+class STORE_TYPE:
+    EXCHANGE_STORE1 = 3
+    EXCHANGE_STORE2 = 5
 
 
 class BaseAppIniting(object):
@@ -1281,6 +1281,8 @@ class ResetSkillReason(object):
     UltraSkill = 11
     SkillStateRemove = 12
     Freeze = 13
+    BreakByState = 14
+
 
 class SkillActionType(object):
     StagedAct=1
@@ -1327,10 +1329,14 @@ class HitType(metaclass=UniqueIntEnum):
     ImmuneAssistantDmg = 16
     #分摊伤害
     ShareDmg = 17 # 为0 不下发
+    #combo伤害（如感电炎爆）
+    ComboHit = 18 # 为0 不下发
+    #combo暴击
+    ComboCrit = 19 # 为0 不下发
 
     clientIgnoreList = (Absorb, BloodSuck, Dodge, Heal, ImmunePhysicalDmg, ImmuneMagicDmg, ImmuneAssistantDmg)
 
-    zeroFilter = (Hit, Crit, Dodge, Heal, HealCrit, Absorb, BloodSuck, Eliminate, ShareDmg)
+    zeroFilter = (Hit, Crit, Dodge, Heal, HealCrit, Absorb, BloodSuck, Eliminate, ShareDmg, ComboHit, ComboCrit)
 
     @staticmethod
     @functools.lru_cache(32)
@@ -1511,6 +1517,7 @@ class DungeonSrcEnum(object):
     FROM_TASK = 4                                 # 任务流程触发传送
     FROM_KICKOUT_DUNGEON = 5                      # 踢出副本
     FROM_TIME_OUT = 6                             # 副本超时
+    FROM_FLOW_CONTROLLER = 7                      # 副本流程控制节点
 
     COLL_FROM_TASK = (FROM_TASK, )
 
@@ -2251,6 +2258,7 @@ class DungeonFlowEventName(object):
     createRebornPos = 'createRebornPos'     # 创建出生点
     removeRebornPos = 'removeRebornPos'     # 回收出生点
 
+    transferToTheDesignatedMap = 'transferToTheDesignatedMap'
 
 class DungeonFlowPlayerChooseType(object):
     UNKNOWN = 0
@@ -2287,9 +2295,11 @@ class GamePlayMapCheckEnum(object):
     ALLOW_WITH_MSG = 1
     ALLOW = 2
 
-def getWorldLineCnt():
+def getBranchLineCnt(mapId):
+    subType = BD_BDD.datas[mapId]["subType"]
+    
     import gameconfig
-    return gameconfig.worldLineCnt()
+    return gameconfig.branchLineCnt(subType)
 
 
 def getWorldLineStubCnt():
@@ -2301,13 +2311,13 @@ lineStubMap = {}
 for mapId in MapIdDef.mapWorldSet:
     lineStubMap.setdefault(mapId, {
         'stubName': 'WorldLineStub',
-        'lineCount': getWorldLineCnt(),
+        'lineCount': getBranchLineCnt(mapId),
     })
 
 # 演武场 单独添加，因为其subType不为1
 lineStubMap[7000] = {
     'stubName': 'WorldLineStub',
-    'lineCount': getWorldLineCnt(),
+    'lineCount': getBranchLineCnt(7000),
 }
 
 spaceDict = {
@@ -3176,7 +3186,7 @@ LIGHTNINGAREABUFF = 64004952
 ANCHOR_CAST_DUR = 1
 
 # 铭文效果类型
-class InscriptionEffectType(metaclass=UniqueIntEnum):
+class InscriptionEffectType(object):
     # 最终伤害提升百分比
     DAMAGE_INCREASE_RATIO = 1
     # 最终伤害提升值
@@ -3227,6 +3237,45 @@ class InscriptionEffectType(metaclass=UniqueIntEnum):
     REPLACE_SKILL = 24
     # 技能释放次数提升值
     SKILL_RELEASE_ADD_COUNT= 25
+    # 随机单参整数类型
+    CHECK_RANDOM_ONE_PARAM_INT_TYPE = (
+            DAMAGE_INCREASE_VALUE,
+            SKILL_HIT_INCREASE_RATIO,
+            SKILL_CRITIAL_HIT_INCREASE_RATIO,
+            SHIELD_INCREASE_VALUE,
+            SKILL_CHARGE_INCREASE_VALUE,
+            MANA_DECREASE_VALUE,
+            ATTACK_TARGET_ADD_VALUE,
+            MODIFY_CD,
+            DAMAGE_HIT_ADD_VALUE,
+            CREATION_ADD_PHASE_WITH_FREQUENCY,
+            CREATION_ADD_PHASE_WITH_LAST_TIME,
+    )
+    # 随机单参浮点类型
+    CHECK_RANDOM_ONE_PARAM_FLOAT_TYPE = (
+        DAMAGE_INCREASE_RATIO,
+        SKILL_DAMAGE_INCREASE_RATIO,
+        SKILL_CRITIAL_DAMAGE_INCREASE_RATIO,
+        SHIELD_INCREASE_RATIO,
+        REFRESH_CD,
+        SKILL_RELEASE_RANGE_ADD_VALUE,
+        SKILL_RELEASE_DISTANCE_ADD_VALUE,
+    )
+    # 单参类型
+    CHECK_ONE_PARAM_TYPE = (
+        SKILL_LEVEL_INCREASE_VALUE,
+        REPLACE_SKILL,
+        SKILL_RELEASE_ADD_COUNT,
+        ADD_EFFECT,
+    )
+    # 双参类型
+    CHECK_TWO_PARAM_TYPE = (
+        EFFECT_TIME_ADD_VALUE,
+    )
+    # 三参类型
+    CHECK_THREE_PARAM_TYPE = (
+        ATTACH_EFFECT,
+    )
 
 BOUNTY_TASK_UI_ID = 'UIRewardTaskPanel'
 
@@ -3301,23 +3350,37 @@ class TeleporterType(object):
 
 
 class CubeRoomType(object):
-    NORMAL = 1
-    COW = 2
+    NORMAL = 1 # 普通房
+    COW = 2 # 奶牛房
+    READY = 3 # 大厅
+
+
+class CubeDurStatus(object):
+    NORMAL = 0
+    ENTER = 1
+
+
+ENTER_CUBE_HAS_LEFT_TIME = 0
+ENTER_CUBE_DEDUCT_TIMES = 1
 
 
 # ----------------------------- cube mock end -----------------------------
+
+# ----------------------------- auth avatar start ---------------------------
 class ClientCallChannel:
     MAIN_CHANNEL = 0
     SUB_CHANNEL = 1
     ALL_CHANNEL = 2
     NONE = 3
-# ----------------------------- AI mock start -----------------------------
-# ----------------------------- AI mock end -----------------------------
 
-# ----------------------------- auth avatar start ---------------------------
 AUTH_AVATAR_LOGIN_EXPIRE_TIME = 30 # 30seconds 由于需要跨进程，30秒内跨进程登录
 AUTH_ROLE_INFO_EXPIRE_TIME = 30 # 30seconds 这是发出授权申请，到对方接受
 AUTH_AVATAR_LEND_EXPIRE_TIME = 30 #角色授权后，对方能登录30天
+
+class AccountHostType(object):
+    NONE = 0
+    HOST = 1 # 主人的号
+    AUTH = 2 # 代理的号
 
 class AuthPerFlags(object):
 # 1.	商城（默认：关闭）
@@ -3383,11 +3446,6 @@ class AvatarDailyProps(metaclass=UniqueIntEnum):
 class AvatarWeeklyProps(metaclass=UniqueIntEnum):
     weeklyTest = 0
 
-
-class GlyphState(metaclass=UniqueIntEnum):
-    # 未解锁
-    LOCKED = 1
-    # 可打造
-    MAKEABLE = 2
-    # 已打造
-    MADE = 3
+class EffetEventSourceType(object):
+    NONE = 0
+    LINGSHOU_SKILL_BUFF = 1

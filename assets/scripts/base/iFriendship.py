@@ -230,7 +230,7 @@ class IFriendship(object):
             _cnt += int(_cntOne)
 
         if _cnt >= RC_RCD.datas['relationFriendNumMax']['value']:
-            ERROR_MSG("IFriends::sendFriendRequestOnGetTargetFriendsNum friends is full")
+            WARNING_MSG("IFriends::sendFriendRequestOnGetTargetFriendsNum friends is full")
             return
 
         # 判断对方申请列表数量

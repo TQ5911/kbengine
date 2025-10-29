@@ -131,7 +131,6 @@ class ImpAutoCombat(object):
             return
 
         if formula.spaceForbidAutoFight(self.spaceNo):
-            self.showMsg(MMD.datas.autoFight_forbid, [])
             return
 
         self.autoCombatInfo['moveController'] = 0

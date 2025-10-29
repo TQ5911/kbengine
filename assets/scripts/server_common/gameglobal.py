@@ -113,6 +113,8 @@ guildRelationDic = {}
 guildRelationVersion = 0
 
 curServerAlias = ''
+curServerName = ''
+mapleServerInfo = {}
 
 accountCompIdCache = {}
 

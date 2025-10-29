@@ -17,7 +17,9 @@
         <serverId> 20227  </serverId>
         <gusId> 1 </gusId>
         <permitLogin> 1 </permitLogin>
-        <worldLineCnt> 2 </worldLineCnt>
+		<branchLineCnt>
+			<subType1> 2 </subType1>
+		</branchLineCnt>
 
         <serverOpenTime> 1624608806 </serverOpenTime>
         <enableAdminServer> 0 </enableAdminServer>
@@ -65,8 +67,7 @@
         <wxErrFlag> 1 </wxErrFlag>
         <tlogFlag> 0 </tlogFlag>
         <broadcastFindCompoents> 0 </broadcastFindCompoents>
-        <yxAppKey> ec2d3a6c84dbe79779abec5df9d5b6cd </yxAppKey>
-        <yxAppSecret> 31384e5af8a3 </yxAppSecret>
+        
         <!-- <interfaceRpc>
             <host>
                 <item addr='127.0.0.1' port='10080'/>
@@ -81,30 +82,12 @@
         <!-- 默认开放注册 -->
         <defaultEnableServerReg> 1 </defaultEnableServerReg>
         <maximumLoginAccount> 40000 </maximumLoginAccount>
-        <yidunCaptchaID> db604d47a72143138935bc0505761ff9 </yidunCaptchaID>
-        <yidunSecurityID> bbd7f829b62ebf34529a349bdd221299 </yidunSecurityID>
-        <yidunSecurityKey> 7b7415d07b06badd4134470d4385e7bd </yidunSecurityKey>
+        
         <errReportUrl> https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=92de3ed1-9bfe-4428-afc6-f1488f9bb452 </errReportUrl>
     </game>
     
     <platform>
-        <digitalCollectionHost> http://10.34.28.243:31584 </digitalCollectionHost>
-        <dcProductCastUrl> /nft/api/product/cast </dcProductCastUrl>
-        <reportDidUrl> /did/userdata/detail/receive </reportDidUrl>
-        <digitalCollectionClientId> 23 </digitalCollectionClientId>
-        <digitalCollectionAppKey> xf_game_test </digitalCollectionAppKey>
-        <digitalCollectionSecretKey> xf_game_test </digitalCollectionSecretKey>
-        <dcProductCastResultUrl> /nft/api/product/cast/result </dcProductCastResultUrl>
-        <dcProductDetailUrl> /nft/api/product/detail </dcProductDetailUrl>
-        <dcChargeOffUrl> /nft/api/product/equity/use </dcChargeOffUrl>
-        <dcQueryChargeOffUrl> /nft/api/product/equity/use/result </dcQueryChargeOffUrl>
-        <dcEquityUseUrl> /nft/api/product/equity/use/query </dcEquityUseUrl>
-        <dcUseEquityChannel> 1 </dcUseEquityChannel>
-        <dcDidQuery> /did/userdata/detail/query </dcDidQuery>
-        <dcUseEquityIMaoTaiUrl> https://testdash.moutai519.com.cn/openapi/proxy/xfGameTest/ </dcUseEquityIMaoTaiUrl>
-        <dcUseEquityIMaoTaiKey> e03e6ed3b06345fb8d0452285582d15f </dcUseEquityIMaoTaiKey>
-        <dcUseEquityIMaoTaiSecret> acc08313ab4e483382a3cd3a916c76ed </dcUseEquityIMaoTaiSecret>
-        <dcIMaoTaiUrl> /did/userdata/detail/receive </dcIMaoTaiUrl>
+        
     </platform>
     
 

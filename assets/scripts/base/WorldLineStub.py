@@ -42,13 +42,6 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onLoadEntitiesEnd(self, spaceNo):
         DEBUG_MSG("WorldLineStub onLoadEntitiesEnd", spaceNo)
         iLineStubBase.ILineStubBase.onLoadEntitiesEnd(self, spaceNo)
-        # lines = self.getLineNoReadyForEnter()
-        # if len(lines) >= gameconfig.worldLineCnt() - 3:
-        #     import gmCommand
-        #     import gmGroup
-        #     import gmAdmin
-        #     agent = gmCommand.GMAgent(gmAdmin.DUMMY_SU, '', None, gmGroup.MANAGER_GROUP_GOD)
-        #     gmCommand.doCommandInside(agent, "$setcachecfg interfaceEnableLogin 1")
 
     def onLineSpaceGone(self, spaceNo, groupOrder):
         iLineStubBase.ILineStubBase.onLineSpaceGone(self, spaceNo, groupOrder)

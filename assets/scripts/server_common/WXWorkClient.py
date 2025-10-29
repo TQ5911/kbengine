@@ -34,7 +34,7 @@ class WXWorkClient(SocketClient.SocketClient):
         if gameglobal.curServerAlias:
             _serverName = gameglobal.curServerAlias
         else:
-            _serverName = gameconfig.serverName()
+            _serverName = gameglobal.curServerName
 
         sendMsg = self.MSG_FLAG + 'serverName\n%s||%s' % (_serverName, gameconfig.serverId())
         self.buffer += sendMsg.encode('utf-8')

@@ -1529,7 +1529,7 @@ datas = _tools.RODict({
     }),
     18000128: _tools.RODict({
         "ID": 18000128,
-        "name": "黄莺儿",
+        "name": "黄莺",
         "baseSpeed": 1.0,
         "adjSpeed": 1.0,
         "isNameDisplay": 1,
@@ -3786,7 +3786,7 @@ datas = _tools.RODict({
     18000662: _tools.RODict({
         "ID": 18000662,
         "name": "何灵丹",
-        "baseSpeed": 1.58,
+        "baseSpeed": 1.0,
         "adjSpeed": 1.0,
         "isNameDisplay": 1,
         "isSelectable": 1,
@@ -4106,6 +4106,18 @@ datas = _tools.RODict({
         "AI": None,
         "creepID": 0,
         "commonDialog": 19000270,
+    }),
+    18000689: _tools.RODict({
+        "ID": 18000689,
+        "name": "？？？",
+        "baseSpeed": 1.0,
+        "adjSpeed": 1.0,
+        "isNameDisplay": 0,
+        "isSelectable": 0,
+        "pathID": 0,
+        "AI": None,
+        "creepID": 0,
+        "commonDialog": 0,
     }),
 })
 minKey = 18000002

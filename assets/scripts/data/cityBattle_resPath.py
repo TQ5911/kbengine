@@ -28,12 +28,12 @@ datas = _tools.RODict({
     3: _tools.RODict({
         "ID": 3,
         "resourcePath": "Assets/Res/ui/texture/common/com_map_citybattle_map_legend02_icon.png",
-        "modelPath": "Assets/Res/art/char/monster/2007_00_zchengmen.prefab"
+        "modelPath": ""
     }),
     4: _tools.RODict({
         "ID": 4,
         "resourcePath": "Assets/Res/ui/texture/common/com_map_citybattle_map_legend03_icon.png",
-        "modelPath": "Assets/Res/art/char/monster/2008_00_fchengmen.prefab"
+        "modelPath": ""
     }),
     5: _tools.RODict({
         "ID": 5,

@@ -573,6 +573,7 @@
         </onRecordAvatarFinished>
 
         <backSelectCharacterBase>
+            <Arg>       BOOL        </Arg>
         </backSelectCharacterBase>
 
         <onLeaveDungeon>
@@ -662,6 +663,9 @@
         <addBlazeId> <Exposed/>
             <Arg>        OBJECT_ID                   </Arg>
         </addBlazeId>
+
+        <subBackLoginBase>
+        </subBackLoginBase>
     </BaseMethods>
 
     <CellMethods>
@@ -893,6 +897,10 @@
             <Arg> POSITION_ARG  </Arg>
         </changeSelfCameraLookPos>
 
+        <triggerNewbieGuide>
+            <Arg> INT32 </Arg>
+        </triggerNewbieGuide>
+
         <revertSelfCameraStatus>
         </revertSelfCameraStatus>
 
@@ -967,5 +975,9 @@
         <onSceneState>
             <Arg>   SCENE_STATE   </Arg>
         </onSceneState>
+
+        <onAllAliasIds>
+            <Arg>   ARRAY   <of>    OBJECT_ID   </of>   </Arg>
+        </onAllAliasIds>
     </ClientMethods>
 </root>

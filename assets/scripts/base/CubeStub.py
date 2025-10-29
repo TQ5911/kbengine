@@ -17,6 +17,7 @@ import CubeRoom
 import iMultiStaticSpace
 import iMultiStaticSpacePlayer
 
+import gamePlay_gamePlay as GP_GPD
 import cube_floor
 import cube_room
 import cube_config
@@ -41,25 +42,24 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.randomWeights = []
         self.pyAddTimer(5, 5, gametimer.CLEAR_MULTI_ENTER_TIME_OUT)
 
-        for _floor in cube_room.floor2Cow.keys():
-            self._startRefreshCowRefreshTimer(_floor)
+        self._startRefreshCowRefreshTimer()
 
-    def _startRefreshCowRefreshTimer(self, floor):
+    def _startRefreshCowRefreshTimer(self):
         _delay = random.randint(*cube_config.datas['cube_cowRoomEntranceIntervalTime']['value'])
         _delay += cube_config.datas['cube_cowRoomEntranceTime']['value']
         _delay *= 60
-        self._callback(_delay, '_doRandomTeleporter', (floor,), gametimer.TIMER_TAG_CUBE_TELEPORTER_REFRESH)
+        self._callback(_delay, '_doRandomTeleporter', (), gametimer.TIMER_TAG_CUBE_TELEPORTER_REFRESH)
 
-    def _doRandomTeleporter(self, floor):
+    def _doRandomTeleporter(self):
         _num = random.randint(*cube_config.datas['cube_cowRoomEntranceNum']['value'])
-        _mapIds = random.sample(cube_room.floor2Rooms[floor], _num)
+        _mapIds = random.sample(cube_room.floor2Rooms[self.cubeNo], _num)
         DEBUG_MSG('_doRandomTeleporter:', _mapIds)
         for _mapId in _mapIds:
             _spaceNo = formula.getLineSpaceNo(_mapId, 0)
             _spaceVal = self.staticSpaces[_spaceNo]
             _spaceVal.spaceMgrBoxCell.createTeleporterToCow()
 
-        self._startRefreshCowRefreshTimer(floor)
+        self._startRefreshCowRefreshTimer()
 
     def _removeRandomInfos(self, mapId):
         for _idx, _room in enumerate(self.randomRooms):
@@ -85,6 +85,11 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def doNext(self):
         super().doNext()
         self._initAllRoom()
+        self._initWeights()
+
+    def _initWeights(self):
+        for _mapId in cube_room.floorTypeMapDic[self.cubeNo][gameconst.CubeRoomType.NORMAL]:
+            self._addRandomInfos(_mapId)
 
     def onTimer(self, tid, userArg):
         if utils.isBelongTimerTag(userArg):
@@ -98,24 +103,13 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def _initAllRoom(self):
         # 先创建大厅，只有大厅是多分线的
-        for _lineNo in range(gameconst.MAX_CUBE_LINE):
-            self._createStaticSpace(
-                cube_config.datas['cube_hall']['value'],
-                lineNo=_lineNo)
+        for _floors in cube_room.floorTypeMapDic[self.cubeNo].values():
+            for _mapId in _floors:
+                if _mapId not in GP_GPD.datas:
+                    ERROR_MSG('CubeStub::_initAllRoom: mapId not found: {}'.format(_mapId))
+                    continue
 
-        # 再创建其他房间，经验房等
-        for _floor, _datas in cube_room.floor2Rooms.items():
-            for _mapId in _datas:
                 self._createStaticSpace(_mapId)
-
-        for _mapId in cube_room.floor2Cow.values():
-            self._createStaticSpace(_mapId)
-
-        # _cubeDatas = dataUtils.getAllCubeRooms(self.cubeNo)
-        # for _cubeData in _cubeDatas:
-        #     _room = CubeRoom.CubeRoom(_cubeData['ID'], _cubeData['weight'], self.cubeNo)
-        #     self.cubeRooms[_room.dunId] = _room
-        #     self._createStaticSpace(_room.dunId)
 
     def _getSpaceMgrEntityType(self):
         return 'CubeSpaceMgr'
@@ -139,6 +133,9 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if _curIdx != -1:
             self.randomWeights[_curIdx] = _curWeight
 
+        if _randomIdx is None:
+            return None
+
         return formula.getLineSpaceNo(self.randomRooms[_randomIdx].mapId, 0)
 
     def _getHallLineNo(self):
@@ -156,12 +153,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def doEnterCube(self, box, mapId, gbId, extra):
         INFO_MSG('CubeStub::doEnterCube: {} {}'.format(mapId, gbId))
-        if mapId == cube_config.datas['cube_hall']['value']:
-            _lineNo = self._getHallLineNo()
-            _spaceNo = formula.getLineSpaceNo(mapId, _lineNo)
-        else:
-            _spaceNo = formula.getLineSpaceNo(mapId, 0)
-
+        _spaceNo = formula.getLineSpaceNo(mapId, 0)
         self._doAvatarEnterCubeRoom(_spaceNo, box, gbId, extra)
 
     def gmEnterTargetRoom(self, box, gbId, spaceNo):
@@ -193,6 +185,21 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         _spaceVal = self.staticSpaces[spaceNo]
         box.onLogonEnterCubeGetSpaceBox(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id)
+
+    def enterRandomRoom(self, box, gbId, extra):
+        _playerVal = self.allPlayers.get(gbId)
+        if not _playerVal:
+            ERROR_MSG('enterRandomRoom: player not found: {}'.format(gbId))
+            return
+
+        _spaceNo = self._getRandomSpaceNo(_playerVal.curSpaceNo)
+        if _spaceNo is None:
+            ERROR_MSG('enterRandomRoom: no space available')
+            return
+
+        self._doAvatarEnterCubeRoom(_spaceNo, box, gbId, extra)
+        if not self.canSpaceEnter(_spaceNo):
+            self._removeRandomInfos(formula.getMapId(_spaceNo))
 
     def _doAvatarEnterCubeRoom(self, spaceNo, box, gbId, extra):
         playerVal = self.allPlayers.get(gbId)

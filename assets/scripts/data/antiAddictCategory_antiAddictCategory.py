@@ -833,7 +833,43 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 54001992,
         "rewardMessage": ('<color=&color211>兑换成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+    }),
+    92: _tools.RODict({
+        "ID": 92,
+        "name": "BONUS_SRC_UPGRADE_BAG_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    93: _tools.RODict({
+        "ID": 93,
+        "name": "BONUS_SRC_UPGRADE_BODY_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    94: _tools.RODict({
+        "ID": 94,
+        "name": "BONUS_SRC_BINDVALUE_WASHING_BAG_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    95: _tools.RODict({
+        "ID": 95,
+        "name": "BONUS_SRC_BINDVALUE_WASHING_BODY_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
     })
 })
 minKey = 1
-maxKey = 91
+maxKey = 95

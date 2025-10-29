@@ -26,16 +26,6 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
 
     def onBecomePlayer(self):
         print('check_login:%s'%self.botClient.accountName)
-        #self.base.runGmCommand(f'$adjfullHp 0 99999')
-
-        # self.base.runGmCommand(f'sethp 0 99999 ')
-        # self.base.runGmCommand(f'$addbuff 0 64000069 1')
-        # pos = random.choice(BOT_CONFIG['randomPos'])
-        # INFO_MSG(self.botClient.accountName, self.player.id,'登录成功')
-
-
-        #客户端等待两秒后执行 self.cell.switchPKModel(2)
-        # self.player.clientapp.callback(2,self.cell.switchPKModel(2))
 
 
     def onTeleportDone(self, *args):

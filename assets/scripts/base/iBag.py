@@ -55,6 +55,8 @@ import tutorConst_newbieCreate as TC_NCD
 import bagData_set as BagDataSet
 import itemData_set as IDSD
 
+import randomSynthesis_config as RSCD
+
 class AwardMixin(object):
     def __init__(self):
         self.dropAwardInfoDic = {}
@@ -506,7 +508,7 @@ class AwardMixin(object):
                 extraDesp = dataUtils.getAddItemExtraDesp(srcType)
                 '''
                 itemData['messageTipsID'] and self.onMessagePre(
-                    itemData['messageTipsID'], 
+                    itemData['messageTipsID'],
                     [str(_num), str(_id)]
                 )
                 '''
@@ -541,7 +543,7 @@ class AwardMixin(object):
                 'itemNum': _num,
             })
             _tip(_id, _num, 0, False)
-        
+
         for _info in itemsDictList[1]:
             popList.append({
                 'itemId': _info[0],
@@ -761,7 +763,7 @@ class AwardMixin(object):
             self.addWealth(srcType, awardVal, opUUID, detail, awardContext.CommonContext(
                 gameconst.MailConstID.DROP_RWD_BAG_FULL_MAIL_ID, **awardCtx.extra))
         return
-    
+
     def getItemObjByItemID(self, itemID, bindType):
         return self.bagData.getItemObjByItemID(itemID, bindType)
 
@@ -1008,10 +1010,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         bagItem = bag.getItemObjByGridId(gridId)
         if not bagItem or bagItem.itemId != itemId:
             return
-        
+
         if bagItem.isLocked():
             WARNING_MSG('in recycleItems, item is locked ', itemId)
-            return 
+            return
 
         itemData = dataUtils.getCommItemData(itemId)
         recycleType = itemData.get('recycleType')
@@ -1125,7 +1127,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if deductWealthVal.darkIron.data > self.darkIron:
             sendMsg and self.onMessagePre(MMD.datas.itemNotEnough, [str(deductWealthVal.darkIron.itemId)])
             return False
-        
+
         if deductWealthVal.geniusQi.data > self.geniusQi:
             sendMsg and self.onMessagePre(MMD.datas.itemNotEnough, [str(deductWealthVal.geniusQi.itemId)])
             return False
@@ -1277,7 +1279,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.darkIron -= int(subNum)
         self.onItemCountChanged([gameconst.ItemId.DARK_IRON, ])
         return True
-    
+
     def addGeniusQi(self, addNum, opUUID, src, detail, srcSubType=0, idipSource=0):
         if addNum <= 0:
             return
@@ -1286,21 +1288,21 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.geniusQi = targetGeniusQi
         self.onItemCountChanged([gameconst.ItemId.GENIUS_QI, ])
         return
-    
+
     def deductGeniusQi(self, subNum, opUUID, src, detail, srcSubType=0, idipSource=0, bMsg=True):
         if subNum < 0:
             return False
         elif subNum == 0:
             return True
-        
+
         if subNum > self.geniusQi:
             bMsg and gameengine.reportCritical('deduct fail:', subNum, self.geniusQi)
             return False
-        
+
         self.geniusQi -= int(subNum)
         self.onItemCountChanged([gameconst.ItemId.GENIUS_QI, ])
         return True
-    
+
     @gamedecorator.offlineCallback
     def addCoin(self, addNum, opUUID, src, detail, srcSubType=0, idipSource=0):
         if addNum <= 0:
@@ -1481,7 +1483,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             checkResult, _ = self.lifeSkills.checkMakeLifeSkillItemCond(self, pickData['lifeSkillId'], [], 1, True)
             if not checkResult:
                 return False
-            
+
         if dropUniqueId:
             checkResult = self.checkPickDropEquip(dropUniqueId)
             if not checkResult:
@@ -1684,7 +1686,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     def reqExchangeMoneyToCoin(self, moneyCnt):
         DEBUG_MSG('in reqExchangeMoneyToCoin:', moneyCnt)
         pass
-    
+
     @gamedecorator.limitcall(1)
     def reqMultiItemDisassemble(self, exposed, gridIdList, uniqueIdList):
         # 要么全部分解，要么都不分解
@@ -1692,14 +1694,21 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         gridIDCount = len(gridIdList)
         uniqueIDCount = len(uniqueIdList)
         if gridIDCount <= 0 or uniqueIDCount <= 0 or gridIDCount != uniqueIDCount:
-            ERROR_MSG('       reqMultiItemDisassemble, args error:', gridIdList, uniqueIdList)
+            ERROR_MSG('       reqMultiItemDisassemble, args error 1:', gridIdList, uniqueIdList)
             return
+        
+        # 请求格子数不允许超过当前背包容量
+        if gridIDCount > self.bagData.capacity:
+            ERROR_MSG('       reqMultiItemDisassemble, args error 2:', gridIdList, uniqueIdList, self.bagData.capacity)
+            return
+        
+        # 背包满了就不允许分解了
         if self.bagData.isFull():
             self.onMessagePre(MMD.datas.bagCapacityNotEnough, [])
             return
+        
         # 收集奖励掉落id
         rewardIDs = []
-        awardVal = dropAward.AwardVal()
         for gridId, uniqueId in zip(gridIdList, uniqueIdList):
             itemObj = self.bagData.getItemObjByGridId(gridId)
             if not itemObj:
@@ -1707,16 +1716,24 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 return
 
             if itemObj.uniqueId != uniqueId:
-                WARNING_MSG('       reqMultiItemDisassemble, itemId mismatch:', itemObj.itemId, gridId, uniqueId)
+                ERROR_MSG('       reqMultiItemDisassemble, itemId mismatch:', itemObj.itemId, gridId, uniqueId)
                 return
 
             itemData = dataUtils.getCommItemData(itemObj.itemId)
-            rewardID = itemData['disassemblyReward']
+            if itemData.bindType == gameconst.ItemBindType.BIND:
+                rewardID = itemData['disassemblyReward']
+            elif itemData.bindType == gameconst.ItemBindType.NORMAL:
+                rewardID = itemData['disassemblyReward2']
+            else:
+                ERROR_MSG('       reqMultiItemDisassemble, unknow bind type:', itemObj.itemId, gridId, uniqueId, itemData.bindType)
+                return
             if not rewardID:
                 WARNING_MSG('   reqMultiItemDisassemble, item cant disassemble:', itemObj.itemId)
                 return
             rewardIDs.append(rewardID)
+        
         # 分层处理奖励
+        awardVal = dropAward.AwardVal()
         for rewardID in rewardIDs:
             awardCtx = self._getAvatarAwardCtx(rewardID, None)
             awardVal += dropAward.getAwardOne(rewardID, awardCtx)
@@ -1727,6 +1744,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if not self.canAddWealthVal(srcType, awardVal):
             self.onMessagePre(MMD.datas.bagCapacityNotEnough, [])
             return
+        
         # 先消耗
         detail = gameclass.AwardDetail(gridIdList=gridIdList, itemIdList=uniqueIdList)
         cleanList = []
@@ -1734,6 +1752,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             itemObj = self.bagData.getItemObjByGridId(gridId)
             self.bagData.cleanGridByGridId(self, gridId, itemObj.itemId, opUUID, srcType, detail, sendClient=False)
             cleanList.append({'gridId': gridId, 'itemNum': 0})
+        
         self.client.onUpdateGridItemsNum(self.bagData.bagType, cleanList)
 
         self.addWealth(srcType, awardVal, opUUID, detail)
@@ -1750,7 +1769,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if not costItemData:
             ERROR_MSG('reqItemDisassemble, missing cost item id:', gridId, costItemId, costItemNum)
             return
-        
+
         if self.bagData.isFull():
             self.onMessagePre(MMD.datas.bagCapacityNotEnough, [])
             return
@@ -1764,14 +1783,21 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             WARNING_MSG('reqItemDisassemble, client data error:', gridObj.itemId, gridObj.itemNum, gridId, costItemId, costItemNum)
             return
 
-        rewardID = costItemData['disassemblyReward']
+        if gridObj.bindType == gameconst.ItemBindType.BIND:
+            rewardID = costItemData['disassemblyReward']
+        elif gridObj.bindType == gameconst.ItemBindType.NORMAL:
+            rewardID = costItemData['disassemblyReward2']
+        else:
+            ERROR_MSG('reqItemDisassemble, unknow bind type:', gridObj.itemId, gridObj.itemNum, gridId, costItemId, costItemNum)
+            return
+        
         if not rewardID:
-            WARNING_MSG('   reqItemDisassemble, item cant disassemble:', costItemId)
+            WARNING_MSG('reqItemDisassemble, item cant disassemble:', costItemId)
             return
 
         awardCtx = self._getAvatarAwardCtx(rewardID, None)
-        
-        DEBUG_MSG('     reqItemDisassemble:')
+
+        DEBUG_MSG('reqItemDisassemble:')
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_DISASSEMBLE
@@ -1806,7 +1832,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             DEBUG_MSG('     reqItemDisassemble cannot disassemble item:', gridId, costItemId, costItemNum, realCostItemNum)
             self.onMessagePre(MMD.datas.bagCapacityNotEnough, [])
             return
-        
+
         # 实际分解
         detail = gameclass.AwardDetail(costItemId=costItemId, realCostItemNum=realCostItemNum)
         self.bagData.deductItemsByGrid(self, {gridId: realCostItemNum}, opUUID, srcType, detail)
@@ -2377,12 +2403,12 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 ERROR_MSG('reqRandomSynthesis not find item', gridId)
                 self.client.onRandomSynthesis(itemIdList)
                 return
-            
+
             if item.isLocked():
                 ERROR_MSG('reqRandomSynthesis item is locked', gridId, item)
                 self.client.onRandomSynthesis(itemIdList)
                 return
-            
+
             itemId = item.itemId
             bindType = item.bindType
             realItemInfoList.append((itemId, itemNum, bindType))
@@ -2401,8 +2427,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         ranItemAddVal = dropAward.AwardVal()
         synthesisUpgradeNumList = []
         synthesisUpgradeKeySet = set()
+        normalItemNum = 0
         for itemId, itemNum, bindType in realItemInfoList:
             hasBindType = True if bindType == gameconst.ItemBindType.BIND else hasBindType
+            if bindType != gameconst.ItemBindType.BIND:
+                normalItemNum += itemNum
             itemData = dataUtils.getCommItemData(itemId)
             if not itemData:
                 ERROR_MSG("reqRandomSynthesis itemData not found", itemId)
@@ -2445,8 +2474,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 self.client.onRandomSynthesis(itemIdList)
                 return
             curItemNum += itemNum
-            while curItemNum >= 4:
-                curItemNum -= 4
+            synthesisNeedNum = 4
+            while curItemNum >= synthesisNeedNum:
+                curItemNum -= synthesisNeedNum
                 prob = cfgData['probList'][quality]
                 if not prob:
                     ERROR_MSG("reqRandomSynthesis prob not found", quality)
@@ -2477,7 +2507,16 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                     self.client.onRandomSynthesis(itemIdList)
                     return
                 ranItemId = random.choice(ranItemIdList)
-                itemBindType = gameconst.ItemBindType.BIND if hasBindType else gameconst.ItemBindType.NORMAL
+                #itemBindType = gameconst.ItemBindType.BIND if hasBindType else gameconst.ItemBindType.NORMAL
+                itemBindType = gameconst.ItemBindType.BIND
+                _randomCfg = RSCD.datas.get('synthesisUnboundProbability', {}).get('value', [])
+                curNormalNum = normalItemNum
+                if normalItemNum >= synthesisNeedNum:
+                    normalItemNum -= synthesisNeedNum
+                    curNormalNum = synthesisNeedNum
+                if curNormalNum > 0 and len(_randomCfg) > curNormalNum and random.randint(0, 100) <= _randomCfg[curNormalNum]:
+                    itemBindType = gameconst.ItemBindType.NORMAL
+                #DEBUG_MSG("reqRandomSynthesis, normalItemNum:", normalItemNum, curNormalNum)
                 randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, itemBindType)
                 itemIdList.append(ranItemId)
                 ranItemAddVal.addWealthByObjList([randItem])
@@ -2490,6 +2529,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 curMainType = None
                 curSubType = None
                 curQuality = None
+                normalItemNum = 0
 
         self.deductWealth(srcType, deductVal, opUUID, detail)
         _ctx = awardContext.CommonContext(gameconst.MailConstID.REWARD_MAIL_ID)
@@ -2558,7 +2598,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.client.onUpgradeSynthesis(ranItemId)
 
     def checkRenameBase(self, pendingCheckId, newName):
-        if not self.mainAccountCache.isHost:
+        if not self.mainAccountCache.isAccountHost():
             self.cell.onPendingCheckItem(pendingCheckId, gameconst.UseItem.FALSE)
             return
 
@@ -2608,7 +2648,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         })
         elasticUtils.ElasticUtils.addAvatarElasticInfo(newName, self.gbID, self.obId)
         self.accountEntity.onCharacterInfoUpdated(
-            self.gbID, 
+            self.gbID,
             newName,
         )
 
@@ -2651,16 +2691,16 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if not dataUtils.checkLockAvailableStatus(itemId):
             ERROR_MSG('reqLockItem, item locker is not opened', itemId)
             return
-        
+
         if lockStatus not in gameconst.ItemLockStatus.VALID_STATUS:
             WARNING_MSG("in reqLockItem, wrong arg lockStatus", lockStatus)
             return
-        
+
         if equipIn == gameconst.ItemBelongToType.BELONGTO_BAG:
             self.bagLockItem(equipIn, equipPos, itemId, uniqueId, lockStatus)
         elif equipIn == gameconst.ItemBelongToType.BELONGTO_BODY:
             self.cell.bodyItemLock(equipIn, equipPos, itemId, uniqueId, lockStatus)
-            
+
     def bagLockItem(self, equipIn, gridId, itemId, uniqueId, lockStatus):
         INFO_MSG('in bagLockItem::', equipIn, gridId, itemId, uniqueId, lockStatus)
         itemObj = self.bagData.getItemObjByGridId(gridId)
@@ -2671,11 +2711,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if itemObj.itemId != itemId:
             WARNING_MSG("bagLockItem, wrong arg itemid", uniqueId, itemObj.itemId, itemId)
             return
-        
+
         if itemObj.uniqueId != uniqueId:
             WARNING_MSG("bagLockItem, wrong arg uniqueId", itemObj.uniqueId, uniqueId, itemObj.itemId, itemId)
             return
-        
+
         itemObj.setLockStatus(lockStatus)
 
         self.client.onLockItemSucc(equipIn, gridId, itemId, lockStatus)
@@ -2698,7 +2738,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if itemObj.isLocked():
             WARNING_MSG("reqSellItem, item is locked ", itemId)
             return
-        
+
         sellPrice = dataUtils.gellItemSellPrice(itemId)
         if sellPrice is None:
             WARNING_MSG("reqSellItem, wrong arg itemId 2 ", itemId)
@@ -2709,7 +2749,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if itemObj.isEquipmentItem() and not itemObj.isGood():
             WARNING_MSG("reqSellItem, equipment item is broken ", itemId)
             return
-        
+
         # 扣除道具
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(itemId, itemNum)
@@ -2717,7 +2757,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if not self.canDeductWealth(deductWealthVal):
             WARNING_MSG("reqSellItem, item is not enough", itemId, itemNum)
             return
-        
+
         # 加入铜币
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_RECYCLE_ITEM
@@ -2735,16 +2775,16 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         addDetail = gameclass.AwardDetail(itemId=gameconst.ItemId.COIN, itemNum=itemNum, sellPrice = sellPrice)
         self.addWealth(srcType, addWealthVal, opUUID, addDetail)
-        
+
         self.client.onSellItemSucc(bagType, gridId, itemId, itemNum)
 
-    
+
     def getBagLimitItemNum(self):
         itemNum = 0
         for itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
             itemNum += self.getItemNum(itemId)
         return itemNum
-    
+
     def checkBagItemLimit(self, itemId, addNum):
         DEBUG_MSG("checkBagItemLimit", itemId, addNum)
         if itemId not in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
@@ -2754,3 +2794,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     def checkBagItemLimitNoItemId(self, addNum):
         DEBUG_MSG("checkBagItemLimitNoItemId", addNum)
         return self.getBagLimitItemNum() + addNum > ID_SET.datas['potionBagStorageLimit']['value']
+    
+    def getGridDatasWithConds(self, itemId, bindType, count, args = None, excludedGridIDs = None):
+        ret, data = self.bagData.getGridIDsWithConds(itemId, bindType, count, args = args, excludedGridIDs = excludedGridIDs)
+        if not ret:
+            return None
+        return data

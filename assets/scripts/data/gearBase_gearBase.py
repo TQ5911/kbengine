@@ -26,6 +26,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 1,
         "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001001,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -37,6 +39,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 500),),
         "reqClass": (1001,)
     }),
     80111002: _tools.RODict({
@@ -50,6 +54,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 5,
         "disassemblyReward": 40018004,
+        "disassemblyReward2": 40018004,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001002,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -61,6 +67,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 501),),
         "reqClass": (1001,)
     }),
     80111003: _tools.RODict({
@@ -74,6 +82,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 10,
         "disassemblyReward": 40018007,
+        "disassemblyReward2": 40018007,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001003,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -85,6 +95,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 502),),
         "reqClass": (1001,)
     }),
     80112001: _tools.RODict({
@@ -98,6 +110,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 15,
         "disassemblyReward": 40018010,
+        "disassemblyReward2": 40018010,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001004,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -109,6 +123,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 503),),
         "reqClass": (1001,)
     }),
     80112002: _tools.RODict({
@@ -122,6 +138,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 20,
         "disassemblyReward": 40018013,
+        "disassemblyReward2": 40018013,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001005,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -133,6 +151,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 504),),
         "reqClass": (1001,)
     }),
     80112003: _tools.RODict({
@@ -146,6 +166,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 24,
         "disassemblyReward": 40018016,
+        "disassemblyReward2": 40018016,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001006,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -157,6 +179,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 505),),
         "reqClass": (1001,)
     }),
     80112004: _tools.RODict({
@@ -170,6 +194,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 28,
         "disassemblyReward": 40018019,
+        "disassemblyReward2": 40018019,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001007,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -181,6 +207,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 506),),
         "reqClass": (1001,)
     }),
     80113001: _tools.RODict({
@@ -194,6 +222,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 32,
         "disassemblyReward": 40018022,
+        "disassemblyReward2": 40018022,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001008,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -205,6 +235,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 507),),
         "reqClass": (1001,)
     }),
     80113002: _tools.RODict({
@@ -218,6 +250,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 36,
         "disassemblyReward": 40018025,
+        "disassemblyReward2": 40018025,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001009,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -229,6 +263,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 508),),
         "reqClass": (1001,)
     }),
     80113003: _tools.RODict({
@@ -242,6 +278,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 40,
         "disassemblyReward": 40018028,
+        "disassemblyReward2": 40018028,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001010,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -253,6 +291,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 509),),
         "reqClass": (1001,)
     }),
     80113004: _tools.RODict({
@@ -266,6 +306,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 44,
         "disassemblyReward": 40018031,
+        "disassemblyReward2": 40018031,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001011,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -277,6 +319,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 510),),
         "reqClass": (1001,)
     }),
     80113005: _tools.RODict({
@@ -290,6 +334,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 48,
         "disassemblyReward": 40018034,
+        "disassemblyReward2": 40018034,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001012,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -301,6 +347,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 511),),
         "reqClass": (1001,)
     }),
     80113006: _tools.RODict({
@@ -314,6 +362,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 36,
         "disassemblyReward": 40018025,
+        "disassemblyReward2": 40018025,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001013,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -325,6 +375,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 512),),
         "reqClass": (1001,)
     }),
     80113007: _tools.RODict({
@@ -338,6 +390,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 40,
         "disassemblyReward": 40018028,
+        "disassemblyReward2": 40018028,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001014,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -349,6 +403,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 513),),
         "reqClass": (1001,)
     }),
     80113008: _tools.RODict({
@@ -362,6 +418,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 44,
         "disassemblyReward": 40018031,
+        "disassemblyReward2": 40018031,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001015,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -373,6 +431,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 514),),
         "reqClass": (1001,)
     }),
     80113009: _tools.RODict({
@@ -386,6 +446,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 48,
         "disassemblyReward": 40018034,
+        "disassemblyReward2": 40018034,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001016,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -397,6 +459,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 515),),
         "reqClass": (1001,)
     }),
     80114001: _tools.RODict({
@@ -410,6 +474,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018037,
+        "disassemblyReward2": 40018037,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001017,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -421,6 +487,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 516),),
         "reqClass": (1001,)
     }),
     80114002: _tools.RODict({
@@ -434,6 +502,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018040,
+        "disassemblyReward2": 40018040,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001018,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -445,6 +515,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 517),),
         "reqClass": (1001,)
     }),
     80114003: _tools.RODict({
@@ -458,6 +530,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018043,
+        "disassemblyReward2": 40018043,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001019,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -469,6 +543,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 518),),
         "reqClass": (1001,)
     }),
     80115001: _tools.RODict({
@@ -481,7 +557,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001020,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -493,6 +571,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 519),),
         "reqClass": (1001,)
     }),
     80114005: _tools.RODict({
@@ -506,6 +586,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018037,
+        "disassemblyReward2": 40018037,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001021,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -517,6 +599,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 520),),
         "reqClass": (1001,)
     }),
     80114006: _tools.RODict({
@@ -530,6 +614,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018040,
+        "disassemblyReward2": 40018040,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001022,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -541,6 +627,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 521),),
         "reqClass": (1001,)
     }),
     80114007: _tools.RODict({
@@ -554,6 +642,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018043,
+        "disassemblyReward2": 40018043,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001023,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -565,6 +655,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 522),),
         "reqClass": (1001,)
     }),
     80115002: _tools.RODict({
@@ -577,7 +669,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001024,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -589,6 +683,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 523),),
         "reqClass": (1001,)
     }),
     80121001: _tools.RODict({
@@ -602,6 +698,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 1,
         "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001025,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -613,6 +711,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 524),),
         "reqClass": (1002,)
     }),
     80121002: _tools.RODict({
@@ -626,6 +726,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 5,
         "disassemblyReward": 40018004,
+        "disassemblyReward2": 40018004,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001026,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -637,6 +739,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 525),),
         "reqClass": (1002,)
     }),
     80121003: _tools.RODict({
@@ -650,6 +754,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 10,
         "disassemblyReward": 40018007,
+        "disassemblyReward2": 40018007,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001027,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -661,6 +767,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 526),),
         "reqClass": (1002,)
     }),
     80122001: _tools.RODict({
@@ -674,6 +782,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 15,
         "disassemblyReward": 40018010,
+        "disassemblyReward2": 40018010,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001028,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -685,6 +795,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 527),),
         "reqClass": (1002,)
     }),
     80122002: _tools.RODict({
@@ -698,6 +810,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 20,
         "disassemblyReward": 40018013,
+        "disassemblyReward2": 40018013,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001029,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -709,6 +823,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 528),),
         "reqClass": (1002,)
     }),
     80122003: _tools.RODict({
@@ -722,6 +838,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 24,
         "disassemblyReward": 40018016,
+        "disassemblyReward2": 40018016,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001030,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -733,6 +851,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 529),),
         "reqClass": (1002,)
     }),
     80122004: _tools.RODict({
@@ -746,6 +866,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 28,
         "disassemblyReward": 40018019,
+        "disassemblyReward2": 40018019,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001031,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -757,6 +879,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 530),),
         "reqClass": (1002,)
     }),
     80123001: _tools.RODict({
@@ -770,6 +894,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 32,
         "disassemblyReward": 40018022,
+        "disassemblyReward2": 40018022,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001032,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -781,6 +907,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 531),),
         "reqClass": (1002,)
     }),
     80123002: _tools.RODict({
@@ -794,6 +922,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 36,
         "disassemblyReward": 40018025,
+        "disassemblyReward2": 40018025,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001033,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -805,6 +935,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 532),),
         "reqClass": (1002,)
     }),
     80123003: _tools.RODict({
@@ -818,6 +950,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 40,
         "disassemblyReward": 40018028,
+        "disassemblyReward2": 40018028,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001034,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -829,6 +963,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 533),),
         "reqClass": (1002,)
     }),
     80123004: _tools.RODict({
@@ -842,6 +978,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 44,
         "disassemblyReward": 40018031,
+        "disassemblyReward2": 40018031,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001035,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -853,6 +991,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 534),),
         "reqClass": (1002,)
     }),
     80123005: _tools.RODict({
@@ -866,6 +1006,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 48,
         "disassemblyReward": 40018034,
+        "disassemblyReward2": 40018034,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001036,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -877,6 +1019,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 535),),
         "reqClass": (1002,)
     }),
     80123006: _tools.RODict({
@@ -890,6 +1034,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 36,
         "disassemblyReward": 40018025,
+        "disassemblyReward2": 40018025,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001037,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -901,6 +1047,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 536),),
         "reqClass": (1002,)
     }),
     80123007: _tools.RODict({
@@ -914,6 +1062,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 40,
         "disassemblyReward": 40018028,
+        "disassemblyReward2": 40018028,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001038,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -925,6 +1075,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 537),),
         "reqClass": (1002,)
     }),
     80123008: _tools.RODict({
@@ -938,6 +1090,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 44,
         "disassemblyReward": 40018031,
+        "disassemblyReward2": 40018031,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001039,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -949,6 +1103,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 538),),
         "reqClass": (1002,)
     }),
     80123009: _tools.RODict({
@@ -962,6 +1118,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 48,
         "disassemblyReward": 40018034,
+        "disassemblyReward2": 40018034,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001040,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -973,6 +1131,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 539),),
         "reqClass": (1002,)
     }),
     80124001: _tools.RODict({
@@ -986,6 +1146,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018037,
+        "disassemblyReward2": 40018037,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001041,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -997,6 +1159,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 540),),
         "reqClass": (1002,)
     }),
     80124002: _tools.RODict({
@@ -1010,6 +1174,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018040,
+        "disassemblyReward2": 40018040,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001042,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1021,6 +1187,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 541),),
         "reqClass": (1002,)
     }),
     80124003: _tools.RODict({
@@ -1034,6 +1202,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018043,
+        "disassemblyReward2": 40018043,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001043,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1045,6 +1215,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 542),),
         "reqClass": (1002,)
     }),
     80125001: _tools.RODict({
@@ -1057,7 +1229,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001044,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1069,6 +1243,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 543),),
         "reqClass": (1002,)
     }),
     80124005: _tools.RODict({
@@ -1082,6 +1258,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018037,
+        "disassemblyReward2": 40018037,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001045,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1093,6 +1271,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 544),),
         "reqClass": (1002,)
     }),
     80124006: _tools.RODict({
@@ -1106,6 +1286,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018040,
+        "disassemblyReward2": 40018040,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001046,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1117,6 +1299,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 545),),
         "reqClass": (1002,)
     }),
     80124007: _tools.RODict({
@@ -1130,6 +1314,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018043,
+        "disassemblyReward2": 40018043,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001047,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1141,6 +1327,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 546),),
         "reqClass": (1002,)
     }),
     80125002: _tools.RODict({
@@ -1153,7 +1341,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001048,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1165,6 +1355,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 547),),
         "reqClass": (1002,)
     }),
     80131001: _tools.RODict({
@@ -1178,6 +1370,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 1,
         "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001049,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1189,6 +1383,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 548),),
         "reqClass": (1003,)
     }),
     80131002: _tools.RODict({
@@ -1202,6 +1398,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 5,
         "disassemblyReward": 40018004,
+        "disassemblyReward2": 40018004,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001050,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1213,6 +1411,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 549),),
         "reqClass": (1003,)
     }),
     80131003: _tools.RODict({
@@ -1226,6 +1426,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 10,
         "disassemblyReward": 40018007,
+        "disassemblyReward2": 40018007,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001051,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1237,6 +1439,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 550),),
         "reqClass": (1003,)
     }),
     80132001: _tools.RODict({
@@ -1250,6 +1454,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 15,
         "disassemblyReward": 40018010,
+        "disassemblyReward2": 40018010,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001052,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1261,6 +1467,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 551),),
         "reqClass": (1003,)
     }),
     80132002: _tools.RODict({
@@ -1274,6 +1482,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 20,
         "disassemblyReward": 40018013,
+        "disassemblyReward2": 40018013,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001053,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1285,6 +1495,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 552),),
         "reqClass": (1003,)
     }),
     80132003: _tools.RODict({
@@ -1298,6 +1510,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 24,
         "disassemblyReward": 40018016,
+        "disassemblyReward2": 40018016,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001054,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1309,6 +1523,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 553),),
         "reqClass": (1003,)
     }),
     80132004: _tools.RODict({
@@ -1322,6 +1538,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 28,
         "disassemblyReward": 40018019,
+        "disassemblyReward2": 40018019,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001055,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1333,6 +1551,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 554),),
         "reqClass": (1003,)
     }),
     80133001: _tools.RODict({
@@ -1346,6 +1566,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 32,
         "disassemblyReward": 40018022,
+        "disassemblyReward2": 40018022,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001056,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1357,6 +1579,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 555),),
         "reqClass": (1003,)
     }),
     80133002: _tools.RODict({
@@ -1370,6 +1594,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 36,
         "disassemblyReward": 40018025,
+        "disassemblyReward2": 40018025,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001057,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1381,6 +1607,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 556),),
         "reqClass": (1003,)
     }),
     80133003: _tools.RODict({
@@ -1394,6 +1622,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 40,
         "disassemblyReward": 40018028,
+        "disassemblyReward2": 40018028,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001058,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1405,6 +1635,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 557),),
         "reqClass": (1003,)
     }),
     80133004: _tools.RODict({
@@ -1418,6 +1650,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 44,
         "disassemblyReward": 40018031,
+        "disassemblyReward2": 40018031,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001059,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1429,6 +1663,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 558),),
         "reqClass": (1003,)
     }),
     80133005: _tools.RODict({
@@ -1442,6 +1678,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 48,
         "disassemblyReward": 40018034,
+        "disassemblyReward2": 40018034,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001060,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1453,6 +1691,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 559),),
         "reqClass": (1003,)
     }),
     80133006: _tools.RODict({
@@ -1466,6 +1706,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 36,
         "disassemblyReward": 40018025,
+        "disassemblyReward2": 40018025,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001061,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1477,6 +1719,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 560),),
         "reqClass": (1003,)
     }),
     80133007: _tools.RODict({
@@ -1490,6 +1734,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 40,
         "disassemblyReward": 40018028,
+        "disassemblyReward2": 40018028,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001062,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1501,6 +1747,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 561),),
         "reqClass": (1003,)
     }),
     80133008: _tools.RODict({
@@ -1514,6 +1762,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 44,
         "disassemblyReward": 40018031,
+        "disassemblyReward2": 40018031,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001063,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1525,6 +1775,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 562),),
         "reqClass": (1003,)
     }),
     80133009: _tools.RODict({
@@ -1538,6 +1790,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 48,
         "disassemblyReward": 40018034,
+        "disassemblyReward2": 40018034,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001064,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1549,6 +1803,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 563),),
         "reqClass": (1003,)
     }),
     80134001: _tools.RODict({
@@ -1562,6 +1818,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018037,
+        "disassemblyReward2": 40018037,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001065,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1573,6 +1831,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 564),),
         "reqClass": (1003,)
     }),
     80134002: _tools.RODict({
@@ -1586,6 +1846,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018040,
+        "disassemblyReward2": 40018040,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001066,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1597,6 +1859,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 565),),
         "reqClass": (1003,)
     }),
     80134003: _tools.RODict({
@@ -1610,6 +1874,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018043,
+        "disassemblyReward2": 40018043,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001067,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1621,6 +1887,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 566),),
         "reqClass": (1003,)
     }),
     80135001: _tools.RODict({
@@ -1633,7 +1901,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001068,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1645,6 +1915,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 567),),
         "reqClass": (1003,)
     }),
     80134005: _tools.RODict({
@@ -1658,6 +1930,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018037,
+        "disassemblyReward2": 40018037,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001069,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1669,6 +1943,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 568),),
         "reqClass": (1003,)
     }),
     80134006: _tools.RODict({
@@ -1682,6 +1958,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018040,
+        "disassemblyReward2": 40018040,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001070,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1693,6 +1971,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 569),),
         "reqClass": (1003,)
     }),
     80134007: _tools.RODict({
@@ -1706,6 +1986,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018043,
+        "disassemblyReward2": 40018043,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001071,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1717,6 +1999,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 570),),
         "reqClass": (1003,)
     }),
     80135002: _tools.RODict({
@@ -1729,7 +2013,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001072,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -1741,6 +2027,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 571),),
         "reqClass": (1003,)
     }),
     80211001: _tools.RODict({
@@ -1754,6 +2042,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 4,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001073,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1765,6 +2055,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 572),),
         "reqClass": (1001,)
     }),
     80211002: _tools.RODict({
@@ -1778,6 +2070,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 8,
         "disassemblyReward": 40018005,
+        "disassemblyReward2": 40018005,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001074,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1789,6 +2083,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 573),),
         "reqClass": (1001,)
     }),
     80211003: _tools.RODict({
@@ -1802,6 +2098,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 13,
         "disassemblyReward": 40018008,
+        "disassemblyReward2": 40018008,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001075,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1813,6 +2111,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 574),),
         "reqClass": (1001,)
     }),
     80212001: _tools.RODict({
@@ -1826,6 +2126,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 17,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001076,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1837,6 +2139,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 575),),
         "reqClass": (1001,)
     }),
     80212002: _tools.RODict({
@@ -1850,6 +2154,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 22,
         "disassemblyReward": 40018014,
+        "disassemblyReward2": 40018014,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001077,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1861,6 +2167,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 576),),
         "reqClass": (1001,)
     }),
     80212003: _tools.RODict({
@@ -1874,6 +2182,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 26,
         "disassemblyReward": 40018017,
+        "disassemblyReward2": 40018017,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001078,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1885,6 +2195,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 577),),
         "reqClass": (1001,)
     }),
     80212004: _tools.RODict({
@@ -1898,6 +2210,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 30,
         "disassemblyReward": 40018020,
+        "disassemblyReward2": 40018020,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001079,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1909,6 +2223,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 578),),
         "reqClass": (1001,)
     }),
     80213001: _tools.RODict({
@@ -1922,6 +2238,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 34,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001080,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1933,6 +2251,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 579),),
         "reqClass": (1001,)
     }),
     80213002: _tools.RODict({
@@ -1946,6 +2266,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 38,
         "disassemblyReward": 40018026,
+        "disassemblyReward2": 40018026,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001081,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1957,6 +2279,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 580),),
         "reqClass": (1001,)
     }),
     80213003: _tools.RODict({
@@ -1970,6 +2294,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 42,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001082,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -1981,6 +2307,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 581),),
         "reqClass": (1001,)
     }),
     80213004: _tools.RODict({
@@ -1994,6 +2322,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 46,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001083,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2005,6 +2335,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 582),),
         "reqClass": (1001,)
     }),
     80213005: _tools.RODict({
@@ -2018,6 +2350,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 50,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001084,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2029,6 +2363,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 583),),
         "reqClass": (1001,)
     }),
     80213006: _tools.RODict({
@@ -2042,6 +2378,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 42,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001085,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2053,6 +2391,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 584),),
         "reqClass": (1001,)
     }),
     80213007: _tools.RODict({
@@ -2066,6 +2406,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 46,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001086,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2077,6 +2419,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 585),),
         "reqClass": (1001,)
     }),
     80213008: _tools.RODict({
@@ -2090,6 +2434,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 50,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001087,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2101,6 +2447,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 586),),
         "reqClass": (1001,)
     }),
     80214001: _tools.RODict({
@@ -2114,6 +2462,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 53,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001088,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2125,6 +2475,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 587),),
         "reqClass": (1001,)
     }),
     80214002: _tools.RODict({
@@ -2138,6 +2490,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 55,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001089,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2149,6 +2503,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 588),),
         "reqClass": (1001,)
     }),
     80214003: _tools.RODict({
@@ -2162,6 +2518,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 57,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001090,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2173,6 +2531,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 589),),
         "reqClass": (1001,)
     }),
     80215001: _tools.RODict({
@@ -2185,7 +2545,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 61,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001091,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2197,6 +2559,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 590),),
         "reqClass": (1001,)
     }),
     80214005: _tools.RODict({
@@ -2210,6 +2574,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 53,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001092,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2221,6 +2587,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 591),),
         "reqClass": (1001,)
     }),
     80214006: _tools.RODict({
@@ -2234,6 +2602,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 55,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001093,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2245,6 +2615,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 592),),
         "reqClass": (1001,)
     }),
     80214007: _tools.RODict({
@@ -2258,6 +2630,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 57,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001094,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2269,6 +2643,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 593),),
         "reqClass": (1001,)
     }),
     80215002: _tools.RODict({
@@ -2281,7 +2657,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 61,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001095,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2293,6 +2671,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 594),),
         "reqClass": (1001,)
     }),
     80221001: _tools.RODict({
@@ -2306,6 +2686,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 4,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001096,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2317,6 +2699,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 595),),
         "reqClass": (1002,)
     }),
     80221002: _tools.RODict({
@@ -2330,6 +2714,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 8,
         "disassemblyReward": 40018005,
+        "disassemblyReward2": 40018005,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001097,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2341,6 +2727,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 596),),
         "reqClass": (1002,)
     }),
     80221003: _tools.RODict({
@@ -2354,6 +2742,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 13,
         "disassemblyReward": 40018008,
+        "disassemblyReward2": 40018008,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001098,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2365,6 +2755,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 597),),
         "reqClass": (1002,)
     }),
     80222001: _tools.RODict({
@@ -2378,6 +2770,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 17,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001099,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2389,6 +2783,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 598),),
         "reqClass": (1002,)
     }),
     80222002: _tools.RODict({
@@ -2402,6 +2798,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 22,
         "disassemblyReward": 40018014,
+        "disassemblyReward2": 40018014,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001100,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2413,6 +2811,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 599),),
         "reqClass": (1002,)
     }),
     80222003: _tools.RODict({
@@ -2426,6 +2826,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 26,
         "disassemblyReward": 40018017,
+        "disassemblyReward2": 40018017,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001101,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2437,6 +2839,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 600),),
         "reqClass": (1002,)
     }),
     80222004: _tools.RODict({
@@ -2450,6 +2854,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 30,
         "disassemblyReward": 40018020,
+        "disassemblyReward2": 40018020,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001102,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2461,6 +2867,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 601),),
         "reqClass": (1002,)
     }),
     80223001: _tools.RODict({
@@ -2474,6 +2882,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 34,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001103,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2485,6 +2895,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 602),),
         "reqClass": (1002,)
     }),
     80223002: _tools.RODict({
@@ -2498,6 +2910,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 38,
         "disassemblyReward": 40018026,
+        "disassemblyReward2": 40018026,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001104,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2509,6 +2923,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 603),),
         "reqClass": (1002,)
     }),
     80223003: _tools.RODict({
@@ -2522,6 +2938,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 42,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001105,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2533,6 +2951,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 604),),
         "reqClass": (1002,)
     }),
     80223004: _tools.RODict({
@@ -2546,6 +2966,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 46,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001106,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2557,6 +2979,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 605),),
         "reqClass": (1002,)
     }),
     80223005: _tools.RODict({
@@ -2570,6 +2994,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 50,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001107,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2581,6 +3007,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 606),),
         "reqClass": (1002,)
     }),
     80223006: _tools.RODict({
@@ -2594,6 +3022,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 42,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001108,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2605,6 +3035,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 607),),
         "reqClass": (1002,)
     }),
     80223007: _tools.RODict({
@@ -2618,6 +3050,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 46,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001109,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2629,6 +3063,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 608),),
         "reqClass": (1002,)
     }),
     80223008: _tools.RODict({
@@ -2642,6 +3078,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 50,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001110,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2653,6 +3091,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 609),),
         "reqClass": (1002,)
     }),
     80224001: _tools.RODict({
@@ -2666,6 +3106,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 53,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001111,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2677,6 +3119,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 610),),
         "reqClass": (1002,)
     }),
     80224002: _tools.RODict({
@@ -2690,6 +3134,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 55,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001112,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2701,6 +3147,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 611),),
         "reqClass": (1002,)
     }),
     80224003: _tools.RODict({
@@ -2714,6 +3162,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 57,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001113,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2725,6 +3175,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 612),),
         "reqClass": (1002,)
     }),
     80225001: _tools.RODict({
@@ -2737,7 +3189,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 61,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001114,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2749,6 +3203,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 613),),
         "reqClass": (1002,)
     }),
     80224005: _tools.RODict({
@@ -2762,6 +3218,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 53,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001115,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2773,6 +3231,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 614),),
         "reqClass": (1002,)
     }),
     80224006: _tools.RODict({
@@ -2786,6 +3246,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 55,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001116,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2797,6 +3259,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 615),),
         "reqClass": (1002,)
     }),
     80224007: _tools.RODict({
@@ -2810,6 +3274,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 57,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001117,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2821,6 +3287,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 616),),
         "reqClass": (1002,)
     }),
     80225002: _tools.RODict({
@@ -2833,7 +3301,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 61,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001118,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2845,6 +3315,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 617),),
         "reqClass": (1002,)
     }),
     80231001: _tools.RODict({
@@ -2858,6 +3330,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 4,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001119,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2869,6 +3343,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 618),),
         "reqClass": (1003,)
     }),
     80231002: _tools.RODict({
@@ -2882,6 +3358,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 8,
         "disassemblyReward": 40018005,
+        "disassemblyReward2": 40018005,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001120,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2893,6 +3371,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 619),),
         "reqClass": (1003,)
     }),
     80231003: _tools.RODict({
@@ -2906,6 +3386,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 13,
         "disassemblyReward": 40018008,
+        "disassemblyReward2": 40018008,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001121,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2917,6 +3399,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 620),),
         "reqClass": (1003,)
     }),
     80232001: _tools.RODict({
@@ -2930,6 +3414,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 17,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001122,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2941,6 +3427,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 621),),
         "reqClass": (1003,)
     }),
     80232002: _tools.RODict({
@@ -2954,6 +3442,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 22,
         "disassemblyReward": 40018014,
+        "disassemblyReward2": 40018014,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001123,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2965,6 +3455,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 622),),
         "reqClass": (1003,)
     }),
     80232003: _tools.RODict({
@@ -2978,6 +3470,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 26,
         "disassemblyReward": 40018017,
+        "disassemblyReward2": 40018017,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001124,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -2989,6 +3483,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 623),),
         "reqClass": (1003,)
     }),
     80232004: _tools.RODict({
@@ -3002,6 +3498,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 30,
         "disassemblyReward": 40018020,
+        "disassemblyReward2": 40018020,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001125,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3013,6 +3511,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 624),),
         "reqClass": (1003,)
     }),
     80233001: _tools.RODict({
@@ -3026,6 +3526,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 34,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001126,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3037,6 +3539,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 625),),
         "reqClass": (1003,)
     }),
     80233002: _tools.RODict({
@@ -3050,6 +3554,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 38,
         "disassemblyReward": 40018026,
+        "disassemblyReward2": 40018026,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001127,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3061,6 +3567,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 626),),
         "reqClass": (1003,)
     }),
     80233003: _tools.RODict({
@@ -3074,6 +3582,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 42,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001128,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3085,6 +3595,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 627),),
         "reqClass": (1003,)
     }),
     80233004: _tools.RODict({
@@ -3098,6 +3610,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 46,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001129,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3109,6 +3623,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 628),),
         "reqClass": (1003,)
     }),
     80233005: _tools.RODict({
@@ -3122,6 +3638,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 50,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001130,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3133,6 +3651,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 629),),
         "reqClass": (1003,)
     }),
     80233006: _tools.RODict({
@@ -3146,6 +3666,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 42,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001131,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3157,6 +3679,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 630),),
         "reqClass": (1003,)
     }),
     80233007: _tools.RODict({
@@ -3170,6 +3694,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 46,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001132,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3181,6 +3707,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 631),),
         "reqClass": (1003,)
     }),
     80233008: _tools.RODict({
@@ -3194,6 +3722,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 50,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001133,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3205,6 +3735,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 632),),
         "reqClass": (1003,)
     }),
     80234001: _tools.RODict({
@@ -3218,6 +3750,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 53,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001134,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3229,6 +3763,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 633),),
         "reqClass": (1003,)
     }),
     80234002: _tools.RODict({
@@ -3242,6 +3778,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 55,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001135,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3253,6 +3791,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 634),),
         "reqClass": (1003,)
     }),
     80234003: _tools.RODict({
@@ -3266,6 +3806,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 57,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001136,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3277,6 +3819,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 635),),
         "reqClass": (1003,)
     }),
     80235001: _tools.RODict({
@@ -3289,7 +3833,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 61,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001137,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3301,6 +3847,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 636),),
         "reqClass": (1003,)
     }),
     80234005: _tools.RODict({
@@ -3314,6 +3862,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 53,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001138,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3325,6 +3875,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 637),),
         "reqClass": (1003,)
     }),
     80234006: _tools.RODict({
@@ -3338,6 +3890,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 55,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001139,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3349,6 +3903,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 638),),
         "reqClass": (1003,)
     }),
     80234007: _tools.RODict({
@@ -3362,6 +3918,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 57,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001140,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3373,6 +3931,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 639),),
         "reqClass": (1003,)
     }),
     80235002: _tools.RODict({
@@ -3385,7 +3945,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 61,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001141,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -3397,6 +3959,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 5,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 640),),
         "reqClass": (1003,)
     }),
     80311001: _tools.RODict({
@@ -3410,6 +3974,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 2,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001142,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3421,6 +3987,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 641),),
         "reqClass": (1001,)
     }),
     80311002: _tools.RODict({
@@ -3434,6 +4002,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 6,
         "disassemblyReward": 40018005,
+        "disassemblyReward2": 40018005,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001143,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3445,6 +4015,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 642),),
         "reqClass": (1001,)
     }),
     80311003: _tools.RODict({
@@ -3458,6 +4030,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 11,
         "disassemblyReward": 40018008,
+        "disassemblyReward2": 40018008,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001144,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3469,6 +4043,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 643),),
         "reqClass": (1001,)
     }),
     80312001: _tools.RODict({
@@ -3482,6 +4058,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 16,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001145,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3493,6 +4071,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 644),),
         "reqClass": (1001,)
     }),
     80312002: _tools.RODict({
@@ -3506,6 +4086,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 21,
         "disassemblyReward": 40018014,
+        "disassemblyReward2": 40018014,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001146,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3517,6 +4099,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 645),),
         "reqClass": (1001,)
     }),
     80312003: _tools.RODict({
@@ -3530,6 +4114,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 25,
         "disassemblyReward": 40018017,
+        "disassemblyReward2": 40018017,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001147,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3541,6 +4127,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 646),),
         "reqClass": (1001,)
     }),
     80312004: _tools.RODict({
@@ -3554,6 +4142,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 29,
         "disassemblyReward": 40018020,
+        "disassemblyReward2": 40018020,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001148,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3565,6 +4155,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 647),),
         "reqClass": (1001,)
     }),
     80313001: _tools.RODict({
@@ -3578,6 +4170,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 33,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001149,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3589,6 +4183,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 648),),
         "reqClass": (1001,)
     }),
     80313002: _tools.RODict({
@@ -3602,6 +4198,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 37,
         "disassemblyReward": 40018026,
+        "disassemblyReward2": 40018026,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001150,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3613,6 +4211,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 649),),
         "reqClass": (1001,)
     }),
     80313003: _tools.RODict({
@@ -3626,6 +4226,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 41,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001151,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3637,6 +4239,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 650),),
         "reqClass": (1001,)
     }),
     80313004: _tools.RODict({
@@ -3650,6 +4254,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 45,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001152,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3661,6 +4267,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 651),),
         "reqClass": (1001,)
     }),
     80313005: _tools.RODict({
@@ -3674,6 +4282,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 49,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001153,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3685,6 +4295,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 652),),
         "reqClass": (1001,)
     }),
     80314001: _tools.RODict({
@@ -3698,6 +4310,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001154,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3709,6 +4323,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 653),),
         "reqClass": (1001,)
     }),
     80314002: _tools.RODict({
@@ -3722,6 +4338,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001155,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3733,6 +4351,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 654),),
         "reqClass": (1001,)
     }),
     80314003: _tools.RODict({
@@ -3746,6 +4366,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001156,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3757,6 +4379,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 655),),
         "reqClass": (1001,)
     }),
     80315001: _tools.RODict({
@@ -3769,7 +4393,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001157,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3781,6 +4407,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 656),),
         "reqClass": (1001,)
     }),
     80321001: _tools.RODict({
@@ -3794,6 +4422,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 2,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001142,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3805,6 +4435,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 657),),
         "reqClass": (1002,)
     }),
     80321002: _tools.RODict({
@@ -3818,6 +4450,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 6,
         "disassemblyReward": 40018005,
+        "disassemblyReward2": 40018005,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001143,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3829,6 +4463,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 658),),
         "reqClass": (1002,)
     }),
     80321003: _tools.RODict({
@@ -3842,6 +4478,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 11,
         "disassemblyReward": 40018008,
+        "disassemblyReward2": 40018008,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001144,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3853,6 +4491,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 659),),
         "reqClass": (1002,)
     }),
     80322001: _tools.RODict({
@@ -3866,6 +4506,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 16,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001145,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3877,6 +4519,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 660),),
         "reqClass": (1002,)
     }),
     80322002: _tools.RODict({
@@ -3890,6 +4534,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 21,
         "disassemblyReward": 40018014,
+        "disassemblyReward2": 40018014,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001146,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3901,6 +4547,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 661),),
         "reqClass": (1002,)
     }),
     80322003: _tools.RODict({
@@ -3914,6 +4562,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 25,
         "disassemblyReward": 40018017,
+        "disassemblyReward2": 40018017,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001147,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3925,6 +4575,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 662),),
         "reqClass": (1002,)
     }),
     80322004: _tools.RODict({
@@ -3938,6 +4590,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 29,
         "disassemblyReward": 40018020,
+        "disassemblyReward2": 40018020,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001148,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3949,6 +4603,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 663),),
         "reqClass": (1002,)
     }),
     80323001: _tools.RODict({
@@ -3962,6 +4618,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 33,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001149,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3973,6 +4631,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 664),),
         "reqClass": (1002,)
     }),
     80323002: _tools.RODict({
@@ -3986,6 +4646,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 37,
         "disassemblyReward": 40018026,
+        "disassemblyReward2": 40018026,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001150,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -3997,6 +4659,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 665),),
         "reqClass": (1002,)
     }),
     80323003: _tools.RODict({
@@ -4010,6 +4674,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 41,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001151,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4021,6 +4687,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 666),),
         "reqClass": (1002,)
     }),
     80323004: _tools.RODict({
@@ -4034,6 +4702,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 45,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001152,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4045,6 +4715,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 667),),
         "reqClass": (1002,)
     }),
     80323005: _tools.RODict({
@@ -4058,6 +4730,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 49,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001153,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4069,6 +4743,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 668),),
         "reqClass": (1002,)
     }),
     80324001: _tools.RODict({
@@ -4082,6 +4758,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001154,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4093,6 +4771,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 669),),
         "reqClass": (1002,)
     }),
     80324002: _tools.RODict({
@@ -4106,6 +4786,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001155,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4117,6 +4799,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 670),),
         "reqClass": (1002,)
     }),
     80324003: _tools.RODict({
@@ -4130,6 +4814,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001156,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4141,6 +4827,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 671),),
         "reqClass": (1002,)
     }),
     80325001: _tools.RODict({
@@ -4153,7 +4841,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001157,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4165,6 +4855,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 672),),
         "reqClass": (1002,)
     }),
     80331001: _tools.RODict({
@@ -4178,6 +4870,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 2,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001142,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4189,6 +4883,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 673),),
         "reqClass": (1003,)
     }),
     80331002: _tools.RODict({
@@ -4202,6 +4898,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 6,
         "disassemblyReward": 40018005,
+        "disassemblyReward2": 40018005,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001143,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4213,6 +4911,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 674),),
         "reqClass": (1003,)
     }),
     80331003: _tools.RODict({
@@ -4226,6 +4926,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 11,
         "disassemblyReward": 40018008,
+        "disassemblyReward2": 40018008,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001144,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4237,6 +4939,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 675),),
         "reqClass": (1003,)
     }),
     80332001: _tools.RODict({
@@ -4250,6 +4954,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 16,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001145,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4261,6 +4967,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 676),),
         "reqClass": (1003,)
     }),
     80332002: _tools.RODict({
@@ -4274,6 +4982,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 21,
         "disassemblyReward": 40018014,
+        "disassemblyReward2": 40018014,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001146,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4285,6 +4995,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 677),),
         "reqClass": (1003,)
     }),
     80332003: _tools.RODict({
@@ -4298,6 +5010,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 25,
         "disassemblyReward": 40018017,
+        "disassemblyReward2": 40018017,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001147,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4309,6 +5023,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 678),),
         "reqClass": (1003,)
     }),
     80332004: _tools.RODict({
@@ -4322,6 +5038,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 29,
         "disassemblyReward": 40018020,
+        "disassemblyReward2": 40018020,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001148,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4333,6 +5051,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 679),),
         "reqClass": (1003,)
     }),
     80333001: _tools.RODict({
@@ -4346,6 +5066,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 33,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001149,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4357,6 +5079,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 680),),
         "reqClass": (1003,)
     }),
     80333002: _tools.RODict({
@@ -4370,6 +5094,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 37,
         "disassemblyReward": 40018026,
+        "disassemblyReward2": 40018026,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001150,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4381,6 +5107,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 681),),
         "reqClass": (1003,)
     }),
     80333003: _tools.RODict({
@@ -4394,6 +5122,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 41,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001151,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4405,6 +5135,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 682),),
         "reqClass": (1003,)
     }),
     80333004: _tools.RODict({
@@ -4418,6 +5150,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 45,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001152,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4429,6 +5163,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 683),),
         "reqClass": (1003,)
     }),
     80333005: _tools.RODict({
@@ -4442,6 +5178,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 49,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001153,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4453,6 +5191,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 684),),
         "reqClass": (1003,)
     }),
     80334001: _tools.RODict({
@@ -4466,6 +5206,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001154,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4477,6 +5219,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 685),),
         "reqClass": (1003,)
     }),
     80334002: _tools.RODict({
@@ -4490,6 +5234,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001155,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4501,6 +5247,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 686),),
         "reqClass": (1003,)
     }),
     80334003: _tools.RODict({
@@ -4514,6 +5262,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001156,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4525,6 +5275,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 687),),
         "reqClass": (1003,)
     }),
     80335001: _tools.RODict({
@@ -4537,7 +5289,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001157,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -4549,6 +5303,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 688),),
         "reqClass": (1003,)
     }),
     80411001: _tools.RODict({
@@ -4562,6 +5318,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 2,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001158,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4573,6 +5331,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 689),),
         "reqClass": (1001,)
     }),
     80411002: _tools.RODict({
@@ -4586,6 +5346,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 7,
         "disassemblyReward": 40018005,
+        "disassemblyReward2": 40018005,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001159,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4597,6 +5359,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 690),),
         "reqClass": (1001,)
     }),
     80411003: _tools.RODict({
@@ -4610,6 +5374,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 12,
         "disassemblyReward": 40018008,
+        "disassemblyReward2": 40018008,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001160,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4621,6 +5387,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 691),),
         "reqClass": (1001,)
     }),
     80412001: _tools.RODict({
@@ -4634,6 +5402,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 16,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001161,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4645,6 +5415,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 692),),
         "reqClass": (1001,)
     }),
     80412002: _tools.RODict({
@@ -4658,6 +5430,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 21,
         "disassemblyReward": 40018014,
+        "disassemblyReward2": 40018014,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001162,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4669,6 +5443,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 693),),
         "reqClass": (1001,)
     }),
     80412003: _tools.RODict({
@@ -4682,6 +5458,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 25,
         "disassemblyReward": 40018017,
+        "disassemblyReward2": 40018017,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001163,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4693,6 +5471,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 694),),
         "reqClass": (1001,)
     }),
     80412004: _tools.RODict({
@@ -4706,6 +5486,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 29,
         "disassemblyReward": 40018020,
+        "disassemblyReward2": 40018020,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001164,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4717,6 +5499,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 695),),
         "reqClass": (1001,)
     }),
     80413001: _tools.RODict({
@@ -4730,6 +5514,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 33,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001165,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4741,6 +5527,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 696),),
         "reqClass": (1001,)
     }),
     80413002: _tools.RODict({
@@ -4754,6 +5542,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 37,
         "disassemblyReward": 40018026,
+        "disassemblyReward2": 40018026,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001166,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4765,6 +5555,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 697),),
         "reqClass": (1001,)
     }),
     80413003: _tools.RODict({
@@ -4778,6 +5570,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 41,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001167,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4789,6 +5583,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 698),),
         "reqClass": (1001,)
     }),
     80413004: _tools.RODict({
@@ -4802,6 +5598,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 45,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001168,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4813,6 +5611,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 699),),
         "reqClass": (1001,)
     }),
     80413005: _tools.RODict({
@@ -4826,6 +5626,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 49,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001169,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4837,6 +5639,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 700),),
         "reqClass": (1001,)
     }),
     80414001: _tools.RODict({
@@ -4850,6 +5654,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001170,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4861,6 +5667,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 701),),
         "reqClass": (1001,)
     }),
     80414002: _tools.RODict({
@@ -4874,6 +5682,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001171,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4885,6 +5695,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 702),),
         "reqClass": (1001,)
     }),
     80414003: _tools.RODict({
@@ -4898,6 +5710,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001172,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4909,6 +5723,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 703),),
         "reqClass": (1001,)
     }),
     80415001: _tools.RODict({
@@ -4921,7 +5737,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001173,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4933,6 +5751,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 704),),
         "reqClass": (1001,)
     }),
     80421001: _tools.RODict({
@@ -4946,6 +5766,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 2,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001158,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4957,6 +5779,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 705),),
         "reqClass": (1002,)
     }),
     80421002: _tools.RODict({
@@ -4970,6 +5794,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 7,
         "disassemblyReward": 40018005,
+        "disassemblyReward2": 40018005,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001159,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -4981,6 +5807,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 706),),
         "reqClass": (1002,)
     }),
     80421003: _tools.RODict({
@@ -4994,6 +5822,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 12,
         "disassemblyReward": 40018008,
+        "disassemblyReward2": 40018008,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001160,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5005,6 +5835,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 707),),
         "reqClass": (1002,)
     }),
     80422001: _tools.RODict({
@@ -5018,6 +5850,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 16,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001161,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5029,6 +5863,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 708),),
         "reqClass": (1002,)
     }),
     80422002: _tools.RODict({
@@ -5042,6 +5878,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 21,
         "disassemblyReward": 40018014,
+        "disassemblyReward2": 40018014,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001162,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5053,6 +5891,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 709),),
         "reqClass": (1002,)
     }),
     80422003: _tools.RODict({
@@ -5066,6 +5906,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 25,
         "disassemblyReward": 40018017,
+        "disassemblyReward2": 40018017,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001163,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5077,6 +5919,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 710),),
         "reqClass": (1002,)
     }),
     80422004: _tools.RODict({
@@ -5090,6 +5934,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 29,
         "disassemblyReward": 40018020,
+        "disassemblyReward2": 40018020,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001164,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5101,6 +5947,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 711),),
         "reqClass": (1002,)
     }),
     80423001: _tools.RODict({
@@ -5114,6 +5962,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 33,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001165,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5125,6 +5975,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 712),),
         "reqClass": (1002,)
     }),
     80423002: _tools.RODict({
@@ -5138,6 +5990,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 37,
         "disassemblyReward": 40018026,
+        "disassemblyReward2": 40018026,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001166,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5149,6 +6003,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 713),),
         "reqClass": (1002,)
     }),
     80423003: _tools.RODict({
@@ -5162,6 +6018,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 41,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001167,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5173,6 +6031,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 714),),
         "reqClass": (1002,)
     }),
     80423004: _tools.RODict({
@@ -5186,6 +6046,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 45,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001168,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5197,6 +6059,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 715),),
         "reqClass": (1002,)
     }),
     80423005: _tools.RODict({
@@ -5210,6 +6074,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 49,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001169,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5221,6 +6087,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 716),),
         "reqClass": (1002,)
     }),
     80424001: _tools.RODict({
@@ -5234,6 +6102,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001170,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5245,6 +6115,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 717),),
         "reqClass": (1002,)
     }),
     80424002: _tools.RODict({
@@ -5258,6 +6130,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001171,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5269,6 +6143,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 718),),
         "reqClass": (1002,)
     }),
     80424003: _tools.RODict({
@@ -5282,6 +6158,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001172,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5293,6 +6171,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 719),),
         "reqClass": (1002,)
     }),
     80425001: _tools.RODict({
@@ -5305,7 +6185,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001173,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5317,6 +6199,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 720),),
         "reqClass": (1002,)
     }),
     80431001: _tools.RODict({
@@ -5330,6 +6214,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 2,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001158,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5341,6 +6227,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 721),),
         "reqClass": (1003,)
     }),
     80431002: _tools.RODict({
@@ -5354,6 +6242,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 7,
         "disassemblyReward": 40018005,
+        "disassemblyReward2": 40018005,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001159,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5365,6 +6255,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 722),),
         "reqClass": (1003,)
     }),
     80431003: _tools.RODict({
@@ -5378,6 +6270,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 12,
         "disassemblyReward": 40018008,
+        "disassemblyReward2": 40018008,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001160,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5389,6 +6283,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 723),),
         "reqClass": (1003,)
     }),
     80432001: _tools.RODict({
@@ -5402,6 +6298,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 16,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001161,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5413,6 +6311,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 724),),
         "reqClass": (1003,)
     }),
     80432002: _tools.RODict({
@@ -5426,6 +6326,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 21,
         "disassemblyReward": 40018014,
+        "disassemblyReward2": 40018014,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001162,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5437,6 +6339,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 725),),
         "reqClass": (1003,)
     }),
     80432003: _tools.RODict({
@@ -5450,6 +6354,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 25,
         "disassemblyReward": 40018017,
+        "disassemblyReward2": 40018017,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001163,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5461,6 +6367,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 726),),
         "reqClass": (1003,)
     }),
     80432004: _tools.RODict({
@@ -5474,6 +6382,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 29,
         "disassemblyReward": 40018020,
+        "disassemblyReward2": 40018020,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001164,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5485,6 +6395,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 727),),
         "reqClass": (1003,)
     }),
     80433001: _tools.RODict({
@@ -5498,6 +6410,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 33,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001165,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5509,6 +6423,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 728),),
         "reqClass": (1003,)
     }),
     80433002: _tools.RODict({
@@ -5522,6 +6438,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 37,
         "disassemblyReward": 40018026,
+        "disassemblyReward2": 40018026,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001166,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5533,6 +6451,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 729),),
         "reqClass": (1003,)
     }),
     80433003: _tools.RODict({
@@ -5546,6 +6466,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 41,
         "disassemblyReward": 40018029,
+        "disassemblyReward2": 40018029,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001167,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5557,6 +6479,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 730),),
         "reqClass": (1003,)
     }),
     80433004: _tools.RODict({
@@ -5570,6 +6494,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 45,
         "disassemblyReward": 40018032,
+        "disassemblyReward2": 40018032,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001168,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5581,6 +6507,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 731),),
         "reqClass": (1003,)
     }),
     80433005: _tools.RODict({
@@ -5594,6 +6522,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 49,
         "disassemblyReward": 40018035,
+        "disassemblyReward2": 40018035,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001169,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5605,6 +6535,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 732),),
         "reqClass": (1003,)
     }),
     80434001: _tools.RODict({
@@ -5618,6 +6550,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 52,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001170,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5629,6 +6563,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 733),),
         "reqClass": (1003,)
     }),
     80434002: _tools.RODict({
@@ -5642,6 +6578,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 54,
         "disassemblyReward": 40018041,
+        "disassemblyReward2": 40018041,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001171,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5653,6 +6591,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 734),),
         "reqClass": (1003,)
     }),
     80434003: _tools.RODict({
@@ -5666,6 +6606,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 56,
         "disassemblyReward": 40018044,
+        "disassemblyReward2": 40018044,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001172,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5677,6 +6619,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 735),),
         "reqClass": (1003,)
     }),
     80435001: _tools.RODict({
@@ -5689,7 +6633,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 60,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001173,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -5701,6 +6647,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 736),),
         "reqClass": (1003,)
     }),
     80581001: _tools.RODict({
@@ -5714,6 +6662,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 3,
         "disassemblyReward": 40018003,
+        "disassemblyReward2": 40018003,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001174,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5725,6 +6675,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 737),),
         "reqClass": (0,)
     }),
     80581002: _tools.RODict({
@@ -5738,6 +6690,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 9,
         "disassemblyReward": 40018006,
+        "disassemblyReward2": 40018006,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001175,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5749,6 +6703,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 738),),
         "reqClass": (0,)
     }),
     80581003: _tools.RODict({
@@ -5762,6 +6718,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 14,
         "disassemblyReward": 40018009,
+        "disassemblyReward2": 40018009,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001176,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5773,6 +6731,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 739),),
         "reqClass": (0,)
     }),
     80582001: _tools.RODict({
@@ -5786,6 +6746,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 17,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001177,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5797,6 +6759,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 740),),
         "reqClass": (0,)
     }),
     80582002: _tools.RODict({
@@ -5810,6 +6774,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 22,
         "disassemblyReward": 40018015,
+        "disassemblyReward2": 40018015,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001178,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5821,6 +6787,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 741),),
         "reqClass": (0,)
     }),
     80582003: _tools.RODict({
@@ -5834,6 +6802,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 26,
         "disassemblyReward": 40018018,
+        "disassemblyReward2": 40018018,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001179,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5845,6 +6815,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 742),),
         "reqClass": (0,)
     }),
     80582004: _tools.RODict({
@@ -5858,6 +6830,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 30,
         "disassemblyReward": 40018021,
+        "disassemblyReward2": 40018021,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001180,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5869,6 +6843,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 743),),
         "reqClass": (0,)
     }),
     80583001: _tools.RODict({
@@ -5882,6 +6858,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 34,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001181,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5893,6 +6871,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 744),),
         "reqClass": (0,)
     }),
     80583002: _tools.RODict({
@@ -5906,6 +6886,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 38,
         "disassemblyReward": 40018027,
+        "disassemblyReward2": 40018027,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001182,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5917,6 +6899,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 745),),
         "reqClass": (0,)
     }),
     80583003: _tools.RODict({
@@ -5930,6 +6914,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 42,
         "disassemblyReward": 40018030,
+        "disassemblyReward2": 40018030,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001183,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5941,6 +6927,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 746),),
         "reqClass": (0,)
     }),
     80583004: _tools.RODict({
@@ -5954,6 +6942,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 46,
         "disassemblyReward": 40018033,
+        "disassemblyReward2": 40018033,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001184,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5965,6 +6955,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 747),),
         "reqClass": (0,)
     }),
     80583005: _tools.RODict({
@@ -5978,6 +6970,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 50,
         "disassemblyReward": 40018036,
+        "disassemblyReward2": 40018036,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001185,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -5989,6 +6983,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 748),),
         "reqClass": (0,)
     }),
     80584001: _tools.RODict({
@@ -6002,6 +6998,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 53,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001186,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -6013,6 +7011,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 749),),
         "reqClass": (0,)
     }),
     80584002: _tools.RODict({
@@ -6026,6 +7026,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 55,
         "disassemblyReward": 40018042,
+        "disassemblyReward2": 40018042,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001187,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -6037,6 +7039,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 750),),
         "reqClass": (0,)
     }),
     80584003: _tools.RODict({
@@ -6050,6 +7054,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 57,
         "disassemblyReward": 40018045,
+        "disassemblyReward2": 40018045,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001188,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -6061,6 +7067,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 751),),
         "reqClass": (0,)
     }),
     80585001: _tools.RODict({
@@ -6073,7 +7081,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 61,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001189,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -6085,6 +7095,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 752),),
         "reqClass": (0,)
     }),
     80682001: _tools.RODict({
@@ -6098,6 +7110,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 18,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001225,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6109,6 +7123,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 753),),
         "reqClass": (0,)
     }),
     80682002: _tools.RODict({
@@ -6122,6 +7138,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 23,
         "disassemblyReward": 40018015,
+        "disassemblyReward2": 40018015,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001226,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6133,6 +7151,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 754),),
         "reqClass": (0,)
     }),
     80682003: _tools.RODict({
@@ -6146,6 +7166,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 27,
         "disassemblyReward": 40018018,
+        "disassemblyReward2": 40018018,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001227,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6157,6 +7179,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 755),),
         "reqClass": (0,)
     }),
     80682004: _tools.RODict({
@@ -6170,6 +7194,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 31,
         "disassemblyReward": 40018021,
+        "disassemblyReward2": 40018021,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001228,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6181,6 +7207,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 756),),
         "reqClass": (0,)
     }),
     80683001: _tools.RODict({
@@ -6194,6 +7222,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 35,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001229,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6205,6 +7235,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 757),),
         "reqClass": (0,)
     }),
     80683002: _tools.RODict({
@@ -6218,6 +7250,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 39,
         "disassemblyReward": 40018027,
+        "disassemblyReward2": 40018027,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001230,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6229,6 +7263,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 758),),
         "reqClass": (0,)
     }),
     80683003: _tools.RODict({
@@ -6242,6 +7278,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 43,
         "disassemblyReward": 40018030,
+        "disassemblyReward2": 40018030,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001231,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6253,6 +7291,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 759),),
         "reqClass": (0,)
     }),
     80683004: _tools.RODict({
@@ -6266,6 +7306,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 47,
         "disassemblyReward": 40018033,
+        "disassemblyReward2": 40018033,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001232,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6277,6 +7319,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 760),),
         "reqClass": (0,)
     }),
     80683005: _tools.RODict({
@@ -6290,6 +7334,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 51,
         "disassemblyReward": 40018036,
+        "disassemblyReward2": 40018036,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001233,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6301,6 +7347,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 761),),
         "reqClass": (0,)
     }),
     80684001: _tools.RODict({
@@ -6314,6 +7362,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 54,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001234,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6325,6 +7375,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 762),),
         "reqClass": (0,)
     }),
     80684002: _tools.RODict({
@@ -6338,6 +7390,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 56,
         "disassemblyReward": 40018042,
+        "disassemblyReward2": 40018042,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001235,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6349,6 +7403,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 763),),
         "reqClass": (0,)
     }),
     80684003: _tools.RODict({
@@ -6362,6 +7418,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 58,
         "disassemblyReward": 40018045,
+        "disassemblyReward2": 40018045,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001236,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6373,6 +7431,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 764),),
         "reqClass": (0,)
     }),
     80685001: _tools.RODict({
@@ -6385,7 +7445,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 62,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001237,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6397,6 +7459,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 765),),
         "reqClass": (0,)
     }),
     80692001: _tools.RODict({
@@ -6410,6 +7474,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 18,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001238,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6421,6 +7487,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 766),),
         "reqClass": (0,)
     }),
     80692002: _tools.RODict({
@@ -6434,6 +7502,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 23,
         "disassemblyReward": 40018015,
+        "disassemblyReward2": 40018015,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001239,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6445,6 +7515,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 767),),
         "reqClass": (0,)
     }),
     80692003: _tools.RODict({
@@ -6458,6 +7530,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 27,
         "disassemblyReward": 40018018,
+        "disassemblyReward2": 40018018,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001240,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6469,6 +7543,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 768),),
         "reqClass": (0,)
     }),
     80692004: _tools.RODict({
@@ -6482,6 +7558,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 31,
         "disassemblyReward": 40018021,
+        "disassemblyReward2": 40018021,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001241,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6493,6 +7571,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 769),),
         "reqClass": (0,)
     }),
     80693001: _tools.RODict({
@@ -6506,6 +7586,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 35,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001242,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6517,6 +7599,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 770),),
         "reqClass": (0,)
     }),
     80693002: _tools.RODict({
@@ -6530,6 +7614,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 39,
         "disassemblyReward": 40018027,
+        "disassemblyReward2": 40018027,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001243,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6541,6 +7627,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 771),),
         "reqClass": (0,)
     }),
     80693003: _tools.RODict({
@@ -6554,6 +7642,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 43,
         "disassemblyReward": 40018030,
+        "disassemblyReward2": 40018030,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001244,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6565,6 +7655,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 772),),
         "reqClass": (0,)
     }),
     80693004: _tools.RODict({
@@ -6578,6 +7670,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 47,
         "disassemblyReward": 40018033,
+        "disassemblyReward2": 40018033,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001245,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6589,6 +7683,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 773),),
         "reqClass": (0,)
     }),
     80693005: _tools.RODict({
@@ -6602,6 +7698,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 51,
         "disassemblyReward": 40018036,
+        "disassemblyReward2": 40018036,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001246,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6613,6 +7711,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 774),),
         "reqClass": (0,)
     }),
     80694001: _tools.RODict({
@@ -6626,6 +7726,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 54,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001247,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6637,6 +7739,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 775),),
         "reqClass": (0,)
     }),
     80694002: _tools.RODict({
@@ -6650,6 +7754,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 56,
         "disassemblyReward": 40018042,
+        "disassemblyReward2": 40018042,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001248,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6661,6 +7767,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 776),),
         "reqClass": (0,)
     }),
     80694003: _tools.RODict({
@@ -6674,6 +7782,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 58,
         "disassemblyReward": 40018045,
+        "disassemblyReward2": 40018045,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001249,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6685,6 +7795,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 777),),
         "reqClass": (0,)
     }),
     80695001: _tools.RODict({
@@ -6697,7 +7809,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 62,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001250,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6709,6 +7823,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 778),),
         "reqClass": (0,)
     }),
     80703001: _tools.RODict({
@@ -6722,6 +7838,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 35,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001251,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6733,6 +7851,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 779),),
         "reqClass": (0,)
     }),
     80703002: _tools.RODict({
@@ -6746,6 +7866,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 39,
         "disassemblyReward": 40018027,
+        "disassemblyReward2": 40018027,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001252,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6757,6 +7879,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 780),),
         "reqClass": (0,)
     }),
     80703003: _tools.RODict({
@@ -6770,6 +7894,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 43,
         "disassemblyReward": 40018030,
+        "disassemblyReward2": 40018030,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001253,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6781,6 +7907,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 781),),
         "reqClass": (0,)
     }),
     80703004: _tools.RODict({
@@ -6794,6 +7922,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 47,
         "disassemblyReward": 40018033,
+        "disassemblyReward2": 40018033,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001254,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6805,6 +7935,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 782),),
         "reqClass": (0,)
     }),
     80703005: _tools.RODict({
@@ -6818,6 +7950,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 51,
         "disassemblyReward": 40018036,
+        "disassemblyReward2": 40018036,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001255,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6829,6 +7963,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 783),),
         "reqClass": (0,)
     }),
     80704001: _tools.RODict({
@@ -6842,6 +7978,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 54,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001256,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6853,6 +7991,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 784),),
         "reqClass": (0,)
     }),
     80704002: _tools.RODict({
@@ -6866,6 +8006,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 56,
         "disassemblyReward": 40018042,
+        "disassemblyReward2": 40018042,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001257,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6877,6 +8019,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 785),),
         "reqClass": (0,)
     }),
     80704003: _tools.RODict({
@@ -6890,6 +8034,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 58,
         "disassemblyReward": 40018045,
+        "disassemblyReward2": 40018045,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001258,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6901,6 +8047,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 786),),
         "reqClass": (0,)
     }),
     80705002: _tools.RODict({
@@ -6913,7 +8061,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 62,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001259,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -6925,6 +8075,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 787),),
         "reqClass": (0,)
     }),
     80782001: _tools.RODict({
@@ -6938,6 +8090,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 19,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001190,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -6949,6 +8103,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 788),),
         "reqClass": (0,)
     }),
     80782002: _tools.RODict({
@@ -6962,6 +8118,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 24,
         "disassemblyReward": 40018015,
+        "disassemblyReward2": 40018015,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001191,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -6973,6 +8131,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 789),),
         "reqClass": (0,)
     }),
     80782003: _tools.RODict({
@@ -6986,6 +8146,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 28,
         "disassemblyReward": 40018018,
+        "disassemblyReward2": 40018018,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001192,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -6997,6 +8159,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 790),),
         "reqClass": (0,)
     }),
     80782004: _tools.RODict({
@@ -7010,6 +8174,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 32,
         "disassemblyReward": 40018021,
+        "disassemblyReward2": 40018021,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001193,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7021,6 +8187,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 791),),
         "reqClass": (0,)
     }),
     80783001: _tools.RODict({
@@ -7034,6 +8202,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 36,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001194,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7045,6 +8215,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 792),),
         "reqClass": (0,)
     }),
     80783002: _tools.RODict({
@@ -7058,6 +8230,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 40,
         "disassemblyReward": 40018027,
+        "disassemblyReward2": 40018027,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001195,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7069,6 +8243,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 793),),
         "reqClass": (0,)
     }),
     80783003: _tools.RODict({
@@ -7082,6 +8258,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 44,
         "disassemblyReward": 40018030,
+        "disassemblyReward2": 40018030,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001196,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7093,6 +8271,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 794),),
         "reqClass": (0,)
     }),
     80783004: _tools.RODict({
@@ -7106,6 +8286,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 48,
         "disassemblyReward": 40018033,
+        "disassemblyReward2": 40018033,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001197,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7117,6 +8299,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 795),),
         "reqClass": (0,)
     }),
     80783005: _tools.RODict({
@@ -7130,6 +8314,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 52,
         "disassemblyReward": 40018036,
+        "disassemblyReward2": 40018036,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001198,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7141,6 +8327,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 796),),
         "reqClass": (0,)
     }),
     80784001: _tools.RODict({
@@ -7154,6 +8342,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 55,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001199,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7165,6 +8355,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 797),),
         "reqClass": (0,)
     }),
     80784002: _tools.RODict({
@@ -7178,6 +8370,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 57,
         "disassemblyReward": 40018042,
+        "disassemblyReward2": 40018042,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001200,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7189,6 +8383,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 798),),
         "reqClass": (0,)
     }),
     80784003: _tools.RODict({
@@ -7202,6 +8398,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 59,
         "disassemblyReward": 40018045,
+        "disassemblyReward2": 40018045,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001201,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7213,6 +8411,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 799),),
         "reqClass": (0,)
     }),
     80785001: _tools.RODict({
@@ -7225,7 +8425,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 63,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001202,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7237,6 +8439,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 800),),
         "reqClass": (0,)
     }),
     80792001: _tools.RODict({
@@ -7250,6 +8454,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 19,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001203,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7261,6 +8467,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 801),),
         "reqClass": (0,)
     }),
     80792002: _tools.RODict({
@@ -7274,6 +8482,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 24,
         "disassemblyReward": 40018015,
+        "disassemblyReward2": 40018015,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001204,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7285,6 +8495,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 802),),
         "reqClass": (0,)
     }),
     80792003: _tools.RODict({
@@ -7298,6 +8510,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 28,
         "disassemblyReward": 40018018,
+        "disassemblyReward2": 40018018,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001205,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7309,6 +8523,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 803),),
         "reqClass": (0,)
     }),
     80792004: _tools.RODict({
@@ -7322,6 +8538,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 32,
         "disassemblyReward": 40018021,
+        "disassemblyReward2": 40018021,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001206,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7333,6 +8551,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 804),),
         "reqClass": (0,)
     }),
     80793001: _tools.RODict({
@@ -7346,6 +8566,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 36,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001207,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7357,6 +8579,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 805),),
         "reqClass": (0,)
     }),
     80793002: _tools.RODict({
@@ -7370,6 +8594,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 40,
         "disassemblyReward": 40018027,
+        "disassemblyReward2": 40018027,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001208,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7381,6 +8607,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 806),),
         "reqClass": (0,)
     }),
     80793003: _tools.RODict({
@@ -7394,6 +8622,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 44,
         "disassemblyReward": 40018030,
+        "disassemblyReward2": 40018030,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001209,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7405,6 +8635,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 807),),
         "reqClass": (0,)
     }),
     80793004: _tools.RODict({
@@ -7418,6 +8650,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 48,
         "disassemblyReward": 40018033,
+        "disassemblyReward2": 40018033,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001210,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7429,6 +8663,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 808),),
         "reqClass": (0,)
     }),
     80793005: _tools.RODict({
@@ -7442,6 +8678,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 52,
         "disassemblyReward": 40018036,
+        "disassemblyReward2": 40018036,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001211,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7453,6 +8691,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 809),),
         "reqClass": (0,)
     }),
     80794001: _tools.RODict({
@@ -7466,6 +8706,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 55,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001212,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7477,6 +8719,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 810),),
         "reqClass": (0,)
     }),
     80794002: _tools.RODict({
@@ -7490,6 +8734,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 57,
         "disassemblyReward": 40018042,
+        "disassemblyReward2": 40018042,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001213,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7501,6 +8747,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 811),),
         "reqClass": (0,)
     }),
     80794003: _tools.RODict({
@@ -7514,6 +8762,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 59,
         "disassemblyReward": 40018045,
+        "disassemblyReward2": 40018045,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001214,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7525,6 +8775,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 812),),
         "reqClass": (0,)
     }),
     80795001: _tools.RODict({
@@ -7537,7 +8789,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 63,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001215,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7549,6 +8803,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 813),),
         "reqClass": (0,)
     }),
     80803001: _tools.RODict({
@@ -7562,6 +8818,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 36,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001216,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7573,6 +8831,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 814),),
         "reqClass": (0,)
     }),
     80803002: _tools.RODict({
@@ -7586,6 +8846,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 40,
         "disassemblyReward": 40018027,
+        "disassemblyReward2": 40018027,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001217,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7597,6 +8859,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 815),),
         "reqClass": (0,)
     }),
     80803003: _tools.RODict({
@@ -7610,6 +8874,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 44,
         "disassemblyReward": 40018030,
+        "disassemblyReward2": 40018030,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001218,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7621,6 +8887,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 816),),
         "reqClass": (0,)
     }),
     80803004: _tools.RODict({
@@ -7634,6 +8902,8 @@ datas = _tools.RODict({
         "grade": 4,
         "equipLevel": 48,
         "disassemblyReward": 40018033,
+        "disassemblyReward2": 40018033,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001219,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7645,6 +8915,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 817),),
         "reqClass": (0,)
     }),
     80803005: _tools.RODict({
@@ -7658,6 +8930,8 @@ datas = _tools.RODict({
         "grade": 5,
         "equipLevel": 52,
         "disassemblyReward": 40018036,
+        "disassemblyReward2": 40018036,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001220,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7669,6 +8943,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 818),),
         "reqClass": (0,)
     }),
     80804001: _tools.RODict({
@@ -7682,6 +8958,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 55,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001221,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7693,6 +8971,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 819),),
         "reqClass": (0,)
     }),
     80804002: _tools.RODict({
@@ -7706,6 +8986,8 @@ datas = _tools.RODict({
         "grade": 2,
         "equipLevel": 57,
         "disassemblyReward": 40018042,
+        "disassemblyReward2": 40018042,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001222,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7717,6 +8999,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 820),),
         "reqClass": (0,)
     }),
     80804003: _tools.RODict({
@@ -7730,6 +9014,8 @@ datas = _tools.RODict({
         "grade": 3,
         "equipLevel": 59,
         "disassemblyReward": 40018045,
+        "disassemblyReward2": 40018045,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001223,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7741,6 +9027,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 821),),
         "reqClass": (0,)
     }),
     80805001: _tools.RODict({
@@ -7753,7 +9041,9 @@ datas = _tools.RODict({
         "iLevel": 80,
         "grade": 1,
         "equipLevel": 63,
-        "disassemblyReward": 0,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52001224,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -7765,6 +9055,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 822),),
         "reqClass": (0,)
     }),
     80811001: _tools.RODict({
@@ -7778,6 +9070,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 1,
         "disassemblyReward": 40020225,
+        "disassemblyReward2": 40020225,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001260,
         "fixedAffix": None,
@@ -7789,6 +9083,8 @@ datas = _tools.RODict({
         "lockAvailable": 0,
         "sellPrice": 10,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 823),),
         "reqClass": (1001,)
     }),
     80812001: _tools.RODict({
@@ -7802,6 +9098,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 1,
         "disassemblyReward": 40020225,
+        "disassemblyReward2": 40020225,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001261,
         "fixedAffix": None,
@@ -7813,6 +9111,8 @@ datas = _tools.RODict({
         "lockAvailable": 0,
         "sellPrice": 10,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 824),),
         "reqClass": (1002,)
     }),
     80813001: _tools.RODict({
@@ -7826,6 +9126,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 1,
         "disassemblyReward": 40020225,
+        "disassemblyReward2": 40020225,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52001262,
         "fixedAffix": None,
@@ -7837,6 +9139,8 @@ datas = _tools.RODict({
         "lockAvailable": 0,
         "sellPrice": 10,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 825),),
         "reqClass": (1003,)
     }),
     80814001: _tools.RODict({
@@ -7850,6 +9154,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 1,
         "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012098,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -7861,6 +9167,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 826),),
         "reqClass": (1001,)
     }),
     80814002: _tools.RODict({
@@ -7872,8 +9180,10 @@ datas = _tools.RODict({
         "subType": 11,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 15,
+        "equipLevel": 13,
         "disassemblyReward": 40018010,
+        "disassemblyReward2": 40018010,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012099,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -7885,6 +9195,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 827),),
         "reqClass": (1001,)
     }),
     80814003: _tools.RODict({
@@ -7896,8 +9208,10 @@ datas = _tools.RODict({
         "subType": 11,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 32,
+        "equipLevel": 27,
         "disassemblyReward": 40018022,
+        "disassemblyReward2": 40018022,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012100,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -7909,6 +9223,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 828),),
         "reqClass": (1001,)
     }),
     80814004: _tools.RODict({
@@ -7920,8 +9236,10 @@ datas = _tools.RODict({
         "subType": 11,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 52,
+        "equipLevel": 43,
         "disassemblyReward": 40018037,
+        "disassemblyReward2": 40018037,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012101,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -7933,6 +9251,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 829),),
         "reqClass": (1001,)
     }),
     80814005: _tools.RODict({
@@ -7946,6 +9266,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 1,
         "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012102,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -7957,6 +9279,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 830),),
         "reqClass": (1002,)
     }),
     80814006: _tools.RODict({
@@ -7968,8 +9292,10 @@ datas = _tools.RODict({
         "subType": 12,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 15,
+        "equipLevel": 13,
         "disassemblyReward": 40018010,
+        "disassemblyReward2": 40018010,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012103,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -7981,6 +9307,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 831),),
         "reqClass": (1002,)
     }),
     80814007: _tools.RODict({
@@ -7992,8 +9320,10 @@ datas = _tools.RODict({
         "subType": 12,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 32,
+        "equipLevel": 27,
         "disassemblyReward": 40018022,
+        "disassemblyReward2": 40018022,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012104,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -8005,6 +9335,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 832),),
         "reqClass": (1002,)
     }),
     80814008: _tools.RODict({
@@ -8016,8 +9348,10 @@ datas = _tools.RODict({
         "subType": 12,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 52,
+        "equipLevel": 43,
         "disassemblyReward": 40018037,
+        "disassemblyReward2": 40018037,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52012105,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -8029,6 +9363,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 833),),
         "reqClass": (1002,)
     }),
     80814009: _tools.RODict({
@@ -8042,6 +9378,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 1,
         "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012106,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -8053,6 +9391,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 834),),
         "reqClass": (1003,)
     }),
     80814010: _tools.RODict({
@@ -8064,8 +9404,10 @@ datas = _tools.RODict({
         "subType": 13,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 15,
+        "equipLevel": 13,
         "disassemblyReward": 40018010,
+        "disassemblyReward2": 40018010,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012107,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -8077,6 +9419,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 835),),
         "reqClass": (1003,)
     }),
     80814011: _tools.RODict({
@@ -8088,8 +9432,10 @@ datas = _tools.RODict({
         "subType": 13,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 32,
+        "equipLevel": 27,
         "disassemblyReward": 40018022,
+        "disassemblyReward2": 40018022,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012108,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -8101,6 +9447,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 836),),
         "reqClass": (1003,)
     }),
     80814012: _tools.RODict({
@@ -8112,8 +9460,10 @@ datas = _tools.RODict({
         "subType": 13,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 52,
+        "equipLevel": 43,
         "disassemblyReward": 40018037,
+        "disassemblyReward2": 40018037,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012109,
         "fixedAffix": _tools.ROList([78000001, 78000002, 78000003, 78000004, 78000009, 78000011]),
@@ -8125,6 +9475,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 837),),
         "reqClass": (1003,)
     }),
     80814013: _tools.RODict({
@@ -8138,6 +9490,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 4,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012134,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8149,6 +9503,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 838),),
         "reqClass": (1001,)
     }),
     80814014: _tools.RODict({
@@ -8160,8 +9516,10 @@ datas = _tools.RODict({
         "subType": 21,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 17,
+        "equipLevel": 16,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012135,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8173,6 +9531,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 839),),
         "reqClass": (1001,)
     }),
     80814015: _tools.RODict({
@@ -8184,8 +9544,10 @@ datas = _tools.RODict({
         "subType": 21,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 34,
+        "equipLevel": 30,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012136,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8197,6 +9559,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 840),),
         "reqClass": (1001,)
     }),
     80814016: _tools.RODict({
@@ -8208,8 +9572,10 @@ datas = _tools.RODict({
         "subType": 21,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 53,
+        "equipLevel": 46,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012137,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8221,6 +9587,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 841),),
         "reqClass": (1001,)
     }),
     80814017: _tools.RODict({
@@ -8234,6 +9602,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 4,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012134,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8245,6 +9615,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 842),),
         "reqClass": (1002,)
     }),
     80814018: _tools.RODict({
@@ -8256,8 +9628,10 @@ datas = _tools.RODict({
         "subType": 22,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 17,
+        "equipLevel": 16,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012135,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8269,6 +9643,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 843),),
         "reqClass": (1002,)
     }),
     80814019: _tools.RODict({
@@ -8280,8 +9656,10 @@ datas = _tools.RODict({
         "subType": 22,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 34,
+        "equipLevel": 30,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012136,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8293,6 +9671,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 844),),
         "reqClass": (1002,)
     }),
     80814020: _tools.RODict({
@@ -8304,8 +9684,10 @@ datas = _tools.RODict({
         "subType": 22,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 53,
+        "equipLevel": 46,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012137,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8317,6 +9699,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 845),),
         "reqClass": (1002,)
     }),
     80814021: _tools.RODict({
@@ -8330,6 +9714,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 4,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012134,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8341,6 +9727,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 846),),
         "reqClass": (1003,)
     }),
     80814022: _tools.RODict({
@@ -8352,8 +9740,10 @@ datas = _tools.RODict({
         "subType": 23,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 17,
+        "equipLevel": 16,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012135,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8365,6 +9755,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 847),),
         "reqClass": (1003,)
     }),
     80814023: _tools.RODict({
@@ -8376,8 +9768,10 @@ datas = _tools.RODict({
         "subType": 23,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 34,
+        "equipLevel": 30,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012136,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8389,6 +9783,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 848),),
         "reqClass": (1003,)
     }),
     80814024: _tools.RODict({
@@ -8400,8 +9796,10 @@ datas = _tools.RODict({
         "subType": 23,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 53,
+        "equipLevel": 46,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012137,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -8413,6 +9811,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 849),),
         "reqClass": (1003,)
     }),
     80814025: _tools.RODict({
@@ -8426,6 +9826,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 2,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012146,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8437,6 +9839,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 850),),
         "reqClass": (1001,)
     }),
     80814026: _tools.RODict({
@@ -8448,8 +9852,10 @@ datas = _tools.RODict({
         "subType": 31,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 16,
+        "equipLevel": 14,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012147,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8461,6 +9867,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 851),),
         "reqClass": (1001,)
     }),
     80814027: _tools.RODict({
@@ -8472,8 +9880,10 @@ datas = _tools.RODict({
         "subType": 31,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 33,
+        "equipLevel": 28,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012148,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8485,6 +9895,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 852),),
         "reqClass": (1001,)
     }),
     80814028: _tools.RODict({
@@ -8496,8 +9908,10 @@ datas = _tools.RODict({
         "subType": 31,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 52,
+        "equipLevel": 44,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012149,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8509,6 +9923,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 853),),
         "reqClass": (1001,)
     }),
     80814029: _tools.RODict({
@@ -8522,6 +9938,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 2,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012146,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8533,6 +9951,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 854),),
         "reqClass": (1002,)
     }),
     80814030: _tools.RODict({
@@ -8544,8 +9964,10 @@ datas = _tools.RODict({
         "subType": 32,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 16,
+        "equipLevel": 14,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012147,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8557,6 +9979,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 855),),
         "reqClass": (1002,)
     }),
     80814031: _tools.RODict({
@@ -8568,8 +9992,10 @@ datas = _tools.RODict({
         "subType": 32,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 33,
+        "equipLevel": 28,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012148,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8581,6 +10007,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 856),),
         "reqClass": (1002,)
     }),
     80814032: _tools.RODict({
@@ -8592,8 +10020,10 @@ datas = _tools.RODict({
         "subType": 32,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 52,
+        "equipLevel": 44,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012149,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8605,6 +10035,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 857),),
         "reqClass": (1002,)
     }),
     80814033: _tools.RODict({
@@ -8618,6 +10050,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 2,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012146,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8629,6 +10063,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 858),),
         "reqClass": (1003,)
     }),
     80814034: _tools.RODict({
@@ -8640,8 +10076,10 @@ datas = _tools.RODict({
         "subType": 33,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 16,
+        "equipLevel": 14,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012147,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8653,6 +10091,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 859),),
         "reqClass": (1003,)
     }),
     80814035: _tools.RODict({
@@ -8664,8 +10104,10 @@ datas = _tools.RODict({
         "subType": 33,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 33,
+        "equipLevel": 28,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012148,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8677,6 +10119,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 860),),
         "reqClass": (1003,)
     }),
     80814036: _tools.RODict({
@@ -8688,8 +10132,10 @@ datas = _tools.RODict({
         "subType": 33,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 52,
+        "equipLevel": 44,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012149,
         "fixedAffix": _tools.ROList([78000005, 78000009, 78000016, 78000018, 78000022, 78000026, 78000028]),
@@ -8701,6 +10147,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 861),),
         "reqClass": (1003,)
     }),
     80814037: _tools.RODict({
@@ -8712,8 +10160,10 @@ datas = _tools.RODict({
         "subType": 41,
         "iLevel": 5,
         "grade": 1,
-        "equipLevel": 2,
+        "equipLevel": 3,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012138,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8725,6 +10175,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 862),),
         "reqClass": (1001,)
     }),
     80814038: _tools.RODict({
@@ -8736,8 +10188,10 @@ datas = _tools.RODict({
         "subType": 41,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 16,
+        "equipLevel": 15,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012139,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8749,6 +10203,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 863),),
         "reqClass": (1001,)
     }),
     80814039: _tools.RODict({
@@ -8760,8 +10216,10 @@ datas = _tools.RODict({
         "subType": 41,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 33,
+        "equipLevel": 29,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012140,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8773,6 +10231,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 864),),
         "reqClass": (1001,)
     }),
     80814040: _tools.RODict({
@@ -8784,8 +10244,10 @@ datas = _tools.RODict({
         "subType": 41,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 52,
+        "equipLevel": 45,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012141,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8797,6 +10259,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 865),),
         "reqClass": (1001,)
     }),
     80814041: _tools.RODict({
@@ -8808,8 +10272,10 @@ datas = _tools.RODict({
         "subType": 42,
         "iLevel": 5,
         "grade": 1,
-        "equipLevel": 2,
+        "equipLevel": 3,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012138,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8821,6 +10287,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 866),),
         "reqClass": (1002,)
     }),
     80814042: _tools.RODict({
@@ -8832,8 +10300,10 @@ datas = _tools.RODict({
         "subType": 42,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 16,
+        "equipLevel": 15,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012139,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8845,6 +10315,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 867),),
         "reqClass": (1002,)
     }),
     80814043: _tools.RODict({
@@ -8856,8 +10328,10 @@ datas = _tools.RODict({
         "subType": 42,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 33,
+        "equipLevel": 29,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012140,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8869,6 +10343,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 868),),
         "reqClass": (1002,)
     }),
     80814044: _tools.RODict({
@@ -8880,8 +10356,10 @@ datas = _tools.RODict({
         "subType": 42,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 52,
+        "equipLevel": 45,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012141,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8893,6 +10371,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 869),),
         "reqClass": (1002,)
     }),
     80814045: _tools.RODict({
@@ -8904,8 +10384,10 @@ datas = _tools.RODict({
         "subType": 43,
         "iLevel": 5,
         "grade": 1,
-        "equipLevel": 2,
+        "equipLevel": 3,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012138,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8917,6 +10399,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 870),),
         "reqClass": (1003,)
     }),
     80814046: _tools.RODict({
@@ -8928,8 +10412,10 @@ datas = _tools.RODict({
         "subType": 43,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 16,
+        "equipLevel": 15,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012139,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8941,6 +10427,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 871),),
         "reqClass": (1003,)
     }),
     80814047: _tools.RODict({
@@ -8952,8 +10440,10 @@ datas = _tools.RODict({
         "subType": 43,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 33,
+        "equipLevel": 29,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012140,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8965,6 +10455,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 872),),
         "reqClass": (1003,)
     }),
     80814048: _tools.RODict({
@@ -8976,8 +10468,10 @@ datas = _tools.RODict({
         "subType": 43,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 52,
+        "equipLevel": 45,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012141,
         "fixedAffix": _tools.ROList([78000006, 78000009, 78000010, 78000013, 78000024, 78000025, 78000029]),
@@ -8989,19 +10483,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 873),),
         "reqClass": (1003,)
     }),
     80814049: _tools.RODict({
         "ID": 80814049,
-        "name": "玉石项链",
+        "name": "玉石项链 物",
         "quality": 1,
         "randomWeight": 200,
         "type": 5,
         "subType": 58,
         "iLevel": 5,
         "grade": 1,
-        "equipLevel": 3,
+        "equipLevel": 5,
         "disassemblyReward": 40018003,
+        "disassemblyReward2": 40018003,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012110,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -9013,11 +10511,13 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 874),),
         "reqClass": (0,)
     }),
     80814050: _tools.RODict({
         "ID": 80814050,
-        "name": "晓悟项链",
+        "name": "晓悟项链 物",
         "quality": 2,
         "randomWeight": 200,
         "type": 5,
@@ -9026,6 +10526,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 17,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012111,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -9037,19 +10539,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 875),),
         "reqClass": (0,)
     }),
     80814051: _tools.RODict({
         "ID": 80814051,
-        "name": "穿杨项链",
+        "name": "穿杨项链 物",
         "quality": 3,
         "randomWeight": 200,
         "type": 5,
         "subType": 58,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 34,
+        "equipLevel": 31,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012112,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -9061,19 +10567,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 876),),
         "reqClass": (0,)
     }),
     80814052: _tools.RODict({
         "ID": 80814052,
-        "name": "时运项链",
+        "name": "时运项链 物",
         "quality": 4,
         "randomWeight": 200,
         "type": 5,
         "subType": 58,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 53,
+        "equipLevel": 47,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012113,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -9085,19 +10595,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 877),),
         "reqClass": (0,)
     }),
     80814053: _tools.RODict({
         "ID": 80814053,
-        "name": "玉石项链",
+        "name": "玉石项链 法",
         "quality": 1,
         "randomWeight": 200,
         "type": 5,
         "subType": 58,
         "iLevel": 5,
         "grade": 1,
-        "equipLevel": 3,
+        "equipLevel": 5,
         "disassemblyReward": 40018003,
+        "disassemblyReward2": 40018003,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012114,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -9109,11 +10623,13 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 878),),
         "reqClass": (0,)
     }),
     80814054: _tools.RODict({
         "ID": 80814054,
-        "name": "晓悟项链",
+        "name": "晓悟项链 法",
         "quality": 2,
         "randomWeight": 200,
         "type": 5,
@@ -9122,6 +10638,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 17,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012115,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -9133,19 +10651,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 879),),
         "reqClass": (0,)
     }),
     80814055: _tools.RODict({
         "ID": 80814055,
-        "name": "穿杨项链",
+        "name": "穿杨项链 法",
         "quality": 3,
         "randomWeight": 200,
         "type": 5,
         "subType": 58,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 34,
+        "equipLevel": 31,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012116,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -9157,19 +10679,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 880),),
         "reqClass": (0,)
     }),
     80814056: _tools.RODict({
         "ID": 80814056,
-        "name": "时运项链",
+        "name": "时运项链 法",
         "quality": 4,
         "randomWeight": 200,
         "type": 5,
         "subType": 58,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 53,
+        "equipLevel": 47,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012117,
         "fixedAffix": _tools.ROList([78000008, 78000010, 78000014, 78000015, 78000020, 78000027]),
@@ -9181,19 +10707,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 881),),
         "reqClass": (0,)
     }),
     80814057: _tools.RODict({
         "ID": 80814057,
-        "name": "贪狼戒指",
+        "name": "贪狼戒指 物",
         "quality": 1,
         "randomWeight": 200,
         "type": 6,
         "subType": 68,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 18,
+        "equipLevel": 7,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012126,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -9205,19 +10735,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 882),),
         "reqClass": (0,)
     }),
     80814058: _tools.RODict({
         "ID": 80814058,
-        "name": "长空戒指",
+        "name": "长空戒指 物",
         "quality": 2,
         "randomWeight": 200,
         "type": 6,
         "subType": 68,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 35,
+        "equipLevel": 19,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012127,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -9229,19 +10763,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 883),),
         "reqClass": (0,)
     }),
     80814059: _tools.RODict({
         "ID": 80814059,
-        "name": "逐炎戒指",
+        "name": "逐炎戒指 物",
         "quality": 3,
         "randomWeight": 200,
         "type": 6,
         "subType": 68,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 54,
+        "equipLevel": 33,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012128,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -9253,19 +10791,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 884),),
         "reqClass": (0,)
     }),
     80814060: _tools.RODict({
         "ID": 80814060,
-        "name": "神威戒指",
+        "name": "神威戒指 物",
         "quality": 4,
         "randomWeight": 25,
         "type": 6,
         "subType": 68,
         "iLevel": 80,
         "grade": 1,
-        "equipLevel": 62,
-        "disassemblyReward": 0,
+        "equipLevel": 49,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52012129,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -9277,19 +10819,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 885),),
         "reqClass": (0,)
     }),
     80814061: _tools.RODict({
         "ID": 80814061,
-        "name": "寓言戒指",
+        "name": "寓言戒指 法",
         "quality": 1,
         "randomWeight": 200,
         "type": 6,
         "subType": 69,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 18,
+        "equipLevel": 7,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012130,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -9301,19 +10847,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 886),),
         "reqClass": (0,)
     }),
     80814062: _tools.RODict({
         "ID": 80814062,
-        "name": "两仪戒指",
+        "name": "两仪戒指 法",
         "quality": 2,
         "randomWeight": 200,
         "type": 6,
         "subType": 69,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 35,
+        "equipLevel": 19,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012131,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -9325,19 +10875,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 887),),
         "reqClass": (0,)
     }),
     80814063: _tools.RODict({
         "ID": 80814063,
-        "name": "太阴戒指",
+        "name": "太阴戒指 法",
         "quality": 3,
         "randomWeight": 200,
         "type": 6,
         "subType": 69,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 54,
+        "equipLevel": 33,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012132,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -9349,19 +10903,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 888),),
         "reqClass": (0,)
     }),
     80814064: _tools.RODict({
         "ID": 80814064,
-        "name": "轮回戒指",
+        "name": "轮回戒指 法",
         "quality": 4,
         "randomWeight": 25,
         "type": 6,
         "subType": 69,
         "iLevel": 80,
         "grade": 1,
-        "equipLevel": 62,
-        "disassemblyReward": 0,
+        "equipLevel": 49,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52012133,
         "fixedAffix": _tools.ROList([78000001, 78000003, 78000007, 78000008, 78000011, 78000013, 78000015, 78000017, 78000018, 78000020, 78000022, 78000024, 78000026, 78000028]),
@@ -9373,19 +10931,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 889),),
         "reqClass": (0,)
     }),
     80814065: _tools.RODict({
         "ID": 80814065,
-        "name": "贪狼手镯",
+        "name": "贪狼手镯 物",
         "quality": 1,
         "randomWeight": 200,
         "type": 7,
         "subType": 78,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 19,
+        "equipLevel": 6,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012118,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -9397,19 +10959,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 890),),
         "reqClass": (0,)
     }),
     80814066: _tools.RODict({
         "ID": 80814066,
-        "name": "长空手镯",
+        "name": "长空手镯 物",
         "quality": 2,
         "randomWeight": 200,
         "type": 7,
         "subType": 78,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 36,
+        "equipLevel": 18,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012119,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -9421,19 +10987,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 891),),
         "reqClass": (0,)
     }),
     80814067: _tools.RODict({
         "ID": 80814067,
-        "name": "逐炎手镯",
+        "name": "逐炎手镯 物",
         "quality": 3,
         "randomWeight": 200,
         "type": 7,
         "subType": 78,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 55,
+        "equipLevel": 32,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012120,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -9445,19 +11015,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 892),),
         "reqClass": (0,)
     }),
     80814068: _tools.RODict({
         "ID": 80814068,
-        "name": "神威手镯",
+        "name": "神威手镯 物",
         "quality": 4,
         "randomWeight": 25,
         "type": 7,
         "subType": 78,
         "iLevel": 80,
         "grade": 1,
-        "equipLevel": 63,
-        "disassemblyReward": 0,
+        "equipLevel": 48,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52012121,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -9469,19 +11043,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 893),),
         "reqClass": (0,)
     }),
     80814069: _tools.RODict({
         "ID": 80814069,
-        "name": "寓言手镯",
+        "name": "寓言手镯 法",
         "quality": 1,
         "randomWeight": 200,
         "type": 7,
         "subType": 79,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 19,
+        "equipLevel": 6,
         "disassemblyReward": 40018012,
+        "disassemblyReward2": 40018012,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012122,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -9493,19 +11071,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 894),),
         "reqClass": (0,)
     }),
     80814070: _tools.RODict({
         "ID": 80814070,
-        "name": "两仪手镯",
+        "name": "两仪手镯 法",
         "quality": 2,
         "randomWeight": 200,
         "type": 7,
         "subType": 79,
         "iLevel": 45,
         "grade": 1,
-        "equipLevel": 36,
+        "equipLevel": 18,
         "disassemblyReward": 40018024,
+        "disassemblyReward2": 40018024,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012123,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -9517,19 +11099,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 895),),
         "reqClass": (0,)
     }),
     80814071: _tools.RODict({
         "ID": 80814071,
-        "name": "太阴手镯",
+        "name": "太阴手镯 法",
         "quality": 3,
         "randomWeight": 200,
         "type": 7,
         "subType": 79,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 55,
+        "equipLevel": 32,
         "disassemblyReward": 40018039,
+        "disassemblyReward2": 40018039,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012124,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -9541,19 +11127,23 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 896),),
         "reqClass": (0,)
     }),
     80814072: _tools.RODict({
         "ID": 80814072,
-        "name": "轮回手镯",
+        "name": "轮回手镯 法",
         "quality": 4,
         "randomWeight": 25,
         "type": 7,
         "subType": 79,
         "iLevel": 80,
         "grade": 1,
-        "equipLevel": 63,
-        "disassemblyReward": 0,
+        "equipLevel": 48,
+        "disassemblyReward": 40018001,
+        "disassemblyReward2": 40018001,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 0,
         "propID": 52012125,
         "fixedAffix": _tools.ROList([78000002, 78000004, 78000005, 78000006, 78000012, 78000014, 78000016, 78000019, 78000021, 78000023, 78000025, 78000027, 78000029]),
@@ -9565,6 +11155,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 897),),
         "reqClass": (0,)
     }),
     80814073: _tools.RODict({
@@ -9576,8 +11168,10 @@ datas = _tools.RODict({
         "subType": 81,
         "iLevel": 5,
         "grade": 1,
-        "equipLevel": 4,
+        "equipLevel": 8,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012142,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9589,6 +11183,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 898),),
         "reqClass": (1001,)
     }),
     80814074: _tools.RODict({
@@ -9600,8 +11196,10 @@ datas = _tools.RODict({
         "subType": 81,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 17,
+        "equipLevel": 20,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012143,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9613,6 +11211,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 899),),
         "reqClass": (1001,)
     }),
     80814075: _tools.RODict({
@@ -9626,6 +11226,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 34,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012144,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9637,6 +11239,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 900),),
         "reqClass": (1001,)
     }),
     80814076: _tools.RODict({
@@ -9648,8 +11252,10 @@ datas = _tools.RODict({
         "subType": 81,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 53,
+        "equipLevel": 50,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012145,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9661,6 +11267,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 901),),
         "reqClass": (1001,)
     }),
     80814077: _tools.RODict({
@@ -9672,8 +11280,10 @@ datas = _tools.RODict({
         "subType": 82,
         "iLevel": 5,
         "grade": 1,
-        "equipLevel": 4,
+        "equipLevel": 8,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012142,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9685,6 +11295,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 902),),
         "reqClass": (1002,)
     }),
     80814078: _tools.RODict({
@@ -9696,8 +11308,10 @@ datas = _tools.RODict({
         "subType": 82,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 17,
+        "equipLevel": 20,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012143,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9709,6 +11323,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 903),),
         "reqClass": (1002,)
     }),
     80814079: _tools.RODict({
@@ -9722,6 +11338,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 34,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012144,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9733,6 +11351,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 904),),
         "reqClass": (1002,)
     }),
     80814080: _tools.RODict({
@@ -9744,8 +11364,10 @@ datas = _tools.RODict({
         "subType": 82,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 53,
+        "equipLevel": 50,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012145,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9757,6 +11379,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 905),),
         "reqClass": (1002,)
     }),
     80814081: _tools.RODict({
@@ -9768,8 +11392,10 @@ datas = _tools.RODict({
         "subType": 83,
         "iLevel": 5,
         "grade": 1,
-        "equipLevel": 4,
+        "equipLevel": 8,
         "disassemblyReward": 40018002,
+        "disassemblyReward2": 40018002,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012142,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9781,6 +11407,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 0,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 906),),
         "reqClass": (1003,)
     }),
     80814082: _tools.RODict({
@@ -9792,8 +11420,10 @@ datas = _tools.RODict({
         "subType": 83,
         "iLevel": 25,
         "grade": 1,
-        "equipLevel": 17,
+        "equipLevel": 20,
         "disassemblyReward": 40018011,
+        "disassemblyReward2": 40018011,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012143,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9805,6 +11435,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 1,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 907),),
         "reqClass": (1003,)
     }),
     80814083: _tools.RODict({
@@ -9818,6 +11450,8 @@ datas = _tools.RODict({
         "grade": 1,
         "equipLevel": 34,
         "disassemblyReward": 40018023,
+        "disassemblyReward2": 40018023,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012144,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9829,6 +11463,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 3,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 908),),
         "reqClass": (1003,)
     }),
     80814084: _tools.RODict({
@@ -9840,8 +11476,10 @@ datas = _tools.RODict({
         "subType": 83,
         "iLevel": 65,
         "grade": 1,
-        "equipLevel": 53,
+        "equipLevel": 50,
         "disassemblyReward": 40018038,
+        "disassemblyReward2": 40018038,
+        "disassemblyExtraItem": ((1, 30000227, 1), (2, 30000227, 2), (3, 30000227, 4), (4, 30000227, 8)),
         "disassemblyIsBound": 2,
         "propID": 52012145,
         "fixedAffix": _tools.ROList([78000007, 78000010, 78000012, 78000019, 78000021, 78000023]),
@@ -9853,6 +11491,8 @@ datas = _tools.RODict({
         "lockAvailable": 1,
         "sellPrice": 0,
         "appearance": 4,
+        "washConsumeItem": ((30000287, 1),),
+        "washConsumeMoney": ((30000002, 909),),
         "reqClass": (1003,)
     })
 })

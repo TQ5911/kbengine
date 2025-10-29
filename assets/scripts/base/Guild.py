@@ -143,7 +143,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             if _now - _gmVal.offlineTime < _dur:
                 _isDissolve = False
                 break
-        
+
         # 城主帮会不解散
         if self.isCityOwner:
             _isDissolve = False
@@ -209,6 +209,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         box.onMessagePre(M_M_DD.datas.mesg_getItemType2, [str(_addNum), str(ID_SD.datas['itemID_guildCoin']['value'])])
 
     def _updateGuildScore(self):
+        if utils.hasBit(self.guildFlag, gameconst.GuildFlags.DISSOLVE):
+            return
+
         _newScore = 0
         for _gmVal in self.members.values():
             _newScore += _gmVal.score
@@ -226,6 +229,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             _gmVal.name,
             self.guildLevel,
             self.guildScore,
+            utils.getNow(),
         )
 
     def _updateDataToLeaderBoard(self):
@@ -677,7 +681,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if _gmVal.job == GA_A_DD.datas.leader and len(self.members) > 1:
             box.onMessagePre(G_GCD.datas['guild_presidentLeave_msg']['value'], [])
             return
-        
+
         if _gmVal.job == GA_A_DD.datas.leader and (self.siegeWarSignUped or self.haveYuXi or self.siegeWarDeclared or self.isCityOwner):
             box.onMessagePre(G_CBD.datas['cityBattle_prohibitExit']['value'], [])
             return
@@ -1205,7 +1209,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         _msgId = G_GCD.datas['guild_officialResigned_chatMsg']['value']
         _msgId = utils.getNeedTranslateMsgId(_msgId)
-            
+
         _args = [_gmVal.name, utils.getNeedTranslateArg(GA_AD.datas[_oldJob]['name'])]
 
         self._braodcastAsync(
@@ -1565,17 +1569,17 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             DEBUG_MSG('[lj]doSiegeWarSignUpBidding: no permission', gbId)
             box.onSiegeWarSignUpBiddingResult(False, gameconst.SiegeWarSignUpResult.NO_PERMISSION)
             return
-        
+
         if self.siegeWarSignUped:
             DEBUG_MSG('[lj]doSiegeWarSignUpBidding: already sign up', gbId)
             box.onSiegeWarSignUpBiddingResult(False, gameconst.SiegeWarSignUpResult.ALREADY_SIGN_UP)
             return
-        
+
         if self.isCityOwner:
             DEBUG_MSG('[lj]doSiegeWarSignUpBidding: is city owner', gbId)
             box.onSiegeWarSignUpBiddingResult(False, gameconst.SiegeWarSignUpResult.IS_CITY_OWNER)
             return
-        
+
         DEBUG_MSG('[lj]doSiegeWarSignUpBidding: guildMoney:', self.guildFund, self.siegeWarSignUped)
         cost = G_CBD.datas['cityBattle_biddingCost']['value'][1]
         if self.guildFund >= cost:
@@ -1610,17 +1614,17 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             DEBUG_MSG('[lj]onSiegeWarDeclareWar: no permission', gbId)
             box.onSiegeWarDeclareWarGuildResult(False, gameconst.SiegeWarDeclareWarResult.NO_PERMISSION, self.guildName, self.guildUUID)
             return
-        
+
         if not self.haveYuXi:
             DEBUG_MSG('[lj]onSiegeWarDeclareWar: no yuxi', gbId)
             box.onSiegeWarDeclareWarGuildResult(False, gameconst.SiegeWarDeclareWarResult.NO_YUXI, self.guildName, self.guildUUID)
             return
-        
+
         if self.siegeWarDeclared:
             DEBUG_MSG('[lj]onSiegeWarDeclareWar: already declared', gbId)
             box.onSiegeWarDeclareWarGuildResult(False, gameconst.SiegeWarDeclareWarResult.ALREADY_DECLARED, self.guildName, self.guildUUID)
             return
-        
+
         box.onSiegeWarDeclareWarGuildResult(True, gameconst.SiegeWarDeclareWarResult.SUCCESS, self.guildName, self.guildUUID)
 
     def onSiegeWarDeclareWarOfficial(self, guildUUID):
@@ -1635,9 +1639,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if _curRelationType == gameconst.GuildRelationType.UNION:
             gameengine.getGlobalBase('CrossDataStub').removeGuildRelation(
                 self.guildUUID, guildUUID, gameconst.GuildRelationType.UNION, None, self)
-        
+
         self.syncJunXuQiXieLevel()
-            
+
     def syncJunXuQiXieLevel(self):
         data = self.junXuArchitecture.toJunXuArchitectureSavedDict()
         res = {}
@@ -1647,12 +1651,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         DEBUG_MSG('[lj]syncJunXuQiXieLevel', res)
         gameengine.getGlobalBase('SiegeWarStub').onJunXuQiXieLevelSync(self.guildUUID, res)
 
-        
+
     def onSiegeWarGetWinnerData(self, box):
         redisUtils.RedisUtils.getSingleUserInfo(
             self.leaderGbId,
             lambda fcVal: self._onSiegeWarGetWinnerData(fcVal, box))
-        
+
     def _onSiegeWarGetWinnerData(self, fcVal, box):
         name = fcVal.name
         school = fcVal.school
@@ -1681,14 +1685,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         canChange = False
         if self._checkHasPermission(srcGbId, GA_AI_DD.datas.guildMoneyToCoin):
             canChange = True
-        
+
         DEBUG_MSG('[lj]checkCanChangeCityMoneyToGuildMoney', canChange, self.guildUUID, val)
         box.onCanChangeCityMoneyToGuildMoneyResult(canChange, self.guildUUID, val)
 
     def doChangeCityMoneyToGuildMoney(self, srcGbId, val):
         DEBUG_MSG('[lj]doChangeCityMoneyToGuildMoney', val)
         self.modifyGuildFund(val, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_MONEY_TO_COIN, srcGbId, gameclass.AwardDetail())
-                
+
     def getCacheBeforeEnterCrossSiegeWar(self, box, gbId):
         cache = {}
         cache['startEG'] = self._checkHasPermission(gbId, GA_AI_DD.datas.cityBattleSiegeEnginesStart)
@@ -1715,31 +1719,31 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             'memberCnt': len(self.members),
         }
         return _data
-    
+
     def _checkCrossDataNeedSync(self, crossData):
         if self.guildSyncDataToCrossDataCache is None:
             return True
-        
+
         gsdtcdc = self.guildSyncDataToCrossDataCache
 
         if crossData['guildName'] != gsdtcdc['guildName']:
             return True
-        
+
         if crossData['flag'] != gsdtcdc['flag']:
             return True
-        
+
         if crossData['guildScore'] != gsdtcdc['guildScore']:
             return True
-        
+
         if crossData['guildLevel'] != gsdtcdc['guildLevel']:
             return True
-        
+
         if crossData['memberCnt'] != gsdtcdc['memberCnt']:
             return True
-        
+
         if crossData['guildIcon'] != gsdtcdc['guildIcon']:
             return True
-        
+
         return False
 
     def _syncDataToCrossData(self):
@@ -1753,7 +1757,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
     def onAddGuildInfo(self, toCrossData):
         if self.isDestroyed:
             return
-        
+
         self.guildSyncDataToCrossDataCache = toCrossData
 
     def doGetGuildInfosFromCrossData(self, oprGbId, box):
@@ -1761,14 +1765,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         #         or self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildEnmity)):
         #     WARNING_MSG('doGetGuildInfosFromCrossData: no permission', oprGbId)
         #     return
-        
+
         gameengine.getGlobalBase('CrossDataStub').getGuildInfos(box)
 
     def doApplyGuildUnion(self, oprGbId, box, guildUUID):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
             box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
             return
-        
+
         if self.guildUnionApplyMgr.isSenderFull():
             box.onMessagePre(G_GCD.datas['guild_unionApplicationDes']['value'], [])
             return
@@ -1776,11 +1780,11 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if self.guildUnionApplyMgr.isInSender(guildUUID):
             box.onMessagePre(G_GCD.datas['guild_unionAppliedFor']['value'], [])
             return
-        
+
         if guildUUID == self.guildUUID:
             WARNING_MSG('doApplyGuildUnion: same guild', oprGbId)
             return
-        
+
         if self.siegeWarDeclared:
             if self.siegeWarDeclareTarget == guildUUID:
                 box.onMessagePre(G_CBD.datas['cityBattle_prohibitAlliance']['value'], [])
@@ -1806,12 +1810,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if not success:
             box.onMessagePre(G_GCD.datas['guild_dismissed']['value'], [])
             return
-        
+
         guildData = cPickle.loads(result)
         if guildData['full']:
             box.onMessagePre(G_GCD.datas['guild_failUnionFull_msg']['value'], [])
             return
-        
+
         _senderVal = self.guildUnionApplyMgr.addSender(
             guildData['guildUUID'],
             guildData['guildName'],
@@ -1833,15 +1837,15 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
                         },
                     )
             return
-        
+
         _auVal = self.guildUnionApplyMgr.addApplyUnion(
-            guildData['guildUUID'], 
-            guildData['guildName'], 
-            guildData['guildIcon'], 
-            guildData['flag'], 
-            guildData['guildScore'], 
+            guildData['guildUUID'],
+            guildData['guildName'],
+            guildData['guildIcon'],
+            guildData['flag'],
+            guildData['guildScore'],
             guildData['guildLevel'])
-        
+
         self.broadcastByPermission(
             GA_AI_DD.datas.guildUnion,
             lambda box: box.client.onNewApplyGuildUnion(_auVal)
@@ -1865,19 +1869,19 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
             box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
             return
-        
+
         box.client.onGetGuildUnionApplySender(list(self.guildUnionApplyMgr.senderDict.values()))
 
     def doDealGuildUnionApply(self, oprGbId, box, guildUUID, agree):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
             box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
             return
-        
+
         if not self.guildUnionApplyMgr.isInApplyUnion(guildUUID):
             WARNING_MSG('Guild::doDealGuildUnionApply: guildUUID not in apply union', guildUUID)
             return
 
-        
+
         if self.siegeWarDeclared:
             if agree and self.siegeWarDeclareTarget == guildUUID:
                 box.onMessagePre(G_CBD.datas['cityBattle_prohibitAlliance']['value'], [])
@@ -1885,9 +1889,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         if agree:
             gameengine.getGlobalBase('CrossDataStub').addGuildRelation(
-                self.guildUUID, 
-                guildUUID, 
-                gameconst.GuildRelationType.UNION, 
+                self.guildUUID,
+                guildUUID,
+                gameconst.GuildRelationType.UNION,
                 0,
                 box,
                 self,
@@ -1911,21 +1915,21 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
             box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
             return
-        
+
         gameengine.getGlobalBase('CrossDataStub').removeGuildRelation(
             self.guildUUID, guildUUID, gameconst.GuildRelationType.UNION, box, self)
-        
+
     def doQixieAssistFetchCostCoin(self, oprGbId, box, qixieType):
         _gmVal = self.members.get(oprGbId)
         if not _gmVal:
             WARNING_MSG('Guild::doQixieAssistFetchCostCoin: gbId not in guild', oprGbId)
             return
-        
+
         _qixie = self.junXuArchitecture.getQixie(qixieType)
         if not _qixie:
             WARNING_MSG('Guild::doQixieAssistFetchCostCoin: qixieType not in junXuArchitecture', qixieType)
             return
-        
+
         _cost = _qixie.getCostCoin()
         box.onQixieAssistFetchCostCoinResult(qixieType, _cost)
 
@@ -1935,13 +1939,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             WARNING_MSG('Guild::doQixieAssist: gbId not in guild', oprGbId)
             box.onQixieAssistResult(False, opUUID, cost)
             return
-        
+
         _qixie = self.junXuArchitecture.getQixie(qixieType)
         if not _qixie:
             WARNING_MSG('Guild::doQixieAssist: qixieType not in junXuArchitecture', qixieType)
             box.onQixieAssistResult(False, opUUID, cost)
             return
-        
+
         _qixie.addExp()
         box.onQixieAssistResult(True, opUUID, cost)
         box.client.onQixieChanged(_qixie)
@@ -1950,27 +1954,27 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildBuildingUpgrade):
             box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
             return
-        
+
         _qixie = self.junXuArchitecture.getQixie(qixieType)
         if not _qixie:
             WARNING_MSG('Guild::doUpgradeQixie: qixieType not in junXuArchitecture', qixieType)
             return
-        
+
         _junxu = self._getBuilding(gameconst.GuildBuilding.JUN_XU)
 
         if _qixie.needJunxuLevel() > _junxu.level:
             box.onMessagePre(G_GCD.datas['guild_commissariatLevelNotEnough']['value'], [])
             WARNING_MSG('Guild::doUpgradeQixie: qixie level >= junxu level', qixieType)
             return
-        
+
         if not _qixie.isExpSufficient():
             WARNING_MSG('Guild::doUpgradeQixie: not enough exp', oprGbId, _qixie.exp, _qixie.upgradeExp())
             return
-       
+
         if self.guildFund < _qixie.upgradeFundCost():
             WARNING_MSG('Guild::doUpgradeQixie: not enough fund', oprGbId, self.guildFund, _qixie.upgradeFundCost())
             return
-        
+
         self.modifyGuildFund(-_qixie.upgradeFundCost(), AAC_AACDD.datas.BONUS_SRC_GUILD_BUILDING_UPGRADE, oprGbId, gameclass.AwardDetail())
         _qixie.upgrade()
         box.client.onQixieChanged(_qixie)
@@ -1988,25 +1992,25 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildEnmity):
             box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
             return
-        
+
         if guildUUID == self.guildUUID:
             WARNING_MSG('Guild::doDeclareEnemy: same guild', oprGbId)
             return
-        
+
         _, _cost = G_GCD.datas['guild_enmityCost']['value']
 
         if self.guildFund < _cost:
             WARNING_MSG('Guild::doDeclareEnemy: not enough fund', oprGbId, self.guildFund, _cost)
             return
-        
+
         _opUUID = KBEngine.genUUID64()
-        
+
         self.modifyGuildFund(-_cost, AAC_AACDD.datas.BONUS_SRC_GUILD_ENEMY, _opUUID, None)
-        
+
         gameengine.getGlobalBase('CrossDataStub').addGuildRelation(
-            self.guildUUID, 
-            guildUUID, 
-            gameconst.GuildRelationType.ENEMY, 
+            self.guildUUID,
+            guildUUID,
+            gameconst.GuildRelationType.ENEMY,
             utils.getNow() + G_GCD.datas['guild_enmityTime']['value'],
             box,
             self,
@@ -2016,15 +2020,15 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
     def onDeclareEnemyFailed(self, opUUID):
         _, _cost = G_GCD.datas['guild_enmityCost']['value']
         self.modifyGuildFund(_cost, AAC_AACDD.datas.BONUS_SRC_GUILD_ENEMY, opUUID, None)
-        
+
     def doDonateCityBattleToken(self, oprGbId, box, num, opUUID):
         _gmVal = self.members.get(oprGbId)
         if not _gmVal:
             WARNING_MSG('Guild::doDonateCityBattleToken: gbId not in guild', oprGbId)
             return
-        
+
         self.modifyCityBattleToken(num, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_TOKEN, opUUID)
-        
+
     def modifyCityBattleToken(self, num, src, opUUID):
         self.cityBattleToken += num
 
@@ -2036,7 +2040,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if self.cityBattleToken < cnt:
             src.onCityBattleTokenDeducted(False, cnt, guildName, guildUUID)
             return
-        
+
         self.cityBattleToken -= cnt
         src.onCityBattleTokenDeducted(True, cnt, guildName, guildUUID)
 
@@ -2046,7 +2050,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.biddingFailRedPointUnchecked = True
         if ec == gameconst.SiegeWarBiddingResult.OUTBID:
             self.biddingFailRedPointSync()
-        
+
         _eId = M_GL_DD.datas.guild_biddingReturn
         _args = [str(cnt)]
         self.addGuildEvent(_eId, _args)
@@ -2077,7 +2081,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         for _auVal in self.guildUnionApplyMgr.applyUnionDic.values():
             if _auVal.endTime < _now:
                 _deleteList.append(_auVal.guildUUID)
-        
+
         for _guildUUID in _deleteList:
             self.guildUnionApplyMgr.removeApplyUnion(_guildUUID, self)
 
@@ -2085,7 +2089,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         for _senderVal in self.guildUnionApplyMgr.senderDict.values():
             if _senderVal.endTime < _now:
                 _deleteList.append(_senderVal.guildUUID)
-        
+
         for _guildUUID in _deleteList:
             self.guildUnionApplyMgr.removeSender(_guildUUID)
 
@@ -2093,7 +2097,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
             box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
             return
-        
+
         self.guildUnionApplyMgr.removeSender(guildUUID)
         gameengine.getGlobalBase('CrossDataStub').removeReceiverGuildApplyUnion(
             self.guildUUID,
@@ -2107,7 +2111,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         _detailInfo = self.toGuildDetailInfo()
         if not _detailInfo:
             return
-        
+
         gameengine.getGlobalBase('CrossDataStub').getCrossServerGuildDetailFromOtherServer(uuid, serverId, _detailInfo)
 
     def clearCrossDataCache(self):

@@ -96,72 +96,6 @@ datas ={
             "Remark": ""
           }
         },
-        "10054009": {
-          "ActivityID": 0,
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 305.3997,
-          "DisplayName": "",
-          "EntityID": 18000621,
-          "ID": 10054009,
-          "Name": "\u5c3c\u6602",
-          "PosX": 111.4443,
-          "PosY": 143.808,
-          "PosZ": 167.2166,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": "11",
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
-        "10054010": {
-          "ActivityID": 0,
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 305.3997,
-          "DisplayName": "",
-          "EntityID": 18000620,
-          "ID": 10054010,
-          "Name": "\u8bfa\u5170",
-          "PosX": 106.1203,
-          "PosY": 143.808,
-          "PosZ": 160.8037,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": "11",
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
-        "10054014": {
-          "ActivityID": 0,
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 209.4461,
-          "DisplayName": "",
-          "EntityID": 18000608,
-          "ID": 10054014,
-          "Name": "\u5fb7\u91cc\u5b89",
-          "PosX": 219.56,
-          "PosY": 166.0966,
-          "PosZ": 177.52,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": "11",
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
         "10054015": {
           "ActivityID": 0,
           "ClassName": "Npc",
@@ -425,6 +359,72 @@ datas ={
             "RefreshTime": 1,
             "Remark": ""
           }
+        },
+        "10054030": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 303.893,
+          "DisplayName": "",
+          "EntityID": 18000621,
+          "ID": 10054030,
+          "Name": "\u5c3c\u6602",
+          "PosX": 105.2324,
+          "PosY": 147.4683,
+          "PosZ": 170.3983,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "10054031": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 314.5554,
+          "DisplayName": "",
+          "EntityID": 18000608,
+          "ID": 10054031,
+          "Name": "\u5fb7\u91cc\u5b89",
+          "PosX": 101.9541,
+          "PosY": 147.4683,
+          "PosZ": 165.8292,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "10054033": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 229.4568,
+          "DisplayName": "",
+          "EntityID": 18000620,
+          "ID": 10054033,
+          "Name": "\u8bfa\u5170",
+          "PosX": 219.551,
+          "PosY": 165.7487,
+          "PosZ": 176.1879,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
         }
       },
       "Teleporter": {
@@ -483,7 +483,7 @@ datas ={
         "ClassNameType": 20,
         "CustomID": "",
         "Dir": 40.13477,
-        "DisplayName": "\u795e\u884c\u70b9\u00b7\u4e7e",
+        "DisplayName": "\u795e\u884c\u70b9\u00b7\u6bbf\u5916\u5e73\u53f0",
         "EntityID": 0,
         "ID": 10058003,
         "Name": "\u795e\u884c\u70b9",
@@ -491,6 +491,7 @@ datas ={
         "PosY": 165.7011,
         "PosZ": 150.2149,
         "Props": {
+          "CameraId": 0,
           "MapEntityType": "26",
           "Remark": ""
         }

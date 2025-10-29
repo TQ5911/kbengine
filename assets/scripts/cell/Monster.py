@@ -443,6 +443,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
     def enterFightingState(self):
         super(Monster, self).enterFightingState()
+        self.combatDebugMsg('enterFightingState')
         if self.isMoving():
             self.cancelMoveController()
         self.setProp('adjSpeed', self.getProp('adjSpeed') + creep_base.datas[self.monsterId].get('adjSpeed', 0),
@@ -450,6 +451,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
     def leaveFightingState(self):
         super(Monster, self).leaveFightingState()
+        self.combatDebugMsg('leaveFightingState')
         if self.isDie():
             return
 

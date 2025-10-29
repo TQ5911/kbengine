@@ -6,8 +6,6 @@ import gameclass
 import dropAward
 import gameengine
 import collect_details as  PDETAIL
-import prop_fightprop  as  PPROPERTY
-import collect_nodes   as  PSCORE
 from avatarCollectInfo import collectItem
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
@@ -18,29 +16,22 @@ class ICollectible(object):
 
     def _refreshProperty(self):
         # 每次登录重新计算当前收集项的属性加成
-        self.collectScore = {}
         propIndexList = []
         for collectId, collectData in self.collectibleData.collectibleDict.items():
             info = PDETAIL.datas.get(collectId, None)
             if not info:
                 continue
+            if self._checkInUnavailableClass(info, collectId):
+                continue
             equipment_len = len(info['equipment']) if info['equipment'] else 0
             prop_len = len(info['props']) if info['props'] else 0
             if not collectData.isCompleteAll(equipment_len + prop_len):
                 continue
-            self.collectScore.setdefault(info['type1'], 0)
-            self.collectScore[info['type1']] += info['progress']
             propIndex = info['prop']
             propIndexList.append(propIndex)
-        # 重新计算收集分数对应的二次奖励
-        for item in PSCORE.datas.values():
-            self.collectScore.setdefault(item['type1'], 0)
-            if self.collectScore[item['type1']] < item['progress']:
-                continue
-            propIndex = item['prop']
-            propIndexList.append(propIndex)
+
         self.cell.onCollectAward(propIndexList)
-        DEBUG_MSG('call _refreshProperty done', self.collectScore)
+        DEBUG_MSG('call _refreshProperty done')
 
     def sendCollectInfo(self):
         # 发送当前属性信息和收集情况
@@ -57,8 +48,11 @@ class ICollectible(object):
         DEBUG_MSG('begin reqMark collectID', collectID, ' isMark', isMark)
         info = PDETAIL.datas.get(collectID, None)
         if not info:
-            gameengine.reportCritical('in reqCollect, collectID not exist in table, id :', collectID)
+            gameengine.reportCritical('in reqMark, collectID not exist in table, id :', collectID)
             return
+        if self._checkInUnavailableClass(info, collectID):
+            return
+
         self.collectibleData.collectibleDict.setdefault(collectID, collectItem(collectID))
         self.collectibleData.collectibleDict[collectID].onMark(isMark)
         self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
@@ -71,6 +65,10 @@ class ICollectible(object):
         if not info:
             gameengine.reportCritical('in reqCollect, collectID not exist in table, id :', collectID)
             return
+
+        if self._checkInUnavailableClass(info, collectID):
+            return
+
         # 由于策划分表，这里的 equipment + props 两个表共用了一个index (collectGridID)
         equipment_len = len(info['equipment']) if info['equipment'] else 0
         prop_len = len(info['props']) if info['props'] else 0
@@ -105,21 +103,11 @@ class ICollectible(object):
             return
         # 获得本次收集项对应的奖励
         collectProp = info['prop']
-        # 获得积分
-        score = info['progress']
-        scoreType = info['type1']
-        # 检查积分是否满足升级奖励
-        self.collectScore.setdefault(scoreType, 0)
-        oldSet = self._findSet(self.collectScore[scoreType], scoreType)
-        # 更新积分
-        self.collectScore[scoreType] += score
-        newSet = self._findSet(self.collectScore[scoreType], scoreType)
         # 获得奖励
-        self._onScore(newSet - oldSet, collectProp)
+        self._onScore(collectProp)
         # 发送进度信息给客户端
         self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
         DEBUG_MSG('reqCollect Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
-        self.triggerAchievement(gameconst.AchieveType.COLLECT)
 
     def _completeCollect(self, bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel):
         itemCount = 1
@@ -150,7 +138,15 @@ class ICollectible(object):
             WARNING_MSG('     in _completeCollect, item is locked:', bagGridID)
             return False
 
-        if enhanceLevel:
+        if bagItem.isEquipmentItem():
+            if not bagItem.isGood():
+                WARNING_MSG('     in _completeCollect, item is not good:', bagGridID)
+                return False
+
+            if enhanceLevel is None:
+                WARNING_MSG('     in _completeCollect, item level is none:', bagGridID)
+                return False
+
             if bagItem.getEnhanceLevel() != enhanceLevel:
                 WARNING_MSG('     in _completeCollect, getEnhanceLevel() not matched:', bagItem.getEnhanceLevel(), ' item level', enhanceLevel)
                 return False
@@ -179,21 +175,18 @@ class ICollectible(object):
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
         return True
 
-    def _findSet(self, score, scoreType):
-        result = set()
-        for key, value in PSCORE.datas.items():
-            if score >= value['progress'] and scoreType == value['type1']:
-                result.add(key)
-        return result
-
-    def _onScore(self, awardBox, collectProp):
+    def _onScore(self, collectProp):
         propIndexList = [collectProp] if collectProp else []
-        for awardID in awardBox:
-            item = PSCORE.datas[awardID]
-            propIndex = item['prop']
-            propIndexList.append(propIndex)
 
         self.cell.onCollectAward(propIndexList)
-        DEBUG_MSG('_onScore, awardBox ', awardBox, ' propList ', propIndexList)
+        DEBUG_MSG('_onScore propList ', propIndexList)
 
 
+    def _checkInUnavailableClass(self, info, collectID):
+        unavailableClass = info.get('unavailableClass', [])
+        school = self.getAvatarSchool()
+        if school in unavailableClass:
+            WARNING_MSG('in _checkInUnavailableClass, school in unavailableClass:', collectID, school, unavailableClass)
+            return True
+
+        return False

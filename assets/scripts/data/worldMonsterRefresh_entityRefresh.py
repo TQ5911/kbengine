@@ -531,6 +531,198 @@ datas = _tools.RODict({
         "refreshGroupID": 10350005,
         "refreshWeight": 25
     }),
+    11238045: _tools.RODict({
+        "ID": 11238045,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238046: _tools.RODict({
+        "ID": 11238046,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238047: _tools.RODict({
+        "ID": 11238047,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238048: _tools.RODict({
+        "ID": 11238048,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238049: _tools.RODict({
+        "ID": 11238049,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238050: _tools.RODict({
+        "ID": 11238050,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238051: _tools.RODict({
+        "ID": 11238051,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238052: _tools.RODict({
+        "ID": 11238052,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238053: _tools.RODict({
+        "ID": 11238053,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238054: _tools.RODict({
+        "ID": 11238054,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238055: _tools.RODict({
+        "ID": 11238055,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238056: _tools.RODict({
+        "ID": 11238056,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238057: _tools.RODict({
+        "ID": 11238057,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238058: _tools.RODict({
+        "ID": 11238058,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238059: _tools.RODict({
+        "ID": 11238059,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238060: _tools.RODict({
+        "ID": 11238060,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238061: _tools.RODict({
+        "ID": 11238061,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238062: _tools.RODict({
+        "ID": 11238062,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238063: _tools.RODict({
+        "ID": 11238063,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238064: _tools.RODict({
+        "ID": 11238064,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238065: _tools.RODict({
+        "ID": 11238065,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238066: _tools.RODict({
+        "ID": 11238066,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238067: _tools.RODict({
+        "ID": 11238067,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238068: _tools.RODict({
+        "ID": 11238068,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238069: _tools.RODict({
+        "ID": 11238069,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238070: _tools.RODict({
+        "ID": 11238070,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238071: _tools.RODict({
+        "ID": 11238071,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238072: _tools.RODict({
+        "ID": 11238072,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238073: _tools.RODict({
+        "ID": 11238073,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238074: _tools.RODict({
+        "ID": 11238074,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238075: _tools.RODict({
+        "ID": 11238075,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
+    11238076: _tools.RODict({
+        "ID": 11238076,
+        "isOpen": 1,
+        "refreshGroupID": 11230001,
+        "refreshWeight": 100
+    }),
     31188001: _tools.RODict({
         "ID": 31188001,
         "isOpen": 1,

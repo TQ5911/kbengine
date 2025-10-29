@@ -304,12 +304,11 @@ class IBag(object):
     def preAwardOnKillMonster(self, dropCtx, dropRewardIds, shareRewards, displayModes):
         DEBUG_MSG("iBag->preAwardOnKillMonster ", dropCtx, dropRewardIds, shareRewards, displayModes)
         awardResults = {}
+        self.processKillMonsterExp(dropCtx, awardResults)
         for idx in range(len(dropRewardIds)):
             dropRewardId = dropRewardIds[idx]
             shareReward = shareRewards[idx]
             displayMode = displayModes[idx]
-            if idx == 0:
-                self.processKillMonsterExp(dropCtx, awardResults)
             self.processKillMonsterAward(awardResults, dropRewardId, 1, shareReward, displayMode)
 
         for entityID, awardResult in awardResults.items():

@@ -147,7 +147,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
             gameengine.getLineStub(formula.getMapId(spaceNo)).onLoadGroupEntities(info)
 
         elif formula.isCubeSpace(spaceNo):
-            gameengine.getGlobalBase('CubeStub').onLoadGroupEntities(info)
+            gameengine.getCubeStubBySpaceNo(spaceNo).onLoadGroupEntities(info)
 
         elif formula.isWonderLandSpace(spaceNo):
             gameengine.getWonderLandStubBySpaceNo(spaceNo).onLoadGroupEntities(info)
@@ -159,7 +159,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
             gameengine.getLineStub(formula.getMapId(id)).onRefreshGroupEntities(info)
 
         elif formula.isCubeSpace(id):
-            gameengine.getGlobalBase('CubeStub').onRefreshGroupEntities(info)
+            gameengine.getCubeStubBySpaceNo(id).onRefreshGroupEntities(info)
 
         elif formula.isWonderLandSpace(id):
             gameengine.getWonderLandStubBySpaceNo(id).onRefreshGroupEntities(info)

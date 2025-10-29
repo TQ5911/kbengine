@@ -75,8 +75,7 @@ class ServerSkills(userType.UserDictType):
             'skills': skills,
             'skillSwitches': skillSwitches,
         }
-        INFO_MSG("getClientData  ", clientData)
-        return clientData    
+        return clientData
 
     def toDict(self):
         skillDict = {'skills': []}
@@ -90,23 +89,23 @@ class ServerSkills(userType.UserDictType):
             skillDict['skills'].append(sDict)
         skillDict['skillSwitches'] = self.skillSwitches
         return skillDict
-    
+
     def checkSkillSwitch(self, skillID, status):
         switchStatus = self.skillSwitches.get(skillID, None)
         if switchStatus is None:
             return False
         return switchStatus == status
-    
+
     def getSkillSwitch(self, skillID):
         return self.skillSwitches.get(skillID, gameconst.SkillSwitchStatus.AUTO)
-    
+
     def setSkillSwitch(self, skillID, status):
         if not SSD.datas.get(skillID, None):
             ERROR_MSG("setSkillSwitch illeagal skill id", skillID, status)
             return
         if status not in gameconst.SkillSwitchStatus.VALID_STATUS:
             ERROR_MSG("setSkillSwitch illeagal switch status", skillID, status)
-            return    
+            return
         self.skillSwitches[skillID] = status
 
     def _lateReload(self):
@@ -333,23 +332,24 @@ class SkillBase(userType.UserSoleType):
         totalCD = max(realCD, gcd)
         if owner.IsAvatar:
             addValue = 0
-            ret, args = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.MODIFY_CD)
+            ret, datas = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.MODIFY_CD)
             if ret:
-                DEBUG_MSG("getCD ", self.skillId, gameconst.InscriptionEffectType.MODIFY_CD, args)
-                if len(args) != 1:
-                    ERROR_MSG("getCD, args error ", self.skillId, gameconst.InscriptionEffectType.MODIFY_CD, args)
-                else:
-                    addValue = args[0]
+                if len(datas) == 1:
+                    addValue = datas[0]
+                    DEBUG_MSG("in getCD, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.MODIFY_CD, datas)
             totalCD -= addValue
             if totalCD < 0:
                 totalCD = 0
             if totalCD > 0:
-                ret, args = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.REFRESH_CD)
+                ret, datas = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.REFRESH_CD)
                 if ret:
-                    DEBUG_MSG("getCD ", self.skillId, gameconst.InscriptionEffectType.REFRESH_CD, args)
-                    totalCD = 0
+                    if len(datas) == 1:
+                        addValue = datas[0]
+                        if random.uniform(0, 1) <= addValue:
+                            totalCD = 0
+                            DEBUG_MSG("in getCD, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.REFRESH_CD, datas)
         return totalCD
-    
+
     def changeCD(self, owner, delta):
         owner.combatDebugMsg("SkillBase changeCD: skillId:%s, delta:%s, inCDTime:%s", self.getSkillId(), delta, self.inCDTime())
         self.cdDelta += delta
@@ -412,18 +412,16 @@ class SkillBase(userType.UserSoleType):
     @functools.lru_cache(1024)
     def getMaxTargetData(skillId):
         return SkillBase.getSkillData(skillId).get('maxTargetNum', 0)
-    
+
     def getMaxTargetNum(self, owner, skillId):
         defaultMaxTagretNum = self.getMaxTargetData(skillId)
         if owner.IsAvatar:
-            ret, args = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE)
+            ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE)
             if ret:
-                DEBUG_MSG("getMaxTargetNum ", skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE, args)
-                if len(args) != 1:
-                    ERROR_MSG("getMaxTargetNum, args error ", skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE, args)
-                else:
-                    addValue = args[0]
+                if len(datas) == 1:
+                    addValue = datas[0]
                     defaultMaxTagretNum += addValue
+                    DEBUG_MSG("in getMaxTargetNum, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE, datas)
         return defaultMaxTagretNum
 
     @staticmethod
@@ -445,7 +443,7 @@ class SkillBase(userType.UserSoleType):
     @functools.lru_cache(1024)
     def getScopeData(skillId):
         return SkillBase.getSkillData(skillId).get('scopeParam', '')
-    
+
     def getScopeParam(self, owner, skillId):
         scopeParam = self.getScopeData(skillId)
         if not scopeParam:
@@ -455,40 +453,37 @@ class SkillBase(userType.UserSoleType):
             if type(scopeParam) not in (list, tuple):
                 scopeParam = (scopeParam,)
             if owner.IsAvatar:
-                ret, args = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE)
+                ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE)
                 if ret:
-                    DEBUG_MSG("getScopeParam ", skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE, args)
-                    if len(args) != 1:
-                        ERROR_MSG("getScopeParam, args error ", skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE, args)
-                    else:
-                        addValue = args[0]
+                    if len(datas) == 1:
+                        addValue = datas[0]
                         if addValue > 0:
                             scopeParam = list(scopeParam)
                             for idx in range(len(scopeParam)):
-                                scopeParam[idx] *= (1+ addValue/100)
+                                scopeParam[idx] *= (1+ addValue)
                             scopeParam=tuple(scopeParam)
+                            DEBUG_MSG("in getScopeParam, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE, datas)
+
             return scopeParam
 
     @staticmethod
     @functools.lru_cache(1024)
     def getCostMpData(skillId):
         return SkillBase.getSkillData(skillId).get('consumeMp') or 0
-    
+
     def getCostMp(self, owner, skillId, factor):
         originalConsumeMP = self.getCostMpData(skillId)
         if owner.IsAvatar:
             if originalConsumeMP > 0:
-                ret, args = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE)
+                ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE)
                 if ret:
-                    DEBUG_MSG("getCostMp ", skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE, args)
-                    if len(args) != 1:
-                        ERROR_MSG("getCostMp, args error ", skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE, args)
-                    else:
-                        addValue = args[0]
+                    if len(datas) == 1:
+                        addValue = datas[0]
                         if addValue >= originalConsumeMP:
                             originalConsumeMP = 0
                         else:
                             originalConsumeMP -= addValue
+                        DEBUG_MSG("in getCostMp, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE, datas)
         return factor * float(originalConsumeMP)
 
     @staticmethod
@@ -504,14 +499,12 @@ class SkillBase(userType.UserSoleType):
     def getRange(self, owner, skillId):
         defaultRange = self.getRangeData(skillId)
         if owner.IsAvatar:
-            ret, args = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE)
+            ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE)
             if ret:
-                DEBUG_MSG("getRange ", skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE, args)
-                if len(args) != 1:
-                    ERROR_MSG("getRange, args error ", skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE, args)
-                else:
-                    addValue = args[0]
+                if len(datas) == 1:
+                    addValue = datas[0]
                     defaultRange += addValue
+                    DEBUG_MSG("in getRange, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE, datas)
         return defaultRange
 
     @staticmethod
@@ -767,7 +760,7 @@ class SkillBase(userType.UserSoleType):
         targetRadius = 0
         if target.IsMonster:
             targetRadius = target.getConfigData().get('attackDistanceCompensation', 0)
-            
+
         distance2 = sMath.distance2DToCompareFrom3DPosition(target.position, center)
         distance = math.sqrt(max(0, distance2))
 
@@ -921,13 +914,13 @@ class SkillBase(userType.UserSoleType):
         for i in range(sectorNum):
             offsetAngle = offsetAngles[i] if i < len(offsetAngles) else 0
             offsetRad = offsetAngle * math.pi / 180
-            
+
             rotatedDir = sMath.clockwiseRotate(baseDir, offsetRad)
             rotatedDir3D = Math.Vector3(rotatedDir[0], 0, rotatedDir[2])
-            
+
             if self.isInAttackSector(target, center, rotatedDir3D, radius, angle):
                 return True
-                
+
         return False
 
     def isInAttackMi(self, target, center, skillDir, length, width):
@@ -1062,7 +1055,7 @@ class SkillBase(userType.UserSoleType):
             direction = sMath.getDirFromYaw(caster.direction[2])
             direction.normalise()
             position = caster.position
-            
+
         elif scopeType == gameconst.SkillScope.MULTI_SECTOR:
             direction = Math.Vector3(arr[0], arr[1], arr[2])
             direction.normalise()
@@ -1094,7 +1087,7 @@ class SkillBase(userType.UserSoleType):
 
         elif scopeType == gameconst.SkillScope.USER_DEFINED_CIRCLE:
             arr = utils.transformPosesToSkillArgs(
-                caster.position, 
+                caster.position,
                 target.position,
                 self.getRange(caster, self.skillId),
                 direction
@@ -1164,7 +1157,7 @@ class SkillBase(userType.UserSoleType):
                 dis = dis - collisionDis if dis > collisionDis else 0
                 if skillRange > dis:
                     skillRange = dis
-            
+
             dstPosition = caster.position + skillDir * skillRange
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
             realDstPos = utils.getRaycastPos(caster.spaceID, caster.position, dstPosition)
@@ -1233,8 +1226,8 @@ class SkillBase(userType.UserSoleType):
                     continue
 
                 if not utils.checkTargetType(
-                        self.getEffectTarget(self.skillId), 
-                        caster, 
+                        self.getEffectTarget(self.skillId),
+                        caster,
                         target):
 
                     invalidIds.append(i)
@@ -1415,14 +1408,14 @@ class SkillBase(userType.UserSoleType):
             sectorNum = int(scopeParams[0])
             offsetAngles = scopeParams[1]
             sectorAngle = float(scopeParams[2])
-            
+
             if not isinstance(offsetAngles, (list, tuple)):
                 offsetAngles = []
-                
+
             if len(offsetAngles) < sectorNum:
                 caster.combatDebugMsg("_internalGetEffectTargets MULTI_SECTOR not enough offsetAngles: skillId:%s", self.skillId)
-                
-            checkScopeFun = lambda target: self.isInMultiSectorAttack(target, caster.position, skillDir, 
+
+            checkScopeFun = lambda target: self.isInMultiSectorAttack(target, caster.position, skillDir,
                                                 self.getServerRange(caster), sectorAngle * 2, sectorNum, offsetAngles)
             return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
@@ -1550,7 +1543,7 @@ class SkillBase(userType.UserSoleType):
     def enterCDTime(self, owner, delayCd=0):
         if delayCd:
             self.tNextCast = time.time() + delayCd
-        else:   
+        else:
             self.tNextCast = time.time() + self.getCD(owner) - 0.1
 
     def _cancelTempTimer(self, owner, timerName, timerTag=''):
@@ -1587,7 +1580,7 @@ class SkillBase(userType.UserSoleType):
     def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
         self.isInSkill = True
         self.setTempData('skillArgs', skillArgs)
-        owner.combatDebugMsg('SkillBase.beginUseSkill: skillId:%s, targetId:%s, skillArgs:%s', targetId, self.skillId, skillArgs)
+        owner.combatDebugMsg('SkillBase.beginUseSkill: skillId:%s, targetId:%s, skillArgs:%s', self.skillId, targetId, skillArgs)
         target = KBEngine.entities.get(targetId)
         startAction = self.getStartAction(self.skillId)
         startActionFail = False
@@ -1637,13 +1630,11 @@ class SkillBase(userType.UserSoleType):
                 gameconst.SkillTag.Channel):
             if owner.IsAvatar:
                 addValue = 0
-                ret, args = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT)
+                ret, datas = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT)
                 if ret:
-                    DEBUG_MSG("beginUseSkill ", self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT, args)
-                    if len(args) != 1:
-                        ERROR_MSG("beginUseSkill, args error ", self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT, args)
-                    else:
-                        addValue = args[0]
+                    if len(datas) == 1:
+                        addValue = datas[0]
+                        DEBUG_MSG("in beginUseSkill, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT, datas)
 
                 releasedCount = self.getTempData('releasedCount', 0)
                 totalReleaseCount = self.getTempData('totalReleaseCount', 0)
@@ -1672,7 +1663,7 @@ class SkillBase(userType.UserSoleType):
 
         # startAction里可能会攻击别人然后被反噬死。。
         if owner.isDie():
-            owner.combatDebugMsg('SkillBase.beginUseSkill die after startAction:', owner.id, targetId, self.skillId,
+            owner.combatDebugMsg('SkillBase.beginUseSkill die after startAction: skillId:%s, ownerId:%s, targetId:%s, ownerPosition:%s', self.skillId, owner.id, targetId,
                                  owner.position)
             self.useSkillDone(owner, targetId, skillArgs, isSucc=False, startActionFail=startActionFail)
             return gameconst.StartActionResult.Fail, None, None
@@ -1682,7 +1673,7 @@ class SkillBase(userType.UserSoleType):
     # 支持callAfterDelay配出来的分阶段action
     def setupMulAttackAction(self, owner, context, delay, firstStageCalcDelay, duration):
         context.actionStage += 1
-        if context.actionStage >= 10:
+        if context.actionStage >= 50:
             gameengine.reportCritical('skill action stage reach max', context.actionStage, self.skillId)
 
         self.setTempData('duration', duration)
@@ -1722,7 +1713,7 @@ class SkillBase(userType.UserSoleType):
             gameengine.reportCritical('applySkillEffect error:', owner.id, self.skillId, targetId, str(e))
 
         self.targetIds = []
-        owner.combatDebugMsg('applySkillEffect: targetId:%s, skillArgs:%s, effectedEntIds:%s, actResult:%s', targetId, skillArgs, effectedEntIds, actResult)
+        owner.combatDebugMsg('applySkillEffect: skillId:%s, targetId:%s, skillArgs:%s, effectedEntIds:%s, actResult:%s', self.skillId, targetId, skillArgs, effectedEntIds, actResult)
         return actResult
 
     def onSkillActionFinished(self, owner, targetId, skillArgs, context, calcDelay, actionDuration, doRemoveState=True):
@@ -1751,7 +1742,7 @@ class SkillBase(userType.UserSoleType):
         if doRemoveState:
             self._cancelTempTimer(owner, 'removeSkillStateTimer', gametimer.TIMER_TAG_REMOVE_SKILL_STATE)
             skillState = self.getSkillState()
-            owner.removeState(skillState)
+            owner.removeState(skillState, removeReason=gameconst.RemoveStateReason.SKILL_DONE)
 
         if self.hasTempData('changedFromSkill'):
             fromSkillId = self.getTempData('changedFromSkill')
@@ -1766,6 +1757,7 @@ class SkillBase(userType.UserSoleType):
         if self.needResetOnSkillDone(owner):
             self.resetSkill(owner, gameconst.ResetSkillReason.SkillDone, doRemoveState)
         else:
+            self.isInSkill = False
             self.targetIds = []
 
         owner.useSkillFinish(self.skillId)
@@ -1847,6 +1839,7 @@ class SkillBase(userType.UserSoleType):
         return True
 
     def resetSkill(self, owner, reason=gameconst.ResetSkillReason.Default, doRemoveState=True):
+        owner.combatDebugMsg('resetSkill: skillId:%s, resetSkillReason:%s, doRemoveState:%s', self.skillId, reason, doRemoveState)
         self.isInSkill = False
         owner.removeUseSkillRecord(self.skillId)
         skillState = self.getSkillState()
@@ -1872,6 +1865,9 @@ class SkillBase(userType.UserSoleType):
             skillVal = owner.getSkill(changeFromSkillId)
             if skillVal:
                 skillVal.resetSkill(owner, reason, doRemoveState)
+
+    def childSkill(self):
+        return None
 
 # 普通技能
 class CommonSkillVal(SkillBase):
@@ -1952,8 +1948,8 @@ class CommonSkillVal(SkillBase):
                     self.setTempData(
                         'delayCalcTimer',
                         owner._callback(
-                            calcDelay + 0.1, 
-                            'delayCalcSkill', 
+                            calcDelay + 0.1,
+                            'delayCalcSkill',
                             (
                                 self, targetId,
                                 skillArgs,
@@ -2344,9 +2340,14 @@ class StagedSkill(ZedSkillVal):
             return self, False
         else:
             curStageSkillId = self.getSkillIdForStage(self.stageIndex)
+            curStageSKill = self.getTempData('stageChild')
+            if curStageSKill and curStageSKill.skillId == curStageSkillId:
+                return curStageSKill, False
+
             if not curStageSkillId:
                 return self, False
             curStageSKill = StagedSkill(curStageSkillId, self.skillLv, parentSkill=self)
+            self.setTempData('stageChild', curStageSKill)
             return curStageSKill, False
 
     def getSkillIdForStage(self, stageIndex):
@@ -2360,9 +2361,9 @@ class StagedSkill(ZedSkillVal):
     def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
         enhancedSkill = self.getEnhancedZedSkill(owner)
         rootSkillVal = self.getRootSkillVal()
-        owner.combatDebugMsg('StageSkill.beginUseSkill: skillId:%s, stageIndex:%s, targetId:%s, skillArgs:%s, doSetState:%s, zedPoint:%s, enhancedSkillId:%s', 
+        owner.combatDebugMsg('StageSkill.beginUseSkill: skillId:%s, stageIndex:%s, targetId:%s, skillArgs:%s, doSetState:%s, rootSkillId:%s, enhancedSkillId:%s',
                              self.skillId, self.stageIndex, targetId, skillArgs,
-                             doSetState, owner.zedPoint, getattr(enhancedSkill, 'skillId', 0))
+                             doSetState, rootSkillVal.skillId, getattr(enhancedSkill, 'skillId', 0))
         if enhancedSkill:
             self.enhanceZedSkill = enhancedSkill
             if self is rootSkillVal:
@@ -2379,8 +2380,6 @@ class StagedSkill(ZedSkillVal):
             isEnhancedStage = bool(rootSkillVal.enhanceZedSkill)
 
             nextStageSkillId = self.getSkillIdForStage(self.stageIndex + 1)
-            owner.combatDebugMsg('StageSkill.beginUseSkill: skillId:%s, stageIndex:%s, rootSkillId:%s, nextStageSkillId:%s, isEnhancedStage:%s', 
-                                 self.skillId, self.stageIndex, rootSkillVal.skillId, nextStageSkillId, isEnhancedStage)
 
             # 如果有下一段就不进入cd
             enterCD = (nextStageSkillId == 0)
@@ -2390,8 +2389,10 @@ class StagedSkill(ZedSkillVal):
                                                                                             compensateTime, doSetState,
                                                                                             enterCD, parentCtx)
             else:
-                curStageSkillId = self.getSkillIdForStage(self.stageIndex)
-                curStageSKill = StagedSkill(curStageSkillId, self.skillLv, parentSkill=self)
+                curStageSKill, _ = self.getRealSkillVal(owner)
+                if curStageSKill is self:
+                    raise Exception('ckz curStageSKill is self', self.skillId)
+
                 self is rootSkillVal and self.gotoNextStage(owner)
                 isSucc, actionCtx, effectTargetIds = curStageSKill.beginUseSkill(owner, targetId, skillArgs,
                                                                                  compensateTime, doSetState, enterCD,
@@ -2438,7 +2439,7 @@ class StagedSkill(ZedSkillVal):
     def onStageEnd(self, owner, endByTimeout=False):
         self._cancelTempTimer(owner, 'stageCDTimer', gametimer.TIMER_TAG_ON_STAGE_END)
         rootSkillVal = self.getRootSkillVal()
-        owner.combatDebugMsg('StageSkill.onStageEnd: skillId:%s, rootSkillId:%s, rootSkillEnhanceZedSkill:%s, rootSkillStageIndex:%s', 
+        owner.combatDebugMsg('StageSkill.onStageEnd: skillId:%s, rootSkillId:%s, rootSkillEnhanceZedSkill:%s, rootSkillStageIndex:%s',
                              self.skillId, rootSkillVal.skillId, rootSkillVal.enhanceZedSkill, rootSkillVal.stageIndex)
         rootSkillVal.enterCDTime(owner)
         owner.client.onSetAddSkillCd(rootSkillVal.skillId, float(rootSkillVal.getCD(owner)),
@@ -2460,6 +2461,9 @@ class StagedSkill(ZedSkillVal):
     def onStageSkillDone(self, owner):
         pass
 
+    def childSkill(self):
+        return self.getTempData('stageChild')
+
     def needResetOnSkillDone(self, owner):
         # 如果技能使用成功且还有下一段就先不reset，否则被reset到第一段了,等着onStageEnd里去reset
         if self.isLastStage(owner):
@@ -2476,6 +2480,7 @@ class StagedSkill(ZedSkillVal):
 
         self.stageIndex = 0
         self.enhanceZedSkill = None
+        self.popTempData('stageChild', None)
         self._cancelTempTimer(owner, 'stageCDTimer', gametimer.TIMER_TAG_ON_STAGE_END)
 
         super(StagedSkill, self).resetSkill(owner, reason, doRemoveState)

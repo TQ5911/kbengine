@@ -794,7 +794,17 @@ datas = _tools.RODict({
         "ifExport": 1,
         "defaultValue": "0",
         "listValue": ""
+    }),
+    3005: _tools.RODict({
+        "ID": 3005,
+        "name": "地图Id",
+        "value": "mapId",
+        "valueType": 1,
+        "Type": "uint",
+        "ifExport": 1,
+        "defaultValue": "1001",
+        "listValue": ""
     })
 })
 minKey = 1001
-maxKey = 3004
+maxKey = 3005

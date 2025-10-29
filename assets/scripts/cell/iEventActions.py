@@ -305,16 +305,14 @@ class IEventActions(object):
         if len(args) >= 4:
             endTime = float(args[3])
             if self.IsAvatar and hasattr(context, 'skillId'):
-                ret, args = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE)
+                ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE)
                 if ret:
-                    DEBUG_MSG("addBuffBySkill ", context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE, args)
-                    if len(args) != 2:
-                        ERROR_MSG("addBuffBySkill, wrong args, ", context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE, args)
-                    else:
-                        addValue = args[0]
-                        checkBuffID = args[1] 
+                    if len(datas) == 2:
+                        checkBuffID = datas[0]
+                        addValue = datas[1]
                         if checkBuffID > 0 and checkBuffID == buffId:
                             endTime += addValue
+                            DEBUG_MSG("in addBuffBySkill, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE, datas)
 
         if random.uniform(0, 1) > prob:
             return
@@ -1014,7 +1012,7 @@ class IEventActions(object):
         props['ttl'] = float(ttl)
         props['casterType'] = self.classname()
         props['selectedTargetId'] = target.id if target else 0
-        
+
         if self.IsAvatar:
             props['casterTeamId'] = self.teamId
         elif self.IsCreation:

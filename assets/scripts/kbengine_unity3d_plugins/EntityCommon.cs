@@ -129,6 +129,7 @@ namespace KBEngine
 		public virtual void onMulFullHpChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onMulFullMpChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onMulHpChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
+		public virtual void onMulSpeedChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onNameChanged(string oldValue) {}	//Avatar Monster Summon Teleporter Npc Collection Creation 
 		public virtual void onRealDmgChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onRealDmgDefChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 

@@ -71,7 +71,7 @@ class ICrossServer(object):
 
         if _crossServerWaitingClientInitTuple.reasonId == gameconst.CrossServerWaitingClientInitTuple.BACKSELECTCHARACTER:
             self.resetCrossServerWaitingClientInitReason()
-            self.base.backSelectCharacterBase()
+            self.base.backSelectCharacterBase(True)
 
         elif _crossServerWaitingClientInitTuple.reasonId == gameconst.CrossServerWaitingClientInitTuple.OFFLINE:
             _reason, *_ = _crossServerWaitingClientInitTuple.reasonArgs

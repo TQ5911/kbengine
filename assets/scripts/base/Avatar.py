@@ -97,9 +97,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
              impAvatarPet.ImpAvatarPet, impEquipment.ImpEquipment, iCrusade.ICrusade, impMail.ImpMail,
              iCubeBase.ICubeBase, impStore.ImpStore, iFriendship.IFriendship, iEventBase.IEventBase, iPay.IPay,
              iHolidayPay.IHolidayPay, iGuild.IGuild, iDrawCard.IDrawCard, iGuildTrain.IGuildTrain, iWarehouse.IWarehouse,
-             iLeaderBoard.ILeaderBoard, iCoinAuction.ICoinAuction, iNewbie.INewbie, iAchievement.IAchievement, 
+             iLeaderBoard.ILeaderBoard, iCoinAuction.ICoinAuction, iNewbie.INewbie, iAchievement.IAchievement,
              iEnemy.IEnemy, iWonderLandBase.IWonderLandBase, iActivityBase.IActivityBase, iCollectible.ICollectible, iSiegeWarBase.ISiegeWarBase,
-             iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop, 
+             iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop,
              iRedBag.IRedBag, iDateData.IDateData):
     """
     角色实体
@@ -265,7 +265,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.collectOnLogin()
         self.welfareSignInOnLogin()
         self.drawCardOnLogin()
-        self.redbagOnLogin()
 
         self.setTempMiscProp(gameconst.AvatarProps.gameLengthMarkTime, utils.getNow())
         self.initPetProps()
@@ -325,6 +324,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                 if formula.spaceInWorldLine(mapId):
                     outRecordDic.clear()
 
+        elif formula.isDungeonSpace(spaceNo):
+            _pos, _dir = formula.whatSpaceBornPosAndDir(mapId)
+            cellData['position'] = _pos
+            cellData['direction'] = _dir
+
         return spaceNo, mapId
 
     def createCell(self):
@@ -373,7 +377,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             lineType = utils.getPlayerBornMapId()
 
         _logonEnterType = gameconst.LogOnEnterType.NONE
-        if cellData.get('cubeRoomLeftTime', 0) > _now and formula.isCubeSpace(spaceNo):
+        _cubeQuota = cellData.get('cubeQuota', 0)
+        if _cubeQuota.calcLeftTime() > 0 and formula.isCubeSpace(spaceNo):
             _logonEnterType = gameconst.LogOnEnterType.CUBE
 
         if cellData.get('wonderLandLeftTime', 0) > _now and formula.isWonderLandSpace(spaceNo):
@@ -386,7 +391,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         teamId = self.getCellData('teamId', 0)
         extra = {'isLogin': 1}
         if _logonEnterType == gameconst.LogOnEnterType.CUBE:
-            gameengine.getGlobalBase('CubeStub').logonEnterCube(self, self.gbID, spaceNo, extra)
+            gameengine.getCubeStubBySpaceNo(spaceNo).logonEnterCube(self, self.gbID, spaceNo, extra)
 
         elif _logonEnterType == gameconst.LogOnEnterType.WONDER_LAND:
             gameengine.getWonderLandStubBySpaceNo(spaceNo).logonEnterWonderLand(self, self.gbID)
@@ -423,15 +428,15 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             if self.accountEntity:
                 # TODO X: update data
                 updateInfo = (
-                    self.gbID, 
-                    self.getCellData('name', ''), 
-                    self.tLoginBase, 
+                    self.gbID,
+                    self.getCellData('name', ''),
+                    self.tLoginBase,
                     False,
                     self.getCellData('school', 0),
                     self.getCellData('level', 1),
                     self.getCellData('sex', 0)
                     )
-                
+
                 stubs = gameengine.getLoginStubsByAccountName(self.accountEntity.__ACCOUNT_NAME__)
                 gameclass.DuplicatedCallList(stubs).updateCharacterInfo(updateInfo, self.accountEntity.centralServerId)
             else:
@@ -656,6 +661,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             delay += 0.1
             self._callback(delay, 'avatarLogin', (), gametimer.TIMER_TAG_AVATER_IGUILD_LOGION)
             self._callback(delay, '_sendAllGuildRelation', (), gametimer.TIMER_TAG_AVATER_SEND_GUILD_RELATION)
+            self._callback(delay, 'redbagOnLogin', (), gametimer.TIMER_TAG_ON_RED_BAG_RELOGIN)
 
             self.sendHotfix()
             if isRelogin:
@@ -684,24 +690,42 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         # hotfix = gameglobal.hotfix
         # self.streamStringProxy(hotfix, '', gameconst.StreamStringID.HOTFIX_DATA)
 
-    def backSelectCharacterBase(self):
-        INFO_MSG('backSelectCharacterBase')
+    def backSelectCharacterBase(self, isFromHost):
+        INFO_MSG('backSelectCharacterBase', isFromHost)
         if self.isDestroying or not (self.accountEntity or self.subAccount):
             ERROR_MSG('backSelectCharacterBase failed!')
+            return
+
+        if not isFromHost:
+            self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL).onBackSelectCharacter()
+            self.subAccount.onAvatarSubClientDisconnect()
+            self.giveClientTo(
+                self.subAccount,
+                gameconst.ClientCallChannel.SUB_CHANNEL,
+                gameconst.ClientCallChannel.MAIN_CHANNEL,
+            )
+
+            self.setSubAccount(0, gameconst.AccountHostType.NONE)
             return
 
         self.isDestroying = True
         self.setTempMiscProp(gameconst.AvatarProps.backAccount, True)
         self.cell.offline(gameconst.AVATAR_OFFLINE_REASON_SELECT_CHARACTER)
 
+    def subBackLoginBase(self):
+        self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL).onBackLogin()
+        self.disconnect(gameconst.ClientCallChannel.SUB_CHANNEL)
+        self.subAccount.onAvatarSubClientBackLogin()
+        self.setSubAccount(0, gameconst.AccountHostType.NONE)
+
     def _clearAccountInfo(self):
         if self.accountEntity != None:
             self.accountEntity.onAvatarDestroy()
-            self.setAccountInfo(0, False)
+            self.setAccountInfo(0, gameconst.AccountHostType.NONE)
 
         if self.subAccount != None:
             self.subAccount.onAvatarDestroy()
-            self.setSubAccount(0, False)
+            self.setSubAccount(0, gameconst.AccountHostType.NONE)
 
     def _removePendingEnter(self):
         spaceNo = self.getCellData('spaceNo', 0)
@@ -845,7 +869,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                 gameengine.getLineStub(lineType).notifyRemoveFakeLeavePlayer(self.gbID)
 
             elif formula.isCubeSpace(spaceNo):
-                gameengine.getGlobalBase('CubeStub').onAvatarOffline(self.gbID)
+                gameengine.getCubeStubBySpaceNo(spaceNo).onAvatarOffline(self.gbID)
 
             if raidId > 0:
                 gameengine.getRaidStub(raidId).onAvatarOffline(raidId, 0, self.gbID)
@@ -1303,7 +1327,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         if self.isCrossServerInOtherServer:
             INFO_MSG("pyWriteToDB isCrossServerInOtherServer")
             return
-            
+
         if callBackFunc:
             self.writeToDB(callBackFunc)
         else:
@@ -1435,7 +1459,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def getCommonFlag(self, flagType):
         return utils.hasBit(self.commonFlag, flagType)
-    
+
     def isUIVisible(self, uiId):
         uiData = UVVD.datas.get(uiId)
         if not uiData:
@@ -1455,11 +1479,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def _onDailyHealWoundsTimesRefresh(self):
         self.cell.onDailyHealWoundsTimesRefresh()
 # ---------------------------- auth avatar start ----------------------------
-    def isHost(self, eid):
+    def isHostAccount(self, eid):
         if eid > 0:
-            return self.mainAccountCache.isHost
+            return self.mainAccountCache.isAccountHost()
         else:
-            return self.subAccountCache.isHost
+            return self.subAccountCache.isAccountHost()
 
     def giveClientToMe(self, account):
         if account.id == self.mainAccountCache.eid:
@@ -1480,9 +1504,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def accountEntity(self):
         return KBEngine.entities.get(self.mainAccountCache.eid)
 
-    def setAccountInfo(self, eid, isHost):
+    def setAccountInfo(self, eid, accountHostType):
         self.mainAccountCache.eid = eid
-        self.mainAccountCache.isHost = isHost
+        self.mainAccountCache.actHostType = accountHostType
         if self.accountEntity:
             self.deviceUniqueIdentifier = self.accountEntity.deviceUniqueIdentifier
 
@@ -1502,7 +1526,19 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         return gameconst.ClientCallChannel.NONE
 
-    def getAvaliableClientChn(self):
+    def getAvaliableClientChn(self, eid):
+        _account = KBEngine.entities.get(eid)
+        _accountHostType = _account.getAccountHostType(self.gbID)
+        if _accountHostType == gameconst.AccountHostType.NONE:
+            ERROR_MSG('getAvaliableClientChn but account not exist', eid)
+            return
+
+        if _accountHostType == self.mainAccountCache.actHostType:
+            return gameconst.ClientCallChannel.MAIN_CHANNEL
+
+        if _accountHostType == self.subAccountCache.actHostType:
+            return gameconst.ClientCallChannel.SUB_CHANNEL
+
         if not self.getClient(gameconst.ClientCallChannel.MAIN_CHANNEL):
             return gameconst.ClientCallChannel.MAIN_CHANNEL
 
@@ -1515,9 +1551,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def subAccount(self):
         return KBEngine.entities.get(self.subAccountCache.eid)
 
-    def setSubAccount(self, eid, isHost):
+    def setSubAccount(self, eid, accountHostType):
         self.subAccountCache.eid = eid
-        self.subAccountCache.isHost = isHost
+        self.subAccountCache.actHostType = accountHostType
 # ---------------------------- auth avatar end ----------------------------
 
 # ---------------------------- switch avatar server start ----------------------------

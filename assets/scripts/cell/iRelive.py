@@ -174,7 +174,8 @@ class IRelive(object):
             # _enterPos = formula.whatSpaceBornPoint(resSceneId)
             # self.doEnterWorldCube(resSceneId, 0, _src, 0, _enterPos, self.direction)
             _mapId = cube_config.datas['cube_hall']['value']
-            gameengine.getGlobalBase('CubeStub').reliveToCubeRoom(self.base, _mapId, self.gbId, {})
+            _floor = cube_room.datas[_mapId]['floor']
+            gameengine.getCubeStub(_floor).reliveToCubeRoom(self.base, _mapId, self.gbId, {})
 
         return False
 

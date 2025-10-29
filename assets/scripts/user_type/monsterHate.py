@@ -146,7 +146,7 @@ class MonsterHate(object):
                     return False
         return True
 
-    def getFirstVisibleHateTargetByRange(self, skillRange):
+    def getFirstVisibleHateTargetByRange(self, skillRange, withOutArea = None):
         _square = skillRange * skillRange
         _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt)
         _maxHate = None
@@ -161,6 +161,12 @@ class MonsterHate(object):
                 continue
             if not ent.isAttackable(self.owner):
                 continue
+            if withOutArea:
+                if ent.position.x > withOutArea[0].x and ent.position.x < withOutArea[1].x:
+                    if ent.position.y > withOutArea[0].y and ent.position.y < withOutArea[1].y:
+                        if ent.position.z > withOutArea[0].z and ent.position.z < withOutArea[1].z:
+                            continue
+
             if _maxHate is None or hateVal.currentHate > _maxHate.currentHate:
                 _maxHate = hateVal
                 _maxTid = tid

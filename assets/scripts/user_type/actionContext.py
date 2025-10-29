@@ -498,8 +498,9 @@ class AddLingShouCtx(object):
 
 class PassiveSkillCtx(ActionContext):
     actionType = ACTION_PASSIVE_SKILL
-    def __init__(self, pSkillId, parentCtx=None):
+    def __init__(self, objId, pSkillId, parentCtx=None):
         super(PassiveSkillCtx, self).__init__(parentCtx)
+        self.objId = objId
         self.skillId = pSkillId                  #技能id
 
     def getDmgSourceType(self):
@@ -573,6 +574,19 @@ class AureoleCtx(ActionContext):
 
         aureoleVal = owner.aureoleDic.get(self.aureoleId)
         if aureoleVal:
-            return  aureoleVal.aureoleTargetIds
+            return aureoleVal.aureoleTargetIds
 
         return []
+
+
+class CubeDurCtx(object):
+    def __init__(self, avatarBase, failedLeaveCube=False):
+        self.avatarBase = avatarBase
+        self.failedLeaveCube = failedLeaveCube
+
+    def done(self, isSuccess):
+        if not isSuccess:
+            if self.failedLeaveCube:
+                self.avatarBase.cell.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
+
+

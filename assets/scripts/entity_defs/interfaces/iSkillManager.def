@@ -309,8 +309,8 @@
             <Flags>         CELL_PUBLIC     </Flags>
         </adjSpeed>
         <mulSpeed>
-            <Type>          FLOATATTR        </Type>
-            <Flags>         CELL_PUBLIC     </Flags>
+            <Type>          FLOATATTR               </Type>
+            <Flags>         CELL_PUBLIC_AND_OWN     </Flags>
         </mulSpeed>
 
         <bloodSuck>

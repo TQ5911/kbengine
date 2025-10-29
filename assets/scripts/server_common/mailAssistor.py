@@ -5,7 +5,6 @@ from KBEDebug import *
 import dropAward
 import mail_mail as MAMAD
 import mail_config as MACF
-import serverList_serverList as SLSL
 import gameengine
 import utils
 import gamesql

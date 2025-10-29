@@ -241,6 +241,7 @@ class ImpLine(object):
         spaceNo = formula.getLineSpaceNo(lineType, toLineNo)
         enterPos = extra.pop('position', self.position)
         enterDir = extra.pop('dir', self.direction)
+        extra['fromSpaceMgrBox'] = self.spaceMgr
 
         self.teleportToCell(toSpaceBox.cell, spaceNo, enterPos, enterDir, '_onSwitchLine',
                             (lineType, fromLineNo, toLineNo, extra))
@@ -255,6 +256,13 @@ class ImpLine(object):
         if extra and extra.get('callback'):
             func = getattr(self, extra['callback'])
             func and func(*extra.get('callbackArgs', ()))
+
+        self.spaceMgrId = self.getCurrentSpace().spaceMgrId
+        self.spaceMgr.onPlayerEnter(self.id)
+
+        fromSpaceMgrBox = extra.get('fromSpaceMgrBox')
+        if fromSpaceMgrBox:
+            fromSpaceMgrBox.onPlayerLeave(self.gbId, self.id, self.base)
 
     @utils.isMyself
     def applyLeaveLine(self, exposed):

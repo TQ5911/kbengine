@@ -66,6 +66,20 @@ datas = _tools.RODict({
     }),
     17: _tools.RODict({
         "ID": 17,
+        "gearBlessGoldCost": ((30000013, 70000),),
+        "gearBlessItem": ((30000220, 40), (30000221, 1)),
+        "result": _tools.ROList([[-1, 0, 1], [88, 10, 2]]),
+        "backtrack": 250
+    }),
+    18: _tools.RODict({
+        "ID": 18,
+        "gearBlessGoldCost": ((30000013, 70000),),
+        "gearBlessItem": ((30000220, 40), (30000221, 1)),
+        "result": _tools.ROList([[-1, 0, 1], [88, 10, 2]]),
+        "backtrack": 300
+    }),
+    19: _tools.RODict({
+        "ID": 19,
         "gearBlessGoldCost": 0,
         "gearBlessItem": 0,
         "result": 0,
@@ -73,4 +87,4 @@ datas = _tools.RODict({
     })
 })
 minKey = 10
-maxKey = 17
+maxKey = 19

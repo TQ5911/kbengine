@@ -18,7 +18,6 @@ import gamelog
 import gametimer
 import re
 import gamedecorator
-import serverList_serverList as SLSL
 import gameconfig
 import gametlog
 import KBEngine

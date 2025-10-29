@@ -384,8 +384,8 @@ class AvatarBaseEntityCall(object):
     def reqLockItem(self, arg1, arg2, arg3, arg4, arg5, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqLockItem', (arg1, arg2, arg3, arg4, arg5, )))
 
-    def reqMakeEquipment(self, arg1, arg2, arg3, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMakeEquipment', (arg1, arg2, arg3, )))
+    def reqMakeEquipment(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMakeEquipment', (arg1, arg2, arg3, arg4, )))
 
     def reqMark(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMark', (arg1, arg2, )))
@@ -941,11 +941,14 @@ class AvatarCellEntityCall(object):
     def reqEquipBackBless(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipBackBless', (arg1, arg2, arg3, )))
 
+    def reqEquipBindValueWashing(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipBindValueWashing', (arg1, arg2, arg3, arg4, )))
+
     def reqEquipBless(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipBless', (arg1, arg2, arg3, )))
 
-    def reqEquipEnhance(self, arg1, arg2, arg3, arg4, arg5, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipEnhance', (arg1, arg2, arg3, arg4, arg5, )))
+    def reqEquipEnhance(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipEnhance', (arg1, arg2, arg3, arg4, )))
 
     def reqEquipGlyphApply(self, arg1, arg2, arg3, arg4, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipGlyphApply', (arg1, arg2, arg3, arg4, )))
@@ -959,8 +962,11 @@ class AvatarCellEntityCall(object):
     def reqEquipSpiritApply(self, arg1, arg2, arg3, arg4, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipSpiritApply', (arg1, arg2, arg3, arg4, )))
 
-    def reqEquipSpiritWashing(self, arg1, arg2, arg3, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipSpiritWashing', (arg1, arg2, arg3, )))
+    def reqEquipSpiritWashing(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipSpiritWashing', (arg1, arg2, arg3, arg4, )))
+
+    def reqEquipUpgrade(self, arg1, arg2, arg3, arg4, arg5, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipUpgrade', (arg1, arg2, arg3, arg4, arg5, )))
 
     def reqGetRaidList(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqGetRaidList', (arg1, arg2, )))

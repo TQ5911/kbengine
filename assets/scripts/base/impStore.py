@@ -9,6 +9,7 @@ import dropAward
 import awardContext
 import gameclass
 import Store
+import mall_storeList as MSLD
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
@@ -112,6 +113,12 @@ class ImpStore(object):
         detail = gameclass.AwardDetail(storeId=storeId, goodsId=itemId, goodsNum=itemNum)
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_BUY_STORE_ITEMS
+        
+        storeCfgData = MSLD.datas.get(storeId)
+        if storeCfgData:
+            tp = storeCfgData["type"]
+            if tp == gameconst.STORE_TYPE.EXCHANGE_STORE1 or tp == gameconst.STORE_TYPE.EXCHANGE_STORE2:
+                srcType = AAC_AACDD.datas.BONUS_SRC_EXCHANGE_STORE_ITEMS
 
         storeDic = self.storeData.getStoreDic(storeId)
 

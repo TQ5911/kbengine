@@ -444,9 +444,9 @@ datas ={
           "EntityID": 16006002,
           "ID": 10028126,
           "Name": "\u540c\u5fc3\u6751\u89c2\u666f\u70b9",
-          "PosX": 319.2831,
-          "PosY": 52.39331,
-          "PosZ": 265.4943,
+          "PosX": 187.548,
+          "PosY": 118.0067,
+          "PosZ": 234.0599,
           "Props": {
             "IsOpen": 1,
             "Radius": 0.0,
@@ -2497,7 +2497,7 @@ datas ={
             "Level": 1,
             "MapEntityScale": 0,
             "MapEntityType": 0,
-            "MonsterGroupID": 10,
+            "MonsterGroupID": 50,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
@@ -2524,7 +2524,7 @@ datas ={
             "Level": 1,
             "MapEntityScale": 0,
             "MapEntityType": 0,
-            "MonsterGroupID": 10,
+            "MonsterGroupID": 50,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
@@ -2551,7 +2551,7 @@ datas ={
             "Level": 1,
             "MapEntityScale": 0,
             "MapEntityType": 0,
-            "MonsterGroupID": 10,
+            "MonsterGroupID": 50,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
@@ -7927,68 +7927,6 @@ datas ={
               4.851311,
               165.271271,
               40.0,
-              10.0
-            ]
-          ]
-        }
-      },
-      "10028136": {
-        "ActivityID": 0,
-        "ClassName": "FastMovePoint",
-        "ClassNameType": 19,
-        "CustomID": "",
-        "Dir": 265.4256,
-        "DisplayName": "test",
-        "EntityID": 13000001,
-        "ID": 10028136,
-        "Name": "\u75be\u63a0\u70b9",
-        "PosX": 190.9003,
-        "PosY": 44.91127,
-        "PosZ": 398.6447,
-        "Props": {
-          "Remark": "",
-          "SubPoints": [
-            [
-              155.9115,
-              24.8857117,
-              389.140747,
-              4.0,
-              10.0,
-              156.078583,
-              24.89195,
-              389.409058,
-              30.0,
-              10.0
-            ]
-          ]
-        }
-      },
-      "10028137": {
-        "ActivityID": 0,
-        "ClassName": "FastMovePoint",
-        "ClassNameType": 19,
-        "CustomID": "",
-        "Dir": 304.2755,
-        "DisplayName": "test",
-        "EntityID": 13000001,
-        "ID": 10028137,
-        "Name": "\u75be\u63a0\u70b9",
-        "PosX": 187.5783,
-        "PosY": 22.24958,
-        "PosZ": 180.7466,
-        "Props": {
-          "Remark": "",
-          "SubPoints": [
-            [
-              225.2651,
-              2.85268736,
-              154.139557,
-              4.0,
-              10.0,
-              225.089783,
-              2.85935545,
-              154.208679,
-              30.0,
               10.0
             ]
           ]

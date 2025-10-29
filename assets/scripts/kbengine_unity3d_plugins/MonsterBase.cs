@@ -113,6 +113,7 @@ namespace KBEngine
 		public float mulFullHp = 0f;
 		public float mulFullMp = 0f;
 		public float mulHp = 0f;
+		public float mulSpeed = 0f;
 		
 		public Int32 realDmg = 0;
 		public Int32 realDmgDef = 0;
@@ -1865,6 +1866,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onMulHpChanged(oldval_mulHp);
+						}
+
+						break;
+					case 30660:
+						float oldval_mulSpeed = mulSpeed;
+						mulSpeed = stream.readFloat();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMulSpeedChanged(oldval_mulSpeed);
+						}
+						else
+						{
+							if(inWorld)
+								onMulSpeedChanged(oldval_mulSpeed);
 						}
 
 						break;
@@ -4010,6 +4027,27 @@ namespace KBEngine
 					else
 					{
 						onMulHpChanged(oldval_mulHp);
+					}
+				}
+			}
+
+			float oldval_mulSpeed = mulSpeed;
+			Property prop_mulSpeed = pdatas[43];
+			if(prop_mulSpeed.isBase())
+			{
+				if(inited && !inWorld)
+					onMulSpeedChanged(oldval_mulSpeed);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_mulSpeed.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMulSpeedChanged(oldval_mulSpeed);
 					}
 				}
 			}

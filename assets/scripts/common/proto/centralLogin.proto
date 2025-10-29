@@ -57,6 +57,18 @@ message TokenLogin
     string token = 3;
 }
 
+enum ThirdLoginType
+{
+    THIRD_LOGIN_UNKNOW = 0;
+    THIRD_LOGIN_TAPTAP = 1;
+}
+
+message ThirdLogin
+{
+    string channelInfo = 1;
+    string accessToken = 2;
+}
+
 message LoginReply
 {
     enum LoginResult
@@ -67,6 +79,7 @@ message LoginReply
         LOGIN_NOT_LOGIN = 3;
         LOGIN_NEED_CDKEY = 4;
         LOGIN_DEVICE_LIMIT = 5;
+        LOGIN_THIRD_FAILED = 6;
     }
 
     LoginResult result=1;
@@ -178,6 +191,7 @@ service CentralServer
     rpc checkCDkey(CheckCDKeyRequest) returns(Void);
     rpc getServerListDir(ServerListRequest) returns(Void);
     rpc captchaValidate(CaptchaValidateRequest) returns(Void);
+    rpc loginByThird(ThirdLogin) returns(Void);
 }
 
 //客户端接受的rpc

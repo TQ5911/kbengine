@@ -449,50 +449,22 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_GLYPH_INFO : DATATYPE_BASE
+	public class DATATYPE_GLYPH_VAL : DATATYPE_BASE
 	{
-		private DATATYPE__GLYPH_INFO_glyphAffixes_ArrayType_ChildArray glyphAffixes_DataType = new DATATYPE__GLYPH_INFO_glyphAffixes_ArrayType_ChildArray();
-
-		public class DATATYPE__GLYPH_INFO_glyphAffixes_ArrayType_ChildArray : DATATYPE_BASE
+		public GLYPH_VAL createFromStreamEx(MemoryStream stream)
 		{
-			private DATATYPE_AFFIX_VAL itemType = new DATATYPE_AFFIX_VAL();
-
-			public List<AFFIX_VAL> createFromStreamEx(MemoryStream stream)
-			{
-				UInt32 size = stream.readUint32();
-				List<AFFIX_VAL> datas = new List<AFFIX_VAL>();
-
-				while(size > 0)
-				{
-					--size;
-					datas.Add(itemType.createFromStreamEx(stream));
-				};
-
-				return datas;
-			}
-
-			public void addToStreamEx(Bundle stream, List<AFFIX_VAL> v)
-			{
-				stream.writeUint32((UInt32)v.Count);
-				for(int i=0; i<v.Count; ++i)
-				{
-					itemType.addToStreamEx(stream, v[i]);
-				};
-			}
-		}
-
-		public GLYPH_INFO createFromStreamEx(MemoryStream stream)
-		{
-			GLYPH_INFO datas = new GLYPH_INFO();
-			datas.glyphState = stream.readInt8();
-			datas.glyphAffixes = glyphAffixes_DataType.createFromStreamEx(stream);
+			GLYPH_VAL datas = new GLYPH_VAL();
+			datas.affixId = stream.readUint32();
+			datas.affixVal = stream.readFloat();
+			datas.affixEffect = stream.readString();
 			return datas;
 		}
 
-		public void addToStreamEx(Bundle stream, GLYPH_INFO v)
+		public void addToStreamEx(Bundle stream, GLYPH_VAL v)
 		{
-			stream.writeInt8(v.glyphState);
-			glyphAffixes_DataType.addToStreamEx(stream, v.glyphAffixes);
+			stream.writeUint32(v.affixId);
+			stream.writeFloat(v.affixVal);
+			stream.writeString(v.affixEffect);
 		}
 	}
 
@@ -504,12 +476,12 @@ namespace KBEngine
 
 		public class DATATYPE__CLI_GLYPH_INFO_glyphAffixes_ArrayType_ChildArray : DATATYPE_BASE
 		{
-			private DATATYPE_AFFIX_VAL itemType = new DATATYPE_AFFIX_VAL();
+			private DATATYPE_GLYPH_VAL itemType = new DATATYPE_GLYPH_VAL();
 
-			public List<AFFIX_VAL> createFromStreamEx(MemoryStream stream)
+			public List<GLYPH_VAL> createFromStreamEx(MemoryStream stream)
 			{
 				UInt32 size = stream.readUint32();
-				List<AFFIX_VAL> datas = new List<AFFIX_VAL>();
+				List<GLYPH_VAL> datas = new List<GLYPH_VAL>();
 
 				while(size > 0)
 				{
@@ -520,7 +492,7 @@ namespace KBEngine
 				return datas;
 			}
 
-			public void addToStreamEx(Bundle stream, List<AFFIX_VAL> v)
+			public void addToStreamEx(Bundle stream, List<GLYPH_VAL> v)
 			{
 				stream.writeUint32((UInt32)v.Count);
 				for(int i=0; i<v.Count; ++i)
@@ -533,62 +505,15 @@ namespace KBEngine
 		public CLI_GLYPH_INFO createFromStreamEx(MemoryStream stream)
 		{
 			CLI_GLYPH_INFO datas = new CLI_GLYPH_INFO();
-			datas.glyphState = stream.readInt8();
+			datas.glyphPos = stream.readUint8();
 			datas.glyphAffixes = glyphAffixes_DataType.createFromStreamEx(stream);
 			return datas;
 		}
 
 		public void addToStreamEx(Bundle stream, CLI_GLYPH_INFO v)
 		{
-			stream.writeInt8(v.glyphState);
+			stream.writeUint8(v.glyphPos);
 			glyphAffixes_DataType.addToStreamEx(stream, v.glyphAffixes);
-		}
-	}
-
-
-
-	public class DATATYPE_SPIRIT_INFO : DATATYPE_BASE
-	{
-		private DATATYPE__SPIRIT_INFO_spiritAffixes_ArrayType_ChildArray spiritAffixes_DataType = new DATATYPE__SPIRIT_INFO_spiritAffixes_ArrayType_ChildArray();
-
-		public class DATATYPE__SPIRIT_INFO_spiritAffixes_ArrayType_ChildArray : DATATYPE_BASE
-		{
-			private DATATYPE_AFFIX_VAL itemType = new DATATYPE_AFFIX_VAL();
-
-			public List<AFFIX_VAL> createFromStreamEx(MemoryStream stream)
-			{
-				UInt32 size = stream.readUint32();
-				List<AFFIX_VAL> datas = new List<AFFIX_VAL>();
-
-				while(size > 0)
-				{
-					--size;
-					datas.Add(itemType.createFromStreamEx(stream));
-				};
-
-				return datas;
-			}
-
-			public void addToStreamEx(Bundle stream, List<AFFIX_VAL> v)
-			{
-				stream.writeUint32((UInt32)v.Count);
-				for(int i=0; i<v.Count; ++i)
-				{
-					itemType.addToStreamEx(stream, v[i]);
-				};
-			}
-		}
-
-		public SPIRIT_INFO createFromStreamEx(MemoryStream stream)
-		{
-			SPIRIT_INFO datas = new SPIRIT_INFO();
-			datas.spiritAffixes = spiritAffixes_DataType.createFromStreamEx(stream);
-			return datas;
-		}
-
-		public void addToStreamEx(Bundle stream, SPIRIT_INFO v)
-		{
-			spiritAffixes_DataType.addToStreamEx(stream, v.spiritAffixes);
 		}
 	}
 
@@ -647,12 +572,12 @@ namespace KBEngine
 
 		public class DATATYPE__CLI_EQUIP_ITEM_VAL_spiritDatas_ArrayType_ChildArray : DATATYPE_BASE
 		{
-			private DATATYPE_SPIRIT_INFO itemType = new DATATYPE_SPIRIT_INFO();
+			private DATATYPE_CLI_SPIRIT_INFO itemType = new DATATYPE_CLI_SPIRIT_INFO();
 
-			public List<SPIRIT_INFO> createFromStreamEx(MemoryStream stream)
+			public List<CLI_SPIRIT_INFO> createFromStreamEx(MemoryStream stream)
 			{
 				UInt32 size = stream.readUint32();
-				List<SPIRIT_INFO> datas = new List<SPIRIT_INFO>();
+				List<CLI_SPIRIT_INFO> datas = new List<CLI_SPIRIT_INFO>();
 
 				while(size > 0)
 				{
@@ -663,7 +588,7 @@ namespace KBEngine
 				return datas;
 			}
 
-			public void addToStreamEx(Bundle stream, List<SPIRIT_INFO> v)
+			public void addToStreamEx(Bundle stream, List<CLI_SPIRIT_INFO> v)
 			{
 				stream.writeUint32((UInt32)v.Count);
 				for(int i=0; i<v.Count; ++i)
@@ -673,16 +598,16 @@ namespace KBEngine
 			}
 		}
 
-		private DATATYPE__CLI_EQUIP_ITEM_VAL_glyphDatas_ArrayType_ChildArray glyphDatas_DataType = new DATATYPE__CLI_EQUIP_ITEM_VAL_glyphDatas_ArrayType_ChildArray();
+		private DATATYPE__CLI_EQUIP_ITEM_VAL_glyphInfo_ArrayType_ChildArray glyphInfo_DataType = new DATATYPE__CLI_EQUIP_ITEM_VAL_glyphInfo_ArrayType_ChildArray();
 
-		public class DATATYPE__CLI_EQUIP_ITEM_VAL_glyphDatas_ArrayType_ChildArray : DATATYPE_BASE
+		public class DATATYPE__CLI_EQUIP_ITEM_VAL_glyphInfo_ArrayType_ChildArray : DATATYPE_BASE
 		{
-			private DATATYPE_GLYPH_INFO itemType = new DATATYPE_GLYPH_INFO();
+			private DATATYPE_CLI_GLYPH_INFO itemType = new DATATYPE_CLI_GLYPH_INFO();
 
-			public List<GLYPH_INFO> createFromStreamEx(MemoryStream stream)
+			public List<CLI_GLYPH_INFO> createFromStreamEx(MemoryStream stream)
 			{
 				UInt32 size = stream.readUint32();
-				List<GLYPH_INFO> datas = new List<GLYPH_INFO>();
+				List<CLI_GLYPH_INFO> datas = new List<CLI_GLYPH_INFO>();
 
 				while(size > 0)
 				{
@@ -693,7 +618,7 @@ namespace KBEngine
 				return datas;
 			}
 
-			public void addToStreamEx(Bundle stream, List<GLYPH_INFO> v)
+			public void addToStreamEx(Bundle stream, List<CLI_GLYPH_INFO> v)
 			{
 				stream.writeUint32((UInt32)v.Count);
 				for(int i=0; i<v.Count; ++i)
@@ -772,7 +697,7 @@ namespace KBEngine
 			datas.lockStatus = stream.readInt8();
 			datas.auctionTime = stream.readUint32();
 			datas.spiritDatas = spiritDatas_DataType.createFromStreamEx(stream);
-			datas.glyphDatas = glyphDatas_DataType.createFromStreamEx(stream);
+			datas.glyphInfo = glyphInfo_DataType.createFromStreamEx(stream);
 			datas.radomEnhTimes = radomEnhTimes_DataType.createFromStreamEx(stream);
 			datas.enhanceLv = stream.readUint8();
 			datas.enhanceLvRate = stream.readUint8();
@@ -786,6 +711,7 @@ namespace KBEngine
 			datas.bindValue = stream.readUint16();
 			datas.glyphGroup = stream.readUint8();
 			datas.spiritGroup = stream.readUint8();
+			datas.grade = stream.readUint8();
 			return datas;
 		}
 
@@ -799,7 +725,7 @@ namespace KBEngine
 			stream.writeInt8(v.lockStatus);
 			stream.writeUint32(v.auctionTime);
 			spiritDatas_DataType.addToStreamEx(stream, v.spiritDatas);
-			glyphDatas_DataType.addToStreamEx(stream, v.glyphDatas);
+			glyphInfo_DataType.addToStreamEx(stream, v.glyphInfo);
 			radomEnhTimes_DataType.addToStreamEx(stream, v.radomEnhTimes);
 			stream.writeUint8(v.enhanceLv);
 			stream.writeUint8(v.enhanceLvRate);
@@ -813,6 +739,7 @@ namespace KBEngine
 			stream.writeUint16(v.bindValue);
 			stream.writeUint8(v.glyphGroup);
 			stream.writeUint8(v.spiritGroup);
+			stream.writeUint8(v.grade);
 		}
 	}
 
@@ -1454,7 +1381,7 @@ namespace KBEngine
 			SKILL_DAMAGE_VAL datas = new SKILL_DAMAGE_VAL();
 			datas.targetId = stream.readInt32();
 			datas.hurt = stream.readInt32();
-			datas.hitType = stream.readInt32();
+			datas.hitType = stream.readUint8();
 			return datas;
 		}
 
@@ -1462,7 +1389,7 @@ namespace KBEngine
 		{
 			stream.writeInt32(v.targetId);
 			stream.writeInt32(v.hurt);
-			stream.writeInt32(v.hitType);
+			stream.writeUint8(v.hitType);
 		}
 	}
 
@@ -1640,7 +1567,6 @@ namespace KBEngine
 			datas.position = stream.readVector3();
 			datas.hp = stream.readInt32();
 			datas.fullHp = stream.readInt32();
-			datas.equipSetLv = stream.readUint8();
 			datas.enableMics = stream.readUint8();
 			datas.isBlockMics = stream.readUint8();
 			datas.openId = stream.readUnicode();
@@ -1662,7 +1588,6 @@ namespace KBEngine
 			stream.writeVector3(v.position);
 			stream.writeInt32(v.hp);
 			stream.writeInt32(v.fullHp);
-			stream.writeUint8(v.equipSetLv);
 			stream.writeUint8(v.enableMics);
 			stream.writeUint8(v.isBlockMics);
 			stream.writeUnicode(v.openId);
@@ -4983,6 +4908,7 @@ namespace KBEngine
 			datas.num = stream.readUint32();
 			datas.leftNum = stream.readUint32();
 			datas.maxGbId = stream.readUint64();
+			datas.desc = stream.readUnicode();
 			datas.fetchPlayerList = fetchPlayerList_DataType.createFromStreamEx(stream);
 			return datas;
 		}
@@ -4999,6 +4925,7 @@ namespace KBEngine
 			stream.writeUint32(v.num);
 			stream.writeUint32(v.leftNum);
 			stream.writeUint64(v.maxGbId);
+			stream.writeUnicode(v.desc);
 			fetchPlayerList_DataType.addToStreamEx(stream, v.fetchPlayerList);
 		}
 	}
@@ -5034,6 +4961,7 @@ namespace KBEngine
 			datas.guildLevel = stream.readUint8();
 			datas.guildScore = stream.readInt32();
 			datas.leaderName = stream.readUnicode();
+			datas.ts = stream.readUint32();
 			return datas;
 		}
 
@@ -5044,6 +4972,7 @@ namespace KBEngine
 			stream.writeUint8(v.guildLevel);
 			stream.writeInt32(v.guildScore);
 			stream.writeUnicode(v.leaderName);
+			stream.writeUint32(v.ts);
 		}
 	}
 

@@ -407,9 +407,9 @@ def getRaidStub(raidId):
     raidStubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(id)
     return getGlobalBase(raidStubName)
 
-def getLeaderStub(leaderBoardType):
+def getLeaderStub(leaderBoardType, reportErr=True):
     _leaderStubName = 'LeaderBoardStub' + str(leaderBoardType)
-    return getGlobalBase(_leaderStubName)
+    return getGlobalBase(_leaderStubName, reportErr)
 
 
 def resetGlobalActData(globalActData):
@@ -437,9 +437,12 @@ def removeGuildRelation(guildUUID1, guildUUID2, version):
     gameglobal.guildRelationVersion = version
 
 
-
-def setServerAlias(alias):
+def setMapleServerInfo(serverInfo, alias, serverName):
     gameglobal.curServerAlias = alias
+    gameglobal.mapleServerInfo = serverInfo
+    gameglobal.curServerName = serverName
+
+    utils.group2ServerIds.cache_clear()
 
 
 def removeEquipDropDestroyCollection(collectionId, dropEquipId):

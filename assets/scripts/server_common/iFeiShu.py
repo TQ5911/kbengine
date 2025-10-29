@@ -48,8 +48,8 @@ class IFeiShu():
         if gameglobal.curServerAlias:
             _serverName = gameglobal.curServerAlias
         else:
-            _serverName = gameconfig.serverName()
-        msgs.append("serverId: %d, 服务器: %s" % (gameconfig.serverId(), gameconfig.serverName()))
+            _serverName = gameglobal.curServerName
+        msgs.append("serverId: %d, 服务器: %s" % (gameconfig.serverId(), gameglobal.curServerName))
 
         datas = {
             "msgtype": "text",

@@ -37,7 +37,7 @@ class applyJoinPlayerVal(userType.UserSoleType):
 
 class TeamMemberCacheVal(userType.UserSoleType):
     def __init__(self, playerGbId, playerBox, playerName, level, school, sex, picFrameId, bFollow, bOnline,
-                 spaceNo=0, position=(0, 0, 0), hp=1, fullHp=1, score=0, hpkScore=0, mountState=0, equipSetLv=0,
+                 spaceNo=0, position=(0, 0, 0), hp=1, fullHp=1, score=0, hpkScore=0, mountState=0,
                  raidUUID=0, enableMics=False, isBlockMics=False, isDead=True, openId=''):
         self.playerGbId = playerGbId
         self.playerBox = playerBox
@@ -55,7 +55,6 @@ class TeamMemberCacheVal(userType.UserSoleType):
         self.score = score
         self.hpkScore = hpkScore
         self.mountState = mountState
-        self.equipSetLv = equipSetLv
         self.raidUUID = raidUUID
         self.enableMics = enableMics
         self.isBlockMics = isBlockMics
@@ -79,7 +78,6 @@ class TeamMemberCacheVal(userType.UserSoleType):
             'fullHp': self.fullHp,
             'score': self.score,
             'hpkScore': self.hpkScore,
-            'equipSetLv': self.equipSetLv,
             'raidUUID': self.raidUUID,
             'isDead': self.isDead,
             'openId': self.openId,
@@ -103,7 +101,6 @@ class TeamMemberCacheVal(userType.UserSoleType):
             'score': self.score,
             'hpkScore': self.hpkScore,
             'mountState': self.mountState,
-            'equipSetLv': self.equipSetLv,
             'raidUUID': self.raidUUID,
             'enableMics': self.enableMics,
             'isBlockMics': self.isBlockMics,
@@ -126,7 +123,6 @@ class TeamMemberCacheVal(userType.UserSoleType):
                 'hp': self.hp,
                 'fullHp': self.fullHp,
                 'score': self.score,
-                'equipSetLv': self.equipSetLv,
                 'enableMics': self.enableMics,
                 'isBlockMics': self.isBlockMics,
                 'openId': self.openId,
@@ -500,7 +496,7 @@ class TeamStatisticMixin(object):
 
 class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
     def __init__(self, teamId=0, teamTarget=0, teamCaptainGbId=0, playerBox=None, playerName='', level=0, school=0,
-                 sex=0, picFrameId=0, bFollow=False, bOnline=True, score=0, mountState=0, equipSetLv=0, isDead=False,
+                 sex=0, picFrameId=0, bFollow=False, bOnline=True, score=0, mountState=0, isDead=False,
                  openId='', teamMicsSwitch=gameconst.TeamMicsMode.OFF, teamMicsBlocked=False):
         # region __init__
         self.teamId = teamId
@@ -672,10 +668,10 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
         return len(self.teamPlayerDic)
 
     def addMember(self, playerGbId, playerBox, playerName, level, school, sex, picFrameId, bFollow=False,
-                  bOnline=True, score=0, mountState=0, equipSetLv=0, isDead=False, openId=0):
+                  bOnline=True, score=0, mountState=0, isDead=False, openId=0):
         if self.isTeamFull():
             WARNING_MSG('addMember isTeamFull', playerGbId, playerBox, playerName, level, school, picFrameId,
-                        bFollow, bOnline, score, equipSetLv, isDead, openId)
+                        bFollow, bOnline, score, isDead, openId)
             return False, gameconst.RaidErrno.RAID_RAID_TEAM_IS_FULL
 
         isBlockMics = False
@@ -683,7 +679,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
             isBlockMics = True
 
         newMember = TeamMemberCacheVal(playerGbId, playerBox, playerName, level, school, sex, picFrameId, bFollow, bOnline,
-                                       score=score, mountState=mountState, equipSetLv=equipSetLv, isDead=isDead, openId=openId,
+                                       score=score, mountState=mountState, isDead=isDead, openId=openId,
                                        isBlockMics=isBlockMics)
         self.teamPlayerDic[playerGbId] = newMember
 
@@ -964,7 +960,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
             if utils.isBoxOffline(box):
                 continue
 
-            if any(map(lambda _attr: _attr in attrDic, ('spaceNo', 'score', 'mountState', 'equipSetLv'))):
+            if any(map(lambda _attr: _attr in attrDic, ('spaceNo', 'score', 'mountState'))):
                 if box.cell:
                     box.cell.onUpdateTeamMemberCell(playerGbId, attrDic)
 
@@ -983,9 +979,6 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
 
             if 'score' in attrDic:
                 box.client.onUpdateTeamMemberScore(playerGbId, memberInfo.score)
-
-            if 'equipSetLv' in attrDic:
-                box.client.onUpdateTeamMemberEquipSetlv(playerGbId, memberInfo.equipSetLv)
 
             if 'sex' in attrDic:
                 box.client.onUpdateTeamMembeSex(playerGbId, memberInfo.sex)
@@ -1462,14 +1455,12 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
         self.broadcastAllMembersClient('onAddTeamDungeonRewardRecord', (self.teamId, gbID, rewardList))
 
 class PlayerTeamMemberCacheVal(userType.UserSoleType):
-    def __init__(self, playerGbId, playerBox, bFollow, spaceNo=0,
-                 mountState=gameconst.TeamMountState.none, equipSetLv=0, score = 0):
+    def __init__(self, playerGbId, playerBox, bFollow, spaceNo=0, mountState=gameconst.TeamMountState.none, score = 0):
         self.playerGbId = playerGbId
         self.playerBox = playerBox
         self.bFollow = bFollow
         self.spaceNo = spaceNo
         self.mountState = mountState
-        self.equipSetLv = equipSetLv
         self.score = score
 
     def toSavedDict(self):
@@ -1479,7 +1470,6 @@ class PlayerTeamMemberCacheVal(userType.UserSoleType):
             'bFollow': self.bFollow,
             'spaceNo': self.spaceNo,
             'mountState': self.mountState,
-            'equipSetLv': self.equipSetLv,
             'score': self.score
         }
 
@@ -1696,9 +1686,8 @@ class PlayerTeamCacheVal(userType.UserSoleType):
             bFollow = teamMemberDict['bFollow']
             spaceNo = teamMemberDict['spaceNo']
             mountState = teamMemberDict['mountState']
-            equipSetLv = teamMemberDict['equipSetLv']
             score = teamMemberDict['score']
-            pVal = PlayerTeamMemberCacheVal(playerGbId, playerBox, bFollow, spaceNo, mountState, equipSetLv, score)
+            pVal = PlayerTeamMemberCacheVal(playerGbId, playerBox, bFollow, spaceNo, mountState, score)
             self.teamPlayerDic[playerGbId] = pVal
 
         self.followPlayerGbId = savedDataDict.get('followPlayerGbId')

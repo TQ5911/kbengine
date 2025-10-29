@@ -181,10 +181,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
             skillSwitch = SkillManager.SkillManager.getSkillDic(self).getSkillSwitch(skillId)
             self.client.onAddSkill(
-                skillId, 
-                skillLv, 
-                skill.getExtraLv(self), 
-                skill.tNextCast, 
+                skillId,
+                skillLv,
+                skill.getExtraLv(self),
+                skill.tNextCast,
                 skill.getCD(self),
                 skillSwitch)
 
@@ -228,20 +228,20 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def _checkAddEnemy(self, killer):
         if not killer:
             return False
-        
+
         if killer.pkModel == gameconst.PKModel.ATTACK:
             return True
 
         if not self.guildUUID:
             return True
-        
+
         if not killer.guildUUID:
             return True
 
         _relationType = utils.getGuildRelation(self.guildUUID, killer.guildUUID)
         if _relationType == gameconst.GuildRelationType.ENEMY:
             return False
-        
+
         return True
 
     def onDead(self, killer, srcType=0, srcId=0):
@@ -397,6 +397,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if state == gameconst.State.Idle and not self.hasState(gameconst.State.Moving):
             return
 
+        DEBUG_MSG('clientSetState', state)
         self.setState(state, reportErr=False)
         self.setTempMiscProp(gameconst.AvatarProps.AvatarActiveTimestamp, utils.getNow())
 
@@ -510,7 +511,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         if not self.hasState(gameconst.State.Death):
             return
-        
+
         self.onEffectEvent('onDeadLater', killerId, self.id, effectEventCtx.EE_DEFAULT_CONTEXT)
 
     def enterFightingState(self):
@@ -585,8 +586,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
             dmgHostEnt.showMsg(PKD.datas['killPlayer']['value'], [self.name, str(self.gbId)])
 
-        onDeadLaterTime = CONST.datas.get('OnDeadLaterTime', 0).get('value')
-        self.setTempMiscProp(gameconst.AvatarProps.deadLaterCallbackInfo, self._callback(onDeadLaterTime, '_onDeadLaterCallback', (killer.id,),  gametimer.TIMER_TAG_ON_DEAD_LATER_TIMER))
+            onDeadLaterTime = CONST.datas.get('OnDeadLaterTime', 0).get('value')
+            self.setTempMiscProp(gameconst.AvatarProps.deadLaterCallbackInfo, self._callback(onDeadLaterTime, '_onDeadLaterCallback', (killer.id,),  gametimer.TIMER_TAG_ON_DEAD_LATER_TIMER))
 
         super(ImpCombat, self).goDie(killer, srcType, srcId, forceDead, context)
 
@@ -643,7 +644,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         DEBUG_MSG("impCombat->addExpByKill ", baseExp, level, opUUID, src, detail, isNeedAddition)
         if formula.isCubeSpace(self.spaceNo):
             self.addCubeRoomRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
-        
+
         elif formula.isWonderLandSpace(self.spaceNo):
             self.addWonderLandRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
 
@@ -749,6 +750,11 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         # for lev in range(self.level + 1, level + 1):
         #     levelUpMsgID = EPCD.datas.get('levelUp_msgID', {}).get('value')
         #     self.base.onMessagePre(levelUpMsgID, [str(lev)])
+        level = min(level, utils.getPlayerMaxLevel())
+        if level <= self.level:
+            INFO_MSG('levelUp: level <= self.level', level)
+            return
+
         oldFullHp = self.fullHp
         oldFullMp = self.fullMp
         oldLevel = self.level
@@ -1008,7 +1014,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if flagType < 0:
             WARNING_MSG("updateCommonFlagCell flagType is error:", flagType)
             return
-        
+
         self._updateCommonFlagCell(flagType, flag)
 
     def _updateCommonFlagCell(self, flagType, flag):
@@ -1019,9 +1025,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def getCommonFlagCell(self, flagType):
         return utils.hasBit(self.commonFlagCell, flagType)
-    
+
     def doCalcTeamStatistic(self, target, context, valType, deltaVal):
-        
+
         if utils.isEnemy(self, target):
             # target不能是玩家，host也不能是玩家
             if target.IsAvatarMirror or target.IsSummon or target.IsCreation:
@@ -1055,7 +1061,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         self.statisticsHurt += dmgResult.hurtDmg
 
-    def calcHealStats(self, srcEnt, context, hpDelta):      
+    def calcHealStats(self, srcEnt, context, hpDelta):
         self.doCalcTeamStatistic(srcEnt, context, gameconst.TeamStatisticType.HEAL, hpDelta)
 
         if not gameconfig.enableStatistic():
@@ -1299,8 +1305,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if self.isDie():
             return
 
+        DEBUG_MSG('dropAndDeath')
         self.setState(gameconst.State.Fall)
-        self.killSelf()
+        self.killSelf(gameconst.SourceType.DropDeath)
 
     def onGetEnemyPosInfo(self, box):
         box.onGetEnemyPosInfoResult(self.gbId, True, (self.spaceNo,))
@@ -1316,14 +1323,12 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         ultimatePowerMax = CONST.datas['ultimatePowerMax'].get('value')
         # 技能那边调过来的，带着上下文数据
         if context and self.IsAvatar and hasattr(context, 'skillId'):
-            ret, args = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE)
+            ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE)
             if ret:
-                DEBUG_MSG("addUltraSkillPower ", context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE, args)
-                if len(args) != 1:
-                    ERROR_MSG("addUltraSkillPower, wrong args, ", context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE, args)
-                else:
-                    extraAddValue = args[0]
+                if len(datas) == 1:
+                    extraAddValue = datas[0]
                     addVal += extraAddValue
+                    DEBUG_MSG("in addUltraSkillPower, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE, datas)
         self.ultraSkillPower = min(ultimatePowerMax, self.ultraSkillPower + addVal)
 
     def isUltraSkillPowerMax(self):
@@ -1343,10 +1348,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             _newSkillVal = self.getSkill(_newSkillId, False)
             if not _newSkillVal:
                 _newSkillVal = self.addSkill(
-                    _newSkillId, 
-                    _skillVal.skillLv, 
+                    _newSkillId,
+                    _skillVal.skillLv,
                     _skillVal.tNextCast)
-                
+
                 if _newSkillVal:
                     _newSkillVal.onChangedFromSkill(_skillVal)
 
@@ -1362,7 +1367,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.base.setSummonSlotIdxAck(self.summonSlotIdx)
         for summonId in list(self.petList):
             summon = KBEngine.entities.get(summonId)
-            summon and summon.killSelf()
+            summon and summon.killSelf(gameconst.SourceType.Default)
         #INFO_MSG('cell setSummonSlotIdx get', self.getSummonId())
 
     def getSummonId(self):

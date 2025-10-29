@@ -2,9 +2,7 @@
 from KBEDebug import *
 import KBEngine
 
-import collect_details as  PDETAIL
 import prop_fightprop  as  PPROPERTY
-import collect_nodes   as  PSCORE
 from avatarCollectInfo import collectItem
 import gameconst
 import fightProp_define as FPDD

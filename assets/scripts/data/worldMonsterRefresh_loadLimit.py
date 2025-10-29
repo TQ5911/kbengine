@@ -69,6 +69,15 @@ datas = _tools.RODict({
     40024016: _tools.RODict({
         "mission": 0,
     }),
+    40024017: _tools.RODict({
+        "mission": 0,
+    }),
+    40024018: _tools.RODict({
+        "mission": 0,
+    }),
+    40024019: _tools.RODict({
+        "mission": 0,
+    }),
     40014001: _tools.RODict({
         "mission": 0,
     }),
@@ -472,6 +481,30 @@ datas = _tools.RODict({
         "mission": 0,
     }),
     40028007: _tools.RODict({
+        "mission": 0,
+    }),
+    40028012: _tools.RODict({
+        "mission": 0,
+    }),
+    40028013: _tools.RODict({
+        "mission": 0,
+    }),
+    40028014: _tools.RODict({
+        "mission": 0,
+    }),
+    40028015: _tools.RODict({
+        "mission": 0,
+    }),
+    40024020: _tools.RODict({
+        "mission": 0,
+    }),
+    40024021: _tools.RODict({
+        "mission": 0,
+    }),
+    40024022: _tools.RODict({
+        "mission": 0,
+    }),
+    40024023: _tools.RODict({
         "mission": 0,
     })
 })

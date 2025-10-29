@@ -107,6 +107,10 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         if not needDestroy:
             return
 
+        spaceMgr = self.spaceMgr
+        if spaceMgr:
+            spaceMgr.onCollectionBeCollect(utils.getGidFromGameEntityId(self.gameEntityId), self.creepBaseId)
+
         if formula.isLineSpace(self.spaceNo):
             lineType = formula.getMapId(self.spaceNo)
             gameengine.getLineStub(lineType).onCollectionBeCollectAndDestroyed(self.spaceNo, self.posIndex, self.gameEntityId)

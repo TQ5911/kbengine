@@ -5,13 +5,15 @@ def refreshCell():
     # --auto genterate mark--
     pass
 def refreshBase():
-    import actionContext
-    import gameconst
-    import iAchievement
-    def _checkAchieveDailyRefresh(self, *args):
-        DEBUG_MSG('ZTQ takeAchievementRewards:')
-        self.achievementInfo.triggerAchieveByType(self, gameconst.AchieveType.LOGIN_DAYS, actionContext.AchievementCtx())
-    iAchievement.IAchievement._checkAchieveDailyRefresh = _checkAchieveDailyRefresh
+    import iCollectible
+    def _checkInUnavailableClass(self, info, collectID):
+        unavailableClass = info.get('unavailableClass', [])
+        school = self.getAvatarSchool()
+        if school in unavailableClass:
+            WARNING_MSG('in _checkInUnavailableClass, school in unavailableClass:', collectID, school, unavailableClass)
+            return True
+        return False
+    iCollectible.ICollectible._checkInUnavailableClass = _checkInUnavailableClass
     # --auto genterate mark--
     pass
 def refreshInterface():

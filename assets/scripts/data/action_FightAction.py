@@ -28,15 +28,6 @@ import conflict_status_def as CCDD
 def attack(self, target, context, *args):
     # 技能倍率
     arg1 = args[0] if len(args) >= 1 else 1.0
-    if self.IsAvatar:
-        ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO)
-        if ret:
-            DEBUG_MSG("attack ", context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO, args)
-            if len(datas) != 1:
-                ERROR_MSG("attack, args error ", context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO, args)
-            else:
-                addValue = datas[0]
-                arg1 += addValue
     # 攻击力比例伤害
     arg2 = args[1] if len(args) >= 2 else 0.0
     # 附带额外伤害
@@ -202,6 +193,15 @@ def attackShare(self, target, context, *args):
 
     # 对象伤害倍率计算
     realDmgRatioEx = realDmgRatio(self, target,context)
+    avatar = self.getAvatar()
+    if avatar:
+        ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO)
+        if ret:
+            if len(datas) == 1:
+                from KBEDebug import DEBUG_MSG
+                DEBUG_MSG("in attackShare, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO, datas)
+                addValue = datas[0]
+                realDmgRatioEx += addValue
 
     # 善恶值对伤害影响
     moralEffectRatio = moralEffect(self, target)
@@ -210,13 +210,32 @@ def attackShare(self, target, context, *args):
     if dodgeDmgRatio == 0:
         realHurt = 0
     else:
-        realHurt =max((((realAtk - dmgAvoidance) * arg1 + arg2) * fatalDmgRatio * realDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef"))* moralEffectRatio, 0.1 * realAtk + 1)
+        addValue = 0
+        addRatio = 0
+        avatar = self.getAvatar()
+        if avatar:
+            ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE)
+            if ret:
+                if len(datas) == 1:
+                    addValue = datas[0]
+                    from KBEDebug import DEBUG_MSG
+                    DEBUG_MSG("in attackShare, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE, datas)
+
+            ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO)
+            if ret:
+                if len(datas) == 1:
+                    addRatio = datas[0]
+                    from KBEDebug import DEBUG_MSG
+                    DEBUG_MSG("in attackShare, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO, datas)
+
+        realHurt =max((((realAtk - dmgAvoidance) * arg1 + arg2 + addValue) *(1+addRatio) * fatalDmgRatio * realDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef"))* moralEffectRatio, 0.1 * realAtk + 1)
+    
     if target.IsMonster:
         if not hasattr(context, "ignoreMaxDamage"):
             maxDamage = creep_base.datas.get(target.monsterId, {}).get("MaxDamage", -1)
             if maxDamage > 0:
                 realHurt = min(realHurt, maxDamage)
-# 承伤统计
+    # 承伤统计
     hurtDmg = realHurt
 
     realHurt = realHurt
@@ -444,17 +463,17 @@ def isHit(self, target, context):
     if not target:
         return False
     # 基础命中90%
-
-    hitRatio = min(max(90 + (self.getProp("hit") - target.getProp("dodge") - min(max((target.level - self.level), 0), 10) * 3) / 100, minHitRate), maxHitRate)
-    if self.IsAvatar:
-        ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO)
+    addValue = 0
+    avatar = self.getAvatar()
+    if avatar:
+        ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO)
         if ret:
-            DEBUG_MSG("isHit ", context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO, args)
-            if len(datas) != 1:
-                ERROR_MSG("isHit, args error ", context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO, args)
-            else:
+            if len(datas) == 1:
                 addValue = datas[0]
-                hitRatio += addValue
+                from KBEDebug import DEBUG_MSG
+                DEBUG_MSG("in isHit, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO, datas)
+
+    hitRatio = min(max(90 + addValue + (self.getProp("hit") - target.getProp("dodge") - min(max((target.level - self.level), 0), 10) * 3) / 100, minHitRate), maxHitRate)
     if random.randint(1, 100) <= hitRatio * 100:
         return True
     else:
@@ -477,16 +496,17 @@ def isCrit(self, target, context, *args):
 
     minFatalRate = const_const.datas.get('minFatalRate', {}).get('value')
     maxFatalRate = const_const.datas.get('maxFatalRate', {}).get('value')
-    fatalRate = min(max(minFatalRate, (self.getProp("fatal") - target.getProp("antiFatal") - min(max((target.level - self.level),0), 10))/100), maxFatalRate)
-    if self.IsAvatar:
-        ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO)
+    addValue = 0
+    avatar = self.getAvatar()
+    if avatar:
+        ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO)
         if ret:
-            DEBUG_MSG("isCrit ", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO, args)
-            if len(datas) != 1:
-                ERROR_MSG("isCrit, args error ", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO, args)
-            else:
+            if len(datas) == 1:
                 addValue = datas[0]
-                fatalRate += addValue
+                from KBEDebug import DEBUG_MSG
+                DEBUG_MSG("in isCrit, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO, datas)
+
+    fatalRate = min(max(minFatalRate, (addValue + self.getProp("fatal") - target.getProp("antiFatal") - min(max((target.level - self.level),0), 10))/100), maxFatalRate)
     if random.randint(1, 100) <= fatalRate * 100 :
         return True
     else:
@@ -529,16 +549,17 @@ def fatalDmg(self, target, context):
         minFatalDmgRatio = const_const.datas.get('monsterMinFatalDmgRatio', {}).get('value')
         maxFatalDmgRatio = const_const.datas.get('monsterMaxFatalDmgRatio', {}).get('value')
     t_antiMortal = target.getProp("antiMortal") if target else 0
-    fatalDmgRatio = min(max(1.1, 1.5 + self.getProp("mortal") - t_antiMortal), 2)
-    if self.IsAvatar:
-        ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO)
+    addValue = 0
+    avatar = self.getAvatar()
+    if avatar:
+        ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO)
         if ret:
-            DEBUG_MSG("fatalDmg ", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO, datas)
-            if len(datas) != 1:
-                ERROR_MSG("fatalDmg, args error ", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO, datas)
-            else:
+            if len(datas) == 1:
                 addValue = datas[0]
-                fatalDmgRatio += addValue
+                from KBEDebug import DEBUG_MSG
+                DEBUG_MSG("in fatalDmg, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO, datas)
+
+    fatalDmgRatio = min(max(1.1, addValue + 1.5 + self.getProp("mortal") - t_antiMortal), 2)
     return fatalDmgRatio
 
 def armorAvoidance(self, target, classTag, ignoreRatio):
@@ -558,7 +579,6 @@ def armorAvoidance(self, target, classTag, ignoreRatio):
     dmgArmor = target.getProp('dmgArmor')
 
     dmgAvoidance = int(max(dmgAvoidance*(1 - max(ignoreArmor - dmgArmor, 0)), 0.3 * dmgAvoidance))
-
     return dmgAvoidance
 
 def realDmgRatio(self, target, context):
@@ -588,28 +608,6 @@ def realDmgRatio(self, target, context):
             DefDmgRatio = target.getProp("monsterDmgAnti")
 
     finalDmg = self.getProp("finalDmg")
-    
-    if self.IsAvatar:
-        totalAddDmg = 0
-        ret, args = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE)
-        if ret:
-            DEBUG_MSG("realDmgRatio 1 ", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE, args)
-            if len(args) != 1:
-                ERROR_MSG("realDmgRatio 1, args error ", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE, args)
-            else:
-                addValue = args[0]
-                totalAddDmg += addValue
-
-        ret, args = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO)
-        if ret:
-            DEBUG_MSG("realDmgRatio 2 ", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO, args)
-            if len(args) != 1:
-                ERROR_MSG("realDmgRatio 2, args error ", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO, args)
-            else:
-                addValue = args[0]
-                totalAddDmg += round((1+addValue)*finalDmg)
-    
-        finalDmg += totalAddDmg
 
     realDmgRatio = min(max(1 + AtkDmgRatio - DefDmgRatio + finalDmg - target.getProp("finalDmgAnti"),0.5),2)
 

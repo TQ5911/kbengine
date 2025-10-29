@@ -631,11 +631,6 @@
             <Arg>           SCORE           </Arg>
         </onUpdateTeamMemberScore>
 
-        <onUpdateTeamMemberEquipSetlv>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           UINT8           </Arg>
-        </onUpdateTeamMemberEquipSetlv>
-
         <onUpdateTeamMembeSex>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           SEX             </Arg>

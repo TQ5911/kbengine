@@ -953,11 +953,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             return False
         return bool(iInfo.status == gameconst.ImmuneDeathState.IMMUNE_DURING)
 
-    def killSelf(self):
+    def killSelf(self, sourceType):
         iInfo = self.getTempMiscProp(gameconst.AvatarProps.immuneDeath)
         if iInfo:
             iInfo.status = gameconst.ImmuneDeathState.IMMUNE_FINISHED
-        self.modifyHP(-self.hp, self.id, gameconst.SourceType.DropDeath, 0)
+        self.modifyHP(-self.hp, self.id, sourceType, 0)
         self._endBigWorldDuel(self)
 
     def goDie(self, killer, srcType, srcId, forceDead=False, context=None):
@@ -1323,7 +1323,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 self._onExitClientPick()
 
             elif state == gameconst.State.GeneralAttack:
-                self._breakGeneralSkill()
+                if removeReason != gameconst.RemoveStateReason.SKILL_DONE:
+                    self._breakGeneralSkill()
 
             elif state == gameconst.State.Shifting or state == gameconst.State.Dodging:
                 self.endMovement()
@@ -1434,8 +1435,12 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
             sVal, tid = usingSkills[sid]
             if sVal.hasTag(gameconst.SkillTag.GeneralSkill):
-                sVal.useSkillDone(self, 0, [], isSucc=False, doRemoveState=True)
-                # sVal.resetSkill(self, reason=gameconst.ResetSkillReason.GeneralSkillBreak)
+                if sVal.isInSkill:
+                    sVal.useSkillDone(self, 0, [], isSucc=False, doRemoveState=True)
+
+                _child = sVal.childSkill()
+                if _child and _child.isInSkill:
+                    _child.useSkillDone(self, 0, [], isSucc=False, doRemoveState=True)
 
     def _useSkillBySkillObj(self, skill, targetID, arr, isClient=False, compensateTime=0):
         skillId = skill.skillId
@@ -1450,7 +1455,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
             self._endCastingSkill(endReason)
 
-        ret = skill.checkUseSkill(self, targetID)
+        realSkill, replaceSkill = skill.getRealSkillVal(self)
+        ret = realSkill.checkUseSkill(self, targetID)
 
         if ret != gameconst.UseSkillCheck.CHEKC_OK:
             target = KBEngine.entities.get(targetID)
@@ -1465,7 +1471,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         # 多段技能check时按当前段check，但是replaceSkill是false，表示使用时还调用第一段的使用
         # 因为后面段是第一段的子技能，子技能只能通过父技能使用
-        realSkill, replaceSkill = skill.getRealSkillVal(self)
         if isClient and not realSkill.checkSkillArgs(arr):
             ERROR_MSG("doUseSkill: invalid skill args", realSkill.skillId, targetID, arr)
             if realSkill.isChangePositionSkill(realSkill.skillId):
@@ -1537,6 +1542,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if self.hasState(gameconst.State.Casting):
             return
 
+        if not self.checkConflictState(CCD.datas.cast):
+            INFO_MSG('skill %d cannot use: checkConflict: %d' % (skillObj.skillId, CCD.datas.cast))
+            return
+
         skillID = skillObj.skillId
         realSkillVal, replaceSkill = skillObj.getRealSkillVal(self)
         if replaceSkill:
@@ -1552,10 +1561,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 INFO_MSG("Spell::castingSkill(%i): cannot spell skillID=%i, targetID=%i, code=%i" % (
                     self.id, skillID, targetID, ret))
                 return
-
-        if not self.checkConflictState(CCD.datas.cast):
-            INFO_MSG('skill %d cannot use: checkConflict: 29100024' % (skillID))
-            return
 
         self.removeState(gameconst.State.Moving)
         self.setState(gameconst.State.Casting)
@@ -1746,7 +1751,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         actionFunc = skill.getAction(skill.skillId)
         skillArgs = context.skillArgs
         if context.actionStage > 0:
-            #多段技能重新随目标 
+            #多段技能重新随目标
             realSkillArgs = skillArgs
             positionSkillArgs = None
             if context.skillObj.isChangePositionSkill(skillId):
@@ -1912,11 +1917,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
     def calcBeHurtStats(self, target, context, dmgResult):
         if not dmgResult.hurtDmg:
             return
-        
+
         if self.IsSummon:
             host = self.getHost()
             host and host.IsAvatar and host.calcBeHurtStats(target, context, dmgResult)
-        
+
 
     def calcHealStats(self, target, context, hpDelta):
         if not hpDelta:
@@ -1938,7 +1943,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         return transferDmg
 
     def applyDmgActionResult(self, target, context, dmgResult):
-        self.combatDebugMsg('applyDmgActionResult: targetId:%s, context:%s, dmgResult:%s', target.id, context, dmgResult)
+        self.combatDebugMsg('applyDmgActionResult: sourceId:%s, targetId:%s, context:%s, dmgResult:%s', context.getDmgSourceId(), target.id, context, dmgResult)
         skillDamges = context.getCombatResult()
         if not skillDamges:
             ERROR_MSG('unexpected heal action context', context)
@@ -2026,7 +2031,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             if dmgResult.atkType == gameconst.SkillAttackType.ATTACK_NORMAL:
                 # 普通伤害
                 if realDmgVal:
-                    skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, realDmgVal, gameconst.HitType.Hit))
+                    if hasattr(context, 'isCombo'):
+                        skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, realDmgVal, gameconst.HitType.ComboHit))
+                    else:
+                        skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, realDmgVal, gameconst.HitType.Hit))
 
             elif dmgResult.atkType == gameconst.SkillAttackType.ATTACK_DODGE:
                 # 被部分闪避
@@ -2038,7 +2046,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 # 暴击伤害
                 self.onEffectEvent('onFatal', self.id, target.id, effectEventCtx.EE_DEFAULT_CONTEXT)
                 if realDmgVal:
-                    skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, realDmgVal, gameconst.HitType.Crit))
+                    if hasattr(context, 'isCombo'):
+                        skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, realDmgVal, gameconst.HitType.ComboCrit))
+                    else:
+                        skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, realDmgVal, gameconst.HitType.Crit))
 
             else:
                 ERROR_MSG('unknow attack type', target.id, context, dmgResult)
@@ -2100,8 +2111,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         ctx = context or context.parentContext
         dmgDesc = gameconst.SKILL_DMG_DESC[dmgResult.dmgType]
 
-        self.combatDebugMsg('sendDmgMsg: targetId:%s, context:%s, dmgResult:%s, absorbDamageDetail:%s, realDmgVal:%s',
-                            target.id, ctx, dmgResult, absorbDamageDetail, realDmgVal)
+        self.combatDebugMsg('sendDmgMsg: sourceId:%s, targetId:%s, context:%s, dmgResult:%s, absorbDamageDetail:%s, realDmgVal:%s',
+                            context.getDmgSourceId(), target.id, ctx, dmgResult, absorbDamageDetail, realDmgVal)
 
         if ctx.actionType == actionContext.ACTION_USE_SKILL:
             skillName = context.skillObj.getSkillName(context.skillObj.skillId)
@@ -2344,7 +2355,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                        'adjAntiMortal',
                        ]
         # 没有被定义和使用的属性,先移出来,不然报错
-        # 'mulHit', 'mulDodge', 'baseDodgeDmg', 'adjDodgeDmg', 
+        # 'mulHit', 'mulDodge', 'baseDodgeDmg', 'adjDodgeDmg',
         # 'mulDodgeDmg', 'mulAntiFatal', 'mulMortal', 'mulAntiMortal'
 
         for propName in inheritList:
@@ -3692,8 +3703,21 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
     def breakSkillByState(self):
         for skillId in list(self.getSkillDic()):
             skillVal = self.getSkill(skillId)
-            if skillVal and skillVal.isInSkill:
-                skillVal.resetSkill(self)
+            if not skillVal:
+                continue
 
+            if skillVal.isInSkill:
+                skillVal.useSkillDone(self, 0, [], isSucc=False, doRemoveState=True)
 
+            _child = skillVal.childSkill()
+            if _child and _child.isInSkill:
+                _child.useSkillDone(self, 0, [], isSucc=False, doRemoveState=True)
 
+    def getAvatar(self):
+        if self.IsAvatar:
+            return self
+        if self.IsCreation or self.IsSummon:
+            entity = self.getHost()
+            if entity.IsAvatar:
+                return entity
+        return None

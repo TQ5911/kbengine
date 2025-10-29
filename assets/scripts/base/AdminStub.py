@@ -168,7 +168,7 @@ class AdminStubService(GameServer):
         request = ServerInfoMessage()
         request.serverId = gameconfig.serverId()
         request.compId = KBEngine.getComponentGroupOrder()
-        request.serverName = gameconfig.serverName()
+        request.serverName = gameglobal.curServerName
 
         self.serviceStub.registerServer(None, request, None)
 

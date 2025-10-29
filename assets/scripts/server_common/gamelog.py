@@ -18,7 +18,6 @@ import formula
 import utils
 import time
 
-import serverList_serverList as SLSLD
 import inspect
 import gamewlog
 

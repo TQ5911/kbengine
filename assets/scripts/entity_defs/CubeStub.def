@@ -71,5 +71,11 @@
              <Arg>       PLAYER_GBID         </Arg>
              <Arg>       SPACE_NO            </Arg>
         </gmEnterTargetRoom>
+
+        <enterRandomRoom>
+             <Arg>       ENTITYCALL             </Arg>
+             <Arg>       PLAYER_GBID            </Arg>
+             <Arg>       PYTHON                 </Arg>
+        </enterRandomRoom>
     </BaseMethods>
 </root>

@@ -11,6 +11,7 @@ import gamedecorator
 import utils
 import gametimer
 import impDungeonCommon
+import math
 
 import message_Message_def as MMD
 import conflict_conflict_def as CCD
@@ -300,3 +301,16 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
     def canNewbieLeaveCurDungeon(self):
         return True
+
+    #副本流程控制节点传送到其他场景（目前支持传到大世界or大世界副本）
+    def transferToTheDesignatedMap(self, dstNo, dstPos, dstDir):
+        if formula.isWorldLineType(dstNo):
+            self.doLeaveSingleDungeonWithDstPos(dstNo, dstPos, (0, 0, dstDir * math.pi / 180))
+            return
+        
+        dungeonSpaceType = DDID.datas[dstNo]['type']
+        dungeonEnterType = DDID.datas[dstNo]['enterType']
+        
+        if gameconst.DungeonType.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
+            src = dungeonSrc.DungeonFromFlowController(self.base, self.gbId)
+            self._enterSingleDungeon(dstNo, src, {'position': (dstPos.x, dstPos.y, dstPos.z)})

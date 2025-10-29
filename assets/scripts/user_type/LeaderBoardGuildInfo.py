@@ -6,19 +6,21 @@ import userType
 
 class LeaderBoardGuildVal(userType.UserSoleType):
     '''LEADER_BOARD_GUILD_DATA_INFO'''
-    def __init__(self, guildUUID=0, guildName="", leaderName="", guildLevel=0, guildScore=0):
+    def __init__(self, guildUUID=0, guildName="", leaderName="", guildLevel=0, guildScore=0, ts=0):
         self.guildUUID = guildUUID
         self.guildName = guildName
         self.leaderName = leaderName
         self.guildLevel = guildLevel
         self.guildScore = guildScore
+        self.ts = ts
 
     def __eq__(self, other):
         return self.guildUUID == other.guildUUID\
             and self.guildName == other.guildName\
             and self.leaderName == other.leaderName\
             and self.guildLevel == other.guildLevel\
-            and self.guildScore == other.guildScore
+            and self.guildScore == other.guildScore\
+            and self.ts == other.ts
 
     @property
     def key(self):
@@ -30,7 +32,7 @@ class LeaderBoardGuildVal(userType.UserSoleType):
 
     @staticmethod
     def sortKeyFunc():
-        return lambda x: (-x.guildLevel, -x.guildScore)
+        return lambda x: (-x.guildLevel, -x.guildScore, x.ts)
 
     @staticmethod
     def funcName():
@@ -47,7 +49,8 @@ class LeaderBoardGuildVal(userType.UserSoleType):
             "guildName": self.guildName,
             "leaderName": self.leaderName,
             "guildLevel": self.guildLevel,
-            "guildScore": self.guildScore
+            "guildScore": self.guildScore,
+            "ts": self.ts
         }
 
 

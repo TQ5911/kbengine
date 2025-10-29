@@ -157,7 +157,7 @@ datas = _tools.RODict({
     }),
     "recycleBtnText": _tools.RODict({
         "ID": "recycleBtnText",
-        "value": "分解",
+        "value": "出售",
     }),
     "discardBtnText": _tools.RODict({
         "ID": "discardBtnText",

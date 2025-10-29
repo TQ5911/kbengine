@@ -133,7 +133,7 @@ class IEntityLoader(object):
             gameengine.getLineStub(lineType).onLoadEntitiesEnd(self.spaceNo)
 
         elif formula.isCubeSpace(self.spaceNo):
-            gameengine.getGlobalBase('CubeStub').onLoadEntitiesEnd(self.spaceNo)
+            gameengine.getCubeStubBySpaceNo(self.spaceNo).onLoadEntitiesEnd(self.spaceNo)
 
         elif formula.isSiegeWarSpace(self.spaceNo):
             gameengine.getGlobalBase('SiegeWarSpaceStub').onLoadEntitiesEnd(self.spaceNo)

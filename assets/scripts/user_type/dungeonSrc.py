@@ -102,3 +102,19 @@ class EnterGuildFromTeamCaptainSrc(BasicDungeonSrc):
         self.srcId = gameconst.DungeonSrcEnum.FROM_FOLLOW_CAPTAIN_ENTER_GUILD
 
 
+class DungeonFromFlowController(BasicDungeonSrc):
+    """副本流程控制节点"""
+
+    def __init__(self, playerBox, playerGBID):
+        super(DungeonFromFlowController, self).__init__(
+            srcId=gameconst.DungeonSrcEnum.FROM_FLOW_CONTROLLER,
+            playerBox=playerBox,
+            playerGBID=playerGBID)
+
+    @property
+    def playerBox(self):
+        return self._extra['playerBox']
+
+    @property
+    def playerGBID(self):
+        return self._extra['playerGBID']

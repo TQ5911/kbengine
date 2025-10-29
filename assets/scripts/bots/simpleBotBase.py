@@ -71,7 +71,10 @@ class SimpleBotBase(object):
 
     def onBecomePlayer(self):
         self.tagPrint('登录成功', self.botName, self.runTimes)
+        
 
+
+        
     def _check_bot_target(self, message):
         """
         检查消息是否指定了机器人执行
@@ -118,6 +121,7 @@ class SimpleBotBase(object):
             return (False, None)
 
     def onRecvAvatarChannelMsg(self, channelID, avatarInfo, msgId):
+        
         """
         处理接收到的聊天消息，包括GM指令和系统广播
         
@@ -135,7 +139,6 @@ class SimpleBotBase(object):
         should_execute, actual_command = self._check_bot_target(msgId)
         if not should_execute:
             return
-        
         # 判断执行模式
         is_targeted = msgId.startswith('@')
         mode_tag = '[指定执行]' if is_targeted else '[广播执行]'

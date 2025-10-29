@@ -77,7 +77,7 @@ class BotBase(object):
             return self.multiDict.pop(funcName)
 
         return None
-    
+
     @property
     def botClient(self):
         return self.clientObj

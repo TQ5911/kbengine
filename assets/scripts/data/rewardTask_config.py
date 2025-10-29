@@ -95,6 +95,10 @@ datas = _tools.RODict({
         "ID": "rewardTaskAutomaticConfirm",
         "value": 54001932,
     }),
+    "rewardTaskAutomaticCancel": _tools.RODict({
+        "ID": "rewardTaskAutomaticCancel",
+        "value": 54001971,
+    }),
     "rewardTaskLabel": _tools.RODict({
         "ID": "rewardTaskLabel",
         "value": _tools.ROList(['', 'Assets/Res/ui/texture/offerreward/offerreward_day_label_img.png', 'Assets/Res/ui/texture/offerreward/offerreward_week_label_img.png']),

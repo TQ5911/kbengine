@@ -26,6 +26,7 @@ class Affix(userType.UserSoleType):
         self.afxId = val[0]
         self.lv = val[1]
         self.affixVal = val[2]
+        return val[3:]
 
     def toAfxClientDic(self):
         return {
@@ -55,6 +56,7 @@ class GlyphAffix(Affix):
         self.effectTypes = []
         self.effectSkillIds = []
         self.effectQualitys = []
+        self.applyEffects()
     
     def applyEffects(self):
         if self.afxId <= 0:
@@ -82,10 +84,32 @@ class GlyphAffix(Affix):
     def _lateReload(self):
         super(GlyphAffix, self)._lateReload()
 
+    def toAffixValList(self):
+        vals = super().toAffixValList()
+        vals.append(self.effectValues)
+        vals.append(self.effectTypes)
+        vals.append(self.effectSkillIds)
+        vals.append(self.effectQualitys)
+        return vals
+
     def fromAffixValList(self, val):
-        super().fromAffixValList(val)
-        self.applyEffects()
+        val = super().fromAffixValList(val)
+        if len(val) > 0:
+            self.effectValues = val[0]
+            self.effectTypes = val[1]
+            self.effectSkillIds = val[2]
+            self.effectQualitys = val[3]
     
+    def toAfxClientDic(self):
+        return {
+            'affixId': self.afxId,
+            'affixVal': self.affixVal,
+            'affixEffect': self.getAffixEffect(),
+        }
+    
+    def getAffixEffect(self):
+        return ','.join(map(str, self.effectValues))
+
     def iterGlyphEffect(self):
         for i in range(len(self.effectSkillIds)):
             yield self.effectTypes[i], self.effectSkillIds[i], self.effectQualitys[i], self.effectValues[i]

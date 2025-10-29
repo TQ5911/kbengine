@@ -46,6 +46,11 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         creationType = creation_creation.datas[self.creationId].get('type', '')
         self.speed = self.flySpeed
         self.cancleLockTarget = False
+        
+        self.areaLoop = self.getAreaLoop()
+        self.loopIntervalTime = self.getLoopIntervalTime()
+        self.creationLiveTime = self.getCreationLiveTime()
+
         self.initPosition()
 
         if creationType == 'Linar':
@@ -138,68 +143,57 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
     def areaAction(self):
         return creation_creation.datas[self.creationId].get('areaAction', '')
 
-    @property
-    def loopIntervalTime(self):
+    def getLoopIntervalTime(self):
         defaultValue = creation_creation.datas[self.creationId].get('loopIntervalTime') or 0
         skillId = self.tmpProps.get('skillId', 0)
         if skillId > 0:
             hostEntity = self.getHost()
             if hostEntity and hostEntity.IsAvatar:
-                ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
+                ret, datas = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
                 if ret:
-                    DEBUG_MSG('loopIntervalTime, 1', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
-                else:
-                    ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
-                    if ret:
-                        DEBUG_MSG('loopIntervalTime, 2', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
-                        if self.creationLiveTime > 0:
-                            defaultValue = self.areaLoop/self.creationLiveTime
+                    DEBUG_MSG("in loopIntervalTime, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, datas)
+                    creationLiveTime = self.getCreationLiveTime()
+                    if creationLiveTime > 0:
+                        defaultValue = self.getAreaLoop()/creationLiveTime
         return defaultValue
-
-    @property
-    def creationLiveTime(self):
+    
+    def getCreationLiveTime(self):
         defaultTime = float(creation_creation.datas[self.creationId].get('time') or 0)
         skillId = self.tmpProps.get('skillId', 0)
         if skillId > 0:
             hostEntity = self.getHost()
             if hostEntity and hostEntity.IsAvatar:
-                ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
+                ret, datas = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
                 if ret:
-                    DEBUG_MSG('creationLiveTime, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
-                    if len(args) == 1:
-                        addValue = args[0]
-                        defaultTime += addValue
-                    else:
-                        ERROR_MSG('creationLiveTime, wrong args, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, args)
+                    if len(datas) == 1:
+                        addValue = datas[0]
+                        defaultTime += (addValue * self.getLoopIntervalTime())
+                        DEBUG_MSG("in creationLiveTime, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, datas)
+
         return defaultTime
-
-    @property
-    def hurtNumber(self):
-        return int(creation_creation.datas[self.creationId].get('hurtNumber') or 0)
-
-    @property
-    def areaLoop(self):
+    
+    def getAreaLoop(self):
         defaultValue = int(creation_creation.datas[self.creationId].get('areaLoop') or 0)
         skillId = self.tmpProps.get('skillId', 0)
         if skillId > 0:
             hostEntity = self.getHost()
             if hostEntity and hostEntity.IsAvatar:
-                ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
+                ret, datas = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
                 if ret:
-                    DEBUG_MSG('areaLoop 1, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
-                    if len(args) == 1:
-                        defaultValue += args[0]
-                    else:
-                        ERROR_MSG('areaLoop, wrong args 1, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, args)
+                    if len(datas) == 1:
+                        defaultValue += datas[0]
+                        DEBUG_MSG("in areaLoop, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, datas)
                 else:
-                    ret, args = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
+                    ret, datas = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
                     if ret:
-                        DEBUG_MSG('areaLoop 2, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, ret, args)
-                        if len(args) == 1:
-                            defaultValue += args[0]
-                        else:
-                            ERROR_MSG('areaLoop, wrong args 2, ', skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, args)
+                        if len(datas) == 1:
+                            defaultValue += datas[0]
+                            DEBUG_MSG("in areaLoop, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, datas)
         return defaultValue
+    
+    @property
+    def hurtNumber(self):
+        return int(creation_creation.datas[self.creationId].get('hurtNumber') or 0)
 
     @property
     def enterAction(self):

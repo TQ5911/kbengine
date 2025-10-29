@@ -48,7 +48,7 @@ class TaskInfo(userType.UserSoleType):
 
         # 每周悬赏任务完成次数
         self.hookRewardTaskFnsNumWeekly = 0
-        # 同时进行的悬赏任务个数 
+        # 同时进行的悬赏任务个数
         self.hookRewardTaskNum = 0
         # 悬赏任务列表
         self.hookRewardTaskIdListWeekly = []
@@ -330,7 +330,7 @@ class TaskInfo(userType.UserSoleType):
             DEBUG_MSG('     in doSendUpdateTasksToClient:', [(t.taskId, t.stat) for t in self.sendUpdateTasks.values()])
             owner.client.onTaskUpdate([task.toTaskClientDict() for task in self.sendUpdateTasks.values()])
             self.sendUpdateTasks = {}
-            
+
     def sendHookRewardTaskList(self, owner):
         DEBUG_MSG('     in sendHookRewardTaskList daily list: ', self.hookRewardTaskIdListDaily, ' weekly list: ', self.hookRewardTaskIdListWeekly)
         DEBUG_MSG('     in sendHookRewardTaskList self.hookRewardTaskFnsNumWeekly: ', self.hookRewardTaskFnsNumWeekly, 'self.hookRewardTaskNum', self.hookRewardTaskNum)
@@ -659,7 +659,7 @@ class TaskInfo(userType.UserSoleType):
                 if task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_DAYLY \
                     or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_WEEKLY \
                     or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_ONCE:
-                    
+
                     self.hookRewardTaskNum += 1
             # 修改变量
             if addTaskData.get('ClaimCanVarMod'):
@@ -682,7 +682,7 @@ class TaskInfo(userType.UserSoleType):
             target and owner.cell.onAreaTargetTaskAdd(addTaskId, target)
         self.doSendUpdateTasksToClient(owner)
         return
-    
+
     def _claimEnterDungeon(self, owner, addTaskData, task):
         if dataUtils.taskFieldVal(addTaskData, 'ClaimCanTransIns'):
             claimTransData = dataUtils.taskFieldVal(addTaskData, 'ClaimTransInstance')
@@ -800,7 +800,7 @@ class TaskInfo(userType.UserSoleType):
             if self.hookRewardTaskNum > RRTIC.datas.get('currentlyMaxNum', {}).get('value', 0) :
                 WARNING_MSG('       in canClaimTask, hookRewardTaskNum exceed at', self.hookRewardTaskNum)
                 return gameclass.TaskCondResult(False)
-            
+
         # 开启变量检查
         fmlId = dataUtils.taskFieldVal(taskData, 'OpenCondVarCheckFormID')
         if fmlId and not dataUtils.checkVariableCond(owner, fmlId, dataUtils.taskFieldVal(taskData, 'OpenCondVarCheckParam')):
@@ -916,7 +916,7 @@ class TaskInfo(userType.UserSoleType):
             addTaskIds.extend(addChildTaskIds)
             task.lastChildTaskId = childTaskId
         return addTaskIds
-    
+
     def calculateRandomTaskWithWeight(self, task, taskData):
         DEBUG_MSG("calculateRandomTaskWithWeight 0", task, taskData, self.randomTaskWeights)
         guaranteeCount = 0
@@ -934,7 +934,7 @@ class TaskInfo(userType.UserSoleType):
         else:
             task.guaranteeCount += 1
             guaranteeCount = task.guaranteeCount
-        
+
         DEBUG_MSG("calculateRandomTaskWithWeight 1", task, self.randomTaskWeights)
         # 到达指定次数，出保底
         if guaranteeCount >= dataUtils.taskFieldVal(taskData, 'GuaranteeCount'):
@@ -943,7 +943,7 @@ class TaskInfo(userType.UserSoleType):
             taskId = guaranteeTaskId
             if type(guaranteeTaskId) is list:
                 taskId = random.choice(guaranteeTaskId)
-                
+
             if taskType == gameconst.TaskType.TASK_TYPE_SPIRIT:
                 self.randomTaskWeights.pop(task.taskId, 0)
             else:
@@ -1119,7 +1119,7 @@ class TaskInfo(userType.UserSoleType):
             if self.checkSubmitBaseCond(owner, task.taskId):
                 # 任务自动提交
                 owner.startSubmitTask(task.taskId)
-        
+
         return
 
     def relateSubmitTaskList(self, taskId):
@@ -1235,10 +1235,10 @@ class TaskInfo(userType.UserSoleType):
         if task.taskType == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
             if task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_DAYLY \
                 or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_WEEKLY:
-                
+
                 self.hookRewardTaskFnsNumWeekly += 1
                 owner.client.onHookRewardTaskWeeklyLimitRefresh(self.hookRewardTaskFnsNumWeekly)
-            
+
             if task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_DAYLY \
                 or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_WEEKLY \
                 or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_ONCE:
@@ -1491,7 +1491,7 @@ class TaskInfo(userType.UserSoleType):
                     # 发放新的子任务
                     idx += 1
                     taskId = parentTask.childTaskIds[idx]
-                    
+
             if taskId > 0:
                 # 子任务无条件领取成功
                 self.doClaimTask(owner, taskId, actionContext.ClaimTaskCtx())
@@ -1620,16 +1620,16 @@ class TaskInfo(userType.UserSoleType):
             uptaskList.append(childTask)
             quitTaskIds.add(childTaskId)
 
-        
+
         # 如果是悬赏任务，则更新同时接取的限制状态
         if task.taskType == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
             if task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_DAYLY \
                 or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_WEEKLY \
                 or task.cycleType == gameconst.TaskCycleType.TASK_CYCLE_ONCE:
-                
+
                 self.hookRewardTaskNum = max(self.hookRewardTaskNum-1, 0)
                 DEBUG_MSG('do quit task, self.hookRewardTaskNum is ', self.hookRewardTaskNum)
-        
+
         self.addSendUpdatedTaskList(uptaskList)
         self._afterTaskQuit(owner, quitTaskIds, reason)
 
@@ -1783,17 +1783,17 @@ class TaskInfo(userType.UserSoleType):
         if not dataUtils.taskFieldVal(taskInfo, 'ClaimCanTransIns'):
             ERROR_MSG('taskEnterSpace illegal op 1', taskInfo)
             return False
-        
+
         claimTransData = dataUtils.taskFieldVal(taskInfo, 'ClaimTransInstance')
         if not claimTransData:
             ERROR_MSG('taskEnterSpace wrong cfg', taskInfo)
             return False
-        
+
         needConfirm = claimTransData.get('NeedConfirm')
         # 不需要二次确认弹窗，接取任务主动进入地图
         if not needConfirm:
             ERROR_MSG('taskEnterSpace illegal op 2', taskInfo)
             return False
-        
+
         self._taskEnterSpace(owner, task.taskId, claimTransData)
         return True

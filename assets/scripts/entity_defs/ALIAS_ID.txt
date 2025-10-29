@@ -151,6 +151,7 @@ Avatar property mulFullMp 120
 Avatar property mulHp 122
 Avatar property mulHpRecovery 219
 Avatar property mulMpRecovery 195
+Avatar property mulSpeed 136
 Avatar property name 42
 Avatar property newbieGuideIds 104
 Avatar property nextRecoverGuildAssistTime 112
@@ -344,6 +345,7 @@ Creation property mulCD 73
 Creation property mulFullHp 74
 Creation property mulFullMp 75
 Creation property mulHp 76
+Creation property mulSpeed 35
 Creation property name 77
 Creation property realDmg 104
 Creation property realDmgDef 105
@@ -493,6 +495,7 @@ Monster property mulCD 104
 Monster property mulFullHp 114
 Monster property mulFullMp 115
 Monster property mulHp 117
+Monster property mulSpeed 43
 Monster property name 12
 Monster property realDmg 68
 Monster property realDmgDef 70
@@ -634,6 +637,7 @@ Npc property mulCD 101
 Npc property mulFullHp 111
 Npc property mulFullMp 112
 Npc property mulHp 114
+Npc property mulSpeed 44
 Npc property name 7
 Npc property npcId 8
 Npc property realDmg 71
@@ -783,6 +787,7 @@ Summon property mulCD 76
 Summon property mulFullHp 77
 Summon property mulFullMp 78
 Summon property mulHp 79
+Summon property mulSpeed 38
 Summon property name 80
 Summon property realDmg 107
 Summon property realDmgDef 108

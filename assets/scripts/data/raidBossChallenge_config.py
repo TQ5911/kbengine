@@ -78,5 +78,9 @@ datas = _tools.RODict({
     "useShanglingdingMsg": _tools.RODict({
         "ID": "useShanglingdingMsg",
         "value": "54001264",
+    }),
+    "groupMembersNum": _tools.RODict({
+        "ID": "groupMembersNum",
+        "value": 15,
     })
 })

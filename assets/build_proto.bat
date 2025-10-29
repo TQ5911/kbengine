@@ -4,7 +4,7 @@ set curpath=%~dp0
 set PROTO_TOOL_PATH=%curpath%/external/proto
 set PROTO_SRC_PATH=%curpath%/scripts/common/proto/
 set PROTO_OUT_PATH=%curpath%/scripts/common/proto/
-set CSHARP_OUT_PATH=%curpath%/../../../../Client/Assets/Scripts/Proto
+set CSHARP_OUT_PATH=%curpath%/../../../../Client/Assets/CSHotUpdate/Scripts/Proto
 
 cd %PROTO_TOOL_PATH%/protoc-3.3.0-csharp/
 protoc -I %PROTO_SRC_PATH% --csharp_out=%CSHARP_OUT_PATH% %PROTO_SRC_PATH%/centralLogin.proto

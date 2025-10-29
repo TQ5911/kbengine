@@ -77,7 +77,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if self.isNewAccount:
             self.isNewAccount = False
         gameglobal.localAccountCache[self.__ACCOUNT_NAME__] = self
-        
+
         if self.isCrossServer:
             crossServerToken = clientData.get('crossServerToken')
             gameengine.getGlobalBase('CrossServerStub').checkCrossServerToken(self.accountName, crossServerToken, self,
@@ -137,15 +137,15 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             _level = int(_level)
             _birthInDB = int(_birthInDB)
             self.characters.addCharacter(
-                parentID=self.databaseID, 
-                selfDbId=0, 
-                authDbId=0, 
-                gbId=_gbId, 
-                dbId=_dbId, 
-                school=_school, 
-                name=_name, 
-                sex=_sex, 
-                level=_level, 
+                parentID=self.databaseID,
+                selfDbId=0,
+                authDbId=0,
+                gbId=_gbId,
+                dbId=_dbId,
+                school=_school,
+                name=_name,
+                sex=_sex,
+                level=_level,
                 birthInDB=_birthInDB,
             )
             gbIdList.append(_gbId)
@@ -172,7 +172,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
     def avatar(self):
         a = KBEngine.entities.get(self.avatarID, None)
         return a
-    
+
     @property
     def isCrossServer(self):
         return self.accountType==centralLogin.ACCOUNT_CROSS_SERVER
@@ -298,13 +298,13 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.avatarDatabaseID = avatar.databaseID
             self.characters.addCharacter(
                 parentID=self.databaseID,
-                gbId=avatar.gbID, 
-                dbId=avatar.databaseID, 
-                school=props["school"], 
+                gbId=avatar.gbID,
+                dbId=avatar.databaseID,
+                school=props["school"],
                 name=props["name"],
-                sex=props['sex'], 
+                sex=props['sex'],
                 level=1,
-                birthInDB=props['birthInDB'], 
+                birthInDB=props['birthInDB'],
                 charAppearance=props['appearance'])
 
             self._onAvatarBaseCreated(avatar, gameconst.ClientCallChannel.MAIN_CHANNEL)
@@ -330,14 +330,14 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
     # avatar的base创建成功：新建角色或从数据加载
     def _onAvatarBaseCreated(self, avatar, chn):
         if chn == gameconst.ClientCallChannel.MAIN_CHANNEL:
-            avatar.setAccountInfo(self.id, self.isAuthHost(avatar.gbID))
+            avatar.setAccountInfo(self.id, self.getAccountHostType(avatar.gbID))
 
             if not self.isAuthHost(avatar.gbID):
                 _delay = self._getExpireDelay(avatar.gbID)
-                avatar._callback(_delay, 'backSelectCharacterBase', (), gametimer.TIMER_TAG_OFFLINE_BY_AUTH_EXPIRE)
+                avatar._datetimeCallback(_delay, 'backSelectCharacterBase', (True,), gametimer.TIMER_TAG_OFFLINE_BY_AUTH_EXPIRE)
 
         elif chn == gameconst.ClientCallChannel.SUB_CHANNEL:
-            avatar.setSubAccount(self.id, self.isAuthHost(avatar.gbID))
+            avatar.setSubAccount(self.id, self.getAccountHostType(avatar.gbID))
 
         avatar.updateRoleCache({
         })
@@ -427,7 +427,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         _datas = {}
         for k, v in character_roleData_r_school.datas.items():
             _datas[k] = v[0]['sex']
-        
+
         _sex = _datas.get(school, None)
         if _sex:
             _school = school
@@ -867,6 +867,17 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         self.destroy(deleteFromDB=False)
 
+    def onAvatarSubClientDisconnect(self):
+        INFO_MSG('onAvatarSubClientDisconnect', self.client)
+        self.accountStatus = AccountStatus.normal
+        self.avatarID = 0
+
+    def onAvatarSubClientBackLogin(self):
+        INFO_MSG('onAvatarSubClientBackLogin', self.client)
+        self.accountStatus = AccountStatus.normal
+        self.avatarID = 0
+        self.destroyAccount()
+
     def onAvatarDestroy(self):
         INFO_MSG('onAvatarDestroy', self.client)
         self.accountStatus = AccountStatus.normal
@@ -913,9 +924,14 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         INFO_MSG('create avatar succ', avatar.id, avatar.gbID)
         # 如果wasActive说明当前已经存在avatar，这时候就设置为
-        otherChn = avatar.getAvaliableClientChn()
+        otherChn = avatar.getAvaliableClientChn(self.id)
         if otherChn is None:
             ERROR_MSG('_onAvatarLoaded but not has valid client')
+            return
+
+        if otherChn == gameconst.ClientCallChannel.SUB_CHANNEL and not self.isAuthHost(avatar.gbID):
+            ERROR_MSG('_onAvatarLoaded not host could not observe')
+            self.accountStatus = AccountStatus.normal
             return
 
         self._onAvatarBaseCreated(avatar, otherChn)
@@ -1035,7 +1051,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             return
 
         INFO_MSG('create cross server avatar succ', avatar.id, avatar.gbID)
-        avatar.setAccountInfo(self.id, True)
+        avatar.setAccountInfo(self.id, gameconst.AccountHostType.HOST)
         self.accountStatus = AccountStatus.avatarLoaded
         self.avatarID = avatar.id
         self.giveClientTo(
@@ -1154,7 +1170,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             'gbId': gbId
         }
         gamesql.getAvatarTotalScoreAndSpaceNo(
-            gbId, 
+            gbId,
             functools.partial(self._onGetScoreAndSpaceNo, _ctx))
 
     def _onGetScoreAndSpaceNo(self, ctx, ret, num, insertId, err):
@@ -1166,7 +1182,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             ctx['totalScore'] = int(_totalScore)
             ctx['spaceNo'] = int(_spaceNo)
             gamesql.loadAvatarGuildInfo(
-                ctx['gbId'], 
+                ctx['gbId'],
                 functools.partial(self._onGetAvatarGuildUUID, ctx))
             return
 
@@ -1236,12 +1252,12 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 parentID=self.databaseID,
                 selfDbId=_id,
                 authDbId=_authDbId,
-                gbId=_gbId, 
-                dbId=_dbId, 
-                school=_school, 
-                name=_name, 
-                sex=_sex, 
-                level=_level, 
+                gbId=_gbId,
+                dbId=_dbId,
+                school=_school,
+                name=_name,
+                sex=_sex,
+                level=_level,
                 authExpire=_authExpire,
             )
 
@@ -1266,15 +1282,15 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             _authExpire = int(_authExpire)
 
             self.characters.addCharacter(
-                parentID=_parentID, 
-                selfDbId=_id, 
-                authDbId=_authDbId, 
-                gbId=_gbId, 
-                dbId=_dbId, 
-                school=_school, 
-                name=_name, 
-                sex=_sex, 
-                level=_level, 
+                parentID=_parentID,
+                selfDbId=_id,
+                authDbId=_authDbId,
+                gbId=_gbId,
+                dbId=_dbId,
+                school=_school,
+                name=_name,
+                sex=_sex,
+                level=_level,
                 authExpire=_authExpire,
             )
 
@@ -1283,7 +1299,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             return
 
         self._beginLoadCharacterAppearance()
- 
+
     def _writeCharacters(self, ignoreDirty):
         """
         将角色数据写入数据库
@@ -1411,6 +1427,17 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         return _cVal.parentID == self.databaseID
 
+    def getAccountHostType(self, gbId):
+        _cVal = self.characters.get(gbId)
+        if not _cVal:
+            ERROR_MSG('isAuthHost not find character', gbId)
+            return gameconst.AccountHostType.NONE
+
+        if _cVal.parentID == self.databaseID:
+            return gameconst.AccountHostType.HOST
+        else:
+            return gameconst.AccountHostType.AUTH
+
     def isAuthExpire(self, gbId):
         _cVal = self.characters.get(gbId)
         if not _cVal:
@@ -1423,9 +1450,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         _cVal = self.characters.get(gbId)
         if not _cVal:
             ERROR_MSG('_getExpireDelay not find character', gbId)
-            return 0.1
+            return utils.getNow()
 
-        return max(0.1, _cVal.authExpire - utils.getNow())
+        return _cVal.authExpire
 
     def stopCharacterAuth(self, exposed, gbId):
         if not self.isAuthHost(gbId):
@@ -1452,7 +1479,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
             [gbId],
             'backSelectCharacterBase',
-            (),
+            (True,),
             None,
             '',
             ())

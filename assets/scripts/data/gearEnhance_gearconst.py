@@ -250,5 +250,9 @@ datas = _tools.RODict({
     "gearWeaponGlyphNumWeight": _tools.RODict({
         "ID": "gearWeaponGlyphNumWeight",
         "value": (90, 10),
+    }),
+    "gearFuLingRating": _tools.RODict({
+        "ID": "gearFuLingRating",
+        "value": ('C', 'B', 'A', 'S'),
     })
 })

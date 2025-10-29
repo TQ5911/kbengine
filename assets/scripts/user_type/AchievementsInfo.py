@@ -107,8 +107,8 @@ class AchievementsVal(userType.UserSoleType):
             if not _achieveVal:
                 return False
 
-            if _achieveVal.isFinished():
-                return True
+            if not _achieveVal.isFinished():
+                return False
 
         return True
 

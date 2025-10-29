@@ -1087,13 +1087,13 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSoleType,
 
     def buildDungeonPlayerRestNum(self, eventId, symbol, number, checkNow, checkOnce):
         return self.build_element(
-            DungeonPlayerRestNumEvent, 
+            DungeonPlayerRestNumEvent,
             element_id=eventId,
             event_handler=handlePlayerRestNumEvent,
             name=gameconst.DungeonFlowEventName.playerRestNum,
-            symbol=symbol, 
+            symbol=symbol,
             number=number,
-            checkNow=checkNow, 
+            checkNow=checkNow,
             checkOnce=checkOnce
         )
 
@@ -1545,7 +1545,7 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSoleType,
                                event_handler=handleTimeFreezeEnd,
                                name=gameconst.DungeonFlowEventName.timeFreezeEnd)
         return e
-    
+
     def buildReleaseDungeonRebornPosEvent(self, eventId, rebornPosGIDs, rebornPosNum):
         """释放复活点事件"""
         e = self.build_element(DungeonRebornPosReleaseEvent, element_id=eventId,
@@ -1560,6 +1560,19 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSoleType,
                                event_handler=handleRecycleRebornPos,
                                name=gameconst.DungeonFlowEventName.removeRebornPos)
         e.add_param('rebornPosGIDs', rebornPosGIDs)
+        return e
+    
+    def buildTransferToTheDesignatedMap(self, eventId, lineNo, pos, angle):
+        """传送到大世界目标点"""
+        e = self.build_element(
+            FlowEvent,
+            element_id=eventId,
+            event_handler=handleTransferToTheDesignatedMap,
+            name=gameconst.DungeonFlowEventName.transferToTheDesignatedMap,
+        )
+        e.add_param('lineNo', lineNo)
+        e.add_param('pos', pos)
+        e.add_param('angle', angle)
         return e
 
 def _createNoHostCreation(spaceID, target, context, *args, spaceMgrId=0, spaceNo=0, extraProps=None):
@@ -2848,7 +2861,7 @@ def handleDungeonKillEntities(e, src_e, ctx, **ref_param):
     for entityGID in entityGIDs:
         gidTag = 'gid_{}'.format(entityGID)
         for ent in spaceMgr.getEntitiesByTag(gidTag):
-            ent.killSelf()
+            ent.killSelf(gameconst.SourceType.Default)
 
 
 def handleDungeonEntityImmuneDeath(e, src_e, ctx, **ref_param):
@@ -3183,3 +3196,15 @@ def handleRecycleRebornPos(e, src_e, ctx, **ref_params):
     rebornPosGIDs = e.get_param('rebornPosGIDs', [])
     WARNING_MSG('DUNGEON FLOW -- EVENT[{}]: recycle reborn point -> {}'.format(e.id, rebornPosGIDs))
     _handleRecycleInDungeon(e, rebornPosGIDs)
+
+def handleTransferToTheDesignatedMap(e, src_e, ctx, **ref_params):
+    lineNo = e.get_param('lineNo', [])
+    pos = e.get_param('pos', [])
+    angle = e.get_param('angle', [])
+    WARNING_MSG('DUNGEON FLOW -- EVENT[{}]: transfer to the designated map -> {}'.format(e.id, lineNo, pos))
+    
+    spaceMgr = e.controller.owner
+    if not spaceMgr:
+        return
+
+    spaceMgr.syncPlayer(lambda boxCell: boxCell.transferToTheDesignatedMap(lineNo, pos, angle))

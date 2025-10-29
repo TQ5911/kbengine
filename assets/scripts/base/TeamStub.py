@@ -696,12 +696,10 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         sex = teamPlayerInfoDic['sex']
         picFrameId = teamPlayerInfoDic['picFrameId']
         score = teamPlayerInfoDic['score']
-        equipSetLv = teamPlayerInfoDic['equipSetLv']
         openId = teamPlayerInfoDic['openId']
 
         return self.teamDic[teamId].addMember(
-            gbId, box, playerName, level, school, sex, picFrameId, score=score, equipSetLv=equipSetLv,
-            openId=openId)
+            gbId, box, playerName, level, school, sex, picFrameId, score=score, openId=openId)
 
     def isCanCreateTeam(self, teamId):
         if teamId in self.teamDic:
@@ -719,10 +717,9 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         picFrameId = teamPlayerInfoDic['picFrameId']
         score = teamPlayerInfoDic['score']
         mountState = teamPlayerInfoDic['mountState']
-        equipSetLv = teamPlayerInfoDic['equipSetLv']
         openId = teamPlayerInfoDic['openId']
         teamVal = team.TeamCacheVal(teamId, teamTarget, gbId, box, playerName, level, school, sex, picFrameId,
-                                                 score=score, mountState=mountState, equipSetLv=equipSetLv, openId=openId)
+                                                 score=score, mountState=mountState, openId=openId)
         
         teamVal.teamMinLv = minLevel
         teamVal.teamMinScore = minScore
@@ -731,7 +728,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         teamVal.isAutoExpedition = isAutoExpedition
         
         teamVal.addMember(gbId, box, playerName, level, school, sex, picFrameId, False, True, score=score, 
-                          mountState=0, equipSetLv=equipSetLv, isDead=False, openId=openId)
+                          mountState=0, isDead=False, openId=openId)
             
         self.teamDic[teamId] = teamVal
 

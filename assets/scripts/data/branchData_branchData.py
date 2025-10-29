@@ -18,7 +18,7 @@ datas = _tools.RODict({
     1001: _tools.RODict({
         "ID": 1001,
         "name": "新元城",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -26,7 +26,7 @@ datas = _tools.RODict({
     1002: _tools.RODict({
         "ID": 1002,
         "name": "同心村",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -34,7 +34,7 @@ datas = _tools.RODict({
     1003: _tools.RODict({
         "ID": 1003,
         "name": "占坑场景",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -42,7 +42,7 @@ datas = _tools.RODict({
     1004: _tools.RODict({
         "ID": 1004,
         "name": "飞沙要塞",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -50,7 +50,7 @@ datas = _tools.RODict({
     1005: _tools.RODict({
         "ID": 1005,
         "name": "精灵村外",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -58,7 +58,7 @@ datas = _tools.RODict({
     1006: _tools.RODict({
         "ID": 1006,
         "name": "精灵宝殿",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -66,7 +66,7 @@ datas = _tools.RODict({
     1010: _tools.RODict({
         "ID": 1010,
         "name": "石窟走廊",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -74,7 +74,7 @@ datas = _tools.RODict({
     1011: _tools.RODict({
         "ID": 1011,
         "name": "新元城郊",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -82,7 +82,7 @@ datas = _tools.RODict({
     1020: _tools.RODict({
         "ID": 1020,
         "name": "祖珂地堡一层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -90,7 +90,7 @@ datas = _tools.RODict({
     1021: _tools.RODict({
         "ID": 1021,
         "name": "祖珂地堡二层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -98,7 +98,7 @@ datas = _tools.RODict({
     1022: _tools.RODict({
         "ID": 1022,
         "name": "祖珂地堡三层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -106,7 +106,7 @@ datas = _tools.RODict({
     1024: _tools.RODict({
         "ID": 1024,
         "name": "祖珂地堡五层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -114,7 +114,7 @@ datas = _tools.RODict({
     1026: _tools.RODict({
         "ID": 1026,
         "name": "祖珂地堡七层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -122,7 +122,7 @@ datas = _tools.RODict({
     1030: _tools.RODict({
         "ID": 1030,
         "name": "月光海港一层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -130,7 +130,7 @@ datas = _tools.RODict({
     1031: _tools.RODict({
         "ID": 1031,
         "name": "月光海港二层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -138,7 +138,7 @@ datas = _tools.RODict({
     1035: _tools.RODict({
         "ID": 1035,
         "name": "月光海港六层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -146,7 +146,7 @@ datas = _tools.RODict({
     1036: _tools.RODict({
         "ID": 1036,
         "name": "月光海港七层",
-        "branchNum": 5,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -154,7 +154,7 @@ datas = _tools.RODict({
     1101: _tools.RODict({
         "ID": 1101,
         "name": "杜格教廷一层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -162,7 +162,7 @@ datas = _tools.RODict({
     1102: _tools.RODict({
         "ID": 1102,
         "name": "杜格教廷二层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -170,7 +170,7 @@ datas = _tools.RODict({
     1103: _tools.RODict({
         "ID": 1103,
         "name": "杜格教廷三层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -178,7 +178,7 @@ datas = _tools.RODict({
     1110: _tools.RODict({
         "ID": 1110,
         "name": "猪洞一层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -186,7 +186,7 @@ datas = _tools.RODict({
     1111: _tools.RODict({
         "ID": 1111,
         "name": "猪洞二层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -194,7 +194,7 @@ datas = _tools.RODict({
     1112: _tools.RODict({
         "ID": 1112,
         "name": "猪洞三层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -202,7 +202,7 @@ datas = _tools.RODict({
     1120: _tools.RODict({
         "ID": 1120,
         "name": "蜈蚣洞一层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -210,7 +210,7 @@ datas = _tools.RODict({
     1121: _tools.RODict({
         "ID": 1121,
         "name": "蜈蚣洞二层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -218,7 +218,7 @@ datas = _tools.RODict({
     1122: _tools.RODict({
         "ID": 1122,
         "name": "蜈蚣洞三层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -226,7 +226,7 @@ datas = _tools.RODict({
     1123: _tools.RODict({
         "ID": 1123,
         "name": "五毒石窟四层",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190
@@ -234,7 +234,7 @@ datas = _tools.RODict({
     7000: _tools.RODict({
         "ID": 7000,
         "name": "演武场",
-        "branchNum": 15,
+        "subType": 1,
         "N1": 200,
         "N2": 195,
         "N3": 190

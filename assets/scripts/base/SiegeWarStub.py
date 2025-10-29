@@ -116,7 +116,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             box.onMessagePre(CBC.datas["cityBattle_guildAlreadyBidding"]["value"], [])
 
         #跨服
-        serverName = gameconfig.serverName()
+        serverName = gameglobal.curServerName
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.doBidding(self.serverId, avatarGBID, name, cnt, guildName, guildUUID, serverName)
 
@@ -250,7 +250,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         DEBUG_MSG('[lj]on siege war declare war official mail id:', mailId, 'args:', args, content)
         gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, args, title, content, 0, utils.getNow(), 1,
                                                                     utils.getPlayerMaxLevel() + 1)
-        
+
         for i in range(len(args)):
             content = content.replace('{' + str(i) + '}', args[i])
         content = content.replace('\n', '  ')
@@ -264,7 +264,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             '',
             (),
         )
-        
+
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             defensiveGuildUUID,
             'onSiegeWarDeclareWarOfficial',
@@ -378,7 +378,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             DEBUG_MSG('[lj]first time city owner change')
 
     def onSiegeWarGuildWinnerData(self, data):
-        data.append(gameconfig.serverName())
+        data.append(gameglobal.curServerName)
         DEBUG_MSG('[lj]on siege war guild winner data', data)
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.cityOwnerChange(self.serverId, data)
@@ -496,7 +496,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 gameengine.broadcastBaseapp('broadcastToAllAvatar',
                                         (gameconst.BASE, 'syncCitySimpleData',
                                         (self.cityOwnerName, self.cityOwnerGuildName, self.cityOwnerGuildUUID, self.lastSiegeWarEndTime), ()))
-        
+
         self.writeToDB()
 
     def onCityDataRequest(self, srcGbId):

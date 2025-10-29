@@ -7,6 +7,7 @@ import petData_petData as PDPDD
 import passiveSkill_passiveSkill as PSPSD
 import petData_petGear as PDPGD
 import actionContext
+import utils
 
 
 class ImpAvatarPet(object):
@@ -51,24 +52,24 @@ class ImpAvatarPet(object):
                 skills = self.getPetSkills(petId)
                 for skillId in skills:
                     removeAction = PSPSD.datas[skillId]['removeAction']
-                    removeAction and removeAction(self, self, actionContext.PassiveSkillCtx(skillId))
+                    removeAction and removeAction(self, self, actionContext.PassiveSkillCtx(petId, skillId))
                 for itemId in equipList:
                     if itemId:
                         passiveSkill = PDPGD.datas[itemId]['passiveSkill']
                         if passiveSkill:
                             removeAction = PSPSD.datas[passiveSkill]['removeAction']
-                            removeAction and removeAction(self, self, actionContext.PassiveSkillCtx(passiveSkill))
+                            removeAction and removeAction(self, self, actionContext.PassiveSkillCtx(itemId, passiveSkill))
         for petId, equipList in battleList:
             skills = self.getPetSkills(petId)
             for skillId in skills:
                 action = PSPSD.datas[skillId]['action']
-                action and action(self, self, actionContext.PassiveSkillCtx(skillId))
+                action and action(self, self, actionContext.PassiveSkillCtx(petId, skillId))
             for itemId in equipList:
                 if itemId:
                     passiveSkill = PDPGD.datas[itemId]['passiveSkill']
                     if passiveSkill:
                         action = PSPSD.datas[passiveSkill]['action']
-                        action and action(self, self, actionContext.PassiveSkillCtx(passiveSkill))
+                        action and action(self, self, actionContext.PassiveSkillCtx(itemId, passiveSkill))
 
         self.lingShouBattleList = battleList
 
@@ -79,25 +80,52 @@ class ImpAvatarPet(object):
             skills = self.getPetSkills(oldPetId)
             for skillId in skills:
                 removeAction = PSPSD.datas[skillId]['removeAction']
-                removeAction and removeAction(self, self, actionContext.PassiveSkillCtx(skillId))
+                removeAction and removeAction(self, self, actionContext.PassiveSkillCtx(oldPetId, skillId))
             for itemId in oldEquipList:
                 if itemId:
                     passiveSkill = PDPGD.datas[itemId]['passiveSkill']
                     if passiveSkill:
                         removeAction = PSPSD.datas[passiveSkill]['removeAction']
-                        removeAction and removeAction(self, self, actionContext.PassiveSkillCtx(passiveSkill))
+                        removeAction and removeAction(self, self, actionContext.PassiveSkillCtx(itemId, passiveSkill))
 
         if petId:
             skills = self.getPetSkills(petId)
             for skillId in skills:
                 action = PSPSD.datas[skillId]['action']
-                action and action(self, self, actionContext.PassiveSkillCtx(skillId))
+                action and action(self, self, actionContext.PassiveSkillCtx(petId, skillId))
 
             for itemId in equipList:
                 if itemId:
                     passiveSkill = PDPGD.datas[itemId]['passiveSkill']
                     if passiveSkill:
                         action = PSPSD.datas[passiveSkill]['action']
-                        action and action(self, self, actionContext.PassiveSkillCtx(passiveSkill))
+                        action and action(self, self, actionContext.PassiveSkillCtx(itemId, passiveSkill))
 
         self.lingShouBattleList[slotId] = petInfo
+
+    def updateLingShouEffectEventInfo(self, objId, skillId, buffId, effectId, triggerTime):
+        objIdSkillInfoKey = utils.getObjIdSkillInfoKey(objId, skillId)
+        buffEffectInfos = self.lingShouEffectEventInfo.setdefault(objIdSkillInfoKey, {})
+        buffEffectInfoKey = utils.getBuffEffectInfoKey(buffId, effectId)
+        buffEffectInfos[buffEffectInfoKey] = triggerTime
+        #DEBUG_MSG('update EventEffect', objId, skillId, buffId, effectId, utils.getNowTimeStr(triggerTime),
+        #          objIdSkillInfoKey, buffEffectInfoKey)
+
+    def getLingShouEffectEventInfo(self, objId, skillId, buffId, effectId):
+        #DEBUG_MSG('get EventEffect', objId, skillId, buffId, effectId)
+        objIdSkillInfoKey = utils.getObjIdSkillInfoKey(objId, skillId)
+        if not self.lingShouEffectEventInfo:
+            #DEBUG_MSG('get EventEffect1')
+            return 0
+        
+        if objIdSkillInfoKey not in self.lingShouEffectEventInfo:
+            #DEBUG_MSG('get EventEffect2')
+            return 0
+        
+        buffEffectInfoKey = utils.getBuffEffectInfoKey(buffId, effectId)
+        if buffEffectInfoKey not in self.lingShouEffectEventInfo[objIdSkillInfoKey]:
+            #DEBUG_MSG('get EventEffect3')
+            return 0
+        
+        #DEBUG_MSG('get EventEffect', objIdSkillInfoKey, buffEffectInfoKey)
+        return self.lingShouEffectEventInfo[objIdSkillInfoKey][buffEffectInfoKey]

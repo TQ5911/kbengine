@@ -212,11 +212,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     @gamedecorator.crossServer
     def backSelectCharacter(self, exposed):
+        if not self._isMyself(exposed):
+            return
+
         if self.isCrossServerInOtherServer:
             self.base.gobackServer(gameconst.CrossServerCallbackComponent.CELL,
                                    'backSelectCharacterFromCrossServer', ())
             return
-        self.base.backSelectCharacterBase()
+        self.base.backSelectCharacterBase(exposed > 0)
 
     def backSelectCharacterFromCrossServer(self):
         INFO_MSG("backSelectCharacterFromCrossServer::")
@@ -233,6 +236,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     @gamedecorator.crossServer
     def offline(self, exposed, reason):
         if not self._isMyself(exposed):
+            return
+
+        if exposed < 0:
+            self.base.subBackLoginBase()
             return
 
         if self.isCrossServerInOtherServer and reason and reason != gameconst.AVATAR_OFFLINE_REASON_END_CROSS_SERVER:
@@ -259,6 +266,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.leaveRaidAutoMatch()
         # TODO x: logout log
         self.clearStateOffline()
+        self._onCubeOffline()
         self.base.startOffline(self.spaceNo, reason)
         self.safeDestroy()
         if self.spaceMgr:
@@ -413,7 +421,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             getattr(self, callback)(*args)
 
     def _isMyself(self, exposed):
-        return self.id == exposed
+        return self.id == abs(exposed)
 
     def realDoGmCommandProxy(self, args):
         gmCommand.realDoCommand(*args)
@@ -1520,4 +1528,19 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.popTempMiscProp(gameconst.AvatarProps.isLightningArea)
 
 # ----------------------------------------- map buff end -----------------------------
+
+    def getAliasIDs(self):
+        _aliasStrs = self.debugWitnessAliasID().split('\n')
+        _sendIds = []
+        for _str in _aliasStrs:
+            _sps = _str.split(':')
+            if len(_sps) != 2:
+                ERROR_MSG('getAliasIDs:: invalid alias str', _str)
+                continue
+
+            _aliasId = int(_sps[1].strip())
+            _sendIds.append(_aliasId)
+
+        self.client.onAllAliasIds(_sendIds)
+
 

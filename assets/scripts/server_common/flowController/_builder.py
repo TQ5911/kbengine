@@ -15,6 +15,8 @@ import utils
 import random
 import copy
 import math
+import sMath
+import Math
 
 import ep_ctrl
 
@@ -751,6 +753,15 @@ class DungeonFlowControllerBuilder(object):
     def build_removeRebornPos(self, eventId, eventData):
         entityIds = eventData['entityID']
         return self.controller.buildRecycleDungeonRebornPosEvent(eventId, entityIds)
+    
+    def build_transferToTheDesignatedMap(self, eventId, eventData):
+        lineNo = eventData['mapId']
+        x = eventData['posX']
+        y = eventData['posY']
+        z = eventData['posZ']
+        angle = eventData['angle']
+        pos = Math.Vector3(x, y, z)
+        return self.controller.buildTransferToTheDesignatedMap(eventId, lineNo, pos, angle)
 
     # -------------------------------------------------------------------
 

@@ -71,6 +71,11 @@
         <reqRedBagPlayerInfo> <Exposed/>
         </reqRedBagPlayerInfo>
 
+        <getRedBagRankListCB>
+            <Arg>           UINT32            </Arg>
+            <Arg>   ARRAY   <of>    RED_BAG_CLIENT_VAL  </of>        </Arg>
+        </getRedBagRankListCB>
+
     </BaseMethods>
 
     <CellMethods>

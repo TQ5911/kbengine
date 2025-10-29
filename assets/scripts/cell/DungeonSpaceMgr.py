@@ -216,36 +216,6 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         self.dungeonStage = newStageID
         self.dungeonStageStartT = now or utils.getNow()
 
-        _isDongfuWarDungeon = self.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.DONGFU_WAR
-        _isSoulCardDungeon = self.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.SOULCARD
-        _isQimoCave = self.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.QIMOCAVE
-        _isHanQingDungeon = self.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.HANQING
-
-        if _isDongfuWarDungeon:
-            self.dungeonPlayMode.guildBox.updateDongfuWarDungeonStage(
-                self.spaceNo, oldStageID, newStageID)
-
-        if _isHanQingDungeon:
-            for pid in self.players:
-                ent = KBEngine.entities.get(pid)
-                if not ent:
-                    continue
-                ent.hanQingDungeonTransform(oldStageID, newStageID)
-
-        if toClient:
-            for pid in self.players:
-                ent = KBEngine.entities.get(pid)
-                if not ent:
-                    continue
-
-                if _isSoulCardDungeon:
-                    self.getSoulCardDungeonRemainStage(ent.base, ent.gbId)
-                    ent.client.onSoulCardDungeonStageChange(self.spaceNo, newStageID)
-                elif _isQimoCave:
-                    ent.client.onSendQimoCaveDungeonMonsterInfo(newStageID)
-                else:
-                    ent.client.onChangeDungeonStageSet(self.spaceNo, oldStageID, newStageID)
-
     def onDungeonStarted(self, tCreate):
         DEBUG_MSG('onDungeonStarted::', tCreate, self.dungeonPlayMode.playMode)
         self.dungeonPlayMode.tCreate = tCreate
@@ -294,7 +264,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 return
             gameengine.getDungeonStubBySpaceNo(self.spaceNo).onEntityCreated(
                 self.spaceNo, self.spaceUUID, entId, ent.gameEntityIdentifyID)
-            
+
         if 'RebornPos' in tags:
             gameengine.getDungeonStubBySpaceNo(self.spaceNo).onCreateNewRebornPos(self.spaceNo, ent.position)
 

@@ -6,6 +6,7 @@ import random
 import math
 import uuid
 import ast
+import utils
 import importlib
 import re
 import datetime
@@ -30,7 +31,6 @@ import performanceLevel_set as PLSD
 import teamMatch_matchConfig as TMMCD
 import login_set as LGS
 import message_Message as MSG
-import serverList_serverList as SLSL
 import cityBattle_firstTime as CBFT
 import cityBattle_config as CBC
 import conflict_status_def as C_S_DD
@@ -841,6 +841,11 @@ def getEntitiesByIds(entIdList):
 def getBuffEffectKey(effectId, effectIndex):
     return effectId * 100 + effectIndex
 
+def getObjIdSkillInfoKey(objId, skillId):
+    return objId * 100000000 + skillId
+
+def getBuffEffectInfoKey(buffId, effectId):
+    return buffId * 100000000 + effectId
 
 def mustInSpecialSpace(type_):
     def _wrapper(fn):
@@ -1894,7 +1899,6 @@ def checkIDIPModifyName(name):
 
 
 def getTlogHeaderList(avatar):
-    import serverList_serverList as SLSL
     import gameconfig
     roleInfo = gameglobal.roleCache[avatar.id]
     return [
@@ -1912,7 +1916,6 @@ def getTlogHeaderList(avatar):
 
 def getSecTlogHeaderList(avatar):
     roleInfo = gameglobal.roleCache[avatar.id]
-    import serverList_serverList as SLSL
     import gameconfig
     return [
         getGameAppId(avatar.accountEntity.channelId),
@@ -2255,7 +2258,7 @@ def isEnemyInPK(src, target):
 
     if src.pkModel == gameconst.PKModel.JUSTICE:
         return target.inRedName() or target.isGreyName()
-    
+
     elif src.pkModel == gameconst.PKModel.ENEMY:
         if target.inRedName() or target.isGreyName():
             return True
@@ -2319,7 +2322,7 @@ def _isEnemy(src, target):
     src, target = getEntityRealEntity(src), getEntityRealEntity(target)
     if src.id == target.id:
         return False
-    
+
     # 切磋状态下，只能攻击切磋对象
     if src.IsAvatar:
         if src.duelAttr.inFight():
@@ -2327,10 +2330,10 @@ def _isEnemy(src, target):
                 return False
 
             return src.duelAttr.isDuelEnemy(target)
-    
+
         elif src.duelAttr.inReady():
             return False
-    
+
     if formula.isSiegeWarSpace(src.spaceNo):
         if formula.isSiegeWarSpace(target.spaceNo):
             if src.IsAvatar and target.IsAvatar:
@@ -2422,7 +2425,7 @@ def _isFriend(src, target):
     src, target = getEntityRealEntity(src), getEntityRealEntity(target)
     if src.id == target.id:
         return True
-    
+
     # 切磋状态下，不能影响任何人
     #     【【切磋】处于切磋中的人放的加血技能可以给非切磋目标加血】
     # https://www.tapd.cn/tapd_fe/59721401/bug/detail/1159721401001002975
@@ -2540,18 +2543,18 @@ def entIsTeam(src, e, target):
     # 不包括自己
     if src.id == target.id:
         return False
-    
+
     src = getEntityRealEntity(src)
     if src.id == target.id:
         return True
-    
+
     if not (src.isReal() and target.isReal()):
         return False
-    
+
     if src.IsAvatar and target.IsAvatar:
         if isEnemy(src, target):
             return False
-        
+
         if src.teamId != 0 and src.teamId == target.teamId:
             return True
         if src.raidId != 0 and src.raidId == target.raidId:
@@ -2831,7 +2834,7 @@ def checkCanChangeSceneAndShowMsg(avatar, fromSpaceNo, toSpaceNo):
     if not GPES.datas[_fromSceneType][str(_toSceneType)]:
         avatar.showMsg(CCT.datas['leaveTheScene']['value'], [])
         return False
-    
+
     return True
 
 def getSkillLvParam(skillId):
@@ -2849,8 +2852,8 @@ def checkDrawCardPoolTimeLimit(curTimestamp, checkType):
                 continue
             startTimestamp = getIntTimestamp(poolData['startTime'])
             endTimestamp = getIntTimestamp(poolData['endTime'])
-            #DEBUG_MSG('poolData id:%i, groupId:%i, timeLimit:%i, startTime:%s(%i), endTime:%s(%i)' % 
-            #            (pool, poolData['poolGroupId'],  poolData['timeLimit'], 
+            #DEBUG_MSG('poolData id:%i, groupId:%i, timeLimit:%i, startTime:%s(%i), endTime:%s(%i)' %
+            #            (pool, poolData['poolGroupId'],  poolData['timeLimit'],
             #            getNowTimeStr(startTimestamp), startTimestamp,
             #            getNowTimeStr(endTimestamp), endTimestamp))
             if not startTimestamp and not endTimestamp:
@@ -2874,19 +2877,19 @@ def checkDrawCardPoolTimeLimit(curTimestamp, checkType):
 def getSiegeWarFirstTimeInfo():
     firstTime = 0
     firstTimeValid = False
-    if not gameconfig.serverId() in SLSL.datas:
+    if not gameconfig.serverId() in gameglobal.mapleServerInfo:
         WARNING_MSG('[lj]get siege war first time info, server id not found:', gameconfig.serverId())
         return firstTime, firstTimeValid, 0
-    crossServerGroupID = SLSL.datas[gameconfig.serverId()]['groupID']
-    GroupServerList = SLSL.group2ServerIds[crossServerGroupID]
+    crossServerGroupID = gameglobal.mapleServerInfo[gameconfig.serverId()]['server_group']
+    GroupServerList = utils.group2ServerIds(crossServerGroupID)
     GroupServerOpenTimes = []
     lastestOpenTime = 0 #group内开服最晚时间
     for serverID in GroupServerList:
-        _openTime = int(SLSL.datas[int(serverID)]['startTime'])
+        _openTime = int(gameglobal.mapleServerInfo[int(serverID)]['start_time'])
         GroupServerOpenTimes.append(int(_openTime))
         if _openTime > lastestOpenTime:
             lastestOpenTime = _openTime
-    
+
     if CBFT.datas.get(crossServerGroupID, None) is None:
         ERROR_MSG('[lj]cross siege war start time not found group id:', crossServerGroupID)
         firstTimeValid = False
@@ -2908,7 +2911,7 @@ def getSiegeWarFirstTimeInfo():
         firstTimeValid = False
     else:
         firstTimeValid = True
-    
+
     return firstTime, firstTimeValid, limitTime
 
 
@@ -2928,7 +2931,7 @@ def getSiegeWarMonthlyStartTime(monthAdd):
 
 def getNextSiegeWarMonthlyExpireTime(addTime):
     now = getNow()
-    
+
     for i in (-1, 0, 1):
         t = getSiegeWarMonthlyStartTime(i) + addTime
         if now < t:
@@ -2941,17 +2944,17 @@ def getNextBiddingStartTime():
     firstTime, firstTimeValid, limitTime = getSiegeWarFirstTimeInfo()
     if firstTimeValid and now < firstTime:
         return firstTime
-    
+
     if now < getSiegeWarMonthlyStartTime(0):
         return getSiegeWarMonthlyStartTime(0)
-    
+
     return getSiegeWarMonthlyStartTime(1)
 
 def getSiegeWarBiddingEndTime():
     if gameglobal.globalSiegeWarData.get('expireTime', None) is not None:
         if getNow() < gameglobal.globalSiegeWarData['expireTime']:
             return gameglobal.globalSiegeWarData['expireTime']
-    
+
     firstTime, firstTimeValid, limitTime = getSiegeWarFirstTimeInfo()
     addTime = CBC.datas['cityBattle_biddingTime']['value'] * 24 * 60 * 60 + CBC.datas['cityBattle_biddingDelayed']['value'][2] * 60 + CBC.datas['cityBattle_BiddingEndTime']['value'] * 60 * 60
     if firstTimeValid:
@@ -2959,7 +2962,7 @@ def getSiegeWarBiddingEndTime():
         if getNow() < expireTime:
             gameglobal.globalSiegeWarData['expireTime'] = expireTime
             return expireTime
-        
+
     t = getNextSiegeWarMonthlyExpireTime(addTime)
     gameglobal.globalSiegeWarData['expireTime'] = t
     return t
@@ -3075,7 +3078,7 @@ def getForceComponentID(accountName):
         return 0
 
     return _cache[1]
- 
+
 def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = False):
     if not entityIDs:
         return
@@ -3153,7 +3156,7 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                              or _mPrm.get('CustomID') == gameconst.DunCustomId.POS_FOR_SKILL):
                 #存在随机区域，则改变出生位置
                 randomRegion = _pP['RandomRegion']
-                
+
                 bornPosition = getRandomPositionFromMultiRegion(randomRegion, entityIDs, gid, RandomRegionAtLeastInfo)
                 params.update({
                     'position': bornPosition,
@@ -3298,20 +3301,20 @@ def calculatePointIn2DCircle(monsterID, x, z, x1, z1, r, precision=1e-10):
     r1 = (dx *dx + dz * dz)
     r2 = (r * r - precision)
     DEBUG_MSG("calculatePointIn2DCircle ", monsterID, x, z, x1, z1, r, precision, r1, r2)
-    return r1 < r2 
+    return r1 < r2
 
 def calculatePointIn2DRectangle(monsterID, x, z, x1, z1, l, w, t, precision=1e-10):
     dx = x - x1
     dz = z - z1
-    
+
     cos_angle = math.cos(-t)
     sin_angle = math.sin(-t)
     rotated_x = dx * cos_angle - dz * sin_angle
     rotated_z = dx * sin_angle + dz * cos_angle
-    
+
     half_length = l / 2.0 - precision
     half_width = w / 2.0 - precision
-    
+
     absX = abs(rotated_x)
     absZ = abs(rotated_z)
     DEBUG_MSG("calculatePointIn2DRectangle ", monsterID, x, z, x1, z1, l, w, t, precision, absX, absZ, half_length, half_width)
@@ -3326,3 +3329,14 @@ def splitInscriptionKey(dataKey):
     skillId = dataKey // (1000 * 100)
     inscriptionType = dataKey - skillId * 1000 * 100
     return skillId, inscriptionType
+
+
+@functools.lru_cache(maxsize=256)
+def group2ServerIds(groupId):
+    _serverIds = []
+    for _serverId, _data in gameglobal.mapleServerInfo.items():
+        _grp = _data['server_group']
+        if _grp == groupId:
+            _serverIds.append(_serverId)
+
+    return _serverIds

@@ -6,22 +6,6 @@
             <Flags>         CELL_PRIVATE        </Flags>
             <Persistent>    true                </Persistent>
         </bodyEquipData>
-        <equipSetLv>
-            <Type>          UINT8           </Type>
-            <Flags>         CELL_PRIVATE    </Flags>
-            <Default>       0               </Default>
-            <Persistent>    true            </Persistent>
-        </equipSetLv>
-        <maxEquipSetLv>
-            <Type>          UINT8           </Type>
-            <Flags>         CELL_PRIVATE    </Flags>
-            <Default>       0               </Default>
-            <Persistent>    true            </Persistent>
-        </maxEquipSetLv>
-        <baseMaxEquipSetLv>
-            <Type>          UINT8           </Type>
-            <Flags>         BASE            </Flags>
-        </baseMaxEquipSetLv>
         <baseEquipEncExtraTimesList>
             <Type>          PY_LIST         </Type>
             <Flags>         BASE            </Flags>
@@ -87,18 +71,33 @@
         <bagEquipEnhance>
             <Arg>       GRIDID     </Arg>
             <Arg>       UUID       </Arg>
-            <Arg>       UINT32     </Arg>
             <Arg>       BOOL       </Arg>
-            <Arg>       UINT8      </Arg>
         </bagEquipEnhance>
 
         <bagEquipEnhanceDeductItemsCB>
             <Arg>       OP_STAT     </Arg>
             <Arg>       UUID       </Arg>
             <Arg>       GRIDID     </Arg>
-            <Arg>       UINT32     </Arg>
-            <Arg>       UINT8      </Arg>
         </bagEquipEnhanceDeductItemsCB>
+
+        <bagEquipUpgrade>
+            <Arg>       GRIDID     </Arg>
+            <Arg>       UUID       </Arg>
+            <Arg>       BOOL       </Arg>
+            <Arg>       BOOL       </Arg>
+        </bagEquipUpgrade>
+
+        <bagEquipUpgradeDeductItemsCB>
+            <Arg>       OP_STAT     </Arg>
+            <Arg>       UUID       </Arg>
+            <Arg>       GRIDID     </Arg>
+        </bagEquipUpgradeDeductItemsCB>
+
+        <bagEquipBindWashing>
+            <Arg>       GRIDID     </Arg>
+            <Arg>       UUID       </Arg>
+            <Arg>       UINT32     </Arg>
+        </bagEquipBindWashing>
 
         <undressEquipment><Exposed/>
             <Arg>       UINT32      </Arg>
@@ -164,12 +163,6 @@
             <Arg>      ARRAY <of> UUID </of>  </Arg>
         </reqMultiEquipDisassemble>
 
-        <gmBaseDressEquipsByQuality>
-            <Arg>      UINT8    </Arg>
-            <Arg>      UINT8    </Arg>
-            <Arg>      PY_LIST  </Arg>
-        </gmBaseDressEquipsByQuality>
-
         <gmBaseDressEquips>
             <Arg>      PY_LIST  </Arg>
         </gmBaseDressEquips>
@@ -189,7 +182,6 @@
             <Arg>      UINT8        </Arg>
             <Arg>      FLOAT        </Arg>
             <Arg>      BOOL         </Arg>
-            <Arg>      UINT8        </Arg>
         </makeEquipmentEnhanceLog>
         <makeEquipmentAffixWashingLog>
             <Arg>      ITEM_ID       </Arg>
@@ -199,13 +191,11 @@
         <updateBodyEquipDressData>
             <Arg>      PY_DICT       </Arg>
         </updateBodyEquipDressData>
-        <updateMaxEquipSetLv>
-            <Arg>      UINT8        </Arg>
-        </updateMaxEquipSetLv>
 
         <reqMakeEquipment> <Exposed/>
             <Arg>      ITEM_ID      </Arg>
             <Arg>      ARRAY <of> GRIDID </of>  </Arg>
+            <Arg>      ARRAY <of> UINT16 </of>  </Arg>
             <Arg>      INT8 </Arg>
         </reqMakeEquipment>
 
@@ -319,6 +309,11 @@
             <Arg>      UINT64       </Arg>
             <Arg>      BOOL         </Arg>
         </reqEquipReplace>
+
+        <gmGlyphWashingEquips>
+            <Arg>   UINT32     </Arg>
+            <Arg>   UINT32     </Arg>
+        </gmGlyphWashingEquips>
     </BaseMethods>
 
     <CellMethods>
@@ -337,7 +332,6 @@
             <Arg>      UINT8   </Arg>
             <Arg>      GRIDID  </Arg>
             <Arg>      UINT64  </Arg>
-            <Arg>      UINT32  </Arg>
             <Arg>      BOOL    </Arg>
         </reqEquipEnhance>
         <cellEquipEnhance>
@@ -354,6 +348,7 @@
             <Arg>      UINT8   </Arg>
             <Arg>      UINT32  </Arg>
             <Arg>      UINT64  </Arg>
+            <Arg>      UINT8   </Arg>
         </reqEquipSpiritWashing>
 
         <cellEquipSpiritWashing>
@@ -427,6 +422,40 @@
             <Arg>      UINT8   </Arg>
             <Arg>      UINT8   </Arg>
         </gmModifyEquipEnhanceLevel>
+
+        <reqEquipBindValueWashing> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      GRIDID  </Arg>
+            <Arg>      UINT64  </Arg>
+            <Arg>      UINT32  </Arg>
+        </reqEquipBindValueWashing>
+
+        <cellEquipBindValueWashing>
+            <Arg>   UINT8      </Arg>
+            <Arg>   UUID       </Arg>
+            <Arg>   UINT32     </Arg>
+        </cellEquipBindValueWashing>
+
+        <reqEquipUpgrade> <Exposed/>
+            <Arg>      UINT8   </Arg>
+            <Arg>      GRIDID  </Arg>
+            <Arg>      UINT64  </Arg>
+            <Arg>      BOOL    </Arg>
+            <Arg>      BOOL    </Arg>
+        </reqEquipUpgrade>
+
+        <cellEquipUpgrade>
+            <Arg>   UINT8      </Arg>
+            <Arg>   UUID       </Arg>
+            <Arg>   UINT32     </Arg>
+            <Arg>   UINT32     </Arg>
+        </cellEquipUpgrade>
+
+        <gmGlyphWashingEquips>
+            <Arg>   UINT8      </Arg>
+            <Arg>   UINT32     </Arg>
+            <Arg>   UINT32     </Arg>
+        </gmGlyphWashingEquips>
     </CellMethods>
 
     <ClientMethods>
@@ -458,16 +487,17 @@
         </onEquipBaseAttrWashingSucc>
 
         <onEquipSpiritWashingSucc>
-            <Arg>      UINT8    </Arg>
-            <Arg>      GRIDID   </Arg>
-            <Arg>      CLI_SPIRIT_INFO </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      GRIDID           </Arg>
+            <Arg>      CLI_SPIRIT_INFO  </Arg>
+            <Arg>      UINT8             </Arg>
         </onEquipSpiritWashingSucc>
 
         <onEquipGlyphWashingSucc>
-            <Arg>      UINT8         </Arg>
-            <Arg>      GRIDID        </Arg>
-            <Arg>      UINT8         </Arg>
-            <Arg>      CLI_GLYPH_INFO </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      GRIDID           </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      CLI_GLYPH_INFO   </Arg>
         </onEquipGlyphWashingSucc>
 
         <onEquipBlessSucc>
@@ -567,6 +597,28 @@
             <Arg>      UINT64  </Arg>
             <Arg>      UINT8   </Arg>
         </onEquipSpiritApplySucc>
+
+        <onEquipBindValueWashingSucc>
+            <Arg>      UINT8                </Arg>
+            <Arg>      GRIDID               </Arg>
+            <Arg>      UINT32               </Arg>
+        </onEquipBindValueWashingSucc>
+
+        <onEquipBindValueWashingFailed>
+            <Arg>      UINT8                </Arg>
+            <Arg>      GRIDID               </Arg>
+        </onEquipBindValueWashingFailed>
+        
+        <onEquipUpgradeSucc>
+            <Arg>      UINT8                </Arg>
+            <Arg>      GRIDID               </Arg>
+            <Arg>      UINT8                </Arg>
+        </onEquipUpgradeSucc>
+
+        <onEquipUpgradeFailed>
+            <Arg>      UINT8                </Arg>
+            <Arg>      GRIDID               </Arg>
+        </onEquipUpgradeFailed>
     </ClientMethods>
 </root>
 

@@ -20,7 +20,7 @@ import message_Message_def as MMD
 
 class IRedBag(object):
     def __init__(self):
-        pass
+        self.rbVersion = 0
 
     def reloadScript(self):
         for pName, pVal in self.__dict__.items():
@@ -32,6 +32,9 @@ class IRedBag(object):
 
     def redbagOnLogin(self):
         try:
+            # 初始化拉取版本号
+            self.rbVersion = 0
+
             # 同步数据
             self._reqRedBagPlayerInfo()
 
@@ -74,8 +77,12 @@ class IRedBag(object):
     def _getRedBagRankList(self):
         if not self.checkPlayerLimit():
             return
-        gameengine.getGlobalBase('RedBagStub').doGetRedBagRankList(self, self.guildUUIDBase, list(self.fetchRedBagDict.keys()))
+        gameengine.getGlobalBase('RedBagStub').doGetRedBagRankList(self, self.guildUUIDBase, self.rbVersion, list(self.fetchRedBagDict.keys()))
         
+    def getRedBagRankListCB(self, sVersion, rankList):
+        # 更新version
+        self.rbVersion = sVersion
+        self.client.onGetRedBagRankList(rankList)
 
     # 获取我发的红包信息
     def getRedBagMyList(self, exposed):
@@ -121,6 +128,11 @@ class IRedBag(object):
             DEBUG_MSG("reqReleaseRedBag error desc len: ", self.gbID, redbagType, channel, money, num, desc)
             return False
         
+        if money < num:
+            # 人均金额不能小于1
+            DEBUG_MSG("reqReleaseRedBag error money < num: ", self.gbID, redbagType, channel, money, num)
+            return False
+
         # 数量检查
         channelConfig = CC_RPD.datas[channel]
         if num < channelConfig['countLimitMin'] or num > channelConfig['countLimitMax']:
@@ -192,6 +204,9 @@ class IRedBag(object):
         # 重新拉一遍我的红包列表
         self._getRedBagMyList()
 
+        # 重新推一下玩家数据
+        self._reqRedBagPlayerInfo()
+
     def onReleaseRedBagFail(self, redbagId, money):
         # 发布失败
         src = AAC_AACDD.datas.BONUS_SRC_SEND_RED_PACKET_COST
@@ -242,6 +257,9 @@ class IRedBag(object):
 
         # 展示红包数据
         self.client.onShowRedBagInfo(redbagId, money, fetchDict)
+
+        # 重新推一下玩家数据
+        self._reqRedBagPlayerInfo()
 
     def markFetchRedBag(self, redbagId, releastTime):
         self.fetchRedBagDict[redbagId] = releastTime

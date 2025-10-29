@@ -2169,7 +2169,6 @@ class ImpRaid(object):
             'score': self.getTotalScore(),
             'hpkScore': 0,
             'mountState': 0,
-            'equipSetLv': 0,
             'raidUUID': self.raidUUID,
             'enableMics': True,
             'isBlockMics': False,

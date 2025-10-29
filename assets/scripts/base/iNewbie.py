@@ -64,7 +64,7 @@ class INewbie(object):
         yield False
 
     def _gmNewbieFinishOffline(self):
-        self.backSelectCharacterBase()
+        self.backSelectCharacterBase(True)
 
     def onTaskFinishedForNewbieStep(self, taskId):
         stepId = TCNSTD.datas.get(taskId, 0)

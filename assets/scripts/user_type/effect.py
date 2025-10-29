@@ -312,23 +312,20 @@ class BasicEffect(EffectBase):
                         skillId = buffVal.rootContext.skillId
             if skillId > 0:
                 totalAddValue = 0
-                ret, args = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO)
+                ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO)
                 if ret:
-                    DEBUG_MSG("addShield 1 ", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, args)
-                    if len(args) != 1:
-                        ERROR_MSG("addShield 1, args error ", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, args)
-                    else:
-                        addValue = args[0]
+                    if len(datas) == 1:
+                        addValue = datas[0]
                         totalAddValue = value * (1+addValue)
+                        DEBUG_MSG("in addShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, datas)
 
-                ret, args = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE)
+                ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE)
                 if ret:
-                    DEBUG_MSG("addShield 2 ", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, args)
-                    if len(args) != 1:
-                        ERROR_MSG("addShield 2, args error ", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, args)
-                    else:
-                        addValue = args[0]
+                    if len(datas) == 1:
+                        addValue = datas[0]
                         totalAddValue += addValue
+                        DEBUG_MSG("in addShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, datas)
+
 
                 value += totalAddValue
 
@@ -365,7 +362,15 @@ class EventEffect(EffectBase):
 
     def __init__(self, owner, callerInfo, effectId, effectIndex, extraInfo):
         super(EventEffect, self).__init__(owner, callerInfo, effectId, effectIndex, extraInfo)
-        self.tNextTime = 0
+        effectData = self.getEffectData()
+        triggerTime = 0
+        if effectData.get('EventSourceType') == gameconst.EffetEventSourceType.LINGSHOU_SKILL_BUFF:
+            bufVal = callerInfo.getCaller(owner)
+            if bufVal and bufVal.rootContext and bufVal.rootContext.actionType == actionContext.ACTION_PASSIVE_SKILL:
+                triggerTime = owner.getLingShouEffectEventInfo(bufVal.rootContext.objId, bufVal.rootContext.skillId, bufVal.buffId, self.effectId)
+        self.tNextTime = triggerTime
+        #DEBUG_MSG('init EventEffect', self.effectId, self.tNextTime, utils.getNowTimeStr(self.tNextTime))
+
 
     def getEffectData(self):
         return EED.datas.get(self.effectId, {})
@@ -441,6 +446,10 @@ class EventEffect(EffectBase):
             target = releaseRole
 
         self.tNextTime = time.time() + effectData.get('EventCD', 0)
+        if effectData.get('EventSourceType') == gameconst.EffetEventSourceType.LINGSHOU_SKILL_BUFF:
+            bufVal = callerInfo.getCaller(owner)
+            if bufVal and bufVal.rootContext and bufVal.rootContext.actionType == actionContext.ACTION_PASSIVE_SKILL:
+                owner.updateLingShouEffectEventInfo(bufVal.rootContext.objId, bufVal.rootContext.skillId, bufVal.buffId, self.effectId, self.tNextTime)
 
         #有可能不是combatUnit触发的事件，比如Creation
         if (target and target.IsCombatUnit) or targetType=='None':

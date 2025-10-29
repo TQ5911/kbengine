@@ -226,6 +226,7 @@ namespace KBEngine
 		public virtual void onMulHpRecoveryChanged(float oldValue) {}
 		public float mulMpRecovery = 0f;
 		public virtual void onMulMpRecoveryChanged(float oldValue) {}
+		public float mulSpeed = 0f;
 		
 		public List<Int32> newbieGuideIds = new List<Int32>();
 		public virtual void onNewbieGuideIdsChanged(List<Int32> oldValue) {}
@@ -325,6 +326,7 @@ namespace KBEngine
 		public virtual void onAddTeamMember(CLIENT_TEAM_MEMBER_VAL arg1) {} 
 		public virtual void onAddWonderLandRewardRecord(List<BAG_ITEM_BRIEF_VAL> arg1) {} 
 		public virtual void onAffixWashingFailed() {} 
+		public virtual void onAllAliasIds(List<Int32> arg1) {} 
 		public virtual void onAllApplyGuildUnion(List<GUILD_APPLY_UNION_DATA_INFO> arg1) {} 
 		public virtual void onAnotherClientLogin() {} 
 		public virtual void onAppearanceOutfitUpdated(string arg1, Byte arg2) {} 
@@ -407,6 +409,8 @@ namespace KBEngine
 		public virtual void onEnterSingleDungeon(UInt32 arg1) {} 
 		public virtual void onEquipBackBlessSucc(Byte arg1, UInt16 arg2, List<AFFIX_VAL> arg3, Byte arg4, UInt16 arg5) {} 
 		public virtual void onEquipBaseAttrWashingSucc(Byte arg1, UInt16 arg2, CLI_EQUIP_ITEM_VAL arg3) {} 
+		public virtual void onEquipBindValueWashingFailed(Byte arg1, UInt16 arg2) {} 
+		public virtual void onEquipBindValueWashingSucc(Byte arg1, UInt16 arg2, UInt32 arg3) {} 
 		public virtual void onEquipBlessSucc(Byte arg1, UInt16 arg2, List<AFFIX_VAL> arg3, Byte arg4, UInt16 arg5) {} 
 		public virtual void onEquipDisassemble(Byte arg1, List<UInt16> arg2, List<UInt64> arg3) {} 
 		public virtual void onEquipDropStateChange(UInt64 arg1, Byte arg2) {} 
@@ -420,7 +424,9 @@ namespace KBEngine
 		public virtual void onEquipReplaceSucc(UInt16 arg1, CLI_EQUIP_ITEM_VAL arg2) {} 
 		public virtual void onEquipSell(Byte arg1, UInt16 arg2, UInt64 arg3) {} 
 		public virtual void onEquipSpiritApplySucc(Byte arg1, UInt64 arg2, Byte arg3) {} 
-		public virtual void onEquipSpiritWashingSucc(Byte arg1, UInt16 arg2, CLI_SPIRIT_INFO arg3) {} 
+		public virtual void onEquipSpiritWashingSucc(Byte arg1, UInt16 arg2, CLI_SPIRIT_INFO arg3, Byte arg4) {} 
+		public virtual void onEquipUpgradeFailed(Byte arg1, UInt16 arg2) {} 
+		public virtual void onEquipUpgradeSucc(Byte arg1, UInt16 arg2, Byte arg3) {} 
 		public virtual void onEventTips(Int32 arg1, List<string> arg2) {} 
 		public virtual void onExchangeRaidTeamMember(UInt64 arg1, Byte arg2, UInt64 arg3, Byte arg4, UInt64 arg5) {} 
 		public virtual void onExitGuildClient() {} 
@@ -693,7 +699,6 @@ namespace KBEngine
 		public virtual void onUpdateStrangerData(List<STRANGER_FRIEND_VAL> arg1) {} 
 		public virtual void onUpdateSynthesisUpgradeNum(List<CLIENT_RANDOM_SYNTHESIS_NUM_VAL> arg1) {} 
 		public virtual void onUpdateTeamMembeSex(UInt64 arg1, Byte arg2) {} 
-		public virtual void onUpdateTeamMemberEquipSetlv(UInt64 arg1, Byte arg2) {} 
 		public virtual void onUpdateTeamMemberHp(UInt64 arg1, Int32 arg2, Int32 arg3) {} 
 		public virtual void onUpdateTeamMemberPos(UInt64 arg1, UInt32 arg2, Vector3 arg3) {} 
 		public virtual void onUpdateTeamMemberScore(UInt64 arg1, Int32 arg2) {} 
@@ -732,6 +737,7 @@ namespace KBEngine
 		public virtual void syncGuildTaskInfo(List<GUILD_ONETASK_INFO> arg1) {} 
 		public virtual void syncServerTime(Int64 arg1, float arg2) {} 
 		public virtual void teleportCastingPreNotify(UInt32 arg1, Vector3 arg2) {} 
+		public virtual void triggerNewbieGuide(Int32 arg1) {} 
 		public virtual void updateSkillsExtraLevel(Byte arg1, List<UInt32> arg2, List<Byte> arg3) {} 
 
 		public AvatarBase()
@@ -991,6 +997,10 @@ namespace KBEngine
 					break;
 				case 644:
 					onAffixWashingFailed();
+					break;
+				case 1056:
+					List<Int32> onAllAliasIds_arg1 = ((DATATYPE_AnonymousArray_10004)method.args[0]).createFromStreamEx(stream);
+					onAllAliasIds(onAllAliasIds_arg1);
 					break;
 				case 947:
 					List<GUILD_APPLY_UNION_DATA_INFO> onAllApplyGuildUnion_arg1 = ((DATATYPE_AnonymousArray_10070)method.args[0]).createFromStreamEx(stream);
@@ -1443,6 +1453,17 @@ namespace KBEngine
 					CLI_EQUIP_ITEM_VAL onEquipBaseAttrWashingSucc_arg3 = ((DATATYPE_CLI_EQUIP_ITEM_VAL)method.args[2]).createFromStreamEx(stream);
 					onEquipBaseAttrWashingSucc(onEquipBaseAttrWashingSucc_arg1, onEquipBaseAttrWashingSucc_arg2, onEquipBaseAttrWashingSucc_arg3);
 					break;
+				case 1052:
+					Byte onEquipBindValueWashingFailed_arg1 = stream.readUint8();
+					UInt16 onEquipBindValueWashingFailed_arg2 = stream.readUint16();
+					onEquipBindValueWashingFailed(onEquipBindValueWashingFailed_arg1, onEquipBindValueWashingFailed_arg2);
+					break;
+				case 1051:
+					Byte onEquipBindValueWashingSucc_arg1 = stream.readUint8();
+					UInt16 onEquipBindValueWashingSucc_arg2 = stream.readUint16();
+					UInt32 onEquipBindValueWashingSucc_arg3 = stream.readUint32();
+					onEquipBindValueWashingSucc(onEquipBindValueWashingSucc_arg1, onEquipBindValueWashingSucc_arg2, onEquipBindValueWashingSucc_arg3);
+					break;
 				case 666:
 					Byte onEquipBlessSucc_arg1 = stream.readUint8();
 					UInt16 onEquipBlessSucc_arg2 = stream.readUint16();
@@ -1519,7 +1540,19 @@ namespace KBEngine
 					Byte onEquipSpiritWashingSucc_arg1 = stream.readUint8();
 					UInt16 onEquipSpiritWashingSucc_arg2 = stream.readUint16();
 					CLI_SPIRIT_INFO onEquipSpiritWashingSucc_arg3 = ((DATATYPE_CLI_SPIRIT_INFO)method.args[2]).createFromStreamEx(stream);
-					onEquipSpiritWashingSucc(onEquipSpiritWashingSucc_arg1, onEquipSpiritWashingSucc_arg2, onEquipSpiritWashingSucc_arg3);
+					Byte onEquipSpiritWashingSucc_arg4 = stream.readUint8();
+					onEquipSpiritWashingSucc(onEquipSpiritWashingSucc_arg1, onEquipSpiritWashingSucc_arg2, onEquipSpiritWashingSucc_arg3, onEquipSpiritWashingSucc_arg4);
+					break;
+				case 1055:
+					Byte onEquipUpgradeFailed_arg1 = stream.readUint8();
+					UInt16 onEquipUpgradeFailed_arg2 = stream.readUint16();
+					onEquipUpgradeFailed(onEquipUpgradeFailed_arg1, onEquipUpgradeFailed_arg2);
+					break;
+				case 1054:
+					Byte onEquipUpgradeSucc_arg1 = stream.readUint8();
+					UInt16 onEquipUpgradeSucc_arg2 = stream.readUint16();
+					Byte onEquipUpgradeSucc_arg3 = stream.readUint8();
+					onEquipUpgradeSucc(onEquipUpgradeSucc_arg1, onEquipUpgradeSucc_arg2, onEquipUpgradeSucc_arg3);
 					break;
 				case 494:
 					Int32 onEventTips_arg1 = stream.readInt32();
@@ -2940,11 +2973,6 @@ namespace KBEngine
 					Byte onUpdateTeamMembeSex_arg2 = stream.readUint8();
 					onUpdateTeamMembeSex(onUpdateTeamMembeSex_arg1, onUpdateTeamMembeSex_arg2);
 					break;
-				case 370:
-					UInt64 onUpdateTeamMemberEquipSetlv_arg1 = stream.readUint64();
-					Byte onUpdateTeamMemberEquipSetlv_arg2 = stream.readUint8();
-					onUpdateTeamMemberEquipSetlv(onUpdateTeamMemberEquipSetlv_arg1, onUpdateTeamMemberEquipSetlv_arg2);
-					break;
 				case 368:
 					UInt64 onUpdateTeamMemberHp_arg1 = stream.readUint64();
 					Int32 onUpdateTeamMemberHp_arg2 = stream.readInt32();
@@ -3168,6 +3196,10 @@ namespace KBEngine
 					UInt32 teleportCastingPreNotify_arg1 = stream.readUint32();
 					Vector3 teleportCastingPreNotify_arg2 = stream.readVector3();
 					teleportCastingPreNotify(teleportCastingPreNotify_arg1, teleportCastingPreNotify_arg2);
+					break;
+				case 370:
+					Int32 triggerNewbieGuide_arg1 = stream.readInt32();
+					triggerNewbieGuide(triggerNewbieGuide_arg1);
 					break;
 				case 105:
 					Byte updateSkillsExtraLevel_arg1 = stream.readUint8();
@@ -3765,7 +3797,7 @@ namespace KBEngine
 						break;
 					case 363:
 						AUTH_PERMISSION_DATA_INFO oldval_authPermission = authPermission;
-						authPermission = ((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[347]).createFromStreamEx(stream);
+						authPermission = ((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[344]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -4005,7 +4037,7 @@ namespace KBEngine
 						break;
 					case 145:
 						CHIEF_DUNGEON_PLAY_MODE_PLAYER_OBJ oldval_chiefInfo = chiefInfo;
-						chiefInfo = ((DATATYPE_CHIEF_DUNGEON_PLAY_MODE_PLAYER_OBJ)EntityDef.id2datatypes[206]).createFromStreamEx(stream);
+						chiefInfo = ((DATATYPE_CHIEF_DUNGEON_PLAY_MODE_PLAYER_OBJ)EntityDef.id2datatypes[203]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -4117,7 +4149,7 @@ namespace KBEngine
 						break;
 					case 413:
 						CRUSADE_DUNGEON_PLAY_MODE_PLAYER_OBJ oldval_crusadeInfo = crusadeInfo;
-						crusadeInfo = ((DATATYPE_CRUSADE_DUNGEON_PLAY_MODE_PLAYER_OBJ)EntityDef.id2datatypes[205]).createFromStreamEx(stream);
+						crusadeInfo = ((DATATYPE_CRUSADE_DUNGEON_PLAY_MODE_PLAYER_OBJ)EntityDef.id2datatypes[202]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -4341,7 +4373,7 @@ namespace KBEngine
 						break;
 					case 133:
 						DUEL_ATTR_DATA_INFO oldval_duelAttr = duelAttr;
-						duelAttr = ((DATATYPE_DUEL_ATTR_DATA_INFO)EntityDef.id2datatypes[326]).createFromStreamEx(stream);
+						duelAttr = ((DATATYPE_DUEL_ATTR_DATA_INFO)EntityDef.id2datatypes[323]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -4357,7 +4389,7 @@ namespace KBEngine
 						break;
 					case 441:
 						ENEMY_MGR_DATA_INFO oldval_enemyMgr = enemyMgr;
-						enemyMgr = ((DATATYPE_ENEMY_MGR_DATA_INFO)EntityDef.id2datatypes[319]).createFromStreamEx(stream);
+						enemyMgr = ((DATATYPE_ENEMY_MGR_DATA_INFO)EntityDef.id2datatypes[316]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -4885,7 +4917,7 @@ namespace KBEngine
 						break;
 					case 115:
 						INSTANT_POTION_SLOTS_DATA_INFO oldval_instantPotionSlots = instantPotionSlots;
-						instantPotionSlots = ((DATATYPE_INSTANT_POTION_SLOTS_DATA_INFO)EntityDef.id2datatypes[324]).createFromStreamEx(stream);
+						instantPotionSlots = ((DATATYPE_INSTANT_POTION_SLOTS_DATA_INFO)EntityDef.id2datatypes[321]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -5475,6 +5507,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 30402:
+						float oldval_mulSpeed = mulSpeed;
+						mulSpeed = stream.readFloat();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMulSpeedChanged(oldval_mulSpeed);
+						}
+						else
+						{
+							if(inWorld)
+								onMulSpeedChanged(oldval_mulSpeed);
+						}
+
+						break;
 					case 9:
 						string oldval_name = name;
 						name = stream.readUnicode();
@@ -5749,7 +5797,7 @@ namespace KBEngine
 						break;
 					case 82:
 						AVATAR_SCORES_VAL oldval_scoresInfo = scoresInfo;
-						scoresInfo = ((DATATYPE_AVATAR_SCORES_VAL)EntityDef.id2datatypes[178]).createFromStreamEx(stream);
+						scoresInfo = ((DATATYPE_AVATAR_SCORES_VAL)EntityDef.id2datatypes[175]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -9167,6 +9215,27 @@ namespace KBEngine
 					else
 					{
 						onMulMpRecoveryChanged(oldval_mulMpRecovery);
+					}
+				}
+			}
+
+			float oldval_mulSpeed = mulSpeed;
+			Property prop_mulSpeed = pdatas[136];
+			if(prop_mulSpeed.isBase())
+			{
+				if(inited && !inWorld)
+					onMulSpeedChanged(oldval_mulSpeed);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_mulSpeed.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMulSpeedChanged(oldval_mulSpeed);
 					}
 				}
 			}

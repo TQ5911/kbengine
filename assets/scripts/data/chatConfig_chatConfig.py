@@ -89,7 +89,7 @@ datas = _tools.RODict({
     }),
     "receivePacketLimit": _tools.RODict({
         "ID": "receivePacketLimit",
-        "value": 20,
+        "value": 50,
     }),
     "receivePacketLimitMsg": _tools.RODict({
         "ID": "receivePacketLimitMsg",
@@ -138,5 +138,13 @@ datas = _tools.RODict({
     "sendPacketMsg": _tools.RODict({
         "ID": "sendPacketMsg",
         "value": "恭喜发财，大吉大利！#祝福收下，好运连连！#手气最佳，非你莫属！#财源广进，万事如意！",
+    }),
+    "mainRedPacketMsgShow": _tools.RODict({
+        "ID": "mainRedPacketMsgShow",
+        "value": "<color=#00000000><quad name=48 size=24/></color><color=#C4971D>{0}</color>",
+    }),
+    "sendPacketNumLimitMsg": _tools.RODict({
+        "ID": "sendPacketNumLimitMsg",
+        "value": 54000339,
     })
 })

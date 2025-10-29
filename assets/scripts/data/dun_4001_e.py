@@ -26,15 +26,10 @@ datas ={
     "transition": {
       "finished": [
         1002,
-        1018,
-        1016,
-        1005,
-        1019,
-        1021,
-        1007,
-        1020,
-        1010,
-        1014,
+        1017,
+        1022,
+        1015,
+        1023,
         1024,
         1027,
         1028,
@@ -42,7 +37,9 @@ datas ={
         1003,
         1034,
         1035,
-        1036
+        1036,
+        1018,
+        1040
       ]
     }
   },
@@ -63,15 +60,6 @@ datas ={
     "aiName": 0,
     "hpPercent": 0.0,
     "transition": {}
-  },
-  "1005": {
-    "type": "taskInProgress",
-    "taskID": 86060003,
-    "transition": {
-      "finished": [
-        1011
-      ]
-    }
   },
   "1004": {
     "type": "dunFailed",
@@ -99,15 +87,6 @@ datas ={
     "hpPercent": 0.0,
     "transition": {}
   },
-  "1007": {
-    "type": "taskInProgress",
-    "taskID": 86060005,
-    "transition": {
-      "finished": [
-        1012
-      ]
-    }
-  },
   "1009": {
     "type": "createMonster",
     "entityID": [
@@ -127,21 +106,11 @@ datas ={
     "hpPercent": 0.0,
     "transition": {}
   },
-  "1010": {
-    "type": "taskInProgress",
-    "taskID": 86060007,
-    "transition": {
-      "finished": [
-        1013
-      ]
-    }
-  },
   "1011": {
     "type": "integrationEvent",
     "transition": {
       "finished": [
-        1006,
-        1022
+        1006
       ]
     }
   },
@@ -149,8 +118,7 @@ datas ={
     "type": "integrationEvent",
     "transition": {
       "finished": [
-        1008,
-        1015
+        1008
       ]
     }
   },
@@ -160,14 +128,13 @@ datas ={
       "finished": [
         1009,
         1025,
-        1026,
-        1023
+        1026
       ]
     }
   },
   "1015": {
     "type": "taskFinished",
-    "taskID": 86060006,
+    "taskID": 86060112,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -176,18 +143,9 @@ datas ={
       ]
     }
   },
-  "1016": {
-    "type": "taskInProgress",
-    "taskID": 86060002,
-    "transition": {
-      "finished": [
-        1017
-      ]
-    }
-  },
   "1017": {
     "type": "taskFinished",
-    "taskID": 86060002,
+    "taskID": 86060107,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -196,47 +154,9 @@ datas ={
       ]
     }
   },
-  "1018": {
-    "type": "taskFinished",
-    "taskID": 86060001,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1017
-      ]
-    }
-  },
-  "1019": {
-    "type": "taskInProgress",
-    "taskID": 86060004,
-    "transition": {
-      "finished": [
-        1022
-      ]
-    }
-  },
-  "1020": {
-    "type": "taskInProgress",
-    "taskID": 86060006,
-    "transition": {
-      "finished": [
-        1015
-      ]
-    }
-  },
-  "1021": {
-    "type": "taskInProgress",
-    "taskID": 86060029,
-    "transition": {
-      "finished": [
-        1022
-      ]
-    }
-  },
   "1022": {
     "type": "taskFinished",
-    "taskID": 86060029,
+    "taskID": 86060110,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -324,18 +244,9 @@ datas ={
     "duration": -1.0,
     "transition": {}
   },
-  "1014": {
-    "type": "taskInProgress",
-    "taskID": 86060014,
-    "transition": {
-      "finished": [
-        1029
-      ]
-    }
-  },
   "1023": {
     "type": "taskFinished",
-    "taskID": 86060007,
+    "taskID": 86060113,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -350,7 +261,8 @@ datas ={
       "finished": [
         1030,
         1031,
-        1033
+        1033,
+        1037
       ]
     }
   },
@@ -415,5 +327,61 @@ datas ={
     "lv": "9",
     "ifSetBoss": 0,
     "transition": {}
+  },
+  "1037": {
+    "type": "delayLoop",
+    "firstDelay": 3.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1038
+      ]
+    }
+  },
+  "1038": {
+    "type": "transferToTheDesignatedMap",
+    "mapId": 1002,
+    "posX": 302.3398,
+    "posY": 17.8216,
+    "posZ": 63.28776,
+    "angle": 0,
+    "transition": {}
+  },
+  "1014": {
+    "type": "castCinemaPlay",
+    "cinemaPlayID": 98010002,
+    "transition": {}
+  },
+  "1018": {
+    "type": "taskFinished",
+    "taskID": 86060105,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1039
+      ]
+    }
+  },
+  "1039": {
+    "type": "delayLoop",
+    "firstDelay": 5.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1014
+      ]
+    }
+  },
+  "1040": {
+    "type": "taskInProgress",
+    "taskID": 86060106,
+    "transition": {
+      "finished": [
+        1039
+      ]
+    }
   }
 }

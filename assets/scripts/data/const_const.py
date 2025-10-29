@@ -573,7 +573,7 @@ datas = _tools.RODict({
     }),
     "translucentRangeCamera": _tools.RODict({
         "ID": "translucentRangeCamera",
-        "value": (1, 2.8),
+        "value": (1, 1.5),
     }),
     "taskGuideFxNum": _tools.RODict({
         "ID": "taskGuideFxNum",
@@ -637,7 +637,7 @@ datas = _tools.RODict({
     }),
     "SelectRolePositon": _tools.RODict({
         "ID": "SelectRolePositon",
-        "value": ((2.03, -2.4, -27.96), (2.03, -2.4, -27.96), (-1.674, 180, 0)),
+        "value": ((2.03, -2.4, -27.96), (2.03, -2.4, -27.96), (-1.674, 180, 0), (-1.674, 180, 0)),
     }),
     "BossProfileRange": _tools.RODict({
         "ID": "BossProfileRange",
@@ -694,6 +694,10 @@ datas = _tools.RODict({
     "selectedTargetMonster": _tools.RODict({
         "ID": "selectedTargetMonster",
         "value": "Assets/Res/ui/texture/maincity/target_monster_icon.png",
+    }),
+    "selectedTargetNeutrality": _tools.RODict({
+        "ID": "selectedTargetNeutrality",
+        "value": "Assets/Res/ui/texture/common/Selection_neutrality_Icon.png",
     }),
     "nearbyListLimit": _tools.RODict({
         "ID": "nearbyListLimit",
@@ -822,5 +826,41 @@ datas = _tools.RODict({
     "OnDeadLaterTime": _tools.RODict({
         "ID": "OnDeadLaterTime",
         "value": 2,
+    }),
+    "autoGatherVerticalMaxDistance": _tools.RODict({
+        "ID": "autoGatherVerticalMaxDistance",
+        "value": 3,
+    }),
+    "dpsStaText1": _tools.RODict({
+        "ID": "dpsStaText1",
+        "value": "伤害统计",
+    }),
+    "dpsStaText2": _tools.RODict({
+        "ID": "dpsStaText2",
+        "value": "治疗统计",
+    }),
+    "dpsStaText3": _tools.RODict({
+        "ID": "dpsStaText3",
+        "value": "承伤统计",
+    }),
+    "dpsStaText4": _tools.RODict({
+        "ID": "dpsStaText4",
+        "value": "重置数据",
+    }),
+    "dpsRankText1": _tools.RODict({
+        "ID": "dpsRankText1",
+        "value": "伤害排行",
+    }),
+    "dpsRankText2": _tools.RODict({
+        "ID": "dpsRankText2",
+        "value": "治疗排行",
+    }),
+    "dpsRankText3": _tools.RODict({
+        "ID": "dpsRankText3",
+        "value": "承伤排行",
+    }),
+    "dpsResetCheck": _tools.RODict({
+        "ID": "dpsResetCheck",
+        "value": 54000386,
     })
 })

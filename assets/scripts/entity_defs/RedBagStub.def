@@ -29,6 +29,7 @@
         <doGetRedBagRankList>
             <Arg>          MAILBOX         </Arg>
             <Arg>           GUILD_UUID           </Arg>
+            <Arg>          UINT32         </Arg>
             <Arg>          PY_LIST         </Arg>
         </doGetRedBagRankList>
         <doGetRedBagList>

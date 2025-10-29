@@ -28,6 +28,56 @@ from ai import botAI
 mount_item_id = [30050078, 30050080, 30050090]
 
 
+# --- RPC call statistics decorator for PlayerAvatar ---
+import functools
+import inspect
+
+
+def _count_call(key: str):
+    def _decorator(func):
+        @functools.wraps(func)
+        def _wrap(*args, **kwargs):
+            try:
+                stats = GD.rpc_call_statistics
+                stats[key] = stats.get(key, 0) + 1
+            except Exception:
+                pass
+            return func(*args, **kwargs)
+        return _wrap
+    return _decorator
+
+
+def rpc_counted_class(cls):
+    """Class decorator that wraps instance methods (including inherited).
+
+    - Counts calls into GD.rpc_call_statistics using key: "<SubClass>.<method>"
+    - Skips dunder, properties, staticmethod, classmethod.
+    - Avoids double-wrapping if a name is already wrapped on the subclass.
+    """
+    seen = set()
+    # Walk the MRO so we also include parent classes
+    for base in cls.mro():
+        if base is object:
+            continue
+        for name, attr in base.__dict__.items():
+            if name in seen:
+                continue
+            if name.startswith('__') and name.endswith('__'):
+                continue
+            # Skip non-instance-method descriptors
+            if isinstance(attr, (staticmethod, classmethod, property)):
+                continue
+            if inspect.isfunction(attr):
+                # If subclass already defines a wrapper, keep it
+                existing = cls.__dict__.get(name)
+                if existing is not None and inspect.isfunction(existing) and existing is not attr:
+                    seen.add(name)
+                    continue
+                setattr(cls, name, _count_call(f"{cls.__name__}.{name}")(attr))
+                seen.add(name)
+    return cls
+
+
 class ModeDoing(object):
     MODE_INIT = 0
     MODE_MOVE = 1
@@ -217,6 +267,7 @@ class PlayerAvatarSkillsCDMixin(object):
         return not self.isSkillReady(slotId)
 
 
+@rpc_counted_class
 class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
     # 帮战相关
     battleFieldDungeonMatchingBeginTime = 0
@@ -249,6 +300,7 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
             return
 
         func = getattr(d, methodName, None)
+        GD.rpc_call_statistics[methodName] = GD.rpc_call_statistics.get(methodName, 0) + 1
         func and func(*args)
 
     # def botOffLine(self):
@@ -294,6 +346,13 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
     def onEnterWorld(self):
         print('avatar onEnterWorld', self.id, self.name, self.gbId)
         self.callDelegateMethod('onEnterWorld', ())
+
+    def syncServerTime(self, *args):
+        d = self.clientapp.getPlayerDelegate()
+        if not d:
+            return
+
+        d.clientObj.updateTickTime()
 
     def onEnterSpace(self):
         """

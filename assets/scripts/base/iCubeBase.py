@@ -3,8 +3,10 @@ import KBEngine
 from KBEDebug import *
 
 import gameconst
+import formula
 import gameengine
 import dropAward
+import actionContext
 import gameclass
 import utils
 import activityControl_config as AC_CD
@@ -20,14 +22,15 @@ class ICubeBase(object):
     def _cubeWeeklyRefresh(self, *args):
         self.cubeUseItemTimes = 0
 
-    def beforeEnterCubeDecrementCnt(self, extra):
+    def beforeEnterCubeDecrementCnt(self, spaceNo, extra):
         if self.leftCubeTimes <= 0:
             WARNING_MSG('beforeEnterCubeDecrementCnt: leftCubeTimes <= 0')
             return False
 
-        extra['needSetLeftTime'] = 1
-        gameengine.getGlobalBase('CubeStub').doEnterCube(
-            self, cube_config.datas['cube_hall']['value'], self.gbID, extra)
+        extra['enterCubeType'] = gameconst.ENTER_CUBE_DEDUCT_TIMES
+        _mapId = formula.getMapId(spaceNo)
+        gameengine.getCubeStubBySpaceNo(spaceNo).doEnterCube(
+            self, _mapId, self.gbID, extra)
 
     def afterEnterCubeDeductTimes(self):
         self.leftCubeTimes = max(0, self.leftCubeTimes - 1)
@@ -35,14 +38,15 @@ class ICubeBase(object):
         #蜂巢秘境 又名魔方阵
         self.completeGuildTask(gameconst.GuildTaskType.ENTERMAP,cube_config.datas['cubeActID']['value'])
 
-    def autoRenewCubeRoom(self, switchData):
+    def autoRenewCubeRoom(self, switchData, cubeDurCtx):
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']):
             INFO_MSG('ICubeBase::autoRenewCubeRoom: cubeActID not open')
+            cubeDurCtx.done(False)
             return
 
         if self.leftCubeTimes > 0:
             self.leftCubeTimes -= 1
-            self.cell.directlyAddCubeRoomDuration('addRoomDurationFailedRewindTimes', ())
+            self.cell.directlyAddCubeRoomDuration('addRoomDurationFailedRewindTimes', (), cubeDurCtx)
             return
 
         if self.cubeUseCoinTimes < cube_config.datas['cubeNumCoinDailyLimit']['value']:
@@ -86,7 +90,8 @@ class ICubeBase(object):
                 return
 
             self.leftCubeTimes -= 1
-            self.cell.directlyAddCubeRoomDuration('addRoomDurationFailedRewindTimes', ())
+            _ctx = actionContext.CubeDurCtx(self)
+            self.cell.directlyAddCubeRoomDuration('addRoomDurationFailedRewindTimes', (), _ctx)
             return
 
         self.useItemAddCubeTimes(itemId, num, isAddDuration, False, gameconst.CubeAddTimesReason.FROM_CLIENT)
@@ -136,7 +141,8 @@ class ICubeBase(object):
             self.cubeUseItemTimes += num
 
         if isAddDuration:
-            self.cell.directlyAddCubeRoomDuration('addRoomDurationFailed', (_opUUID, itemId, num))
+            _ctx = actionContext.CubeDurCtx(self)
+            self.cell.directlyAddCubeRoomDuration('addRoomDurationFailed', (_opUUID, itemId, num), _ctx)
         else:
             self.leftCubeTimes += num
 

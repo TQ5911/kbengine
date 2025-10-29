@@ -18,1400 +18,1400 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "grade": 1,
-        "expPlayer": 72,
+        "expPlayer": 40,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     2: _tools.RODict({
         "ID": 2,
         "grade": 2,
-        "expPlayer": 250,
+        "expPlayer": 120,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     3: _tools.RODict({
         "ID": 3,
         "grade": 3,
-        "expPlayer": 250,
+        "expPlayer": 170,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     4: _tools.RODict({
         "ID": 4,
         "grade": 4,
-        "expPlayer": 290,
+        "expPlayer": 210,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     5: _tools.RODict({
         "ID": 5,
         "grade": 5,
-        "expPlayer": 330,
+        "expPlayer": 220,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     6: _tools.RODict({
         "ID": 6,
         "grade": 6,
-        "expPlayer": 390,
+        "expPlayer": 230,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     7: _tools.RODict({
         "ID": 7,
         "grade": 7,
-        "expPlayer": 450,
+        "expPlayer": 260,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     8: _tools.RODict({
         "ID": 8,
         "grade": 8,
-        "expPlayer": 520,
+        "expPlayer": 290,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     9: _tools.RODict({
         "ID": 9,
         "grade": 9,
-        "expPlayer": 690,
+        "expPlayer": 320,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     10: _tools.RODict({
         "ID": 10,
         "grade": 10,
-        "expPlayer": 860,
+        "expPlayer": 350,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     11: _tools.RODict({
         "ID": 11,
         "grade": 11,
-        "expPlayer": 1240,
+        "expPlayer": 380,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     12: _tools.RODict({
         "ID": 12,
         "grade": 12,
-        "expPlayer": 1430,
+        "expPlayer": 630,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     13: _tools.RODict({
         "ID": 13,
         "grade": 13,
-        "expPlayer": 1590,
+        "expPlayer": 1140,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     14: _tools.RODict({
         "ID": 14,
         "grade": 14,
-        "expPlayer": 1800,
+        "expPlayer": 2050,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     15: _tools.RODict({
         "ID": 15,
         "grade": 15,
-        "expPlayer": 2010,
+        "expPlayer": 3700,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     16: _tools.RODict({
         "ID": 16,
         "grade": 16,
-        "expPlayer": 2410,
+        "expPlayer": 6610,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     17: _tools.RODict({
         "ID": 17,
         "grade": 17,
-        "expPlayer": 2890,
+        "expPlayer": 8751,
         "fakeOnlineTime": 2,
         "score": 0
     }),
     18: _tools.RODict({
         "ID": 18,
         "grade": 18,
-        "expPlayer": 3470,
+        "expPlayer": 11146,
         "fakeOnlineTime": 4,
         "score": 0
     }),
     19: _tools.RODict({
         "ID": 19,
         "grade": 19,
-        "expPlayer": 4160,
+        "expPlayer": 14113,
         "fakeOnlineTime": 4,
         "score": 0
     }),
     20: _tools.RODict({
         "ID": 20,
         "grade": 20,
-        "expPlayer": 5410,
+        "expPlayer": 17418,
         "fakeOnlineTime": 4,
         "score": 0
     }),
     21: _tools.RODict({
         "ID": 21,
         "grade": 21,
-        "expPlayer": 7030,
+        "expPlayer": 21060,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     22: _tools.RODict({
         "ID": 22,
         "grade": 22,
-        "expPlayer": 9840,
+        "expPlayer": 25486,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     23: _tools.RODict({
         "ID": 23,
         "grade": 23,
-        "expPlayer": 13780,
+        "expPlayer": 30333,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     24: _tools.RODict({
         "ID": 24,
         "grade": 24,
-        "expPlayer": 19290,
+        "expPlayer": 36132,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     25: _tools.RODict({
         "ID": 25,
         "grade": 25,
-        "expPlayer": 27295,
+        "expPlayer": 42438,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     26: _tools.RODict({
         "ID": 26,
         "grade": 26,
-        "expPlayer": 45004,
+        "expPlayer": 52488,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     27: _tools.RODict({
         "ID": 27,
         "grade": 27,
-        "expPlayer": 74224,
+        "expPlayer": 68429,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     28: _tools.RODict({
         "ID": 28,
         "grade": 28,
-        "expPlayer": 134680,
+        "expPlayer": 87091,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     29: _tools.RODict({
         "ID": 29,
         "grade": 29,
-        "expPlayer": 222190,
+        "expPlayer": 108864,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     30: _tools.RODict({
         "ID": 30,
         "grade": 30,
-        "expPlayer": 266610,
+        "expPlayer": 132970,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     31: _tools.RODict({
         "ID": 31,
         "grade": 31,
-        "expPlayer": 319930,
+        "expPlayer": 160704,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     32: _tools.RODict({
         "ID": 32,
         "grade": 32,
-        "expPlayer": 383900,
+        "expPlayer": 196830,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     33: _tools.RODict({
         "ID": 33,
         "grade": 33,
-        "expPlayer": 460670,
+        "expPlayer": 238140,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     34: _tools.RODict({
         "ID": 34,
         "grade": 34,
-        "expPlayer": 552790,
+        "expPlayer": 285120,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     35: _tools.RODict({
         "ID": 35,
         "grade": 35,
-        "expPlayer": 663340,
+        "expPlayer": 338256,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     36: _tools.RODict({
         "ID": 36,
         "grade": 36,
-        "expPlayer": 796000,
+        "expPlayer": 400140,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     37: _tools.RODict({
         "ID": 37,
         "grade": 37,
-        "expPlayer": 955190,
+        "expPlayer": 469476,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     38: _tools.RODict({
         "ID": 38,
         "grade": 38,
-        "expPlayer": 1146210,
+        "expPlayer": 549180,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     39: _tools.RODict({
         "ID": 39,
         "grade": 39,
-        "expPlayer": 1375440,
+        "expPlayer": 637632,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     40: _tools.RODict({
         "ID": 40,
         "grade": 40,
-        "expPlayer": 1512980,
+        "expPlayer": 764122,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     41: _tools.RODict({
         "ID": 41,
         "grade": 41,
-        "expPlayer": 1830700,
+        "expPlayer": 908237,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     42: _tools.RODict({
         "ID": 42,
         "grade": 42,
-        "expPlayer": 2196830,
+        "expPlayer": 1071533,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     43: _tools.RODict({
         "ID": 43,
         "grade": 43,
-        "expPlayer": 2746020,
+        "expPlayer": 1259194,
         "fakeOnlineTime": 10,
         "score": 0
     }),
     44: _tools.RODict({
         "ID": 44,
         "grade": 44,
-        "expPlayer": 3432510,
+        "expPlayer": 1469664,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     45: _tools.RODict({
         "ID": 45,
         "grade": 45,
-        "expPlayer": 4290630,
+        "expPlayer": 1708646,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     46: _tools.RODict({
         "ID": 46,
         "grade": 46,
-        "expPlayer": 5363270,
+        "expPlayer": 1978474,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     47: _tools.RODict({
         "ID": 47,
         "grade": 47,
-        "expPlayer": 6704070,
+        "expPlayer": 2281478,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     48: _tools.RODict({
         "ID": 48,
         "grade": 48,
-        "expPlayer": 8380060,
+        "expPlayer": 2624918,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     49: _tools.RODict({
         "ID": 49,
         "grade": 49,
-        "expPlayer": 11522580,
+        "expPlayer": 3011904,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     50: _tools.RODict({
         "ID": 50,
         "grade": 50,
-        "expPlayer": 14848400,
+        "expPlayer": 3691656,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     51: _tools.RODict({
         "ID": 51,
         "grade": 51,
-        "expPlayer": 20045300,
+        "expPlayer": 4471200,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     52: _tools.RODict({
         "ID": 52,
         "grade": 52,
-        "expPlayer": 27061140,
+        "expPlayer": 5360256,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     53: _tools.RODict({
         "ID": 53,
         "grade": 53,
-        "expPlayer": 36532510,
+        "expPlayer": 6376320,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     54: _tools.RODict({
         "ID": 54,
         "grade": 54,
-        "expPlayer": 49318860,
+        "expPlayer": 7531056,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     55: _tools.RODict({
         "ID": 55,
         "grade": 55,
-        "expPlayer": 66580440,
+        "expPlayer": 8836128,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     56: _tools.RODict({
         "ID": 56,
         "grade": 56,
-        "expPlayer": 89883580,
+        "expPlayer": 11010816,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     57: _tools.RODict({
         "ID": 57,
         "grade": 57,
-        "expPlayer": 121342800,
+        "expPlayer": 13506912,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     58: _tools.RODict({
         "ID": 58,
         "grade": 58,
-        "expPlayer": 163812760,
+        "expPlayer": 16355520,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     59: _tools.RODict({
         "ID": 59,
         "grade": 59,
-        "expPlayer": 221147200,
+        "expPlayer": 19616256,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     60: _tools.RODict({
         "ID": 60,
         "grade": 60,
-        "expPlayer": 243261920,
+        "expPlayer": 23328000,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     61: _tools.RODict({
         "ID": 61,
         "grade": 61,
-        "expPlayer": 267588100,
+        "expPlayer": 28605960,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     62: _tools.RODict({
         "ID": 62,
         "grade": 62,
-        "expPlayer": 294346910,
+        "expPlayer": 34642080,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     63: _tools.RODict({
         "ID": 63,
         "grade": 63,
-        "expPlayer": 470955020,
+        "expPlayer": 41527728,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     64: _tools.RODict({
         "ID": 64,
         "grade": 64,
-        "expPlayer": 753528000,
+        "expPlayer": 49385376,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     65: _tools.RODict({
         "ID": 65,
         "grade": 65,
-        "expPlayer": 1205644760,
+        "expPlayer": 58327776,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     66: _tools.RODict({
         "ID": 66,
         "grade": 66,
-        "expPlayer": 1929031570,
+        "expPlayer": 73366560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     67: _tools.RODict({
         "ID": 67,
         "grade": 67,
-        "expPlayer": 3472256770,
+        "expPlayer": 88840800,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     68: _tools.RODict({
         "ID": 68,
         "grade": 68,
-        "expPlayer": 6250062140,
+        "expPlayer": 106527960,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     69: _tools.RODict({
         "ID": 69,
         "grade": 69,
-        "expPlayer": 11250111800,
+        "expPlayer": 126671040,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     70: _tools.RODict({
         "ID": 70,
         "grade": 70,
-        "expPlayer": 12705000060,
+        "expPlayer": 149568120,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     71: _tools.RODict({
         "ID": 71,
         "grade": 71,
-        "expPlayer": 4779560,
+        "expPlayer": 169317540,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     72: _tools.RODict({
         "ID": 72,
         "grade": 72,
-        "expPlayer": 4971122,
+        "expPlayer": 191373840,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     73: _tools.RODict({
         "ID": 73,
         "grade": 73,
-        "expPlayer": 5167888,
+        "expPlayer": 216061020,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     74: _tools.RODict({
         "ID": 74,
         "grade": 74,
-        "expPlayer": 5369934,
+        "expPlayer": 243631800,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     75: _tools.RODict({
         "ID": 75,
         "grade": 75,
-        "expPlayer": 5577327,
+        "expPlayer": 274402080,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     76: _tools.RODict({
         "ID": 76,
         "grade": 76,
-        "expPlayer": 5790142,
+        "expPlayer": 308759040,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     77: _tools.RODict({
         "ID": 77,
         "grade": 77,
-        "expPlayer": 6008450,
+        "expPlayer": 347062320,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     78: _tools.RODict({
         "ID": 78,
         "grade": 78,
-        "expPlayer": 6232326,
+        "expPlayer": 389746080,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     79: _tools.RODict({
         "ID": 79,
         "grade": 79,
-        "expPlayer": 6461836,
+        "expPlayer": 437327100,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     80: _tools.RODict({
         "ID": 80,
         "grade": 80,
-        "expPlayer": 6697058,
+        "expPlayer": 490296240,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     81: _tools.RODict({
         "ID": 81,
         "grade": 81,
-        "expPlayer": 6938060,
+        "expPlayer": 549290160,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     82: _tools.RODict({
         "ID": 82,
         "grade": 82,
-        "expPlayer": 7184917,
+        "expPlayer": 614922840,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     83: _tools.RODict({
         "ID": 83,
         "grade": 83,
-        "expPlayer": 7437698,
+        "expPlayer": 687903840,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     84: _tools.RODict({
         "ID": 84,
         "grade": 84,
-        "expPlayer": 7696477,
+        "expPlayer": 769046400,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     85: _tools.RODict({
         "ID": 85,
         "grade": 85,
-        "expPlayer": 7961325,
+        "expPlayer": 859209120,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     86: _tools.RODict({
         "ID": 86,
         "grade": 86,
-        "expPlayer": 8232316,
+        "expPlayer": 959364000,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     87: _tools.RODict({
         "ID": 87,
         "grade": 87,
-        "expPlayer": 8509519,
+        "expPlayer": 1070604540,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     88: _tools.RODict({
         "ID": 88,
         "grade": 88,
-        "expPlayer": 8793009,
+        "expPlayer": 1194082560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     89: _tools.RODict({
         "ID": 89,
         "grade": 89,
-        "expPlayer": 9082855,
+        "expPlayer": 1331154000,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     90: _tools.RODict({
         "ID": 90,
         "grade": 90,
-        "expPlayer": 9379132,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     91: _tools.RODict({
         "ID": 91,
         "grade": 91,
-        "expPlayer": 9681909,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     92: _tools.RODict({
         "ID": 92,
         "grade": 92,
-        "expPlayer": 9991260,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     93: _tools.RODict({
         "ID": 93,
         "grade": 93,
-        "expPlayer": 10307257,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     94: _tools.RODict({
         "ID": 94,
         "grade": 94,
-        "expPlayer": 10629972,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     95: _tools.RODict({
         "ID": 95,
         "grade": 95,
-        "expPlayer": 10959475,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     96: _tools.RODict({
         "ID": 96,
         "grade": 96,
-        "expPlayer": 11295841,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     97: _tools.RODict({
         "ID": 97,
         "grade": 97,
-        "expPlayer": 11639140,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     98: _tools.RODict({
         "ID": 98,
         "grade": 98,
-        "expPlayer": 24249650,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     99: _tools.RODict({
         "ID": 99,
         "grade": 99,
-        "expPlayer": 25031480,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     100: _tools.RODict({
         "ID": 100,
         "grade": 100,
-        "expPlayer": 25830050,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     101: _tools.RODict({
         "ID": 101,
         "grade": 101,
-        "expPlayer": 26645540,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     102: _tools.RODict({
         "ID": 102,
         "grade": 102,
-        "expPlayer": 27478130,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     103: _tools.RODict({
         "ID": 103,
         "grade": 103,
-        "expPlayer": 28328000,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     104: _tools.RODict({
         "ID": 104,
         "grade": 104,
-        "expPlayer": 29195330,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     105: _tools.RODict({
         "ID": 105,
         "grade": 105,
-        "expPlayer": 30018712,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     106: _tools.RODict({
         "ID": 106,
         "grade": 106,
-        "expPlayer": 31450018,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     107: _tools.RODict({
         "ID": 107,
         "grade": 107,
-        "expPlayer": 32935636,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     108: _tools.RODict({
         "ID": 108,
         "grade": 108,
-        "expPlayer": 34477107,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     109: _tools.RODict({
         "ID": 109,
         "grade": 109,
-        "expPlayer": 36075995,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     110: _tools.RODict({
         "ID": 110,
         "grade": 110,
-        "expPlayer": 75600050,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     111: _tools.RODict({
         "ID": 111,
         "grade": 111,
-        "expPlayer": 81733924,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     112: _tools.RODict({
         "ID": 112,
         "grade": 112,
-        "expPlayer": 88047050,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     113: _tools.RODict({
         "ID": 113,
         "grade": 113,
-        "expPlayer": 94541674,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     114: _tools.RODict({
         "ID": 114,
         "grade": 114,
-        "expPlayer": 101220050,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     115: _tools.RODict({
         "ID": 115,
         "grade": 115,
-        "expPlayer": 469665260,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     116: _tools.RODict({
         "ID": 116,
         "grade": 116,
-        "expPlayer": 525327004,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     117: _tools.RODict({
         "ID": 117,
         "grade": 117,
-        "expPlayer": 587507255,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     118: _tools.RODict({
         "ID": 118,
         "grade": 118,
-        "expPlayer": 656961381,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     119: _tools.RODict({
         "ID": 119,
         "grade": 119,
-        "expPlayer": 734531462,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     120: _tools.RODict({
         "ID": 120,
         "grade": 120,
-        "expPlayer": 1000000049,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     121: _tools.RODict({
         "ID": 121,
         "grade": 121,
-        "expPlayer": 60357290,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     122: _tools.RODict({
         "ID": 122,
         "grade": 122,
-        "expPlayer": 62859050,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     123: _tools.RODict({
         "ID": 123,
         "grade": 123,
-        "expPlayer": 65443356,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     124: _tools.RODict({
         "ID": 124,
         "grade": 124,
-        "expPlayer": 68112240,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     125: _tools.RODict({
         "ID": 125,
         "grade": 125,
-        "expPlayer": 70867771,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     126: _tools.RODict({
         "ID": 126,
         "grade": 126,
-        "expPlayer": 73712046,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     127: _tools.RODict({
         "ID": 127,
         "grade": 127,
-        "expPlayer": 76647198,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     128: _tools.RODict({
         "ID": 128,
         "grade": 128,
-        "expPlayer": 79675395,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     129: _tools.RODict({
         "ID": 129,
         "grade": 129,
-        "expPlayer": 82798840,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     130: _tools.RODict({
         "ID": 130,
         "grade": 130,
-        "expPlayer": 86019768,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     131: _tools.RODict({
         "ID": 131,
         "grade": 131,
-        "expPlayer": 89340448,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     132: _tools.RODict({
         "ID": 132,
         "grade": 132,
-        "expPlayer": 92763188,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     133: _tools.RODict({
         "ID": 133,
         "grade": 133,
-        "expPlayer": 96290330,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     134: _tools.RODict({
         "ID": 134,
         "grade": 134,
-        "expPlayer": 99924250,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     135: _tools.RODict({
         "ID": 135,
         "grade": 135,
-        "expPlayer": 103667361,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     136: _tools.RODict({
         "ID": 136,
         "grade": 136,
-        "expPlayer": 107522114,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     137: _tools.RODict({
         "ID": 137,
         "grade": 137,
-        "expPlayer": 111490991,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     138: _tools.RODict({
         "ID": 138,
         "grade": 138,
-        "expPlayer": 115576518,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     139: _tools.RODict({
         "ID": 139,
         "grade": 139,
-        "expPlayer": 119781253,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     140: _tools.RODict({
         "ID": 140,
         "grade": 140,
-        "expPlayer": 124107792,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     141: _tools.RODict({
         "ID": 141,
         "grade": 141,
-        "expPlayer": 128558768,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     142: _tools.RODict({
         "ID": 142,
         "grade": 142,
-        "expPlayer": 133136856,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     143: _tools.RODict({
         "ID": 143,
         "grade": 143,
-        "expPlayer": 137844764,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     144: _tools.RODict({
         "ID": 144,
         "grade": 144,
-        "expPlayer": 142685240,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     145: _tools.RODict({
         "ID": 145,
         "grade": 145,
-        "expPlayer": 147661072,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     146: _tools.RODict({
         "ID": 146,
         "grade": 146,
-        "expPlayer": 152775088,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     147: _tools.RODict({
         "ID": 147,
         "grade": 147,
-        "expPlayer": 158030148,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     148: _tools.RODict({
         "ID": 148,
         "grade": 148,
-        "expPlayer": 163429160,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     149: _tools.RODict({
         "ID": 149,
         "grade": 149,
-        "expPlayer": 168975068,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     150: _tools.RODict({
         "ID": 150,
         "grade": 150,
-        "expPlayer": 174670855,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     151: _tools.RODict({
         "ID": 151,
         "grade": 151,
-        "expPlayer": 541558532,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     152: _tools.RODict({
         "ID": 152,
         "grade": 152,
-        "expPlayer": 559572509,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     153: _tools.RODict({
         "ID": 153,
         "grade": 153,
-        "expPlayer": 578063705,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     154: _tools.RODict({
         "ID": 154,
         "grade": 154,
-        "expPlayer": 597041564,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     155: _tools.RODict({
         "ID": 155,
         "grade": 155,
-        "expPlayer": 616515653,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     156: _tools.RODict({
         "ID": 156,
         "grade": 156,
-        "expPlayer": 636495656,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     157: _tools.RODict({
         "ID": 157,
         "grade": 157,
-        "expPlayer": 656991380,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     158: _tools.RODict({
         "ID": 158,
         "grade": 158,
-        "expPlayer": 678012779,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     159: _tools.RODict({
         "ID": 159,
         "grade": 159,
-        "expPlayer": 1165949825,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     160: _tools.RODict({
         "ID": 160,
         "grade": 160,
-        "expPlayer": 1202788275,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     161: _tools.RODict({
         "ID": 161,
         "grade": 161,
-        "expPlayer": 1240553815,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     162: _tools.RODict({
         "ID": 162,
         "grade": 162,
-        "expPlayer": 255852815,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     163: _tools.RODict({
         "ID": 163,
         "grade": 163,
-        "expPlayer": 263787259,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     164: _tools.RODict({
         "ID": 164,
         "grade": 164,
-        "expPlayer": 271917706,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     165: _tools.RODict({
         "ID": 165,
         "grade": 165,
-        "expPlayer": 280247775,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     166: _tools.RODict({
         "ID": 166,
         "grade": 166,
-        "expPlayer": 288781123,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     167: _tools.RODict({
         "ID": 167,
         "grade": 167,
-        "expPlayer": 297521454,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     168: _tools.RODict({
         "ID": 168,
         "grade": 168,
-        "expPlayer": 306472521,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     169: _tools.RODict({
         "ID": 169,
         "grade": 169,
-        "expPlayer": 315638117,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     170: _tools.RODict({
         "ID": 170,
         "grade": 170,
-        "expPlayer": 325022083,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     171: _tools.RODict({
         "ID": 171,
         "grade": 171,
-        "expPlayer": 334628303,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     172: _tools.RODict({
         "ID": 172,
         "grade": 172,
-        "expPlayer": 344460709,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     173: _tools.RODict({
         "ID": 173,
         "grade": 173,
-        "expPlayer": 354523279,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     174: _tools.RODict({
         "ID": 174,
         "grade": 174,
-        "expPlayer": 364820038,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     175: _tools.RODict({
         "ID": 175,
         "grade": 175,
-        "expPlayer": 375355057,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     176: _tools.RODict({
         "ID": 176,
         "grade": 176,
-        "expPlayer": 386132454,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     177: _tools.RODict({
         "ID": 177,
         "grade": 177,
-        "expPlayer": 397156390,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     178: _tools.RODict({
         "ID": 178,
         "grade": 178,
-        "expPlayer": 408431084,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     179: _tools.RODict({
         "ID": 179,
         "grade": 179,
-        "expPlayer": 419960793,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     180: _tools.RODict({
         "ID": 180,
         "grade": 180,
-        "expPlayer": 431749827,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     181: _tools.RODict({
         "ID": 181,
         "grade": 181,
-        "expPlayer": 443802540,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     182: _tools.RODict({
         "ID": 182,
         "grade": 182,
-        "expPlayer": 456123339,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     183: _tools.RODict({
         "ID": 183,
         "grade": 183,
-        "expPlayer": 468716682,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     184: _tools.RODict({
         "ID": 184,
         "grade": 184,
-        "expPlayer": 481587067,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     185: _tools.RODict({
         "ID": 185,
         "grade": 185,
-        "expPlayer": 494739050,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     186: _tools.RODict({
         "ID": 186,
         "grade": 186,
-        "expPlayer": 508177233,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     187: _tools.RODict({
         "ID": 187,
         "grade": 187,
-        "expPlayer": 521906268,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     188: _tools.RODict({
         "ID": 188,
         "grade": 188,
-        "expPlayer": 535930859,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     189: _tools.RODict({
         "ID": 189,
         "grade": 189,
-        "expPlayer": 550255758,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     190: _tools.RODict({
         "ID": 190,
         "grade": 190,
-        "expPlayer": 564885770,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     191: _tools.RODict({
         "ID": 191,
         "grade": 191,
-        "expPlayer": 579825749,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     192: _tools.RODict({
         "ID": 192,
         "grade": 192,
-        "expPlayer": 595080601,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     193: _tools.RODict({
         "ID": 193,
         "grade": 193,
-        "expPlayer": 610655287,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     194: _tools.RODict({
         "ID": 194,
         "grade": 194,
-        "expPlayer": 626554813,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     195: _tools.RODict({
         "ID": 195,
         "grade": 195,
-        "expPlayer": 642784244,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     196: _tools.RODict({
         "ID": 196,
         "grade": 196,
-        "expPlayer": 659348692,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     197: _tools.RODict({
         "ID": 197,
         "grade": 197,
-        "expPlayer": 676253325,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     198: _tools.RODict({
         "ID": 198,
         "grade": 198,
-        "expPlayer": 693503364,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     199: _tools.RODict({
         "ID": 199,
         "grade": 199,
-        "expPlayer": 711104080,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     }),
     200: _tools.RODict({
         "ID": 200,
         "grade": 200,
-        "expPlayer": 1000000049,
+        "expPlayer": 1483171560,
         "fakeOnlineTime": 20,
         "score": 0
     })

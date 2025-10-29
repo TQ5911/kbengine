@@ -7,6 +7,7 @@ from pypinyin import lazy_pinyin
 from datetime import datetime
 import random
 from simpleBotBase import FACE_DATA
+import http_service
 # 添加目标服务器参数：modName, school, loginHost, loginPort
 modName, _school, _loginHost, _loginPort = sys.argv[1:5]
 const_workspace_id_h1 = "59721401"
@@ -55,6 +56,11 @@ def startBot(delegateCls, school, loginHost, loginPort):
     
     print(f'版本日机器人目标服务器: {loginHost}:{loginPort}')
     
+    # 启动 HTTP 服务
+    httpd, http_thread = http_service.start_http_server('0.0.0.0', 49527)
+    host, port = httpd.server_address
+    print(f'http service started at http://{host}:{port}')
+    
     Allusers = GetAllUsers()
     faceData = FACE_DATA()
     for avatarName, accountName in Allusers.items():
@@ -96,8 +102,8 @@ def startBot(delegateCls, school, loginHost, loginPort):
                 botschool = school
                 faceData.random_set_face_data_by_id(botschool)
                 face_dict = faceData.toSavedDict()
-            final_account_name = f"{accountName}{int(month_day)}"
-            final_avatarName = f"{avatarName}{int(month_day)}"
+            final_account_name = f"{accountName}a{int(month_day)}"
+            final_avatarName = f"{avatarName}阿{int(month_day)}"
             
             print(f"创建机器人 - 账号: {final_account_name}, 角色: {final_avatarName}, 职业: {botschool}")
             
@@ -124,6 +130,17 @@ def startBot(delegateCls, school, loginHost, loginPort):
     print(f"总共创建了 {len(ts)} 个版本日机器人，目标服务器: {loginHost}:{loginPort}")
     for t in ts:
         t.join()
+    
+    # 关闭并等待HTTP线程，确保在runBot流程内join
+    try:
+        httpd.shutdown()
+    except Exception:
+        pass
+    try:
+        httpd.server_close()
+    except Exception:
+        pass
+    http_thread.join()
 
 
 if __name__ == '__main__':

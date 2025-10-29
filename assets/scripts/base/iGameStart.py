@@ -2,7 +2,7 @@
 import dataUtils
 import formula
 import KBEngine
-import math
+import json
 
 import gameclass
 from KBEDebug import *
@@ -19,6 +19,7 @@ import dataUtils
 
 import gamePlay_gamePlay as DDL
 import wonderLand_floor as WL_FD
+import cube_floor as C_FD
 
 
 class IGameStart(object):
@@ -63,16 +64,31 @@ class IGameStart(object):
             self.onGetAllBaseApps()
 
             self.createLocalStubs()
+            self.pyAddTimer(0.1, 0, gametimer.GET_ALL_SERVER_INFO)
+
+        elif userArg == gametimer.GET_ALL_SERVER_INFO:
+            _url = gameconfig.mapleAllServerUrl()
+            if gameglobal.isBootstrap and _url:
+                KBEngine.urlopenv2(_url, self._onGetAllServerResult, method='GET')
+
+            self.pyAddTimer(0.1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
+
+        elif userArg == gametimer.WAIT_GET_ALL_SERVER_INFO:
+            if not gameglobal.mapleServerInfo:
+                WARNING_MSG('still waiting for get mapleServerInfo')
+                self.pyAddTimer(0.1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
+                return
+
             self.pyAddTimer(0.1, 0, gametimer.CREATE_LEADER_BOARD_STUB)
 
         elif userArg == gametimer.CREATE_LEADER_BOARD_STUB:
             if gameglobal.isBootstrap:
                 self.createLeaderBoardStub()
-            self.pyAddTimer(0.2, 0, gametimer.WAIT_LEADER_BOARD_STUB_READY)
+            self.pyAddTimer(1, 0, gametimer.WAIT_LEADER_BOARD_STUB_READY)
 
         elif userArg == gametimer.WAIT_LEADER_BOARD_STUB_READY:
             for _lbType in gameconst.LeaderBoardType.ALL_KEYS:
-                _stub = gameengine.getLeaderStub(_lbType)
+                _stub = gameengine.getLeaderStub(_lbType, reportErr=False)
                 if not _stub:
                     INFO_MSG('startwatting: waiting for leaderBoardStub ready', _lbType)
                     self.pyAddTimer(0.1, 0, gametimer.WAIT_LEADER_BOARD_STUB_READY)
@@ -156,6 +172,19 @@ class IGameStart(object):
                 if hasattr(self, '_skipInitDungeonStubs'):
                     del self._skipInitDungeonStubs
 
+
+            for _floorNo in WL_FD.datas.keys():
+                if not gameengine.getGlobalBase('WonderLandStub%d' % _floorNo, reportErr=False):
+                    INFO_MSG('startwatting: waiting for wonderland stub', _floorNo)
+                    self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
+                    return
+
+            for _floorNo in C_FD.datas.keys():
+                if not gameengine.getGlobalBase('CubeStub%d' % _floorNo, reportErr=False):
+                    INFO_MSG('startwatting: waiting for CubeStub stub', _floorNo)
+                    self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
+                    return
+
             INFO_MSG('starting: all baseapp finished creating stubs')
             self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_HALF_PREPARE)
 
@@ -215,6 +244,9 @@ class IGameStart(object):
 
                 for _floorNo in WL_FD.datas.keys():
                     gameengine.getGlobalBase('WonderLandStub%d' % _floorNo).doNext()
+
+                for _floorNo in C_FD.datas.keys():
+                    gameengine.getGlobalBase('CubeStub%d' % _floorNo).doNext()
 
                 gameengine.getGlobalBase('SiegeWarSpaceStub').doNext()
 
@@ -421,6 +453,10 @@ class IGameStart(object):
         for _floorNo in WL_FD.datas.keys():
             random.choice(baseApps).createUnarchiveStub('WonderLandStub', {'floor': _floorNo}, 'WonderLandStub%d' % _floorNo)
 
+        # 每层单独一个stub,一个space
+        for _floorNo in C_FD.datas.keys():
+            random.choice(baseApps).createUnarchiveStub('CubeStub', {'cubeNo': _floorNo}, 'CubeStub%d' % _floorNo)
+
         #todo读策划表
         random.choice(baseApps).createUnarchiveStub('SiegeWarSpaceStub', {}, 'SiegeWarSpaceStub')
 
@@ -476,4 +512,23 @@ class IGameStart(object):
 
     def _onCreateLeaderBoardStub(self, lbStub):
         lbStub.onFirstCreate()
+
+    def _onGetAllServerResult(self, httpCode, data, headers, success, *args):
+        if not (httpCode == 200 and success):
+            ERROR_MSG('_onGetAllServerResult', httpCode)
+            return
+
+        _datas = json.loads(data)
+        INFO_MSG('all server data', _datas)
+        _dic = {}
+        for _data in _datas:
+            _dic[_data['id']] = _data
+
+        _curServerInfo = _dic.get(gameconfig.serverId(), {})
+        _alias = _curServerInfo.get('alias', '')
+        _serverName = _curServerInfo.get('server_name', '')
+
+        gameengine.callAllApps(
+            'gameengine.setMapleServerInfo',
+            (_dic, _alias, _serverName))
 

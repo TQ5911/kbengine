@@ -17,14 +17,12 @@ import gametimer
 import gmCommand
 import gamesql
 import iRouter
-import json
 import ResMgr
 import copy
 import iTimer
 import iBaseNoCell
 import asyncore
 import iBroadcastEvent
-import gzip
 import iGameStart
 import mailAssistor
 import elasticUtils
@@ -115,34 +113,6 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
 
         if gameconfig.elasticServer() and gameglobal.isBootstrap:
             self._callback(1, 'initElastic', (), gametimer.TIMER_TAG_INIT_ELASTIC)
-
-        _url = gameconfig.mapleAllServerUrl()
-        if gameglobal.isBootstrap and _url:
-            KBEngine.urlopenv2(_url, self._onGetAllServerResult, method='GET')
-
-        return
-
-    def _onGetAllServerResult(self, httpCode, data, headers, success, *args):
-        if not (httpCode == 200 and success):
-            ERROR_MSG('_onGetAllServerResult', httpCode)
-            return
-
-        _datas = json.loads(data)
-        _alias = ''
-        for _data in _datas:
-            if _data['id'] != gameconfig.serverId():
-                continue
-
-            _alias = _data['alias']
-            break
-
-        if not _alias:
-            INFO_MSG('_onGetAllServerResult: no alias found')
-            return
-
-        gameengine.callAllApps(
-            'gameengine.setServerAlias',
-            (_alias,))
 
     def initElastic(self):
         elasticUtils.ElasticUtils.init(self._initElasitc)

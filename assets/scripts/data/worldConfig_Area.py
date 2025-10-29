@@ -23,6 +23,7 @@ datas = _tools.RODict({
         "ifSafeArea": 1,
         "deathPenaltyID": 1,
         "ifRide": 1,
+        "specialAreaType": 0
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -32,7 +33,18 @@ datas = _tools.RODict({
         "ifSafeArea": 1,
         "deathPenaltyID": 1,
         "ifRide": 0,
+        "specialAreaType": 0
+    }),
+    3: _tools.RODict({
+        "ID": 3,
+        "Areaname": "新手副本",
+        "N4": 100,
+        "N5": 150,
+        "ifSafeArea": 1,
+        "deathPenaltyID": 1,
+        "ifRide": 0,
+        "specialAreaType": 1
     })
 })
 minKey = 1
-maxKey = 2
+maxKey = 3

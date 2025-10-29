@@ -77,25 +77,25 @@ import importlib
 def dynamic_import(module_name: str, class_name: str = None):
     """
     根据传入的模块名动态导入模块，可选导入指定类
-    
+
     Args:
         module_name: 要导入的模块名称（例如："math" 或 "my_package.my_module"）
         class_name: 可选，要导入的类名
-    
+
     Returns:
         导入的模块或类对象
     """
     try:
         # 导入模块
         module = importlib.import_module(module_name)
-        
+
         if class_name:
             # 如果指定了类名，则从模块中获取该类
             return getattr(module, class_name)
         else:
             # 否则返回整个模块
             return module
-            
+
     except ImportError as e:
         print(f"导入模块失败: {e}")
         return None
@@ -165,15 +165,15 @@ def Alladdbuff(su, player, buffid):
 def AllsetskillLV(su, player, level):
     import skillRelevant_skillUpgrade as SRSUD
     skill_dicts = {
-    1001: {},  
-    1002: {},  
+    1001: {},
+    1002: {},
     1003: {}  }
 
-    #根据角色等级和技能levelLimit确定技能最多能升多少级      
+    #根据角色等级和技能levelLimit确定技能最多能升多少级
     def assign_skill_level(skill_id, level_limit, player_level):
         if not level_limit:
             return 1
-        
+
         # 找到角色等级能达到的最高技能等级
         max_skill_level = 1
         for skill_level_index, required_player_level in enumerate(level_limit):
@@ -181,9 +181,9 @@ def AllsetskillLV(su, player, level):
                 max_skill_level = skill_level_index + 1
             else:
                 break
-        
+
         return max_skill_level
-    
+
     for skill_id, skill_info in SRSUD.datas.items():
         school_id = 1000 + int(str(skill_info.get('ID'))[3])  # 提取学校 ID
         if  school_id in skill_dicts:
@@ -250,7 +250,7 @@ def deductHp(su, player, damage, eid=0):
     # 检查目标是否存在且是战斗单位
     if not e or not e.IsCombatUnit:
         return False, '%s不存在或者不是战斗单位' % eid
-    
+
     # 确保扣除的血量不会超过目标当前血量
     actual_damage = min(damage, e.hp)
     # 修改目标血量，从当前血量中扣除指定数值
@@ -263,36 +263,36 @@ def deductHp(su, player, damage, eid=0):
 def createMonster(su, player, monsterId, level, monsterNum=1, radius=0, force=0):
     # 检查怪物ID和等级是否有效
     if monsterId not in MD.datas or level < 1 or monsterNum < 1:
-        return False, '执行失败'  
+        return False, '执行失败'
     # 计算每个怪物之间的角度间隔（弧度）
     angle_step = 2 * math.pi / monsterNum
-    
+
     # 玩家当前朝向（假设player.direction是欧拉角或四元数）
     # 将玩家朝向转换为弧度角，这里假设direction.z是偏航角（yaw）
     player_yaw = player.direction.z
-    
+
     # 创建怪物的信息列表
     monster_positions = []
-    
+
     # 计算圆周上各点的位置
     for i in range(monsterNum):
         # 计算当前怪物的角度
         angle = i * angle_step
-        
+
         # 计算最终角度（玩家朝向 + 相对角度）
         final_angle = player_yaw + angle
-        
+
         # 计算怪物在圆上的坐标
         x_offset = radius * math.sin(final_angle)
         z_offset = radius * math.cos(final_angle)
-        
+
         # 玩家位置加上偏移量
         monster_x = player.position.x + x_offset
         monster_y = player.position.y  # 保持与玩家相同的高度
         monster_z = player.position.z + z_offset
-        
+
         monster_position = (monster_x, monster_y, monster_z)
-        
+
     # 创建怪物参数
         props = {
             'monsterId': monsterId,
@@ -310,8 +310,8 @@ def createMonster(su, player, monsterId, level, monsterNum=1, radius=0, force=0)
             monster_position,
             player.direction,
             props,
-        )       
-    
+        )
+
     return True, f'成功在玩家周围{radius}米的圆上创建了{monsterNum}个怪物'
 
 
@@ -757,7 +757,7 @@ def getFixedItemsBox(su, player, bagType, itemId, bindType, boxItemsJson):
 
 @gm_cmd('$getitems', (Player("gbId/Id", raw=True), Int('bagType'), Int('itemNum'), Float('_bindType'), Int('itemId_Start'), Int('itemId_End')),
         RARG(0), BASE, '获取指定物品', ALLSIDE, GOD_GROUPS, minArgs=4)
-def getItems(su, player, bagType, itemNum, _bindType, itemId_Start, itemId_End = 0):  
+def getItems(su, player, bagType, itemNum, _bindType, itemId_Start, itemId_End = 0):
     if itemId_End == 0 and itemId_Start != 0:
         itemId_End = itemId_Start
     if bagType not in (0, 1, 2, 3):
@@ -794,7 +794,7 @@ def getItems(su, player, bagType, itemNum, _bindType, itemId_Start, itemId_End =
                     # 如果是在线玩家，直接调用gmAddItems方法添加物品
                     player.gmAddItems(bagType, itemId, itemNum, detail,bindType)
             else:
-                continue             
+                continue
     su.onCommandResult(0, '', {})
     return True, '执行成功'
 
@@ -832,7 +832,7 @@ def getGear(su,player,templateId,bindType):
         return True, '执行成功'
     else:
         return False, '执行失败'
-    
+
 
 @gm_cmd('$getReward', (Player("gbId/Id"), Int('dropId'), Int('num'),), RARG(0), BASE, '获取奖励', ALLSIDE, GOD_GROUPS)
 def getReward(su, player, dropId, num):
@@ -843,7 +843,7 @@ def getReward(su, player, dropId, num):
         return True, '执行成功'
     else:
         return False, '执行失败'
-    
+
 @gm_cmd('$getDropid', (Player("gbId/Id"), Int('dropId'), Int('num'),), RARG(0), BASE, '执行掉落', ALLSIDE, GOD_GROUPS)
 def getDropid(su, player, dropId, num):
     for i in range(num):
@@ -2640,14 +2640,14 @@ def leaveSingleDungeon(su, player):
     import gamePlay_gamePlay as GGD
     import dungeonSrc
     import tutorConst_newbieStep as TCNSD
-    lockdun = [] 
+    lockdun = []
     for _,v in TCNSD.datas.items():
         lockdun.append(v.get('lockDun'))
     dungeonNo = formula.getDungeonNoBySpaceNo(player.spaceNo)
 
     if  GGD.datas[dungeonNo].get('sceneType') not in [1,2]:
         return False,f'{dungeonNo}不是副本'
-    
+
     if dungeonNo in lockdun:     #如果是新手副本，先跳过新手任务，在离开副本。
         forwardCommand(su,"$SkipNewbieTask",player.id)
 
@@ -2680,7 +2680,7 @@ def AllPlayerEnterMap(su,player,mapId,floor=1):
     type = mapInfo.get('type')
     if not sceneType or not type:
         return False, f'地图 {mapId} 配置错误：缺少sceneType或type字段'
-    
+
     if (sceneType == 4 or sceneType == 7) and type == 6:  #大世界场景
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
@@ -2689,15 +2689,15 @@ def AllPlayerEnterMap(su,player,mapId,floor=1):
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
                 forwardCommand(su,"$gmenterDungeon",e.id,mapId)
-    elif sceneType == 3 and type == 3: 
+    elif sceneType == 3 and type == 3:
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
                 forwardCommand(su,"$enterCube",e.id,floor)
-    elif sceneType == 5 and type == 7: 
+    elif sceneType == 5 and type == 7:
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
                 forwardCommand(su,"$EnterWonderLand",e.id,mapId)
-    elif sceneType == 6 and type == 8: 
+    elif sceneType == 6 and type == 8:
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
                 forwardCommand(su,"$enterCityBattle",e.id)
@@ -2739,7 +2739,7 @@ def _getItems(school, quality, level, awardCtx):
     for k, v in GBG.auctionDic.items():
         if (k[0], k[1]) not in _targetList:
             continue
-        
+
         if k[2] != quality:
             continue
 
@@ -2786,8 +2786,8 @@ def createDuelFlag(su, player):
     return True, '执行成功'
 
 
-@gm_cmd('$getEquipment', (Player("gbId/Id"), Int('school'), Int('quality'), Int('level')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
-def gmGetEquipment(su, player, school, quality, level):
+@gm_cmd('$getEquipment', (Player("gbId/Id"), Int('school'), Int('quality')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
+def gmGetEquipment(su, player, school, quality, level=1):
     awardCtx = awardContext.CommonContext(0)
     awardVal = dropAward.AwardVal()
     if school == 0:
@@ -2799,11 +2799,11 @@ def gmGetEquipment(su, player, school, quality, level):
 
     awardVal.addWealthByObjList(_items)
     player.addWealth(
-        AAC_AACDD.datas.BONUS_SRC_GM, 
-        awardVal, 
-        KBEngine.genUUID64(), 
-        detail=None, 
-        awardCtx=awardCtx, 
+        AAC_AACDD.datas.BONUS_SRC_GM,
+        awardVal,
+        KBEngine.genUUID64(),
+        detail=None,
+        awardCtx=awardCtx,
         )
     return True, '执行成功'
 
@@ -2889,7 +2889,7 @@ def gmChangeSiegeWarState(su, player, state, endTime):
 @gm_cmd('$siegeWarBattleFastForward', (Player("gbId/Id"), Int('minutes')), RARG(0), gameconst.BASE, '城战战斗快进', ALLSIDE, GOD_GROUPS)
 def gmSiegeWarBattleFastForward(su, player, minutes):
     gameengine.getGlobalBase("SiegeWarSpaceStub").onGmAddTime(minutes)
-    player.sendWorldChatMsg("城战战斗快进"+str(minutes)+"分钟")
+    player.sendWorldChatMsg(player, "城战战斗快进"+str(minutes)+"分钟")
 
     _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
     _stub.gmChangeSiegeWarState(4, 0, minutes)
@@ -2905,7 +2905,7 @@ def resetMailStubTime(su, player):
     now = utils.getNow()
     sql = "UPDATE tbl_GlobalMailStub SET sm_lastSendTime = %s WHERE id = 1;" % (now)
     KBEngine.executeRawDatabaseCommand(sql)
-    player.sendWorldChatMsg("邮件数据库lasttime已重置:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now)))+"重启服务器生效")
+    player.sendWorldChatMsg(player, "邮件数据库lasttime已重置:"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now)))+"重启服务器生效")
     return True, '执行成功'
 
 @gm_cmd('$createCreationByFixedPosition', (Player("gbId/Id"), Int('creationId'), Int('x'),Int('y'),Int('z')), RARG(0), CELL, '创建固定位置的创建物', ALLSIDE, GOD_GROUPS)
@@ -2936,7 +2936,7 @@ def sendrewardIDglobalmail(su, mailId, rewardID, despArgsStr, title, cont, minRo
                                     monsterSpaceNo=10020000, activityId=0)
     award = dropAward.getAwardOne(rewardID, dropCtx)
 
-    
+
     # if award.coin:
     #     coinnum = award.coin
     #     attach.addWealthByItemId(COIN_ID,coinnum, 0)
@@ -3027,7 +3027,7 @@ def gotoLinePos(su, player, spaceNo=0, x=0, y=0, z=0):
     pos = Math.Vector3(x, y, z)
     if x == 0 and y == 0 and z == 0:
         pos, _ = utils.getPlayerBornInfo()
-        
+
     try:
         lineNo = formula.getLineNo(spaceNo)
         lineType = formula.getLineType(spaceNo)
@@ -3059,16 +3059,3 @@ def clearPickedCollections(su, player, collectionId):
 
     return True, '执行成功'
 
-@gm_cmd('$modifyEquipEnhanceLevel', (Player("gbId/Id"), Int("slotID"), Int("enhanceLevel")), RARG(0), gameconst.CELL, '修改装备强化等级', ALLSIDE, GOD_GROUPS)
-def modifyEquipEnhanceLevel(su, player, slotID, enhanceLevel):
-    ret = player.gmModifyEquipEnhanceLevel(slotID, enhanceLevel)
-    if not ret:
-        return False, '执行失败'
-    return True, '执行成功'
-
-@gm_cmd('$dressAllEquipments', (Player("gbId/Id"), ), RARG(0), gameconst.CELL, '穿戴所有装备', ALLSIDE, GOD_GROUPS)
-def dressAllEquipments(su, player):
-    ret = player.gmDressEquips()
-    if not ret:
-        return False, '执行失败'
-    return True, '执行成功'

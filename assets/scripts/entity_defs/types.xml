@@ -337,7 +337,7 @@
                 <Type>  ARRAY   <of>    CLIENT_SKILL_VAL      </of>   </Type>
             </skills>
             <skillSwitches>
-                <Type>  ARRAY   <of>    CLIENT_SKILL_SWITCH_VAL    </of>   </Type>      
+                <Type>  ARRAY   <of>    CLIENT_SKILL_SWITCH_VAL    </of>   </Type>
             </skillSwitches>
         </Properties>
     </CLIENT_SKILLS>
@@ -383,6 +383,20 @@
         </Properties>
     </AFFIX_VAL>
 
+    <GLYPH_VAL> FIXED_DICT
+        <Properties>
+            <affixId>
+                <Type>  UINT32   </Type>
+            </affixId>
+            <affixVal>
+                <Type>  FLOAT    </Type>
+            </affixVal>
+            <affixEffect>
+                <Type>  STRING  </Type>
+            </affixEffect>
+        </Properties>
+    </GLYPH_VAL>
+
     <ATTR_VAL> FIXED_DICT
         <Properties>
             <attrName>
@@ -394,35 +408,16 @@
         </Properties>
     </ATTR_VAL>
 
-    <GLYPH_INFO> FIXED_DICT
-        <Properties>
-            <glyphState>
-                <Type>  INT8   </Type>
-            </glyphState>
-            <glyphAffixes>
-                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
-            </glyphAffixes>
-        </Properties>
-    </GLYPH_INFO>
-
     <CLI_GLYPH_INFO> FIXED_DICT
         <Properties>
-            <glyphState>
-                <Type>  INT8   </Type>
-            </glyphState>
+            <glyphPos>
+                <Type>  UINT8 </Type>
+            </glyphPos>
             <glyphAffixes>
-                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
+                <Type>  ARRAY <of>  GLYPH_VAL </of>   </Type>
             </glyphAffixes>
         </Properties>
     </CLI_GLYPH_INFO>
-
-    <SPIRIT_INFO>   FIXED_DICT
-        <Properties>
-            <spiritAffixes>
-                <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
-            </spiritAffixes>
-        </Properties>
-    </SPIRIT_INFO>
 
     <CLI_SPIRIT_INFO> FIXED_DICT
         <Properties>
@@ -456,11 +451,11 @@
                 <Type>  LONGTIME        </Type>
             </auctionTime>
             <spiritDatas>
-                <Type>  ARRAY <of>  SPIRIT_INFO </of>   </Type>
+                <Type>  ARRAY <of>  CLI_SPIRIT_INFO </of>   </Type>
             </spiritDatas>
-            <glyphDatas>
-                <Type>  ARRAY <of>  GLYPH_INFO </of>   </Type>
-            </glyphDatas>
+            <glyphInfo>
+                <Type>  ARRAY <of>  CLI_GLYPH_INFO </of>   </Type>
+            </glyphInfo>
             <radomEnhTimes>
                 <Type>  ARRAY <of>  UINT32   </of>   </Type>
             </radomEnhTimes>
@@ -500,9 +495,12 @@
             <spiritGroup>
                 <Type> UINT8 </Type>
             </spiritGroup>
+            <grade>
+                <Type> UINT8 </Type>
+            </grade>
         </Properties>
-    </CLI_EQUIP_ITEM_VAL>    
-    
+    </CLI_EQUIP_ITEM_VAL>
+
     <ITEM_VAL_LIST>  ARRAY <of>  ITEM_VAL </of> </ITEM_VAL_LIST>
 
     <BAG_GRID_INFO> FIXED_DICT
@@ -550,7 +548,7 @@
             <bindType>
                 <Type>  ITEM_BIND_TYPE     </Type>
             </bindType>
-            <lockStatus> 
+            <lockStatus>
                 <Type> INT8 </Type>
             </lockStatus>
             <attrJson>
@@ -1077,7 +1075,7 @@
                 <Type>  HP   </Type>
             </hurt>
             <hitType>
-                <Type>  INT32   </Type>
+                <Type>  UINT8   </Type>
             </hitType>
         </Properties>
     </SKILL_DAMAGE_VAL>
@@ -1257,9 +1255,6 @@
             <fullHp>
                 <Type>  HP              </Type>
             </fullHp>
-            <equipSetLv>
-                <Type>  UINT8           </Type>
-            </equipSetLv>
             <enableMics>
                 <Type>  BOOL            </Type>
             </enableMics>
@@ -1424,9 +1419,6 @@
             <mountState>
                 <Type>  UINT8           </Type>
             </mountState>
-            <equipSetLv>
-                <Type>  UINT8           </Type>
-            </equipSetLv>
             <raidUUID>
                 <Type> RAID_ID          </Type>
             </raidUUID>
@@ -1570,9 +1562,6 @@
             <mountState>
                 <Type>  UINT8         </Type>
             </mountState>
-            <equipSetLv>
-                <Type>  UINT8           </Type>
-            </equipSetLv>
             <score>
                 <Type>  INT64           </Type>
             </score>
@@ -2593,7 +2582,7 @@
             <bindType>
                 <Type>  ITEM_BIND_TYPE     </Type>
             </bindType>
-            <lockStatus> 
+            <lockStatus>
                 <Type> INT8 </Type>
             </lockStatus>
             <attrJson>
@@ -3698,11 +3687,11 @@
             </collectibleID>
             <state>
                 <Type>  UINT16          </Type>
-            </state> 
+            </state>
         </Properties>
     </COLLECTIBLE_ITEM_VAL>
 
-    <COLLECTIBLE_INFO> FIXED_DICT  
+    <COLLECTIBLE_INFO> FIXED_DICT
         <implementedBy>     avatarCollectInfo.collectInfoInstance     </implementedBy>
         <Properties>
             <collectibleList>
@@ -3711,7 +3700,7 @@
         </Properties>
     </COLLECTIBLE_INFO>
 
-    <WELFARE_SIGN_IN_INFO> FIXED_DICT  
+    <WELFARE_SIGN_IN_INFO> FIXED_DICT
         <implementedBy>     avatarWelfareSignInInfo.welfareSignInInfoInstance     </implementedBy>
         <Properties>
             <welfareSignInDay>
@@ -4319,8 +4308,8 @@
                 <Type>  UINT8                       </Type>
             </relationType>
         </Properties>
-    </GUILD_AND_RELATION> 
-    
+    </GUILD_AND_RELATION>
+
     <GUILD_ONETASK_INFO>FIXED_DICT
         <implementedBy>     GuildTaskInfo.GuildTaskInfoInstance    </implementedBy>
         <Properties>
@@ -4335,7 +4324,7 @@
             </completed>
         </Properties>
     </GUILD_ONETASK_INFO>
-    
+
     <POP_REWARD_ITEM_VAL> FIXED_DICT
         <Properties>
             <itemId>
@@ -4496,6 +4485,9 @@
             <maxGbId>
                 <Type>  UINT64   </Type>
             </maxGbId>
+            <desc>
+                <Type> UNICODE </Type>
+            </desc>
             <fetchPlayerList>
                 <Type>  ARRAY <of>  RED_BAG_FETCH_VAL </of>   </Type>
             </fetchPlayerList>
@@ -4517,7 +4509,7 @@
     <GLYPH_EQUIP_INFO> FIXED_DICT
         <implementedBy>     GlyphEquipInfo.glyphInfoInstance    </implementedBy>
         <Properties>
-            <inscriptionEffects> 
+            <inscriptionEffects>
                 <Type>  PYTHON  </Type>
             </inscriptionEffects>
             <inscriptionRecords>
@@ -4532,9 +4524,9 @@
             <eid>
                 <Type>  OBJECT_ID               </Type>
             </eid>
-            <isHost>
-                <Type>  BOOL                    </Type>
-            </isHost>
+            <actHostType>
+                <Type>  UINT8                   </Type>
+            </actHostType>
         </Properties>
     </ACCOUNT_CACHE_DATA_INFO>
 
@@ -4556,6 +4548,9 @@
             <leaderName>
                 <Type>  UNICODE                 </Type>
             </leaderName>
+            <ts>
+                <Type>  LONGTIME                </Type>
+            </ts>
         </Properties>
     </LEADER_BOARD_GUILD_DATA_INFO>
 
@@ -4600,4 +4595,19 @@
             </hurtList>
         </Properties>
     </TEAM_STATISTIC_CLIENT_VAL>
+
+    <CUBE_QUOTA_DATA_INFO> FIXED_DICT
+        <implementedBy>     CubeQuotaInfo.CubeQuotaInstance    </implementedBy>
+        <Properties>
+            <leftTime>
+                <Type>  LONGTIME            </Type>
+            </leftTime>
+            <enterTime>
+                <Type>  LONGTIME            </Type>
+            </enterTime>
+            <cubeDurState>
+                <Type>  UINT8               </Type>
+            </cubeDurState>
+        </Properties>
+    </CUBE_QUOTA_DATA_INFO>
 </root>

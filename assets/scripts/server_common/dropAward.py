@@ -796,7 +796,6 @@ def _genEquipItemList(itemId, itemNum, bindType, quality, context):
         'monsterId': context.monsterId or 0,
         'school': context.school or 0,
         'quality': quality or 0,
-        'equipSetLv': context.equipSetLv or 0,
         'creatorGbId': context.avatarGbId or 0,
     }
 

@@ -288,7 +288,7 @@ def unlockAllFunc(su, player):
     for _, data in UVVD.datas.items():
         lvLimit = data.get('level', 0)
         taskId = data.get('task', 0)
-        if taskId > 0:
+        if taskId > 0 and dataUtils.getTaskData(taskId):
             rootTaskId = dataUtils.getRootTaskId(taskId)
             player.baseTaskClaim(rootTaskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.GM), needCheck=False)
             player.gmForceSubmitTask(taskId)
@@ -332,7 +332,7 @@ def hookModuleFunc(su, moduleName, prefix=''):
     mod = sys.modules.get(moduleName)
     if mod is None:
         return su.onCommandResult(1, f'module {moduleName} not found', {})
-    functionHooker.hook_specific_module(moduleName, prefix=prefix or '[hook]', verbose=True)
+    functionHooker.hook_specific_module(moduleName, prefix=prefix, verbose=True)
     return su.onCommandResult(0, f'hook module {moduleName} success', {})
 
 @gm_cmd('$hookClassFunc', (Str("moduleName"), Str("className"), Str("prefix")), RALL, ALL, 
@@ -343,7 +343,7 @@ def hookClassFunc(su, moduleName, className, prefix=''):
     mod = sys.modules.get(moduleName)
     if mod is None:
         return su.onCommandResult(1, f'module {moduleName} not found', {})
-    functionHooker.hook_specific_class(moduleName, className, prefix=prefix or '[hook]', verbose=True)
+    functionHooker.hook_specific_class(moduleName, className, prefix=prefix, verbose=True)
     return su.onCommandResult(0, f'hook class {className} in module {moduleName} success', {})
 
 @gm_cmd('$hookFunc', (Str("moduleName"), Str("className"), Str("funcName"), Int("traceDepth"), Str("prefix")), RALL, ALL, 
@@ -354,8 +354,15 @@ def hookFunc(su, moduleName, className, funcName, traceDepth=0, prefix=''):
     mod = sys.modules.get(moduleName)
     if mod is None:
         return su.onCommandResult(1, f'module {moduleName} not found', {})
-    functionHooker.hook_specific_class_method(moduleName, className, funcName, prefix=prefix or '[hook]', show_traceback=bool(traceDepth), traceback_depth=traceDepth, verbose=True)
+    functionHooker.hook_specific_class_method(moduleName, className, funcName, prefix=prefix, show_traceback=bool(traceDepth), traceback_depth=traceDepth, verbose=True)
     return su.onCommandResult(0, f'hook class {className} func {funcName} in module {moduleName} success', {})
+
+@gm_cmd('$hookShowLog', (Int("is_open"),), RALL, ALL, 
+    'hook打印开关', ALLSIDE, GOD_GROUPS)
+def hookShowLog(su, is_open):
+    from test import functionHooker
+    functionHooker.hook_print_open(bool(is_open))
+    return su.onCommandResult(0, f'hook print open: {is_open}', {})
 
 @gm_cmd('$refreshData', (Str('moduleName'),), RALL, ALL, '刷新表格数据', ALLSIDE, GOD_GROUPS, minArgs=0)
 def refreshData(su, moduleName=None):
@@ -407,6 +414,8 @@ def _translateValue(value, valueType, module_dict=None):
         elif valueType == 'tuple':
             value = ast.literal_eval(value) if isinstance(value, str) else tuple(value)
         elif valueType == 'function':
+            if value == '':
+                return True, "转换成功", None
             # 解析函数名
             rootNode = ast.parse(value)
             funcName = None
@@ -453,9 +462,12 @@ def _setMemoryDataInProcess(su, moduleName, key, attrName, value, isBase64, proc
         # 获取目标数据对象
         target_data = datas[key_cast]
         # 根据目标属性的当前值类型进行转换
-        valueType = type(target_data.get(attrName, None)).__name__
-        if valueType is None:
-            for _, v in datas.items():
+        target_value = target_data.get(attrName, None)
+        
+        if target_value is not None:
+            valueType = type(target_value).__name__
+        else:
+            for v in datas.values():
                 tmp_value = v.get(attrName, None)
                 if tmp_value is not None:
                     valueType = type(tmp_value).__name__
@@ -696,6 +708,17 @@ def _get_entity_attributes_classified(target_obj, process_name):
                     classified["公共"][str(i)] = "<error>"
             return classified
         
+        elif isinstance(target_obj, (set, frozenset)):
+            try:
+                values_list = list(target_obj)
+                for i, value in enumerate(values_list):
+                    try:
+                        classified["公共"][str(i)] = _get_simple_value(value)
+                    except:
+                        classified["公共"][str(i)] = "<error>"
+            except:
+                classified["公共"]["error"] = "无法遍历set内容"
+            return classified
         # 普通对象：按属性名分类
         skip_attrs = {'canDestroy', 'destroy', 'destroyEntity', 'writeToDB', 'createCellEntity', 'destroyCellEntity', 'teleport', 'addTimer', 'delTimer', 'giveClientTo'}
         
@@ -742,6 +765,9 @@ def _get_simple_value(value):
         elif isinstance(value, dict):
             # 字典也可以展开查看内容
             return f"dict[{len(value)}] [可展开]"
+        elif isinstance(value, set):
+            # set集合类型也可以展开查看内容
+            return f"set[{len(value)}] [可展开]"
         elif callable(value):
             return f"<{type(value).__name__}>"
         else:
@@ -807,4 +833,26 @@ def broadcastSystemMsg(su, message):
     except Exception as e:
         return su.onCommandResult(1, f'系统消息广播失败: {str(e)}', {})
 
+# --------------------------dev test only cmd segment----------------------------------------------------------------------------------------------------------------------------------------- 
+@gm_cmd('$modifyEquipEnhanceLevel', (Player("gbId/Id"), Int("slotID"), Int("enhanceLevel")), RARG(0), gameconst.CELL, '修改装备强化等级', ALLSIDE, GOD_GROUPS)
+def modifyEquipEnhanceLevel(su, player, slotID, enhanceLevel):
+    ret = player.gmModifyEquipEnhanceLevel(slotID, enhanceLevel)
+    if not ret:
+        return False, '执行失败'
+    return True, '执行成功'
 
+@gm_cmd('$dressAllEquipments', (Player("gbId/Id"), ), RARG(0), gameconst.CELL, '穿戴所有装备', ALLSIDE, GOD_GROUPS)
+def dressAllEquipments(su, player):
+    ret = player.gmDressEquips()
+    if not ret:
+        return False, '执行失败'
+    return True, '执行成功'
+
+@gm_cmd('$glyphWashingEquipments', (Player("gbId/Id"), Int("equipPos"), Int("itemId"), Int("affixId")), RARG(0), gameconst.CELL, '给指定的装备洗铭文', ALLSIDE, GOD_GROUPS)
+def glyphWashingEquipments(su, player, equipPos, itemId, affixId):
+    ret = player.gmGlyphWashingEquips(equipPos, itemId, affixId)
+    if not ret:
+        return False, '执行失败'
+    return True, '执行成功'
+
+# --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

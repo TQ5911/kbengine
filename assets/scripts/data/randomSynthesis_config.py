@@ -45,7 +45,7 @@ datas = _tools.RODict({
     }),
     "synthesisIntervalTime": _tools.RODict({
         "ID": "synthesisIntervalTime",
-        "value": 0.5,
+        "value": 2.0,
     }),
     "synthesisRecordDes": _tools.RODict({
         "ID": "synthesisRecordDes",
@@ -62,5 +62,9 @@ datas = _tools.RODict({
     "synthesisAutoQuality": _tools.RODict({
         "ID": "synthesisAutoQuality",
         "value": _tools.ROList([2, 3, 4]),
+    }),
+    "synthesisUnboundProbability": _tools.RODict({
+        "ID": "synthesisUnboundProbability",
+        "value": _tools.ROList([0, 0, 25, 50, 100]),
     })
 })

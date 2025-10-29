@@ -17,18 +17,18 @@ import RedBagInfo
 import dropAward
 import mailAssistor
 import chatConfig_chatConfig as CC_CCD
-import iCycleEvent
+import message_Message_def as MMD
     
 
-class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer, iCycleEvent.ICycleEvent):
+class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
     def __init__(self):
-        iCycleEvent.ICycleEvent.__init__(self)
         self.fetchCacheDict = {}
 
         # 排行缓存列表
         self.rankCacheList = []
-        self.lastGetRankTime = 0
-        self._callback(2, 'doReg', (), gametimer.TIMER_TAG_RED_BAG_REG)
+        self.addDatetimeTimerTick()
+        self.checkTimerId = self._callback(10, 'onRedBagCheck', (), gametimer.TIMER_TAG_RED_BAG_CHECK_EXPIRE, 'checkTimerId')
+        self.version = 0
 
     def reloadScript(self):
         for pName, pVal in self.__dict__.items():
@@ -41,44 +41,57 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer, iCycle
     def doNext(self):
         super().doNext()
 
-    def doReg(self):
-        self.registerDailyEvent('onRedBagDailyCheck')
-
-        self.onDailyEvent()
-
     def onTimer(self, tid, userArg):
         self._onTimer(tid, userArg)
-        if userArg == gametimer.CYCLE_EVENT_TICK_TIMER:
-            self.onCycleEventTick()
-            
+        if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
+                self._onDatetimeTimerTick()
         elif utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
         else:
             pass
-            
-    def onRedBagDailyCheck(self):
-        INFO_MSG('onRedBagDailyCheck')
+
+    def onRedBagCheck(self):
+        INFO_MSG('onRedBagCheck', len(self.redbagDict))
         try:
-            for redbagId in self.redbagDict.keys():
-                self.checkExpire(redbagId)
+            self.getRankFromRedis()
+
+            minTime = None
+            for redbagId, rbVal in self.redbagDict.items():
+                if self.checkExpire(redbagId):
+                    continue
+                if not minTime or rbVal.releaseTime < minTime:
+                    minTime = rbVal.releaseTime
+
+            if minTime and not self._hasDatetimeTimer(self.checkTimerId):
+                # 下次检查时间
+                nextCheckTime = minTime + CC_CCD.datas['returnPacketTime']['value'] * 3600 + 2             
+                self.checkTimerId = self._datetimeCallback(nextCheckTime,
+                           'onRedBagCheck', (), gametimer.TIMER_TAG_RED_BAG_CHECK_EXPIRE, 'checkTimerId')
+                
+                INFO_MSG('onRedBagCheck set next check time:', nextCheckTime)
         except Exception as e:
-            ERROR_MSG('onRedBagDailyCheck exception:', e)
+            ERROR_MSG('onRedBagCheck exception:', e)
+
+    def getRankFromRedis(self):
+        # 每次拉取数据都更新版本号
+        self.version += 1
+        redisUtils.RedBagUtils.getRedBagRankList(functools.partial(self._onGetRedBagRankList, None, None, None))
 
     # 获取顺序红包列表
-    def doGetRedBagRankList(self, playerbox, guildUUID, playerFetchList):
-        if utils.getNow() - self.lastGetRankTime > 5:
-            redisUtils.RedBagUtils.getRedBagRankList(functools.partial(self._onGetRedBagRankList, playerbox, guildUUID, playerFetchList))
-        else:
-            self._onGetRedBagRankList(playerbox, guildUUID, playerFetchList, self.rankCacheList)
+    def doGetRedBagRankList(self, playerbox, guildUUID, pVersion, playerFetchList):
+        if self.version == pVersion:
+            return
+        self._onGetRedBagRankList(playerbox, guildUUID, playerFetchList, self.rankCacheList)
 
     def _onGetRedBagRankList(self, playerbox, guildUUID, playerFetchList, result):
-        INFO_MSG('_onGetRedBagRankList: result={}'.format(result))
+        INFO_MSG('_onGetRedBagRankList: playerbox={} result={}'.format(playerbox, result[:5]))
         if result is None:
             return
-        
+
         # 做个缓存
         self.rankCacheList = result
-        self.lastGetRankTime = utils.getNow()
+        if not playerbox:   # 系统拉的数据，不用往下执行
+            return
 
         canFetchList = []
         hasFetchList = []
@@ -119,8 +132,9 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer, iCycle
             INFO_MSG('doGetRedBagRankList: delList={}'.format(delList))
             redisUtils.RedBagUtils.removeRedBagRankData(delList, 0, None)
         
-        INFO_MSG('doGetRedBagRankList: rankList={}'.format(rankList))
-        playerbox.client.onGetRedBagRankList(rankList)
+        # INFO_MSG('doGetRedBagRankList: rankList={}'.format(rankList))
+        #playerbox.client.onGetRedBagRankList(rankList)
+        playerbox.getRedBagRankListCB(self.version, rankList)
 
     def doGetRedBagList(self, playerbox, redbagList, playerFetchList):
         canFetchList = []
@@ -152,7 +166,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer, iCycle
             redisUtils.RedBagUtils.removeRedBagRankData(delList, 0, 
                                                         functools.partial(self.onDelRedBagCache, playerbox, delList))
 
-        INFO_MSG('doGetRedBagList: infoList={}'.format(infoList))
+        # INFO_MSG('doGetRedBagList: infoList={}'.format(infoList))
         playerbox.client.onGetRedBagMyList(infoList)
 
     def onDelRedBagCache(self, playerBox, delList, error):
@@ -190,6 +204,13 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer, iCycle
         _FcVal = RedBagInfo.RedBagFetchVal()
         self.fetchCacheDict[_RbVal.redbagId] = _FcVal
         self.writeToDB(self.onSave)
+
+        if not self._hasDatetimeTimer(self.checkTimerId):
+            # 重新注册timer
+            self.onRedBagCheck()
+
+        # 系统拉下数据
+        self.getRankFromRedis()
 
         # 回调通知 box
         playerbox.onReleaseRedBag(_RbVal.redbagId, _RbVal.redbagType, _RbVal.channel, _RbVal.money, _RbVal.releaseTime, _RbVal.desc)
@@ -242,11 +263,16 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer, iCycle
         _RbVal = self.redbagDict[redbagId]
         if _RbVal.leftNum <= 0 or _RbVal.leftMoney <= 0:
             DEBUG_MSG('_doFetchRedBag fail: redbagId={} leftNum={} leftMoney={}'.format(redbagId, _RbVal.leftNum, _RbVal.leftMoney))
+            _msg = CC_CCD.datas['receivePacketEmptyMsg']['value']
+            playerbox.onMessagePre(_msg, [])
             # 更新数据
             self.showRedBagFetchInfo(playerbox, redbagId, 0)
             return
         if _RbVal.channel == gameconst.RedBagChannel.GUILD and _RbVal.guildUUID != guildUUID:
             DEBUG_MSG('_doFetchRedBag fail: redbagId={} guildUUID={} not match'.format(redbagId, guildUUID))
+            if _RbVal.playerGbId == playerGbId:
+                _msg = MMD.datas.receivePacketGroupLimit
+                playerbox.onMessagePre(_msg, [])
             return
         
         # 已领取
@@ -321,8 +347,10 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer, iCycle
         if redbagId in self.fetchCacheDict:
             self.fetchCacheDict.pop(redbagId)
         _RbVal = self.redbagDict.pop(redbagId)
-        self._doReturnRedBag(_RbVal)
+        # 删除了数据，有diff
+        self.version += 1
 
+        self._doReturnRedBag(_RbVal)
 
     # 返还剩余金币，通过邮件
     def _doReturnRedBag(self, _RbVal):

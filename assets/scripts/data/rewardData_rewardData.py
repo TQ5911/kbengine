@@ -365,7 +365,7 @@ datas = _tools.RODict({
         "dropID": None,
         "resourceFixReward": None,
         "resourceExReward": None,
-        "fixReward": _tools.ROList([(30002003, 1), (30002004, 1), (30002006, 1), (30002007, 1), (30002009, 1), (30002010, 1)]),
+        "fixReward": _tools.ROList([(30002001, 1), (30002002, 1), (30002003, 1), (30002004, 1), (30002005, 1), (30002006, 1), (30002007, 1), (30002008, 1), (30002009, 1)]),
         "fixRewardBaseOnSexual": None,
         "nestFixReward": None,
         "singleReward": None,

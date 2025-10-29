@@ -189,7 +189,7 @@ datas ={
         "ClassNameType": 20,
         "CustomID": "",
         "Dir": 180.9093,
-        "DisplayName": "\u795e\u884c\u70b9\u00b7\u4e7e",
+        "DisplayName": "\u795e\u884c\u70b9\u00b7\u7cbe\u7075\u5b9d\u6bbf",
         "EntityID": 0,
         "ID": 10068012,
         "Name": "\u795e\u884c\u70b9",
@@ -197,6 +197,7 @@ datas ={
         "PosY": 102.4035,
         "PosZ": 150.0169,
         "Props": {
+          "CameraId": 0,
           "MapEntityType": "26",
           "Remark": ""
         }

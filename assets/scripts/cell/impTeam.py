@@ -197,9 +197,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
             lastRecord['hp'] = self.hp
             lastRecord['fullHp'] = self.fullHp
             modified = True
-        if 'equipSetLv' not in lastRecord or lastRecord['equipSetLv'] != self.equipSetLv:
-            lastRecord['equipSetLv'] = self.equipSetLv
-            modified = True
 
         oldScore = lastRecord.get('score', 0)
         newScore = self.getTotalScore()
@@ -282,7 +279,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
             'picFrameId': self.appearance.outfitData.picFrameId,
             'mountState': 0,
             'spaceNo': self.spaceNo,
-            'equipSetLv': 0,
             'guildUUID': 0,
             'openId': "openId",
         }

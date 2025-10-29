@@ -16,7 +16,7 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
     def __init__(self):
         iStaticSpaceMgr.IStaticSpaceMgr.__init__(self)
         iCollectionBossForMgr.ICollectionBossForMgr.__init__(self)
-        gameengine.getGlobalBase('CubeStub').onSpaceMgrReady(self.spaceNo, self)
+        gameengine.getCubeStubBySpaceNo(self.spaceNo).onSpaceMgrReady(self.spaceNo, self)
 
     def initStaticSpace(self):
         super().initStaticSpace()

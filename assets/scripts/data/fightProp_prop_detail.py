@@ -1,7 +1,7 @@
 import gamedatatools as _tools
 
 datas = _tools.RODict({
-    1: _tools.ROList(['fullHp', 'fullMp', 'minPhysicalAtk', 'maxPhysicalAtk', 'minPhysicalArmor', 'maxPhysicalArmor', 'minMagicAtk', 'maxMagicAtk', 'minMagicArmor', 'maxMagicArmor', 'skillCD']),
+    1: _tools.ROList(['fullHp', 'fullMp', 'minPhysicalAtk', 'maxPhysicalAtk', 'minPhysicalArmor', 'maxPhysicalArmor', 'minMagicAtk', 'maxMagicAtk', 'minMagicArmor', 'maxMagicArmor', 'mulSpeed', 'skillCD']),
     2: _tools.ROList(['hit', 'dodge', 'fatal', 'antiFatal', 'ignoreArmor', 'dmgArmor', 'mortal', 'antiMortal', 'finalDmg', 'finalDmgAnti', 'PVPDmg', 'PVPDmgAnti', 'monsterDmg', 'monsterDmgAnti', 'realDmg', 'realDmgDef', 'extraDmg', 'extraDmgDef', 'stunEnh', 'stunAnti', 'silentEnh', 'silentAnti', 'knockEnh', 'knockAnti', 'frozenEnh', 'frozenAnti', 'slowEnh', 'slowAnti', 'expGrow', 'copper', 'medicineRate', 'gatherRate', 'drugsQuantity']),
     101: _tools.ROList(['atkBless'])
 })

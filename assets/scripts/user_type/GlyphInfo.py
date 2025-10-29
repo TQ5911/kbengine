@@ -5,8 +5,8 @@ import gameconst
 import AffixInfo
 
 class GlyphInfo(userType.UserSoleType):
-    def __init__(self, state = gameconst.GlyphState.LOCKED):
-        self.glyphState = state
+    def __init__(self, glyphPos = 0):
+        self.glyphPos = glyphPos
         self.glyphAffixes = []
 
     def _lateReload(self):
@@ -16,14 +16,18 @@ class GlyphInfo(userType.UserSoleType):
 
     def toDBData(self):
         data = []
-        data.append(self.glyphState)
+        data.append(self.glyphPos)
         for glyphAffix in self.glyphAffixes:
             data.append(glyphAffix.toAffixValList())
         return data
 
     def fromDBData(self, datas):
-        self.glyphState = datas[0]
+        self.glyphPos = datas[0]
+        if len(datas) == 1:
+            return
         datas = datas[1:]
+        if not datas:
+            return
         for data in datas:
             affixData = AffixInfo.GlyphAffix()
             affixData.fromAffixValList(data)
@@ -31,16 +35,15 @@ class GlyphInfo(userType.UserSoleType):
         
     def toClientData(self):
         return {
-            'glyphState' : self.glyphState,
+            'glyphPos' : self.glyphPos,
             'glyphAffixes' : [glyphAffix.toAfxClientDic() for glyphAffix in self.glyphAffixes]
         }
     
-    def CheckGlyphState(self, state):
-        return state == self.glyphState
-    
-    def UpdateGlyphAffixes(self, affixes):
+    def updateGlyphAffixes(self, affixes):
         self.glyphAffixes = affixes
-        self.glyphState = gameconst.GlyphState.MADE
 
-    def GetGlyphAffixes(self):
+    def getGlyphAffixes(self):
         return self.glyphAffixes
+    
+    def getGlyphPos(self):
+        return self.glyphPos
