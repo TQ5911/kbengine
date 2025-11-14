@@ -17,9 +17,9 @@
         <serverId> 20227  </serverId>
         <gusId> 1 </gusId>
         <permitLogin> 1 </permitLogin>
-		<branchLineCnt>
-			<subType1> 2 </subType1>
-		</branchLineCnt>
+        <branchLineCnt>
+            <subType1> 2 </subType1>
+        </branchLineCnt>
 
         <serverOpenTime> 1624608806 </serverOpenTime>
         <enableAdminServer> 0 </enableAdminServer>
@@ -45,7 +45,7 @@
         <crossDataServerInfo>
                         <item crossDataServerId='1' ip='192.168.10.13' port='2140'></item>
         </crossDataServerInfo>
-		
+
         <mapleAllServerUrl> http://192.168.10.13:9527/getAllServer </mapleAllServerUrl>
         
         <crossSiegeWarServerInfo>
@@ -100,11 +100,11 @@
     <debug>
         <waitEntityLoading> 0 </waitEntityLoading>
         <loadEntity> 1 </loadEntity>
-        <entityLoadSpeed> 5 </entityLoadSpeed>
+        <entityLoadSpeed> 20 </entityLoadSpeed>
         <enableBotLogin> 1 </enableBotLogin>
         <callbackNumThreshold> 100 </callbackNumThreshold>
         <enableCentralLogin> 1 </enableCentralLogin>
-        <debugErrorLogHost> 192.168.10.13:58080 </debugErrorLogHost>
+        <debugErrorLogHost>  </debugErrorLogHost>
     </debug>
 
     <enable_packet_history> 1 </enable_packet_history>

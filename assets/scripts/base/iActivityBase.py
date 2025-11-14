@@ -6,7 +6,10 @@ import actionContext
 class IActivityBase(object):
     def activityComplete(self, activityId):
         self.achievementInfo.triggerAchieveByType(
-            self, 
-            gameconst.AchieveType.ACTIVITY, 
+            self,
+            gameconst.AchieveType.ACTIVITY,
             actionContext.AchievementCtx(activityId=activityId))
+
+        self.authStatistics.addActTimes(activityId)
+
 

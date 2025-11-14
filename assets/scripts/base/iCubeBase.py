@@ -9,9 +9,11 @@ import dropAward
 import actionContext
 import gameclass
 import utils
+import AuthClsWraper
 import activityControl_config as AC_CD
 import cube_config
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import agent_agentFunction as A_AFD
 
 
 class ICubeBase(object):
@@ -78,6 +80,7 @@ class ICubeBase(object):
     def addRoomDurationFailedRewindTimes(self):
         self.leftCubeTimes += 1
 
+    @AuthClsWraper.authWithPermission(A_AFD.UISquarePanel)
     def reqUseItemAddCubeTimes(self, exposed, itemId, num, isAddDuration):
         INFO_MSG('reqUseItemAddCubeTimes: {} {}'.format(itemId, num), isAddDuration)
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']) and isAddDuration:

@@ -99,7 +99,7 @@ class ServerBuffs(userType.UserDictType):
 
     def doAddBuff(self, owner, buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs):
         DEBUG_MSG("trace doAddBuff ", buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs)
-        owner.combatDebugMsg('doAddBuff: buffId:%s, level:%s, duration:%s, releaseRoleId:%s, releaseRoleName:%s, buffSrcType:%s, srcKey:%s, rootContext:%s', 
+        owner.combatDebugMsg('doAddBuff: buffId:%s, level:%s, duration:%s, releaseRoleId:%s, releaseRoleName:%s, buffSrcType:%s, srcKey:%s, rootContext:%s',
                                      buffId, level, duration, releaseRoleId, releaseRoleName, srcType, srcKey, rootContext)
         self.setdefault(buffId, {})
         isAddBySelf = True if releaseRoleId == owner.id else False
@@ -137,7 +137,7 @@ class ServerBuffs(userType.UserDictType):
         if buffId not in self:
             return
         DEBUG_MSG("trace removeBuff ", buffId, buffSrcKeys, isFinished, removeType)
-        owner.combatDebugMsg('removeBuff: buffId:%s, buffSrcKeys:%s, isFinished:%s, removeType:%s', 
+        owner.combatDebugMsg('removeBuff: buffId:%s, buffSrcKeys:%s, isFinished:%s, removeType:%s',
                                      buffId, buffSrcKeys, isFinished, removeType)
         buffSrcKeys = buffSrcKeys or list(self[buffId].keys())
         if type(buffSrcKeys) not in (tuple, list):

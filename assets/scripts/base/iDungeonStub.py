@@ -248,7 +248,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 return
 
             rebornD, *_ = rebornPosDict.values()
-            rebornPos = (rebornD['PosX'], rebornD['PosY'], rebornD['PosZ'])
+            rebornPos = formula.bornPosFromData(rebornD)
             rebornDir = (0.0, 0.0, rebornD['Dir'] * math.pi / 180)
             # 修改下复活点
             if spaceNo in self.rebornPosCache:
@@ -256,13 +256,13 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 INFO_MSG('relive use rebornPosCache', spaceNo, posCache)
                 # 做个随机偏移
                 angle = random.uniform(0, 2 * math.pi)
-                radius = max(2, rebornD['Props']['Radius'])
+                radius = max(0, rebornD['Props']['Radius'])
                 offsetX = math.cos(angle) * radius
                 offsetZ = math.sin(angle) * radius
                 rebornPos = (posCache[0] + offsetX, posCache[1], posCache[2] + offsetZ)
                 # 计算方向
-                yaw = sMath.getYawFromPoints(posCache, rebornPos)
-                rebornDir = (0.0, 0.0, yaw)
+                # yaw = sMath.getYawFromPoints(posCache, rebornPos)
+                # rebornDir = (0.0, 0.0, yaw)
             playerBox.cell.reliveToPos(rebornPos, rebornDir, reliveHp, None)
 
         elif reliveType == gameconst.RELIVE_TYPE_DIRECTLY:
@@ -274,7 +274,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         else:
             ERROR_MSG('onReliveInDungeon::reliveType is not valid, got {}'.format(reliveType))
-    
+
     def onCreateNewRebornPos(self, spaceNo, position):
         INFO_MSG('onCreateNewRebornPos', spaceNo, position)
         self.rebornPosCache[spaceNo] = position

@@ -139,7 +139,7 @@ datas = _tools.RODict({
         "ID": 58,
         "type": 5,
         "SubType": 58,
-        "Name": "项链",
+        "Name": "物理项链",
         "RemindClass": 0,
         "weight": 40,
         "slot": 5,

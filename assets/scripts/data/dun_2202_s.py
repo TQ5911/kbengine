@@ -17,7 +17,7 @@ datas ={
           "PosZ": 46.13921,
           "Props": {
             "GroupID": "",
-            "Level": 38,
+            "Level": 35,
             "MapEntityScale": 0,
             "MapEntityType": "18",
             "MonsterGroupID": 1,
@@ -44,7 +44,7 @@ datas ={
           "PosZ": 68.80826,
           "Props": {
             "GroupID": "",
-            "Level": 38,
+            "Level": 35,
             "MapEntityScale": 0,
             "MapEntityType": "18",
             "MonsterGroupID": 1,

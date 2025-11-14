@@ -455,13 +455,16 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def gmChangeSiegeWarState(self, state, endTime, *args):
         DEBUG_MSG('[lj]gm change siege war state', state, endTime, args)
-        if self.siegeWarState == state and args[0] == 0:
+        if self.siegeWarState == state and args[0] == 0 and len(args) <= 1:
             WARNING_MSG('[lj]gm change siege war state failed, state is same:', self.siegeWarState)
             return
 
         endTime = utils.getNow() + 60 * 60 * 24
         WARNING_MSG('[lj]gm change siege war state:', self.siegeWarState, '->', state, "end time:", endTime, "args:", args)
-        self.gmDisableStateAutoChange = True
+        if len(args) > 1 and args[1] == 1:
+            self.gmDisableStateAutoChange = False
+        else:
+            self.gmDisableStateAutoChange = True
         WARNING_MSG('[lj]set gmDisableStateAutoChange:', self.gmDisableStateAutoChange)
         if state == gameconst.SiegeWarState.WAR_COUNT_DOWN:
             self.onSiegeWarDeclareWar(0, 0, True, 0, self.firstBiddingGuildName, self.firstBiddingGuildUUID, "", "")

@@ -48,7 +48,8 @@ datas ={
     "entityID": [
       40010006,
       40010007,
-      40010008
+      40010008,
+      40010025
     ],
     "num": 1,
     "lv": "5",
@@ -261,8 +262,7 @@ datas ={
       "finished": [
         1030,
         1031,
-        1033,
-        1037
+        1033
       ]
     }
   },
@@ -326,26 +326,6 @@ datas ={
     "num": 1,
     "lv": "9",
     "ifSetBoss": 0,
-    "transition": {}
-  },
-  "1037": {
-    "type": "delayLoop",
-    "firstDelay": 3.0,
-    "loopDelay": 0.0,
-    "loopNum": 1,
-    "transition": {
-      "finished": [
-        1038
-      ]
-    }
-  },
-  "1038": {
-    "type": "transferToTheDesignatedMap",
-    "mapId": 1002,
-    "posX": 302.3398,
-    "posY": 17.8216,
-    "posZ": 63.28776,
-    "angle": 0,
     "transition": {}
   },
   "1014": {

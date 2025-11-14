@@ -81,6 +81,7 @@ import iCrossServer
 import gzip
 import json
 import guildAuthorization_authorization_def as GA_A_DD
+import iMeridian
 
 class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace, impTask.ImpTask, impCombat.ImpCombat,
              EventMgr.EventMgr, iComplexTeleport.IComplexTeleport, impTeam.ImpTeam, impRaid.ImpRaid,
@@ -91,7 +92,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              iCubeCell.ICubeCell, iGuildCell.IGuildCell, iGuildTrainCell.IGuildTrainCell,
              iLeaderBoardCell.ILeaderBoardCell, iWonderLandCell.IWonderLandCell,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief,
-             iNewbie.INewbie, iCrossServer.ICrossServer):
+             iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian):
     IsAvatar = True
     IsCombatUnit = True
 
@@ -411,6 +412,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.setHealRatio(self.id, _hpRatio, True)
         self.setHealRatio(self.id, _mpRatio, False)
 
+        self.autoCombatReliveReturnTimes = CONST.datas['autoFightSettingsReliveTime']['value']
+
     def _initLogonCell(self):
         ret = self.popTempMiscProp(gameconst.AvatarProps.logonCreateCellCB)
         if ret is None:
@@ -521,6 +524,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     @utils.isMyself
     def reqTransmitWithMapPoint(self, exposed, mapId, exampleId):
+        extraProps = {"mapId" : mapId, "exampleId" : exampleId, "callbackName" : "transmitMapUnlockedCallback"}
+        self.base.onCheckMapUnlocked(gameconst.CELL, 1, 'teleportEnterLineMapUnlockedCallback', extraProps)
+
+    def transmitMapUnlockedCallback(self, extraProps):
+        INFO_MSG("transmitMapUnlockedCallback", extraProps)
+
+        mapId = extraProps["mapId"]
+        exampleId = extraProps["exampleId"]
         self._commonNeedCast(
             CCD.datas.teleportCast,
             gameconst.State.Teleporting,
@@ -793,7 +804,17 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 WARNING_MSG('teleportByTeleporter::lineNo == lineNo', lineNo, self.spaceNo)
                 # self.checkLineArea(dstPos, '_onCheckLineAreaByTeleport', (teleporter, dstPos, src, desTelId, fromTelId))
         else:
-            self.applyEnterLineInternal(lineType, lineNo, dstPos, telDirection, False)
+            extraProps = {"mapId" : formula.getMapId(desTelId), "lineNo" : lineNo, "lineType" : lineType, "dstPos" : dstPos, "telDirection" : telDirection,  "callbackName" : "teleportMapUnlockedCallback"}
+            self.base.onCheckMapUnlocked(gameconst.CELL, 2, 'teleportEnterLineMapUnlockedCallback', extraProps)
+
+    def teleportMapUnlockedCallback(self, extraProps):
+        INFO_MSG("teleportMapUnlockedCallback", extraProps)
+
+        lineType = extraProps["lineType"]
+        lineNo = extraProps["lineNo"]
+        dstPos = extraProps["dstPos"]
+        telDirection = extraProps["telDirection"]
+        self.applyEnterLineInternal(lineType, lineNo, dstPos, telDirection, False)
 
     def beforeTeleport(self, toSpaceNo):
         if self.spaceNo != toSpaceNo:
@@ -1325,8 +1346,18 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 'callback': callback,
                 'callbackArgs': callbackArgs
             }
-            self.applyEnterLineInternal(lineType, -1, dstPos, dstDir, extra)
-            self._stopCommonCast()
+            extraProps = {"mapId" : lineType, "lineType" : lineType, "lineNo" : -1, "dstPos" : dstPos, "dstDir" : dstDir, "extra" : extra,  "callbackName" : "telToMainCityWithCastMapUnlockedCallback"}
+            self.base.onCheckMapUnlocked(gameconst.CELL, 3, 'teleportEnterLineMapUnlockedCallback', extraProps)
+
+    def telToMainCityWithCastMapUnlockedCallback(self, extraProps):
+        INFO_MSG("telToMainCityWithCastMapUnlockedCallback", extraProps)
+
+        lineType = extraProps["lineType"]
+        dstPos = extraProps["dstPos"]
+        dstDir = extraProps["dstDir"]
+        extra = extraProps["extra"]
+        self.applyEnterLineInternal(lineType, -1, dstPos, dstDir, extra)
+        self._stopCommonCast()
 
     def getSpaceRouteController(self):
         if formula.spaceInWorldLine(self.spaceNo):

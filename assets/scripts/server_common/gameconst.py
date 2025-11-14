@@ -110,6 +110,7 @@ AVATAR_OFFLINE_REASON_IDIP_PLAT_AUTHOR_CHANGE = 18
 AVATAR_OFFLINE_REASON_SWITCH_SERVER = 19
 AVATAR_OFFLINE_REASON_NEWBIE_KICKOUT = 20
 AVATAR_OFFLINE_REASON_STOP_AUTH = 21
+AVATAR_OFFLINE_AUTH_NEED_RECONNECT = 22
 
 CENTRAL_SERVER_HEARTBEAT_INTERVAL = 10
 
@@ -315,6 +316,7 @@ class ItemSubType(object):
     HEAL_HP = 1
     HEAL_MP = 2
     Equipment = 4
+    EQUIP_CORE = 6
     ExtractReward = 52
 
 class AvatarProps(metaclass=UniqueIntEnum):
@@ -587,6 +589,7 @@ class BagOPStat(object):
     BAG_OP_REUSE_ITEM_USE_TIMES_FAILED = 19
     BAG_OP_ITEM_DISABLED = 20
     BAG_OP_ITEM_LOCKED = 21
+    BAG_OP_ARG_ERR = 22
 
 class BagOpPlan(object):
     BAG_OP_NO_PLAN = 1
@@ -984,7 +987,6 @@ class VariableType(object):
 
 
 class LoadEntitySetting(object):
-    BATCH_NUM = 20
     BATCH_DELAY = 0.2
 
 
@@ -1209,6 +1211,7 @@ class SourceType(metaclass=UniqueIntEnum):
     CollectProp = 41
     DuelEnd = 42
     DropDeath = 43
+    MeridianProp = 44
 
 MAX_BUFF_COUNT = 50
 
@@ -1329,14 +1332,36 @@ class HitType(metaclass=UniqueIntEnum):
     ImmuneAssistantDmg = 16
     #分摊伤害
     ShareDmg = 17 # 为0 不下发
+    #血量回复
+    HPRecover = 21 # 为0 不下发
+    #伤害免疫
+    ImmuneDmg = 22
+    #晕眩
+    Stun = 24
+    #击倒
+    Down = 25
+    #冰冻
+    Frozen = 26
+    #定身
+    Snare = 27
+    #缓速
+    Slow = 28
+    #控制抵抗or免疫
+    AntiControl = 29
+    #沉默抵抗or免疫
+    AntiSilence = 30
     #combo伤害（如感电炎爆）
-    ComboHit = 18 # 为0 不下发
+    ComboHit = 31 # 为0 不下发
     #combo暴击
-    ComboCrit = 19 # 为0 不下发
+    ComboCrit = 32 # 为0 不下发
+    #沉默
+    Silence = 34
+    #位移免疫
+    ImmuneDisplacement = 36
 
-    clientIgnoreList = (Absorb, BloodSuck, Dodge, Heal, ImmunePhysicalDmg, ImmuneMagicDmg, ImmuneAssistantDmg)
+    clientIgnoreList = (Absorb, BloodSuck, Dodge, Heal, ImmunePhysicalDmg, ImmuneMagicDmg, ImmuneAssistantDmg, HPRecover)
 
-    zeroFilter = (Hit, Crit, Dodge, Heal, HealCrit, Absorb, BloodSuck, Eliminate, ShareDmg, ComboHit, ComboCrit)
+    zeroFilter = (Hit, Crit, Dodge, Heal, HealCrit, Absorb, BloodSuck, Eliminate, ShareDmg, ComboHit, ComboCrit, HPRecover)
 
     @staticmethod
     @functools.lru_cache(32)
@@ -1706,6 +1731,7 @@ class _RaidErrno(object):
     RAID_NOT_RAID_CANNOT_KICK_DEPUTY        = _errno(10068)     # 不能踢副团长
     RAID_NOT_RAID_CANNOT_MOVE_LEADER        = _errno(10069)     # 不能移动团长
     RAID_NOT_RAID_UNKNOWN_TEAM_MEMBER       = _errno(10070)     # 小队人数不支持
+    RAID_NOT_SAME_SIEGEWAR_CAMP             = _errno(10071)     # 城战不同阵营
 
     RAID_CHECKING_TEAM_JOIN                 = _errno(50000)     # 团队正在检查组队加入(申请通过)
     RAID_CHECKING_TEAM_INVITE               = _errno(50001)     # 团队正在检查组队加入(邀请通过)
@@ -2297,7 +2323,7 @@ class GamePlayMapCheckEnum(object):
 
 def getBranchLineCnt(mapId):
     subType = BD_BDD.datas[mapId]["subType"]
-    
+
     import gameconfig
     return gameconfig.branchLineCnt(subType)
 
@@ -3166,6 +3192,8 @@ class SiegeWarEnterResult:
     NOT_ENOUGH_NUM = 3
 
 SIEGEWAR_WANTED_BUFF = 64000096
+SIEGEWAR_PARE_ACTIVITY_ID = 2
+SIEGEWAR_GO_BACK_LINENO = 1002
 
 class ActivityControlType(object):
     # 单人
@@ -3174,6 +3202,8 @@ class ActivityControlType(object):
     TEAM = 1
     # 组团
     RAID = 2
+
+PARE_ACTIVITY_ID = 2
 
 class GuildTaskType(object):
     COLLECTION = 1  #采集
@@ -3250,6 +3280,13 @@ class InscriptionEffectType(object):
             DAMAGE_HIT_ADD_VALUE,
             CREATION_ADD_PHASE_WITH_FREQUENCY,
             CREATION_ADD_PHASE_WITH_LAST_TIME,
+            DAMAGE_INCREASE_RATIO,
+            SKILL_DAMAGE_INCREASE_RATIO,
+            SKILL_CRITIAL_DAMAGE_INCREASE_RATIO,
+            SHIELD_INCREASE_RATIO,
+            REFRESH_CD,
+            SKILL_RELEASE_RANGE_ADD_VALUE,
+            SKILL_RELEASE_DISTANCE_ADD_VALUE,
     )
     # 随机单参浮点类型
     CHECK_RANDOM_ONE_PARAM_FLOAT_TYPE = (
@@ -3382,6 +3419,16 @@ class AccountHostType(object):
     HOST = 1 # 主人的号
     AUTH = 2 # 代理的号
 
+# 授权建立过程中的状态
+class AuthState(object):
+    NORMAL = 0
+    AGREE_AUTH = 1
+
+
+SELECT_GAME_FAILED_AUTH_EXPIRED = 1
+SELECT_GAME_FAILED_MORAL_LOW = 2
+
+
 class AuthPerFlags(object):
 # 1.	商城（默认：关闭）
 # 2.	交易行（默认：关闭）
@@ -3449,3 +3496,12 @@ class AvatarWeeklyProps(metaclass=UniqueIntEnum):
 class EffetEventSourceType(object):
     NONE = 0
     LINGSHOU_SKILL_BUFF = 1
+
+class EquipConstVale(object):
+    # 装备强化破碎标记
+    ENHANCEMENT_BROKEN_FLAG = -99
+
+class UIUIVisibleType(object):
+    NONE = 0
+    TASK = 1
+    LEVEL = 2

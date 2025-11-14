@@ -207,14 +207,16 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.accountTodayRegNum.incSum(self)
 
     def syncRegNumLog(self):
-        self.pyAddTimer(1, 60, gametimer.LOGIN_STUB_REG_NUM_CNT)
+        #self.pyAddTimer(1, 60, gametimer.LOGIN_STUB_REG_NUM_CNT)
+        pass
 
     def regNumLog(self):
-        if utils.isDiffDay(self.todayAccountRegNumTs, utils.getNow(), gameconst.COMMON_CYCLE_TIME):
-            self.accountTodayRegNum.setSum(self, 0)
-            self.todayAccountRegNumTs = utils.getNow()
-
-        gamelog.makeWLog("RegisterNum", {
-                'all': self.accountRegNum.dataSum,
-                'today_add': self.accountTodayRegNum.dataSum
-            })
+        pass
+        # if utils.isDiffDay(self.todayAccountRegNumTs, utils.getNow(), gameconst.COMMON_CYCLE_TIME):
+        #     self.accountTodayRegNum.setSum(self, 0)
+        #     self.todayAccountRegNumTs = utils.getNow()
+        #
+        # gamelog.makeWLog("RegisterNum", {
+        #         'all': self.accountRegNum.dataSum,
+        #         'today_add': self.accountTodayRegNum.dataSum
+        #     })

@@ -4119,6 +4119,18 @@ datas = _tools.RODict({
         "creepID": 0,
         "commonDialog": 0,
     }),
+    18000690: _tools.RODict({
+        "ID": 18000690,
+        "name": "？？？",
+        "baseSpeed": 1.0,
+        "adjSpeed": 1.0,
+        "isNameDisplay": 0,
+        "isSelectable": 0,
+        "pathID": 0,
+        "AI": None,
+        "creepID": 0,
+        "commonDialog": 0,
+    }),
 })
 minKey = 18000002
 maxKey = 18990005

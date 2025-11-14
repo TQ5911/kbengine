@@ -6,6 +6,9 @@ class AccountBaseEntityCall(object):
     def getAvatarDetailForAccount(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getAvatarDetailForAccount', (arg1, )))
 
+    def getAvatarOfflineTime(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getAvatarOfflineTime', (arg1, )))
+
     def kickAnotherAvatar(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'kickAnotherAvatar', (arg1, )))
 
@@ -21,8 +24,8 @@ class AccountBaseEntityCall(object):
     def reqRemoveAvatar(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqRemoveAvatar', (arg1, )))
 
-    def selectAvatarGame(self, arg1, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'selectAvatarGame', (arg1, )))
+    def selectAvatarGame(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'selectAvatarGame', (arg1, arg2, )))
 
     def stopCharacterAuth(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'stopCharacterAuth', (arg1, )))

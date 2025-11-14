@@ -2,12 +2,10 @@
 from KBEDebug import *
 import KBEngine
 
-import prop_fightprop  as  PPROPERTY
-from avatarCollectInfo import collectItem
 import gameconst
-import fightProp_define as FPDD
+import dataUtils
 
-
+import prop_fightprop  as  PPROPERTY
 
 class ICollectible(object):
     def onCollectAward(self, propIndexList):
@@ -20,7 +18,7 @@ class ICollectible(object):
         addScore = 0
         for propName, val in syncPropDict.items():
             self.addProp(propName, val, gameconst.SourceType.CollectProp)
-            addScore += int(round(FPDD.datas[propName]['perPropertyScore'] * val))
+            addScore += int(round(dataUtils.filterFightPropScore(self.school, propName) * val))
             DEBUG_MSG('add prop by collect', propName, ', val', val)
 
         if addScore:

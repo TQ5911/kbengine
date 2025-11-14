@@ -17,7 +17,7 @@ class Account(AccountBase):
         self.userName = ""
         # self.base.reqAvatarList()
 
-    def onReqAvatarList(self, characters, notUse):
+    def onReqAvatarList(self, characters, notUse, notUse2):
         DEBUG_MSG('onReqAvatarList:', characters)
         if not characters['characters']:
             DEBUG_MSG('reqCreateBot', self)
@@ -27,7 +27,7 @@ class Account(AccountBase):
             return
 
         _gbId = characters['characters'][0]['gbId']
-        self.base.selectAvatarGame(_gbId)
+        self.base.selectAvatarGame(_gbId,True)
 
     def onReqAvatarGBID(self, gbId, arg2):
         d = self.clientapp.getPlayerDelegate()
@@ -47,7 +47,7 @@ class Account(AccountBase):
             self.base.reqCreateBot(avatarName, d.botClient.school, d.botClient.faceData)
         else:
             self.gbId = gbId
-            self.selectAvatarGame()
+            self.selectAvatarGame(self.gbId,True)
 
         self.userName = GD.account_username
         GD.account_map[self.userName] = self.id
@@ -68,11 +68,11 @@ class Account(AccountBase):
         DEBUG_MSG('onCreateAvatarResult:', arg, gbId)
         self.gbId = gbId
         if arg == 0:
-            self.base.selectAvatarGame(gbId)
+            self.base.selectAvatarGame(gbId,True)
 
     def selectAvatarGame(self):
         DEBUG_MSG('selectAvatarGame gbid:', self.gbId)
-        self.base.selectAvatarGame()
+        self.base.selectAvatarGame(self.gbId,True)
 
     def onMessage(self, *arg):
         pass

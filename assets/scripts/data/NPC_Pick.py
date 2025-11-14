@@ -4060,7 +4060,7 @@ datas = _tools.RODict({
     }),
     16002001: _tools.RODict({
         "ID": 16002001,
-        "name": "混沌回廊一层入口宝箱",
+        "name": "混沌回廊一层入口宝箱~低级",
         "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
@@ -4087,7 +4087,7 @@ datas = _tools.RODict({
     }),
     16002002: _tools.RODict({
         "ID": 16002002,
-        "name": "混沌回廊一层守护宝箱",
+        "name": "混沌回廊一层守护宝箱-中级",
         "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
@@ -4114,7 +4114,7 @@ datas = _tools.RODict({
     }),
     16002003: _tools.RODict({
         "ID": 16002003,
-        "name": "混沌回廊一层协助宝箱",
+        "name": "混沌回廊一层协助宝箱-中级",
         "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
@@ -4141,7 +4141,7 @@ datas = _tools.RODict({
     }),
     16002004: _tools.RODict({
         "ID": 16002004,
-        "name": "混沌回廊一层封印剑",
+        "name": "混沌回廊一层封印石",
         "type": 5,
         "pickDistance": 6.0,
         "taskCheck": None,

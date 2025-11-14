@@ -39,6 +39,18 @@ def onlyHost(fn):
     return __
 
 
+def onlyMainChannel(fn):
+    @wraps(fn)
+    def __(self, exposed, *args, **kwargs):
+        if exposed < 0:
+            return
+
+        return fn(self, exposed, *args, **kwargs)
+
+    return __
+
+
+
 def authWithPermission(permission):
     def _decorator(fn):
         @wraps(fn)

@@ -5568,37 +5568,37 @@ namespace KBEngine
 
 	public struct AUTH_PERMISSION
 	{
-		UInt16 value;
+		UInt64 value;
 
-		AUTH_PERMISSION(UInt16 value)
+		AUTH_PERMISSION(UInt64 value)
 		{
 			this.value = value;
 		}
 
-		public static implicit operator UInt16(AUTH_PERMISSION value)
+		public static implicit operator UInt64(AUTH_PERMISSION value)
 		{
 			return value.value;
 		}
 
-		public static implicit operator AUTH_PERMISSION(UInt16 value)
+		public static implicit operator AUTH_PERMISSION(UInt64 value)
 		{
-			UInt16 tvalue = (UInt16)value;
+			UInt64 tvalue = (UInt64)value;
 			return new AUTH_PERMISSION(tvalue);
 		}
 
-		public static UInt16 MaxValue
+		public static UInt64 MaxValue
 		{
 			get
 			{
-				return UInt16.MaxValue;
+				return UInt64.MaxValue;
 			}
 		}
 
-		public static UInt16 MinValue
+		public static UInt64 MinValue
 		{
 			get
 			{
-				return UInt16.MinValue;
+				return UInt64.MinValue;
 			}
 		}
 	}
@@ -5738,11 +5738,7 @@ namespace KBEngine
 		public UInt32 auctionTime = 0;
 		public List<CLI_SPIRIT_INFO> spiritDatas = new List<CLI_SPIRIT_INFO>();
 		public List<CLI_GLYPH_INFO> glyphInfo = new List<CLI_GLYPH_INFO>();
-		public List<UInt32> radomEnhTimes = new List<UInt32>();
 		public Byte enhanceLv = 0;
-		public Byte enhanceLvRate = 0;
-		public string creatorName = "";
-		public UInt64 creatorGbId = 0;
 		public List<AFFIX_VAL> blessAffixes = new List<AFFIX_VAL>();
 		public Byte maxBlessLv = 0;
 		public UInt16 blessLvRate = 0;
@@ -6184,6 +6180,7 @@ namespace KBEngine
 		public Int32 id = 0;
 		public string openId = "";
 		public Byte raidAmount = 0;
+		public UInt32 offlineTime = 0;
 
 	}
 
@@ -6932,7 +6929,7 @@ namespace KBEngine
 
 	public class AUTH_PERMISSION_DATA_INFO
 	{
-		public UInt16 permission = 0;
+		public UInt64 permission = 0;
 		public UInt64 dailyMoney = 0;
 
 	}
@@ -6945,6 +6942,33 @@ namespace KBEngine
 		public Int32 guildScore = 0;
 		public string leaderName = "";
 		public UInt32 ts = 0;
+
+	}
+
+	public class ACT_TIMES_DATA_INFO
+	{
+		public UInt32 actId = 0;
+		public Byte times = 0;
+
+	}
+
+	public class AUTH_STATISTICS_DATA_INFO
+	{
+		public UInt32 oldLevel = 0;
+		public float oldExp = 0f;
+		public Int32 oldScore = 0;
+		public UInt64 oldMoney = 0;
+		public UInt64 oldCoin = 0;
+		public Int64 oldDarkIron = 0;
+		public Int64 oldGeniusQi = 0;
+		public UInt64 otherGbId = 0;
+		public UInt32 authExpire = 0;
+		public List<UInt64> itemUniqueIds = new List<UInt64>();
+		public List<ACT_TIMES_DATA_INFO> actTimes = new List<ACT_TIMES_DATA_INFO>();
+		public UInt64 dailyUseMoney = 0;
+		public List<AWARD_ITEM_VAL> items = new List<AWARD_ITEM_VAL>();
+		public UInt32 hostOffline = 0;
+		public UInt32 authLogin = 0;
 
 	}
 
@@ -6962,6 +6986,28 @@ namespace KBEngine
 		public List<TEAM_STATISTIC_PLAYER_VAL> dmgList = new List<TEAM_STATISTIC_PLAYER_VAL>();
 		public List<TEAM_STATISTIC_PLAYER_VAL> healList = new List<TEAM_STATISTIC_PLAYER_VAL>();
 		public List<TEAM_STATISTIC_PLAYER_VAL> hurtList = new List<TEAM_STATISTIC_PLAYER_VAL>();
+
+	}
+
+	public class MERIDIAN_POINT_INFO
+	{
+		public Byte pointIdx = 0;
+		public Byte level = 0;
+
+	}
+
+	public class MERIDIAN_SLOT_INFO
+	{
+		public Byte slotIdx = 0;
+		public Byte hasEnhance = 0;
+		public List<MERIDIAN_POINT_INFO> points = new List<MERIDIAN_POINT_INFO>();
+
+	}
+
+	public class MERIDIAN_ENHANCE_ITEM_INFO
+	{
+		public UInt16 gridId = 0;
+		public Byte itemNum = 0;
 
 	}
 

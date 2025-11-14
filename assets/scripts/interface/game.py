@@ -53,7 +53,7 @@ def onInterfaceAppReady():
     KBEngine method.
     interfaces已经准备好了
     """
-    INFO_MSG('ZTQ onInterfaceAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
+    INFO_MSG('onInterfaceAppReady: bootstrapGroupIndex=%s, bootstrapGlobalIndex=%s' % \
              (os.getenv("KBE_BOOTIDX_GROUP"), os.getenv("KBE_BOOTIDX_GLOBAL")))
 
     KBEngine.globalData = {}
@@ -85,7 +85,7 @@ def onInterfaceAppShutDown():
     KBEngine method.
     这个interfaces被关闭前的回调函数
     """
-    INFO_MSG('ZTQ onInterfaceAppShutDown()')
+    INFO_MSG('onInterfaceAppShutDown()')
 
 
 def onRequestCreateAccount(registerName, password, datas):
@@ -101,7 +101,7 @@ def onRequestCreateAccount(registerName, password, datas):
     @param datas: 客户端请求时所附带的数据，可将数据转发第三方平台
     @type  datas: bytes
     """
-    INFO_MSG('ZTQ onRequestCreateAccount: registerName=%s' % (registerName))
+    INFO_MSG('onRequestCreateAccount: registerName=%s' % (registerName))
 
     commitName = registerName
 
@@ -123,12 +123,12 @@ def onRequestCreateAccount(registerName, password, datas):
 
 
 def _onCheckWhiteList(result, error, isNewAccount, realAccountName, password, dataBytes):
-    INFO_MSG('ZTQ _onCheckWhiteList: registerName', result, realAccountName)
+    INFO_MSG('_onCheckWhiteList: registerName', result, realAccountName)
     if not result:
         nowNum = gameglobal.registerCount
         cfgNum = int(gameconfig.getServerRegLimit())
         if isNewAccount and nowNum >= cfgNum:
-            INFO_MSG('ZTQ _onCheckWhiteList check server limit error.', nowNum, cfgNum)
+            INFO_MSG('_onCheckWhiteList check server limit error.', nowNum, cfgNum)
             KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER5)
             return
         clientData = utils.decodeClientData(dataBytes)
@@ -148,7 +148,7 @@ def _onCheckWhiteList(result, error, isNewAccount, realAccountName, password, da
 
 
 def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
-    INFO_MSG('ZTQ _onCheckBanAccount: registerName', result, realAccountName)
+    INFO_MSG('_onCheckBanAccount: registerName', result, realAccountName)
     accountType, accountName = utils.getAccountTypeAndName(realAccountName)
     isNewAccount = False
     if len(result) == 0:
@@ -159,7 +159,7 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
 
         switch = int(gameconfig.getServerRegSwitch())
         if not switch:
-            INFO_MSG('ZTQ _onCheckBanAccount check server switch error.', switch)
+            INFO_MSG('_onCheckBanAccount check server switch error.', switch)
             KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER5)
             return
     else:
@@ -169,7 +169,7 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
         # forbidLoginReason = str(result[0][3].decode())
         isDelete = int(result[0][0])
         if isDelete:
-            INFO_MSG('ZTQ reject login,account delete', isDelete, realAccountName)
+            INFO_MSG('reject login,account delete', isDelete, realAccountName)
             fmtMessage = MMD.datas[LSD.datas['accountCancellation']['value']]['Message']
             KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'), 0,
                                           KBEngine.SERVER_ERR_USER6)
@@ -211,22 +211,20 @@ def onRequestAccountLogin(realAccountName, password, dataBytes):
     @param datas: 客户端请求时所附带的数据，可将数据转发第三方平台
     @type  datas: bytes
     """
-    INFO_MSG('ZTQ onRequestAccountLogin: registerName', realAccountName, dataBytes)
+    INFO_MSG('onRequestAccountLogin: registerName', realAccountName, dataBytes)
     accountType, accountName = utils.getAccountTypeAndName(realAccountName)
     _forceCompId = utils.getForceComponentID(realAccountName)
 
     clientData = utils.decodeClientData(dataBytes)
-    # 跨服登录 accountType=3，realAccountName传过来的是 3:ztq1 这样子
     if accountType == centralLogin.ACCOUNT_CROSS_SERVER and clientData.get('crossServerToken'):
         KBEngine.accountLoginResponse(realAccountName, realAccountName, dataBytes, _forceCompId, KBEngine.SERVER_SUCCESS)
         return
 
     if not gameconfig.interfaceEnableLogin():
         KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', _forceCompId, KBEngine.SERVER_ERR_SRV_STARTING)
-        INFO_MSG('ZTQ reject login, recovring cellapps')
+        INFO_MSG('reject login, recovring cellapps')
         return
 
-    # 走这里
     gamesql.getForbidLoginProp(realAccountName,
                                lambda result, row, insertid, error: _onCheckBanAccount(result, error, realAccountName,
                                                                                        password, dataBytes))
@@ -248,7 +246,6 @@ def _requestAccountLogin(realAccountName, password, dataBytes):
         KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER2)
         return
 
-    INFO_MSG('ZTQ _requestAccountLogin')
     loginManager.checkPlayerLogin(realAccountName, dataBytes, centralServerId)
 
 

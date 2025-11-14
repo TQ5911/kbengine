@@ -15,12 +15,9 @@ import NPC_Pick as NPD
 # dropParamDic = {
 #     'lv': playerlevel,
 #     'srcLevel': context.level or 0,
-#     'creatorName': context.avatarName or '',
-#     'mstName': context.srcEntName or '',
 #     'monsterId': context.monsterId or 0,
 #     'school': context.school or 0,
 #     'quality': quality or 0,
-#     'creatorGbId': context.avatarGbId or 0,
 # }
 
 #KBEngine.addTimer(1, 0, lambda tid: checkGameConfigReady())

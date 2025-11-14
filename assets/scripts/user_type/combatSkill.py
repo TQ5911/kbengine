@@ -322,7 +322,20 @@ class SkillBase(userType.UserSoleType):
         return gcd * (1 + owner.mulGCD)
 
     def getCD(self, owner):
-        cd = self.getSkillData(self.skillId).get('CD', 0)
+        _cd = self.getSkillData(self.skillId).get('CD', 0)
+
+        if isinstance(_cd, tuple) or isinstance(_cd, list):
+            _lv = self.getLevel(owner) - 1
+            if 0 <= _lv < len(_cd):
+                cd = _cd[_lv]
+            else:
+                ERROR_MSG('getCD but range invalid', _lv, _cd)
+                cd = 0
+        elif _cd is None:
+            cd = 0
+        else:
+            cd = _cd
+
 #         【【战斗】技能冷却加速属性没生效】
 # https://www.tapd.cn/tapd_fe/59721401/bug/detail/1159721401001004163
         #realCD = (cd + owner.adjCD) * (1 + owner.mulCD) + self.cdDelta'
@@ -785,7 +798,7 @@ class SkillBase(userType.UserSoleType):
         else:
             dirMagnitude = math.sqrt(direction.x * direction.x + direction.z * direction.z)
             if dirMagnitude == 0:
-                return False
+                dirMagnitude = 1
 
             unitDirX = direction.x / dirMagnitude
             unitDirZ = direction.z / dirMagnitude
@@ -2391,7 +2404,7 @@ class StagedSkill(ZedSkillVal):
             else:
                 curStageSKill, _ = self.getRealSkillVal(owner)
                 if curStageSKill is self:
-                    raise Exception('ckz curStageSKill is self', self.skillId)
+                    raise Exception('ckz curStageSKill is self', self.skillId, self.stageIndex, owner.gbId)
 
                 self is rootSkillVal and self.gotoNextStage(owner)
                 isSucc, actionCtx, effectTargetIds = curStageSKill.beginUseSkill(owner, targetId, skillArgs,

@@ -1746,6 +1746,7 @@ datas ={
     "FinRewardEventParam": "1",
     "FNFinDialogId": "19000004",
     "FNUnFinDiallogId": "19000005",
+    "IsAutoQuit": True,
     "OpenCondCheckSex": 0,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
@@ -1822,6 +1823,7 @@ datas ={
     "GuaranteeTaskId": [
       0
     ],
+    "IsAutoQuit": True,
     "OpenCondCheckSex": 0,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
@@ -3418,6 +3420,7 @@ datas ={
     "FatherTaskId": 0,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
+    "IsAutoQuit": True,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -15333,6 +15336,7 @@ datas ={
     "FinCondHasFinDia": True,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
+    "IsAutoQuit": True,
     "OpenCondCheckSex": 0,
     "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
@@ -17608,10 +17612,10 @@ datas ={
       "MapId": 4002,
       "NeedConfirm": False,
       "UseConfigPos": True,
-      "X": 767.0632,
-      "Y": 33.99687,
-      "Z": 419.8018,
-      "Dir": 180.0,
+      "X": 788.0348,
+      "Y": 34.41483,
+      "Z": 430.455,
+      "Dir": 268.7704,
       "Angles": 0,
       "IsShowFx": 0
     },
@@ -17623,9 +17627,9 @@ datas ={
     "FinCondNeedMergeTarget": False,
     "FinCondReachArea": {
       "MapId": 4002,
-      "X": 770.0,
-      "Y": 35.0,
-      "Z": 374.0,
+      "X": 760.0,
+      "Y": 33.56694,
+      "Z": 420.0,
       "Width": 5.0,
       "Length": 5.0,
       "TriggerDis": 0.0,
@@ -17633,7 +17637,6 @@ datas ={
       "IsShowFx": 0
     },
     "FinRewardCameraData": 0,
-    "FinRewardDialog": 19900286,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -17644,6 +17647,7 @@ datas ={
     "ChildDoInQueue": False,
     "ChildTaskIds": [],
     "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060049,
     "FinCondDefaultText": "\u5411\u524d\u63a2\u7d22",
@@ -17651,9 +17655,9 @@ datas ={
     "FinCondNeedMergeTarget": False,
     "FinCondReachArea": {
       "MapId": 4002,
-      "X": 766.8117,
-      "Y": 33.85596,
-      "Z": 362.0343,
+      "X": 769.0,
+      "Y": 34.41484,
+      "Z": 366.0,
       "Width": 5.0,
       "Length": 5.0,
       "TriggerDis": 0.0,
@@ -17749,13 +17753,18 @@ datas ={
       86060094,
       86060095,
       86060096,
-      86060100
+      86060100,
+      86060117,
+      86060120,
+      86060123,
+      86060126
     ],
     "ClamiCameraData": 0,
     "DeliMetdManual": None,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNeedMergeTarget": False,
+    "IsAutoQuit": True,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -18756,8 +18765,8 @@ datas ={
       "X": 765.6284,
       "Y": 34.29571,
       "Z": 314.0,
-      "Width": 5.0,
-      "Length": 5.0,
+      "Width": 2.0,
+      "Length": 2.0,
       "TriggerDis": 0.0,
       "Angles": 0.0,
       "IsShowFx": 0
@@ -18831,7 +18840,7 @@ datas ={
     ],
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardTriggerStoryID": 98000001,
+    "FinRewardTriggerStoryID": 98000036,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -18852,6 +18861,7 @@ datas ={
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86060052",
     "OpenCondRelateTaskState": 5,
@@ -19221,9 +19231,9 @@ datas ={
     "FinCondNeedMergeTarget": False,
     "FinCondReachArea": {
       "MapId": 4002,
-      "X": 576.0,
-      "Y": 69.30848,
-      "Z": 294.0,
+      "X": 575.0477,
+      "Y": 68.41695,
+      "Z": 287.8274,
       "Width": 5.0,
       "Length": 5.0,
       "TriggerDis": 0.0,
@@ -19381,6 +19391,7 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [
+      86060128,
       86060078,
       86060080,
       86060083,
@@ -19592,11 +19603,11 @@ datas ={
     "FinCondNeedMergeTarget": False,
     "FinCondReachArea": {
       "MapId": 4002,
-      "X": 452.0,
-      "Y": 81.92803,
-      "Z": 348.1135,
-      "Width": 5.0,
-      "Length": 5.0,
+      "X": 459.4783,
+      "Y": 81.87803,
+      "Z": 348.1114,
+      "Width": 2.0,
+      "Length": 2.0,
       "TriggerDis": 0.0,
       "Angles": 0.0,
       "IsShowFx": 0
@@ -19642,7 +19653,15 @@ datas ={
     "BelongMap": 0,
     "ChildTaskIds": [
       86060088,
-      86060089
+      86060127,
+      86060089,
+      86060116,
+      86060118,
+      86060119,
+      86060121,
+      86060122,
+      86060124,
+      86060125
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -19650,6 +19669,7 @@ datas ={
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
     "OpenCondCheckSex": 0,
     "OpenCondRelateTaskId": "86060084",
     "OpenCondRelateTaskState": 5,
@@ -19693,33 +19713,21 @@ datas ={
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
     "FatherTaskId": 86060087,
-    "FinCondDefaultText": "\u5f00\u542f\u673a\u5173",
-    "FinCondHasInterCollect": True,
-    "FinCondInterCollect": [
-      {
-        "CollId": 16000109,
-        "Count": 1,
-        "MapId": 4002
-      },
-      {
-        "CollId": 16000112,
-        "Count": 1,
-        "MapId": 4002
-      },
-      {
-        "CollId": 16000111,
-        "Count": 1,
-        "MapId": 4002
-      },
-      {
-        "CollId": 16000110,
-        "Count": 1,
-        "MapId": 4002
-      }
-    ],
+    "FinCondDefaultText": "\u5524\u9192\u602a\u7269",
+    "FinCondIsTriggerArea": True,
     "FinCondNeedMergeTarget": False,
+    "FinCondReachArea": {
+      "MapId": 4002,
+      "X": 347.0,
+      "Y": 90.02078,
+      "Z": 357.0,
+      "Width": 2.0,
+      "Length": 2.0,
+      "TriggerDis": 0.0,
+      "Angles": 0.0,
+      "IsShowFx": 0
+    },
     "FinRewardCameraData": 0,
-    "FinRewardTriggerStoryID": 98000001,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -19830,7 +19838,8 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [
-      86060098
+      86060098,
+      86060129
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
@@ -19883,19 +19892,7 @@ datas ={
       }
     ],
     "FinCondNeedMergeTarget": False,
-    "FinHasRewardInst": True,
     "FinRewardCameraData": 0,
-    "FinRewardInstance": {
-      "MapId": 4002,
-      "NeedConfirm": False,
-      "UseConfigPos": True,
-      "X": 237.8829,
-      "Y": 90.25985,
-      "Z": 347.6016,
-      "Dir": 269.3945,
-      "Angles": 0,
-      "IsShowFx": 0
-    },
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -19906,6 +19903,7 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [
+      86060114,
       86060101
     ],
     "ClaimCondAutoTake": True,
@@ -20063,11 +20061,14 @@ datas ={
       86060110,
       86060111,
       86060112,
-      86060113
+      86060113,
+      86060115
     ],
     "ClaimCondAutoTake": True,
     "ClamiCameraData": 0,
-    "DeliMetdManual": None,
+    "DeliMetdNoLimit": True,
+    "FailCondCanQuitIfFail": False,
+    "FailCondQuitIfFail": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondNeedMergeTarget": False,
@@ -20179,7 +20180,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 3
+        "Count": 4
       },
       {
         "MapId": 1,
@@ -20200,6 +20201,7 @@ datas ={
     ],
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40020215,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
@@ -20357,10 +20359,6 @@ datas ={
     },
     "ClamiCameraData": 0,
     "DeliMetdNoLimit": True,
-    "FailCondFailIfQtInst": True,
-    "FailCondInstId": 4001,
-    "FailCondInstType": 0,
-    "FailCondQuitIfFail": True,
     "FatherTaskId": 86060104,
     "FinCondDefaultText": "\u51fb\u8d25\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
@@ -20394,10 +20392,468 @@ datas ={
     "FinCondKillMonsterNum": 10,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
+    "FinRewardID": 40020220,
     "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86060113,
+    "TaskType": 1
+  },
+  "86060114": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060099,
+    "FinCondIsTriggerArea": True,
+    "FinCondNeedMergeTarget": False,
+    "FinCondReachArea": {
+      "MapId": 4002,
+      "X": 233.6134,
+      "Y": 90.26532,
+      "Z": 348.4149,
+      "Width": 4.0,
+      "Length": 4.0,
+      "TriggerDis": 0.0,
+      "Angles": 0.0,
+      "IsShowFx": 0
+    },
+    "FinRewardCameraData": 0,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060114,
+    "TaskType": 1
+  },
+  "86060115": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "DispHiddenTask": True,
+    "FatherTaskId": 86060104,
+    "FinCondNeedMergeTarget": False,
+    "FinCondNoLimit": True,
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardInstance": {
+      "MapId": 1001,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 302.3398,
+      "Y": 17.8216,
+      "Z": 63.28776,
+      "Dir": 0.0,
+      "Angles": 0,
+      "IsShowFx": 0
+    },
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060115,
+    "TaskType": 1
+  },
+  "86060116": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060087,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4002,
+        "MonsterId": 11212015,
+        "Count": 3,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      {
+        "MapId": 4002,
+        "MonsterId": 11212025,
+        "Count": 2,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      {
+        "MapId": 4002,
+        "MonsterId": 11212028,
+        "Count": 2,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      }
+    ],
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060116,
+    "TaskType": 1
+  },
+  "86060117": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "FatherTaskId": 86060004,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060117,
+    "TaskType": 1
+  },
+  "86060118": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060087,
+    "FinCondDefaultText": "\u5524\u9192\u602a\u7269",
+    "FinCondIsTriggerArea": True,
+    "FinCondNeedMergeTarget": False,
+    "FinCondReachArea": {
+      "MapId": 4002,
+      "X": 304.0,
+      "Y": 90.02078,
+      "Z": 372.0,
+      "Width": 2.0,
+      "Length": 2.0,
+      "TriggerDis": 0.0,
+      "Angles": 0.0,
+      "IsShowFx": 0
+    },
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060118,
+    "TaskType": 1
+  },
+  "86060119": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060087,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4002,
+        "MonsterId": 11212015,
+        "Count": 3,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      {
+        "MapId": 4002,
+        "MonsterId": 11212025,
+        "Count": 2,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      {
+        "MapId": 4002,
+        "MonsterId": 11212028,
+        "Count": 2,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      }
+    ],
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060119,
+    "TaskType": 1
+  },
+  "86060120": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "FatherTaskId": 86060004,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060120,
+    "TaskType": 1
+  },
+  "86060121": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060087,
+    "FinCondDefaultText": "\u5524\u9192\u602a\u7269",
+    "FinCondIsTriggerArea": True,
+    "FinCondNeedMergeTarget": False,
+    "FinCondReachArea": {
+      "MapId": 4002,
+      "X": 295.0,
+      "Y": 90.02079,
+      "Z": 343.0,
+      "Width": 2.0,
+      "Length": 2.0,
+      "TriggerDis": 0.0,
+      "Angles": 0.0,
+      "IsShowFx": 0
+    },
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060121,
+    "TaskType": 1
+  },
+  "86060122": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060087,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4002,
+        "MonsterId": 11212015,
+        "Count": 3,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      {
+        "MapId": 4002,
+        "MonsterId": 11212025,
+        "Count": 2,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      {
+        "MapId": 4002,
+        "MonsterId": 11212028,
+        "Count": 2,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      }
+    ],
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060122,
+    "TaskType": 1
+  },
+  "86060123": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "FatherTaskId": 86060004,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060123,
+    "TaskType": 1
+  },
+  "86060124": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060087,
+    "FinCondDefaultText": "\u5524\u9192\u602a\u7269",
+    "FinCondIsTriggerArea": True,
+    "FinCondNeedMergeTarget": False,
+    "FinCondReachArea": {
+      "MapId": 4002,
+      "X": 326.0,
+      "Y": 90.02079,
+      "Z": 328.0,
+      "Width": 2.0,
+      "Length": 2.0,
+      "TriggerDis": 0.0,
+      "Angles": 0.0,
+      "IsShowFx": 0
+    },
+    "FinRewardCameraData": 0,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060124,
+    "TaskType": 1
+  },
+  "86060125": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060087,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4002,
+        "MonsterId": 11212015,
+        "Count": 3,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      {
+        "MapId": 4002,
+        "MonsterId": 11212025,
+        "Count": 2,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      {
+        "MapId": 4002,
+        "MonsterId": 11212028,
+        "Count": 2,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      }
+    ],
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardTriggerStoryID": 98000001,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060125,
+    "TaskType": 1
+  },
+  "86060126": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdManual": None,
+    "FatherTaskId": 86060004,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060126,
+    "TaskType": 1
+  },
+  "86060127": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060087,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondNeedMergeTarget": False,
+    "FinCondReachArea": {
+      "MapId": 4002,
+      "X": 360.0927,
+      "Y": 89.73132,
+      "Z": 348.9021,
+      "Width": 2.0,
+      "Length": 2.0,
+      "TriggerDis": 0.0,
+      "Angles": 0.0,
+      "IsShowFx": 0
+    },
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060127,
+    "TaskType": 1
+  },
+  "86060128": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060077,
+    "FinCondDefaultText": "\u7ee7\u7eed\u524d\u8fdb",
+    "FinCondIsTriggerArea": True,
+    "FinCondNeedMergeTarget": False,
+    "FinCondReachArea": {
+      "MapId": 4002,
+      "X": 525.9346,
+      "Y": 80.44681,
+      "Z": 338.2349,
+      "Width": 2.0,
+      "Length": 2.0,
+      "TriggerDis": 0.0,
+      "Angles": 0.0,
+      "IsShowFx": 0
+    },
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060128,
+    "TaskType": 1
+  },
+  "86060129": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "ClamiCameraData": 0,
+    "DeliMetdNoLimit": True,
+    "FatherTaskId": 86060097,
+    "FinCondDefaultText": "\u51fb\u6740boss",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 4002,
+        "MonsterId": 11212030,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondNeedMergeTarget": False,
+    "FinHasRewardInst": True,
+    "FinRewardCameraData": 0,
+    "FinRewardInstance": {
+      "MapId": 4002,
+      "NeedConfirm": False,
+      "UseConfigPos": True,
+      "X": 247.9708,
+      "Y": 90.26735,
+      "Z": 348.6495,
+      "Dir": 269.3945,
+      "Angles": 0,
+      "IsShowFx": 0
+    },
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86060129,
     "TaskType": 1
   },
   "86070001": {
@@ -21707,7 +22163,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -21757,7 +22212,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -21807,7 +22261,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -21857,7 +22310,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -21907,7 +22359,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -21957,7 +22408,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -21965,12 +22415,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u51fb\u8d25\u9ab7\u9ac5\u56e2\u4f19",
+    "FinCondDefaultText": "\u6536\u96c6\u9ca8\u9c7c\u76ae",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1030,
-        "MonsterId": 11221007,
+        "MonsterId": 11221025,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -21978,23 +22428,23 @@ datas ={
       },
       {
         "MapId": 1030,
-        "MonsterId": 11221002,
+        "MonsterId": 11221013,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1030,
-        "MonsterId": 11221009,
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1030,
-        "MonsterId": 11221010,
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -22002,7 +22452,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 50,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020287,
@@ -22018,7 +22468,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -22068,7 +22517,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -22076,7 +22524,135 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u51fb\u8d25\u86c7\u65cf\u9b54\u7269",
+    "FinCondDefaultText": "\u6536\u96c6\u87fe\u870d\u5b9d\u4e39",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1030,
+        "MonsterId": 11221022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 50
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221023,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020289,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080008,
+    "TaskType": 6
+  },
+  "86080009": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u86c7\u6cd5\u88c5\u5907",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1030,
+        "MonsterId": 11221032,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221034,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020289,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080009,
+    "TaskType": 6
+  },
+  "86080010": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u86c7\u6218\u6b66\u5668",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -22085,7 +22661,299 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 50
+        "Count": 0
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221030,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020289,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080010,
+    "TaskType": 6
+  },
+  "86080011": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u5c0f\u9b3c\u9762\u5177",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1030,
+        "MonsterId": 11221019,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221020,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020289,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080011,
+    "TaskType": 6
+  },
+  "86080012": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u5947\u602a\u5f13\u7bad",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1030,
+        "MonsterId": 11221009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 3,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020289,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080012,
+    "TaskType": 6
+  },
+  "86080013": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u86c7\u4eba\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1030,
+        "MonsterId": 11221028,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 100
       },
       {
         "MapId": 1030,
@@ -22110,130 +22978,10 @@ datas ={
         "Y": 0,
         "Z": 0,
         "Count": 0
-      },
-      {
-        "MapId": 1030,
-        "MonsterId": 11221033,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1030,
-        "MonsterId": 11221029,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 50,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020289,
-    "OpenCondCheckSex": 0,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080008,
-    "TaskType": 6
-  },
-  "86080009": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1030,
-        "MonsterId": 11221028,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020289,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 1,
-    "OpenCondCountLimit": 1,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080009,
-    "TaskType": 0
-  },
-  "86080013": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u86c7\u7259",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1030,
-        "MonsterId": 11221015,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1030,
-        "MonsterId": 11221017,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020390,
@@ -22260,7 +23008,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u9ab7\u9ac5\u5175\u5668",
+    "FinCondDefaultText": "\u51fb\u8d25\u9ab7\u9ac5\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -22280,8 +23028,32 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1030,
+        "MonsterId": 11221009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221002,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221007,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -22316,12 +23088,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u87fe\u870d\u5b9d\u4e39",
+    "FinCondDefaultText": "\u51fb\u8d25\u9c7c\u7c7b\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1030,
-        "MonsterId": 11221023,
+        "MonsterId": 11221025,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -22329,15 +23101,23 @@ datas ={
       },
       {
         "MapId": 1030,
-        "MonsterId": 11221022,
+        "MonsterId": 11221013,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1030,
+        "MonsterId": 11221019,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221020,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -22372,12 +23152,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u9ca8\u9c7c\u76ae",
+    "FinCondDefaultText": "\u51fb\u8d25\u6bd2\u7269\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1030,
-        "MonsterId": 11221025,
+        "MonsterId": 11221015,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -22385,15 +23165,23 @@ datas ={
       },
       {
         "MapId": 1030,
-        "MonsterId": 11221013,
+        "MonsterId": 11221017,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1030,
+        "MonsterId": 11221022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1030,
+        "MonsterId": 11221023,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -22420,58 +23208,126 @@ datas ={
   "86080017": {
     "BelongChapter": 0,
     "BelongMap": 0,
-    "ChildTaskIds": [],
+    "ChildTaskIds": [
+      86080020,
+      86080021,
+      86080022,
+      86080023,
+      86080024,
+      86080025,
+      86080035,
+      86080042,
+      86080043,
+      86080044,
+      86080045,
+      86080046,
+      86080047,
+      86080048,
+      86080049,
+      86080050,
+      86080061,
+      86080062,
+      86080067,
+      86080068,
+      86080069,
+      86080070,
+      86080071,
+      86080072,
+      86080073,
+      86080074,
+      86080075,
+      86080084,
+      86080085,
+      86080086,
+      86080087,
+      86080092,
+      86080093,
+      86080094,
+      86080095,
+      86080096,
+      86080097,
+      86080098,
+      86080099,
+      86080100,
+      86080104,
+      86080110,
+      86080111,
+      86080112,
+      86080117,
+      86080118,
+      86080119,
+      86080120,
+      86080121,
+      86080122,
+      86080123,
+      86080124,
+      86080125,
+      86080136,
+      86080137,
+      86080142,
+      86080143,
+      86080144,
+      86080145,
+      86080146,
+      86080147,
+      86080148,
+      86080149,
+      86080150,
+      86080161,
+      86080162,
+      86080167,
+      86080168,
+      86080169,
+      86080170,
+      86080171,
+      86080172,
+      86080173,
+      86080174,
+      86080175,
+      86080186,
+      86080187,
+      86080192,
+      86080193,
+      86080194,
+      86080195,
+      86080196,
+      86080197,
+      86080198,
+      86080199,
+      86080200,
+      86080211,
+      86080212,
+      86080217,
+      86080218,
+      86080219,
+      86080220,
+      86080221,
+      86080222,
+      86080223,
+      86080224,
+      86080225,
+      86080244,
+      86080245,
+      86080246,
+      86080247,
+      86080248,
+      86080249,
+      86080250,
+      86080254,
+      86080259
+    ],
     "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
+    "DeliMetdNoLimit": True,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u5c0f\u9b3c\u9762\u5177",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1030,
-        "MonsterId": 11221019,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1030,
-        "MonsterId": 11221020,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020394,
+    "IsAutoQuit": True,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080017,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080018": {
     "BelongChapter": 0,
@@ -22484,7 +23340,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u5947\u602a\u5f13\u7bad",
+    "FinCondDefaultText": "\u5468\u5e38",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -22519,8 +23375,8 @@ datas ={
     "FinRewardID": 40020395,
     "OpenCondCheckSex": 0,
     "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
+    "OpenCondCountCycle": 1,
+    "OpenCondCountLimit": 1,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
     "OpenCondRepeatIfSucess": True,
@@ -22529,11 +23385,122 @@ datas ={
     "TaskId": 86080018,
     "TaskType": 6
   },
+  "86080019": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u86c7\u6cd5\u7ad6\u7434",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1031,
+        "MonsterId": 11222015,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1031,
+        "MonsterId": 11222017,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020294,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080019,
+    "TaskType": 6
+  },
+  "86080020": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080020,
+    "TaskType": 0
+  },
+  "86080021": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080021,
+    "TaskType": 0
+  },
+  "86080022": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080022,
+    "TaskType": 0
+  },
+  "86080023": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080023,
+    "TaskType": 0
+  },
+  "86080024": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080024,
+    "TaskType": 0
+  },
+  "86080025": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080025,
+    "TaskType": 0
+  },
   "86080026": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 7,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -22583,7 +23550,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 7,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -22633,7 +23599,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 7,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -22683,7 +23648,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 7,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -22733,7 +23697,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 7,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -22783,7 +23746,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 7,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -22834,7 +23796,388 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 7,
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u5c0f\u9b3c\u914d\u9970",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1031,
+        "MonsterId": 11222009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1031,
+        "MonsterId": 11222008,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020297,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080032,
+    "TaskType": 6
+  },
+  "86080033": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u7075\u86c7\u9057\u9aa8",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1031,
+        "MonsterId": 11222020,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 50
+      },
+      {
+        "MapId": 1031,
+        "MonsterId": 11222022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020298,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080033,
+    "TaskType": 6
+  },
+  "86080034": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u9ca8\u9c7c\u6218\u65a7",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1031,
+        "MonsterId": 11222004,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1031,
+        "MonsterId": 11222006,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020298,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080034,
+    "TaskType": 6
+  },
+  "86080035": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080035,
+    "TaskType": 0
+  },
+  "86080036": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u6218\u58eb\u6b66\u5668",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1031,
+        "MonsterId": 11222024,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1031,
+        "MonsterId": 11222027,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020298,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080036,
+    "TaskType": 6
+  },
+  "86080037": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u9ab7\u9ac5\u5f13\u7bad",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1031,
+        "MonsterId": 11222029,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1031,
+        "MonsterId": 11222032,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020298,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080037,
+    "TaskType": 6
+  },
+  "86080038": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -22851,7 +24194,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 1
+        "Count": 30
       },
       {
         "MapId": 1031,
@@ -22879,120 +24222,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 50,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020297,
-    "OpenCondCheckSex": 0,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080032,
-    "TaskType": 6
-  },
-  "86080033": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClaimCondLevelMin": 7,
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u51fb\u8d25\u9ab7\u9ac5\u56e2\u4f19",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1031,
-        "MonsterId": 11222029,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1031,
-        "MonsterId": 11222032,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1031,
-        "MonsterId": 11222024,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1031,
-        "MonsterId": 11222027,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 50,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020298,
-    "OpenCondCheckSex": 0,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080033,
-    "TaskType": 6
-  },
-  "86080038": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6f5c\u6c34\u9762\u7f69",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1031,
-        "MonsterId": 11222008,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 30
-      },
-      {
-        "MapId": 1031,
-        "MonsterId": 11222009,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020399,
@@ -23019,12 +24249,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u7075\u86c7\u9aa8",
+    "FinCondDefaultText": "\u51fb\u8d25\u9ab7\u9ac5\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1031,
-        "MonsterId": 11222022,
+        "MonsterId": 11222029,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -23032,7 +24262,23 @@ datas ={
       },
       {
         "MapId": 1031,
-        "MonsterId": 11222020,
+        "MonsterId": 11222032,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1031,
+        "MonsterId": 11222024,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1031,
+        "MonsterId": 11222027,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -23048,7 +24294,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020400,
@@ -23075,7 +24321,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6d77\u6d0b\u6218\u65a7",
+    "FinCondDefaultText": "\u51fb\u8d25\u9c7c\u7c7b\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -23095,8 +24341,16 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1031,
+        "MonsterId": 11222009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1031,
+        "MonsterId": 11222008,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -23104,7 +24358,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020401,
@@ -23131,12 +24385,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u65e7\u5f0f\u6b66\u5668",
+    "FinCondDefaultText": "\u51fb\u8d25\u6bd2\u86c7\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1031,
-        "MonsterId": 11222024,
+        "MonsterId": 11222022,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -23144,7 +24398,7 @@ datas ={
       },
       {
         "MapId": 1031,
-        "MonsterId": 11222027,
+        "MonsterId": 11222020,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -23160,7 +24414,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020402,
@@ -23177,178 +24431,99 @@ datas ={
     "TaskType": 6
   },
   "86080042": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u725b\u9aa8\u5f13",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1031,
-        "MonsterId": 11222029,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1031,
-        "MonsterId": 11222032,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020403,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080042,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080043": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u9508\u8680\u780d\u5200",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1031,
-        "MonsterId": 11222010,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1031,
-        "MonsterId": 11222011,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020404,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080043,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080044": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6f6e\u97f3\u7ad6\u7434",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1031,
-        "MonsterId": 11222015,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1031,
-        "MonsterId": 11222017,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020405,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080044,
-    "TaskType": 6
+    "TaskType": 0
+  },
+  "86080045": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080045,
+    "TaskType": 0
+  },
+  "86080046": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080046,
+    "TaskType": 0
+  },
+  "86080047": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080047,
+    "TaskType": 0
+  },
+  "86080048": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080048,
+    "TaskType": 0
+  },
+  "86080049": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080049,
+    "TaskType": 0
+  },
+  "86080050": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080050,
+    "TaskType": 0
   },
   "86080051": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 36,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -23398,7 +24573,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 36,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -23410,14 +24584,14 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1035,
-        "MonsterId": 11226012,
+        "MonsterId": 11226002,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 1
       },
       {
-        "MapId": 1035,
+        "MapId": 1,
         "MonsterId": 0,
         "X": 0,
         "Y": 0,
@@ -23449,7 +24623,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 36,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -23499,7 +24672,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 36,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -23550,7 +24722,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 36,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -23596,7 +24767,7 @@ datas ={
     "TaskId": 86080055,
     "TaskType": 6
   },
-  "86080063": {
+  "86080056": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -23607,20 +24778,44 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u751f\u94c1\u5927\u5200",
+    "FinCondDefaultText": "\u6536\u96c6\u86c7\u6cd5\u9cde\u7247",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1035,
-        "MonsterId": 11226007,
+        "MonsterId": 11226013,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 50
+        "Count": 0
       },
       {
         "MapId": 1035,
-        "MonsterId": 11226008,
+        "MonsterId": 11226015,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -23636,23 +24831,19 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020480,
+    "FinRewardID": 40020404,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080063,
+    "TaskId": 86080056,
     "TaskType": 6
   },
-  "86080064": {
+  "86080057": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -23663,7 +24854,315 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u5206\u6c34\u73e0",
+    "FinCondDefaultText": "\u6536\u96c6\u86c7\u6218\u6218\u9524",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1035,
+        "MonsterId": 11226009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020404,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080057,
+    "TaskType": 6
+  },
+  "86080058": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u9ab7\u9ac5\u7bad\u888b",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1035,
+        "MonsterId": 11226029,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226027,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020404,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080058,
+    "TaskType": 6
+  },
+  "86080059": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u6218\u58eb\u9057\u9aa8",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1035,
+        "MonsterId": 11226024,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020404,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080059,
+    "TaskType": 6
+  },
+  "86080060": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u5c0f\u9b3c\u5b9d\u73e0",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -23672,7 +25171,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 50
+        "Count": 0
       },
       {
         "MapId": 1035,
@@ -23692,23 +25191,39 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020481,
+    "FinRewardID": 40020404,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080064,
+    "TaskId": 86080060,
     "TaskType": 6
   },
-  "86080065": {
+  "86080061": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080061,
+    "TaskType": 0
+  },
+  "86080062": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080062,
+    "TaskType": 0
+  },
+  "86080063": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -23719,175 +25234,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u86c7\u9cde",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1035,
-        "MonsterId": 11226017,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1035,
-        "MonsterId": 11226019,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020482,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080065,
-    "TaskType": 6
-  },
-  "86080066": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u7cbe\u82f1\u6218\u9524",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1035,
-        "MonsterId": 11226009,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1035,
-        "MonsterId": 11226010,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020483,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080066,
-    "TaskType": 6
-  },
-  "86080067": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u52c7\u58eb\u9057\u9aa8",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1035,
-        "MonsterId": 11226021,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1035,
-        "MonsterId": 11226025,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020484,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080067,
-    "TaskType": 6
-  },
-  "86080068": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u7ad6\u7434",
+    "FinCondDefaultText": "\u51fb\u8d25\u86c7\u6cd5\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -23916,10 +25263,10 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020485,
+    "FinRewardID": 40020480,
     "OpenCondCheckSex": 0,
     "OpenCondCheckTaskCount": True,
     "OpenCondCountCycle": 0,
@@ -23929,10 +25276,10 @@ datas ={
     "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080068,
+    "TaskId": 86080063,
     "TaskType": 6
   },
-  "86080069": {
+  "86080064": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -23943,7 +25290,71 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u524d\u671d\u5f13\u7bad",
+    "FinCondDefaultText": "\u51fb\u8d25\u6218\u58eb\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1035,
+        "MonsterId": 11226021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 50
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226025,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226024,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020481,
+    "OpenCondCheckSex": 0,
+    "OpenCondCheckTaskCount": True,
+    "OpenCondCountCycle": 0,
+    "OpenCondCountLimit": 3,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondRepeatIfSucess": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080064,
+    "TaskType": 6
+  },
+  "86080065": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u5f13\u7bad\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -23952,7 +25363,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 10
+        "Count": 50
       },
       {
         "MapId": 1035,
@@ -23972,10 +25383,10 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020486,
+    "FinRewardID": 40020482,
     "OpenCondCheckSex": 0,
     "OpenCondCheckTaskCount": True,
     "OpenCondCountCycle": 0,
@@ -23985,10 +25396,10 @@ datas ={
     "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080069,
+    "TaskId": 86080065,
     "TaskType": 6
   },
-  "86080070": {
+  "86080066": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -23999,12 +25410,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u575a\u6bc5\u4e4b\u5fc3",
+    "FinCondDefaultText": "\u51fb\u8d25\u86c7\u6218\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1035,
-        "MonsterId": 11226022,
+        "MonsterId": 11226007,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24012,15 +25423,23 @@ datas ={
       },
       {
         "MapId": 1035,
-        "MonsterId": 11226024,
+        "MonsterId": 11226008,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1035,
+        "MonsterId": 11226009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1035,
+        "MonsterId": 11226010,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24031,7 +25450,7 @@ datas ={
     "FinCondKillMonsterNum": 30,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020487,
+    "FinRewardID": 40020483,
     "OpenCondCheckSex": 0,
     "OpenCondCheckTaskCount": True,
     "OpenCondCountCycle": 0,
@@ -24041,14 +25460,107 @@ datas ={
     "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080070,
+    "TaskId": 86080066,
     "TaskType": 6
+  },
+  "86080067": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080067,
+    "TaskType": 0
+  },
+  "86080068": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "ClaimTaskNeedTips": None,
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080068,
+    "TaskType": 0
+  },
+  "86080069": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080069,
+    "TaskType": 0
+  },
+  "86080070": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080070,
+    "TaskType": 0
+  },
+  "86080071": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080071,
+    "TaskType": 0
+  },
+  "86080072": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080072,
+    "TaskType": 0
+  },
+  "86080073": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080073,
+    "TaskType": 0
+  },
+  "86080074": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080074,
+    "TaskType": 0
+  },
+  "86080075": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080075,
+    "TaskType": 0
   },
   "86080076": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 11,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24098,7 +25610,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 11,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24149,7 +25660,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 11,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24199,7 +25709,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 11,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24250,7 +25759,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 11,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24258,12 +25766,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u51fb\u8d25\u725b\u5f13\u56e2\u4f19",
+    "FinCondDefaultText": "\u6536\u96c6\u725b\u6218\u76fe\u724c",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1020,
-        "MonsterId": 11231016,
+        "MonsterId": 11231008,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24271,7 +25779,7 @@ datas ={
       },
       {
         "MapId": 1020,
-        "MonsterId": 11231018,
+        "MonsterId": 11231002,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24287,7 +25795,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020313,
@@ -24298,6 +25806,202 @@ datas ={
     "TaskGroup": 0,
     "TaskId": 86080080,
     "TaskType": 6
+  },
+  "86080081": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u4e4b\u5fc3",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1020,
+        "MonsterId": 11231022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1020,
+        "MonsterId": 11231021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020313,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080081,
+    "TaskType": 6
+  },
+  "86080082": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u725b\u6218\u6b66\u5668",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1020,
+        "MonsterId": 11231013,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1020,
+        "MonsterId": 11231007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020313,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080082,
+    "TaskType": 6
+  },
+  "86080083": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u517d\u6cd5\u6743\u6756",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1020,
+        "MonsterId": 11231026,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1020,
+        "MonsterId": 11231028,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020313,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080083,
+    "TaskType": 6
+  },
+  "86080084": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080084,
+    "TaskType": 0
+  },
+  "86080085": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080085,
+    "TaskType": 0
+  },
+  "86080086": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080086,
+    "TaskType": 0
+  },
+  "86080087": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080087,
+    "TaskType": 0
   },
   "86080088": {
     "BelongChapter": 0,
@@ -24310,7 +26014,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6218\u58eb\u4e4b\u5fc3",
+    "FinCondDefaultText": "\u51fb\u8d25\u517d\u6218\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -24330,8 +26034,16 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1020,
+        "MonsterId": 11231021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1020,
+        "MonsterId": 11231022,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24339,7 +26051,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020417,
@@ -24366,12 +26078,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u7ea2\u5dfe",
+    "FinCondDefaultText": "\u51fb\u8d25\u725b\u5f13\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1020,
-        "MonsterId": 11231026,
+        "MonsterId": 11231015,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24379,15 +26091,15 @@ datas ={
       },
       {
         "MapId": 1020,
-        "MonsterId": 11231028,
+        "MonsterId": 11231016,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1020,
+        "MonsterId": 11231018,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24395,7 +26107,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020418,
@@ -24422,12 +26134,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u957f\u9aef",
+    "FinCondDefaultText": "\u51fb\u8d25\u517d\u6cd5\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1020,
-        "MonsterId": 11231021,
+        "MonsterId": 11231026,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24435,15 +26147,23 @@ datas ={
       },
       {
         "MapId": 1020,
-        "MonsterId": 11231022,
+        "MonsterId": 11231028,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1020,
+        "MonsterId": 11231027,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1020,
+        "MonsterId": 11231029,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24451,7 +26171,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020419,
@@ -24478,7 +26198,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u6cd5\u6756",
+    "FinCondDefaultText": "\u51fb\u8d25\u725b\u6218\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -24524,122 +26244,99 @@ datas ={
     "TaskType": 6
   },
   "86080092": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u725b\u89d2",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1020,
-        "MonsterId": 11231013,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1020,
-        "MonsterId": 11231007,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020421,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080092,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080093": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u795d\u798f\u4e4b\u7259",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1020,
-        "MonsterId": 11231002,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1020,
-        "MonsterId": 11231008,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020422,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080093,
-    "TaskType": 6
+    "TaskType": 0
+  },
+  "86080094": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080094,
+    "TaskType": 0
+  },
+  "86080095": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080095,
+    "TaskType": 0
+  },
+  "86080096": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080096,
+    "TaskType": 0
+  },
+  "86080097": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080097,
+    "TaskType": 0
+  },
+  "86080098": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080098,
+    "TaskType": 0
+  },
+  "86080099": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080099,
+    "TaskType": 0
+  },
+  "86080100": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080100,
+    "TaskType": 0
   },
   "86080101": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 13,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24651,7 +26348,7 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1021,
-        "MonsterId": 11232021,
+        "MonsterId": 11232013,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24689,7 +26386,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 13,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24740,7 +26436,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 13,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24787,61 +26482,19 @@ datas ={
     "TaskType": 6
   },
   "86080104": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 13,
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1021,
-        "MonsterId": 11232013,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 1021,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterNum": 50,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020321,
     "OpenCondCheckSex": 0,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080104,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080105": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 13,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24853,7 +26506,7 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1021,
-        "MonsterId": 11232024,
+        "MonsterId": 11232021,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24891,7 +26544,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 13,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -24899,7 +26551,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u51fb\u8d25\u725b\u5f13\u56e2\u4f19",
+    "FinCondDefaultText": "\u6536\u96c6\u5947\u602a\u5f13\u7bad",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -24928,7 +26580,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 50,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020323,
@@ -24939,6 +26591,192 @@ datas ={
     "TaskGroup": 0,
     "TaskId": 86080106,
     "TaskType": 6
+  },
+  "86080107": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u725b\u6218\u4e4b\u5fc3",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1021,
+        "MonsterId": 11232009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232011,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020323,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080107,
+    "TaskType": 6
+  },
+  "86080108": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u53e4\u8001\u76fe\u724c",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1021,
+        "MonsterId": 11232003,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232005,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020323,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080108,
+    "TaskType": 6
+  },
+  "86080109": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u517d\u4eba\u62ab\u98ce",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1021,
+        "MonsterId": 11232022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232023,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020323,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080109,
+    "TaskType": 6
+  },
+  "86080110": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080110,
+    "TaskType": 0
+  },
+  "86080111": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080111,
+    "TaskType": 0
+  },
+  "86080112": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080112,
+    "TaskType": 0
   },
   "86080113": {
     "BelongChapter": 0,
@@ -24951,7 +26789,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u72fc\u7259\u68d2",
+    "FinCondDefaultText": "\u51fb\u8d25\u76fe\u724c\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -24971,8 +26809,16 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1021,
+        "MonsterId": 11232003,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232005,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -24980,7 +26826,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020426,
@@ -25007,12 +26853,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6d41\u661f\u9524",
+    "FinCondDefaultText": "\u51fb\u8d25\u725b\u5f13\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1021,
-        "MonsterId": 11232009,
+        "MonsterId": 11232014,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -25020,15 +26866,23 @@ datas ={
       },
       {
         "MapId": 1021,
-        "MonsterId": 11232011,
+        "MonsterId": 11232017,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1021,
+        "MonsterId": 11232016,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232018,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -25036,7 +26890,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020427,
@@ -25063,12 +26917,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u53e4\u8001\u76fe\u724c",
+    "FinCondDefaultText": "\u51fb\u8d25\u534a\u517d\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1021,
-        "MonsterId": 11232003,
+        "MonsterId": 11232019,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -25076,15 +26930,23 @@ datas ={
       },
       {
         "MapId": 1021,
-        "MonsterId": 11232005,
+        "MonsterId": 11232020,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1021,
+        "MonsterId": 11232022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232023,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -25092,7 +26954,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020428,
@@ -25119,175 +26981,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u5f81\u4f10\u4e4b\u5fc3",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1021,
-        "MonsterId": 11232014,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1021,
-        "MonsterId": 11232017,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020429,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080116,
-    "TaskType": 6
-  },
-  "86080117": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u70c8\u7130\u9b03\u6bdb",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1021,
-        "MonsterId": 11232019,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1021,
-        "MonsterId": 11232020,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020430,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080117,
-    "TaskType": 6
-  },
-  "86080118": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6cd5\u5e08\u6743\u6756",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1021,
-        "MonsterId": 11232022,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1021,
-        "MonsterId": 11232023,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 100,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020431,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080118,
-    "TaskType": 6
-  },
-  "86080119": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u7eaf\u767d\u9b03\u6bdb",
+    "FinCondDefaultText": "\u51fb\u8d25\u52c7\u58eb\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -25307,8 +27001,16 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1021,
+        "MonsterId": 11232009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1021,
+        "MonsterId": 11232011,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -25316,10 +27018,10 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 100,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020432,
+    "FinRewardID": 40020429,
     "OpenCondCheckSex": 0,
     "OpenCondCheckTaskCount": True,
     "OpenCondCountCycle": 0,
@@ -25329,14 +27031,105 @@ datas ={
     "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080119,
+    "TaskId": 86080116,
     "TaskType": 6
+  },
+  "86080117": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080117,
+    "TaskType": 0
+  },
+  "86080118": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080118,
+    "TaskType": 0
+  },
+  "86080119": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080119,
+    "TaskType": 0
+  },
+  "86080120": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080120,
+    "TaskType": 0
+  },
+  "86080121": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080121,
+    "TaskType": 0
+  },
+  "86080122": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080122,
+    "TaskType": 0
+  },
+  "86080123": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080123,
+    "TaskType": 0
+  },
+  "86080124": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080124,
+    "TaskType": 0
+  },
+  "86080125": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080125,
+    "TaskType": 0
   },
   "86080126": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 17,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -25386,7 +27179,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 17,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -25405,7 +27197,7 @@ datas ={
         "Count": 1
       },
       {
-        "MapId": 1024,
+        "MapId": 1,
         "MonsterId": 0,
         "X": 0,
         "Y": 0,
@@ -25437,7 +27229,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 17,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -25487,7 +27278,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 17,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -25537,7 +27327,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 17,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -25587,7 +27376,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 17,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -25595,56 +27383,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1024,
-        "MonsterId": 11235008,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020332,
-    "OpenCondCheckSex": 0,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080131,
-    "TaskType": 6
-  },
-  "86080138": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u94f6\u767d\u9b03\u6bdb",
+    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u9b03\u6bdb",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -25653,7 +27392,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 100
+        "Count": 1
       },
       {
         "MapId": 1024,
@@ -25673,7 +27412,292 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020332,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080131,
+    "TaskType": 6
+  },
+  "86080132": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u9ab7\u9ac5\u5934\u76d4",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235035,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235030,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020328,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080132,
+    "TaskType": 6
+  },
+  "86080133": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u62ab\u98ce",
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020328,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080133,
+    "TaskType": 6
+  },
+  "86080134": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u76fe\u725b\u62a4\u624b",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235002,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235006,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020328,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080134,
+    "TaskType": 6
+  },
+  "86080135": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u725b\u89d2\u5f13",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235016,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235020,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020328,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080135,
+    "TaskType": 6
+  },
+  "86080136": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080136,
+    "TaskType": 0
+  },
+  "86080137": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080137,
+    "TaskType": 0
+  },
+  "86080138": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u725b\u6218\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1024,
+        "MonsterId": 11235002,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 100
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235006,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235003,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235014,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235012,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020435,
@@ -25700,12 +27724,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u70c8\u7130\u9b03\u6bdb",
+    "FinCondDefaultText": "\u51fb\u8d25\u9ab7\u9ac5\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1024,
-        "MonsterId": 11235026,
+        "MonsterId": 11235030,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -25713,15 +27737,47 @@ datas ={
       },
       {
         "MapId": 1024,
-        "MonsterId": 11235027,
+        "MonsterId": 11235034,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1024,
+        "MonsterId": 11235035,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235037,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235040,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235038,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235039,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -25729,7 +27785,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020436,
@@ -25756,12 +27812,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u7ea2\u7f28\u76d4",
+    "FinCondDefaultText": "\u51fb\u8d25\u534a\u517d\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1024,
-        "MonsterId": 11235030,
+        "MonsterId": 11235025,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -25769,15 +27825,39 @@ datas ={
       },
       {
         "MapId": 1024,
-        "MonsterId": 11235034,
+        "MonsterId": 11235028,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1024,
+        "MonsterId": 11235026,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235027,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235045,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235042,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -25785,7 +27865,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020437,
@@ -25812,287 +27892,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6cd5\u672f\u7075\u77f3",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1024,
-        "MonsterId": 11235042,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1024,
-        "MonsterId": 11235045,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020438,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080141,
-    "TaskType": 6
-  },
-  "86080142": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u5236\u5f0f\u5f13",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1024,
-        "MonsterId": 11235037,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1024,
-        "MonsterId": 11235040,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020439,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080142,
-    "TaskType": 6
-  },
-  "86080143": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u91ce\u86ee\u68d2\u69cc",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1024,
-        "MonsterId": 11235002,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1024,
-        "MonsterId": 11235006,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 1024,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020440,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080143,
-    "TaskType": 6
-  },
-  "86080144": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u62a4\u5fc3\u5927\u76fe",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1024,
-        "MonsterId": 11235007,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1024,
-        "MonsterId": 11235003,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020441,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080144,
-    "TaskType": 6
-  },
-  "86080145": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u53e4\u8001\u624b\u7532",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1024,
-        "MonsterId": 11235009,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1024,
-        "MonsterId": 11235014,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020442,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080145,
-    "TaskType": 6
-  },
-  "86080146": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u76ae\u8d28\u7bad\u888b",
+    "FinCondDefaultText": "\u51fb\u8d25\u5f13\u7bad\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -26112,8 +27912,32 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1024,
+        "MonsterId": 11235037,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235040,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235038,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1024,
+        "MonsterId": 11235039,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -26121,10 +27945,10 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020443,
+    "FinRewardID": 40020438,
     "OpenCondCheckSex": 0,
     "OpenCondCheckTaskCount": True,
     "OpenCondCountCycle": 0,
@@ -26132,72 +27956,105 @@ datas ={
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
     "OpenCondRepeatIfSucess": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080141,
+    "TaskType": 6
+  },
+  "86080142": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080142,
+    "TaskType": 0
+  },
+  "86080143": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080143,
+    "TaskType": 0
+  },
+  "86080144": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080144,
+    "TaskType": 0
+  },
+  "86080145": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080145,
+    "TaskType": 0
+  },
+  "86080146": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080146,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080147": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u725b\u89d2",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1024,
-        "MonsterId": 11235012,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1024,
-        "MonsterId": 11235014,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020443,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080147,
-    "TaskType": 6
+    "TaskType": 0
+  },
+  "86080148": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080148,
+    "TaskType": 0
+  },
+  "86080149": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080149,
+    "TaskType": 0
+  },
+  "86080150": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080150,
+    "TaskType": 0
   },
   "86080151": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 21,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -26247,7 +28104,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 21,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -26298,7 +28154,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 21,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -26348,7 +28203,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 21,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -26399,7 +28253,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 21,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -26445,7 +28298,59 @@ datas ={
     "TaskId": 86080155,
     "TaskType": 6
   },
-  "86080163": {
+  "86080156": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u6bd2\u874e\u5c3e",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1120,
+        "MonsterId": 11321013,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321014,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020349,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080156,
+    "TaskType": 6
+  },
+  "86080157": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -26465,11 +28370,71 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 50
+        "Count": 0
       },
       {
         "MapId": 1120,
         "MonsterId": 11321007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020349,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080157,
+    "TaskType": 6
+  },
+  "86080158": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u8718\u86db\u4e1d",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1120,
+        "MonsterId": 11321004,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321005,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -26485,7 +28450,198 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020349,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080158,
+    "TaskType": 6
+  },
+  "86080159": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u86c7\u6cd5\u9cde\u7247",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1120,
+        "MonsterId": 11321025,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321027,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020349,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080159,
+    "TaskType": 6
+  },
+  "86080160": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u86c7\u6218\u5927\u9524",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1120,
+        "MonsterId": 11321018,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020349,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080160,
+    "TaskType": 6
+  },
+  "86080161": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080161,
+    "TaskType": 0
+  },
+  "86080162": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080162,
+    "TaskType": 0
+  },
+  "86080163": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u86c7\u6cd5\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1120,
+        "MonsterId": 11321023,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 50
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321026,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321025,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321027,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321024,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020453,
@@ -26512,12 +28668,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u843d\u65e5\u9cde\u7247",
+    "FinCondDefaultText": "\u51fb\u8d25\u86c7\u6218\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1120,
-        "MonsterId": 11321009,
+        "MonsterId": 11321018,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -26525,7 +28681,31 @@ datas ={
       },
       {
         "MapId": 1120,
-        "MonsterId": 11321010,
+        "MonsterId": 11321021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321020,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -26541,7 +28721,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020454,
@@ -26568,12 +28748,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u72c2\u86c7\u6b66\u5668",
+    "FinCondDefaultText": "\u51fb\u8d25\u6bd2\u7269\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1120,
-        "MonsterId": 11321018,
+        "MonsterId": 11321008,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -26581,15 +28761,39 @@ datas ={
       },
       {
         "MapId": 1120,
-        "MonsterId": 11321021,
+        "MonsterId": 11321007,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1120,
+        "MonsterId": 11321009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321015,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1120,
+        "MonsterId": 11321016,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -26597,7 +28801,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020455,
@@ -26624,119 +28828,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u7eff\u86c7\u9cde",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1120,
-        "MonsterId": 11321023,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1120,
-        "MonsterId": 11321026,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020456,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080166,
-    "TaskType": 6
-  },
-  "86080167": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u9ed1\u87d2\u6bd2",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1120,
-        "MonsterId": 11321025,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1120,
-        "MonsterId": 11321027,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020457,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080167,
-    "TaskType": 6
-  },
-  "86080168": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u5c3e\u4e0a\u523a",
+    "FinCondDefaultText": "\u51fb\u8d25\u6bd2\u866b\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -26756,52 +28848,12 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020458,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080168,
-    "TaskType": 6
-  },
-  "86080169": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u86db\u4e1d",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
         "MapId": 1120,
         "MonsterId": 11321004,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 50
+        "Count": 0
       },
       {
         "MapId": 1120,
@@ -26812,108 +28864,12 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020459,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080169,
-    "TaskType": 6
-  },
-  "86080170": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u866b\u94b3",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1120,
-        "MonsterId": 11321001,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1120,
-        "MonsterId": 11321002,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020460,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080170,
-    "TaskType": 6
-  },
-  "86080171": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u8708\u86a3\u6563",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
         "MapId": 1120,
         "MonsterId": 11321011,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 50
+        "Count": 0
       },
       {
         "MapId": 1120,
@@ -26922,21 +28878,13 @@ datas ={
         "Y": 0,
         "Z": 0,
         "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020461,
+    "FinRewardID": 40020456,
     "OpenCondCheckSex": 0,
     "OpenCondCheckTaskCount": True,
     "OpenCondCountCycle": 0,
@@ -26946,14 +28894,105 @@ datas ={
     "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080171,
+    "TaskId": 86080166,
     "TaskType": 6
+  },
+  "86080167": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080167,
+    "TaskType": 0
+  },
+  "86080168": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080168,
+    "TaskType": 0
+  },
+  "86080169": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080169,
+    "TaskType": 0
+  },
+  "86080170": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080170,
+    "TaskType": 0
+  },
+  "86080171": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080171,
+    "TaskType": 0
+  },
+  "86080172": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080172,
+    "TaskType": 0
+  },
+  "86080173": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080173,
+    "TaskType": 0
+  },
+  "86080174": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080174,
+    "TaskType": 0
+  },
+  "86080175": {
+    "ChildDoInQueue": False,
+    "ChildTaskIds": [],
+    "DeliMetdManual": None,
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080175,
+    "TaskType": 0
   },
   "86080176": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 30,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27003,7 +29042,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 30,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27054,7 +29092,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 30,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27104,7 +29141,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 30,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27154,7 +29190,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 30,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27200,7 +29235,7 @@ datas ={
     "TaskId": 86080180,
     "TaskType": 6
   },
-  "86080188": {
+  "86080181": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -27216,15 +29251,15 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1123,
-        "MonsterId": 11324014,
+        "MonsterId": 11324012,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 100
+        "Count": 0
       },
       {
         "MapId": 1123,
-        "MonsterId": 11324012,
+        "MonsterId": 11324014,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -27240,23 +29275,19 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020471,
+    "FinRewardID": 40020365,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080188,
+    "TaskId": 86080181,
     "TaskType": 6
   },
-  "86080189": {
+  "86080182": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -27272,15 +29303,15 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1123,
-        "MonsterId": 11324003,
+        "MonsterId": 11324007,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 50
+        "Count": 0
       },
       {
         "MapId": 1123,
-        "MonsterId": 11324004,
+        "MonsterId": 11324009,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -27296,23 +29327,19 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020472,
+    "FinRewardID": 40020365,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080189,
+    "TaskId": 86080182,
     "TaskType": 6
   },
-  "86080190": {
+  "86080183": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -27332,7 +29359,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 100
+        "Count": 0
       },
       {
         "MapId": 1123,
@@ -27352,23 +29379,19 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020473,
+    "FinRewardID": 40020365,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080190,
+    "TaskId": 86080183,
     "TaskType": 6
   },
-  "86080191": {
+  "86080184": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -27380,6 +29403,130 @@ datas ={
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
     "FinCondDefaultText": "\u6536\u96c6\u86c7\u6cd5\u529b\u91cf",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1123,
+        "MonsterId": 11324027,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1123,
+        "MonsterId": 11324028,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020365,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080184,
+    "TaskType": 6
+  },
+  "86080185": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u5236\u4f5c\u8708\u86a3\u836f\u9152",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1123,
+        "MonsterId": 11324007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1123,
+        "MonsterId": 11324009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020365,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080185,
+    "TaskType": 6
+  },
+  "86080186": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080186,
+    "TaskType": 0
+  },
+  "86080187": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080187,
+    "TaskType": 0
+  },
+  "86080188": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u86c7\u6cd5\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -27408,7 +29555,175 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020471,
+    "OpenCondCheckSex": 0,
+    "OpenCondCheckTaskCount": True,
+    "OpenCondCountCycle": 0,
+    "OpenCondCountLimit": 3,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondRepeatIfSucess": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080188,
+    "TaskType": 6
+  },
+  "86080189": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u86c7\u6218\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1123,
+        "MonsterId": 11324023,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 50
+      },
+      {
+        "MapId": 1123,
+        "MonsterId": 11324025,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020472,
+    "OpenCondCheckSex": 0,
+    "OpenCondCheckTaskCount": True,
+    "OpenCondCountCycle": 0,
+    "OpenCondCountLimit": 3,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondRepeatIfSucess": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080189,
+    "TaskType": 6
+  },
+  "86080190": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u8718\u86db\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1123,
+        "MonsterId": 11324003,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 100
+      },
+      {
+        "MapId": 1123,
+        "MonsterId": 11324004,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020473,
+    "OpenCondCheckSex": 0,
+    "OpenCondCheckTaskCount": True,
+    "OpenCondCountCycle": 0,
+    "OpenCondCountLimit": 3,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondRepeatIfSucess": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080190,
+    "TaskType": 6
+  },
+  "86080191": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u874e\u5b50\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1123,
+        "MonsterId": 11324011,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 100
+      },
+      {
+        "MapId": 1123,
+        "MonsterId": 11324013,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020474,
@@ -27425,66 +29740,99 @@ datas ={
     "TaskType": 6
   },
   "86080192": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u5236\u4f5c\u8708\u86a3\u836f\u9152",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1123,
-        "MonsterId": 11324007,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1123,
-        "MonsterId": 11324009,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020475,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080192,
-    "TaskType": 6
+    "TaskType": 0
+  },
+  "86080193": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080193,
+    "TaskType": 0
+  },
+  "86080194": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080194,
+    "TaskType": 0
+  },
+  "86080195": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080195,
+    "TaskType": 0
+  },
+  "86080196": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080196,
+    "TaskType": 0
+  },
+  "86080197": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080197,
+    "TaskType": 0
+  },
+  "86080198": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080198,
+    "TaskType": 0
+  },
+  "86080199": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080199,
+    "TaskType": 0
+  },
+  "86080200": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080200,
+    "TaskType": 0
   },
   "86080201": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27496,7 +29844,7 @@ datas ={
     "FinCondKillMonster": [
       {
         "MapId": 1002,
-        "MonsterId": 11210012,
+        "MonsterId": 11210025,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -27534,7 +29882,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27584,7 +29931,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27634,7 +29980,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27684,7 +30029,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 1,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -27730,7 +30074,7 @@ datas ={
     "TaskId": 86080205,
     "TaskType": 6
   },
-  "86080213": {
+  "86080206": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
@@ -27741,7 +30085,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u70c8\u7130\u9b03\u6bdb",
+    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u62ab\u98ce",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -27750,7 +30094,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 100
+        "Count": 0
       },
       {
         "MapId": 1002,
@@ -27770,7 +30114,311 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020277,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080206,
+    "TaskType": 6
+  },
+  "86080207": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u9b03\u6bdb",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1002,
+        "MonsterId": 11210020,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210024,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020277,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080207,
+    "TaskType": 6
+  },
+  "86080208": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u72d0\u88d8",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1002,
+        "MonsterId": 11210063,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210064,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020277,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080208,
+    "TaskType": 6
+  },
+  "86080209": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u732b\u4eba\u722a\u58f3",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1002,
+        "MonsterId": 11210037,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210034,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020277,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080209,
+    "TaskType": 6
+  },
+  "86080210": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u5236\u5f0f\u6b66\u5668",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1002,
+        "MonsterId": 11210056,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210060,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020277,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080210,
+    "TaskType": 6
+  },
+  "86080211": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080211,
+    "TaskType": 0
+  },
+  "86080212": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080212,
+    "TaskType": 0
+  },
+  "86080213": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u534a\u517d\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1002,
+        "MonsterId": 11210021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 100
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210023,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210020,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210024,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210026,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210030,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020381,
@@ -27797,12 +30445,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u7070\u8272\u9b03\u6bdb",
+    "FinCondDefaultText": "\u51fb\u8d25\u9ab7\u9ac5\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1002,
-        "MonsterId": 11210020,
+        "MonsterId": 11210053,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -27810,15 +30458,31 @@ datas ={
       },
       {
         "MapId": 1002,
-        "MonsterId": 11210024,
+        "MonsterId": 11210054,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1002,
+        "MonsterId": 11210049,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210056,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210060,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -27826,7 +30490,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020382,
@@ -27853,12 +30517,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u72d0\u88d8",
+    "FinCondDefaultText": "\u51fb\u8d25\u732b\u4eba\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1002,
-        "MonsterId": 11210063,
+        "MonsterId": 11210037,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -27866,15 +30530,23 @@ datas ={
       },
       {
         "MapId": 1002,
-        "MonsterId": 11210064,
+        "MonsterId": 11210034,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1002,
+        "MonsterId": 11210045,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1002,
+        "MonsterId": 11210043,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -27882,7 +30554,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020383,
@@ -27909,12 +30581,12 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u4ea1\u8005\u4e4b\u5f13",
+    "FinCondDefaultText": "\u51fb\u8d25\u91ce\u517d\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1002,
-        "MonsterId": 11210056,
+        "MonsterId": 11210063,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -27922,15 +30594,15 @@ datas ={
       },
       {
         "MapId": 1002,
-        "MonsterId": 11210060,
+        "MonsterId": 11210064,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1002,
+        "MonsterId": 11210003,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -27938,7 +30610,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020384,
@@ -27955,178 +30627,99 @@ datas ={
     "TaskType": 6
   },
   "86080217": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u5236\u5f0f\u6b66\u5668",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1002,
-        "MonsterId": 11210054,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1002,
-        "MonsterId": 11210049,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1002,
-        "MonsterId": 11210053,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020385,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080217,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080218": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u4ec6\u4ece\u9632\u5177",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1002,
-        "MonsterId": 11210045,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1002,
-        "MonsterId": 11210043,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 50,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020386,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080218,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080219": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u52c7\u58eb\u722a\u58f3",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1002,
-        "MonsterId": 11210034,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1002,
-        "MonsterId": 11210037,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 50,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020387,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080219,
-    "TaskType": 6
+    "TaskType": 0
+  },
+  "86080220": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080220,
+    "TaskType": 0
+  },
+  "86080221": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080221,
+    "TaskType": 0
+  },
+  "86080222": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080222,
+    "TaskType": 0
+  },
+  "86080223": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080223,
+    "TaskType": 0
+  },
+  "86080224": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080224,
+    "TaskType": 0
+  },
+  "86080225": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080225,
+    "TaskType": 0
   },
   "86080226": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 20,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -28176,7 +30769,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 20,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -28227,7 +30819,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 20,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -28277,7 +30868,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 20,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -28327,7 +30917,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 20,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -28377,7 +30966,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 20,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -28427,7 +31015,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 20,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -28477,7 +31064,6 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClaimCondLevelMin": 20,
     "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
@@ -28485,56 +31071,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1010,
-        "MonsterId": 11310037,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020343,
-    "OpenCondCheckSex": 0,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080233,
-    "TaskType": 6
-  },
-  "86080238": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u8725\u8734\u722a",
+    "FinCondDefaultText": "\u6536\u96c6\u8725\u8734\u80cc\u523a",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -28543,7 +31080,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 100
+        "Count": 1
       },
       {
         "MapId": 1010,
@@ -28563,7 +31100,307 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020343,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080233,
+    "TaskType": 6
+  },
+  "86080234": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u874e\u5c3e",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1010,
+        "MonsterId": 11310021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310023,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020343,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080234,
+    "TaskType": 6
+  },
+  "86080235": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u8708\u86a3\u58f3",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1010,
+        "MonsterId": 11310016,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310017,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020343,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080235,
+    "TaskType": 6
+  },
+  "86080236": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u8718\u86db\u7f51",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1010,
+        "MonsterId": 11310003,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310004,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020343,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080236,
+    "TaskType": 6
+  },
+  "86080237": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u86c7\u8715",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1010,
+        "MonsterId": 11310054,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310051,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020343,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080237,
+    "TaskType": 6
+  },
+  "86080238": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u6218\u58eb\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1010,
+        "MonsterId": 11310030,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 100
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310033,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310032,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310034,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310035,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310036,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020444,
@@ -28590,16 +31427,32 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u8725\u8734\u80cc\u523a",
+    "FinCondDefaultText": "\u51fb\u8d25\u6bd2\u7269\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
+      {
+        "MapId": 1010,
+        "MonsterId": 11310010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 50
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310007,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
       {
         "MapId": 1010,
         "MonsterId": 11310012,
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 50
+        "Count": 0
       },
       {
         "MapId": 1010,
@@ -28608,18 +31461,10 @@ datas ={
         "Y": 0,
         "Z": 0,
         "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020445,
@@ -28646,7 +31491,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u874e\u5c3e",
+    "FinCondDefaultText": "\u51fb\u8d25\u6bd2\u866b\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -28666,8 +31511,32 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1010,
+        "MonsterId": 11310017,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310016,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310003,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310004,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -28675,7 +31544,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020446,
@@ -28702,28 +31571,36 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u8708\u86a3\u58f3",
+    "FinCondDefaultText": "\u51fb\u8d25\u5f13\u7bad\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
         "MapId": 1010,
-        "MonsterId": 11310017,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1010,
-        "MonsterId": 11310016,
+        "MonsterId": 11310040,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1010,
+        "MonsterId": 11310042,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310038,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310041,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -28731,10 +31608,10 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020447,
+    "FinRewardID": 40020446,
     "OpenCondCheckSex": 0,
     "OpenCondCheckTaskCount": True,
     "OpenCondCountCycle": 0,
@@ -28758,118 +31635,6 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u8718\u86db\u7f51",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1010,
-        "MonsterId": 11310003,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1010,
-        "MonsterId": 11310004,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020448,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080242,
-    "TaskType": 6
-  },
-  "86080243": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u86c7\u8715",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1010,
-        "MonsterId": 11310054,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 50
-      },
-      {
-        "MapId": 1010,
-        "MonsterId": 11310051,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020449,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080243,
-    "TaskType": 6
-  },
-  "86080244": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
     "FinCondDefaultText": "\u6536\u96c6\u8759\u8760\u7fc5",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
@@ -28879,7 +31644,7 @@ datas ={
         "X": 0,
         "Y": 0,
         "Z": 0,
-        "Count": 100
+        "Count": 0
       },
       {
         "MapId": 1010,
@@ -28899,203 +31664,189 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
-    "FinRewardID": 40020450,
+    "FinRewardID": 40020342,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080242,
+    "TaskType": 6
+  },
+  "86080243": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u9ab7\u9ac5\u76d4\u7532",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1010,
+        "MonsterId": 11310032,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1010,
+        "MonsterId": 11310034,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020342,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080243,
+    "TaskType": 6
+  },
+  "86080244": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080244,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080245": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u7ea2\u76d4\u7f28",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1010,
-        "MonsterId": 11310030,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1010,
-        "MonsterId": 11310033,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020451,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080245,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080246": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u524d\u671d\u76d4\u7532",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1010,
-        "MonsterId": 11310040,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 100
-      },
-      {
-        "MapId": 1010,
-        "MonsterId": 11310042,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1010,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020452,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080246,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080247": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "ClamiCameraData": 0,
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6f06\u9ed1\u53cc\u5200",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1010,
-        "MonsterId": 11310066,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 30
-      },
-      {
-        "MapId": 1010,
-        "MonsterId": 11310069,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020452,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080247,
-    "TaskType": 6
+    "TaskType": 0
+  },
+  "86080248": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080248,
+    "TaskType": 0
+  },
+  "86080249": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080249,
+    "TaskType": 0
+  },
+  "86080250": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080250,
+    "TaskType": 0
   },
   "86080251": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u874e\u6bd2",
+    "FinCondDefaultText": "\u51fb\u8d25\u8725\u8734\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1121,
+        "MonsterId": 11322012,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1121,
+        "MonsterId": 11322015,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1121,
+        "MonsterId": 11322014,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1121,
+        "MonsterId": 11322016,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020396,
@@ -29115,13 +31866,14 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u86db\u4e1d",
+    "FinCondDefaultText": "\u51fb\u8d25\u8718\u86db\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -29141,8 +31893,8 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1,
-        "MonsterId": 0,
+        "MapId": 1121,
+        "MonsterId": 11322010,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -29150,7 +31902,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020396,
@@ -29170,13 +31922,14 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u8708\u86a3\u6bd2\u817a",
+    "FinCondDefaultText": "\u51fb\u8d25\u8708\u86a3\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -29222,20 +31975,135 @@ datas ={
     "TaskType": 6
   },
   "86080254": {
+    "ChildTaskIds": [],
+    "FatherTaskId": 86080017,
+    "FinCondNeedMergeTarget": False,
+    "OpenCondCheckSex": 0,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080254,
+    "TaskType": 0
+  },
+  "86080255": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u8725\u8734\u76ae",
+    "FinCondDefaultText": "\u6536\u96c6\u8718\u86db\u5185\u4e39",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
-        "MapId": 1021,
+        "MapId": 1121,
+        "MonsterId": 11322008,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1121,
+        "MonsterId": 11322009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020396,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080255,
+    "TaskType": 6
+  },
+  "86080256": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u874e\u5c3e\u6bd2",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1121,
+        "MonsterId": 11322021,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1121,
+        "MonsterId": 11322022,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020396,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080256,
+    "TaskType": 6
+  },
+  "86080257": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u8725\u8734\u722a\u7259",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1121,
         "MonsterId": 11322012,
         "X": 0,
         "Y": 0,
@@ -29243,7 +32111,7 @@ datas ={
         "Count": 0
       },
       {
-        "MapId": 1021,
+        "MapId": 1121,
         "MonsterId": 11322015,
         "X": 0,
         "Y": 0,
@@ -29260,136 +32128,23 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020396,
     "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
     "OpenCondIsAbanNoCount": True,
     "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080254,
-    "TaskType": 6
-  },
-  "86080255": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u7c97\u7cd9\u76ae\u9769",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1021,
-        "MonsterId": 11322014,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1021,
-        "MonsterId": 11322016,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020396,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080255,
-    "TaskType": 6
-  },
-  "86080256": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6bd2\u86db\u5185\u4e39",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1121,
-        "MonsterId": 11322010,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1121,
-        "MonsterId": 11322007,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020396,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080256,
+    "TaskId": 86080257,
     "TaskType": 6
   },
   "86080258": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
@@ -29435,57 +32190,20 @@ datas ={
     "TaskType": 6
   },
   "86080259": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
     "ChildTaskIds": [],
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1121,
-        "MonsterId": 11322004,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
+    "FatherTaskId": 86080017,
     "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020396,
     "OpenCondCheckSex": 0,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080259,
-    "TaskType": 6
+    "TaskType": 0
   },
   "86080260": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
@@ -29534,6 +32252,7 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
@@ -29582,12 +32301,40 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1121,
+        "MonsterId": 11322017,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 1
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020396,
@@ -29599,29 +32346,31 @@ datas ={
     "TaskId": 86080262,
     "TaskType": 6
   },
-  "86080264": {
+  "86080263": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u9b03\u6bdb",
+    "FinCondDefaultText": "\u5236\u4f5c\u8708\u86a3\u836f\u9152",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
-        "MapId": 1011,
-        "MonsterId": 11240001,
+        "MapId": 1121,
+        "MonsterId": 11322019,
         "X": 0,
         "Y": 0,
         "Z": 0,
         "Count": 0
       },
       {
-        "MapId": 1011,
-        "MonsterId": 11240003,
+        "MapId": 1121,
+        "MonsterId": 11322018,
         "X": 0,
         "Y": 0,
         "Z": 0,
@@ -29637,7 +32386,67 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020396,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080263,
+    "TaskType": 6
+  },
+  "86080264": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u9ab7\u9ac5\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240032,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240033,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240036,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240037,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020396,
@@ -29657,68 +32466,14 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u72fc\u7259\u68d2",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1011,
-        "MonsterId": 11240009,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1011,
-        "MonsterId": 11240010,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020396,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080265,
-    "TaskType": 6
-  },
-  "86080266": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u6f06\u9ed1\u6b66\u5668",
+    "FinCondDefaultText": "\u51fb\u8d25\u6e38\u8361\u9ed1\u9a91\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -29760,6 +32515,62 @@ datas ={
     "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
+    "TaskId": 86080265,
+    "TaskType": 6
+  },
+  "86080266": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u51fb\u8d25\u517d\u6218\u9b54\u7269\u56e2\u4f19",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240001,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240003,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020396,
+    "OpenCondCheckSex": 0,
+    "OpenCondCheckTaskCount": True,
+    "OpenCondCountCycle": 0,
+    "OpenCondCountLimit": 3,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondRepeatIfSucess": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
     "TaskId": 86080266,
     "TaskType": 6
   },
@@ -29774,7 +32585,7 @@ datas ={
     "FailCondCanQuitIfFail": False,
     "FatherFailIfChildFail": False,
     "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u8725\u8734\u76ae",
+    "FinCondDefaultText": "\u51fb\u8d25\u6bd2\u7269\u9b54\u7269\u56e2\u4f19",
     "FinCondHasKillMon": True,
     "FinCondKillMonster": [
       {
@@ -29793,44 +32604,6 @@ datas ={
         "Z": 0,
         "Count": 0
       },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondKillMonsterMode": 1,
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020396,
-    "OpenCondCheckSex": 0,
-    "OpenCondCheckTaskCount": True,
-    "OpenCondCountCycle": 0,
-    "OpenCondCountLimit": 3,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondRepeatIfSucess": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080267,
-    "TaskType": 6
-  },
-  "86080268": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondDefaultText": "\u6536\u96c6\u874e\u58f3",
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
       {
         "MapId": 1011,
         "MonsterId": 11240018,
@@ -29857,7 +32630,7 @@ datas ={
       }
     ],
     "FinCondKillMonsterMode": 1,
-    "FinCondKillMonsterNum": 30,
+    "FinCondKillMonsterNum": 20,
     "FinCondNeedMergeTarget": False,
     "FinRewardCameraData": 0,
     "FinRewardID": 40020396,
@@ -29870,13 +32643,14 @@ datas ={
     "OpenCondRepeatIfSucess": True,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
-    "TaskId": 86080268,
+    "TaskId": 86080267,
     "TaskType": 6
   },
   "86080269": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
@@ -29921,106 +32695,11 @@ datas ={
     "TaskId": 86080269,
     "TaskType": 6
   },
-  "86080270": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1011,
-        "MonsterId": 11240021,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020396,
-    "OpenCondCheckSex": 0,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080270,
-    "TaskType": 6
-  },
-  "86080271": {
-    "BelongChapter": 0,
-    "BelongMap": 0,
-    "ChildTaskIds": [],
-    "DeliMetdManual": True,
-    "DispNotInTaskPanel": True,
-    "FailCondCanGiveUp": True,
-    "FailCondCanQuitIfFail": False,
-    "FatherFailIfChildFail": False,
-    "FatherTaskId": 0,
-    "FinCondHasKillMon": True,
-    "FinCondKillMonster": [
-      {
-        "MapId": 1011,
-        "MonsterId": 11240005,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 1
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      },
-      {
-        "MapId": 1,
-        "MonsterId": 0,
-        "X": 0,
-        "Y": 0,
-        "Z": 0,
-        "Count": 0
-      }
-    ],
-    "FinCondNeedMergeTarget": False,
-    "FinRewardCameraData": 0,
-    "FinRewardID": 40020396,
-    "OpenCondCheckSex": 0,
-    "OpenCondIsAbanNoCount": True,
-    "OpenCondIsFailNoCount": True,
-    "OpenCondTaskeState": 0,
-    "TaskGroup": 0,
-    "TaskId": 86080271,
-    "TaskType": 6
-  },
   "86080272": {
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
@@ -30069,6 +32748,7 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
@@ -30117,6 +32797,7 @@ datas ={
     "BelongChapter": 0,
     "BelongMap": 0,
     "ChildTaskIds": [],
+    "ClamiCameraData": 0,
     "DeliMetdManual": True,
     "DispNotInTaskPanel": True,
     "FailCondCanGiveUp": True,
@@ -30159,6 +32840,214 @@ datas ={
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,
     "TaskId": 86080274,
+    "TaskType": 6
+  },
+  "86080275": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u534a\u517d\u9b03\u6bdb",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240003,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240001,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020396,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080275,
+    "TaskType": 6
+  },
+  "86080276": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u874e\u5b50\u58f3",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240018,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240019,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020396,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080276,
+    "TaskType": 6
+  },
+  "86080277": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u8725\u8734\u76ae",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240014,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240015,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020396,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080277,
+    "TaskType": 6
+  },
+  "86080278": {
+    "BelongChapter": 0,
+    "BelongMap": 0,
+    "ChildTaskIds": [],
+    "ClamiCameraData": 0,
+    "DeliMetdManual": True,
+    "DispNotInTaskPanel": True,
+    "FailCondCanGiveUp": True,
+    "FailCondCanQuitIfFail": False,
+    "FatherFailIfChildFail": False,
+    "FatherTaskId": 0,
+    "FinCondDefaultText": "\u6536\u96c6\u725b\u6218\u72fc\u7259\u68d2",
+    "FinCondHasKillMon": True,
+    "FinCondKillMonster": [
+      {
+        "MapId": 1011,
+        "MonsterId": 11240009,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1011,
+        "MonsterId": 11240010,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      },
+      {
+        "MapId": 1,
+        "MonsterId": 0,
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+        "Count": 0
+      }
+    ],
+    "FinCondKillMonsterMode": 1,
+    "FinCondKillMonsterNum": 20,
+    "FinCondNeedMergeTarget": False,
+    "FinRewardCameraData": 0,
+    "FinRewardID": 40020396,
+    "OpenCondCheckSex": 0,
+    "OpenCondIsAbanNoCount": True,
+    "OpenCondIsFailNoCount": True,
+    "OpenCondTaskeState": 0,
+    "TaskGroup": 0,
+    "TaskId": 86080278,
     "TaskType": 6
   },
   "86090001": {
@@ -35940,7 +38829,7 @@ datas ={
     "FinRewardCameraData": 0,
     "FinRewardID": 40019993,
     "OpenCondCheckSex": 0,
-    "OpenCondRelateTaskId": "86010144",
+    "OpenCondRelateTaskId": "86090144",
     "OpenCondRelateTaskState": 5,
     "OpenCondTaskeState": 0,
     "TaskGroup": 0,

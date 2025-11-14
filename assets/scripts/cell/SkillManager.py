@@ -560,6 +560,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         # newMp = self.fullMp * mpPercent
         # self.modifyMP(newMp - self.mp)
 
+    @propChangedHandler((gameconst.SourceType.All, ), ('drugsQuantity',))
+    def onDrugsQuantityChanged(self, srcType, oldVal):
+        DEBUG_MSG('onDrugsQuantityChanged', srcType, oldVal)
+        self.base.onDrugsQuantitySync(self.drugsQuantity)
+
     def rateInDungeon(self, rate):
         self.hp = self.fullHp
 
@@ -1144,7 +1149,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if bTakeSkill:
             skill = self.takeSkill(skillId, skillLv)
         else:
-            skill = self.getSkill(skillId, True, True)
+            skill = self.getSkill(skillId, False, True)
 
         if not skill:
             return
@@ -1363,6 +1368,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
     @functools.lru_cache(64)
     def _getConflictEventName(eventId):
         return conflict_conflict.datas[eventId]['eventName']
+
+    @staticmethod
+    @functools.lru_cache(64)
+    def _getConflictPopupIndex(stateId):
+        return CSD.datas.get(stateId, {}).get('popupIndex', 0)
 
     @staticmethod
     @functools.lru_cache(64)
@@ -1828,11 +1838,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         eventId, hitType = 0, 0
         if schoolType == gameconst.SCHOOL_PHYSICAL:
             eventId = CCD.datas.pBeat
-            hitType = gameconst.HitType.ImmunePhysicalDmg
+            hitType = gameconst.HitType.ImmuneDmg
 
         elif schoolType == gameconst.SCHOOL_MAGIC:
             eventId = CCD.datas.mBeat
-            hitType = gameconst.HitType.ImmuneMagicDmg
+            hitType = gameconst.HitType.ImmuneDmg
 
         # elif schoolType == gameconst.SCHOOL_ASSISTANT:
         #     eventId = CCD.datas.hBeat
@@ -2062,7 +2072,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                                         effectEventCtx.HpEventCtx(dmgResult.hpSuck))
                 if dmgResult.hpSuck:
                     skillDamges.damageInfo.append(
-                        combatSkill.SkillDamageVal(dmgSrcEnt.id, dmgResult.hpSuck, gameconst.HitType.BloodSuck))
+                        combatSkill.SkillDamageVal(dmgSrcEnt.id, dmgResult.hpSuck, gameconst.HitType.HPRecover))
 
             # effect里造成的血量伤害不触发onHit，否则攻击附带xxx效果会死循环
             if context.actionType not in (actionContext.ACTION_BUFF_EFFECT, actionContext.ACTION_EVENT_EFFECT):
@@ -2271,7 +2281,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                         combatSkill.SkillDamageVal(target.id, hpDelta, gameconst.HitType.HealCrit))
                 else:
                     skillDamges.damageInfo.append(
-                        combatSkill.SkillDamageVal(target.id, hpDelta, gameconst.HitType.Heal))
+                        combatSkill.SkillDamageVal(target.id, hpDelta, gameconst.HitType.HPRecover))
 
         self.calcHealStats(target, context, hpDelta)
 
@@ -2282,14 +2292,14 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         _ret = self.checkConflictState(CCD.datas.bePushed, True)
         if not _ret:
-            if _ret.extra == CCDD.datas.Bating:
+            if _ret.extra == CCDD.datas.Bating and not self.IsMonster:
                 skillDamges = context.getCombatResult()
                 if skillDamges:
                     skillDamges.damageInfo.append(
                         combatSkill.SkillDamageVal(
                             self.id,
                             0,
-                            gameconst.HitType.Immune))
+                            gameconst.HitType.ImmuneDisplacement))
             return False
 
         realDist = sMath.distance2D(self.position, pos)
@@ -3141,26 +3151,19 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         controlStateId = antiRes.controlState
         stateName = self._getConflictStatusName(controlStateId)
         buffName = buff.Buff.getBuffName(antiRes.controlBuffId)
+        hitType = self._getConflictPopupIndex(controlStateId)
 
-        # 免疫控制状态
-        if antiRes.resultCode == antiRes.RES_IMMUNE:
-            # 己方免疫状态战斗信息log
-            self.IsAvatar and self.client.onAddStateRet(self.id, target.id, controlStateId, gameconst.HitType.Immune)
-            # self.sendCombatMsg(MBD.datas.targetImmuneBuff, [target.name, str(buffLv), buffName])
-            # 对方免疫状态战斗信息log
-            target.IsAvatar and target.client.onAddStateRet(self.id, target.id, controlStateId,
-                                                            gameconst.HitType.Immune)
-            # target.sendCombatMsg(MBD.datas.immuneBuff, [str(buffLv), buffName])
+        skillDamges = context.getCombatResult()
+        if not skillDamges:
+            ERROR_MSG('unexpected anti control context', context)
+            skillDamges = combatSkill.SkillDamges(self.id, context.getDmgSourceType(), context.getDmgSourceId())
 
-        # 控制状态被抵抗，效果和免疫一样，只是跳字不一样
-        elif antiRes.resultCode == antiRes.RES_ANTI:
-            # 己方抵抗状态战斗信息log
-            self.IsAvatar and self.client.onAddStateRet(self.id, target.id, controlStateId, gameconst.HitType.Resist)
-            # self.sendCombatMsg(MBD.datas.targetResistBuff, [target.name, str(buffLv), buffName])
-            # 对方抵抗状态战斗信息log
-            target.IsAvatar and target.client.onAddStateRet(self.id, target.id, controlStateId,
-                                                            gameconst.HitType.Resist)
-            # target.sendCombatMsg(MBD.datas.resistBuff, [str(buffLv), buffName])
+        # 免疫控制状态 or 控制状态被抵抗
+        if (antiRes.resultCode == antiRes.RES_IMMUNE and not target.IsMonster) or antiRes.resultCode == antiRes.RES_ANTI:
+            if hitType == gameconst.HitType.Silence:
+                skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, 0, gameconst.HitType.AntiSilence))
+            else:
+                skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, 0, gameconst.HitType.AntiControl))
 
         # 命中，如果衰减的话要增加控制等级，刷新衰减时间
         elif antiRes.resultCode == antiRes.RES_HIT:
@@ -3173,9 +3176,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             self.addBuffBySkill(target, context, antiRes.controlBuffId, buffLv, 1.0, antiRes.controlDuration)
             antiRes.dispelBuffTag and self.dispelBuffByTag(target, context, antiRes.dispelBuffTag)
 
-            target.IsAvatar and target.client.onAddStateRet(self.id, target.id, controlStateId,
-                                                            gameconst.HitType.HitState)
-            self.IsAvatar and self.client.onAddStateRet(self.id, target.id, controlStateId, gameconst.HitType.HitState)
+            if hitType == 0:
+                ERROR_MSG('unexpected anti control hitType', hitType)
+                return
+            skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, 0, hitType))
 
     def dispelBuffByTag(self, target, context, tag):
         buffIdList = []

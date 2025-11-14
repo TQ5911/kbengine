@@ -1,25 +1,15 @@
 # -*- encoding:utf-8 -*-
 
 from KBEDebug import *
-import KBEngine
-import itemData_itemData as ITEMDATA
-import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+
 import utils
-import gamelog
 import gameconst
 import userType
-import dataUtils
 import gameengine
-
-import message_Message_def as MMD
-import BaseItem
 import itemFactory
-import itemData_itemData as ID_ID
-import warnings
-import math
+import dataUtils
 
-import actionContext
-
+import itemData_itemData as ITEMDATA
 
 class ItemContainer(userType.UserSoleType):
     def __init__(self, capacity):
@@ -201,6 +191,10 @@ class ItemContainer(userType.UserSoleType):
         if gridId in self.gridId2GridObj:
             gameengine.reportCritical('addItemsToNewGrid: add to non empty grid', gridId)
             return gameconst.BagOPStat.BAG_OP_NO_SPACE, None
+        
+        # 装备入包需要设置一下职业，战力计算需要
+        if dataUtils.isEquipItemByItemId(itemObj.itemId):
+            itemObj.setEquipSchool(owner.getAvatarSchool())
 
         self.gridId2GridObj[gridId] = itemObj
         self.itemId2gridIds.setdefault(itemObj.itemId, set()).add(gridId)

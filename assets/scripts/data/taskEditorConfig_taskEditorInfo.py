@@ -337,7 +337,7 @@ datas = _tools.RODict({
         "value": 3
     }),
     "FinCondNeedMergeTarget": _tools.RODict({
-        "value": None
+        "value": False
     }),
     "FinCondDefaultText": _tools.RODict({
         "value": ''

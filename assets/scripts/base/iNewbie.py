@@ -128,7 +128,7 @@ class INewbie(object):
             return stepData.get('bornPos'), (0, 0, bornRotation * math.pi / 180)
         elif 'BornPos' in dunSData:
             d, *_ = dunSData['BornPos'].values()
-            return (d['PosX'], d['PosY'], d['PosZ']), (0, 0, d['Dir'] * math.pi / 180)
+            return formula.bornPosFromData(d), (0, 0, d['Dir'] * math.pi / 180)
         else:
             gameengine.reportCritical('_getNewbieEntrance but not has pos and dir:', dungeonNo)
             return self.cellData['position'], self.cellData['direction']

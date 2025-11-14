@@ -17,7 +17,7 @@ datas ={
           "PosZ": 57.96909,
           "Props": {
             "GroupID": "",
-            "Level": 28.0,
+            "Level": 25,
             "MapEntityScale": 0,
             "MapEntityType": "18",
             "MonsterGroupID": "",

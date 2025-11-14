@@ -85,6 +85,12 @@
             <Default>       0                   </Default>
         </moveAni>
 
+        <stopByFuben>
+            <Type>          BOOL                </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </stopByFuben>
+
         <nextKeepDistanceTime>
             <Type>          LONGTIME            </Type>
             <Default>       0                   </Default>

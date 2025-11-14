@@ -62,7 +62,9 @@ datas = _tools.RODict({
         "fullName": "新元城",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": "xinyuanchengopentask"
     }),
     1002: _tools.RODict({
         "ID": 1002,
@@ -111,7 +113,9 @@ datas = _tools.RODict({
         "fullName": "同心谷",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1003: _tools.RODict({
         "ID": 1003,
@@ -160,7 +164,9 @@ datas = _tools.RODict({
         "fullName": "占坑大世界场景",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1004: _tools.RODict({
         "ID": 1004,
@@ -209,7 +215,9 @@ datas = _tools.RODict({
         "fullName": "飞沙要塞",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1005: _tools.RODict({
         "ID": 1005,
@@ -258,7 +266,9 @@ datas = _tools.RODict({
         "fullName": "精灵之村",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1006: _tools.RODict({
         "ID": 1006,
@@ -307,7 +317,9 @@ datas = _tools.RODict({
         "fullName": "精灵宝殿",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1010: _tools.RODict({
         "ID": 1010,
@@ -356,7 +368,9 @@ datas = _tools.RODict({
         "fullName": "石窟走廊",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1011: _tools.RODict({
         "ID": 1011,
@@ -405,7 +419,9 @@ datas = _tools.RODict({
         "fullName": "新元城郊",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1020: _tools.RODict({
         "ID": 1020,
@@ -454,7 +470,9 @@ datas = _tools.RODict({
         "fullName": "祖珂地堡一层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1021: _tools.RODict({
         "ID": 1021,
@@ -503,7 +521,9 @@ datas = _tools.RODict({
         "fullName": "祖珂地堡二层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1022: _tools.RODict({
         "ID": 1022,
@@ -552,7 +572,9 @@ datas = _tools.RODict({
         "fullName": "祖珂地堡三层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1024: _tools.RODict({
         "ID": 1024,
@@ -601,7 +623,9 @@ datas = _tools.RODict({
         "fullName": "祖珂地堡三层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1026: _tools.RODict({
         "ID": 1026,
@@ -650,7 +674,9 @@ datas = _tools.RODict({
         "fullName": "祖珂地堡五层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1030: _tools.RODict({
         "ID": 1030,
@@ -699,7 +725,9 @@ datas = _tools.RODict({
         "fullName": "月光海港一层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1031: _tools.RODict({
         "ID": 1031,
@@ -748,7 +776,9 @@ datas = _tools.RODict({
         "fullName": "月光海港二层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1035: _tools.RODict({
         "ID": 1035,
@@ -764,7 +794,7 @@ datas = _tools.RODict({
         "breakAwayStuckPos": _tools.ROList([(101.4263, 150.71, 196.9305)]),
         "ifSafeArea": 0,
         "ifEnemy": 1,
-        "deathPenaltyID": 5,
+        "deathPenaltyID": 3,
         "specialDeathPenaltyID": 7,
         "canResAtNearest": 1,
         "resSceneId": 1001,
@@ -797,7 +827,9 @@ datas = _tools.RODict({
         "fullName": "月光海港四层",
         "addbufflist": _tools.ROList([64004953]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1036: _tools.RODict({
         "ID": 1036,
@@ -813,7 +845,7 @@ datas = _tools.RODict({
         "breakAwayStuckPos": _tools.ROList([(305.9333, 118.0822, 534.9097)]),
         "ifSafeArea": 0,
         "ifEnemy": 1,
-        "deathPenaltyID": 5,
+        "deathPenaltyID": 3,
         "specialDeathPenaltyID": 7,
         "canResAtNearest": 1,
         "resSceneId": 1036,
@@ -846,7 +878,9 @@ datas = _tools.RODict({
         "fullName": "月光海港五层",
         "addbufflist": _tools.ROList([64004953]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1101: _tools.RODict({
         "ID": 1101,
@@ -895,7 +929,9 @@ datas = _tools.RODict({
         "fullName": "杜格教廷一层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1102: _tools.RODict({
         "ID": 1102,
@@ -944,7 +980,9 @@ datas = _tools.RODict({
         "fullName": "杜格教廷二层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1103: _tools.RODict({
         "ID": 1103,
@@ -993,7 +1031,9 @@ datas = _tools.RODict({
         "fullName": "杜格教廷三层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1110: _tools.RODict({
         "ID": 1110,
@@ -1042,7 +1082,9 @@ datas = _tools.RODict({
         "fullName": "流沙故城一层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1111: _tools.RODict({
         "ID": 1111,
@@ -1091,7 +1133,9 @@ datas = _tools.RODict({
         "fullName": "流沙故城二层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1112: _tools.RODict({
         "ID": 1112,
@@ -1140,7 +1184,9 @@ datas = _tools.RODict({
         "fullName": "流沙故城三层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1120: _tools.RODict({
         "ID": 1120,
@@ -1189,7 +1235,9 @@ datas = _tools.RODict({
         "fullName": "五毒石窟一层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1121: _tools.RODict({
         "ID": 1121,
@@ -1238,7 +1286,9 @@ datas = _tools.RODict({
         "fullName": "五毒石窟二层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1122: _tools.RODict({
         "ID": 1122,
@@ -1287,7 +1337,9 @@ datas = _tools.RODict({
         "fullName": "五毒石窟三层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     1123: _tools.RODict({
         "ID": 1123,
@@ -1336,7 +1388,9 @@ datas = _tools.RODict({
         "fullName": "五毒石窟四层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2001: _tools.RODict({
         "ID": 2001,
@@ -1385,7 +1439,9 @@ datas = _tools.RODict({
         "fullName": "新手村(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2002: _tools.RODict({
         "ID": 2002,
@@ -1434,7 +1490,9 @@ datas = _tools.RODict({
         "fullName": "新手村(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2013: _tools.RODict({
         "ID": 2013,
@@ -1483,7 +1541,9 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2014: _tools.RODict({
         "ID": 2014,
@@ -1532,7 +1592,9 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2015: _tools.RODict({
         "ID": 2015,
@@ -1581,7 +1643,9 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2016: _tools.RODict({
         "ID": 2016,
@@ -1630,7 +1694,9 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2017: _tools.RODict({
         "ID": 2017,
@@ -1679,7 +1745,9 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2018: _tools.RODict({
         "ID": 2018,
@@ -1728,7 +1796,9 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2019: _tools.RODict({
         "ID": 2019,
@@ -1777,7 +1847,9 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2020: _tools.RODict({
         "ID": 2020,
@@ -1826,7 +1898,9 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2021: _tools.RODict({
         "ID": 2021,
@@ -1875,7 +1949,9 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2022: _tools.RODict({
         "ID": 2022,
@@ -1924,7 +2000,60 @@ datas = _tools.RODict({
         "fullName": "杜格教大祭司(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
+    }),
+    2023: _tools.RODict({
+        "ID": 2023,
+        "name": "首领BOSS4测试副本",
+        "sceneType": 2,
+        "type": 2,
+        "subType": 0,
+        "recover": 0,
+        "sceneRes": "field_hundunhuilang_05",
+        "AOI": 100,
+        "enterType": 3,
+        "teammateConfirm": 1,
+        "breakAwayStuckPos": _tools.ROList([(37.71, 39.02, 58.94)]),
+        "ifSafeArea": 1,
+        "ifEnemy": 1,
+        "deathPenaltyID": 2,
+        "specialDeathPenaltyID": 7,
+        "canResAtNearest": 1,
+        "resSceneId": 0,
+        "canResByTaoist": 1,
+        "canUseReturnScroll": 0,
+        "returnMapID": 0,
+        "ifSinglePK": 0,
+        "ifTeamFollow": 1,
+        "ifAutoFight": 1,
+        "ifCrossSceneRouting": 2,
+        "ifEnterDun": 2,
+        "ifRide": 0,
+        "timeOut": 30,
+        "maxNum": 5,
+        "minNum": 1,
+        "fightConflict": 1,
+        "enterBlockByCombat": 0,
+        "teamMemberSkipCheck": 0,
+        "needTeamFollow": 0,
+        "isTaskShareScene": 1,
+        "scenePath": 0,
+        "enterSceneAutoFight": 0,
+        "leaveSceneDisableAutoFight": 0,
+        "leave": 0,
+        "event": "",
+        "parm": "",
+        "weatherType": -1,
+        "openGuildLevel": 0,
+        "isDmgDataInvsbnew": 0,
+        "fullName": "杜格教大祭司(副本)",
+        "addbufflist": _tools.ROList([]),
+        "specialAreaType": 0,
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2101: _tools.RODict({
         "ID": 2101,
@@ -1973,7 +2102,9 @@ datas = _tools.RODict({
         "fullName": "深海禁地",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2102: _tools.RODict({
         "ID": 2102,
@@ -2022,7 +2153,9 @@ datas = _tools.RODict({
         "fullName": "杜格祭坛",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2103: _tools.RODict({
         "ID": 2103,
@@ -2071,7 +2204,9 @@ datas = _tools.RODict({
         "fullName": "冰蜈蚣巢穴",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2201: _tools.RODict({
         "ID": 2201,
@@ -2120,7 +2255,9 @@ datas = _tools.RODict({
         "fullName": "小鬼钟馗",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2202: _tools.RODict({
         "ID": 2202,
@@ -2169,7 +2306,9 @@ datas = _tools.RODict({
         "fullName": "双生海妖",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     2203: _tools.RODict({
         "ID": 2203,
@@ -2218,11 +2357,13 @@ datas = _tools.RODict({
         "fullName": "熔岩三头蛟",
         "addbufflist": _tools.ROList([64004963]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3100: _tools.RODict({
         "ID": 3100,
-        "name": "混沌回廊大厅",
+        "name": "回廊1层-入口",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2264,14 +2405,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊大厅",
+        "fullName": "混沌回廊1层-入口",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3101: _tools.RODict({
         "ID": 3101,
-        "name": "回廊1层-训练Ⅰ",
+        "name": "回廊1层-修行Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2313,14 +2456,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-训练Ⅰ",
+        "fullName": "混沌回廊1层-修行Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3102: _tools.RODict({
         "ID": 3102,
-        "name": "回廊1层-训练Ⅱ",
+        "name": "回廊1层-修行Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2362,14 +2507,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-训练Ⅱ",
+        "fullName": "混沌回廊1层-修行Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3103: _tools.RODict({
         "ID": 3103,
-        "name": "回廊1层-经验Ⅰ",
+        "name": "回廊1层-历战Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2411,14 +2558,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-经验Ⅰ",
+        "fullName": "混沌回廊1层-历战Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3104: _tools.RODict({
         "ID": 3104,
-        "name": "回廊1层-经验Ⅱ",
+        "name": "回廊1层-历战Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2460,14 +2609,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-经验Ⅱ",
+        "fullName": "混沌回廊1层-历战Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3105: _tools.RODict({
         "ID": 3105,
-        "name": "回廊1层-经验Ⅲ",
+        "name": "回廊1层-历战Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2509,10 +2660,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-经验Ⅲ",
+        "fullName": "混沌回廊1层-历战Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3106: _tools.RODict({
         "ID": 3106,
@@ -2561,7 +2714,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-魔物",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3107: _tools.RODict({
         "ID": 3107,
@@ -2610,7 +2765,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3108: _tools.RODict({
         "ID": 3108,
@@ -2659,7 +2816,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3109: _tools.RODict({
         "ID": 3109,
@@ -2708,11 +2867,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3110: _tools.RODict({
         "ID": 3110,
-        "name": "回廊1层-白银Ⅰ",
+        "name": "回廊1层-俸禄Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2754,14 +2915,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-白银Ⅰ",
+        "fullName": "混沌回廊1层-俸禄Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3111: _tools.RODict({
         "ID": 3111,
-        "name": "回廊1层-白银Ⅱ",
+        "name": "回廊1层-俸禄Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2803,14 +2966,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-白银Ⅱ",
+        "fullName": "混沌回廊1层-俸禄Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3112: _tools.RODict({
         "ID": 3112,
-        "name": "回廊1层-黄金Ⅰ",
+        "name": "回廊1层-赏金Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2852,14 +3017,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-黄金Ⅰ",
+        "fullName": "混沌回廊1层-赏金Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3113: _tools.RODict({
         "ID": 3113,
-        "name": "回廊1层-黄金Ⅱ",
+        "name": "回廊1层-赏金Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2901,14 +3068,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-黄金Ⅱ",
+        "fullName": "混沌回廊1层-赏金Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3114: _tools.RODict({
         "ID": 3114,
-        "name": "回廊1层-黄金Ⅲ",
+        "name": "回廊1层-赏金Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -2950,10 +3119,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-黄金Ⅲ",
+        "fullName": "混沌回廊1层-赏金Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3115: _tools.RODict({
         "ID": 3115,
@@ -3002,7 +3173,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-守护",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3116: _tools.RODict({
         "ID": 3116,
@@ -3051,7 +3224,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-协助",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3117: _tools.RODict({
         "ID": 3117,
@@ -3100,16 +3275,18 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-封印",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3118: _tools.RODict({
         "ID": 3118,
-        "name": "回廊1层-黑铁",
+        "name": "回廊1层-锻体",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
         "recover": 0,
-        "sceneRes": "field_hundunhuilang_02",
+        "sceneRes": "field_hundunhuilang_03",
         "AOI": 90,
         "enterType": 3,
         "teammateConfirm": 0,
@@ -3146,10 +3323,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊1层-黑铁",
+        "fullName": "混沌回廊1层-锻体",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3119: _tools.RODict({
         "ID": 3119,
@@ -3198,7 +3377,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-真气",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3120: _tools.RODict({
         "ID": 3120,
@@ -3247,7 +3428,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3121: _tools.RODict({
         "ID": 3121,
@@ -3296,7 +3479,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3200: _tools.RODict({
         "ID": 3200,
@@ -3345,11 +3530,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-入口",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3201: _tools.RODict({
         "ID": 3201,
-        "name": "回廊2层-训练Ⅰ",
+        "name": "回廊2层-修行Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -3391,14 +3578,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-训练Ⅰ",
+        "fullName": "混沌回廊2层-修行Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3202: _tools.RODict({
         "ID": 3202,
-        "name": "回廊2层-训练Ⅱ",
+        "name": "回廊2层-修行Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -3440,14 +3629,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-训练Ⅱ",
+        "fullName": "混沌回廊2层-修行Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3203: _tools.RODict({
         "ID": 3203,
-        "name": "回廊2层-经验Ⅰ",
+        "name": "回廊2层-历战Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -3489,14 +3680,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-经验Ⅰ",
+        "fullName": "混沌回廊2层-历战Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3204: _tools.RODict({
         "ID": 3204,
-        "name": "回廊2层-经验Ⅱ",
+        "name": "回廊2层-历战Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -3538,14 +3731,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-经验Ⅱ",
+        "fullName": "混沌回廊2层-历战Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3205: _tools.RODict({
         "ID": 3205,
-        "name": "回廊2层-经验Ⅲ",
+        "name": "回廊2层-历战Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -3587,10 +3782,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-经验Ⅲ",
+        "fullName": "混沌回廊2层-历战Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3206: _tools.RODict({
         "ID": 3206,
@@ -3639,7 +3836,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-魔物",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3207: _tools.RODict({
         "ID": 3207,
@@ -3688,7 +3887,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3208: _tools.RODict({
         "ID": 3208,
@@ -3737,7 +3938,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3209: _tools.RODict({
         "ID": 3209,
@@ -3786,11 +3989,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3210: _tools.RODict({
         "ID": 3210,
-        "name": "回廊2层-白银Ⅰ",
+        "name": "回廊2层-俸禄Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -3832,14 +4037,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-白银Ⅰ",
+        "fullName": "混沌回廊2层-俸禄Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3211: _tools.RODict({
         "ID": 3211,
-        "name": "回廊2层-白银Ⅱ",
+        "name": "回廊2层-俸禄Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -3881,14 +4088,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-白银Ⅱ",
+        "fullName": "混沌回廊2层-俸禄Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3212: _tools.RODict({
         "ID": 3212,
-        "name": "回廊2层-黄金Ⅰ",
+        "name": "回廊2层-赏金Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -3930,14 +4139,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-黄金Ⅰ",
+        "fullName": "混沌回廊2层-赏金Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3213: _tools.RODict({
         "ID": 3213,
-        "name": "回廊2层-黄金Ⅱ",
+        "name": "回廊2层-赏金Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -3979,14 +4190,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-黄金Ⅱ",
+        "fullName": "混沌回廊2层-赏金Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3214: _tools.RODict({
         "ID": 3214,
-        "name": "回廊2层-黄金Ⅲ",
+        "name": "回廊2层-赏金Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -4028,10 +4241,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-黄金Ⅲ",
+        "fullName": "混沌回廊2层-赏金Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3215: _tools.RODict({
         "ID": 3215,
@@ -4080,7 +4295,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-守护",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3216: _tools.RODict({
         "ID": 3216,
@@ -4129,7 +4346,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-协助",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3217: _tools.RODict({
         "ID": 3217,
@@ -4178,11 +4397,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-封印",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3218: _tools.RODict({
         "ID": 3218,
-        "name": "回廊2层-黑铁",
+        "name": "回廊2层-锻体",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -4224,10 +4445,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊2层-黑铁",
+        "fullName": "混沌回廊2层-锻体",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3219: _tools.RODict({
         "ID": 3219,
@@ -4276,7 +4499,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-真气",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3220: _tools.RODict({
         "ID": 3220,
@@ -4325,7 +4550,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊2层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3221: _tools.RODict({
         "ID": 3221,
@@ -4374,7 +4601,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3300: _tools.RODict({
         "ID": 3300,
@@ -4423,11 +4652,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-入口",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3301: _tools.RODict({
         "ID": 3301,
-        "name": "回廊3层-训练Ⅰ",
+        "name": "回廊3层-修行Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -4469,14 +4700,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-训练Ⅰ",
+        "fullName": "混沌回廊3层-修行Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3302: _tools.RODict({
         "ID": 3302,
-        "name": "回廊3层-训练Ⅱ",
+        "name": "回廊3层-修行Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -4518,14 +4751,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-训练Ⅱ",
+        "fullName": "混沌回廊3层-修行Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3303: _tools.RODict({
         "ID": 3303,
-        "name": "回廊3层-经验Ⅰ",
+        "name": "回廊3层-历战Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -4567,14 +4802,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-经验Ⅰ",
+        "fullName": "混沌回廊3层-历战Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3304: _tools.RODict({
         "ID": 3304,
-        "name": "回廊3层-经验Ⅱ",
+        "name": "回廊3层-历战Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -4616,14 +4853,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-经验Ⅱ",
+        "fullName": "混沌回廊3层-历战Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3305: _tools.RODict({
         "ID": 3305,
-        "name": "回廊3层-经验Ⅲ",
+        "name": "回廊3层-历战Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -4665,10 +4904,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-经验Ⅲ",
+        "fullName": "混沌回廊3层-历战Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3306: _tools.RODict({
         "ID": 3306,
@@ -4717,7 +4958,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-魔物",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3307: _tools.RODict({
         "ID": 3307,
@@ -4766,7 +5009,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3308: _tools.RODict({
         "ID": 3308,
@@ -4815,7 +5060,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3309: _tools.RODict({
         "ID": 3309,
@@ -4864,11 +5111,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3310: _tools.RODict({
         "ID": 3310,
-        "name": "回廊3层-白银Ⅰ",
+        "name": "回廊3层-俸禄Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -4910,14 +5159,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-白银Ⅰ",
+        "fullName": "混沌回廊3层-俸禄Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3311: _tools.RODict({
         "ID": 3311,
-        "name": "回廊3层-白银Ⅱ",
+        "name": "回廊3层-俸禄Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -4959,14 +5210,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-白银Ⅱ",
+        "fullName": "混沌回廊3层-俸禄Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3312: _tools.RODict({
         "ID": 3312,
-        "name": "回廊3层-黄金Ⅰ",
+        "name": "回廊3层-赏金Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5008,14 +5261,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-黄金Ⅰ",
+        "fullName": "混沌回廊3层-赏金Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3313: _tools.RODict({
         "ID": 3313,
-        "name": "回廊3层-黄金Ⅱ",
+        "name": "回廊3层-赏金Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5057,14 +5312,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-黄金Ⅱ",
+        "fullName": "混沌回廊3层-赏金Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3314: _tools.RODict({
         "ID": 3314,
-        "name": "回廊3层-黄金Ⅲ",
+        "name": "回廊3层-赏金Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5106,10 +5363,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-黄金Ⅲ",
+        "fullName": "混沌回廊3层-赏金Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3315: _tools.RODict({
         "ID": 3315,
@@ -5158,7 +5417,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-守护",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3316: _tools.RODict({
         "ID": 3316,
@@ -5207,7 +5468,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-协助",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3317: _tools.RODict({
         "ID": 3317,
@@ -5256,11 +5519,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-封印",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3318: _tools.RODict({
         "ID": 3318,
-        "name": "回廊3层-黑铁",
+        "name": "回廊3层-锻体",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5302,10 +5567,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊3层-黑铁",
+        "fullName": "混沌回廊3层-锻体",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3319: _tools.RODict({
         "ID": 3319,
@@ -5354,7 +5621,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-真气",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3320: _tools.RODict({
         "ID": 3320,
@@ -5403,7 +5672,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊3层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3321: _tools.RODict({
         "ID": 3321,
@@ -5452,7 +5723,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3400: _tools.RODict({
         "ID": 3400,
@@ -5501,11 +5774,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-入口",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3401: _tools.RODict({
         "ID": 3401,
-        "name": "回廊4层-训练Ⅰ",
+        "name": "回廊4层-修行Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5547,14 +5822,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-训练Ⅰ",
+        "fullName": "混沌回廊4层-修行Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3402: _tools.RODict({
         "ID": 3402,
-        "name": "回廊4层-训练Ⅱ",
+        "name": "回廊4层-修行Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5596,14 +5873,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-训练Ⅱ",
+        "fullName": "混沌回廊4层-修行Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3403: _tools.RODict({
         "ID": 3403,
-        "name": "回廊4层-经验Ⅰ",
+        "name": "回廊4层-历战Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5645,14 +5924,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-经验Ⅰ",
+        "fullName": "混沌回廊4层-历战Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3404: _tools.RODict({
         "ID": 3404,
-        "name": "回廊4层-经验Ⅱ",
+        "name": "回廊4层-历战Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5694,14 +5975,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-经验Ⅱ",
+        "fullName": "混沌回廊4层-历战Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3405: _tools.RODict({
         "ID": 3405,
-        "name": "回廊4层-经验Ⅲ",
+        "name": "回廊4层-历战Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5743,10 +6026,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-经验Ⅲ",
+        "fullName": "混沌回廊4层-历战Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3406: _tools.RODict({
         "ID": 3406,
@@ -5795,7 +6080,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-魔物",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3407: _tools.RODict({
         "ID": 3407,
@@ -5844,7 +6131,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3408: _tools.RODict({
         "ID": 3408,
@@ -5893,7 +6182,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3409: _tools.RODict({
         "ID": 3409,
@@ -5942,11 +6233,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3410: _tools.RODict({
         "ID": 3410,
-        "name": "回廊4层-白银Ⅰ",
+        "name": "回廊4层-俸禄Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -5988,14 +6281,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-白银Ⅰ",
+        "fullName": "混沌回廊4层-俸禄Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3411: _tools.RODict({
         "ID": 3411,
-        "name": "回廊4层-白银Ⅱ",
+        "name": "回廊4层-俸禄Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6037,14 +6332,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-白银Ⅱ",
+        "fullName": "混沌回廊4层-俸禄Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3412: _tools.RODict({
         "ID": 3412,
-        "name": "回廊4层-黄金Ⅰ",
+        "name": "回廊4层-赏金Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6086,14 +6383,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-黄金Ⅰ",
+        "fullName": "混沌回廊4层-赏金Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3413: _tools.RODict({
         "ID": 3413,
-        "name": "回廊4层-黄金Ⅱ",
+        "name": "回廊4层-赏金Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6135,14 +6434,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-黄金Ⅱ",
+        "fullName": "混沌回廊4层-赏金Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3414: _tools.RODict({
         "ID": 3414,
-        "name": "回廊4层-黄金Ⅲ",
+        "name": "回廊4层-赏金Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6184,10 +6485,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-黄金Ⅲ",
+        "fullName": "混沌回廊4层-赏金Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3415: _tools.RODict({
         "ID": 3415,
@@ -6236,7 +6539,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-守护",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3416: _tools.RODict({
         "ID": 3416,
@@ -6285,7 +6590,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-协助",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3417: _tools.RODict({
         "ID": 3417,
@@ -6334,11 +6641,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-封印",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3418: _tools.RODict({
         "ID": 3418,
-        "name": "回廊4层-黑铁",
+        "name": "回廊4层-锻体",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6380,10 +6689,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊4层-黑铁",
+        "fullName": "混沌回廊4层-锻体",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3419: _tools.RODict({
         "ID": 3419,
@@ -6432,7 +6743,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-真气",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3420: _tools.RODict({
         "ID": 3420,
@@ -6481,7 +6794,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊4层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3421: _tools.RODict({
         "ID": 3421,
@@ -6530,7 +6845,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3500: _tools.RODict({
         "ID": 3500,
@@ -6579,11 +6896,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-入口",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3501: _tools.RODict({
         "ID": 3501,
-        "name": "回廊5层-训练Ⅰ",
+        "name": "回廊5层-修行Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6625,14 +6944,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-训练Ⅰ",
+        "fullName": "混沌回廊5层-修行Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3502: _tools.RODict({
         "ID": 3502,
-        "name": "回廊5层-训练Ⅱ",
+        "name": "回廊5层-修行Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6674,14 +6995,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-训练Ⅱ",
+        "fullName": "混沌回廊5层-修行Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3503: _tools.RODict({
         "ID": 3503,
-        "name": "回廊5层-经验Ⅰ",
+        "name": "回廊5层-历战Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6723,14 +7046,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-经验Ⅰ",
+        "fullName": "混沌回廊5层-历战Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3504: _tools.RODict({
         "ID": 3504,
-        "name": "回廊5层-经验Ⅱ",
+        "name": "回廊5层-历战Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6772,14 +7097,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-经验Ⅱ",
+        "fullName": "混沌回廊5层-历战Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3505: _tools.RODict({
         "ID": 3505,
-        "name": "回廊5层-经验Ⅲ",
+        "name": "回廊5层-历战Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -6821,10 +7148,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-经验Ⅲ",
+        "fullName": "混沌回廊5层-历战Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3506: _tools.RODict({
         "ID": 3506,
@@ -6873,7 +7202,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-魔物",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3507: _tools.RODict({
         "ID": 3507,
@@ -6922,7 +7253,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-首领Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3508: _tools.RODict({
         "ID": 3508,
@@ -6971,7 +7304,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-首领Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3509: _tools.RODict({
         "ID": 3509,
@@ -7020,11 +7355,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-首领Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3510: _tools.RODict({
         "ID": 3510,
-        "name": "回廊5层-白银Ⅰ",
+        "name": "回廊5层-俸禄Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -7066,14 +7403,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-白银Ⅰ",
+        "fullName": "混沌回廊5层-俸禄Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3511: _tools.RODict({
         "ID": 3511,
-        "name": "回廊5层-白银Ⅱ",
+        "name": "回廊5层-俸禄Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -7115,14 +7454,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-白银Ⅱ",
+        "fullName": "混沌回廊5层-俸禄Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3512: _tools.RODict({
         "ID": 3512,
-        "name": "回廊5层-黄金Ⅰ",
+        "name": "回廊5层-赏金Ⅰ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -7164,14 +7505,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-黄金Ⅰ",
+        "fullName": "混沌回廊5层-赏金Ⅰ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3513: _tools.RODict({
         "ID": 3513,
-        "name": "回廊5层-黄金Ⅱ",
+        "name": "回廊5层-赏金Ⅱ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -7213,14 +7556,16 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-黄金Ⅱ",
+        "fullName": "混沌回廊5层-赏金Ⅱ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3514: _tools.RODict({
         "ID": 3514,
-        "name": "回廊5层-黄金Ⅲ",
+        "name": "回廊5层-赏金Ⅲ",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -7262,10 +7607,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-黄金Ⅲ",
+        "fullName": "混沌回廊5层-赏金Ⅲ",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3515: _tools.RODict({
         "ID": 3515,
@@ -7314,7 +7661,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-守护",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3516: _tools.RODict({
         "ID": 3516,
@@ -7363,7 +7712,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-协助",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3517: _tools.RODict({
         "ID": 3517,
@@ -7412,11 +7763,13 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-封印",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3518: _tools.RODict({
         "ID": 3518,
-        "name": "回廊5层-黑铁",
+        "name": "回廊5层-锻体",
         "sceneType": 3,
         "type": 3,
         "subType": 0,
@@ -7458,10 +7811,12 @@ datas = _tools.RODict({
         "weatherType": -1,
         "openGuildLevel": 0,
         "isDmgDataInvsbnew": 0,
-        "fullName": "混沌回廊5层-黑铁",
+        "fullName": "混沌回廊5层-锻体",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3519: _tools.RODict({
         "ID": 3519,
@@ -7510,7 +7865,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-真气",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3520: _tools.RODict({
         "ID": 3520,
@@ -7559,7 +7916,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊5层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     3521: _tools.RODict({
         "ID": 3521,
@@ -7608,7 +7967,9 @@ datas = _tools.RODict({
         "fullName": "混沌回廊1层-狂潮",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     4001: _tools.RODict({
         "ID": 4001,
@@ -7657,11 +8018,13 @@ datas = _tools.RODict({
         "fullName": "同心谷(副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     4002: _tools.RODict({
         "ID": 4002,
-        "name": "新手试炼（新手副本）",
+        "name": "新手试炼",
         "sceneType": 2,
         "type": 2,
         "subType": 0,
@@ -7706,7 +8069,9 @@ datas = _tools.RODict({
         "fullName": "山洞1（新手副本）",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 1
+        "regionalInspection": 1,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     4003: _tools.RODict({
         "ID": 4003,
@@ -7755,7 +8120,9 @@ datas = _tools.RODict({
         "fullName": "同心谷(任务副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     4004: _tools.RODict({
         "ID": 4004,
@@ -7804,7 +8171,9 @@ datas = _tools.RODict({
         "fullName": "月光海港(任务副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     4005: _tools.RODict({
         "ID": 4005,
@@ -7853,7 +8222,9 @@ datas = _tools.RODict({
         "fullName": "祖珂地堡（任务副本）",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     4006: _tools.RODict({
         "ID": 4006,
@@ -7902,7 +8273,9 @@ datas = _tools.RODict({
         "fullName": "山洞3（新手副本）",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     4007: _tools.RODict({
         "ID": 4007,
@@ -7951,7 +8324,9 @@ datas = _tools.RODict({
         "fullName": "新元城郊(任务副本)",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     5100: _tools.RODict({
         "ID": 5100,
@@ -7967,7 +8342,7 @@ datas = _tools.RODict({
         "breakAwayStuckPos": _tools.ROList([(102.166, 2.084, 55.69336)]),
         "ifSafeArea": 0,
         "ifEnemy": 1,
-        "deathPenaltyID": 4,
+        "deathPenaltyID": 5,
         "specialDeathPenaltyID": 7,
         "canResAtNearest": 1,
         "resSceneId": 0,
@@ -8000,7 +8375,9 @@ datas = _tools.RODict({
         "fullName": "试炼峰一层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     5101: _tools.RODict({
         "ID": 5101,
@@ -8016,7 +8393,7 @@ datas = _tools.RODict({
         "breakAwayStuckPos": _tools.ROList([(102.166, 2.084, 55.69336)]),
         "ifSafeArea": 0,
         "ifEnemy": 1,
-        "deathPenaltyID": 4,
+        "deathPenaltyID": 5,
         "specialDeathPenaltyID": 7,
         "canResAtNearest": 1,
         "resSceneId": 0,
@@ -8049,7 +8426,9 @@ datas = _tools.RODict({
         "fullName": "试炼峰二层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     5102: _tools.RODict({
         "ID": 5102,
@@ -8098,7 +8477,9 @@ datas = _tools.RODict({
         "fullName": "试炼峰三层",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     6000: _tools.RODict({
         "ID": 6000,
@@ -8147,7 +8528,9 @@ datas = _tools.RODict({
         "fullName": "新元城战",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     }),
     7000: _tools.RODict({
         "ID": 7000,
@@ -8196,7 +8579,9 @@ datas = _tools.RODict({
         "fullName": "演武场",
         "addbufflist": _tools.ROList([]),
         "specialAreaType": 0,
-        "regionalInspection": 0
+        "regionalInspection": 0,
+        "fatalFallMinimumHeight": -100,
+        "openTask": ""
     })
 })
 minKey = 1001

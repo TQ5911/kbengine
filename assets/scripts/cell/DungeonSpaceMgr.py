@@ -29,7 +29,6 @@ import dungeonPlayMode
 import gamePlay_gamePlay as DDI
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import activityControl_config as ACCD
-import iMapMonsterRefresh
 
 class DungeonPlayerReliveRecordMixin(object):
     def __init__(self):
@@ -50,13 +49,12 @@ class DungeonPlayerReliveRecordMixin(object):
         self.dungeonPlayerReliveRecordDic.clear()
 
 
-class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPlayerReliveRecordMixin, iMapMonsterRefresh.IMapMonsterRefresh):
+class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPlayerReliveRecordMixin):
     def __init__(self):
         INFO_MSG("DungeonSpaceMgr#__init__", self.spaceNo, self.spaceID)
 
         iCell.ICell.__init__(self)
         iSpaceMgr.ISpaceMgr.__init__(self)
-        iMapMonsterRefresh.IMapMonsterRefresh.__init__(self)
 
         if not self.dungeonPlayMode:
             self.dungeonPlayMode = dungeonPlayMode.UnknownDungeonPlayMode()

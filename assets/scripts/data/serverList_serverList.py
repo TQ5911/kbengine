@@ -306,8 +306,8 @@ datas = _tools.RODict({
     20233: _tools.RODict({
         "ID": 20233,
         "serverName": "zww",
-        "groupID": 2,
-        "zoneID": 2002,
+        "groupID": 12,
+        "zoneID": 2003,
         "startTime": "1744009200",
         "serverState": 2,
         "serverFlagState": None
@@ -387,7 +387,7 @@ datas = _tools.RODict({
     20242: _tools.RODict({
         "ID": 20242,
         "serverName": "WY",
-        "groupID": 2,
+        "groupID": 12,
         "zoneID": 2002,
         "startTime": "1743494400",
         "serverState": 2,
@@ -464,19 +464,29 @@ datas = _tools.RODict({
         "startTime": "1742160600",
         "serverState": 2,
         "serverFlagState": None
+    }),
+    20807: _tools.RODict({
+        "ID": 20807,
+        "serverName": "zww跨服",
+        "groupID": 12,
+        "zoneID": 2003,
+        "startTime": "1744009200",
+        "serverState": 2,
+        "serverFlagState": None
     })
 })
 minKey = 10001
-maxKey = 20806
+maxKey = 20807
 
 group2ServerIds = _tools.RODict({
     1: _tools.ROList(['10001', '20002', '20003', '20004', '20005', '20224']),
     9: _tools.ROList(['10002', '10003']),
     3: _tools.ROList(['20088', '20212', '20227', '20231', '20232', '20234', '20236', '20256', '20257', '20258']),
-    2: _tools.ROList(['20101', '20102', '20103', '20104', '20107', '20109', '20110', '20216', '20222', '20223', '20225', '20226', '20230', '20233', '20235', '20237', '20239', '20240', '20242', '20250', '20259', '20298']),
+    2: _tools.ROList(['20101', '20102', '20103', '20104', '20107', '20109', '20110', '20216', '20222', '20223', '20225', '20226', '20230', '20235', '20237', '20239', '20240', '20250', '20259', '20298']),
     8: _tools.ROList(['20105', '20108', '20806']),
     30: _tools.ROList(['20201', '20202']),
     4: _tools.ROList(['20228', '20238']),
     5: _tools.ROList(['20229']),
+    12: _tools.ROList(['20233', '20242', '20807']),
     6: _tools.ROList(['20241', '20251']),
 })

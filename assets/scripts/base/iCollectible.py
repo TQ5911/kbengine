@@ -5,6 +5,7 @@ import gameconst
 import gameclass
 import dropAward
 import gameengine
+import gamedecorator
 import collect_details as  PDETAIL
 from avatarCollectInfo import collectItem
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
@@ -43,6 +44,7 @@ class ICollectible(object):
         self.client.onGetCollectInfo(clientData)
         DEBUG_MSG('call sendCollectInfo done', self.collectibleData.collectibleDict.items())
 
+    @gamedecorator.checkGameconfigEnable('collection')
     def reqMark(self, exposed, collectID, isMark):
         # 标记收集项高亮显示
         DEBUG_MSG('begin reqMark collectID', collectID, ' isMark', isMark)
@@ -58,6 +60,7 @@ class ICollectible(object):
         self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
         DEBUG_MSG('call reqMark done', self.collectibleData.collectibleDict[collectID].toSavedDict())
 
+    @gamedecorator.checkGameconfigEnable('collection')
     def reqCollect(self, exposed, bagType, bagGridID, itemUniqueID, useBind, collectID, collectGridID):
         # 获取收集项的要求
         DEBUG_MSG('begin reqCollect bagType', bagType, ' bagGridID', bagGridID, ' itemUniqueID', itemUniqueID, ' collectID', collectID, ' collectGridID', collectGridID)
@@ -184,6 +187,8 @@ class ICollectible(object):
 
     def _checkInUnavailableClass(self, info, collectID):
         unavailableClass = info.get('unavailableClass', [])
+        if not unavailableClass:
+            return False
         school = self.getAvatarSchool()
         if school in unavailableClass:
             WARNING_MSG('in _checkInUnavailableClass, school in unavailableClass:', collectID, school, unavailableClass)

@@ -1,23 +1,15 @@
 # coding: utf-8
 from KBEDebug import *
-import KBEngine
 
-import functools
-import json
 import math
 
 import gameconst
 import dataUtils
 
 import AvatarScores
-
-import const_const as CONST
-import formula_generalFormula as FML_G
-import experience_exp as EED
-import fightProp_define as FPD
 import gameengine
 
-
+import fightProp_define as FPD
 
 class IScore(object):
     """ score AIO """
@@ -89,14 +81,13 @@ class IScore(object):
         for propName in changeAffactProp.split(';'):
             propValue = getattr(self, propName)
             if propValue > 0:
-                score += int(propValue * dataUtils.getPropBaseScore(propName))
+                score += int(propValue * dataUtils.filterFightPropScore(self.school, propName))
         return score
 
     def getTotalEquipmentsScore(self):
         totalScore = 0
         for equipObj in self.bodyEquipData.equips_map.values():
-            totalScore += equipObj.getValidEquipScore()
-        # totalScore += self.bodyEquipData.getSetEffectScore()
+            totalScore += equipObj.getEquipScore()
         return totalScore
 
     # --------------------------------------------------------------

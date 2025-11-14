@@ -23,10 +23,6 @@ datas = _tools.RODict({
         "ID": "defaultLevel_PC",
         "value": 103,
     }),
-    "defaultLevel_login": _tools.RODict({
-        "ID": "defaultLevel_login",
-        "value": 150,
-    }),
     "adjustLevelLimit": _tools.RODict({
         "ID": "adjustLevelLimit",
         "value": 1,
@@ -110,9 +106,5 @@ datas = _tools.RODict({
     "savePowerModeScreenBrightness": _tools.RODict({
         "ID": "savePowerModeScreenBrightness",
         "value": 0.2,
-    }),
-    "NewBeeLevel": _tools.RODict({
-        "ID": "NewBeeLevel",
-        "value": "NewBeePerformance",
     })
 })

@@ -147,6 +147,14 @@
             <Arg>           UINT32      </Arg>
         </sendTeamMatchMessage>
 
+        <sendRaidMatchMessage> <Exposed/>
+            <Arg>           TEAMID      </Arg>
+            <Arg>           UNICODE     </Arg>
+            <Arg>           UINT32      </Arg>
+            <Arg>           UINT32      </Arg>
+            <Arg>           UINT32      </Arg>
+        </sendRaidMatchMessage>
+
         <registerItemLink> <Exposed/>
             <Arg>           ARRAY <of>  ITEM_ID </of>          </Arg>
             <Arg>           ARRAY <of>  UINT64 </of>           </Arg>

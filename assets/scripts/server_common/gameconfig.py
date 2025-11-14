@@ -426,7 +426,7 @@ def entityLoadSpeed():
         if _entityLoadSpeed <= 0:
             _entityLoadSpeed = 5
     except:
-        _entityLoadSpeed = 5
+        _entityLoadSpeed = 20
     return _entityLoadSpeed
 
 
@@ -574,6 +574,7 @@ def combatMsgFlag():
 @cache
 def centralServersInfo():
     try:
+        
         centralServers = ResMgr.getStringContentListForPath(ResMgr.kbengineConfig(), 'game/centralServersInfo')
         centralServersInfo = []
         for centralServer in centralServers:
@@ -581,6 +582,9 @@ def centralServersInfo():
             address = res[0][4][0]
             csInfo = {'centralServerId': centralServer['centralServerId'], 'ip': address, 'port': centralServer['port']}
             centralServersInfo.append(csInfo)
+        '''
+        centralServersInfo = [{'centralServerId': '1', 'ip': '192.168.10.127', 'port': '2030'}]
+        '''
     except:
         centralServersInfo = [{'centralServerId': '1', 'ip': '10.219.68.119', 'port': '2030'}]
     return centralServersInfo

@@ -121,7 +121,7 @@ class IWarehouse(object):
             return
         
         if self.checkBagItemLimit(itemObj.itemId, itemObj.itemNum):
-            self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(IDSD.datas['potionBagStorageLimit']['value'])])
+            self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(self.drugsQuantityBase)])
             return
 
         opUUID = KBEngine.genUUID64()

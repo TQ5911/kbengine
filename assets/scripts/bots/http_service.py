@@ -83,6 +83,27 @@ def route_clients_noclient(handler: BaseHTTPRequestHandler, parsed):
     _send_json(handler, {'count': len(result), 'clients': result}, 200)
 
 
+def route_clients_accounts(handler: BaseHTTPRequestHandler, parsed):
+    """获取所有客户端的账号列表
+    
+    返回格式:
+        {'count': int, 'accounts': [str, ...]}
+    
+    示例:
+        /clients/accounts
+        => {"count": 10, "accounts": ["bot1", "bot2", ...]}
+    """
+    if not hasattr(global_data, 'client_dic'):
+        _send_json(handler, {'count': 0, 'accounts': []}, 200)
+        return
+    
+    # 获取所有账号名
+    accounts = [str(acc) for acc in global_data.client_dic.keys()]
+    accounts.sort()  # 排序方便查看
+    
+    _send_json(handler, {'count': len(accounts), 'accounts': accounts}, 200)
+
+
 # ----------------------- Remote Call routes -----------------------
 def route_execute(handler: BaseHTTPRequestHandler, parsed):
     """统一的远程执行接口
@@ -340,6 +361,7 @@ ROUTES = [
     (lambda p: p.startswith('/rpc/stats') or p.startswith('/rpc_call_statistics'), route_rpc_stats),
     (lambda p: p.startswith('/clients/slow'), route_clients_slow),
     (lambda p: p.startswith('/clients/noclient'), route_clients_noclient),
+    (lambda p: p.startswith('/clients/accounts'), route_clients_accounts),
     # remote execution
     (lambda p: p.startswith('/execute'), route_execute),
     # switches

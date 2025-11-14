@@ -1,10 +1,13 @@
 Account delAccount BASE 30261
 Account destroyAccountReason BASE 30258
 Account getAvatarDetailForAccount BASE 748
+Account getAvatarOfflineTime BASE 1070
 Account kickAccount BASE 30259
 Account kickAnotherAvatar BASE 6
 Account logBeforeLogin BASE 3
 Account onAvatarDetailInAccount CLIENT 750
+Account onAvatarOfflineTime CLIENT 1071
+Account onCharInfoChange CLIENT 1072
 Account onCheckCrossServerTokenRet BASE 31784
 Account onCreateAvatarFailed CLIENT 12
 Account onCreateAvatarResult CLIENT 11
@@ -13,10 +16,12 @@ Account onGetAvatarPorpertiesResp BASE 31811
 Account onGetGuildsCacheDataAccount BASE 31590
 Account onKickAnotherAccount CLIENT 17
 Account onKickAnotherAvatar CLIENT 16
+Account onLoginNeedReconnect CLIENT 1067
 Account onMessage CLIENT 13
 Account onRemoveAvatar CLIENT 10
 Account onReqAvatarGBID CLIENT 9
 Account onReqAvatarList CLIENT 8
+Account onSelectGameFailed CLIENT 1074
 Account reqCreateAvatar BASE 2
 Account reqCreateBot BASE 4
 Account reqRemoveAvatar BASE 5
@@ -123,10 +128,12 @@ Avatar backSelectCharacterFromCrossServer CELL 31786
 Avatar bagEquipBackBless BASE 31248
 Avatar bagEquipBindWashing BASE 32004
 Avatar bagEquipBless BASE 31151
+Avatar bagEquipBlessDeductItemsCB BASE 32013
 Avatar bagEquipEnhance BASE 31139
 Avatar bagEquipEnhanceDeductItemsCB BASE 31140
 Avatar bagEquipGlyphApply BASE 31993
 Avatar bagEquipGlyphWashing BASE 31149
+Avatar bagEquipGlyphWashingDeductItemsCB BASE 32012
 Avatar bagEquipSell BASE 31153
 Avatar bagEquipSpiritApply BASE 31147
 Avatar bagEquipSpiritWashing BASE 31146
@@ -175,6 +182,7 @@ Avatar callMethod BASE 30284
 Avatar callMethod CELL 30309
 Avatar cancelAllMemberFollow CELL 322
 Avatar cancelApplyGuildUnion BASE 952
+Avatar cancelAuthRole BASE 1060
 Avatar cancelCastingSkill CELL 21
 Avatar cancelChannelingSkill CELL 22
 Avatar cancelChargeSkill CELL 202
@@ -200,6 +208,7 @@ Avatar cellUndressEquipmentFail BASE 31141
 Avatar cellUndressEquipmentSucc BASE 31142
 Avatar changeCityMoneyToGuildMoney BASE 968
 Avatar changeDungeonRemainTime CLIENT 516
+Avatar changeMorphPreAddSkill CELL 32028
 Avatar changeMorphStateBase BASE 31497
 Avatar changeSelfCameraLookPos CLIENT 514
 Avatar changeSelfCameraStatus CLIENT 513
@@ -351,6 +360,7 @@ Avatar flowCtrlOnTaskInProgress CELL 30880
 Avatar flowCtrrlDungeonEntityReleaseCompleteByEventId CELL 30895
 Avatar followCaptainInCube CELL 1015
 Avatar followCaptainToGuildSpaceFailed CELL 30423
+Avatar forceAuthOffline BASE 32017
 Avatar forceCompleteTaskNoCond BASE 30219
 Avatar getAuctionItemNumByCategoryId BASE 816
 Avatar getAuctionItemNumByItemIdList BASE 828
@@ -442,6 +452,7 @@ Avatar makeEquipmentLostLog BASE 31158
 Avatar makeItemFlowLog BASE 30343
 Avatar makeMallFlowLog BASE 31247
 Avatar markFetchRedBag BASE 31969
+Avatar modifyAuthPermission BASE 1069
 Avatar modifyGuildDesc BASE 755
 Avatar modifyGuildDisp BASE 799
 Avatar modifyGuildIcon BASE 794
@@ -505,6 +516,8 @@ Avatar onApplyJoinTeamMsg CLIENT 348
 Avatar onAreaTargetTaskAdd CELL 30201
 Avatar onAskConfirmFollowCaptain CLIENT 376
 Avatar onAskedFollowCaptain CELL 30453
+Avatar onAuthExpire BASE 32016
+Avatar onAuthExpireChanged BASE 32018
 Avatar onAvatarEquipSetChanged CLIENT 643
 Avatar onAvatarLevelUp CLIENT 143
 Avatar onAvatarLevelUpBase BASE 30207
@@ -571,6 +584,7 @@ Avatar onCheckCaptainTeamDungeonConditionsFailed CELL 30842
 Avatar onCheckCaptainTeamDungeonConditionsSucceed CELL 30841
 Avatar onCheckCellSubmitCondSucc BASE 30211
 Avatar onCheckCrossServerTokenResp BASE 31806
+Avatar onCheckMapUnlocked BASE 32019
 Avatar onCheckMemberTeamDungeonConditionsFailed CELL 30844
 Avatar onCheckMemberTeamDungeonConditionsSucceed CELL 30843
 Avatar onCheckResultFromMember CELL 30439
@@ -595,6 +609,7 @@ Avatar onClearRaidDungeonInfo CELL 30870
 Avatar onClearRaidDungeonInfo CLIENT 509
 Avatar onClearRaidJoinRecords CELL 30472
 Avatar onClearSpeak CLIENT 497
+Avatar onClientAuthState CLIENT 1068
 Avatar onClientDataSyncFinished CLIENT 56
 Avatar onClientLaunchReward CLIENT 448
 Avatar onCloneDestroy CELL 30256
@@ -624,6 +639,7 @@ Avatar onCubeRoomEndTime CLIENT 688
 Avatar onDailyHealWoundsTimesRefresh CELL 31933
 Avatar onDead CLIENT 73
 Avatar onDeadAddEnemy BASE 31393
+Avatar onDealAuthResult CLIENT 1058
 Avatar onDealGuildInviteGetBox BASE 31323
 Avatar onDeathPenaltyExpChange CLIENT 672
 Avatar onDeathPenaltyReward CLIENT 673
@@ -644,11 +660,13 @@ Avatar onDropEquipBase BASE 31383
 Avatar onDropEquipExpire BASE 31407
 Avatar onDropRuneIds CLIENT 219
 Avatar onDropTypeChangeToAvatar BASE 31390
+Avatar onDrugsQuantitySync BASE 32011
 Avatar onDuelFinished CELL 31538
 Avatar onDuelFlagsChanged CLIENT 896
 Avatar onDuelResult CLIENT 897
 Avatar onDungeonCompleted CLIENT 102
 Avatar onEnemyDatas CLIENT 859
+Avatar onEnhanceMeridian CLIENT 1065
 Avatar onEnterChiefDungeon BASE 31642
 Avatar onEnterCrossSiegeWarSpaceRemotely BASE 31810
 Avatar onEnterCrusadeDungeon BASE 31143
@@ -659,6 +677,7 @@ Avatar onEquipBaseAttrWashingSucc CLIENT 638
 Avatar onEquipBindValueWashingFailed CLIENT 1052
 Avatar onEquipBindValueWashingSucc CLIENT 1051
 Avatar onEquipBlessSucc CLIENT 666
+Avatar onEquipBroken CLIENT 1057
 Avatar onEquipDisassemble CLIENT 641
 Avatar onEquipDropStateChange CLIENT 862
 Avatar onEquipEnhanceFailed CLIENT 637
@@ -667,9 +686,6 @@ Avatar onEquipGlyphApplySucc CLIENT 1043
 Avatar onEquipGlyphWashingSucc CLIENT 665
 Avatar onEquipMakeFailed CLIENT 647
 Avatar onEquipMakeSucc CLIENT 646
-Avatar onEquipReplaceFailed CLIENT 983
-Avatar onEquipReplaceSucc CLIENT 982
-Avatar onEquipSell CLIENT 642
 Avatar onEquipSpiritApplySucc CLIENT 1049
 Avatar onEquipSpiritWashingSucc CLIENT 1048
 Avatar onEquipUpgradeFailed CLIENT 1055
@@ -741,6 +757,7 @@ Avatar onGetLingShouBattleList CLIENT 583
 Avatar onGetMailAttach CLIENT 681
 Avatar onGetMailList CLIENT 678
 Avatar onGetMemberJob CELL 31967
+Avatar onGetMeridianData CLIENT 1066
 Avatar onGetNewMail CLIENT 679
 Avatar onGetOnlineRewardData CLIENT 132
 Avatar onGetOnlineTimeReward CLIENT 131
@@ -832,6 +849,7 @@ Avatar onLeaveTeam CELL 30415
 Avatar onLeaveTeam CLIENT 353
 Avatar onLeaveTeamBase BASE 30025
 Avatar onLeftFreeReliveTimesChanged CLIENT 196
+Avatar onLeveUpMeridianPointTo CLIENT 1064
 Avatar onLoadGuildGetBox BASE 30967
 Avatar onLoadPlayerCoinAuctionData BASE 31325
 Avatar onLockItemSucc CLIENT 1005
@@ -839,6 +857,7 @@ Avatar onLogonEnterCubeGetSpaceBox BASE 31499
 Avatar onLogonEnterWonderLandGetSpaceBox BASE 31502
 Avatar onMemJoinRaidByAutoMatch CELL 31578
 Avatar onMemJoinTeamByAutoMatch CELL 30454
+Avatar onMeridianAward CELL 32015
 Avatar onMessage CLIENT 79
 Avatar onMessagePre BASE 30292
 Avatar onMessagePre_localCross BASE 31807
@@ -1088,6 +1107,7 @@ Avatar onUpdateCollectionGatherPickTimes CLIENT 944
 Avatar onUpdateCreditNum CLIENT 733
 Avatar onUpdateDailyUseLimit CLIENT 129
 Avatar onUpdateDrawCardInfo CLIENT 988
+Avatar onUpdateExpRate BASE 32014
 Avatar onUpdateFriendsDiff CLIENT 702
 Avatar onUpdateFriendsFull CLIENT 689
 Avatar onUpdateGridItemsExpireTime CLIENT 113
@@ -1243,6 +1263,7 @@ Avatar reqDisableOutfit CELL 570
 Avatar reqDropTaskItem BASE 184
 Avatar reqDuel CELL 894
 Avatar reqEnableOutfit BASE 571
+Avatar reqEnhanceMeridianSlot BASE 1063
 Avatar reqEnterTaskTargetDungeon BASE 623
 Avatar reqEquipBackBless CELL 698
 Avatar reqEquipBindValueWashing CELL 1050
@@ -1250,8 +1271,6 @@ Avatar reqEquipBless CELL 640
 Avatar reqEquipEnhance CELL 624
 Avatar reqEquipGlyphApply CELL 1042
 Avatar reqEquipGlyphWashing CELL 664
-Avatar reqEquipReplace BASE 967
-Avatar reqEquipSell CELL 629
 Avatar reqEquipSpiritApply CELL 639
 Avatar reqEquipSpiritWashing CELL 625
 Avatar reqEquipUpgrade CELL 1053
@@ -1259,6 +1278,7 @@ Avatar reqExpOutfit BASE 572
 Avatar reqFetchRedBag BASE 923
 Avatar reqGetAllMailsAttach BASE 675
 Avatar reqGetGuaranteedPetEgg BASE 987
+Avatar reqGetMeridianData BASE 1061
 Avatar reqGetOneMailAttach BASE 674
 Avatar reqGetOnlineTimeReward BASE 100
 Avatar reqGetRaidList CELL 924
@@ -1271,6 +1291,7 @@ Avatar reqGetWarehouse BASE 763
 Avatar reqItemDisassemble BASE 1008
 Avatar reqJoinRaid CELL 1028
 Avatar reqJoinTeam CELL 1026
+Avatar reqLevelUpMeridianPoint BASE 1062
 Avatar reqLockItem BASE 1003
 Avatar reqMakeEquipment BASE 650
 Avatar reqMark BASE 878
@@ -1358,6 +1379,7 @@ Avatar sendOneGlobalMail BASE 31162
 Avatar sendOneMemberFollowAsk CELL 321
 Avatar sendPickedCollectoins CLIENT 138
 Avatar sendRaidChatMsg BASE 484
+Avatar sendRaidMatchMessage BASE 629
 Avatar sendSiegeWarChatMsg BASE 998
 Avatar sendSkillBuilds CLIENT 104
 Avatar sendTeamChatMsg BASE 482
@@ -1415,6 +1437,7 @@ Avatar startOffline BASE 30285
 Avatar startRaidStandbyChecker CELL 420
 Avatar startTaskFailed BASE 30214
 Avatar startTeleport CLIENT 64
+Avatar stopAuthInAvatar BASE 1059
 Avatar stopAutoCombat CELL 466
 Avatar stopOfficialMessage CLIENT 66
 Avatar streamStringProxy BASE 30296
@@ -1448,6 +1471,7 @@ Avatar taskPreEnterSpace CELL 30971
 Avatar taskReachArea CELL 172
 Avatar telToTeleporter CELL 30
 Avatar teleportCastingPreNotify CLIENT 728
+Avatar teleportEnterLineMapUnlockedCallback CELL 32024
 Avatar teleportFromSpaceToSpaceRpc CELL 30404
 Avatar tipPlayerAuctionCollection BASE 31849
 Avatar toClientCubeLoginData CELL 31241
@@ -1785,6 +1809,7 @@ CubeSpaceMgr flowCtrlOnTaskInProgress CELL 31207
 CubeSpaceMgr flowCtrrlDungeonEntityReleaseCompleteByEventId CELL 31222
 CubeSpaceMgr initStaticSpace CELL 31230
 CubeSpaceMgr innerSetSpaceVar CELL 31202
+CubeSpaceMgr onMonsterDestroy CELL 32025
 CubeSpaceMgr onPlayerDead CELL 31199
 CubeSpaceMgr onPlayerEnter CELL 31193
 CubeSpaceMgr onPlayerLeave CELL 31195
@@ -2075,6 +2100,7 @@ Monster callMethod CELL 30380
 Monster cancelChargeSkill CELL 268
 Monster createCellNearHere BASE 30357
 Monster createCellNearSelf BASE 30356
+Monster delBeMarkedAsEnemy CELL 32023
 Monster delayDestroy BASE 30305
 Monster delaySafeDestroy CELL 30378
 Monster displacedBySkill CELL 30369
@@ -2111,6 +2137,7 @@ Monster onAddBuff CLIENT 292
 Monster onAddPassiveSkill CLIENT 272
 Monster onAddSkill CLIENT 271
 Monster onAddStateRet CLIENT 287
+Monster onBeMarkedAsEnemy CELL 32022
 Monster onBornAction CLIENT 266
 Monster onBreakCastingSkill CLIENT 289
 Monster onBreakChannelingSkill CLIENT 290
@@ -2400,6 +2427,7 @@ RaidStub onAvatarClientDeath BASE 31564
 RaidStub onAvatarLogin BASE 30646
 RaidStub onAvatarOffline BASE 30645
 RaidStub onLoadRaidDungeonSpaceReady BASE 30660
+RaidStub onMarkMonsterDead BASE 32021
 RaidStub onPlayerIsOffline BASE 30647
 RaidStub onRaidAutoMatchTimeout BASE 31576
 RaidStub onRaidDungeonCompletedCallback BASE 30657
@@ -2504,6 +2532,7 @@ SiegeWarSpaceMgr innerSetSpaceVar CELL 31611
 SiegeWarSpaceMgr onGetWinnerDataFromCityOwnerMgr CELL 31776
 SiegeWarSpaceMgr onGmAddTime CELL 31824
 SiegeWarSpaceMgr onGmTestScores CELL 31860
+SiegeWarSpaceMgr onMonsterDestroy CELL 32027
 SiegeWarSpaceMgr onPlayerDead CELL 31608
 SiegeWarSpaceMgr onPlayerEnter CELL 31602
 SiegeWarSpaceMgr onPlayerLeave CELL 31604
@@ -2842,6 +2871,7 @@ TeamStub onCreateTeamDungeon BASE 30526
 TeamStub onDestroyTeamDungeon BASE 30537
 TeamStub onEnterDungeonFailedSpaceNotFound BASE 30533
 TeamStub onEnterTeamDungeon BASE 30534
+TeamStub onMarkMonsterDead BASE 32020
 TeamStub onPlayerIsOffline BASE 30513
 TeamStub onReplyInviteRaidWithTeamFail BASE 30568
 TeamStub onTeamAutoMatchTimeout BASE 30557
@@ -2930,6 +2960,7 @@ WonderLandSpaceMgr flowCtrlOnTaskInProgress CELL 31437
 WonderLandSpaceMgr flowCtrrlDungeonEntityReleaseCompleteByEventId CELL 31459
 WonderLandSpaceMgr initStaticSpace CELL 31413
 WonderLandSpaceMgr innerSetSpaceVar CELL 31432
+WonderLandSpaceMgr onMonsterDestroy CELL 32026
 WonderLandSpaceMgr onPlayerDead CELL 31429
 WonderLandSpaceMgr onPlayerEnter CELL 31423
 WonderLandSpaceMgr onPlayerLeave CELL 31425

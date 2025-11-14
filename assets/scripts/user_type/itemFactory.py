@@ -55,8 +55,7 @@ class ItemFactory(object):
         if itemNum > maxStackSize:
             raise Exception('createItem itemNum error!! itemNum:%s maxStackSize:%s please use createItemList' %
                             (itemNum, maxStackSize))
-            return
-
+        
         it = cls._createItem(itemId, itemNum, bindType, **kwargs)
         if not it:
             return

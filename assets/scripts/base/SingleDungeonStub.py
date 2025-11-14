@@ -167,7 +167,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             dunSData = utils.getDunStructureModuleData(self.dungeonNo)
             if 'BornPos' in dunSData:
                 d, *_ = dunSData['BornPos'].values()
-                return d['PosX'], d['PosY'], d['PosZ']
+                return formula.bornPosFromData(d)
 
         if not extra.get('position'):
             extra['position'] = _getEntranceByDungeonNo() or ()

@@ -217,18 +217,18 @@ namespace KBEngine
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SKILL_TELEPORT, id, skillid, pos);
         }
 
-        /// <summary>
-        /// 对抗状态（用于飄字）
-        /// </summary>
-        /// <param name="casterId"></param>
-        /// <param name="targetId"></param>
-        /// <param name="state"></param>
-        /// <param name="value"></param>
-        public override void onAddStateRet(Int32 casterId, Int32 targetId, Int32 state, Int32 damageType)
-        {
-            BattleManager.Instance.OnHandleSkillAddState(casterId, targetId, state, damageType);
-            //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SKILL_ADD_STATE, casterId, targetId, state, damageType);
-        }
+        ///// <summary>
+        ///// 对抗状态（用于飄字）
+        ///// </summary>
+        ///// <param name="casterId"></param>
+        ///// <param name="targetId"></param>
+        ///// <param name="state"></param>
+        ///// <param name="value"></param>
+        //public override void onAddStateRet(Int32 casterId, Int32 targetId, Int32 state, Int32 damageType)
+        //{
+        //    BattleManager.Instance.OnHandleSkillAddState(casterId, targetId, state, damageType);
+        //    //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SKILL_ADD_STATE, casterId, targetId, state, damageType);
+        //}
 
         //public override void onSetAddSkillCd(uint skillID, float cd, double nextCastTime, Byte isReset)
         //{
@@ -1317,6 +1317,15 @@ namespace KBEngine
         {
             isControlled = _isControlled;
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONTROLLED, id, isControlled);
+        }
+
+
+        public override void onMulSpeedChanged(float oldValue)
+        {
+            if (isPlayer())
+            {
+                PropCalculator.Instance.SetServerValue(PropDataConsant.MulSpeed, oldValue);
+            }
         }
     }
 }

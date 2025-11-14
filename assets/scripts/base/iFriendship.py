@@ -11,8 +11,10 @@ import redisUtils
 import elasticUtils
 import actionContext
 import Friendship
-import relationConfig_relationConfig as RC_RCD
 import AuthClsWraper
+
+import relationConfig_relationConfig as RC_RCD
+import agent_agentFunction as A_AFD
 
 
 class IFriendship(object):
@@ -196,7 +198,7 @@ class IFriendship(object):
         else:
             self.setTempMiscProp(gameconst.AvatarProps.friendInitStatus, 0)
 
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def sendFriendRequest(self, exposed, gbId):
         INFO_MSG("IFriends::sendFriendRequest gbId={}".format(gbId))
         if self.friendship.isRecvReq(gbId):
@@ -296,7 +298,7 @@ class IFriendship(object):
         _clientData = self.friendship.addReceiveReq(senderData, timestamp)
         self.client.onFriendRequests([_clientData])
 
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def rejectRequest(self, exposed, gbId):
         INFO_MSG("IFriends::rejectRequest gbId={}".format(gbId))
         if not self.friendship.isRecvReq(gbId):
@@ -305,7 +307,7 @@ class IFriendship(object):
 
         self._removeRecvRequest(gbId)
 
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def acceptAllRequest(self, exposed):
         INFO_MSG("IFriends::acceptAllRequest")
         _gbIds = self.friendship.getRecvReqGbIds()
@@ -315,7 +317,7 @@ class IFriendship(object):
 
         self.batchlyCall(_iter(), 1, 0.1)
 
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def rejectAllRequest(self, exposed):
         INFO_MSG("IFriends::rejectAllRequest")
         redisUtils.FriendUtils.rejectAllRequest(self.gbID, self._rejectAllRequestAfterDelRedis)
@@ -329,7 +331,7 @@ class IFriendship(object):
         self.friendship.clearReceiveReq()
         self.client.onRemoveFriendRequests(_gbIds)
 
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def acceptRequest(self, exposed, gbId):
         INFO_MSG("IFriends::acceptRequest gbId={}".format(gbId))
         self._acceptRequest(gbId)
@@ -535,6 +537,7 @@ class IFriendship(object):
         INFO_MSG("IFriends::searchFriend name={}".format(name))
         gamesql.searchFriendTemp(self._searchFriendTemp)
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def searchFriend(self, exposed, name):
         INFO_MSG("IFriends::searchElastic name={}".format(name))
         elasticUtils.ElasticUtils.searchAvatarByName(
@@ -604,7 +607,7 @@ class IFriendship(object):
         self._addPacketSendTask(_iter(_sendList))
         # self.client.onSearchFriends(_sendList)
 
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def removeFriend(self, exposed, gbId):
         INFO_MSG("IFriends::removeFriend gbId={}".format(gbId))
         self._removeFriend(gbId, gameconst.FriendRemoveReason.CLIENT_REMOVE)
@@ -664,7 +667,7 @@ class IFriendship(object):
         self.client.onUpdateStrangerData([_data])
 
     # -------------------------------- block list start ------------------------
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def blockPlayer(self, exposed, gbId):
         INFO_MSG("IFriends::blockPlayer gbId={}".format(gbId))
         if self.friendship.isBlock(gbId):
@@ -701,7 +704,7 @@ class IFriendship(object):
         _clientData = self.friendship.updateBlock(fcVal)
         self.client.onUpdateBlocks([_clientData])
 
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def removeFromBlock(self, exposed, gbId):
         INFO_MSG("IFriends::removeFromBlock gbId={}".format(gbId))
         if not self.friendship.isBlock(gbId):
@@ -725,6 +728,7 @@ class IFriendship(object):
 
     # ------------------------------- msg start -------------------------------
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def sendFriendMsg(self, exposed, gbId, msg):
         INFO_MSG("IFriends::sendFriendMsg gbId={} msg={}".format(gbId, msg))
         self._sendFriendMsg(gbId, msg)
@@ -831,7 +835,6 @@ class IFriendship(object):
     def _onRemoveFriendMsgs(self, *args):
         INFO_MSG("IFriends::_onRemoveFriendMsgs", args)
 
-    @AuthClsWraper.onlyHost
     def removeRecent(self, exposed, gbId):
         INFO_MSG("IFriends::removeRecent gbId={}".format(gbId))
         self._removeRecent(gbId)
@@ -926,11 +929,13 @@ class IFriendship(object):
                 'id': 0,
                 'openId': fcVal.accountName,
                 'raidAmount': 0,
+                'offlineTime': fcVal.offlineTime,
             })
         redisUtils.RedisUtils.getSingleUserInfo(gbId, __tmp)
 
     # ------------------------ 角色授权开始 ---------------------------------------
-    def authorizeRole(self, exposed, gbId, days):
+    @AuthClsWraper.onlyHost
+    def authorizeRole(self, exposed, gbId, days, authPermission):
         INFO_MSG('authorizeRole', gbId)
         if self.accountEntity.checkHasAuth(self.gbID):
             ERROR_MSG('IFriends::authorizeRole already authorized')
@@ -949,10 +954,37 @@ class IFriendship(object):
             ERROR_MSG("IFriends::authorizeRole gbId={} is offline".format(gbId))
             return
 
-        self.setTempMiscProp(gameconst.AvatarProps.authRoleInfo, (gbId, utils.getNow(), days))
-        _fVal.box.onRecvAuthRole(self.gbID)
+        if authPermission is not None:
+            self.authPermission = authPermission
 
-    def onRecvAuthRole(self, gbId):
+        self.setTempMiscProp(
+            gameconst.AvatarProps.authRoleInfo,
+            {
+                'gbId': gbId,
+                'ts': utils.getNow(),
+                'days': days,
+                'st': gameconst.AuthState.NORMAL
+            })
+        _fVal.box.onRecvAuthRole(self.gbID, self.getRoleCacheAttr('name'))
+
+    @AuthClsWraper.onlyHost
+    def cancelAuthRole(self, exposed):
+        _authCache = self.getTempMiscProp(gameconst.AvatarProps.authRoleInfo, None)
+        if not _authCache:
+            WARNING_MSG('IFriends::cancelAuthRole auth role info not exist')
+            return
+
+        if _authCache['st'] != gameconst.AuthState.NORMAL:
+            WARNING_MSG('IFriends::cancelAuthRole auth role not normal')
+            return
+
+        if _authCache['ts'] + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < utils.getNow():
+            WARNING_MSG('IFriends::cancelAuthRole auth role info expired')
+            return
+
+        self.popTempMiscProp(gameconst.AvatarProps.authRoleInfo)
+
+    def onRecvAuthRole(self, gbId, name):
         _fVal = self.friendship.getFriend(gbId)
         if not _fVal:
             ERROR_MSG("IFriends::onRecvAuthRole gbId={} not your friend".format(gbId))
@@ -965,16 +997,18 @@ class IFriendship(object):
             return
 
         self.setTempMiscProp(gameconst.AvatarProps.recvAuthRoleInfo, (gbId, _now))
-        self.client.onRecvAuthRoleClient(gbId)
+        self.client.onRecvAuthRoleClient(gbId, name)
 
+    @AuthClsWraper.onlyHost
     def dealAuthRole(self, exposed, isAccept):
         INFO_MSG('dealAuthRole', isAccept)
         _gbId, _ts = self.popTempMiscProp(gameconst.AvatarProps.recvAuthRoleInfo, (0, 0))
-        _now = utils.getNow()
-        # +5 留出容错时间
-        if not isAccept:
+        if not _gbId:
+            ERROR_MSG('IFriends::dealAuthRole recv auth role info not exist')
             return
 
+        _now = utils.getNow()
+        # +5 留出容错时间
         if _ts + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < _now:
             ERROR_MSG('IFriends::dealAuthRole auth role info expired')
             return
@@ -988,6 +1022,10 @@ class IFriendship(object):
             ERROR_MSG('IFriends::dealAuthRole gbId={} is offline'.format(_gbId))
             return
 
+        if not isAccept:
+            _fVal.box.client.onDealAuthResult(False)
+            return
+
         _accountDBID = self.accountEntity.databaseID
         _fVal.box.onAgreeAuthRole(self.gbID, _accountDBID)
 
@@ -996,22 +1034,33 @@ class IFriendship(object):
             ERROR_MSG('IFriends::onAgreeAuthRole already authorized')
             return
 
-        _gbId, _stTime, _days = self.getTempMiscProp(gameconst.AvatarProps.authRoleInfo, (0, 0, 0))
-        if _gbId != gbId:
-            ERROR_MSG('IFriends::onAgreeAuthRole not your friend', _gbId)
+        _authCache = self.getTempMiscProp(gameconst.AvatarProps.authRoleInfo, None)
+        if not _authCache:
+            WARNING_MSG('IFriends::onAgreeAuthRole auth role info not exist')
             return
 
-        if _stTime + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < utils.getNow():
+        if _authCache['st'] != gameconst.AuthState.NORMAL:
+            WARNING_MSG('IFriends::onAgreeAuthRole auth role not normal')
+            return
+
+        if _authCache['gbId'] != gbId:
+            ERROR_MSG('IFriends::onAgreeAuthRole not your friend', _authCache['gbId'])
+            return
+
+        if _authCache['ts'] + gameconst.AUTH_ROLE_INFO_EXPIRE_TIME + 5 < utils.getNow():
             ERROR_MSG('IFriends::onAgreeAuthRole auth role info expired')
             return
+
+        _authCache['st'] = gameconst.AuthState.AGREE_AUTH
 
         self.accountEntity.lendAvatar(
             self.gbID,
             dbid,
-            _days,
+            _authCache['days'],
             functools.partial(self._onAgreeAuthRoleResult, gbId))
 
     def _onAgreeAuthRoleResult(self, gbId, ret):
+        self.popTempMiscProp(gameconst.AvatarProps.authRoleInfo)
         if not ret:
             ERROR_MSG('_onAgreeAuthRoleResult failed', ret)
             return
@@ -1025,13 +1074,144 @@ class IFriendship(object):
             ERROR_MSG('IFriends::_onAgreeAuthRoleResult gbId={} is offline'.format(gbId))
             return
 
+        # 走到这里整个授权的流程就结束了
         _char = self.accountEntity.getCharVal(self.gbID)
         _fVal.box.onAgreeAuthRoleSuccess(self.gbID, _char)
+        self.authStatistics.otherGbId = gbId
+        self.authStatistics.authExpire = _char.authExpire
+        self.authStatistics = self.authStatistics
+
+        self.client.onDealAuthResult(True)
 
     def onAgreeAuthRoleSuccess(self, gbId, char):
         self.accountEntity.addOtherCharVal(gbId, char)
 
     def hasAuthPermission(self, permission):
         return utils.hasBit(self.authPermission.permission, permission)
+
+    @AuthClsWraper.onlyHost
+    def stopAuthInAvatar(self, exposed):
+        self.accountEntity.stopCharacterAuthInternal(self.gbID)
+
+    def sendClientAuthState(self, chn):
+        # bit 0: 1 host, 0 auth
+        # bit 1: 1 main, 0 ob
+        _state = 0
+        if chn == gameconst.ClientCallChannel.MAIN_CHANNEL:
+            _state = utils.bitSet(0, 1)
+            if self.accountEntity.isAuthHost(self.gbID):
+                _state = utils.bitSet(_state, 0)
+
+        else:
+            if self.subAccount.isAuthHost(self.gbID):
+                _state = utils.bitSet(_state, 0)
+
+        self.getClient(chn).onClientAuthState(_state)
+
+    @AuthClsWraper.onlyHost
+    def modifyAuthPermission(self, exposed, authPermission, days):
+        INFO_MSG('modifyAuthPermission', authPermission, days)
+        self.authPermission = authPermission
+        if days:
+            _authExpire = utils.getNow() + days * gameconst.ONE_DAY_SECONDS
+            if self.mainAccountCache.isAccountHost():
+                self.accountEntity.modifyAuthExpire(self.gbID, _authExpire)
+
+            elif self.subAccountCache.isAccountHost():
+                self.accountEntity.modifyAuthExpire(self.gbID, _authExpire)
+
+    def onAuthExpireChanged(self, newAuthExpire):
+        if self.authExpireTimerId:
+            self._cancelDatetimeCallback(self.authExpireTimerId, gametimer.TIMER_TAG_OFFLINE_BY_AUTH_EXPIRE)
+            self.authExpireTimerId = 0
+
+        self.authStatistics.doModifyAuthExpire(newAuthExpire)
+        self.authStatistics = self.authStatistics
+        if not self.accountEntity.isAuthHost(self.gbID):
+            self.accountEntity.modifyAuthExpire(self.gbID, newAuthExpire)
+            self.startAuthExpireTime()
+
+    def _authDailyReset(self):
+        self.authStatistics.dailyUseMoney = 0
+
+    def _canAuthDailyUseMoney(self, money):
+        if self.accountEntity.isAuthHost(self.gbID):
+            return True
+
+        return money <= self.authPermission.dailyMoney - self.authStatistics.dailyUseMoney
+
+    def _addAuthDailyUseMoney(self, money):
+        if self.accountEntity.isAuthHost(self.gbID):
+            return
+
+        self.authStatistics.addUseMoney(money)
+
+    def onUpdateExpRate(self, expRate):
+        if not self.accountEntity.isAuthHost(self.gbID):
+            return
+
+        self.authStatistics.oldExp = expRate
+
+    def startCheckExpireOnLogin(self):
+        # 登录完成后，如果是代理，五秒后再检查一次expire时间是否一致，防止出现极限问题
+        self._callback(5, '_checkAuthExpireOnLogin', (), gametimer.TIMER_TAG_CHECK_AUTH_LOGIN)
+
+    def _checkAuthExpireOnLogin(self):
+        if self.accountEntity.isAuthHost(self.gbID):
+            return
+
+        gamesql.getAuthExpire(self.gbID, self._checkAuthExpireOnLoginAfterGetDBData)
+
+    def _checkAuthExpireOnLoginAfterGetDBData(self, ret, num, insertId, err):
+        if self.accountEntity.isAuthHost(self.gbID):
+            return
+
+        if err:
+            ERROR_MSG('_checkAuthExpireOnLoginAfterGetDBData err={}'.format(err))
+            return
+
+        _authExpire, _authDbId, _gbId = ret[0]
+        _authExpire = int(_authExpire)
+        if _authExpire == self.accountEntity.getExpireDelay(self.gbID):
+            return
+
+        if self.authExpireTimerId:
+            self._cancelDatetimeCallback(self.authExpireTimerId, gametimer.TIMER_TAG_OFFLINE_BY_AUTH_EXPIRE)
+            self.authExpireTimerId = 0
+
+        self.authStatistics.doModifyAuthExpire(_authExpire)
+        self.authStatistics = self.authStatistics
+        self.accountEntity.modifyAuthExpire(self.gbID, _authExpire)
+        self.startAuthExpireTime()
+
+    def startAuthExpireTime(self):
+        _fireTime = self.accountEntity.getExpireDelay(self.gbID)
+        self.authExpireTimerId = self._datetimeCallback(_fireTime, 'onAuthExpire', gametimer.TIMER_TAG_OFFLINE_BY_AUTH_EXPIRE, 'authExpireTimerId')
+
+    def onAuthExpire(self):
+        self.authStatistics.reset()
+        self.authStatistics = self.authStatistics
+
+        if self.accountEntity.isAuthHost(self.gbID):
+            return
+
+        self.accountEntity.onAvatarAuthExpire(self.gbID)
+        self.backSelectCharacterBase(True)
+
+    def onAvatarLoginForAuth(self):
+        if self.accountEntity.isAuthHost(self.gbID):
+            if not self.accountEntity.checkHasAuth(self.gbID):
+                if self.authStatistics.reset():
+                    self.authStatistics = self.authStatistics
+        else:
+            self.authStatistics.onAuthLogin()
+            self.authStatistics = self.authStatistics
+
+    def forceAuthOffline(self):
+        self.backSelectCharacterBase(True)
+
+    def addAuthStatistics(self, awardVal):
+        self.authStatistics.addItemByAward(awardVal)
+
     # ------------------------ 角色授权结束 ---------------------------------------
 

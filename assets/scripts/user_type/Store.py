@@ -280,7 +280,7 @@ class StoreData(userType.UserSoleType):
             
         if owner.checkBagItemLimit(storeItemData['itemId'], itemNum):
             DEBUG_MSG('in canBuyItems, bag item limit:', storeItemData['itemId'])
-            owner.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(IDSD.datas['potionBagStorageLimit']['value'])])
+            owner.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(owner.drugsQuantityBase)])
             return False
 
         return True

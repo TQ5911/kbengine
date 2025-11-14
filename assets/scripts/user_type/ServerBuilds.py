@@ -155,6 +155,11 @@ class Build(userType.UserSoleType):
         owner.updateSkillLevelSetSummonSlotIdx(skillId, skillLv)
         return True
 
+    def buildRemoveActiveSkill(self, owner, skillId):
+        self.skillLevels.pop(skillId, None)
+        owner.removeSkillSetSummonSlotIdx([skillId])
+        return True
+
     def changeSkillSlot(self, owner, skillId, fromSlotId, toSlotId):
         if fromSlotId is None and toSlotId is None:
             return

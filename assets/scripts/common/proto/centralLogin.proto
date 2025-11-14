@@ -10,6 +10,7 @@ enum AccountType
     ACCOUNT_PASSWD = 1;
     ACCOUNT_TOKEN = 2;
     ACCOUNT_CROSS_SERVER = 3;
+    ACCOUNT_TAPTAP = 4;
 }
 
 message Void {
@@ -60,7 +61,7 @@ message TokenLogin
 enum ThirdLoginType
 {
     THIRD_LOGIN_UNKNOW = 0;
-    THIRD_LOGIN_TAPTAP = 1;
+    THIRD_LOGIN_TAPTAP = 4;
 }
 
 message ThirdLogin
@@ -80,6 +81,10 @@ message LoginReply
         LOGIN_NEED_CDKEY = 4;
         LOGIN_DEVICE_LIMIT = 5;
         LOGIN_THIRD_FAILED = 6;
+        LOGIN_THIRD_TAPTAP_ACCESS_DENIED = 401;
+        LOGIN_THIRD_TAPTAP_FORBIDDEN = 402;
+        LOGIN_THIRD_TAPTAP_SERVER_ERROR = 403;
+        LOGIN_THIRD_TAPTAP_INSUFFICIENT_SCOPE = 404;
     }
 
     LoginResult result=1;

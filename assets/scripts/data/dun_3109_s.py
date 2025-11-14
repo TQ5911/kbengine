@@ -11,9 +11,9 @@ datas ={
         "EntityID": 0,
         "ID": 31090001,
         "Name": "\u51fa\u751f\u70b9",
-        "PosX": 249.8773,
-        "PosY": 527.809,
-        "PosZ": 23.98155,
+        "PosX": 246.6733,
+        "PosY": 527.8172,
+        "PosZ": 20.33599,
         "Props": {
           "Num": 0,
           "Radius": 0.0,
@@ -32,23 +32,53 @@ datas ={
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
-          "Dir": 232.2314,
+          "Dir": 222.1075,
           "DisplayName": "",
-          "EntityID": 11011017,
+          "EntityID": 11011018,
           "ID": 31090002,
-          "Name": "5013\u9996\u9886",
-          "PosX": 277.2596,
+          "Name": "5013-\u7b80\u914d\u7248\u9996\u98863",
+          "PosX": 277.3504,
           "PosY": 524.9851,
-          "PosZ": 55.1036,
+          "PosZ": 54.9992,
           "Props": {
             "GroupID": "",
             "Level": 30.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": "",
+            "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 3600.0,
-            "Remark": ""
+            "Remark": "\u9996\u9886",
+            "ShowMonsterGroupID": ""
+          }
+        }
+      }
+    },
+    "Cube": {
+      "Teleporter": {
+        "31098001": {
+          "ActivityID": 0,
+          "ClassName": "Teleporter",
+          "ClassNameType": 2,
+          "CustomID": "31218002",
+          "Dir": 220.1051,
+          "DisplayName": "",
+          "EntityID": 17310901,
+          "ID": 31098001,
+          "Name": "\u6df7\u6c8c\u4e4b\u5883",
+          "PosX": 307.6499,
+          "PosY": 526.2947,
+          "PosZ": 91.26532,
+          "Props": {
+            "CameraId": 0,
+            "GateType": 3,
+            "Remark": "",
+            "TelDir": 220.1051,
+            "TelX": 307.6499,
+            "TelY": 526.2947,
+            "TelZ": 91.26532
           }
         }
       }

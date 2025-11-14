@@ -164,6 +164,8 @@ class ICrossServer(object):
         self.setFollowCaptain(False)
         self.selfStopAutoCombat(gameconst.SuspendAutoCombatReason.Teleport)
         self.endApplyGather(gameconst.CancelGatherReason.CrossServer)
+        self.applyLeaveTeam(self.id)
+        self.leaveRaid(self.id)
 
     def onCrossServerSuc(self, reasonNo):
         INFO_MSG("onCrossServerSuc::", reasonNo)

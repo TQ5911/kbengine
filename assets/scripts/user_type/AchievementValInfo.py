@@ -39,27 +39,21 @@ def _checkAchievePetEquipNum(avatar, achieveData, achieveVal, ctx):
 def _checkAchieveHookReward(avatar, achieveData, achieveVal, ctx):
     _mapId = achieveData['targetParam'][0]
     _num = achieveData['targetParam'][1]
-    if ctx.mapId == _mapId:
+    if getattr(ctx, 'mapId', 0) == _mapId:
         achieveVal.step += 1
 
     return achieveVal.step >= _num
 
-def _checkAchieveCollect(avatar, achieveData, achieveVal, ctx):
-    _colType = achieveData['targetParam'][0]
-    _num = achieveData['targetParam'][1]
-    achieveVal.step = avatar.collectScore.get(_colType, 0)
-    return achieveVal.step >= _num
-
 def _checkAchieveTask(avatar, achieveData, achieveVal, ctx):
     _taskId = achieveData['targetParam'][0]
-    if _taskId != ctx.taskId:
+    if _taskId != getattr(ctx, 'taskId', 0):
         return False
 
     achieveVal.step = 1
     return True
 
 def _checkAchieveActivityFinished(avatar, achieveData, achieveVal, ctx):
-    if ctx.activityId == achieveData['targetParam'][0]:
+    if getattr(ctx, 'activityId', 0) == achieveData['targetParam'][0]:
         achieveVal.step += 1
         return achieveVal.step >= achieveData['targetParam'][1]
 
@@ -68,10 +62,10 @@ def _checkAchieveActivityFinished(avatar, achieveData, achieveVal, ctx):
 def _checkAchieveLeaderBoard(avatar, achieveData, achieveVal, ctx):
     _type = achieveData['targetParam'][0]
     _num = achieveData['targetParam'][1]
-    if _type != ctx.lbType:
+    if _type != getattr(ctx, 'lbType', 0):
         return False
 
-    if ctx.rank <= _num:
+    if getattr(ctx, 'rank', 0) <= _num:
         achieveVal.step = 1
         return True
 
@@ -101,7 +95,6 @@ _CHECK_ACHIEVE_DIC = {
     gameconst.AchieveType.MAIN_TASK: (_checkAchieveTask, False),
     gameconst.AchieveType.SUB_TASK: (_checkAchieveTask, False),
     gameconst.AchieveType.HOOK_TASK_REWARD: (_checkAchieveHookReward, False),
-    gameconst.AchieveType.COLLECT: (_checkAchieveCollect, True),
     gameconst.AchieveType.LEADER_BOARD: (_checkAchieveLeaderBoard, False),
     gameconst.AchieveType.SIEGE_KILL: (_checkAchieveAddStep, False),
     gameconst.AchieveType.PERSONAL_BOX: (_checkAchieveAddStep, False),

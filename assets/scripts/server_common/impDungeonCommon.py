@@ -6,6 +6,7 @@ import functools
 
 import sMath
 import utils
+import formula
 
 import gamePlay_gamePlay as DDID
 
@@ -38,7 +39,7 @@ class ImpDungeonCommon(object):
         dunSData = utils.getDunStructureModuleData(dungeonNo)
         if 'BornPos' in dunSData:
             d, *_ = dunSData['BornPos'].values()
-            return d['PosX'], d['PosY'], d['PosZ']
+            return formula.bornPosFromData(d)
 
     def _getEntranceDirByDungeonNo(self, dungeonNo):
         dunSData = utils.getDunStructureModuleData(dungeonNo)

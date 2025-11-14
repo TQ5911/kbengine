@@ -48,24 +48,26 @@ datas ={
             "Remark": ""
           }
         }
-      },
+      }
+    },
+    "Cube": {
       "Teleporter": {
         "31178002": {
           "ActivityID": 0,
           "ClassName": "Teleporter",
           "ClassNameType": 2,
-          "CustomID": "3101",
+          "CustomID": "31218001",
           "Dir": 129.019,
           "DisplayName": "",
           "EntityID": 17311701,
           "ID": 31178002,
-          "Name": "\u8bad\u7ec3\u2160",
+          "Name": "\u6df7\u6c8c\u4e4b\u5883",
           "PosX": 126.8446,
           "PosY": 527.7394,
           "PosZ": 92.2588,
           "Props": {
             "CameraId": 0,
-            "GateType": 4,
+            "GateType": 3,
             "Remark": "",
             "TelDir": 129.019,
             "TelX": 126.8446,

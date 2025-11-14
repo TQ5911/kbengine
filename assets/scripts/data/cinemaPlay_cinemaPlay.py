@@ -219,6 +219,12 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
+    98000036: _tools.RODict({
+        "ID": 98000036,
+        "cinemaTime": 5,
+        "event": "setPositionByTag",
+        "parm": "1",
+    }),
     98010001: _tools.RODict({
         "ID": 98010001,
         "cinemaTime": 12,

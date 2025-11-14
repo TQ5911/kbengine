@@ -7,7 +7,7 @@ import utils
 import creep_countRefresh as CCR
 
 class IMapMonsterRefresh(object):
-    
+
     @classmethod
     def clearAllCache(cls):
         cls.countLimit.cache_clear()
@@ -16,19 +16,29 @@ class IMapMonsterRefresh(object):
         cls.countResetTime.cache_clear()
 
     @staticmethod
+    @functools.lru_cache(128)
+    def getRefreshDataKey(mapID, monsterIntanceID):
+        dataKey = mapID*100000000+monsterIntanceID
+        return CCR.refreshMonsterIDIndex.get(dataKey, 0)
+    
+    @staticmethod
+    @functools.lru_cache(128)
+    def getRefreshDataKeys(mapID):
+        return CCR.mapIDIndex.get(mapID, None)
+        
+    @staticmethod
     @functools.lru_cache(64)
-    def countLimit(spaceNo):
-        mapId = formula.getMapId(spaceNo)
-        countRefreshData = CCR.datas.get(mapId, None)
+    def countLimit(dataKey):
+        countRefreshData = CCR.datas.get(dataKey, None)
         if countRefreshData:
             return countRefreshData['countLimit']
         return None
-    
+
     @staticmethod
     @functools.lru_cache(64)
-    def refreshMonsterIDs(spaceNo):
+    def refreshMonsterIDs(spaceNo, dataKey):
         mapId = formula.getMapId(spaceNo)
-        countRefreshData = CCR.datas.get(mapId, None)
+        countRefreshData = CCR.datas.get(dataKey, None)
         if countRefreshData:
             dunData = utils.getDunModuleData(mapId)
             refreshMonsterIDs = countRefreshData['refreshMonsterID']
@@ -38,21 +48,19 @@ class IMapMonsterRefresh(object):
                     datas[refreshMonsterID] = dunData[str(refreshMonsterID)]["Props"]["RefreshNum"]
                 return datas
         return None
-    
+
     @staticmethod
     @functools.lru_cache(64)
-    def countMonsterIDs(spaceNo):
-        mapId = formula.getMapId(spaceNo)
-        countRefreshData = CCR.datas.get(mapId, None)
+    def countMonsterIDs(dataKey):
+        countRefreshData = CCR.datas.get(dataKey, None)
         if countRefreshData:
             return countRefreshData['countMonsterID']
         return None
-    
+
     @staticmethod
     @functools.lru_cache(64)
-    def countResetTime(spaceNo):
-        mapId = formula.getMapId(spaceNo)
-        countRefreshData = CCR.datas.get(mapId, None)
+    def countResetTime(dataKey):
+        countRefreshData = CCR.datas.get(dataKey, None)
         if countRefreshData:
             return countRefreshData['countResetTime']
         return None
@@ -67,34 +75,34 @@ class IMapMonsterRefresh(object):
         # 上一次记录的时间
         self.lastRecordTime = 0
 
-    def onMonsterDestroy(self, monsterId, monsterInstId, spaceMgrId, monsterMgrId):
-        DEBUG_MSG("onMonsterDestroy ", monsterId, monsterInstId, self.spaceNo, self.spaceID)
+    def onMonsterDestroy(self, monsterId, monsterInstId, spaceMgrId, monsterMgrId, refreshDataKey):
+        DEBUG_MSG("onMonsterDestroy ", monsterId, monsterInstId, self.spaceNo, self.spaceID, refreshDataKey)
         if self.lastRecordTime == 0:
             self.lastRecordTime = utils.getNow()
         else:
             lastRecordTime = self.lastRecordTime
             self.lastRecordTime = utils.getNow()
-            countResetTime = self.countResetTime(self.spaceNo)
+            countResetTime = self.countResetTime(refreshDataKey)
             if countResetTime and countResetTime > 0:
                 if self.lastRecordTime - lastRecordTime >= countResetTime:
                     self.refreshCount = 0
-            
+
         if not self.waitForNextRefresh:
-            countMonsterIDs = self.countMonsterIDs(self.spaceNo)
+            countMonsterIDs = self.countMonsterIDs(refreshDataKey)
             if countMonsterIDs is None:
                 return
             if monsterId in countMonsterIDs:
                 self.refreshCount += 1
-                if self.refreshCount >= self.countLimit(self.spaceNo):
+                if self.refreshCount >= self.countLimit(refreshDataKey):
                     self.refreshCount = 0
                     self.waitForNextRefresh = True
-                    self.doMapMonsterRefresh(spaceMgrId, monsterMgrId)
+                    self.doMapMonsterRefresh(spaceMgrId, monsterMgrId, monsterInstId, refreshDataKey)
             return
-        
-        refreshMonsterIDs = self.refreshMonsterIDs(self.spaceNo)
+
+        refreshMonsterIDs = self.refreshMonsterIDs(self.spaceNo, refreshDataKey)
         if refreshMonsterIDs is None:
             return
-        
+
         if monsterInstId in refreshMonsterIDs.keys():
             self.killOrDestroyMonsterIDs[monsterInstId] = self.killOrDestroyMonsterIDs.get(monsterInstId, 0) + 1
             if self.killOrDestroyMonsterIDs == refreshMonsterIDs:
@@ -102,14 +110,14 @@ class IMapMonsterRefresh(object):
                 self.refreshCount = 0
                 self.waitForNextRefresh = False
                 self.lastRecordTime = 0
-        
-    def doMapMonsterRefresh(self, spaceMgrId, monsterMgrId):
-        DEBUG_MSG("doMapMonsterRefresh ", self.spaceNo, self.spaceID, spaceMgrId, monsterMgrId)
-        refreshMonsterIDs = self.refreshMonsterIDs(self.spaceNo)
+
+    def doMapMonsterRefresh(self, spaceMgrId, monsterMgrId, monsterInstId, refreshDataKey):
+        DEBUG_MSG("doMapMonsterRefresh ", self.spaceNo, self.spaceID, spaceMgrId, monsterMgrId, refreshDataKey)
+        refreshMonsterIDs = self.refreshMonsterIDs(self.spaceNo, refreshDataKey)
         if refreshMonsterIDs is None:
             ERROR_MSG("doMapMonsterRefresh 1, missing refreshMonsterIDs ", self.spaceNo, self.spaceID)
             return
-        
+
         mapID = formula.getMapId(self.spaceNo)
         dunData = utils.getDunModuleData(mapID)
         instanceIDs = []
@@ -125,3 +133,4 @@ class IMapMonsterRefresh(object):
             _params['spaceMgrId'] = spaceMgrId
             _params['monsterGroupId'] = monsterMgrId
             KBEngine.createEntity(_className, self.spaceID, _pos, _dir, _params)
+

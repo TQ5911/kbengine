@@ -136,6 +136,28 @@ def _65000025_leave(self, target, context):
 def _65000026(self, target, context):
     self.castSkill(target, context, 91001034)
 
+def _65000027(self, target, context):
+    self.castSkill(target, context, 90020451)
+
+def _65000028(self, target, context):
+    self.castSkill(target, context, 90020452)
+
+def _65000029(self, target, context):
+    self.castSkill(target, context, 90020453)
+
+def _65000030(self, target, context):
+    self.castSkill(target, context, 90020601)
+
+def _65000031(self, target, context):
+    self.castSkill(target, context, 90020602)
+
+def _65000032(self, target, context):
+    self.castSkill(target, context, 90020066)
+
+def _65000032_enter(self, target, context):
+    self.addBuffBySkill(target, context,64000228, 1, 1.0, 2)
+    self.addBuffBySkill(target, context,64000224, 1, 1.0, 5)
+
 # 生成的技能代码
 def _66000001(self, target, context):
 
@@ -1187,6 +1209,22 @@ def _66000114(self, target, context):
         self.attack(ent, context, 2.5, 0, 0)
         action_FightAction.down(self, ent, context, 1, 1, 0, 0)
 
+def _66000116(self, target, context):
+    # 技能执行逻辑
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1.5)
+
+def _66000117(self, target, context):
+    # 技能执行逻辑
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1.5)
+
 datas = _tools.RODict({ 
     65000001: _tools.RODict({
         "ID": 65000001,
@@ -1887,6 +1925,174 @@ datas = _tools.RODict({
         "selectType": 1,
         "selectPar": 8,
         "delayTime": 0.0,
+    }),
+    65000027: _tools.RODict({
+        "ID": 65000027,
+        "name": "法师水龙卷铭文（伤害）",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _65000027,
+        "time": 3.5,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.3,
+        "hurtNumber": 10,
+        "areaLoop": 10,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 7.2,
+        "delayTime": 0.3,
+    }),
+    65000028: _tools.RODict({
+        "ID": 65000028,
+        "name": "法师水龙卷铭文（拉人）",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _65000028,
+        "time": 3.5,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 1.0,
+        "hurtNumber": 10,
+        "areaLoop": 3,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 7.2,
+        "delayTime": 0.3,
+    }),
+    65000029: _tools.RODict({
+        "ID": 65000029,
+        "name": "法师水龙卷铭文（定身）",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _65000029,
+        "time": 3.5,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 1.0,
+        "hurtNumber": 10,
+        "areaLoop": 3,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 7.2,
+        "delayTime": 0.3,
+    }),
+    65000030: _tools.RODict({
+        "ID": 65000030,
+        "name": "炽热火墙铭文（金）",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _65000030,
+        "time": 8.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 1.0,
+        "hurtNumber": 10,
+        "areaLoop": 8,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 5,
+        "delayTime": 1.5,
+    }),
+    65000031: _tools.RODict({
+        "ID": 65000031,
+        "name": "炽热火墙铭文（金）",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _65000031,
+        "time": 2.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.4,
+        "hurtNumber": 10,
+        "areaLoop": 1,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 2,
+        "delayTime": 1.5,
+    }),
+    65000032: _tools.RODict({
+        "ID": 65000032,
+        "name": "法师大招铭文（金）",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _65000032,
+        "time": 2.5,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.2,
+        "hurtNumber": 10,
+        "areaLoop": 5,
+        "enterAction": _65000032_enter,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 8,
+        "delayTime": 0.6,
     }),
     66000001: _tools.RODict({
         "ID": 66000001,
@@ -5107,7 +5313,119 @@ datas = _tools.RODict({
         "selectType": 1,
         "selectPar": 8,
         "delayTime": 0.0,
+    }),
+    66000116: _tools.RODict({
+        "ID": 66000116,
+        "name": "5008技能2沙圈",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _66000116,
+        "time": 4.6,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 4.5,
+        "hurtNumber": 99,
+        "areaLoop": 1,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 6,
+        "delayTime": 0.0,
+    }),
+    66000117: _tools.RODict({
+        "ID": 66000117,
+        "name": "5008技能3九宫格时钟伤害",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _66000117,
+        "time": 10.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 10.0,
+        "hurtNumber": 99,
+        "areaLoop": 1,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 7,
+        "delayTime": 0.0,
+    }),
+    66000118: _tools.RODict({
+        "ID": 66000118,
+        "name": "5008技能3九宫格时钟无伤害",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": None,
+        "time": 10.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.0,
+        "hurtNumber": 99,
+        "areaLoop": 0,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 7,
+        "delayTime": 0.0,
+    }),
+    66000119: _tools.RODict({
+        "ID": 66000119,
+        "name": "新手副本石柱特效",
+        "type": "FixPosition",
+        "isAttackSkill": 0,
+        "classTag": 3,
+        "relyOnMaster": 0,
+        "inherit": 0,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": None,
+        "time": 0.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.0,
+        "hurtNumber": 99,
+        "areaLoop": 0,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 7,
+        "delayTime": 0.0,
     })
 })
 minKey = 65000001
-maxKey = 66000115
+maxKey = 66000119

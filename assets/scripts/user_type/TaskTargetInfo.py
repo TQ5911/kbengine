@@ -118,7 +118,7 @@ class TaskTargetMonsters(BaseTarget):
         self.killMode = 0
         self.killTotalCountTarget = 0
         self.killedTotalCount = 0
-        self.monsterIDsTarget = set()
+        self.monsterIDsTarget = []
 
     def initTarget(self, tgtId, dstCnt, mapId, killMode, killTotalCount, monsterIDs):
         self.tgtId = tgtId
@@ -126,18 +126,28 @@ class TaskTargetMonsters(BaseTarget):
         self.mapId = mapId
         self.killMode = killMode
         self.killTotalCountTarget = killTotalCount
-        self.targetUIDs = []
-        self.monsterIDsTarget = monsterIDs
+        self.monsterIDsTarget = list(monsterIDs)
 
     def initFromTgtObj(self, tgt):
         super(TaskTargetMonsters, self).initFromTgtObj(tgt)
         self.mapId = tgt.mapId
 
     def genExtraStr(self):
-        return json.dumps({'mapId': self.mapId})
+        datas = {
+            'mapId': self.mapId, 
+            'killMode': self.killMode, 
+            'killTotalCountTarget': self.killTotalCountTarget, 
+            'killedTotalCount': self.killedTotalCount, 
+            'monsterIDsTarget': self.monsterIDsTarget,
+        }
+        return json.dumps(datas)
 
     def fromExtraDic(self, extraDic):
         self.mapId = extraDic.get('mapId', 0)
+        self.killMode = extraDic.get('killMode', 0)
+        self.killTotalCountTarget = extraDic.get('killTotalCountTarget', 0)
+        self.killedTotalCount = extraDic.get('killedTotalCount', 0)
+        self.monsterIDsTarget = extraDic.get('monsterIDsTarget', [])
         return
 
     def killOneMonster(self, spaceNo, monsterId, monsterGBId):

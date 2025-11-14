@@ -7,10 +7,7 @@ import gamedecorator
 import dropAward
 import utils
 import json
-import ServerBuilds
 import gameglobal
-import gametlog
-import time
 import actionContext
 import gametimer
 
@@ -18,7 +15,6 @@ import skill_skill as SSD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import skill_unlock as SUD
 import fightProp_define as FPDD
-import const_const as CONST
 import skillRelevant_summonUnlock as SRSU
 import skillRelevant_skillConst as SRSC
 import gamelog
@@ -27,7 +23,6 @@ import gameclass
 import gamePlay_set as GP_SD
 import formula_generalFormula as F_GFD
 import dataUtils
-import itemData_itemData as ID_IDD
 import taskClass_taskTarget as TCCTD
 
 
@@ -91,7 +86,8 @@ class AvatarBuildsMixin(object):
         if not condStr:
             return True
 
-        return self.isUIVisible(condStr)
+        res, _1, _2 = self.isUIVisible(condStr)
+        return res
 
     def unlockSkill(self, isNotify, lv=0, mid=0):
         unlockedSkills = []
@@ -103,32 +99,71 @@ class AvatarBuildsMixin(object):
                     if not skillId:
                         continue
                     skillId = dataUtils.getSkillIdByMorphState(skillId, self.morphState)
+                    if not self._isCanUnlockSkill(True, skillId, lv, mid):
+                        continue
 
-                    if self.unlockActiveSkill(skillId, isNotify, lv, mid):
-                        DEBUG_MSG('unlock skill', skillId)
-                        unlockedSkills.append(skillId)
+                    _buildSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
+                    taskId = self.checkHasUnlockedTemporarySkill(_buildSkillId)
+                    if taskId:
+                       self.cannelTemporarySkill(taskId, _buildSkillId)
+                    else:
+                        if self.unlockActiveSkill(_buildSkillId, skillId, isNotify, lv, mid):
+                            DEBUG_MSG('unlock skill', skillId)
+                            unlockedSkills.append(skillId)
 
         if unlockedSkills:
             self.client.onUnlockSkills(unlockedSkills)
             self.updateSkillScore()
 
-    def unlockActiveSkill(self, skillId, isNotify, lv, mid):
+    def unlockActiveSkill(self, _buildSkillId, skillId, isNotify, lv, mid):
         if self.hasSkill(skillId):
-            return False
-
-        if not self._isCanUnlockSkill(True, skillId, lv, mid):
             return False
 
         skillLv = 1
 
         self.buildDic.buildAddActiveSkill(self, skillId, skillLv)
 
-        _buildSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
         recommendSlot = self.buildDic.getSkillRecommendSlot(self, _buildSkillId)
         if recommendSlot is not None:
             self.buildDic.changeSkillSlot(self, skillId, None, recommendSlot)
 
         return True
+
+    def cannelTemporarySkill(self, taskId, skillId):
+        unlockedSkills = self.tmpTaskSkillIds.get(taskId, [skillId])
+        unlockedSkills.remove(skillId)
+
+    def checkHasUnlockedTemporarySkill(self, skillId):
+        for taskId, unlockedSkills in self.tmpTaskSkillIds.items():
+            if skillId in unlockedSkills:
+                return taskId
+        return None
+
+    def unlockTemporarySkill(self, _buildSkillId, _stateSkillId, skillLv):
+        if self.hasSkill(_buildSkillId):
+            return False
+
+        self.buildDic.buildAddActiveSkill(self, _stateSkillId, skillLv)
+        recommendSlot = self.buildDic.getSkillRecommendSlot(self, _buildSkillId)
+        if recommendSlot is not None:
+            self.buildDic.changeSkillSlot(self, _stateSkillId, None, recommendSlot)
+
+        return True
+
+    def deleteTemporarySkill(self, _buildSkillId, _stateSkillId):
+        slotId = self.buildDic.getSlotId(_stateSkillId)
+        if slotId is None:
+            slotId = self.buildDic.getSlotId(_buildSkillId)
+        self.buildDic.changeSkillSlot(self, _stateSkillId, slotId, None)
+        if _buildSkillId != _stateSkillId:
+            self.buildDic.changeSkillSlot(self, _buildSkillId, slotId, None)
+
+        relatedSkills = SSD.datas.get(_buildSkillId, {}).get('conflictSkill') or ()
+        skillIdList = [_buildSkillId] + list(relatedSkills)
+        for skillId in skillIdList:
+            if not self.hasSkill(skillId):
+                continue
+            self.buildDic.buildRemoveActiveSkill(self, skillId)
 
     def initNoviceBuild(self):
         pass
@@ -340,7 +375,6 @@ class ImpCombat(AvatarBuildsMixin):
 
     def addAwardFightProps(self, fightProps, srcType, awardId, opUUID, detail):
         syncPropList = []
-        logStrs = []
         for propName, val in fightProps:
             fpData = FPDD.datas.get(propName)
             if not fpData:
@@ -353,16 +387,6 @@ class ImpCombat(AvatarBuildsMixin):
 
             self.awardFightPropDic[propName] = self.awardFightPropDic.get(propName, 0) + val
             syncPropList.append((propName, val))
-            # relatedKey = fpData['relatedKey']
-            # relatedName = FPDD.datas[relatedKey]['name']
-            # if fpData['isPercent']:
-            #     valStr = f'{int(val * 100)}%'
-            # else:
-            #     valStr = str(val)
-            #
-            # logStrs.append('{}:{}'.format(propName, val))
-            #
-            # self.onMessagePre(WYS_CD.datas['msgId_tuJian_getFightProp']['value'], [relatedName, valStr])
 
         self.cell.addAwardFightPropsCell(syncPropList)
         # gamelog.makeAddAwardFightPropsLog(self, srcType, awardId, opUUID, str(detail), ','.join(logStrs))
@@ -408,6 +432,38 @@ class ImpCombat(AvatarBuildsMixin):
             return
 
         self.enemyMgr.onKillOtherAvatarRecord(self, gbId, spaceNo)
+
+    def unlockTemporarySkillByTask(self, taskId, skillList):
+        unlockedSkills = []
+        for skillId in skillList:
+            _stateSkillId = dataUtils.getSkillIdByMorphState(skillId, self.morphState)
+            _buildSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
+            if not self.unlockTemporarySkill(_buildSkillId, _stateSkillId, 1):
+                continue
+            unlockedSkills.append(_buildSkillId)
+
+        if unlockedSkills:
+            self.tmpTaskSkillIds[taskId] = unlockedSkills
+            self.client.onUnlockSkills(unlockedSkills)
+            self.updateSkillScore()
+        self.sendCliSkillBuildInfo()
+
+    def deleteTemporarySkillByTask(self, taskId):
+        if taskId not in self.tmpTaskSkillIds:
+            return
+
+        unlockedSkills = self.tmpTaskSkillIds.pop(taskId, [])
+        for _buildSkillId in unlockedSkills:
+            _stateSkillId = dataUtils.getSkillIdByMorphState(_buildSkillId, self.morphState)
+            self.deleteTemporarySkill(_buildSkillId, _stateSkillId)
+
+        self.removeSkillChangeMorphState(unlockedSkills)
+        self.sendCliSkillBuildInfo()
+
+    def initRemoveTemporarySkill(self):
+        removeTaskIds = list(self.tmpTaskSkillIds.keys())
+        for taskId in removeTaskIds:
+            self.deleteTemporarySkillByTask(taskId)
 
     # 变身状态 start ---------------------------------
 
@@ -584,3 +640,26 @@ class ImpCombat(AvatarBuildsMixin):
     def setSummonSlotIdxAck(self, slotIdx):
         INFO_MSG('base setSummonSlotIdxAck', self.summonSlotIdxBase, slotIdx)
         self.summonSlotIdxBase = slotIdx
+
+    def removeSkillSetSummonSlotIdx(self, removedSkills):
+        school = gameglobal.roleCache[self.id]['school']
+        summonSkillId = SRSC.datas['summonSkillId'].get('valueCN', 0)
+        summonSchool = SRSC.datas['usePlayerForSummon'].get('valueCN', 0)
+        if school != summonSchool or summonSkillId not in removedSkills:
+            return
+        
+        INFO_MSG('base removeSkillSetSummonSlotIdx ', self.summonSlotIdxBase, removedSkills)
+        self.summonSlotIdxBase = 0
+        self.cell.setSummonSlotIdx(0)
+
+    def removeSkillChangeMorphState(self, removedSkills):
+        school = gameglobal.roleCache[self.id]['school']
+        summonSkillId = SRSC.datas['summonSkillId'].get('valueCN', 0)
+        summonSchool = SRSC.datas['usePlayerForSummon'].get('valueCN', 0)
+        if school != summonSchool or summonSkillId not in removedSkills:
+            return
+        if self.morphState == gameconst.MORPH_BUILD_STATE:
+            return
+
+        INFO_MSG('base removeSkillChangeMorphState ', summonSkillId, removedSkills, self.morphState)
+        self.cell.changeMorphPreAddSkill(gameconst.MORPH_BUILD_STATE)

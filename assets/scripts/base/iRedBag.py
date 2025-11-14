@@ -11,11 +11,13 @@ import redisUtils
 import elasticUtils
 import actionContext
 import gameclass
+import AuthClsWraper
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import dropAward
 import chatConfig_chatConfig as CC_CCD
 import chatConfig_redPacket as CC_RPD
 import message_Message_def as MMD
+import agent_agentFunction as A_AFD
 
 
 class IRedBag(object):
@@ -78,7 +80,7 @@ class IRedBag(object):
         if not self.checkPlayerLimit():
             return
         gameengine.getGlobalBase('RedBagStub').doGetRedBagRankList(self, self.guildUUIDBase, self.rbVersion, list(self.fetchRedBagDict.keys()))
-        
+
     def getRedBagRankListCB(self, sVersion, rankList):
         # 更新version
         self.rbVersion = sVersion
@@ -93,9 +95,9 @@ class IRedBag(object):
             return
         if len(self.releaseRedBagDict) <= 0:
             return
-        
+
         gameengine.getGlobalBase('RedBagStub').doGetRedBagList(self, list(self.releaseRedBagDict.keys()), list(self.fetchRedBagDict.keys()))
-        
+
 
     def getRBRealMoney(self, channel, money):
         channelConfig = CC_RPD.datas[channel]
@@ -104,30 +106,30 @@ class IRedBag(object):
     def _checkReleaseLimit(self, redbagType, channel, money, num, desc):
         if not self.checkPlayerLimit():
             return False
-        
+
         if self.getDailyData(gameconst.AvatarDailyProps.releaseRbNum, 0) >= CC_CCD.datas['sendPacketLimit']['value']:
             # 今日发布次数超过上限
             _msg = CC_CCD.datas['sendPacketLimitMsg']['value']
             self.onMessagePre(_msg, [])
             return False
-        
+
         if channel not in gameconst.RED_BAG_CHANNELS:
             # 渠道不存在
             DEBUG_MSG("reqReleaseRedBag error channel: ", self.gbID, redbagType, channel, money, num)
             return False
-        
+
         if channel == gameconst.RedBagChannel.GUILD and self.guildUUIDBase == 0:
             # 未加入公会
             DEBUG_MSG("reqReleaseRedBag error not in guild: ", self.gbID, redbagType, channel, money, num)
             self.onMessagePre(MMD.datas.guildTrain_notInGuild, [])
             return False
-        
+
         # 屏蔽字检查客户端做，这里只做长度检查
         if len(desc) > CC_CCD.datas['blessingLength']['value']:
             # 描述长度超过上限
             DEBUG_MSG("reqReleaseRedBag error desc len: ", self.gbID, redbagType, channel, money, num, desc)
             return False
-        
+
         if money < num:
             # 人均金额不能小于1
             DEBUG_MSG("reqReleaseRedBag error money < num: ", self.gbID, redbagType, channel, money, num)
@@ -157,11 +159,12 @@ class IRedBag(object):
                 # 人均金额超过上限
                 DEBUG_MSG("reqReleaseRedBag error avgMoney: ", self.gbID, redbagType, channel, money, num, avgMoney, avgMin, avgMax)
                 return False
-        
+
         return True
 
 
     # 发布红包
+    @AuthClsWraper.authWithPermission(A_AFD.UIRedPacketPanel)
     def reqReleaseRedBag(self, exposed, redbagType, channel, money, num, desc):
         self._reqReleaseRedBag(redbagType, channel, money, num, desc)
 
@@ -176,7 +179,7 @@ class IRedBag(object):
             DEBUG_MSG("reqReleaseRedBag error no enough money: ", self.gbID, redbagType, channel, money, num)
             # 钱不足
             return
-        
+
         redbagId = KBEngine.genUUID64()
         src = AAC_AACDD.datas.BONUS_SRC_SEND_RED_PACKET_COST
         deductWealthVal = dropAward.DeductWealthVal()
@@ -190,7 +193,7 @@ class IRedBag(object):
 
     def onReleaseRedBag(self, redbagId, redbagType, channel, money, releaseTime, desc):
         INFO_MSG("onReleaseRedBag:", redbagId, redbagType, channel, money, releaseTime, desc)
-        # 
+        #
         self.addDailyData(gameconst.AvatarDailyProps.releaseRbNum, 1)
         # 保存数据
         self.releaseRedBagDict[redbagId] = releaseTime
@@ -220,6 +223,7 @@ class IRedBag(object):
         return self.fetchRedBagDict.get(redbagId, 0)
 
     # 请求领取红包
+    @AuthClsWraper.authWithPermission(A_AFD.UIRedPacketPanel)
     def reqFetchRedBag(self, exposed, redbagId):
         self._reqFetchRedBag(redbagId)
 
@@ -232,7 +236,7 @@ class IRedBag(object):
             _msg = CC_CCD.datas['receivePacketLimitMsg']['value']
             self.onMessagePre(_msg, [])
             return
-        
+
         # 缓存里有 已领取
         if self.getFetchRedBagTime(redbagId) > 0:
             return
@@ -273,7 +277,7 @@ class IRedBag(object):
             return
         # 用领取的同一个接口
         gameengine.getGlobalBase('RedBagStub').doFetchRedBag(self, redbagId, self.gbID, self.guildUUIDBase, self.characterName, True)
-    
+
     # 被动删除红包缓存
     def onDelRedBagCache(self, delList):
         for redbagId in delList:
@@ -308,6 +312,6 @@ class IRedBag(object):
 
         self.gmGetDateData()
 
-        
 
-    
+
+

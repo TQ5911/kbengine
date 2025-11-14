@@ -361,7 +361,13 @@ class IChat(object):
     #         return
     #     self.transportGoodsInfo.lookCurTransportGoods(box, actId, gbId, helpNum)
 
+    def sendRaidMatchMessage(self, exposed, teamId, content, teamTarget, curNum, channel):
+        self._sendMatchMessage(teamId, content, teamTarget, curNum, channel, False)
+
     def sendTeamMatchMessage(self, exposed, teamId, content, teamTarget, curNum, channel):
+        self._sendMatchMessage(teamId, content, teamTarget, curNum, channel, True)
+
+    def _sendMatchMessage(self, teamId, content, teamTarget, curNum, channel, isTeam):
         DEBUG_MSG('in sendTeamMatchMessage:', teamId, content, teamTarget, curNum, channel)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
@@ -377,24 +383,9 @@ class IChat(object):
         if not targetInfo:
             ERROR_MSG('in sendTeamMatchMessage, teamTarget error 2')
             return
-        
-        actData = AC_ADD.datas.get(int(targetInfo['pareActivity']))
-        if not actData:
-            ERROR_MSG("in sendTeamMatchMessage, cfg is missing in activity control", teamTarget, targetInfo['pareActivity'])
-            return
-        
-        chatMsgKey = ''
-        teamMemberCount = 0
-        recruitTips = None
-        if gameconst.ActivityControlType.TEAM == int(actData['needTeam']):
-            chatMsgKey = 'teamChannel_applyTeamMsg'
-            teamMemberCount = gameconst.TEAM_MEMBER_MAX_NUM
-        elif gameconst.ActivityControlType.RAID == int(actData['needTeam']):
-            chatMsgKey = 'teamChannel_applyRaidMsg'
-            teamMemberCount = gameconst.RAID_MEMBER_MAX_NUM
-        else:
-            ERROR_MSG("in sendTeamMatchMessage, cfg is wrong in activity control", teamTarget, targetInfo['pareActivity'], actData['needTeam'])
-            return
+
+        chatMsgKey = 'teamChannel_applyTeamMsg' if isTeam else 'teamChannel_applyRaidMsg'
+        teamMemberCount = gameconst.TEAM_MEMBER_MAX_NUM if isTeam else gameconst.RAID_MEMBER_MAX_NUM
         
         #活动：%s%d-%d级%s的队伍正在招募:<link team name=申请加入 teamId=%d>
         msg = MCM.datas[TMMCD.datas[chatMsgKey]['value']]['Message'].format(targetInfo['value'], content, curNum, teamMemberCount, teamId)
@@ -407,7 +398,8 @@ class IChat(object):
                 return
             self.sendMatchTeamGuildMsgTime = now
             self._sendMsgToGuild(msg, includeMe=True, isTeamZhaomu=True)
-        elif gameconst.ChatChannel.RECRUIT == channel or gameconst.ChatChannel.TEAM == channel or gameconst.ChatChannel.RAID == channel:
+        elif gameconst.ChatChannel.RECRUIT == channel or gameconst.ChatChannel.TEAM == channel or gameconst.ChatChannel.RAID == channel \
+            or gameconst.ChatChannel.SIEGE_WAR == channel:
             zhaomuChannelCD = TMMCD.datas.get('zhaomuChannelCD', {}).get('value', 0)
             if self.sendMatchTeamRecruitMsgTime + zhaomuChannelCD > now:
                 self.onMessagePre(MMD.datas.zhaomuMessageCD, [str(self.sendMatchTeamRecruitMsgTime + zhaomuChannelCD - now)])
@@ -419,6 +411,10 @@ class IChat(object):
     def sendTeamMatchRecruitMsg(self, channel, msg):
         if self.isSilentChat(gameconst.SilentSpeakScene.CHAT):
             self.cell.handleTeamChannelMatchTeamMsg(self._getChatChannelAvatarInfo(), channel, msg)
+        elif gameconst.ChatChannel.SIEGE_WAR == channel:
+            gameengine.broadcastBaseapp('broadcastToAllAvatar',
+                                        (gameconst.CELL, 'onSiegeWarChatMsg',
+                                        (gameconst.ChatChannel.SIEGE_WAR, self._getChatChannelAvatarInfo(), msg, self.cell), ()))
         else:
             gameengine.broadcastBaseapp('broadcastToAllAvatar',
                                         (gameconst.CELL, 'handleTeamChannelMatchTeamMsg',

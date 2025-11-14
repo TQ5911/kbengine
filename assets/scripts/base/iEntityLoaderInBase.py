@@ -122,7 +122,7 @@ class IEntityLoaderInBase(object):
         readyEntitiesList = []
         self.loadGroupEntities(spaceNo, entityIDs, readyEntitiesList, info)
         self.loadGroupEntitiesBatchly(spaceNo, iter(readyEntitiesList),
-                                    gameconst.LoadEntitySetting.BATCH_NUM,
+                                    gameconfig.entityLoadSpeed(),
                                     gameconst.LoadEntitySetting.BATCH_DELAY, True)
 
         DEBUG_MSG("IEntityLoader::_onLoadGroupEntities", info)
@@ -175,7 +175,7 @@ class IEntityLoaderInBase(object):
         readyEntitiesList = []
         self.loadGroupEntities(spaceNo, entityIDs, readyEntitiesList, info)
         self.loadGroupEntitiesBatchly(spaceNo, iter(readyEntitiesList),
-                                    gameconst.LoadEntitySetting.BATCH_NUM,
+                                    gameconfig.entityLoadSpeed(),
                                     gameconst.LoadEntitySetting.BATCH_DELAY, True)
 
         DEBUG_MSG("IEntityLoader::_onRefreshGroupEntities", info)

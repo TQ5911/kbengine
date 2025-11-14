@@ -217,7 +217,7 @@ datas = _tools.RODict({
     }),
     "leaveFightStateTime": _tools.RODict({
         "ID": "leaveFightStateTime",
-        "value": 9.0,
+        "value": 6.0,
     }),
     "leaveLockTargerTime": _tools.RODict({
         "ID": "leaveLockTargerTime",
@@ -391,6 +391,10 @@ datas = _tools.RODict({
         "ID": "autoFightSettingsDefaultStatus",
         "value": (1, 1, 0, 0, 1, 0),
     }),
+    "autoFightSettingsReliveTime": _tools.RODict({
+        "ID": "autoFightSettingsReliveTime",
+        "value": 1,
+    }),
     "autoHealHpAndMpPct": _tools.RODict({
         "ID": "autoHealHpAndMpPct",
         "value": (0.5, 0.5),
@@ -489,11 +493,11 @@ datas = _tools.RODict({
     }),
     "playerDamageOffset": _tools.RODict({
         "ID": "playerDamageOffset",
-        "value": ((-0.7, -0.5, 0), (-0.5, -0.8, 0), (0.1, -0.8, 0)),
+        "value": ((80, -120), (110, -120), (130, 20), (-150, -100), (-115, -20), (-115, 0), (-170, -100), (-170, -40), (0, -80), (0, -80), (80, -120), (110, -120)),
     }),
     "othersDamageOffset": _tools.RODict({
         "ID": "othersDamageOffset",
-        "value": ((0, -0.5, 0), (0, -0.8, 0)),
+        "value": ((80, 70), (80, 70), (130, 20), (150, -100), (-115, -20), (-115, 0), (170, -100), (170, -40), (0, -80), (0, -80), (80, 70), (80, 70)),
     }),
     "playerDamageHudscale": _tools.RODict({
         "ID": "playerDamageHudscale",
@@ -775,6 +779,22 @@ datas = _tools.RODict({
         "ID": "basicStaTitle4",
         "value": "附加属性",
     }),
+    "basicStaIcon1": _tools.RODict({
+        "ID": "basicStaIcon1",
+        "value": "Assets/Res/ui/texture/attribute/attribute_titleicon01_icon.png",
+    }),
+    "basicStaIcon2": _tools.RODict({
+        "ID": "basicStaIcon2",
+        "value": "Assets/Res/ui/texture/attribute/attribute_titleicon02_icon.png",
+    }),
+    "basicStaIcon3": _tools.RODict({
+        "ID": "basicStaIcon3",
+        "value": "Assets/Res/ui/texture/attribute/attribute_titleicon03_icon.png",
+    }),
+    "basicStaIcon4": _tools.RODict({
+        "ID": "basicStaIcon4",
+        "value": "Assets/Res/ui/texture/attribute/attribute_titleicon04_icon.png",
+    }),
     "homepageMe": _tools.RODict({
         "ID": "homepageMe",
         "value": "我的信息",
@@ -862,5 +882,17 @@ datas = _tools.RODict({
     "dpsResetCheck": _tools.RODict({
         "ID": "dpsResetCheck",
         "value": 54000386,
+    }),
+    "dpsResetFeedback": _tools.RODict({
+        "ID": "dpsResetFeedback",
+        "value": 54000387,
+    }),
+    "dialogbuttonleave": _tools.RODict({
+        "ID": "dialogbuttonleave",
+        "value": 15.0,
+    }),
+    "function_notAvailable": _tools.RODict({
+        "ID": "function_notAvailable",
+        "value": 54003127,
     })
 })

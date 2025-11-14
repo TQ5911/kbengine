@@ -4,6 +4,7 @@ import cmath
 import gameconst
 import functools
 import random
+import math
 
 import gamePlay_gamePlay as GGD
 import decimal
@@ -59,16 +60,27 @@ def whatSpaceTypeWithSub(spaceNo):
     return GGD.datas[mapId]['type'], GGD.datas[mapId]['subType']
 
 
+def bornPosFromData(d):
+    _radius = d.get('Props', {}).get('Radius', 0.0)
+    if _radius <= 0:
+        return (d['PosX'], d['PosY'], d['PosZ'])
+
+    _radius = random.uniform(0.0, _radius)
+    _theta = random.uniform(0.0, 2 * cmath.pi)
+    _x = d['PosX'] + _radius * math.cos(_theta)
+    _z = d['PosZ'] + _radius * math.sin(_theta)
+    return (_x, d['PosY'], _z)
+
+
 def whatSpaceBornPoint(spaceNo):
     mapId = getMapId(spaceNo)
     import utils
     dunSData = utils.getDunStructureModuleData(mapId)
-    if 'BornPos' in dunSData:
-        d, *_ = dunSData['BornPos'].values()
-        return (d['PosX'], d['PosY'], d['PosZ'])
+    if 'BornPos' not in dunSData:
+        return None
 
-    return None
-
+    d, *_ = dunSData['BornPos'].values()
+    return bornPosFromData(d)
 
 def whatSpaceBornPosAndDir(mapId):
     import utils
@@ -77,7 +89,7 @@ def whatSpaceBornPosAndDir(mapId):
         return None, None
 
     _data = random.choice(list(dunSData['BornPos'].values()))
-    return (_data['PosX'], _data['PosY'], _data['PosZ']), (0, 0, _data['Dir'])
+    return bornPosFromData(_data), (0, 0, _data['Dir'])
 
 
 def range2D(p1, p2):

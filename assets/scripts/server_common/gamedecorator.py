@@ -164,10 +164,18 @@ def checkGameconfigEnable(name):
     def f(func):
         @functools.wraps(func)
         def wrapper(*args):
-            enableCall = getattr(gameconfig, name)
-            if not enableCall or not enableCall():
+            info = gameconfig.CONFIG.get(name)
+            if not info:
+                ERROR_MSG('gameconfig not found:', name)
+                return
+            
+            configName, convFunc, default, defaultV, desc, cid, flags = info
+
+            v = KBEngine.globalData['CONFIG'][configName]
+            if not v:
                 WARNING_MSG('gameconfig not enable:', name)
                 return
+            
             return func(*args)
 
         return wrapper

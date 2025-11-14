@@ -30,6 +30,13 @@
             <Persistent>      true                </Persistent>
         </buildDic>
 
+        <tmpTaskSkillIds>
+            <Type>              PY_DICT             </Type>
+            <Flags>             BASE                </Flags>
+            <Default>           {}                  </Default>
+            <Persistent>        true                </Persistent>
+        </tmpTaskSkillIds>
+
         <bigWorldRouteController>
             <Type>  PYTHON  </Type>
             <Flags> CELL_PRIVATE        </Flags>
@@ -459,6 +466,10 @@
         <setSummonSlotIdx>
             <Arg>          SLOTID       </Arg>
         </setSummonSlotIdx>
+
+        <changeMorphPreAddSkill>
+            <Arg>          MORPH_STATE  </Arg>
+        </changeMorphPreAddSkill>
     </CellMethods>
 
     <BaseMethods>

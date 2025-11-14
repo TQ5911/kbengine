@@ -29,5 +29,9 @@ CommEventActionMap = {
     'addEquipWashAnima': (ActionType.BASE,
                  lambda self, eventActionSrc, *args, **kwargs: self._eventActionAddEquipWashAnima(eventActionSrc, *args,
                                                                                          **kwargs)),
-    'AddSkillUltimatePoint': (ActionType.CELL, lambda self, eventActionSrc, *args, **kwargs: self.addUltraSkillPower(int(args[0])))
+    'AddSkillUltimatePoint': (ActionType.CELL, lambda self, eventActionSrc, *args, **kwargs: self.addUltraSkillPower(int(args[0]))),
+
+    'temporaryskill' : (ActionType.BASE,
+                lambda self, eventActionSrc, *args, **kwargs: self._eventActionTemporarySkill(eventActionSrc, *args,
+                                                                                              **kwargs))
 }

@@ -926,18 +926,18 @@ class PlayerBuyAuctionItemRecord(object):
             key = cls._getKey(gbId)
             gameglobal.localBaseApp.getRedisClient().ltrim(key, 0, _crtidx)
 
-class RedBagUtils:  
+class RedBagUtils:
     @classmethod
     def redbagRankKey(cls):
         return 'RB_RANK_{}'.format(gameconfig.serverId())
-    
+
     @classmethod
     def redbagFetchKey(cls, redbagId):
         return 'RB_FETCH_{}_{}'.format(gameconfig.serverId(), redbagId)
-    
+
     @classmethod
     def getRedBagRankList(cls, cb=None):
-        # gameglobal.localBaseApp.getRedisClient().getRangeByScore(cls.redbagRankKey(), 0, utils.getNow(), 0, 100, False, None, 
+        # gameglobal.localBaseApp.getRedisClient().getRangeByScore(cls.redbagRankKey(), 0, utils.getNow(), 0, 100, False, None,
         #     functools.partial(cls.callbackGetRankList, cb))
         gameglobal.localBaseApp.getRedisClient().getRange(cls.redbagRankKey(), 0, 100, True, False, None,
                                                           functools.partial(cls.callbackGetRankList, cb))
@@ -948,13 +948,13 @@ class RedBagUtils:
             ERROR_MSG("callbackGetRankList::cache missing", error)
             return
         cb and cb(result)
-    
+
     @classmethod
     def createRedBagRank(cls, redbagId, timestamp, cb=None):
         key = cls.redbagRankKey()
         gameglobal.localBaseApp.getRedisClient().add(cls.redbagRankKey(), {redbagId: timestamp},
                                                      functools.partial(cls.callbackAddRedBagRankData, redbagId, cb))
-    
+
     @classmethod
     def callbackAddRedBagRankData(cls, redbagId, cb, cid, error, result):
         if error != "":
@@ -997,9 +997,9 @@ class RedBagUtils:
 
     @classmethod
     def setRedBagFetchExpire(cls, redbagId, expireTime, cb=None):
-        gameglobal.localBaseApp.getRedisClient().expireat(cls.redbagFetchKey(redbagId), expireTime, 
+        gameglobal.localBaseApp.getRedisClient().expireat(cls.redbagFetchKey(redbagId), expireTime,
                                                           functools.partial(cls.callbackSetRedBagFetchExpire, redbagId, cb))
-        
+
     @classmethod
     def callbackSetRedBagFetchExpire(cls, redbagId, cb, cid, error, result):
         if error != "":
@@ -1011,10 +1011,10 @@ class RedBagUtils:
     def removeRedBagFetch(cls, redbagId, cb=None):
         HashTableUtils.delete(cls.redbagFetchKey(redbagId),
                               functools.partial(cls.callbackRemoveRedBagFetch, redbagId, cb))
-    
+
     @classmethod
     def callbackRemoveRedBagFetch(cls, redbagId, cb, cid, error, result):
         if error != "":
             ERROR_MSG("callbackRemoveRedBagFetch::cache missing", error)
         cb and cb(error)
-    
+

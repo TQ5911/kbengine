@@ -8,6 +8,7 @@ import json
 
 import gameengine
 import gameconst
+import gameconfig
 import gametimer
 import gametlog
 import formula
@@ -24,6 +25,7 @@ import raid
 import raid_raidConst as RAID_CONST
 import teamMatch_matchConfig as TMMCD
 import teamMatch_activity as TMACTD
+import copy
 
 class _RaidTeamMemberJoinRecordVal(userType.UserSoleType):
     def __init__(self, playerJoinVal, memberCheckDic):
@@ -185,6 +187,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.raidTeamMembersJoinRecordDic = {}
         self.raidTeamMembersInviteRecordDic = {}
         self.raidStandbyCheckerDic = {}
+        self.teamMarkMonsterRec = {}
 
     def doNext(self):
         gameglobal.localBaseApp.fullPrepare(self.classname())
@@ -260,7 +263,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
             [gbId], 'onMessagePre', (MMD.datas.raid_applicantOffline, [name]), None, '', ())
 
-    def onTransfer(self, playerGbId, teamIDX, raidVal):
+    def onTransfer(self, playerGbId, teamIDX, raidVal, broadcast):
         if raidVal.isEmpty():
             return
         teamVal = raidVal.raidTeamDic[teamIDX]
@@ -278,36 +281,10 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                     self.transferRaidLeader(
                         playerVal.playerBox, playerVal.playerGbId, raidVal.raidUUID,
                         transedPlayerVal.playerGbId, {})
-                '''
-                for teamVal in raidVal.raidTeamDic.values():
-                    if teamVal.isEmpty():
-                        continue
-                    
-                    _transedPlayerValList = list(_i for _i in teamVal.teamPlayerDic.values()
-                                            if _i.playerGbId != playerVal.playerGbId)
-                    if len(_transedPlayerValList) == 0:
-                        continue
-
-                    self.transferRaidLeader(
-                        playerVal.playerBox, playerVal.playerGbId, raidVal.raidUUID,
-                        _transedPlayerValList[0].playerGbId, {})
-                    break
-                '''
         elif raidVal.isRaidDeputy(playerVal.playerGbId):
             self.transferRaidDeputy(
                 playerVal.playerBox, playerVal.playerGbId, raidVal.raidUUID,
-                0, {}, True, True)
-        '''
-            # is raid team captain
-            elif playerGBID == memberVal.teamCaptainGBID:
-                if memberVal.hasActivePlayer(excepted=(playerGBID, )):
-                    _transedPlayerVal = random.choice(
-                        list(_i for _i in memberVal.teamPlayerDic.values()
-                             if _i.playerGbId != playerGBID))
-                    self.transferRaidTeamCaptain(
-                        playerVal.playerBox, playerVal.playerGbId, raidUUID,
-                        _transedPlayerVal.playerGbId, {})
-        '''
+                0, {}, True, broadcast)
 
     def _onLeaderClientDeath(self, raidUUID, playerGBID):
         DEBUG_MSG('_onLeaderClientDeath::', raidUUID, playerGBID)
@@ -328,7 +305,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if leaderVal.bOnline:
             return
 
-        self.onTransfer(raidVal.raidLeaderGBID, raidVal.raidLeaderTeamIDX, raidVal)
+        self.onTransfer(raidVal.raidLeaderGBID, raidVal.raidLeaderTeamIDX, raidVal, False)
         if not raidVal.getNextActivePlayer(excepted=(playerGBID,)):
             self.doDisbandRaid(raidVal.raidUUID, {})
             raidVal.clearRaidCacheValToAllPlayers()
@@ -642,11 +619,10 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def createRaidLonely(self, srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, extraProps, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         DEBUG_MSG('createRaidLonely::', srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, extraProps, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
-        raidVal, err = self._createRaid(srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList)
+        raidVal, err = self._createRaid(srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, raidTarget)
         if err != gameconst.RaidErrno.RAID_OK:
             ERROR_MSG('createRaid:: failed, {}'.format(err))
             return
-        raidVal.raidTarget = raidTarget
         if raidVal.raidTarget > 0:
             raidVal.isPublish = True
         raidVal.raidMinLevel = minLevel
@@ -662,7 +638,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if len(raidVal.password) == 0:
             raidVal.isPublish = True
 
-            if raidVal.raidTarget > 1:
+            if raidVal.raidTarget > gameconst.PARE_ACTIVITY_ID:
                 self.raidPrepareAutoMatch(raidUUID)
         self.checkAutoStart(raidUUID)
 
@@ -686,7 +662,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self._cancelCallback(raidVal.autoStartTimer, gametimer.TIMER_TAG_RAID_AUTO_START)
             raidVal.autoStartTimer = 0
 
-        if raidVal.isAutoExpedition and raidVal.raidTarget > 1:
+        if raidVal.isAutoExpedition and raidVal.raidTarget > gameconst.PARE_ACTIVITY_ID:
             if raidVal.isRaidFull():
                 captainBox = raidVal.getRaidLeaderBox()
                 if captainBox and captainBox.cell:
@@ -694,7 +670,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                     return
             raidVal.autoStartTimer = self._callback(5, 'checkAutoStart', (raidUUID,), gametimer.TIMER_TAG_RAID_AUTO_START)
 
-    def _createRaid(self, srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList):
+    def _createRaid(self, srcPlayerBox, srcPlayerGBID, raidUUID, capacity, memberPropsList, raidTarget = 0):
         raidLeaderBox, raidLeaderGBID = srcPlayerBox, srcPlayerGBID
 
         if not dataUtils.isRaidCapacityValidate(capacity):
@@ -705,8 +681,12 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if raidUUID in self.raidDic:
             return None, gameconst.RaidErrno.RAID_RAID_ID_REPEAT.initkvbody(source='_createRaid',
                                                                             raidUUID=raidUUID)
-
-        raidVal = raid.RaidVal(raidUUID=raidUUID, raidCapacity=capacity)
+        siegeWarCamp = 0
+        if memberPropsList:
+            siegeWarCamp = memberPropsList[0]['siegeWarCamp']
+        if gameconfig.isCrossServer() and siegeWarCamp != 0:
+            raidTarget = gameconst.SIEGEWAR_PARE_ACTIVITY_ID
+        raidVal = raid.RaidVal(raidUUID=raidUUID, raidCapacity=capacity, siegeWarCamp=siegeWarCamp, raidTarget=raidTarget)
         teamIDX = 1
         raidTeamVal, err = raidVal.addNewTeam(teamIDX)
         if err != gameconst.RaidErrno.RAID_OK:
@@ -767,6 +747,12 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         # when disband raid, try clear all join val first
         self.doClearRaidApplyJoinDic(raidUUID)
         raidVal = self.raidDic.pop(raidUUID)
+
+        try:
+            raidVal.clearMarkRecord(self)
+        except Exception as e:
+            ERROR_MSG('doDisbandRaid:: clearMarkRecord exception: {}'.format(e))
+
         # 团队解散了，从匹配队列里停止
         if raidVal.raidAutoMatchTime > 0:
             raidVal.raidAutoMatchTime = 0
@@ -789,6 +775,9 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 joinedPlayerBox and joinedPlayerBox.onMessagePre(RAID_CONST.datas["raid_applyFull_msg"]["value"], [])
             elif err == gameconst.RaidErrno.RAID_ALREADY_APPLY_JOIN:
                 WARNING_MSG('applyJoinRaidLonely::already apply join', err)
+            elif err == gameconst.RaidErrno.RAID_NOT_SAME_SIEGEWAR_CAMP:
+                WARNING_MSG('applyJoinRaidLonely::not same siegewar camp', err)
+                joinedPlayerBox and joinedPlayerBox.onMessagePre(MMD.datas.teamMatch_differentFactions, [])
             else:
                 ERROR_MSG('applyJoinRaidLonely:: failed, {}'.format(err))
             return
@@ -814,6 +803,10 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 source='_applyJoinRaidLonely', raidUUID=raidUUID)
 
         raidVal = self.raidDic[raidUUID]
+        if gameconfig.isCrossServer() and raidVal.siegeWarCamp != 0 and joinPlayerProps['siegeWarCamp'] != 0 \
+            and raidVal.siegeWarCamp != joinPlayerProps['siegeWarCamp']:
+            return None, gameconst.RaidErrno.RAID_NOT_SAME_SIEGEWAR_CAMP
+
         playerJoinVal, err = raidVal.addSingleRaidJoin(playerGBID=joinedPlayerGBID,
                                                        playerName=joinPlayerProps['playerName'],
                                                        level=joinPlayerProps['level'],
@@ -827,7 +820,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def applyJoinRaidWithTeam(self, joinedCaptainBox, joinedCaptainGBID, teamUUID, raidUUID, memberDataList, extraProps):
         DEBUG_MSG('applyJoinRaidWithTeam::', joinedCaptainBox, joinedCaptainGBID, teamUUID, raidUUID, memberDataList, extraProps)
-        raidPlayerJoinVal, _err = self._applyJoinRaidWithTeam(joinedCaptainBox, joinedCaptainGBID, teamUUID, raidUUID, memberDataList)
+        raidPlayerJoinVal, _err = self._applyJoinRaidWithTeam(joinedCaptainBox, joinedCaptainGBID, teamUUID, raidUUID, memberDataList, extraProps)
         if _err != gameconst.RaidErrno.RAID_OK:
             if _err == gameconst.RaidErrno.RAID_APPLY_JOIN_NUMBER_OFR:
                 WARNING_MSG('applyJoinRaidWithTeam::apply join number out of range', _err)
@@ -853,11 +846,14 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.raidJoinRecordTimeout, tag=gametimer.TIMER_TAG_RAID_APPLY_JOIN_TIMEOUT
         )._onRaidApplyJoinRecordTimeout(raidUUID, joinedCaptainGBID)
 
-    def _applyJoinRaidWithTeam(self, joinedCaptainBox, joinedCaptainGBID, teamUUID, raidUUID, memberDataList):
+    def _applyJoinRaidWithTeam(self, joinedCaptainBox, joinedCaptainGBID, teamUUID, raidUUID, memberDataList, extraProps):
         if raidUUID not in self.raidDic:
             return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND
 
         raidVal = self.raidDic[raidUUID]
+        if gameconfig.isCrossServer() and raidVal.siegeWarCamp != 0 and extraProps['siegeWarCamp'] != 0 \
+            and raidVal.siegeWarCamp != extraProps['siegeWarCamp']:
+            return None, gameconst.RaidErrno.RAID_NOT_SAME_SIEGEWAR_CAMP
         raidPlayerJoinVal, err = raidVal.addTeamRaidJoin(captainGBID=joinedCaptainGBID,
                                                          teamUUID=teamUUID,
                                                          memberDataList=memberDataList)
@@ -1221,21 +1217,21 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             else:
                 ERROR_MSG('raidLeaderApplyInvitedRaid:: unknown joinValType', joinVal.raidJoinType)
             return
-
-        raidLeaderVal = raidVal.getRaidLeader()
-
+        raidVal = self.raidDic[raidUUID]
+        leaderVal = raidVal.getRaidLeader()
+        raidTarget = raidVal.raidTarget
         _teamUUID = extraProps.get('teamUUID')
         if _teamUUID:
-            gameengine.getTeamStub(_teamUUID).raidApplyInvitedRaid(
-                srcPlayerBox, srcPlayerGBID, raidUUID, raidLeaderVal.playerName,
-                raidLeaderVal.playerGbId, raidLeaderVal.playerName,
+            gameengine.getTeamStub(_teamUUID).raidApplyInvitedRaid(raidTarget,
+                srcPlayerBox, srcPlayerGBID, raidUUID, leaderVal.playerName,
+                leaderVal.playerGbId, leaderVal.playerName,
                 invitePlayerGBID, invitePlayerName, _teamUUID, extraProps)
             return
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             [invitePlayerGBID], 'invitedPlayerOnApplyInvitedRaid',
-            (raidUUID, raidLeaderVal.playerGbId, raidLeaderVal.playerName,
-             raidLeaderVal.playerName, extraProps), self, 'onPlayerIsOffline', (srcPlayerGBID, invitePlayerName))
+            (raidUUID, raidTarget, leaderVal.playerGbId, leaderVal.playerName,
+             leaderVal.playerName, extraProps), self, 'onPlayerIsOffline', (srcPlayerGBID, invitePlayerName))
 
     def raidDeputyApplyInvitedRaid(self, srcPlayerBox, srcPlayerGBID, raidUUID,
                                    invitePlayerGBID, invitePlayerName, extraProps):
@@ -1278,10 +1274,10 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         raidDeputyVal = raidVal.getRaidDeputy()
         raidLeaderVal = raidVal.getRaidLeader()
-
+        raidTarget = raidVal.raidTarget
         _teamUUID = extraProps.get('teamUUID')
         if _teamUUID:
-            gameengine.getTeamStub(_teamUUID).raidApplyInvitedRaid(
+            gameengine.getTeamStub(_teamUUID).raidApplyInvitedRaid(raidTarget,
                 srcPlayerBox, srcPlayerGBID, raidUUID, raidDeputyVal.playerName,
                 raidLeaderVal.playerGbId, raidLeaderVal.playerName,
                 invitePlayerGBID, invitePlayerName, _teamUUID, extraProps)
@@ -1289,7 +1285,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             [invitePlayerGBID], 'invitedPlayerOnApplyInvitedRaid',
-            (raidUUID, raidDeputyVal.playerGbId, raidDeputyVal.playerName,
+            (raidUUID, raidTarget, raidDeputyVal.playerGbId, raidDeputyVal.playerName,
              raidLeaderVal.playerName, extraProps), self, 'onPlayerIsOffline', (srcPlayerGBID, invitePlayerName))
     #
     def raidCaptainApplyInvitedRaid(self, srcPlayerBox, srcPlayerGBID, raidUUID, raidTeamIDX,
@@ -1321,11 +1317,12 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return
 
         captainVal = teamVal.teamPlayerDic[srcPlayerGBID]
+        raidVal = self.raidDic[raidUUID]
         leaderVal = raidVal.getRaidLeader()
-
+        raidTarget = raidVal.raidTarget
         _teamUUID = extraProps.get('teamUUID')
         if _teamUUID:
-            gameengine.getTeamStub(_teamUUID).raidApplyInvitedRaid(
+            gameengine.getTeamStub(_teamUUID).raidApplyInvitedRaid(raidTarget,
                 srcPlayerBox, srcPlayerGBID, raidUUID, captainVal.playerName,
                 leaderVal.playerGbId, leaderVal.playerName,
                 invitePlayerGBID, invitePlayerName, _teamUUID, extraProps)
@@ -1333,7 +1330,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             [invitePlayerGBID], 'invitedPlayerOnApplyInvitedRaid',
-            (raidUUID, captainVal.playerGbId, captainVal.playerName,
+            (raidUUID, raidTarget, captainVal.playerGbId, captainVal.playerName,
              leaderVal.playerName, extraProps), self, 'onPlayerIsOffline', (srcPlayerGBID, invitePlayerName))
 
     def raidMemberApplyInvitedRaid(self, srcPlayerBox, srcPlayerGBID, raidUUID,
@@ -1363,12 +1360,12 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if err != gameconst.RaidErrno.RAID_OK:
             ERROR_MSG('raidMemberApplyInvitedRaid:: failed, {}'.format(err))
             return
-
-        leaderVal = self.raidDic[raidUUID].getRaidLeader()
-
+        raidVal = self.raidDic[raidUUID]
+        leaderVal = raidVal.getRaidLeader()
+        raidTarget = raidVal.raidTarget
         _teamUUID = extraProps.get('teamUUID')
         if _teamUUID:
-            gameengine.getTeamStub(_teamUUID).raidApplyInvitedRaid(
+            gameengine.getTeamStub(_teamUUID).raidApplyInvitedRaid(raidTarget,
                 srcPlayerBox, srcPlayerGBID, raidUUID, playerVal.playerName,
                 leaderVal.playerGbId, leaderVal.playerName,
                 invitePlayerGBID, invitePlayerName, _teamUUID, extraProps)
@@ -1376,7 +1373,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             [invitePlayerGBID], 'invitedPlayerOnApplyInvitedRaid',
-            (raidUUID, playerVal.playerGbId, playerVal.playerName,
+            (raidUUID, raidTarget, playerVal.playerGbId, playerVal.playerName,
              leaderVal.playerName, extraProps), self, 'onPlayerIsOffline', (srcPlayerGBID, invitePlayerName))
 
     def replyInviteRaidLonely(self, invitedPlayerBox, invitedPlayerGBID, invitedPlayerProps,
@@ -1569,7 +1566,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if not teamIDX:
             return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND
 
-        self.onTransfer(memberGBID, teamIDX, raidVal)
+        self.onTransfer(memberGBID, teamIDX, raidVal, False)
 
         teamIDX = raidVal.getRaidTeamIDX(memberGBID)
         raidMemberVal, err = raidVal.popMember(teamIDX, memberGBID, toClient=True)
@@ -1830,8 +1827,8 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         return raidVal, orgRaidLeaderGBID, gameconst.RaidErrno.RAID_OK
 
-    def transferRaidDeputy(self, srcPlayerBox, srcPlayerGBID, raidUUID, toPlayerGBID, extraProps, toClient=True, beBroad=True):
-        DEBUG_MSG('transferRaidDeputy::', srcPlayerBox, srcPlayerGBID, raidUUID, toPlayerGBID, extraProps, toClient, beBroad)
+    def transferRaidDeputy(self, srcPlayerBox, srcPlayerGBID, raidUUID, toPlayerGBID, extraProps, toClient=True, broadcast=True):
+        DEBUG_MSG('transferRaidDeputy::', srcPlayerBox, srcPlayerGBID, raidUUID, toPlayerGBID, extraProps, toClient, broadcast)
         if not toPlayerGBID:
             raidVal, orgRaidDeputyGBID, err = self._cancelRaidDeputy(srcPlayerBox, srcPlayerGBID, raidUUID, 0, toClient)
         else:
@@ -1859,7 +1856,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if raidDeputyVal:
                 raidVal.broadcastAllRaidMembersBase('onMessagePre', (RAID_CONST.datas["raid_appointRDLDone_msg"]["value"], [raidDeputyVal.playerName]),
                                                 exclude=(raidDeputyVal.playerGbId,))
-            elif orgRaidDeputyVal and beBroad:
+            elif orgRaidDeputyVal and broadcast:
                 raidVal.broadcastAllRaidMembersBase('onMessagePre', (RAID_CONST.datas["raid_RDLDownGrade_msg"]["value"], [orgRaidDeputyVal.playerName]))
 
         fn = 'onTransferRaidDeputyAllMemberNotify'
@@ -2360,7 +2357,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             raidVal.broadcastAllRaidMembersClient('onSetRaidTarget', (raidUUID, newRaidTargetId, minLevel, minScore, recruitInfo, raidVal.password, raidVal.isAutoExpedition))
 
         self.raidPrepareStopAutoMatch(raidUUID)
-        if raidVal.isPublish and raidVal.raidTarget > 1:
+        if raidVal.isPublish and raidVal.raidTarget > gameconst.PARE_ACTIVITY_ID:
             self.raidPrepareAutoMatch(raidUUID)
 
         return raidVal, gameconst.RaidErrno.RAID_OK
@@ -2821,6 +2818,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND
 
         raidVal = self.raidDic[raidUUID]
+        # 这里拦截需要判断玩家是否在队伍里的原因是，不在队伍里，就不用通知了
         srcPlayerTeamIDX = raidVal.getRaidTeamIDX(srcPlayerGBID)
         if not srcPlayerTeamIDX:
             return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND
@@ -3047,13 +3045,49 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         raidVal = self.raidDic[raidUUID]
         raidVal.addRaidMarkMemberFromData(markDataInfo)
     
-    def reqAddRaidMarkMember(self, raidUUID, playerBox, type, index, name, gbId, entId, pos):
-        INFO_MSG('reqAddRaidMarkMember: ', raidUUID, playerBox, type, index, name, gbId, entId, pos)
+    def reqAddRaidMarkMember(self, raidUUID, playerBox, type, index, name, gbId, entId, pos, box):
+        INFO_MSG('reqAddRaidMarkMember: ', raidUUID, playerBox, type, index, name, gbId, entId, pos, box)
         if raidUUID not in self.raidDic:
             return
 
+        # 要先执行删除
+        self.reqDelRaidMarkMember(raidUUID, playerBox, type, index)
+
         raidVal = self.raidDic[raidUUID]
         raidVal.addRaidMarkMember(playerBox, type, index, name, gbId, entId, pos)
+        # 记录
+        if type == gameconst.TeamMarkType.MARK_ENEMY and entId > 0:
+            self.addRaidMarkMonsterRec(raidUUID, entId, index, box)
+
+    def addRaidMarkMonsterRec(self, teamId, entId, index, box):
+        # 满了说明处理逻辑有问题，功能暂停
+        if len(self.teamMarkMonsterRec) >= 20000:
+            DEBUG_MSG('addRaidMarkMonsterRec, mark monster rec full ', len(self.teamMarkMonsterRec))
+            return
+        if not self.teamMarkMonsterRec.get(entId, None):
+            self.teamMarkMonsterRec[entId] = {0: box}
+
+        if len(self.teamMarkMonsterRec[entId]) >= 10000:
+            DEBUG_MSG('addRaidMarkMonsterRec, mark monster rec full for entId: ', entId, len(self.teamMarkMonsterRec[entId]))
+            return
+        self.teamMarkMonsterRec[entId][teamId] = index
+        INFO_MSG('addRaidMarkMonsterRec, mark monster rec:', entId, teamId, index)
+
+        box.onBeMarkedAsEnemy(teamId, gameconst.TeamType.RAID, index)
+            
+    def delMarkMonsterRec(self, teamId, entId):
+        if entId not in self.teamMarkMonsterRec:
+            return
+        if teamId in self.teamMarkMonsterRec[entId]:
+            self.teamMarkMonsterRec[entId].pop(teamId)
+            INFO_MSG('delMonsterRec, del mark monster rec:', entId, teamId)
+            box = self.teamMarkMonsterRec[entId].get(0, None)
+            if box:
+                box.delBeMarkedAsEnemy(teamId, gameconst.TeamType.TEAM)
+
+        if len(self.teamMarkMonsterRec[entId]) <= 1:
+            self.teamMarkMonsterRec.pop(entId)
+            INFO_MSG('delMarkMonsterRec, remove mark monster rec box:', entId)
 
     def reqDelRaidMarkMember(self, raidUUID, playerBox, type, index):
         INFO_MSG('reqDelRaidMarkMember: ', raidUUID, playerBox, type, index)
@@ -3061,7 +3095,18 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return
         
         raidVal = self.raidDic[raidUUID]
-        raidVal.delRaidMarkMember(playerBox, type, index)
+        entId = raidVal.delRaidMarkMember(playerBox, type, index)
+        
+        self.delMarkMonsterRec(raidUUID, entId)
+
+    def onMarkMonsterDead(self, entId):
+        if entId not in self.teamMarkMonsterRec:
+            return
+        teamInfo = self.teamMarkMonsterRec.get(entId, {})
+        INFO_MSG('onMarkMonsterDead, remove mark monster:', entId, teamInfo)
+        teamInfo = copy.deepcopy(teamInfo)
+        for teamId, index in teamInfo.items():
+            self.reqDelRaidMarkMember(teamId, None, gameconst.TeamMarkType.MARK_ENEMY, index)
 
     def reqChangeRaidOnlyLeader(self, raidUUID, playerBox, bOnlyCapatain):
         INFO_MSG('reqChangeRaidOnlyLeader: ', raidUUID, playerBox, bOnlyCapatain)

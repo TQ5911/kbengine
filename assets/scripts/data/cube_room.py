@@ -145,7 +145,7 @@ datas = _tools.RODict({
         "ID": 3118,
         "floor": 1,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3119: _tools.RODict({

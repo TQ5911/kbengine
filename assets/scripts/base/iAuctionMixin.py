@@ -61,13 +61,13 @@ class IAuctionMixin(object):
 
             if 0 < _w_itemObj.expireTime <= curTime:
                 return gameconst.AuctionErrno.AUCTION_IS_EXPIRED
-            
+
             if _w_itemObj.isEquipmentItem() and (not _w_itemObj.isGood() or _w_itemObj.hasBindValue()):
                 return gameconst.AuctionErrno.AUCTION_EQUIP_IN_DROP_REPAIR
 
             if _w_itemObj.isLocked():
                 return gameconst.AuctionErrno.AUCTION_ITEM_IN_BAG_LOCKED_STATUS
-            
+
             return gameconst.AuctionErrno.AUCTION_OK
 
         m_errno = __itemCommonCheck(m_itemObj)

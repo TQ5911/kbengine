@@ -8,6 +8,7 @@ import gameconst
 import gametimer
 import formula
 import gameglobal
+import gameconfig
 
 import iBaseNoCell
 import iGlobal
@@ -24,6 +25,7 @@ import teamMatch_activity as TMACTD
 import raid_raidConst as RAID_CONST
 import teamDunChallenge_config as TDC_CFG
 import visible_visible as UVVD
+import copy
 
 
 class DungeonStubMixin(object):
@@ -416,6 +418,7 @@ class DungeonStubMixin(object):
         DEBUG_MSG('onDestroyTeamDungeon:: {} {}'.format(teamUUID, dungeonNo), spaceNo, spaceUUID)
         _team = self.teamDic[teamUUID]
         _team.removeDungeonSpaceCache(dungeonNo, spaceNo, spaceUUID)
+        self.teamDungeonFinished(teamUUID)
 
     def addTeamDungeonSpace(self, teamUUID, dungeonNo, spaceNo, spaceUUID):
         if teamUUID not in self.teamDic:
@@ -499,6 +502,13 @@ class RaidMixin(object):
                 markDataInfo['onlyCaptainCanMark'] = teamVal.onlyCaptainCanMark
                 
                 gameengine.getRaidStub(raidUUID).addTeamMarkDataFromTeam(raidUUID, markDataInfo)
+                # 怪物的话，重新加一下
+                for pDic in markDataInfo.get('playerList', []):
+                    if pDic['type'] == gameconst.TeamMarkType.MARK_ENEMY and pDic['entId'] in self.teamMarkMonsterRec:
+                        ent = self.teamMarkMonsterRec[pDic['entId']].get(0, None)
+                        if not ent:
+                            continue
+                        gameengine.getRaidStub(raidUUID).reqAddRaidMarkMember(raidUUID, None, pDic['type'], pDic['index'], pDic['name'], pDic['gbId'], pDic['entId'], pDic.get('pos'), ent)
             except Exception as e:
                 DEBUG_MSG("addTeamMarkDataFromTeam::error", e)
 
@@ -544,6 +554,8 @@ class RaidMixin(object):
                 srcPlayerBox.onMessagePre(RAID_CONST.datas["raidPartyApply_underLevel_msg"]["value"], [])
             return
     
+        teamVal = self.teamDic[teamUUID]
+        extraProps["siegeWarCamp"] = teamVal.siegeWarCamp
         gameengine.getRaidStub(raidUUID).applyJoinRaidWithTeam(
                 captainBox, captainGBID, teamUUID, raidUUID, memberDataList, extraProps)
 
@@ -581,10 +593,10 @@ class RaidMixin(object):
         gameengine.getRaidStub(raidUUID).onTeamReplyJoinRaidWithTeam(
             srcPlayerBox, srcPlayerGBID, raidUUID, joinedPlayerGBID, err, extraProps)
 
-    def raidApplyInvitedRaid(self, srcPlayerBox, srcPlayerGBID, raidUUID, srcPlayerName,
+    def raidApplyInvitedRaid(self, raidTarget, srcPlayerBox, srcPlayerGBID, raidUUID, srcPlayerName,
                              raidLeaderGBID, raidLeaderName, invitedPlayerGBID, invitedPlayerName,
                              invitedTeamUUID, extraProps):
-        DEBUG_MSG("raidApplyInvitedRaid::", srcPlayerBox, srcPlayerGBID, raidUUID, srcPlayerName,
+        DEBUG_MSG("raidApplyInvitedRaid::", raidTarget, srcPlayerBox, srcPlayerGBID, raidUUID, srcPlayerName,
                    raidLeaderGBID, raidLeaderName, invitedPlayerGBID, invitedPlayerName,
                    invitedTeamUUID, extraProps)
 
@@ -616,7 +628,7 @@ class RaidMixin(object):
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             [invitedPlayerGBID], 'invitedPlayerOnApplyInvitedRaid',
-            (raidUUID, srcPlayerGBID, srcPlayerName, raidLeaderName, extraProps),
+            (raidUUID, raidTarget, srcPlayerGBID, srcPlayerName, raidLeaderName, extraProps),
             self, 'onPlayerIsOffline', (srcPlayerGBID, invitedPlayerName))
 
     def onReplyInviteRaidWithTeamFail(self, playerBox, playerGBID, raidId, srcPlayerGBID, teamId, errno, extra):
@@ -646,6 +658,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def __init__(self):
         super(TeamStub, self).__init__()
         self.teamDic = {}
+        self.teamMarkMonsterRec = {}
         return
 
     def postReloadScript(self):
@@ -718,8 +731,11 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         score = teamPlayerInfoDic['score']
         mountState = teamPlayerInfoDic['mountState']
         openId = teamPlayerInfoDic['openId']
+        siegeWarCamp = teamPlayerInfoDic['siegeWarCamp']
+        if gameconfig.isCrossServer() and siegeWarCamp != 0:
+            teamTarget = gameconst.SIEGEWAR_PARE_ACTIVITY_ID
         teamVal = team.TeamCacheVal(teamId, teamTarget, gbId, box, playerName, level, school, sex, picFrameId,
-                                                 score=score, mountState=mountState, openId=openId)
+                                                 score=score, mountState=mountState, openId=openId, siegeWarCamp=siegeWarCamp)
         
         teamVal.teamMinLv = minLevel
         teamVal.teamMinScore = minScore
@@ -735,8 +751,8 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         # 没有密码的属于公开
         if len(teamVal.password) == 0:
             teamVal.isPublish = True
-            # 自由组队目标为1，不进匹配队列
-            if teamVal.teamTarget > 1:
+            # 自由组队目标大于2，才进匹配队列
+            if teamVal.teamTarget > gameconst.PARE_ACTIVITY_ID:
                 self.teamPrepareAutoMatch(teamId, teamPlayerInfoDic.get('guildUUID', 0))
         
         # 定时启动自动检查是否自动开始
@@ -760,7 +776,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self._cancelCallback(teamVal.autoStartTimer, gametimer.TIMER_TAG_TEAM_AUTO_START)
             teamVal.autoStartTimer = 0
 
-        if teamVal.isAutoExpedition and teamVal.teamTarget > 1:
+        if teamVal.isAutoExpedition and teamVal.teamTarget > gameconst.PARE_ACTIVITY_ID:
             if teamVal.isTeamFull():
                 captainBox = teamVal.getCaptainBox()
                 if captainBox and captainBox.cell:
@@ -768,7 +784,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                     return
             teamVal.autoStartTimer = self._callback(5, 'checkAutoStart', (teamID,), gametimer.TIMER_TAG_TEAM_AUTO_START)
 
-    def isCanApplyJoinTeam(self, box, teamId, gbId, level, score):
+    def isCanApplyJoinTeam(self, box, teamId, gbId, level, score, siegeWarCamp):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
             box.onMessagePre(TMMCD.datas['teamDisbandMsg']['value'], [])
@@ -785,6 +801,11 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if box.client:
                 box.onMessagePre(MMD.datas.insufficientConditions, [])
             return False
+        if gameconfig.isCrossServer():
+            if siegeWarCamp != teamVal.siegeWarCamp and siegeWarCamp != 0 and teamVal.siegeWarCamp != 0:
+                if box.client:
+                    box.onMessagePre(MMD.datas.teamMatch_differentFactions, [])
+                return False
 
         return True
 
@@ -845,9 +866,9 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         box = teamPlayerInfoDic['box']
         level = teamPlayerInfoDic['level']
         score = teamPlayerInfoDic['score']
+        siegeWarCamp = teamPlayerInfoDic['siegeWarCamp']
 
-
-        if not self.isCanApplyJoinTeam(box, teamId, gbId, level, score):
+        if not self.isCanApplyJoinTeam(box, teamId, gbId, level, score, siegeWarCamp):
             box.client.onApplyJoinTeamFailed(teamId)
             ret = False
         else:
@@ -916,6 +937,11 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if teamVal.captainOfflineTimer > 0:
             self._cancelCallback(teamVal.captainOfflineTimer, gametimer.TIMER_TAG_CAPTAIN_OFFLINE)
             teamVal.captainOfflineTimer = 0
+
+        try:
+            teamVal.clearMarkRecord(self)
+        except Exception as e:
+            ERROR_MSG('doDisbandTeam:: clearMarkRecord exception: {}'.format(e))
             
         self.teamDic.pop(teamId)
 
@@ -957,7 +983,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             captainName = teamVal.getPlayerName(captainGbId)
             srcPlayerName = teamVal.getPlayerName(srcPlayerGbId)
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell([invitedPlayerGbId], 'procInviteTeamMsg', (
-                srcTeamId, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool), self, 'onPlayerIsOffline', (srcPlayerGbId, name))
+                srcTeamId, teamVal.teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool), self, 'onPlayerIsOffline', (srcPlayerGbId, name))
 
     def applyInviteTeam(self, box, srcTeamId, srcPlayerGbId, srcLevel, srcSchool, invitedPlayerGbId, name):
         ret = True
@@ -1559,7 +1585,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         
         # 改完队伍的目标之后，统一刷一遍匹配条件
         self.teamPrepareStopAutoMatch(teamId)
-        if teamVal.isPublish and teamVal.teamTarget > 1:
+        if teamVal.isPublish and teamVal.teamTarget > gameconst.PARE_ACTIVITY_ID:
             self.teamPrepareAutoMatch(teamId, guildUUID)
 
         self.checkAutoStart(teamId)
@@ -1804,20 +1830,67 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         
     
     # 标记相关
-    def reqAddMarkMember(self, teamId, playerBox, type, index, name, gbId, entId, pos):
-        INFO_MSG('reqAddMarkMember', teamId, type, index, name, gbId, entId, pos)
+    def reqAddMarkMember(self, teamId, playerBox, type, index, name, gbId, entId, pos, box):
+        INFO_MSG('reqAddMarkMember', teamId, type, index, name, gbId, entId, pos, box)
         if teamId not in self.teamDic:
             return
+        
+        # 要先执行删除
+        self.reqDelMarkMember(teamId, playerBox, type, index)
+
         teamVal = self.teamDic[teamId]
         teamVal.addMarkMember(playerBox, type, index, name, gbId, entId, pos)
+        # 记录
+        if type == gameconst.TeamMarkType.MARK_ENEMY and entId > 0:
+            self.addTeamMarkMonsterRec(teamId, entId, index, box)
+
+    def addTeamMarkMonsterRec(self, teamId, entId, index, box):
+        # 满了说明处理逻辑有问题，功能暂停
+        if len(self.teamMarkMonsterRec) >= 20000:
+            DEBUG_MSG('addTeamMarkMonsterRec, mark monster rec full ', len(self.teamMarkMonsterRec))
+            return
+        if not self.teamMarkMonsterRec.get(entId, None):
+            self.teamMarkMonsterRec[entId] = {0: box}
+
+        if len(self.teamMarkMonsterRec[entId]) >= 10000:
+            DEBUG_MSG('addTeamMarkMonsterRec, mark monster rec full for entId: ', entId, len(self.teamMarkMonsterRec[entId]))
+            return
+        self.teamMarkMonsterRec[entId][teamId] = index
+        INFO_MSG('addTeamMarkMonsterRec, mark monster rec:', entId, teamId, index)
+        #
+        box.onBeMarkedAsEnemy(teamId, gameconst.TeamType.TEAM, index)
+            
+    def delMarkMonsterRec(self, teamId, entId):
+        if entId not in self.teamMarkMonsterRec:
+            return
+        if teamId in self.teamMarkMonsterRec[entId]:
+            self.teamMarkMonsterRec[entId].pop(teamId)
+            INFO_MSG('delMonsterRec, del mark monster rec:', entId, teamId)
+            box = self.teamMarkMonsterRec[entId].get(0, None)
+            if box:
+                box.delBeMarkedAsEnemy(teamId, gameconst.TeamType.TEAM)
+
+        if len(self.teamMarkMonsterRec[entId]) <= 1:   # 最后只剩box了
+            self.teamMarkMonsterRec.pop(entId)
+            INFO_MSG('delMonsterRec, remove mark monster rec box:', entId)
         
     def reqDelMarkMember(self, teamId, playerBox, type, index):
         INFO_MSG('reqDelMarkMember', teamId, type, index)
         if teamId not in self.teamDic:
             return
         teamVal = self.teamDic[teamId]
+        entId = teamVal.delMarkMember(playerBox, type, index)
         
-        teamVal.delMarkMember(playerBox, type, index)
+        self.delMarkMonsterRec(teamId, entId)
+
+    def onMarkMonsterDead(self, entId):
+        if entId not in self.teamMarkMonsterRec:
+            return
+        teamInfo = self.teamMarkMonsterRec.get(entId, {})
+        INFO_MSG('onMarkMonsterDead, remove mark monster:', entId, teamInfo.keys())
+        teamInfo = copy.deepcopy(teamInfo)
+        for teamId, index in teamInfo.items():
+            self.reqDelMarkMember(teamId, None, gameconst.TeamMarkType.MARK_ENEMY, index)
         
     def reqChangeOnlyCaptain(self, teamId, playerBox, state):
         INFO_MSG('reqChangeOnlyCaptain', teamId, state)

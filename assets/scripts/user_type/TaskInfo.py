@@ -262,7 +262,12 @@ class TaskInfo(userType.UserSoleType):
         self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskList(hookRewardTaskNum, RRTID.WeeklyTaskList, level)
         self.hookRewardTaskFnsNumWeekly = 0
 
-    def doTaskDailyUpdate(self, myLevel):
+    def _afterTaskUpdateRemoved(self, owner, removeTaskIds):
+        DEBUG_MSG("_afterTaskUpdateRemoved", removeTaskIds)
+        for taskId in removeTaskIds:
+            owner.deleteTemporarySkillByTask(taskId)
+
+    def doTaskDailyUpdate(self, owner, myLevel):
         finDailyTaskIds = []
         hookRewardTaskNum = RRTIC.datas.get('dailyLimitNum', {}).get('value', 0)
         self.hookRewardTaskIdListDaily = self._constructHookRewardTaskList(hookRewardTaskNum, RRTID.DailyTaskList, myLevel)
@@ -285,9 +290,10 @@ class TaskInfo(userType.UserSoleType):
                 removeTaskIds.append(remTaskId)
             removeTaskIds.extend(self.remChildTask(remTaskId))
         DEBUG_MSG('in doTaskDailyUpdate, removeTaskIds:', removeTaskIds)
+        self._afterTaskUpdateRemoved(owner, removeTaskIds)
         return removeTaskIds
 
-    def doTaskWeeklyUpdate(self, myLevel):
+    def doTaskWeeklyUpdate(self, owner, myLevel):
         finDailyTaskIds = []
         hookRewardTaskNum = RRTIC.datas.get('weeklyLimitNum', {}).get('value', 0)
         self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskList(hookRewardTaskNum, RRTID.WeeklyTaskList, myLevel)
@@ -311,6 +317,7 @@ class TaskInfo(userType.UserSoleType):
                 removeTaskIds.append(remTaskId)
             removeTaskIds.extend(self.remChildTask(remTaskId))
         DEBUG_MSG('in doTaskWeeklyUpdate, removeTaskIds:', removeTaskIds)
+        self._afterTaskUpdateRemoved(owner, removeTaskIds)
         return removeTaskIds
 
     def addSendUpdatedTaskList(self, tasksList):
@@ -504,14 +511,6 @@ class TaskInfo(userType.UserSoleType):
         wealthVal = dropAward.AwardVal()
         # itemList = []
         for itemId, itemNum in rewardDic.items():
-            # it = itemFactory.ItemFactory.createItem(itemId, itemNum, bindType=gameconst.ItemBindType.BIND,
-            #                                         taskId=taskData['TaskId'])
-            # if it.itemType != gameconst.ItemType.Task:
-            #     gameengine.reportCritical('in giveClaimTaskItems, itemType error:',
-            #                               taskData['TaskId'], it.itemId, it.itemType)
-            #     continue
-            # itemList.append(it)
-
             wealthVal.addWealthByItemId(itemId, itemNum, dataUtils.getItemDefaultBindType())
             # 出售获得的是货币，所以必定成功
         if owner.canAddWealthVal(src, wealthVal):
@@ -721,11 +720,7 @@ class TaskInfo(userType.UserSoleType):
             dstPos = (transData['X'], transData['Y'], transData['Z'])
             dstDir = (0.0, 0.0, math.pi*transData.get('Dir', 0.0)/180)
         else:
-            dunSData = utils.getDunStructureModuleData(dungeonNo)
-            if dunSData and 'BornPos' in dunSData:
-                d, *_ = dunSData['BornPos'].values()
-                dstPos = (d['PosX'], d['PosY'], d['PosZ'])
-                dstDir = (0.0, 0.0, math.pi*d.get('Dir', 0.0)/180)
+            dstPos, dstDir = formula.whatSpaceBornPosAndDir(dungeonNo)
 
         owner.cell.taskPreEnterSpace(taskId, dungeonNo, dstPos, dstDir)
         self.curTryEnterDunData = {'dungeonNo':dungeonNo, 't':utils.getNow()}
@@ -787,9 +782,21 @@ class TaskInfo(userType.UserSoleType):
             return gameclass.TaskCondResult(False, msgId=dataUtils.taskMsgId('taskClaimAlert_GetItem'))
 
         if dataUtils.taskFieldVal(taskData, 'TaskType') == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
-            hookRewardTaskCheck = taskId in self.hookRewardTaskIdListDaily
-            hookRewardTaskCheck |= taskId in self.hookRewardTaskIdListWeekly
-            hookRewardTaskCheck |= taskId in RRTID.DoOnceTaskList
+            hookRewardTaskCheck = taskId in RRTID.DoOnceTaskList
+            if hookRewardTaskCheck:
+                data = RRTID.datas.get(taskId)
+                if not data:
+                    ERROR_MSG('       in canClaimTask, hookRewardTaskNum cfg not exist: ', taskId)
+                    return gameclass.TaskCondResult(False)
+
+                myLevel = owner.getAvatarLevel()
+                ClaimCondLevelMin = data.get('minLevel', 0)
+                if myLevel < ClaimCondLevelMin:
+                    WARNING_MSG('       in canClaimTask, hookRewardTaskNum level limit, ', taskId, myLevel, ClaimCondLevelMin)
+                    return gameclass.TaskCondResult(False)
+            else:
+                hookRewardTaskCheck |= taskId in self.hookRewardTaskIdListDaily
+                hookRewardTaskCheck |= taskId in self.hookRewardTaskIdListWeekly
 
             if not hookRewardTaskCheck:
                 WARNING_MSG('       in canClaimTask, hookRewardTaskId not in hookRewardTaskIdList, taskId is ', taskId, 'daily list is ', self.hookRewardTaskIdListDaily, 'weekly list is ', self.hookRewardTaskIdListWeekly, 'task count limit ', dataUtils.taskFieldVal(taskData, 'OpenCondCountLimit'))
@@ -1254,6 +1261,7 @@ class TaskInfo(userType.UserSoleType):
         DEBUG_MSG("_afterTaskSubmitted ", task, popRewardUUID)
         owner.onTaskFinishedForNewbieStep(task.taskId)
         owner.checkUnlockBuildAndSkillByTask(True, task.taskId)
+        owner.deleteTemporarySkillByTask(task.taskId)
         owner.checkAndUnlockWelfareSignIn(updateFlag = True)
         owner.checkUnlockBountyTask()
 
@@ -1531,7 +1539,7 @@ class TaskInfo(userType.UserSoleType):
             childTask.setStat(owner, gameconst.TaskStat.TASK_STAT_FAILED)
             failedTaskIds.append(childTaskId)
             uptaskList.append(childTask)
-        self._afterTaskFailed(failedTaskIds)
+        self._afterTaskFailed(owner, failedTaskIds)
         self.addSendUpdatedTaskList(uptaskList)
         if task.parentTaskId != 0:
             self.onChildTaskFailed(owner, task)
@@ -1542,7 +1550,8 @@ class TaskInfo(userType.UserSoleType):
             owner.startQuitTask(taskId, reason)
         return True
 
-    def _afterTaskFailed(self, quitTaskIds):
+    def _afterTaskFailed(self, owner, quitTaskIds):
+        self._afterTaskUpdateRemoved(owner, quitTaskIds)
         for taskId in quitTaskIds:
             task = self.getTask(taskId)
             taskData = dataUtils.getTaskData(taskId)
@@ -1641,6 +1650,7 @@ class TaskInfo(userType.UserSoleType):
         actId = None
         relateActTaskTask = 0
         actUseTime = 0
+        self._afterTaskUpdateRemoved(owner, quitTaskIds)
         for taskId in quitTaskIds:
             # 任务放弃也可能有奖励
             self.quitTaskReward(owner, taskId, opUUID, srcType)

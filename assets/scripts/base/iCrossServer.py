@@ -255,8 +255,9 @@ class ICrossServer(object):
             return
 
         self.otherServerAvatarBox.onCrossServerEnd(callbackComponent, callbackName, args)
-        #TODO TODO配表
-        self.client.onGobackServer(1002)
+
+        #TODO未来如果有多个跨服玩法，需要再配表设计每个玩法goback的场景
+        self.client.onGobackServer(gameconst.SIEGEWAR_GO_BACK_LINENO)
         gameengine.getGlobalBase('CrossServerStub').onGobackServer(self.accountEntity.accountName)
 
         self.cell.offline(gameconst.AVATAR_OFFLINE_REASON_END_CROSS_SERVER)

@@ -670,6 +670,9 @@ class ImpAutoCombat(object):
         if not _ent.isAttackable(self):
             return
 
+        if self.duelAttr.isDuelEnemy(_ent):
+            return
+
         self.fightBackTarget = _ent.id
         self.setSelectedTargetId(_ent.id)
 
@@ -946,7 +949,12 @@ class ImpAutoCombat(object):
             return None
         dstPos = None
         skillRange = skill.getRange(self, skill.skillId)
-        mDis = max(0.2, int(skillRange * 0.9))
+
+        targetRadius = 0
+        if target.IsMonster:
+            targetRadius = target.getConfigData().get('attackDistanceCompensation', 0)
+
+        mDis = max(0.2, int(skillRange * 0.9) + targetRadius)
         return target.position, mDis
 
     #--------------------------------------------bot------------------------

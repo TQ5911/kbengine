@@ -56,7 +56,7 @@ datas ={
       22020002
     ],
     "num": 1,
-    "lv": "38",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -203,7 +203,7 @@ datas ={
       22020001
     ],
     "num": 1,
-    "lv": "38",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

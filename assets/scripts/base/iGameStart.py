@@ -36,13 +36,13 @@ class IGameStart(object):
         if userArg == gametimer.BASESTUB_TIMER_CHECK_COMPONENTS:
             cellapps = self.initedCellapps
             if len(cellapps) != gameconfig.cellAppCount():
-                INFO_MSG('startwatting: waiting for cellapps start: %s/%s' % (cellapps, gameconfig.cellAppCount()))
+                INFO_MSG('start waiting: waiting for cellapps start: %s/%s' % (cellapps, gameconfig.cellAppCount()))
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CHECK_COMPONENTS)
                 return
 
             comps = KBEngine.getComponents()
             if len(comps['baseapps']) + 1 != gameconfig.baseAppCount():
-                INFO_MSG('startwatting: waiting for baseapps start: %s/%s' % (
+                INFO_MSG('start waiting: waiting for baseapps start: %s/%s' % (
                 len(comps['baseapps']) + 1, gameconfig.baseAppCount()))
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CHECK_COMPONENTS)
                 return
@@ -56,7 +56,7 @@ class IGameStart(object):
             howManyBaseApp = gameengine.howManyBaseApps()
 
             if howManyBaseApp < baseAppCnt:
-                INFO_MSG('startwatting: waiting for creating all BaseApp Entity: %s/%s' % (howManyBaseApp, baseAppCnt))
+                INFO_MSG('start waiting: waiting for creating all BaseApp Entity: %s/%s' % (howManyBaseApp, baseAppCnt))
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_BASEAPPS)
                 return
 
@@ -90,7 +90,7 @@ class IGameStart(object):
             for _lbType in gameconst.LeaderBoardType.ALL_KEYS:
                 _stub = gameengine.getLeaderStub(_lbType, reportErr=False)
                 if not _stub:
-                    INFO_MSG('startwatting: waiting for leaderBoardStub ready', _lbType)
+                    INFO_MSG('start waiting: waiting for leaderBoardStub ready', _lbType)
                     self.pyAddTimer(0.1, 0, gametimer.WAIT_LEADER_BOARD_STUB_READY)
                     return
 
@@ -106,7 +106,7 @@ class IGameStart(object):
             for stubName in gameconst.GLOBAL_BASE_STUB_UNARCHIVE:
                 globalName = stubName
                 if not gameengine.getGlobalBase(globalName, reportErr=False):
-                    INFO_MSG('startwatting: still waiting for stub:', globalName)
+                    INFO_MSG('start waiting: still waiting for stub:', globalName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
@@ -127,7 +127,7 @@ class IGameStart(object):
             for lineType in gameconst.lineStubMap.keys():
                 globalName = gameengine.buildLineStubName(lineType)
                 if not gameengine.getGlobalBase(globalName, reportErr=False):
-                    INFO_MSG('startwatting: still waiting for line stub:', globalName)
+                    INFO_MSG('start waiting: still waiting for line stub:', globalName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
@@ -175,13 +175,13 @@ class IGameStart(object):
 
             for _floorNo in WL_FD.datas.keys():
                 if not gameengine.getGlobalBase('WonderLandStub%d' % _floorNo, reportErr=False):
-                    INFO_MSG('startwatting: waiting for wonderland stub', _floorNo)
+                    INFO_MSG('start waiting: waiting for wonderland stub', _floorNo)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
             for _floorNo in C_FD.datas.keys():
                 if not gameengine.getGlobalBase('CubeStub%d' % _floorNo, reportErr=False):
-                    INFO_MSG('startwatting: waiting for CubeStub stub', _floorNo)
+                    INFO_MSG('start waiting: waiting for CubeStub stub', _floorNo)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return
 
@@ -269,7 +269,7 @@ class IGameStart(object):
                     stubName = lineCfg['stubName']
                     ready = self.lineReady.get(lineType, False)
                     if not ready:
-                        INFO_MSG('startwatting: waiting for line space ready', stubName, lineType)
+                        INFO_MSG('start waiting: waiting for line space ready', stubName, lineType)
                         gameengine.getLineStub(lineType).checkAllLineSpaceReady(self, 'onLineReady', ())
                         self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_CHECK_LINE_READY)
                         return
@@ -293,7 +293,7 @@ class IGameStart(object):
         elif userArg == gametimer.BASESTUB_TIMER_CREATE_LINE_SPACE_ENTITIES:
             ready = self.isLineEntityReady()
             if not ready:
-                INFO_MSG('startwatting: waiting for entities ready', ready.extra)
+                INFO_MSG('start waiting: waiting for entities ready', ready.extra)
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_CREATE_LINE_SPACE_ENTITIES)
                 return
 
@@ -315,7 +315,7 @@ class IGameStart(object):
             if gameglobal.isBootstrap:
                 ready = self.isWorldRefreshEntityReady()
                 if not ready:
-                   INFO_MSG('startwatting: waiting for world refresh entities ready', ready.extra)
+                   INFO_MSG('start waiting: waiting for world refresh entities ready', ready.extra)
                    gameengine.getGlobalBase('WorldRefreshEntityStub').checkAllGroupReady(self, 'onWorldRefreshEntityReady', ())
                    self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_WAIT_WORLD_REFRESH_ENTITIES_READY)
                    return
@@ -325,7 +325,7 @@ class IGameStart(object):
 
         elif userArg == gametimer.BASESTUB_TIMER_GAME_READY:
             if not gameglobal.isRelivedBaseapp and len(gameglobal.readyBaseappOrder) != gameconfig.baseAppCount():
-                INFO_MSG('startwatting: waitting for all baseapps ready')
+                INFO_MSG('start waiting: waitting for all baseapps ready')
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_GAME_READY)
                 return
 

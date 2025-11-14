@@ -223,8 +223,6 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
                      
         _teamStub.TeamDungeonCompletedAfter(sVal.teamUUID, self.dungeonNo, spaceNo ,win)
         _teamStub.destroyTeamDungeonDelay(sVal.teamUUID, self.dungeonNo, spaceNo, reason, extraInfo)
-        # 解散队伍
-        _teamStub.teamDungeonFinished(sVal.teamUUID)
 
     def doEnterDungeon(self, box, gbId, teamUUID, spaceNo, extra):
         if spaceNo not in self.spaces:

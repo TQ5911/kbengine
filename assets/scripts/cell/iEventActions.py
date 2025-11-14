@@ -39,8 +39,6 @@ class IEventActions(object):
         if combatResult and combatResult.damageInfo and not self.isDestroyed:
             self.sendSkillDamage(combatResult)
             combatResult.damageInfo = []
-        # 按说应该都有combatDebugMsg方法，加容错判断可能有点耗，看看情况
-        actionOwner.combatDebugMsg('doCombatActions end: actionFunc:%s, targetId:%s, dmgSrcEntId:%s, combatResult:%s', actionFunc, getattr(target, 'id', None), dmgSrcEntId, combatResult)
         return ret
 
     def _getSkillByActionContext(self, context):

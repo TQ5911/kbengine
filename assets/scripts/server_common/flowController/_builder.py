@@ -743,17 +743,17 @@ class DungeonFlowControllerBuilder(object):
         transPetId = eventData['transPetID']
         chooseType = eventData['chooseType']
         return self.controller.buildDungeonPlayerForceTrans(eventId, transPetId, chooseType)
-    
+
     def build_createRebornPos(self, eventId, eventData):
         entityIds = eventData['entityID']
         entityNum = eventData['num']
         return self.controller.buildReleaseDungeonRebornPosEvent(
             eventId, entityIds, entityNum)
-    
+
     def build_removeRebornPos(self, eventId, eventData):
         entityIds = eventData['entityID']
         return self.controller.buildRecycleDungeonRebornPosEvent(eventId, entityIds)
-    
+
     def build_transferToTheDesignatedMap(self, eventId, eventData):
         lineNo = eventData['mapId']
         x = eventData['posX']

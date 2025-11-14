@@ -67,6 +67,11 @@
             <Persistent>    true                    </Persistent>
         </channelId>
 
+        <operatingSystem>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+        </operatingSystem>
+
         <loginChannel>
             <Type>          UNICODE                   </Type>
             <Flags>         BASE                    </Flags>
@@ -179,7 +184,12 @@
         <onReqAvatarList>
             <Arg>   CHARACTERS_INFO </Arg>
             <Arg>   BOOL            </Arg>
+            <Arg>   DBID            </Arg>
         </onReqAvatarList>
+
+        <onCharInfoChange>
+            <Arg>   CHARACTER_VAL   </Arg>
+        </onCharInfoChange>
 
         <onReqAvatarGBID>
             <Arg>   PLAYER_GBID </Arg>
@@ -221,12 +231,26 @@
             <Arg>    UNICODE        </Arg>
             <Arg>    SERVER_ID      </Arg>
         </onAvatarDetailInAccount>
+
+        <onAvatarOfflineTime>
+            <Arg>    PLAYER_GBID    </Arg>
+            <Arg>    LONGTIME       </Arg>
+        </onAvatarOfflineTime>
+
+        <onLoginNeedReconnect>
+        </onLoginNeedReconnect>
+
+        <onSelectGameFailed>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UINT8           </Arg>
+        </onSelectGameFailed>
     </ClientMethods>
 
     <BaseMethods>
         <selectAvatarGame>
             <Exposed/>
-            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   BOOL            </Arg>
         </selectAvatarGame>
 
         <reqCreateAvatar>
@@ -296,9 +320,12 @@
         <stopCharacterAuth> <Exposed/>
             <Arg>    PLAYER_GBID    </Arg>
         </stopCharacterAuth>
+
+        <getAvatarOfflineTime> <Exposed/>
+            <Arg>    PLAYER_GBID    </Arg>
+        </getAvatarOfflineTime>
     </BaseMethods>
 
     <CellMethods>
     </CellMethods>
-
 </root>

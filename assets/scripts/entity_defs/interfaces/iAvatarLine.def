@@ -69,6 +69,11 @@
             <Arg>           PYTHON           </Arg>
             <Arg>           PYTHON           </Arg>
         </applyEnterLineInternal>
+
+        <teleportEnterLineMapUnlockedCallback>
+            <Arg>       BOOL            </Arg>
+            <Arg>       PY_DICT         </Arg>
+        </teleportEnterLineMapUnlockedCallback>
     </CellMethods>
 
     <BaseMethods>

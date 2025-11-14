@@ -473,7 +473,7 @@ def isHit(self, target, context):
                 from KBEDebug import DEBUG_MSG
                 DEBUG_MSG("in isHit, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO, datas)
 
-    hitRatio = min(max(90 + addValue + (self.getProp("hit") - target.getProp("dodge") - min(max((target.level - self.level), 0), 10) * 3) / 100, minHitRate), maxHitRate)
+    hitRatio = min(max(0.9 + addValue + (self.getProp("hit") - target.getProp("dodge") - min(max((target.level - self.level), 0), 10) * 3) / 100, minHitRate), maxHitRate)
     if random.randint(1, 100) <= hitRatio * 100:
         return True
     else:
@@ -767,6 +767,8 @@ def stun(self, target, context, *args):
     # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
     arg4 = args[3] if len(args) >= 4 else 0
     # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+    arg5 = args[4] if len(args) >= 5 else 0
+    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效
 
     if not target:
         return
@@ -790,7 +792,12 @@ def stun(self, target, context, *args):
     # 可被驱散的Buff Tag
     dispelTag = 22
 
-    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti,
+    if arg5 == 1 and not utils.isPVP(self, target):
+        return False
+    elif arg5 == 2 and utils.isPVP(self, target):
+        return False
+    else:
+        return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti,
                   adjControlAnti, dispelTag)
 
 def silent(self, target, context, *args):
@@ -803,6 +810,8 @@ def silent(self, target, context, *args):
     # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
     arg4 = args[3] if len(args) >= 4 else 0
     # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+    arg5 = args[4] if len(args) >= 5 else 0
+    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效
 
     if not target:
         return
@@ -827,8 +836,12 @@ def silent(self, target, context, *args):
     adjControlAnti = target.getProp("adjSilentAnti")
     # 可被驱散的Buff Tag
     dispelTag = 23
-
-    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
+    if arg5 == 1 and not utils.isPVP(self, target):
+        return False
+    elif arg5 == 2 and utils.isPVP(self, target):
+        return False
+    else:
+        return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
 
 def down(self, target, context, *args):
     # 通用击倒
@@ -840,6 +853,8 @@ def down(self, target, context, *args):
     # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
     arg4 = args[3] if len(args) >= 4 else 0
     # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+    arg5 = args[4] if len(args) >= 5 else 0
+    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效
 
     if not target:
         return
@@ -863,7 +878,12 @@ def down(self, target, context, *args):
     # 可被驱散的Buff Tag
     dispelTag = 57
 
-    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
+    if arg5 == 1 and not utils.isPVP(self, target):
+        return False
+    elif arg5 == 2 and utils.isPVP(self, target):
+        return False
+    else:
+        return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
 
 def dragTargetToPos(self, target, context, *args):
     if not target:
@@ -904,6 +924,8 @@ def frozen(self, target, context, *args):
     # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
     arg4 = args[3] if len(args) >= 4 else 0
     # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+    arg5 = args[4] if len(args) >= 5 else 0
+    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效
 
     if not target:
         return
@@ -927,11 +949,16 @@ def frozen(self, target, context, *args):
     # 可被驱散的Buff Tag
     dispelTag = 24
 
-    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh,
+    if arg5 == 1 and not utils.isPVP(self, target):
+        return False
+    elif arg5 == 2 and utils.isPVP(self, target):
+        return False
+    else:
+        return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh,
                          controlAnti, adjControlAnti, dispelTag)
 
 def snare(self, target, context, *args):
-    # 通用定身
+    # 通用定身（走的迟缓属性）
     arg1 = args[0] if len(args) >= 1 else 0.0
     # 持续时间
     arg2 = args[1] if len(args) >= 2 else 0.0
@@ -940,6 +967,8 @@ def snare(self, target, context, *args):
     # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
     arg4 = args[3] if len(args) >= 4 else 0
     # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+    arg5 = args[4] if len(args) >= 5 else 0
+    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效
 
     if not target:
         return
@@ -955,15 +984,20 @@ def snare(self, target, context, *args):
     # 控制状态ID
     stateID = 9
     # 控制穿透
-    controlEnh = self.getProp("snareEnh")
+    controlEnh = self.getProp("slowEnh")
     # 控制抵抗
-    controlAnti = target.getProp("snareAnti")
+    controlAnti = target.getProp("slowAnti")
     # 控制抵抗调整值
-    adjControlAnti = target.getProp("adjSnareAnti")
+    adjControlAnti = target.getProp("adjSlowAnti")
     # 可被驱散的Buff Tag
     dispelTag = 29
 
-    return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
+    if arg5 == 1 and not utils.isPVP(self, target):
+        return False
+    elif arg5 == 2 and utils.isPVP(self, target):
+        return False
+    else:
+        return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
 
 def moralEffect(self, target):
     # 红名状态对伤害的影响（红名玩家伤害降低，攻击方造成易伤）

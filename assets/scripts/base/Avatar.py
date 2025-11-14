@@ -88,6 +88,7 @@ import iCrossServer
 import iWorkshop
 import iRedBag
 import iDateData
+import iMeridian
 
 
 class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, impLine.ImpLine, iClient.IClient,
@@ -100,7 +101,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
              iLeaderBoard.ILeaderBoard, iCoinAuction.ICoinAuction, iNewbie.INewbie, iAchievement.IAchievement,
              iEnemy.IEnemy, iWonderLandBase.IWonderLandBase, iActivityBase.IActivityBase, iCollectible.ICollectible, iSiegeWarBase.ISiegeWarBase,
              iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop,
-             iRedBag.IRedBag, iDateData.IDateData):
+             iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian):
     """
     角色实体
 
@@ -234,6 +235,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.onReloginInCrossServerState()
 
         self.clientIP = self.clientAddr(chn)[0]
+        self.sendClientAuthState(chn)
 
     def getAccountByChn(self, chn):
         if chn == gameconst.ClientCallChannel.MAIN_CHANNEL:
@@ -269,6 +271,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.setTempMiscProp(gameconst.AvatarProps.gameLengthMarkTime, utils.getNow())
         self.initPetProps()
         self.initSummonSlotIdx()
+        self.initRemoveTemporarySkill()
 
         self.recordAvatarBase()
         self._claimTaskByNewbieStep()
@@ -662,6 +665,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self._callback(delay, 'avatarLogin', (), gametimer.TIMER_TAG_AVATER_IGUILD_LOGION)
             self._callback(delay, '_sendAllGuildRelation', (), gametimer.TIMER_TAG_AVATER_SEND_GUILD_RELATION)
             self._callback(delay, 'redbagOnLogin', (), gametimer.TIMER_TAG_ON_RED_BAG_RELOGIN)
+            delay += 0.1
+            self._callback(delay, 'meridianOnLogin', (), gametimer.TIMER_TAG_ON_MERIDIAN_LOGIN)
 
             self.sendHotfix()
             if isRelogin:
@@ -671,7 +676,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             gameconfig.sendClientConfig(self)
 
             if not isRelogin:
-                pass
+                self.onAvatarLoginForAuth()
 
         except Exception as e:
             gameengine.reportCritical('EEEEEEEError!!! in doInitClientBase:', e)
@@ -690,13 +695,13 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         # hotfix = gameglobal.hotfix
         # self.streamStringProxy(hotfix, '', gameconst.StreamStringID.HOTFIX_DATA)
 
-    def backSelectCharacterBase(self, isFromHost):
-        INFO_MSG('backSelectCharacterBase', isFromHost)
+    def backSelectCharacterBase(self, isFromMain):
+        INFO_MSG('backSelectCharacterBase', isFromMain)
         if self.isDestroying or not (self.accountEntity or self.subAccount):
             ERROR_MSG('backSelectCharacterBase failed!')
             return
 
-        if not isFromHost:
+        if not isFromMain:
             self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL).onBackSelectCharacter()
             self.subAccount.onAvatarSubClientDisconnect()
             self.giveClientTo(
@@ -760,6 +765,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         if not self.offlineReason:
             self.offlineReason = gameconst.AVATAR_OFFLINE_REASON_LOSE_CELL
         self.isDestroying = True
+
+        # 这时候需要一些level等等信息，所以需要在pop前保存下
+        if self.accountEntity.isAuthHost(self.gbID):
+            self.authStatistics.saveOnOffline(self)
+
         self.popRoleCache(self.offlineReason)
         return
 
@@ -1395,6 +1405,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('_checkAchieveDailyRefresh')
         self.registerDailyEvent('_resetCubeCowDur')
         self.registerDailyEvent('_onDailyHealWoundsTimesRefresh')
+        self.registerDailyEvent('_authDailyReset')
         self.registerHourlyEvent('onLimitedStoreHourlyUpdate')
 
     def reqDeleteAvatar(self, exposed):
@@ -1463,18 +1474,18 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def isUIVisible(self, uiId):
         uiData = UVVD.datas.get(uiId)
         if not uiData:
-            return False
+            return False, gameconst.UIUIVisibleType.NONE, 0
 
         missionID = uiData['task']
         if missionID and not self.isTaskComplete(missionID):
-            return False
+            return False, gameconst.UIUIVisibleType.TASK, missionID
 
         lvLimit = uiData['level']
         myRoleCache = gameglobal.roleCache.get(self.id)
         if lvLimit and myRoleCache['level'] < lvLimit:
-            return False
+            return False, gameconst.UIUIVisibleType.LEVEL, lvLimit
 
-        return True
+        return True, 0, 0
 
     def _onDailyHealWoundsTimesRefresh(self):
         self.cell.onDailyHealWoundsTimesRefresh()
@@ -1591,9 +1602,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.client.onNewBlazeId(blazeId)
 # ---------------------------- blaze end ----------------------------
 
-#
-def onExpireDailyData(self, key, val):
-    super(Avatar, self).onExpireDailyData(key, val)
+    #
+    def onExpireDailyData(self, key, val):
+        super(Avatar, self).onExpireDailyData(key, val)
 
-def onExpireWeeklyData(self, key, val):
-    super(Avatar, self).onExpireWeeklyData(key, val)
+    def onExpireWeeklyData(self, key, val):
+        super(Avatar, self).onExpireWeeklyData(key, val)

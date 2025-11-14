@@ -135,7 +135,7 @@ class IRelive(object):
         _posList = []
         _dirList = []
         for _data in _posData.values():
-            _posList.append((_data['PosX'], _data['PosY'], _data['PosZ']))
+            _posList.append(formula.bornPosFromData(_data))
             _dirList.append((0.0, 0.0, _data['Dir'] * math.pi / 180))
 
         if len(_posList) == 0:

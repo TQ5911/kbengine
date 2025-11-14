@@ -107,6 +107,14 @@ class TaskEvent(object):
         self._innerSetVariable(gameconst.VarChangeSrc.VAR_SRC_COMM_ACTION, varId, fmlId, paramsStr, opUUID, '')
         return
 
+    def _eventActionTemporarySkill(self, eventActionSrc, *args, **kwargs):
+        DEBUG_MSG('_eventActionTemporarySkill:', eventActionSrc, args, kwargs)
+
+        taskId = kwargs['_srcTaskId']
+        school = self.getRoleCacheAttr('school')
+        skillList =  kwargs[str(school)]
+        self.unlockTemporarySkillByTask(taskId, skillList)
+
 class TaskProgress(object):
     def onTaskAvatarDie(self, spaceNo):
         # 角色死亡，对应任务可能会直接失败
@@ -299,7 +307,7 @@ class ImpTask(TaskProgress, TaskEvent):
     def onTaskDailyUpdate(self, *args):
         DEBUG_MSG('onTaskDailyUpdate:', args)
         myLevel = self.getAvatarLevel()
-        removeTaskIds = self.taskInfo.doTaskDailyUpdate(myLevel)
+        removeTaskIds = self.taskInfo.doTaskDailyUpdate(self, myLevel)
         self.client.onTasksRem(removeTaskIds)
         self.sendUpdateTasksToClient()
         self.taskInfo.sendHookRewardTaskList(self)
@@ -307,7 +315,7 @@ class ImpTask(TaskProgress, TaskEvent):
     def onTaskWeeklyUpdate(self, *args):
         DEBUG_MSG('onTaskWeeklyUpdate:', args)
         myLevel = self.getAvatarLevel()
-        removeTaskIds = self.taskInfo.doTaskWeeklyUpdate(myLevel)
+        removeTaskIds = self.taskInfo.doTaskWeeklyUpdate(self, myLevel)
         self.client.onTasksRem(removeTaskIds)
         self.sendUpdateTasksToClient()
         self.taskInfo.sendHookRewardTaskList(self)
@@ -780,7 +788,8 @@ class ImpTask(TaskProgress, TaskEvent):
         if self.getPersistentMiscProp(gameconst.AvatarProps.unlockBountyTaskFlag, 0):
             return
 
-        if not self.isUIVisible(gameconst.BOUNTY_TASK_UI_ID):
+        res, _1, _2 = self.isUIVisible(gameconst.BOUNTY_TASK_UI_ID)
+        if not res:
             return
 
         self.setPersistentMiscProp(gameconst.AvatarProps.unlockBountyTaskFlag, 1)

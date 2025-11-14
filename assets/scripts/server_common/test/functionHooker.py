@@ -18,6 +18,9 @@ from types import FunctionType, ModuleType
 from typing import Any, Dict, List, Set, Optional, Union, Callable
 from KBEDebug import *
 
+
+CALL_FUNC_GET_PROP = "get_props"
+
 class FunctionHooker:
 
     _instance = None
@@ -29,6 +32,9 @@ class FunctionHooker:
                  show_args: bool = True,
                  show_return: bool = True,
                  show_errors: bool = True,
+                 show_variables: bool = True,
+                 pre_call_func_type: Optional[str] = None,
+                 post_call_func_type: Optional[str] = None,
                  verbose: bool = True):
         """
         Initialize enhanced hook tool
@@ -48,12 +54,35 @@ class FunctionHooker:
         self.show_args = show_args
         self.show_return = show_return
         self.show_errors = show_errors
+        self.show_variables = show_variables
+        self.pre_call_func_type = pre_call_func_type
+        self.post_call_func_type = post_call_func_type
         self.verbose = verbose
         
+        self.pre_call_map = {}
+        self.post_call_map = {}
         self.hooked_functions: Set[FunctionType] = set()
         self.hooked_classes: Set[type] = set()
         self.hooked_methods: Set[tuple] = set()  # (class, method_name)
     
+        # 预设一些函数调用
+        def get_props(*args, **kwargs):
+            self_props = {}
+            target_props = {}
+            if hasattr(args[0], 'getFightProps'):
+                self_props = {k:v for k,v in args[0].getFightProps().items() if v != 0}
+            if hasattr(args[1], 'getFightProps'):
+                target_props = {k:v for k,v in args[1].getFightProps().items() if v != 0}
+            return {'selfProps': self_props, 'targetProps': target_props}
+        self.call_funcs = {
+            CALL_FUNC_GET_PROP: get_props
+        }
+
+    # 一次性用，需要重置
+    def reset_call_func_type(self):
+        self.pre_call_func_type = None
+        self.post_call_func_type = None
+
     @classmethod
     def get_instance(cls, **kwargs):
         if cls._instance is None:
@@ -106,10 +135,10 @@ class FunctionHooker:
                 sig = inspect.signature(func)
                 bound_args = sig.bind(*args, **kwargs)
                 bound_args.apply_defaults()
-                args = str({k: str(v) for k,v in dict(bound_args.arguments).items()}) # 把自定义str的类都展开一下
-                if len(args) > 1300: # 防止参数过长导致日志被截断
-                    args = str(dict(bound_args.arguments))
-                lines.append(f"Argument mapping: {args}")
+                args_str = str({k: str(v) for k,v in dict(bound_args.arguments).items()}) # 把自定义str的类都展开一下
+                if len(args_str) > 1300: # 防止参数过长导致日志被截断
+                    args_str = str(dict(bound_args.arguments))
+                lines.append(f"Argument mapping: {args_str}")
             except Exception as e:
                 lines.append(f"Argument parsing failed: {e}")
                 lines.append(f"Positional args: {args}")
@@ -121,6 +150,11 @@ class FunctionHooker:
         
         return ", ".join(lines)
     
+    def _format_function_other_call(self, func: FunctionType, func_type: str, ret: Any) -> str:
+        """Format other function call information"""
+        func_name = getattr(func, '__qualname__', func.__name__)
+        return f"Function other call: {func_name}, {func_type}: {ret}"
+
     def _format_function_return(self, func: FunctionType, result: Any) -> str:
         """Format function return information"""
         func_name = getattr(func, '__qualname__', func.__name__)
@@ -131,8 +165,16 @@ class FunctionHooker:
             result_str = str({k: str(v) for k,v in result.items()})
         if len(result_str) > 1300: # 防止返回值过长导致日志被截断
             result_str = str(result)
-        lines = [f"Function return: {func_name} -> {result_str}"]
-        return " ".join(lines)
+        result_str = f"Function return: {func_name}, {result_str}"
+        return result_str
+
+    def _format_function_variables(self, func: FunctionType, local_vars: Dict[str, Any]) -> str:
+        """Format function local variables information"""
+        func_name = getattr(func, '__qualname__', func.__name__)
+        lines = [f"Function variables: {func_name}"]
+        for var_name, var_value in local_vars.items():
+            lines.append(f"{var_name}: {var_value}")
+        return ", ".join(lines)
 
     def _format_function_error(self, func: FunctionType, error: Exception) -> str:
         """Format function error information"""
@@ -152,35 +194,93 @@ class FunctionHooker:
         
         return "\n".join(lines)
     
-    def _print(self, message: str) -> None:
+    def _print(self, message: str, args=None) -> None:
         """Print log information"""
         if not self.verbose:
             return
-        message = f"{self.prefix}[hook] {message}"
+        if args and len(args) > 0:
+            message = f"[{getattr(args[0], 'name', '')}]{self.prefix}[hook] {message}"
+        else:
+            message = f"{self.prefix}[hook] {message}"
         DEBUG_MSG(message)
 
     def hook_function(self, func: FunctionType) -> FunctionType:
         """Hook a single function"""
-        if func in self.hooked_functions:
+        func_name = getattr(func, '__qualname__', func.__name__)
+        if func_name in self.hooked_functions:
+            if self.verbose:
+                self._print(f"Function {func_name} is already hooked, skipping")
             return func
-            
+        # 这两个逻辑要放在外面， 否则等到函数具体执行的时候再赋值，就被reset清掉了
+        if self.pre_call_func_type and self.pre_call_func_type in self.call_funcs:
+            self.pre_call_map[func_name] = self.pre_call_func_type
+
+        if self.post_call_func_type and self.post_call_func_type in self.call_funcs:
+            self.post_call_map[func_name] = self.post_call_func_type
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             # Print call information
-            self._print(self._format_function_call(func, args, kwargs))
-            
+            self._print(self._format_function_call(func, args, kwargs), args)
+            captured_vars = {}
+            old_trace = None
+            if self.show_variables:
+                # 获取函数源代码并解析AST
+                import dis
+                # 获取函数的字节码
+                bytecode = dis.Bytecode(func)
+                
+                # 分析字节码，找出所有STORE_*操作的目标变量
+                local_var_names = set()
+                
+                for instruction in bytecode:
+                    # 查找存储操作 (STORE_FAST, STORE_NAME, STORE_DEREF等)
+                    # if instruction.opname in ('STORE_FAST', 'STORE_NAME', 'STORE_DEREF'):
+                    # STORE_FAST 操作的操作数是局部变量名
+                    if instruction.opname == 'STORE_FAST':
+                        local_var_names.add(instruction.argval)
+                    # 对于其他存储操作，我们需要更复杂的分析
+                # 定义跟踪函数以捕获局部变量
+                def trace_func(frame, event, arg):
+                    if event == 'return' and frame.f_code == func.__code__:
+                        # 只捕获在函数内部定义的变量
+                        for var_name in local_var_names:
+                            if var_name in frame.f_locals:
+                                captured_vars[var_name] = frame.f_locals[var_name]
+                    return trace_func
+                    # 设置跟踪函数
+                old_trace = sys.gettrace()
+                sys.settrace(trace_func)
+
             # Call the original function
             try:
+                
+                pre_call_func_type=  self.pre_call_map.get(func_name)
+                if pre_call_func_type:
+                    ret = self.call_funcs[pre_call_func_type](*args, **kwargs)
+                    self._print(self._format_function_other_call(func, pre_call_func_type, ret), args)
+
                 result = func(*args, **kwargs)
+                
+                post_call_func_type = self.post_call_map.get(func_name)
+                if post_call_func_type:
+                    ret = self.call_funcs[post_call_func_type](*args, **kwargs)
+                    self._print(self._format_function_other_call(func, post_call_func_type, ret), args)
+
+                # 变量要放return前输出，不然函数解析器那边无法匹配
+                if self.show_variables:
+                    self._print(self._format_function_variables(func, captured_vars.copy()), args)
                 if self.show_return:
-                    self._print(self._format_function_return(func, result))
-                return result
+                    self._print(self._format_function_return(func, result), args)
             except Exception as e:
                 if self.show_errors:
-                    self._print(self._format_function_error(func, e))
+                    self._print(self._format_function_error(func, e), args)
                 raise
-        
-        self.hooked_functions.add(func)
+            finally:
+                if old_trace:
+                    sys.settrace(old_trace)
+            return result
+        self.hooked_functions.add(func_name)
         return wrapper
     
     def hook_method(self, cls: type, method_name: str) -> None:
@@ -288,7 +388,7 @@ def hook_specific_class_method(module_name: str,
         # Create Hooker and hook specified method
         hooker = FunctionHooker.get_instance(**hook_options)
         hooker.hook_method(cls, method_name)
-        
+        hooker.reset_call_func_type()
         DEBUG_MSG(f"Hook succeeded: {module_name}.{class_name}.{method_name}")
         return True
         
@@ -328,7 +428,7 @@ def hook_specific_class(module_name: str,
         # Create Hooker and hook class
         hooker = FunctionHooker.get_instance(**hook_options)
         hooker.hook_class(cls, method_filter)
-
+        hooker.reset_call_func_type()
         DEBUG_MSG(f"Hook succeeded: {module_name}.{class_name}")
         return True
         
@@ -361,7 +461,7 @@ def hook_specific_module(module_name: str,
         # Create Hooker and hook module
         hooker = FunctionHooker.get_instance(**hook_options)
         hooker.hook_module(module, class_filter, method_filter)
-
+        hooker.reset_call_func_type()
         DEBUG_MSG(f"Hook succeeded: {module_name}")
         return True
         

@@ -3298,6 +3298,76 @@ datas = _tools.RODict({
     86060115: _tools.RODict({
         "TaskId": 86060115,
         "TaskGroup": 0,
+        "TaskName": "村庄异变",
+    }),
+    86060116: _tools.RODict({
+        "TaskId": 86060116,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060117: _tools.RODict({
+        "TaskId": 86060117,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060118: _tools.RODict({
+        "TaskId": 86060118,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060119: _tools.RODict({
+        "TaskId": 86060119,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060120: _tools.RODict({
+        "TaskId": 86060120,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060121: _tools.RODict({
+        "TaskId": 86060121,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060122: _tools.RODict({
+        "TaskId": 86060122,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060123: _tools.RODict({
+        "TaskId": 86060123,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060124: _tools.RODict({
+        "TaskId": 86060124,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060125: _tools.RODict({
+        "TaskId": 86060125,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060126: _tools.RODict({
+        "TaskId": 86060126,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060127: _tools.RODict({
+        "TaskId": 86060127,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060128: _tools.RODict({
+        "TaskId": 86060128,
+        "TaskGroup": 0,
+        "TaskName": "同心试炼",
+    }),
+    86060129: _tools.RODict({
+        "TaskId": 86060129,
+        "TaskGroup": 0,
         "TaskName": "同心试炼",
     }),
     86070001: _tools.RODict({

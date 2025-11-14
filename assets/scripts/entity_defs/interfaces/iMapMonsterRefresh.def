@@ -28,6 +28,7 @@
             <Arg> OBJECT_ID </Arg>
             <Arg> OBJECT_ID </Arg>
             <Arg> OBJECT_ID </Arg>
+            <Arg> OBJECT_ID </Arg>
         </onMonsterDestroy>
     </CellMethods>
 </root>

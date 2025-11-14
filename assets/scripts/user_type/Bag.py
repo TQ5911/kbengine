@@ -113,12 +113,6 @@ class Bag(BaseBag.BaseBag):
                           srcSubType=0, idipSource=0):
         opStat, gridId = super(Bag, self).addItemsToNewGrid(owner, itemObj, opUUID, src, detail, gridId, notify,
                                                             syncToClient, srcSubType, idipSource)
-
-        if src != AAC_AACDD.datas.BONUS_SRC_BAG_SORT:
-            newCount = self.getItemCount(itemObj.itemId, itemObj.bindType)
-            # owner.makeItemFlowLog(self.bagType, itemObj, itemObj.itemNum, opUUID, src, newCount, detail)
-            itemData = dataUtils.getCommItemData(itemObj.itemId)
-
         return opStat, gridId
 
     def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True,
@@ -467,9 +461,7 @@ class Bag(BaseBag.BaseBag):
             detail = gameclass.AwardDetail(addItemIdSet=list(addItemIdSet))
             itemObjList = []
             for itemId in addItemIdSet:
-                item = itemFactory.ItemFactory.createItem(itemId, 1,
-                                                          dataUtils.getItemDefaultBindType()
-                                                          )
+                item = itemFactory.ItemFactory.createItem(itemId, 1, dataUtils.getItemDefaultBindType())
                 itemObjList.append(item)
 
             wealthVal = dropAward.AwardVal(itemObjs=itemObjList)

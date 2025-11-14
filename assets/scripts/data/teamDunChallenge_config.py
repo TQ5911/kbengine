@@ -154,5 +154,21 @@ datas = _tools.RODict({
     "dunDailyTimesInfo": _tools.RODict({
         "ID": "dunDailyTimesInfo",
         "value": 36,
+    }),
+    "raidStats_rank1": _tools.RODict({
+        "ID": "raidStats_rank1",
+        "value": "S",
+    }),
+    "raidStats_rank2": _tools.RODict({
+        "ID": "raidStats_rank2",
+        "value": "A",
+    }),
+    "raidStats_rank3": _tools.RODict({
+        "ID": "raidStats_rank3",
+        "value": "B",
+    }),
+    "raidStats_rank4": _tools.RODict({
+        "ID": "raidStats_rank4",
+        "value": "C",
     })
 })

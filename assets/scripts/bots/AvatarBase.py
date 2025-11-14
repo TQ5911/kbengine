@@ -47,7 +47,7 @@ class AvatarBase(KBEngine.Entity):
     def onAppearanceUpdated(self, arg0, arg1): pass
     def onApplyBecomeCaptainMsg(self, arg0, arg1): pass
     def onApplyGather(self, arg0, arg1): pass
-    def onApplyInviteTeamMsg(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
+    def onApplyInviteTeamMsg(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
     def onApplyJoinTeamFailed(self, arg0): pass
     def onApplyJoinTeamMsg(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onAskConfirmFollowCaptain(self): pass
@@ -58,10 +58,10 @@ class AvatarBase(KBEngine.Entity):
     def onBackSelectCharacter(self): pass
     def onBagItemsDailyUpdate(self, arg0): pass
     def onBasePersistPropChanged(self, arg0, arg1): pass
-    def onBeInvitedRaidByDeputy(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
-    def onBeInvitedRaidByLeader(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
-    def onBeInvitedRaidByMember(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
-    def onBeInvitedRaidByTeamCaptain(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
+    def onBeInvitedRaidByDeputy(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
+    def onBeInvitedRaidByLeader(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
+    def onBeInvitedRaidByMember(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
+    def onBeInvitedRaidByTeamCaptain(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
     def onBindItemSucc(self, arg0, arg1): pass
     def onBlockAllRaidMemberMics(self, arg0, arg1): pass
     def onBlockAllTeamMemberMics(self, arg0, arg1): pass
@@ -95,6 +95,7 @@ class AvatarBase(KBEngine.Entity):
     def onClearRaidData(self): pass
     def onClearRaidDungeonInfo(self, arg0, arg1, arg2): pass
     def onClearSpeak(self, arg0): pass
+    def onClientAuthState(self, arg0): pass
     def onClientDataSyncFinished(self): pass
     def onClientLaunchReward(self, arg0): pass
     def onCollectHolyArtifactFragment(self, arg0): pass
@@ -107,6 +108,7 @@ class AvatarBase(KBEngine.Entity):
     def onCubeLoginData(self, arg0, arg1, arg2, arg3): pass
     def onCubeRoomEndTime(self, arg0): pass
     def onDead(self, arg0): pass
+    def onDealAuthResult(self, arg0): pass
     def onDeathPenaltyExpChange(self, arg0): pass
     def onDeathPenaltyReward(self, arg0, arg1, arg2, arg3): pass
     def onDelAllMails(self): pass
@@ -124,27 +126,26 @@ class AvatarBase(KBEngine.Entity):
     def onDuelResult(self, arg0, arg1, arg2): pass
     def onDungeonCompleted(self, arg0, arg1, arg2, arg3): pass
     def onEnemyDatas(self, arg0): pass
+    def onEnhanceMeridian(self, arg0): pass
     def onEnterSingleDungeon(self, arg0): pass
-    def onEquipBackBlessSucc(self, arg0, arg1, arg2, arg3, arg4): pass
+    def onEquipBackBlessSucc(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onEquipBaseAttrWashingSucc(self, arg0, arg1, arg2): pass
     def onEquipBindValueWashingFailed(self, arg0, arg1): pass
-    def onEquipBindValueWashingSucc(self, arg0, arg1, arg2): pass
-    def onEquipBlessSucc(self, arg0, arg1, arg2, arg3, arg4): pass
+    def onEquipBindValueWashingSucc(self, arg0, arg1, arg2, arg3): pass
+    def onEquipBlessSucc(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7): pass
+    def onEquipBroken(self, arg0, arg1): pass
     def onEquipDisassemble(self, arg0, arg1, arg2): pass
     def onEquipDropStateChange(self, arg0, arg1): pass
     def onEquipEnhanceFailed(self, arg0, arg1): pass
-    def onEquipEnhanceSucc(self, arg0, arg1, arg2, arg3): pass
-    def onEquipGlyphApplySucc(self, arg0, arg1, arg2): pass
-    def onEquipGlyphWashingSucc(self, arg0, arg1, arg2, arg3): pass
+    def onEquipEnhanceSucc(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
+    def onEquipGlyphApplySucc(self, arg0, arg1, arg2, arg3): pass
+    def onEquipGlyphWashingSucc(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
     def onEquipMakeFailed(self): pass
     def onEquipMakeSucc(self, arg0): pass
-    def onEquipReplaceFailed(self, arg0): pass
-    def onEquipReplaceSucc(self, arg0, arg1): pass
-    def onEquipSell(self, arg0, arg1, arg2): pass
-    def onEquipSpiritApplySucc(self, arg0, arg1, arg2): pass
-    def onEquipSpiritWashingSucc(self, arg0, arg1, arg2, arg3): pass
+    def onEquipSpiritApplySucc(self, arg0, arg1, arg2, arg3): pass
+    def onEquipSpiritWashingSucc(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
     def onEquipUpgradeFailed(self, arg0, arg1): pass
-    def onEquipUpgradeSucc(self, arg0, arg1, arg2): pass
+    def onEquipUpgradeSucc(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onEventTips(self, arg0, arg1): pass
     def onExchangeRaidTeamMember(self, arg0, arg1, arg2, arg3, arg4): pass
     def onExitGuildClient(self): pass
@@ -187,6 +188,7 @@ class AvatarBase(KBEngine.Entity):
     def onGetLingShouBattleList(self, arg0): pass
     def onGetMailAttach(self, arg0): pass
     def onGetMailList(self, arg0): pass
+    def onGetMeridianData(self, arg0, arg1, arg2): pass
     def onGetNewMail(self, arg0): pass
     def onGetOnlineRewardData(self, arg0, arg1): pass
     def onGetOnlineTimeReward(self, arg0): pass
@@ -247,6 +249,7 @@ class AvatarBase(KBEngine.Entity):
     def onLeaveSingleDungeon(self, arg0): pass
     def onLeaveTeam(self): pass
     def onLeftFreeReliveTimesChanged(self, arg0): pass
+    def onLeveUpMeridianPointTo(self, arg0, arg1, arg2): pass
     def onLockItemSucc(self, arg0, arg1, arg2, arg3): pass
     def onMessage(self, arg0, arg1): pass
     def onModifyNameResult(self, arg0, arg1): pass
@@ -287,7 +290,7 @@ class AvatarBase(KBEngine.Entity):
     def onRandomSynthesis(self, arg0): pass
     def onReadOneMail(self, arg0): pass
     def onRecordFightProps(self): pass
-    def onRecvAuthRoleClient(self, arg0): pass
+    def onRecvAuthRoleClient(self, arg0, arg1): pass
     def onRecvAvatarChannelMsg(self, arg0, arg1, arg2): pass
     def onRecvDuelReq(self, arg0, arg1): pass
     def onRecvTrumpetMsg(self, arg0, arg1, arg2): pass

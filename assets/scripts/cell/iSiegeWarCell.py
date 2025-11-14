@@ -165,9 +165,11 @@ class ISiegeWarCell(object):
 
     def crossServerSiegeWarLeave(self):
         DEBUG_MSG("[lj]crossServerSiegeWarLeave")
+        self.applyLeaveTeam(self.id)
+        self.leaveRaid(self.id)
         self.spaceMgr.onPlayerLeave(self.gbId, self.id, self)
 
     def onSiegeWarChatMsg(self, channelID, avatarInfo, msg, src):
         DEBUG_MSG('[lj]on siege war chat msg', channelID, avatarInfo, msg, src)
         if src.siegeWarCamp == self.siegeWarCamp:
-            self.base.onRecvChannelMsg(channelID, avatarInfo, msg)
+            self.client.onRecvAvatarChannelMsg(channelID, avatarInfo, msg)

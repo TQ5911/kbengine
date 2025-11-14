@@ -628,34 +628,6 @@ namespace KBEngine
 			}
 		}
 
-		private DATATYPE__CLI_EQUIP_ITEM_VAL_radomEnhTimes_ArrayType_ChildArray radomEnhTimes_DataType = new DATATYPE__CLI_EQUIP_ITEM_VAL_radomEnhTimes_ArrayType_ChildArray();
-
-		public class DATATYPE__CLI_EQUIP_ITEM_VAL_radomEnhTimes_ArrayType_ChildArray : DATATYPE_BASE
-		{
-			public List<UInt32> createFromStreamEx(MemoryStream stream)
-			{
-				UInt32 size = stream.readUint32();
-				List<UInt32> datas = new List<UInt32>();
-
-				while(size > 0)
-				{
-					--size;
-					datas.Add(stream.readUint32());
-				};
-
-				return datas;
-			}
-
-			public void addToStreamEx(Bundle stream, List<UInt32> v)
-			{
-				stream.writeUint32((UInt32)v.Count);
-				for(int i=0; i<v.Count; ++i)
-				{
-					stream.writeUint32(v[i]);
-				};
-			}
-		}
-
 		private DATATYPE__CLI_EQUIP_ITEM_VAL_blessAffixes_ArrayType_ChildArray blessAffixes_DataType = new DATATYPE__CLI_EQUIP_ITEM_VAL_blessAffixes_ArrayType_ChildArray();
 
 		public class DATATYPE__CLI_EQUIP_ITEM_VAL_blessAffixes_ArrayType_ChildArray : DATATYPE_BASE
@@ -698,11 +670,7 @@ namespace KBEngine
 			datas.auctionTime = stream.readUint32();
 			datas.spiritDatas = spiritDatas_DataType.createFromStreamEx(stream);
 			datas.glyphInfo = glyphInfo_DataType.createFromStreamEx(stream);
-			datas.radomEnhTimes = radomEnhTimes_DataType.createFromStreamEx(stream);
 			datas.enhanceLv = stream.readUint8();
-			datas.enhanceLvRate = stream.readUint8();
-			datas.creatorName = stream.readUnicode();
-			datas.creatorGbId = stream.readUint64();
 			datas.blessAffixes = blessAffixes_DataType.createFromStreamEx(stream);
 			datas.maxBlessLv = stream.readUint8();
 			datas.blessLvRate = stream.readUint16();
@@ -726,11 +694,7 @@ namespace KBEngine
 			stream.writeUint32(v.auctionTime);
 			spiritDatas_DataType.addToStreamEx(stream, v.spiritDatas);
 			glyphInfo_DataType.addToStreamEx(stream, v.glyphInfo);
-			radomEnhTimes_DataType.addToStreamEx(stream, v.radomEnhTimes);
 			stream.writeUint8(v.enhanceLv);
-			stream.writeUint8(v.enhanceLvRate);
-			stream.writeUnicode(v.creatorName);
-			stream.writeUint64(v.creatorGbId);
 			blessAffixes_DataType.addToStreamEx(stream, v.blessAffixes);
 			stream.writeUint8(v.maxBlessLv);
 			stream.writeUint16(v.blessLvRate);
@@ -2305,6 +2269,7 @@ namespace KBEngine
 			datas.id = stream.readInt32();
 			datas.openId = stream.readUnicode();
 			datas.raidAmount = stream.readUint8();
+			datas.offlineTime = stream.readUint32();
 			return datas;
 		}
 
@@ -2325,6 +2290,7 @@ namespace KBEngine
 			stream.writeInt32(v.id);
 			stream.writeUnicode(v.openId);
 			stream.writeUint8(v.raidAmount);
+			stream.writeUint32(v.offlineTime);
 		}
 	}
 
@@ -4937,14 +4903,14 @@ namespace KBEngine
 		public AUTH_PERMISSION_DATA_INFO createFromStreamEx(MemoryStream stream)
 		{
 			AUTH_PERMISSION_DATA_INFO datas = new AUTH_PERMISSION_DATA_INFO();
-			datas.permission = stream.readUint16();
+			datas.permission = stream.readUint64();
 			datas.dailyMoney = stream.readUint64();
 			return datas;
 		}
 
 		public void addToStreamEx(Bundle stream, AUTH_PERMISSION_DATA_INFO v)
 		{
-			stream.writeUint16(v.permission);
+			stream.writeUint64(v.permission);
 			stream.writeUint64(v.dailyMoney);
 		}
 	}
@@ -4973,6 +4939,158 @@ namespace KBEngine
 			stream.writeInt32(v.guildScore);
 			stream.writeUnicode(v.leaderName);
 			stream.writeUint32(v.ts);
+		}
+	}
+
+
+
+	public class DATATYPE_ACT_TIMES_DATA_INFO : DATATYPE_BASE
+	{
+		public ACT_TIMES_DATA_INFO createFromStreamEx(MemoryStream stream)
+		{
+			ACT_TIMES_DATA_INFO datas = new ACT_TIMES_DATA_INFO();
+			datas.actId = stream.readUint32();
+			datas.times = stream.readUint8();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, ACT_TIMES_DATA_INFO v)
+		{
+			stream.writeUint32(v.actId);
+			stream.writeUint8(v.times);
+		}
+	}
+
+
+
+	public class DATATYPE_AUTH_STATISTICS_DATA_INFO : DATATYPE_BASE
+	{
+		private DATATYPE__AUTH_STATISTICS_DATA_INFO_itemUniqueIds_ArrayType_ChildArray itemUniqueIds_DataType = new DATATYPE__AUTH_STATISTICS_DATA_INFO_itemUniqueIds_ArrayType_ChildArray();
+
+		public class DATATYPE__AUTH_STATISTICS_DATA_INFO_itemUniqueIds_ArrayType_ChildArray : DATATYPE_BASE
+		{
+			public List<UInt64> createFromStreamEx(MemoryStream stream)
+			{
+				UInt32 size = stream.readUint32();
+				List<UInt64> datas = new List<UInt64>();
+
+				while(size > 0)
+				{
+					--size;
+					datas.Add(stream.readUint64());
+				};
+
+				return datas;
+			}
+
+			public void addToStreamEx(Bundle stream, List<UInt64> v)
+			{
+				stream.writeUint32((UInt32)v.Count);
+				for(int i=0; i<v.Count; ++i)
+				{
+					stream.writeUint64(v[i]);
+				};
+			}
+		}
+
+		private DATATYPE__AUTH_STATISTICS_DATA_INFO_actTimes_ArrayType_ChildArray actTimes_DataType = new DATATYPE__AUTH_STATISTICS_DATA_INFO_actTimes_ArrayType_ChildArray();
+
+		public class DATATYPE__AUTH_STATISTICS_DATA_INFO_actTimes_ArrayType_ChildArray : DATATYPE_BASE
+		{
+			private DATATYPE_ACT_TIMES_DATA_INFO itemType = new DATATYPE_ACT_TIMES_DATA_INFO();
+
+			public List<ACT_TIMES_DATA_INFO> createFromStreamEx(MemoryStream stream)
+			{
+				UInt32 size = stream.readUint32();
+				List<ACT_TIMES_DATA_INFO> datas = new List<ACT_TIMES_DATA_INFO>();
+
+				while(size > 0)
+				{
+					--size;
+					datas.Add(itemType.createFromStreamEx(stream));
+				};
+
+				return datas;
+			}
+
+			public void addToStreamEx(Bundle stream, List<ACT_TIMES_DATA_INFO> v)
+			{
+				stream.writeUint32((UInt32)v.Count);
+				for(int i=0; i<v.Count; ++i)
+				{
+					itemType.addToStreamEx(stream, v[i]);
+				};
+			}
+		}
+
+		private DATATYPE__AUTH_STATISTICS_DATA_INFO_items_ArrayType_ChildArray items_DataType = new DATATYPE__AUTH_STATISTICS_DATA_INFO_items_ArrayType_ChildArray();
+
+		public class DATATYPE__AUTH_STATISTICS_DATA_INFO_items_ArrayType_ChildArray : DATATYPE_BASE
+		{
+			private DATATYPE_AWARD_ITEM_VAL itemType = new DATATYPE_AWARD_ITEM_VAL();
+
+			public List<AWARD_ITEM_VAL> createFromStreamEx(MemoryStream stream)
+			{
+				UInt32 size = stream.readUint32();
+				List<AWARD_ITEM_VAL> datas = new List<AWARD_ITEM_VAL>();
+
+				while(size > 0)
+				{
+					--size;
+					datas.Add(itemType.createFromStreamEx(stream));
+				};
+
+				return datas;
+			}
+
+			public void addToStreamEx(Bundle stream, List<AWARD_ITEM_VAL> v)
+			{
+				stream.writeUint32((UInt32)v.Count);
+				for(int i=0; i<v.Count; ++i)
+				{
+					itemType.addToStreamEx(stream, v[i]);
+				};
+			}
+		}
+
+		public AUTH_STATISTICS_DATA_INFO createFromStreamEx(MemoryStream stream)
+		{
+			AUTH_STATISTICS_DATA_INFO datas = new AUTH_STATISTICS_DATA_INFO();
+			datas.oldLevel = stream.readUint32();
+			datas.oldExp = stream.readFloat();
+			datas.oldScore = stream.readInt32();
+			datas.oldMoney = stream.readUint64();
+			datas.oldCoin = stream.readUint64();
+			datas.oldDarkIron = stream.readInt64();
+			datas.oldGeniusQi = stream.readInt64();
+			datas.otherGbId = stream.readUint64();
+			datas.authExpire = stream.readUint32();
+			datas.itemUniqueIds = itemUniqueIds_DataType.createFromStreamEx(stream);
+			datas.actTimes = actTimes_DataType.createFromStreamEx(stream);
+			datas.dailyUseMoney = stream.readUint64();
+			datas.items = items_DataType.createFromStreamEx(stream);
+			datas.hostOffline = stream.readUint32();
+			datas.authLogin = stream.readUint32();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, AUTH_STATISTICS_DATA_INFO v)
+		{
+			stream.writeUint32(v.oldLevel);
+			stream.writeFloat(v.oldExp);
+			stream.writeInt32(v.oldScore);
+			stream.writeUint64(v.oldMoney);
+			stream.writeUint64(v.oldCoin);
+			stream.writeInt64(v.oldDarkIron);
+			stream.writeInt64(v.oldGeniusQi);
+			stream.writeUint64(v.otherGbId);
+			stream.writeUint32(v.authExpire);
+			itemUniqueIds_DataType.addToStreamEx(stream, v.itemUniqueIds);
+			actTimes_DataType.addToStreamEx(stream, v.actTimes);
+			stream.writeUint64(v.dailyUseMoney);
+			items_DataType.addToStreamEx(stream, v.items);
+			stream.writeUint32(v.hostOffline);
+			stream.writeUint32(v.authLogin);
 		}
 	}
 
@@ -5107,6 +5225,95 @@ namespace KBEngine
 			dmgList_DataType.addToStreamEx(stream, v.dmgList);
 			healList_DataType.addToStreamEx(stream, v.healList);
 			hurtList_DataType.addToStreamEx(stream, v.hurtList);
+		}
+	}
+
+
+
+	public class DATATYPE_MERIDIAN_POINT_INFO : DATATYPE_BASE
+	{
+		public MERIDIAN_POINT_INFO createFromStreamEx(MemoryStream stream)
+		{
+			MERIDIAN_POINT_INFO datas = new MERIDIAN_POINT_INFO();
+			datas.pointIdx = stream.readUint8();
+			datas.level = stream.readUint8();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, MERIDIAN_POINT_INFO v)
+		{
+			stream.writeUint8(v.pointIdx);
+			stream.writeUint8(v.level);
+		}
+	}
+
+
+
+	public class DATATYPE_MERIDIAN_SLOT_INFO : DATATYPE_BASE
+	{
+		private DATATYPE__MERIDIAN_SLOT_INFO_points_ArrayType_ChildArray points_DataType = new DATATYPE__MERIDIAN_SLOT_INFO_points_ArrayType_ChildArray();
+
+		public class DATATYPE__MERIDIAN_SLOT_INFO_points_ArrayType_ChildArray : DATATYPE_BASE
+		{
+			private DATATYPE_MERIDIAN_POINT_INFO itemType = new DATATYPE_MERIDIAN_POINT_INFO();
+
+			public List<MERIDIAN_POINT_INFO> createFromStreamEx(MemoryStream stream)
+			{
+				UInt32 size = stream.readUint32();
+				List<MERIDIAN_POINT_INFO> datas = new List<MERIDIAN_POINT_INFO>();
+
+				while(size > 0)
+				{
+					--size;
+					datas.Add(itemType.createFromStreamEx(stream));
+				};
+
+				return datas;
+			}
+
+			public void addToStreamEx(Bundle stream, List<MERIDIAN_POINT_INFO> v)
+			{
+				stream.writeUint32((UInt32)v.Count);
+				for(int i=0; i<v.Count; ++i)
+				{
+					itemType.addToStreamEx(stream, v[i]);
+				};
+			}
+		}
+
+		public MERIDIAN_SLOT_INFO createFromStreamEx(MemoryStream stream)
+		{
+			MERIDIAN_SLOT_INFO datas = new MERIDIAN_SLOT_INFO();
+			datas.slotIdx = stream.readUint8();
+			datas.hasEnhance = stream.readUint8();
+			datas.points = points_DataType.createFromStreamEx(stream);
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, MERIDIAN_SLOT_INFO v)
+		{
+			stream.writeUint8(v.slotIdx);
+			stream.writeUint8(v.hasEnhance);
+			points_DataType.addToStreamEx(stream, v.points);
+		}
+	}
+
+
+
+	public class DATATYPE_MERIDIAN_ENHANCE_ITEM_INFO : DATATYPE_BASE
+	{
+		public MERIDIAN_ENHANCE_ITEM_INFO createFromStreamEx(MemoryStream stream)
+		{
+			MERIDIAN_ENHANCE_ITEM_INFO datas = new MERIDIAN_ENHANCE_ITEM_INFO();
+			datas.gridId = stream.readUint16();
+			datas.itemNum = stream.readUint8();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, MERIDIAN_ENHANCE_ITEM_INFO v)
+		{
+			stream.writeUint16(v.gridId);
+			stream.writeUint8(v.itemNum);
 		}
 	}
 
@@ -8267,6 +8474,66 @@ namespace KBEngine
 		}
 
 		public void addToStreamEx(Bundle stream, List<RED_BAG_CLIENT_VAL> v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				itemType.addToStreamEx(stream, v[i]);
+			};
+		}
+	}
+
+
+
+	public class DATATYPE_AnonymousArray_10097 : DATATYPE_BASE
+	{
+		private DATATYPE_MERIDIAN_ENHANCE_ITEM_INFO itemType = new DATATYPE_MERIDIAN_ENHANCE_ITEM_INFO();
+
+		public List<MERIDIAN_ENHANCE_ITEM_INFO> createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			List<MERIDIAN_ENHANCE_ITEM_INFO> datas = new List<MERIDIAN_ENHANCE_ITEM_INFO>();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(itemType.createFromStreamEx(stream));
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, List<MERIDIAN_ENHANCE_ITEM_INFO> v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				itemType.addToStreamEx(stream, v[i]);
+			};
+		}
+	}
+
+
+
+	public class DATATYPE_AnonymousArray_10098 : DATATYPE_BASE
+	{
+		private DATATYPE_MERIDIAN_SLOT_INFO itemType = new DATATYPE_MERIDIAN_SLOT_INFO();
+
+		public List<MERIDIAN_SLOT_INFO> createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			List<MERIDIAN_SLOT_INFO> datas = new List<MERIDIAN_SLOT_INFO>();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(itemType.createFromStreamEx(stream));
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, List<MERIDIAN_SLOT_INFO> v)
 		{
 			stream.writeUint32((UInt32)v.Count);
 			for(int i=0; i<v.Count; ++i)

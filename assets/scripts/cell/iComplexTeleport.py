@@ -76,7 +76,6 @@ class IComplexTeleport(object):
         lContext = {'extra': {}}
         eContext = {'lineNo': lineNo, 'lineType': lineType}
         context = {'l': lContext, 'e': eContext, 'src': src}
-        options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
 
         spaceNo = formula.getLineSpaceNo(lineType, lineNo)
         if desTelId:
@@ -101,6 +100,15 @@ class IComplexTeleport(object):
                 WARNING_MSG("enterWorldLine::failed, errno={}".format(canLeave.extra), self.spaceNo, context)
             return
 
+        extraProps = {"mapId" : lineType, "spaceNo" : spaceNo, "context" : context,  "callbackName" : "enterWorldLineMapUnlockedCallback"}
+        self.base.onCheckMapUnlocked(gameconst.CELL, 6, 'teleportEnterLineMapUnlockedCallback', extraProps)
+    
+    def enterWorldLineMapUnlockedCallback(self, extraProps):
+        INFO_MSG("enterWorldLineMapUnlockedCallback", extraProps)
+
+        spaceNo = extraProps.get("spaceNo")
+        context = extraProps.get("context")
+        options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
         self.teleportFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
 
     def switchSelfLine(self, lineNo, src):

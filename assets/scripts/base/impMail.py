@@ -24,6 +24,7 @@ import KBEngine
 import gameclass
 import itemData_set as IDSD
 import itemData_itemData_set as IDIDS
+import agent_agentFunction as A_AFD
 import AuthClsWraper
 
 
@@ -357,6 +358,7 @@ class ImpMail(object):
         self.mailCacheData.readMail(mailGBID)
         self.client.onReadOneMail(mailGBID)
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqGetOneMailAttach(self, exposed, mailGBID):
         DEBUG_MSG('in reqGetOneMailAttach:', mailGBID)
         mail = self.mailCacheData.getMailByGBID(mailGBID)
@@ -364,6 +366,7 @@ class ImpMail(object):
             return
         self.getMailAttachByMailList([mail])
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     @gamedecorator.limitcall(2)
     def reqGetAllMailsAttach(self, exposed):
         DEBUG_MSG('in reqGetAllMailsAttach')
@@ -405,7 +408,7 @@ class ImpMail(object):
                         totalLimitItemNum += item.itemNum
                 if totalLimitItemNum != 0 and self.checkBagItemLimitNoItemId(totalLimitItemNum):
                     if len(mailList) == 1:
-                        self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(IDSD.datas['potionBagStorageLimit']['value'])])
+                        self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(self.drugsQuantityBase)])
                     continue
 
             totalWealthVal = tryWealthVal
@@ -482,7 +485,7 @@ class ImpMail(object):
         INFO_MSG('resetMailAttachStateCallback, reset mail attach state succ:', mailGBIDList)
         return
 
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqDelMails(self, exposed, mailGBIDList):
         # 删除选中的邮件
         DEBUG_MSG('in reqDelMails:', mailGBIDList)
@@ -511,7 +514,7 @@ class ImpMail(object):
         self.onMailsDeleted({mailGBID:self.mailCacheData.getMailByGBID(mailGBID)}, srcType=AAC_AACDD.datas.BONUS_SRC_CLIENT_DELETE_MAIL, desc='from client')
         return
 
-    @AuthClsWraper.onlyHost
+    @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqDelAllMails(self, exposed):
         DEBUG_MSG('in reqDelAllMails')
         delMailGBIDList = self.mailCacheData.getMailListCanDelete()

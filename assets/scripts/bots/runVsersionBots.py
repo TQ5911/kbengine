@@ -102,8 +102,8 @@ def startBot(delegateCls, school, loginHost, loginPort):
                 botschool = school
                 faceData.random_set_face_data_by_id(botschool)
                 face_dict = faceData.toSavedDict()
-            final_account_name = f"{accountName}a{int(month_day)}"
-            final_avatarName = f"{avatarName}阿{int(month_day)}"
+            final_account_name = f"{accountName}{int(month_day)}"
+            final_avatarName = f"{avatarName}{int(month_day)}"
             
             print(f"创建机器人 - 账号: {final_account_name}, 角色: {final_avatarName}, 职业: {botschool}")
             

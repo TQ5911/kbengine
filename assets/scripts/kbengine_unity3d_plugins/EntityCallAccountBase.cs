@@ -31,6 +31,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void getAvatarOfflineTime(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("getAvatarOfflineTime", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
 		public void kickAnotherAvatar(Byte arg1)
 		{
 			Bundle pBundle = newCall("kickAnotherAvatar", 0);
@@ -88,13 +98,14 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void selectAvatarGame(UInt64 arg1)
+		public void selectAvatarGame(UInt64 arg1, Byte arg2)
 		{
 			Bundle pBundle = newCall("selectAvatarGame", 0);
 			if(pBundle == null)
 				return;
 
 			bundle.writeUint64(arg1);
+			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
 

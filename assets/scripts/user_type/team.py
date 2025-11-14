@@ -38,7 +38,7 @@ class applyJoinPlayerVal(userType.UserSoleType):
 class TeamMemberCacheVal(userType.UserSoleType):
     def __init__(self, playerGbId, playerBox, playerName, level, school, sex, picFrameId, bFollow, bOnline,
                  spaceNo=0, position=(0, 0, 0), hp=1, fullHp=1, score=0, hpkScore=0, mountState=0,
-                 raidUUID=0, enableMics=False, isBlockMics=False, isDead=True, openId=''):
+                 raidUUID=0, enableMics=False, isBlockMics=False, isDead=True, openId='', siegeWarCamp=0):
         self.playerGbId = playerGbId
         self.playerBox = playerBox
         self.playerName = playerName
@@ -60,6 +60,7 @@ class TeamMemberCacheVal(userType.UserSoleType):
         self.isBlockMics = isBlockMics
         self.isDead = isDead
         self.openId = openId
+        self.siegeWarCamp = siegeWarCamp
 
     def toRaidTransDict(self):
         return {
@@ -81,6 +82,7 @@ class TeamMemberCacheVal(userType.UserSoleType):
             'raidUUID': self.raidUUID,
             'isDead': self.isDead,
             'openId': self.openId,
+            'siegeWarCamp': self.siegeWarCamp,
         }
 
     def toSavedDict(self):
@@ -106,6 +108,7 @@ class TeamMemberCacheVal(userType.UserSoleType):
             'isBlockMics': self.isBlockMics,
             'isDead': self.isDead,
             'openId': self.openId,
+            'siegeWarCamp': self.siegeWarCamp,
         }
 
     def toClientData(self):
@@ -475,14 +478,20 @@ class TeamStatisticMixin(object):
                 }
             if gbId in self.teamStatistic.dmgDict:
                 pData['value'] = self.teamStatistic.dmgDict[gbId]
+            else:
+                pData['value'] = 0
             dmgList.append(copy.copy(pData))
 
             if gbId in self.teamStatistic.healDict:
                 pData['value'] = self.teamStatistic.healDict[gbId]
+            else:
+                pData['value'] = 0
             healList.append(copy.copy(pData))
 
             if gbId in self.teamStatistic.hurtDict:
                 pData['value'] = self.teamStatistic.hurtDict[gbId]
+            else:
+                pData['value'] = 0
             hurtList.append(copy.copy(pData))
 
         return {
@@ -497,7 +506,7 @@ class TeamStatisticMixin(object):
 class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
     def __init__(self, teamId=0, teamTarget=0, teamCaptainGbId=0, playerBox=None, playerName='', level=0, school=0,
                  sex=0, picFrameId=0, bFollow=False, bOnline=True, score=0, mountState=0, isDead=False,
-                 openId='', teamMicsSwitch=gameconst.TeamMicsMode.OFF, teamMicsBlocked=False):
+                 openId='', siegeWarCamp=0, teamMicsSwitch=gameconst.TeamMicsMode.OFF, teamMicsBlocked=False):
         # region __init__
         self.teamId = teamId
         self.teamTarget = teamTarget
@@ -538,6 +547,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
         self.autoStartTimer = 0
         self.teamMemberList = []
         self.teamRewardDatas = {}
+        self.siegeWarCamp = siegeWarCamp
         # endregion
 
         TeamStatisticMixin.__init__(self)
@@ -1406,14 +1416,15 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
             return
         
         ret = False
+        entId = 0
         if type == gameconst.TeamMarkType.MARK_SCENE:
-            ret = self.teamMark.delSceneMark(index)
+            ret, entId = self.teamMark.delSceneMark(index)
         else:
-            ret = self.teamMark.delPlayerMark(index)
+            ret, entId = self.teamMark.delPlayerMark(index)
 
         if ret:
             self.onChangeTeamMarkInfo(gameconst.TeamMarkChangeType.DELETE)
-        return ret
+        return entId
             
     def changeOnlyCaptainState(self, owner, state):
         if state == self.onlyCaptainCanMark:
@@ -1438,6 +1449,8 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
         
         INFO_MSG('onChangeTeamMarkInfo', markInfoDict)
 
+    def clearMarkRecord(self, ownerStub):
+        self.teamMark.clearMarkRecord(ownerStub, self.teamId)
     
     def clearTeamDungeonRewardRecord(self, gbID):
         self.teamRewardDatas.pop(gbID, None)
@@ -1727,12 +1740,22 @@ class TeamMarkCacheVal(userType.UserSoleType):
         self.playerCache = {} # entId -> index
     
     def addPlayerMark(self, type, index, name, gbId, entId, pos=None, spaceNo=0):
+        # 有gbId就用gbId 作为标识
+        if gbId > 0:
+            entId = gbId
+        INFO_MSG('addPlayerMark: ', type, index, name, gbId, entId, pos, spaceNo)
         if entId in self.playerCache:
             if self.playerCache[entId] == index:
                 return False
             idx = self.playerCache.pop(entId)
             if idx in self.playerDict:
                 self.playerDict.pop(idx)
+                
+        if index in self.playerDict:
+            oldMemberVal = self.playerDict[index]
+            oldEntId = oldMemberVal.entId
+            if oldEntId in self.playerCache:
+                self.playerCache.pop(oldEntId)
 
         self.playerDict[index] = TeamMarkMemberCacheVal(type, index, name, gbId, entId, pos, spaceNo)
         self.playerCache[entId] = index
@@ -1741,14 +1764,13 @@ class TeamMarkCacheVal(userType.UserSoleType):
 
     def delPlayerMark(self, index):
         if index not in self.playerDict:
-            return False
+            return False, 0
         memberVal = self.playerDict.pop(index)
         entId = memberVal.entId
         if entId in self.playerCache:
             self.playerCache.pop(entId)
 
-        return True
-
+        return True, entId
 
     def addSceneMark(self, type, index, name, gbId, entId, pos, spaceNo=0):
         self.sceneDict[index] = TeamMarkMemberCacheVal(type, index, name, gbId, entId, pos, spaceNo)
@@ -1756,9 +1778,17 @@ class TeamMarkCacheVal(userType.UserSoleType):
 
     def delSceneMark(self, index):
         if index not in self.sceneDict:
-            return False
-        self.sceneDict.pop(index)
-        return True
+            return False, 0
+        memberVal = self.sceneDict.pop(index)
+        return True, memberVal.entId
+
+    def clearMarkRecord(self, ownerStub, teamId):
+        INFO_MSG('clearMarkRecord: ', teamId, self.playerDict.keys())
+        for memberVal in self.playerDict.values():
+            if memberVal.type != gameconst.TeamMarkType.MARK_ENEMY:
+                continue
+            entId = memberVal.entId
+            ownerStub.delMarkMonsterRec(teamId, entId)
     
     def toClientData(self):
         playerList = []
@@ -1776,13 +1806,10 @@ class TeamMarkCacheVal(userType.UserSoleType):
     
     def initFromClientData(self, markInfoDict):
         for pDic in markInfoDict.get('playerList', []):
-            mVal = TeamMarkMemberCacheVal(pDic['type'], pDic['index'], pDic['name'], pDic['gbId'], pDic['entId'], pDic.get('pos'), pDic.get('spaceNo', 0))
-            self.playerDict[mVal.index] = mVal
-            self.playerCache[mVal.entId] = mVal.index
+            self.addPlayerMark(pDic['type'], pDic['index'], pDic['name'], pDic['gbId'], pDic['entId'], pDic.get('pos'), pDic.get('spaceNo', 0))
             
         for sDic in markInfoDict.get('sceneList', []):
-            mVal = TeamMarkMemberCacheVal(sDic['type'], sDic['index'], sDic['name'], sDic['gbId'], sDic['entId'], sDic.get('pos'), sDic.get('spaceNo', 0))
-            self.sceneDict[mVal.index] = mVal
+            self.addSceneMark(sDic['type'], sDic['index'], sDic['name'], sDic['gbId'], sDic['entId'], sDic.get('pos'), sDic.get('spaceNo', 0))
         return self
 
 

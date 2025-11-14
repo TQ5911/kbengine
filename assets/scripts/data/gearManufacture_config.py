@@ -15,10 +15,6 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    "gearManufUnboundProb": _tools.RODict({
-        "ID": "gearManufUnboundProb",
-        "value": 0.3,
-    }),
     "manufMatsNotInserted_msgId": _tools.RODict({
         "ID": "manufMatsNotInserted_msgId",
         "value": 54000298,

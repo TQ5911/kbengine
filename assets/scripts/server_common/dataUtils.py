@@ -3,17 +3,12 @@ import sys
 
 from KBEDebug import *
 
-import math
 import random
 import functools
-import time
 
 import utils
 import gameconst
 import gameengine
-import gameglobal
-import json
-import _pickle as cPickle
 
 import itemData_itemData as ITEMDATA
 import gearBase_gearBase as GBGBD
@@ -32,13 +27,8 @@ import appearance_avatarFrame as AAF
 import taskDesc_taskDesc as TDTD
 import taskDesc_taskGroup as TTG
 import taskRandTargetPoint as TRTPD
-import rewardData_rewardData as RDRDD
 import mounts_mounts as MOUNTS
-import itemData_synthesis as IDS
-import gamePlay_gamePlay as GP_GP
-import itemData_set as ID_SET
 import antiAddictCategory_antiAddictCategory as AAC_AAC
-import itemData_itemData as IDID
 import rewardData_rewardData as RWDRWDD
 import creep_base as CBD
 import gearBase_typeExplanation as GBTED
@@ -54,6 +44,7 @@ import skill_skill as SSD
 import raid_raidConst as RAID_CONST
 import gearBase_gearConst as GBGCD
 import skill_specialMonsterAI as S_SMAD
+import character_charData as CCD
 
 def getRaidConstDataValue(key):
     raidConstData = RAID_CONST.datas.get(key, None)
@@ -477,20 +468,19 @@ def _getGearIdsByBaseInfo(quality, gearType, gearSubType, school):
 def getCreepMD(creepId):
     return CBD.datas.get(creepId, {}).get('magicDrop', 0)
 
-def getPropBaseScore(propName):
+def getPropBaseScore(propName, school = 0):
     cfgData = FDD.datas.get(propName, None)
     if not cfgData:
         ERROR_MSG("getPropScore cfgData not found:", propName)
         return 0
-
     return cfgData['perPropertyScore']
 
-def getPassiveSkillScore(passiveSkillId):
+def getPassiveSkillScore(school, passiveSkillId):
     score = PSPSD.datas[passiveSkillId]['score']
     petPropList = PSPSD.datas[passiveSkillId]['propList']
     if petPropList:
         for propName, val in petPropList:
-            propBaseScore = getPropBaseScore(propName)
+            propBaseScore = filterFightPropScore(school, propName)
             score += int(propBaseScore * val)
     return score
 
@@ -562,8 +552,7 @@ def checkEquipmentBlessType(equipType):
     return equipType in (gameconst.EquipTypes.MAIN_TYPE_WEAPON,)
 
 def checkEquipmentSpiritType(equipType):
-    return equipType in (gameconst.EquipTypes.MAIN_TYPE_WEAPON,
-                        gameconst.EquipTypes.MAIN_TYPE_CLOTHES,
+    return equipType in (gameconst.EquipTypes.MAIN_TYPE_CLOTHES,
                         gameconst.EquipTypes.MAIN_TYPE_HEAD,
                         gameconst.EquipTypes.MAIN_TYPE_SHOE,
                         gameconst.EquipTypes.MAIN_TYPE_NECKLACE,
@@ -575,7 +564,10 @@ def checkEquipmentUpgradeType(equipType):
     return True
 
 def checkEquipGrowingForbidden(equipItem):
-    isForbidden = equipItem.itemId in GBGCD.datas['equipGrowingForbidden']['value']
+    data = GBGCD.datas['equipGrowingForbidden']['value']
+    if not data:
+        return False
+    isForbidden = equipItem.itemId in data
     if isForbidden:
         return True
     isBroken = not equipItem.isGood()
@@ -630,3 +622,16 @@ def isCubeCow(mapId):
 
     return _cubeData['type'] == gameconst.CubeRoomType.COW
 
+def filterFightPropScore(school, propName):
+    cfgData = FDD.datas.get(propName, None)
+    if not cfgData:
+        WARNING_MSG("filterFightPropScore fight cfg not found:", propName)
+        return 0
+
+    characterData = CCD.datas.get(school, None)
+    if characterData:
+        # 角色表里需要排除的属性类型
+        if characterData['excludePropType'] == cfgData['propType']:
+            return 0
+
+    return cfgData['perPropertyScore']

@@ -127,6 +127,17 @@ datas = _tools.RODict({
     }),
     100110: _tools.RODict({
         "ID": 100110,
+        "startTask": 86060104,
+        "taskTag": 86060104,
+        "lockDun": 4001,
+        "bornPos": (180.2183, 63.10073, 99.65),
+        "bornRotation": 307,
+        "setValue": None,
+        "rewardTag": 0,
+        "allowleave": 0
+    }),
+    100111: _tools.RODict({
+        "ID": 100111,
         "startTask": 0,
         "taskTag": 0,
         "lockDun": 0,
@@ -134,8 +145,8 @@ datas = _tools.RODict({
         "bornRotation": None,
         "setValue": None,
         "rewardTag": 0,
-        "allowleave": 0
+        "allowleave": 1
     })
 })
 minKey = 100100
-maxKey = 100110
+maxKey = 100111

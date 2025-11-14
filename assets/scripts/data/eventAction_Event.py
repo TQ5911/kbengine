@@ -171,6 +171,12 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "setPositionByTag": _tools.RODict({
+        "ID": "setPositionByTag",
+        "EventID": 10027,
+        "sendType": 0,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,
@@ -264,6 +270,12 @@ datas = _tools.RODict({
     "AddSkillUltimatePoint": _tools.RODict({
         "ID": "AddSkillUltimatePoint",
         "EventID": 20058,
+        "sendType": 1,
+        "npcId": None
+    }),
+    "temporaryskill": _tools.RODict({
+        "ID": "temporaryskill",
+        "EventID": 20059,
         "sendType": 1,
         "npcId": None
     })

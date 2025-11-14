@@ -113,10 +113,10 @@ class BehaveCtrl(object):
 
     def navigationTimeTag(self):
         return "navTime"
-    
+
     def navigationTimeTagWithTarget(self, targetId):
         return self.navigationTimeTag() + str(targetId)
-    
+
     def checkNavigationTimeExpire(self, targetId):
         owner = self.owner
         _navigationTimeTag = self.navigationTimeTagWithTarget(targetId)
@@ -124,7 +124,7 @@ class BehaveCtrl(object):
         if nTime and nTime + CONST.datas['monsterResetTimer']['value'] < utils.getNow():
             return True
         return False
-    
+
     def clearNavigationTimes(self):
         owner = self.owner
         delList = []
@@ -257,7 +257,7 @@ class BehaveCtrl(object):
         if hasattr(owner, 'nextRouteTime'):
             return utils.getNow() <= owner.nextRouteTime
         return False
-    
+
     def routePatrol(self):
         owner = self.owner
         pos = owner.getRandomPosition(owner.nextPoint(), owner.patrolRadii)
@@ -317,7 +317,7 @@ class BehaveCtrl(object):
         if owner.isMoving():
             owner.cancelMoveController()
         self.machine.transform(self, State.STAND)
-        
+
     def clearHateAndRoute(self):
         # 清理仇恨并回继续巡逻
         owner = self.owner
@@ -680,7 +680,7 @@ class BehaveCtrl(object):
             'target': self.targetId,
             'message': 0
         }))
-    
+
     def doAiAction(self):
         owner = self.owner
         if not owner or owner.isDie(): return
@@ -754,7 +754,7 @@ class AuxFunc(object):
             _now = utils.getNow()
             if self.machine.moveable and skillRange <= CONST.datas['monsterSkillRange']['value']\
                     and _now >= owner.nextKeepDistanceTime:
-                mDis = max(0.5, skillRange * CONST.datas['monsterSkillRangeCoefficient']['value']) 
+                mDis = max(0.5, skillRange * CONST.datas['monsterSkillRangeCoefficient']['value'])
                 if dis_ < math.pow(mDis, 2) and self.moveToRandPosAroundCircle(target.position, skillRange * 0.9):
                     owner.nextKeepDistanceTime = _now + CONST.datas['monsterSkillRangeTriggerCD']['value']
                     return
@@ -807,14 +807,14 @@ class AuxFunc(object):
         if not self.skillId:
             self.skillId = owner.getRandomSkill()
         return owner.getSkill(self.skillId)
-    
+
     def isSiegeWarMonster(self):
         owner = self.owner
         if owner.IsMonster:
             if owner.isSiegeWarBow() or owner.isSiegeWarBoss():
                 return True
         return False
-    
+
     def selectSiegeWarTarget(self):
         owner = self.owner
         spaceMgr = owner.spaceMgr
@@ -866,7 +866,7 @@ class AuxFunc(object):
         if not skill:
             # owner.setSelectedTargetId(0)
             return None
-        
+
         if self.isSiegeWarMonster():
             return self.selectSiegeWarTarget()
 
@@ -1341,6 +1341,9 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         if not owner or owner.isDie():
             return False
 
+        if owner.stopByFuben:
+            return False
+
         spaceMgr = owner.spaceMgr
         isSummonedEnt = owner.IsAvatarMirror or owner.IsSummon
         if spaceMgr is not None and spaceMgr.isSpaceMarkCompleted() and (isSummonedEnt and not owner.hostId):
@@ -1644,7 +1647,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
 
     def isAnimationEnd(self):
         return self.machine.elapsedTime() >= self.getAnimationDuration()
-    
+
     def getLeftAnimationTime(self):
         return self.getAnimationDuration() - self.machine.elapsedTime()  + 0.1
 
@@ -1688,7 +1691,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def getLeftFinishWaitResetAnimTime(self):
         _dur = self.owner.getAIParam().get('resetCdAfterCombat', 0)
         return _dur - self.machine.elapsedTime() + 0.1
-    
+
     def transformResetAnim(self):
         self.machine.transform(self, State.RESET_ANIM)
 
@@ -1712,10 +1715,10 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
 
     def getTickCallBackTimer(self):
         return self.machine.getChangeTimer()
-    
+
     def setTickCallBack(self, t):
         self.machine.setChangeTimer(self.owner._callback(t, 'tickCallBack', (), gametimer.TIMER_TAG_TICK_CALL_BACK))
- 
+
     def tickCallBack(self):
         self.cancelTickCallBack(self.getTickCallBackTimer())
         self.owner.tickAI()

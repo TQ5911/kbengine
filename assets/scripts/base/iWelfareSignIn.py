@@ -6,12 +6,14 @@ import gameclass
 import dropAward
 import gameengine 
 import gameglobal
+import gamedecorator
 import utils
 import welfare_welfarePages as WWCONFIG
 import welfare_serverLogin   as WSLCONFIG
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 class IWelfareSignIn(object):
+    @gamedecorator.checkGameconfigEnable('welfare')
     def reqWelfareSignIn(self, exposed, signInDayNo):
         INFO_MSG('call reqWelfareSignIn')
         if not self.welfareSignInInfo.welfareSignInDay:
@@ -104,7 +106,7 @@ class IWelfareSignIn(object):
 
     def checkUnlock(self):
         uid = WWCONFIG.datas.get(1, {}).get('unlockID', None)
-        isUnlock = self.isUIVisible(uid)
+        isUnlock, _1, _2 = self.isUIVisible(uid)
         INFO_MSG('call checkUnlock', isUnlock)
         return isUnlock
 

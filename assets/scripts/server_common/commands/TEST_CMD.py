@@ -285,17 +285,21 @@ def unlockAllFunc(su, player):
     import actionContext
     maxLv = 0
     forwardCommand(su,"$SkipNewbieTask", player.id)
+    need_complete_tasks = []
     for _, data in UVVD.datas.items():
         lvLimit = data.get('level', 0)
         taskId = data.get('task', 0)
         if taskId > 0 and dataUtils.getTaskData(taskId):
-            rootTaskId = dataUtils.getRootTaskId(taskId)
-            player.baseTaskClaim(rootTaskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.GM), needCheck=False)
-            player.gmForceSubmitTask(taskId)
+            need_complete_tasks.append(taskId)
         if lvLimit > maxLv:
             maxLv = lvLimit
     if maxLv > 0:
         forwardCommand(su,"$setlv", player.id, maxLv)
+    # 任务可能有前后续，导致前面完成的被重置了，目前先排序完成处理大部分问题
+    for taskId in sorted(need_complete_tasks):
+        rootTaskId = dataUtils.getRootTaskId(taskId)
+        player.baseTaskClaim(rootTaskId, actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.GM), needCheck=False)
+        player.gmForceSubmitTask(taskId)
     return True, '执行成功'
 
 
@@ -324,15 +328,15 @@ def statDropByDunNo(su, playerStub, dunNo, count):
     else:
         su.onCommandResult(0, 'wait', {'msg': content, 'process_info': process_info})
 
-@gm_cmd('$hookModuleFunc', (Str("moduleName"), Str("prefix")), RALL, ALL, 
+@gm_cmd('$hookModuleFunc', (Str("moduleName"), Str("prefix"), Str("preCall"), Str("postCall")), RALL, ALL, 
     'hook模块方法，输出入参和回参', ALLSIDE, GOD_GROUPS, minArgs=1)
-def hookModuleFunc(su, moduleName, prefix=''):
+def hookModuleFunc(su, moduleName, prefix='', preCall='', postCall=''):
     from test import functionHooker
     import sys
     mod = sys.modules.get(moduleName)
     if mod is None:
         return su.onCommandResult(1, f'module {moduleName} not found', {})
-    functionHooker.hook_specific_module(moduleName, prefix=prefix, verbose=True)
+    functionHooker.hook_specific_module(moduleName, prefix=prefix, verbose=True, pre_call_func_type=preCall, post_call_func_type=postCall)
     return su.onCommandResult(0, f'hook module {moduleName} success', {})
 
 @gm_cmd('$hookClassFunc', (Str("moduleName"), Str("className"), Str("prefix")), RALL, ALL, 
@@ -848,9 +852,9 @@ def dressAllEquipments(su, player):
         return False, '执行失败'
     return True, '执行成功'
 
-@gm_cmd('$glyphWashingEquipments', (Player("gbId/Id"), Int("equipPos"), Int("itemId"), Int("affixId")), RARG(0), gameconst.CELL, '给指定的装备洗铭文', ALLSIDE, GOD_GROUPS)
-def glyphWashingEquipments(su, player, equipPos, itemId, affixId):
-    ret = player.gmGlyphWashingEquips(equipPos, itemId, affixId)
+@gm_cmd('$glyphWashingEquipments', (Player("gbId/Id"), Int("equipPos"), Int("slotId"), Int("itemId"), Int("affixId1"), Int("affixId2")), RARG(0), gameconst.CELL, '给指定的装备洗铭文', ALLSIDE, GOD_GROUPS)
+def glyphWashingEquipments(su, player, equipPos, slotId, itemId, affixId1, affixId2):
+    ret = player.gmGlyphWashingEquips(equipPos, slotId, itemId, affixId1, affixId2)
     if not ret:
         return False, '执行失败'
     return True, '执行成功'

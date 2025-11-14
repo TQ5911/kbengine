@@ -3,6 +3,8 @@ from KBEDebug import *
 
 import KBEngine
 
+import math
+import time
 import sMath
 import formula
 import gameconst
@@ -11,10 +13,12 @@ import gametimer
 import SkillManager
 import actionContext
 import gameclass
+import AuthClsWraper
 import gameconfig
 import dataUtils
 import effectEventCtx
-
+import dataUtils
+import gamedecorator
 
 import character_charData as CHD
 import const_const as CONST
@@ -25,19 +29,15 @@ import buff_buff as BBD
 import gamePlay_gamePlay as DDL
 import conflict_status as CSD
 import conflict_status_def as CSDD
-import fightProp_define as FPDD
 
 import experience_exp as EPED
-import experience_config as EPCD
+
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import performanceLevel_set as PLSD
-import math
-import time
 import skillRelevant_summonUnlock as SRSU
 import skillRelevant_skillConst as SRSC
 import PKData_PKData as PKD
 import skill_skill as SSD
-import gamedecorator
 import guild_guildConst as G_GCD
 
 
@@ -382,6 +382,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         return gameclass.BoolResult(True, -1)
 
     @utils.isMyself
+    @AuthClsWraper.onlyMainChannel
     def clientSetState(self, exposed, state):
         if state < 0:
             return
@@ -402,6 +403,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.setTempMiscProp(gameconst.AvatarProps.AvatarActiveTimestamp, utils.getNow())
 
     @utils.isMyself
+    @AuthClsWraper.onlyMainChannel
     def clientRemoveState(self, exposed, state):
         if not self.hasState(state):
             return
@@ -413,6 +415,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.removeState(state)
 
     @utils.isMyself
+    @AuthClsWraper.onlyMainChannel
     def clientSetInteractState(self, exposed, state, interactId, taskId):
         if state < 0:
             return
@@ -436,6 +439,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.client.onSelfInteractStateChange(interactId, taskId)
 
     @utils.isMyself
+    @AuthClsWraper.onlyMainChannel
     def clientRemoveInteractState(self, exposed, state):
         if not self.hasState(state):
             return
@@ -446,6 +450,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.removeState(state)
 
     @utils.isMyself
+    @AuthClsWraper.onlyMainChannel
     def clientSetIsOnGround(self, exposed, isOnGround):
         self.isClientOnGround = isOnGround
 
@@ -744,12 +749,11 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.levelUp(level, opUUID, src, detail)
         self.exp = int(exp)
 
+        levelExp = EPED.datas[self.level]['expPlayer']
+        self.base.onUpdateExpRate(self.exp / levelExp)
         # exceedExp > 0 and self._addExpCoin(exceedExp, opUUID, src, detail)
 
     def levelUp(self, level, opUUID, src, detail):
-        # for lev in range(self.level + 1, level + 1):
-        #     levelUpMsgID = EPCD.datas.get('levelUp_msgID', {}).get('value')
-        #     self.base.onMessagePre(levelUpMsgID, [str(lev)])
         level = min(level, utils.getPlayerMaxLevel())
         if level <= self.level:
             INFO_MSG('levelUp: level <= self.level', level)
@@ -1125,7 +1129,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         addScore = 0
         for propName, val in syncPropList:
             self.addProp(propName, val, gameconst.SourceType.awardFightProp)
-            addScore += int(round(FPDD.datas[propName]['perPropertyScore'] * val))
+            addScore += int(round(dataUtils.filterFightPropScore(self.school, propName) * val))
 
         if addScore:
             newScore = self.scoresInfo.rewardFightProp + addScore
@@ -1141,7 +1145,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         newScore = 0
 
         for propName, val in propList:
-            newScore += int(round(FPDD.datas[propName]['perPropertyScore'] * val))
+            newScore += int(round(dataUtils.filterFightPropScore(self.school, propName) * val))
 
         self.onUpdateRewardFightProp(newScore)
 
@@ -1231,6 +1235,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         DEBUG_MSG('clear state offline:', self.state, self.state2, self.stateList)
 
     @utils.isMyself
+    @AuthClsWraper.onlyMainChannel
     def jump(self, exposed, jumpType):
         if jumpType == gameconst.JumpType.FIRST_JUMP:
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Jump)):
@@ -1301,6 +1306,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.addProp(propName, -val, gameconst.SourceType.PassiveSkill)
 
     @utils.isMyself
+    @AuthClsWraper.onlyMainChannel
     def dropAndDeath(self, exposed):
         if self.isDie():
             return

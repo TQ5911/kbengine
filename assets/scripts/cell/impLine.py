@@ -42,6 +42,15 @@ class ImpLine(object):
 
         lineNo = formula.getLineNo(self.spaceNo)
         enterPos = formula.whatSpaceBornPoint(lineType)
+        extraProps = {"mapId" : lineType, "lineType" : lineType, "lineNo" : lineNo, "enterPos" : enterPos,  "callbackName" : "applyEnterLineMapUnlockedCallback"}
+        self.base.onCheckMapUnlocked(gameconst.CELL, 4, 'teleportEnterLineMapUnlockedCallback', extraProps)
+
+    def applyEnterLineMapUnlockedCallback(self, extraProps):
+        INFO_MSG("applyEnterLineMapUnlockedCallback", extraProps)
+
+        lineType = extraProps.get("lineType")
+        lineNo = extraProps.get("lineNo")
+        enterPos = extraProps.get("enterPos")
         self.applyEnterLineInternal(lineType, lineNo, enterPos, self.direction, False)
 
     def enterLineByNpc(self, lineType, *args, **kwargs):
@@ -53,7 +62,16 @@ class ImpLine(object):
             return
 
         enterPos, direction = formula.whatSpaceBornPosAndDir(lineType)
+        extraProps = {"mapId" : mapId, "lineType" : lineType, "lineNo" : lineNo, "enterPos" : enterPos, "direction" : direction,  "callbackName" : "enterLineByNpcMapUnlockedCallback"}
+        self.base.onCheckMapUnlocked(gameconst.CELL, 5, 'teleportEnterLineMapUnlockedCallback', extraProps)
 
+    def enterLineByNpcMapUnlockedCallback(self, extraProps):
+        INFO_MSG("enterLineByNpcMapUnlockedCallback", extraProps)
+
+        lineType = extraProps.get("lineType")
+        lineNo = extraProps.get("lineNo")
+        enterPos = extraProps.get("enterPos")
+        direction = extraProps.get("direction")
         if formula.isDuelMapId(lineType):
             _options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
             self.tryRegiTeleportOutsideRecord(self.spaceNo, _options)
@@ -367,3 +385,11 @@ class ImpLine(object):
             self.setTempMiscProp(gameconst.AvatarProps.lastUpdateAreaPos, tuple(self.position))
         else:
             self.popTempMiscProp(gameconst.AvatarProps.lastUpdateAreaPos)
+
+    def teleportEnterLineMapUnlockedCallback(self, checkResult, extraProps):
+        INFO_MSG("teleportEnterLineMapUnlockedCallback", checkResult, extraProps)
+        if not checkResult:
+            return
+
+        callbackName = extraProps.get("callbackName")
+        getattr(self, callbackName)(extraProps)

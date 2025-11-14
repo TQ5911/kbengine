@@ -63,6 +63,7 @@
         <Interface>         iWorkshop                   </Interface>
         <Interface>         iRedBag                     </Interface>
         <Interface>         iDateData                   </Interface>
+        <Interface>         iMeridian                   </Interface>
     </Interfaces>
 
     <Properties>

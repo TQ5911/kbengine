@@ -1682,7 +1682,7 @@ datas = _tools.RODict({
     }),
     112: _tools.RODict({
         "ID": 112,
-        "itemId": 30000239,
+        "itemId": 30010022,
         "groupId": 0,
         "exType": 1,
         "propItem": ((30000227, 10), (30000228, 5)),
@@ -1697,7 +1697,7 @@ datas = _tools.RODict({
     }),
     113: _tools.RODict({
         "ID": 113,
-        "itemId": 30000240,
+        "itemId": 30010023,
         "groupId": 0,
         "exType": 1,
         "propItem": ((30000227, 10), (30000229, 5)),
@@ -1712,7 +1712,7 @@ datas = _tools.RODict({
     }),
     114: _tools.RODict({
         "ID": 114,
-        "itemId": 30000241,
+        "itemId": 30010024,
         "groupId": 0,
         "exType": 1,
         "propItem": ((30000227, 10), (30000228, 5)),
@@ -1772,7 +1772,7 @@ datas = _tools.RODict({
     }),
     118: _tools.RODict({
         "ID": 118,
-        "itemId": 30000245,
+        "itemId": 30010022,
         "groupId": 0,
         "exType": 2,
         "propItem": ((30000227, 10), (30000228, 5)),
@@ -1787,7 +1787,7 @@ datas = _tools.RODict({
     }),
     119: _tools.RODict({
         "ID": 119,
-        "itemId": 30000246,
+        "itemId": 30010023,
         "groupId": 0,
         "exType": 2,
         "propItem": ((30000227, 10), (30000229, 5)),
@@ -1802,7 +1802,7 @@ datas = _tools.RODict({
     }),
     120: _tools.RODict({
         "ID": 120,
-        "itemId": 30000247,
+        "itemId": 30010024,
         "groupId": 0,
         "exType": 2,
         "propItem": ((30000227, 10), (30000228, 5)),
@@ -1952,7 +1952,7 @@ datas = _tools.RODict({
     }),
     130: _tools.RODict({
         "ID": 130,
-        "itemId": 30010012,
+        "itemId": 30010022,
         "groupId": 2,
         "exType": 0,
         "propItem": None,
@@ -1967,7 +1967,7 @@ datas = _tools.RODict({
     }),
     131: _tools.RODict({
         "ID": 131,
-        "itemId": 30010013,
+        "itemId": 30010023,
         "groupId": 2,
         "exType": 0,
         "propItem": None,
@@ -1982,7 +1982,7 @@ datas = _tools.RODict({
     }),
     132: _tools.RODict({
         "ID": 132,
-        "itemId": 30010014,
+        "itemId": 30010024,
         "groupId": 2,
         "exType": 0,
         "propItem": None,
@@ -2039,57 +2039,12 @@ datas = _tools.RODict({
         "limitNumber": 1,
         "isBound": 0,
         "weight": 3000
-    }),
-    136: _tools.RODict({
-        "ID": 136,
-        "itemId": 30010018,
-        "groupId": 2,
-        "exType": 0,
-        "propItem": None,
-        "costItem": ((30000001, 200),),
-        "guildMallLv": 0,
-        "startTime": None,
-        "deleteTime": None,
-        "limitType": 6,
-        "limitNumber": 1,
-        "isBound": 0,
-        "weight": 1000
-    }),
-    137: _tools.RODict({
-        "ID": 137,
-        "itemId": 30010019,
-        "groupId": 2,
-        "exType": 0,
-        "propItem": None,
-        "costItem": ((30000001, 200),),
-        "guildMallLv": 0,
-        "startTime": None,
-        "deleteTime": None,
-        "limitType": 6,
-        "limitNumber": 1,
-        "isBound": 0,
-        "weight": 2000
-    }),
-    138: _tools.RODict({
-        "ID": 138,
-        "itemId": 30010020,
-        "groupId": 2,
-        "exType": 0,
-        "propItem": None,
-        "costItem": ((30000001, 200),),
-        "guildMallLv": 0,
-        "startTime": None,
-        "deleteTime": None,
-        "limitType": 6,
-        "limitNumber": 1,
-        "isBound": 0,
-        "weight": 3000
     })
 })
 minKey = 1
-maxKey = 138
+maxKey = 135
 
 group2ID = _tools.RODict({
     1: _tools.ROList([124, 125, 126, 127, 128, 129]),
-    2: _tools.ROList([130, 131, 132, 133, 134, 135, 136, 137, 138]),
+    2: _tools.ROList([130, 131, 132, 133, 134, 135]),
 })

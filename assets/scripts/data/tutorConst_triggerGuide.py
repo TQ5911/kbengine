@@ -30,9 +30,6 @@ datas = _tools.RODict({
     24100301: _tools.RODict({
         "conditionArgs": "",
     }),
-    24100302: _tools.RODict({
-        "conditionArgs": "",
-    }),
     24100401: _tools.RODict({
         "conditionArgs": "",
     }),

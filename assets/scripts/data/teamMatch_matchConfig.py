@@ -191,9 +191,13 @@ datas = _tools.RODict({
         "ID": "team_createTeamMsg",
         "value": 54000155,
     }),
-    "teamApplyPopMsgMsg": _tools.RODict({
-        "ID": "teamApplyPopMsgMsg",
+    "playerApplyTeamPopMsg": _tools.RODict({
+        "ID": "playerApplyTeamPopMsg",
         "value": 54001126,
+    }),
+    "teamApplyGroupPopMsg": _tools.RODict({
+        "ID": "teamApplyGroupPopMsg",
+        "value": 54001128,
     }),
     "teamMinLevel": _tools.RODict({
         "ID": "teamMinLevel",
@@ -238,6 +242,10 @@ datas = _tools.RODict({
     "zhaomuGuildSent": _tools.RODict({
         "ID": "zhaomuGuildSent",
         "value": 54000645,
+    }),
+    "zhaomuBattleFieldSent": _tools.RODict({
+        "ID": "zhaomuBattleFieldSent",
+        "value": 54000647,
     }),
     "assembleTeammatesCD": _tools.RODict({
         "ID": "assembleTeammatesCD",
@@ -378,5 +386,9 @@ datas = _tools.RODict({
     "onlyPublicTeamCanMatch": _tools.RODict({
         "ID": "onlyPublicTeamCanMatch",
         "value": 54000911,
+    }),
+    "teamMatch_differentFactions": _tools.RODict({
+        "ID": "teamMatch_differentFactions",
+        "value": 54003128,
     })
 })

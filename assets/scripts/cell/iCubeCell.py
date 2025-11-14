@@ -123,6 +123,9 @@ class ICubeCell(object):
     def enterCube(self, exposed):
         INFO_MSG('ICubeCell::enterCube')
         floor = 1
+        self.enterCubeInternal(floor)
+
+    def enterCubeInternal(self, floor):
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']):
             self.showMsg(AC_CD.datas['activity_notOpen']['value'], [])
             return
@@ -221,16 +224,8 @@ class ICubeCell(object):
             self.base, _mapId, self.gbId, {'followPos': _pos})
 
     def gmEnterCubeRoom(self, mapId):
-        _curMapId = formula.getMapId(self.spaceNo)
-        _curFloor = dataUtils.getCubeFloor(_curMapId)
-
         _targetFloor = dataUtils.getCubeFloor(mapId)
-        if _curFloor != _targetFloor:
-            ERROR_MSG('ICubeCell::gmEnterCubeRoom: floor not match: {} {}'.format(_curFloor, _targetFloor))
-            return False
-
-        spaceNo = formula.getLineSpaceNo(mapId, 0)
-        gameengine.getCubeStub(_curFloor).gmEnterTargetRoom(self.base, self.gbId, spaceNo)
+        gameengine.getCubeStub(_targetFloor).doEnterCube(self.base, mapId, self.gbId, {})
         return True
 
     @utils.isMyself

@@ -29,7 +29,7 @@ datas = _tools.RODict({
     }),
     "upgradeItemText": _tools.RODict({
         "ID": "upgradeItemText",
-        "value": "{0}·螭龙鼎",
+        "value": "{0}·盈能法阵",
     }),
     "msgId_syntheticNoItem": _tools.RODict({
         "ID": "msgId_syntheticNoItem",

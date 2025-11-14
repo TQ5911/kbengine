@@ -22,7 +22,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100003,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     1: _tools.RODict({
         "ID": 1,
@@ -31,7 +32,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100005,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -40,7 +42,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100004,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -49,7 +52,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100001,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -58,7 +62,8 @@ datas = _tools.RODict({
         "clearOnline": 0,
         "clearTeleport": 0,
         "event": 29100006,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     5: _tools.RODict({
         "ID": 5,
@@ -67,7 +72,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 0,
         "event": 29100007,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 25
     }),
     6: _tools.RODict({
         "ID": 6,
@@ -76,7 +82,8 @@ datas = _tools.RODict({
         "clearOnline": 0,
         "clearTeleport": 0,
         "event": 29100008,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 24
     }),
     7: _tools.RODict({
         "ID": 7,
@@ -85,7 +92,8 @@ datas = _tools.RODict({
         "clearOnline": 0,
         "clearTeleport": 0,
         "event": 29100009,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 28
     }),
     8: _tools.RODict({
         "ID": 8,
@@ -94,7 +102,8 @@ datas = _tools.RODict({
         "clearOnline": 0,
         "clearTeleport": 0,
         "event": 29100010,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 34
     }),
     9: _tools.RODict({
         "ID": 9,
@@ -103,7 +112,8 @@ datas = _tools.RODict({
         "clearOnline": 0,
         "clearTeleport": 0,
         "event": 29100011,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 27
     }),
     10: _tools.RODict({
         "ID": 10,
@@ -112,7 +122,8 @@ datas = _tools.RODict({
         "clearOnline": 0,
         "clearTeleport": 0,
         "event": 29100012,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 26
     }),
     11: _tools.RODict({
         "ID": 11,
@@ -121,7 +132,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 0,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     12: _tools.RODict({
         "ID": 12,
@@ -130,7 +142,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 0,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     13: _tools.RODict({
         "ID": 13,
@@ -139,7 +152,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100015,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     14: _tools.RODict({
         "ID": 14,
@@ -148,7 +162,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100016,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     15: _tools.RODict({
         "ID": 15,
@@ -157,7 +172,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100017,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     16: _tools.RODict({
         "ID": 16,
@@ -166,7 +182,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100018,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     17: _tools.RODict({
         "ID": 17,
@@ -175,7 +192,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100019,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     18: _tools.RODict({
         "ID": 18,
@@ -184,7 +202,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100020,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     19: _tools.RODict({
         "ID": 19,
@@ -193,7 +212,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100021,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     20: _tools.RODict({
         "ID": 20,
@@ -202,7 +222,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100022,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     21: _tools.RODict({
         "ID": 21,
@@ -211,7 +232,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100024,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     22: _tools.RODict({
         "ID": 22,
@@ -220,7 +242,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100025,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     23: _tools.RODict({
         "ID": 23,
@@ -229,7 +252,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100026,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     24: _tools.RODict({
         "ID": 24,
@@ -238,7 +262,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100027,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     25: _tools.RODict({
         "ID": 25,
@@ -247,7 +272,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100028,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     26: _tools.RODict({
         "ID": 26,
@@ -256,7 +282,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100029,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     27: _tools.RODict({
         "ID": 27,
@@ -265,7 +292,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100030,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     28: _tools.RODict({
         "ID": 28,
@@ -274,7 +302,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100031,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     29: _tools.RODict({
         "ID": 29,
@@ -283,7 +312,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100034,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     30: _tools.RODict({
         "ID": 30,
@@ -292,7 +322,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100035,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     31: _tools.RODict({
         "ID": 31,
@@ -301,7 +332,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100033,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     32: _tools.RODict({
         "ID": 32,
@@ -310,7 +342,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100103,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     33: _tools.RODict({
         "ID": 33,
@@ -319,7 +352,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 0,
         "event": 29100037,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     34: _tools.RODict({
         "ID": 34,
@@ -328,7 +362,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100036,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     35: _tools.RODict({
         "ID": 35,
@@ -337,7 +372,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100039,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     36: _tools.RODict({
         "ID": 36,
@@ -346,7 +382,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100040,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     37: _tools.RODict({
         "ID": 37,
@@ -355,7 +392,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100104,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     38: _tools.RODict({
         "ID": 38,
@@ -364,7 +402,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100041,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     43: _tools.RODict({
         "ID": 43,
@@ -373,7 +412,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100105,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     44: _tools.RODict({
         "ID": 44,
@@ -382,7 +422,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100106,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     }),
     45: _tools.RODict({
         "ID": 45,
@@ -391,7 +432,8 @@ datas = _tools.RODict({
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 0,
-        "buffTag": 0
+        "buffTag": 0,
+        "popupIndex": 0
     })
 })
 minKey = 0

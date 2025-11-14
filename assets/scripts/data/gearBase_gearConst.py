@@ -91,6 +91,10 @@ datas = _tools.RODict({
         "ID": "equipDropProbFormulaID",
         "value": 34000013,
     }),
+    "equipDropSeriousInjury": _tools.RODict({
+        "ID": "equipDropSeriousInjury",
+        "value": -5001,
+    }),
     "equipRepairCostItemID": _tools.RODict({
         "ID": "equipRepairCostItemID",
         "value": 30000001,
@@ -209,7 +213,7 @@ datas = _tools.RODict({
     }),
     "equipGrowingForbidden": _tools.RODict({
         "ID": "equipGrowingForbidden",
-        "value": (80811001, 80812001, 80813001),
+        "value": None,
     }),
     "equipStrengThenText1": _tools.RODict({
         "ID": "equipStrengThenText1",
@@ -217,6 +221,10 @@ datas = _tools.RODict({
     }),
     "equipStrengThenText2": _tools.RODict({
         "ID": "equipStrengThenText2",
+        "value": "风险",
+    }),
+    "equipStrengThenText3": _tools.RODict({
+        "ID": "equipStrengThenText3",
         "value": "危险",
     }),
     "equipDevelopNoMaterials": _tools.RODict({
@@ -238,5 +246,9 @@ datas = _tools.RODict({
     "equipSlot2Text": _tools.RODict({
         "ID": "equipSlot2Text",
         "value": "栏位二",
+    }),
+    "equipUnbindMsg": _tools.RODict({
+        "ID": "equipUnbindMsg",
+        "value": 54000308,
     })
 })

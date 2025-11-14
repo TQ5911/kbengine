@@ -49,7 +49,7 @@ datas ={
       22030001
     ],
     "num": 1,
-    "lv": "48",
+    "lv": "45",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -154,7 +154,7 @@ datas ={
       22030002
     ],
     "num": 1,
-    "lv": "48",
+    "lv": "45",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -216,7 +216,7 @@ datas ={
       22030003
     ],
     "num": 1,
-    "lv": "48",
+    "lv": "45",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

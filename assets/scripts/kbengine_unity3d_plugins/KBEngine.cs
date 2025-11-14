@@ -93,11 +93,11 @@ namespace KBEngine
 
         // 服务端与客户端的版本号以及协议MD5
         public string serverVersion = "";
-		public string clientVersion = "2.5.8";
-		public string serverScriptVersion = "";
-		public string clientScriptVersion = "0.1.0";
-		public string serverProtocolMD5 = "00C842919090D3FD4897D0C953C8FBA9";
-		public string serverEntitydefMD5 = "A3416606F68ED498ECC21011EA1AEC6C";
+        public string clientVersion = "2.5.8";
+        public string serverScriptVersion = "";
+        public string clientScriptVersion = "0.1.0";
+        public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
+        public string serverEntitydefMD5 = "915616E3CA4B69DECE4B0CB7695C9E93";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -1635,7 +1635,7 @@ namespace KBEngine
                 return;
 
             Avatar playerAvatar = playerEntity as Avatar;
-            if (playerAvatar == null || playerAvatar.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL))
+            if (playerAvatar == null || playerAvatar.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL) || playerAvatar.IsObPlayer())
             {
                 return;
             }
@@ -1905,7 +1905,7 @@ namespace KBEngine
             _entityServerPos.z = z;
 
             Avatar entity = player() as Avatar;
-            if (entity != null && entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL))
+            if (entity != null && (entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL) || entity.IsObPlayer()))
             {
                 entity.position.Set(_entityServerPos.x, _entityServerPos.y, _entityServerPos.z);
                 Event.fireOut(EventOutTypes.updatePosition, entity);
@@ -1920,7 +1920,7 @@ namespace KBEngine
             _entityServerPos.z = z;
 
             Avatar entity = player() as Avatar;
-            if (entity != null && entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL))
+            if (entity != null && (entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL)  || entity.IsObPlayer()))
             {
                 entity.position.x = _entityServerPos.x;
                 entity.position.z = _entityServerPos.z;
@@ -2719,6 +2719,30 @@ namespace KBEngine
                 bundle.writeBlob(data);
                 bundle.send(_networkInterface);
             }
+        }
+
+        public void Client_onUpdateSubPos_y(MemoryStream ms)
+        {
+            float x = ms.readFloat();
+            float y = ms.readFloat();
+            float z = ms.readFloat();
+            float yawRad = ms.readFloat();
+
+            var entity = player();
+            if (entity != null)
+            {
+                entity.position.Set(x, y, z);
+                float yaw = yawRad * 360 / ((float)System.Math.PI * 2);
+                entity.direction.Set(entity.direction.x, entity.direction.y, yaw);
+                Event.fireOut(EventOutTypes.updatePosition, entity);
+                entity.onSetPosition();
+                entity.onSetDirection();
+                entity.onUpdateVolatileData();
+            }
+
+            _entityServerPos.x = x;
+            _entityServerPos.y = y;
+            _entityServerPos.z = z;
         }
     }
 

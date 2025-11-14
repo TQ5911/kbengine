@@ -64,7 +64,7 @@ class FriendVal(RelationBase):
         if self.level != fcVal.level:
             self.level = fcVal.level
             isModify = True
-        
+
         if self.score != fcVal.battleEffect:
             self.score = fcVal.battleEffect
             isModify = True

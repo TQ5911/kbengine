@@ -1,0 +1,142 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: agent/agentFunction
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    1: _tools.RODict({
+        "functionID": 1,
+        "isControl": 1,
+        "isOpen": 0,
+    }),
+    2: _tools.RODict({
+        "functionID": 2,
+        "isControl": 0,
+        "isOpen": 0,
+    }),
+    3: _tools.RODict({
+        "functionID": 3,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    4: _tools.RODict({
+        "functionID": 4,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    5: _tools.RODict({
+        "functionID": 5,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    6: _tools.RODict({
+        "functionID": 6,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    7: _tools.RODict({
+        "functionID": 7,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    8: _tools.RODict({
+        "functionID": 8,
+        "isControl": 1,
+        "isOpen": 0,
+    }),
+    9: _tools.RODict({
+        "functionID": 9,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    10: _tools.RODict({
+        "functionID": 10,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    11: _tools.RODict({
+        "functionID": 11,
+        "isControl": 0,
+        "isOpen": 0,
+    }),
+    12: _tools.RODict({
+        "functionID": 12,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    13: _tools.RODict({
+        "functionID": 13,
+        "isControl": 0,
+        "isOpen": 0,
+    }),
+    14: _tools.RODict({
+        "functionID": 14,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    15: _tools.RODict({
+        "functionID": 15,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    16: _tools.RODict({
+        "functionID": 16,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    17: _tools.RODict({
+        "functionID": 17,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    18: _tools.RODict({
+        "functionID": 18,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    19: _tools.RODict({
+        "functionID": 19,
+        "isControl": 1,
+        "isOpen": 1,
+    }),
+    20: _tools.RODict({
+        "functionID": 20,
+        "isControl": 1,
+        "isOpen": 0,
+    })
+})
+minKey = 1
+maxKey = 20
+
+
+UIBusinessPanel = 1
+CityBattle = 2
+UICrusadeSystemPanel = 3
+UIDrawPetPanel = 4
+UIEquipMakePanel = 5
+UIEquipTrainingPanel = 6
+UIEquipEnchantingPanel = 7
+UIFriendPanel = 8
+Guild = 9
+UIMailPanel = 10
+UIPayStorePanel = 11
+UIPetPanel = 12
+UIRedPacketPanel = 13
+UISquarePanel = 14
+UISynthesisSystemPanel = 15
+UITeamDunPanel = 16
+UIWarehousePanel = 17
+UIWonderLandPanel = 18
+UIPropMakePanel = 19
+Disassembly = 20

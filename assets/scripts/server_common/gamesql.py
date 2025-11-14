@@ -763,7 +763,8 @@ def getAvatarPersonalInfo(gbId, callback):
     _sql = f"""SELECT a.sm_name, a.sm_level, a.sm_school, a.sm_totalScore, eq.sm_gridId, eq.sm_attrJson, a.sm_sex,
 		  a.sm_appearance_weapon, a.sm_appearance_breast, a.sm_appearance_outfitData_hairId, a.sm_appearance_outfitData_clothesId,
 		  a.sm_appearance_outfitData_picFrameId, a.sm_appearance_outfitData_wingId, a.sm_appearance_outfitData_mountId, a.sm_appearance_faceData_suitId,
-		  a.sm_appearance_faceData_hairIdFaceId, a.sm_appearance_faceData_hairColorIdSkinColorId
+		  a.sm_appearance_faceData_hairIdFaceId, a.sm_appearance_faceData_hairColorIdSkinColorId, eq.sm_itemId, eq.sm_createTime, eq.sm_expireTime,
+		  eq.sm_uniqueId, eq.sm_bindType, eq.sm_lockStatus
         FROM tbl_Avatar_bodyEquipData_bodyEquipList eq
         RIGHT JOIN (SELECT id, sm_name, sm_level, sm_school, sm_totalScore, sm_sex, sm_appearance_weapon, sm_appearance_breast, sm_appearance_outfitData_hairId,
 		  sm_appearance_outfitData_clothesId, sm_appearance_outfitData_picFrameId, sm_appearance_outfitData_wingId, sm_appearance_outfitData_mountId,
@@ -817,4 +818,17 @@ def stopLendAvatar(gbId, callback):
     _sql = f'UPDATE game_account_characters SET authDbId=0, authExpire=0 WHERE gbId={gbId} and authDbId>0'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
+
+def modifyAuthExpire(gbId, authExpire, callback):
+    _sql = f'UPDATE game_account_characters SET authExpire={authExpire} WHERE gbId={gbId} and authDbId>0'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+def getAuthExpire(gbId, callback):
+    _sql = f'SELECT authExpire, authDbId, gbId FROM game_account_characters WHERE gbId={gbId}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def getAvatarMoralValue(gbId, callback):
+    _sql = f'SELECT sm_moralValue FROM tbl_Avatar WHERE sm_gbID={gbId}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
 # --------------------------- auth avatar end --------------------------------

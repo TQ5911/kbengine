@@ -222,6 +222,6 @@ class ImpOutfit(object):
                 if configData:
                     prop = configData.get('prop', [])
                     for propName, val in prop:
-                        propBaseScore = dataUtils.getPropBaseScore(propName)
+                        propBaseScore = dataUtils.filterFightPropScore(self.getAvatarSchool(), propName)
                         totalScore += int(propBaseScore * val)
         return totalScore

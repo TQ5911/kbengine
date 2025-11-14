@@ -41,14 +41,14 @@ class FollowState(object):
     SUSPEND = 3   # 打断状态
 
 class AvatarTeamStatisticMixin(object):
-    
+
     def getRealTeamId(self):
         if self.teamId > 0:
             return self.teamId
         elif self.raidUUID > 0:
             return self.raidUUID
         return 0
-        
+
     def getRealTeamStub(self):
         if self.teamId > 0:
             return gameengine.getTeamStub(self.teamId)
@@ -68,14 +68,14 @@ class AvatarTeamStatisticMixin(object):
             if self.raidUUID > 0 and not gameconst.DungeonType.isRaidDungeon(_dunType, _dunEnterType):
                 return False
             return True
-        
-        return False
-        
 
-    def addTeamStatisticPlayerVal(self, type, val):       
+        return False
+
+
+    def addTeamStatisticPlayerVal(self, type, val):
         if not self.checkTeamStaticLimit():
             return
-        
+
         stub = self.getRealTeamStub()
         if stub:
             stub.addTeamStatisticPlayerVal(self.getRealTeamId(), self.gbId, type, val)
@@ -85,7 +85,7 @@ class AvatarTeamStatisticMixin(object):
     def reqGetTeamStatisticData(self, exposed):
         if not self.checkTeamStaticLimit():
             return
-        
+
         stub = self.getRealTeamStub()
         if stub:
             stub.getTeamStatisticData(self.base, self.getRealTeamId())
@@ -95,7 +95,7 @@ class AvatarTeamStatisticMixin(object):
     def reqClearTeamStatisticData(self, exposed):
         if not self.checkTeamStaticLimit():
             return
-        
+
         # 获取暂存数据
         dataRecord = self.getTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord, {})
 
@@ -281,6 +281,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
             'spaceNo': self.spaceNo,
             'guildUUID': 0,
             'openId': "openId",
+            'siegeWarCamp': self.siegeWarCamp
         }
 
     @utils.isMyself
@@ -292,19 +293,19 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if teamTarget <=0:
             ERROR_MSG("applyCreateTeam, illegal teamTarget", teamTarget)
             return
-        
+
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if teamTargetInfo is None:
             ERROR_MSG("applyCreateTeam, invalid teamTarget", teamTarget)
             return
-        
-        # 非自由组队的，检查下活动类型是否是组队    
-        if teamTarget > 1:
+
+        # 非自由组队的，检查下活动类型是否是组队
+        if teamTarget > gameconst.PARE_ACTIVITY_ID:
             actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
             if not actData or gameconst.ActivityControlType.TEAM != int(actData['needTeam']):
                 ERROR_MSG("applyCreateTeam, wrong activity control need team type", teamTarget)
                 return
-            
+
         cfgMinLv = teamTargetInfo['minLevel']
         if minLevel < cfgMinLv:
             WARNING_MSG("applyCreateTeam, invalid minLevel", minLevel, cfgMinLv)
@@ -314,10 +315,10 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if minScore < cfgMinScore:
             WARNING_MSG("applyCreateTeam, invalid minScore", minScore, cfgMinScore)
             minScore = cfgMinScore
-        
+
         if not self.isCanCreateTeam(teamTarget, minLevel, minScore):
             return
-        
+
         # 这里其实是为了给去team stub上进行rpc调用留出时间
         if self.isInTryAddTeamCD():
             WARNING_MSG('applyCreateTeam, is trying add team')
@@ -450,6 +451,12 @@ class ImpTeam(AvatarTeamStatisticMixin):
 
         if not self.isCanInviteTeam(gbId):
             return
+        
+        if gameconfig.isCrossServer():
+            target = utils.getAvatarByGbId(gbId)
+            if target and target.siegeWarCamp != self.siegeWarCamp and target.siegeWarCamp != 0 and self.siegeWarCamp != 0:
+                self.showMsg(MMD.datas.teamMatch_differentFactions, [])
+                return
 
         # gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
         #     [gbId, ], 'makeTargetSecSNSGetFlowLog',
@@ -459,7 +466,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
             gameengine.getTeamStub(self.teamId).applyInviteTeam(self.base, self.teamId, self.gbId, self.level, self.school, gbId, name)
         else:
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell([gbId], 'procInviteTeamMsg', (
-                0, self.gbId, self.name, self.name, self.level, self.school), self, 'onTeamInviteOffline', ())
+                0, 0, self.gbId, self.name, self.name, self.level, self.school), self, 'onTeamInviteOffline', ())
 
     def IDIPBanTeam(self, endTime, data):
         self.setPersistentMiscProp(gameconst.AvatarProps.idipBanSocialTeam, (endTime, data))
@@ -544,14 +551,14 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if teamTargetInfo is None:
             ERROR_MSG("createAndAddTeamMember, invalid teamTarget", teamTarget)
             return
-            
+
         cfgMinLv = teamTargetInfo['minLevel']
 
         cfgMinScore = teamTargetInfo['minScore']
-        
+
         if not self.isCanCreateTeam(teamTarget, cfgMinLv, cfgMinScore):
             return
-        
+
         teamId = KBEngine.genUUID64()
         INFO_MSG('createAndAddTeamMember', teamId, teamTarget, cfgMinLv, cfgMinScore, "", "", False, teamPlayerInfoDic)
 
@@ -804,7 +811,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'onMessagePre',
                                                               (TMMCD.datas['applySentMsg']['value'], []), None, '', ())
 
-    def procInviteTeamMsg(self, srcTeamId, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool):
+    def procInviteTeamMsg(self, srcTeamId, teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool):
         if formula.isDungeonSpace(self.spaceNo):
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
                   (TMMCD.datas['team_inCopyScene']['value'], []), None, '', ())
@@ -840,7 +847,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
             teamInviteRecord[(srcTeamId, srcPlayerGbId)] = self.toCallbackAfter(
                 max(MSG.datas[TMMCD.datas["inviteToTeamMsg"]['value']]["defaultCountdown"], 0.1), gametimer.TIMER_TAG_REPLY_INVITE_TEAM_TIMEOUT
                 )._replyInviteTeamTimeout(srcTeamId, srcPlayerGbId)
-            self.client.onApplyInviteTeamMsg(srcTeamId, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool)
+            self.client.onApplyInviteTeamMsg(srcTeamId, teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool)
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
                                   (TMMCD.datas['inviteSentMsg']['value'], []), None, '', ())
 
@@ -1894,7 +1901,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if not self.isInTeam(self.gbId) and not self.isInRaid():
             ERROR_MSG('reqCaptainFollowInfo error not in team or raid', self.teamId, self.raidUUID)
             return
-        
+
         # 检查自己是否是队长或者团长
         if self.isCaptain() or self.isRaidLeader():
             ERROR_MSG('reqCaptainFollowInfo error is captain', self.teamId, self.raidUUID)
@@ -2125,6 +2132,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
             'name': self.name,
             'openId': myAccountName,
             'id': self.id,
+            'offlineTime': 0,
         }
 
         # 【【任务】隐藏在线状态效果调整】
@@ -2179,7 +2187,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if target == 0 or target == 1:
             WARNING_MSG("reqPlayerAutoMatch target error", target)
             return
-        
+
         if self.isInTeam(self.gbId):
             WARNING_MSG('   in reqPlayerAutoMatchTeam, already in a team:', self.teamId)
             return
@@ -2187,7 +2195,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if self.isInRaid():
             WARNING_MSG('   in reqPlayerAutoMatchTeam, already in a raid:', self.raidUUID)
             return
-        
+
         if not self.isReachTeamMemMinLevel():
             WARNING_MSG('   in reqPlayerAutoMatchTeam, level cond failed:', self.level)
             return
@@ -2196,7 +2204,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if teamTargetInfo is None:
             ERROR_MSG("reqPlayerAutoMatch, misssing target", target)
             return
-        
+
         actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
         if not actData or gameconst.ActivityControlType.TEAM != int(actData['needTeam']):
             ERROR_MSG("reqPlayerAutoMatch, wrong activity control need team type", target)
@@ -2270,8 +2278,12 @@ class ImpTeam(AvatarTeamStatisticMixin):
             self.autoMatchStartTime = 0
             self.autoMatchTarget = 0
             gameengine.getGlobalBase('TeamMatchStub').playerStopAutoMatch(self.gbId)
+
         if self.teamId > 0 and self.isCaptain():
             gameengine.getTeamStub(self.teamId).teamPrepareStopAutoMatch(self.teamId)
+            
+        if self.isInTeam(self.gbId):
+            gameengine.getTeamStub(self.teamId).leaveTeam(self.base, self.teamId, self.gbId, True)
         return
 
     def onPlayerAutoMatchTimeout(self):
@@ -2287,23 +2299,23 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if not self.isInTeam(self.gbId):
             ERROR_MSG("reqSetTeamTarget, not in team")
             return
-        
+
         if not self.isCaptain():
             ERROR_MSG("reqSetTeamTarget, not captain")
             return
-        
+
         teamTarget = self.teamInfo.teamTarget
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if teamTargetInfo is None:
             ERROR_MSG("reqSetTeamTarget, misssing teamTarget", teamTarget)
             return
-        
-        if teamTarget > 1:
+
+        if teamTarget > gameconst.PARE_ACTIVITY_ID:
             actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
             if not actData or gameconst.ActivityControlType.TEAM != int(actData['needTeam']):
                 ERROR_MSG("reqSetTeamTarget, wrong activity control need team type", teamTargetInfo)
                 return
-            
+
         cfgMinLv = teamTargetInfo['minLevel']
         if minLv < cfgMinLv:
             ERROR_MSG("reqSetTeamTarget, minLv is not enough", minLv, cfgMinLv)
@@ -2317,7 +2329,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if self.getTotalScore() < minScore:
             ERROR_MSG("reqSetTeamTarget, totalScore not enough")
             return
-        
+
         gameengine.getTeamStub(self.teamId).setTeamTarget(self.teamId, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition, self.guildUUID)
         return
 
@@ -2331,13 +2343,13 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if teamTargetInfo is None:
             ERROR_MSG("reqGetTeamList, missing teamTarget", teamTarget, lastTime)
             return
-        
-        if teamTarget != 1:
+
+        if teamTarget > gameconst.PARE_ACTIVITY_ID or teamTarget == 0:
             actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
             if not actData or gameconst.ActivityControlType.TEAM != int(actData['needTeam']):
                ERROR_MSG("reqGetTeamList, wrong activity control need team type", teamTarget, lastTime)
                return
-    
+
         recordsDic = self.getTempMiscProp(gameconst.AvatarProps.getTeamListRecordData)
         if not recordsDic:
             recordsDic = {}
@@ -2675,24 +2687,25 @@ class ImpTeam(AvatarTeamStatisticMixin):
     def reqAddMarkMember(self, exposed, type, index, name, gbId, entId, pos):
         """API: 请求增加标记"""
         INFO_MSG('reqAddMarkMember', self.teamId, type, index, name, gbId, entId, pos)
-        
+
         # 检查
         if index <= 0 or index > gameconst.TEAM_MARK_MAX_SLOT or self.teamId <= 0:
             # DEBUG_MSG('reqAddMarkMember error no team')
             return
-        gameengine.getTeamStub(self.teamId).reqAddMarkMember(self.teamId, self.base, type, index, name, gbId, entId, pos)
-        
+        ent = KBEngine.entities.get(entId)
+        gameengine.getTeamStub(self.teamId).reqAddMarkMember(self.teamId, self.base, type, index, name, gbId, entId, pos, ent)
+
     @utils.isMyself
     def reqDelMarkMember(self, exposed, type, index):
         """API: 请求删除标记"""
         INFO_MSG('reqDelMarkMember', self.teamId, type, index)
-        
+
         if index <= 0 or index > gameconst.TEAM_MARK_MAX_SLOT or self.teamId <= 0:
             DEBUG_MSG('reqDelMarkMember error', self.teamId)
             return
 
         gameengine.getTeamStub(self.teamId).reqDelMarkMember(self.teamId, self.base, type, index)
-        
+
     @utils.isMyself
     @gamedecorator.limitcall(2)
     def reqChangeOnlyCaptain(self, exposed, state):
@@ -2717,7 +2730,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         else:
             playerProps = self._getTeamPlayerInfoDic()
             gameengine.getTeamStub(teamID).reqJoinTeam(self.base, teamID, password, playerProps)
-    
+
     def _onJoinTeamCheck(self):
         _errno = gameconst.RaidErrno
         if self.isInRaid():

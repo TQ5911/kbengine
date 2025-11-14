@@ -356,6 +356,50 @@ datas = _tools.RODict({
         "event": "",
         "parm": ""
     }),
+    37001017: _tools.RODict({
+        "ID": 37001017,
+        "type": 1,
+        "title": "矿区争夺战开始",
+        "content": "矿区争夺战已开始，攻破矿区核心的帮会，可获得矿区归属，群雄逐鹿，舍我其谁",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001018: _tools.RODict({
+        "ID": 37001018,
+        "type": 1,
+        "title": "矿区收益分红",
+        "content": "您对帮会的贡献，获得了帮主的认可，您获得了帮主{0}犒赏的{1}",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001019: _tools.RODict({
+        "ID": 37001019,
+        "type": 1,
+        "title": "矿区占领",
+        "content": "经过浴血奋战，帮主{0}率领帮众占领了{1}矿区",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001020: _tools.RODict({
+        "ID": 37001020,
+        "type": 1,
+        "title": "矿战积分奖励",
+        "content": "您在本次{0}矿区争夺战中表现英勇，特予如下奖励，还请及时查收。",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
     37990001: _tools.RODict({
         "ID": 37990001,
         "type": 2,
@@ -403,5 +447,9 @@ MailArgsNumMap = _tools.RODict({
         37001014:0,
         37001015:4,
         37001016:6,
+        37001017:0,
+        37001018:2,
+        37001019:2,
+        37001020:1,
         37990001:0,
 })

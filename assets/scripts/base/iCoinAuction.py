@@ -16,6 +16,7 @@ import iAuctionMixin
 import dropAward
 import auction
 import gamelog
+import AuthClsWraper
 import json
 import itemFactory
 import dataUtils
@@ -29,6 +30,7 @@ import itemData_itemData_set as IDID_SET
 import gearBase_typeExplanation as GBTED
 import gearBase_gearBase as GBGBD
 import gearBase_typeTab as GBTTD
+import agent_agentFunction as A_AFD
 
 
 def lockCoinAuction(timeout=3):
@@ -174,7 +176,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         #     if not self._checkMarketTime(itemId):
         #         WARNING_MSG("searchCoinAuctionItemsByItemId:: not in market time", itemId)
         #         return
-        
+
         self._doSearchCoinAuctionItemsByItemId(self.gbID, itemIds, limit, offset, jumpSpecialAuctionUUID)
 
     def _doSearchCoinAuctionItemsByItemId(self, gbID, itemIds, limit, offset, jumpSpecialAuctionUUID):
@@ -190,6 +192,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         return None, gameconst.AuctionErrno.AUCTION_OK
 
     # @@AuctionAPI
+    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     @lockCoinAuction(timeout=2)
     def saleItemInCoinAuction(self, exposed, itemId, uniqueId, totalPrice, number, bagType):
         INFO_MSG("saleItemInCoinAuction::", itemId, uniqueId, totalPrice, number, bagType)
@@ -319,6 +322,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     # buy auction item by auctionItemUUID
 
     # @@AuctionAPI
+    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     @lockCoinAuction(timeout=2)
     def buyItemInCoinAuctionByAuctionItemUUID(self, exposed, auctionItemUUID, number):
         INFO_MSG("buyItemInCoinAuctionByAuctionItemUUID::", auctionItemUUID, number)
@@ -399,7 +403,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         _m_auctionItemUUID = auctionItem.auctionItemUUID
         _m_uniqueId = auctionItem.uniqueId
         _m_itemId = auctionItem.itemId
-        _m_itemName = auctionItem.itemData.getItemName()
         _m_now = utils.getNow()
 
         m_src = AAC_AACDD.datas.BONUS_SRC_COIN_AUCTION_BUY_ITEM
@@ -407,7 +410,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         buyItemNum = extra.get('auctionBuyItemNum')
         m_desc = "buy-coinAuction-auctionItemUUID-{}-{}-{}".format(_m_auctionItemUUID, _m_itemId, _m_uniqueId)
         m_itemObjList = list(auctionItem.iterToSaledItemDataList(number=extra.get('auctionBuyItemNum')))
-        
+
         self.setAuctionDealCDTime(m_itemObjList, extra.get("dealCDTime", 0))
 
         m_addWealth = dropAward.AwardVal(itemObjs=m_itemObjList)
@@ -430,7 +433,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         _m_auctionItemUUID = auctionItem.auctionItemUUID
         _m_uniqueId = auctionItem.uniqueId
         _m_itemId = auctionItem.itemId
-        _m_itemName = auctionItem.itemData.getItemName()
         _m_now = utils.getNow()
 
         m_src = AAC_AACDD.datas.BONUS_SRC_COIN_AUCTION_BUY_ITEM
@@ -438,7 +440,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         buyItemNum = extra.get('auctionBuyItemNum')
         m_desc = "buy-coinAuction-auctionItemUUID-{}-{}-{}".format(_m_auctionItemUUID, _m_itemId, _m_uniqueId)
         m_itemObjList = list(auctionItem.iterToSaledItemDataList(number=extra.get('auctionBuyItemNum')))
-        
+
         self.setAuctionDealCDTime(m_itemObjList, extra.get("dealCDTime", 0))
 
         m_addWealth = dropAward.AwardVal(itemObjs=m_itemObjList)
@@ -463,10 +465,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
         DEBUG_MSG("onPlayerGlobalAuctionItemBeSaled::", auctionItem, number, totalPrice, cacheSyncT,
                   totalPriceInDeductTax, extra)
-        # m_opUUID = extra.get("opUUID", KBEngine.genUUID64())
-        # addSrc = AAC_AACDD.datas.BONUS_SRC_COLLECT_COIN_AUCTION_REVIEWED_NUMBER
-        # i_addWealth = dropAward.AwardVal(coin=totalPriceInDeductTax)
-        # self.addWealth(addSrc, i_addWealth, m_opUUID, None, notify=False)
         self.saleItemMoney += totalPriceInDeductTax
         self.onMessagePre(int(AUT_CONST.datas["auctionSoldMsg"]["value"]),
                           [str(auctionItem.itemId), str(number)])
@@ -480,13 +478,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
                   totalPriceInDeductTax, extra)
         if extra is None:
             extra = {}
-        # m_opUUID = extra.get("opUUID", KBEngine.genUUID64())
-        # addSrc = AAC_AACDD.datas.BONUS_SRC_COLLECT_COIN_AUCTION_REVIEWED_NUMBER
-        # i_addWealth = dropAward.AwardVal(coin=totalPriceInDeductTax)
-        # self.addWealth(addSrc, i_addWealth, m_opUUID, None, notify=False)
         self.saleItemMoney += totalPriceInDeductTax
-        # self.onMessagePre(int(AUT_CONST.datas["saleSuccessOfflineMsg"]["value"]),
-        #                   [str(auctionItem.itemId), str(number), str(self.coinItemId), str(totalPriceInDeductTax)])
         self.client.onPlayerCoinAuctionItemBeSaled(auctionItem.auctionItemUUID, number, totalPrice)
 
     # ---------------------------------------------------------------
@@ -495,6 +487,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     # cancel sale auction item
 
     # @@AuctionAPI
+    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     @lockCoinAuction(timeout=2)
     def cancelSaleItemInCoinAuction(self, exposed, auctionItemUUID, needReSale):
         """API: 玩家从CoinAution中下架出售的商品"""
@@ -610,9 +603,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             ERROR_MSG("_doCancelSaleItemInCoinAuction:: bag full", self.gbID, auctionItem, extra)
             return None, gameconst.AuctionErrno.AUCTION_PLAYER_BAG_GRID_NOT_ENOUGH
         self.addWealth(m_src, m_addWealth, m_opUUID, m_desc, notify=False)
-        # if not extra.get('needReSale', False):
-        #     msgId = int(AUT_CONST.datas['takeBackAndRetrieveMsg'].get('value'))
-        #     self.onMessagePre(msgId, [str(m_itemId), str(m_number)])
         return m_addWealth, gameconst.AuctionErrno.AUCTION_OK
 
     @unlockCoinAuction
@@ -968,6 +958,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     def _getPlayerBuyAuctionItemRecords(self, number):
         redisUtils.PlayerBuyAuctionItemRecord.getMessageRecord(self, self.gbID, number=number)
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     def getAuctionSaleItemMoney(self, exposed):
         INFO_MSG("getAuctionSaleItemMoney::")
         if self.saleItemMoney <= 0:
@@ -1016,7 +1007,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     def tipPlayerAuctionCollection(self, newAuctionCache):
         if not len(newAuctionCache):
             return
-        
+
         itemIdList = []
         #DEBUG_MSG("call tipPlayerAuctionCollection", self.gbID, self.collectionItemIdList, newAuctionCache, id(newAuctionCache))
         for itemId, playerGBIDSet in newAuctionCache.items():

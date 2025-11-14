@@ -264,11 +264,13 @@
         </transferRaidLeader>
 
         <transferRaidDeputy>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
+            <Arg>   RAID_ID         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   PYTHON      </Arg>
+            <Arg>   PYTHON          </Arg>
+            <Arg>   BOOL            </Arg>
+            <Arg>   BOOL            </Arg>
         </transferRaidDeputy>
 
         <transferRaidTeamCaptain>
@@ -589,6 +591,7 @@
             <Arg>       PLAYER_GBID     </Arg>
             <Arg>       ENTITY_ID           </Arg>
             <Arg>       POSITION_ARG    </Arg>
+            <Arg>       MAILBOX     </Arg>
         </reqAddRaidMarkMember>
         <reqDelRaidMarkMember>
             <Arg>       TEAMID      </Arg>
@@ -601,6 +604,9 @@
             <Arg>       MAILBOX        </Arg>
             <Arg>       UINT8       </Arg>
         </reqChangeRaidOnlyLeader>
+        <onMarkMonsterDead>
+            <Arg>       OBJECT_ID       </Arg>
+        </onMarkMonsterDead>
 
         <reqJoinRaid>
             <Arg>   MAILBOX     </Arg>

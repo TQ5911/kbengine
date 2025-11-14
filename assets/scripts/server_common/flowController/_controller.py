@@ -1561,7 +1561,7 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSoleType,
                                name=gameconst.DungeonFlowEventName.removeRebornPos)
         e.add_param('rebornPosGIDs', rebornPosGIDs)
         return e
-    
+
     def buildTransferToTheDesignatedMap(self, eventId, lineNo, pos, angle):
         """传送到大世界目标点"""
         e = self.build_element(
@@ -2900,6 +2900,7 @@ def handleStopAiTick(e, src_e, ctx, **ref_param):
             if not ent.thinkTimer:
                 WARNING_MSG("FlowController::handleStopAiTick:skip entity AItick already stopped", entityGID, ent.id)
                 continue
+            ent.stopByFuben = True
             ent.stopThink()
 
 
@@ -2919,6 +2920,7 @@ def handleStartAiTick(e, src_e, ctx, **ref_param):
             if ent.thinkTimer:
                 WARNING_MSG("FlowController::handleStartAiTick:skip entity already thinking", entityGID, ent.id)
                 continue
+            ent.stopByFuben = False
             ent.startThink()
 
 
@@ -3202,7 +3204,7 @@ def handleTransferToTheDesignatedMap(e, src_e, ctx, **ref_params):
     pos = e.get_param('pos', [])
     angle = e.get_param('angle', [])
     WARNING_MSG('DUNGEON FLOW -- EVENT[{}]: transfer to the designated map -> {}'.format(e.id, lineNo, pos))
-    
+
     spaceMgr = e.controller.owner
     if not spaceMgr:
         return

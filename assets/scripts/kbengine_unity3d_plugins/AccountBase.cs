@@ -26,13 +26,17 @@ namespace KBEngine
 		public UInt16 serverId = 0;
 
 		public virtual void onAvatarDetailInAccount(UInt64 arg1, Int32 arg2, UInt32 arg3, string arg4, Int32 arg5) {} 
+		public virtual void onAvatarOfflineTime(UInt64 arg1, UInt32 arg2) {} 
+		public virtual void onCharInfoChange(CHARACTER_VAL arg1) {} 
 		public virtual void onCreateAvatarFailed(Byte arg1) {} 
 		public virtual void onCreateAvatarResult(Byte arg1, UInt64 arg2) {} 
 		public virtual void onKickAnotherAccount() {} 
 		public virtual void onKickAnotherAvatar() {} 
+		public virtual void onLoginNeedReconnect() {} 
 		public virtual void onRemoveAvatar(UInt64 arg1) {} 
 		public virtual void onReqAvatarGBID(UInt64 arg1) {} 
-		public virtual void onReqAvatarList(CHARACTERS_INFO arg1, Byte arg2) {} 
+		public virtual void onReqAvatarList(CHARACTERS_INFO arg1, Byte arg2, UInt64 arg3) {} 
+		public virtual void onSelectGameFailed(UInt64 arg1, Byte arg2) {} 
 
 		public AccountBase()
 		{
@@ -132,6 +136,15 @@ namespace KBEngine
 					Int32 onAvatarDetailInAccount_arg5 = stream.readInt32();
 					onAvatarDetailInAccount(onAvatarDetailInAccount_arg1, onAvatarDetailInAccount_arg2, onAvatarDetailInAccount_arg3, onAvatarDetailInAccount_arg4, onAvatarDetailInAccount_arg5);
 					break;
+				case 1071:
+					UInt64 onAvatarOfflineTime_arg1 = stream.readUint64();
+					UInt32 onAvatarOfflineTime_arg2 = stream.readUint32();
+					onAvatarOfflineTime(onAvatarOfflineTime_arg1, onAvatarOfflineTime_arg2);
+					break;
+				case 1072:
+					CHARACTER_VAL onCharInfoChange_arg1 = ((DATATYPE_CHARACTER_VAL)method.args[0]).createFromStreamEx(stream);
+					onCharInfoChange(onCharInfoChange_arg1);
+					break;
 				case 12:
 					Byte onCreateAvatarFailed_arg1 = stream.readUint8();
 					onCreateAvatarFailed(onCreateAvatarFailed_arg1);
@@ -152,6 +165,9 @@ namespace KBEngine
 				case 16:
 					onKickAnotherAvatar();
 					break;
+				case 1067:
+					onLoginNeedReconnect();
+					break;
 				case 13:
 					Int32 onMessage_arg1 = stream.readInt32();
 					List<string> onMessage_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
@@ -168,7 +184,13 @@ namespace KBEngine
 				case 8:
 					CHARACTERS_INFO onReqAvatarList_arg1 = ((DATATYPE_CHARACTERS_INFO)method.args[0]).createFromStreamEx(stream);
 					Byte onReqAvatarList_arg2 = stream.readUint8();
-					onReqAvatarList(onReqAvatarList_arg1, onReqAvatarList_arg2);
+					UInt64 onReqAvatarList_arg3 = stream.readUint64();
+					onReqAvatarList(onReqAvatarList_arg1, onReqAvatarList_arg2, onReqAvatarList_arg3);
+					break;
+				case 1074:
+					UInt64 onSelectGameFailed_arg1 = stream.readUint64();
+					Byte onSelectGameFailed_arg2 = stream.readUint8();
+					onSelectGameFailed(onSelectGameFailed_arg1, onSelectGameFailed_arg2);
 					break;
 				default:
 					break;

@@ -88,6 +88,13 @@
             <Default>       {}          </Default>
             <Persistent>    true        </Persistent>
         </randomSynthesisDic>
+
+        <drugsQuantityBase>
+            <Type>          INT32           </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </drugsQuantityBase>
     </Properties>
 
     <BaseMethods>
@@ -342,6 +349,13 @@
             <Arg>       UNICODE                 </Arg>
         </delOldName>
 
+        <onCheckMapUnlocked>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT16          </Arg>
+            <Arg>       METHOD_NAME     </Arg>
+            <Arg>       PY_DICT         </Arg>
+        </onCheckMapUnlocked>
+
         <onCheckAndCostWealth>
             <Arg>       UINT8           </Arg>
             <Arg>       UINT16          </Arg>
@@ -385,6 +399,10 @@
             <Arg>       ITEM_ID     </Arg>
             <Arg>       UINT32      </Arg>
         </reqItemDisassemble>
+
+        <onDrugsQuantitySync>
+            <Arg>       INT32      </Arg>
+        </onDrugsQuantitySync>
     </BaseMethods>
 
     <CellMethods>

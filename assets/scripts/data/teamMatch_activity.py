@@ -33,6 +33,15 @@ datas = _tools.RODict({
         "enterDunID": 0,
         "isCrossServer": 0
     }),
+    2: _tools.RODict({
+        "ID": 2,
+        "value": "新元城战",
+        "pareActivity": 2,
+        "minScore": 0,
+        "minLevel": 0,
+        "enterDunID": 0,
+        "isCrossServer": 0
+    }),
     102: _tools.RODict({
         "ID": 102,
         "value": "祖珂祭坛",

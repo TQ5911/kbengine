@@ -79,7 +79,8 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
                  raidMicsSwitch=gameconst.RaidMicsMode.OFF,
                  raidMicsBlocked=False,
                  raidDungeonRecords=None,
-                 raidTeamDic=None, raidApplyJoinDic=None):
+                 raidTeamDic=None, raidApplyJoinDic=None,
+                 siegeWarCamp=0):
         if raidTeamDic is None:
             raidTeamDic = {}
 
@@ -123,6 +124,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         self.password = ''
         self.autoStartTimer = 0
         self.raidRewardDatas = {}
+        self.siegeWarCamp = siegeWarCamp
 
         team.TeamStatisticMixin.__init__(self)
 
@@ -1367,14 +1369,18 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
             return False
         
         ret = False
+        entId = 0
         if type == gameconst.TeamMarkType.MARK_SCENE:
-            ret = self.raidMark.delSceneMark(index)
+            ret, entId = self.raidMark.delSceneMark(index)
         else:
-            ret = self.raidMark.delPlayerMark(index)
+            ret, entId = self.raidMark.delPlayerMark(index)
         
         if ret:
             self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.DELETE)
-        return ret
+        return entId
+    
+    def clearMarkRecord(self, ownerStub):
+        self.raidMark.clearMarkRecord(ownerStub, self.raidUUID)
     
     def changeRaidOnlyLeader(self, owner, state):
         if state == self.onlyCaptainCanMark:

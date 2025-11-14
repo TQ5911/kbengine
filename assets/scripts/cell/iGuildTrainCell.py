@@ -24,10 +24,10 @@ class IGuildTrainCell(object):
 
                 if isinstance(ret, int):
                     propVal = ret
-                    scoreTmp = dataUtils.getPropBaseScore(propName) * propVal
+                    scoreTmp = dataUtils.filterFightPropScore(self.school, propName) * propVal
                 elif isinstance(ret, float):
                     propVal = int(ret)
-                    scoreTmp = dataUtils.getPropBaseScore(propName) * propVal
+                    scoreTmp = dataUtils.filterFightPropScore(self.school, propName) * propVal
                 else:
                     propVal, scoreTmp = ret
 

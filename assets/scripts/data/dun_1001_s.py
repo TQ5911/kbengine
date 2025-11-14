@@ -16,7 +16,7 @@ datas ={
         "PosZ": 244.9985,
         "Props": {
           "Num": 0,
-          "Radius": 0.0,
+          "Radius": 6.0,
           "Remark": "",
           "TelDir": 89.9999847,
           "TelX": 177.916,
@@ -41,7 +41,7 @@ datas ={
         "PosZ": 244.9701,
         "Props": {
           "Num": 0,
-          "Radius": 0.0,
+          "Radius": 6.0,
           "Remark": "",
           "TelDir": 90.0,
           "TelX": 176.4001,
@@ -2706,28 +2706,6 @@ datas ={
             "Remark": ""
           }
         },
-        "10014127": {
-          "ActivityID": 0,
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 129.7179,
-          "DisplayName": "",
-          "EntityID": 18000686,
-          "ID": 10014127,
-          "Name": "\u5f20\u5929\u5f03",
-          "PosX": 288.8942,
-          "PosY": 0.569424,
-          "PosZ": 286.1508,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": "11",
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
         "10014128": {
           "ActivityID": 0,
           "ClassName": "Npc",
@@ -2763,6 +2741,50 @@ datas ={
           "PosX": 329.9416,
           "PosY": 10.6526,
           "PosZ": 310.6364,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "10014130": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 357.6917,
+          "DisplayName": "",
+          "EntityID": 18000664,
+          "ID": 10014130,
+          "Name": "\u6b66\u9675",
+          "PosX": 306.1298,
+          "PosY": -2.568883,
+          "PosZ": 124.8596,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
+        },
+        "10014131": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 215.5891,
+          "DisplayName": "",
+          "EntityID": 18000686,
+          "ID": 10014131,
+          "Name": "\u5f20\u5929\u5f03",
+          "PosX": 297.9117,
+          "PosY": -0.6477975,
+          "PosZ": 99.25594,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": "11",

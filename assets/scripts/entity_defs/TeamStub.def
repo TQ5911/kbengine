@@ -512,16 +512,17 @@
         </replyJoinRaidWithTeam>
 
         <raidApplyInvitedRaid>
+            <Arg>   TEAMTARGET  </Arg>
             <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
             <Arg>   RAID_ID     </Arg>
             <Arg>   UNICODE     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
             <Arg>   UNICODE     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
             <Arg>   UNICODE     </Arg>
-            <Arg>   TEAMID </Arg>
-            <Arg>   PYTHON  </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PYTHON      </Arg>
         </raidApplyInvitedRaid>
 
         <onReplyInviteRaidWithTeamFail>
@@ -644,6 +645,7 @@
             <Arg>       PLAYER_GBID     </Arg>
             <Arg>       ENTITY_ID           </Arg>
             <Arg>       POSITION_ARG    </Arg>
+            <Arg>       MAILBOX     </Arg>
         </reqAddMarkMember>
         <reqDelMarkMember>
             <Arg>       TEAMID      </Arg>
@@ -656,6 +658,9 @@
             <Arg>       MAILBOX        </Arg>
             <Arg>       UINT8       </Arg>
         </reqChangeOnlyCaptain>
+        <onMarkMonsterDead>
+            <Arg>       OBJECT_ID       </Arg>
+        </onMarkMonsterDead>
         <reqJoinTeam>
             <Arg>   MAILBOX     </Arg>
             <Arg>   RAID_ID     </Arg>

@@ -46,7 +46,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         creationType = creation_creation.datas[self.creationId].get('type', '')
         self.speed = self.flySpeed
         self.cancleLockTarget = False
-        
+
         self.areaLoop = self.getAreaLoop()
         self.loopIntervalTime = self.getLoopIntervalTime()
         self.creationLiveTime = self.getCreationLiveTime()
@@ -156,7 +156,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                     if creationLiveTime > 0:
                         defaultValue = self.getAreaLoop()/creationLiveTime
         return defaultValue
-    
+
     def getCreationLiveTime(self):
         defaultTime = float(creation_creation.datas[self.creationId].get('time') or 0)
         skillId = self.tmpProps.get('skillId', 0)
@@ -171,7 +171,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                         DEBUG_MSG("in creationLiveTime, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, datas)
 
         return defaultTime
-    
+
     def getAreaLoop(self):
         defaultValue = int(creation_creation.datas[self.creationId].get('areaLoop') or 0)
         skillId = self.tmpProps.get('skillId', 0)
@@ -190,7 +190,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                             defaultValue += datas[0]
                             DEBUG_MSG("in areaLoop, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, datas)
         return defaultValue
-    
+
     @property
     def hurtNumber(self):
         return int(creation_creation.datas[self.creationId].get('hurtNumber') or 0)

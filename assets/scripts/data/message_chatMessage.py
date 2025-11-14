@@ -162,13 +162,13 @@ datas = _tools.RODict({
     58000028: _tools.RODict({
         "ID": 58000028,
         "name": "teamChannel_applyTeamMsg",
-        "Message": "目标：{0}\n招募信息：{1}\n队伍人数：{2}/{3}<link team name=申请加入 teamId={4}>",
+        "Message": "目标：{0}\n招募信息：{1}\n队伍人数：{2}/{3}<link team name=申请加入 teamId={4} isRaid={5} teamTarget={6}>",
         "channelID": (2,)
     }),
     58000029: _tools.RODict({
         "ID": 58000029,
         "name": "teamChannel_applyRaidMsg",
-        "Message": "目标：{0}\n招募信息：{1}\n团队人数：{2}/{3}<link team name=申请加入 teamId={4}>",
+        "Message": "目标：{0}\n招募信息：{1}\n团队人数：{2}/{3}<link team name=申请加入 teamId={4} isRaid={5} teamTarget={6}>",
         "channelID": (2,)
     }),
     58000030: _tools.RODict({
@@ -236,7 +236,49 @@ datas = _tools.RODict({
         "name": "petQuality4Broadcast",
         "Message": "<link player name={0} gbid={1}>获得<color=#a53131>神话</color>精灵<color=#a53131>{2}</color>！",
         "channelID": (2, 99)
+    }),
+    58000201: _tools.RODict({
+        "ID": 58000201,
+        "name": "mineBatte_chatChannelMsg1",
+        "Message": "矿区争夺战已开始，攻破矿区核心的帮会，可获得矿区归属，群雄逐鹿，舍我其谁！",
+        "channelID": (2, 3, 99)
+    }),
+    58000202: _tools.RODict({
+        "ID": 58000202,
+        "name": "mineBatte_chatChannelMsg2",
+        "Message": "经过浴血奋战，帮主{0}率领帮众占领了{1}矿区",
+        "channelID": (2, 3, 99)
+    }),
+    58000203: _tools.RODict({
+        "ID": 58000203,
+        "name": "mineBatte_chatChannelMsg3",
+        "Message": "{0}矿区的荣誉旗帜正在遭受攻击，请前往保护",
+        "channelID": (3,)
+    }),
+    58000204: _tools.RODict({
+        "ID": 58000204,
+        "name": "mineBatte_chatChannelMsg4",
+        "Message": "{0}矿区荣誉旗帜被破坏，本周已被破坏{1}/{2}次，帮会权威受到挑战",
+        "channelID": (3,)
+    }),
+    58000205: _tools.RODict({
+        "ID": 58000205,
+        "name": "mineBatte_chatChannelMsg5",
+        "Message": "{0}矿区荣誉旗帜被破坏，本周已被破坏{1}/{2}次，不再获得矿区额外收益",
+        "channelID": (3,)
+    }),
+    58000206: _tools.RODict({
+        "ID": 58000206,
+        "name": "mineBatte_chatChannelMsg6",
+        "Message": "{0}矿区的核心血量已不足50%，请及时修复",
+        "channelID": (3,)
+    }),
+    58000207: _tools.RODict({
+        "ID": 58000207,
+        "name": "mineBatte_chatChannelMsg7",
+        "Message": "{0}帮会占领的{1}矿区被多次破坏，帮会颜面扫地，不再获得该矿区额外收益",
+        "channelID": (3, 99)
     })
 })
 minKey = 58000001
-maxKey = 58000155
+maxKey = 58000207

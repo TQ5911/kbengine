@@ -11,7 +11,6 @@ import cube_config
 import iStaticSpaceMgr
 import iCollectionBossForMgr
 
-
 class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.IStaticSpaceMgr):
     def __init__(self):
         iStaticSpaceMgr.IStaticSpaceMgr.__init__(self)

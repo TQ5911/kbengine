@@ -6,3 +6,5 @@ assets/res/routers/BigWorldWaypoint_2_path.json
 *.pyc
 assets/scripts/data/.svn/
 assets/scripts/kbengine_unity3d_plugins/.svn/
+*.pid
+assets/backup_xml/

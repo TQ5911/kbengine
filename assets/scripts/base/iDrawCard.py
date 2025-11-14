@@ -74,6 +74,7 @@ class IDrawCard(object):
 			WARNING_MSG('call checkGachaPoolVaild after timeLimit')
 		return False
 
+	@gamedecorator.checkGameconfigEnable('drawPet')
 	def reqRandomSummonPet(self, exposed, pool, summonNum):
 		INFO_MSG('call reqRandomSummonPet', pool, summonNum)
 		if not self.checkGachaPoolVaild(pool):
@@ -203,6 +204,7 @@ class IDrawCard(object):
 		items = [itemId for itemId in itemIdList]
 		self.drawCardRecord.appendRecord(poolData.get('poolGroupId', pool), items)
 
+	@gamedecorator.checkGameconfigEnable('drawPet')
 	def reqGetGuaranteedPetEgg(self, exposed, pool):
 		INFO_MSG('call reqGetGuaranteedPetEgg', pool)
 		if not self.checkGachaPoolVaild(pool):
@@ -227,6 +229,7 @@ class IDrawCard(object):
 		self.addWealth(AAC_AACDD.datas.BONUS_SRC_PETROLL_SECURED, wealthVal, opUUID, detail, notify=True)
 		self.client.onGetGuaranteedPetEgg(pool, pityReward, guaranteed)
 
+	@gamedecorator.checkGameconfigEnable('drawPet')
 	@gamedecorator.limitcall(1)
 	def reqPetDrawCardRecord(self, exposed, pool):
 		INFO_MSG('call petDrawCardRecord', pool)

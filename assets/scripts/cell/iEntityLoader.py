@@ -79,11 +79,12 @@ class IEntityLoader(object):
             WARNING_MSG('loadEntities::skip load entities')
             self.doLoadEntitiesEnd()
             return
+
         entityIDs = self._initEntities(self.spaceNo)
         readyEntitiesList = []
         self.loadLineEntities(self.spaceNo, entityIDs, readyEntitiesList)
         self.loadEntitiesBatchly(self.spaceNo, iter(readyEntitiesList),
-                                 gameconst.LoadEntitySetting.BATCH_NUM,
+                                 gameconfig.entityLoadSpeed(),
                                  gameconst.LoadEntitySetting.BATCH_DELAY, True, spaceMgrId)
 
         _iter = self.loadMonsterGroups(self.spaceNo, spaceMgrId)

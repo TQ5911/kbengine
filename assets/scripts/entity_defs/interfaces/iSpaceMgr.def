@@ -3,6 +3,7 @@
     <Interfaces>
         <Interface>     iFlowControllerCell     </Interface>
         <Interface>     iFlowControllerBase     </Interface>
+        <Interface>     iMapMonsterRefresh      </Interface>
     </Interfaces>
 
     <Properties>

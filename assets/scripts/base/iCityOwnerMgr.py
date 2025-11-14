@@ -21,7 +21,7 @@ class ICityOwnerMgr(object):
     def __init__(self):
         DEBUG_MSG('[lj]init city owner mgr cityOwnerServerId:', self.cityOwnerServerId, 'cityOwnerId:', self.cityOwnerId,
                   'cityOwnerGuildUUID:', self.cityOwnerGuildUUID, 'cityOwnerGuildName:', self.cityOwnerGuildName, 'cityMoney:', self.cityMoney)
-        
+
         #init完了sync一下
         self.cityDataChanged = True
 
@@ -38,7 +38,7 @@ class ICityOwnerMgr(object):
     def syncCityData(self, force = False):
         if self.cityOwnerId == 0 and not force:
             return
-        
+
         cityOfficerList = []
         for key, value in self.cityOfficerDict.items():
             cityOfficerList.append({
@@ -108,11 +108,11 @@ class ICityOwnerMgr(object):
 
     #战斗结束 城主变更
     def cityOwnerChange(self, serverId, dataList):
-        ownerChanged = False 
+        ownerChanged = False
         if self.cityOwnerId != dataList[0]:
             ownerChanged = True
             self.occupyTime = utils.getNow()
-            
+
         self.lastSiegeWarEndTime = utils.getNow()
         self.cityOwnerServerId = serverId
         self.cityOwnerId = dataList[0]
@@ -168,7 +168,7 @@ class ICityOwnerMgr(object):
             else:
                 self.orderRemainTimesDict[key][0] = value['Times']
         self.cityDataChanged = True
-        
+
     def _onCityOwnerDailyEvent(self):
         finalTax = int(self.dailyCumulativeTax * (CBC.datas['cityBattle_taxProportion']['value'] / 100.0))
         self.lastDailyFinalTax = finalTax
@@ -185,7 +185,7 @@ class ICityOwnerMgr(object):
         if officerType in self.cityOfficerDict:
             tarGbid, name, sex, school = self.cityOfficerDict.pop(officerType)
             removeOfficerList.append((tarGbid, officerType))
-        
+
         for serverID in self.GroupServerList:
             _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'SiegeWarStub')
             _stub.onCityOfficerChange(addOfficerList, removeOfficerList)
@@ -195,10 +195,10 @@ class ICityOwnerMgr(object):
         if srcId != self.cityOwnerId or self.cityOwnerId == 0:
             DEBUG_MSG('[lj]onAppointCityOfficer', officerType, officerId, 'not city owner')
             return
-        
+
         addOfficerList = []
         removeOfficerList = []
-        
+
         #槽位有人
         if officerType in self.cityOfficerDict:
             tarGbid, name, sex, school = self.cityOfficerDict.pop(officerType)
@@ -210,7 +210,7 @@ class ICityOwnerMgr(object):
                 tarGbid, name, sex, school = self.cityOfficerDict.pop(key)
                 removeOfficerList.append((tarGbid, key))
                 break
-        
+
         self.cityOfficerDict[officerType] = (officerId, officerName, sex, school)
         addOfficerList.append((officerId, officerType))
 
@@ -249,7 +249,7 @@ class ICityOwnerMgr(object):
             permission = True
             srcName = self.cityOwnerName
             DEBUG_MSG('[lj]cityNewOrder is city owner', srcGbId, orderId)
-        
+
         tbKey = {
             1: 'Order',
             2: 'Reward',
@@ -262,27 +262,27 @@ class ICityOwnerMgr(object):
                     DEBUG_MSG('[lj]cityNewOrder is city officer type:', key, 'srcGbId:', srcGbId, 'orderId:', orderId)
                     srcName = value[1]
                     break
-        
+
         if not permission:
             DEBUG_MSG('[lj]onCityNewOrder', srcGbId, 'no permission')
             return
-        
+
         if orderId not in self.orderRemainTimesDict:
             DEBUG_MSG('[lj]onCityNewOrder not found orderId:', orderId)
             return
-        
+
         if self.orderRemainTimesDict[orderId][0] <= 0:
             DEBUG_MSG('[lj]onCityNewOrder', srcGbId, 'no remain times')
             return
-        
+
         consume = CBP.datas[orderId]['consume']
         if self.cityMoney < consume:
             DEBUG_MSG('[lj]onCityNewOrder', srcGbId, 'no city money', self.cityMoney, consume)
             return
-        
+
         self.cityMoney -= consume
         self.orderRemainTimesDict[orderId][0] -= 1
-        
+
         #全服buff
         #个人reward
         #目标debuff
@@ -347,7 +347,7 @@ class ICityOwnerMgr(object):
             for serverID in self.GroupServerList:
                 _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'SiegeWarStub')
                 _stub.onCityAddBuffToTarget(buffId, endTime, targetGbId)
-        
+
         #通知使用者本人
         self.syncCityData()
         _stub = iRouter.RemoteServerStubEntityCall(srcServerId, 'SiegeWarStub')
@@ -365,12 +365,12 @@ class ICityOwnerMgr(object):
         if srcGuildUUID != self.cityOwnerGuildUUID:
             DEBUG_MSG('[lj]changeCityMoneyToGuildMoney', srcGbId, srcGuildUUID, 'not city owner guild')
             return
-        
+
         if val > self.cityMoney:
             DEBUG_MSG('[lj]changeCityMoneyToGuildMoney', srcGbId, srcGuildUUID, 'not enough city money', self.cityMoney, val)
             _stub.onChangeCityMoneyToGuildMoneyResult(False, srcGuildUUID, srcGbId, srcBox, val, self.cityMoney)
             return
-        
+
         self.cityMoney -= val
         self.cityFundUseRecord.append({
             'recordId': CityBattleLog.EXCHANGE,
@@ -379,7 +379,7 @@ class ICityOwnerMgr(object):
         })
         if len(self.cityFundUseRecord) > 20:
             self.cityFundUseRecord.pop(0)
-        
+
         _stub.onChangeCityMoneyToGuildMoneyResult(True, srcGuildUUID, srcGbId, srcBox, val, self.cityMoney)
         self.syncCityData()
         DEBUG_MSG('[lj]changeCityMoneyToGuildMoney', srcGbId, srcGuildUUID, 'success', val, self.cityMoney, self.cityFundUseRecord)
@@ -391,7 +391,7 @@ class ICityOwnerMgr(object):
             DEBUG_MSG('[lj]onSiegeWarRename is city owner', newName)
             self.cityOwnerName = newName
             self.cityDataChanged = True
-        
+
         #是官员
         cityOfficerList = []
         for key, value in self.cityOfficerDict.items():
@@ -400,12 +400,12 @@ class ICityOwnerMgr(object):
                 self.cityOfficerDict[key] = (value[0], newName, value[2], value[3])
                 self.cityDataChanged = True
                 break
-    
+
     def onGuildRename(self, guildUUID, guildName):
         DEBUG_MSG('[lj]onGuildRename', guildUUID, guildName)
         if guildUUID == self.cityOwnerGuildUUID:
             DEBUG_MSG('[lj]onGuildRename is city owner guild', guildName)
             self.cityOwnerGuildName = guildName
             self.cityDataChanged = True
-            
-            
+
+

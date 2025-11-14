@@ -161,7 +161,7 @@ def Alladdbuff(su, player, buffid):
                 e.addBuff(buffid,1,e.id)
     return True, '执行成功'
 
-@gm_cmd('$AllsetskillLV', (Player("gbId/Id"), Int("level")), RALL, gameconst.CELL, '所有人技能升级', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$AllsetskillLV', (Player("gbId/Id"), Int("level")), RALL, gameconst.BASE, '所有人技能升级', ALLSIDE, GOD_GROUPS)
 def AllsetskillLV(su, player, level):
     import skillRelevant_skillUpgrade as SRSUD
     skill_dicts = {
@@ -189,18 +189,32 @@ def AllsetskillLV(su, player, level):
         if  school_id in skill_dicts:
             skill_dicts[school_id][skill_id] = assign_skill_level(skill_id, skill_info.get('levelLimit', []), level)
 
+    import skill_skill as SSD
     def update_skill_levels(self, skill_dict):
         skill_id_list = []
         skill_lv_list = []
         for skill_id, skill_lv in skill_dict.items():
             skill_id_list.append(skill_id)
             skill_lv_list.append(skill_lv)
-            self.onChangeSkillLv(skill_id, skill_lv)
+            self.cell.onChangeSkillLv(skill_id, skill_lv)
+            newLevel = skill_lv
+            self.buildDic.skillLevels[skill_id] = newLevel
+            self.updateSkillLevelSetSummonSlotIdx(skill_id, newLevel)
+
+            # 被动技能替换的技能一并要升级
+            relatedSkills = SSD.datas.get(skill_id, {}).get('conflictSkill') or ()
+            skillIdList = [skill_id] + list(relatedSkills)
+            for sid in relatedSkills:
+                if sid in self.buildDic.skillLevels:
+                    self.buildDic.skillLevels[sid] = newLevel
+                    self.updateSkillLevelSetSummonSlotIdx(sid, newLevel)
+
         self.client.onUpdateSkillLevel(skill_id_list, skill_lv_list)
 
     def update_skills_by_school(self):
-        if self.school in skill_dicts:
-            update_skill_levels(self, skill_dicts[self.school])
+        school = self.getAvatarSchool()
+        if school in skill_dicts:
+            update_skill_levels(self, skill_dicts[school])
 
     for e in KBEngine.entities.values():
         if e.className == 'Avatar':
@@ -823,11 +837,11 @@ def clenBag(su, player, bagType):
     else:
         return False, '执行失败'
 
-@gm_cmd('$getGearbaseEquipItem', (Player("gbId/Id"), Int('templateId'),Int('bindType')), RARG(0), BASE, '获取装备', ALLSIDE, GOD_GROUPS)
-def getGear(su,player,templateId,bindType):
+@gm_cmd('$getGearbaseEquipItem', (Player("gbId/Id"), Int('templateId'), Int('bindType'), Int('grade')), RARG(0), BASE, '获取装备', ALLSIDE, GOD_GROUPS)
+def getGear(su, player, templateId, bindType, grade):
     if gmCommand.isRawPlayer(player):
         return False, '执行失败'
-    ret = player.gmAddGearbaseEquipItem(templateId,bindType)
+    ret = player.gmAddGearbaseEquipItem(templateId, bindType, grade)
     if ret == gameconst.BagOPStat.BAG_OP_STAT_OK:
         return True, '执行成功'
     else:
@@ -2621,13 +2635,7 @@ def EnterWonderLand(su, player, mapId):
 
 @gm_cmd('$enterCube', (Player("gbId/Id"), Int("floor")), RARG(0), CELL, '进入魔方阵', ALLSIDE, GOD_GROUPS)
 def enterCube(su, player, floor):
-    import cube_floor
-    if floor:
-        _floorData = cube_floor.datas.get(floor)
-    if not _floorData:
-        ERROR_MSG('ICubeCell::enterCube: floor not found1: {}'.format(floor))
-        return
-    gameengine.getCubeStub(floor).doEnterCube(player.base, True, player.gbId, player.spaceNo, {})
+    player.enterCubeInternal(floor)
     return True, '执行成功'
 
 @gm_cmd('$enterYanwu', (Player("gbId/Id"), Int("mapId")), RARG(0), CELL, '进入演武场', ALLSIDE, GOD_GROUPS)
@@ -2744,9 +2752,6 @@ def _getItems(school, quality, level, awardCtx):
             continue
 
         for i in v:
-            if i < 80814001:
-                continue
-
             grade = GBG.datas[i]['grade']
             if grade == level:
                 _itemIds.append(i)
@@ -2886,6 +2891,12 @@ def gmChangeSiegeWarState(su, player, state, endTime):
     _stub.gmChangeSiegeWarState(state, endTime, 0)
     return True, '执行成功'
 
+@gm_cmd('$changeSiegeWarStateOfficial', (Player("gbId/Id"), Int('state'), Int('endTime')), RARG(0), gameconst.BASE, '修改城战状态(线上用)', ALLSIDE, GOD_GROUPS)
+def gmChangeSiegeWarStateOfficial(su, player, state, endTime):
+    _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
+    _stub.gmChangeSiegeWarState(state, endTime, (0, 1))
+    return True, '执行成功'
+
 @gm_cmd('$siegeWarBattleFastForward', (Player("gbId/Id"), Int('minutes')), RARG(0), gameconst.BASE, '城战战斗快进', ALLSIDE, GOD_GROUPS)
 def gmSiegeWarBattleFastForward(su, player, minutes):
     gameengine.getGlobalBase("SiegeWarSpaceStub").onGmAddTime(minutes)
@@ -3014,9 +3025,30 @@ def changeSceneStates(su, player, states):
     return True, '执行成功'
 
 
-@gm_cmd('$levelUpSkill', (Player("gbId/Id"), Int("skillId"),), RARG(0), gameconst.BASE, '升级技能', ALLSIDE, GOD_GROUPS)
-def levelUpSkill(su, player, skillId):
-    player.levelUpSkill(skillId, 1)
+@gm_cmd('$levelUpSkill', (Player("gbId/Id"), Int("skillId"), Int("level")), RARG(0), gameconst.BASE, '升级指定技能到指定等级', ALLSIDE, GOD_GROUPS)
+def levelUpSkill(su, player, skillId, level):
+    if not player:
+        return False, "玩家不存在"
+
+    import skill_skill as SSD
+    if skillId not in SSD.datas:
+        return False, f"技能ID {skillId} 不存在"
+
+    newLevel = level
+    player.buildDic.skillLevels[skillId] = newLevel
+    player.cell.onChangeSkillLv(skillId, newLevel)
+    player.updateSkillLevelSetSummonSlotIdx(skillId, newLevel)
+
+    # 处理相关联的被动技能升级（参考原有逻辑）
+    relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
+    for sid in relatedSkills:
+        if sid in player.buildDic.skillLevels:
+            player.buildDic.skillLevels[sid] = newLevel
+            player.updateSkillLevelSetSummonSlotIdx(sid, newLevel)
+
+    player.client.onUpdateSkillLevel([skillId], [newLevel])
+
+    return True, f"技能 {skillId} 已升级到等级 {level}"
 
 @gm_cmd('$gotoLinePos', (Player("gbId/Id"), Int('spaceNo'),  Float('x'), Float('y'), Float('z')), RARG(0), CELL,
         '传送到大世界地图指定位置', ALLSIDE, GOD_GROUPS, minArgs=2)

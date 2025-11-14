@@ -214,6 +214,7 @@
 
         <tryBeInvitedInRaid>
             <Arg>   MAILBOX     </Arg>
+            <Arg>   PYTHON      </Arg>
         </tryBeInvitedInRaid>
 
         <tryApplyInviteRaidOffline>
@@ -237,17 +238,18 @@
         </applyInviteRaidWithTeam>
 
         <invitedPlayerOnApplyInvitedRaid>
-            <Arg>   RAID_ID     </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   PYTHON      </Arg>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   PYTHON          </Arg>
         </invitedPlayerOnApplyInvitedRaid>
 
         <onReplyInviteRaidLonelyWithLonely>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   PY_DICT     </Arg>
+            <Arg>   PY_DICT         </Arg>
         </onReplyInviteRaidLonelyWithLonely>
 
         <!--玩家回应单独邀请-->
@@ -670,9 +672,10 @@
 
         <!--团长邀请入团后被邀请者(玩家/队长)回调-->
         <onBeInvitedRaidByLeader>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UUID        </Arg>
-            <Arg>   TEAMID      </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UUID            </Arg>
+            <Arg>   TEAMID          </Arg>
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->
@@ -680,9 +683,10 @@
 
         <!--副团长邀请入团后被邀请者(玩家/队长)回调-->
         <onBeInvitedRaidByDeputy>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UUID        </Arg>
-            <Arg>   TEAMID      </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UUID            </Arg>
+            <Arg>   TEAMID          </Arg>
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->
@@ -690,19 +694,21 @@
 
         <!--队长邀请入团后被邀请者(玩家)回调-->
         <onBeInvitedRaidByTeamCaptain>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UUID        </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UUID            </Arg>
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->
-            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8           </Arg>
         </onBeInvitedRaidByTeamCaptain>
 
         <!--团员提议邀请入团后被邀请者(玩家/队长)回调-->
         <onBeInvitedRaidByMember>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UUID        </Arg>
-            <Arg>   TEAMID      </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UUID            </Arg>
+            <Arg>   TEAMID          </Arg>
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->

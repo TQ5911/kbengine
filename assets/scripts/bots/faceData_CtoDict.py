@@ -11,7 +11,7 @@ def parse_character_data_detailed(file_path):
     
     # 提取模板数据
     templates = extract_templates(content)
-    
+
     # 提取角色数据
     characters = extract_characters(content, templates)
     
@@ -22,14 +22,14 @@ def extract_templates(content):
     templates = {}
     
     # 匹配简单的List<int>模板
-    simple_pattern = r'private static readonly List<int> m_Template_(\d+) = new List<int>\{([^\}]+)\};'
+    simple_pattern = r'.*?List<int> m_Template_(\d+) = new List<int>\{([^\}]+)\};'
     matches = re.findall(simple_pattern, content)
     for template_id, values in matches:
         numbers = [int(x.strip()) for x in values.split(',') if x.strip().isdigit()]
         templates[template_id] = numbers
     
     # 匹配List<List<int>>模板
-    nested_pattern = r'private static readonly List<List<int>> m_Template_(\d+) = new List<List<int>>\{([^}]+)\};'
+    nested_pattern = r'.*?List<List<int>> m_Template_(\d+) = new List<List<int>>\{([^}]+)\};'
     nested_matches = re.findall(nested_pattern, content)
     for template_id, values in nested_matches:
         # 解析嵌套列表

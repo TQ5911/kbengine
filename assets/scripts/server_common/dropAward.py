@@ -188,7 +188,7 @@ class WealthItem(WealthUnit):
         if bindType not in gameconst.ItemBindType.VALID_BIND_TYPE:
             ERROR_MSG('updateBindType, invalid bind type:', bindType, gameconst.ItemBindType.VALID_BIND_TYPE)
             return
-        
+
         for itemID, wealthData in self.data.items():
             newBindType = _calculateBindType(itemID, awardContext.school)
             if newBindType is None:
@@ -197,7 +197,7 @@ class WealthItem(WealthUnit):
             for _, num in wealthData.items():
                 totalNum += num
             self.data[itemID] = {newBindType:totalNum}
-        
+
         for itemsObj in self.itemsObjs:
             newBindType = _calculateBindType(itemsObj.itemId, awardContext.school)
             if newBindType is None:
@@ -329,6 +329,23 @@ class AwardMixin(object):
             _retList.append({'itemId': it.itemId, 'itemNum': it.itemNum, 'bindType': it.bindType})
 
         return _retList
+
+    def itemDataIter(self):
+        for itemId, itemInfo in self.itemWealth.data.items():
+            for _, num in itemInfo.items():
+                yield itemId, num
+
+        for itemId, itemInfo in self.petItemWealth.data.items():
+            for _, num in itemInfo.items():
+                yield itemId, num
+
+    def itemObjIter(self):
+        for it in self.itemWealth.itemsObjs:
+            yield it
+
+        for it in self.petItemWealth.itemsObjs:
+            yield it
+
 
 
 class BaseAwardVal(WealthVal, AwardMixin):
@@ -701,7 +718,7 @@ class MailWealthVal(BaseAwardVal):
             newData.setdefault(itemId, {})
             newData[itemId] = itemInfo
         self.itemWealth.data = newData
-        
+
         newItemObjs = []
         for it in self.itemWealth.itemsObjs:
             if maxNum <= 0:
@@ -791,12 +808,9 @@ def _getDefaultBandType():
 def _genEquipItemList(itemId, itemNum, bindType, quality, context):
     dropParamDic = {
         'srcLevel': context.level or 0,
-        'creatorName': context.avatarName or '',
-        'mstName': context.srcEntName or '',
         'monsterId': context.monsterId or 0,
         'school': context.school or 0,
         'quality': quality or 0,
-        'creatorGbId': context.avatarGbId or 0,
     }
 
     if itemId == gameconst.ItemId.COMMON_EQUIPMENT_ID:
@@ -814,7 +828,7 @@ def _genEquipItemList(itemId, itemNum, bindType, quality, context):
                 gearDropBindProb = GBGCD.datas['gearDropUnboundProbForOwnClass']['value']
             else:
                 gearDropBindProb = GBGCD.datas['gearDropUnboundProbForOtherClass']['value']
-                
+
             if random.uniform(0, 1) > gearDropBindProb:
                 bindType = gameconst.ItemBindType.BIND
             else:
@@ -1037,14 +1051,14 @@ def _calSubPackDrop(dropTarget, times, context):
     #单次子包掉落与策划约定最大掉100次，如未来有需求更大得用numpy重构
     if times > 100:
         ERROR_MSG("drop times is too large:", times, "dropTarget:", dropTarget, "context:", context)
-        return [], [], [], []
+        return [], [], [], [], []
 
     dropSubPackageData = DDS.dropPackageData.get(dropTarget)
     if dropSubPackageData:
         dropSubPackageData = _checkDropCondition(dropSubPackageData, context)
         if len(dropSubPackageData) == 0:
             WARNING_MSG("dropSubPackageData is empty, dropTarget: %s" % dropTarget)
-            return [], [], [], []
+            return [], [], [], [], []
         weights = []
         for dropData in dropSubPackageData:
             weights.append(dropData['weight'])
@@ -1053,8 +1067,9 @@ def _calSubPackDrop(dropTarget, times, context):
         numMinList = [item['dropNumMin'] for item in data]
         numMaxList = [item['dropNumMax'] for item in data]
         bindWeightList = [item.get('bindWeight', 10000) for item in data]
-        return dropTargetList, numMinList, numMaxList, bindWeightList
-    return [], [], [], []
+        gradeList = [item['grade'] for item in data]
+        return dropTargetList, numMinList, numMaxList, bindWeightList, gradeList
+    return [], [], [], [], []
 
 
 #处理掉落子包还是掉落物品
@@ -1063,10 +1078,11 @@ def _getRealDropTarget(dropTargetData, context):
     numMinList = [dropTargetData['dropNumMin']]
     numMaxList = [dropTargetData['dropNumMax']]
     bindWeightList = [dropTargetData.get('bindWeight', 10000)]
+    gradeList = [dropTargetData['grade']]
     #子包
     if dropTargetData['dropType'] == gameconst.DropWayType.DROP_WAY_TYPE_2:
-        (dropTargetList, numMinList, numMaxList, bindWeightList) = _calSubPackDrop(dropTargetList[0], random.randint(numMinList[0], numMaxList[0]), context)
-    return dropTargetList, numMinList, numMaxList, bindWeightList
+        (dropTargetList, numMinList, numMaxList, bindWeightList, gradeList) = _calSubPackDrop(dropTargetList[0], random.randint(numMinList[0], numMaxList[0]), context)
+    return dropTargetList, numMinList, numMaxList, bindWeightList, gradeList
 
 
 def _getBindType(itemID, bindWeight, context):
@@ -1149,12 +1165,12 @@ def _getDropAwardType1or2(dropPackage, dropType, dropCount, context):
             if dropType == gameconst.DropWayType.DROP_WAY_TYPE_1:
                 weights[idx] = 0
             dropTargetData = dropDataList[idx]
-            dropTargetList, numMinList, numMaxList, bindWeightList = _getRealDropTarget(dropTargetData, context)
-            for dropTarget, numMin, numMax, bindWeight in zip(dropTargetList, numMinList, numMaxList, bindWeightList):
+            dropTargetList, numMinList, numMaxList, bindWeightList, gradeList = _getRealDropTarget(dropTargetData, context)
+            for dropTarget, numMin, numMax, bindWeight, grade in zip(dropTargetList, numMinList, numMaxList, bindWeightList, gradeList):
                 if dropTarget:
                     num = random.randint(numMin, numMax)
                     bindType = _getBindType(dropTarget, bindWeight, context)
-                    awardVal.addWealthByItemId(dropTarget, num, bindType)
+                    awardVal.addWealthByItemId(dropTarget, num, bindType, grade = grade)
                 else:
                     WARNING_MSG("subPackage dropTarget is None, dropTarget: %s" % dropTargetData['dropTarget'])
     else:
@@ -1173,14 +1189,14 @@ def _getDropAwardType3(dropPackage, dropCount, context):
             return awardVal
         for idx in range(len(dropDataList)):
             dropTargetData = dropDataList[idx]
-            dropTargetList, numMinList, numMaxList, bindWeightList = _getRealDropTarget(dropTargetData, context)
-            for dropTarget, numMin, numMax, bindWeight in zip(dropTargetList, numMinList, numMaxList, bindWeightList):
+            dropTargetList, numMinList, numMaxList, bindWeightList, gradeList = _getRealDropTarget(dropTargetData, context)
+            for dropTarget, numMin, numMax, bindWeight, grade in zip(dropTargetList, numMinList, numMaxList, bindWeightList, gradeList):
                 if dropTarget:
                     num = 0
                     for i in range(dropCount):
                         num += random.randint(numMin, numMax)
                     bindType = _getBindType(dropTarget, bindWeight, context)
-                    awardVal.addWealthByItemId(dropTarget, num, bindType)
+                    awardVal.addWealthByItemId(dropTarget, num, bindType, grade = grade)
                 else:
                     WARNING_MSG("subPackage dropTarget is None, dropTarget: %s" % dropTargetData['dropTarget'])
 
@@ -1200,15 +1216,15 @@ def _getDropAwardType4or5(dropPackage, dropType, dropCount, context):
                 dropTargetData = dropDataList[idx]
                 weight = dropTargetData['weight']
                 if random.randint(1, 10000) <= weight:
-                    dropTargetList, numMinList, numMaxList, bindWeightList = _getRealDropTarget(dropTargetData, context)
-                    for dropTarget, numMin, numMax, bindWeight in zip(dropTargetList, numMinList, numMaxList, bindWeightList):
+                    dropTargetList, numMinList, numMaxList, bindWeightList, gradeList = _getRealDropTarget(dropTargetData, context)
+                    for dropTarget, numMin, numMax, bindWeight, grade in zip(dropTargetList, numMinList, numMaxList, bindWeightList, gradeList):
                         if dropTarget:
                             num = random.randint(numMin, numMax)
                             bindType = _getBindType(dropTarget, bindWeight, context)
-                            awardVal.addWealthByItemId(dropTarget, num, bindType)
+                            awardVal.addWealthByItemId(dropTarget, num, bindType, grade = grade)
                         else:
                             WARNING_MSG("subPackage dropTarget is None, dropTarget: %s" % dropTargetData['dropTarget'])
-                    
+
                     if dropType == gameconst.DropWayType.DROP_WAY_TYPE_5:
                         break
 

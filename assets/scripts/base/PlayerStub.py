@@ -362,6 +362,12 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 data['bodyEquipList'].append({
                     'slotId': d[4].decode(),
                     'attrJson': d[5].decode(),
+                    'itemId': d[17].decode(),
+                    'createTime': d[18].decode(),
+                    'expireTime': d[19].decode(),
+                    'uniqueId': d[20].decode(),
+                    'bindType': d[21].decode(),
+                    'lockStatus': d[22].decode(),
                 })
 
         jsonStr = json.dumps(data).encode('ascii')

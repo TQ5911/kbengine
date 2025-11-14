@@ -84,6 +84,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         self.needCountRefresh = False
         self.needCountNum = False
+        self.refreshDataKey = 0
 
         self.initPosition()
 
@@ -146,6 +147,10 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self._initCombatAreas()
         # 初始化计算刷新
         self._initCountRefresh()
+        
+        # 标记相关
+        self.teamMarkDict = {}
+        self.raidMarkDict = {}
 
     def _checkCombatArea(self, combatAreaData):
         posX = combatAreaData["PosX"]
@@ -206,19 +211,30 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             self.tmpProps["combatAreaDatas"] = propsData
 
     def _initCountRefresh(self):
+        # 地图没有配置刷新，就不刷新
         mapID = formula.getMapId(self.spaceNo)
-        countRefreshData = CCR.datas.get(mapID, None)
-        if not countRefreshData:
+        dataKeys = self.spaceMgr.getRefreshDataKeys(mapID)
+        if not dataKeys:
             return
 
-        if self.instanceId in self.spaceMgr.refreshMonsterIDs(self.spaceNo):
+        # 配置了怪物实例的计数刷新
+        dataKey = self.spaceMgr.getRefreshDataKey(mapID, self.instanceId)
+        countRefreshData = CCR.datas.get(dataKey, None)
+        if countRefreshData:
             self.needCountRefresh = True
 
-        combatAreaID = countRefreshData['combatAreaID']
-        if combatAreaID:
-            ret, _ = self._checkCombatAreas([combatAreaID])
-            if ret:
-                self.needCountNum = True
+        # 检测怪物的出生点是否出现在地图的某个刷新区域
+        for dataKey in dataKeys:
+            countRefreshData = CCR.datas.get(dataKey, None)
+            if not countRefreshData:
+                continue
+            combatAreaID = countRefreshData['combatAreaID']
+            if combatAreaID:
+                ret, _ = self._checkCombatAreas([combatAreaID])
+                if ret:
+                    self.needCountNum = True
+                    self.refreshDataKey = dataKey
+                    break
 
     def _createMonsterGrpInDungeon(self):
         _dunData = self.dunData()
@@ -410,7 +426,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if not isWitnessed:
             if self.needCountRefresh:
                 self.doMonsterDestroy()
-                self.spaceMgr.onMonsterDestroy(self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId)
+                self.spaceMgr.onMonsterDestroy(self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
 
     def _preSafeDestory(self):
         """
@@ -543,7 +559,16 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         # 需要计数或者刷新的怪物:
         if self.needCountRefresh or self.needCountNum:
-            self.spaceMgr.onMonsterDestroy(self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId)
+            self.spaceMgr.onMonsterDestroy(self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
+            
+        try:
+            for teamId in self.teamMarkDict.keys():
+                gameengine.getTeamStub(teamId).onMarkMonsterDead(self.id)
+                
+            for raidId in self.raidMarkDict.keys():
+                gameengine.getRaidStub(raidId).onMarkMonsterDead(self.id)
+        except Exception as e:
+            ERROR_MSG("Error in onDead for clear team record: ", e)
 
     def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx):
         DEBUG_MSG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
@@ -704,3 +729,20 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             return
 
         super().onEntityRefresh(self.spaceNo, _refreshTime)
+
+    def onBeMarkedAsEnemy(self, teamId, teamType, index):
+        if teamType == gameconst.TeamType.TEAM:
+            self.teamMarkDict[teamId] = index
+        elif teamType == gameconst.TeamType.RAID:
+            self.raidMarkDict[teamId] = index
+        DEBUG_MSG("Monster::onBeMarkedAsEnemy: {}, {}, {}, {}".format(self.id, teamId, teamType, index))
+        
+    def delBeMarkedAsEnemy(self, teamId, teamType):
+        if teamType == gameconst.TeamType.TEAM:
+            if teamId in self.teamMarkDict:
+                self.teamMarkDict.pop(teamId)
+        elif teamType == gameconst.TeamType.RAID:
+            if teamId in self.raidMarkDict:
+                self.raidMarkDict.pop(teamId)
+        DEBUG_MSG("Monster::delBeMarkedAsEnemy: {}, {}, {}".format(self.id, teamId, teamType))
+        

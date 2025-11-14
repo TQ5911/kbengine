@@ -10,12 +10,10 @@ import iTimer
 import formula
 import creep_base
 import const_const as CONST
-import iMapMonsterRefresh
 
-class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMapMonsterRefresh.IMapMonsterRefresh):
+class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
     def __init__(self):
         INFO_MSG('WorldLineSpaceMgr init', self.spaceNo, self.spaceID)
-        iMapMonsterRefresh.IMapMonsterRefresh.__init__(self)
         if formula.isWolrdBossSpace(self.spaceNo):
             self._initCreateBoss(0)
             self._initWorldBossGid()

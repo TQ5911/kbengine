@@ -28,12 +28,12 @@ class LingShou(userType.UserSoleType):
         if type(skill) is int:
             skill = (skill,)
         for skillId in skill:
-            score += dataUtils.getPassiveSkillScore(skillId)
+            score += dataUtils.getPassiveSkillScore(self.school, skillId)
 
         for itemId in self.equipList:
             if itemId:
                 passiveSkill = PDPGD.datas[itemId]['passiveSkill']
-                score += dataUtils.getPassiveSkillScore(passiveSkill)
+                score += dataUtils.getPassiveSkillScore(self.school, passiveSkill)
 
         score += PDPD.datas[self.petId]['score']
         return score
@@ -43,7 +43,7 @@ class LingShou(userType.UserSoleType):
         petData = PDPD.datas[self.petId]
         prop = petData.get('prop', [])
         for propName, val in prop:
-            propBaseScore = dataUtils.getPropBaseScore(propName)
+            propBaseScore = dataUtils.filterFightPropScore(self.school, propName)
             totalScore += int(propBaseScore * val)
 
         return totalScore
@@ -69,6 +69,8 @@ class LingShou(userType.UserSoleType):
     def initFromDict(self, dataDict):
         self.petId = dataDict['petId']
         self.equipList = dataDict['equipList']
+        # 这里兼容处理
+        self.school = dataDict.get('school', 0)
         self.baseScore = self._getBaseLingShouScore()
         self._score = self._getLingShouScore()
 
@@ -80,6 +82,7 @@ class LingShou(userType.UserSoleType):
     # 服务器解析的数据结构可以和前端不一样,增加petMirror节点只做缓存不做入库处理以便通过checkProperty的检查
     def toSavedDict(self):
         retDt = self.toClientDict()
+        retDt['school'] =self.school
         return retDt
 
     def toClientDispDetail(self):
@@ -235,7 +238,9 @@ class LingShouInfo(userType.UserSoleType):
 
     def addLingShou(self, owner, addContext):
         pet = LingShou()
-        pet.initFromDict(addContext.extra['item'].attr2LingShouData())
+        data = addContext.extra['item'].attr2LingShouData()
+        data['school'] = addContext.extra['school']
+        pet.initFromDict(data)
 
         addContext.setPet(pet)
         self._addLingShou(owner, addContext)

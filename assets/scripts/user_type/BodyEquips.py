@@ -1,18 +1,12 @@
 # -*- encoding:utf-8 -*-
 
 from KBEDebug import *
-import KBEngine
 import utils
 import gameconst
-import message_Message_def as MMD
-import gearEnhance_setEffect as GESED
-import actionContext
 import userType
 import itemFactory
 import gameengine
 import dataUtils
-import affix_affix as AFAFD
-import inscription_inscription as ININD
 
 class BodyEquips(userType.UserSoleType):
     EQUIPS_LOCK_TIME = 5
@@ -50,7 +44,10 @@ class BodyEquips(userType.UserSoleType):
         for equipDic in dataDic['bodyEquipList']:
             try:
                 equipItem = itemFactory.ItemFactory.createItemWithSavedDict(equipDic)
-                self.loadEquipItem(equipDic['gridId'], equipItem)
+                if equipItem:
+                    self.loadEquipItem(equipDic['gridId'], equipItem)
+                else:
+                    WARNING_MSG('equipment template id is missing', equipDic)
             except Exception as e:
                 ERROR_MSG('ERRRRRRRRROR!!! in initObjFromSavedDict:', e, equipDic)
                 continue
@@ -140,31 +137,6 @@ class BodyEquips(userType.UserSoleType):
         DEBUG_MSG('doUnlockBodyEquips')
         self.lockedTime = 0
         self.lockedDesp= ''
-
-    def getSetEffectScore(self):
-        setLv = self.setInfo.get('setLv', 0)
-        return GESED.datas.get(setLv, {}).get('score', 0)
-
-    def calcAllEnhanceLvRate(self):
-        DEBUG_MSG("calcAllEnhanceLvRate")
-        enhanceAllLvRate = 0
-        for _, equipObj in self.equips_map.items():
-            enhanceAllLvRate += equipObj.equipAttr.enhanceLvSumValue
-
-        return enhanceAllLvRate
-
-    def _doSetAction(self, owner, newSetlv, onLoing=False):
-        DEBUG_MSG('in _addSetEffect:', newSetlv, onLoing)
-        if newSetlv == 0:
-            return
-        action = GESED.datas[newSetlv]['action']
-        if not action:
-            return
-        action(owner, None, actionContext.EquipSetActionCtx(self, newSetlv))
-        if onLoing:
-            #call client or send msg
-            pass
-        return
 
     def _removeSetEffect(self, owner, oldSetLv):
         DEBUG_MSG('in _removeSetEffect:', self.setInfo)
@@ -294,10 +266,11 @@ class BodyEquips(userType.UserSoleType):
     def addEquipItem(self, owner, slotId, equipItem):
         DEBUG_MSG("BodyEquips-->addEquipItem, begin~")
         self.equips_map[slotId] = equipItem
-        
+        self.recalculateAllInscriptionEffects(owner)
         DEBUG_MSG("BodyEquips-->addEquipItem, end~")
 
     def recalculateAllInscriptionEffects(self, owner):
+        DEBUG_MSG("recalculateAllInscriptionEffects")
         owner.glyphEquipData.cleanInscriptionEffects(owner)
         for equipItem in self.equips_map.values():
             owner.glyphEquipData.calculateAllInscriptionEffects(owner, equipItem.getGlyphAffixes())

@@ -28,6 +28,7 @@ Account lastSelectGbId 255
 Account loginChannel 30274
 Account loginCount 30285
 Account loginState 30251
+Account operatingSystem 31492
 Account otherServerAvatarBox 31035
 Account registerChannel 30275
 Account serverId 4
@@ -165,7 +166,9 @@ Avatar areaId 31368
 Avatar atkBless 102
 Avatar aureoleDic 30231
 Avatar aureoleFormOtherDic 30232
+Avatar authExpireTimerId 31264
 Avatar authPermission 363
+Avatar authStatistics 450
 Avatar autoAskTeam 77
 Avatar autoCombat 80
 Avatar autoCombatInfo 30035
@@ -322,6 +325,7 @@ Avatar drawCardInfo 31681
 Avatar drawCardRecord 31380
 Avatar dropRate 31530
 Avatar drugsQuantity 550
+Avatar drugsQuantityBase 31262
 Avatar duelAttr 133
 Avatar duelBlackDict 31225
 Avatar endCrossServerTimerId 31583
@@ -436,6 +440,7 @@ Avatar maxPhysicalArmor 376
 Avatar maxPhysicalAtk 99
 Avatar maxZedPoint 15
 Avatar medicineRate 31532
+Avatar meridianData 31263
 Avatar methodPool 30367
 Avatar methodPoolBase 30335
 Avatar midasTotalPay 31360
@@ -612,6 +617,7 @@ Avatar tempMiscPropsBase 30331
 Avatar timerDataBase 30374
 Avatar timerDataCell 30380
 Avatar tmpProps 30369
+Avatar tmpTaskSkillIds 31609
 Avatar todayCubeCowDur 31941
 Avatar totalGameTime 30337
 Avatar totalPayFreeReliveTimes 30117
@@ -1171,10 +1177,13 @@ CubeSpaceMgr delayDestroyTimerID 31302
 CubeSpaceMgr entsForControl 31318
 CubeSpaceMgr flowController 31313
 CubeSpaceMgr force 421
+CubeSpaceMgr killOrDestroyMonsterIDs 31494
+CubeSpaceMgr lastRecordTime 31557
 CubeSpaceMgr methodPool 31301
 CubeSpaceMgr miscProps 31307
 CubeSpaceMgr notifyNearPosList 31317
 CubeSpaceMgr players 31310
+CubeSpaceMgr refreshCount 31493
 CubeSpaceMgr spaceEntities 31308
 CubeSpaceMgr spaceNo 420
 CubeSpaceMgr spaceState 31320
@@ -1185,6 +1194,7 @@ CubeSpaceMgr thinkTimer 31314
 CubeSpaceMgr timerDataCell 31321
 CubeSpaceMgr tmpProps 31303
 CubeSpaceMgr ttl 31304
+CubeSpaceMgr waitForNextRefresh 31556
 CubeStub birthInDB 31290
 CubeStub cubeNo 31288
 CubeStub cubeRooms 31327
@@ -1661,6 +1671,7 @@ Monster pointIndex 31116
 Monster posIndex 30720
 Monster realDmg 496
 Monster realDmgDef 503
+Monster refreshDataKey 31608
 Monster refreshTime 30481
 Monster rmFightStateTimeId 30695
 Monster route 30571
@@ -1690,6 +1701,7 @@ Monster state 398
 Monster state2 399
 Monster stateList 30609
 Monster statisticsDmgRecords 30608
+Monster stopByFuben 31489
 Monster stopCacheTargetTypeTimeId 30704
 Monster stunAnti 466
 Monster stunEnh 451
@@ -2015,6 +2027,7 @@ Npc state 42
 Npc state2 43
 Npc stateList 30194
 Npc statisticsDmgRecords 30464
+Npc stopByFuben 31491
 Npc stopCacheTargetTypeTimeId 30559
 Npc stunAnti 281
 Npc stunEnh 266
@@ -2153,10 +2166,13 @@ SiegeWarSpaceMgr delayDestroyTimerID 31802
 SiegeWarSpaceMgr entsForControl 31818
 SiegeWarSpaceMgr flowController 31813
 SiegeWarSpaceMgr force 160
+SiegeWarSpaceMgr killOrDestroyMonsterIDs 31563
+SiegeWarSpaceMgr lastRecordTime 31607
 SiegeWarSpaceMgr methodPool 31801
 SiegeWarSpaceMgr miscProps 31807
 SiegeWarSpaceMgr notifyNearPosList 31817
 SiegeWarSpaceMgr players 31810
+SiegeWarSpaceMgr refreshCount 31562
 SiegeWarSpaceMgr spaceEntities 31808
 SiegeWarSpaceMgr spaceNo 157
 SiegeWarSpaceMgr spaceState 31820
@@ -2167,6 +2183,7 @@ SiegeWarSpaceMgr thinkTimer 31814
 SiegeWarSpaceMgr timerDataCell 31821
 SiegeWarSpaceMgr tmpProps 31803
 SiegeWarSpaceMgr ttl 31804
+SiegeWarSpaceMgr waitForNextRefresh 31606
 SiegeWarSpaceStub birthInDB 31790
 SiegeWarSpaceStub datetimeTimerDataBase 31796
 SiegeWarSpaceStub datetimeTimerDataNextTBase 31798
@@ -2532,6 +2549,7 @@ Summon state 171
 Summon state2 172
 Summon stateList 30769
 Summon statisticsDmgRecords 30768
+Summon stopByFuben 31490
 Summon stopCacheTargetTypeTimeId 31027
 Summon stunAnti 194
 Summon stunEnh 184
@@ -2634,12 +2652,15 @@ WonderLandSpaceMgr delayDestroyTimerID 30741
 WonderLandSpaceMgr entsForControl 30931
 WonderLandSpaceMgr flowController 30926
 WonderLandSpaceMgr force 104
+WonderLandSpaceMgr killOrDestroyMonsterIDs 31559
+WonderLandSpaceMgr lastRecordTime 31561
 WonderLandSpaceMgr methodPool 30740
 WonderLandSpaceMgr miscProps 30784
 WonderLandSpaceMgr notifyNearPosList 30930
 WonderLandSpaceMgr players 30787
 WonderLandSpaceMgr randomBossGameEntityId 30978
 WonderLandSpaceMgr randomBossId 30977
+WonderLandSpaceMgr refreshCount 31558
 WonderLandSpaceMgr spaceEntities 30785
 WonderLandSpaceMgr spaceNo 103
 WonderLandSpaceMgr spaceState 30933
@@ -2650,6 +2671,7 @@ WonderLandSpaceMgr thinkTimer 30927
 WonderLandSpaceMgr timerDataCell 30934
 WonderLandSpaceMgr tmpProps 30761
 WonderLandSpaceMgr ttl 30762
+WonderLandSpaceMgr waitForNextRefresh 31560
 WonderLandStub birthInDB 31504
 WonderLandStub datetimeTimerDataBase 31510
 WonderLandStub datetimeTimerDataNextTBase 31512

@@ -34,21 +34,22 @@ class Affix(userType.UserSoleType):
             'affixVal': self.affixVal,
         }
 
-    def getAfxScore(self):
+    def getAfxScore(self, school):
         afxData = AFAFD.datas.get(self.afxId)
         if not afxData:
             return 0
+        
         score_data = afxData.get('score')
         prop = afxData.get('prop')
+        
+        propScore = 0
         if prop:
-            propScore = int(dataUtils.getPropBaseScore(prop) * self.affixVal)
-        else:
-            propScore = 0
+            propScore = int(dataUtils.filterFightPropScore(school, prop) * self.affixVal)
         return int(propScore + score_data)
-    
+
     def getAffixId(self):
         return self.afxId
-    
+
 class GlyphAffix(Affix):
     def __init__(self, affixId = 0, affixLv=1):
         super(GlyphAffix, self).__init__(affixId, affixLv)
@@ -57,7 +58,7 @@ class GlyphAffix(Affix):
         self.effectSkillIds = []
         self.effectQualitys = []
         self.applyEffects()
-    
+
     def applyEffects(self):
         if self.afxId <= 0:
             return
@@ -99,14 +100,14 @@ class GlyphAffix(Affix):
             self.effectTypes = val[1]
             self.effectSkillIds = val[2]
             self.effectQualitys = val[3]
-    
+
     def toAfxClientDic(self):
         return {
             'affixId': self.afxId,
             'affixVal': self.affixVal,
             'affixEffect': self.getAffixEffect(),
         }
-    
+
     def getAffixEffect(self):
         return ','.join(map(str, self.effectValues))
 

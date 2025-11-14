@@ -145,7 +145,7 @@
     <SCENE_STATE>       UINT16          </SCENE_STATE>
     <LEADER_BOARD_PAGE>     UINT8       </LEADER_BOARD_PAGE>
     <RANK>              UINT16          </RANK>
-    <AUTH_PERMISSION>   UINT16          </AUTH_PERMISSION>
+    <AUTH_PERMISSION>   UINT64          </AUTH_PERMISSION>
 
     <FACE_DATA> FIXED_DICT
         <implementedBy>     appearanceInfo.faceDataIns     </implementedBy>
@@ -456,21 +456,9 @@
             <glyphInfo>
                 <Type>  ARRAY <of>  CLI_GLYPH_INFO </of>   </Type>
             </glyphInfo>
-            <radomEnhTimes>
-                <Type>  ARRAY <of>  UINT32   </of>   </Type>
-            </radomEnhTimes>
             <enhanceLv>
                 <Type>  UINT8   </Type>
             </enhanceLv>
-            <enhanceLvRate>
-                <Type>  UINT8   </Type>
-            </enhanceLvRate>
-            <creatorName>
-                <Type>  UNICODE   </Type>
-            </creatorName>
-            <creatorGbId>
-                <Type>  UINT64  </Type>
-            </creatorGbId>
             <blessAffixes>
                 <Type>  ARRAY <of>  AFFIX_VAL </of>   </Type>
             </blessAffixes>
@@ -2402,7 +2390,9 @@
             <raidAmount>
                 <Type>  UINT8           </Type>
             </raidAmount>
-
+            <offlineTime>
+                <Type>  LONGTIME        </Type>
+            </offlineTime>
         </Properties>
     </AVATAR_INTER_VAL>
 
@@ -4494,7 +4484,6 @@
         </Properties>
     </RED_BAG_FETCH_CLIENT_VAL>
 
-
     <AUTH_PERMISSION_DATA_INFO> FIXED_DICT
         <implementedBy>     AuthPermissionInfo.AuthPermissionInstance    </implementedBy>
         <Properties>
@@ -4506,6 +4495,7 @@
             </dailyMoney>
         </Properties>
     </AUTH_PERMISSION_DATA_INFO>
+
     <GLYPH_EQUIP_INFO> FIXED_DICT
         <implementedBy>     GlyphEquipInfo.glyphInfoInstance    </implementedBy>
         <Properties>
@@ -4554,15 +4544,66 @@
         </Properties>
     </LEADER_BOARD_GUILD_DATA_INFO>
 
+    <ACT_TIMES_DATA_INFO> FIXED_DICT
+        <implementedBy>     ActTimesInfo.ActTimesInstance    </implementedBy>
+        <Properties>
+            <actId>
+                <Type>  ACTIVITY_ID         </Type>
+            </actId>
+            <times>
+                <Type>  UINT8               </Type>
+            </times>
+        </Properties>
+    </ACT_TIMES_DATA_INFO>
+
     <AUTH_STATISTICS_DATA_INFO> FIXED_DICT
         <implementedBy>     AuthStatisticsInfo.AuthStatisticsInstance    </implementedBy>
         <Properties>
             <oldLevel>
                 <Type>  LEVEL                   </Type>
             </oldLevel>
+            <oldExp>
+                <Type>  FLOAT                   </Type>
+            </oldExp>
+            <oldScore>
+                <Type>  SCORE                   </Type>
+            </oldScore>
+            <oldMoney>
+                <Type>  MONEY                   </Type>
+            </oldMoney>
             <oldCoin>
                 <Type>  COIN                    </Type>
             </oldCoin>
+            <oldDarkIron>
+                <Type>  DARK_IRON               </Type>
+            </oldDarkIron>
+            <oldGeniusQi>
+                <Type>  GENIUS_QI               </Type>
+            </oldGeniusQi>
+            <otherGbId>
+                <Type>  PLAYER_GBID             </Type>
+            </otherGbId>
+            <authExpire>
+                <Type>  LONGTIME                </Type>
+            </authExpire>
+            <itemUniqueIds>
+                <Type>  ARRAY   <of>    UNIQUE_ID   </of>   </Type>
+            </itemUniqueIds>
+            <actTimes>
+                <Type>  ARRAY   <of>    ACT_TIMES_DATA_INFO     </of>   </Type>
+            </actTimes>
+            <dailyUseMoney>
+                <Type>  MONEY                   </Type>
+            </dailyUseMoney>
+            <items>
+                <Type>  ARRAY   <of>    AWARD_ITEM_VAL      </of>   </Type>
+            </items>
+            <hostOffline>
+                <Type>  LONGTIME                </Type>
+            </hostOffline>
+            <authLogin>
+                <Type>  LONGTIME                </Type>
+            </authLogin>
         </Properties>
     </AUTH_STATISTICS_DATA_INFO>
 
@@ -4610,4 +4651,53 @@
             </cubeDurState>
         </Properties>
     </CUBE_QUOTA_DATA_INFO>
+
+    <MERIDIAN_POINT_INFO> FIXED_DICT
+        <Properties>
+            <pointIdx>
+                <Type>  UINT8               </Type>
+            </pointIdx>
+            <level>
+                <Type>  UINT8               </Type>
+            </level>
+        </Properties>
+    </MERIDIAN_POINT_INFO>
+
+    <MERIDIAN_SLOT_INFO> FIXED_DICT
+        <Properties>
+            <slotIdx>
+                <Type>  UINT8              </Type>
+            </slotIdx>
+            <hasEnhance>
+                <Type>  UINT8               </Type>
+            </hasEnhance>
+            <points>
+                <Type>  ARRAY <of> MERIDIAN_POINT_INFO </of>   </Type>
+            </points>
+        </Properties>
+    </MERIDIAN_SLOT_INFO>
+
+    <MERIDIAN_INFO> FIXED_DICT
+        <implementedBy>     MeridianInfo.MeridianInstance    </implementedBy>
+        <Properties>
+            <curSlot>
+                <Type>  UINT8               </Type>
+            </curSlot>
+            <slots>
+                <Type>  ARRAY <of> MERIDIAN_SLOT_INFO </of>   </Type>
+            </slots>
+        </Properties>
+    </MERIDIAN_INFO>
+
+    <MERIDIAN_ENHANCE_ITEM_INFO> FIXED_DICT
+        <Properties>
+            <gridId>
+                <Type>  GRIDID   </Type>
+            </gridId>
+            <itemNum>
+                <Type>  UINT8   </Type>
+            </itemNum>
+        </Properties>
+    </MERIDIAN_ENHANCE_ITEM_INFO>
+
 </root>

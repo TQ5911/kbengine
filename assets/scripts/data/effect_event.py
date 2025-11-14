@@ -660,6 +660,18 @@ def _13090334(self, target, context):
 def _13090335(self, target, context):
     self.healByPct(target, context, *context.args.ActionParam)
 
+def _13090336(self, target, context):
+    skill = self._getSkillByActionContext(context)
+    if skill.hasTag(56) and skill.inCDTime():
+        print(f"没减CD前的  下次释放时间  {skill.tNextCast} ")
+        skill.changeNextCast(self,context.args.ActionParam[0])
+
+def _13090337(self, target, context):
+    skill = self._getSkillByActionContext(context)
+    if skill.hasTag(46) and skill.inCDTime():
+        print(f"没减CD前的  下次释放时间  {skill.tNextCast} ")
+        skill.changeNextCast(self,context.args.ActionParam[0])
+
 datas = _tools.RODict({ 
     13090001: _tools.RODict({
         "ID": 13090001,
@@ -1764,7 +1776,23 @@ datas = _tools.RODict({
         "Action": _13090335,
         "Target": "self",
         "EventCD": 120.0
+    }),
+    13090336: _tools.RODict({
+        "ID": 13090336,
+        "Event": "onSkill",
+        "EventSourceType": 0,
+        "Action": _13090336,
+        "Target": "self",
+        "EventCD": 120.0
+    }),
+    13090337: _tools.RODict({
+        "ID": 13090337,
+        "Event": "onDodge",
+        "EventSourceType": 0,
+        "Action": _13090337,
+        "Target": "self",
+        "EventCD": 0.0
     })
 })
 minKey = 13090001
-maxKey = 13090335
+maxKey = 13090337

@@ -226,7 +226,7 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
         """將其他属性转化为Dict"""
         raise NotImplementedError
 
-    def getReplaceItemWhenExpire(self):
+    def getReplaceItemWhenExpire(self, owner):
         itemData = dataUtils.getCommItemData(self.itemId)
         replaceItemId, bind = itemData.get("recycleReplaceItem", (0, 0))
         return itemFactory.ItemFactory.createItem(replaceItemId, self.itemNum, bind)
@@ -248,9 +248,6 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
             'attrJson': self.attr2Json(),
             'lockStatus': self.lockStatus,
         }
-
-    def onAddedToAvatar(self, owner):
-        return
 
     def getItemLevel(self):
         return 1

@@ -9,7 +9,7 @@ import utils
 import formula
 import dataUtils
 import gamelog
-
+import iMapMonsterRefresh
 
 class PlayerInfo(int):
     def __init__(self, *args, **kwargs):
@@ -25,11 +25,12 @@ class PlayerInfo(int):
         self._isDead = False
 
 
-class ISpaceMgr(iFlowController.IFlowController):
+class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterRefresh):
 
     def __init__(self):
         DEBUG_MSG('ISpaceMgr.__init__', self.id, self.spaceNo)
         self.initFlowController()
+        iMapMonsterRefresh.IMapMonsterRefresh.__init__(self)
         self.beNotifiedSpaceEvent(0, gameconst.AI_EVENT_BEFORE_LOADING_ENTITIES, ())
         self.addEntity(self.id, ('_spaceMgr_',))
 

@@ -1,107 +1,95 @@
 <root>
-	<!--
-		个性化服务端配置({assets}/res/server/kbengine.xml)
+    <!--
+        个性化服务端配置({assets}/res/server/kbengine.xml)
 
-		如果你需要改变引擎设置, 请在({assets}/res/server/kbengine.xml)中覆盖kbe/res/server/kbengine_defaults.xml的对应参数来修改,
-		这样的好处是不会破坏引擎的默认设置，在你更新引擎时也不会产生冲突，以及在多个逻辑项目时不会影响到其他的项目设置。
-		详细说明请参考：http://kbengine.org/cn/docs/configuration/kbengine.html
-	-->
+        如果你需要改变引擎设置, 请在({assets}/res/server/kbengine.xml)中覆盖kbe/res/server/kbengine_defaults.xml的对应参数来修改,
+        这样的好处是不会破坏引擎的默认设置，在你更新引擎时也不会产生冲突，以及在多个逻辑项目时不会影响到其他的项目设置。
+        详细说明请参考：http://kbengine.org/cn/docs/configuration/kbengine.html
+    -->
 
-	<trace_packet>
-		<debug_type> 0 </debug_type>
-	</trace_packet>
+    <trace_packet>
+        <debug_type> 0 </debug_type>
+    </trace_packet>
 
-	<game>
-		<baseAppCount> 2 </baseAppCount>
-		<cellAppCount> 2 </cellAppCount>
-		<serverId>  </serverId>
-		<gusId> 1 </gusId>
-		<permitLogin> 1 </permitLogin>
-		<branchLineCnt>
-			<subType1> 2 </subType1>
-		</branchLineCnt>
+    <game>
+        <baseAppCount> 2 </baseAppCount>
+        <cellAppCount> 2 </cellAppCount>
+        <serverId> 20227  </serverId>
+        <gusId> 1 </gusId>
+        <permitLogin> 1 </permitLogin>
+        <branchLineCnt>
+            <subType1> 2 </subType1>
+        </branchLineCnt>
 
-		<serverOpenTime> 1624608806 </serverOpenTime>
-		<enableAdminServer> 0 </enableAdminServer>
-		<enableRouterServer> 1 </enableRouterServer>
-		<gm>
-			<item ip='192.168.10.31' port='2040' httpApi='8080'/>
-		</gm>
-		<gmHttpSecret> 8nvkguc7w7igpyituowk8pusi56r41mp </gmHttpSecret>
-		<centralServersInfo>
-			<item centralServerId='1' ip='192.168.10.31' port='2030'></item>
-		</centralServersInfo>
+        <serverOpenTime> 1624608806 </serverOpenTime>
+        <enableAdminServer> 0 </enableAdminServer>
+        <enableRouterServer> 1 </enableRouterServer>
+        <gm>
+            <item ip='192.168.10.13' port='2040' httpApi='8080'/>
+        </gm>
+        <gmHttpSecret> 8nvkguc7w7igpyituowk8pusi56r41mp </gmHttpSecret>
+        <centralServersInfo>
+            <item centralServerId='1' ip='192.168.10.13' port='2030'></item>
+        </centralServersInfo>
 
-		<routerServersInfo>
-			<item routerServerId='1' ip='192.168.10.31' port='2060'></item>
-		</routerServersInfo>
+        <routerServersInfo>
+            <item routerServerId='1' ip='192.168.10.13' port='2060'></item>
+        </routerServersInfo>
 
-		<dropServersInfo>
-			<item dropServerId='1' ip='192.168.10.31' port='2120'></item>
-		</dropServersInfo>
+        <dropServersInfo>
+            <item dropServerId='1' ip='192.168.10.13' port='2120'></item>
+        </dropServersInfo>
 
-		<crossServerInfo>
-			<item crossServerId='20228'></item>
-		</crossServerInfo>
+        <socialTokenKey> 19ee0530b20a6ba84d1567280a2210a6 </socialTokenKey>
 
-		<socialTokenKey> 19ee0530b20a6ba84d1567280a2210a6 </socialTokenKey>
+        <crossDataServerInfo>
+                        <item crossDataServerId='1' ip='192.168.10.13' port='2140'></item>
+        </crossDataServerInfo>
 
-		<auctionServerHost> 192.168.10.31:2010 </auctionServerHost>
-		<enableGlobalAuction> 1 </enableGlobalAuction>
+        <mapleAllServerUrl> http://192.168.10.13:9527/getAllServer </mapleAllServerUrl>
+        
+        <crossSiegeWarServerInfo>
+                <item crossServerId='20228'></item>
+        </crossSiegeWarServerInfo>
 
-		<redisServer> 192.168.10.31 </redisServer>
-		<redisPort> 6379 </redisPort>
+        <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
+        <enableGlobalAuction> 1 </enableGlobalAuction>
 
-		<elasticServer> 192.168.10.31 </elasticServer>
-		<elasticPort> 9200 </elasticPort>
+        <redisServer> 192.168.10.13 </redisServer>
+        <redisPort> 6379 </redisPort>
 
-		<gmVerifyByGroup> 0 </gmVerifyByGroup>
-		<debugLevel> 1 </debugLevel>
-		<wxErrNumPerSecond> 5 </wxErrNumPerSecond>
-		<wxErrFlag> 1 </wxErrFlag>
-		<tlogFlag> 0 </tlogFlag>
-		<broadcastFindCompoents> 0 </broadcastFindCompoents>
-		<yxAppKey> ec2d3a6c84dbe79779abec5df9d5b6cd </yxAppKey>
-		<yxAppSecret> 31384e5af8a3 </yxAppSecret>
-		<!-- <interfaceRpc>
-			<host>
-				<item addr='127.0.0.1' port='10080'/>
-				<item addr='127.0.0.1' port='10081'/>
-				<item addr='127.0.0.1' port='10082'/>
-				<item addr='127.0.0.1' port='10083'/>
-			</host>
-		</interfaceRpc> -->
+        <elasticServer> 192.168.10.13 </elasticServer>
+        <elasticPort> 9200 </elasticPort>
 
-		<!-- 默认注册人数 -->
-		<defaultLimitServerReg> 8000 </defaultLimitServerReg>
-		<!-- 默认开放注册 -->
-		<defaultEnableServerReg> 1 </defaultEnableServerReg>
-		<maximumLoginAccount> 40000 </maximumLoginAccount>
-		<yidunCaptchaID> db604d47a72143138935bc0505761ff9 </yidunCaptchaID>
-		<yidunSecurityID> bbd7f829b62ebf34529a349bdd221299 </yidunSecurityID>
-		<yidunSecurityKey> 7b7415d07b06badd4134470d4385e7bd </yidunSecurityKey>
-	</game>
-	
-	<platform>
-		<digitalCollectionHost> http://10.34.28.243:31584 </digitalCollectionHost>
-		<dcProductCastUrl> /nft/api/product/cast </dcProductCastUrl>
-		<reportDidUrl> /did/userdata/detail/receive </reportDidUrl>
-		<digitalCollectionClientId> 23 </digitalCollectionClientId>
-		<digitalCollectionAppKey> xf_game_test </digitalCollectionAppKey>
-		<digitalCollectionSecretKey> xf_game_test </digitalCollectionSecretKey>
-		<dcProductCastResultUrl> /nft/api/product/cast/result </dcProductCastResultUrl>
-		<dcProductDetailUrl> /nft/api/product/detail </dcProductDetailUrl>
-		<dcChargeOffUrl> /nft/api/product/equity/use </dcChargeOffUrl>
-		<dcQueryChargeOffUrl> /nft/api/product/equity/use/result </dcQueryChargeOffUrl>
-		<dcEquityUseUrl> /nft/api/product/equity/use/query </dcEquityUseUrl>
-		<dcUseEquityChannel> 1 </dcUseEquityChannel>
-		<dcDidQuery> /did/userdata/detail/query </dcDidQuery>
-		<dcUseEquityIMaoTaiUrl> https://testdash.moutai519.com.cn/openapi/proxy/xfGameTest/ </dcUseEquityIMaoTaiUrl>
-		<dcUseEquityIMaoTaiKey> e03e6ed3b06345fb8d0452285582d15f </dcUseEquityIMaoTaiKey>
-		<dcUseEquityIMaoTaiSecret> acc08313ab4e483382a3cd3a916c76ed </dcUseEquityIMaoTaiSecret>
-		<dcIMaoTaiUrl> /did/userdata/detail/receive </dcIMaoTaiUrl>
-	</platform>
-	
+        <gmVerifyByGroup> 0 </gmVerifyByGroup>
+        <debugLevel> 1 </debugLevel>
+        <wxErrNumPerSecond> 5 </wxErrNumPerSecond>
+        <wxErrFlag> 1 </wxErrFlag>
+        <tlogFlag> 0 </tlogFlag>
+        <broadcastFindCompoents> 0 </broadcastFindCompoents>
+        
+        <!-- <interfaceRpc>
+            <host>
+                <item addr='127.0.0.1' port='10080'/>
+                <item addr='127.0.0.1' port='10081'/>
+                <item addr='127.0.0.1' port='10082'/>
+                <item addr='127.0.0.1' port='10083'/>
+            </host>
+        </interfaceRpc> -->
+
+        <!-- 默认注册人数 -->
+        <defaultLimitServerReg> 8000 </defaultLimitServerReg>
+        <!-- 默认开放注册 -->
+        <defaultEnableServerReg> 1 </defaultEnableServerReg>
+        <maximumLoginAccount> 40000 </maximumLoginAccount>
+        
+        <errReportUrl> https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=92de3ed1-9bfe-4428-afc6-f1488f9bb452 </errReportUrl>
+    </game>
+    
+    <platform>
+        
+    </platform>
+    
 
     <!-- 生成数据库初始化sql脚本路径 -->
     <sql_script_filename> scripts/game.sql </sql_script_filename>
@@ -109,187 +97,189 @@
     <!-- 游戏中是否执行同步数据库逻辑 -->
     <game_sync_sql> true </game_sync_sql>
 
-	<debug>
-		<waitEntityLoading> 0 </waitEntityLoading>
-		<loadEntity> 1 </loadEntity>
-		<entityLoadSpeed> 5 </entityLoadSpeed>
-		<enableBotLogin> 1 </enableBotLogin>
-		<callbackNumThreshold> 100 </callbackNumThreshold>
-	</debug>
+    <debug>
+        <waitEntityLoading> 0 </waitEntityLoading>
+        <loadEntity> 1 </loadEntity>
+        <entityLoadSpeed> 20 </entityLoadSpeed>
+        <enableBotLogin> 1 </enableBotLogin>
+        <callbackNumThreshold> 100 </callbackNumThreshold>
+        <enableCentralLogin> 1 </enableCentralLogin>
+        <debugErrorLogHost>  </debugErrorLogHost>
+    </debug>
 
-	<enable_packet_history> 1 </enable_packet_history>
+    <enable_packet_history> 1 </enable_packet_history>
 
-	<publish>
-		<!-- 发布状态, 可在脚本中获取该值。 KBEngine.publish()
-			(apps released state, This value can be obtained in the script. KBEngine.publish())
-			Type: Integer8
-			0 : debug
-			1 : release
-			其他自定义(Other custom)
-		-->
-		<state> 0 </state>
+    <publish>
+        <!-- 发布状态, 可在脚本中获取该值。 KBEngine.publish()
+            (apps released state, This value can be obtained in the script. KBEngine.publish())
+            Type: Integer8
+            0 : debug
+            1 : release
+            其他自定义(Other custom)
+        -->
+        <state> 0 </state>
 
-		<!-- 脚本层发布的版本号
-			(Script layer released version number)
-		 -->
-		<script_version> 0.1.0 </script_version>
-	</publish>
+        <!-- 脚本层发布的版本号
+            (Script layer released version number)
+         -->
+        <script_version> 0.1.0 </script_version>
+    </publish>
 
-	<!-- defined => kbe/res/server/kbengine_defs.xml -->
-	<dbmgr>
-		<account_system>
-			<!-- 账号找回密码相关
-				(Account reset password)
-			-->
-			<account_resetPassword>
-				<!-- 是否开放重设密码
-					(Whether open reset password)
-				-->
-				<enable>	true	</enable>
-			</account_resetPassword>
+    <!-- defined => kbe/res/server/kbengine_defs.xml -->
+    <dbmgr>
+        <account_system>
+            <!-- 账号找回密码相关
+                (Account reset password)
+            -->
+            <account_resetPassword>
+                <!-- 是否开放重设密码
+                    (Whether open reset password)
+                -->
+                <enable>    true    </enable>
+            </account_resetPassword>
 
-			<!-- 账号注册相关
-				(Account registration)
-			-->
-			<account_registration>
-				<!-- 是否开放注册
-					(Whether open registration)
-				-->
-				<enable>	true	</enable>
+            <!-- 账号注册相关
+                (Account registration)
+            -->
+            <account_registration>
+                <!-- 是否开放注册
+                    (Whether open registration)
+                -->
+                <enable>    true    </enable>
 
-				<!-- 登录合法时游戏数据库找不到游戏账号则自动创建
-					(When logged in, the game database can not find the game account is automatically created)
-				-->
-				<loginAutoCreate> true </loginAutoCreate>
-			</account_registration>
-		</account_system>
+                <!-- 登录合法时游戏数据库找不到游戏账号则自动创建
+                    (When logged in, the game database can not find the game account is automatically created)
+                -->
+                <loginAutoCreate> true </loginAutoCreate>
+            </account_registration>
+        </account_system>
 
-		<databaseInterfaces>
-			<!-- 数据库接口名称 （可以定义多个不同的接口，但至少存在一个default）
-				（Database interface name)
-			-->
-			<default>
-				<!-- 如果为true，则为纯净的数据库，引擎不创建实体表
-					（If true is pure database, engine does not create the entity table)
-				-->
-				<pure> false </pure>
-				<isTenDB> false </isTenDB>
+        <databaseInterfaces>
+            <!-- 数据库接口名称 （可以定义多个不同的接口，但至少存在一个default）
+                （Database interface name)
+            -->
+            <default>
+                <!-- 如果为true，则为纯净的数据库，引擎不创建实体表
+                    （If true is pure database, engine does not create the entity table)
+                -->
+                <pure> false </pure>
+                <isTenDB> false </isTenDB>
 
-				<!-- 数据库类型 （mysql、redis）
-					（Database type(mysql, redis))
-				-->
-				<type> mysql </type>											<!-- Type: String -->
+                <!-- 数据库类型 （mysql、redis）
+                    （Database type(mysql, redis))
+                -->
+                <type> mysql </type>                                            <!-- Type: String -->
 
-				<!-- 数据库地址
-					（Database address)
-				-->
-				<host> 127.0.0.1 </host>										<!-- Type: String -->
-				<port> 3306 </port>												<!-- Type: Integer -->
+                <!-- 数据库地址
+                    （Database address)
+                -->
+                <host> 127.0.0.1 </host>                                        <!-- Type: String -->
+                <port> 3306 </port>                                                <!-- Type: Integer -->
 
-				<!-- 数据库账号验证
-					（Database auth)
-				-->
-				<auth>
-					<username> fengyan </username>									<!-- Type: String -->
-					<password> 123456 </password>							<!-- Type: String -->
+                <!-- 数据库账号验证
+                    （Database auth)
+                -->
+                <auth>
+                    <username> fengyan </username>                                    <!-- Type: String -->
+                    <password> 123456 </password>                            <!-- Type: String -->
 
-					<!-- 为true则表示password是加密(rsa)的, 可防止明文配置
-						(is true, password is RSA)
-					-->
-					<encrypt> true </encrypt>
-				</auth>
+                    <!-- 为true则表示password是加密(rsa)的, 可防止明文配置
+                        (is true, password is RSA)
+                    -->
+                    <encrypt> true </encrypt>
+                </auth>
 
-				<!-- 数据库名称
-					(Database name)
-				-->
-				<databaseName> game_trunk </databaseName> 								<!-- Type: String -->
+                <!-- 数据库名称
+                    (Database name)
+                -->
+                <databaseName> game_trunk </databaseName>                                 <!-- Type: String -->
 
-				<!-- 数据库允许的连接数
-					(Number of connections allowed by the database)
-				-->
-				<numConnections> 5 </numConnections>							<!-- Type: Integer -->
+                <!-- 数据库允许的连接数
+                    (Number of connections allowed by the database)
+                -->
+                <numConnections> 5 </numConnections>                            <!-- Type: Integer -->
 
-				<!-- 字符编码类型
-					(Character encoding type)
-				-->
-				<unicodeString>
-					<characterSet> utf8 </characterSet> 						<!-- Type: String -->
-					<collation> utf8_bin </collation> 							<!-- Type: String -->
-				</unicodeString>
-			</default>
-		</databaseInterfaces>
-	</dbmgr>
+                <!-- 字符编码类型
+                    (Character encoding type)
+                -->
+                <unicodeString>
+                    <characterSet> utf8 </characterSet>                         <!-- Type: String -->
+                    <collation> utf8_bin </collation>                             <!-- Type: String -->
+                </unicodeString>
+            </default>
+        </databaseInterfaces>
+    </dbmgr>
 
-	<cellapp>
-	</cellapp>
+    <cellapp>
+    </cellapp>
 
-	<baseapp>
-		<!-- 自动存档的时间周期(秒)
-			（Automatic archiving time period(secs)）
-		-->
-		<archivePeriod> 300 </archivePeriod> 							<!-- Type: Float -->
+    <baseapp>
+        <!-- 自动存档的时间周期(秒)
+            （Automatic archiving time period(secs)）
+        -->
+        <archivePeriod> 300 </archivePeriod>                             <!-- Type: Float -->
 
-		<!-- 自动备份的时间(秒)
-			（Automatic backup time period(secs)）
-		-->
-		<backupPeriod> 300 </backupPeriod>							<!-- Type: Float -->
-		<externalAddress>  </externalAddress>
-		<!-- 暴露给客户端的端口范围
-			（Exposed to the client port range）
-		-->
-		<externalTcpPorts_min> 20015 </externalTcpPorts_min>			<!-- Type: Integer -->
-		<externalTcpPorts_max> 20099 </externalTcpPorts_max>			<!-- Type: Integer -->
-		<externalUdpPorts_min> 30015 </externalUdpPorts_min>			<!-- Type: Integer -->
-		<externalUdpPorts_max> 30099 </externalUdpPorts_max>			<!-- Type: Integer -->
-	</baseapp>
+        <!-- 自动备份的时间(秒)
+            （Automatic backup time period(secs)）
+        -->
+        <backupPeriod> 300 </backupPeriod>                            <!-- Type: Float -->
+        <externalAddress>  </externalAddress>
+        <!-- 暴露给客户端的端口范围
+            （Exposed to the client port range）
+        -->
+        <externalTcpPorts_min> 20015 </externalTcpPorts_min>            <!-- Type: Integer -->
+        <externalTcpPorts_max> 20099 </externalTcpPorts_max>            <!-- Type: Integer -->
+        <externalUdpPorts_min> 30015 </externalUdpPorts_min>            <!-- Type: Integer -->
+        <externalUdpPorts_max> 30099 </externalUdpPorts_max>            <!-- Type: Integer -->
+    </baseapp>
 
-	<cellappmgr>
-	</cellappmgr>
+    <cellappmgr>
+    </cellappmgr>
 
-	<baseappmgr>
-	</baseappmgr>
+    <baseappmgr>
+    </baseappmgr>
 
-	<loginapp>
-		<externalAddress>  </externalAddress>							<!-- Type: String -->
+    <loginapp>
+        <externalAddress>  </externalAddress>                            <!-- Type: String -->
 
-		<!-- 暴露给客户端的端口范围
-			（Exposed to the client port range）
-		-->
-		<externalTcpPorts_min> 20013 </externalTcpPorts_min>			<!-- Type: Integer -->
-		<externalTcpPorts_max> 0 </externalTcpPorts_max>				<!-- Type: Integer -->
-		<externalUdpPorts_min> -1 </externalUdpPorts_min>				<!-- Type: Integer -->
-		<externalUdpPorts_max> -1 </externalUdpPorts_max>				<!-- Type: Integer -->
-	</loginapp>
+        <!-- 暴露给客户端的端口范围
+            （Exposed to the client port range）
+        -->
+        <externalTcpPorts_min> 20013 </externalTcpPorts_min>            <!-- Type: Integer -->
+        <externalTcpPorts_max> 0 </externalTcpPorts_max>                <!-- Type: Integer -->
+        <externalUdpPorts_min> -1 </externalUdpPorts_min>                <!-- Type: Integer -->
+        <externalUdpPorts_max> -1 </externalUdpPorts_max>                <!-- Type: Integer -->
+    </loginapp>
 
-	<machine>
-		<addresses>
-			<!--<item> 127.0.0.1 </item>-->
-			<!--<item> 192.168.10.18 </item>-->
-		</addresses>
-	</machine>
+    <machine>
+        <addresses>
+            <!--<item> 127.0.0.1 </item>-->
+            <!--<item> 192.168.10.18 </item>-->
+        </addresses>
+    </machine>
 
-	<bots>
-		<!-- loginapp地址
-			（loginapp address)
-		-->
-		<host> 192.168.10.31 </host>										<!-- Type: String -->
-		<port_min> 20013 </port_min>									<!-- Type: Integer -->
-		<port_max> 0 </port_max>									<!-- Type: Integer -->
+    <bots>
+        <!-- loginapp地址
+            （loginapp address)
+        -->
+        <host> 127.0.0.1 </host>                                        <!-- Type: String -->
+        <port_min> 20013 </port_min>                                    <!-- Type: Integer -->
+        <port_max> 0 </port_max>                                    <!-- Type: Integer -->
 
-		<!-- 默认启动进程后自动添加这么多个机器人
-			(After starting the process, automatically add some robots)
-			totalCount	： 添加总数量			(Add the total-number)
-			tickTime	： 每次添加所用时间(s)	(Interval time-secs)
-			tickCount	： 每次添加数量			(Each time you add the number of)
-		-->
-		<defaultAddBots>
-			<totalCount> 0  </totalCount>								<!-- Type: Integer -->
-			<tickTime> 0.1  </tickTime>									<!-- Type: Float -->
-			<tickCount> 5  </tickCount>									<!-- Type: Integer -->
-		</defaultAddBots>
+        <!-- 默认启动进程后自动添加这么多个机器人
+            (After starting the process, automatically add some robots)
+            totalCount    ： 添加总数量            (Add the total-number)
+            tickTime    ： 每次添加所用时间(s)    (Interval time-secs)
+            tickCount    ： 每次添加数量            (Each time you add the number of)
+        -->
+        <defaultAddBots>
+            <totalCount> 0  </totalCount>                                <!-- Type: Integer -->
+            <tickTime> 0.1  </tickTime>                                    <!-- Type: Float -->
+            <tickCount> 5  </tickCount>                                    <!-- Type: Integer -->
+        </defaultAddBots>
 
 
-		<totalAccountCount> 0  </totalAccountCount>								<!-- Type: Integer -->
+        <totalAccountCount> 0  </totalAccountCount>                                <!-- Type: Integer -->
 
-	</bots>
+    </bots>
 </root>

@@ -117,15 +117,15 @@ class ImpAvatarPet(object):
         if not self.lingShouEffectEventInfo:
             #DEBUG_MSG('get EventEffect1')
             return 0
-        
+
         if objIdSkillInfoKey not in self.lingShouEffectEventInfo:
             #DEBUG_MSG('get EventEffect2')
             return 0
-        
+
         buffEffectInfoKey = utils.getBuffEffectInfoKey(buffId, effectId)
         if buffEffectInfoKey not in self.lingShouEffectEventInfo[objIdSkillInfoKey]:
             #DEBUG_MSG('get EventEffect3')
             return 0
-        
+
         #DEBUG_MSG('get EventEffect', objIdSkillInfoKey, buffEffectInfoKey)
         return self.lingShouEffectEventInfo[objIdSkillInfoKey][buffEffectInfoKey]

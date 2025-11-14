@@ -1,37 +1,25 @@
 # coding: utf-8
-import KBEngine
 from KBEDebug import *
 
-import gamedecorator
-import gamelog
+import json
 
-import outsideRecord
+import gamedecorator
 import gameengine
 import gameconst
 import gameclass
 import formula
-import utils
-import json
-import sMath
-import math
 import gametimer
-
 import impDungeonCommon
+import complexTeleportOption
+import dungeonSrc
+import utils
 
-import taskdata as TSKD
 import taskDesc_taskDesc as TSK_DESC
 import message_Message_def as MMD
 import gamePlay_gamePlay as DDL
 import conflict_conflict_def as CCD
-import const_const as CONST
-import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import teamDunChallenge_config as TDC_CFG
 import message_Message as M_MD
-
-import complexTeleportOption
-import dungeonSrc
-import dungeonPlayMode
-
 
 class DungeonItemCheckMixin(object):
     """Mixin class for impTeamDungeon/impSingleDungeon or etc"""
@@ -111,7 +99,6 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
             return
 
         self._resetTDungeonCheckDic()
-
         self.checkCaptionTeamDungeonConditions(dungeonNo, extra)
 
     def checkCaptionTeamDungeonConditions(self, dungeonNo, extra):

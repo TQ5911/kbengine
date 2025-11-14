@@ -38,5 +38,9 @@ datas = _tools.RODict({
     "mailItemsNumMax": _tools.RODict({
         "ID": "mailItemsNumMax",
         "value": 100,
+    }),
+    "mailDelete_Fail": _tools.RODict({
+        "ID": "mailDelete_Fail",
+        "value": 54003126,
     })
 })

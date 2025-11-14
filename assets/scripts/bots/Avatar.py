@@ -728,7 +728,6 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
         self.clientapp.callback(random.randint(0, 60), self._doRandomTeleport)
 
     def set_state(self, *args):
-        DEBUG_MSG('set_state:', args)
         self.callDelegateMethod('set_state', args)
 
     def set_spaceNo(self, *args):

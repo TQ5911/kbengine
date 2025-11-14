@@ -15,10 +15,6 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    "strengtheningFormula": _tools.RODict({
-        "ID": "strengtheningFormula",
-        "value": 34000003,
-    }),
     "enhancedAdvancementLevel": _tools.RODict({
         "ID": "enhancedAdvancementLevel",
         "value": 5,
@@ -141,15 +137,15 @@ datas = _tools.RODict({
     }),
     "gearButtonAction_rune": _tools.RODict({
         "ID": "gearButtonAction_rune",
-        "value": "Openinterface,UIEquipTrainingPanel,2",
+        "value": "Openinterface,UIEquipTrainingPanel,5",
     }),
     "gearButtonAction_bless": _tools.RODict({
         "ID": "gearButtonAction_bless",
-        "value": "Openinterface,UIEquipTrainingPanel,3",
+        "value": "Openinterface,UIEquipTrainingPanel,4",
     }),
     "gearButtonAction_identify": _tools.RODict({
         "ID": "gearButtonAction_identify",
-        "value": "Openinterface,UIEquipEnchantingPanel",
+        "value": "Openinterface,UIEquipTrainingPanel,2",
     }),
     "gearButtonLimitID_enhance": _tools.RODict({
         "ID": "gearButtonLimitID_enhance",
@@ -169,7 +165,7 @@ datas = _tools.RODict({
     }),
     "gearStrengthenMax": _tools.RODict({
         "ID": "gearStrengthenMax",
-        "value": (0, 3, 5, 10, 13, 13),
+        "value": (0, 8, 8, 10, 10, 10),
     }),
     "gearblessingBack": _tools.RODict({
         "ID": "gearblessingBack",
@@ -194,6 +190,10 @@ datas = _tools.RODict({
     "strengthenDes2": _tools.RODict({
         "ID": "strengthenDes2",
         "value": "强化失败时，强化等级概率下降",
+    }),
+    "strengthenDes3": _tools.RODict({
+        "ID": "strengthenDes3",
+        "value": "强化失败时，装备概率破损直接销毁",
     }),
     "gearFuLing_AccessFailed": _tools.RODict({
         "ID": "gearFuLing_AccessFailed",
@@ -235,6 +235,10 @@ datas = _tools.RODict({
         "ID": "gearFuLing_noFuLingDesc",
         "value": "通过“装备附灵”可获得额外属性",
     }),
+    "gearFuLing_noGlyphDesc": _tools.RODict({
+        "ID": "gearFuLing_noGlyphDesc",
+        "value": "通过“武器铭文”可获得技能特性",
+    }),
     "gearFuLing_ItemTip": _tools.RODict({
         "ID": "gearFuLing_ItemTip",
         "value": "存储灵气：",
@@ -254,5 +258,37 @@ datas = _tools.RODict({
     "gearFuLingRating": _tools.RODict({
         "ID": "gearFuLingRating",
         "value": ('C', 'B', 'A', 'S'),
+    }),
+    "enhanceGreatFailed2": _tools.RODict({
+        "ID": "enhanceGreatFailed2",
+        "value": 54000306,
+    }),
+    "gearEnhanceBindLimit": _tools.RODict({
+        "ID": "gearEnhanceBindLimit",
+        "value": 1,
+    }),
+    "gearEnhanceBindMsg": _tools.RODict({
+        "ID": "gearEnhanceBindMsg",
+        "value": 54000307,
+    }),
+    "blessAffixID": _tools.RODict({
+        "ID": "blessAffixID",
+        "value": 78000030,
+    }),
+    "noStrengthenList": _tools.RODict({
+        "ID": "noStrengthenList",
+        "value": ('adjFinalDmg', 'adjFinalDmgAnti', 'adjIgnoreArmor', 'adjDmgArmor', 'adjMonsterDmg', 'adjMonsterDmgAnti', 'adjPVPDmg', 'adjPVPDmgAnti', 'adjMortal', 'adjAntiMortal', 'adjDrugsQuantity'),
+    }),
+    "strengthenPercent": _tools.RODict({
+        "ID": "strengthenPercent",
+        "value": (0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6),
+    }),
+    "gearBlessBoundValue": _tools.RODict({
+        "ID": "gearBlessBoundValue",
+        "value": ((1, 1), (2, 2), (3, 4), (4, 8)),
+    }),
+    "equipmentClassLevel": _tools.RODict({
+        "ID": "equipmentClassLevel",
+        "value": 4,
     })
 })

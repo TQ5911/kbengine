@@ -102,10 +102,13 @@ datas ={
       "Level": 5.0,
       "MapEntityScale": 0,
       "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 2000.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowMonsterGroupID": ""
     }
   },
   "40010007": {
@@ -118,18 +121,21 @@ datas ={
     "EntityID": 11211001,
     "ID": 40010007,
     "Name": "\u9b54\u5316\u7684\u9e7f",
-    "PosX": 198.4907,
-    "PosY": 49.45516,
-    "PosZ": 20.44954,
+    "PosX": 199.52,
+    "PosY": 49.37,
+    "PosZ": 19.83,
     "Props": {
       "GroupID": "",
       "Level": 5.0,
       "MapEntityScale": 0,
       "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 2000.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowMonsterGroupID": ""
     }
   },
   "40010008": {
@@ -540,6 +546,33 @@ datas ={
       "Remark": ""
     }
   },
+  "40010025": {
+    "ActivityID": 0,
+    "ClassName": "Monster",
+    "ClassNameType": 0,
+    "CustomID": "",
+    "Dir": 136.8868,
+    "DisplayName": "",
+    "EntityID": 11211001,
+    "ID": 40010025,
+    "Name": "\u9b54\u5316\u7684\u9e7f",
+    "PosX": 197.9845,
+    "PosY": 49.38917,
+    "PosZ": 18.5776,
+    "Props": {
+      "GroupID": "",
+      "Level": 5,
+      "MapEntityScale": 0,
+      "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": "",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "Remark": "",
+      "ShowMonsterGroupID": ""
+    }
+  },
   "40014001": {
     "ActivityID": 0,
     "ClassName": "Npc",
@@ -708,16 +741,16 @@ datas ={
     "EntityID": 1,
     "ID": 40018005,
     "Name": "\u7a7a\u6c14\u5899",
-    "PosX": 148.2242,
-    "PosY": 73.07196,
-    "PosZ": 83.94177,
+    "PosX": 152.7,
+    "PosY": 62.5,
+    "PosZ": 62.2,
     "Props": {
       "AreaType": 2,
-      "Height": 3.0,
-      "Length": 30.0,
-      "MPosX": 139.0,
-      "MPosY": 73.07,
-      "MPosZ": 52.0,
+      "Height": 4.0,
+      "Length": 80.0,
+      "MPosX": 133.0,
+      "MPosY": 62.5,
+      "MPosZ": -19.0,
       "Remark": ""
     }
   },

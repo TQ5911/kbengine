@@ -8,6 +8,7 @@ import gameclass
 import gamedecorator
 import avatarPet
 import dataUtils
+import AuthClsWraper
 
 import itemData_itemData as IDID
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
@@ -17,6 +18,7 @@ import actionContext
 import petData_unlock as PDUD
 import taskClass_taskTarget as TCCTD
 import qualityData_qualityData as QD_QDD
+import agent_agentFunction as A_AFD
 
 
 class ImpAvatarPet(object):
@@ -57,6 +59,7 @@ class ImpAvatarPet(object):
     def _sendBattleListData(self):
         self.lingShouInfo.sendBattleListData(self)
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def setFollowPet(self, exposed, bFollow, petId):
         pet = self.lingShouInfo.getLingShouByPetId(petId)
         if not pet:
@@ -65,6 +68,7 @@ class ImpAvatarPet(object):
 
         self.cell.setFollowPet(bFollow, petId)
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def updateLingShouBattleList(self, exposed, battleIndex, petId, slotId):
         DEBUG_MSG('updateLingShouBattleList', battleIndex, petId, slotId)
         myLevel = gameglobal.roleCache[self.id]['level']
@@ -164,6 +168,7 @@ class ImpAvatarPet(object):
 
         return _dic.get(quality, 0)
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def modifyPetBattleListName(self, exposed, battleIndex, name):
         if not self.lingShouInfo.isBattleIndexValid(battleIndex):
             ERROR_MSG("modifyPetBattleListName battleIndex invalid", battleIndex)
@@ -179,6 +184,7 @@ class ImpAvatarPet(object):
     def getTotalPetScore(self):
         return self.lingShouInfo.getTotalPetScore(self)
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     @gamedecorator.limitcall(PDSD.datas['petTeamSwitchCD']['value'])
     def setBattleIndex(self, exposed, battleIndex):
         if not self.lingShouInfo.isBattleIndexValid(battleIndex):
@@ -221,12 +227,13 @@ class ImpAvatarPet(object):
             self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
             return
 
-        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'item': info['gridObj']})
+        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'item': info['gridObj'], 'school':self.getAvatarSchool()})
         self.addLingShouBase(abCtx)
 
         # self.onMessagePre(MMD.datas.petEggHatchTip, [])
         self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
 
+    @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def useLingShouEquip(self, exposed, gridId, petId, slotId):
         DEBUG_MSG("useLingShouEquip ", gridId, petId, slotId)
         pet = self.lingShouInfo.getLingShouByPetId(petId)

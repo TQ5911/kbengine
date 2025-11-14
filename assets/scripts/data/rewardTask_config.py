@@ -41,7 +41,7 @@ datas = _tools.RODict({
     }),
     "awardReceiveTimes": _tools.RODict({
         "ID": "awardReceiveTimes",
-        "value": "领奖次数：{0}",
+        "value": "重复任务领奖次数：{0}",
     }),
     "unclaimedReward": _tools.RODict({
         "ID": "unclaimedReward",

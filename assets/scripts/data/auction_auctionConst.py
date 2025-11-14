@@ -114,5 +114,41 @@ datas = _tools.RODict({
     "auction_removeConfirm": _tools.RODict({
         "key": "auction_removeConfirm",
         "value": 54000249,
+    }),
+    "auction_TabText2": _tools.RODict({
+        "key": "auction_TabText2",
+        "value": "公示商品",
+    }),
+    "auctionHelpInfo": _tools.RODict({
+        "key": "auctionHelpInfo",
+        "value": 38,
+    }),
+    "auctionPublicityCountdownText": _tools.RODict({
+        "key": "auctionPublicityCountdownText",
+        "value": "{0}后公式结束",
+    }),
+    "auctionPublicityTime": _tools.RODict({
+        "key": "auctionPublicityTime",
+        "value": 4,
+    }),
+    "auctionOnSale": _tools.RODict({
+        "key": "auctionOnSale",
+        "value": "出售中",
+    }),
+    "auctionOnShow": _tools.RODict({
+        "key": "auctionOnShow",
+        "value": "公示中",
+    }),
+    "auctionPublicityConfirm": _tools.RODict({
+        "key": "auctionPublicityConfirm",
+        "value": 54000250,
+    }),
+    "auctionCountdownTips": _tools.RODict({
+        "key": "auctionCountdownTips",
+        "value": "该商品处于公示期，将于{0}后方可购买",
+    }),
+    "auctionPublicityPeriod": _tools.RODict({
+        "key": "auctionPublicityPeriod",
+        "value": 54000251,
     })
 })
