@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package adminWebService;
+option go_package = "../webservice";
+option py_generic_services = true;
+
+message Void {
+}
+
+
+
+message ServerInfo
+{
+    uint32 serverId = 1;  //serverId
+    string serverName = 2;  //serverName
+}
+
+message ServerList
+{
+    repeated ServerInfo servers = 1;
+}
+
+message CommandInfo
+{
+    string acount = 1;
+    uint32 serverId = 2;
+    string command = 3;
+}
+
+message CommandResult
+{
+    uint32 resultCode = 1;
+    string desc = 2;
+}
+
+message ScriptInfo
+{
+    string account = 1;
+    uint32 serverId = 2;
+    uint32 compType = 3;
+    uint32 compGroupOrder = 4;
+    string script = 5;
+}
+
+message ComponentInfo
+{
+    uint32 compType = 1;
+    uint32 groupOrder = 2;
+}
+
+message ScriptResult
+{
+    ComponentInfo compInfo = 1;
+    string result = 2;
+}
+
+message ScriptResultList
+{
+    repeated ScriptResult results = 1;
+}
+
+message ComponentList
+{
+    repeated ComponentInfo comps = 1;
+}
+
+message ListCompRequest
+{
+    uint32 serverId = 1;
+}
+
+// gm 进程的 service
+service AdminWeb
+{
+    rpc listServers(Void) returns(ServerList);
+    rpc doCommand(CommandInfo) returns(CommandResult);
+    rpc listComponents(ListCompRequest) returns(ComponentList);
+    rpc runscript(ScriptInfo) returns(ScriptResultList);
+}
+

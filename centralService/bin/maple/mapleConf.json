@@ -1,0 +1,17 @@
+{
+    "serverName":"mapleServer",
+    "serverId":1,
+    "httpAddr": "0.0.0.0:9527",
+    "addressForDebug":"localhost:8989",
+    "logPath":"maple.log",
+    "logLevel":0,
+    "logRotateSize":500,
+    "secret": "hello world",
+    "mysql": {
+    	"addr": "127.0.0.1",
+        "user": "fengyan",
+        "passwd": "123456",
+        "db": "maple"
+    },
+    "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
+}

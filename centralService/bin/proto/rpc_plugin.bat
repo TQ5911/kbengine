@@ -1,0 +1,1 @@
+@python customRpc.py centralService/src/trpc

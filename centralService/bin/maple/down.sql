@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `maple`;
+DROP TABLE IF EXISTS `maple_zone`;

@@ -1,0 +1,11 @@
+{
+    "serverName":"routerServer",
+    "serverId":1,
+    "gameServerServiceAddr": "0.0.0.0:2060",
+    "routerServerId":1,
+    "addressForDebug":"localhost:8989",
+    "logPath":"router.log",
+    "logLevel":0,
+    "logRotateSize":500,
+    "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
+}

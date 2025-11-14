@@ -1,0 +1,16 @@
+{
+    "serverName":"dropServer",
+    "serverId":1,
+    "dropServerAddr": "0.0.0.0:2120",
+    "addressForDebug":"localhost:8989",
+    "logPath":"drop.log",
+    "logLevel":0,
+    "logRotateSize":500,
+    "mysql": {
+    	"addr": "127.0.0.1",
+	    "user": "fengyan",
+	    "passwd": "123456",
+	    "db": "dropDB"
+    },
+    "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
+}
