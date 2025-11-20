@@ -53,11 +53,11 @@ datas = _tools.RODict({
     }),
     "mineBattle_recoveryRatio": _tools.RODict({
         "ID": "mineBattle_recoveryRatio",
-        "value": _tools.ROList([(10, 0.1), (20, 0.2)]),
+        "value": _tools.ROList([0.1, 0.5]),
     }),
     "mineBattle_damageScore": _tools.RODict({
         "ID": "mineBattle_damageScore",
-        "value": _tools.ROList([0.1, 100]),
+        "value": 10000,
     }),
     "mineBattle_lastHitScore": _tools.RODict({
         "ID": "mineBattle_lastHitScore",

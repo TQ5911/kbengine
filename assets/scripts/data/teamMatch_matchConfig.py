@@ -390,5 +390,53 @@ datas = _tools.RODict({
     "teamMatch_differentFactions": _tools.RODict({
         "ID": "teamMatch_differentFactions",
         "value": 54003128,
+    }),
+    "in_dungeon_cant_operate": _tools.RODict({
+        "ID": "in_dungeon_cant_operate",
+        "value": 54000648,
+    }),
+    "raidTeamNotExist": _tools.RODict({
+        "ID": "raidTeamNotExist",
+        "value": 54000649,
+    }),
+    "raidTeamTitleDes": _tools.RODict({
+        "ID": "raidTeamTitleDes",
+        "value": "队伍招募中，欢迎加入！",
+    }),
+    "teamMatch_notFollow": _tools.RODict({
+        "ID": "teamMatch_notFollow",
+        "value": 54000650,
+    }),
+    "teamMatch_notConvene": _tools.RODict({
+        "ID": "teamMatch_notConvene",
+        "value": 54000651,
+    }),
+    "teamMatch_dataChange": _tools.RODict({
+        "ID": "teamMatch_dataChange",
+        "value": 54000652,
+    }),
+    "teamMatch_enterPassword": _tools.RODict({
+        "ID": "teamMatch_enterPassword",
+        "value": 54000653,
+    }),
+    "teamMatch_existingTeam": _tools.RODict({
+        "ID": "teamMatch_existingTeam",
+        "value": 54000654,
+    }),
+    "teamMatch_applicationFailed": _tools.RODict({
+        "ID": "teamMatch_applicationFailed",
+        "value": 54000655,
+    }),
+    "teamMatch_invitationFailed": _tools.RODict({
+        "ID": "teamMatch_invitationFailed",
+        "value": 54000656,
+    }),
+    "teamMatch_joinFailed": _tools.RODict({
+        "ID": "teamMatch_joinFailed",
+        "value": 54000657,
+    }),
+    "teamMatch_settlementInterval": _tools.RODict({
+        "ID": "teamMatch_settlementInterval",
+        "value": 3.5,
     })
 })

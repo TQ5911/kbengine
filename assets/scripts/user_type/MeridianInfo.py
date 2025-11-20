@@ -147,6 +147,7 @@ class MeridianVal(userType.UserSoleType):
         
         if self.curSlot < 1:
             self.curSlot = 1
+        if self.curSlot not in self.slotDict.keys():
             self.slotDict[self.curSlot] = MeridianSlotVal(slotIdx=self.curSlot)
         return self
     

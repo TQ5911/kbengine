@@ -230,10 +230,46 @@ datas = _tools.RODict({
         "normalBuyExRewardType": 0,
         "normalBuyExReward": 0,
         "reward": _tools.ROList([40000017])
+    }),
+    68000300: _tools.RODict({
+        "ID": 68000300,
+        "name": "月卡1",
+        "type": 2,
+        "subType": 2,
+        "price": 98,
+        "priceID": 0,
+        "quantity": 0,
+        "VIPPoint": 98,
+        "productID": "com.cangminginc.com.credit980",
+        "amount": 0,
+        "credit": 0,
+        "firstBuyExRewardType": 0,
+        "firstBuyExReward": 0,
+        "normalBuyExRewardType": 0,
+        "normalBuyExReward": 0,
+        "reward": _tools.ROList([40000015])
+    }),
+    68000301: _tools.RODict({
+        "ID": 68000301,
+        "name": "月卡1",
+        "type": 2,
+        "subType": 2,
+        "price": 0,
+        "priceID": 30000001,
+        "quantity": 980,
+        "VIPPoint": 0,
+        "productID": "",
+        "amount": 0,
+        "credit": 0,
+        "firstBuyExRewardType": 0,
+        "firstBuyExReward": 0,
+        "normalBuyExRewardType": 0,
+        "normalBuyExReward": 0,
+        "reward": _tools.ROList([40000015])
     })
 })
 minKey = 68000001
-maxKey = 68000202
+maxKey = 68000301
 
 ProductIdDic = _tools.RODict({ 
         "com.cangminginc.com.credit60":68000001,
@@ -247,11 +283,13 @@ ProductIdDic = _tools.RODict({
         "com.cangminginc.com.credit680":68000200,
         "com.cangminginc.com.credit1280":68000201,
         "com.cangminginc.com.credit3280":68000202,
+        "com.cangminginc.com.credit980":68000300,
 })
 
 
 BuyCreditMainTypeDic = _tools.RODict({ 
         1:[68000001, 68000002, 68000003, 68000004, 68000005, 68000006],
+        2:[68000300, 68000301],
         7:[68000101, 68000102],
         8:[68000100],
         10:[68000200, 68000201, 68000202],
@@ -260,6 +298,7 @@ BuyCreditMainTypeDic = _tools.RODict({
 
 BuyCreditAllTypeDic = _tools.RODict({ 
         100:[68000001, 68000002, 68000003, 68000004, 68000005, 68000006],
+        202:[68000300, 68000301],
         700:[68000101, 68000102],
         800:[68000100],
         1000:[68000200, 68000201, 68000202],
@@ -269,7 +308,7 @@ BuyCreditAllTypeDic = _tools.RODict({
 TiyanMonthCardBuyCreditId = 0
 
 
-JingdianMonthCardBuyCreditId = 0
+JingdianMonthCardBuyCreditId = 68000301
 
 
 DianCangMonthCardBuyCreditId = 0

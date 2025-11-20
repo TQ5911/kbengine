@@ -556,7 +556,7 @@ class ImpAutoCombat(object):
     def _getCombatTarget(self, skill):
         target = None
         targetType = skill.getTarget(skill.skillId)
-        skillRange = skill.getRange(self, skill.skillId)
+        skillRange = skill.getRange(self, skill.skillId, skill.skillLv)
         if targetType == 'Enemy':
             target = self.getNearestEnemy()
         elif targetType == 'Self':
@@ -939,7 +939,7 @@ class ImpAutoCombat(object):
         targetRadius = 0
         if target.IsMonster:
             targetRadius = target.getConfigData().get('attackDistanceCompensation', 0)
-        skillRange = skill.getRange(self, skill.skillId) + targetRadius
+        skillRange = skill.getRange(self, skill.skillId, skill.skillLv) + targetRadius
         if skillRange and sMath.distance2DToCompareFrom3DPosition(self.position, target.position) > math.pow(skillRange, 2):
             return False
         return True
@@ -948,7 +948,7 @@ class ImpAutoCombat(object):
         if not skill:
             return None
         dstPos = None
-        skillRange = skill.getRange(self, skill.skillId)
+        skillRange = skill.getRange(self, skill.skillId, skill.skillLv)
 
         targetRadius = 0
         if target.IsMonster:

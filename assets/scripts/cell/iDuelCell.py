@@ -8,6 +8,7 @@ import sMath
 import AvatarInDuelInfo
 import DuelAttrInfo
 import gametimer
+import gamedecorator
 import duel_config as D_CD
 import conflict_conflict_def as CCD
 import conflict_status_def as CSD
@@ -22,6 +23,7 @@ class IDuelCell(object):
     duelAttr: DuelAttrInfo.DuelAttrVal
     duelBlackDict: dict
 
+    @gamedecorator.checkGameconfigEnable('enableDuel')
     @utils.isMyself
     def reqDuel(self, exposed, targetId):
         INFO_MSG('reqDuel: ', targetId)
@@ -175,6 +177,7 @@ class IDuelCell(object):
             _delay = D_CD.datas['duel_disturbRefuseTime']['value'] * 60
             self._callback(_delay, '_removeDuelBlack', (target.id,), gametimer.TIMER_TAG_DUEL_BLACK)
 
+    @gamedecorator.checkGameconfigEnable('enableDuel')
     @utils.isMyself
     def dealDuelReq(self, exposed, accept, isBlack):
         INFO_MSG('dealDuelReq: ', accept, isBlack)

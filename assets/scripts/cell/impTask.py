@@ -496,7 +496,7 @@ class ImpTask(impTalk.ImpTalk):
     def taskEnterWorldLine(self, taskId, dungeonNo, dstPos, dstDir):
         INFO_MSG('in taskEnterWorldLine:', taskId, dstPos, dstDir, self.spaceNo, dungeonNo)
         if formula.spaceInWorldLine(self.spaceNo):
-            self.onTelToMainCityWithCast(None, dungeonNo, dstPos, dstDir, None, None)
+            self.onTelToMainCityWithCast(None, dungeonNo, dstPos, dstDir, None, None, None, None)
             '''
             #当前在大世界
             DEBUG_MSG('in taskEnterWorldLine, from space world')

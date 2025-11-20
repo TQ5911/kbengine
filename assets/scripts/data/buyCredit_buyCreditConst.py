@@ -82,5 +82,33 @@ datas = _tools.RODict({
     "rmbFormat": _tools.RODict({
         "ID": "rmbFormat",
         "value": "￥{0}",
+    }),
+    "itemActivate": _tools.RODict({
+        "ID": "itemActivate",
+        "value": 30000312,
+    }),
+    "durationHours": _tools.RODict({
+        "ID": "durationHours",
+        "value": 720,
+    }),
+    "durationHoursLimit": _tools.RODict({
+        "ID": "durationHoursLimit",
+        "value": 4297,
+    }),
+    "durationHoursLimitMsg": _tools.RODict({
+        "ID": "durationHoursLimitMsg",
+        "value": 54001697,
+    }),
+    "dailyRewards": _tools.RODict({
+        "ID": "dailyRewards",
+        "value": 40000012,
+    }),
+    "dailyBaseTime": _tools.RODict({
+        "ID": "dailyBaseTime",
+        "value": 720,
+    }),
+    "maxAccumulateTime": _tools.RODict({
+        "ID": "maxAccumulateTime",
+        "value": 3360,
     })
 })

@@ -21,8 +21,8 @@ message ItemData
   uint32 itemNum = 2;
   uint64 uniqueId = 3;
   uint32 bindType = 4;
-  uint32 createTime = 5;
-  uint32 expireTime = 6;
+  int64 createTime = 5;
+  int64 expireTime = 6;
   string attrJson = 7;
 }
 
@@ -30,7 +30,7 @@ message AuctionItem
 {
   uint32 auctionType = 1;
   uint64 auctionItemUUID = 2;
-  uint32 addTime = 3;
+  int64 addTime = 3;
   ItemData itemData = 4;
   uint64 price = 5;
   uint32 number = 6;
@@ -41,13 +41,14 @@ message AuctionItem
   string extraInfo = 11;
   uint32 tCreate = 12;
   uint64 fromPlayerGBID = 13;
+  int32 isPublicity = 14;
 }
 
 message AuctionClientInfo
 {
   uint32 auctionType = 1;
   uint64 auctionItemUUID = 2;
-  uint32 addTime = 3;
+  int64 addTime = 3;
   uint32 itemId = 4;
   uint64 uniqueId = 5;
   uint64 price = 6;
@@ -156,7 +157,8 @@ message SearchItemsByItemIdReq
   repeated uint32 itemIds = 2;
   uint32 limit = 3;
   uint32 offset = 4;
-  string extra = 5;
+  uint32 isPublicity = 5;
+  string extra = 6;
 }
 
 message SearchItemsByItemIdResp
@@ -168,6 +170,7 @@ message SearchItemsByItemIdResp
   repeated AuctionItem auctionItems = 5;
   uint32 totalNum = 6;
   string extra = 7;
+  uint32 isPublicity = 8;
 }
 
 message GetItemLastAndAvgPriceReq
@@ -190,7 +193,8 @@ message GetCurrentSaleItemInfoReq
 {
   uint64 playerGBID = 1;
   uint32 itemId = 2;
-  string extra = 3;
+  uint32 isPublicity = 3;
+  string extra = 4;
 }
 
 message GetCurrentSaleItemInfoResp
@@ -201,6 +205,7 @@ message GetCurrentSaleItemInfoResp
   float avgPrice = 4;
   string extra = 5;
   repeated AuctionItem auctionItems = 6;
+  uint32 isPublicity = 7;
 }
 
 message GetPlayerAuctionItemsReq
@@ -254,6 +259,7 @@ message GetItemNumByCategoryIdReq
   uint64 playerGBID = 1;
   uint32 categoryId = 2;
   repeated uint32 itemIds = 3;
+  int32 isPublicity = 4;
 }
 
 message GetItemNumByCategoryIdResp
@@ -263,7 +269,9 @@ message GetItemNumByCategoryIdResp
   repeated uint32 itemIds = 3;
   repeated uint32 itemNums = 4;
   repeated float prices = 5;
+  int32 isPublicity = 6;
 }
+
 message BuyItemByItemIdReq
 {
   uint64 playerGBID = 1;
@@ -310,6 +318,24 @@ message DoBuyItemByItemIdResp
   uint32 totalPrice = 8;
   string extra = 9;
 }
+
+message GetAuctionItemByAuctionIdsReq
+{
+  uint64 playerGBID = 1;
+  uint32 categoryId = 2;
+  repeated uint64 auctionIds = 3;
+}
+
+message GetAuctionItemByAuctionIdsResp
+{
+  uint64 playerGBID = 1;
+  uint32 categoryId = 2;
+  repeated uint64 auctionIds = 3;
+  repeated uint32 itemIds = 4;
+  repeated uint32 itemNums = 5;
+  repeated float prices = 6;
+  repeated int64 addTimes = 7;
+}
 //中心服务器向游戏服提供的rpc
 service AuctionServer
 {
@@ -330,6 +356,7 @@ service AuctionServer
   rpc getAuctionItemNumByCategoryId(GetItemNumByCategoryIdReq) returns(Void);
   rpc buyItemByItemId(BuyItemByItemIdReq) returns(Void);
   rpc doBuyItemByItemId(DoBuyItemByItemIdReq) returns(Void);
+  rpc getAuctionItemsByAuctionIds(GetAuctionItemByAuctionIdsReq) returns(Void);
 }
 
 //游戏服向中心服的rpc
@@ -352,4 +379,5 @@ service GameServer
   rpc replyGetAuctionItemNumByCategoryId(GetItemNumByCategoryIdResp) returns(Void);
   rpc replyBuyItemByItemId(BuyItemByItemIdResp) returns(Void);
   rpc replyDoBuyItemByItemId(DoBuyItemByItemIdResp) returns(Void);
+  rpc replyGetAuctionItemsByAuctionIds(GetAuctionItemByAuctionIdsResp) returns(Void);
 }

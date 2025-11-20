@@ -195,10 +195,12 @@ class IBroadcastEvent(object):
             self._callback(0.1, '_doBroadcastToAccountHotfix', (newSendList,),
                            gametimer.TIMER_TAG_DO_BROADCAST_TO_ACCOUNT)
     
-    def onSyncNewAuctionItemCache(self, playerGBID, itemId):
-        playerGBIDSet = gameglobal.newAuctionCache.setdefault(itemId, set())
+    def onSyncNewAuctionItemCache(self, playerGBID, auctionId, itemId):
+        playerGBIDSet = gameglobal.newAuctionItemCache.setdefault(itemId, set())
         playerGBIDSet.add(playerGBID)
-        #DEBUG_MSG('in onSyncNewAuctionItemCache:', playerGBID, itemId, playerGBIDSet)
+
+        gameglobal.newAuctionItemCache[auctionId] = playerGBID
+        DEBUG_MSG('in onSyncNewAuctionItemCache:', playerGBID, itemId, auctionId, playerGBIDSet)
 
     ################################### gm ##########################################
     def gmSendMailByEntityId(self, entId, mailId, attach, despArgs, title, cont):

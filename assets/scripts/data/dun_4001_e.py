@@ -37,9 +37,7 @@ datas ={
         1003,
         1034,
         1035,
-        1036,
-        1018,
-        1040
+        1036
       ]
     }
   },
@@ -321,47 +319,12 @@ datas ={
   "1036": {
     "type": "createNPC",
     "entityID": [
-      40014003
+      40014003,
+      40014004
     ],
     "num": 1,
     "lv": "9",
     "ifSetBoss": 0,
     "transition": {}
-  },
-  "1014": {
-    "type": "castCinemaPlay",
-    "cinemaPlayID": 98010002,
-    "transition": {}
-  },
-  "1018": {
-    "type": "taskFinished",
-    "taskID": 86060105,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1039
-      ]
-    }
-  },
-  "1039": {
-    "type": "delayLoop",
-    "firstDelay": 5.0,
-    "loopDelay": 0.0,
-    "loopNum": 1,
-    "transition": {
-      "finished": [
-        1014
-      ]
-    }
-  },
-  "1040": {
-    "type": "taskInProgress",
-    "taskID": 86060106,
-    "transition": {
-      "finished": [
-        1039
-      ]
-    }
   }
 }

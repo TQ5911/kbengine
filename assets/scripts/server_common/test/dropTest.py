@@ -183,7 +183,7 @@ class DropUnit():
         for spawnId, spawnData in dunData.items():
             ClassName = spawnData.get('ClassName', '')
             EntityID = spawnData.get('EntityID', 0)
-            Name = spawnData.get('Name', '')
+            Name = spawnData.get('DisplayName', '')
             props = spawnData.get('Props', {})
             entityName = f"{Name}({EntityID})"
             goCount = False

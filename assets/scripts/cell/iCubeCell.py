@@ -120,9 +120,8 @@ class ICubeCell(object):
         self.cubeQuota.checkout()
 
     @utils.isMyself
-    def enterCube(self, exposed):
-        INFO_MSG('ICubeCell::enterCube')
-        floor = 1
+    def enterCube(self, exposed, floor):
+        INFO_MSG('ICubeCell::enterCube', floor)
         self.enterCubeInternal(floor)
 
     def enterCubeInternal(self, floor):
@@ -152,7 +151,8 @@ class ICubeCell(object):
         gameengine.getCubeStubBySpaceNo(_targetSpaceNo).doEnterCube(
             self.base, cube_config.datas['cube_hall']['value'], self.gbId, extra)
 
-    def randomCubeRoom(self):
+    @utils.isMyself
+    def randomCubeRoom(self, exposed):
         if not formula.isCubeSpace(self.spaceNo):
             ERROR_MSG('randomCubeRoom but not in cube', self.spaceNo)
             return
@@ -318,7 +318,7 @@ class ICubeCell(object):
             return False
 
         if self.cubeQuota.calcLeftTime() > cube_config.datas['cubeNumTime']['value'] * 60:
-            WARNING_MSG('ICubeCell::checkAddCubeRoomDurationCondition: duration beyond max', self.cubeRoomLeftTime)
+            WARNING_MSG('ICubeCell::checkAddCubeRoomDurationCondition: duration beyond max')
             return False
 
         return True
@@ -371,7 +371,7 @@ class ICubeCell(object):
             _renewSwitch = True
             _switchData = _switchVal.toClientData()
 
-        self.client.onCubeLoginData(self.cubeRoomLeftTime, _renewSwitch, _switchData, _rewardList)
+        self.client.onCubeLoginData(self.cubeQuota.leftTime, _renewSwitch, _switchData, _rewardList)
 
     def onLogonEnterCubeCB(self, spaceMgrId):
         INFO_MSG('ICubeCell::onLogonEnterCubeCB: {}'.format(spaceMgrId))
@@ -417,5 +417,10 @@ class ICubeCell(object):
             self.popTempMiscProp(gameconst.AvatarProps.cubeRandRoomCD)
         else:
             self.setTempMiscProp(gameconst.AvatarProps.cubeRandRoomCD, val)
+
+    @utils.isMyself
+    def getCubeRoomLeftTime(self, exposed):
+        INFO_MSG('ICubeCell::getCubeRoomLeftTime')
+        self.client.onCubeRoomLeftTime(self.cubeQuota.leftTime)
 
     # ------------------------ props end ------------------------

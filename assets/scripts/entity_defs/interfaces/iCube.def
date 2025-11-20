@@ -24,13 +24,6 @@
             <Default>       0                           </Default>
         </cubeRoomTimerId>
 
-        <cubeRoomLeftTime>
-            <Type>          LONGTIME                    </Type>
-            <Flags>         CELL_PRIVATE                </Flags>
-            <Default>       0                           </Default>
-            <Persistent>    true                        </Persistent>
-        </cubeRoomLeftTime>
-
         <cubeEnterFloor>
             <Type>          UINT8                       </Type>
             <Flags>         OWN_CLIENT                  </Flags>
@@ -117,6 +110,7 @@
         </beginEnterCubeRoom>
 
         <enterCube> <Exposed/>
+            <Arg>           UINT8                   </Arg>
         </enterCube>
 
         <leaveCube> <Exposed/>
@@ -158,6 +152,12 @@
         <leaveCubeInternal>
             <Arg>           UINT8                   </Arg>
         </leaveCubeInternal>
+
+        <getCubeRoomLeftTime> <Exposed/>
+        </getCubeRoomLeftTime>
+
+        <randomCubeRoom> <Exposed/>
+        </randomCubeRoom>
     </CellMethods>
 
     <ClientMethods>
@@ -180,5 +180,9 @@
             <Arg>           CUBE_SWITCH             </Arg>
             <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
         </onCubeLoginData>
+
+        <onCubeRoomLeftTime>
+            <Arg>           LONGTIME                </Arg>
+        </onCubeRoomLeftTime>
     </ClientMethods>
 </root>

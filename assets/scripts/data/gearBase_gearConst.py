@@ -93,7 +93,7 @@ datas = _tools.RODict({
     }),
     "equipDropSeriousInjury": _tools.RODict({
         "ID": "equipDropSeriousInjury",
-        "value": -5001,
+        "value": -501,
     }),
     "equipRepairCostItemID": _tools.RODict({
         "ID": "equipRepairCostItemID",

@@ -2814,6 +2814,7 @@ INIT_EACH_EN_LOOP_COUNT = 40
 
 class BuyCreditType(object):
     money = 1
+    monthCard = 2
     PermanentGift = 7
     FreePermanentPackage = 8
     holidayGift = 10
@@ -2917,6 +2918,11 @@ class AuctionSource(object):
 
 class AuctionCollection(object):
     START_KEY = 2001
+    MAX_COUNT = 20
+    CHECK_TIP_INTERVAL = 1
+
+class AuctionItemCollection(object):
+    START_KEY = 2501
     MAX_COUNT = 20
     CHECK_TIP_INTERVAL = 1
 
@@ -3505,3 +3511,23 @@ class UIUIVisibleType(object):
     NONE = 0
     TASK = 1
     LEVEL = 2
+    DAY = 3
+    
+class AuctionConst(object):
+    # 我的关注
+    ATTENTION_MY = 1
+    # 商品关注
+    ATTENTION_GOODS = 100
+        
+TEAM_STATISTIC_TYPE_TO_LIST = {
+    TeamStatisticType.DAMAGE: 'dmgList',
+    TeamStatisticType.HEAL: 'healList',
+    TeamStatisticType.HURT: 'hurtList',
+}
+
+TEAM_STATISTIC_TYPE_TO_KEY = {
+    TeamStatisticType.DAMAGE: 'dmg',
+    TeamStatisticType.HEAL: 'heal',
+    TeamStatisticType.HURT: 'hurt',
+}
+    

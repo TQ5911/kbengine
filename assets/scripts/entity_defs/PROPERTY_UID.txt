@@ -269,7 +269,7 @@ Avatar coinAuctionInfo 31400
 Avatar coinBillInfo 30392
 Avatar coinFraction 53
 Avatar collectibleData 30970
-Avatar collectionItemIdList 31937
+Avatar collectionAuctionIdList 30993
 Avatar combatReturnInfo 31433
 Avatar commonFlag 274
 Avatar commonFlagCell 431
@@ -286,7 +286,6 @@ Avatar crusadeInfo 413
 Avatar cubeCowTimerId 31942
 Avatar cubeEnterFloor 349
 Avatar cubeQuota 31488
-Avatar cubeRoomLeftTime 30993
 Avatar cubeRoomTimerId 31330
 Avatar cubeUseCoinTimes 423
 Avatar cubeUseItemTimes 424
@@ -419,6 +418,7 @@ Avatar knockAnti 590
 Avatar knockEnh 586
 Avatar lastDeadTime 415
 Avatar lastDeathPentlyTime 30242
+Avatar lastMonthCardDailyRewardTime 31613
 Avatar lastNotifyScoreTime 30048
 Avatar lastSpaceNo 30330
 Avatar leftCubeTimes 422
@@ -455,6 +455,7 @@ Avatar money 57
 Avatar monsterDmg 465
 Avatar monsterDmgAnti 468
 Avatar monsterGroupId 30735
+Avatar monthCardExpireTime 31610
 Avatar moralLevel 30909
 Avatar moralValue 87
 Avatar morphState 30992
@@ -633,6 +634,8 @@ Avatar viewEnterViewSet 30352
 Avatar viewLeaveViewSet 30353
 Avatar viewNameSet 30351
 Avatar viewRadius 31987
+Avatar visibleBits 31611
+Avatar visibleBitsCell 31612
 Avatar warehouse 31386
 Avatar welfareSignInInfo 31220
 Avatar wonderLandAddTimes 106

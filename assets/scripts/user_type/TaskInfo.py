@@ -25,6 +25,7 @@ import gameglobal
 import Task
 import gamelog
 import formula
+import visible_visible as V_VD
 
 
 class TaskCountLimitType(object):
@@ -1126,7 +1127,6 @@ class TaskInfo(userType.UserSoleType):
             if self.checkSubmitBaseCond(owner, task.taskId):
                 # 任务自动提交
                 owner.startSubmitTask(task.taskId)
-
         return
 
     def relateSubmitTaskList(self, taskId):
@@ -1259,6 +1259,9 @@ class TaskInfo(userType.UserSoleType):
 
     def _afterTaskSubmitted(self, owner, task, popRewardUUID=0):
         DEBUG_MSG("_afterTaskSubmitted ", task, popRewardUUID)
+        if task.taskId in V_VD.taskDic:
+            owner.updateVisibleByList(V_VD.taskDic[task.taskId])
+
         owner.onTaskFinishedForNewbieStep(task.taskId)
         owner.checkUnlockBuildAndSkillByTask(True, task.taskId)
         owner.deleteTemporarySkillByTask(task.taskId)

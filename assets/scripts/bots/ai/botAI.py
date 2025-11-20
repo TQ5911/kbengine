@@ -10,11 +10,13 @@ import Math
 import global_data as GD
 import random
 
+
 class botAI(object):
     def __init__(self):
         self.treeDic = {}
         self._stopCount = 0
         self._lastPatrolPos = self.position
+
         #self.bt_tree = self.buildBtTree()
 
     def buildBtTree(self):
@@ -61,7 +63,7 @@ class botAI(object):
 
     def setCurrentIndex(self, id, currentIndex):
         if id not in self.treeDic:
-            print('setCurrentIndex error', id)
+            DEBUG_MSG('setCurrentIndex error', id)
             return
         dic = self.treeDic.get(id)
         dic['currentIndex'] = currentIndex
@@ -74,7 +76,7 @@ class botAI(object):
 
     def setStatus(self, id, status):
         if id not in self.treeDic:
-            print('setStatus error', id)
+            DEBUG_MSG('setStatus error', id)
             return
         dic = self.treeDic.get(id)
         dic['status'] = status
@@ -106,7 +108,7 @@ class botAI(object):
         self.dstPos = Math.Vector3(self.dstPos)
         self.dstPos.y = self.position.y
         self.cell.botMoveTo(self.dstPos)
-        print('mmmmmmmmmmm moveToNextPos, dst pos:', self.dstPos)
+        DEBUG_MSG('mmmmmmmmmmm moveToNextPos, dst pos:', self.dstPos)
         #self.moveToPoint( self.dstPosList[self.dstPosIdx], self.speed/3, 0.0, 0, True, True )
 
     def updateNextPos(self):
@@ -131,11 +133,11 @@ class botAI(object):
         elif self.botHasState(gameconst.State.Moving):
             ret = False
             reason = 'moving'
-        print('in shouldPatrol:', ret, reason, self.position)
+        DEBUG_MSG('in shouldPatrol:', ret, reason, self.position)
         return ret
 
     def patrol(self):
-        print('in patrol')
+        DEBUG_MSG('in patrol')
         if self.botHasState(gameconst.State.Idle):
             self._stopCount = 0
             self._lastPatrolPos = self.position
@@ -144,20 +146,20 @@ class botAI(object):
 
         if ((self.dstPos is not None and sMath.distance2D(self.position, self.dstPos) < 1)
                 or sMath.distance2D(self.position, self._lastPatrolPos) < 1):
-            print('     in patrol,  arrived dst')
+            DEBUG_MSG('     in patrol,  arrived dst')
             return py_trees.Status.SUCCESS
 
         self._lastPatrolPos = self.position
 
         if self.botHasState(gameconst.State.Moving):
-            print('     in patrol,  Running')
+            DEBUG_MSG('     in patrol,  Running')
             return py_trees.Status.RUNNING
         else:
-            print('     in patrol,  Failed')
+            DEBUG_MSG('     in patrol,  Failed')
             return py_trees.Status.FAILURE
 
     def startPatrol(self):
-        print('in startPatrol')
+        DEBUG_MSG('in startPatrol')
         self.moveToNextPos()
 
     def shouldStopPatrol(self):
@@ -182,11 +184,11 @@ class botAI(object):
             if len(entities) > 0:
                 ret = True
                 reason = 'enemy come'
-        print('in shouldStopPatrol, ret:', ret, reason)
+        DEBUG_MSG('in shouldStopPatrol, ret:', ret, reason)
         return ret
 
     def stopPatrol(self):
-        print('in stopPatrol')
+        DEBUG_MSG('in stopPatrol')
         if self.botHasState(gameconst.State.Idle):
             return py_trees.Status.SUCCESS
         else:
@@ -197,7 +199,7 @@ class botAI(object):
         return False
 
     def relive(self):
-        print('in relive')
+        DEBUG_MSG('in relive')
         if self.isDead():
             self.cell.relive(1)
             return py_trees.Status.RUNNING
@@ -211,21 +213,21 @@ class botAI(object):
         if len(entities) > 0:
             ret = True
             reason = 'enemy in range'
-        print('in shouldAttack:', ret, reason)
+        DEBUG_MSG('in shouldAttack:', ret, reason)
         return ret
 
     def attack(self):
         entities = self.getEnemyNearBy()
-        print('in attack, entities:', len(entities))
+        DEBUG_MSG('in attack, entities:', len(entities))
         if len(entities) > 0:
-            print('  ATTACK')
+            DEBUG_MSG('  ATTACK')
             mids = list(entities.keys())
             targetId = random.choice(mids)
             targetPos = entities[targetId]
             self.useSkill(targetId, targetPos)
             return py_trees.Status.RUNNING
         else:
-            print('  NO TARGET')
+            DEBUG_MSG('  NO TARGET')
             return py_trees.Status.SUCCESS
 
     def hasMonstersNearby(self):
@@ -282,9 +284,12 @@ class botAI(object):
         return random.choice(pos) if pos else None
 
     def botUpdate(self):
+        DEBUG_MSG("botUpdate")
+        if not isinstance(self, botAI):
+            return
         if self.shouldAttack():
             entities = self.getEnemyNearBy()
-            print('in attack, entities:', len(entities))
+            DEBUG_MSG('in attack, entities:', len(entities))
             if len(entities) > 0:
                 mids = list(entities.keys())
                 targetId = random.choice(mids)

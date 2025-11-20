@@ -295,75 +295,17 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         elif formula.isRaidDungeonSpace(self.spaceNo):
             stub.completeRaidDungeon(self.spaceNo, self.raidDungeonBelongRaidUUID, False, delay)
 
-    def _handlePlayerDungeonFlowTlogWithExtra(self, pEnt, spaceNo, tlogProps):
-        _playMode = self.dungeonPlayMode
-        extra = {}
-        if not _playMode:
-            pass
-
-        # tlogProps.update({"vExtra": json.dumps(extra)})
-        # tlogProps['iTeamMemNum'] = pEnt.teamInfo.howManyMember() if pEnt.isInTeam(pEnt.gbId) else 0
-        # pEnt.base.handleDungeonFlowTlog(spaceNo, tlogProps)
-
     def onSingleDungeonCompleted(self, spaceNo, playerGbId, win, delay, elapsedTime):
         DEBUG_MSG('onSingleDungeonCompleted::', spaceNo, playerGbId, win, delay, elapsedTime)
         self._onDungeonCompleted(spaceNo, win, delay, elapsedTime)
-        self._onSingleDungeonCompleted(spaceNo, playerGbId, win)
-
-    def _onSingleDungeonCompleted(self, spaceNo, playerGbId, win):
-        _dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
-        _tlogDungeonFlowCommon = dict(GameSvrId=None, dtEventTime=None, vGameAppid=None,
-                                      iBattleID=formula.getDungeonNoBySpaceNo(spaceNo),
-                                      iResult=int(win), SingleOrteam=gametlog.SingleOrteam.SINGLE)
-
-        now = utils.getNow()
-        for pid in self.players:
-            pEnt = KBEngine.entities.get(pid)
-            if not pEnt:
-                continue
-
-            _tlogDungeonFlowCommon.update(dict(iRoundTime=max(0, now - pEnt.getSpaceEnterT())))
-            self._handlePlayerDungeonFlowTlogWithExtra(pEnt, spaceNo, _tlogDungeonFlowCommon)
 
     def onTeamDungeonCompleted(self, spaceNo, teamUUID, win, delay, elapsedTime):
         DEBUG_MSG('onTeamDungeonCompleted::', spaceNo, teamUUID, win, delay, elapsedTime)
         self._onDungeonCompleted(spaceNo, win, delay, elapsedTime)
-        self._onTeamDungeonCompleted(spaceNo, teamUUID, win)
-
-    def _onTeamDungeonCompleted(self, spaceNo, teamUUID, win):
-        _dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
-        _tlogDungeonFlowCommon = dict(GameSvrId=None, dtEventTime=None, vGameAppid=None,
-                                      iBattleID=formula.getDungeonNoBySpaceNo(spaceNo),
-                                      iResult=int(win), SingleOrteam=gametlog.SingleOrteam.TEAM)
-
-        now = utils.getNow()
-        for pid in self.players:
-            pEnt = KBEngine.entities.get(pid)
-            if not pEnt:
-                continue
-
-            _tlogDungeonFlowCommon.update(dict(iRoundTime=max(0, now - pEnt.getSpaceEnterT())))
-            self._handlePlayerDungeonFlowTlogWithExtra(pEnt, spaceNo, _tlogDungeonFlowCommon)
 
     def onRaidDungeonCompleted(self, spaceNo, raidUUID, win, delay, creepBaseKillDic, playerGbidAndNameList, elapsedTime):
         DEBUG_MSG('onRaidDungeonCompleted::', spaceNo, raidUUID, win, delay, creepBaseKillDic, len(playerGbidAndNameList), elapsedTime)
         self._onDungeonCompleted(spaceNo, win, delay, elapsedTime)
-        self._onRaidDungeonCompleted(spaceNo, raidUUID, win, creepBaseKillDic, playerGbidAndNameList)
-
-    def _onRaidDungeonCompleted(self, spaceNo, raidUUID, win, creepBaseKillDic, playerGbidAndNameList):
-        _dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
-        _tlogDungeonFlowCommon = dict(GameSvrId=None, dtEventTime=None, vGameAppid=None,
-                                      iBattleID=formula.getDungeonNoBySpaceNo(spaceNo),
-                                      iResult=int(win), SingleOrteam=gametlog.SingleOrteam.RAID)
-
-        now = utils.getNow()
-        for pid in self.players:
-            pEnt = KBEngine.entities.get(pid)
-            if not pEnt:
-                continue
-
-            _tlogDungeonFlowCommon.update(dict(iRoundTime=max(0, now - pEnt.getSpaceEnterT())))
-            self._handlePlayerDungeonFlowTlogWithExtra(pEnt, spaceNo, _tlogDungeonFlowCommon)
 
     def _onDungeonCompleted(self, spaceNo, win, delay, elapsedTime):
         self.isDungeonWin = win
@@ -384,6 +326,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                     pEnt.showMsg(ACCD.datas["msgId_goodMan_noHelpTarget"]["value"], [])
 
                 dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+                DEBUG_MSG("_onDungeonCompleted::", dungeonNo, spaceNo, win, elapsedTime, _endT)
                 pEnt.client.onDungeonCompleted(dungeonNo, win, elapsedTime, _endT)
                 pEnt.client.changeDungeonRemainTime(spaceNo, _endT)
 
@@ -391,25 +334,6 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
 
             else:
                 self.players.pop(pid, None)
-
-        try:
-
-            _tlogRoundEndFlowCommon = dict(GameSvrId=None, dtEventTime=None, vGameAppid=None,
-                                           iBattleID=formula.getDungeonNoBySpaceNo(spaceNo),
-                                           iResult=int(self.isDungeonWin), iRank=0)
-            _tlogRoundFlowCommon = dict(GameSvrId=None, dtEventTime=None, vGameAppid=None,
-                                        iBattleID=formula.getDungeonNoBySpaceNo(spaceNo),
-                                        iResult=int(self.isDungeonWin), iRank=0, vExtra="")
-            for pEnt in _pEntList:
-                _tlogRoundEndFlowKWargs = dict(iRoundTime=max(0, utils.getNow() - pEnt.getSpaceEnterT()))
-                _tlogRoundEndFlowKWargs.update(_tlogRoundEndFlowCommon)
-                _tlogRoundFlowKWargs = dict(iRoundTime=max(0, utils.getNow() - pEnt.getSpaceEnterT()),
-                                            teamMemNum=pEnt.teamInfo.howManyMember() if pEnt.isInTeam(pEnt.gbId) else 0)
-                _tlogRoundFlowKWargs.update(_tlogRoundFlowCommon)
-
-
-        finally:
-            del _pEntList
 
     def onUpdateChallengeInfo(self, hpPercent):
         isChallengeDun = bool(self.dungeonPlayMode and self.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHALLENGE_DUNGEON)

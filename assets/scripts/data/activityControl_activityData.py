@@ -56,7 +56,7 @@ datas = _tools.RODict({
         "activityTime": -1,
         "openLevel": 0,
         "openTimeCron": _tools.ROList([[[0], [0], [], [], [], []]]),
-        "endTimeCron": _tools.ROList([[[59], [23], [], [], [], []]]),
+        "endTimeCron": _tools.ROList([[[], [], [], [], [], []]]),
         "activityTask": 0,
         "openGuildLevel": 1,
         "firstUnlockPush": 1

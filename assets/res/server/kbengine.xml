@@ -21,6 +21,10 @@
             <subType1> 2 </subType1>
         </branchLineCnt>
 
+		<crossServerInfo>
+				<item crossServerId='20228'></item>
+		</crossServerInfo>
+
         <serverOpenTime> 1624608806 </serverOpenTime>
         <enableAdminServer> 0 </enableAdminServer>
         <enableRouterServer> 1 </enableRouterServer>
@@ -47,10 +51,6 @@
         </crossDataServerInfo>
 
         <mapleAllServerUrl> http://192.168.10.13:9527/getAllServer </mapleAllServerUrl>
-        
-        <crossSiegeWarServerInfo>
-                <item crossServerId='20228'></item>
-        </crossSiegeWarServerInfo>
 
         <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
         <enableGlobalAuction> 1 </enableGlobalAuction>

@@ -76,6 +76,7 @@ class IComplexTeleport(object):
         lContext = {'extra': {}}
         eContext = {'lineNo': lineNo, 'lineType': lineType}
         context = {'l': lContext, 'e': eContext, 'src': src}
+        options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
 
         spaceNo = formula.getLineSpaceNo(lineType, lineNo)
         if desTelId:
@@ -100,15 +101,9 @@ class IComplexTeleport(object):
                 WARNING_MSG("enterWorldLine::failed, errno={}".format(canLeave.extra), self.spaceNo, context)
             return
 
-        extraProps = {"mapId" : lineType, "spaceNo" : spaceNo, "context" : context,  "callbackName" : "enterWorldLineMapUnlockedCallback"}
-        self.base.onCheckMapUnlocked(gameconst.CELL, 6, 'teleportEnterLineMapUnlockedCallback', extraProps)
-    
-    def enterWorldLineMapUnlockedCallback(self, extraProps):
-        INFO_MSG("enterWorldLineMapUnlockedCallback", extraProps)
+        if not self.onCheckMapUnlocked(lineType):
+            return
 
-        spaceNo = extraProps.get("spaceNo")
-        context = extraProps.get("context")
-        options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
         self.teleportFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
 
     def switchSelfLine(self, lineNo, src):
@@ -841,7 +836,6 @@ class IComplexTeleport(object):
         raidUUID = context['l']['raidUUID']
         spaceMgrBox = context['l']['spaceMgrBox']
         extra = context['l']['extra']
-        dungeonNo = formula.getDungeonNoBySpaceNo(fromSpaceNo)
 
         self.base.onLeaveDungeon(self.spaceNo, fromSpaceNo)
         if spaceMgrBox:
@@ -857,9 +851,6 @@ class IComplexTeleport(object):
             self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
 
         self.selfStopAutoCombat('leave raid dungeon')
-        # 离开团队副本了，清理奖励记录
-        if not formula.isRaidDungeonSpace(toSpaceNo):
-            gameengine.getRaidStub(raidUUID).clearRaidDungeonRewardRecord(raidUUID, self.gbId)
         return True
 
     # ----------------------------------------------------------------------
@@ -1243,7 +1234,6 @@ class IComplexTeleport(object):
     def _afterLeave_teamDungeon(self, fromSpaceNo, toSpaceNo, options, context):
         INFO_MSG('_afterLeave_teamDungeon::~')
         teamUUID = context['l']['teamUUID']
-        dungeonNo = formula.getDungeonNoBySpaceNo(fromSpaceNo)
         spaceMgrBox = context['l']['spaceMgrBox']
 
         self.base.onLeaveDungeon(self.spaceNo, fromSpaceNo)
@@ -1255,15 +1245,7 @@ class IComplexTeleport(object):
         dungeonStub = gameengine.getDungeonStubBySpaceNo(fromSpaceNo)
         dungeonStub.leaveDungeonSpaceSucc(fromSpaceNo, self.base, self.gbId, teamUUID, {})
 
-
-        # if self.isDie():
-        #     self._relive()
-        #     self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
-
         self.selfStopAutoCombat('leave team dungeon')
-        # 离开组队副本了，清理奖励记录
-        if not formula.isTeamDungeonSpace(toSpaceNo):
-            gameengine.getTeamStub(teamUUID).clearTeamDungeonRewardRecord(teamUUID, self.gbId)
         return True
 
     # ----------------------------------------------------------------------

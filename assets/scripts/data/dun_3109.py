@@ -8,7 +8,6 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 31090001,
-    "Name": "\u51fa\u751f\u70b9",
     "PosX": 246.6733,
     "PosY": 527.8172,
     "PosZ": 20.33599,
@@ -31,7 +30,6 @@ datas ={
     "DisplayName": "",
     "EntityID": 11011018,
     "ID": 31090002,
-    "Name": "5013-\u7b80\u914d\u7248\u9996\u98863",
     "PosX": 277.3504,
     "PosY": 524.9851,
     "PosZ": 54.9992,
@@ -58,7 +56,6 @@ datas ={
     "DisplayName": "",
     "EntityID": 17310901,
     "ID": 31098001,
-    "Name": "\u6df7\u6c8c\u4e4b\u5883",
     "PosX": 307.6499,
     "PosY": 526.2947,
     "PosZ": 91.26532,
@@ -70,6 +67,24 @@ datas ={
       "TelX": 307.6499,
       "TelY": 526.2947,
       "TelZ": 91.26532
+    }
+  },
+  "31098002": {
+    "ActivityID": 0,
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 31098002,
+    "PosX": 280.0114,
+    "PosY": 524.8969,
+    "PosZ": 57.93085,
+    "Props": {
+      "AreaType": 1,
+      "Radius": 35.0,
+      "Remark": ""
     }
   }
 }

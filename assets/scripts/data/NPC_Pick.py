@@ -52,6 +52,12 @@ def _16000047_precheck(self, *args):
 def _16000047(self, *args):
     return self.siegeWarInvokeBoss(*args)
 
+def _16002004_precheck(self, *args):
+    return self.checkSummonWonderLandBoss(30000305, 31170002, *args)
+
+def _16002004(self, *args):
+    self.summonWonderLandBoss(30000305, 31170002, *args)
+
 def _16002204_precheck(self, *args):
     return self.checkSummonWonderLandBoss(30000305, 33170002, *args)
 
@@ -4087,7 +4093,7 @@ datas = _tools.RODict({
     }),
     16002002: _tools.RODict({
         "ID": 16002002,
-        "name": "混沌回廊一层守护宝箱-中级",
+        "name": "混沌回廊一层守护宝箱-高级",
         "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
@@ -4143,15 +4149,15 @@ datas = _tools.RODict({
         "ID": 16002004,
         "name": "混沌回廊一层封印石",
         "type": 5,
-        "pickDistance": 6.0,
+        "pickDistance": 8.0,
         "taskCheck": None,
         "toolCheck": None,
         "time": 60,
         "isUnstoppble": 1,
-        "precheckAction": None,
+        "precheckAction": _16002004_precheck,
         "applyAction": None,
         "unApplyAction": None,
-        "triggerAction": None,
+        "triggerAction": _16002004,
         "isUnique": 1,
         "ifBornState": 0,
         "rewardID": 40020677,

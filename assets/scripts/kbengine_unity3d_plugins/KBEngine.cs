@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "915616E3CA4B69DECE4B0CB7695C9E93";
+        public string serverEntitydefMD5 = "55A851221880F97D557F233EDF17AE0A";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;

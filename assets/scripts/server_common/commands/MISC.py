@@ -20,6 +20,7 @@ import itemData_itemData as ITEM_DATA
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import gearBase_typeExplanation as GBE
 import gearBase_gearBase as GBG
+import gearEnhance_gearconst as GEGCD
 
 import json
 import redisUtils
@@ -1673,7 +1674,7 @@ def loadallentity(su, player):
 
             params.update({
                 'groupId': int(_mPrm['EntityID']),
-                'groupName': _mPrm.get('Name', '未命名组怪'),
+                'groupName': _mPrm.get('DisplayName', '未命名组怪'),
             })
 
             if 'Props' in _mPrm:
@@ -1725,7 +1726,7 @@ def loadallentity(su, player):
 
             params.update({
 
-                'name': _mPrm['Name'],
+                'name': _mPrm['DisplayName'],
 
                 'teleporterId': teleporterId,
 
@@ -1797,7 +1798,7 @@ def loadallentity(su, player):
         elif className == _Collection.__name__:
             collectionId = _mPrm['EntityID']
             params.update({
-                'name': _mPrm['Name'],
+                'name': _mPrm['DisplayName'],
                 'type': gameconst.CollectionType.NORMAL,
                 'collectionId': collectionId,
             })
@@ -1858,7 +1859,7 @@ def loadallentity(su, player):
 
             params.update({
 
-                'name': _mPrm['Name'],
+                'name': _mPrm['DisplayName'],
 
                 'rebornPosId': _rebornPosId,
 
@@ -2732,7 +2733,7 @@ def ALLfinishNewbie(su,player, step):
     return True, '执行成功'
 
 
-def _getItems(school, quality, level, awardCtx):
+def _getItems(school, quality, awardCtx):
     _targetList = []
     for k, v in GBE.auctionDic.items():
         # k : (1, 1001), v: [(1, 11), (2, 21), (3, 31), (4, 41)]
@@ -2750,13 +2751,10 @@ def _getItems(school, quality, level, awardCtx):
 
         if k[2] != quality:
             continue
-
         for i in v:
-            grade = GBG.datas[i]['grade']
-            if grade == level:
+            _itemIds.append(i)
+            if k[0] == 6 or k[0] == 7:
                 _itemIds.append(i)
-                if k[0] == 6 or k[0] == 7:
-                    _itemIds.append(i)
 
     _items = []
     for _itemId in _itemIds:
@@ -2791,8 +2789,8 @@ def createDuelFlag(su, player):
     return True, '执行成功'
 
 
-@gm_cmd('$getEquipment', (Player("gbId/Id"), Int('school'), Int('quality')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
-def gmGetEquipment(su, player, school, quality, level=1):
+@gm_cmd('$getEquipment', (Player("gbId/Id"), Int('school'), Int('quality'), Int('grade')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
+def gmGetEquipment(su, player, school, quality, grade):
     awardCtx = awardContext.CommonContext(0)
     awardVal = dropAward.AwardVal()
     if school == 0:
@@ -2800,7 +2798,12 @@ def gmGetEquipment(su, player, school, quality, level=1):
         if school == 0:
             DEBUG_MSG('gmGetEquipment: failed to fetch school from role cache, school=0')
             return False, '执行失败，玩家门派未知'
-    _items = _getItems(school, quality, level, awardCtx)
+    if quality not in gameconst.ItemQuality.COLL_QUALITY:
+        return False, '执行失败，无效品质'
+    if not(0 < grade <= GEGCD.datas['equipmentClassLevel']['value']):
+        return False, '执行失败，无效品阶'
+    awardCtx.addContextVar('grade', grade)
+    _items = _getItems(school, quality, awardCtx)
 
     awardVal.addWealthByObjList(_items)
     player.addWealth(

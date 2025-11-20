@@ -26,7 +26,7 @@ class IGuildTrainCell(object):
                     propVal = ret
                     scoreTmp = dataUtils.filterFightPropScore(self.school, propName) * propVal
                 elif isinstance(ret, float):
-                    propVal = int(ret)
+                    propVal = ret
                     scoreTmp = dataUtils.filterFightPropScore(self.school, propName) * propVal
                 else:
                     propVal, scoreTmp = ret

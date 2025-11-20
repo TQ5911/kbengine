@@ -138,9 +138,17 @@ datas = _tools.RODict({
     "field_shouling_00": _tools.RODict({
         "sceneRes": "field_shouling_00",
         "sceneName": "首领讨伐临时",
-        "defaultMapID": 2201,
+        "defaultMapID": 2202,
         "returnPos": None,
         "tmxRes": "shouLing_00",
+        "weatherType": 0,
+    }),
+    "field_shouling_02": _tools.RODict({
+        "sceneRes": "field_shouling_02",
+        "sceneName": "首领讨伐2",
+        "defaultMapID": 2201,
+        "returnPos": None,
+        "tmxRes": "shouLing_02",
         "weatherType": 0,
     }),
     "field_shouling_04": _tools.RODict({
@@ -149,6 +157,14 @@ datas = _tools.RODict({
         "defaultMapID": 2203,
         "returnPos": None,
         "tmxRes": "shouLing_04",
+        "weatherType": 0,
+    }),
+    "field_bangpai_01": _tools.RODict({
+        "sceneRes": "field_bangpai_01",
+        "sceneName": "帮会讨伐1",
+        "defaultMapID": 2301,
+        "returnPos": None,
+        "tmxRes": "shouLing_02",
         "weatherType": 0,
     }),
     "field_hundunhuilang_01": _tools.RODict({
@@ -211,6 +227,14 @@ datas = _tools.RODict({
         "sceneRes": "field_hundunhuilang_08",
         "sceneName": "混沌回廊封印",
         "defaultMapID": 3117,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_08",
+        "weatherType": 0,
+    }),
+    "field_hundunhuilang_09": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_09",
+        "sceneName": "混沌之境",
+        "defaultMapID": 3121,
         "returnPos": None,
         "tmxRes": "hunDunHuiLang_08",
         "weatherType": 0,

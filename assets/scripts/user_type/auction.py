@@ -32,7 +32,8 @@ class AuctionItem(userType.UserSTDSoleType):
                  'status',  # 物品交易状态
                  'locked',  # 物品是否被锁
                  'extraInfo',  # 其他信息
-                 'tCreate',
+                 'tCreate',  #  创建时间
+                 'isPublicity' # 是否公式
                  )
 
     # __slots__ = __attrs__
@@ -83,6 +84,7 @@ class AuctionItem(userType.UserSTDSoleType):
             "number": self.number,
             "status": self.status,
             'createTime': self.tCreate,
+            'isPublicity': self.isPublicity,
         }
 
         m_extra = {}
@@ -97,7 +99,7 @@ class AuctionItem(userType.UserSTDSoleType):
                  itemData=None, price=0, number=0, bagType=gameconst.BagType.BAG_TYPE_NORMAL,
                  source=gameconst.AuctionSource.UNKNOWN,
                  status=gameconst.AuctionItemStatus.INIT, locked=False, extraInfo=None,
-                 tCreate=utils.getNow()):
+                 tCreate=utils.getNow(), isPublicity = 0):
         self.auctionType = auctionType
         self.auctionItemUUID = auctionItemUUID
         self.addTime = addTime
@@ -112,6 +114,7 @@ class AuctionItem(userType.UserSTDSoleType):
         self.extraInfo = extraInfo
         # ----------------------------------------
         self.tCreate = tCreate
+        self.isPublicity = isPublicity
 
     def canBeSearched(self):
         # if not self.isNotifyExpired():

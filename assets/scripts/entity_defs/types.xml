@@ -123,6 +123,7 @@
     <RESTFUL_LIMIT>     UINT32          </RESTFUL_LIMIT>
     <RESTFUL_OFFSET>    UINT32          </RESTFUL_OFFSET>
     <AUCTION_ITEM_UUID>  UUID           </AUCTION_ITEM_UUID>
+    <AUCTIONID_LIST>   ARRAY   <of>    AUCTION_ITEM_UUID      </of>   </AUCTIONID_LIST>
     <AUCTION_TYPE>       UINT8          </AUCTION_TYPE>
     <AUCTIONED_STATUS>   UINT8          </AUCTIONED_STATUS>
     <AUCTION_SOURCE>     UINT8          </AUCTION_SOURCE>
@@ -477,6 +478,9 @@
             <bindValue>
                 <Type>  UINT16  </Type>
             </bindValue>
+            <isAddBindValue>
+                <Type>  BOOL  </Type>
+            </isAddBindValue>
             <glyphGroup>
                 <Type> UINT8 </Type>
             </glyphGroup>
@@ -1864,24 +1868,33 @@
             <raidTarget>
                 <Type>  TEAMTARGET  </Type>
             </raidTarget>
-            <raidDungeonRecords>
-                <Type>  ARRAY   <of>    RAID_DUNGEON_CACHE_VAL  </of>   </Type>
-            </raidDungeonRecords>
-            <raidTeamList>
-                <Type>  ARRAY   <of>    PLAYER_RAID_TEAM_CACHE_VAL   </of>   </Type>
-            </raidTeamList>
-            <followPlayerGbId>
-                <Type>  PLAYER_GBID    </Type>
-            </followPlayerGbId>
-            <raidLeaderBigWorldMapFollowPos>
-                <Type> PYTHON </Type>
-            </raidLeaderBigWorldMapFollowPos>
             <raidMinLevel>
                 <Type> LEVEL </Type>
             </raidMinLevel>
             <raidMinScore>
                 <Type> SCORE </Type>
             </raidMinScore>
+            <raidDungeonRecords>
+                <Type>  ARRAY   <of>    RAID_DUNGEON_CACHE_VAL  </of>   </Type>
+            </raidDungeonRecords>
+            <raidTeamDic>
+                <Type>  ARRAY   <of>    PLAYER_RAID_TEAM_CACHE_VAL   </of>   </Type>
+            </raidTeamDic>
+            <followPlayerGbId>
+                <Type>  PLAYER_GBID    </Type>
+            </followPlayerGbId>
+            <raidLeaderBigWorldMapFollowPos>
+                <Type> PYTHON </Type>
+            </raidLeaderBigWorldMapFollowPos>
+            <recruitInfo>
+                <Type>  UNICODE     </Type>
+            </recruitInfo>
+            <isAutoExpedition>
+                <Type> BOOL </Type>
+            </isAutoExpedition>
+            <password>
+                <Type> STRING </Type>
+            </password>
         </Properties>
     </PLAYER_RAID_CACHE_VAL>
     <!--Raid about end-->
@@ -2454,11 +2467,14 @@
     <LINGSHOU_ITEM_VAL> FIXED_DICT
         <Properties>
             <petId>
-                <Type>  PETID       </Type>
+                <Type>  PETID                       </Type>
             </petId>
             <equipList>
-                <Type>  ARRAY <of> ITEM_ID </of>          </Type>
+                <Type>  ARRAY <of> ITEM_ID </of>    </Type>
             </equipList>
+            <school>
+                <Type>  INT16                       </Type>
+            </school>
         </Properties>
     </LINGSHOU_ITEM_VAL>
 
@@ -4700,4 +4716,12 @@
         </Properties>
     </MERIDIAN_ENHANCE_ITEM_INFO>
 
+    <BIG_BIT_DATA_INFO> FIXED_DICT
+        <implementedBy>     BigBitInfo.BigBitInstance    </implementedBy>
+        <Properties>
+            <stateList>
+                <Type>  PYTHON              </Type>
+            </stateList>
+        </Properties>
+    </BIG_BIT_DATA_INFO>
 </root>

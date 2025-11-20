@@ -85,11 +85,12 @@ class IEventActions(object):
     #普通攻击
     def attack(self, target, context, *args, **checkArgs):
         if not self._attackActionBefore(target, context, **checkArgs):
-            return
+            return 0
 
         dmgResult = action_FightAction.attack(self, target, context, *args)
 
-        self.applyDmgActionResult(target, context, dmgResult)
+        # 策划需求返回真实伤害，方便后面做一些吸血之类的操作
+        return self.applyDmgActionResult(target, context, dmgResult)
 
     #吸血攻击
     def bloodSuckAttack(self, target, context, *args, **checkArgs):
@@ -380,7 +381,7 @@ class IEventActions(object):
     def teleportBySkill(self, target, context, dis):
         realDstPos = tuple(context.skillArgs[-3:])
         skill = self._getSkillByActionContext(context)
-        if sMath.distance2D(self.position, realDstPos) > skill.getRange(self, skill.skillId) * 1.2:
+        if sMath.distance2D(self.position, realDstPos) > skill.getRange(self, skill.skillId, skill.skillLv) * 1.2:
             WARNING_MSG('teleportBySkill distance too far')
             return False
 
@@ -465,7 +466,7 @@ class IEventActions(object):
         realDstPos = tuple(context.skillArgs[-3:])
         if not realDstPos:
             realDstPos = target.position
-        if sMath.distance2D(self.position, realDstPos) > skillVal.getRange(self, skillVal.skillId)*1.2:
+        if sMath.distance2D(self.position, realDstPos) > skillVal.getRange(self, skillVal.skillId, skillVal.skillLv)*1.2:
             WARNING_MSG('blinkToTarget distance too far')
             return False
         yaw = sMath.getYawFromPoints(self.position,realDstPos)
@@ -707,8 +708,10 @@ class IEventActions(object):
 
         targetId = target.id if target and not target.isDie() and not target.isDestroyed  else 0
         ignoreReasons = gameconst.UseSkillCheck.STATE_CONFLICT | gameconst.UseSkillCheck.ULTRA_SKILL_POWER_NOT_ENOUGH
+        checkInRange = True
 
         if context.actionType == actionContext.ACTION_USE_SKILL:
+            checkInRange = context.checkInRange
             if SSD.datas.get(skillID, {}).get('chooseAgain') and target:
                 skill.targetIds = [target.id]
             ignoreReasons = gameconst.UseSkillCheck.STATE_CONFLICT|gameconst.UseSkillCheck.OUT_OF_RANGE|gameconst.UseSkillCheck.ULTRA_SKILL_POWER_NOT_ENOUGH
@@ -723,7 +726,7 @@ class IEventActions(object):
         if skill.hasTag(gameconst.SkillTag.Casting):
             self._castingSkillObjInternal(skill, targetId, skillArgs)
         else:
-            ret = skill.checkUseSkill(self, targetId, ignoreReasons=ignoreReasons)
+            ret = skill.checkUseSkill(self, targetId, ignoreReasons=ignoreReasons, checkInRange=checkInRange)
             if ret!=gameconst.UseSkillCheck.CHEKC_OK:
                 INFO_MSG("Spell::castSkill(%i): cannot spell skillID=%i, targetID=%i, code=%i" % (
                     self.id, skillID, targetId, ret))
@@ -1271,7 +1274,7 @@ class IEventActions(object):
             percent = arr[3]
             direction = Math.Vector3(arr[0], arr[1], arr[2])
             direction.normalise()
-            dstPosition = self.position + direction * percent * context.skillObj.getRange(self, context.skillId)
+            dstPosition = self.position + direction * percent * context.skillObj.getRange(self, context.skillId, context.skillObj.skillLv)
         if dist <= 0:
             dist = sMath.distance2D(dstPosition, target.position)
         else:
@@ -1348,7 +1351,7 @@ class IEventActions(object):
             dstPosition = tuple(context.skillArgs[-3:])
         else:
             dstPosition = target.position
-        if sMath.distance2D(self.position, dstPosition) > skillVal.getRange(self, skillVal.skillId)*2:
+        if sMath.distance2D(self.position, dstPosition) > skillVal.getRange(self, skillVal.skillId, skillVal.skillLv)*2:
             WARNING_MSG('chongfeng distance too far')
             return False
 
@@ -1608,7 +1611,7 @@ class IEventActions(object):
         _arr = utils.transformPosesToSkillArgs(
             self.position,
             _pos,
-            _skill.getRange(self, skillId),
+            _skill.getRange(self, skillId, level),
             _dir
         )
         return _arr

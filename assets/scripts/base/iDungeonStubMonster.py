@@ -495,7 +495,7 @@ class IDungeonStubMonster(object):
                               dunCollData['PosY'],
                               dunCollData['PosZ']),
                  'direction': (0.0, 0.0, dunCollData['Dir'] * math.pi / 180),
-                 'name': dunCollData['Name'],
+                 'name': dunCollData['DisplayName'],
                  'dungeonFlagId': flagId,
                  'gameEntityId': 0,
                  'gameEntityIdentifyID': 0}

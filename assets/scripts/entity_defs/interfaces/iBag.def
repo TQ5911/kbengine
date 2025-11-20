@@ -240,10 +240,6 @@
             <Arg>      UINT32       </Arg>
         </addSignInAwards>
 
-        <addLevelAwards><Exposed/>
-            <Arg>       LEVEL           </Arg>
-        </addLevelAwards>
-
         <checkBaseUseTreasureBoxCond>
             <Arg>       PYTHON          </Arg>
             <Arg>       UINT32          </Arg>
@@ -348,13 +344,6 @@
         <delOldName>
             <Arg>       UNICODE                 </Arg>
         </delOldName>
-
-        <onCheckMapUnlocked>
-            <Arg>       UINT8           </Arg>
-            <Arg>       UINT16          </Arg>
-            <Arg>       METHOD_NAME     </Arg>
-            <Arg>       PY_DICT         </Arg>
-        </onCheckMapUnlocked>
 
         <onCheckAndCostWealth>
             <Arg>       UINT8           </Arg>
@@ -580,14 +569,6 @@
             <Arg>       UNICODE     </Arg>
         </onCheckUseHomeItemCond>
 
-        <onAddLevelAwards>
-            <Arg>      ARRAY    <of>   LEVEL    </of>     </Arg>
-        </onAddLevelAwards>
-
-        <onSendLevelRewardInfo>
-            <Arg>      ARRAY    <of>   LEVEL    </of>     </Arg>
-        </onSendLevelRewardInfo>
-
         <onUpdateDailyUseLimit>
             <Arg>       ITEM_ID     </Arg>
             <Arg>       UINT32      </Arg>
@@ -677,7 +658,7 @@
         </onClientLaunchReward>
 
         <onRandomSynthesis>
-            <Arg>       ARRAY    <of>   ITEMID    </of>     </Arg>
+            <Arg>       ARRAY    <of>   BAG_ITEM_BRIEF_VAL    </of>     </Arg>
         </onRandomSynthesis>
 
         <onUpgradeSynthesis>

@@ -23,7 +23,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 900,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     2: _tools.RODict({
@@ -34,7 +35,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 90,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     3: _tools.RODict({
@@ -45,7 +47,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 90,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     4: _tools.RODict({
@@ -56,7 +59,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 400,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     5: _tools.RODict({
@@ -67,7 +71,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     6: _tools.RODict({
@@ -78,7 +83,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     7: _tools.RODict({
@@ -89,7 +95,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     8: _tools.RODict({
@@ -100,7 +107,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     9: _tools.RODict({
@@ -111,7 +119,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     10: _tools.RODict({
@@ -122,7 +131,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 20,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     11: _tools.RODict({
@@ -133,7 +143,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 20,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     12: _tools.RODict({
@@ -144,7 +155,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 100,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     13: _tools.RODict({
@@ -155,7 +167,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 10,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     14: _tools.RODict({
@@ -166,7 +179,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 900,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     15: _tools.RODict({
@@ -177,7 +191,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 90,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     16: _tools.RODict({
@@ -188,7 +203,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 90,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     17: _tools.RODict({
@@ -199,7 +215,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 400,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     18: _tools.RODict({
@@ -210,7 +227,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     19: _tools.RODict({
@@ -221,7 +239,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     20: _tools.RODict({
@@ -232,7 +251,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     21: _tools.RODict({
@@ -243,7 +263,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     22: _tools.RODict({
@@ -254,7 +275,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     23: _tools.RODict({
@@ -265,7 +287,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     24: _tools.RODict({
@@ -276,7 +299,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     25: _tools.RODict({
@@ -287,7 +311,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     26: _tools.RODict({
@@ -298,7 +323,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     27: _tools.RODict({
@@ -309,7 +335,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     28: _tools.RODict({
@@ -320,7 +347,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     29: _tools.RODict({
@@ -331,7 +359,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     30: _tools.RODict({
@@ -342,7 +371,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     31: _tools.RODict({
@@ -353,7 +383,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     32: _tools.RODict({
@@ -364,7 +395,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     33: _tools.RODict({
@@ -375,7 +407,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     34: _tools.RODict({
@@ -386,7 +419,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     35: _tools.RODict({
@@ -397,7 +431,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     36: _tools.RODict({
@@ -408,7 +443,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     37: _tools.RODict({
@@ -419,7 +455,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     38: _tools.RODict({
@@ -430,7 +467,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     39: _tools.RODict({
@@ -441,7 +479,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     40: _tools.RODict({
@@ -452,7 +491,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     41: _tools.RODict({
@@ -463,7 +503,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     42: _tools.RODict({
@@ -474,7 +515,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     43: _tools.RODict({
@@ -485,7 +527,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     44: _tools.RODict({
@@ -496,7 +539,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     45: _tools.RODict({
@@ -507,7 +551,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     46: _tools.RODict({
@@ -518,7 +563,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     47: _tools.RODict({
@@ -529,7 +575,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     48: _tools.RODict({
@@ -540,7 +587,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     49: _tools.RODict({
@@ -551,7 +599,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     50: _tools.RODict({
@@ -562,7 +611,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     51: _tools.RODict({
@@ -573,7 +623,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     52: _tools.RODict({
@@ -584,7 +635,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     53: _tools.RODict({
@@ -595,7 +647,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     54: _tools.RODict({
@@ -606,7 +659,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     55: _tools.RODict({
@@ -617,7 +671,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     56: _tools.RODict({
@@ -628,7 +683,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     57: _tools.RODict({
@@ -639,7 +695,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     58: _tools.RODict({
@@ -650,7 +707,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     59: _tools.RODict({
@@ -661,7 +719,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     60: _tools.RODict({
@@ -672,7 +731,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     61: _tools.RODict({
@@ -683,7 +743,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     62: _tools.RODict({
@@ -694,7 +755,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     63: _tools.RODict({
@@ -705,7 +767,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     64: _tools.RODict({
@@ -716,7 +779,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     65: _tools.RODict({
@@ -727,7 +791,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     66: _tools.RODict({
@@ -738,7 +803,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     67: _tools.RODict({
@@ -749,7 +815,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     68: _tools.RODict({
@@ -760,7 +827,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     69: _tools.RODict({
@@ -771,7 +839,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     70: _tools.RODict({
@@ -782,7 +851,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     71: _tools.RODict({
@@ -793,7 +863,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     72: _tools.RODict({
@@ -804,7 +875,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     73: _tools.RODict({
@@ -815,7 +887,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     74: _tools.RODict({
@@ -826,7 +899,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     75: _tools.RODict({
@@ -837,7 +911,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     76: _tools.RODict({
@@ -848,7 +923,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     77: _tools.RODict({
@@ -859,7 +935,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     78: _tools.RODict({
@@ -870,7 +947,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     79: _tools.RODict({
@@ -881,7 +959,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     80: _tools.RODict({
@@ -892,7 +971,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     81: _tools.RODict({
@@ -903,7 +983,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     82: _tools.RODict({
@@ -914,7 +995,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     83: _tools.RODict({
@@ -925,7 +1007,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     84: _tools.RODict({
@@ -936,7 +1019,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     85: _tools.RODict({
@@ -947,7 +1031,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     86: _tools.RODict({
@@ -958,7 +1043,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     87: _tools.RODict({
@@ -969,7 +1055,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     88: _tools.RODict({
@@ -980,7 +1067,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     89: _tools.RODict({
@@ -991,7 +1079,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     90: _tools.RODict({
@@ -1002,7 +1091,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     91: _tools.RODict({
@@ -1013,7 +1103,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     92: _tools.RODict({
@@ -1024,7 +1115,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     93: _tools.RODict({
@@ -1035,7 +1127,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     94: _tools.RODict({
@@ -1046,7 +1139,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     95: _tools.RODict({
@@ -1057,7 +1151,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     96: _tools.RODict({
@@ -1068,7 +1163,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     97: _tools.RODict({
@@ -1079,7 +1175,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     98: _tools.RODict({
@@ -1090,7 +1187,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     99: _tools.RODict({
@@ -1101,7 +1199,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     100: _tools.RODict({
@@ -1112,7 +1211,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     101: _tools.RODict({
@@ -1123,7 +1223,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     102: _tools.RODict({
@@ -1134,7 +1235,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     103: _tools.RODict({
@@ -1145,7 +1247,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     104: _tools.RODict({
@@ -1156,7 +1259,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     105: _tools.RODict({
@@ -1167,7 +1271,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     106: _tools.RODict({
@@ -1178,7 +1283,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     107: _tools.RODict({
@@ -1189,7 +1295,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     108: _tools.RODict({
@@ -1200,7 +1307,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     109: _tools.RODict({
@@ -1211,7 +1319,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     110: _tools.RODict({
@@ -1222,7 +1331,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     111: _tools.RODict({
@@ -1233,7 +1343,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     112: _tools.RODict({
@@ -1244,7 +1355,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     113: _tools.RODict({
@@ -1256,6 +1368,7 @@ datas = _tools.RODict({
         "dropNumMax": 6,
         "weight": 300,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     114: _tools.RODict({
@@ -1267,6 +1380,7 @@ datas = _tools.RODict({
         "dropNumMax": 6,
         "weight": 300,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     115: _tools.RODict({
@@ -1278,6 +1392,7 @@ datas = _tools.RODict({
         "dropNumMax": 6,
         "weight": 300,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     116: _tools.RODict({
@@ -1289,6 +1404,7 @@ datas = _tools.RODict({
         "dropNumMax": 6,
         "weight": 300,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     117: _tools.RODict({
@@ -1300,6 +1416,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 300,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     118: _tools.RODict({
@@ -1311,6 +1428,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 300,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     119: _tools.RODict({
@@ -1322,6 +1440,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 300,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     120: _tools.RODict({
@@ -1333,6 +1452,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 300,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     121: _tools.RODict({
@@ -1343,7 +1463,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     122: _tools.RODict({
@@ -1354,7 +1475,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     123: _tools.RODict({
@@ -1365,7 +1487,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     124: _tools.RODict({
@@ -1376,7 +1499,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     125: _tools.RODict({
@@ -1387,7 +1511,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 20,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     126: _tools.RODict({
@@ -1398,7 +1523,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 20,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     127: _tools.RODict({
@@ -1409,7 +1535,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 20,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     128: _tools.RODict({
@@ -1420,7 +1547,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 20,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     129: _tools.RODict({
@@ -1431,7 +1559,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 100,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     130: _tools.RODict({
@@ -1442,7 +1571,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     131: _tools.RODict({
@@ -1453,7 +1583,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     132: _tools.RODict({
@@ -1464,7 +1595,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     133: _tools.RODict({
@@ -1476,6 +1608,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     134: _tools.RODict({
@@ -1487,6 +1620,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     135: _tools.RODict({
@@ -1498,6 +1632,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     136: _tools.RODict({
@@ -1509,6 +1644,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     137: _tools.RODict({
@@ -1520,6 +1656,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     138: _tools.RODict({
@@ -1531,6 +1668,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     139: _tools.RODict({
@@ -1542,6 +1680,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     140: _tools.RODict({
@@ -1553,6 +1692,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     141: _tools.RODict({
@@ -1564,6 +1704,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     142: _tools.RODict({
@@ -1575,6 +1716,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     143: _tools.RODict({
@@ -1586,6 +1728,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     144: _tools.RODict({
@@ -1597,6 +1740,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     145: _tools.RODict({
@@ -1608,6 +1752,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     146: _tools.RODict({
@@ -1619,6 +1764,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     147: _tools.RODict({
@@ -1630,6 +1776,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     148: _tools.RODict({
@@ -1641,6 +1788,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     149: _tools.RODict({
@@ -1652,6 +1800,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     150: _tools.RODict({
@@ -1663,6 +1812,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     151: _tools.RODict({
@@ -1674,6 +1824,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     152: _tools.RODict({
@@ -1685,6 +1836,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     153: _tools.RODict({
@@ -1696,6 +1848,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     154: _tools.RODict({
@@ -1707,6 +1860,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     155: _tools.RODict({
@@ -1718,6 +1872,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     156: _tools.RODict({
@@ -1729,6 +1884,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     157: _tools.RODict({
@@ -1740,6 +1896,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     158: _tools.RODict({
@@ -1751,6 +1908,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     159: _tools.RODict({
@@ -1762,6 +1920,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     160: _tools.RODict({
@@ -1773,6 +1932,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     161: _tools.RODict({
@@ -1784,6 +1944,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     162: _tools.RODict({
@@ -1795,6 +1956,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     163: _tools.RODict({
@@ -1806,6 +1968,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     164: _tools.RODict({
@@ -1817,6 +1980,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     165: _tools.RODict({
@@ -1828,6 +1992,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     166: _tools.RODict({
@@ -1839,6 +2004,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     167: _tools.RODict({
@@ -1850,6 +2016,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     168: _tools.RODict({
@@ -1861,6 +2028,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     169: _tools.RODict({
@@ -1872,6 +2040,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     170: _tools.RODict({
@@ -1883,6 +2052,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     171: _tools.RODict({
@@ -1894,6 +2064,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     172: _tools.RODict({
@@ -1904,7 +2075,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     173: _tools.RODict({
@@ -1915,7 +2087,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     174: _tools.RODict({
@@ -1926,7 +2099,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     175: _tools.RODict({
@@ -1937,7 +2111,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     176: _tools.RODict({
@@ -1948,7 +2123,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     177: _tools.RODict({
@@ -1959,7 +2135,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     178: _tools.RODict({
@@ -1970,7 +2147,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     179: _tools.RODict({
@@ -1981,7 +2159,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     180: _tools.RODict({
@@ -1992,7 +2171,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     181: _tools.RODict({
@@ -2003,7 +2183,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     182: _tools.RODict({
@@ -2014,7 +2195,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     183: _tools.RODict({
@@ -2025,7 +2207,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     184: _tools.RODict({
@@ -2036,7 +2219,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 100,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     185: _tools.RODict({
@@ -2047,7 +2231,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     186: _tools.RODict({
@@ -2058,7 +2243,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     187: _tools.RODict({
@@ -2069,7 +2255,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     188: _tools.RODict({
@@ -2080,7 +2267,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 100,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     189: _tools.RODict({
@@ -2091,7 +2279,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     190: _tools.RODict({
@@ -2102,7 +2291,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     191: _tools.RODict({
@@ -2113,7 +2303,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     192: _tools.RODict({
@@ -2124,7 +2315,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 100,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     193: _tools.RODict({
@@ -2135,7 +2327,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     194: _tools.RODict({
@@ -2146,7 +2339,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     195: _tools.RODict({
@@ -2157,7 +2351,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     196: _tools.RODict({
@@ -2168,7 +2363,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     197: _tools.RODict({
@@ -2179,7 +2375,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     198: _tools.RODict({
@@ -2190,7 +2387,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     199: _tools.RODict({
@@ -2201,7 +2399,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     200: _tools.RODict({
@@ -2212,7 +2411,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     201: _tools.RODict({
@@ -2223,7 +2423,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     202: _tools.RODict({
@@ -2234,7 +2435,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     203: _tools.RODict({
@@ -2245,7 +2447,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     204: _tools.RODict({
@@ -2256,7 +2459,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     205: _tools.RODict({
@@ -2267,7 +2471,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     206: _tools.RODict({
@@ -2278,7 +2483,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     207: _tools.RODict({
@@ -2289,7 +2495,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     208: _tools.RODict({
@@ -2300,7 +2507,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     209: _tools.RODict({
@@ -2311,7 +2519,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     210: _tools.RODict({
@@ -2322,7 +2531,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     211: _tools.RODict({
@@ -2333,7 +2543,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     212: _tools.RODict({
@@ -2344,7 +2555,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     213: _tools.RODict({
@@ -2355,7 +2567,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     214: _tools.RODict({
@@ -2366,7 +2579,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     215: _tools.RODict({
@@ -2377,7 +2591,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     216: _tools.RODict({
@@ -2388,7 +2603,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     217: _tools.RODict({
@@ -2399,7 +2615,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     218: _tools.RODict({
@@ -2410,7 +2627,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     219: _tools.RODict({
@@ -2421,7 +2639,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     220: _tools.RODict({
@@ -2432,7 +2651,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     221: _tools.RODict({
@@ -2443,7 +2663,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     222: _tools.RODict({
@@ -2454,7 +2675,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     223: _tools.RODict({
@@ -2465,7 +2687,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     224: _tools.RODict({
@@ -2476,7 +2699,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     225: _tools.RODict({
@@ -2487,7 +2711,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     226: _tools.RODict({
@@ -2498,7 +2723,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     227: _tools.RODict({
@@ -2509,7 +2735,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     228: _tools.RODict({
@@ -2520,7 +2747,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     229: _tools.RODict({
@@ -2531,7 +2759,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     230: _tools.RODict({
@@ -2542,7 +2771,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     231: _tools.RODict({
@@ -2553,7 +2783,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     232: _tools.RODict({
@@ -2564,7 +2795,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     233: _tools.RODict({
@@ -2575,7 +2807,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     234: _tools.RODict({
@@ -2586,7 +2819,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     235: _tools.RODict({
@@ -2597,7 +2831,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     236: _tools.RODict({
@@ -2608,7 +2843,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     237: _tools.RODict({
@@ -2619,7 +2855,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     238: _tools.RODict({
@@ -2630,7 +2867,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     239: _tools.RODict({
@@ -2641,7 +2879,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     240: _tools.RODict({
@@ -2652,7 +2891,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     241: _tools.RODict({
@@ -2663,7 +2903,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     242: _tools.RODict({
@@ -2674,7 +2915,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     243: _tools.RODict({
@@ -2685,7 +2927,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     244: _tools.RODict({
@@ -2696,7 +2939,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     245: _tools.RODict({
@@ -2707,7 +2951,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     246: _tools.RODict({
@@ -2718,7 +2963,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     247: _tools.RODict({
@@ -2729,7 +2975,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     248: _tools.RODict({
@@ -2740,7 +2987,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     249: _tools.RODict({
@@ -2751,7 +2999,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     250: _tools.RODict({
@@ -2762,7 +3011,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     251: _tools.RODict({
@@ -2773,7 +3023,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     252: _tools.RODict({
@@ -2784,7 +3035,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     253: _tools.RODict({
@@ -2795,7 +3047,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     254: _tools.RODict({
@@ -2806,7 +3059,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     255: _tools.RODict({
@@ -2817,7 +3071,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     256: _tools.RODict({
@@ -2828,7 +3083,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     257: _tools.RODict({
@@ -2839,7 +3095,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     258: _tools.RODict({
@@ -2850,7 +3107,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     259: _tools.RODict({
@@ -2861,7 +3119,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     260: _tools.RODict({
@@ -2872,7 +3131,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     261: _tools.RODict({
@@ -2883,7 +3143,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     262: _tools.RODict({
@@ -2894,7 +3155,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     263: _tools.RODict({
@@ -2905,7 +3167,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     264: _tools.RODict({
@@ -2916,7 +3179,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     265: _tools.RODict({
@@ -2927,7 +3191,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     266: _tools.RODict({
@@ -2938,7 +3203,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     267: _tools.RODict({
@@ -2949,7 +3215,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     268: _tools.RODict({
@@ -2960,7 +3227,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     269: _tools.RODict({
@@ -2971,7 +3239,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     270: _tools.RODict({
@@ -2982,7 +3251,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     271: _tools.RODict({
@@ -2993,7 +3263,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     272: _tools.RODict({
@@ -3004,7 +3275,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     273: _tools.RODict({
@@ -3015,7 +3287,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     274: _tools.RODict({
@@ -3026,7 +3299,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     275: _tools.RODict({
@@ -3037,7 +3311,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     276: _tools.RODict({
@@ -3048,7 +3323,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     277: _tools.RODict({
@@ -3059,7 +3335,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     278: _tools.RODict({
@@ -3070,7 +3347,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     279: _tools.RODict({
@@ -3081,7 +3359,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     280: _tools.RODict({
@@ -3092,7 +3371,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     281: _tools.RODict({
@@ -3103,7 +3383,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     282: _tools.RODict({
@@ -3114,7 +3395,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     283: _tools.RODict({
@@ -3125,7 +3407,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     284: _tools.RODict({
@@ -3136,7 +3419,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     285: _tools.RODict({
@@ -3147,7 +3431,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     286: _tools.RODict({
@@ -3158,7 +3443,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     287: _tools.RODict({
@@ -3169,7 +3455,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     288: _tools.RODict({
@@ -3180,7 +3467,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     289: _tools.RODict({
@@ -3191,7 +3479,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     290: _tools.RODict({
@@ -3202,7 +3491,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     291: _tools.RODict({
@@ -3213,7 +3503,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     292: _tools.RODict({
@@ -3224,7 +3515,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     293: _tools.RODict({
@@ -3235,7 +3527,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     294: _tools.RODict({
@@ -3246,7 +3539,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     295: _tools.RODict({
@@ -3257,7 +3551,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     296: _tools.RODict({
@@ -3268,7 +3563,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     297: _tools.RODict({
@@ -3279,7 +3575,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     298: _tools.RODict({
@@ -3290,7 +3587,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     299: _tools.RODict({
@@ -3301,7 +3599,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     300: _tools.RODict({
@@ -3312,7 +3611,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     301: _tools.RODict({
@@ -3323,7 +3623,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     302: _tools.RODict({
@@ -3334,7 +3635,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     303: _tools.RODict({
@@ -3345,7 +3647,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     304: _tools.RODict({
@@ -3356,7 +3659,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     305: _tools.RODict({
@@ -3367,7 +3671,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     306: _tools.RODict({
@@ -3378,7 +3683,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     307: _tools.RODict({
@@ -3389,7 +3695,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     308: _tools.RODict({
@@ -3400,7 +3707,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     309: _tools.RODict({
@@ -3411,7 +3719,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     310: _tools.RODict({
@@ -3422,7 +3731,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     311: _tools.RODict({
@@ -3433,7 +3743,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     312: _tools.RODict({
@@ -3444,7 +3755,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     313: _tools.RODict({
@@ -3455,7 +3767,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     314: _tools.RODict({
@@ -3466,7 +3779,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     315: _tools.RODict({
@@ -3477,7 +3791,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     316: _tools.RODict({
@@ -3488,7 +3803,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     317: _tools.RODict({
@@ -3499,7 +3815,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     318: _tools.RODict({
@@ -3510,7 +3827,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     319: _tools.RODict({
@@ -3521,7 +3839,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     320: _tools.RODict({
@@ -3532,7 +3851,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     321: _tools.RODict({
@@ -3543,7 +3863,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     322: _tools.RODict({
@@ -3554,7 +3875,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     323: _tools.RODict({
@@ -3565,7 +3887,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     324: _tools.RODict({
@@ -3576,7 +3899,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     325: _tools.RODict({
@@ -3587,7 +3911,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     326: _tools.RODict({
@@ -3598,7 +3923,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     327: _tools.RODict({
@@ -3609,7 +3935,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     328: _tools.RODict({
@@ -3620,7 +3947,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     329: _tools.RODict({
@@ -3631,7 +3959,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     330: _tools.RODict({
@@ -3642,7 +3971,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     331: _tools.RODict({
@@ -3653,7 +3983,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     332: _tools.RODict({
@@ -3664,7 +3995,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 899,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     333: _tools.RODict({
@@ -3675,7 +4007,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 100,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     334: _tools.RODict({
@@ -3686,7 +4019,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 1,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     335: _tools.RODict({
@@ -3697,7 +4031,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 878,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     336: _tools.RODict({
@@ -3708,7 +4043,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 120,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     337: _tools.RODict({
@@ -3719,7 +4055,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 2,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     338: _tools.RODict({
@@ -3730,7 +4067,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 857,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     339: _tools.RODict({
@@ -3741,7 +4079,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 140,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     340: _tools.RODict({
@@ -3752,7 +4091,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 3,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     341: _tools.RODict({
@@ -3763,7 +4103,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 836,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     342: _tools.RODict({
@@ -3774,7 +4115,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 160,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     343: _tools.RODict({
@@ -3785,7 +4127,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     344: _tools.RODict({
@@ -3796,7 +4139,8 @@ datas = _tools.RODict({
         "dropNumMin": 4,
         "dropNumMax": 6,
         "weight": 899,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     345: _tools.RODict({
@@ -3807,7 +4151,8 @@ datas = _tools.RODict({
         "dropNumMin": 2,
         "dropNumMax": 3,
         "weight": 100,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     346: _tools.RODict({
@@ -3818,7 +4163,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 1,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     347: _tools.RODict({
@@ -3829,7 +4175,8 @@ datas = _tools.RODict({
         "dropNumMin": 4,
         "dropNumMax": 6,
         "weight": 878,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     348: _tools.RODict({
@@ -3840,7 +4187,8 @@ datas = _tools.RODict({
         "dropNumMin": 2,
         "dropNumMax": 3,
         "weight": 120,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     349: _tools.RODict({
@@ -3851,7 +4199,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 2,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     350: _tools.RODict({
@@ -3862,7 +4211,8 @@ datas = _tools.RODict({
         "dropNumMin": 4,
         "dropNumMax": 6,
         "weight": 857,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     351: _tools.RODict({
@@ -3873,7 +4223,8 @@ datas = _tools.RODict({
         "dropNumMin": 2,
         "dropNumMax": 3,
         "weight": 140,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     352: _tools.RODict({
@@ -3884,7 +4235,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 3,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     353: _tools.RODict({
@@ -3895,7 +4247,8 @@ datas = _tools.RODict({
         "dropNumMin": 4,
         "dropNumMax": 6,
         "weight": 836,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     354: _tools.RODict({
@@ -3906,7 +4259,8 @@ datas = _tools.RODict({
         "dropNumMin": 2,
         "dropNumMax": 3,
         "weight": 160,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     355: _tools.RODict({
@@ -3917,7 +4271,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     356: _tools.RODict({
@@ -3928,7 +4283,8 @@ datas = _tools.RODict({
         "dropNumMin": 4,
         "dropNumMax": 6,
         "weight": 390,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     357: _tools.RODict({
@@ -3939,7 +4295,8 @@ datas = _tools.RODict({
         "dropNumMin": 2,
         "dropNumMax": 3,
         "weight": 600,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     358: _tools.RODict({
@@ -3950,7 +4307,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 10,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     359: _tools.RODict({
@@ -3961,7 +4319,8 @@ datas = _tools.RODict({
         "dropNumMin": 4,
         "dropNumMax": 6,
         "weight": 330,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     360: _tools.RODict({
@@ -3972,7 +4331,8 @@ datas = _tools.RODict({
         "dropNumMin": 2,
         "dropNumMax": 3,
         "weight": 650,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     361: _tools.RODict({
@@ -3983,7 +4343,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 20,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     362: _tools.RODict({
@@ -3994,7 +4355,8 @@ datas = _tools.RODict({
         "dropNumMin": 4,
         "dropNumMax": 6,
         "weight": 270,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     363: _tools.RODict({
@@ -4005,7 +4367,8 @@ datas = _tools.RODict({
         "dropNumMin": 2,
         "dropNumMax": 3,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     364: _tools.RODict({
@@ -4016,7 +4379,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 30,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     365: _tools.RODict({
@@ -4027,7 +4391,8 @@ datas = _tools.RODict({
         "dropNumMin": 4,
         "dropNumMax": 6,
         "weight": 210,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     366: _tools.RODict({
@@ -4038,7 +4403,8 @@ datas = _tools.RODict({
         "dropNumMin": 2,
         "dropNumMax": 3,
         "weight": 750,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     367: _tools.RODict({
@@ -4049,7 +4415,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     368: _tools.RODict({
@@ -4060,7 +4427,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     369: _tools.RODict({
@@ -4071,7 +4439,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     370: _tools.RODict({
@@ -4082,7 +4451,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     371: _tools.RODict({
@@ -4093,7 +4463,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     372: _tools.RODict({
@@ -4104,7 +4475,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     373: _tools.RODict({
@@ -4115,7 +4487,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     374: _tools.RODict({
@@ -4126,7 +4499,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     375: _tools.RODict({
@@ -4137,7 +4511,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     376: _tools.RODict({
@@ -4148,7 +4523,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     377: _tools.RODict({
@@ -4159,7 +4535,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     378: _tools.RODict({
@@ -4170,7 +4547,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     379: _tools.RODict({
@@ -4181,7 +4559,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     380: _tools.RODict({
@@ -4192,7 +4571,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     381: _tools.RODict({
@@ -4203,7 +4583,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     382: _tools.RODict({
@@ -4214,7 +4595,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     383: _tools.RODict({
@@ -4225,7 +4607,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     384: _tools.RODict({
@@ -4236,7 +4619,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     385: _tools.RODict({
@@ -4247,7 +4631,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     386: _tools.RODict({
@@ -4258,7 +4643,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     387: _tools.RODict({
@@ -4269,7 +4655,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     388: _tools.RODict({
@@ -4280,7 +4667,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     389: _tools.RODict({
@@ -4291,7 +4679,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     390: _tools.RODict({
@@ -4302,7 +4691,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     391: _tools.RODict({
@@ -4313,7 +4703,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     392: _tools.RODict({
@@ -4324,7 +4715,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     393: _tools.RODict({
@@ -4335,7 +4727,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     394: _tools.RODict({
@@ -4346,7 +4739,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     395: _tools.RODict({
@@ -4357,7 +4751,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     396: _tools.RODict({
@@ -4368,7 +4763,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     397: _tools.RODict({
@@ -4379,7 +4775,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     398: _tools.RODict({
@@ -4390,7 +4787,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     399: _tools.RODict({
@@ -4401,7 +4799,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     400: _tools.RODict({
@@ -4412,7 +4811,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     401: _tools.RODict({
@@ -4423,7 +4823,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     402: _tools.RODict({
@@ -4434,7 +4835,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     403: _tools.RODict({
@@ -4445,7 +4847,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     404: _tools.RODict({
@@ -4456,7 +4859,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     405: _tools.RODict({
@@ -4467,7 +4871,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     406: _tools.RODict({
@@ -4478,7 +4883,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     407: _tools.RODict({
@@ -4489,7 +4895,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     408: _tools.RODict({
@@ -4500,7 +4907,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     409: _tools.RODict({
@@ -4511,7 +4919,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     410: _tools.RODict({
@@ -4522,7 +4931,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     411: _tools.RODict({
@@ -4533,7 +4943,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 2300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     412: _tools.RODict({
@@ -4544,7 +4955,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 2300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     413: _tools.RODict({
@@ -4555,7 +4967,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 2300,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     414: _tools.RODict({
@@ -4566,7 +4979,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 500,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     415: _tools.RODict({
@@ -4577,7 +4991,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 500,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     416: _tools.RODict({
@@ -4588,7 +5003,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 500,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     417: _tools.RODict({
@@ -4599,7 +5015,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 50,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     418: _tools.RODict({
@@ -4610,7 +5027,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 50,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     419: _tools.RODict({
@@ -4621,7 +5039,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 50,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     420: _tools.RODict({
@@ -4632,7 +5051,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4000,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     421: _tools.RODict({
@@ -4643,7 +5063,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4000,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     422: _tools.RODict({
@@ -4654,7 +5075,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4000,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     423: _tools.RODict({
@@ -4665,7 +5087,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4000,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     424: _tools.RODict({
@@ -4676,7 +5099,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4000,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     425: _tools.RODict({
@@ -4687,7 +5111,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4000,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     426: _tools.RODict({
@@ -4698,7 +5123,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4000,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     427: _tools.RODict({
@@ -4709,7 +5135,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 4000,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     428: _tools.RODict({
@@ -4720,7 +5147,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     429: _tools.RODict({
@@ -4731,7 +5159,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     430: _tools.RODict({
@@ -4742,7 +5171,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     431: _tools.RODict({
@@ -4753,7 +5183,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     432: _tools.RODict({
@@ -4764,7 +5195,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     433: _tools.RODict({
@@ -4775,7 +5207,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     434: _tools.RODict({
@@ -4786,7 +5219,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     435: _tools.RODict({
@@ -4797,7 +5231,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     436: _tools.RODict({
@@ -4808,7 +5243,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     437: _tools.RODict({
@@ -4819,7 +5255,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     438: _tools.RODict({
@@ -4830,7 +5267,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     439: _tools.RODict({
@@ -4841,7 +5279,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 700,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     440: _tools.RODict({
@@ -4852,7 +5291,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     441: _tools.RODict({
@@ -4863,7 +5303,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     442: _tools.RODict({
@@ -4874,7 +5315,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     443: _tools.RODict({
@@ -4885,7 +5327,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     444: _tools.RODict({
@@ -4896,7 +5339,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     445: _tools.RODict({
@@ -4907,7 +5351,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     446: _tools.RODict({
@@ -4918,7 +5363,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     447: _tools.RODict({
@@ -4929,7 +5375,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     448: _tools.RODict({
@@ -4940,7 +5387,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     449: _tools.RODict({
@@ -4951,7 +5399,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     450: _tools.RODict({
@@ -4962,7 +5411,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     451: _tools.RODict({
@@ -4973,7 +5423,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     452: _tools.RODict({
@@ -4984,7 +5435,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 40,
-        "bindWeight": 10000,
+        "bindWeight": 0,
+        "bindWeightMonth": 0,
         "grade": 0
     }),
     453: _tools.RODict({
@@ -4996,6 +5448,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 14,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     454: _tools.RODict({
@@ -5007,6 +5460,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 14,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     455: _tools.RODict({
@@ -5018,6 +5472,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 14,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     456: _tools.RODict({
@@ -5029,6 +5484,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 14,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     457: _tools.RODict({
@@ -5040,6 +5496,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 14,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     458: _tools.RODict({
@@ -5051,6 +5508,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 14,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     459: _tools.RODict({
@@ -5062,6 +5520,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 14,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     460: _tools.RODict({
@@ -5073,6 +5532,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 14,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     461: _tools.RODict({
@@ -5084,6 +5544,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 14,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     462: _tools.RODict({
@@ -5095,6 +5556,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 1,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     463: _tools.RODict({
@@ -5106,6 +5568,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 1,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     464: _tools.RODict({
@@ -5117,6 +5580,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 1,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     465: _tools.RODict({
@@ -5128,6 +5592,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 1,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     466: _tools.RODict({
@@ -5139,6 +5604,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 1,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     467: _tools.RODict({
@@ -5150,6 +5616,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 1,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     468: _tools.RODict({
@@ -5161,6 +5628,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 1,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     469: _tools.RODict({
@@ -5172,6 +5640,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 1,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     470: _tools.RODict({
@@ -5182,7 +5651,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 2000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     471: _tools.RODict({
@@ -5193,7 +5663,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 2000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     472: _tools.RODict({
@@ -5204,7 +5675,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 2000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     473: _tools.RODict({
@@ -5215,7 +5687,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 2000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     474: _tools.RODict({
@@ -5226,7 +5699,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 240,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     475: _tools.RODict({
@@ -5237,7 +5711,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 240,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     476: _tools.RODict({
@@ -5248,7 +5723,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 240,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     477: _tools.RODict({
@@ -5259,7 +5735,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 240,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     478: _tools.RODict({
@@ -5270,7 +5747,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 24,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     479: _tools.RODict({
@@ -5281,7 +5759,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 24,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     480: _tools.RODict({
@@ -5292,7 +5771,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 24,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     481: _tools.RODict({
@@ -5303,7 +5783,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 24,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     482: _tools.RODict({
@@ -5314,7 +5795,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 1,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     483: _tools.RODict({
@@ -5325,7 +5807,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 1,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     484: _tools.RODict({
@@ -5336,7 +5819,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 1,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     485: _tools.RODict({
@@ -5347,7 +5831,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 1,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     486: _tools.RODict({
@@ -5359,6 +5844,7 @@ datas = _tools.RODict({
         "dropNumMax": 30,
         "weight": 2000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     487: _tools.RODict({
@@ -5370,6 +5856,7 @@ datas = _tools.RODict({
         "dropNumMax": 30,
         "weight": 2000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     488: _tools.RODict({
@@ -5381,6 +5868,7 @@ datas = _tools.RODict({
         "dropNumMax": 5,
         "weight": 1000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     489: _tools.RODict({
@@ -5392,6 +5880,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 500,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     490: _tools.RODict({
@@ -5403,6 +5892,7 @@ datas = _tools.RODict({
         "dropNumMax": 5,
         "weight": 1000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     491: _tools.RODict({
@@ -5414,6 +5904,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 500,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     492: _tools.RODict({
@@ -5425,6 +5916,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 1000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     493: _tools.RODict({
@@ -5436,6 +5928,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 2000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     494: _tools.RODict({
@@ -5447,6 +5940,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 500,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     495: _tools.RODict({
@@ -5458,6 +5952,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 1000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     496: _tools.RODict({
@@ -5469,6 +5964,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 2000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     497: _tools.RODict({
@@ -5480,6 +5976,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 500,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     498: _tools.RODict({
@@ -5491,6 +5988,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 1000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     499: _tools.RODict({
@@ -5502,6 +6000,7 @@ datas = _tools.RODict({
         "dropNumMax": 3,
         "weight": 2000,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     500: _tools.RODict({
@@ -5513,6 +6012,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 10,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     501: _tools.RODict({
@@ -5524,6 +6024,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 10,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     502: _tools.RODict({
@@ -5535,6 +6036,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 50,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     503: _tools.RODict({
@@ -5546,6 +6048,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     504: _tools.RODict({
@@ -5556,7 +6059,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     505: _tools.RODict({
@@ -5567,7 +6071,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     506: _tools.RODict({
@@ -5578,7 +6083,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     507: _tools.RODict({
@@ -5589,7 +6095,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     508: _tools.RODict({
@@ -5600,7 +6107,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     509: _tools.RODict({
@@ -5611,7 +6119,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     510: _tools.RODict({
@@ -5622,7 +6131,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     511: _tools.RODict({
@@ -5633,7 +6143,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     512: _tools.RODict({
@@ -5644,7 +6155,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     513: _tools.RODict({
@@ -5655,7 +6167,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     514: _tools.RODict({
@@ -5666,7 +6179,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     515: _tools.RODict({
@@ -5677,7 +6191,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     516: _tools.RODict({
@@ -5688,7 +6203,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 2000,
+        "bindWeight": 0,
+        "bindWeightMonth": 8000,
         "grade": 0
     }),
     517: _tools.RODict({
@@ -5699,7 +6215,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     518: _tools.RODict({
@@ -5710,7 +6227,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     519: _tools.RODict({
@@ -5721,7 +6239,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     520: _tools.RODict({
@@ -5732,7 +6251,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     521: _tools.RODict({
@@ -5743,7 +6263,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     522: _tools.RODict({
@@ -5754,7 +6275,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     523: _tools.RODict({
@@ -5765,7 +6287,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     524: _tools.RODict({
@@ -5776,7 +6299,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     525: _tools.RODict({
@@ -5787,7 +6311,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     526: _tools.RODict({
@@ -5798,7 +6323,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     527: _tools.RODict({
@@ -5809,7 +6335,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     528: _tools.RODict({
@@ -5820,7 +6347,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     529: _tools.RODict({
@@ -5831,7 +6359,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 1000,
+        "bindWeight": 0,
+        "bindWeightMonth": 9000,
         "grade": 0
     }),
     530: _tools.RODict({
@@ -5842,7 +6371,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     531: _tools.RODict({
@@ -5853,7 +6383,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     532: _tools.RODict({
@@ -5864,7 +6395,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     533: _tools.RODict({
@@ -5875,7 +6407,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     534: _tools.RODict({
@@ -5886,7 +6419,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     535: _tools.RODict({
@@ -5897,7 +6431,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     536: _tools.RODict({
@@ -5908,7 +6443,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     537: _tools.RODict({
@@ -5919,7 +6455,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     538: _tools.RODict({
@@ -5930,7 +6467,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     539: _tools.RODict({
@@ -5941,7 +6479,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     540: _tools.RODict({
@@ -5952,7 +6491,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     541: _tools.RODict({
@@ -5963,7 +6503,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     542: _tools.RODict({
@@ -5974,7 +6515,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 500,
+        "bindWeight": 0,
+        "bindWeightMonth": 9500,
         "grade": 0
     }),
     543: _tools.RODict({
@@ -5985,7 +6527,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     544: _tools.RODict({
@@ -5996,7 +6539,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     545: _tools.RODict({
@@ -6007,7 +6551,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     546: _tools.RODict({
@@ -6018,7 +6563,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     547: _tools.RODict({
@@ -6029,7 +6575,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     548: _tools.RODict({
@@ -6040,7 +6587,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     549: _tools.RODict({
@@ -6051,7 +6599,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     550: _tools.RODict({
@@ -6062,7 +6611,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     551: _tools.RODict({
@@ -6073,7 +6623,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     552: _tools.RODict({
@@ -6084,7 +6635,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     553: _tools.RODict({
@@ -6095,7 +6647,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     554: _tools.RODict({
@@ -6106,7 +6659,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     555: _tools.RODict({
@@ -6117,7 +6671,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     556: _tools.RODict({
@@ -6128,7 +6683,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     557: _tools.RODict({
@@ -6139,7 +6695,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     558: _tools.RODict({
@@ -6150,7 +6707,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     559: _tools.RODict({
@@ -6161,7 +6719,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 200,
+        "bindWeight": 0,
+        "bindWeightMonth": 9800,
         "grade": 0
     }),
     560: _tools.RODict({
@@ -6172,7 +6731,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     561: _tools.RODict({
@@ -6183,7 +6743,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     562: _tools.RODict({
@@ -6194,7 +6755,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     563: _tools.RODict({
@@ -6205,7 +6767,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     564: _tools.RODict({
@@ -6216,7 +6779,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     565: _tools.RODict({
@@ -6227,7 +6791,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     566: _tools.RODict({
@@ -6238,7 +6803,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     567: _tools.RODict({
@@ -6249,7 +6815,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     568: _tools.RODict({
@@ -6260,7 +6827,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     569: _tools.RODict({
@@ -6271,7 +6839,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     570: _tools.RODict({
@@ -6282,7 +6851,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     571: _tools.RODict({
@@ -6293,7 +6863,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     572: _tools.RODict({
@@ -6304,7 +6875,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     573: _tools.RODict({
@@ -6315,7 +6887,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     574: _tools.RODict({
@@ -6326,7 +6899,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     575: _tools.RODict({
@@ -6337,7 +6911,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     576: _tools.RODict({
@@ -6348,7 +6923,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 100,
+        "bindWeight": 0,
+        "bindWeightMonth": 9900,
         "grade": 0
     }),
     577: _tools.RODict({
@@ -6359,7 +6935,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     578: _tools.RODict({
@@ -6370,7 +6947,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     579: _tools.RODict({
@@ -6381,7 +6959,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 200,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     580: _tools.RODict({
@@ -6392,7 +6971,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     581: _tools.RODict({
@@ -6403,7 +6983,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     582: _tools.RODict({
@@ -6414,7 +6995,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     583: _tools.RODict({
@@ -6425,7 +7007,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     584: _tools.RODict({
@@ -6436,7 +7019,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     585: _tools.RODict({
@@ -6447,7 +7031,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     586: _tools.RODict({
@@ -6458,7 +7043,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     587: _tools.RODict({
@@ -6469,7 +7055,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     588: _tools.RODict({
@@ -6480,7 +7067,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     589: _tools.RODict({
@@ -6491,7 +7079,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 600,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     590: _tools.RODict({
@@ -6502,7 +7091,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     591: _tools.RODict({
@@ -6513,7 +7103,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     592: _tools.RODict({
@@ -6524,7 +7115,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     593: _tools.RODict({
@@ -6535,7 +7127,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 300,
-        "bindWeight": 50,
+        "bindWeight": 0,
+        "bindWeightMonth": 9950,
         "grade": 0
     }),
     594: _tools.RODict({
@@ -6547,6 +7140,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     595: _tools.RODict({
@@ -6558,6 +7152,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     596: _tools.RODict({
@@ -6569,6 +7164,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     597: _tools.RODict({
@@ -6580,6 +7176,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     598: _tools.RODict({
@@ -6591,6 +7188,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     599: _tools.RODict({
@@ -6602,6 +7200,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     600: _tools.RODict({
@@ -6613,6 +7212,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     601: _tools.RODict({
@@ -6624,6 +7224,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     602: _tools.RODict({
@@ -6635,6 +7236,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     603: _tools.RODict({
@@ -6646,6 +7248,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     604: _tools.RODict({
@@ -6657,6 +7260,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     605: _tools.RODict({
@@ -6668,6 +7272,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     606: _tools.RODict({
@@ -6679,6 +7284,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     607: _tools.RODict({
@@ -6690,6 +7296,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     608: _tools.RODict({
@@ -6701,6 +7308,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     609: _tools.RODict({
@@ -6712,6 +7320,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     610: _tools.RODict({
@@ -6723,6 +7332,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     611: _tools.RODict({
@@ -6734,6 +7344,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     612: _tools.RODict({
@@ -6745,6 +7356,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     613: _tools.RODict({
@@ -6756,6 +7368,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     614: _tools.RODict({
@@ -6767,6 +7380,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     615: _tools.RODict({
@@ -6778,6 +7392,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     616: _tools.RODict({
@@ -6789,6 +7404,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     617: _tools.RODict({
@@ -6800,6 +7416,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     618: _tools.RODict({
@@ -6811,6 +7428,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     619: _tools.RODict({
@@ -6822,6 +7440,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     620: _tools.RODict({
@@ -6833,6 +7452,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     621: _tools.RODict({
@@ -6844,6 +7464,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     622: _tools.RODict({
@@ -6855,6 +7476,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     623: _tools.RODict({
@@ -6866,6 +7488,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     624: _tools.RODict({
@@ -6877,6 +7500,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     625: _tools.RODict({
@@ -6888,6 +7512,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     626: _tools.RODict({
@@ -6899,6 +7524,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     627: _tools.RODict({
@@ -6910,6 +7536,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     628: _tools.RODict({
@@ -6921,6 +7548,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     629: _tools.RODict({
@@ -6932,6 +7560,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     630: _tools.RODict({
@@ -6943,6 +7572,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     631: _tools.RODict({
@@ -6954,6 +7584,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     632: _tools.RODict({
@@ -6965,6 +7596,7 @@ datas = _tools.RODict({
         "dropNumMax": 1,
         "weight": 200,
         "bindWeight": 0,
+        "bindWeightMonth": 10000,
         "grade": 0
     }),
     633: _tools.RODict({
@@ -6975,7 +7607,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     634: _tools.RODict({
@@ -6986,7 +7619,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     635: _tools.RODict({
@@ -6997,7 +7631,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     636: _tools.RODict({
@@ -7008,7 +7643,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     637: _tools.RODict({
@@ -7019,7 +7655,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     638: _tools.RODict({
@@ -7030,7 +7667,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     639: _tools.RODict({
@@ -7041,7 +7679,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     640: _tools.RODict({
@@ -7052,7 +7691,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     641: _tools.RODict({
@@ -7063,7 +7703,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     642: _tools.RODict({
@@ -7074,7 +7715,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     643: _tools.RODict({
@@ -7085,7 +7727,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     644: _tools.RODict({
@@ -7096,7 +7739,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     645: _tools.RODict({
@@ -7107,7 +7751,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     646: _tools.RODict({
@@ -7118,7 +7763,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     647: _tools.RODict({
@@ -7129,7 +7775,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     }),
     648: _tools.RODict({
@@ -7140,7 +7787,8 @@ datas = _tools.RODict({
         "dropNumMin": 1,
         "dropNumMax": 1,
         "weight": 5000,
-        "bindWeight": 5000,
+        "bindWeight": 0,
+        "bindWeightMonth": 5000,
         "grade": 0
     })
 })
@@ -7148,58 +7796,58 @@ minKey = 1
 maxKey = 648
 
 dropPackageData = _tools.RODict({ 
-        10041:[{'ID': 1, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80792001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 900, 'bindWeight': 5000, 'grade': 0}, {'ID': 2, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80792002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 90, 'bindWeight': 5000, 'grade': 0}, {'ID': 3, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80792003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 90, 'bindWeight': 5000, 'grade': 0}, {'ID': 4, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80792004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 400, 'bindWeight': 5000, 'grade': 0}, {'ID': 5, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 5000, 'grade': 0}, {'ID': 6, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 5000, 'grade': 0}, {'ID': 7, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 5000, 'grade': 0}, {'ID': 8, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 5000, 'grade': 0}, {'ID': 9, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793005, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 10, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80794001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 5000, 'grade': 0}, {'ID': 11, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80794002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 5000, 'grade': 0}, {'ID': 12, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80794003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 5000, 'grade': 0}, {'ID': 13, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80795001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 10, 'bindWeight': 5000, 'grade': 0}],
-        10042:[{'ID': 14, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 900, 'bindWeight': 5000, 'grade': 0}, {'ID': 15, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 90, 'bindWeight': 5000, 'grade': 0}, {'ID': 16, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 90, 'bindWeight': 5000, 'grade': 0}, {'ID': 17, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 400, 'bindWeight': 5000, 'grade': 0}, {'ID': 18, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703005, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 5000, 'grade': 0}, {'ID': 19, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80704001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 5000, 'grade': 0}, {'ID': 20, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80704002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 5000, 'grade': 0}, {'ID': 21, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80704003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 5000, 'grade': 0}, {'ID': 22, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80705002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}],
-        1001:[{'ID': 23, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 24, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 25, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 26, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 27, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 28, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 29, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 30, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 31, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 32, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 33, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 34, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 35, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80581001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}],
-        1002:[{'ID': 36, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 37, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 38, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 39, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 40, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 41, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 42, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 43, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 44, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 45, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 46, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 47, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 48, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80581001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}],
-        1003:[{'ID': 49, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 50, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 51, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 52, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 53, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 54, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 55, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 56, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 57, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 58, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 59, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 60, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 61, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80581001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}],
-        1004:[{'ID': 62, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 63, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 64, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 65, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 66, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 67, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 68, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 69, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 70, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 71, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 72, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 73, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 74, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 75, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80682001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 76, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80692001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 77, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80782001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 78, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80792001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1005:[{'ID': 79, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 80, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 81, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 82, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 83, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 84, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 85, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 86, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 87, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 88, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 89, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 90, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 91, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 92, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80682001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 93, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80692001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 94, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80782001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 95, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80792001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1006:[{'ID': 96, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 97, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 98, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 99, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 100, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 101, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 102, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 103, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 104, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 105, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 106, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 107, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 108, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 109, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80682001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 110, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80692001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 111, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80782001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 112, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80792001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1301:[{'ID': 113, 'dropPackage': 1301, 'dropCondition': None, 'dropTarget': 30010021, 'dropNumMin': 2, 'dropNumMax': 6, 'weight': 300, 'bindWeight': 0, 'grade': 0}, {'ID': 114, 'dropPackage': 1301, 'dropCondition': None, 'dropTarget': 30010022, 'dropNumMin': 2, 'dropNumMax': 6, 'weight': 300, 'bindWeight': 0, 'grade': 0}, {'ID': 115, 'dropPackage': 1301, 'dropCondition': None, 'dropTarget': 30010023, 'dropNumMin': 2, 'dropNumMax': 6, 'weight': 300, 'bindWeight': 0, 'grade': 0}, {'ID': 116, 'dropPackage': 1301, 'dropCondition': None, 'dropTarget': 30010024, 'dropNumMin': 2, 'dropNumMax': 6, 'weight': 300, 'bindWeight': 0, 'grade': 0}],
-        1302:[{'ID': 117, 'dropPackage': 1302, 'dropCondition': None, 'dropTarget': 30010021, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 300, 'bindWeight': 0, 'grade': 0}, {'ID': 118, 'dropPackage': 1302, 'dropCondition': None, 'dropTarget': 30010022, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 300, 'bindWeight': 0, 'grade': 0}, {'ID': 119, 'dropPackage': 1302, 'dropCondition': None, 'dropTarget': 30010023, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 300, 'bindWeight': 0, 'grade': 0}, {'ID': 120, 'dropPackage': 1302, 'dropCondition': None, 'dropTarget': 30010024, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 300, 'bindWeight': 0, 'grade': 0}],
-        1303:[{'ID': 121, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990135, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 122, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990136, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 123, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990137, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 124, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990138, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 125, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990142, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 5000, 'grade': 0}, {'ID': 126, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990143, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 5000, 'grade': 0}, {'ID': 127, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990144, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 5000, 'grade': 0}, {'ID': 128, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990145, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 5000, 'grade': 0}],
-        1501:[{'ID': 129, 'dropPackage': 1501, 'dropCondition': None, 'dropTarget': 30990121, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 5000, 'grade': 0}, {'ID': 130, 'dropPackage': 1501, 'dropCondition': None, 'dropTarget': 30990122, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 131, 'dropPackage': 1501, 'dropCondition': None, 'dropTarget': 30990123, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 132, 'dropPackage': 1501, 'dropCondition': None, 'dropTarget': 30990124, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}],
-        1502:[{'ID': 133, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000102, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 134, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000103, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 135, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000104, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 136, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000105, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 137, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000106, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 138, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000107, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 139, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000108, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 140, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000109, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 141, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000110, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 142, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000111, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 143, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000112, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 144, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000113, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 145, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000114, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 146, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000141, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 147, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000142, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 148, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000143, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 149, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000144, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 150, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000145, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 151, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000146, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 152, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000147, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 153, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000148, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 154, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000149, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 155, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000150, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 156, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000151, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 157, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000152, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 158, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000153, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 159, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000180, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 160, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000181, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 161, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000182, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 162, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000183, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 163, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000184, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 164, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000185, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 165, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000186, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 166, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000187, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 167, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000188, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 168, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000189, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 169, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000190, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 170, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000191, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 171, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000192, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}],
-        1503:[{'ID': 172, 'dropPackage': 1503, 'dropCondition': None, 'dropTarget': 30000287, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 173, 'dropPackage': 1503, 'dropCondition': None, 'dropTarget': 30000288, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 174, 'dropPackage': 1503, 'dropCondition': None, 'dropTarget': 30000289, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}],
-        1504:[{'ID': 175, 'dropPackage': 1504, 'dropCondition': None, 'dropTarget': 30000290, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 176, 'dropPackage': 1504, 'dropCondition': None, 'dropTarget': 30000291, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 177, 'dropPackage': 1504, 'dropCondition': None, 'dropTarget': 30000292, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}],
-        1505:[{'ID': 178, 'dropPackage': 1505, 'dropCondition': None, 'dropTarget': 30000293, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 179, 'dropPackage': 1505, 'dropCondition': None, 'dropTarget': 30000294, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 180, 'dropPackage': 1505, 'dropCondition': None, 'dropTarget': 30000295, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}],
-        1506:[{'ID': 181, 'dropPackage': 1506, 'dropCondition': None, 'dropTarget': 30000296, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 182, 'dropPackage': 1506, 'dropCondition': None, 'dropTarget': 30000297, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 183, 'dropPackage': 1506, 'dropCondition': None, 'dropTarget': 30000298, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}],
-        1507:[{'ID': 184, 'dropPackage': 1507, 'dropCondition': None, 'dropTarget': 30990128, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 5000, 'grade': 0}, {'ID': 185, 'dropPackage': 1507, 'dropCondition': None, 'dropTarget': 30990129, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 186, 'dropPackage': 1507, 'dropCondition': None, 'dropTarget': 30990130, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 187, 'dropPackage': 1507, 'dropCondition': None, 'dropTarget': 30990131, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}],
-        1508:[{'ID': 188, 'dropPackage': 1508, 'dropCondition': None, 'dropTarget': 30990135, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 5000, 'grade': 0}, {'ID': 189, 'dropPackage': 1508, 'dropCondition': None, 'dropTarget': 30990136, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 190, 'dropPackage': 1508, 'dropCondition': None, 'dropTarget': 30990137, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 191, 'dropPackage': 1508, 'dropCondition': None, 'dropTarget': 30990138, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}],
-        1509:[{'ID': 192, 'dropPackage': 1509, 'dropCondition': None, 'dropTarget': 30990142, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 5000, 'grade': 0}, {'ID': 193, 'dropPackage': 1509, 'dropCondition': None, 'dropTarget': 30990143, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 194, 'dropPackage': 1509, 'dropCondition': None, 'dropTarget': 30990144, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 195, 'dropPackage': 1509, 'dropCondition': None, 'dropTarget': 30990145, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}],
-        1007:[{'ID': 196, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 197, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 198, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 199, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 200, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 201, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 202, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 203, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 204, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 205, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 206, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 207, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 208, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80583001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 209, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80593001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 210, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 211, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 212, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1008:[{'ID': 213, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 214, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 215, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 216, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 217, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 218, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 219, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 220, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 221, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 222, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 223, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 224, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 225, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 226, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 227, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 228, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80783001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 229, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1009:[{'ID': 230, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 231, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 232, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 233, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 234, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 235, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 236, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 237, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 238, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 239, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 240, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 241, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 242, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 243, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 244, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 245, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80783001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 246, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1010:[{'ID': 247, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 248, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 249, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 250, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 251, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 252, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 253, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 254, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 255, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 256, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 257, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 258, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 259, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 260, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 261, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 262, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80783001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 263, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1011:[{'ID': 264, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 265, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 266, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 267, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 268, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 269, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 270, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 271, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 272, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 273, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 274, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 275, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 276, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 277, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 278, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 279, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80783001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 280, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1012:[{'ID': 281, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80114001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 282, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80124001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 283, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80134001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 284, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80214001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 285, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80224001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 286, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80234001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 287, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80314001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 288, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80324001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 289, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80334001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 290, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80414001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 291, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80424001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 292, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80434001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 293, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80584001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 294, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80594001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 295, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80814001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 296, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80824001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 297, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80834001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1013:[{'ID': 298, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80114001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 299, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80124001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 300, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80134001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 301, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80214001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 302, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80224001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 303, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80234001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 304, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80314001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 305, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80324001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 306, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80334001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 307, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80414001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 308, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80424001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 309, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80434001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 310, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80584001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 311, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80594001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 312, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80814001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 313, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80824001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 314, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80834001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        1014:[{'ID': 315, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80114001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 316, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80124001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 317, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80134001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 5000, 'grade': 0}, {'ID': 318, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80214001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 319, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80224001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 320, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80234001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 321, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80314001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 322, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80324001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 323, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80334001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 324, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80414001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 325, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80424001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 326, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80434001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 327, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80584001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 5000, 'grade': 0}, {'ID': 328, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80594001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 329, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80814001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 330, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80824001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}, {'ID': 331, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80834001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 5000, 'grade': 0}],
-        11002:[{'ID': 332, 'dropPackage': 11002, 'dropCondition': None, 'dropTarget': 30000227, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 899, 'bindWeight': 10000, 'grade': 0}, {'ID': 333, 'dropPackage': 11002, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 10000, 'grade': 0}, {'ID': 334, 'dropPackage': 11002, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 10000, 'grade': 0}],
-        11003:[{'ID': 335, 'dropPackage': 11003, 'dropCondition': None, 'dropTarget': 30000227, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 878, 'bindWeight': 10000, 'grade': 0}, {'ID': 336, 'dropPackage': 11003, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 120, 'bindWeight': 10000, 'grade': 0}, {'ID': 337, 'dropPackage': 11003, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2, 'bindWeight': 10000, 'grade': 0}],
-        11004:[{'ID': 338, 'dropPackage': 11004, 'dropCondition': None, 'dropTarget': 30000227, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 857, 'bindWeight': 10000, 'grade': 0}, {'ID': 339, 'dropPackage': 11004, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 140, 'bindWeight': 10000, 'grade': 0}, {'ID': 340, 'dropPackage': 11004, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 3, 'bindWeight': 10000, 'grade': 0}],
-        11005:[{'ID': 341, 'dropPackage': 11005, 'dropCondition': None, 'dropTarget': 30000227, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 836, 'bindWeight': 10000, 'grade': 0}, {'ID': 342, 'dropPackage': 11005, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 160, 'bindWeight': 10000, 'grade': 0}, {'ID': 343, 'dropPackage': 11005, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4, 'bindWeight': 10000, 'grade': 0}],
-        11006:[{'ID': 344, 'dropPackage': 11006, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 899, 'bindWeight': 10000, 'grade': 0}, {'ID': 345, 'dropPackage': 11006, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 100, 'bindWeight': 10000, 'grade': 0}, {'ID': 346, 'dropPackage': 11006, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 10000, 'grade': 0}],
-        11007:[{'ID': 347, 'dropPackage': 11007, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 878, 'bindWeight': 10000, 'grade': 0}, {'ID': 348, 'dropPackage': 11007, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 120, 'bindWeight': 10000, 'grade': 0}, {'ID': 349, 'dropPackage': 11007, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2, 'bindWeight': 10000, 'grade': 0}],
-        11008:[{'ID': 350, 'dropPackage': 11008, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 857, 'bindWeight': 10000, 'grade': 0}, {'ID': 351, 'dropPackage': 11008, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 140, 'bindWeight': 10000, 'grade': 0}, {'ID': 352, 'dropPackage': 11008, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 3, 'bindWeight': 10000, 'grade': 0}],
-        11009:[{'ID': 353, 'dropPackage': 11009, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 836, 'bindWeight': 10000, 'grade': 0}, {'ID': 354, 'dropPackage': 11009, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 160, 'bindWeight': 10000, 'grade': 0}, {'ID': 355, 'dropPackage': 11009, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4, 'bindWeight': 10000, 'grade': 0}],
-        11010:[{'ID': 356, 'dropPackage': 11010, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 390, 'bindWeight': 10000, 'grade': 0}, {'ID': 357, 'dropPackage': 11010, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 600, 'bindWeight': 10000, 'grade': 0}, {'ID': 358, 'dropPackage': 11010, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 10, 'bindWeight': 10000, 'grade': 0}],
-        11011:[{'ID': 359, 'dropPackage': 11011, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 330, 'bindWeight': 10000, 'grade': 0}, {'ID': 360, 'dropPackage': 11011, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 650, 'bindWeight': 10000, 'grade': 0}, {'ID': 361, 'dropPackage': 11011, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 10000, 'grade': 0}],
-        11012:[{'ID': 362, 'dropPackage': 11012, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 270, 'bindWeight': 10000, 'grade': 0}, {'ID': 363, 'dropPackage': 11012, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 364, 'dropPackage': 11012, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 30, 'bindWeight': 10000, 'grade': 0}],
-        11013:[{'ID': 365, 'dropPackage': 11013, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 210, 'bindWeight': 10000, 'grade': 0}, {'ID': 366, 'dropPackage': 11013, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 750, 'bindWeight': 10000, 'grade': 0}, {'ID': 367, 'dropPackage': 11013, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}],
-        99:[{'ID': 368, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 369, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 370, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 371, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 372, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001005, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 373, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001006, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 374, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001007, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 375, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001008, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 376, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001009, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 377, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001010, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 378, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001036, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}],
-        98:[{'ID': 379, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001011, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 380, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001012, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 381, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001013, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 382, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001014, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 383, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001015, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 384, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001016, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 385, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001017, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 386, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001018, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 387, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001019, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 388, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001020, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 389, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001037, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}],
-        97:[{'ID': 390, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001021, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 391, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001022, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 392, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001023, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 393, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001024, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 394, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001025, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 395, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001026, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 396, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001027, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 397, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001028, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 398, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001029, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 399, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001038, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}],
-        96:[{'ID': 400, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001030, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 401, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001031, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 402, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001032, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 403, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001033, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 404, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001034, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 405, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001035, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 406, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001039, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}, {'ID': 407, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001040, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 10000, 'grade': 0}],
-        1510:[{'ID': 408, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000287, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 409, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000288, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 410, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000289, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 411, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000290, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2300, 'bindWeight': 5000, 'grade': 0}, {'ID': 412, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000291, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2300, 'bindWeight': 5000, 'grade': 0}, {'ID': 413, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000292, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2300, 'bindWeight': 5000, 'grade': 0}, {'ID': 414, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000293, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 500, 'bindWeight': 5000, 'grade': 0}, {'ID': 415, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000294, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 500, 'bindWeight': 5000, 'grade': 0}, {'ID': 416, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000295, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 500, 'bindWeight': 5000, 'grade': 0}, {'ID': 417, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000296, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 50, 'bindWeight': 5000, 'grade': 0}, {'ID': 418, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000297, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 50, 'bindWeight': 5000, 'grade': 0}, {'ID': 419, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000298, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 50, 'bindWeight': 5000, 'grade': 0}],
-        2000:[{'ID': 420, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 10000, 'grade': 0}, {'ID': 421, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 10000, 'grade': 0}, {'ID': 422, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003009, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 10000, 'grade': 0}, {'ID': 423, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003017, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 10000, 'grade': 0}, {'ID': 424, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003019, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 10000, 'grade': 0}, {'ID': 425, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003020, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 10000, 'grade': 0}, {'ID': 426, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003021, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 10000, 'grade': 0}, {'ID': 427, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003022, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 10000, 'grade': 0}, {'ID': 428, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 429, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003007, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 430, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003010, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 431, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003012, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 432, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003015, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 433, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003033, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 434, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003035, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 435, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003037, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 436, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003040, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 437, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003044, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 438, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003049, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 439, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003050, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 10000, 'grade': 0}, {'ID': 440, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 441, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003005, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 442, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003008, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 443, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003011, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 444, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003013, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 445, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003016, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 446, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003018, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 447, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003027, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 448, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003029, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 449, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003038, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 450, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003042, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 451, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003045, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 452, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003047, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 10000, 'grade': 0}, {'ID': 453, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003023, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'grade': 0}, {'ID': 454, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003025, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'grade': 0}, {'ID': 455, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003034, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'grade': 0}, {'ID': 456, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003036, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'grade': 0}, {'ID': 457, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003039, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'grade': 0}, {'ID': 458, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003041, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'grade': 0}, {'ID': 459, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003043, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'grade': 0}, {'ID': 460, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003046, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'grade': 0}, {'ID': 461, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003048, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'grade': 0}, {'ID': 462, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003006, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'grade': 0}, {'ID': 463, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003014, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'grade': 0}, {'ID': 464, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003024, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'grade': 0}, {'ID': 465, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003026, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'grade': 0}, {'ID': 466, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003028, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'grade': 0}, {'ID': 467, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003030, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'grade': 0}, {'ID': 468, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003031, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'grade': 0}, {'ID': 469, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003032, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'grade': 0}],
-        1511:[{'ID': 470, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990121, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2000, 'bindWeight': 5000, 'grade': 0}, {'ID': 471, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990122, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2000, 'bindWeight': 5000, 'grade': 0}, {'ID': 472, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990123, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2000, 'bindWeight': 5000, 'grade': 0}, {'ID': 473, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990124, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2000, 'bindWeight': 5000, 'grade': 0}, {'ID': 474, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990128, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 240, 'bindWeight': 5000, 'grade': 0}, {'ID': 475, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990129, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 240, 'bindWeight': 5000, 'grade': 0}, {'ID': 476, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990130, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 240, 'bindWeight': 5000, 'grade': 0}, {'ID': 477, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990131, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 240, 'bindWeight': 5000, 'grade': 0}, {'ID': 478, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990135, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 24, 'bindWeight': 5000, 'grade': 0}, {'ID': 479, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990136, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 24, 'bindWeight': 5000, 'grade': 0}, {'ID': 480, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990137, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 24, 'bindWeight': 5000, 'grade': 0}, {'ID': 481, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990138, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 24, 'bindWeight': 5000, 'grade': 0}, {'ID': 482, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990142, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 5000, 'grade': 0}, {'ID': 483, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990143, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 5000, 'grade': 0}, {'ID': 484, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990144, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 5000, 'grade': 0}, {'ID': 485, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990145, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 5000, 'grade': 0}],
-        9200:[{'ID': 486, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010007, 'dropNumMin': 20, 'dropNumMax': 30, 'weight': 2000, 'bindWeight': 0, 'grade': 0}, {'ID': 487, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010008, 'dropNumMin': 20, 'dropNumMax': 30, 'weight': 2000, 'bindWeight': 0, 'grade': 0}, {'ID': 488, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010009, 'dropNumMin': 1, 'dropNumMax': 5, 'weight': 1000, 'bindWeight': 0, 'grade': 0}, {'ID': 489, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010010, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 500, 'bindWeight': 0, 'grade': 0}, {'ID': 490, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010011, 'dropNumMin': 1, 'dropNumMax': 5, 'weight': 1000, 'bindWeight': 0, 'grade': 0}, {'ID': 491, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010012, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 500, 'bindWeight': 0, 'grade': 0}, {'ID': 492, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010013, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 1000, 'bindWeight': 0, 'grade': 0}, {'ID': 493, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010014, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 2000, 'bindWeight': 0, 'grade': 0}, {'ID': 494, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010015, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 500, 'bindWeight': 0, 'grade': 0}, {'ID': 495, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010016, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 1000, 'bindWeight': 0, 'grade': 0}, {'ID': 496, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010017, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 2000, 'bindWeight': 0, 'grade': 0}, {'ID': 497, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010018, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 500, 'bindWeight': 0, 'grade': 0}, {'ID': 498, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010019, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 1000, 'bindWeight': 0, 'grade': 0}, {'ID': 499, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010020, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 2000, 'bindWeight': 0, 'grade': 0}, {'ID': 500, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010021, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 10, 'bindWeight': 0, 'grade': 0}, {'ID': 501, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010022, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 10, 'bindWeight': 0, 'grade': 0}, {'ID': 502, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010023, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 50, 'bindWeight': 0, 'grade': 0}, {'ID': 503, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010024, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}],
-        2001:[{'ID': 504, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 2000, 'grade': 0}, {'ID': 505, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 2000, 'grade': 0}, {'ID': 506, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 2000, 'grade': 0}, {'ID': 507, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 508, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 509, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 510, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 511, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 512, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 513, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 514, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 515, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 516, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80811001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 2000, 'grade': 0}, {'ID': 517, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 1000, 'grade': 0}, {'ID': 518, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 1000, 'grade': 0}, {'ID': 519, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 1000, 'grade': 0}, {'ID': 520, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 521, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 522, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 523, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 524, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 525, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 526, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 527, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 528, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 529, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80811001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 1000, 'grade': 0}, {'ID': 530, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 500, 'grade': 0}, {'ID': 531, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 500, 'grade': 0}, {'ID': 532, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 500, 'grade': 0}, {'ID': 533, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 534, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 535, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 536, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 537, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 538, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 539, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 540, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 541, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 542, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80811001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 500, 'grade': 0}, {'ID': 543, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 200, 'grade': 0}, {'ID': 544, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 200, 'grade': 0}, {'ID': 545, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 200, 'grade': 0}, {'ID': 546, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 547, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 548, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 549, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 550, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 551, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 552, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 553, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 554, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 555, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 200, 'grade': 0}, {'ID': 556, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80592001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 200, 'grade': 0}, {'ID': 557, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80812001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 200, 'grade': 0}, {'ID': 558, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80822001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 200, 'grade': 0}, {'ID': 559, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80832001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 200, 'grade': 0}, {'ID': 560, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 100, 'grade': 0}, {'ID': 561, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 100, 'grade': 0}, {'ID': 562, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 100, 'grade': 0}, {'ID': 563, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 564, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 565, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 566, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 567, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 568, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 569, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 570, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 571, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 572, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 100, 'grade': 0}, {'ID': 573, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80592001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 100, 'grade': 0}, {'ID': 574, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80812001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 100, 'grade': 0}, {'ID': 575, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80822001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 100, 'grade': 0}, {'ID': 576, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80832001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 100, 'grade': 0}, {'ID': 577, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 50, 'grade': 0}, {'ID': 578, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 50, 'grade': 0}, {'ID': 579, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 50, 'grade': 0}, {'ID': 580, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 581, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 582, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 583, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 584, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 585, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 586, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 587, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 588, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 589, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 50, 'grade': 0}, {'ID': 590, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80592001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 50, 'grade': 0}, {'ID': 591, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80812001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 50, 'grade': 0}, {'ID': 592, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80822001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 50, 'grade': 0}, {'ID': 593, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80832001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 50, 'grade': 0}],
-        1512:[{'ID': 594, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000115, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 595, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000116, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 596, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000117, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 597, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000118, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 598, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000119, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 599, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000120, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 600, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000121, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 601, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000122, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 602, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000123, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 603, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000124, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 604, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000125, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 605, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000126, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 606, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000127, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 607, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000154, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 608, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000155, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 609, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000156, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 610, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000157, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 611, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000158, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 612, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000159, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 613, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000160, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 614, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000161, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 615, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000162, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 616, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000163, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 617, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000164, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 618, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000165, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 619, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000166, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 620, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000193, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 621, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000194, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 622, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000195, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 623, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000196, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 624, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000197, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 625, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000198, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 626, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000199, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 627, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000200, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 628, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000201, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 629, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000202, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 630, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000203, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 631, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000204, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}, {'ID': 632, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000205, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'grade': 0}],
-        1513:[{'ID': 633, 'dropPackage': 1513, 'dropCondition': None, 'dropTarget': 30000283, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 634, 'dropPackage': 1513, 'dropCondition': None, 'dropTarget': 30000284, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 635, 'dropPackage': 1513, 'dropCondition': None, 'dropTarget': 30000285, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 636, 'dropPackage': 1513, 'dropCondition': None, 'dropTarget': 30000286, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}],
-        1514:[{'ID': 637, 'dropPackage': 1514, 'dropCondition': None, 'dropTarget': 30000287, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 638, 'dropPackage': 1514, 'dropCondition': None, 'dropTarget': 30000288, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 639, 'dropPackage': 1514, 'dropCondition': None, 'dropTarget': 30000289, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 640, 'dropPackage': 1514, 'dropCondition': None, 'dropTarget': 30000290, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}],
-        1515:[{'ID': 641, 'dropPackage': 1515, 'dropCondition': None, 'dropTarget': 30990121, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 642, 'dropPackage': 1515, 'dropCondition': None, 'dropTarget': 30990122, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 643, 'dropPackage': 1515, 'dropCondition': None, 'dropTarget': 30990123, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 644, 'dropPackage': 1515, 'dropCondition': None, 'dropTarget': 30990124, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}],
-        1516:[{'ID': 645, 'dropPackage': 1516, 'dropCondition': None, 'dropTarget': 30990128, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 646, 'dropPackage': 1516, 'dropCondition': None, 'dropTarget': 30990129, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 647, 'dropPackage': 1516, 'dropCondition': None, 'dropTarget': 30990130, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}, {'ID': 648, 'dropPackage': 1516, 'dropCondition': None, 'dropTarget': 30990131, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 5000, 'grade': 0}],
+        10041:[{'ID': 1, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80792001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 900, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 2, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80792002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 90, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 3, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80792003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 90, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 4, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80792004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 400, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 5, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 6, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 7, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 8, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 9, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80793005, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 10, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80794001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 11, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80794002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 12, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80794003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 13, 'dropPackage': 10041, 'dropCondition': None, 'dropTarget': 80795001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 10, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        10042:[{'ID': 14, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 900, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 15, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 90, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 16, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 90, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 17, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 400, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 18, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80703005, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 19, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80704001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 20, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80704002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 21, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80704003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 22, 'dropPackage': 10042, 'dropCondition': None, 'dropTarget': 80705002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1001:[{'ID': 23, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 24, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 25, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 26, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 27, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 28, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 29, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 30, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 31, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 32, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 33, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 34, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 35, 'dropPackage': 1001, 'dropCondition': None, 'dropTarget': 80581001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1002:[{'ID': 36, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 37, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 38, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 39, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 40, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 41, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 42, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 43, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 44, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 45, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 46, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 47, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 48, 'dropPackage': 1002, 'dropCondition': None, 'dropTarget': 80581001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1003:[{'ID': 49, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 50, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 51, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 52, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 53, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 54, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 55, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 56, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 57, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 58, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 59, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 60, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 61, 'dropPackage': 1003, 'dropCondition': None, 'dropTarget': 80581001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1004:[{'ID': 62, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 63, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 64, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 65, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 66, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 67, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 68, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 69, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 70, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 71, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 72, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 73, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 74, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 75, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80682001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 76, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80692001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 77, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80782001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 78, 'dropPackage': 1004, 'dropCondition': None, 'dropTarget': 80792001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1005:[{'ID': 79, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 80, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 81, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 82, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 83, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 84, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 85, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 86, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 87, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 88, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 89, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 90, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 91, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 92, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80682001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 93, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80692001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 94, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80782001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 95, 'dropPackage': 1005, 'dropCondition': None, 'dropTarget': 80792001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1006:[{'ID': 96, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 97, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 98, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 99, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 100, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 101, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 102, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 103, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 104, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 105, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 106, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 107, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 108, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 109, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80682001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 110, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80692001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 111, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80782001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 112, 'dropPackage': 1006, 'dropCondition': None, 'dropTarget': 80792001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1301:[{'ID': 113, 'dropPackage': 1301, 'dropCondition': None, 'dropTarget': 30010021, 'dropNumMin': 2, 'dropNumMax': 6, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 114, 'dropPackage': 1301, 'dropCondition': None, 'dropTarget': 30010022, 'dropNumMin': 2, 'dropNumMax': 6, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 115, 'dropPackage': 1301, 'dropCondition': None, 'dropTarget': 30010023, 'dropNumMin': 2, 'dropNumMax': 6, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 116, 'dropPackage': 1301, 'dropCondition': None, 'dropTarget': 30010024, 'dropNumMin': 2, 'dropNumMax': 6, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}],
+        1302:[{'ID': 117, 'dropPackage': 1302, 'dropCondition': None, 'dropTarget': 30010021, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 118, 'dropPackage': 1302, 'dropCondition': None, 'dropTarget': 30010022, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 119, 'dropPackage': 1302, 'dropCondition': None, 'dropTarget': 30010023, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 120, 'dropPackage': 1302, 'dropCondition': None, 'dropTarget': 30010024, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}],
+        1303:[{'ID': 121, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990135, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 122, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990136, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 123, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990137, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 124, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990138, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 125, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990142, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 126, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990143, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 127, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990144, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 128, 'dropPackage': 1303, 'dropCondition': None, 'dropTarget': 30990145, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1501:[{'ID': 129, 'dropPackage': 1501, 'dropCondition': None, 'dropTarget': 30990121, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 130, 'dropPackage': 1501, 'dropCondition': None, 'dropTarget': 30990122, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 131, 'dropPackage': 1501, 'dropCondition': None, 'dropTarget': 30990123, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 132, 'dropPackage': 1501, 'dropCondition': None, 'dropTarget': 30990124, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1502:[{'ID': 133, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000102, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 134, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000103, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 135, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000104, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 136, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000105, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 137, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000106, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 138, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000107, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 139, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000108, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 140, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000109, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 141, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000110, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 142, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000111, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 143, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000112, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 144, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000113, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 145, 'dropPackage': 1502, 'dropCondition': [(2, 1001)], 'dropTarget': 30000114, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 146, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000141, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 147, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000142, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 148, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000143, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 149, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000144, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 150, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000145, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 151, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000146, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 152, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000147, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 153, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000148, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 154, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000149, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 155, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000150, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 156, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000151, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 157, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000152, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 158, 'dropPackage': 1502, 'dropCondition': [(2, 1002)], 'dropTarget': 30000153, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 159, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000180, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 160, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000181, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 161, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000182, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 162, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000183, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 163, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000184, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 164, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000185, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 165, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000186, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 166, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000187, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 167, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000188, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 168, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000189, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 169, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000190, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 170, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000191, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 171, 'dropPackage': 1502, 'dropCondition': [(2, 1003)], 'dropTarget': 30000192, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}],
+        1503:[{'ID': 172, 'dropPackage': 1503, 'dropCondition': None, 'dropTarget': 30000287, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 173, 'dropPackage': 1503, 'dropCondition': None, 'dropTarget': 30000288, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 174, 'dropPackage': 1503, 'dropCondition': None, 'dropTarget': 30000289, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1504:[{'ID': 175, 'dropPackage': 1504, 'dropCondition': None, 'dropTarget': 30000290, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 176, 'dropPackage': 1504, 'dropCondition': None, 'dropTarget': 30000291, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 177, 'dropPackage': 1504, 'dropCondition': None, 'dropTarget': 30000292, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1505:[{'ID': 178, 'dropPackage': 1505, 'dropCondition': None, 'dropTarget': 30000293, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 179, 'dropPackage': 1505, 'dropCondition': None, 'dropTarget': 30000294, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 180, 'dropPackage': 1505, 'dropCondition': None, 'dropTarget': 30000295, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1506:[{'ID': 181, 'dropPackage': 1506, 'dropCondition': None, 'dropTarget': 30000296, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 182, 'dropPackage': 1506, 'dropCondition': None, 'dropTarget': 30000297, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 183, 'dropPackage': 1506, 'dropCondition': None, 'dropTarget': 30000298, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1507:[{'ID': 184, 'dropPackage': 1507, 'dropCondition': None, 'dropTarget': 30990128, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 185, 'dropPackage': 1507, 'dropCondition': None, 'dropTarget': 30990129, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 186, 'dropPackage': 1507, 'dropCondition': None, 'dropTarget': 30990130, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 187, 'dropPackage': 1507, 'dropCondition': None, 'dropTarget': 30990131, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1508:[{'ID': 188, 'dropPackage': 1508, 'dropCondition': None, 'dropTarget': 30990135, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 189, 'dropPackage': 1508, 'dropCondition': None, 'dropTarget': 30990136, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 190, 'dropPackage': 1508, 'dropCondition': None, 'dropTarget': 30990137, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 191, 'dropPackage': 1508, 'dropCondition': None, 'dropTarget': 30990138, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1509:[{'ID': 192, 'dropPackage': 1509, 'dropCondition': None, 'dropTarget': 30990142, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 193, 'dropPackage': 1509, 'dropCondition': None, 'dropTarget': 30990143, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 194, 'dropPackage': 1509, 'dropCondition': None, 'dropTarget': 30990144, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 195, 'dropPackage': 1509, 'dropCondition': None, 'dropTarget': 30990145, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1007:[{'ID': 196, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 197, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 198, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 199, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 200, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 201, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 202, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 203, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 204, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 205, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 206, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 207, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 208, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80583001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 209, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80593001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 210, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 211, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 212, 'dropPackage': 1007, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1008:[{'ID': 213, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 214, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 215, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 216, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 217, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 218, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 219, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 220, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 221, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 222, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 223, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 224, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 225, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 226, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 227, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 228, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80783001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 229, 'dropPackage': 1008, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1009:[{'ID': 230, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 231, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 232, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 233, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 234, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 235, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 236, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 237, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 238, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 239, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 240, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 241, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 242, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 243, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 244, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 245, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80783001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 246, 'dropPackage': 1009, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1010:[{'ID': 247, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 248, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 249, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 250, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 251, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 252, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 253, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 254, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 255, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 256, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 257, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 258, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 259, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 260, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 261, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 262, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80783001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 263, 'dropPackage': 1010, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1011:[{'ID': 264, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80113001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 265, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80123001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 266, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80133001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 267, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80213001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 268, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80223001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 269, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80233001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 270, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80313001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 271, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80323001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 272, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80333001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 273, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80413001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 274, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80423001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 275, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80433001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 276, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80813001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 277, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80823001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 278, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80833001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 279, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80783001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 280, 'dropPackage': 1011, 'dropCondition': None, 'dropTarget': 80793001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1012:[{'ID': 281, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80114001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 282, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80124001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 283, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80134001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 284, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80214001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 285, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80224001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 286, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80234001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 287, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80314001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 288, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80324001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 289, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80334001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 290, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80414001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 291, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80424001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 292, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80434001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 293, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80584001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 294, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80594001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 295, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80814001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 296, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80824001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 297, 'dropPackage': 1012, 'dropCondition': None, 'dropTarget': 80834001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1013:[{'ID': 298, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80114001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 299, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80124001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 300, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80134001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 301, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80214001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 302, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80224001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 303, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80234001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 304, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80314001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 305, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80324001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 306, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80334001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 307, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80414001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 308, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80424001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 309, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80434001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 310, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80584001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 311, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80594001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 312, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80814001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 313, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80824001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 314, 'dropPackage': 1013, 'dropCondition': None, 'dropTarget': 80834001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1014:[{'ID': 315, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80114001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 316, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80124001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 317, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80134001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 318, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80214001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 319, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80224001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 320, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80234001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 321, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80314001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 322, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80324001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 323, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80334001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 324, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80414001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 325, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80424001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 326, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80434001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 327, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80584001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 328, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80594001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 329, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80814001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 330, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80824001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 331, 'dropPackage': 1014, 'dropCondition': None, 'dropTarget': 80834001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        11002:[{'ID': 332, 'dropPackage': 11002, 'dropCondition': None, 'dropTarget': 30000227, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 899, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 333, 'dropPackage': 11002, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 100, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 334, 'dropPackage': 11002, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11003:[{'ID': 335, 'dropPackage': 11003, 'dropCondition': None, 'dropTarget': 30000227, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 878, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 336, 'dropPackage': 11003, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 120, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 337, 'dropPackage': 11003, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11004:[{'ID': 338, 'dropPackage': 11004, 'dropCondition': None, 'dropTarget': 30000227, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 857, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 339, 'dropPackage': 11004, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 140, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 340, 'dropPackage': 11004, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 3, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11005:[{'ID': 341, 'dropPackage': 11005, 'dropCondition': None, 'dropTarget': 30000227, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 836, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 342, 'dropPackage': 11005, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 160, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 343, 'dropPackage': 11005, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11006:[{'ID': 344, 'dropPackage': 11006, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 899, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 345, 'dropPackage': 11006, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 100, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 346, 'dropPackage': 11006, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11007:[{'ID': 347, 'dropPackage': 11007, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 878, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 348, 'dropPackage': 11007, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 120, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 349, 'dropPackage': 11007, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11008:[{'ID': 350, 'dropPackage': 11008, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 857, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 351, 'dropPackage': 11008, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 140, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 352, 'dropPackage': 11008, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 3, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11009:[{'ID': 353, 'dropPackage': 11009, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 836, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 354, 'dropPackage': 11009, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 160, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 355, 'dropPackage': 11009, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11010:[{'ID': 356, 'dropPackage': 11010, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 390, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 357, 'dropPackage': 11010, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 358, 'dropPackage': 11010, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 10, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11011:[{'ID': 359, 'dropPackage': 11011, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 330, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 360, 'dropPackage': 11011, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 650, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 361, 'dropPackage': 11011, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 20, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11012:[{'ID': 362, 'dropPackage': 11012, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 270, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 363, 'dropPackage': 11012, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 364, 'dropPackage': 11012, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 30, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        11013:[{'ID': 365, 'dropPackage': 11013, 'dropCondition': None, 'dropTarget': 30000228, 'dropNumMin': 4, 'dropNumMax': 6, 'weight': 210, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 366, 'dropPackage': 11013, 'dropCondition': None, 'dropTarget': 30000229, 'dropNumMin': 2, 'dropNumMax': 3, 'weight': 750, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 367, 'dropPackage': 11013, 'dropCondition': None, 'dropTarget': 30000230, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        99:[{'ID': 368, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 369, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 370, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 371, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 372, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001005, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 373, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001006, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 374, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001007, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 375, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001008, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 376, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001009, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 377, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001010, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 378, 'dropPackage': 99, 'dropCondition': None, 'dropTarget': 30001036, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        98:[{'ID': 379, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001011, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 380, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001012, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 381, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001013, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 382, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001014, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 383, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001015, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 384, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001016, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 385, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001017, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 386, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001018, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 387, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001019, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 388, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001020, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 389, 'dropPackage': 98, 'dropCondition': None, 'dropTarget': 30001037, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        97:[{'ID': 390, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001021, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 391, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001022, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 392, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001023, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 393, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001024, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 394, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001025, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 395, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001026, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 396, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001027, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 397, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001028, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 398, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001029, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 399, 'dropPackage': 97, 'dropCondition': None, 'dropTarget': 30001038, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        96:[{'ID': 400, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001030, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 401, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001031, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 402, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001032, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 403, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001033, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 404, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001034, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 405, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001035, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 406, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001039, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 407, 'dropPackage': 96, 'dropCondition': None, 'dropTarget': 30001040, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}],
+        1510:[{'ID': 408, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000287, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 409, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000288, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 410, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000289, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 411, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000290, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 412, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000291, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 413, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000292, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2300, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 414, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000293, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 500, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 415, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000294, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 500, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 416, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000295, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 500, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 417, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000296, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 50, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 418, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000297, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 50, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 419, 'dropPackage': 1510, 'dropCondition': None, 'dropTarget': 30000298, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 50, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        2000:[{'ID': 420, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 421, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003004, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 422, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003009, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 423, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003017, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 424, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003019, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 425, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003020, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 426, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003021, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 427, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003022, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 4000, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 428, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003002, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 429, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003007, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 430, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003010, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 431, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003012, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 432, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003015, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 433, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003033, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 434, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003035, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 435, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003037, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 436, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003040, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 437, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003044, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 438, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003049, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 439, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003050, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 700, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 440, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003003, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 441, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003005, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 442, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003008, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 443, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003011, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 444, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003013, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 445, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003016, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 446, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003018, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 447, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003027, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 448, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003029, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 449, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003038, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 450, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003042, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 451, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003045, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 452, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003047, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 40, 'bindWeight': 0, 'bindWeightMonth': 0, 'grade': 0}, {'ID': 453, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003023, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 454, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003025, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 455, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003034, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 456, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003036, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 457, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003039, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 458, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003041, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 459, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003043, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 460, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003046, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 461, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003048, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 14, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 462, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003006, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 463, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003014, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 464, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003024, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 465, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003026, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 466, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003028, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 467, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003030, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 468, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003031, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 469, 'dropPackage': 2000, 'dropCondition': None, 'dropTarget': 30003032, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}],
+        1511:[{'ID': 470, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990121, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 471, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990122, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 472, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990123, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 473, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990124, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 2000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 474, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990128, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 240, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 475, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990129, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 240, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 476, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990130, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 240, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 477, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990131, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 240, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 478, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990135, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 24, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 479, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990136, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 24, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 480, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990137, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 24, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 481, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990138, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 24, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 482, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990142, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 483, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990143, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 484, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990144, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 485, 'dropPackage': 1511, 'dropCondition': None, 'dropTarget': 30990145, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 1, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        9200:[{'ID': 486, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010007, 'dropNumMin': 20, 'dropNumMax': 30, 'weight': 2000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 487, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010008, 'dropNumMin': 20, 'dropNumMax': 30, 'weight': 2000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 488, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010009, 'dropNumMin': 1, 'dropNumMax': 5, 'weight': 1000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 489, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010010, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 500, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 490, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010011, 'dropNumMin': 1, 'dropNumMax': 5, 'weight': 1000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 491, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010012, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 500, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 492, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010013, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 1000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 493, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010014, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 2000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 494, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010015, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 500, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 495, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010016, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 1000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 496, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010017, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 2000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 497, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010018, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 500, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 498, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010019, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 1000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 499, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010020, 'dropNumMin': 1, 'dropNumMax': 3, 'weight': 2000, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 500, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010021, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 10, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 501, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010022, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 10, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 502, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010023, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 50, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 503, 'dropPackage': 9200, 'dropCondition': None, 'dropTarget': 30010024, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}],
+        2001:[{'ID': 504, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 505, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 506, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 507, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 508, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 509, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 510, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 511, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 512, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 513, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 514, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 515, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 516, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80811001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 8000, 'grade': 0}, {'ID': 517, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 518, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 519, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 520, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 521, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 522, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 523, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 524, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 525, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 526, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 527, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 528, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 529, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80811001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9000, 'grade': 0}, {'ID': 530, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80111001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 531, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80121001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 532, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80131001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 533, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80211001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 534, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80221001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 535, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80231001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 536, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80311001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 537, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80321001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 538, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80331001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 539, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80411001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 540, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80421001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 541, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80431001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 542, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80811001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9500, 'grade': 0}, {'ID': 543, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 544, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 545, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 546, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 547, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 548, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 549, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 550, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 551, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 552, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 553, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 554, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 555, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 556, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80592001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 557, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80812001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 558, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80822001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 559, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80832001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9800, 'grade': 0}, {'ID': 560, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 561, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 562, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 563, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 564, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 565, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 566, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 567, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 568, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 569, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 570, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 571, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 572, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 573, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80592001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 574, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80812001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 575, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80822001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 576, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80832001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9900, 'grade': 0}, {'ID': 577, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80112001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 578, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80122001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 579, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80132001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 580, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80212001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 581, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80222001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 582, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80232001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 583, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80312001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 584, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80322001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 585, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80332001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 586, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80412001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 587, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80422001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 588, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80432001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 589, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80582001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 600, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 590, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80592001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 591, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80812001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 592, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80822001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}, {'ID': 593, 'dropPackage': 2001, 'dropCondition': None, 'dropTarget': 80832001, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 300, 'bindWeight': 0, 'bindWeightMonth': 9950, 'grade': 0}],
+        1512:[{'ID': 594, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000115, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 595, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000116, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 596, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000117, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 597, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000118, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 598, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000119, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 599, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000120, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 600, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000121, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 601, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000122, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 602, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000123, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 603, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000124, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 604, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000125, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 605, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000126, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 606, 'dropPackage': 1512, 'dropCondition': [(2, 1001)], 'dropTarget': 30000127, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 607, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000154, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 608, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000155, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 609, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000156, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 610, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000157, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 611, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000158, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 612, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000159, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 613, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000160, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 614, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000161, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 615, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000162, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 616, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000163, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 617, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000164, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 618, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000165, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 619, 'dropPackage': 1512, 'dropCondition': [(2, 1002)], 'dropTarget': 30000166, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 620, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000193, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 621, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000194, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 622, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000195, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 623, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000196, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 624, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000197, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 625, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000198, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 626, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000199, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 627, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000200, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 628, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000201, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 629, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000202, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 630, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000203, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 631, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000204, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}, {'ID': 632, 'dropPackage': 1512, 'dropCondition': [(2, 1003)], 'dropTarget': 30000205, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 200, 'bindWeight': 0, 'bindWeightMonth': 10000, 'grade': 0}],
+        1513:[{'ID': 633, 'dropPackage': 1513, 'dropCondition': None, 'dropTarget': 30000283, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 634, 'dropPackage': 1513, 'dropCondition': None, 'dropTarget': 30000284, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 635, 'dropPackage': 1513, 'dropCondition': None, 'dropTarget': 30000285, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 636, 'dropPackage': 1513, 'dropCondition': None, 'dropTarget': 30000286, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1514:[{'ID': 637, 'dropPackage': 1514, 'dropCondition': None, 'dropTarget': 30000287, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 638, 'dropPackage': 1514, 'dropCondition': None, 'dropTarget': 30000288, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 639, 'dropPackage': 1514, 'dropCondition': None, 'dropTarget': 30000289, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 640, 'dropPackage': 1514, 'dropCondition': None, 'dropTarget': 30000290, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1515:[{'ID': 641, 'dropPackage': 1515, 'dropCondition': None, 'dropTarget': 30990121, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 642, 'dropPackage': 1515, 'dropCondition': None, 'dropTarget': 30990122, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 643, 'dropPackage': 1515, 'dropCondition': None, 'dropTarget': 30990123, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 644, 'dropPackage': 1515, 'dropCondition': None, 'dropTarget': 30990124, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
+        1516:[{'ID': 645, 'dropPackage': 1516, 'dropCondition': None, 'dropTarget': 30990128, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 646, 'dropPackage': 1516, 'dropCondition': None, 'dropTarget': 30990129, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 647, 'dropPackage': 1516, 'dropCondition': None, 'dropTarget': 30990130, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}, {'ID': 648, 'dropPackage': 1516, 'dropCondition': None, 'dropTarget': 30990131, 'dropNumMin': 1, 'dropNumMax': 1, 'weight': 5000, 'bindWeight': 0, 'bindWeightMonth': 5000, 'grade': 0}],
 })

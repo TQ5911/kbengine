@@ -42,15 +42,9 @@ class ImpLine(object):
 
         lineNo = formula.getLineNo(self.spaceNo)
         enterPos = formula.whatSpaceBornPoint(lineType)
-        extraProps = {"mapId" : lineType, "lineType" : lineType, "lineNo" : lineNo, "enterPos" : enterPos,  "callbackName" : "applyEnterLineMapUnlockedCallback"}
-        self.base.onCheckMapUnlocked(gameconst.CELL, 4, 'teleportEnterLineMapUnlockedCallback', extraProps)
+        if not self.onCheckMapUnlocked(lineType):
+            return
 
-    def applyEnterLineMapUnlockedCallback(self, extraProps):
-        INFO_MSG("applyEnterLineMapUnlockedCallback", extraProps)
-
-        lineType = extraProps.get("lineType")
-        lineNo = extraProps.get("lineNo")
-        enterPos = extraProps.get("enterPos")
         self.applyEnterLineInternal(lineType, lineNo, enterPos, self.direction, False)
 
     def enterLineByNpc(self, lineType, *args, **kwargs):
@@ -62,16 +56,9 @@ class ImpLine(object):
             return
 
         enterPos, direction = formula.whatSpaceBornPosAndDir(lineType)
-        extraProps = {"mapId" : mapId, "lineType" : lineType, "lineNo" : lineNo, "enterPos" : enterPos, "direction" : direction,  "callbackName" : "enterLineByNpcMapUnlockedCallback"}
-        self.base.onCheckMapUnlocked(gameconst.CELL, 5, 'teleportEnterLineMapUnlockedCallback', extraProps)
+        if not self.onCheckMapUnlocked(mapId):
+            return
 
-    def enterLineByNpcMapUnlockedCallback(self, extraProps):
-        INFO_MSG("enterLineByNpcMapUnlockedCallback", extraProps)
-
-        lineType = extraProps.get("lineType")
-        lineNo = extraProps.get("lineNo")
-        enterPos = extraProps.get("enterPos")
-        direction = extraProps.get("direction")
         if formula.isDuelMapId(lineType):
             _options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
             self.tryRegiTeleportOutsideRecord(self.spaceNo, _options)
@@ -386,10 +373,19 @@ class ImpLine(object):
         else:
             self.popTempMiscProp(gameconst.AvatarProps.lastUpdateAreaPos)
 
-    def teleportEnterLineMapUnlockedCallback(self, checkResult, extraProps):
-        INFO_MSG("teleportEnterLineMapUnlockedCallback", checkResult, extraProps)
-        if not checkResult:
-            return
+    def onCheckMapUnlocked(self, mapId):
+        mapData = GGD.datas.get(mapId)
+        if not mapData:
+            ERROR_MSG('onCheckMapUnlocked but mapData invalid:', mapId)
+            return False
+    
+        checkResult = True
+        openTask = mapData['openTask']
+        if openTask:
+            checkResult = self._isUIVisibleStrCell(openTask)
+            if not checkResult:
+                self.client.onMapUnlockMessagePre(mapId)
+        else:
+            DEBUG_MSG("onCheckMapUnlocked map always locked")
 
-        callbackName = extraProps.get("callbackName")
-        getattr(self, callbackName)(extraProps)
+        return checkResult

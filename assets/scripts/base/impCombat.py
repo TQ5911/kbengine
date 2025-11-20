@@ -86,7 +86,7 @@ class AvatarBuildsMixin(object):
         if not condStr:
             return True
 
-        res, _1, _2 = self.isUIVisible(condStr)
+        res = self._isUIVisibleStr(condStr)
         return res
 
     def unlockSkill(self, isNotify, lv=0, mid=0):
@@ -347,6 +347,7 @@ class ImpCombat(AvatarBuildsMixin):
     # ------------------- dead and relive end -------------------
 
     def onAvatarLevelUpBase(self, oldLv, newLv):
+        self._onLvUpVisible(oldLv, newLv)
         self.onTaskAvatarLvUp(oldLv, newLv)
         # self._modifyRedisAttr({'level': newLv})
         self.accountEntity.updateCharacterLevel(self.gbID, newLv, self.tLoginBase)
@@ -647,7 +648,7 @@ class ImpCombat(AvatarBuildsMixin):
         summonSchool = SRSC.datas['usePlayerForSummon'].get('valueCN', 0)
         if school != summonSchool or summonSkillId not in removedSkills:
             return
-        
+
         INFO_MSG('base removeSkillSetSummonSlotIdx ', self.summonSlotIdxBase, removedSkills)
         self.summonSlotIdxBase = 0
         self.cell.setSummonSlotIdx(0)

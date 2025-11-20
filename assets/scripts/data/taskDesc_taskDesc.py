@@ -110,13 +110,43 @@ datas = _tools.RODict({
         "TaskGroup": 0,
         "TaskName": "启程",
     }),
-    86010012: _tools.RODict({
-        "TaskId": 86010012,
+    86050001: _tools.RODict({
+        "TaskId": 86050001,
         "TaskGroup": 0,
-        "TaskName": "启程",
+        "TaskName": "铁匠的委托",
+    }),
+    86050060: _tools.RODict({
+        "TaskId": 86050060,
+        "TaskGroup": 0,
+        "TaskName": "铁匠的委托",
+    }),
+    86050032: _tools.RODict({
+        "TaskId": 86050032,
+        "TaskGroup": 0,
+        "TaskName": "铁匠的委托",
+    }),
+    86050003: _tools.RODict({
+        "TaskId": 86050003,
+        "TaskGroup": 0,
+        "TaskName": "铁匠的委托",
+    }),
+    86050005: _tools.RODict({
+        "TaskId": 86050005,
+        "TaskGroup": 0,
+        "TaskName": "铁匠的委托",
+    }),
+    86050006: _tools.RODict({
+        "TaskId": 86050006,
+        "TaskGroup": 0,
+        "TaskName": "铁匠的委托",
     }),
     86010013: _tools.RODict({
         "TaskId": 86010013,
+        "TaskGroup": 0,
+        "TaskName": "启程",
+    }),
+    86010062: _tools.RODict({
+        "TaskId": 86010062,
         "TaskGroup": 0,
         "TaskName": "启程",
     }),
@@ -128,7 +158,7 @@ datas = _tools.RODict({
     86010015: _tools.RODict({
         "TaskId": 86010015,
         "TaskGroup": 0,
-        "TaskName": "启程",
+        "TaskName": "废弃",
     }),
     86010016: _tools.RODict({
         "TaskId": 86010016,
@@ -138,12 +168,12 @@ datas = _tools.RODict({
     86010017: _tools.RODict({
         "TaskId": 86010017,
         "TaskGroup": 0,
-        "TaskName": "启程",
+        "TaskName": "废弃",
     }),
     86010019: _tools.RODict({
         "TaskId": 86010019,
         "TaskGroup": 0,
-        "TaskName": "启程",
+        "TaskName": "废弃",
     }),
     86010023: _tools.RODict({
         "TaskId": 86010023,
@@ -163,7 +193,7 @@ datas = _tools.RODict({
     86010005: _tools.RODict({
         "TaskId": 86010005,
         "TaskGroup": 0,
-        "TaskName": "初入新元城",
+        "TaskName": "启程",
     }),
     86010026: _tools.RODict({
         "TaskId": 86010026,
@@ -197,16 +227,6 @@ datas = _tools.RODict({
     }),
     86010031: _tools.RODict({
         "TaskId": 86010031,
-        "TaskGroup": 0,
-        "TaskName": "初入新元城",
-    }),
-    86010041: _tools.RODict({
-        "TaskId": 86010041,
-        "TaskGroup": 0,
-        "TaskName": "初入新元城",
-    }),
-    86010062: _tools.RODict({
-        "TaskId": 86010062,
         "TaskGroup": 0,
         "TaskName": "初入新元城",
     }),
@@ -275,6 +295,21 @@ datas = _tools.RODict({
         "TaskGroup": 0,
         "TaskName": "寻找精灵村",
     }),
+    86010041: _tools.RODict({
+        "TaskId": 86010041,
+        "TaskGroup": 0,
+        "TaskName": "寻找精灵村",
+    }),
+    86010063: _tools.RODict({
+        "TaskId": 86010063,
+        "TaskGroup": 0,
+        "TaskName": "寻找精灵村",
+    }),
+    86010067: _tools.RODict({
+        "TaskId": 86010067,
+        "TaskGroup": 0,
+        "TaskName": "寻找精灵村",
+    }),
     86010040: _tools.RODict({
         "TaskId": 86010040,
         "TaskGroup": 0,
@@ -335,11 +370,6 @@ datas = _tools.RODict({
         "TaskGroup": 0,
         "TaskName": "道尊",
     }),
-    86010063: _tools.RODict({
-        "TaskId": 86010063,
-        "TaskGroup": 0,
-        "TaskName": "道尊",
-    }),
     86010053: _tools.RODict({
         "TaskId": 86010053,
         "TaskGroup": 0,
@@ -394,6 +424,46 @@ datas = _tools.RODict({
         "TaskId": 86010066,
         "TaskGroup": 0,
         "TaskName": "主线测试",
+    }),
+    86010068: _tools.RODict({
+        "TaskId": 86010068,
+        "TaskGroup": 0,
+        "TaskName": "5人讨伐",
+    }),
+    86010069: _tools.RODict({
+        "TaskId": 86010069,
+        "TaskGroup": 0,
+        "TaskName": "收集",
+    }),
+    86010070: _tools.RODict({
+        "TaskId": 86010070,
+        "TaskGroup": 0,
+        "TaskName": "混沌回廊",
+    }),
+    86010071: _tools.RODict({
+        "TaskId": 86010071,
+        "TaskGroup": 0,
+        "TaskName": "恢复商路",
+    }),
+    86010072: _tools.RODict({
+        "TaskId": 86010072,
+        "TaskGroup": 0,
+        "TaskName": "恢复商路",
+    }),
+    86010073: _tools.RODict({
+        "TaskId": 86010073,
+        "TaskGroup": 0,
+        "TaskName": "恢复商路",
+    }),
+    86010074: _tools.RODict({
+        "TaskId": 86010074,
+        "TaskGroup": 0,
+        "TaskName": "恢复商路",
+    }),
+    86010075: _tools.RODict({
+        "TaskId": 86010075,
+        "TaskGroup": 0,
+        "TaskName": "精灵装备",
     }),
     86020001: _tools.RODict({
         "TaskId": 86020001,
@@ -2435,26 +2505,6 @@ datas = _tools.RODict({
         "TaskGroup": 0,
         "TaskName": "悬赏任务测试",
     }),
-    86050001: _tools.RODict({
-        "TaskId": 86050001,
-        "TaskGroup": 0,
-        "TaskName": "铁匠的委托",
-    }),
-    86050003: _tools.RODict({
-        "TaskId": 86050003,
-        "TaskGroup": 0,
-        "TaskName": "铁匠的委托",
-    }),
-    86050005: _tools.RODict({
-        "TaskId": 86050005,
-        "TaskGroup": 0,
-        "TaskName": "铁匠的委托",
-    }),
-    86050006: _tools.RODict({
-        "TaskId": 86050006,
-        "TaskGroup": 0,
-        "TaskName": "铁匠的委托",
-    }),
     86050007: _tools.RODict({
         "TaskId": 86050007,
         "TaskGroup": 0,
@@ -2588,12 +2638,7 @@ datas = _tools.RODict({
     86050031: _tools.RODict({
         "TaskId": 86050031,
         "TaskGroup": 0,
-        "TaskName": "师父的信物",
-    }),
-    86050032: _tools.RODict({
-        "TaskId": 86050032,
-        "TaskGroup": 0,
-        "TaskName": "师父的信物",
+        "TaskName": "帮会",
     }),
     86050033: _tools.RODict({
         "TaskId": 86050033,
@@ -2729,6 +2774,26 @@ datas = _tools.RODict({
         "TaskId": 86050059,
         "TaskGroup": 0,
         "TaskName": "支线任务测试",
+    }),
+    86050061: _tools.RODict({
+        "TaskId": 86050061,
+        "TaskGroup": 0,
+        "TaskName": "不老仙丹",
+    }),
+    86050062: _tools.RODict({
+        "TaskId": 86050062,
+        "TaskGroup": 0,
+        "TaskName": "不老仙丹",
+    }),
+    86050063: _tools.RODict({
+        "TaskId": 86050063,
+        "TaskGroup": 0,
+        "TaskName": "不老仙丹",
+    }),
+    86050064: _tools.RODict({
+        "TaskId": 86050064,
+        "TaskGroup": 0,
+        "TaskName": "不老仙丹",
     }),
     86060008: _tools.RODict({
         "TaskId": 86060008,
@@ -2943,7 +3008,7 @@ datas = _tools.RODict({
     86060043: _tools.RODict({
         "TaskId": 86060043,
         "TaskGroup": 0,
-        "TaskName": "初入新元城",
+        "TaskName": "废弃任务·",
     }),
     86060044: _tools.RODict({
         "TaskId": 86060044,

@@ -4821,6 +4821,11 @@ namespace KBEngine
 		}
 	}
 
+	public class AUCTIONID_LIST : List<UInt64>
+	{
+
+	}
+
 	public struct AUCTION_TYPE
 	{
 		Byte value;
@@ -5745,6 +5750,7 @@ namespace KBEngine
 		public UInt32 dropFixEndTime = 0;
 		public Int64 score = 0;
 		public UInt16 bindValue = 0;
+		public Byte isAddBindValue = 0;
 		public Byte glyphGroup = 0;
 		public Byte spiritGroup = 0;
 		public Byte grade = 0;
@@ -6978,14 +6984,6 @@ namespace KBEngine
 		public string name = "";
 		public UInt16 school = 0;
 		public Int32 value = 0;
-
-	}
-
-	public class TEAM_STATISTIC_CLIENT_VAL
-	{
-		public List<TEAM_STATISTIC_PLAYER_VAL> dmgList = new List<TEAM_STATISTIC_PLAYER_VAL>();
-		public List<TEAM_STATISTIC_PLAYER_VAL> healList = new List<TEAM_STATISTIC_PLAYER_VAL>();
-		public List<TEAM_STATISTIC_PLAYER_VAL> hurtList = new List<TEAM_STATISTIC_PLAYER_VAL>();
 
 	}
 

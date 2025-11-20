@@ -7,14 +7,17 @@ import json
 
 
 def initBotConfig(filepath):
-    ROOT_PATH = os.path.realpath(filepath)
-    ROOT_PATH = os.path.dirname(ROOT_PATH)
     basename = os.path.basename(filepath).split('.')[0]
-    BOT_CONFIG = json.load(open(os.path.join(ROOT_PATH, f'config/{basename}.json')))
-
-    ROOT_PATH = os.path.dirname(ROOT_PATH)
-    sys.path.append(os.path.join(ROOT_PATH, 'data'))
-    sys.path.append(os.path.join(ROOT_PATH, 'server_common'))
+    ROOT_PATH = os.path.realpath(filepath)
+    max_depth = 0
+    while os.path.basename(ROOT_PATH) != 'bots' and max_depth < 10:
+        ROOT_PATH = os.path.dirname(ROOT_PATH)
+        max_depth += 1
+    # print(f'BOT ROOT_PATH: {ROOT_PATH}')
+    config_path = os.path.join(ROOT_PATH, f'config/{basename}.json')
+    if not os.path.exists(config_path):
+        return {}
+    BOT_CONFIG = json.load(open(config_path, 'r', encoding='utf-8'))
     return BOT_CONFIG
 
 class Caller(object):

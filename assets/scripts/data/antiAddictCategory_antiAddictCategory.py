@@ -869,7 +869,25 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None
+    }),
+    96: _tools.RODict({
+        "ID": 96,
+        "name": "BONUS_SRC_BUYCREDIT_MONTHCARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001993,
+        "rewardMessage": ('<color=&color211>激活月卡</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+    }),
+    97: _tools.RODict({
+        "ID": 97,
+        "name": "BONUS_SRC_MONTHCARD_DAILY",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001994,
+        "rewardMessage": ('<color=&color211>月卡奖励</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     })
 })
 minKey = 1
-maxKey = 95
+maxKey = 97

@@ -37,6 +37,7 @@ import conflict_status_def as C_S_DD
 import NPC_Pick as NPD
 import creep_base as CBD
 import gacha_gachaPool as GGP
+import creep_coefficient as C_CD
 
 import KBEngine
 from KBEDebug import *
@@ -2683,9 +2684,12 @@ def initBaseProperties(entity, propCurveID=0):
             ERROR_MSG('initBaseProperties propType error', entity.creepBaseId, propType, cfgPropType)
             return
 
+        _coefficientType = creepData['coefficientType']
+        _coefficientDic = C_CD.datas.get(_coefficientType, {})
+
         propList = propData.get('propList')
         for prop, val in propList.items():
-            setattr(entity, prop, val)
+            setattr(entity, prop, val * _coefficientDic.get(prop, 1))
 
     entity.baseSpeed = float(entity.getConfigData().get('baseSpeed', 0))
     entity.jobHealModify = entity.getConfigData().get('jobHealModify', 0.0)
@@ -2824,8 +2828,29 @@ def isActOpen(actId):
 
 
 def checkCanChangeSceneAndShowMsg(avatar, fromSpaceNo, toSpaceNo):
+    DEBUG_MSG('checkCanChangeSceneAndShowMsg 0 ', fromSpaceNo, toSpaceNo)
+    # 1. 任何一个副本可以进组队副本，团队副本除外
+    isRaidFromSpace = formula.isRaidDungeonSpace(fromSpaceNo)
+    isTeamToSpace = formula.isTeamDungeonSpace(toSpaceNo)
+    DEBUG_MSG('checkCanChangeSceneAndShowMsg 1 ', fromSpaceNo, toSpaceNo)
+    if isRaidFromSpace and isTeamToSpace:
+        return False
+    if isTeamToSpace:
+        return True
+
+    # 2. 任何一个副本可以进团队副本，组队副本除外
+    isTeamFromSpace = formula.isTeamDungeonSpace(fromSpaceNo)
+    isRaidToSpace = formula.isRaidDungeonSpace(toSpaceNo)
+    DEBUG_MSG('checkCanChangeSceneAndShowMsg 2 ', fromSpaceNo, toSpaceNo)
+    if isTeamFromSpace and isRaidToSpace:
+        return False
+    if isRaidToSpace:
+        return True
+
+    # 进跨服
     if fromSpaceNo == 0 and gameconfig.isCrossServer():
         return True
+
     _fromMapId = formula.getMapId(fromSpaceNo)
     _toMapId = formula.getMapId(toSpaceNo)
     _fromSceneType = GPGP.datas[_fromMapId]['sceneType']
@@ -3235,7 +3260,7 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
         elif className == 'RebornPos':
             _RebornPosId = _mPrm['EntityID']
             params.update({
-                'name': _mPrm['Name'],
+                'name': _mPrm['DisplayName'],
                 'rebornPosId': _RebornPosId,
             })
 

@@ -27,43 +27,29 @@ datas = _tools.RODict({
         "officalNum_1": 1,
         "officalNum_2": 1,
         "officalNum_3": 1,
-        "memberLimit": 60
+        "memberLimit": 55
     }),
     3: _tools.RODict({
         "ID": 3,
         "officalNum_1": 1,
         "officalNum_2": 1,
         "officalNum_3": 2,
-        "memberLimit": 70
+        "memberLimit": 60
     }),
     4: _tools.RODict({
         "ID": 4,
         "officalNum_1": 1,
         "officalNum_2": 2,
         "officalNum_3": 2,
-        "memberLimit": 80
+        "memberLimit": 70
     }),
     5: _tools.RODict({
         "ID": 5,
         "officalNum_1": 1,
         "officalNum_2": 2,
         "officalNum_3": 3,
-        "memberLimit": 90
-    }),
-    6: _tools.RODict({
-        "ID": 6,
-        "officalNum_1": 1,
-        "officalNum_2": 2,
-        "officalNum_3": 3,
-        "memberLimit": 100
-    }),
-    7: _tools.RODict({
-        "ID": 7,
-        "officalNum_1": 1,
-        "officalNum_2": 2,
-        "officalNum_3": 3,
-        "memberLimit": 150
+        "memberLimit": 80
     })
 })
 minKey = 1
-maxKey = 7
+maxKey = 5

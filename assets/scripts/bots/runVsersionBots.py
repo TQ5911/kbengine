@@ -6,8 +6,8 @@ import pypinyin
 from pypinyin import lazy_pinyin
 from datetime import datetime
 import random
-from simpleBotBase import FACE_DATA
-import http_service
+from botUtils.faceData_CtoDict import FACE_DATA
+import botUtils.http_service as http_service
 # 添加目标服务器参数：modName, school, loginHost, loginPort
 modName, _school, _loginHost, _loginPort = sys.argv[1:5]
 const_workspace_id_h1 = "59721401"

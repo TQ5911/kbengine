@@ -12,6 +12,7 @@ import elasticUtils
 import actionContext
 import Friendship
 import AuthClsWraper
+import gamedecorator
 
 import relationConfig_relationConfig as RC_RCD
 import agent_agentFunction as A_AFD
@@ -198,6 +199,7 @@ class IFriendship(object):
         else:
             self.setTempMiscProp(gameconst.AvatarProps.friendInitStatus, 0)
 
+    @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def sendFriendRequest(self, exposed, gbId):
         INFO_MSG("IFriends::sendFriendRequest gbId={}".format(gbId))
@@ -298,6 +300,7 @@ class IFriendship(object):
         _clientData = self.friendship.addReceiveReq(senderData, timestamp)
         self.client.onFriendRequests([_clientData])
 
+    @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def rejectRequest(self, exposed, gbId):
         INFO_MSG("IFriends::rejectRequest gbId={}".format(gbId))
@@ -307,6 +310,7 @@ class IFriendship(object):
 
         self._removeRecvRequest(gbId)
 
+    @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def acceptAllRequest(self, exposed):
         INFO_MSG("IFriends::acceptAllRequest")
@@ -317,6 +321,7 @@ class IFriendship(object):
 
         self.batchlyCall(_iter(), 1, 0.1)
 
+    @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def rejectAllRequest(self, exposed):
         INFO_MSG("IFriends::rejectAllRequest")
@@ -332,6 +337,7 @@ class IFriendship(object):
         self.client.onRemoveFriendRequests(_gbIds)
 
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
+    @gamedecorator.checkGameconfigEnable('friend')
     def acceptRequest(self, exposed, gbId):
         INFO_MSG("IFriends::acceptRequest gbId={}".format(gbId))
         self._acceptRequest(gbId)
@@ -537,6 +543,7 @@ class IFriendship(object):
         INFO_MSG("IFriends::searchFriend name={}".format(name))
         gamesql.searchFriendTemp(self._searchFriendTemp)
 
+    @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def searchFriend(self, exposed, name):
         INFO_MSG("IFriends::searchElastic name={}".format(name))
@@ -607,6 +614,7 @@ class IFriendship(object):
         self._addPacketSendTask(_iter(_sendList))
         # self.client.onSearchFriends(_sendList)
 
+    @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def removeFriend(self, exposed, gbId):
         INFO_MSG("IFriends::removeFriend gbId={}".format(gbId))
@@ -667,6 +675,7 @@ class IFriendship(object):
         self.client.onUpdateStrangerData([_data])
 
     # -------------------------------- block list start ------------------------
+    @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def blockPlayer(self, exposed, gbId):
         INFO_MSG("IFriends::blockPlayer gbId={}".format(gbId))
@@ -704,6 +713,7 @@ class IFriendship(object):
         _clientData = self.friendship.updateBlock(fcVal)
         self.client.onUpdateBlocks([_clientData])
 
+    @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def removeFromBlock(self, exposed, gbId):
         INFO_MSG("IFriends::removeFromBlock gbId={}".format(gbId))
@@ -729,6 +739,7 @@ class IFriendship(object):
     # ------------------------------- msg start -------------------------------
 
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
+    @gamedecorator.checkGameconfigEnable('chat')
     def sendFriendMsg(self, exposed, gbId, msg):
         INFO_MSG("IFriends::sendFriendMsg gbId={} msg={}".format(gbId, msg))
         self._sendFriendMsg(gbId, msg)

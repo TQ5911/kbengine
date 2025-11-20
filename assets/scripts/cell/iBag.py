@@ -884,6 +884,11 @@ class IBag(object):
             DEBUG_MSG("DEBUG::checkUseTelToMainCity::", itemId, GPGPD.datas[mapId]['canUseReturnScroll'], self.getMoralEffectTransItem())
             return gameconst.UseItem.FALSE
 
+        returnMapID = GPGPD.datas[mapId]['returnMapID']
+        if not returnMapID or not self.onCheckMapUnlocked(returnMapID):
+            DEBUG_MSG("DEBUG::checkUseTelToMainCity::", itemId, GPGPD.datas[mapId]['returnMapID'])
+            return gameconst.UseItem.FALSE
+
         return gameconst.UseItem.TRUE
 
     def useTelToMainCity(self, opUUID, context, castTime=-1, *args):
@@ -912,7 +917,7 @@ class IBag(object):
                              gameconst.State.Teleporting,
                              gameconst.CastType.teleportByUseItem,
                              'onTelToMainCityWithCast',
-                             (None, spaceNo, dstPos, dstDir, callback, callbackArgs),
+                             (None, spaceNo, dstPos, dstDir, callback, callbackArgs, fCallback, fCallbackArgs),
                              castTime=castTime,
                              failedFunc=fCallback,
                              failedArgs=fCallbackArgs,

@@ -18,7 +18,7 @@ import sMath
 import dataUtils
 import dungeonSrc
 import gameconfig
-
+import copy
 import impRaid
 
 import message_Message_def as MMD
@@ -82,13 +82,13 @@ class AvatarTeamStatisticMixin(object):
 
     @utils.isMyself
     @gamedecorator.limitcall(2)
-    def reqGetTeamStatisticData(self, exposed):
+    def reqGetTeamStatisticData(self, exposed, type):
         if not self.checkTeamStaticLimit():
             return
 
         stub = self.getRealTeamStub()
         if stub:
-            stub.getTeamStatisticData(self.base, self.getRealTeamId())
+            stub.getTeamStatisticData(self.base, self.getRealTeamId(), type)
 
     @utils.isMyself
     @gamedecorator.limitcall(2)
@@ -122,37 +122,36 @@ class AvatarTeamStatisticMixin(object):
         self.setTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict, dataDict)
 
         # 同步一下
-        self._onGetTeamStatisticData(dataRecord)
+        self._onGetTeamStatisticData(gameconst.TeamStatisticType.DAMAGE, dataRecord['dmgList'])
 
-    def onGetTeamStatisticData(self, data):
+    def onGetTeamStatisticData(self, type, strType, data):
         # 先暂存
-        self.setTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord, data)
+        dataRecord = self.getTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord, {})
+        dataRecord[strType] = data
+        self.setTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord, dataRecord)
 
-        self._onGetTeamStatisticData(data)
+        if strType == gameconst.TEAM_STATISTIC_TYPE_TO_LIST[type]:
+            self._onGetTeamStatisticData(type, data)
 
-    def _onGetTeamStatisticData(self, data):
+    def _onGetTeamStatisticData(self, type, data):
 
         self.tempStatisticData = self.getTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict, {})
-
-        for val in data['dmgList']:
+        
+        strKey = gameconst.TEAM_STATISTIC_TYPE_TO_KEY[type]
+        
+        data = copy.deepcopy(data)
+        for val in data:
             if val['gbId'] in self.tempStatisticData:
-                val['value'] -= self.tempStatisticData[val['gbId']].get('dmg', 0)
+                val['value'] -= self.tempStatisticData[val['gbId']].get(strKey, 0)
 
-        for val in data['healList']:
-            if val['gbId'] in self.tempStatisticData:
-                val['value'] -= self.tempStatisticData[val['gbId']].get('heal', 0)
+        self.client.sendTeamStatisticData(type, data)
 
-        for val in data['hurtList']:
-            if val['gbId'] in self.tempStatisticData:
-                val['value'] -= self.tempStatisticData[val['gbId']].get('hurt', 0)
-
-        self.client.sendTeamStatisticData(data)
-
-        INFO_MSG('onGetTeamStatisticData::', self.tempStatisticData, data)
+        # INFO_MSG('onGetTeamStatisticData::', type, self.tempStatisticData, data)
 
     def clearStatisticDataRecord(self):
         INFO_MSG('clearStatisticDataRecord::', self.spaceNo)
         self.popTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord)
+        self.popTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict)
 
     def gmShowTeamStatisticData(self):
         if not self.checkTeamStaticLimit():
@@ -289,7 +288,9 @@ class ImpTeam(AvatarTeamStatisticMixin):
     @gamedecorator.limitcall(3)
     def applyCreateTeam(self, exposed, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         INFO_MSG('applyCreateTeam', teamTarget)
-
+        if utils.formula.isRaidDungeonSpace(self.spaceNo):
+            ERROR_MSG("applyCreateTeam, check fail")
+            return
         if teamTarget <=0:
             ERROR_MSG("applyCreateTeam, illegal teamTarget", teamTarget)
             return

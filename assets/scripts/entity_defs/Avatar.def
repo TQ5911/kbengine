@@ -64,6 +64,7 @@
         <Interface>         iRedBag                     </Interface>
         <Interface>         iDateData                   </Interface>
         <Interface>         iMeridian                   </Interface>
+        <Interface>         iMonthCard                  </Interface>
     </Interfaces>
 
     <Properties>
@@ -516,6 +517,16 @@
             <Persistent>    true                </Persistent>
             <Default>       0                    </Default>
         </dailyHealWoundsTimes>
+
+        <visibleBits>
+            <Type>          BIG_BIT_DATA_INFO       </Type>
+            <Flags>         BASE                    </Flags>
+        </visibleBits>
+
+        <visibleBitsCell>
+            <Type>          BIG_BIT_DATA_INFO       </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+        </visibleBitsCell>
     </Properties>
 
     <BaseMethods>
@@ -807,6 +818,10 @@
             <Arg>   UINT8          </Arg>
             <Arg>   ENTITYCALL     </Arg>
         </onGetMemberJob>
+
+        <syncVisible>
+            <Arg>   BIG_BIT_DATA_INFO       </Arg>
+        </syncVisible>
     </CellMethods>
 
     <ClientMethods>

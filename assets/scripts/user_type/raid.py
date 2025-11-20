@@ -272,17 +272,20 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
             _raidDungeonRecords[raidDungeonNo] = d
 
         raidInfo = PlayerRaidCacheVal(raidUUID=self.raidUUID,
-                                      raidTeamIDX=0,
-                                      raidCaptainGBID=0,
-                                      raidLeaderGBID=self.raidLeaderGBID,
-                                      raidLeaderTeamIDX=self.raidLeaderTeamIDX,
-                                      raidDeputyGBID=self.raidDeputyGBID,
-                                      raidDeputyTeamIDX=self.raidDeputyTeamIDX,
-                                      raidTarget=self.raidTarget,
-                                      raidMinLevel=self.raidMinLevel,
-                                      raidMinScore=self.raidMinScore,
-                                      raidDungeonRecords=_raidDungeonRecords,
-                                      raidTeamDic=_playerRaidTeamDic)
+                                        raidTeamIDX=0,
+                                        raidCaptainGBID=0,
+                                        raidLeaderGBID=self.raidLeaderGBID,
+                                        raidLeaderTeamIDX=self.raidLeaderTeamIDX,
+                                        raidDeputyGBID=self.raidDeputyGBID,
+                                        raidDeputyTeamIDX=self.raidDeputyTeamIDX,
+                                        raidTarget=self.raidTarget,
+                                        raidMinLevel=self.raidMinLevel,
+                                        raidMinScore=self.raidMinScore,
+                                        raidDungeonRecords=_raidDungeonRecords,
+                                        raidTeamDic=_playerRaidTeamDic,
+                                        recruitInfo=self.recruitInfo,
+                                        password=self.password,
+                                        isAutoExpedition=self.isAutoExpedition)
         return raidInfo
 
     def _buildPlayerRaidTeamMemberCacheVal(self, raidMemberVal):
@@ -704,47 +707,6 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         if raidTeamVal.isEmpty():
             DEBUG_MSG('popMember:: pop team when it empty')
             self.raidTeamDic.pop(teamIDX)
-        '''
-        # STEP2: 玩家原先如果是小队队长
-        if playerGBID == raidTeamVal.teamCaptainGBID:
-            # STEP2-1: 玩家离队后小队空, 则将小队从团队剥离
-            if raidTeamVal.isEmpty():
-                DEBUG_MSG('popMember:: pop team when it empty')
-                self.raidTeamDic.pop(teamIDX)
-            # STEP2-2: 玩家离队后小队还有成员, 重新任命小队队长
-            else:
-                DEBUG_MSG('popMember:: re-rand captain in team')
-                newCaptainGBID = random.choice(list(raidTeamVal.teamPlayerDic))
-                raidTeamVal.setTeamCaptain(newCaptainGBID)
-
-                toClient and self.broadcastAllRaidMembersClient(
-                    'onSetRaidTeamCaptain', (self.raidUUID, teamIDX, raidTeamVal.teamCaptainGBID))
-        
-        # STEP3: 玩家原先如果是团长
-        if playerGBID == self.raidLeaderGBID:
-            # STEP3-1: 如果当前小队还在团队中, 证明小队中还有其他成员, 任命下一个团员为团长
-            if teamIDX in self.raidTeamDic:
-                DEBUG_MSG('popMember:: reset leader to same-team next member')
-                newLeaderGBID = list(raidTeamVal.teamPlayerDic)[0]
-                self.setRaidLeader(newLeaderGBID, raidTeamVal.teamIDX, toClient=toClient)
-            # STEP3-2: 小队已经从团队中移除, 则从最小团队号码开始遍历团队, 选择一个团长
-            else:
-                DEBUG_MSG('popMember:: try reset leader to diff member')
-                for _teamIDX in range(1, self.maxTeamNum+1):
-                    if _teamIDX not in self.raidTeamDic:
-                        continue
-                    _raidTeamVal = self.raidTeamDic[_teamIDX]
-                    newLeaderGBID = list(_raidTeamVal.teamPlayerDic)[0]
-                    self.setRaidLeader(newLeaderGBID, _raidTeamVal.teamIDX, toClient=toClient)
-                    break
-                # STEP3-3: 没有小队存在, 这种情况下只可能是团队为空
-                else:
-                    WARNING_MSG('popMember:: no team can not leader')
-
-        # STEP4: 玩家原先如果是副团长
-        if self.isRaidDeputy(playerGBID):
-            self.setRaidDeputy(0, 0, toClient=toClient)
-        '''
         self.raidFilterPlayers[playerGBID] = utils.getNow()
         return raidMemberVal, gameconst.RaidErrno.RAID_OK
 
@@ -1646,7 +1608,10 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
                  raidMinScore=0,
                  raidDungeonRecords=None, raidTeamDic=None,
                  followPlayerGbId=0,
-                 raidLeaderBigWorldMapFollowPos=None):
+                 raidLeaderBigWorldMapFollowPos=None,
+                 recruitInfo='',
+                 password='',
+                 isAutoExpedition=False):
         if raidTeamDic is None:
             raidTeamDic = {}
 
@@ -1667,6 +1632,9 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
         self.raidTeamDic = raidTeamDic                  # type: dict[int, PlayerRaidTeamCacheVal]
         self.followPlayerGbId = followPlayerGbId
         self.raidLeaderBigWorldMapFollowPos = raidLeaderBigWorldMapFollowPos
+        self.recruitInfo = recruitInfo
+        self.password = password
+        self.isAutoExpedition = isAutoExpedition
 
     @property
     def raidPlayerNum(self):
@@ -1690,9 +1658,12 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
                'raidMinLevel': self.raidMinLevel,
                'raidMinScore': self.raidMinScore,
                'raidDungeonRecords': [i.toSavedDict() for i in self.raidDungeonRecords.values()],
-               'raidTeamList': [i.toSavedDict() for i in self.raidTeamDic.values()],
+               'raidTeamDic': [i.toSavedDict() for i in self.raidTeamDic.values()],
                'followPlayerGbId': self.followPlayerGbId,
-               'raidLeaderBigWorldMapFollowPos': self.raidLeaderBigWorldMapFollowPos}
+               'raidLeaderBigWorldMapFollowPos': self.raidLeaderBigWorldMapFollowPos,
+               'recruitInfo': self.recruitInfo,
+               'password':self.password, 
+               'isAutoExpedition':self.isAutoExpedition}
         return dic
 
     def initFromDict(self, dataDic):
@@ -1709,9 +1680,12 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
         self.raidDungeonRecords = {i['dungeonNo']: RaidDungeonCacheVal().initFromDict(i)
                                    for i in dataDic['raidDungeonRecords']}
         self.raidTeamDic = {i['teamIDX']: PlayerRaidTeamCacheVal().initFromDict(i)
-                            for i in dataDic['raidTeamList']}
+                            for i in dataDic['raidTeamDic']}
         self.followPlayerGbId = dataDic['followPlayerGbId']
         self.raidLeaderBigWorldMapFollowPos = dataDic['raidLeaderBigWorldMapFollowPos']
+        self.recruitInfo = dataDic['recruitInfo']
+        self.password = dataDic['password']
+        self.isAutoExpedition = dataDic['isAutoExpedition']
         return self
 
     def reset(self):

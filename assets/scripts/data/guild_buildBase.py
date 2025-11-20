@@ -18,17 +18,17 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "name": "聚义楼",
-        "maxLV": 7,
+        "maxLV": 5,
     }),
     2: _tools.RODict({
         "ID": 2,
         "name": "百宝阁",
-        "maxLV": 7,
+        "maxLV": 5,
     }),
     3: _tools.RODict({
         "ID": 3,
         "name": "厢房",
-        "maxLV": 7,
+        "maxLV": 5,
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -38,12 +38,12 @@ datas = _tools.RODict({
     5: _tools.RODict({
         "ID": 5,
         "name": "仓库",
-        "maxLV": 7,
+        "maxLV": 5,
     }),
     6: _tools.RODict({
         "ID": 6,
         "name": "军需处",
-        "maxLV": 7,
+        "maxLV": 5,
     })
 })
 minKey = 1

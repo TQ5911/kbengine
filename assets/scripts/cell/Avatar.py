@@ -47,6 +47,7 @@ import dataUtils
 import actionContext
 import checkUserType
 import gamePlay_set as GP_SD
+import visible_visible as V_VD
 
 import message_chatMessage as MCMD
 import iFubenSpace
@@ -82,6 +83,7 @@ import gzip
 import json
 import guildAuthorization_authorization_def as GA_A_DD
 import iMeridian
+import iMonthCard
 
 class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace, impTask.ImpTask, impCombat.ImpCombat,
              EventMgr.EventMgr, iComplexTeleport.IComplexTeleport, impTeam.ImpTeam, impRaid.ImpRaid,
@@ -92,7 +94,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              iCubeCell.ICubeCell, iGuildCell.IGuildCell, iGuildTrainCell.IGuildTrainCell,
              iLeaderBoardCell.ILeaderBoardCell, iWonderLandCell.IWonderLandCell,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief,
-             iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian):
+             iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard):
     IsAvatar = True
     IsCombatUnit = True
 
@@ -108,6 +110,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         impOutfit.ImpOutfit.__init__(self)
         iLeaderBoardCell.ILeaderBoardCell.__init__(self)
         iSiegeWarCell.ISiegeWarCell.__init__(self)
+        iMonthCard.IMonthCard.__init__(self)
         self.addDatetimeTimerTick()
 
         # 设置每秒允许的最快速度, 超速会被拉回去
@@ -524,14 +527,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     @utils.isMyself
     def reqTransmitWithMapPoint(self, exposed, mapId, exampleId):
-        extraProps = {"mapId" : mapId, "exampleId" : exampleId, "callbackName" : "transmitMapUnlockedCallback"}
-        self.base.onCheckMapUnlocked(gameconst.CELL, 1, 'teleportEnterLineMapUnlockedCallback', extraProps)
+        if not self.onCheckMapUnlocked(mapId):
+            return
 
-    def transmitMapUnlockedCallback(self, extraProps):
-        INFO_MSG("transmitMapUnlockedCallback", extraProps)
-
-        mapId = extraProps["mapId"]
-        exampleId = extraProps["exampleId"]
         self._commonNeedCast(
             CCD.datas.teleportCast,
             gameconst.State.Teleporting,
@@ -803,18 +801,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             else:
                 WARNING_MSG('teleportByTeleporter::lineNo == lineNo', lineNo, self.spaceNo)
                 # self.checkLineArea(dstPos, '_onCheckLineAreaByTeleport', (teleporter, dstPos, src, desTelId, fromTelId))
-        else:
-            extraProps = {"mapId" : formula.getMapId(desTelId), "lineNo" : lineNo, "lineType" : lineType, "dstPos" : dstPos, "telDirection" : telDirection,  "callbackName" : "teleportMapUnlockedCallback"}
-            self.base.onCheckMapUnlocked(gameconst.CELL, 2, 'teleportEnterLineMapUnlockedCallback', extraProps)
-
-    def teleportMapUnlockedCallback(self, extraProps):
-        INFO_MSG("teleportMapUnlockedCallback", extraProps)
-
-        lineType = extraProps["lineType"]
-        lineNo = extraProps["lineNo"]
-        dstPos = extraProps["dstPos"]
-        telDirection = extraProps["telDirection"]
-        self.applyEnterLineInternal(lineType, lineNo, dstPos, telDirection, False)
+        elif self.onCheckMapUnlocked(formula.getMapId(desTelId)):
+            self.applyEnterLineInternal(lineType, lineNo, dstPos, telDirection, False)
 
     def beforeTeleport(self, toSpaceNo):
         if self.spaceNo != toSpaceNo:
@@ -823,12 +811,12 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 self.changeMorphState(None, None, 3)
             self.destroyAllSummon()
             self.clearAllTargetTypeCache(True)
+            self.removeBuffsByTag('scenesClear')
             # self.teammateEntIdInAoiSet.clear()
         self.suspendAutoCombat(gameconst.SuspendAutoCombatReason.Teleport)
         self.endApplyGather(gameconst.CancelGatherReason.Teleport)
         self.cancelController('Movement')
         # 先移除身上buff再传送
-        self.removeBuffsByTag('scenesClear')
 
     def _resetTeleportCache(self, spaceNo, callback, callbackArgs):
         if gameconfig.enableTeleportDict():
@@ -1316,7 +1304,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.client.onCommonCastSuccess()
         getattr(self, funcName)(*args)
 
-    def onTelToMainCityWithCast(self, toCell, lineType, dstPos, dstDir, callback, callbackArgs):
+    def onTelToMainCityWithCast(self, toCell, lineType, dstPos, dstDir, callback, callbackArgs, fCallback, fCallbackArgs):
         INFO_MSG("onTelToMainCityWithCast::", toCell, lineType, dstPos, dstDir, callback, callbackArgs, self.spaceNo)
         if dstPos is None or dstDir is None:
             gameengine.reportCritical("onTelToMainCityWithCast:: Type ERROR -> pos or dir",
@@ -1341,23 +1329,17 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 else:
                     ERROR_MSG("onTelToMainCityWithCast:: failure handle method")
                     self._popTeleportCache(spaceNo)
-        else:
+        elif self.onCheckMapUnlocked(lineType):
             extra = {
                 'callback': callback,
                 'callbackArgs': callbackArgs
             }
-            extraProps = {"mapId" : lineType, "lineType" : lineType, "lineNo" : -1, "dstPos" : dstPos, "dstDir" : dstDir, "extra" : extra,  "callbackName" : "telToMainCityWithCastMapUnlockedCallback"}
-            self.base.onCheckMapUnlocked(gameconst.CELL, 3, 'teleportEnterLineMapUnlockedCallback', extraProps)
-
-    def telToMainCityWithCastMapUnlockedCallback(self, extraProps):
-        INFO_MSG("telToMainCityWithCastMapUnlockedCallback", extraProps)
-
-        lineType = extraProps["lineType"]
-        dstPos = extraProps["dstPos"]
-        dstDir = extraProps["dstDir"]
-        extra = extraProps["extra"]
-        self.applyEnterLineInternal(lineType, -1, dstPos, dstDir, extra)
-        self._stopCommonCast()
+            self.applyEnterLineInternal(lineType, -1, dstPos, dstDir, extra)
+            self._stopCommonCast()
+        else:
+            func = getattr(self, fCallback)
+            func and func(*fCallbackArgs)
+            self._stopCommonCast()
 
     def getSpaceRouteController(self):
         if formula.spaceInWorldLine(self.spaceNo):
@@ -1573,5 +1555,15 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             _sendIds.append(_aliasId)
 
         self.client.onAllAliasIds(_sendIds)
+
+    def syncVisible(self, visibleBits):
+        self.visibleBitsCell = visibleBits
+
+    def _isUIVisibleCell(self, bit):
+        return self.visibleBitsCell.isHasState(bit)
+
+    def _isUIVisibleStrCell(self, bitStr):
+        _bit = V_VD.funcDic[bitStr]
+        return self._isUIVisibleCell(_bit)
 
 

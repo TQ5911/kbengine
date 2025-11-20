@@ -10,7 +10,6 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 70000001,
-        "Name": "\u51fa\u751f\u70b9",
         "PosX": 69.64569,
         "PosY": 3.708378,
         "PosZ": 39.88669,

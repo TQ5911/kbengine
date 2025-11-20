@@ -90,7 +90,13 @@ class IPay(object):
                 self.deductWealth(srcType, deductWealthVal, opUUID, detail)
             self.holidayPaySuccess(buyCreditId)
             self._addCreditConfigReward(buyCreditId, opUUID, srcType, cfgData)
-
+        elif creditType == gameconst.BuyCreditType.monthCard:
+            monthCardId = cfgData.get('ID')
+            seconds = BC_BCCD.datas['durationHours']['value'] * 3600
+            if not self.checkCanAddMonthCard():
+                self.onMessagePre(BCBCCD.datas["durationHoursLimitMsg"]["value"], [])
+                return
+            self.doAddMonthCard(seconds, monthCardId)
         self.client.onBuyCreditSuccess(buyCreditId)
         self.midasTotalPay += price
 

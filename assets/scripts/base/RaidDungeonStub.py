@@ -193,7 +193,6 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             # 【【上灵试炼】组队进入单人副本，打完boss后再次进入副本，会出现报错】
             # 提前cancel的时机到markDestroy
             spaceVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_RAID_DUNGEON_COMPLETED_CALLBACK)
-
             gameengine.getRaidStub(spaceVal.raidUUID).clearRaidDungeonInfo(
                 spaceVal.raidUUID, self.dungeonNo, spaceNo, spaceUUID)
 
@@ -297,6 +296,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             return
 
         sVal.spaceMgr.cell.destroyAllEntities()
+
         sVal.spaceMgr.cell.onRaidDungeonCompleted(spaceNo, raidUUID, win, delay, sVal.dungeonCreepBaseKillDic, sVal.getAllPlayerGbidAndNamePair(), sVal.getElapsedTime())
 
         # 副本完成后倒计时
@@ -323,13 +323,10 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             WARNING_MSG('_onRaidDungeonCompletedCallback:: already complete', spaceNo, sVal.state)
             return
 
-        # 【副本服务端报错】
-        # completecallback后取消其他completecallback回调
         sVal.clearCompleteTimer()
-
         sVal.completeDungeon(win)
+        sVal.toDestoryDungeon()
         self._kickOutAllFounders(spaceNo)
-        # clear dungeonCache in raid with raidDungeon completed
         gameengine.getRaidStub(sVal.raidUUID).onRaidDungeonCompletedCallback(sVal.raidUUID, self.dungeonNo, spaceNo, sVal.spaceUUID)
 
     def doEnterDungeon(self, box, gbId, raidUUID, spaceNo, extra):

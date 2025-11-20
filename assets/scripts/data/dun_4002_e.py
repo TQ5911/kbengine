@@ -61,6 +61,7 @@ datas ={
         1062,
         1063,
         1090,
+        1115,
         1057,
         1096,
         1097,
@@ -553,10 +554,10 @@ datas ={
   "1056": {
     "type": "transferToTheDesignatedMap",
     "mapId": 4001,
-    "posX": 172.0,
+    "posX": 167.0,
     "posY": 63.0,
-    "posZ": 107.0,
-    "angle": 297,
+    "posZ": 116.0,
+    "angle": 110,
     "transition": {}
   },
   "1054": {
@@ -1248,5 +1249,14 @@ datas ={
     "type": "taskUndertake",
     "taskID": 86060090,
     "transition": {}
+  },
+  "1115": {
+    "type": "taskInProgress",
+    "taskID": 86060053,
+    "transition": {
+      "finished": [
+        1032
+      ]
+    }
   }
 }

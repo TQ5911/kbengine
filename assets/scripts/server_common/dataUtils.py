@@ -60,10 +60,6 @@ def isRaidCapacityValidate(capacity):
 def isEquipItemByItemId(itemId):
     return itemId in GBGBD.datas or itemId == gameconst.ItemId.COMMON_EQUIPMENT_ID
 
-def isPetItemByItemId(itemId):
-    itemData = getCommItemData(itemId)
-    return itemData and itemData['type'] == gameconst.ItemType.LingShou
-
 def isReUseItem(itemId):
     itemData = getCommItemData(itemId)
     if not itemData:
@@ -635,3 +631,6 @@ def filterFightPropScore(school, propName):
             return 0
 
     return cfgData['perPropertyScore']
+
+def getAuctionPublicityKey(equipType, equipQuality):
+    return equipType * 100 + equipQuality

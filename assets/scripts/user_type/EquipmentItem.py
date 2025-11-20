@@ -380,14 +380,14 @@ class EquipmentItem(BaseItem.BaseItem):
         # 额外产出，非必选配置
         dissassemblyExtraItem = gearBaseData['disassemblyExtraItem']
         if dissassemblyExtraItem and type(dissassemblyExtraItem) is tuple and len(dissassemblyExtraItem) > 0:
-            quality = gearBaseData['quality']
             # 适配disassemblyExtraItem形式为((a1,b1,c1),(a2,b2,c2))
+            grade = self.getGrade()
             if type(dissassemblyExtraItem[0]) is tuple:
                 for rewardData in dissassemblyExtraItem:
                     if not rewardData or len(rewardData) != 3:
                         ERROR_MSG('returnWealthyByDisassemble missing reward data config', rewardData)
                         break
-                    if quality != rewardData[0]:
+                    if grade != rewardData[0]:
                         continue
                     coreItemID = rewardData[1]
                     coreItemCount = rewardData[2]
@@ -395,7 +395,7 @@ class EquipmentItem(BaseItem.BaseItem):
                     break
             else:
                 # 适配disassemblyExtraItem形式为(a1,b1,c1)
-                if quality == dissassemblyExtraItem[0]:
+                if grade == dissassemblyExtraItem[0]:
                     coreItemID = dissassemblyExtraItem[1]
                     coreItemCount = dissassemblyExtraItem[2]
                     self.calculateDisassemblyReward(coreItemID, coreItemCount, awardVal)
@@ -590,7 +590,7 @@ class EquipmentItem(BaseItem.BaseItem):
             self.setBindValue(self.equipAttr.bindValue - value)
 
     def getBindValue(self):
-        addValue = int(GEGCD.datas['gearEnhanceBindLimit']['value']) if self.isAddBindValue else 0
+        addValue = int(GEGCD.datas['gearEnhanceBindLimit']['value']) if self.equipAttr.isAddBindValue else 0
         return self.equipAttr.bindValue + addValue
 
     def getOriginalBindValue(self):
@@ -765,6 +765,12 @@ class EquipmentItem(BaseItem.BaseItem):
     def setEquipSchool(self, school):
         self.equipAttr.school = school
         self.equipAttr.calcScore()
+
+    def getEquipType(self):
+        return self.equipAttr.equipType
+    
+    def getEquipQuality(self):
+        return self.equipAttr.quality
 
 class EquipAttr(userType.UserSoleType):
 

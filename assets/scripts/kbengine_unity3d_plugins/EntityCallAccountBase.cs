@@ -72,7 +72,7 @@ namespace KBEngine
 			bundle.writeUnicode(arg2);
 			bundle.writeUint8(arg3);
 			bundle.writeUint8(arg4);
-			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[25]).addToStreamEx(bundle, arg5);
+			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[26]).addToStreamEx(bundle, arg5);
 			sendCall(null);
 		}
 
@@ -84,7 +84,7 @@ namespace KBEngine
 
 			bundle.writeUnicode(arg1);
 			bundle.writeUint16(arg2);
-			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[25]).addToStreamEx(bundle, arg3);
+			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[26]).addToStreamEx(bundle, arg3);
 			sendCall(null);
 		}
 

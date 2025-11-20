@@ -968,6 +968,7 @@ class IGuild(object):
         INFO_MSG('IGuild::onGetGuildInfosFromCrossData:', guildDatas)
         self.client.onGuildInfoFromCrossData(guildDatas)
 
+    @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     @gamedecorator.limitcall(1)
     def applyGuildUnion(self, exposed, guildUUID):
@@ -978,6 +979,7 @@ class IGuild(object):
 
         self.guildBox.doApplyGuildUnion(self.gbID, self, guildUUID)
 
+    @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def dealGuildUnionApply(self, exposed, guildUUID, agree):
         INFO_MSG('IGuild::dealGuildUnionApply:', guildUUID, agree)
@@ -987,6 +989,7 @@ class IGuild(object):
 
         self.guildBox.doDealGuildUnionApply(self.gbID, self, guildUUID, agree)
 
+    @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def cancelGuildUnion(self, exposed, guildUUID):
         INFO_MSG('IGuild::cancelGuildUnion:', guildUUID)
@@ -1096,6 +1099,7 @@ class IGuild(object):
 
         self.guildBox.doUpgradeQixie(self.gbID, self, qixieType)
 
+    @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def declareEnemy(self, exposed, guildUUID):
         INFO_MSG('IGuild::declareEnemy:', guildUUID)
@@ -1167,6 +1171,7 @@ class IGuild(object):
 
         self.guildBox.doGetGuildUnionApplySender(self.gbID, self)
 
+    @gamedecorator.checkGameconfigEnable('guild')
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def cancelApplyGuildUnion(self, exposed, guildUUID):
         INFO_MSG('IGuild::cancelApplyGuildUnion:', guildUUID)

@@ -1,10 +1,37 @@
 # -*- encoding:utf-8 -*-
+import KBEngine
+from KBEDebug import *
+import utils
 
 import threading
 import random
-import faceData_CtoDict
+import re
+import Math
 
 from botBase import Getter
+
+class AITimer(threading.Thread):
+    def __init__(self, delay, interval, onTimerCall, stopEvent):
+        threading.Thread.__init__(self)
+        self.delay = delay
+        self.interval = interval
+        self.onTimerCall = onTimerCall
+        self.stopEvent = stopEvent
+
+    def run(self):
+        if not self.stopEvent.wait(self.delay):
+            self.onTimerCall()
+
+        while not self.stopEvent.wait(self.interval):
+            self.onTimerCall()
+
+class AIState:
+    def enter(self, owner):
+        pass
+    def execute(self, owner):
+        pass
+    def exit(self, owner):
+        pass
 
 
 class SimpleBotBase(object):
@@ -21,6 +48,12 @@ class SimpleBotBase(object):
         self.event = threading.Event()
         self._cache = {}
         self.ChatChannel_SYSTEM = 1
+        self.aiTimer = None
+        self.aiStopEvent = threading.Event()
+        self.aiState = 0
+        self.aiStateMap = {}
+        self.botIdx = self.getBotIndx()
+        
         
     def dealMultiPack(self, funcName, datas, index, isEnd):
         self.multiDict.setdefault(funcName, [])
@@ -36,13 +69,6 @@ class SimpleBotBase(object):
     @property
     def botName(self):
         return self.clientObj.avatarName
-
-    def tagPrint(self, *args):
-        strs = ', '.join(str(i) for i in args)
-        if hasattr(self.player, 'name'):
-            print(f'{self.player.name}_tag:{strs}')
-        else:
-            print(f'{self.botName}_tag:{strs}')
 
     @property
     def base(self):
@@ -66,6 +92,84 @@ class SimpleBotBase(object):
     def player(self):
         return self.robot.player()
 
+    @property
+    def position(self): 
+        return self.player.position
+
+    @property
+    def school(self):
+        return self.player.school
+
+    @property
+    def state(self): 
+        return self.player.state
+    
+    @property
+    def entities(self):
+        return self.robot.player().clientapp.entities
+
+    def getBotIndx(self):
+        m = re.match(r'.*?(\d+)$', self.botName)
+        if m:
+            self.botIdx = int(m.group(1))
+        else:
+            self.botIdx = 0
+        return self.botIdx
+
+    def tagPrint(self, *args):
+        strs = ', '.join(str(i) for i in args)
+        if hasattr(self.player, 'name'):
+            DEBUG_MSG(f'{self.player.name}_tag:{strs}')
+        else:
+            DEBUG_MSG(f'{self.botName}_tag:{strs}')
+
+    def debug(self, msg):
+        """调试输出方法"""
+        DEBUG_MSG(f"[bot]{self.botName}({self.player.id}): {msg}")
+
+    def warn(self, msg):
+        """警告输出方法"""
+        WARNING_MSG(f"[bot]{self.botName}({self.player.id}): {msg}")
+
+    def error(self, msg):
+        """错误输出方法"""
+        ERROR_MSG(f"[bot]{self.botName}({self.player.id}): {msg}")
+
+    def regBotAI(self, initState):
+        self.debug("regBotAI")
+        if not self.aiTimer:
+            self.aiTimer = AITimer(1.0, 1.0, self.botUpdate, self.aiStopEvent)
+            self.aiTimer.setDaemon(True)
+            self.aiTimer.start()
+            self.changeAIState(initState)
+
+    def unregBotAI(self):
+        self.debug("unregBotAI")
+        self.changeAIState(-1)  #退出当前状态机
+        if self.aiTimer:
+            self.aiStopEvent.set()
+            self.aiTimer = None
+
+    def changeAIState(self, state):
+        if self.aiState == state:
+            return
+        self.debug(f"changeAIState oldState: {self.aiState}, newState: {state}")
+        oldStateObj = self.aiStateMap.get(self.aiState, None)
+        if oldStateObj:
+            oldStateObj.exit(self)
+        self.aiState = state
+        newStateObj = self.aiStateMap.get(state, None)
+        if newStateObj:
+            newStateObj.enter(self)
+
+    def getAIState(self):
+        return self.aiState
+
+    def botUpdate(self):
+        StateObj = self.aiStateMap.get(self.aiState, None)
+        if StateObj:
+            StateObj.execute(self)
+
     def onReqAvatarList(self, chars, *args):
         self.tagPrint('onReqAvatarList', chars)
 
@@ -73,8 +177,6 @@ class SimpleBotBase(object):
         self.tagPrint('登录成功', self.botName, self.runTimes)
         
 
-
-        
     def _check_bot_target(self, message):
         """
         检查消息是否指定了机器人执行
@@ -161,8 +263,45 @@ class SimpleBotBase(object):
         self.tagPrint('onEnterWorld', self.botName, self.runTimes, self.robot.player().__class__.__name__)
         # 注意：SimpleBotBase不会自动启动线程
 
+    def hasState(self, state):
+        if state < 0:
+            self.error("states is error:", state)
+            return False
+        if state >= 64:
+            return (self.state2 >> (state - 64)) & 1 > 0
+        else:
+            return (self.state >> state) & 1 > 0
+
     def getSelfMapId(self):
         return self.player.spaceNo // 10000
+
+    def isInRaid(self):
+        return self.player.raidId > 0
+
+    def isInTeam(self):
+        return self.player.teamId > 0
+
+    def isTeamCaptain(self):
+        return self.player.bTeamCaptain
+
+    def runGmCommand(self, command):
+        self.debug(f'runGmCommand: {command}')
+        self.base.runGmCommand(command)
+
+    def relive(self, reliveType):
+        now = utils.getNow()
+        nextReliveTime = self.player.lastDeadTime + self.player.curReliveCD
+        leftTime = nextReliveTime - now
+        if leftTime > 0:
+            self.debug(f'等待复活时间: {leftTime} 秒')
+            return
+        self.cell.relive(reliveType)
+
+    def moveTo(self, pos):
+        self.cell.botMoveTo(pos)
+
+    def setInstantPotionSlots(self, slotInfo):
+        self.base.setInstantPotionSlots(slotInfo)
 
     def setResult(self, result):
         self._cache['r'] = result
@@ -179,85 +318,17 @@ class SimpleBotBase(object):
             if _rand <= _sum:
                 return _state
 
-    @property
-    def entities(self):
-        return self.robot.player().clientapp.entities
-
-    def debug(self, info):
-        """调试输出方法"""
-        print(f"[DEBUG] {self.botName}: {info}") 
-
-
-class FACE_DATA:
-    def __init__(self):
-        # 创角默认外观数据
-        self.suitId = 2  
-        self.hairIdFaceId = 257
-        self.hairColorIdSkinColorId = 259
-        self.faceData_list = {
-            # #对应职业对应部位可选的部件流水号，分别是脸部、肤色、头发、发色；具体长这样
-            # 1001:{"faceOpt":[],"skinColorOpt":[],"hairOpt":[],"hairColorOpt":[]},
-            # 1003:{"faceOpt":[],"skinColorOpt":[],"hairOpt":[],"hairColorOpt":[]},
-            # 1002:{"faceOpt":[],"skinColorOpt":[],"hairOpt":[],"hairColorOpt":[]},
-        }
-        #在初始化时填充faceData_list
-        self._load_face_data()
-
-    def _load_face_data(self):
-        """加载外观数据"""
-        self.faceData_list = faceData_CtoDict.main()
-        if not self.faceData_list:
-            print("加载外观数据失败")
-        else:
-            print("加载外观数据成功")
-
-
-    def toSavedDict(self):
-        return {
-            'suitId': self.suitId,
-            'hairIdFaceId': self.hairIdFaceId,
-            'hairColorIdSkinColorId': self.hairColorIdSkinColorId,
-        }
-        
-    def SetfaceData(self, faceId, skinColorId, hairId, hairColorId):
-        "face,脸型"
-        if ((self.hairIdFaceId & 0x00ff) == faceId):
-            pass
-        else:
-            self.hairIdFaceId = (self.hairIdFaceId & 0xff00) + faceId
-        "skinColor,肤色"
-        if ((self.hairColorIdSkinColorId & 0x00ff) == skinColorId):
-            pass
-        else:
-            self.hairColorIdSkinColorId = (self.hairColorIdSkinColorId & 0xff00) + skinColorId
-        "hair,发型"
-        if (((self.hairIdFaceId & 0xff00) >> 8) == hairId):
-            pass
-        else:
-            self.hairIdFaceId = (self.hairIdFaceId & 0x00ff) + (hairId << 8)
-        "hairColor,发色"
-        if (((self.hairColorIdSkinColorId & 0xff00) >> 8) == hairColorId):
-            pass
-        else:
-            self.hairColorIdSkinColorId = (self.hairColorIdSkinColorId & 0x00ff) + (hairColorId << 8)
-    
-
-
-    def random_set_face_data_by_id(self, char_id):
-        """根据传入的ID从faceData_list中随机选择外观数据并设置"""
-        faceData_list = self.faceData_list
-        # 若为0则机器人随机选择一个职业
-        if char_id == 0:
-            char_id = random.choice([1001,1002,1003])
-        if faceData_list:
-        # 获取该职业对应的外观选项
-            face_options = faceData_list[char_id]
-            face_id = random.choice(face_options['faceOpt'])
-            skin_color_id = random.choice(face_options['skinColorOpt'])
-            hair_id = random.choice(face_options['hairOpt'])
-            hair_color_id = random.choice(face_options['hairColorOpt'])
-            self.SetfaceData(face_id, skin_color_id, hair_id, hair_color_id)  
-        else:
-            print('捏脸数据未初始化，使用默认')
-    
- 
+    def getMapMonsterPos(self, dstMapId):
+        mapData = utils.getDunStructureModuleData(dstMapId)
+        self.debug(f"获取地图数据: {mapData}")
+        posX, posY, posZ = 0, 0, 0
+        monsterDatas = mapData.get('InitEntities', {}).get('Monster', {})
+        if monsterDatas:
+            monsterNum = len(monsterDatas)
+            monsterIds = list(monsterDatas.keys())
+            selectedMonsterId = monsterIds[self.botIdx % monsterNum] # 理论上怪点如果太多的话，需要先分组
+            monsterData = monsterDatas[selectedMonsterId]
+            # 随机选择一个怪物的出生位置作为目标位置
+            posX, posY, posZ = monsterData.get('PosX', 0), monsterData.get('PosY', 0), monsterData.get('PosZ', 0)
+            self.debug(f"获取到怪物数据, 数量: {monsterNum}, 选择怪物ID: {selectedMonsterId}, 位置: {posX, posY, posZ}")
+        return Math.Vector3(posX, posY, posZ)

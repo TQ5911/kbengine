@@ -10,7 +10,6 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 31080001,
-        "Name": "\u51fa\u751f\u70b9",
         "PosX": 246.7313,
         "PosY": 527.8172,
         "PosZ": 20.51969,
@@ -36,7 +35,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 11011016,
           "ID": 31080002,
-          "Name": "\u8718\u86db\u9996\u98862",
           "PosX": 273.3099,
           "PosY": 524.9851,
           "PosZ": 62.9118,
@@ -63,7 +61,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 11011017,
           "ID": 31080003,
-          "Name": "\u8725\u8734\u9996\u98862",
           "PosX": 287.022,
           "PosY": 524.9851,
           "PosZ": 52.24747,
@@ -81,6 +78,26 @@ datas ={
             "ShowMonsterGroupID": ""
           }
         }
+      },
+      "CombatArea": {
+        "31088002": {
+          "ActivityID": 0,
+          "ClassName": "CombatArea",
+          "ClassNameType": 21,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 0,
+          "ID": 31088002,
+          "PosX": 279.8412,
+          "PosY": 524.8969,
+          "PosZ": 57.6539,
+          "Props": {
+            "AreaType": 1,
+            "Radius": 35.0,
+            "Remark": ""
+          }
+        }
       }
     },
     "Cube": {
@@ -94,7 +111,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310801,
           "ID": 31088001,
-          "Name": "\u6df7\u6c8c\u4e4b\u5883",
           "PosX": 307.518,
           "PosY": 526.2947,
           "PosZ": 91.75372,

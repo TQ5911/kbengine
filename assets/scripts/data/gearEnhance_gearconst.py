@@ -147,6 +147,10 @@ datas = _tools.RODict({
         "ID": "gearButtonAction_identify",
         "value": "Openinterface,UIEquipTrainingPanel,2",
     }),
+    "gearButtonAction_unbounding": _tools.RODict({
+        "ID": "gearButtonAction_unbounding",
+        "value": "findNearestEntityByTempleteIds,18000019,18000067,18000119",
+    }),
     "gearButtonLimitID_enhance": _tools.RODict({
         "ID": "gearButtonLimitID_enhance",
         "value": "UIEquipTrainingPanel",
@@ -262,6 +266,10 @@ datas = _tools.RODict({
     "enhanceGreatFailed2": _tools.RODict({
         "ID": "enhanceGreatFailed2",
         "value": 54000306,
+    }),
+    "enhanceGreatFailed3": _tools.RODict({
+        "ID": "enhanceGreatFailed3",
+        "value": 54000309,
     }),
     "gearEnhanceBindLimit": _tools.RODict({
         "ID": "gearEnhanceBindLimit",

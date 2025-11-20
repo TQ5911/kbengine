@@ -89,6 +89,7 @@ import iWorkshop
 import iRedBag
 import iDateData
 import iMeridian
+import iMonthCard
 
 
 class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, impLine.ImpLine, iClient.IClient,
@@ -101,7 +102,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
              iLeaderBoard.ILeaderBoard, iCoinAuction.ICoinAuction, iNewbie.INewbie, iAchievement.IAchievement,
              iEnemy.IEnemy, iWonderLandBase.IWonderLandBase, iActivityBase.IActivityBase, iCollectible.ICollectible, iSiegeWarBase.ISiegeWarBase,
              iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop,
-             iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian):
+             iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian, iMonthCard.IMonthCard):
     """
     角色实体
 
@@ -123,10 +124,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         iSiegeWarBase.ISiegeWarBase.__init__(self)
         impTask.ImpTask.__init__(self)
         iWorkshop.IWorkshop.__init__(self)
+        iMonthCard.IMonthCard.__init__(self)
 
         # INFO_MSG('Avatar::__init__:%s' % self.id)
 
         self.initRoleCache()
+        self._initVisible()
         self.addDatetimeTimerTick()
         self._initEquipDrop()
 
@@ -272,6 +275,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.initPetProps()
         self.initSummonSlotIdx()
         self.initRemoveTemporarySkill()
+        self.cell.syncVisible(self.visibleBits)
 
         self.recordAvatarBase()
         self._claimTaskByNewbieStep()
@@ -946,7 +950,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self._loadGuildInfo()
         try:
             self._loadPlayerCoinAuctionData()
-            self._initPlayerCollectionItemIdList()
+            self._initPlayerCollectionAuctionIdList()
         except Exception as e:
             gameengine.reportCritical('_loadPlayerCoinAuctionData error:', e)
 
@@ -1171,12 +1175,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def setCliConfigData(self, exposed, keys, vals):
         for key, val in zip(keys, vals):
             self.cliConfigDic[key] = val
-            self.addCollectionItemIdList(key, val)
+            self.addCollectionAuctionIdList(key, val)
 
     def delCliConfigData(self, exposed, keys):
         for key in keys:
             val = self.cliConfigDic.pop(key, 0)
-            self.removeCollectionItemIdList(key, val)
+            self.removeCollectionAuctionIdList(key, val)
 
     def sendCliConfigData(self):
         jsonStr = json.dumps(self.cliConfigDic).encode('ascii')
@@ -1406,7 +1410,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('_resetCubeCowDur')
         self.registerDailyEvent('_onDailyHealWoundsTimesRefresh')
         self.registerDailyEvent('_authDailyReset')
+        self.registerDailyEvent('_dailyUpdateVisible')
         self.registerHourlyEvent('onLimitedStoreHourlyUpdate')
+        self.registerDailyEvent('checkMonthCardAward')
 
     def reqDeleteAvatar(self, exposed):
         if gameconfig.enableOldLogout():
@@ -1474,18 +1480,28 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def isUIVisible(self, uiId):
         uiData = UVVD.datas.get(uiId)
         if not uiData:
-            return False, gameconst.UIUIVisibleType.NONE, 0
+            return False
 
         missionID = uiData['task']
         if missionID and not self.isTaskComplete(missionID):
-            return False, gameconst.UIUIVisibleType.TASK, missionID
+            return False
 
         lvLimit = uiData['level']
         myRoleCache = gameglobal.roleCache.get(self.id)
         if lvLimit and myRoleCache['level'] < lvLimit:
-            return False, gameconst.UIUIVisibleType.LEVEL, lvLimit
+            return False
 
-        return True, 0, 0
+        if uiData['day'] and utils.getSvrOpenDays() < uiData['day']:
+            return False
+
+        return True
+
+    def _isUIVisible(self, bit):
+        return self.visibleBits.isHasState(bit)
+
+    def _isUIVisibleStr(self, bitStr):
+        _bit = UVVD.funcDic[bitStr]
+        return self._isUIVisible(_bit)
 
     def _onDailyHealWoundsTimesRefresh(self):
         self.cell.onDailyHealWoundsTimesRefresh()
@@ -1608,3 +1624,31 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def onExpireWeeklyData(self, key, val):
         super(Avatar, self).onExpireWeeklyData(key, val)
+
+    def _initVisible(self):
+        self.visibleBits.initBit(UVVD.maxBit)
+        for _func, _bit in UVVD.funcDic.items():
+            if self.isUIVisible(_func):
+                self.visibleBits.setBit(_bit)
+
+    def updateVisibleByList(self, bitList):
+        _isModify = False
+        for _bit in bitList:
+            _func = UVVD.reverseFuncDic[_bit]
+            if self.isUIVisible(_func):
+                self.visibleBits.setBit(_bit)
+                _isModify = True
+
+        if _isModify:
+            self.cell.syncVisible(self.visibleBits)
+
+    def _onLvUpVisible(self, oldLv, newLv):
+        for _lv in range(oldLv + 1, newLv + 1):
+            if _lv in UVVD.levelDic:
+                self.updateVisibleByList(UVVD.levelDic[_lv])
+
+    def _dailyUpdateVisible(self, *args):
+        _days = utils.getSvrOpenDays()
+        if _days in UVVD.dayDic:
+            self.updateVisibleByList(UVVD.dayDic[_days])
+

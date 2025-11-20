@@ -601,7 +601,7 @@ class ImpEquipment(object):
 
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
         bagEquipItem.doDecreaseBindValue(opUUID, washCount)
-        self.client.onEquipBindValueWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, bagEquipItem.getBindValue(), bagEquipItem.bindType)
+        self.client.onEquipBindValueWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, bagEquipItem.getBindValue(), bagEquipItem.getAddBindValueStatus(), bagEquipItem.bindType)
         return
 
     @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)

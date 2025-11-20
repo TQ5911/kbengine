@@ -4,7 +4,7 @@ import KBEngine
 import gameconst
 import gameclass
 import dropAward
-import gameengine 
+import gameengine
 import gameglobal
 import gamedecorator
 import utils
@@ -19,7 +19,7 @@ class IWelfareSignIn(object):
         if not self.welfareSignInInfo.welfareSignInDay:
             ERROR_MSG('call reqWelfareSignIn: not lock')
             return
-        
+
         if signInDayNo > self.welfareSignInInfo.welfareSignInDay or signInDayNo <= 0:
             ERROR_MSG('call reqWelfareSignIn: day err', signInDayNo, self.welfareSignInInfo.welfareSignInDay)
             return
@@ -27,7 +27,7 @@ class IWelfareSignIn(object):
         if self.welfareSignInInfo.hasSignIn(signInDayNo):
             ERROR_MSG('call reqWelfareSignIn: alerady sign in', signInDayNo)
             return
-        
+
         self.welfareSignInInfo.doSignIn(signInDayNo)
 
         self.sendWelfareSignInInfo()
@@ -48,7 +48,7 @@ class IWelfareSignIn(object):
         opUUID = KBEngine.genUUID64()
         self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_SIGN_IN, rewardId, 1, opUUID, detail, awardCtx)
         return True
-        
+
     def welfareSignInOnLogin(self):
         INFO_MSG('call welfareSignInOnLogin')
         self.checkAndUnlockWelfareSignIn(updateFlag = True)
@@ -86,9 +86,9 @@ class IWelfareSignIn(object):
         if not newDaySignIn:
             INFO_MSG('call onWelfareSignInUpdate: alerady signed in today', self.welfareSignInInfo.welfareLastSignInTimestamp)
             return
-        
+
         self.updateWelfareSignIn(curTimestamp)
-        
+
         self.sendWelfareSignInInfo()
 
     def sendWelfareSignInInfo(self):
@@ -96,17 +96,17 @@ class IWelfareSignIn(object):
         if not self.welfareSignInInfo.welfareSignInDay:
             INFO_MSG('call sendWelfareSignInInfo: not lock')
             return
-        
+
         if not self.client:
             INFO_MSG('call sendWelfareSignInInfo: no client')
             return
-        
+
         self.client.onGetWelfareSignInInfo(self.welfareSignInInfo)
         INFO_MSG('call sendWelfareSignInInfo done', self.welfareSignInInfo)
 
     def checkUnlock(self):
         uid = WWCONFIG.datas.get(1, {}).get('unlockID', None)
-        isUnlock, _1, _2 = self.isUIVisible(uid)
+        isUnlock = self._isUIVisibleStr(uid)
         INFO_MSG('call checkUnlock', isUnlock)
         return isUnlock
 
@@ -120,7 +120,7 @@ class IWelfareSignIn(object):
         if not self.welfareSignInInfo.welfareSignInDay:
             DEBUG_MSG('call gmUpdateWelfareSignIn, not lock', self.welfareSignInInfo.welfareSignInDay)
             return False, '未解锁福利签到'
-        
+
         success = True
         msg = ''
         if not flag:
@@ -135,7 +135,7 @@ class IWelfareSignIn(object):
                 DEBUG_MSG('call gmUpdateWelfareSignIn: all signed in', self.welfareSignInInfo.welfareSignInDay)
                 msg ='已经达到最大签到天数'
                 success = False
-            else:    
+            else:
                 self.updateWelfareSignIn(utils.getNow())
                 DEBUG_MSG('call gmUpdateWelfareSignIn: add signin day', self.welfareSignInInfo.welfareSignInDay)
                 msg ='已累增1天'

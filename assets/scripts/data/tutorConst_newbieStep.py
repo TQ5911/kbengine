@@ -130,8 +130,8 @@ datas = _tools.RODict({
         "startTask": 86060104,
         "taskTag": 86060104,
         "lockDun": 4001,
-        "bornPos": (180.2183, 63.10073, 99.65),
-        "bornRotation": 307,
+        "bornPos": (167, 63, 116),
+        "bornRotation": 110,
         "setValue": None,
         "rewardTag": 0,
         "allowleave": 0

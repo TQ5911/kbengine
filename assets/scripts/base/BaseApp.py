@@ -107,7 +107,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
 
         self.pyAddTimer(self.INITIAL_INIT + random.random(), 0, gametimer.BASEAPP_TIMER_INIT)
 
-        #self.pyAddTimer(1, gameconst.AuctionCollection.CHECK_TIP_INTERVAL, gametimer.CHECK_TIP_PLAYER_AUCTION_COLLECTION)
+        self.pyAddTimer(1, gameconst.AuctionItemCollection.CHECK_TIP_INTERVAL, gametimer.CHECK_TIP_PLAYER_AUCTION_ITEM_COLLECTION)
 
         self.pyAddTimer(1, gameconst.DrawCardPoolMacro.CHECK_TIME_LIMIT_INTERVAL, gametimer.CHECK_DRAW_CARD_POOL_TIME_LIMIT)
 
@@ -178,8 +178,8 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         elif userData == gametimer.BASEAPP_ASYNC_TICK:
             self.connectAllRouterServer()
 
-        elif userData == gametimer.CHECK_TIP_PLAYER_AUCTION_COLLECTION:
-            self._checkTipPlayerAuctionCollection()
+        elif userData == gametimer.CHECK_TIP_PLAYER_AUCTION_ITEM_COLLECTION:
+            self._checkTipPlayerAuctionItemCollection()
 
         elif userData == gametimer.CHECK_DRAW_CARD_POOL_TIME_LIMIT:
             self._checkDrawCardPoolTimeLimit()
@@ -225,14 +225,14 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
                 if method:
                     method(*args)
 
-    def _checkTipPlayerAuctionCollection(self):
-        newAuctionCache = gameglobal.newAuctionCache
-        if not len(newAuctionCache):
+    def _checkTipPlayerAuctionItemCollection(self):
+        newAuctionItemCache = gameglobal.newAuctionItemCache
+        if not len(newAuctionItemCache):
             return
 
-        copyNewAuctionCache = copy.deepcopy(newAuctionCache)
-        self.broadcastToAllAvatar(gameconst.BASE, 'tipPlayerAuctionCollection', (copyNewAuctionCache,))
-        newAuctionCache.clear()
+        copyNewAuctionItemCache = copy.deepcopy(newAuctionItemCache)
+        self.broadcastToAllAvatar(gameconst.BASE, 'tipPlayerAuctionItemCollection', (copyNewAuctionItemCache,))
+        newAuctionItemCache.clear()
 
     def _checkDrawCardPoolTimeLimit(self):
         curTimestamp = utils.getNow()

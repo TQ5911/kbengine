@@ -11,6 +11,7 @@ import complexTeleportOption
 import utils
 import math
 import formula
+import visible_visible as V_VD
 
 
 class INewbie(object):
@@ -42,12 +43,20 @@ class INewbie(object):
             if self.newbieStep <= step < stepLimit:
                 taskId = data['taskTag']
                 if taskId:
-                    for subTaskId in self.taskInfo.getChildTaskIds(taskId):
+                    _subIds = self.taskInfo.getChildTaskIds(taskId)
+                    for subTaskId in _subIds:
                         self.taskInfo.tasks.pop(subTaskId, None)
-                        self.unlockSkill(True, 0, subTaskId)
 
                     self.taskInfo.tasks.pop(taskId, None)
                     self.taskInfo.taskRecordDic[taskId] = gameconst.TaskStat.TASK_STAT_SUBMITTED
+                    if taskId in V_VD.taskDic:
+                        self.updateVisibleByList(V_VD.taskDic[taskId])
+
+                    for subTaskId in _subIds:
+                        if subTaskId in V_VD.taskDic:
+                            self.updateVisibleByList(V_VD.taskDic[subTaskId])
+                            self.unlockSkill(True, 0, subTaskId)
+
                     self.unlockSkill(True, 0, taskId)
 
                 rewardId = data['rewardTag']

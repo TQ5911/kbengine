@@ -140,6 +140,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.baseMinMagicArmor = CHD.datas[self.school].get('baseMinMagicArmor', 0)
         self.baseMaxMagicArmor = CHD.datas[self.school].get('baseMaxMagicArmor', 0)
         self.baseDrugsQuantity = CHD.datas[self.school].get('baseDrugsQuantity', 0)
+        self.baseRealDmg = CHD.datas[self.school].get('baseRealDmg', 0)
+        self.baseRealDmgDef = CHD.datas[self.school].get('baseRealDmgDef', 0)
 
 
     def restoreBuffs(self):

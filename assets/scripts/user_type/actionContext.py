@@ -91,6 +91,7 @@ class UseSkillCtx(ActionContext):
         self.duringBigWorldDuel = False
         self.actionProgress = actionProgress                 #���ܽ���
         self.isLastActionStage = isLastActionStage           #�Ƿ����һ��actionstage
+        self.checkInRange = True
 
         if self.skillResult:
             self.skillResult.sourceType = self.getDmgSourceType()

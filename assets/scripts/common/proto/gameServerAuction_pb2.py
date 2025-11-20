@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='AuctionGameServer',
   syntax='proto3',
   serialized_options=_b('H\003Z\024../gameServerService\220\001\001'),
-  serialized_pb=_b('\n\x17gameServerAuction.proto\x12\x11\x41uctionGameServer\"\x06\n\x04Void\"I\n\x11ServerInfoMessage\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0e\n\x06\x63ompId\x18\x02 \x01(\r\x12\x12\n\nserverName\x18\x03 \x01(\t\"\x89\x01\n\x08ItemData\x12\x0e\n\x06itemId\x18\x01 \x01(\r\x12\x0f\n\x07itemNum\x18\x02 \x01(\r\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\x10\n\x08\x62indType\x18\x04 \x01(\r\x12\x12\n\ncreateTime\x18\x05 \x01(\r\x12\x12\n\nexpireTime\x18\x06 \x01(\r\x12\x10\n\x08\x61ttrJson\x18\x07 \x01(\t\"\x97\x02\n\x0b\x41uctionItem\x12\x13\n\x0b\x61uctionType\x18\x01 \x01(\r\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\x0f\n\x07\x61\x64\x64Time\x18\x03 \x01(\r\x12-\n\x08itemData\x18\x04 \x01(\x0b\x32\x1b.AuctionGameServer.ItemData\x12\r\n\x05price\x18\x05 \x01(\x04\x12\x0e\n\x06number\x18\x06 \x01(\r\x12\x0f\n\x07\x62\x61gType\x18\x07 \x01(\r\x12\x0e\n\x06source\x18\x08 \x01(\r\x12\x0e\n\x06status\x18\t \x01(\r\x12\x0e\n\x06locked\x18\n \x01(\r\x12\x11\n\textraInfo\x18\x0b \x01(\t\x12\x0f\n\x07tCreate\x18\x0c \x01(\r\x12\x16\n\x0e\x66romPlayerGBID\x18\r \x01(\x04\"\xb4\x01\n\x11\x41uctionClientInfo\x12\x13\n\x0b\x61uctionType\x18\x01 \x01(\r\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\x0f\n\x07\x61\x64\x64Time\x18\x03 \x01(\r\x12\x0e\n\x06itemId\x18\x04 \x01(\r\x12\x10\n\x08uniqueId\x18\x05 \x01(\x04\x12\r\n\x05price\x18\x06 \x01(\x04\x12\x0e\n\x06number\x18\x07 \x01(\r\x12\x0e\n\x06status\x18\x08 \x01(\r\x12\x0f\n\x07tCreate\x18\t \x01(\r\"w\n\x0bSaleItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x10\n\x08itemDict\x18\x02 \x01(\t\x12\x12\n\ntotalPrice\x18\x03 \x01(\x04\x12\x0e\n\x06number\x18\x04 \x01(\r\x12\x0f\n\x07\x62\x61gType\x18\x05 \x01(\r\x12\r\n\x05\x65xtra\x18\x06 \x01(\t\"f\n\x0cSaleItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"[\n\rDoSaleItemReq\x12\x17\n\x0f\x61uctionItemUUID\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\x12\x0e\n\x06result\x18\x04 \x01(\x08\"h\n\x0e\x44oSaleItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"X\n\nBuyItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\x0e\n\x06number\x18\x03 \x01(\r\x12\r\n\x05\x65xtra\x18\x04 \x01(\t\"f\n\x0b\x42uyItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\r\n\x05price\x18\x03 \x01(\x04\x12\r\n\x05\x65xtra\x18\x04 \x01(\t\x12\x0c\n\x04\x63ode\x18\x05 \x01(\r\"h\n\x0c\x44oBuyItemReq\x12\x17\n\x0f\x61uctionItemUUID\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\r\n\x05\x65rrno\x18\x03 \x01(\r\x12\r\n\x05price\x18\x04 \x01(\x04\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\"g\n\rDoBuyItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"O\n\x11\x43\x61ncelSaleItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"l\n\x12\x43\x61ncelSaleItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"Q\n\x13\x44oCancelSaleItemReq\x12\x17\n\x0f\x61uctionItemUUID\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"}\n\x14\x44oCancelSaleItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65rrno\x18\x02 \x01(\r\x12\x33\n\x0b\x61uctionItem\x18\x03 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x04 \x01(\t\"k\n\x16SearchItemsByItemIdReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0f\n\x07itemIds\x18\x02 \x03(\r\x12\r\n\x05limit\x18\x03 \x01(\r\x12\x0e\n\x06offset\x18\x04 \x01(\r\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\"\xb4\x01\n\x17SearchItemsByItemIdResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0f\n\x07itemIds\x18\x02 \x03(\r\x12\r\n\x05limit\x18\x03 \x01(\r\x12\x0e\n\x06offset\x18\x04 \x01(\r\x12\x34\n\x0c\x61uctionItems\x18\x05 \x03(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\x10\n\x08totalNum\x18\x06 \x01(\r\x12\r\n\x05\x65xtra\x18\x07 \x01(\t\"N\n\x19GetItemLastAndAvgPriceReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"t\n\x1aGetItemLastAndAvgPriceResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x11\n\tlastPrice\x18\x03 \x01(\x02\x12\x10\n\x08\x61vgPrice\x18\x04 \x01(\x02\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\"N\n\x19GetCurrentSaleItemInfoReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"\xaa\x01\n\x1aGetCurrentSaleItemInfoResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x11\n\tlastPrice\x18\x03 \x01(\x02\x12\x10\n\x08\x61vgPrice\x18\x04 \x01(\x02\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\x12\x34\n\x0c\x61uctionItems\x18\x06 \x03(\x0b\x32\x1e.AuctionGameServer.AuctionItem\"=\n\x18GetPlayerAuctionItemsReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65xtra\x18\x02 \x01(\t\"t\n\x19GetPlayerAuctionItemsResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x34\n\x0c\x61uctionItems\x18\x02 \x03(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"=\n\x18LoadPlayerAuctionItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65xtra\x18\x02 \x01(\t\"X\n\x19LoadPlayerAuctionItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x18\n\x10\x61uctionItemUUIDs\x18\x02 \x03(\x04\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"{\n\x11OnItemBeSaledInfo\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\x0e\n\x06number\x18\x03 \x01(\r\x12\r\n\x05\x65xtra\x18\x04 \x01(\t\".\n\x0c\x44oCommandReq\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12\r\n\x05\x65xtra\x18\x02 \x01(\t\"/\n\rDoCommandResp\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12\r\n\x05\x65xtra\x18\x02 \x01(\t\"T\n\x19GetItemNumByCategoryIdReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x12\n\ncategoryId\x18\x02 \x01(\r\x12\x0f\n\x07itemIds\x18\x03 \x03(\r\"w\n\x1aGetItemNumByCategoryIdResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x12\n\ncategoryId\x18\x02 \x01(\r\x12\x0f\n\x07itemIds\x18\x03 \x03(\r\x12\x10\n\x08itemNums\x18\x04 \x03(\r\x12\x0e\n\x06prices\x18\x05 \x03(\x02\"f\n\x12\x42uyItemByItemIdReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x0e\n\x06number\x18\x03 \x01(\r\x12\r\n\x05price\x18\x04 \x01(\r\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\"\xa8\x01\n\x13\x42uyItemByItemIdResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x0e\n\x06number\x18\x03 \x01(\r\x12\r\n\x05price\x18\x04 \x01(\r\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\x12\x11\n\tremainNum\x18\x06 \x01(\r\x12\x18\n\x10\x61uctionItemUUIDs\x18\x07 \x03(\x04\x12\x12\n\ntotalPrice\x18\x08 \x01(\r\"\xb8\x01\n\x14\x44oBuyItemByItemIdReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65rrno\x18\x02 \x01(\r\x12\x0e\n\x06itemId\x18\x03 \x01(\r\x12\x0e\n\x06number\x18\x04 \x01(\r\x12\r\n\x05price\x18\x05 \x01(\r\x12\x11\n\tremainNum\x18\x06 \x01(\r\x12\x18\n\x10\x61uctionItemUUIDs\x18\x07 \x03(\x04\x12\x12\n\ntotalPrice\x18\x08 \x01(\r\x12\r\n\x05\x65xtra\x18\t \x01(\t\"\xce\x01\n\x15\x44oBuyItemByItemIdResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65rrno\x18\x02 \x01(\r\x12\x0e\n\x06itemId\x18\x03 \x01(\r\x12\x0e\n\x06number\x18\x04 \x01(\r\x12\r\n\x05price\x18\x05 \x01(\r\x12\x11\n\tremainNum\x18\x06 \x01(\r\x12-\n\x08itemData\x18\x07 \x01(\x0b\x32\x1b.AuctionGameServer.ItemData\x12\x12\n\ntotalPrice\x18\x08 \x01(\r\x12\r\n\x05\x65xtra\x18\t \x01(\t2\x92\x0b\n\rAuctionServer\x12O\n\x0eregisterServer\x12$.AuctionGameServer.ServerInfoMessage\x1a\x17.AuctionGameServer.Void\x12>\n\nactiveTick\x12\x17.AuctionGameServer.Void\x1a\x17.AuctionGameServer.Void\x12\x43\n\x08saleItem\x12\x1e.AuctionGameServer.SaleItemReq\x1a\x17.AuctionGameServer.Void\x12G\n\ndoSaleItem\x12 .AuctionGameServer.DoSaleItemReq\x1a\x17.AuctionGameServer.Void\x12\x41\n\x07\x62uyItem\x12\x1d.AuctionGameServer.BuyItemReq\x1a\x17.AuctionGameServer.Void\x12\x45\n\tdoBuyItem\x12\x1f.AuctionGameServer.DoBuyItemReq\x1a\x17.AuctionGameServer.Void\x12O\n\x0e\x63\x61ncelSaleItem\x12$.AuctionGameServer.CancelSaleItemReq\x1a\x17.AuctionGameServer.Void\x12S\n\x10\x64oCancelSaleItem\x12&.AuctionGameServer.DoCancelSaleItemReq\x1a\x17.AuctionGameServer.Void\x12Y\n\x13searchItemsByItemId\x12).AuctionGameServer.SearchItemsByItemIdReq\x1a\x17.AuctionGameServer.Void\x12_\n\x16getItemLastAndAvgPrice\x12,.AuctionGameServer.GetItemLastAndAvgPriceReq\x1a\x17.AuctionGameServer.Void\x12_\n\x16getCurrentSaleItemInfo\x12,.AuctionGameServer.GetCurrentSaleItemInfoReq\x1a\x17.AuctionGameServer.Void\x12]\n\x15getPlayerAuctionItems\x12+.AuctionGameServer.GetPlayerAuctionItemsReq\x1a\x17.AuctionGameServer.Void\x12]\n\x15loadPlayerAuctionItem\x12+.AuctionGameServer.LoadPlayerAuctionItemReq\x1a\x17.AuctionGameServer.Void\x12\x45\n\tdoCommand\x12\x1f.AuctionGameServer.DoCommandReq\x1a\x17.AuctionGameServer.Void\x12\x66\n\x1dgetAuctionItemNumByCategoryId\x12,.AuctionGameServer.GetItemNumByCategoryIdReq\x1a\x17.AuctionGameServer.Void\x12Q\n\x0f\x62uyItemByItemId\x12%.AuctionGameServer.BuyItemByItemIdReq\x1a\x17.AuctionGameServer.Void\x12U\n\x11\x64oBuyItemByItemId\x12\'.AuctionGameServer.DoBuyItemByItemIdReq\x1a\x17.AuctionGameServer.Void2\xf0\x0b\n\nGameServer\x12\x46\n\x12\x61\x63tiveTickCallback\x12\x17.AuctionGameServer.Void\x1a\x17.AuctionGameServer.Void\x12I\n\rreplySaleItem\x12\x1f.AuctionGameServer.SaleItemResp\x1a\x17.AuctionGameServer.Void\x12M\n\x0freplyDoSaleItem\x12!.AuctionGameServer.DoSaleItemResp\x1a\x17.AuctionGameServer.Void\x12G\n\x0creplyBuyItem\x12\x1e.AuctionGameServer.BuyItemResp\x1a\x17.AuctionGameServer.Void\x12K\n\x0ereplyDoBuyItem\x12 .AuctionGameServer.DoBuyItemResp\x1a\x17.AuctionGameServer.Void\x12U\n\x13replyCancelSaleItem\x12%.AuctionGameServer.CancelSaleItemResp\x1a\x17.AuctionGameServer.Void\x12Y\n\x15replyDoCancelSaleItem\x12\'.AuctionGameServer.DoCancelSaleItemResp\x1a\x17.AuctionGameServer.Void\x12_\n\x18replySearchItemsByItemId\x12*.AuctionGameServer.SearchItemsByItemIdResp\x1a\x17.AuctionGameServer.Void\x12\x65\n\x1breplyGetItemLastAndAvgPrice\x12-.AuctionGameServer.GetItemLastAndAvgPriceResp\x1a\x17.AuctionGameServer.Void\x12\x65\n\x1breplyGetCurrentSaleItemInfo\x12-.AuctionGameServer.GetCurrentSaleItemInfoResp\x1a\x17.AuctionGameServer.Void\x12\x63\n\x1areplyGetPlayerAuctionItems\x12,.AuctionGameServer.GetPlayerAuctionItemsResp\x1a\x17.AuctionGameServer.Void\x12\x63\n\x1areplyLoadPlayerAuctionItem\x12,.AuctionGameServer.LoadPlayerAuctionItemResp\x1a\x17.AuctionGameServer.Void\x12N\n\ronItemBeSaled\x12$.AuctionGameServer.OnItemBeSaledInfo\x1a\x17.AuctionGameServer.Void\x12K\n\x0ereplyDoCommand\x12 .AuctionGameServer.DoCommandResp\x1a\x17.AuctionGameServer.Void\x12l\n\"replyGetAuctionItemNumByCategoryId\x12-.AuctionGameServer.GetItemNumByCategoryIdResp\x1a\x17.AuctionGameServer.Void\x12W\n\x14replyBuyItemByItemId\x12&.AuctionGameServer.BuyItemByItemIdResp\x1a\x17.AuctionGameServer.Void\x12[\n\x16replyDoBuyItemByItemId\x12(.AuctionGameServer.DoBuyItemByItemIdResp\x1a\x17.AuctionGameServer.VoidB\x1bH\x03Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x17gameServerAuction.proto\x12\x11\x41uctionGameServer\"\x06\n\x04Void\"I\n\x11ServerInfoMessage\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0e\n\x06\x63ompId\x18\x02 \x01(\r\x12\x12\n\nserverName\x18\x03 \x01(\t\"\x89\x01\n\x08ItemData\x12\x0e\n\x06itemId\x18\x01 \x01(\r\x12\x0f\n\x07itemNum\x18\x02 \x01(\r\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\x10\n\x08\x62indType\x18\x04 \x01(\r\x12\x12\n\ncreateTime\x18\x05 \x01(\x03\x12\x12\n\nexpireTime\x18\x06 \x01(\x03\x12\x10\n\x08\x61ttrJson\x18\x07 \x01(\t\"\xac\x02\n\x0b\x41uctionItem\x12\x13\n\x0b\x61uctionType\x18\x01 \x01(\r\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\x0f\n\x07\x61\x64\x64Time\x18\x03 \x01(\x03\x12-\n\x08itemData\x18\x04 \x01(\x0b\x32\x1b.AuctionGameServer.ItemData\x12\r\n\x05price\x18\x05 \x01(\x04\x12\x0e\n\x06number\x18\x06 \x01(\r\x12\x0f\n\x07\x62\x61gType\x18\x07 \x01(\r\x12\x0e\n\x06source\x18\x08 \x01(\r\x12\x0e\n\x06status\x18\t \x01(\r\x12\x0e\n\x06locked\x18\n \x01(\r\x12\x11\n\textraInfo\x18\x0b \x01(\t\x12\x0f\n\x07tCreate\x18\x0c \x01(\r\x12\x16\n\x0e\x66romPlayerGBID\x18\r \x01(\x04\x12\x13\n\x0bisPublicity\x18\x0e \x01(\x05\"\xb4\x01\n\x11\x41uctionClientInfo\x12\x13\n\x0b\x61uctionType\x18\x01 \x01(\r\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\x0f\n\x07\x61\x64\x64Time\x18\x03 \x01(\x03\x12\x0e\n\x06itemId\x18\x04 \x01(\r\x12\x10\n\x08uniqueId\x18\x05 \x01(\x04\x12\r\n\x05price\x18\x06 \x01(\x04\x12\x0e\n\x06number\x18\x07 \x01(\r\x12\x0e\n\x06status\x18\x08 \x01(\r\x12\x0f\n\x07tCreate\x18\t \x01(\r\"w\n\x0bSaleItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x10\n\x08itemDict\x18\x02 \x01(\t\x12\x12\n\ntotalPrice\x18\x03 \x01(\x04\x12\x0e\n\x06number\x18\x04 \x01(\r\x12\x0f\n\x07\x62\x61gType\x18\x05 \x01(\r\x12\r\n\x05\x65xtra\x18\x06 \x01(\t\"f\n\x0cSaleItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"[\n\rDoSaleItemReq\x12\x17\n\x0f\x61uctionItemUUID\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\x12\x0e\n\x06result\x18\x04 \x01(\x08\"h\n\x0e\x44oSaleItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"X\n\nBuyItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\x0e\n\x06number\x18\x03 \x01(\r\x12\r\n\x05\x65xtra\x18\x04 \x01(\t\"f\n\x0b\x42uyItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\r\n\x05price\x18\x03 \x01(\x04\x12\r\n\x05\x65xtra\x18\x04 \x01(\t\x12\x0c\n\x04\x63ode\x18\x05 \x01(\r\"h\n\x0c\x44oBuyItemReq\x12\x17\n\x0f\x61uctionItemUUID\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\r\n\x05\x65rrno\x18\x03 \x01(\r\x12\r\n\x05price\x18\x04 \x01(\x04\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\"g\n\rDoBuyItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"O\n\x11\x43\x61ncelSaleItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x17\n\x0f\x61uctionItemUUID\x18\x02 \x01(\x04\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"l\n\x12\x43\x61ncelSaleItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"Q\n\x13\x44oCancelSaleItemReq\x12\x17\n\x0f\x61uctionItemUUID\x18\x01 \x01(\x04\x12\x12\n\nplayerGBID\x18\x02 \x01(\x04\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"}\n\x14\x44oCancelSaleItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65rrno\x18\x02 \x01(\r\x12\x33\n\x0b\x61uctionItem\x18\x03 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x04 \x01(\t\"\x80\x01\n\x16SearchItemsByItemIdReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0f\n\x07itemIds\x18\x02 \x03(\r\x12\r\n\x05limit\x18\x03 \x01(\r\x12\x0e\n\x06offset\x18\x04 \x01(\r\x12\x13\n\x0bisPublicity\x18\x05 \x01(\r\x12\r\n\x05\x65xtra\x18\x06 \x01(\t\"\xc9\x01\n\x17SearchItemsByItemIdResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0f\n\x07itemIds\x18\x02 \x03(\r\x12\r\n\x05limit\x18\x03 \x01(\r\x12\x0e\n\x06offset\x18\x04 \x01(\r\x12\x34\n\x0c\x61uctionItems\x18\x05 \x03(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\x10\n\x08totalNum\x18\x06 \x01(\r\x12\r\n\x05\x65xtra\x18\x07 \x01(\t\x12\x13\n\x0bisPublicity\x18\x08 \x01(\r\"N\n\x19GetItemLastAndAvgPriceReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"t\n\x1aGetItemLastAndAvgPriceResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x11\n\tlastPrice\x18\x03 \x01(\x02\x12\x10\n\x08\x61vgPrice\x18\x04 \x01(\x02\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\"c\n\x19GetCurrentSaleItemInfoReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x13\n\x0bisPublicity\x18\x03 \x01(\r\x12\r\n\x05\x65xtra\x18\x04 \x01(\t\"\xbf\x01\n\x1aGetCurrentSaleItemInfoResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x11\n\tlastPrice\x18\x03 \x01(\x02\x12\x10\n\x08\x61vgPrice\x18\x04 \x01(\x02\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\x12\x34\n\x0c\x61uctionItems\x18\x06 \x03(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\x13\n\x0bisPublicity\x18\x07 \x01(\r\"=\n\x18GetPlayerAuctionItemsReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65xtra\x18\x02 \x01(\t\"t\n\x19GetPlayerAuctionItemsResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x34\n\x0c\x61uctionItems\x18\x02 \x03(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"=\n\x18LoadPlayerAuctionItemReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65xtra\x18\x02 \x01(\t\"X\n\x19LoadPlayerAuctionItemResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x18\n\x10\x61uctionItemUUIDs\x18\x02 \x03(\x04\x12\r\n\x05\x65xtra\x18\x03 \x01(\t\"{\n\x11OnItemBeSaledInfo\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x33\n\x0b\x61uctionItem\x18\x02 \x01(\x0b\x32\x1e.AuctionGameServer.AuctionItem\x12\x0e\n\x06number\x18\x03 \x01(\r\x12\r\n\x05\x65xtra\x18\x04 \x01(\t\".\n\x0c\x44oCommandReq\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12\r\n\x05\x65xtra\x18\x02 \x01(\t\"/\n\rDoCommandResp\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12\r\n\x05\x65xtra\x18\x02 \x01(\t\"i\n\x19GetItemNumByCategoryIdReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x12\n\ncategoryId\x18\x02 \x01(\r\x12\x0f\n\x07itemIds\x18\x03 \x03(\r\x12\x13\n\x0bisPublicity\x18\x04 \x01(\x05\"\x8c\x01\n\x1aGetItemNumByCategoryIdResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x12\n\ncategoryId\x18\x02 \x01(\r\x12\x0f\n\x07itemIds\x18\x03 \x03(\r\x12\x10\n\x08itemNums\x18\x04 \x03(\r\x12\x0e\n\x06prices\x18\x05 \x03(\x02\x12\x13\n\x0bisPublicity\x18\x06 \x01(\x05\"f\n\x12\x42uyItemByItemIdReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x0e\n\x06number\x18\x03 \x01(\r\x12\r\n\x05price\x18\x04 \x01(\r\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\"\xa8\x01\n\x13\x42uyItemByItemIdResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x0e\n\x06itemId\x18\x02 \x01(\r\x12\x0e\n\x06number\x18\x03 \x01(\r\x12\r\n\x05price\x18\x04 \x01(\r\x12\r\n\x05\x65xtra\x18\x05 \x01(\t\x12\x11\n\tremainNum\x18\x06 \x01(\r\x12\x18\n\x10\x61uctionItemUUIDs\x18\x07 \x03(\x04\x12\x12\n\ntotalPrice\x18\x08 \x01(\r\"\xb8\x01\n\x14\x44oBuyItemByItemIdReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65rrno\x18\x02 \x01(\r\x12\x0e\n\x06itemId\x18\x03 \x01(\r\x12\x0e\n\x06number\x18\x04 \x01(\r\x12\r\n\x05price\x18\x05 \x01(\r\x12\x11\n\tremainNum\x18\x06 \x01(\r\x12\x18\n\x10\x61uctionItemUUIDs\x18\x07 \x03(\x04\x12\x12\n\ntotalPrice\x18\x08 \x01(\r\x12\r\n\x05\x65xtra\x18\t \x01(\t\"\xce\x01\n\x15\x44oBuyItemByItemIdResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\r\n\x05\x65rrno\x18\x02 \x01(\r\x12\x0e\n\x06itemId\x18\x03 \x01(\r\x12\x0e\n\x06number\x18\x04 \x01(\r\x12\r\n\x05price\x18\x05 \x01(\r\x12\x11\n\tremainNum\x18\x06 \x01(\r\x12-\n\x08itemData\x18\x07 \x01(\x0b\x32\x1b.AuctionGameServer.ItemData\x12\x12\n\ntotalPrice\x18\x08 \x01(\r\x12\r\n\x05\x65xtra\x18\t \x01(\t\"[\n\x1dGetAuctionItemByAuctionIdsReq\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x12\n\ncategoryId\x18\x02 \x01(\r\x12\x12\n\nauctionIds\x18\x03 \x03(\x04\"\xa1\x01\n\x1eGetAuctionItemByAuctionIdsResp\x12\x12\n\nplayerGBID\x18\x01 \x01(\x04\x12\x12\n\ncategoryId\x18\x02 \x01(\r\x12\x12\n\nauctionIds\x18\x03 \x03(\x04\x12\x0f\n\x07itemIds\x18\x04 \x03(\r\x12\x10\n\x08itemNums\x18\x05 \x03(\r\x12\x0e\n\x06prices\x18\x06 \x03(\x02\x12\x10\n\x08\x61\x64\x64Times\x18\x07 \x03(\x03\x32\xfc\x0b\n\rAuctionServer\x12O\n\x0eregisterServer\x12$.AuctionGameServer.ServerInfoMessage\x1a\x17.AuctionGameServer.Void\x12>\n\nactiveTick\x12\x17.AuctionGameServer.Void\x1a\x17.AuctionGameServer.Void\x12\x43\n\x08saleItem\x12\x1e.AuctionGameServer.SaleItemReq\x1a\x17.AuctionGameServer.Void\x12G\n\ndoSaleItem\x12 .AuctionGameServer.DoSaleItemReq\x1a\x17.AuctionGameServer.Void\x12\x41\n\x07\x62uyItem\x12\x1d.AuctionGameServer.BuyItemReq\x1a\x17.AuctionGameServer.Void\x12\x45\n\tdoBuyItem\x12\x1f.AuctionGameServer.DoBuyItemReq\x1a\x17.AuctionGameServer.Void\x12O\n\x0e\x63\x61ncelSaleItem\x12$.AuctionGameServer.CancelSaleItemReq\x1a\x17.AuctionGameServer.Void\x12S\n\x10\x64oCancelSaleItem\x12&.AuctionGameServer.DoCancelSaleItemReq\x1a\x17.AuctionGameServer.Void\x12Y\n\x13searchItemsByItemId\x12).AuctionGameServer.SearchItemsByItemIdReq\x1a\x17.AuctionGameServer.Void\x12_\n\x16getItemLastAndAvgPrice\x12,.AuctionGameServer.GetItemLastAndAvgPriceReq\x1a\x17.AuctionGameServer.Void\x12_\n\x16getCurrentSaleItemInfo\x12,.AuctionGameServer.GetCurrentSaleItemInfoReq\x1a\x17.AuctionGameServer.Void\x12]\n\x15getPlayerAuctionItems\x12+.AuctionGameServer.GetPlayerAuctionItemsReq\x1a\x17.AuctionGameServer.Void\x12]\n\x15loadPlayerAuctionItem\x12+.AuctionGameServer.LoadPlayerAuctionItemReq\x1a\x17.AuctionGameServer.Void\x12\x45\n\tdoCommand\x12\x1f.AuctionGameServer.DoCommandReq\x1a\x17.AuctionGameServer.Void\x12\x66\n\x1dgetAuctionItemNumByCategoryId\x12,.AuctionGameServer.GetItemNumByCategoryIdReq\x1a\x17.AuctionGameServer.Void\x12Q\n\x0f\x62uyItemByItemId\x12%.AuctionGameServer.BuyItemByItemIdReq\x1a\x17.AuctionGameServer.Void\x12U\n\x11\x64oBuyItemByItemId\x12\'.AuctionGameServer.DoBuyItemByItemIdReq\x1a\x17.AuctionGameServer.Void\x12h\n\x1bgetAuctionItemsByAuctionIds\x12\x30.AuctionGameServer.GetAuctionItemByAuctionIdsReq\x1a\x17.AuctionGameServer.Void2\xe0\x0c\n\nGameServer\x12\x46\n\x12\x61\x63tiveTickCallback\x12\x17.AuctionGameServer.Void\x1a\x17.AuctionGameServer.Void\x12I\n\rreplySaleItem\x12\x1f.AuctionGameServer.SaleItemResp\x1a\x17.AuctionGameServer.Void\x12M\n\x0freplyDoSaleItem\x12!.AuctionGameServer.DoSaleItemResp\x1a\x17.AuctionGameServer.Void\x12G\n\x0creplyBuyItem\x12\x1e.AuctionGameServer.BuyItemResp\x1a\x17.AuctionGameServer.Void\x12K\n\x0ereplyDoBuyItem\x12 .AuctionGameServer.DoBuyItemResp\x1a\x17.AuctionGameServer.Void\x12U\n\x13replyCancelSaleItem\x12%.AuctionGameServer.CancelSaleItemResp\x1a\x17.AuctionGameServer.Void\x12Y\n\x15replyDoCancelSaleItem\x12\'.AuctionGameServer.DoCancelSaleItemResp\x1a\x17.AuctionGameServer.Void\x12_\n\x18replySearchItemsByItemId\x12*.AuctionGameServer.SearchItemsByItemIdResp\x1a\x17.AuctionGameServer.Void\x12\x65\n\x1breplyGetItemLastAndAvgPrice\x12-.AuctionGameServer.GetItemLastAndAvgPriceResp\x1a\x17.AuctionGameServer.Void\x12\x65\n\x1breplyGetCurrentSaleItemInfo\x12-.AuctionGameServer.GetCurrentSaleItemInfoResp\x1a\x17.AuctionGameServer.Void\x12\x63\n\x1areplyGetPlayerAuctionItems\x12,.AuctionGameServer.GetPlayerAuctionItemsResp\x1a\x17.AuctionGameServer.Void\x12\x63\n\x1areplyLoadPlayerAuctionItem\x12,.AuctionGameServer.LoadPlayerAuctionItemResp\x1a\x17.AuctionGameServer.Void\x12N\n\ronItemBeSaled\x12$.AuctionGameServer.OnItemBeSaledInfo\x1a\x17.AuctionGameServer.Void\x12K\n\x0ereplyDoCommand\x12 .AuctionGameServer.DoCommandResp\x1a\x17.AuctionGameServer.Void\x12l\n\"replyGetAuctionItemNumByCategoryId\x12-.AuctionGameServer.GetItemNumByCategoryIdResp\x1a\x17.AuctionGameServer.Void\x12W\n\x14replyBuyItemByItemId\x12&.AuctionGameServer.BuyItemByItemIdResp\x1a\x17.AuctionGameServer.Void\x12[\n\x16replyDoBuyItemByItemId\x12(.AuctionGameServer.DoBuyItemByItemIdResp\x1a\x17.AuctionGameServer.Void\x12n\n replyGetAuctionItemsByAuctionIds\x12\x31.AuctionGameServer.GetAuctionItemByAuctionIdsResp\x1a\x17.AuctionGameServer.VoidB\x1bH\x03Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -133,14 +133,14 @@ _ITEMDATA = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='createTime', full_name='AuctionGameServer.ItemData.createTime', index=4,
-      number=5, type=13, cpp_type=3, label=1,
+      number=5, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='expireTime', full_name='AuctionGameServer.ItemData.expireTime', index=5,
-      number=6, type=13, cpp_type=3, label=1,
+      number=6, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -192,7 +192,7 @@ _AUCTIONITEM = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='addTime', full_name='AuctionGameServer.AuctionItem.addTime', index=2,
-      number=3, type=13, cpp_type=3, label=1,
+      number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -267,6 +267,13 @@ _AUCTIONITEM = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='isPublicity', full_name='AuctionGameServer.AuctionItem.isPublicity', index=13,
+      number=14, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -280,7 +287,7 @@ _AUCTIONITEM = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=270,
-  serialized_end=549,
+  serialized_end=570,
 )
 
 
@@ -307,7 +314,7 @@ _AUCTIONCLIENTINFO = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='addTime', full_name='AuctionGameServer.AuctionClientInfo.addTime', index=2,
-      number=3, type=13, cpp_type=3, label=1,
+      number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -366,8 +373,8 @@ _AUCTIONCLIENTINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=552,
-  serialized_end=732,
+  serialized_start=573,
+  serialized_end=753,
 )
 
 
@@ -432,8 +439,8 @@ _SALEITEMREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=734,
-  serialized_end=853,
+  serialized_start=755,
+  serialized_end=874,
 )
 
 
@@ -477,8 +484,8 @@ _SALEITEMRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=855,
-  serialized_end=957,
+  serialized_start=876,
+  serialized_end=978,
 )
 
 
@@ -529,8 +536,8 @@ _DOSALEITEMREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=959,
-  serialized_end=1050,
+  serialized_start=980,
+  serialized_end=1071,
 )
 
 
@@ -574,8 +581,8 @@ _DOSALEITEMRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1052,
-  serialized_end=1156,
+  serialized_start=1073,
+  serialized_end=1177,
 )
 
 
@@ -626,8 +633,8 @@ _BUYITEMREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1158,
-  serialized_end=1246,
+  serialized_start=1179,
+  serialized_end=1267,
 )
 
 
@@ -685,8 +692,8 @@ _BUYITEMRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1248,
-  serialized_end=1350,
+  serialized_start=1269,
+  serialized_end=1371,
 )
 
 
@@ -744,8 +751,8 @@ _DOBUYITEMREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1352,
-  serialized_end=1456,
+  serialized_start=1373,
+  serialized_end=1477,
 )
 
 
@@ -789,8 +796,8 @@ _DOBUYITEMRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1458,
-  serialized_end=1561,
+  serialized_start=1479,
+  serialized_end=1582,
 )
 
 
@@ -834,8 +841,8 @@ _CANCELSALEITEMREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1563,
-  serialized_end=1642,
+  serialized_start=1584,
+  serialized_end=1663,
 )
 
 
@@ -879,8 +886,8 @@ _CANCELSALEITEMRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1644,
-  serialized_end=1752,
+  serialized_start=1665,
+  serialized_end=1773,
 )
 
 
@@ -924,8 +931,8 @@ _DOCANCELSALEITEMREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1754,
-  serialized_end=1835,
+  serialized_start=1775,
+  serialized_end=1856,
 )
 
 
@@ -976,8 +983,8 @@ _DOCANCELSALEITEMRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1837,
-  serialized_end=1962,
+  serialized_start=1858,
+  serialized_end=1983,
 )
 
 
@@ -1017,8 +1024,15 @@ _SEARCHITEMSBYITEMIDREQ = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='extra', full_name='AuctionGameServer.SearchItemsByItemIdReq.extra', index=4,
-      number=5, type=9, cpp_type=9, label=1,
+      name='isPublicity', full_name='AuctionGameServer.SearchItemsByItemIdReq.isPublicity', index=4,
+      number=5, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='extra', full_name='AuctionGameServer.SearchItemsByItemIdReq.extra', index=5,
+      number=6, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -1035,8 +1049,8 @@ _SEARCHITEMSBYITEMIDREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1964,
-  serialized_end=2071,
+  serialized_start=1986,
+  serialized_end=2114,
 )
 
 
@@ -1096,6 +1110,13 @@ _SEARCHITEMSBYITEMIDRESP = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='isPublicity', full_name='AuctionGameServer.SearchItemsByItemIdResp.isPublicity', index=7,
+      number=8, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1108,8 +1129,8 @@ _SEARCHITEMSBYITEMIDRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2074,
-  serialized_end=2254,
+  serialized_start=2117,
+  serialized_end=2318,
 )
 
 
@@ -1153,8 +1174,8 @@ _GETITEMLASTANDAVGPRICEREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2256,
-  serialized_end=2334,
+  serialized_start=2320,
+  serialized_end=2398,
 )
 
 
@@ -1212,8 +1233,8 @@ _GETITEMLASTANDAVGPRICERESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2336,
-  serialized_end=2452,
+  serialized_start=2400,
+  serialized_end=2516,
 )
 
 
@@ -1239,8 +1260,15 @@ _GETCURRENTSALEITEMINFOREQ = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='extra', full_name='AuctionGameServer.GetCurrentSaleItemInfoReq.extra', index=2,
-      number=3, type=9, cpp_type=9, label=1,
+      name='isPublicity', full_name='AuctionGameServer.GetCurrentSaleItemInfoReq.isPublicity', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='extra', full_name='AuctionGameServer.GetCurrentSaleItemInfoReq.extra', index=3,
+      number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -1257,8 +1285,8 @@ _GETCURRENTSALEITEMINFOREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2454,
-  serialized_end=2532,
+  serialized_start=2518,
+  serialized_end=2617,
 )
 
 
@@ -1311,6 +1339,13 @@ _GETCURRENTSALEITEMINFORESP = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='isPublicity', full_name='AuctionGameServer.GetCurrentSaleItemInfoResp.isPublicity', index=6,
+      number=7, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1323,8 +1358,8 @@ _GETCURRENTSALEITEMINFORESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2535,
-  serialized_end=2705,
+  serialized_start=2620,
+  serialized_end=2811,
 )
 
 
@@ -1361,8 +1396,8 @@ _GETPLAYERAUCTIONITEMSREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2707,
-  serialized_end=2768,
+  serialized_start=2813,
+  serialized_end=2874,
 )
 
 
@@ -1406,8 +1441,8 @@ _GETPLAYERAUCTIONITEMSRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2770,
-  serialized_end=2886,
+  serialized_start=2876,
+  serialized_end=2992,
 )
 
 
@@ -1444,8 +1479,8 @@ _LOADPLAYERAUCTIONITEMREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2888,
-  serialized_end=2949,
+  serialized_start=2994,
+  serialized_end=3055,
 )
 
 
@@ -1489,8 +1524,8 @@ _LOADPLAYERAUCTIONITEMRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2951,
-  serialized_end=3039,
+  serialized_start=3057,
+  serialized_end=3145,
 )
 
 
@@ -1541,8 +1576,8 @@ _ONITEMBESALEDINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3041,
-  serialized_end=3164,
+  serialized_start=3147,
+  serialized_end=3270,
 )
 
 
@@ -1579,8 +1614,8 @@ _DOCOMMANDREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3166,
-  serialized_end=3212,
+  serialized_start=3272,
+  serialized_end=3318,
 )
 
 
@@ -1617,8 +1652,8 @@ _DOCOMMANDRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3214,
-  serialized_end=3261,
+  serialized_start=3320,
+  serialized_end=3367,
 )
 
 
@@ -1650,6 +1685,13 @@ _GETITEMNUMBYCATEGORYIDREQ = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='isPublicity', full_name='AuctionGameServer.GetItemNumByCategoryIdReq.isPublicity', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1662,8 +1704,8 @@ _GETITEMNUMBYCATEGORYIDREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3263,
-  serialized_end=3347,
+  serialized_start=3369,
+  serialized_end=3474,
 )
 
 
@@ -1709,6 +1751,13 @@ _GETITEMNUMBYCATEGORYIDRESP = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='isPublicity', full_name='AuctionGameServer.GetItemNumByCategoryIdResp.isPublicity', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1721,8 +1770,8 @@ _GETITEMNUMBYCATEGORYIDRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3349,
-  serialized_end=3468,
+  serialized_start=3477,
+  serialized_end=3617,
 )
 
 
@@ -1780,8 +1829,8 @@ _BUYITEMBYITEMIDREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3470,
-  serialized_end=3572,
+  serialized_start=3619,
+  serialized_end=3721,
 )
 
 
@@ -1860,8 +1909,8 @@ _BUYITEMBYITEMIDRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3575,
-  serialized_end=3743,
+  serialized_start=3724,
+  serialized_end=3892,
 )
 
 
@@ -1947,8 +1996,8 @@ _DOBUYITEMBYITEMIDREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3746,
-  serialized_end=3930,
+  serialized_start=3895,
+  serialized_end=4079,
 )
 
 
@@ -2034,8 +2083,126 @@ _DOBUYITEMBYITEMIDRESP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3933,
-  serialized_end=4139,
+  serialized_start=4082,
+  serialized_end=4288,
+)
+
+
+_GETAUCTIONITEMBYAUCTIONIDSREQ = _descriptor.Descriptor(
+  name='GetAuctionItemByAuctionIdsReq',
+  full_name='AuctionGameServer.GetAuctionItemByAuctionIdsReq',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='playerGBID', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsReq.playerGBID', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='categoryId', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsReq.categoryId', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='auctionIds', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsReq.auctionIds', index=2,
+      number=3, type=4, cpp_type=4, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4290,
+  serialized_end=4381,
+)
+
+
+_GETAUCTIONITEMBYAUCTIONIDSRESP = _descriptor.Descriptor(
+  name='GetAuctionItemByAuctionIdsResp',
+  full_name='AuctionGameServer.GetAuctionItemByAuctionIdsResp',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='playerGBID', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsResp.playerGBID', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='categoryId', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsResp.categoryId', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='auctionIds', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsResp.auctionIds', index=2,
+      number=3, type=4, cpp_type=4, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='itemIds', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsResp.itemIds', index=3,
+      number=4, type=13, cpp_type=3, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='itemNums', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsResp.itemNums', index=4,
+      number=5, type=13, cpp_type=3, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='prices', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsResp.prices', index=5,
+      number=6, type=2, cpp_type=6, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='addTimes', full_name='AuctionGameServer.GetAuctionItemByAuctionIdsResp.addTimes', index=6,
+      number=7, type=3, cpp_type=2, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4384,
+  serialized_end=4545,
 )
 
 _AUCTIONITEM.fields_by_name['itemData'].message_type = _ITEMDATA
@@ -2085,6 +2252,8 @@ DESCRIPTOR.message_types_by_name['BuyItemByItemIdReq'] = _BUYITEMBYITEMIDREQ
 DESCRIPTOR.message_types_by_name['BuyItemByItemIdResp'] = _BUYITEMBYITEMIDRESP
 DESCRIPTOR.message_types_by_name['DoBuyItemByItemIdReq'] = _DOBUYITEMBYITEMIDREQ
 DESCRIPTOR.message_types_by_name['DoBuyItemByItemIdResp'] = _DOBUYITEMBYITEMIDRESP
+DESCRIPTOR.message_types_by_name['GetAuctionItemByAuctionIdsReq'] = _GETAUCTIONITEMBYAUCTIONIDSREQ
+DESCRIPTOR.message_types_by_name['GetAuctionItemByAuctionIdsResp'] = _GETAUCTIONITEMBYAUCTIONIDSRESP
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Void = _reflection.GeneratedProtocolMessageType('Void', (_message.Message,), dict(
@@ -2339,6 +2508,20 @@ DoBuyItemByItemIdResp = _reflection.GeneratedProtocolMessageType('DoBuyItemByIte
   ))
 _sym_db.RegisterMessage(DoBuyItemByItemIdResp)
 
+GetAuctionItemByAuctionIdsReq = _reflection.GeneratedProtocolMessageType('GetAuctionItemByAuctionIdsReq', (_message.Message,), dict(
+  DESCRIPTOR = _GETAUCTIONITEMBYAUCTIONIDSREQ,
+  __module__ = 'gameServerAuction_pb2'
+  # @@protoc_insertion_point(class_scope:AuctionGameServer.GetAuctionItemByAuctionIdsReq)
+  ))
+_sym_db.RegisterMessage(GetAuctionItemByAuctionIdsReq)
+
+GetAuctionItemByAuctionIdsResp = _reflection.GeneratedProtocolMessageType('GetAuctionItemByAuctionIdsResp', (_message.Message,), dict(
+  DESCRIPTOR = _GETAUCTIONITEMBYAUCTIONIDSRESP,
+  __module__ = 'gameServerAuction_pb2'
+  # @@protoc_insertion_point(class_scope:AuctionGameServer.GetAuctionItemByAuctionIdsResp)
+  ))
+_sym_db.RegisterMessage(GetAuctionItemByAuctionIdsResp)
+
 
 DESCRIPTOR._options = None
 
@@ -2348,8 +2531,8 @@ _AUCTIONSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=4142,
-  serialized_end=5568,
+  serialized_start=4548,
+  serialized_end=6080,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerServer',
@@ -2504,6 +2687,15 @@ _AUCTIONSERVER = _descriptor.ServiceDescriptor(
     output_type=_VOID,
     serialized_options=None,
   ),
+  _descriptor.MethodDescriptor(
+    name='getAuctionItemsByAuctionIds',
+    full_name='AuctionGameServer.AuctionServer.getAuctionItemsByAuctionIds',
+    index=17,
+    containing_service=None,
+    input_type=_GETAUCTIONITEMBYAUCTIONIDSREQ,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_AUCTIONSERVER)
 
@@ -2516,8 +2708,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=5571,
-  serialized_end=7091,
+  serialized_start=6083,
+  serialized_end=7715,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTickCallback',
@@ -2669,6 +2861,15 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
     index=16,
     containing_service=None,
     input_type=_DOBUYITEMBYITEMIDRESP,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='replyGetAuctionItemsByAuctionIds',
+    full_name='AuctionGameServer.GameServer.replyGetAuctionItemsByAuctionIds',
+    index=17,
+    containing_service=None,
+    input_type=_GETAUCTIONITEMBYAUCTIONIDSRESP,
     output_type=_VOID,
     serialized_options=None,
   ),

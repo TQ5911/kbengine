@@ -678,7 +678,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def getTeamByTeamId(self, teamId) -> team.TeamCacheVal:
         if teamId not in self.teamDic:
-            INFO_MSG('getTeamByTeamId teamId error', teamId)
+            WARNING_MSG('getTeamByTeamId teamId error', teamId)
             return
         teamVal = self.teamDic.get(teamId)
         return teamVal
@@ -1040,6 +1040,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 self._disbandTeam(teamId)
 
         teamVal.resetTeamFollowQueue(gbId, False)
+        teamVal.clearTeamDungeonRewardRecord(gbId)
         if teamVal.teamDuelData.hasTeamDuel():
             gameengine.getGlobalBase('TeamDuelStub').onAvatarLeaveTeam(teamVal.teamDuelData.duelSpaceNo, teamVal.teamDuelData.duelUUID, gbId)
 
@@ -1958,7 +1959,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         teamVal.addTeamStatisticValue(playerGbId, type, value)
 
-    def getTeamStatisticData(self, playerbox, teamId):
+    def getTeamStatisticData(self, playerbox, teamId, type):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
             DEBUG_MSG("getTeamStatisticData, team is missing", teamId)
@@ -1967,5 +1968,6 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         teamVal.showStatisticData()
 
         data = teamVal.getTeamStatisticData()
-        playerbox.cell.onGetTeamStatisticData(data)
+        for strType, dataList in data.items():
+            playerbox.cell.onGetTeamStatisticData(type, strType, dataList)
 

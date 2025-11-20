@@ -857,6 +857,22 @@ def enableTeleportDict():
     #     ret = 1
     return 1
 
+@config(Bool, None, '是否开启切磋')
+def enableDuel():
+    try:
+        ret = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/enableDuel'))
+    except:
+        ret = 1
+    return ret
+
+@config(Bool, None, '是否开启敌方')
+def enableEnemy():
+    try:
+        ret = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/enableEnemy'))
+    except:
+        ret = 1
+    return ret
+
 @config(Bool, None, '是否开启伤害统计', (ConfigFlag.CACHE_CONFIG, ))
 def enableStatistic():
     try:

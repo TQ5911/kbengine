@@ -70,16 +70,9 @@ def _34000012(lv):
     return sum
 def _34000013(e):
     if e >-500:
-        result = 0
-    elif -1000 < e <= -500:
-        result = 0.2
-    elif -2000 < e <= -1000:
-        result = 0.5
-    elif -5000 < e <= -2000:
-        result = 0.75
+        result = 0.05
     else:
-        result = 1
-
+        result = 0.1
     return result
 def _34000014(e):
     result = int(e.score * 2 * 0.1) + e.quality**2 * 10 + e.grade * 10
@@ -177,6 +170,10 @@ def _34010035(e):
     return int(e.level*1.2 + 23)
 def _34010036(e):
      return int(e.level*1.2 + 23)
+def _34010037(e):
+    return int(e.level*1)
+def _34010038(e):
+     return int(e.level*1)
 datas = _tools.RODict({ 
     34000001: _tools.RODict({
         "ID": 34000001,
@@ -413,6 +410,14 @@ datas = _tools.RODict({
     34010036: _tools.RODict({
         "ID": 34010036,
         'serverFormula':_34010036,
+    }),
+    34010037: _tools.RODict({
+        "ID": 34010037,
+        'serverFormula':_34010037,
+    }),
+    34010038: _tools.RODict({
+        "ID": 34010038,
+        'serverFormula':_34010038,
     })
 })
 minKey = 34000001

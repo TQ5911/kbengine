@@ -190,18 +190,12 @@ class WealthItem(WealthUnit):
             return
 
         for itemID, wealthData in self.data.items():
-            newBindType = _calculateBindType(itemID, awardContext.school)
-            if newBindType is None:
-                newBindType = bindType
             totalNum = 0
             for _, num in wealthData.items():
                 totalNum += num
-            self.data[itemID] = {newBindType:totalNum}
+            self.data[itemID] = {bindType:totalNum}
 
         for itemsObj in self.itemsObjs:
-            newBindType = _calculateBindType(itemsObj.itemId, awardContext.school)
-            if newBindType is None:
-                newBindType = bindType
             itemsObj.setItemBind(bindType)
 
 class WealthTitleOne(userType.UserSoleType):
@@ -811,6 +805,7 @@ def _genEquipItemList(itemId, itemNum, bindType, quality, context):
         'monsterId': context.monsterId or 0,
         'school': context.school or 0,
         'quality': quality or 0,
+        'grade': context.grade or 1,
     }
 
     if itemId == gameconst.ItemId.COMMON_EQUIPMENT_ID:
@@ -1066,7 +1061,7 @@ def _calSubPackDrop(dropTarget, times, context):
         dropTargetList = [item['dropTarget'] for item in data]
         numMinList = [item['dropNumMin'] for item in data]
         numMaxList = [item['dropNumMax'] for item in data]
-        bindWeightList = [item.get('bindWeight', 10000) for item in data]
+        bindWeightList = [(10000 - item.get('bindWeight', 10000)) for item in data]
         gradeList = [item['grade'] for item in data]
         return dropTargetList, numMinList, numMaxList, bindWeightList, gradeList
     return [], [], [], [], []
@@ -1077,7 +1072,7 @@ def _getRealDropTarget(dropTargetData, context):
     dropTargetList = [dropTargetData['dropTarget']]
     numMinList = [dropTargetData['dropNumMin']]
     numMaxList = [dropTargetData['dropNumMax']]
-    bindWeightList = [dropTargetData.get('bindWeight', 10000)]
+    bindWeightList = [10000 - dropTargetData.get('bindWeight', 10000)]
     gradeList = [dropTargetData['grade']]
     #子包
     if dropTargetData['dropType'] == gameconst.DropWayType.DROP_WAY_TYPE_2:
@@ -1086,25 +1081,10 @@ def _getRealDropTarget(dropTargetData, context):
 
 
 def _getBindType(itemID, bindWeight, context):
-    bindType = _calculateBindType(itemID, context.school)
-    if bindType:
-        return bindType
-    #其他情况，根据权重随机
     if random.randint(1, 10000) <= bindWeight:
         return gameconst.ItemBindType.BIND
     else:
         return gameconst.ItemBindType.NORMAL
-
-def _calculateBindType(itemID, school):
-    #如果是非本职业装备，必定非绑定
-    itemData = GB_GBD.datas.get(itemID)
-    if itemData:
-        _subType = itemData['subType']
-        itemTypeData = GB_TED.datas.get(_subType)
-        if itemTypeData:
-            _school = itemTypeData['RemindClass']
-            if _school and _school != school:
-                return gameconst.ItemBindType.NORMAL
 
 def _checkDropCondition(dropDataList, context):
     avatarLv = context.args.avatarLv

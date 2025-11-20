@@ -14,7 +14,7 @@ import KBEngine
 @functools.lru_cache(maxsize=1024)
 def getMapId(spaceNo):
     if spaceNo >= gameconst.COPIED_SPACE_NO_START:
-        return int(spaceNo / gameconst.SPACE_NO_INTERVAL)
+        return spaceNo // gameconst.SPACE_NO_INTERVAL
     return spaceNo
 
 
@@ -188,7 +188,9 @@ def getLineType(spaceNo):
 
 
 def getDungeonNoBySpaceNo(spaceNo):
-    return spaceNo // gameconst.SPACE_NO_INTERVAL
+    if spaceNo >= gameconst.SPACE_NO_INTERVAL:
+        return spaceNo // gameconst.SPACE_NO_INTERVAL
+    return spaceNo
 
 
 def setBit(x, index, on=True):
@@ -334,7 +336,7 @@ def isSingleDungeonSpace(spaceNo):
     if not isDungeonSpace(spaceNo):
         return False
     dungeonNo = getDungeonNoBySpaceNo(spaceNo)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.SINGLE)
+    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.UNKNOWN)
     if enterType == gameconst.DungeonEnterType.BOTH:
         dunSpaceStart, dunSpaceEnd = gameconst.SpaceType.getSingleDungeonSpaceNoRange(dungeonNo)
         return dunSpaceStart <= spaceNo < dunSpaceEnd
@@ -346,7 +348,7 @@ def isTeamDungeonSpace(spaceNo):
     if not isDungeonSpace(spaceNo):
         return False
     dungeonNo = getDungeonNoBySpaceNo(spaceNo)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.SINGLE)
+    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.UNKNOWN)
     if enterType == gameconst.DungeonEnterType.BOTH:
         dunSpaceStart, dunSpaceEnd = gameconst.SpaceType.getTeamDungeonSpaceNoRange(dungeonNo)
         return dunSpaceStart <= spaceNo < dunSpaceEnd
@@ -357,7 +359,7 @@ def isRaidDungeonSpace(spaceNo):
     if not isDungeonSpace(spaceNo):
         return False
     dungeonNo = getDungeonNoBySpaceNo(spaceNo)
-    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.SINGLE)
+    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.UNKNOWN)
     if enterType == gameconst.DungeonEnterType.RAID:
         return True
     return False

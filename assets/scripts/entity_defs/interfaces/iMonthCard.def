@@ -1,0 +1,34 @@
+<root>
+    <Properties>
+        <monthCardExpireTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                 </Flags>
+            <Default>       0                    </Default>
+            <Persistent>    true                 </Persistent>
+        </monthCardExpireTime>
+
+        <lastMonthCardDailyRewardTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                 </Flags>
+            <Default>       0                    </Default>
+            <Persistent>    true                 </Persistent>
+        </lastMonthCardDailyRewardTime>
+    </Properties>
+
+    <BaseMethods>
+        <addMonthCardByItem>
+            <Arg>       UINT32       </Arg>
+            <Arg>       UINT64       </Arg>
+            <Arg>       PYTHON       </Arg>
+        </addMonthCardByItem>
+        
+        <tryGetMonthCardDailyReward> <Exposed/>
+        </tryGetMonthCardDailyReward>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

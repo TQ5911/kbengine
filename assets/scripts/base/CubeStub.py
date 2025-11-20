@@ -83,7 +83,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return cube_floor.datas[self.cubeNo]['ID']
 
     def doNext(self):
-        super().doNext()
+        #super().doNext()
         self._initAllRoom()
         self._initWeights()
 

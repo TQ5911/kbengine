@@ -610,7 +610,7 @@ class ImpEquipment(object):
     ################################## Gm cmd ###################################
     def gmDressEquips(self):
         dressSlotIds = []
-        for slotId in range(1, 10):
+        for slotId in range(1, 11):
             it = self.bodyEquipData.getEquipItem(slotId)
             if not it:
                 dressSlotIds.append(slotId)
@@ -623,7 +623,7 @@ class ImpEquipment(object):
 
     def gmModifyEquipEnhanceLevel(self, slotID, enhanceLevel):
         INFO_MSG('in modifyEquipEnhanceLevel, slotId:', slotID, enhanceLevel)
-        return self.enhanceSuccess(0, slotID, enhanceLevel - 1, True)
+        return self.enhanceSuccess(0, slotID, enhanceLevel, isGM = True)
 
     def gmGlyphWashingEquips(self, equipPos, glyphPos, itemId, affixId1, affixId2):
         if equipPos == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
@@ -812,6 +812,6 @@ class ImpEquipment(object):
 
         equipItem = self.bodyEquipData.getEquipItem(slotId)
         equipItem.doDecreaseBindValue(opUUID, washCount)
-        self.client.onEquipBindValueWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, equipItem.getBindValue(), equipItem.bindType)
+        self.client.onEquipBindValueWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, equipItem.getBindValue(), equipItem.getAddBindValueStatus(), equipItem.bindType)
 
 

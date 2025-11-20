@@ -507,10 +507,17 @@ class SkillBase(userType.UserSoleType):
     @staticmethod
     @functools.lru_cache(1024)
     def getRangeData(skillId):
-        return float(SkillBase.getSkillData(skillId).get('range') or 0)
+        # 兼容下老配置
+        rangeData = SkillBase.getSkillData(skillId).get('range')
+        if isinstance(rangeData, (float, int)):
+            return (rangeData,)
+        if not rangeData:
+            return (0,)
+        return rangeData
 
-    def getRange(self, owner, skillId):
-        defaultRange = self.getRangeData(skillId)
+    def getRange(self, owner, skillId, skillLv=1):
+        rangeData = self.getRangeData(skillId)
+        defaultRange = rangeData[-1] if skillLv > len(rangeData) else rangeData[skillLv - 1]
         if owner.IsAvatar:
             ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE)
             if ret:
@@ -519,6 +526,21 @@ class SkillBase(userType.UserSoleType):
                     defaultRange += addValue
                     DEBUG_MSG("in getRange, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE, datas)
         return defaultRange
+
+    @staticmethod
+    @functools.lru_cache(1024)
+    def getEffectRangeData(skillId):
+        # 兼容下老配置
+        damageRangeData = SkillBase.getSkillData(skillId).get('DamageRange')
+        if isinstance(damageRangeData, (float,int)):
+            return (damageRangeData,)
+        if not damageRangeData:
+            return (0,)
+        return damageRangeData
+    
+    def getEffectRange(self, owner, skillId, skillLv=1):
+        effectRangeData = self.getEffectRangeData(skillId)
+        return effectRangeData[-1] if skillLv > len(effectRangeData) else effectRangeData[skillLv - 1]
 
     @staticmethod
     @functools.lru_cache(1024)
@@ -598,11 +620,32 @@ class SkillBase(userType.UserSoleType):
                 classTag = gameconst.SCHOOL_MAGIC
         return classTag
 
-    def getServerRange(self, owner):
+    def getServerEffectRange(self, owner):
         # 为了解决客户端打到，服务端判断出了范围加个延迟的范围值，只给客户端算的锁定技能加
         if self.needReleaseTarget():
-            return self.getRange(owner, self.skillId) + 1
-        return self.getRange(owner, self.skillId)
+            return self.getEffectRange(owner, self.skillId, self.skillLv) + 1
+        return self.getEffectRange(owner, self.skillId, self.skillLv)
+
+    def getServerEffectRangeWithTarget(self, owner, target):
+        targetRadius = 0
+        if target.IsMonster:
+            targetRadius = target.getConfigData().get('attackDistanceCompensation')
+        if self.needReleaseTarget():
+            return self.getEffectRange(owner, self.skillId) + targetRadius + 1
+        return self.getEffectRange(owner, self.skillId) + targetRadius
+
+    def inEffectRange(self, src, target):
+        pos1 = src.position
+        pos2 = target.position
+        if not utils.checkCombatRangeY(src, target):
+            return False
+        if self.getEffectRange(src, self.skillId) <= 0:
+            return True
+        # 为了解决客户端打到，服务端判断出了范围加个延迟的范围值
+        if sMath.distance2DToCompareFrom3DPosition(pos1, pos2) < math.pow(self.getServerEffectRangeWithTarget(src, target), 2):
+            return True
+
+        return False
 
     def getServerRangeWithTarget(self, owner, target):
         targetRadius = 0
@@ -730,7 +773,7 @@ class SkillBase(userType.UserSoleType):
 
                 if not player:
                     continue
-                if utils.checkTargetType(self.getEffectTarget(self.skillId), caster, player) and self.inRange(
+                if utils.checkTargetType(self.getEffectTarget(self.skillId), caster, player) and self.inEffectRange(
                         caster, player):
                     targetsList.append(player)
 
@@ -745,7 +788,7 @@ class SkillBase(userType.UserSoleType):
 
                     if not player:
                         continue
-                    if utils.checkTargetType(self.getEffectTarget(self.skillId), caster, player) and self.inRange(
+                    if utils.checkTargetType(self.getEffectTarget(self.skillId), caster, player) and self.inEffectRange(
                             caster, player):
                         targetsList.append(player)
 
@@ -1045,7 +1088,7 @@ class SkillBase(userType.UserSoleType):
             percent = arr[3]
             direction = Math.Vector3(arr[0], arr[1], arr[2])
             direction.normalise()
-            position = caster.position + direction * percent * self.getRange(caster, self.skillId)
+            position = caster.position + direction * percent * self.getRange(caster, self.skillId, self.skillLv)
         elif scopeType == gameconst.SkillScope.MI_CENTER_SELF:
             direction = Math.Vector3(arr[0], arr[1], arr[2])
             direction.normalise()
@@ -1102,7 +1145,7 @@ class SkillBase(userType.UserSoleType):
             arr = utils.transformPosesToSkillArgs(
                 caster.position,
                 target.position,
-                self.getRange(caster, self.skillId),
+                self.getRange(caster, self.skillId, self.skillLv),
                 direction
             )
 
@@ -1123,7 +1166,7 @@ class SkillBase(userType.UserSoleType):
 
     def getSkillDesPosition(self, caster, target, skillArgs):
         if self.hasTag(gameconst.SkillTag.TeleportSkill):
-            dis = self.getRange(caster, self.skillId)
+            dis = self.getRange(caster, self.skillId, self.skillLv)
             dstPosition = sMath.getForwardPos(caster.position, caster.direction[2], dis)
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
             # scope其他时取技能朝向，scope为6时取双摇杆选的坐标
@@ -1161,7 +1204,7 @@ class SkillBase(userType.UserSoleType):
             desPosition = list(dstPosition)
         elif self.hasTag(gameconst.SkillTag.Lunge):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
-            skillRange = self.getRange(caster, self.skillId)
+            skillRange = self.getRange(caster, self.skillId, self.skillLv)
             # 根据target的碰撞距离处理
             if target and hasattr(target, 'creepBaseId'):
                 collisionDis = utils.getCollisionDistance(target.creepBaseId, 2.0)
@@ -1177,7 +1220,7 @@ class SkillBase(userType.UserSoleType):
             desPosition = list(realDstPos)
         elif self.hasTag(gameconst.SkillTag.DodgeSkill):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
-            dstPosition = caster.position + skillDir * self.getRange(caster, self.skillId)
+            dstPosition = caster.position + skillDir * self.getRange(caster, self.skillId, self.skillLv)
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
             realDstPos = utils.getRaycastPos(caster.spaceID, caster.position, dstPosition)
             desPosition = list(realDstPos)
@@ -1273,7 +1316,7 @@ class SkillBase(userType.UserSoleType):
                 if target and (caster.isVisible(target) or caster.hasBuffTag(
                         gameconst.BuffTag.SeeHiddenEnt)) and utils.checkTargetType(self.getEffectTarget(self.skillId),
                                                                                    caster, target):
-                    if self.inRange(caster, target):
+                    if self.inEffectRange(caster, target):
                         return [target.id]
                     else:
                         return []
@@ -1286,15 +1329,15 @@ class SkillBase(userType.UserSoleType):
 
                 if self.getTempData('beginSkillPosition'):
                     targetsList = caster.getTargets(caster, targetId, self.getEffectTarget(self.skillId),
-                                                    self.getServerRange(caster), forceTarget,
+                                                    self.getServerEffectRange(caster), forceTarget,
                                                     self.getTempData('beginSkillPosition'))
                     targetNearest = self.getOneNearest(self.getTempData('beginSkillPosition'), targetsList)
                 else:
                     targetsList = caster.getTargets(caster, targetId, self.getEffectTarget(self.skillId),
-                                                    self.getServerRange(caster), forceTarget)
+                                                    self.getServerEffectRange(caster), forceTarget)
                     targetNearest = self.getOneNearest(caster.position, targetsList)
             if targetNearest and (caster.isVisible(targetNearest) or caster.hasBuffTag(
-                    gameconst.BuffTag.SeeHiddenEnt)) and self.inRange(caster, targetNearest):
+                    gameconst.BuffTag.SeeHiddenEnt)) and self.inEffectRange(caster, targetNearest):
                 return [targetNearest.id]
             else:
                 return []
@@ -1304,7 +1347,7 @@ class SkillBase(userType.UserSoleType):
             radius = float(scopeParams[0])
 
             checkScopeFun = lambda target: self.isInAttackArea(target, center, radius)
-            return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerRange(caster),
+            return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         elif scopes == gameconst.SkillScope.CIRCLE_CENTER_TARGET:
@@ -1315,7 +1358,7 @@ class SkillBase(userType.UserSoleType):
 
             checkScopeFun = lambda target: self.isInAttackArea(target, skillPos, radius)
             return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId),
-                                            self.getRange(caster, self.skillId) + 0.8,
+                                            self.getEffectRange(caster, self.skillId, self.skillLv) + 0.8,
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         elif scopes == gameconst.SkillScope.SELF_TO_TARGET_RECTANGLE:
@@ -1323,28 +1366,28 @@ class SkillBase(userType.UserSoleType):
             width = float(scopeParams[1])
 
             checkScopeFun = lambda target: self.isInAttackLine(target, caster.position, skillDir, length, width)
-            return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerRange(caster),
+            return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         elif scopes == gameconst.SkillScope.USER_DEFINED_SECTOR:
             skillSectorAngle = float(scopeParams[0])
 
             checkScopeFun = lambda target: self.isInAttackSector(target, caster.position, skillDir,
-                                                                 self.getServerRange(caster), skillSectorAngle * 2)
-            return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerRange(caster),
+                                                                 self.getServerEffectRange(caster), skillSectorAngle * 2)
+            return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         elif scopes in (gameconst.SkillScope.USER_DEFINED_RECTANGLE, gameconst.SkillScope.CURRENT_DIRECTION_RECTANGLE):
-            length = self.getServerRange(caster) + self.getProtectRange(self.skillId)
+            length = self.getServerEffectRange(caster) + self.getProtectRange(self.skillId)
             width = float(scopeParams[1])
 
             if positionSkillArgs:
                 beginSkillPosition = self.getTempData('beginSkillPosition') if self.getTempData(
                     'beginSkillPosition') else caster.position
                 distance = sMath.distance2D(beginSkillPosition, positionSkillArgs)
-                range = min(self.getRange(caster, self.skillId), distance + self.getProtectRange(self.skillId))
+                range = min(self.getEffectRange(caster, self.skillId, self.skillLv), distance + self.getProtectRange(self.skillId))
             else:
-                range = self.getServerRange(caster) + self.getProtectRange(self.skillId)
+                range = self.getServerEffectRange(caster) + self.getProtectRange(self.skillId)
             if self.getTempData('beginSkillPosition'):
                 checkScopeFun = lambda target: self.isInAttackRectAngle(target, self.getTempData('beginSkillPosition'),
                                                                         skillDir, length, width, range)
@@ -1360,12 +1403,12 @@ class SkillBase(userType.UserSoleType):
             direction = Math.Vector3(arr[0], arr[1], arr[2])
             percent = arr[3]
             beginSkillPosition = self.getTempData('beginSkillPosition') if self.getTempData('beginSkillPosition') else caster.position
-            center = beginSkillPosition + direction * percent * self.getRange(caster, self.skillId)
+            center = beginSkillPosition + direction * percent * self.getEffectRange(caster, self.skillId, self.skillLv)
             radius = float(scopeParams[0])
 
             checkScopeFun = lambda target: self.isInAttackArea(target, center, radius)
             return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId),
-                                            self.getServerRange(caster) + radius,
+                                            self.getServerEffectRange(caster) + radius,
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         elif scopes == gameconst.SkillScope.MI_CENTER_SELF:
@@ -1373,7 +1416,7 @@ class SkillBase(userType.UserSoleType):
             width = float(scopeParams[1])
 
             checkScopeFun = lambda target: self.isInAttackMi(target, caster.position, skillDir, length, width)
-            return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId), self.getServerRange(caster),
+            return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         elif scopes == gameconst.SkillScope.HALF_MI:
@@ -1381,7 +1424,7 @@ class SkillBase(userType.UserSoleType):
             width = float(scopeParams[1])
 
             checkScopeFun = lambda target: self.isInAttackHalfMi(target, caster.position, skillDir, length, width)
-            return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId), self.getServerRange(caster),
+            return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         elif scopes == gameconst.SkillScope.TARGET_LINKED:
@@ -1395,18 +1438,18 @@ class SkillBase(userType.UserSoleType):
 
             checkScopeFun = lambda target: self.isInAttackArea(target, center, radius)
             return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId),
-                                            self.getServerRange(caster) + radius,
+                                            self.getServerEffectRange(caster) + radius,
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         elif scopes == gameconst.SkillScope.COLOSSUS_RECTANGLE:
-            length = self.getServerRange(caster)
+            length = self.getServerEffectRange(caster)
             width = float(scopeParams[1])
 
             if skillPos:
                 checkScopeFun = lambda target: self.isInAttackRectAngle(target, skillPos, skillDir, length, width,
-                                                                        self.getServerRange(caster))
+                                                                        self.getServerEffectRange(caster))
                 return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId),
-                                                self.getServerRange(caster),
+                                                self.getServerEffectRange(caster),
                                                 self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
             else:
                 return []
@@ -1415,7 +1458,7 @@ class SkillBase(userType.UserSoleType):
             maxRadius = float(scopeParams[1])
             center = caster.position
             checkScopeFun = lambda target: self.isInAttackAnnularArea(target, center, minRadius, maxRadius)
-            return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId), self.getServerRange(caster),
+            return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
         elif scopes == gameconst.SkillScope.MULTI_SECTOR:
             sectorNum = int(scopeParams[0])
@@ -1429,13 +1472,13 @@ class SkillBase(userType.UserSoleType):
                 caster.combatDebugMsg("_internalGetEffectTargets MULTI_SECTOR not enough offsetAngles: skillId:%s", self.skillId)
 
             checkScopeFun = lambda target: self.isInMultiSectorAttack(target, caster.position, skillDir,
-                                                self.getServerRange(caster), sectorAngle * 2, sectorNum, offsetAngles)
-            return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerRange(caster),
+                                                self.getServerEffectRange(caster), sectorAngle * 2, sectorNum, offsetAngles)
+            return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         return []
 
-    def _checkUseSkillOwner(self, owner, targetId, ignoreReasons=0):
+    def _checkUseSkillOwner(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         code = gameconst.UseSkillCheck.IN_CD
         if not code & ignoreReasons and self.inCDTime():
             owner.combatDebugMsg('_checkUseSkillOwner cannot use inCDTime: skillId:%s, tNextCast:%s, now:%s', self.getSkillId(), self.tNextCast, time.time())
@@ -1485,7 +1528,7 @@ class SkillBase(userType.UserSoleType):
 
         return gameconst.UseSkillCheck.CHEKC_OK
 
-    def _checkUseSkillTarget(self, owner, targetId, ignoreReasons=0):
+    def _checkUseSkillTarget(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         needReleaseTarget = self.needReleaseTarget()
         DEBUG_MSG('_checkUseSkillTarget', self.skillId, targetId, needReleaseTarget)
         owner.combatDebugMsg('_checkUseSkillTarget: skillId:%s, targetId:%s, needReleaseTarget:%s', self.skillId, targetId, needReleaseTarget)
@@ -1495,7 +1538,11 @@ class SkillBase(userType.UserSoleType):
                 return gameconst.UseSkillCheck.CHEKC_OK
             if not utils.checkTargetType(self.getEffectTarget(self.skillId), owner, target):
                 return gameconst.UseSkillCheck.CHEKC_OK
-            if not self.inRange(owner, target):
+            if checkInRange:
+                res = self.inRange(owner, target)
+            else:
+                res = self.inEffectRange(owner, target)
+            if not res:
                 if self.hasTag(gameconst.SkillTag.Channel) or self.hasTag(gameconst.SkillTag.Casting):
                     owner.showMsg(CONST.datas['targetIsOutOfRange_butCasted']['value'], [])
                 else:
@@ -1531,12 +1578,12 @@ class SkillBase(userType.UserSoleType):
 
         return gameconst.UseSkillCheck.CHEKC_OK
 
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0):
-        code = self._checkUseSkillOwner(owner, targetId, ignoreReasons)
+    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
+        code = self._checkUseSkillOwner(owner, targetId, ignoreReasons, checkInRange)
         if code != gameconst.UseSkillCheck.CHEKC_OK:
             return code
 
-        return self._checkUseSkillTarget(owner, targetId, ignoreReasons)
+        return self._checkUseSkillTarget(owner, targetId, ignoreReasons, checkInRange)
 
     # 延迟结算时间
     def getSkillResultDelay(self, owner, targetId, skillArgs, compensateTime):
@@ -2110,8 +2157,8 @@ class DodgeSkillVal(CommonSkillVal):
             owner.endDodge(self, 0, [])
         super(DodgeSkillVal, self).resetSkill(owner, reason, doRemoveState)
 
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0):
-        return super(DodgeSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons)
+    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
+        return super(DodgeSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
 
 
 # 吟唱技能:多一个吟唱的普通技能
@@ -2125,16 +2172,16 @@ class CastingSkillVal(CommonSkillVal):
         if fromSkillVal.hasTag(gameconst.SkillTag.Casting):
             self.castingStartTime = fromSkillVal.castingStartTime
 
-    def checkUseSkill(self, owner, targetID, ignoreReasons=0):
+    def checkUseSkill(self, owner, targetID, ignoreReasons=0, checkInRange=True):
         realSkillVal, _ = self.getRealSkillVal(owner)
         if realSkillVal != self:
-            ret = super(CastingSkillVal, self).checkUseSkill(owner, targetID, ignoreReasons)
+            ret = super(CastingSkillVal, self).checkUseSkill(owner, targetID, ignoreReasons, checkInRange)
         else:
             castingSucc = self.isCastingSucc()
             if castingSucc:
                 ignoreReasons |= gameconst.UseSkillCheck.OUT_OF_RANGE
 
-            ret = super(CastingSkillVal, self).checkUseSkill(owner, targetID, ignoreReasons)
+            ret = super(CastingSkillVal, self).checkUseSkill(owner, targetID, ignoreReasons, checkInRange)
 
             if not castingSucc:
                 code = gameconst.UseSkillCheck.NEED_CAST
@@ -2263,16 +2310,16 @@ class ZedSkillVal(CommonSkillVal):
             return enhanceZedSkill
         return None
 
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0):
+    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         realSkillVal, _ = self.getRealSkillVal(owner)
         if realSkillVal != self:
             if self.inCDTime():
-                code = super(ZedSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons)
+                code = super(ZedSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
                 if code != gameconst.UseSkillCheck.CHEKC_OK:
                     return code
-            return realSkillVal.checkUseSkill(owner, targetId, ignoreReasons)
+            return realSkillVal.checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
         else:
-            return super(ZedSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons)
+            return super(ZedSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
 
     def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
         enhancedSkill = self.getEnhancedZedSkill(owner)
@@ -2337,12 +2384,12 @@ class StagedSkill(ZedSkillVal):
             return rootSkillVal.skillId
         return self.skillId
 
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0):
+    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         realSkillVal, _ = self.getRealSkillVal(owner)
         if realSkillVal == self:
-            return super(StagedSkill, self).checkUseSkill(owner, targetId, ignoreReasons)
+            return super(StagedSkill, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
 
-        return realSkillVal.checkUseSkill(owner, targetId, ignoreReasons)
+        return realSkillVal.checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
 
     def getRealSkillVal(self, owner):
         enhancedSkill = self.getEnhancedZedSkill(owner)
@@ -2544,13 +2591,13 @@ class ShooterSkillVal(CommonSkillVal):
     def checkCanUse(self):
         return time.time() < self.tCanUseEndTime
 
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0):
+    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         code = gameconst.UseSkillCheck.SHOOTER_SKILL_CANNOT_USE
         if not code & ignoreReasons and not self.checkCanUse():
             owner.combatDebugMsg('checkUseSkill because cannot use: skillId:%s, tNextCast:%s, time:%s' % (self.getSkillId(), self.tNextCast, time.time()))
             return code
 
-        return super(ShooterSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons)
+        return super(ShooterSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
 
 
 # 超级技能
@@ -2568,8 +2615,8 @@ class UltraSkillVal(CommonSkillVal):
     def getSkillState(self):
         return gameconst.State.speicalSkill
 
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0):
-        return super(UltraSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons)
+    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
+        return super(UltraSkillVal, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
 
 
 def getSkillClass(skillId):

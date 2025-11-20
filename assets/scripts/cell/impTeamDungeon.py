@@ -507,16 +507,15 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         self.resetStatisticsData()
 
     def _checkEnterTeamDungeon(self, dungeonNo):
-        _targetSpaceNo = formula.getLineSpaceNo(dungeonNo, 0)
-        if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, _targetSpaceNo):
-            return False
-
         if self.isInRaid():
             WARNING_MSG('_checkEnterTeamDungeon::can\'t enter teamDungeon if in raid', dungeonNo, self.raidUUID)
             # TODO()(RAID_FOLLOW): 使用正式的方法
             self.showMsg(MMD.datas.testMessage, ["在团队中无法进入，请离开团队并加入一个小队", ])
             return False
 
+        if not self.canDoCompleteTeleport(noErrorMsg=True):
+            return False
+        
         if dungeonNo not in DDL.datas:
             ERROR_MSG('_checkEnterTeamDungeon::error dungeonNo: {}'.format(dungeonNo))
             return False

@@ -709,6 +709,38 @@ class AuxFunc(object):
 
         return True
 
+    def _checkNeedNav(self, targetPos):
+        if not self.owner.isMoving():
+            return True
+
+        dirToTarget = sMath.vector3WithoutY(targetPos - self.owner.position)
+        selfYaw = self.owner.direction[2]  # 自身朝向Yaw
+        toYaw = sMath.getYawFromDirection(dirToTarget)  # 指向目标的Yaw
+
+# 计算自身朝向与指向目标方向的Yaw差，并转换到 [-pi, pi] 范围
+        deltaYaw = selfYaw - toYaw
+
+        # 将角度包装到 [-pi, pi] 范围
+        if deltaYaw > sMath.pi:
+            deltaYaw -= 2 * sMath.pi
+        elif deltaYaw < -sMath.pi:
+            deltaYaw += 2 * sMath.pi
+
+        deltaYaw = abs(deltaYaw)
+        _angle = CONST.datas['monsterCombatPathingMaxTurnAngle']['value'] * sMath.pi / 180
+        # 若果当前正在移动并且与目标夹角小于某个值，则不进行导航
+        if deltaYaw < _angle:
+            return False
+
+        return True
+
+    def moveToPosWithAngleDis(self, pos, angle, radius):
+        if not self._checkNeedNav(pos):
+            return
+
+        _pos = self.getPositionWithinAngle(pos, angle, radius)
+        self.moveToPos(_pos, 0)
+
     def moveToPos(self, pos, dis=0, extra=None):
         owner = self.owner
         if not owner or not pos or not owner.checkConflictState(CCD.datas.move, False): return False
@@ -724,13 +756,16 @@ class AuxFunc(object):
         targetRadius = 0
         if target.IsMonster:
             targetRadius = target.getConfigData().get('attackDistanceCompensation', 0)
-        skillRange = skill.getRange(owner, skill.skillId) + targetRadius
+        skillRange = skill.getRange(owner, skill.skillId, skill.skillLv) + targetRadius
         rng_ = math.pow(skillRange, 2)
         if dis_ > rng_ and not skill.getTarget(skill.skillId) == 'None':
             _needNavTime = True
             if self.machine.moveable:
                 mDis = max(0.5, skillRange * 0.9)
-                if self.moveToPos(target.position,mDis):
+                #if self.moveToPos(target.position,mDis):
+                # 这里要传进去的是偏转角，策划配的是两个偏转角加一个快的总扇形
+                _angle = CONST.datas['monsterCombatPathingMaxAngle']['value'] / 2
+                if self.moveToPosWithAngleDis(target.position, 90, mDis):
                     _needNavTime = False
                     # 可以寻路时，清除计时
                     self.clearNavigationTimes()
@@ -796,6 +831,60 @@ class AuxFunc(object):
         posList = owner.getRandomPoints(target.position, distance, 1, 0)
         return posList[0] if posList else None
 
+    def getPositionWithinAngle(self, targetPos, angle, radius):
+        """
+        获取目标位置周围指定半径内，且与自身朝向目标位置方向夹角小于指定角度的随机位置
+        根据自身方向选择合适的扇区
+        :param targetPos: 目标位置 (Math.Vector3)
+        :param angle: 最大夹角 (弧度)
+        :param radius: 距离目标位置的半径
+        :return: 符合条件的位置 (Math.Vector3)
+        """
+        selfPos = self.owner.position
+
+        # 计算从自身位置到目标位置的方向 (忽略Y轴)
+        dirToTarget = sMath.vector3WithoutY(targetPos - selfPos)
+
+        # 如果自身位置与目标位置重合，返回随机方向的位置
+        if dirToTarget.length == 0:
+            randomYaw = random.random() * sMath.pi * 2
+            dirVec = sMath.getDirFromYaw(randomYaw)
+            return targetPos + dirVec * radius
+
+        # 获取自身朝向Yaw和指向目标的Yaw
+        selfYaw = self.owner.direction[2]  # 自身朝向Yaw
+        toYaw = sMath.getYawFromDirection(dirToTarget)  # 指向目标的Yaw
+
+        # 计算自身朝向与指向目标方向的Yaw差，并转换到 [-pi, pi] 范围
+        deltaYaw = selfYaw - toYaw
+
+        # 将角度包装到 [-pi, pi] 范围
+        if deltaYaw > sMath.pi:
+            deltaYaw -= 2 * sMath.pi
+        elif deltaYaw < -sMath.pi:
+            deltaYaw += 2 * sMath.pi
+
+        # 选择旋转角度范围
+        # 如果顺时针180度以内，则选择在 -angle 到 0 区间内随机，否则在 0 到 angle 区间内随机
+        angle = angle * sMath.pi / 180
+        if deltaYaw > 0:
+            chosenRange = (-angle, 0)
+        else:
+            chosenRange = (0, angle)
+
+        # 计算从目标位置指向自身的方向 (作为旋转参考)
+        refDir = sMath.vector3WithoutY(selfPos - targetPos)
+        refDir.normalise()
+
+        # 生成随机旋转角度
+        randomRotation = random.uniform(chosenRange[0], chosenRange[1])
+
+        # 旋转方向向量并计算新位置
+        chosenDir = sMath.clockwiseRotate(refDir, randomRotation)
+        newPos = targetPos + chosenDir * radius
+
+        return newPos
+
     def selectSkill(self):
         owner = self.owner
 
@@ -845,7 +934,7 @@ class AuxFunc(object):
                 return target
 
         _skill = self.owner.getSkill(self.skillId)
-        _range = _skill.getRange(owner, _skill.skillId)
+        _range = _skill.getRange(owner, _skill.skillId, _skill.skillLv)
 
         x, y, z, dx, dz, dy = CBC.datas["cityBattle_cityGatePassageArea"]["value"]
         withOutArea = (Math.Vector3(x - dx / 2, y, z - dz / 2), Math.Vector3(x + dx / 2, y + dy, z + dz / 2))
@@ -928,7 +1017,7 @@ class AuxFunc(object):
             maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTarget()
         else:
             _skill = self.owner.getSkill(self.skillId)
-            _range = _skill.getRange(owner, _skill.skillId)
+            _range = _skill.getRange(owner, _skill.skillId, _skill.skillLv)
             maxHateTargetId, maxHateTargetHate = self.hateDict.getFirstVisibleHateTargetByRange(_range)
 
         currentTargetHate = self.hateDict.getHate(owner.selectedTargetId)

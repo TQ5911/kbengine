@@ -47,6 +47,7 @@ class IChat(object):
         else:
             return False
 
+    @gamedecorator.checkGameconfigEnable('chat')
     def sendWorldChatMsg(self, exposed, msg):
         DEBUG_MSG('sendWorldChatMsg', msg)
         if self.isAllServerForbidChat():
@@ -79,13 +80,14 @@ class IChat(object):
                                      (gameconst.ChatChannel.WORLD, self._getChatChannelAvatarInfo(), originalMsg), ()))
         # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannel.WORLD)
 
+    @gamedecorator.checkGameconfigEnable('chat')
     def sendSiegeWarChatMsg(self, exposed, msg):
         DEBUG_MSG('sendSiegeWarChatMsg', msg)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason, utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
             self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
             return
-        
+
         now = utils.getNow()
         if now < self.sendSiegeWarMsgTime + CCCH.datas[gameconst.ChatChannel.SIEGE_WAR]['channelCD']:
             timeDelta = self.sendSiegeWarMsgTime + CCCH.datas[gameconst.ChatChannel.SIEGE_WAR]['channelCD']-now
@@ -97,6 +99,7 @@ class IChat(object):
                                     (gameconst.CELL, 'onSiegeWarChatMsg',
                                      (gameconst.ChatChannel.SIEGE_WAR, self._getChatChannelAvatarInfo(), msg, self.cell), ()))
 
+    @gamedecorator.checkGameconfigEnable('chat')
     @gamedecorator.forwardToLocal
     def sendGuildChatMsg(self, exposed, msg):
         DEBUG_MSG('sendGuildChatMsg', msg)
@@ -165,6 +168,7 @@ class IChat(object):
         self.sendGuildMsgTime = now
         self.guildBoxBase.doSendGuildPickChatMsg(self,self._getChatChannelAvatarInfo(), messageId)
 
+    @gamedecorator.checkGameconfigEnable('chat')
     def sendTeamChatMsg(self, exposed, teamIdDeprecated, msg):
         teamId = self.teamIdBase
         DEBUG_MSG('sendTeamChatMsg', teamId, msg)
@@ -199,6 +203,7 @@ class IChat(object):
         # if not self.isSilentChat(gameconst.SilentSpeakScene.CHAT):
         #     self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannel.TEAM)
 
+    @gamedecorator.checkGameconfigEnable('chat')
     def sendNearbyChatMsg(self, exposed, msg):
         DEBUG_MSG('sendNearbyChatMsg', msg)
         if self.isAllServerForbidChat():
@@ -229,6 +234,7 @@ class IChat(object):
 
     #@gamedecorator.crossServer
     #@gamedecorator.forwardToLocal
+    @gamedecorator.checkGameconfigEnable('chat')
     def sendRaidChatMsg(self, exposed, raidUUIDDeprecated, msg):
         raidUUID = self.raidUUIDBase
         DEBUG_MSG('sendRaidChatMsg::', msg)
@@ -283,7 +289,7 @@ class IChat(object):
         elif channel == gameconst.RedBagChannel.GUILD and self.guildBox:
             # self.sendGuildChatMsg()
             self.guildBox.doSendGuildRedBagMsg(redbagId, redbagType, channel, money, desc, _avatarInfo)
-            
+
 
     def checkUseTrumpetBase(self, pendingCheckId,msg):
         DEBUG_MSG("checkUseTrumpetBase ",pendingCheckId)
@@ -361,9 +367,11 @@ class IChat(object):
     #         return
     #     self.transportGoodsInfo.lookCurTransportGoods(box, actId, gbId, helpNum)
 
+    @gamedecorator.checkGameconfigEnable('chat')
     def sendRaidMatchMessage(self, exposed, teamId, content, teamTarget, curNum, channel):
         self._sendMatchMessage(teamId, content, teamTarget, curNum, channel, False)
 
+    @gamedecorator.checkGameconfigEnable('chat')
     def sendTeamMatchMessage(self, exposed, teamId, content, teamTarget, curNum, channel):
         self._sendMatchMessage(teamId, content, teamTarget, curNum, channel, True)
 
@@ -378,7 +386,7 @@ class IChat(object):
         if teamTarget < 1:
             ERROR_MSG('in sendTeamMatchMessage, teamTarget error 1')
             return
-        
+
         targetInfo = TMACTD.datas.get(teamTarget)
         if not targetInfo:
             ERROR_MSG('in sendTeamMatchMessage, teamTarget error 2')
@@ -386,9 +394,10 @@ class IChat(object):
 
         chatMsgKey = 'teamChannel_applyTeamMsg' if isTeam else 'teamChannel_applyRaidMsg'
         teamMemberCount = gameconst.TEAM_MEMBER_MAX_NUM if isTeam else gameconst.RAID_MEMBER_MAX_NUM
+        isRaid = 0 if isTeam else 1
         
         #活动：%s%d-%d级%s的队伍正在招募:<link team name=申请加入 teamId=%d>
-        msg = MCM.datas[TMMCD.datas[chatMsgKey]['value']]['Message'].format(targetInfo['value'], content, curNum, teamMemberCount, teamId)
+        msg = MCM.datas[TMMCD.datas[chatMsgKey]['value']]['Message'].format(targetInfo['value'], content, curNum, teamMemberCount, teamId, isRaid, teamTarget)
 
         now = utils.getNow()
         if gameconst.ChatChannel.GUILD == channel:
@@ -406,7 +415,6 @@ class IChat(object):
                 return
             self.sendMatchTeamRecruitMsgTime = now
             self.sendTeamMatchRecruitMsg(channel, msg)
-            self.onMessagePre(MMD.datas.recruitSent, [])
 
     def sendTeamMatchRecruitMsg(self, channel, msg):
         if self.isSilentChat(gameconst.SilentSpeakScene.CHAT):
@@ -415,10 +423,12 @@ class IChat(object):
             gameengine.broadcastBaseapp('broadcastToAllAvatar',
                                         (gameconst.CELL, 'onSiegeWarChatMsg',
                                         (gameconst.ChatChannel.SIEGE_WAR, self._getChatChannelAvatarInfo(), msg, self.cell), ()))
+            self.onMessagePre(MMD.datas.zhaomuBattleFieldSent, [])
         else:
             gameengine.broadcastBaseapp('broadcastToAllAvatar',
                                         (gameconst.CELL, 'handleTeamChannelMatchTeamMsg',
                                          (self._getChatChannelAvatarInfo(), channel, msg)))
+            self.onMessagePre(MMD.datas.recruitSent, [])
 
     # 调用前检查对应分享限制条件
     def sendChannelShareMsg(self, channel, msg):
@@ -513,4 +523,4 @@ class IChat(object):
     def onRecvAvatarChannelMsgPre(self, channel, avatarInfo, msg):
         DEBUG_MSG("onRecvAvatarChannelMsgPre::", channel, avatarInfo, msg)
         self.client.onRecvAvatarChannelMsg(channel, avatarInfo, msg)
-        
+

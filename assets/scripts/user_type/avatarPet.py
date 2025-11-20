@@ -82,7 +82,7 @@ class LingShou(userType.UserSoleType):
     # 服务器解析的数据结构可以和前端不一样,增加petMirror节点只做缓存不做入库处理以便通过checkProperty的检查
     def toSavedDict(self):
         retDt = self.toClientDict()
-        retDt['school'] =self.school
+        retDt['school'] = self.school
         return retDt
 
     def toClientDispDetail(self):

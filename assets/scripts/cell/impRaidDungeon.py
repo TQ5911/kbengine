@@ -198,7 +198,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
             return None, _errno.UNKNOWN.initkvbody(reason='current space not allowed enter dungeon')
         if not self.isInRaid():
             return None, _errno.RAIDDUN_NOT_IN_RAID.initkvbody(dungeonNo=dungeonNo)
-        if not self.canDoCompleteTeleport(noErrorMsg=True):
+        if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, dungeonNo) or not self.canDoCompleteTeleport(noErrorMsg=True):
             return None, _errno.RAIDDUN_NOT_IN_AVAILABLE_SPACE.initkvbody(spaceNo=self.spaceNo)
         return None, _errno.RAIDDUN_OK
 
@@ -234,9 +234,6 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
                 pass
             elif err == gameconst.RaidDungeonErrno.RAIDDUN_LEADER_LEVEL_LOWER:
                 pass
-            elif err == gameconst.RaidDungeonErrno.RAIDDUN_NOT_IN_AVAILABLE_SPACE:
-                WARNING_MSG('createAndEnterRaidDungeon:: not in available space, {}'.format(err))
-                self.showMsg(RAID_CONST.datas["raid_transportBanned_msg"]["value"], [])
             elif err == gameconst.RaidDungeonErrno.RAIDDUN_PLAYER_NUM_NOT_MATCH:
                 # NOTE(): 相关检查中已处理并弹出msg， 这里不进行errlog输出
                 pass
@@ -292,10 +289,6 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         if not self._checkCreateDungeonByGuildLevel(dungeonNo):
             return None, gameconst.RaidDungeonErrno.RAIDDUN_GUILD_LEVEL_LOWER
 
-        if not (formula.spaceInWorldLine(self.spaceNo)
-                or formula.isRaidDungeonSpace(self.spaceNo)):
-            return None, gameconst.RaidDungeonErrno.RAIDDUN_NOT_IN_AVAILABLE_SPACE.initkvbody(spaceNo=self.spaceNo)
-
         return None, gameconst.RaidDungeonErrno.RAIDDUN_OK
 
     def createAndEnterRaidDungeonAllMemberPreCheck(self, srcPlayerBox, raidUUID, dungeonNo, src, extra):
@@ -317,9 +310,6 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         if not self._getPrmBydungeonNo(dungeonNo, "fightConflict") and self.hasState(gameconst.State.Fighting):
             INFO_MSG("_createAndEnterRaidDungeonAllMemberPreCheck:: fight state failed")
             return None, gameconst.RaidDungeonErrno.RAIDDUN_PLAYER_IN_FIGHT_STATE
-        if not (formula.spaceInWorldLine(self.spaceNo)
-                or formula.isRaidDungeonSpace(self.spaceNo)):
-            return None, gameconst.RaidDungeonErrno.RAIDDUN_NOT_IN_AVAILABLE_SPACE.initkvbody(spaceNo=self.spaceNo)
         return None, gameconst.RaidDungeonErrno.RAIDDUN_OK
 
     def onCreateAndEnterRaidDungeonAllMemberPreCheck(self, errno, raidUUID, dungeonNo, src, playerGBID, playerName, extra):
@@ -379,8 +369,6 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
                 _fightStateFailedList.append((playerGBID, _avatarProps['name']))
             elif _errno == gameconst.RaidDungeonErrno.RAIDDUN_MEMBER_LEVEL_LOWER:
                 _rcMemberLevelFailedList.append((playerGBID, _avatarProps['name']))
-            elif _errno == gameconst.RaidDungeonErrno.RAIDDUN_NOT_IN_AVAILABLE_SPACE:
-                _rcMemberSpaceFailedList.append((playerGBID, _avatarProps['name']))
             elif _errno == gameconst.RaidDungeonErrno.RAIDDUN_REWARD_NUM_CHECK_FAIL:
                 _rewardNumFailedList.append((playerGBID, _avatarProps['name']))
 
@@ -458,20 +446,11 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
             if not self.isInRaid():
                 return None, gameconst.RaidDungeonErrno.RAIDDUN_NOT_IN_RAID
-            if not (formula.spaceInWorldLine(self.spaceNo)
-                    or formula.isRaidDungeonSpace(self.spaceNo)):
-                return None, gameconst.RaidDungeonErrno.RAIDDUN_NOT_IN_AVAILABLE_SPACE.initkvbody(spaceNo=self.spaceNo)
             return None, gameconst.RaidDungeonErrno.RAIDDUN_OK
 
         _, err = _enterCheck()
         if err != gameconst.RaidDungeonErrno.RAIDDUN_OK:
-            if err == gameconst.RaidDungeonErrno.RAIDDUN_NOT_IN_AVAILABLE_SPACE:
-                WARNING_MSG('doEnterRaidDungeonAfterCheck:: not in available space, {}'.format(err))
-                self.showMsg(RAID_CONST.datas["raid_transportBanned_msg"]["value"], [])
-
-            else:
-                ERROR_MSG('doEnterRaidDungeonAfterCheck:: failed, {}'.format(err))
-
+            ERROR_MSG('doEnterRaidDungeonAfterCheck:: failed, {}'.format(err))
             return
 
         noEnterDungeon = extraProps.get('noEnterDungeon', False)

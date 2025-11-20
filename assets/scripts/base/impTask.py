@@ -28,6 +28,7 @@ import gamelog
 import gameclass
 import taskdata as TDD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import visible_visible as V_VD
 
 
 class TaskEvent(object):
@@ -788,7 +789,7 @@ class ImpTask(TaskProgress, TaskEvent):
         if self.getPersistentMiscProp(gameconst.AvatarProps.unlockBountyTaskFlag, 0):
             return
 
-        res, _1, _2 = self.isUIVisible(gameconst.BOUNTY_TASK_UI_ID)
+        res = self._isUIVisible(V_VD.UIRewardTaskPanel)
         if not res:
             return
 

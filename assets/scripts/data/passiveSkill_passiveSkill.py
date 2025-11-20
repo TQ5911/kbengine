@@ -368,16 +368,16 @@ def _87010039_remove(self, target, context):
     self.removePropByPassiveSkill([["adjFatal",4]])
 
 def _87010040(self, target, context):
-    self.addPropByPassiveSkill([["adjAntiFatal",0.01]])
+    self.addPropByPassiveSkill([["adjAntiFatal",1]])
 
 def _87010040_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjAntiFatal",0.01]])
+    self.removePropByPassiveSkill([["adjAntiFatal",1]])
 
 def _87010041(self, target, context):
-    self.addPropByPassiveSkill([["adjAntiFatal",0.04]])
+    self.addPropByPassiveSkill([["adjAntiFatal",4]])
 
 def _87010041_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjAntiFatal",0.04]])
+    self.removePropByPassiveSkill([["adjAntiFatal",4]])
 
 def _87010042(self, target, context):
     self.addPropByPassiveSkill([["adjIgnoreArmor",0.02]])
@@ -1482,7 +1482,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010040,
         "removeAction": _87010040_remove,
-        "propList": _tools.ROList([['adjAntiFatal', 0.01]]),
+        "propList": _tools.ROList([['adjAntiFatal', 1]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1492,7 +1492,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010041,
         "removeAction": _87010041_remove,
-        "propList": _tools.ROList([['adjAntiFatal', 0.04]]),
+        "propList": _tools.ROList([['adjAntiFatal', 4]]),
         "desBuff": None,
         "score": 0
     }),

@@ -24,98 +24,55 @@ import KBEngine
 def _90010001(self, target, context):
     levelDmg = 1  # 计算基础伤害
     dmgRatio = 1
-    targetBuffLv = 0
     # targetNumber = len(context.effectedEntIds)
     # damageRatio = 5/max(targetNumber, 5)
     for tid in context.effectedEntIds:
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        if ent.hasBuff(64003005):
-            # targetBuffLv = ent.getBuffLv(64003005)
-            # targetBuffLvRatio = 1+0.01
-            # dmgRatio *= targetBuffLvRatio
-            self.addBuffBySkill(ent, context, 64003030, 1, 0.05, 5)
-            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 1)
-        else:
-            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 1)
+        self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 1)
 
 def _90010002(self, target, context):
     levelDmg = 2  # 计算基础伤害
     dmgRatio = 1
-    # targetBuffLv = 0
     # targetNumber = len(context.effectedEntIds)
     # damageRatio = 5/max(targetNumber, 5)
     for tid in context.effectedEntIds:
         ent = KBEngine.entities.get(tid)
         if not ent:  # 目标不存在则跳过
             continue
-        if ent.hasBuff(64003005):
-            # targetBuffLv = ent.getBuffLv(64003005)
-            # targetBuffLvRatio = 1+0.01
-            # dmgRatio *= targetBuffLvRatio
-            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 1)
-            self.addBuffBySkill(ent, context, 64003030, 1, 0.05, 5)
-        else:
-            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 1)
+        self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 1)
 
 def _90010003(self, target, context):
     levelDmg = 3
     dmgRatio = 1
-    # targetBuffLv = 0
-    # targetNumber = len(context.effectedEntIds)
-    # damageRatio = 5/max(targetNumber, 5)    
-    for tid in context.effectedEntIds:
-        ent = KBEngine.entities.get(tid)
-        if not ent:
-            continue
         
-        if context.actionStage == 0:
-            if ent.hasBuff(64003005):
-                # targetBuffLv = ent.getBuffLv(64003005)
-                # targetBuffLvRatio = targetBuffLv/20
-                # dmgRatio += targetBuffLvRatio
-                self.addBuffBySkill(ent, context, 64003030, 1, 0.05, 5)
-                self.attack(ent, context, dmgRatio * 0.5, levelDmg* 0.5, 0, 2, 1, None, 1)
-            else:
-                self.attack(ent, context, dmgRatio * 0.5, levelDmg* 0.5, 0, 2, 1, None, 1)
-            return self.callAfterDelay(target, context, 0.4)
+    if context.actionStage == 0:
+        for tid in context.effectedEntIds:
+            ent = KBEngine.entities.get(tid)
+            if not ent:  # 如果目标不存在，跳过
+                continue
+            self.attack(ent, context, dmgRatio * 0.5, levelDmg* 0.5, 0, 2, 1, None, 1)
+        return self.callAfterDelay(target, context, 0.4)
 
-        elif context.actionStage == 1:
-            if ent.hasBuff(64003005):
-                # targetBuffLv = ent.getBuffLv(64003005)
-                # targetBuffLvRatio = 1+0.01
-                # dmgRatio *= targetBuffLvRatio
-                self.addBuffBySkill(ent, context, 64003030, 1, 0.05, 5)
-                self.attack(ent, context, dmgRatio * 0.5, levelDmg* 0.5, 0)
-            else:
-                dmgRatio = 1
-                self.attack(ent, context, dmgRatio * 0.5, levelDmg* 0.5, 0)
+    elif context.actionStage == 1:
+        for tid in context.effectedEntIds:
+            ent = KBEngine.entities.get(tid)
+            if not ent:  # 如果目标不存在，跳过
+                continue
+            self.attack(ent, context, dmgRatio * 0.5, levelDmg* 0.5, 0)
 
 def _90010004(self, target, context):
     import action_FightAction
     levelDmg = 4  # 计算基础伤害
     dmgRatio = 1
-    # targetBuffLv = 0
-    # targetNumber = len(context.effectedEntIds)
-    # # 计算damageRatio，最低衰减比例为 0.5
-    # damageRatio = 5/max(targetNumber, 5)
 
-    # 遍历所有受影响的实体
     for tid in context.effectedEntIds:
         ent = KBEngine.entities.get(tid)
         if not ent:  # 如果目标不存在，跳过
             continue
-        if ent.hasBuff(64003005):
-            # targetBuffLv = ent.getBuffLv(64003005)
-            # targetBuffLvRatio = 1+0.01
-            # dmgRatio *= targetBuffLvRatio
-            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 2)
-            self.addBuffBySkill(ent, context, 64003030, 1, 0.1, 5)
-            action_FightAction.pushTarget(self, ent, context, 2, 8, 0.5, 1, 2)
-        else:
-            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 2)
-            action_FightAction.pushTarget(self, ent, context, 2, 8, 0.5, 1, 2)
+        self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 2)
+        action_FightAction.pushTarget(self, ent, context, 2, 8, 0.5, 1, 2)
 
 def _90010005(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -214,20 +171,21 @@ def _90010015(self, target, context):
     lvParam = utils.getSkillLvParam(context.skillId)
     base_damage = 20 + (skillLv - 1) * 4
     damage_ratio = lvParam[skillLv - 1] / 100
-    # if not target:
-    #     self.attack(target, context, damage_ratio, base_damage , 2, 2, 1, None, 2)
-    #     self.addBuffBySkill(target, context, 64000224, 1, 1.0, 6)
+
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        elif not e.hasBuff(64003005):
-            self.attack(e, context, damage_ratio, base_damage , 2, 2, 1, None, 2)
-            self.addBuffBySkill(e, context, 64003005, 1, 1.0, 10)
-        elif e.hasBuff(64003005):
-            self.attack(e, context, damage_ratio, base_damage , 2, 2, 1, None, 2)
-            self.addBuffBySkill(e, context, 64003030, 1, 0.3, 5)
-            self.addBuffBySkill(e, context, 64003005, 1, 1.0, 10)
+        self.attack(e, context, damage_ratio, base_damage , 0, 2, 1, None, 2)
+        self.addBuffBySkill(e, context, 64001101, 1, 1.0, 10)
+        if skillLv < 5:
+            self.addBuffBySkill(e, context, 64001102, 1, 1, 2)
+        elif 5 <= skillLv < 8:
+            self.addBuffBySkill(e, context, 64001103, 1, 1, 2)
+        elif 8 <= skillLv < 11:
+            self.addBuffBySkill(e, context, 64001104, 1, 1, 2)
+        elif skillLv == 11:
+            self.addBuffBySkill(e, context, 64001105, 1, 1, 2)
 
 def _90010020(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -235,73 +193,94 @@ def _90010020(self, target, context):
     levelDmg = 23 + skillLv * 4
     dmgRatio = lvParam[skillLv - 1] / 100
     self.castSkill(target, context, 90010021, 1)
-    # targetNumber = len(context.effectedEntIds)
-    # if targetNumber < 1:
-    #     return
-    # damageRatio = 5 / max(targetNumber, 5)
-    # for e in context.effectedEntIds:
-    #     ent = KBEngine.entities.get(e)
-    # # 执行拖拽动作
-    #     action_FightAction.dragTargetToPos(self, ent, context, -1, 1, 0, 10, 1.5)
-    #     self.addBuffBySkill(ent, context, 64003022, 1, 1.0, 5)
-
-    # # 检查并提升 Buff 64003005 等级
-    #     if ent and ent.hasBuff(64003005):
-    #         currentBuffLv = ent.getBuffLv(64003005)
-    #         newBuffLv = min(currentBuffLv + 1, 10)
-    #         self.addBuffBySkill(ent, context, 64003005, newBuffLv, 1.0)
 
 def _90010021(self, target, context):
     skillLv = self.getSkillLevel(target, context, 90010020)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = 23 + skillLv * 4
     dmgRatio = lvParam[skillLv - 1] / 100
+    targetNumber = len(context.effectedEntIds)
+    probability = 0.2/max(targetNumber, 2)
+
+    # 定义不同技能等级对应的额外拖拽参数
+    level_params = {
+        (0, 5): [],
+        (5, 8): [(-1, probability * 1, 1, 15, 0.5)],
+        (8, 11): [(-1, probability * 2, 1, 15, 0.5)],
+        (11, 12): [(-1, probability * 3, 1, 15, 0.5)],
+        (12, float('inf')): [(-1, probability * 4, 1, 15, 0.5)]
+    }
+    # 查找对应的额外拖拽参数
+    extra_drag_params = []
+    for (min_lv, max_lv), params in level_params.items():
+        if min_lv <= skillLv < max_lv:
+            extra_drag_params = params
+            break
+
+    if skillLv < 5:
+        probability2 = 0
+    elif 5 <= skillLv < 7:
+        probability2 = 0.15
+    elif 8 <= skillLv < 11:
+        probability2 = 0.3
+    elif skillLv == 11:
+        probability2 = 0.5
 
     for e in context.effectedEntIds:
         ent = KBEngine.entities.get(e)
     # 执行拖拽动作
-        action_FightAction.dragTargetToPos(self, ent, context, -1, 1, 2, 20, 0.5)
+        action_FightAction.dragTargetToPos(self, ent, context, -1, 1, 2, 15, 0.5)
+        # 执行额外的拖拽操作
+        for params in extra_drag_params:
+            action_FightAction.dragTargetToPos(self, ent, context, *params)
         self.addBuffBySkill(ent, context, 64003022, 1, 1.0, 5)
-        if ent.hasBuff(64003005):
+        if ent.hasBuff(64001101):
             context.isCombo = True
-            dmgRatio2 = dmgRatio*1.2
-            levelDmg2 = levelDmg*1.2
-            action_FightAction.stun(self, ent, context, 1, 0.5, 0, 0)
-            self.attack(ent, context, dmgRatio2 , levelDmg2 , 0, 2, 1, None, 2)
+            action_FightAction.stun(self, ent, context, 1, 0.5, 0, 0, 2)
+            action_FightAction.stun(self, ent, context, 1, probability2, 0, 0, 1)
+            self.attack(ent, context, dmgRatio * 1.2 , levelDmg * 1.2 , 0, 2, 1, None, 2)
         else:
             self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 2)
 
 def _90010025(self, target, context):
 
     skillLv = self.getSkillLevel(target, context, context.skillId)
-    for e in context.effectedEntIds:
-        ent = KBEngine.entities.get(e)
-        if not ent:
-            continue
-        self.addBuffBySkill(ent, context, 64003005, 1, 1.0, 10)
     self.createCreation(target, context, 65000013, self.level, skillLv, 4, 1, 0, 0, 0)
 
 def _90010026(self, target, context):
     import KBEngine
-    import action_FightAction
     skillId = self.tmpProps.get('skillId')
     skillLv = self.getHost().getSkillLevel(target, context, skillId)
     lvParam = utils.getSkillLvParam(skillId)
-    levelDmg = (30 + (skillLv -1)*4)/4
-    dmgRatio = lvParam[skillLv-1]*0.01    
-    # targetNumber = len(context.effectedEntIds)
-    # damageRatio = 5/max(targetNumber, 5)  
+    levelDmg = (30 + (skillLv - 1) * 4) / 4
+    dmgRatio = lvParam[skillLv - 1] * 0.01
+    
+    # 定义不同技能等级对应的buff参数 (buff_id, 持续时间)
+    buff_params = {
+        (0, 5): (64001112, 5),
+        (5, 8): (64001113, 5),
+        (8, 11): (64001114, 5),
+        (11, 12): (64001115, 8)
+    }
+    
+    # 查找对应的buff参数
+    buff_id, duration = None, 5
+    for (min_lv, max_lv), params in buff_params.items():
+        if min_lv <= skillLv < max_lv:
+            buff_id, duration = params
+            break
 
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
-        if not e:  
-            continue  
+        if not e:
+            continue
+            
         self.attack(e, context, dmgRatio, levelDmg, 0)
-        self.addBuffBySkill(e, context, 64003005, 1, 1.0, 10)
-        # 每次攻击都叠加一层 Buff 64003021
-        currentBuffLv = e.getBuffLv(64003021) if e.hasBuff(64003021) else 0
-        NewBuffLv = min(currentBuffLv + 1, 6)  # Buff 最高叠加 6 层
-        self.addBuffBySkill(e, context, 64003021, int(NewBuffLv), 1.0, 5)
+        
+        if buff_id:
+            current_buff_lv = e.getBuffLv(buff_id) if e.hasBuff(buff_id) else 0
+            new_buff_lv = min(current_buff_lv + 1, 5)
+            self.addBuffBySkill(e, context, buff_id, int(new_buff_lv), 1.0, duration)
 
 def _90010027(self, target, context):
 
@@ -312,12 +291,12 @@ def _90010027(self, target, context):
         ent = KBEngine.entities.get(e)
         if not ent:
             continue
-        if ent and ent.hasBuff(64003005):
-            targetBuffLv = ent.getBuffLv(64003005)
+        if ent and ent.hasBuff(64001101):
+            targetBuffLv = ent.getBuffLv(64001101)
             targetBuffLvRatio = targetBuffLv/20
             dmgRatio += targetBuffLvRatio
-            NewBuffLv = min(ent.getBuffLv(64003005) + 1, 10)
-            self.addBuffBySkill(ent, context, 64003005, int(NewBuffLv), 1.0)
+            NewBuffLv = min(ent.getBuffLv(64001101) + 1, 10)
+            self.addBuffBySkill(ent, context, 64001101, int(NewBuffLv), 1.0)
 
     self.createCreation(target, context, 65000020, self.level, skillLv, 0, 1, 0, 0, 0)
 
@@ -427,6 +406,11 @@ def _90010040(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     self.createCreation(target, context, 65000015, self.level, skillLv, 0, 1, 0, 0, 0)
 
+def _90010040_start(self, target, context): 
+    skillLv = self.getSkillLevel(target, context, context.skillId) 
+    if skillLv == 11 : 
+        self.addBuffBySkill(self, context, 64001110, 1, 1.0, 5)
+
 def _90010041(self, target, context):
     import action_FightAction, random
 
@@ -436,51 +420,100 @@ def _90010041(self, target, context):
     levelDmg = (42 + (skillLv - 1) * 4) / 6
     dmgRatio = lvParam[skillLv - 1] * 0.01
 
+    if skillLv < 5:
+        probability = 0
+    elif 5 <= skillLv < 8:
+        probability = 0.2
+    elif 8 <= skillLv < 11:
+        probability = 0.4
+    elif skillLv == 11:
+        probability = 0.6
+
+
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        self.attack(e, context, dmgRatio, levelDmg, 0)
-        if e.hasBuff(64003005):
-            action_FightAction.silent(self, e, context, 1, 1, 0, 0)
-        ret, datas = self.getHost().getInscriptionEffects(90010041, 12)
-        if ret and datas and len(datas) >= 3:
-            slowType = datas[0]      
-            chance = datas[1]        
-            slowTime = datas[2]      
-            if slowType == 7 and random.random() <= chance:                
-                action_FightAction.slow(self, e, context, slowTime, chance, 0, 0)           
-        ret, datas = self.getHost().getInscriptionEffects(90010041, 13)
-        if ret and datas and len(datas) >= 0:
-            buffId = int(datas[0])
-            self.addBuffBySkill(e, context, buffId, 1, 1.0, 3)
+        if 5 <= skillLv :      
+            action_FightAction.silent(self, e, context, 1, probability, 0, 0)
+        if e.hasBuff(64001101):
+            context.isCombo = True
+            self.attack(e, context, dmgRatio * 1.2, levelDmg * 1.2, 0, 2, 1, None, 3)
+        else:    
+            self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
+
+
+        # ret, datas = self.getHost().getInscriptionEffects(90010041, 12)
+        # if ret and datas and len(datas) >= 3:
+        #     slowType = datas[0]      
+        #     chance = datas[1]        
+        #     slowTime = datas[2]      
+        #     if slowType == 7 and random.random() <= chance:                
+        #         action_FightAction.slow(self, e, context, slowTime, chance, 0, 0)           
+        # ret, datas = self.getHost().getInscriptionEffects(90010041, 13)
+        # if ret and datas and len(datas) >= 0:
+        #     buffId = int(datas[0])
+        #     self.addBuffBySkill(e, context, buffId, 1, 1.0, 3)
 
 def _90010045(self, target, context):
     import KBEngine
     import action_FightAction
+    import sMath
     skillLv = self.getSkillLevel(target, context, context.skillId)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = 38 + (skillLv - 1) * 4
     dmgRatio = lvParam[skillLv - 1] / 100
+    targetNumber = len(context.effectedEntIds)
+    probability = 0.2/max(targetNumber, 2)
+
     if context.actionStage == 0:
         for eid in context.effectedEntIds:
-            e = KBEngine.entities.get(eid)  # 获取目标实体对象
+            e = KBEngine.entities.get(eid) 
             if not e:  
                 continue  
-            self.addBuffBySkill(e, context, 64003031, skillLv, 1.0,6)
-            if e.hasBuff(64003005):
-                # attack_damage = 1  # 基于 Buff 等级增加攻击伤害
+            if e.hasBuff(64001101):
                 context.isCombo = True
                 self.attack(e, context, dmgRatio * 1.2, levelDmg * 1.2, 0, 2, 1, None, 3)
             else:
                 self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
+
+            if skillLv < 5:
+                self.addBuffBySkill(e, context, 64001117, 1, 1, 5)
+            elif 5 <= skillLv < 8:
+                self.addBuffBySkill(e, context, 64001118, 1, 1, 10)
+            elif 8 <= skillLv < 11:
+                self.addBuffBySkill(e, context, 64001119, 1, 1, 15)
+            elif skillLv == 11:
+                self.addBuffBySkill(e, context, 64001120, 1, 1, 20)
+
         return self.callAfterDelay(target, context, 0.2)      
-    if context.actionStage == 1:
+
+    elif context.actionStage == 1:
+        level_params = {
+            (0, 5): [],
+            (5, 8): [(probability * 1, 1, 15, 0.3)],
+            (8, 11): [(probability * 2, 1, 15, 0.3)],
+            (11, 12): [(probability * 3, 1, 15, 0.3)],
+            (12, float('inf')): [(probability * 4, 1, 15, 0.3)]
+        }
+
+        # 查找对应的额外拖拽参数
+        extra_drag_params = []
+        for (min_lv, max_lv), params in level_params.items():
+            if min_lv <= skillLv < max_lv:
+                extra_drag_params = params
+                break
+
         for eid in context.effectedEntIds:
-            e = KBEngine.entities.get(eid)  # 获取目标实体对象
+            e = KBEngine.entities.get(eid) 
             if not e:  
-                continue  
-            action_FightAction.dragTarget(self, e, context, 3, 1, 2, 15, 0.3)
+                continue 
+            distance = sMath.distance2D(self.position, e.position)
+            pushDis = min(max(distance - 4, 0.5), 2) 
+            action_FightAction.dragTarget(self, e, context, pushDis, 1, 2, 15, 0.3)
+            # 执行额外的拖拽操作
+            for params in extra_drag_params:
+                action_FightAction.dragTarget(self, e, context, pushDis ,*params)
 
 def _90010050(self, target, context):  
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -500,7 +533,7 @@ def _90010052(self, target, context):
         if not e:
             continue
         self.attack(e, context, dmgRatio, levelDmg, 0,2,1,None,0)
-        self.addBuffBySkill(e, context, 64003005, 1, 1.0, 10)
+        self.addBuffBySkill(e, context, 64001101, 1, 1.0, 10)
 
 def _90010055(self, target, context):
     import action_FightAction
@@ -517,17 +550,19 @@ def _90010055(self, target, context):
             ent = KBEngine.entities.get(tid)
             if not ent:
                 continue
-            if ent.hasBuff(64003005):
+
+            if 5 <= skillLv < 7:
+                action_FightAction.stun(self, ent, context, 1, 1, 0, 0, 0)
+            elif 8 <= skillLv < 11:
+                action_FightAction.stun(self, ent, context, 1.5, 1, 0, 0, 0)
+            elif skillLv == 11:
+                action_FightAction.stun(self, ent, context, 2, 1, 0, 0, 0)
+
+            if ent.hasBuff(64001101):
                 context.isCombo = True
-                dmgRatio2 = dmgRatio*1.2
-                levelDmg2 = levelDmg*1.2
-                action_FightAction.stun(self, ent, context, 3, 1, 1, 0)
-                self.attack(ent, context, dmgRatio2, levelDmg2, 0, 2, 1, None, 3)
+                self.attack(ent, context, dmgRatio*1.2, levelDmg*1.2, 0, 2, 1, None, 3)
             else:
                 self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
-        return self.callAfterDelay(target, context, 0.3)
-    elif context.actionStage == 2:
-        self.addBuffBySkill(self, context, 64003032, 1, 1.0, 10)
 
 def _90010056(self, target, context):
     import action_FightAction
@@ -543,7 +578,7 @@ def _90010056(self, target, context):
         self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 1)
         action_FightAction.pushTarget(self, ent, context, 2 , 8, 0.5, 1, 0)
 
-        buffLv = ent.getBuffLv(64003005) if ent.hasBuff(64003005) else 0
+        buffLv = ent.getBuffLv(64001101) if ent.hasBuff(64001101) else 0
         if buffLv >= 7:
             action_FightAction.stun(self, ent, context, 3, 1, 1, 0)
 
@@ -562,7 +597,7 @@ def _90010057(self, target, context):
             ent = KBEngine.entities.get(tid)
             if not ent:
                 continue
-            if ent.hasBuff(64003005):
+            if ent.hasBuff(64001101):
                 context.isCombo = True
                 dmgRatio2 = dmgRatio*1.2
                 levelDmg2 = levelDmg*1.2
@@ -580,44 +615,59 @@ def _90010060(self, target, context):
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = (26+ (skillLv - 1) * 3) / 2
     dmgRatio = lvParam[skillLv - 1] / 100
-    for eid in context.effectedEntIds:
-        ent = KBEngine.entities.get(eid)
+    # 定义不同技能等级对应的额外击倒参数
+    level_params = {
+        (0, 5): [],
+        (5, 8): [(1.2, 0.3, 0, 0, 1)],
+        (8, 11): [(1.2, 0.7, 0, 0, 1)],
+        (11, 12): [(1.2, 1, 0, 0, 1)],
+        (12, float('inf')): [(1.5, 1, 0, 0, 1)]
+    }
 
-        if context.actionStage == 0:
-            if ent.hasBuff(64003005):
-                context.isCombo = True
-                dmgRatio2 = dmgRatio *1.2
-                levelDmg2 = levelDmg *1.2
-                self.attack(ent, context, dmgRatio2, levelDmg2, 0, 2, 1, None, 3)
-            else:
-                self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
-            action_FightAction.down(self, ent, context, 1.5, 1, 1, 0)
-            return self.callAfterDelay(ent, context, 0.3667)
+    # 查找对应的额外击倒参数
+    extra_down_params = []
+    for (min_lv, max_lv), params in level_params.items():
+        if min_lv <= skillLv < max_lv:
+            extra_down_params = params
+            break
 
-        if context.actionStage == 1:
-            if ent.hasBuff(64003005):
-                context.isCombo = True
-                dmgRatio2 = dmgRatio *1.2
-                levelDmg2 = levelDmg *1.2
-                self.attack(ent, context, dmgRatio2, levelDmg2, 0, 2, 1, None, 3)
-            else:
-                self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
-            action_FightAction.down(self, ent, context, 1.5, 1, 1, 0)
+    if context.actionStage == 0:
 
-    self.castSkill(target, context, 90010061, skillLv)
+        for eid in context.effectedEntIds:
+            e = KBEngine.entities.get(eid)
+            if not e:
+                continue
+            self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
+            action_FightAction.down(self, e, context, 1.5, 1, 0, 0, 2)
+            for params in extra_down_params:
+                action_FightAction.down(self, e, context, *params)
+
+        return self.callAfterDelay(target, context, 0.3667)  
+
+    elif context.actionStage == 1:
+
+        for eid in context.effectedEntIds:
+            e = KBEngine.entities.get(eid)
+            if not e:
+                continue
+            self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 0)
+            action_FightAction.down(self, e, context, 1.5, 1, 0, 0, 2)
+            for params in extra_down_params:
+                action_FightAction.down(self, e, context, *params)
+
+        self.castSkill(target, context, 90010061, skillLv)
 
 def _90010060_start(self, target, context):    
-    self.addBuffBySkill(self, context, 64003028, 1, 1.0, 2)
+    self.addBuffBySkill(self, context, 64001123, 1, 1.0, 2)
 
 def _90010060_end(self, target, context):    
-    self.removeBuffBySkill(self, context, 64003028)
+    self.removeBuffBySkill(self, context, 64001123)
 
 def _90010061(self, target, context):
     skillLv = self.getSkillLevel(target, context, 90010060)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = (40+(skillLv-1)*1)/6
     dmgRatio = lvParam[skillLv-1]/100
-    targetBuffLv = 0
     t = 0
     delay_times = {
         0: 0.4,
@@ -632,14 +682,8 @@ def _90010061(self, target, context):
         if ent:
             t = delay_times.get(context.actionStage, 0)
             if context.actionStage in range(1, 6):
-                if ent.hasBuff(64003005):
-                    dmgRatio2 = dmgRatio *1.2
-                    levelDmg2 = levelDmg *1.2
-                    self.bloodSuckAttack(ent, context, dmgRatio2, levelDmg2, 1)
-                    # action_FightAction.down(self, e, context, 1.2, 1, 1, 0)
-                else:
-                    self.attack(ent, context, dmgRatio, levelDmg, 0)
-                    # action_FightAction.down(self, e, context, 1.2, 1, 1, 0)
+                self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 0)
+                
     if t:
         return self.callAfterDelay(target, context, t)
 
@@ -648,8 +692,7 @@ def _90010065(self, target, context):
 
     if context.actionStage ==0:
         self.createCreation(target, context, 65000016, self.level, skillLv, 5, 1, 0, 0, 0)
-        # self.castSkill(target,context, 90010067, skillLv)
-        return self.callAfterDelay(target, context, 0)
+        return self.callAfterDelay(target, context, 0.2)
     if context.actionStage ==1:
         if not target or target.isDestroyed:
             return
@@ -657,48 +700,53 @@ def _90010065(self, target, context):
             self.castSkill(target,context, 90010066, skillLv)
 
 def _90010065_start(self, target, context):
-    self.addBuffBySkill(self, context, 64000203, 1, 1.0, 2)
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    if 5 <= skillLv < 8:
+        self.addBuffBySkill(self, context, 64001122, 1, 1.0, 2)
+    elif 8 <= skillLv < 11:
+        self.addBuffBySkill(self, context, 64001123, 1, 1.0, 2)
+    elif skillLv == 11:
+        self.addBuffBySkill(self, context, 64001123, 1, 1.0, 2)
 
 def _90010065_end(self, target, context):
-    self.removeBuffBySkill(self, context, 64000203)
+    self.removeBuffBySkill(self, context, 64001122)
+    self.removeBuffBySkill(self, context, 64001123)
 
 def _90010066(self, target, context):
-    import action_FightAction
-    t = 0
     skillLv = self.getSkillLevel(target, context, 90010065)
     lvParam = utils.getSkillLvParam(context.skillId)   
     dmgRatio = lvParam[skillLv-1]/100
     levelDmg = (44+(skillLv-1)*1)/4
-    # targetBuffLv = 0
-    # if target and target.hasBuff(64003005):
-    #     targetBuffLv = target.getBuffLv(64003005)
-    #     targetBuffLvRatio = 1 + targetBuffLv
-    #     dmgRatio *= targetBuffLvRatio
-    #     levelDmg *= targetBuffLvRatio
 
-    delay_times = {
-        0: 0.2,
-        1: 1,
-        2: 1,
-        3: 1,
-        4: 0
-    }
-    if target:
-        t = delay_times.get(context.actionStage, 0)
-        if context.actionStage in range(1, 5):
-            self.attack(target, context, dmgRatio, levelDmg, 0,2,1,None,0)
-            action_FightAction.stun(self, target, context, 1.2, 1, 0, 1)
-            # else:
-            #     self.bloodSuckAttack(target, context, dmgRatio, levelDmg, 0.1)
-            #     action_FightAction.stun(self, target, context, 1, 1, 0, 1)
-    if t:
-        return self.callAfterDelay(target, context, t)
+    if context.actionStage ==0:
+
+        if skillLv < 5:
+            action_FightAction.stun(self, target, context, 1.5, 1, 0, 0)
+        elif 5 <= skillLv < 8:
+            action_FightAction.stun(self, target, context, 2, 1, 0, 0)
+        elif 8 <= skillLv < 11:
+            action_FightAction.stun(self, target, context, 2.5, 1, 0, 0)
+        elif skillLv == 11:
+            action_FightAction.stun(self, target, context, 3, 1, 0, 0)
+        self.attack(target, context, dmgRatio, levelDmg, 0,2,1,None,0)
+        return self.callAfterDelay(target, context, 1)
+
+    if context.actionStage ==1:
+        self.attack(target, context, dmgRatio, levelDmg, 0,2,1,None,0)
+        return self.callAfterDelay(target, context, 1)
+
+    if context.actionStage ==2:
+        self.attack(target, context, dmgRatio, levelDmg, 0,2,1,None,0)
+        return self.callAfterDelay(target, context, 1)
+
+    if context.actionStage ==3:
+        self.attack(target, context, dmgRatio, levelDmg, 0,2,1,None,0)
 
 def _90010066_start(self, target, context):
-    self.addBuffBySkill(target, context, 64003014, 1, 1, 3)
+    self.addBuffBySkill(target, context, 64001124, 1, 1, 3)
 
 def _90010066_end(self, target, context):
-    self.removeBuffBySkill(target, context, 64003014)
+    self.removeBuffBySkill(target, context, 64001124)
 
 def _90010067(self, target, context):
     import action_FightAction
@@ -718,35 +766,35 @@ def _90010067(self, target, context):
 
 def _65000068(self, target, context):
     import KBEngine
-    import action_FightAction
     skillId = self.tmpProps.get('skillId')
     skillLv = self.getHost().getSkillLevel(target, context, skillId)
     lvParam = utils.getSkillLvParam(skillId)
     levelDmg = (skillLv * 4 + 44)/8   
     dmgRatio = lvParam[skillLv-1]/100
-    # targetBuffLv = 0
-    # if target and target.hasBuff(64003005):
-    #     targetBuffLv = target.getBuffLv(64003005)
-    #     targetBuffLvRatio = 1 + targetBuffLv 
-    #     dmgRatio *= targetBuffLvRatio
-    #     levelDmg *= targetBuffLvRatio
 
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
         if not e:
             continue
         self.attack(e, context, dmgRatio, levelDmg, 0)
-        self.addBuffBySkill(e, context, 64003006, 1, 1.0, 2)
-        self.addBuffBySkill(e, context, 64003016, 1, 1.0, 2)
+
+        if 5 <= skillLv < 8:
+            self.addBuffBySkill(e, context, 64001125, 1, 1.0, 2)
+        elif 8 <= skillLv < 11:
+            self.addBuffBySkill(e, context, 64001125, 1, 1.0, 2)
+            self.addBuffBySkill(e, context, 64001132, 1, 1.0, 2)
+        elif skillLv == 11:
+            self.addBuffBySkill(e, context, 64001125, 1, 1.0, 2)
+            self.addBuffBySkill(e, context, 64001133, 1, 1.0, 2)
 
 def _90010070(self, target, context):
     self.dodgeSkill(target, context, 10, 8)
 
 def _90010070_start(self, target, context):
-    self.addBuffBySkill(self, context, 64000203, 1, 1, 0.5)
+    self.addBuffBySkill(self, context, 64001123, 1, 1, 0.5)
 
 def _90010070_end(self, target, context):
-    self.removeBuffBySkill(self, context, 64000203)
+    self.removeBuffBySkill(self, context, 64001123)
 
 def _90020001(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -789,11 +837,19 @@ def _90020004(self, target, context):
         self.attack(e, context, dmgRatio, levelDmg, 0,2,1,None,1)    
         action_FightAction.pushTarget(self, e, context, 1, 4, 0, 1, 2)
 
+def _90020005(self, target, context): 
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    # 铭文效果调用
+    ret, datas = self.getAvatar().getInscriptionEffects(90020005, 13)
+    if ret and datas:
+        buffId = int(datas[0])
+        self.addBuffBySkill(self, context, buffId, 1, 1.0, 3)
+
 def _90020005_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId) 
     if skillLv < 5:
         self.addBuffBySkill(self, context, 64000436, skillLv, 1.0, 30)
-    elif 5 <= skillLv < 7:
+    elif 5 <= skillLv < 8:
         self.addBuffBySkill(self, context, 64000437, skillLv, 1.0, 40)
     elif 8 <= skillLv < 11:
         self.addBuffBySkill(self, context, 64000438, skillLv, 1.0, 50)
@@ -964,7 +1020,7 @@ def _90020030(self, target, context):
         # 根据技能等级调整效果
         if skillLv < 5:
             action_FightAction.snare(self, e, context, 3, probability, 0, 0, 2)
-        elif 5 <= skillLv < 7:
+        elif 5 <= skillLv < 8:
             action_FightAction.snare(self, e, context, 3, probability, 0, 0, 2)
             action_FightAction.snare(self, e, context, 1.5, probability, 0, 0, 1)
         elif 8 <= skillLv < 11:
@@ -1172,7 +1228,7 @@ def _90020047(self, target, context):
     skillId = self.tmpProps['skillId']
     skillLv = self.getHost().getSkillLevel(target, context, 90020045)
     targetNumber = len(context.effectedEntIds)
-    probability = 0.5/max(targetNumber, 5)
+    probability = 0.2/max(targetNumber, 2)
 
     # 定义不同技能等级对应的额外拖拽参数
     level_params = {
@@ -1221,7 +1277,7 @@ def _90020050(self, target, context):
             pushDis = float(5 - distance)
             action_FightAction.stun(self, e, context, 0.7, 1, 0)
             action_FightAction.pushTarget(self, e, context, pushDis , 10, 0, 1, 0)
-        elif 5 <= skillLv < 7: 
+        elif 5 <= skillLv < 8: 
             pushDis = float(6 - distance)
             action_FightAction.stun(self, e, context, 0.8, 1, 0)
             action_FightAction.pushTarget(self, e, context, pushDis , 10, 0, 1, 0)
@@ -1295,17 +1351,17 @@ def _90020056(self, target, context):
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        if e.hasBuff(64003005) or e.hasBuff(64000401):
+        if e.hasBuff(64001101) or e.hasBuff(64000401):
             context.isCombo = True
             self.attack(e, context, dmgRatio * dmgRate, levelDmg * dmgRate, 0, 2, 1, None, 3)
         else:
             self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
-        ret, datas = self.getInscriptionEffects(90020056, 18)
-        if ret and datas and len(datas) >= 1:
-            extraAttackCount = int(datas[0])
-            for _ in range(extraAttackCount):
-                # 保持相同倍率与类型参数
-                self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
+
+        # 铭文效果调用
+        ret, datas = self.getAvatar().getInscriptionEffects(90020056, 13)
+        if ret and datas:
+            buffId = int(datas[0])
+            self.addBuffBySkill(e, context, buffId, 1, 1.0, 5)
 
 def _90020060(self, target, context):
     skillid = 90020060
@@ -1316,7 +1372,7 @@ def _90020060(self, target, context):
     if context.actionStage == 0:
         if skillLv < 5:
             self.createCreation(target, context, 65000003, self.level, skillLv, 5, 1, 0, 0, 0)
-        elif 5 <= skillLv < 7:
+        elif 5 <= skillLv < 8:
             self.createCreation(target, context, 65000003, self.level, skillLv, 6, 1, 0, 0, 0)
         elif 8 <= skillLv < 11:
             self.createCreation(target, context, 65000003, self.level, skillLv, 7, 1, 0, 0, 0)
@@ -1329,7 +1385,7 @@ def _90020060(self, target, context):
             e = KBEngine.entities.get(eid)
             if not e:
                 continue
-            if e.hasBuff(64003005) or e.hasBuff(64000401):
+            if e.hasBuff(64001101) or e.hasBuff(64000401):
                 context.isCombo = True
                 self.attack(e, context, dmgRatio*1.2, levelDmg*1.2, 0, 2, 1, None, 3)
             else:
@@ -1346,7 +1402,7 @@ def _90020061(self, target, context):
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        if e.hasBuff(64003005) or e.hasBuff(64000401):
+        if e.hasBuff(64001101) or e.hasBuff(64000401):
             self.attack(e, context, dmgRatio*1.2, levelDmg*1.2, 0)
         else:
             self.attack(e, context, dmgRatio, levelDmg, 0)
@@ -1359,16 +1415,20 @@ def _90020065(self, target, context):
         return self.callAfterDelay(target, context, 0.3)
     elif context.actionStage == 1: 
         import KBEngine
-        if 5 <= skillLv < 7:
+        if 5 <= skillLv < 8:
             action_FightAction.stun(self, target, context, 1, 1, 0, 0, 0)
         elif 8 <= skillLv < 11:
             action_FightAction.stun(self, target, context, 1, 1.5, 0, 0, 0)
         elif skillLv == 11:
             action_FightAction.stun(self, target, context, 1, 2, 0, 0, 0)
+        ret, datas = self.getAvatar().getInscriptionEffects(90020065, 13)
+        if ret and datas:
+            buffId = int(datas[0])
+            self.addBuffBySkill(self, context, buffId, 1, 1.0, 10)
 
 def _90020065_start(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
-    if 5 <= skillLv < 7:
+    if 5 <= skillLv < 8:
         self.addBuffBySkill(self, context, 64000434, 1, 1.0, 2)
     elif 8 <= skillLv < 11:
         self.addBuffBySkill(self, context, 64000435, 1, 1.0, 2)
@@ -1518,15 +1578,15 @@ def _90020452(self, target, context):
     skillId = self.tmpProps['skillId']
     skillLv = self.getHost().getSkillLevel(target, context, 90020450)
     targetNumber = len(context.effectedEntIds)
-    probability = 0.5/max(targetNumber, 5)
+    probability = 0.2/max(targetNumber, 2)
 
     # 定义不同技能等级对应的额外拖拽参数
     level_params = {
         (0, 5): [],
-        (5, 8): [],
-        (8, 11): [(3, probability * 1, 1, 7, 0.5)],
-        (11, 12): [(3, probability * 2, 1, 7, 0.5)],
-        (12, float('inf')): [(3, probability * 3, 1, 7, 0.5)]
+        (5, 8): [(3, probability * 1, 1, 7, 0.5)],
+        (8, 11): [(3, probability * 2, 1, 7, 0.5)],
+        (11, 12): [(3, probability * 3, 1, 7, 0.5)],
+        (12, float('inf')): [(3, probability * 4, 1, 7, 0.5)]
     }
 
     # 查找对应的额外拖拽参数
@@ -1566,7 +1626,7 @@ def _90020600(self, target, context):
     if context.actionStage == 0:
         if skillLv < 5:
             self.createCreation(target, context, 65000030, self.level, skillLv, 8, 1, 0, 0, 0)
-        elif 5 <= skillLv < 7:
+        elif 5 <= skillLv < 8:
             self.createCreation(target, context, 65000030, self.level, skillLv, 9, 1, 0, 0, 0)
         elif 8 <= skillLv < 11:
             self.createCreation(target, context, 65000030, self.level, skillLv, 10, 1, 0, 0, 0)
@@ -1579,7 +1639,7 @@ def _90020600(self, target, context):
             e = KBEngine.entities.get(eid)
             if not e:
                 continue
-            if e.hasBuff(64003005) or e.hasBuff(64000401):
+            if e.hasBuff(64001101) or e.hasBuff(64000401):
                 context.isCombo = True
                 self.attack(e, context, dmgRatio*1.2, levelDmg*1.2, 0, 2, 1, None, 3)
             else:
@@ -1596,7 +1656,7 @@ def _90020601(self, target, context):
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        if e.hasBuff(64003005) or e.hasBuff(64000401):
+        if e.hasBuff(64001101) or e.hasBuff(64000401):
             self.attack(e, context, dmgRatio*1.2, levelDmg*1.2, 0)
         else:
             self.attack(e, context, dmgRatio, levelDmg, 0)
@@ -1631,12 +1691,17 @@ def _90020650(self, target, context):
         return self.callAfterDelay(target, context, 0.3)
     elif context.actionStage == 1: 
         import KBEngine
-        if 5 <= skillLv < 7:
+        if 5 <= skillLv < 8:
             action_FightAction.stun(self, target, context, 1, 1, 0, 0, 0)
         elif 8 <= skillLv < 11:
             action_FightAction.stun(self, target, context, 1, 1.5, 0, 0, 0)
         elif skillLv == 11:
             action_FightAction.stun(self, target, context, 1, 2, 0, 0, 0)
+                    # 铭文效果调用            
+        ret, datas = self.getAvatar().getInscriptionEffects(90020650, 13)
+        if ret and datas:
+            buffId = int(datas[0])
+            self.addBuffBySkill(self, context, buffId, 1, 1.0, 10) 
     if fullHp > 0:
         healNum = fullHp * 0.10
         healNum = min(healNum, fullHp)
@@ -1644,7 +1709,7 @@ def _90020650(self, target, context):
 
 def _90020650_start(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
-    if 5 <= skillLv < 7:
+    if 5 <= skillLv < 8:
         self.addBuffBySkill(self, context, 64000434, 1, 1.0, 2)
     elif 8 <= skillLv < 11:
         self.addBuffBySkill(self, context, 64000435, 1, 1.0, 2)
@@ -1679,12 +1744,7 @@ def _90030001(self, target, context):
     levelDmg = (44+(skillLv - 1) * 4)
     dmgRatio = lvParam[skillLv - 1]/100
     if context.actionStage == 0:
-        for tid in context.effectedEntIds:
-            ent = KBEngine.entities.get(tid)
-            if not ent:
-                continue
-            self.attack(ent, context, dmgRatio, levelDmg, 0,1,1,None,0)
-            action_FightAction.stun(self, ent, context, 2, 1, 0, 1)
+        self.castSkill(target, context, 90030002, skillLv)
         return self.callAfterDelay(target, context, 0.2)
 
     elif context.actionStage == 1:    
@@ -1692,18 +1752,38 @@ def _90030001(self, target, context):
         return self.callAfterDelay(target, context, 0.6)
 
     elif context.actionStage == 2:    
-        self.castSkill(target, context, 90030002, skillLv)
+        self.castSkill(target, context, 90030003, skillLv)
         return self.callAfterDelay(target, context, 0.1)
     elif context.actionStage == 3:    
-        self.castSkill(target, context, 90030003, skillLv)
+        self.castSkill(target, context, 90030004, skillLv)
 
-def _90030001_start(self, target, context):
-    self.addBuffBySkill(self, context, 64000203, 1, 1.0, 2.5)
+def _900300011_start(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    if 5 <= skillLv < 8:
+        self.addBuffBySkill(self, context, 64000738, 1, 1.0, 2)
+    elif 8 <= skillLv < 11:
+        self.addBuffBySkill(self, context, 64000739, 1, 1.0, 2)
+    elif skillLv == 11:
+        self.addBuffBySkill(self, context, 64000739, 1, 1.0, 2)
 
 def _90030001_end(self, target, context):
-    self.removeBuffBySkill(self, context, 64000203)
+    self.removeBuffBySkill(self, context, 64000738)
+    self.removeBuffBySkill(self, context, 64000739)
 
 def _90030002(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+    levelDmg = (44+(skillLv - 1) * 4)
+    dmgRatio = lvParam[skillLv - 1]/100
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, dmgRatio, levelDmg, 0,1,1,None,0)
+        action_FightAction.stun(self, ent, context, 2, 1, 0, 1)
+
+def _90030003(self, target, context):
     skillLv = self.getSkillLevel(target, context, 90030001)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg2 = (44+(skillLv-1)*4)
@@ -1715,7 +1795,7 @@ def _90030002(self, target, context):
         self.attack(ent, context, dmgRatio2, levelDmg2, 0,1,1,None,0)
         action_FightAction.down(self, ent, context, 1.2, 1, 1, 0)
 
-def _90030003(self, target, context):
+def _90030004(self, target, context):
     skillLv = self.getSkillLevel(target, context, 90030001)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg2 = (44+(skillLv-1)*4)
@@ -1733,18 +1813,31 @@ def _90030005(self, target, context):
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = (39+(skillLv-1)*4)
     dmgRatio = lvParam[skillLv-1]/100
-        
-    # if context.actionStage == 0:
-    for tid in context.effectedEntIds:
-        ent = KBEngine.entities.get(tid)
-        if not ent:
-            continue
-        if ent.hasBuff(64000701) or ent.hasBuff(64003005):
-            context.isCombo = True
-            self.attack(ent, context, dmgRatio*1.4, levelDmg*1.4, 0, 1, 1, None, 3)
-        else:
-            self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
-        self.addBuffBySkill(ent, context,64000310, 1, 1.0, 5)
+
+    if context.actionStage == 0:
+
+        if skillLv < 5:
+            self.addBuffBySkill(self, context, 64000733, 1, 1.0, 10)
+        elif 5 <= skillLv < 8: 
+            self.addBuffBySkill(self, context, 64000734, 1, 1.0, 10)
+        elif 8 <= skillLv < 11: 
+            self.addBuffBySkill(self, context, 64000735, 1, 1.0, 10)
+        elif skillLv == 11 : 
+            self.addBuffBySkill(self, context, 64000736, 1, 1.0, 10)
+        elif skillLv == 12 : 
+            self.addBuffBySkill(self, context, 64000737, 1, 1.0, 10)
+
+        for tid in context.effectedEntIds:
+            ent = KBEngine.entities.get(tid)
+            if not ent:
+                continue
+            else:
+                self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
+
+        return self.callAfterDelay(target, context, 0.6)
+
+    elif context.actionStage == 1:
+        self.addBuffBySkill(self, context, 64000717, 1, 1.0, 5)
 
 def _90030006(self, target, context):
     import action_FightAction
@@ -1814,33 +1907,61 @@ def _90030007(self, target, context):
 def _90030010(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     lvParam = utils.getSkillLvParam(context.skillId)
-    levelDmg = (40+(skillLv-1)*4)*0.5
-    dmgRatio = lvParam[skillLv-1]/100
+    levelDmg = (40 + (skillLv - 1) * 4) * 0.5
+    dmgRatio = lvParam[skillLv - 1] / 100
+
+    # 使用context.customDict来存储阶段间的数据
+    if not hasattr(context, 'customDict'):
+        context.customDict = {}
+
     if context.actionStage == 0:
+        totalDmg1 = 0
         for tid in context.effectedEntIds:
             ent = KBEngine.entities.get(tid)
             if not ent:
                 continue
-            if not self.hasBuff(64000307):
-                self.attack(ent, context, dmgRatio, levelDmg, 0,1,1,None,0)
-            elif self.hasBuff(64000307):
-                self.bloodSuckAttack(ent, context, dmgRatio, levelDmg, 0.4, 0, 1, 1)
+            dmg = self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 0)
+            if dmg is not None and dmg > 0:
+                totalDmg1 += dmg
+        # 存储到context中
+        context.customDict['totalDmg1'] = totalDmg1
         return self.callAfterDelay(target, context, 0.5)
 
-    elif context.actionStage == 1:    
+    elif context.actionStage == 1:
+        totalDmg2 = 0
         for tid in context.effectedEntIds:
             ent = KBEngine.entities.get(tid)
             if not ent:
                 continue
-            if not self.hasBuff(64000307):
-                self.attack(ent, context, dmgRatio, levelDmg, 0,1,1,None,0)
-            elif self.hasBuff(64000307):
-                self.bloodSuckAttack(ent, context, dmgRatio, levelDmg, 0.4, 0, 1, 1)
-        return self.callAfterDelay(target, context, 0.2)
+            dmg2 = self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 0)
+            if dmg2 is not None and dmg2 > 0:
+                totalDmg2 += dmg2
+        context.customDict['totalDmg2'] = totalDmg2
+        return self.callAfterDelay(target, context, 0.1)
 
-    elif context.actionStage == 2:        
-        # self.addBuffBySkill(self, context, 64000309, 1, 1.0, 5)
-        self.addBuffBySkill(self, context, 64000311, 1, 1.0, 5)
+    elif context.actionStage == 2:
+        # 从context中获取之前阶段的数据
+        totalDmg1 = context.customDict.get('totalDmg1', 0)
+        totalDmg2 = context.customDict.get('totalDmg2', 0)
+        totalDmg = totalDmg1 + totalDmg2
+        if totalDmg > 0:
+            fullHp = self.getProp("fullHp")
+            fullHpRate = 1
+            if self.hasBuff(64000717):
+                fullHpRate = 2
+            if skillLv < 5:
+                healNumMax = fullHp * 0.03 * fullHpRate
+                healNum = min(totalDmg * 0.05, healNumMax)
+            if 5 <= skillLv < 8:
+                healNumMax = fullHp * 0.05 * fullHpRate
+                healNum = min(totalDmg * 0.07, healNumMax)
+            elif 8 <= skillLv < 11:
+                healNumMax = fullHp * 0.075 * fullHpRate
+                healNum = min(totalDmg * 0.1, healNumMax)
+            elif skillLv == 11:
+                healNumMax = fullHp * 0.1 * fullHpRate  
+                healNum = min(totalDmg * 0.13, healNumMax)    
+            self.healByNum(self, context, healNum)
 
 def _90030011(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -1871,7 +1992,7 @@ def _90030015(self, target, context):
         self.castSkill(target, context, 90030016)
         return self.callAfterDelay(target, context, 0.1)
     if context.actionStage == 2:
-        if 5 <= skillLv < 7:
+        if 5 <= skillLv < 8:
             action_FightAction.down(self, target, context, 1, 1, 0, 0, 0)
         elif 8 <= skillLv < 11:
             action_FightAction.down(self, target, context, 1.5, 1, 0, 0, 0)
@@ -1905,7 +2026,6 @@ def _90030016(self, target, context):
         self.attack(e, context,dmgRatio , levelDmg, 0, 1, 1, None, 3)
 
 def _90030017(self, target, context):
-    import sMath
     skillLv = self.getSkillLevel(target, context, 90030015)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = (20+(skillLv-1) * 4)*0.5
@@ -1913,14 +2033,16 @@ def _90030017(self, target, context):
     # 如果没有目标，直接释放技能
     if not target:
         return
+    # 计算距离（确保 target 和 self 都有 position 属性）
+    import sMath
+    distance = sMath.distance2D(self.position, target.position)
+    pushDis = max(distance - 3,0.5)
+    pushDis = min(max(distance - 3, 0.5), 3) 
 
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        # 计算距离（确保 target 和 self 都有 position 属性）
-        distance = sMath.distance2D(self.position, target.position)
-        pushDis = max(distance - 3 ,0.5)
         action_FightAction.dragTarget(self, e, context, pushDis, 1, 2, 10, 0.4)
         self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 0)
 
@@ -1985,6 +2107,10 @@ def _90030030(self, target, context):
     import sMath
     t = 0
     if context.actionStage == 0:
+        if 8 <= skillLv < 11: 
+            self.addBuffBySkill(self, context,64000717, 1, 1.0, 5)
+        elif skillLv == 11 : 
+            self.addBuffBySkill(self, context,64000717, 1, 1.0, 10)
         t = 0.1
     elif context.actionStage == 1:
         dstPos = tuple(context.skillArgs[-3:])
@@ -2010,7 +2136,10 @@ def _90030031(self, target, context):
             if not e:
                 continue
             self.attack(e, context, dmgRatio, levelDmg, 0,1,1,None,3)
-            self.addBuffBySkill(e, context,64000701, 1, 1.0, 5)
+            if skillLv < 5: 
+                self.addBuffBySkill(e, context,64000701, 1, 1.0, 5)
+            elif 5 <= skillLv : 
+                self.addBuffBySkill(e, context,64000701, 1, 1.0, 10)
         t = 0.23
     if context.actionStage == 1:
         for eid in context.effectedEntIds:
@@ -2018,7 +2147,6 @@ def _90030031(self, target, context):
             if not e:
                 continue
             self.attack(e, context, dmgRatio, levelDmg, 0)
-            self.addBuffBySkill(e, context,64000701, 1, 1.0, 5)
             action_FightAction.pushTarget(self, e, context, 2, 10, 0.2, 1, 2)
     if t: 
         return self.callAfterDelay(target, context, t)
@@ -2027,10 +2155,10 @@ def _90030035(self, target, context):
     self.dodgeSkill(target, context, 10, 8)
 
 def _90030035_start(self, target, context):
-    self.addBuffBySkill(self, context, 64000203, 1, 1.0, 0.5)
+    self.addBuffBySkill(self, context, 64000739, 1, 1.0, 0.5)
 
 def _90030035_end(self, target, context):
-    self.removeBuffBySkill(self, context, 64000203)
+    self.removeBuffBySkill(self, context, 64000739)
 
 def _90030040(self, target, context):
 
@@ -2043,7 +2171,7 @@ def _90030040(self, target, context):
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        if e.hasBuff(64003005) or e.hasBuff(64000701):
+        if e.hasBuff(64001101) or e.hasBuff(64000701):
             context.isCombo = True
             self.attack(e, context, dmgRatio*1.2, levelDmg*1.2, 0, 1, 1, None, 3)
         else:
@@ -2074,13 +2202,21 @@ def _90030045(self, target, context):
     levelDmg = 30+(skillLv-1) * 4
     dmgRatio = lvParam[skillLv-1]/100
     import action_FightAction
+
+    self.addBuffBySkill(target, context,64000701, 1, 1.0, 10)
+    if 5 <= skillLv < 8: 
+        self.addBuffBySkill(target, context,64000719, 1, 1.0, 10)
+    elif 8 <= skillLv < 11: 
+        self.addBuffBySkill(target, context,64000720, 1, 1.0, 10)
+    elif skillLv == 11 : 
+        self.addBuffBySkill(target, context,64000721, 1, 1.0, 10)
+    
     if action_FightAction.dragTarget(self, target, context, -1, 1, 0, 25):
         action_FightAction.stun(self, target, context, 1, 1, 0, 1)
-    if self.hasBuff(64000307):
+    if self.hasBuff(64000717):
         self.castSkill(target, context, 90030046, skillLv)
-    elif not self.hasBuff(64000307):
+    elif not self.hasBuff(64000717):
         self.attack(target, context, dmgRatio, levelDmg, 0,1,1,None,3)
-        self.addBuffBySkill(target, context,64000701, 1, 1.0, 5)
 
 def _90030046(self, target, context):
     skillLv = self.getSkillLevel(target, context, 90030045)
@@ -2092,7 +2228,6 @@ def _90030046(self, target, context):
         if not ent:
             continue
         self.attack(ent, context, dmgRatio, levelDmg, 0,1,1,None,3)
-        self.addBuffBySkill(ent, context,64000701, 1, 1.0, 5)
 
 def _90030047(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -2132,17 +2267,43 @@ def _90030050(self, target, context):
     levelDmg = 37 + (skillLv - 1) * 4
     dmgRatio = lvParam[skillLv - 1] / 100
 
+    # 定义不同技能等级对应的额外击倒参数
+    level_params = {
+        (0, 5): [],
+        (5, 8): [(1, 0.5, 0, 0, 1)],
+        (8, 11): [(1.5, 1, 0, 0, 1)],
+        (11, 12): [(2, 1, 0, 0, 1)],
+        (12, float('inf')): [(2.5, 1, 0, 0, 1)]
+    }
+
+    # 查找对应的额外击倒参数
+    extra_down_params = []
+    for (min_lv, max_lv), params in level_params.items():
+        if min_lv <= skillLv < max_lv:
+            extra_down_params = params
+            break
+
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        if e.hasBuff(64003005) or e.hasBuff(64000701):
-            context.isCombo = True
-            self.attack(e, context, dmgRatio*1.4, levelDmg*1.4, 0, 1, 1, None, 3)
-        else:
-            self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
-        action_FightAction.down(self, e, context, 1.2, 1, 1, 0)
-    self.castSkill(target, context, 90030051)
+        self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
+        action_FightAction.down(self, e, context, 1.5, 1, 0, 0, 2)
+        for params in extra_down_params:
+            action_FightAction.down(self, e, context, *params)
+
+def _90030050_start(self, target, context): 
+    skillLv = self.getSkillLevel(target, context, context.skillId) 
+
+    if skillLv == 11 : 
+        self.addBuffBySkill(self, context, 64000726, 1, 1.0, 2)
+    elif skillLv == 12 : 
+        self.addBuffBySkill(self, context, 64000727, 1, 1.0, 2)
+
+def _90030050_end(self, target, context):
+    buff_ids = [64000726, 64000727]
+    for buff_id in buff_ids:
+        self.removeBuffBySkill(self, context, buff_id)
 
 def _90030051(self, target, context):
     skillLv = self.getSkillLevel(target, context, 90030050)
@@ -2154,7 +2315,7 @@ def _90030051(self, target, context):
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        if e.hasBuff(64003005) or e.hasBuff(64000701):
+        if e.hasBuff(64001101) or e.hasBuff(64000701):
             context.isCombo = True
             self.attack(e, context, dmgRatio*1.4, levelDmg*1.4, 0, 1, 1, None, 0)
         else:
@@ -2162,6 +2323,7 @@ def _90030051(self, target, context):
         action_FightAction.down(self, e, context, 1.2, 1, 1, 0)
 
 def _90030055(self, target, context):
+    import random
     skillLv = self.getSkillLevel(target, context, context.skillId)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = 60 + (skillLv - 1) * 4
@@ -2176,28 +2338,53 @@ def _90030055(self, target, context):
             ent = KBEngine.entities.get(tid)
             if not ent:
                 continue
+            removeBuffTag = [7]
+            # 根据技能等级计算移除buff的概率
+            if skillLv < 5 and random.random() <= 0.15:
+                for selectTag in removeBuffTag:
+                    if ent.hasBuffTag(selectTag):
+                        ent.removeBuffByTag(selectTag)
+            elif 5 <= skillLv < 8 and random.random() <= 0.3:
+                for selectTag in removeBuffTag:
+                    if ent.hasBuffTag(selectTag):
+                        ent.removeBuffByTag(selectTag)
+            elif 8 <= skillLv < 11 and random.random() <= 0.6:
+                for selectTag in removeBuffTag:
+                    if ent.hasBuffTag(selectTag):
+                        ent.removeBuffByTag(selectTag)
+            elif skillLv == 11:
+                for selectTag in removeBuffTag:
+                    if ent.hasBuffTag(selectTag):
+                        ent.removeBuffByTag(selectTag)
             if ent.hasBuff(64000701):
                 context.isCombo = True
-                self.attack(ent, context, dmgRatio*1.4, levelDmg*1.4, 0, 1, 1, None, 3)
+                self.attack(ent, context, dmgRatio*1.2, levelDmg*1.2, 0, 1, 1, None, 3)
             else:
                 self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
             action_FightAction.pushTarget(self, ent, context, 2, 10, 0.2, 1, 0)
 
-def _90030055_start(self, target, context):    
-    self.removeStates([
-        gameconst.State.Frozen,
-        gameconst.State.Stunned,
-        gameconst.State.Snare,
-        gameconst.State.Down,
-                      ])
-    removeBuffTag = [14,15,17,56]
-    for selectTag in removeBuffTag:
-        if self.hasBuffTag(selectTag):
-            self.removeBuffByTag(selectTag)
+def _90030055_start(self, target, context): 
+    skillLv = self.getSkillLevel(target, context, context.skillId) 
+    if skillLv < 5:
+        self.addBuffBySkill(self, context, 64000728, 1, 1.0, 2)
+    elif 5 <= skillLv < 8: 
+        self.addBuffBySkill(self, context, 64000729, 1, 1.0, 2)
+    elif 8 <= skillLv < 11: 
+        self.addBuffBySkill(self, context, 64000730, 1, 1.0, 2)
+    elif skillLv == 11 : 
+        self.addBuffBySkill(self, context, 64000731, 1, 1.0, 2)
+    elif skillLv == 12 : 
+        self.addBuffBySkill(self, context, 64000732, 1, 1.0, 2)
+
+def _90030055_end(self, target, context):
+    buff_ids = [64000728, 64000729, 64000730, 64000731, 64000732]
+    for buff_id in buff_ids:
+        self.removeBuffBySkill(self, context, buff_id)
 
 def _90030060(self, target, context):
     import action_FightAction
     import sMath
+    import random
     skillLv = self.getSkillLevel(target, context, context.skillId)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = 22 + (skillLv - 1) * 4 
@@ -2212,10 +2399,10 @@ def _90030060(self, target, context):
 
         level_params = {
             (0, 5): [],
-            (5, 8): [(3, probability * 4, 1, 18, 0.5)],
-            (8, 11): [(3, probability * 6, 1, 18, 0.5)],
-            (11, 12): [(3, probability * 8, 1, 18, 0.5)],
-            (12, float('inf')): [(3, probability * 4, 1, 18, 0.5)]
+            (5, 8): [(probability * 4, 1, 18, 0.5)],
+            (8, 11): [(probability * 6, 1, 18, 0.5)],
+            (11, 12): [(probability * 8, 1, 18, 0.5)],
+            (12, float('inf')): [(probability * 10, 1, 18, 0.5)]
         }
 
         # 查找对应的额外拖拽参数
@@ -2231,13 +2418,22 @@ def _90030060(self, target, context):
                 continue
             # 计算距离（确保 target 和 self 都有 position 属性）
             distance = sMath.distance2D(self.position, e.position)
-            pushDis = max(distance - 3,0.5)
+            pushDis = min(max(distance - 4, 0.5), 5) 
             # 基础拖拽操作
             action_FightAction.dragTarget(self, e, context, pushDis, 1, 2, 18, 0.5)
             # 执行额外的拖拽操作
             for params in extra_drag_params:
-                action_FightAction.dragTarget(self, e, context, *params)
+                action_FightAction.dragTarget(self, e, context, pushDis ,*params)
             self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
+
+                            #铭文效果
+            ret, datas = self.getAvatar().getInscriptionEffects(90030060, 12)
+            if ret and datas and len(datas) >= 3:
+                SilenceType = datas[0]      
+                chance = datas[1]        
+                SilenceType = datas[2]      
+                if SilenceType == 8 and random.random() <= chance:                
+                    action_FightAction.slow(self, e, context, SilenceType, chance, 0, 0)
 
 def _90030061(self, target, context):
     levelDmg = 15
@@ -2256,19 +2452,40 @@ def _90030065(self, target, context):
     levelDmg = 27 + (skillLv - 1) * 4
     dmgRatio = lvParam[skillLv - 1] / 100
 
-    # 遍历所有受影响的实体
-    for tid in context.effectedEntIds:
-        ent = KBEngine.entities.get(tid)
-        if not ent:
+    if  skillLv < 11: 
+        dmgRate = 1.2
+    elif skillLv == 11 : 
+        dmgRate = 1.3
+
+    # 定义不同技能等级对应的额外拖拽参数
+    level_params = {
+        (0, 5): [],
+        (5, 8): [(2, 0.5, 0, 0, 1)],
+        (8, 11): [(2, 1, 0, 0, 1)],
+        (11, 12): [(2.5, 1, 0, 0, 1)],
+        (12, float('inf')): [(3, 1, 0, 0, 1)]
+    }
+
+    # 查找对应的额外拖拽参数
+    extra_drag_params = []
+    for (min_lv, max_lv), params in level_params.items():
+        if min_lv <= skillLv < max_lv:
+            extra_drag_params = params
+            break
+
+    for eid in context.effectedEntIds:
+        e = KBEngine.entities.get(eid)
+        if not e:
             continue
-
-        # 命中判断
-        hitResult = action_FightAction.isHit(self, ent,context)
-        self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, hitResult, 3)
-
-        # 如果命中则造成眩晕
-        if hitResult:
-            action_FightAction.stun(self, ent, context, 3, 1, 0)
+        if e.hasBuff(64001101) or e.hasBuff(64000701):
+            context.isCombo = True
+            self.attack(e, context, dmgRatio * dmgRate, levelDmg * dmgRate, 0, 1, 1, None, 3)
+        else:
+            self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
+        action_FightAction.stun(self, e, context, 2.5, 1, 0, 0, 2)
+        # 执行额外的拖拽操作
+        for params in extra_drag_params:
+            action_FightAction.stun(self, e, context, *params)
 
 def _90030066(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -2295,18 +2512,27 @@ def _90030070(self, target, context):
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = (30+(skillLv-1) * 4)*0.6
     dmgRatio = lvParam[skillLv-1]/100
-    if context.actionStage == 0:
-        for eid in context.effectedEntIds:
-            e = KBEngine.entities.get(eid)
-            if not e:
-                continue
-            self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
-            self.taunt(e, context, 1.0, 0, 5)
-            self.addBuffBySkill(e, context, 64004002, skillLv, 1.0, 5)
-        self.addBuffBySkill(self, context, 64000309, skillLv, 1.0, lvParam[skillLv-1])
-        return self.callAfterDelay(target, context, 0.5)
-    elif context.actionStage == 1:
-        self.addBuffBySkill(self, context, 64000307, 1, 1.0, 5)
+    for eid in context.effectedEntIds:
+        e = KBEngine.entities.get(eid)
+        if not e:
+            continue
+        self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
+
+def _90030070_start(self, target, context):
+    self.removeStates([
+        gameconst.State.Frozen,
+        gameconst.State.Stunned,
+        gameconst.State.Snare,
+        gameconst.State.Down,
+                      ])
+    removeBuffTag = [14,15,17,56]
+    for selectTag in removeBuffTag:
+        if self.hasBuffTag(selectTag):
+            self.removeBuffByTag(selectTag)
+    ret, datas = self.getAvatar().getInscriptionEffects(90030070, 13)
+    if ret and datas:
+        buffId = int(datas[0])
+        self.addBuffBySkill(self, context, buffId, 1, 1.0, 7)
 
 def _90030075(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -2372,6 +2598,346 @@ def _90030076(self, target, context):
             continue
         self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 0)
         self.addBuffBySkill(e, context,64000701, 1, 1.0, 5)
+
+def _90030080(self, target, context):
+
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+    levelDmg = (39+(skillLv-1)*4)
+    dmgRatio = lvParam[skillLv-1]/100
+    bufftime1 = 5
+    bufftime2 = 5
+    if context.actionStage == 0:
+
+        if skillLv < 5:
+            self.addBuffBySkill(self, context, 64000733, 1, 1.0, 10 + bufftime1)
+        elif 5 <= skillLv < 8: 
+            self.addBuffBySkill(self, context, 64000734, 1, 1.0, 10 + bufftime1)
+        elif 8 <= skillLv < 11: 
+            self.addBuffBySkill(self, context, 64000735, 1, 1.0, 10 + bufftime1)
+        elif skillLv == 11 : 
+            self.addBuffBySkill(self, context, 64000736, 1, 1.0, 10 + bufftime1)
+        elif skillLv == 12 : 
+            self.addBuffBySkill(self, context, 64000737, 1, 1.0, 10 + bufftime1)
+
+        for tid in context.effectedEntIds:
+            ent = KBEngine.entities.get(tid)
+            if not ent:
+                continue
+            else:
+                self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
+
+        return self.callAfterDelay(target, context, 0.6)
+
+    elif context.actionStage == 1:
+        self.addBuffBySkill(self, context, 64000717, 1, 1.0, 5 + bufftime2)
+
+def _90030150(self, target, context):
+    import action_FightAction
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+    levelDmg = (23+(skillLv-1)*4)*0.5
+    dmgRatio = lvParam[skillLv-1]/100
+    if context.actionStage == 0:
+        self.lunge(target, context, 14, 7)
+        return self.callAfterDelay(target, context, 0.2)
+    if context.actionStage == 1:
+        self.castSkill(target, context, 90030016)
+        return self.callAfterDelay(target, context, 0.1)
+    if context.actionStage == 2:
+        if 5 <= skillLv < 8:
+            action_FightAction.down(self, target, context, 1, 1, 0, 0, 0)
+        elif 8 <= skillLv < 11:
+            action_FightAction.down(self, target, context, 1.5, 1, 0, 0, 0)
+        elif skillLv == 11:
+            action_FightAction.down(self, target, context, 2, 1, 0, 0, 0)
+        return self.callAfterDelay(target, context, 0.3)
+    if context.actionStage == 3:
+        self.castSkill(target, context, 90030017)
+
+def _90030150_start(self, target, context): 
+    skillLv = self.getSkillLevel(target, context, context.skillId) 
+    inscription = 3
+    self.addBuffBySkill(self, context, 64000901, 1, 1.0, 2)
+    if 5 <= skillLv < 8: 
+        self.addBuffBySkill(self, context, 64000708, 1, 1.0, 2+ inscription)
+    elif 8 <= skillLv < 11: 
+        self.addBuffBySkill(self, context, 64000709, 1, 1.0, 2+ inscription)
+    elif skillLv == 11 : 
+        self.addBuffBySkill(self, context, 64000710, 1, 1.0, 2+ inscription)
+
+def _90030150_end(self, target, context):
+    self.removeBuffBySkill(self, context, 64000901)
+
+def _90030151(self, target, context):
+    import action_FightAction
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+    levelDmg = (23+(skillLv-1)*4)*0.5
+    dmgRatio = lvParam[skillLv-1]/100
+
+    for eid in context.effectedEntIds:
+        e = KBEngine.entities.get(eid)
+        if not e:
+            continue
+        self.attack(e, context,dmgRatio , levelDmg, 0, 1, 1, None, 3)
+
+def _90030152(self, target, context):
+    skillLv = self.getSkillLevel(target, context, 90030015)
+    lvParam = utils.getSkillLvParam(context.skillId)
+    levelDmg = (20+(skillLv-1) * 4)*0.5
+    dmgRatio = lvParam[skillLv-1]/100
+    # 如果没有目标，直接释放技能
+    if not target:
+        return
+    # 计算距离（确保 target 和 self 都有 position 属性）
+    import sMath
+    distance = sMath.distance2D(self.position, target.position)
+    pushDis = max(distance - 3,0.5)
+    pushDis = min(max(distance - 3, 0.5), 3) 
+
+    for eid in context.effectedEntIds:
+        e = KBEngine.entities.get(eid)
+        if not e:
+            continue
+        action_FightAction.dragTarget(self, e, context, pushDis, 1, 2, 10, 0.4)
+        self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 0)
+
+def _90030500(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+    levelDmg = 37 + (skillLv - 1) * 4
+    dmgRatio = lvParam[skillLv - 1] / 100
+
+    # 定义不同技能等级对应的额外击倒参数
+    level_params = {
+        (0, 5): [],
+        (5, 8): [(1, 0.5, 0, 0, 1)],
+        (8, 11): [(1.5, 1, 0, 0, 1)],
+        (11, 12): [(2, 1, 0, 0, 1)],
+        (12, float('inf')): [(2.5, 1, 0, 0, 1)]
+    }
+
+    # 查找对应的额外击倒参数
+    extra_down_params = []
+    for (min_lv, max_lv), params in level_params.items():
+        if min_lv <= skillLv < max_lv:
+            extra_down_params = params
+            break
+
+    for eid in context.effectedEntIds:
+        e = KBEngine.entities.get(eid)
+        if not e:
+            continue
+        self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
+        action_FightAction.down(self, e, context, 1.5, 1, 0, 0, 2)
+                        #铭文效果调用
+        self.addBuffBySkill(e, context, 64000904, 1, 1.0, 5) 
+        for params in extra_down_params:
+            action_FightAction.down(self, e, context, *params)
+
+def _90030500_start(self, target, context): 
+    skillLv = self.getSkillLevel(target, context, context.skillId) 
+
+    if skillLv == 11 : 
+        self.addBuffBySkill(self, context, 64000726, 1, 1.0, 2)
+    elif skillLv == 12 : 
+        self.addBuffBySkill(self, context, 64000727, 1, 1.0, 2)
+
+def _90030500_end(self, target, context):
+    buff_ids = [64000726, 64000727]
+    for buff_id in buff_ids:
+        self.removeBuffBySkill(self, context, buff_id)
+
+def _90030650(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+    levelDmg = 27 + (skillLv - 1) * 4
+    dmgRatio = lvParam[skillLv - 1] / 100
+
+    if  skillLv < 11: 
+        dmgRate = 1.2
+    elif skillLv == 11 : 
+        dmgRate = 1.3
+
+    # 定义不同技能等级对应的额外拖拽参数
+    level_params = {
+        (0, 5): [],
+        (5, 8): [(2, 0.5, 0, 0, 1)],
+        (8, 11): [(2, 1, 0, 0, 1)],
+        (11, 12): [(2.5, 1, 0, 0, 1)],
+        (12, float('inf')): [(3, 1, 0, 0, 1)]
+    }
+
+    # 查找对应的额外拖拽参数
+    extra_drag_params = []
+    for (min_lv, max_lv), params in level_params.items():
+        if min_lv <= skillLv < max_lv:
+            extra_drag_params = params
+            break
+
+    for eid in context.effectedEntIds:
+        e = KBEngine.entities.get(eid)
+        if not e:
+            continue
+        if e.hasBuff(64001101) or e.hasBuff(64000701):
+            context.isCombo = True
+            self.attack(e, context, dmgRatio * dmgRate, levelDmg * dmgRate, 0, 1, 1, None, 3)
+        else:
+            self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
+        action_FightAction.stun(self, e, context, 2.5, 1, 0, 0, 2)
+        # 执行额外的拖拽操作
+        for params in extra_drag_params:
+            action_FightAction.stun(self, e, context, *params)
+
+def _90030650_start(self, target, context): 
+    # 铭文效果调用            
+
+    self.addBuffBySkill(self, context, 64000903, 1, 1.0, 3)
+
+def _90031000(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+    levelDmg = (44+(skillLv - 1) * 4)
+    dmgRatio = lvParam[skillLv - 1]/100
+    if context.actionStage == 0:
+        self.castSkill(target, context, 90031001, skillLv)
+        return self.callAfterDelay(target, context, 0.2)
+
+    elif context.actionStage == 1:    
+        self.lunge(target, context, 8, 2.7)
+        return self.callAfterDelay(target, context, 0.6)
+
+    elif context.actionStage == 2:    
+        self.castSkill(target, context, 90031002, skillLv)
+        return self.callAfterDelay(target, context, 0.1)
+    elif context.actionStage == 3:    
+        self.castSkill(target, context, 90031003, skillLv)
+
+def _90031001_start(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    if 5 <= skillLv < 8:
+        self.addBuffBySkill(self, context, 64000738, 1, 1.0, 2)
+    elif 8 <= skillLv < 11:
+        self.addBuffBySkill(self, context, 64000739, 1, 1.0, 2)
+    elif skillLv == 11:
+        self.addBuffBySkill(self, context, 64000739, 1, 1.0, 2)
+
+def _90031001_end(self, target, context):
+    self.removeBuffBySkill(self, context, 64000738)
+    self.removeBuffBySkill(self, context, 64000739)
+
+def _90031001(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+    levelDmg = 44 + (skillLv - 1) * 4
+    dmgRatio = lvParam[skillLv - 1] / 100
+    totalDmg = 0  # 累计本次技能所有目标的伤害
+    # 最大恢复上限 = 最大生命 10%
+    fullHp = self.getProp("fullHp")
+    healMax = fullHp * 0.10
+    
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+
+        # 造成伤害
+        dmg = self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 0)
+
+        # 击倒效果
+        action_FightAction.down(self, ent, context, 1.2, 1, 1, 0)
+
+        # 累计伤害
+        if dmg and dmg > 0:
+            totalDmg += dmg
+
+    # 全部目标处理完后 → 统一计算恢复
+    if totalDmg > 0:
+        healNum = totalDmg * 0.10  # 10%治疗
+
+        # 恢复上限判定
+        if healNum > healMax:
+            healNum = healMax
+        print(f"本次技能总伤害 totalDmg: {totalDmg}, 最终恢复生命值 healNum: {healNum}")
+        # 恢复施法者
+        self.healByNum(self, context, healNum)
+
+def _90031002(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+
+    levelDmg = 44 + (skillLv - 1) * 4
+    dmgRatio = lvParam[skillLv - 1] / 100
+
+    # 最大恢复上限 = 最大生命 10%
+    fullHp = self.getProp("fullHp")
+    healMax = fullHp * 0.10
+
+    totalDmg = 0  # ⭐累计所有目标伤害
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+
+        # 造成伤害
+        dmg = self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 0)
+
+        # 击倒效果
+        action_FightAction.down(self, ent, context, 1.2, 1, 1, 0)
+
+        # 有效伤害则加入总伤害
+        if dmg and dmg > 0:
+            totalDmg += dmg
+
+    # ⭐所有伤害结算完后，再一起恢复
+    if totalDmg > 0:
+        healNum = totalDmg * 0.10  # 10%治疗
+
+        # 恢复上限判定
+        if healNum > healMax:
+            healNum = healMax
+
+        # 恢复施法者
+        self.healByNum(self, context, healNum)
+    print(f"本次技能总伤害 totalDmg: {totalDmg}, 最终恢复生命值 healNum: {healNum}")
+
+def _90031003(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    lvParam = utils.getSkillLvParam(context.skillId)
+
+    levelDmg = 44 + (skillLv - 1) * 4
+    dmgRatio = lvParam[skillLv - 1] / 100
+    totalDmg = 0  # 累计本次技能所有目标的伤害
+
+    # 最大恢复上限 = 最大生命 10%
+    fullHp = self.getProp("fullHp")
+    healMax = fullHp * 0.10
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        dmg = self.attack(ent, context, dmgRatio, levelDmg, 0,1,1,None,0)
+
+        # 击倒效果
+        action_FightAction.down(self, ent, context, 1.2, 1, 1, 0)
+
+        # 累计伤害
+        if dmg and dmg > 0:
+            totalDmg += dmg
+
+    # 全部目标处理完后 → 统一计算恢复
+    if totalDmg > 0:
+        healNum = totalDmg * 0.10  # 10%治疗
+
+        # 恢复上限判定
+        if healNum > healMax:
+            healNum = healMax
+        print(f"本次技能总伤害 totalDmg: {totalDmg}, 最终恢复生命值 healNum: {healNum}")
+        # 恢复施法者
+        self.healByNum(self, context, healNum)
 
 def _91000001(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -2869,6 +3435,8 @@ def _91000082(self, target, context):
     levelDmg = 1
     dmgRatio = 1.0
     self.attack(target, context, dmgRatio, levelDmg, 0)
+
+1.1
 
 def _91000083(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -6313,7 +6881,14 @@ def _91000631(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 1
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    if context.actionStage == 0:
+        self.attack(target, context, dmgRatio, levelDmg, 0)
+        return self.callAfterDelay(target, context, 0.1)
+    if context.actionStage == 1:
+        self.attack(target, context, dmgRatio, levelDmg, 0)
+        return self.callAfterDelay(target, context, 0.1)
+    if context.actionStage == 2:
+        self.attack(target, context, dmgRatio, levelDmg, 0)
 
 def _91000632(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -14458,7 +15033,7 @@ datas = _tools.RODict({
         "delayCD": 0,
         "lvParam": (40, 40, 40, 40, 44, 44, 44, 44, 44, 48, 48, 48, 53, 53, 53, 58, 58, 58),
         "action": _90010040,
-        "startSkillAction": None,
+        "startSkillAction": _90010040_start,
         "endSkillAction": None,
         "activateAction": None,
         "deactivateAction": None,
@@ -14579,15 +15154,15 @@ datas = _tools.RODict({
         "mulSkillCD": None,
         "skillHateRatio": 1.0,
         "chooseAgain": 0,
-        "target": "None",
+        "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 8.0,
+        "range": 7.0,
         "DamageRange": 8,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 80,
+        "scope": 15,
+        "scopeParam": (1, [0], 65),
         "maxTargetNum": 15,
         "consumeMp": 20.0,
         "skillTime": 0.8,
@@ -14971,15 +15546,15 @@ datas = _tools.RODict({
         "mulSkillCD": None,
         "skillHateRatio": 1.0,
         "chooseAgain": 0,
-        "target": "None",
+        "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 10.0,
+        "range": 8.0,
         "DamageRange": 10,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 5,
-        "scopeParam": (10, 5),
+        "scope": 3,
+        "scopeParam": (10, 3),
         "maxTargetNum": 15,
         "consumeMp": 21.0,
         "skillTime": 1.7,
@@ -15034,8 +15609,8 @@ datas = _tools.RODict({
         "DamageRange": 10,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 5,
-        "scopeParam": (10, 5),
+        "scope": 3,
+        "scopeParam": (10, 3),
         "maxTargetNum": 15,
         "consumeMp": 0.0,
         "skillTime": None,
@@ -15577,7 +16152,7 @@ datas = _tools.RODict({
         "skillEvent": 0,
         "delayCD": 0,
         "lvParam": (20, 20, 20, 20, 22, 22, 22, 22, 22, 25, 25, 25, 28, 28, 28, 31, 31, 31),
-        "action": None,
+        "action": _90020005,
         "startSkillAction": _90020005_start,
         "endSkillAction": None,
         "activateAction": None,
@@ -15672,7 +16247,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill01",
+        "unlockCondition": "MageSkill02",
         "autoBattleWeight": 10,
         "tag": (63, 11),
         "GeneralSkillTag": None,
@@ -15728,7 +16303,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill01",
+        "unlockCondition": "MageSkill02",
         "autoBattleWeight": 10,
         "tag": (63, 64, 11),
         "GeneralSkillTag": None,
@@ -15896,7 +16471,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill02",
+        "unlockCondition": "MageSkill01",
         "autoBattleWeight": 10,
         "tag": (63, 11),
         "GeneralSkillTag": None,
@@ -16076,7 +16651,7 @@ datas = _tools.RODict({
         "ID": 90020035,
         "name": "移形换影",
         "classTag": 2,
-        "CD": 30,
+        "CD": (30, 29, 28, 27, 27, 26, 25, 25, 24, 23, 23),
         "globalCD": 0.5,
         "skillEvent": 0,
         "delayCD": 0,
@@ -16512,7 +17087,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill06",
+        "unlockCondition": "MageSkill07",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -16568,7 +17143,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill06",
+        "unlockCondition": "MageSkill07",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -17072,7 +17647,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill01",
+        "unlockCondition": "MageSkill02",
         "autoBattleWeight": 10,
         "tag": (63, 11),
         "GeneralSkillTag": None,
@@ -17140,7 +17715,7 @@ datas = _tools.RODict({
         "ID": 90020350,
         "name": "移形换影（铭文金）",
         "classTag": 2,
-        "CD": 30,
+        "CD": (30, 29, 28, 27, 27, 26, 25, 25, 24, 23, 23),
         "globalCD": 0.5,
         "skillEvent": 0,
         "delayCD": 0,
@@ -17296,7 +17871,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill06",
+        "unlockCondition": "MageSkill07",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -17352,7 +17927,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill06",
+        "unlockCondition": "MageSkill07",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -17408,7 +17983,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill06",
+        "unlockCondition": "MageSkill07",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -17706,7 +18281,7 @@ datas = _tools.RODict({
         "delayCD": 0,
         "lvParam": (198, 198, 198, 198, 218, 218, 218, 218, 218, 240, 240, 240, 264, 264, 264, 290, 290, 290),
         "action": _90030001,
-        "startSkillAction": _90030001_start,
+        "startSkillAction": _900300011_start,
         "endSkillAction": _90030001_end,
         "activateAction": None,
         "deactivateAction": None,
@@ -17715,16 +18290,16 @@ datas = _tools.RODict({
         "mulSkillCD": None,
         "skillHateRatio": 1.0,
         "chooseAgain": 0,
-        "target": "None",
+        "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
         "range": 12.0,
         "DamageRange": 12,
         "shiftDistance": 2.7,
         "protectRange": 12.0,
-        "scope": 5,
-        "scopeParam": (12, 8),
-        "maxTargetNum": 15,
+        "scope": 0,
+        "scopeParam": None,
+        "maxTargetNum": 1,
         "consumeMp": 0.0,
         "skillTime": 2,
         "fxDelay": 0.2,
@@ -17749,18 +18324,18 @@ datas = _tools.RODict({
         "tag": (56, 63, 64, 100),
         "GeneralSkillTag": None,
         "upgradedBy": None,
-        "autoFightUseSkill": 1,
+        "autoFightUseSkill": 0,
         "isMoveSkill": 0,
     }),
     90030002: _tools.RODict({
         "ID": 90030002,
-        "name": "龙焰刀决-二段伤害",
+        "name": "龙焰刀决-一段伤害",
         "classTag": 1,
         "CD": 9,
         "globalCD": 0.0,
         "skillEvent": 0,
         "delayCD": 0,
-        "lvParam": (462, 462, 462, 462, 508, 508, 508, 508, 508, 559, 559, 559, 615, 615, 615, 677, 677, 677),
+        "lvParam": (198, 198, 198, 198, 218, 218, 218, 218, 218, 240, 240, 240, 264, 264, 264, 290, 290, 290),
         "action": _90030002,
         "startSkillAction": None,
         "endSkillAction": None,
@@ -17777,8 +18352,64 @@ datas = _tools.RODict({
         "range": 12.0,
         "DamageRange": 12,
         "shiftDistance": 0.0,
-        "protectRange": 0.0,
-        "scope": 5,
+        "protectRange": 12.0,
+        "scope": 3,
+        "scopeParam": (12, 8),
+        "maxTargetNum": 15,
+        "consumeMp": 0.0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "WarriorSkillUlt",
+        "autoBattleWeight": 10,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    90030003: _tools.RODict({
+        "ID": 90030003,
+        "name": "龙焰刀决-二段伤害",
+        "classTag": 1,
+        "CD": 9,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (198, 198, 198, 198, 218, 218, 218, 218, 218, 240, 240, 240, 264, 264, 264, 290, 290, 290),
+        "action": _90030003,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "None",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 12.0,
+        "DamageRange": 12,
+        "shiftDistance": 0.0,
+        "protectRange": 12.0,
+        "scope": 3,
         "scopeParam": (12, 8),
         "maxTargetNum": 15,
         "consumeMp": 0.0,
@@ -17808,16 +18439,16 @@ datas = _tools.RODict({
         "autoFightUseSkill": 1,
         "isMoveSkill": 0,
     }),
-    90030003: _tools.RODict({
-        "ID": 90030003,
+    90030004: _tools.RODict({
+        "ID": 90030004,
         "name": "龙焰刀决-背后伤害",
         "classTag": 1,
         "CD": 9,
         "globalCD": 0.0,
         "skillEvent": 0,
         "delayCD": 0,
-        "lvParam": (462, 462, 462, 462, 508, 508, 508, 508, 508, 559, 559, 559, 615, 615, 615, 677, 677, 677),
-        "action": _90030003,
+        "lvParam": (198, 198, 198, 198, 218, 218, 218, 218, 218, 240, 240, 240, 264, 264, 264, 290, 290, 290),
+        "action": _90030004,
         "startSkillAction": None,
         "endSkillAction": None,
         "activateAction": None,
@@ -18054,12 +18685,12 @@ datas = _tools.RODict({
         "target": "None",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 7.0,
-        "DamageRange": 7,
+        "range": 4.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 5,
-        "scopeParam": (7, 5),
+        "scope": 3,
+        "scopeParam": (6, 5),
         "maxTargetNum": 15,
         "consumeMp": 24.0,
         "skillTime": 1.5,
@@ -18192,7 +18823,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1003,
         "spec": 1,
-        "unlockCondition": "WarriorSkill02",
+        "unlockCondition": "WarriorSkill10",
         "autoBattleWeight": 10,
         "tag": (56, 63, 64),
         "GeneralSkillTag": None,
@@ -18248,7 +18879,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1003,
         "spec": 1,
-        "unlockCondition": "WarriorSkill02",
+        "unlockCondition": "WarriorSkill10",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -18304,7 +18935,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1003,
         "spec": 1,
-        "unlockCondition": "WarriorSkill02",
+        "unlockCondition": "WarriorSkill10",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -18782,12 +19413,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 7.0,
-        "DamageRange": 7,
+        "range": 4.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (7, 5),
+        "scopeParam": (6, 5),
         "maxTargetNum": 15,
         "consumeMp": 15.0,
         "skillTime": 0.8,
@@ -19050,8 +19681,8 @@ datas = _tools.RODict({
         "delayCD": 0,
         "lvParam": (240, 240, 240, 240, 264, 264, 264, 264, 264, 290, 290, 290, 319, 319, 319, 351, 351, 351),
         "action": _90030050,
-        "startSkillAction": None,
-        "endSkillAction": None,
+        "startSkillAction": _90030050_start,
+        "endSkillAction": _90030050_end,
         "activateAction": None,
         "deactivateAction": None,
         "conflictSkill": None,
@@ -19062,7 +19693,7 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 6.0,
+        "range": 4.0,
         "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
@@ -19158,12 +19789,12 @@ datas = _tools.RODict({
         "classTag": 1,
         "CD": 26,
         "globalCD": 0.5,
-        "skillEvent": 29100032,
+        "skillEvent": 0,
         "delayCD": 0,
         "lvParam": (220, 220, 220, 220, 242, 242, 242, 242, 242, 266, 266, 266, 293, 293, 293, 322, 322, 322),
         "action": _90030055,
         "startSkillAction": _90030055_start,
-        "endSkillAction": None,
+        "endSkillAction": _90030055_end,
         "activateAction": None,
         "deactivateAction": None,
         "conflictSkill": None,
@@ -19179,7 +19810,7 @@ datas = _tools.RODict({
         "shiftDistance": 4.0,
         "protectRange": 0.0,
         "scope": 6,
-        "scopeParam": 5,
+        "scopeParam": 4,
         "maxTargetNum": 15,
         "consumeMp": 18.0,
         "skillTime": 1,
@@ -19200,7 +19831,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1003,
         "spec": 1,
-        "unlockCondition": "WarriorSkill10",
+        "unlockCondition": "WarriorSkill02",
         "autoBattleWeight": 10,
         "tag": (56, 63, 64),
         "GeneralSkillTag": None,
@@ -19434,15 +20065,15 @@ datas = _tools.RODict({
     }),
     90030070: _tools.RODict({
         "ID": 90030070,
-        "name": "嘲讽",
+        "name": "解控",
         "classTag": 1,
-        "CD": 28,
+        "CD": (40, 40, 40, 40, 36, 36, 36, 32, 32, 32, 24, 24),
         "globalCD": 0.5,
-        "skillEvent": 0,
+        "skillEvent": 29100032,
         "delayCD": 0,
         "lvParam": (13, 13, 13, 13, 14, 14, 14, 14, 14, 16, 16, 16, 18, 18, 18, 20, 20, 20),
         "action": _90030070,
-        "startSkillAction": None,
+        "startSkillAction": _90030070_start,
         "endSkillAction": None,
         "activateAction": None,
         "deactivateAction": None,
@@ -19482,7 +20113,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "WarriorSkill07",
         "autoBattleWeight": 10,
-        "tag": (63, 64, 67),
+        "tag": (63, 64),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -19510,8 +20141,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 6.0,
-        "DamageRange": None,
+        "range": 4.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 15,
@@ -19595,6 +20226,566 @@ datas = _tools.RODict({
         "unlockCondition": "",
         "autoBattleWeight": 10,
         "tag": (63, 64),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    90030080: _tools.RODict({
+        "ID": 90030080,
+        "name": "霸道乾坤(铭文金)",
+        "classTag": 1,
+        "CD": 27,
+        "globalCD": 0.5,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (200, 200, 200, 200, 220, 220, 220, 220, 220, 242, 242, 242, 266, 266, 266, 293, 293, 293),
+        "action": _90030080,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "None",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 6.0,
+        "DamageRange": 6,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 1,
+        "scopeParam": 6,
+        "maxTargetNum": 15,
+        "consumeMp": 18.0,
+        "skillTime": 1.333,
+        "fxDelay": 0.667,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "WarriorSkill11",
+        "autoBattleWeight": 10,
+        "tag": (63, 64),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    90030150: _tools.RODict({
+        "ID": 90030150,
+        "name": "野蛮冲撞(铭文金)",
+        "classTag": 1,
+        "CD": 31,
+        "globalCD": 0.5,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (90, 90, 90, 90, 99, 99, 99, 99, 99, 109, 109, 109, 120, 120, 120, 132, 132, 132),
+        "action": _90030150,
+        "startSkillAction": _90030150_start,
+        "endSkillAction": _90030150_end,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 7.0,
+        "DamageRange": 7,
+        "shiftDistance": 7.0,
+        "protectRange": 3.1,
+        "scope": 0,
+        "scopeParam": None,
+        "maxTargetNum": 1,
+        "consumeMp": 26.0,
+        "skillTime": 1.4,
+        "fxDelay": 0,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 14.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "WarriorSkill10",
+        "autoBattleWeight": 10,
+        "tag": (56, 63, 64),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    90030151: _tools.RODict({
+        "ID": 90030151,
+        "name": "野蛮冲撞第一段(铭文金)",
+        "classTag": 1,
+        "CD": 31,
+        "globalCD": 0.5,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (90, 90, 90, 90, 99, 99, 99, 99, 99, 109, 109, 109, 120, 120, 120, 132, 132, 132),
+        "action": _90030151,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "None",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 7.0,
+        "DamageRange": 7,
+        "shiftDistance": 0.0,
+        "protectRange": 3.1,
+        "scope": 3,
+        "scopeParam": (7, 3),
+        "maxTargetNum": 15,
+        "consumeMp": 26.0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "WarriorSkill10",
+        "autoBattleWeight": 10,
+        "tag": (63, 64),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 0,
+        "isMoveSkill": 0,
+    }),
+    90030152: _tools.RODict({
+        "ID": 90030152,
+        "name": "野蛮冲撞第二段(铭文金)",
+        "classTag": 1,
+        "CD": 31,
+        "globalCD": 0.5,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (90, 90, 90, 90, 99, 99, 99, 99, 99, 109, 109, 109, 120, 120, 120, 132, 132, 132),
+        "action": _90030152,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "None",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 7.0,
+        "DamageRange": 7,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 1,
+        "scopeParam": 5,
+        "maxTargetNum": 15,
+        "consumeMp": 0.0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "WarriorSkill10",
+        "autoBattleWeight": 10,
+        "tag": (63, 64),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 0,
+        "isMoveSkill": 0,
+    }),
+    90030500: _tools.RODict({
+        "ID": 90030500,
+        "name": "上挑斩（铭文金）",
+        "classTag": 1,
+        "CD": 22,
+        "globalCD": 0.5,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (240, 240, 240, 240, 264, 264, 264, 264, 264, 290, 290, 290, 319, 319, 319, 351, 351, 351),
+        "action": _90030500,
+        "startSkillAction": _90030500_start,
+        "endSkillAction": _90030500_end,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 4.0,
+        "DamageRange": 7,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 3,
+        "scopeParam": (7, 5),
+        "maxTargetNum": 15,
+        "consumeMp": 15.0,
+        "skillTime": 0.833,
+        "fxDelay": 0.4,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "WarriorSkill09",
+        "autoBattleWeight": 10,
+        "tag": (63, 64),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    90030650: _tools.RODict({
+        "ID": 90030650,
+        "name": "金刚踏（铭文金）",
+        "classTag": 1,
+        "CD": 36,
+        "globalCD": 0.5,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (160, 160, 160, 160, 176, 176, 176, 176, 176, 194, 194, 194, 213, 213, 213, 234, 234, 234),
+        "action": _90030650,
+        "startSkillAction": _90030650_start,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "None",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 7.0,
+        "DamageRange": 7,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 1,
+        "scopeParam": 7,
+        "maxTargetNum": 15,
+        "consumeMp": 24.0,
+        "skillTime": 1,
+        "fxDelay": 0.4,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "WarriorSkill05",
+        "autoBattleWeight": 10,
+        "tag": (63, 64),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    90031000: _tools.RODict({
+        "ID": 90031000,
+        "name": "龙焰刀决(铭文金)",
+        "classTag": 1,
+        "CD": 9,
+        "globalCD": 0.0,
+        "skillEvent": 29100021,
+        "delayCD": 0,
+        "lvParam": (198, 198, 198, 198, 218, 218, 218, 218, 218, 240, 240, 240, 264, 264, 264, 290, 290, 290),
+        "action": _90031000,
+        "startSkillAction": _90031001_start,
+        "endSkillAction": _90031001_end,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 12.0,
+        "DamageRange": 12,
+        "shiftDistance": 2.7,
+        "protectRange": 12.0,
+        "scope": 0,
+        "scopeParam": None,
+        "maxTargetNum": 1,
+        "consumeMp": 0.0,
+        "skillTime": 2,
+        "fxDelay": 0.2,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 8.0,
+        "shiftDelay": 0.4,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "WarriorSkillUlt",
+        "autoBattleWeight": 10,
+        "tag": (56, 63, 64, 100),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 0,
+        "isMoveSkill": 0,
+    }),
+    90031001: _tools.RODict({
+        "ID": 90031001,
+        "name": "龙焰刀决-一段伤害（铭文金）",
+        "classTag": 1,
+        "CD": 9,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (198, 198, 198, 198, 218, 218, 218, 218, 218, 240, 240, 240, 264, 264, 264, 290, 290, 290),
+        "action": _90031001,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "None",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 12.0,
+        "DamageRange": 13.8,
+        "shiftDistance": 0.0,
+        "protectRange": 12.0,
+        "scope": 3,
+        "scopeParam": (13.8, 9.2),
+        "maxTargetNum": 15,
+        "consumeMp": 0.0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "WarriorSkillUlt",
+        "autoBattleWeight": 10,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    90031002: _tools.RODict({
+        "ID": 90031002,
+        "name": "龙焰刀决-二段伤害（铭文金）",
+        "classTag": 1,
+        "CD": 9,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (198, 198, 198, 198, 218, 218, 218, 218, 218, 240, 240, 240, 264, 264, 264, 290, 290, 290),
+        "action": _90031002,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "None",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 12.0,
+        "DamageRange": 13.8,
+        "shiftDistance": 0.0,
+        "protectRange": 12.0,
+        "scope": 3,
+        "scopeParam": (13.8, 9.2),
+        "maxTargetNum": 15,
+        "consumeMp": 0.0,
+        "skillTime": None,
+        "fxDelay": 0.1,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    90031003: _tools.RODict({
+        "ID": 90031003,
+        "name": "龙焰刀决-背后伤害（铭文金）",
+        "classTag": 1,
+        "CD": 9,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": (198, 198, 198, 198, 218, 218, 218, 218, 218, 240, 240, 240, 264, 264, 264, 290, 290, 290),
+        "action": _90031003,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "None",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 4.0,
+        "DamageRange": 4.6,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 15,
+        "scopeParam": (1, [180], 95),
+        "maxTargetNum": 15,
+        "consumeMp": 0.0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 1003,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -21190,12 +22381,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 7.0,
+        "DamageRange": 7,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": (3, 2),
+        "scopeParam": 60,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.8,
@@ -21246,8 +22437,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -21302,8 +22493,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -21358,8 +22549,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -21414,8 +22605,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -21470,8 +22661,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -21526,8 +22717,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -21582,8 +22773,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -21638,8 +22829,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23150,16 +24341,16 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.5,
-        "DamageRange": 5.5,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 2.033,
-        "fxDelay": 0.7,
+        "skillTime": 1.333,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23170,7 +24361,7 @@ datas = _tools.RODict({
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 0.0,
+        "castingTime": 0.9,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -23206,8 +24397,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23215,7 +24406,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.867,
-        "fxDelay": 0.5334,
+        "fxDelay": 0.667,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23262,8 +24453,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23271,7 +24462,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2,
-        "fxDelay": 0.767,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23327,7 +24518,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.5,
-        "fxDelay": 0.767,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23374,8 +24565,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23383,7 +24574,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2,
-        "fxDelay": 0.767,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23439,7 +24630,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.5,
-        "fxDelay": 0.767,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23486,8 +24677,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23495,7 +24686,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2,
-        "fxDelay": 0.767,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23551,7 +24742,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.5,
-        "fxDelay": 0.767,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23598,8 +24789,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23607,7 +24798,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2,
-        "fxDelay": 0.767,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23663,7 +24854,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.5,
-        "fxDelay": 0.767,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23710,8 +24901,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23719,7 +24910,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.3,
-        "fxDelay": 0.8,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23766,8 +24957,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23775,7 +24966,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.5,
-        "fxDelay": 1,
+        "fxDelay": 0.933,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23822,8 +25013,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23831,7 +25022,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.3,
-        "fxDelay": 0.8,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23878,8 +25069,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23887,7 +25078,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.5,
-        "fxDelay": 1,
+        "fxDelay": 0.933,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23934,8 +25125,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23943,7 +25134,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.3,
-        "fxDelay": 0.8,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -23990,8 +25181,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -23999,7 +25190,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.5,
-        "fxDelay": 1,
+        "fxDelay": 0.933,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -24046,8 +25237,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -24055,7 +25246,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.3,
-        "fxDelay": 0.8,
+        "fxDelay": 0.7,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -24102,8 +25293,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -24111,7 +25302,7 @@ datas = _tools.RODict({
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.5,
-        "fxDelay": 1,
+        "fxDelay": 0.933,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -24158,16 +25349,16 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.5,
-        "DamageRange": 5.5,
+        "range": 8.0,
+        "DamageRange": 8,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 3,
+        "scopeParam": (8, 5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 2.933,
-        "fxDelay": 1.133,
+        "skillTime": 1.8,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -24214,12 +25405,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 60,
+        "scopeParam": 80,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2,
@@ -24270,12 +25461,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 3,
+        "scopeParam": (4, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.633,
@@ -24330,8 +25521,8 @@ datas = _tools.RODict({
         "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 3,
+        "scopeParam": (4.5, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.167,
@@ -24382,12 +25573,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 3,
+        "scopeParam": (4, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.633,
@@ -24442,8 +25633,8 @@ datas = _tools.RODict({
         "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 3,
+        "scopeParam": (4.5, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.167,
@@ -24494,12 +25685,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 3,
+        "scopeParam": (4, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.633,
@@ -24554,8 +25745,8 @@ datas = _tools.RODict({
         "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 3,
+        "scopeParam": (4.5, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.167,
@@ -24606,12 +25797,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 3,
+        "scopeParam": (4, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.633,
@@ -24666,8 +25857,8 @@ datas = _tools.RODict({
         "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 3,
+        "scopeParam": (4.5, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.167,
@@ -24718,12 +25909,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.5,
+        "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 60,
+        "scopeParam": 50,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.9,
@@ -24774,12 +25965,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.5,
+        "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 60,
+        "scopeParam": 50,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.067,
@@ -24830,12 +26021,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.5,
+        "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 60,
+        "scopeParam": 50,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.9,
@@ -24886,12 +26077,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.5,
+        "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 60,
+        "scopeParam": 50,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.067,
@@ -24942,12 +26133,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.5,
+        "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 60,
+        "scopeParam": 50,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.9,
@@ -24998,12 +26189,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.5,
+        "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 60,
+        "scopeParam": 50,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.067,
@@ -25054,12 +26245,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.5,
+        "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 60,
+        "scopeParam": 50,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.9,
@@ -25110,12 +26301,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.5,
+        "DamageRange": 4.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 60,
+        "scopeParam": 50,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.067,
@@ -25787,7 +26978,7 @@ datas = _tools.RODict({
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (6, 3),
+        "scopeParam": (8, 4),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.667,
@@ -25899,7 +27090,7 @@ datas = _tools.RODict({
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (6, 3),
+        "scopeParam": (8, 4),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.667,
@@ -26011,7 +27202,7 @@ datas = _tools.RODict({
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (6, 3),
+        "scopeParam": (8, 4),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.667,
@@ -26123,7 +27314,7 @@ datas = _tools.RODict({
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (6, 3),
+        "scopeParam": (8, 4),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.667,
@@ -26286,8 +27477,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.5,
-        "DamageRange": 5.5,
+        "range": 8.0,
+        "DamageRange": 8,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -26342,8 +27533,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.5,
-        "DamageRange": 5.5,
+        "range": 8.0,
+        "DamageRange": 8,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -27294,12 +28485,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 8.0,
+        "DamageRange": 8,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 1,
-        "scopeParam": (5, 2),
+        "scope": 3,
+        "scopeParam": (8, 2.5),
         "maxTargetNum": 5,
         "consumeMp": 0.0,
         "skillTime": 3.033,
@@ -27350,8 +28541,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 8.0,
+        "DamageRange": 8,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -27410,7 +28601,7 @@ datas = _tools.RODict({
         "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 1,
+        "scope": 3,
         "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
@@ -27522,7 +28713,7 @@ datas = _tools.RODict({
         "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 1,
+        "scope": 3,
         "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
@@ -27634,7 +28825,7 @@ datas = _tools.RODict({
         "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 1,
+        "scope": 3,
         "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
@@ -27746,7 +28937,7 @@ datas = _tools.RODict({
         "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 1,
+        "scope": 3,
         "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
@@ -30326,8 +31517,8 @@ datas = _tools.RODict({
         "scopeParam": (5.5, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 3.7,
-        "fxDelay": 1.4667,
+        "skillTime": 2.3,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -30338,7 +31529,7 @@ datas = _tools.RODict({
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 0.0,
+        "castingTime": 1.4667,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -36478,12 +37669,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
+        "scope": 4,
+        "scopeParam": 60,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.4,
@@ -36534,12 +37725,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
+        "scope": 4,
+        "scopeParam": 60,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.033,
@@ -36590,12 +37781,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
+        "scope": 4,
+        "scopeParam": 60,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.4,
@@ -36646,12 +37837,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
+        "scope": 4,
+        "scopeParam": 60,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.033,
@@ -36702,12 +37893,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
+        "scope": 4,
+        "scopeParam": 60,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.4,
@@ -36758,12 +37949,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
+        "scope": 4,
+        "scopeParam": 60,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.033,
@@ -36814,12 +38005,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.867,
@@ -36870,12 +38061,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.5,
@@ -36926,12 +38117,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.867,
@@ -36982,12 +38173,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.5,
@@ -37038,12 +38229,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.867,
@@ -37094,12 +38285,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.5,
@@ -37710,12 +38901,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4, 2),
+        "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.667,
@@ -37766,11 +38957,11 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 2,
+        "scope": 1,
         "scopeParam": 3,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
@@ -37822,12 +39013,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4, 2),
+        "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.667,
@@ -37878,11 +39069,11 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 2,
+        "scope": 1,
         "scopeParam": 3,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
@@ -40398,12 +41589,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (5, 2),
+        "scopeParam": (6, 4),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.333,
@@ -40454,12 +41645,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 1,
-        "scopeParam": 4,
+        "scopeParam": 6,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.033,
@@ -41406,12 +42597,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (5, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.9,
@@ -41467,11 +42658,11 @@ datas = _tools.RODict({
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (7, 2),
+        "scopeParam": (7, 2.5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 2.2,
-        "fxDelay": 0.9,
+        "skillTime": 1.3,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -41482,7 +42673,7 @@ datas = _tools.RODict({
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 0.0,
+        "castingTime": 0.9,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -45438,12 +46629,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (5, 2.5),
+        "scopeParam": (6, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -46510,8 +47701,8 @@ datas = _tools.RODict({
         "scopeParam": (7, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 3,
-        "fxDelay": 1.1,
+        "skillTime": 1.9,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -46522,7 +47713,7 @@ datas = _tools.RODict({
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 0.0,
+        "castingTime": 1.1,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -47454,12 +48645,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (6, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.733,
@@ -47510,16 +48701,16 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 6.0,
-        "DamageRange": 6,
+        "range": 8.0,
+        "DamageRange": 8,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 70,
+        "scope": 15,
+        "scopeParam": (1, [70], 110),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.933,
-        "fxDelay": 0.7,
+        "skillTime": 1.233,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -47530,7 +48721,7 @@ datas = _tools.RODict({
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 0.0,
+        "castingTime": 0.7,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -50478,12 +51669,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4, 2),
+        "scopeParam": (5, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -50534,16 +51725,16 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.5,
-        "DamageRange": 5.5,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (5.5, 3),
+        "scopeParam": (6, 3),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.9,
-        "fxDelay": 0.7,
+        "skillTime": 1.2,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -50554,7 +51745,7 @@ datas = _tools.RODict({
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 0.0,
+        "castingTime": 0.7,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -50590,12 +51781,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3.5, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -50646,12 +51837,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (5, 2.5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -50702,12 +51893,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3.5, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -50758,12 +51949,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (5, 2.5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -50814,12 +52005,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3.5, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -50870,12 +52061,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (5, 2.5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -50926,12 +52117,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3.5, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -50982,12 +52173,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (5, 2.5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -51038,12 +52229,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3.5, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -51094,12 +52285,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (5, 2.5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -51150,12 +52341,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3.5, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -51206,12 +52397,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (5, 2.5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -51262,12 +52453,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3.5, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -51318,12 +52509,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (5, 2.5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -51374,12 +52565,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 4.0,
+        "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3.5, 2),
+        "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -51430,12 +52621,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.5,
-        "DamageRange": 4.5,
+        "range": 5.0,
+        "DamageRange": 5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4.5, 2.5),
+        "scopeParam": (5, 2.5),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.667,
@@ -51490,7 +52681,7 @@ datas = _tools.RODict({
         "DamageRange": 4,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
+        "scope": 3,
         "scopeParam": (4, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
@@ -51598,12 +52789,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.5,
-        "DamageRange": 3.5,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": (3.5, 2),
+        "scope": 3,
+        "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 1.2,
@@ -53148,7 +54339,7 @@ datas = _tools.RODict({
         "ID": 91000600,
         "name": "鹿·普攻1",
         "classTag": 1,
-        "CD": 4,
+        "CD": 3,
         "globalCD": 1.0,
         "skillEvent": 29100015,
         "delayCD": 0,
@@ -53204,7 +54395,7 @@ datas = _tools.RODict({
         "ID": 91000601,
         "name": "鹿·普攻2",
         "classTag": 1,
-        "CD": 4,
+        "CD": 3,
         "globalCD": 1.0,
         "skillEvent": 29100015,
         "delayCD": 0,
@@ -53502,27 +54693,27 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 6.0,
-        "DamageRange": 6,
+        "range": 8.5,
+        "DamageRange": 8.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 1,
-        "scopeParam": (6, 3),
-        "maxTargetNum": 5,
+        "scope": 3,
+        "scopeParam": (8.5, 5),
+        "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 4.667,
-        "fxDelay": 1.667,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
         "isAttackSkill": 1,
         "bulletFx": 0,
         "bulletFxTime": 0.0,
-        "isAlerted": 0,
+        "isAlerted": 1,
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 0.0,
+        "castingTime": 1.668,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -53530,7 +54721,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53543,7 +54734,7 @@ datas = _tools.RODict({
         "CD": 10,
         "globalCD": 1.0,
         "skillEvent": 0,
-        "delayCD": 0,
+        "delayCD": 5,
         "lvParam": None,
         "action": _91000607,
         "startSkillAction": None,
@@ -53558,27 +54749,27 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 6.0,
-        "DamageRange": 6,
+        "range": 9.5,
+        "DamageRange": 9.5,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 1,
-        "scopeParam": (6, 2),
-        "maxTargetNum": 5,
+        "scope": 3,
+        "scopeParam": (9.5, 3.5),
+        "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 3.3,
-        "fxDelay": 1.1,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
         "isAttackSkill": 1,
         "bulletFx": 0,
         "bulletFxTime": 0.0,
-        "isAlerted": 0,
+        "isAlerted": 1,
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 0.0,
+        "castingTime": 1.11,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -53586,7 +54777,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53726,16 +54917,16 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.233,
-        "fxDelay": 0.267,
+        "skillTime": 1.6,
+        "fxDelay": 0.6,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -53782,72 +54973,16 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
-        "shiftDistance": 0.0,
-        "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
-        "maxTargetNum": 3,
-        "consumeMp": 0.0,
-        "skillTime": 1.5,
-        "fxDelay": 0.3,
-        "HitChooseAgain": 1,
-        "shiftSpeed": 0.0,
-        "shiftDelay": 0.0,
-        "isAttackSkill": 1,
-        "bulletFx": 0,
-        "bulletFxTime": 0.0,
-        "isAlerted": 0,
-        "channelTime": 0,
-        "channelInterval": 0.0,
-        "castingAction": None,
-        "castingTime": 0.0,
-        "interrupt": 0,
-        "CDAfterInterrupt": 0,
-        "category": 0,
-        "class": 99,
-        "spec": 1,
-        "unlockCondition": "",
-        "autoBattleWeight": 0,
-        "tag": None,
-        "GeneralSkillTag": None,
-        "upgradedBy": None,
-        "autoFightUseSkill": 1,
-        "isMoveSkill": 0,
-    }),
-    91000612: _tools.RODict({
-        "ID": 91000612,
-        "name": "黑骑战·技能1",
-        "classTag": 1,
-        "CD": 5,
-        "globalCD": 1.0,
-        "skillEvent": 0,
-        "delayCD": 0,
-        "lvParam": None,
-        "action": _91000612,
-        "startSkillAction": None,
-        "endSkillAction": None,
-        "activateAction": None,
-        "deactivateAction": None,
-        "conflictSkill": None,
-        "mulSkillID": None,
-        "mulSkillCD": None,
-        "skillHateRatio": 1.0,
-        "chooseAgain": 0,
-        "target": "Enemy",
-        "effectTarget": "Enemy",
-        "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 6.0,
+        "DamageRange": 6,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (3, 2),
+        "scopeParam": (6, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.4,
-        "fxDelay": 0.4,
+        "skillTime": 1.93,
+        "fxDelay": 0.733,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -53867,6 +55002,62 @@ datas = _tools.RODict({
         "unlockCondition": "",
         "autoBattleWeight": 0,
         "tag": (64, 99),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91000612: _tools.RODict({
+        "ID": 91000612,
+        "name": "黑骑战·技能1",
+        "classTag": 1,
+        "CD": 10,
+        "globalCD": 1.0,
+        "skillEvent": 0,
+        "delayCD": 3,
+        "lvParam": None,
+        "action": _91000612,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 6.0,
+        "DamageRange": 6,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 60,
+        "maxTargetNum": 3,
+        "consumeMp": 0.0,
+        "skillTime": 3.067,
+        "fxDelay": 0,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 1,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 1.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64, 24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53894,12 +55085,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4, 2),
+        "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2.267,
@@ -53950,12 +55141,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 4.0,
-        "DamageRange": 4,
+        "range": 3.0,
+        "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4, 2),
+        "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
         "skillTime": 2,
@@ -54014,8 +55205,8 @@ datas = _tools.RODict({
         "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 2.033,
-        "fxDelay": 0.5,
+        "skillTime": 2.267,
+        "fxDelay": 0.73,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54070,8 +55261,8 @@ datas = _tools.RODict({
         "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.4,
-        "fxDelay": 0.4,
+        "skillTime": 2,
+        "fxDelay": 0.6,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54126,8 +55317,8 @@ datas = _tools.RODict({
         "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 2.033,
-        "fxDelay": 0.5,
+        "skillTime": 2.267,
+        "fxDelay": 0.73,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54182,7 +55373,7 @@ datas = _tools.RODict({
         "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.867,
+        "skillTime": 2,
         "fxDelay": 0.6,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
@@ -54238,8 +55429,8 @@ datas = _tools.RODict({
         "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.5,
-        "fxDelay": 0.534,
+        "skillTime": 2.267,
+        "fxDelay": 0.73,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54294,7 +55485,7 @@ datas = _tools.RODict({
         "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.867,
+        "skillTime": 2,
         "fxDelay": 0.6,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
@@ -54462,8 +55653,8 @@ datas = _tools.RODict({
         "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.5,
-        "fxDelay": 0.534,
+        "skillTime": 2.867,
+        "fxDelay": 0.9,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54514,12 +55705,12 @@ datas = _tools.RODict({
         "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "scope": 1,
+        "scopeParam": 3,
+        "maxTargetNum": 4,
         "consumeMp": 0.0,
-        "skillTime": 1.433,
-        "fxDelay": 0.5,
+        "skillTime": 3.567,
+        "fxDelay": 1.467,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54574,8 +55765,8 @@ datas = _tools.RODict({
         "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.433,
-        "fxDelay": 0.5,
+        "skillTime": 2.867,
+        "fxDelay": 0.9,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54626,12 +55817,12 @@ datas = _tools.RODict({
         "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "scope": 1,
+        "scopeParam": 3,
+        "maxTargetNum": 4,
         "consumeMp": 0.0,
-        "skillTime": 1.433,
-        "fxDelay": 0.5,
+        "skillTime": 3.567,
+        "fxDelay": 1.467,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54686,8 +55877,8 @@ datas = _tools.RODict({
         "scopeParam": (3, 2),
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.433,
-        "fxDelay": 0.5,
+        "skillTime": 2.867,
+        "fxDelay": 0.9,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54738,12 +55929,12 @@ datas = _tools.RODict({
         "DamageRange": 3,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "scope": 1,
+        "scopeParam": 3,
+        "maxTargetNum": 4,
         "consumeMp": 0.0,
-        "skillTime": 1.433,
-        "fxDelay": 0.5,
+        "skillTime": 3.567,
+        "fxDelay": 1.467,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -54790,22 +55981,22 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 5.0,
-        "DamageRange": 5,
+        "range": 15.0,
+        "DamageRange": 15,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 60,
+        "scope": 0,
+        "scopeParam": None,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.233,
-        "fxDelay": 0.267,
+        "skillTime": 2.533,
+        "fxDelay": 0.8,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
         "isAttackSkill": 1,
-        "bulletFx": 0,
-        "bulletFxTime": 0.0,
+        "bulletFx": 31600096,
+        "bulletFxTime": 0.2,
         "isAlerted": 0,
         "channelTime": 0,
         "channelInterval": 0.0,
@@ -54884,10 +56075,10 @@ datas = _tools.RODict({
         "ID": 91000631,
         "name": "黑骑弓·技能1",
         "classTag": 1,
-        "CD": 5,
+        "CD": 10,
         "globalCD": 1.0,
         "skillEvent": 0,
-        "delayCD": 0,
+        "delayCD": 3,
         "lvParam": None,
         "action": _91000631,
         "startSkillAction": None,
@@ -54902,16 +56093,16 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 3.0,
-        "DamageRange": 3,
+        "range": 15.0,
+        "DamageRange": 15,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 3,
-        "scopeParam": (3, 2),
+        "scope": 2,
+        "scopeParam": 3,
         "maxTargetNum": 3,
         "consumeMp": 0.0,
-        "skillTime": 1.4,
-        "fxDelay": 0.4,
+        "skillTime": 3.6,
+        "fxDelay": 1.667,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -56228,7 +57419,7 @@ datas = _tools.RODict({
         "ID": 91000655,
         "name": "猪法80幸运怪·普攻1",
         "classTag": 1,
-        "CD": 5,
+        "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
         "delayCD": 0,
@@ -56310,8 +57501,8 @@ datas = _tools.RODict({
         "scopeParam": 3.5,
         "maxTargetNum": 5,
         "consumeMp": 0.0,
-        "skillTime": 4.6,
-        "fxDelay": 1.6,
+        "skillTime": 3,
+        "fxDelay": None,
         "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
@@ -56322,7 +57513,7 @@ datas = _tools.RODict({
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 0.0,
+        "castingTime": 1.6,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -56419,7 +57610,7 @@ datas = _tools.RODict({
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
-        "scopeParam": (4, 4),
+        "scopeParam": (6, 5),
         "maxTargetNum": 5,
         "consumeMp": 0.0,
         "skillTime": 2.333,
@@ -59550,12 +60741,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 8.0,
-        "DamageRange": 8,
+        "range": 9.0,
+        "DamageRange": 9,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 5,
-        "scopeParam": (8, 6),
+        "scope": 3,
+        "scopeParam": (9, 6),
         "maxTargetNum": 5,
         "consumeMp": 0.0,
         "skillTime": 2.2,
@@ -59606,12 +60797,12 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 8.0,
-        "DamageRange": 8,
+        "range": 9.0,
+        "DamageRange": 9,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 4,
-        "scopeParam": 22.5,
+        "scope": 15,
+        "scopeParam": (1, [17.5], 35),
         "maxTargetNum": 5,
         "consumeMp": 0.0,
         "skillTime": 1.167,

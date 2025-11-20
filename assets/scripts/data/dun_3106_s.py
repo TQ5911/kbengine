@@ -10,7 +10,6 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 31060001,
-        "Name": "\u51fa\u751f\u70b9",
         "PosX": 121.0132,
         "PosY": 528.0772,
         "PosZ": 51.25787,
@@ -36,7 +35,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 11011019,
           "ID": 31060002,
-          "Name": "\u732b\u4eba\u4ec6\u4ece3\u9b54\u7269",
           "PosX": 160.1133,
           "PosY": 525.2142,
           "PosZ": 63.19786,
@@ -63,7 +61,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 11011019,
           "ID": 31060003,
-          "Name": "\u732b\u4eba\u4ec6\u4ece3\u9b54\u7269",
           "PosX": 176.0401,
           "PosY": 525.4185,
           "PosZ": 53.08836,
@@ -90,7 +87,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 11011020,
           "ID": 31060004,
-          "Name": "\u732b\u4eba\u52c7\u58eb4\u9b54\u7269",
           "PosX": 162.1824,
           "PosY": 525.4185,
           "PosZ": 50.36635,
@@ -117,7 +113,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 11011020,
           "ID": 31060005,
-          "Name": "\u732b\u4eba\u52c7\u58eb4\u9b54\u7269",
           "PosX": 173.1136,
           "PosY": 525.2142,
           "PosZ": 65.58234,
@@ -144,7 +139,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 11011021,
           "ID": 31060006,
-          "Name": "\u732b\u4eba\u52c7\u58eb\u9b54\u7269",
           "PosX": 167.5329,
           "PosY": 525.1471,
           "PosZ": 57.71935,
@@ -162,6 +156,26 @@ datas ={
             "ShowMonsterGroupID": ""
           }
         }
+      },
+      "CombatArea": {
+        "31068002": {
+          "ActivityID": 0,
+          "ClassName": "CombatArea",
+          "ClassNameType": 21,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 0,
+          "ID": 31068002,
+          "PosX": 167.4645,
+          "PosY": 525.1543,
+          "PosZ": 57.73598,
+          "Props": {
+            "AreaType": 1,
+            "Radius": 32.0,
+            "Remark": ""
+          }
+        }
       }
     },
     "Cube": {
@@ -170,12 +184,11 @@ datas ={
           "ActivityID": 0,
           "ClassName": "Teleporter",
           "ClassNameType": 2,
-          "CustomID": "31218001",
+          "CustomID": "31218002",
           "Dir": 260.3864,
           "DisplayName": "",
           "EntityID": 17310601,
           "ID": 31068001,
-          "Name": "\u6df7\u6c8c\u4e4b\u5883",
           "PosX": 207.9903,
           "PosY": 526.2047,
           "PosZ": 63.9305,

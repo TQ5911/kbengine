@@ -6,7 +6,7 @@
             <Flags>         CELL_PRIVATE        </Flags>
             <Persistent>    true                </Persistent>
         </bodyEquipData>
-        
+
         <baseEquipEncExtraTimesList>
             <Type>          PY_LIST         </Type>
             <Flags>         BASE            </Flags>
@@ -407,7 +407,7 @@
             <Arg>      UINT8                    </Arg>
             <Arg>      UINT16                   </Arg>
             <Arg>      UINT8                    </Arg>
-            <Arg>      UINT64                   </Arg>   
+            <Arg>      UINT64                   </Arg>
             <Arg>      ARRAY <of> GRIDID </of>  </Arg>
             <Arg>      ARRAY <of> UINT16 </of>  </Arg>
         </reqEquipGlyphWashing>
@@ -637,7 +637,7 @@
             <Arg>      UINT8   </Arg>
             <Arg>      UINT64  </Arg>
             <Arg>      UINT8   </Arg>
-            <Arg>      UINT32  </Arg> 
+            <Arg>      UINT32  </Arg>
         </onEquipGlyphApplySucc>
 
         <onEquipSpiritApplySucc>
@@ -652,13 +652,14 @@
             <Arg>      GRIDID               </Arg>
             <Arg>      UINT8                </Arg>
             <Arg>      UINT8                </Arg>
+            <Arg>      UINT8                </Arg>
         </onEquipBindValueWashingSucc>
 
         <onEquipBindValueWashingFailed>
             <Arg>      UINT8                </Arg>
             <Arg>      GRIDID               </Arg>
         </onEquipBindValueWashingFailed>
-        
+
         <onEquipUpgradeSucc>
             <Arg>      UINT8                </Arg>
             <Arg>      GRIDID               </Arg>

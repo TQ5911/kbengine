@@ -11,7 +11,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212001,
           "ID": 11010001,
-          "Name": "\u7b2c\u4e00\u6ce2\u517d\u4eba\u52c7\u58eb",
           "PosX": 100.0,
           "PosY": 100.0,
           "PosZ": 100.0,

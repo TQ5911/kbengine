@@ -1,6 +1,7 @@
 from KBEDebug import *
 import KBEngine
 import actionContext
+import gamedecorator
 import gameconst
 
 
@@ -8,6 +9,7 @@ class IAchievement(object):
     def _sendAchievementInitData(self):
         self.achievementInfo.sendInitDataToClient(self)
 
+    @gamedecorator.checkGameconfigEnable('achievement')
     def takeAchievementRewards(self, exposed, achievementIds):
         INFO_MSG('takeAchievementRewards:', achievementIds)
         self.achievementInfo.takeAllAchievementRewards(achievementIds, self)

@@ -1783,6 +1783,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         skill._cancelTempTimer(self, 'mulAttackActionTimer', gametimer.TIMER_TAG_DO_SKILL_ACTION)
 
         context.actionProgress = gameconst.ActionProgressType.actionDone
+        context.checkInRange = False
         if skill.getEffectTarget(skill.skillId) == 'None':
             actionFinished = self._executeSkillAction(skillId, context, calcDelay, actionFunc, None, duration)
         else:
@@ -1793,7 +1794,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             if needUseCheck:
                 if effectedTargets:
                     for target in effectedTargets:
-                        checkCode = skill.checkUseSkill(self, target.id, ignoreReasons=checkIgnoreReasons)
+                        checkCode = skill.checkUseSkill(self, target.id, ignoreReasons=checkIgnoreReasons, checkInRange=context.checkInRange)
                         if checkCode == gameconst.UseSkillCheck.CHEKC_OK:
                             break
                     else:
@@ -1968,10 +1969,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         DEBUG_MSG("applyDmgActionResult", dmgResult.dmg, dmgResult.hurtDmg, dmgResult.hpSuck, dmgResult.dmgType, dmgResult.atkType, dmgResult.calcShield)
         # 如果血量被锁定了，就不分摊伤害吸血什么的，也不跳数字了
         if target.getTempMiscProp(gameconst.AvatarProps.isHpLocked, False):
-            return
+            return 0
 
         if target.isDie():
-            return
+            return 0
 
         dmg = realDmgVal = dmgResult.dmg
         absorbDamageDetail = {}
@@ -2102,9 +2103,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         self.sendDmgMsgs(target, context, dmgResult, absorbDamageDetail, realDmgVal)
 
-        # 【切磋会把对方打死】
-        # 需要再技能Action后在清理切磋
-        # self._endBigWorldDuel(target)
+        # 策划需求返回真实伤害，方便后面做一些吸血之类的操作
+        return recordDmgVal
 
     def _endBigWorldDuel(self, target):
         pass

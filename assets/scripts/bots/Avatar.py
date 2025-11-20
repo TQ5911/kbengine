@@ -278,7 +278,7 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
         super(Avatar, self).__init__()
         super(botAI.botAI, self).__init__()
         DEBUG_MSG("PlayerAvatar::__init__")
-
+        
         self.spawnPosition = Math.Vector3(self.position)
         self.randomWalkRadius = 30.0
 
@@ -332,7 +332,7 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
         # self.clientapp.callback(1, self.offlineBot)
 
     def offlineBot(self):
-        print("offlineBot:", self.gbId)
+        DEBUG_MSG("offlineBot:", self.gbId)
         if self.cell:
             self.cell.offline(self.id, gameconst.AVATAR_OFFLINE_REASON_MANNUALLY)
 
@@ -341,10 +341,10 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
         self.base.runGmCommand('$botFinishNewbie 0')
 
     def onEntityEnterWorld(self):
-        print('avatar onEntityEnterWorld')
+        DEBUG_MSG('avatar onEntityEnterWorld')
 
     def onEnterWorld(self):
-        print('avatar onEnterWorld', self.id, self.name, self.gbId)
+        DEBUG_MSG('avatar onEnterWorld', self.id, self.name, self.gbId)
         self.callDelegateMethod('onEnterWorld', ())
 
     def syncServerTime(self, *args):
@@ -400,7 +400,7 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
             WARNING_MSG('-------------- NO SKILL USE, ALL IN CD.', skillId)
             return
 
-        print('in useSKill:', skillId, targetId, direct)
+        DEBUG_MSG('in useSKill:', skillId, targetId, direct)
         dis = sMath.distance2D(self.position, targetPos)
         # skillRng = SS.datas[skillId]['range']
         skillRng = skillRng if skillRng > 1 else 1
@@ -449,7 +449,7 @@ class PlayerAvatar(Avatar, botAI.botAI, PlayerAvatarSkillsCDMixin):
                 continue
             self.selected_skills[slotId] = skill['skillId']
         self.initSkillsCDs(self.skills)
-        print('onUpdateSkills:', self.selected_skills)
+        DEBUG_MSG('onUpdateSkills:', self.selected_skills)
         self.unLockSkill = True
 
     def onUpdateSkillBuilds(self, builds, *args):

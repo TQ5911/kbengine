@@ -22,7 +22,7 @@ datas = _tools.RODict({
         "minScore": 0,
         "minLevel": 0,
         "enterDunID": 0,
-        "isCrossServer": 0
+        "isCrossServer": 0,
     }),
     1: _tools.RODict({
         "ID": 1,
@@ -31,7 +31,7 @@ datas = _tools.RODict({
         "minScore": 0,
         "minLevel": 0,
         "enterDunID": 0,
-        "isCrossServer": 0
+        "isCrossServer": 0,
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -40,7 +40,7 @@ datas = _tools.RODict({
         "minScore": 0,
         "minLevel": 0,
         "enterDunID": 0,
-        "isCrossServer": 0
+        "isCrossServer": 0,
     }),
     102: _tools.RODict({
         "ID": 102,
@@ -49,7 +49,7 @@ datas = _tools.RODict({
         "minScore": 7500,
         "minLevel": 20,
         "enterDunID": 2102,
-        "isCrossServer": 0
+        "isCrossServer": 0,
     }),
     101: _tools.RODict({
         "ID": 101,
@@ -58,7 +58,7 @@ datas = _tools.RODict({
         "minScore": 5500,
         "minLevel": 30,
         "enterDunID": 2101,
-        "isCrossServer": 0
+        "isCrossServer": 0,
     }),
     103: _tools.RODict({
         "ID": 103,
@@ -67,7 +67,7 @@ datas = _tools.RODict({
         "minScore": 10500,
         "minLevel": 40,
         "enterDunID": 2103,
-        "isCrossServer": 0
+        "isCrossServer": 0,
     }),
     151: _tools.RODict({
         "ID": 151,
@@ -76,7 +76,7 @@ datas = _tools.RODict({
         "minScore": 5900,
         "minLevel": 20,
         "enterDunID": 2201,
-        "isCrossServer": 0
+        "isCrossServer": 0,
     }),
     152: _tools.RODict({
         "ID": 152,
@@ -85,7 +85,7 @@ datas = _tools.RODict({
         "minScore": 8300,
         "minLevel": 30,
         "enterDunID": 2202,
-        "isCrossServer": 0
+        "isCrossServer": 0,
     }),
     153: _tools.RODict({
         "ID": 153,
@@ -94,7 +94,7 @@ datas = _tools.RODict({
         "minScore": 12000,
         "minLevel": 40,
         "enterDunID": 2203,
-        "isCrossServer": 0
+        "isCrossServer": 0,
     })
 })
 minKey = 0

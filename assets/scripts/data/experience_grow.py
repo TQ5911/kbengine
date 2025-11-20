@@ -28,7 +28,9 @@ datas = _tools.RODict({
         "baseMinMagicArmorGrow": 34010022,
         "baseMaxMagicArmorGrow": 34010034,
         "baseHitGrow": 34010025,
-        "baseDodgeGrow": 34010028
+        "baseDodgeGrow": 34010028,
+        "baseRealDmgGrow": 34010037,
+        "baseRealDmgDefGrow": 34010038
     }),
     1002: _tools.RODict({
         "ID": 1002,
@@ -43,7 +45,9 @@ datas = _tools.RODict({
         "baseMinMagicArmorGrow": 34010023,
         "baseMaxMagicArmorGrow": 34010035,
         "baseHitGrow": 34010026,
-        "baseDodgeGrow": 34010029
+        "baseDodgeGrow": 34010029,
+        "baseRealDmgGrow": 34010037,
+        "baseRealDmgDefGrow": 34010038
     }),
     1003: _tools.RODict({
         "ID": 1003,
@@ -58,7 +62,9 @@ datas = _tools.RODict({
         "baseMinMagicArmorGrow": 34010024,
         "baseMaxMagicArmorGrow": 34010036,
         "baseHitGrow": 34010027,
-        "baseDodgeGrow": 34010030
+        "baseDodgeGrow": 34010030,
+        "baseRealDmgGrow": 34010037,
+        "baseRealDmgDefGrow": 34010038
     })
 })
 minKey = 1001

@@ -661,7 +661,7 @@ class AwardMixin(object):
         if dataUtils.isEquipItemByItemId(itemId):
             if self.bagData.isFull() or self.bagData.isLocked():
                 return
-        elif dataUtils.isPetItemByItemId(itemId):
+        elif dataUtils.isLingShouItem(itemId):
             if self.petBag.isFull() or self.petBag.isLocked():
                 return
 
@@ -704,7 +704,7 @@ class AwardMixin(object):
                     pickNum -= n
 
                     pickedItems.extend(itemFactory.ItemFactory.createItemList(itemId, n, bindType))
-            elif dataUtils.isPetItemByItemId(itemId):
+            elif dataUtils.isLingShouItem(itemId):
                 #拾取宠物物品
                 for it in petItemList:
                     pickedItems.append(it)
@@ -1127,7 +1127,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             return False
 
         if deductWealthVal.money.data and not self._canAuthDailyUseMoney(deductWealthVal.money.data):
-            sendMsg and self.onMessagePre(A_ACD.datas['dailyGoldLimitMsg']['value'], [])
+            self.onMessagePre(A_ACD.datas['dailyGoldLimitMsg']['value'], [])
             return False
 
         if deductWealthVal.darkIron.data > self.darkIron:
@@ -1620,29 +1620,6 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             })
 
     ################################## 采集 end ######################################
-    def onCheckMapUnlocked(self, callbackComponent, srcType, callbackName, extraProps):
-        DEBUG_MSG("onCheckMapUnlocked", callbackComponent, srcType, callbackName, extraProps)
-        checkResult = True
-        mapId = extraProps["mapId"]
-        mapData = GPGPD.datas.get(mapId)
-        if not mapData:
-            ERROR_MSG('onCheckMapUnlocked but mapData invalid:', mapId)
-            return
-        elif mapData['openTask']:
-            checkResult, type, value = self.isUIVisible(mapData['openTask'])
-            if not checkResult:
-                if type == gameconst.UIUIVisibleType.TASK:
-                    self.onMessagePre(MMD.datas.uiVisibleTaskLimit, [str(value)])
-                elif type == gameconst.UIUIVisibleType.LEVEL:
-                    self.onMessagePre(MMD.datas.uiVisibleLvLimit, [str(value)])
-        else:
-            DEBUG_MSG("onCheckMapUnlocked map always locked")
-
-        if callbackComponent == gameconst.BASE:
-            getattr(self, callbackName)(checkResult, extraProps)
-        elif callbackComponent == gameconst.CELL:
-            getattr(self.cell, callbackName)(checkResult, extraProps)
-
     def onCheckAndCostWealth(self, callbackComponent, srcType, callbackName, deductWealthVal, extraProps):
         checkResult = True
         if deductWealthVal:
@@ -2021,35 +1998,6 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         opUUID = KBEngine.genUUID64()
 
         self.addAwards(AAC_AACDD.datas.BONUS_SRC_SERVER_LOGIN, rewardId, 1, opUUID, detail, awardCtx)
-
-    def sendLevelRewardInfo(self):
-        self.client.onSendLevelRewardInfo(self.levelRewardList)
-
-    def addLevelAwards(self, exposed, level):
-        myLevel = gameglobal.roleCache[self.id]['level']
-        if level > myLevel:
-            DEBUG_MSG("no enough level", level, myLevel)
-            return
-
-        if level in self.levelRewardList:
-            DEBUG_MSG("already use this award", level)
-            return
-
-        if self.bagData.isLocked() or self.bagData.isFull():
-            self.onMessagePre(MMD.datas.bagFullGeneralMessage, [])
-            return
-
-        rewardId = WFLP.datas.get(level, {}).get('rewardID', None)
-        if not rewardId:
-            DEBUG_MSG("no reward", level)
-            return
-
-        awardCtx = self._getAvatarAwardCtx(rewardId, None, gameconst.MailConstID.REWARD_MAIL_ID)
-        self.levelRewardList.append(level)
-        self.client.onAddLevelAwards([level])
-        opUUID = KBEngine.genUUID64()
-        self.addAwards(AAC_AACDD.datas.BONUS_SRC_LEVEL_REWARDS, rewardId, 1, opUUID, 'level ' + str(level) + ' award',
-                       awardCtx)
 
     def exchangeItem(self, exposed, exchangeId, bindNum, unBindNum):
         DEBUG_MSG('exchangeItem ', exchangeId, bindNum, unBindNum)
@@ -2550,7 +2498,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                     itemBindType = gameconst.ItemBindType.NORMAL
                 #DEBUG_MSG("reqRandomSynthesis, normalItemNum:", normalItemNum, curNormalNum)
                 randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, itemBindType)
-                itemIdList.append(ranItemId)
+                itemIdList.append({'itemId': ranItemId, 'itemNum': 1, 'bindType': itemBindType})
                 ranItemAddVal.addWealthByObjList([randItem])
                 key = synthesisKey * 10 + quality
                 if itemQuality == curQuality:
@@ -2599,35 +2547,36 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             ERROR_MSG("reqUpgradeSynthesis upgradeNum not enough", key)
             return
 
-        self.randomSynthesisDic[key] -= upgradeNum
-        if self.randomSynthesisDic[key] == 0:
-            self.randomSynthesisDic.pop(key)
-        itemQuality = quality + 1
-        school = self.getRoleCacheAttr('school')
-        ranItemIdList = list(IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, school), []))
-        ranItemIdList.extend(IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, 0), []))
-        rmItemIdList = []
-        for ranItemId in ranItemIdList:
-            itemCfgData = ITEM_DATA.datas.get(ranItemId, None)
-            if not itemCfgData:
-                ERROR_MSG("reqUpgradeSynthesis itemCfgData not found", ranItemId)
-                continue
-            rndSynNotAvail = itemCfgData.get('rndSynNotAvail', 0)
-            if rndSynNotAvail:
-                rmItemIdList.append(ranItemId)
-                continue
-        for ranItemId in rmItemIdList:
-            ranItemIdList.remove(ranItemId)
-        if len(ranItemIdList) < 1:
-            ERROR_MSG("reqUpgradeSynthesis ranItemIdList not found", mainType, subType, itemQuality)
-            return
-        ranItemId = random.choice(ranItemIdList)
         ranItemAddVal = dropAward.AwardVal()
-        randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, gameconst.ItemBindType.BIND)
-        ranItemAddVal.addWealthByObjList([randItem])
-        self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=False)
+        while(self.randomSynthesisDic.get(key, 0) >= upgradeNum):
+            self.randomSynthesisDic[key] -= upgradeNum
+            if self.randomSynthesisDic[key] == 0:
+                self.randomSynthesisDic.pop(key)
+            itemQuality = quality + 1
+            school = self.getRoleCacheAttr('school')
+            ranItemIdList = list(IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, school), []))
+            ranItemIdList.extend(IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, 0), []))
+            rmItemIdList = []
+            for ranItemId in ranItemIdList:
+                itemCfgData = ITEM_DATA.datas.get(ranItemId, None)
+                if not itemCfgData:
+                    ERROR_MSG("reqUpgradeSynthesis itemCfgData not found", ranItemId)
+                    continue
+                rndSynNotAvail = itemCfgData.get('rndSynNotAvail', 0)
+                if rndSynNotAvail:
+                    rmItemIdList.append(ranItemId)
+                    continue
+            for ranItemId in rmItemIdList:
+                ranItemIdList.remove(ranItemId)
+            if len(ranItemIdList) < 1:
+                ERROR_MSG("reqUpgradeSynthesis ranItemIdList not found", mainType, subType, itemQuality)
+                return
+            ranItemId = random.choice(ranItemIdList)
+            randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, gameconst.ItemBindType.BIND)
+            ranItemAddVal.addWealthByObjList([randItem])
+        self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=True)
         self.client.onUpdateSynthesisUpgradeNum([{'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)}])
-        self.client.onUpgradeSynthesis(ranItemId)
+        # self.client.onUpgradeSynthesis(ranItemId)
 
     def checkRenameBase(self, pendingCheckId, newName):
         if not self.mainAccountCache.isAccountHost():

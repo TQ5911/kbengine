@@ -128,10 +128,15 @@ datas = _tools.RODict({
     19000007002: _tools.RODict({
         "ID": 19000007002,
         "event": "Openinterface",
-        "parm": "UIEquipTrainingPanel,1",
+        "parm": "UIEquipUnbundlePanel",
     }),
     19000007003: _tools.RODict({
         "ID": 19000007003,
+        "event": "Openinterface",
+        "parm": "UIEquipTrainingPanel,1",
+    }),
+    19000007004: _tools.RODict({
+        "ID": 19000007004,
         "event": "OpenStore",
         "parm": "9",
     }),
@@ -147,26 +152,26 @@ datas = _tools.RODict({
     }),
     19000008002: _tools.RODict({
         "ID": 19000008002,
-        "event": "OpenStore",
-        "parm": "1",
+        "event": "HealingWounds",
+        "parm": "",
     }),
     19000008003: _tools.RODict({
         "ID": 19000008003,
-        "event": "HealingWounds",
+        "event": "OpenStore",
+        "parm": "1",
+    }),
+    19000008004: _tools.RODict({
+        "ID": 19000008004,
+        "event": "Cnttask",
         "parm": "",
     }),
     19000009000: _tools.RODict({
         "ID": 19000009000,
-        "event": "Cnttask",
+        "event": "",
         "parm": "",
     }),
     19000009001: _tools.RODict({
         "ID": 19000009001,
-        "event": "",
-        "parm": "",
-    }),
-    19000009002: _tools.RODict({
-        "ID": 19000009002,
         "event": "Openinterface",
         "parm": "UIEquipEnchantingPanel",
     }),
@@ -1614,6 +1619,16 @@ datas = _tools.RODict({
         "ID": 19000146003,
         "event": "OpenStore",
         "parm": "11",
+    }),
+    19000146004: _tools.RODict({
+        "ID": 19000146004,
+        "event": "OpenStore",
+        "parm": "12",
+    }),
+    19000146005: _tools.RODict({
+        "ID": 19000146005,
+        "event": "OpenStore",
+        "parm": "13",
     }),
     19000147000: _tools.RODict({
         "ID": 19000147000,
@@ -3327,7 +3342,7 @@ datas = _tools.RODict({
     }),
     19100014008: _tools.RODict({
         "ID": 19100014008,
-        "event": "Gettask",
+        "event": "Fnstalk",
         "parm": "",
     }),
     19100015000: _tools.RODict({
@@ -4558,6 +4573,31 @@ datas = _tools.RODict({
     19100048013: _tools.RODict({
         "ID": 19100048013,
         "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100049000: _tools.RODict({
+        "ID": 19100049000,
+        "event": "",
+        "parm": "",
+    }),
+    19100049001: _tools.RODict({
+        "ID": 19100049001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19100050000: _tools.RODict({
+        "ID": 19100050000,
+        "event": "SubmitItem",
+        "parm": "",
+    }),
+    19100051000: _tools.RODict({
+        "ID": 19100051000,
+        "event": "SubmitItem",
+        "parm": "",
+    }),
+    19100052000: _tools.RODict({
+        "ID": 19100052000,
+        "event": "SubmitItem",
         "parm": "",
     }),
     19200001000: _tools.RODict({
@@ -6142,17 +6182,18 @@ dialogIdMap = _tools.RODict({
         19000007001,
         19000007002,
         19000007003,
+        19000007004,
     ),
     19000008: (
         19000008000,
         19000008001,
         19000008002,
         19000008003,
+        19000008004,
     ),
     19000009: (
         19000009000,
         19000009001,
-        19000009002,
     ),
     19000010: (
         19000010000,
@@ -6716,6 +6757,8 @@ dialogIdMap = _tools.RODict({
         19000146001,
         19000146002,
         19000146003,
+        19000146004,
+        19000146005,
     ),
     19000147: (
         19000147000,
@@ -7653,6 +7696,19 @@ dialogIdMap = _tools.RODict({
         19100048011,
         19100048012,
         19100048013,
+    ),
+    19100049: (
+        19100049000,
+        19100049001,
+    ),
+    19100050: (
+        19100050000,
+    ),
+    19100051: (
+        19100051000,
+    ),
+    19100052: (
+        19100052000,
     ),
     19200001: (
         19200001000,

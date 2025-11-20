@@ -16,6 +16,7 @@ class IEnemy(object):
     def onDeadAddEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score):
         self.enemyMgr.addEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score)
 
+    @gamedecorator.checkGameconfigEnable('enableEnemy')
     def reqRemoveEnemy(self, exposed, gbId):
         self.enemyMgr.removeEnemy(gbId)
         self.client.onRemoveEnemy([gbId])
@@ -32,19 +33,20 @@ class IEnemy(object):
         self.enemyMgr.updateByFcVals(usersInfo)
         self.client.onGetEnemyFreshInfo(self.enemyMgr.getEnemyFreshInfo())
 
+    @gamedecorator.checkGameconfigEnable('enableEnemy')
     def getEnemyPosInfo(self, exposed, gbId):
         if not self.enemyMgr.isEnemy(gbId):
             self.client.sendEnemyPosInfoToClient(gbId, False, 0)
             return
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
-            [gbId], 
+            [gbId],
             'onGetEnemyPosInfo',
-            (self, ), 
-            self, 
-            'onGetEnemyPosInfoResult', 
+            (self, ),
+            self,
+            'onGetEnemyPosInfoResult',
             (False, None))
-        
+
     def onGetEnemyPosInfoResult(self, otherGbId, find, posInfo):
         if not find:
             INFO_MSG('onGetEnemyPosInfoResult not find', otherGbId, posInfo)
@@ -67,7 +69,7 @@ class IEnemy(object):
         _src = AAC_AACDD.datas.BONUS_SRC_SCAN_ENEMY_POS
         _detail = gameclass.AwardDetail()
         self.deductWealth(_src, _deductVal, _opUUID, _detail)
-        
+
         _spaceNo = posInfo[0]
         self.client.sendEnemyPosInfoToClient(otherGbId, find, _spaceNo)
         self.enemyMgr.updateEnemyLastFindInfo(otherGbId, _spaceNo)

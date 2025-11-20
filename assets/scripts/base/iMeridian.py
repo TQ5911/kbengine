@@ -35,6 +35,9 @@ class IMeridian(object):
             return
         # INFO_MSG("IMeridian.meridianOnLogin")
         self._refreshMeridianProperty()
+        
+        #
+        self._syncMeridianDataToClient(True)
     
     def getConfigId(self, slotIdx, pointIdx, level):
         """获取经脉穴位配置ID"""
@@ -96,12 +99,13 @@ class IMeridian(object):
         
         self._syncMeridianDataToClient()
         
-    def _syncMeridianDataToClient(self):
+    def _syncMeridianDataToClient(self, login=False):
         """
             同步经脉数据到客户端
         """
         meridianData = self.meridianData.toClientDict()
-        INFO_MSG("IMeridian._syncMeridianDataToClient: {}".format(meridianData))
+        if login:
+            INFO_MSG("IMeridian._syncMeridianDataToClient: {}".format(meridianData))
         self.client.onGetMeridianData(meridianData['curSlot'], meridianData['maxSlots'], meridianData['slots'])
 
     def reqLevelUpMeridianPoint(self, exposed, slotIdx, pointIdx, bagType, itemInfoList):

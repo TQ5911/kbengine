@@ -77,7 +77,7 @@ datas = _tools.RODict({
     }),
     6: _tools.RODict({
         "ID": 6,
-        "name": "交易盒兑换",
+        "name": "交易盒",
         "type": 4,
         "isTimeLimit": 0,
         "openTime": None,
@@ -125,7 +125,7 @@ datas = _tools.RODict({
     }),
     10: _tools.RODict({
         "ID": 10,
-        "name": "普通兑换商店",
+        "name": "兑换商店",
         "type": 3,
         "isTimeLimit": 0,
         "openTime": None,
@@ -137,7 +137,7 @@ datas = _tools.RODict({
     }),
     11: _tools.RODict({
         "ID": 11,
-        "name": "选择兑换商店",
+        "name": "选择兑换",
         "type": 5,
         "isTimeLimit": 0,
         "openTime": None,
@@ -146,7 +146,31 @@ datas = _tools.RODict({
         "groupId": None,
         "numberWeight": None,
         "groupRefreshTime": 0,
+    }),
+    12: _tools.RODict({
+        "ID": 12,
+        "name": "矿产购买",
+        "type": 2,
+        "isTimeLimit": 0,
+        "openTime": None,
+        "closeTime": None,
+        "goodsList": (136, 137, 138, 139, 140, 141),
+        "groupId": None,
+        "numberWeight": None,
+        "groupRefreshTime": 0,
+    }),
+    13: _tools.RODict({
+        "ID": 13,
+        "name": "矿产出售",
+        "type": 2,
+        "isTimeLimit": 0,
+        "openTime": None,
+        "closeTime": None,
+        "goodsList": (142, 143, 144, 145, 146, 147),
+        "groupId": None,
+        "numberWeight": None,
+        "groupRefreshTime": 0,
     })
 })
 minKey = 1
-maxKey = 11
+maxKey = 13

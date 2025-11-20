@@ -36,7 +36,7 @@ def clearCommandsCache():
     GM_CMD_FUNC_NAMES.clear()
     GM_CMD_ARG_PERMISSION_CHECKER.clear()
 
-newAuctionCache = {}
+newAuctionItemCache = {}
 expiredDrawCardPoolCache = {}
 
 def clearDataCache(clearGlobalAttrCacheList):

@@ -67,8 +67,8 @@ Avatar addExpByTask CELL 30086
 Avatar addExpByWealthVal CELL 30088
 Avatar addFullHpByNpc CELL 30463
 Avatar addInMonsterGroup CELL 30998
-Avatar addLevelAwards BASE 98
 Avatar addMallWealth BASE 30325
+Avatar addMonthCardByItem BASE 32030
 Avatar addNewbieGuideId BASE 990
 Avatar addPassiveSkill CELL 30295
 Avatar addPressGameAwards BASE 30631
@@ -364,6 +364,7 @@ Avatar forceAuthOffline BASE 32017
 Avatar forceCompleteTaskNoCond BASE 30219
 Avatar getAuctionItemNumByCategoryId BASE 816
 Avatar getAuctionItemNumByItemIdList BASE 828
+Avatar getAuctionItemsByAuctionIdList BASE 127
 Avatar getAuctionSaleItemMoney BASE 832
 Avatar getAureoleInfo CELL 204
 Avatar getAvatarDetailInfo CELL 31
@@ -371,6 +372,7 @@ Avatar getAvatarInterInfo BASE 510
 Avatar getBuffIdInfo CELL 42
 Avatar getBuffInfo CELL 203
 Avatar getCoinAuctionPlayerInfo BASE 809
+Avatar getCubeRoomLeftTime CELL 32029
 Avatar getCurrentSaleItemInfo BASE 817
 Avatar getEnemyFreshInfo BASE 857
 Avatar getEnemyPosInfo BASE 863
@@ -484,7 +486,6 @@ Avatar onAddDropNotify BASE 31408
 Avatar onAddFirstBuyCredit CLIENT 734
 Avatar onAddGatherRewardRecord CLIENT 964
 Avatar onAddGuildRelationClient CLIENT 942
-Avatar onAddLevelAwards CLIENT 127
 Avatar onAddNewEquipDrop CLIENT 851
 Avatar onAddNewRaidMember CLIENT 438
 Avatar onAddPassiveSkill CLIENT 206
@@ -584,7 +585,6 @@ Avatar onCheckCaptainTeamDungeonConditionsFailed CELL 30842
 Avatar onCheckCaptainTeamDungeonConditionsSucceed CELL 30841
 Avatar onCheckCellSubmitCondSucc BASE 30211
 Avatar onCheckCrossServerTokenResp BASE 31806
-Avatar onCheckMapUnlocked BASE 32019
 Avatar onCheckMemberTeamDungeonConditionsFailed CELL 30844
 Avatar onCheckMemberTeamDungeonConditionsSucceed CELL 30843
 Avatar onCheckResultFromMember CELL 30439
@@ -636,6 +636,7 @@ Avatar onCsharpTest CLIENT 7
 Avatar onCubeAutoRenewSwitch CLIENT 691
 Avatar onCubeLoginData CLIENT 693
 Avatar onCubeRoomEndTime CLIENT 688
+Avatar onCubeRoomLeftTime CLIENT 98
 Avatar onDailyHealWoundsTimesRefresh CELL 31933
 Avatar onDead CLIENT 73
 Avatar onDeadAddEnemy BASE 31393
@@ -710,6 +711,8 @@ Avatar onGameConfigChanged CLIENT 54
 Avatar onGatherSucc CLIENT 124
 Avatar onGetAllRaidList CLIENT 926
 Avatar onGetAllTeamList CLIENT 387
+Avatar onGetAuctionItemsByAuctionIdsResp BASE 32032
+Avatar onGetAuctionItemsByAuctionIdsResp CLIENT 642
 Avatar onGetAureoleInfo CLIENT 229
 Avatar onGetAvatarCoinBill CLIENT 145
 Avatar onGetAvatarInterInfo CELL 30441
@@ -855,6 +858,7 @@ Avatar onLoadPlayerCoinAuctionData BASE 31325
 Avatar onLockItemSucc CLIENT 1005
 Avatar onLogonEnterCubeGetSpaceBox BASE 31499
 Avatar onLogonEnterWonderLandGetSpaceBox BASE 31502
+Avatar onMapUnlockMessagePre CLIENT 983
 Avatar onMemJoinRaidByAutoMatch CELL 31578
 Avatar onMemJoinTeamByAutoMatch CELL 30454
 Avatar onMeridianAward CELL 32015
@@ -878,7 +882,7 @@ Avatar onNotifyApplyJoinInfo CLIENT 358
 Avatar onNotifyFriendsNameChanged BASE 31350
 Avatar onNotifyOffline BASE 30948
 Avatar onNotifyOnline BASE 30081
-Avatar onNotiyNewAuctionCollection CLIENT 1002
+Avatar onNotiyNewAuctionItemCollection CLIENT 128
 Avatar onNumResourceChanged CLIENT 140
 Avatar onOfficialMessage CLIENT 65
 Avatar onOtherRemoveDropEquip BASE 31402
@@ -999,7 +1003,6 @@ Avatar onSendCommonFlagCellInfo CLIENT 201
 Avatar onSendForbidChat CLIENT 498
 Avatar onSendForbidVoiceChat CLIENT 499
 Avatar onSendHolidayPayInfo CLIENT 736
-Avatar onSendLevelRewardInfo CLIENT 128
 Avatar onSendRequiredVersion CLIENT 87
 Avatar onSendtoRandomLineAndArea CLIENT 155
 Avatar onServerUseSkill CLIENT 212
@@ -1192,6 +1195,7 @@ Avatar querySiegeWarSignUpState BASE 892
 Avatar qureyAddTeamCaptainFriend CLIENT 386
 Avatar raidEnterDungeonStandbyCheckNotify CLIENT 454
 Avatar raidStandbyCheckNotify CLIENT 453
+Avatar randomCubeRoom CELL 982
 Avatar rateInDungeon CELL 30255
 Avatar reachNewArea CELL 29
 Avatar readyUseItemAndEnterSingleDungeon CELL 30857
@@ -1460,6 +1464,7 @@ Avatar syncMethodCallToLocalServerCell CELL 31791
 Avatar syncModifyGuildInfo CELL 31263
 Avatar syncServerTime CLIENT 45
 Avatar syncSpaceVariable BASE 30229
+Avatar syncVisible CELL 31849
 Avatar takeAchievementRewards BASE 31374
 Avatar takeEquipBase BASE 31394
 Avatar talkToClientNpc CELL 177
@@ -1471,9 +1476,8 @@ Avatar taskPreEnterSpace CELL 30971
 Avatar taskReachArea CELL 172
 Avatar telToTeleporter CELL 30
 Avatar teleportCastingPreNotify CLIENT 728
-Avatar teleportEnterLineMapUnlockedCallback CELL 32024
 Avatar teleportFromSpaceToSpaceRpc CELL 30404
-Avatar tipPlayerAuctionCollection BASE 31849
+Avatar tipPlayerAuctionItemCollection BASE 32031
 Avatar toClientCubeLoginData CELL 31241
 Avatar transferRaidDeputy CELL 885
 Avatar transferRaidLeader CELL 416
@@ -1487,6 +1491,7 @@ Avatar tryApplyInviteRaid CELL 409
 Avatar tryApplyInviteRaidOffline CELL 30483
 Avatar tryBeInvitedInRaid CELL 30482
 Avatar tryChangeCombatStateFollowTeamCaptain CELL 30027
+Avatar tryGetMonthCardDailyReward BASE 967
 Avatar tryHealWoundsFromNpc CELL 1025
 Avatar tryReplyInviteRaidFollowTeamCaptain CELL 30485
 Avatar turnOffRaidMemberMics CELL 426

@@ -54,6 +54,7 @@ class PlayerDelegate(object):
 
     def _sendbotinfo(self):
         print(f'********************************\n{botinfo}')
+        
     def randompos(self):
         randomspeed = random.randint(-10, 10)
         return randomspeed

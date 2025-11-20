@@ -381,6 +381,7 @@ class ImpMail(object):
         totalWealthVal = dropAward.AwardVal()
         srcType = AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH
         hasSendSpaceNotEnoughMsg = False
+        hasSendPotionMaxLimitMsg = False
         for mail in mailList:
             if mail.isExpired():
                 WARNING_MSG('getMailAttachByMailList mail expired:', mail.expiredTime)
@@ -407,7 +408,8 @@ class ImpMail(object):
                     if item.itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
                         totalLimitItemNum += item.itemNum
                 if totalLimitItemNum != 0 and self.checkBagItemLimitNoItemId(totalLimitItemNum):
-                    if len(mailList) == 1:
+                    if not hasSendPotionMaxLimitMsg:
+                        hasSendPotionMaxLimitMsg = True
                         self.onMessagePre(IDSD.datas['potionMaxLimitMsgID']['value'], [str(self.drugsQuantityBase)])
                     continue
 

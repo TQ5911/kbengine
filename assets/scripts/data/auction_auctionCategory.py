@@ -39,6 +39,10 @@ datas = _tools.RODict({
         "ID": 303,
         "linkToSpecificItem": ""
     }),
+    304: _tools.RODict({
+        "ID": 304,
+        "linkToSpecificItem": ""
+    }),
     4: _tools.RODict({
         "ID": 4,
         "linkToSpecificItem": ""

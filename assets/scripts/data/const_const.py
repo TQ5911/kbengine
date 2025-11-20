@@ -305,7 +305,7 @@ datas = _tools.RODict({
     }),
     "navigationWaypointMin": _tools.RODict({
         "ID": "navigationWaypointMin",
-        "value": 30,
+        "value": 40,
     }),
     "navigationWaypointHeightMin": _tools.RODict({
         "ID": "navigationWaypointHeightMin",
@@ -894,5 +894,17 @@ datas = _tools.RODict({
     "function_notAvailable": _tools.RODict({
         "ID": "function_notAvailable",
         "value": 54003127,
+    }),
+    "offlineRetentionTime": _tools.RODict({
+        "ID": "offlineRetentionTime",
+        "value": 5,
+    }),
+    "monsterCombatPathingMaxAngle": _tools.RODict({
+        "ID": "monsterCombatPathingMaxAngle",
+        "value": 180,
+    }),
+    "monsterCombatPathingMaxTurnAngle": _tools.RODict({
+        "ID": "monsterCombatPathingMaxTurnAngle",
+        "value": 6,
     })
 })
