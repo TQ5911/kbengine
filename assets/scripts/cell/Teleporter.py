@@ -31,7 +31,7 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
             self.name = NPC_T.datas[self.teleporterId].get('name', '未知传送门')
 
         spaceMgr = self.spaceMgr
-        if formula.isDungeonSpace(self.spaceNo):
+        if formula.isDungeonSpace(self.spaceNo) or formula.isMineWarSpace(self.spaceNo):
             gid = utils.getGidFromGameEntityId(self.gameEntityId)
             if spaceMgr:
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.teleporterId),
@@ -127,3 +127,7 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
         if ent.spaceNo != self.spaceNo:
             INFO_MSG('Teleporter._checkBadEnt: not in same space')
             return True
+
+    def _ttlDestroy(self):
+        self.safeDestroy()
+

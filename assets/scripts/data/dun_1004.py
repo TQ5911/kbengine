@@ -52,17 +52,17 @@ datas ={
     "DisplayName": "",
     "EntityID": 17100401,
     "ID": 10040006,
-    "PosX": 94.0858,
-    "PosY": -2.98938,
-    "PosZ": -0.02479553,
+    "PosX": 93.84155,
+    "PosY": 0.3145871,
+    "PosZ": -100.65,
     "Props": {
       "CameraId": 0,
       "GateType": 0,
       "Remark": "",
       "TelDir": 0.0,
-      "TelX": 93.8658,
-      "TelY": -2.98938,
-      "TelZ": 5.775204
+      "TelX": 93.62155,
+      "TelY": 0.3145871,
+      "TelZ": -94.85
     }
   },
   "10044001": {

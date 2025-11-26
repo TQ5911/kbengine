@@ -33,7 +33,7 @@ class IMonsterGrp(object):
         #self.monsterGroupId = 0
 
     def selfSync(self, funcName, args=None, kwargs=None):
-        if self.monsterGroupId:
+        if self.monsterGroup:
             return self.monsterGroup.sync(self.id, funcName, args, kwargs)
 
     # -----------------------

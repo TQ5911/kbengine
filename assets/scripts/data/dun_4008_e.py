@@ -31,7 +31,6 @@ datas ={
     "transition": {
       "finished": [
         1003,
-        1015,
         1017,
         1018,
         1004,
@@ -44,15 +43,6 @@ datas ={
     "exitTime": 5.0,
     "isDungeonDone": 1,
     "transition": {}
-  },
-  "1015": {
-    "type": "taskInProgress",
-    "taskID": 86050003,
-    "transition": {
-      "finished": [
-        1003
-      ]
-    }
   },
   "1016": {
     "type": "createMonster",

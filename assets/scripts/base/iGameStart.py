@@ -260,7 +260,8 @@ class IGameStart(object):
                 self.pyAddTimer(0.5, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_FULL_PREPARE)
                 return
 
-            self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_CHECK_LINE_READY)
+            gameengine.getFirstBaseApp().setBaseAppLockState(self, gameconst.BASEAPP_STATE_LOCK_WAIT_FULL_PREPARE)
+            #self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_CHECK_LINE_READY)
 
         elif userArg == gametimer.BASESTUB_TIMER_CHECK_LINE_READY:
             # check world line ready
@@ -325,7 +326,7 @@ class IGameStart(object):
 
         elif userArg == gametimer.BASESTUB_TIMER_GAME_READY:
             if not gameglobal.isRelivedBaseapp and len(gameglobal.readyBaseappOrder) != gameconfig.baseAppCount():
-                INFO_MSG('start waiting: waitting for all baseapps ready')
+                INFO_MSG('start waiting: waitting for all baseapps ready', gameglobal.isRelivedBaseapp, gameglobal.readyBaseappOrder)
                 self.pyAddTimer(1, 0, gametimer.BASESTUB_TIMER_GAME_READY)
                 return
 

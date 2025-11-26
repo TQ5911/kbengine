@@ -15,8 +15,8 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    100: _tools.RODict({
-        "ID": 100,
+    99: _tools.RODict({
+        "ID": 99,
         "qualityAbove": None,
         "itemList": None
     }),

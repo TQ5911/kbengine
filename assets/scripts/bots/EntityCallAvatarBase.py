@@ -102,6 +102,9 @@ class AvatarBaseEntityCall(object):
     def enterCrossServerSiegeWarSpace(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'enterCrossServerSiegeWarSpace', ()))
 
+    def exchangeGiftKeyReward(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'exchangeGiftKeyReward', (arg1, )))
+
     def exchangeItem(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'exchangeItem', (arg1, arg2, arg3, )))
 
@@ -111,8 +114,8 @@ class AvatarBaseEntityCall(object):
     def getAuctionItemNumByCategoryId(self, arg1, arg2, arg3, arg4, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getAuctionItemNumByCategoryId', (arg1, arg2, arg3, arg4, )))
 
-    def getAuctionItemNumByItemIdList(self, arg1, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getAuctionItemNumByItemIdList', (arg1, )))
+    def getAuctionItemNumByItemIdList(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getAuctionItemNumByItemIdList', (arg1, arg2, )))
 
     def getAuctionItemsByAuctionIdList(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getAuctionItemsByAuctionIdList', (arg1, )))
@@ -372,6 +375,9 @@ class AvatarBaseEntityCall(object):
     def reqGetMeridianData(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqGetMeridianData', ()))
 
+    def reqGetOfflineExp(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqGetOfflineExp', ()))
+
     def reqGetOneMailAttach(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqGetOneMailAttach', (arg1, )))
 
@@ -413,6 +419,9 @@ class AvatarBaseEntityCall(object):
 
     def reqMultiItemDisassemble(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMultiItemDisassemble', (arg1, arg2, )))
+
+    def reqOfflineHangupData(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqOfflineHangupData', ()))
 
     def reqPetDrawCardRecord(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqPetDrawCardRecord', (arg1, )))
@@ -662,14 +671,14 @@ class AvatarCellEntityCall(object):
     def applyInviteTeam(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyInviteTeam', (arg1, arg2, )))
 
-    def applyJoinRaidLonely(self, arg1, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinRaidLonely', (arg1, )))
+    def applyJoinRaidLonely(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinRaidLonely', (arg1, arg2, )))
 
     def applyJoinRaidWithTeam(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinRaidWithTeam', (arg1, )))
 
-    def applyJoinTeam(self, arg1, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinTeam', (arg1, )))
+    def applyJoinTeam(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinTeam', (arg1, arg2, )))
 
     def applyKickTeamMember(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyKickTeamMember', (arg1, )))

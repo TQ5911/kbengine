@@ -130,6 +130,7 @@
 
         <applyJoinTeam> <Exposed/>
             <Arg>           TEAMID          </Arg>
+            <Arg>           STRING          </Arg>
         </applyJoinTeam>
 
         <onApplyJoinTeam>
@@ -674,7 +675,11 @@
             <Arg>           UNICODE          </Arg>
         </onSetTeamTarget>
         <onApplyJoinTeamFailed>
+            <Arg>           UINT16       </Arg>
             <Arg>           TEAMID       </Arg>
+            <Arg>           UINT16       </Arg>
+            <Arg>           UINT32       </Arg>
+            <Arg>           STRING       </Arg>
         </onApplyJoinTeamFailed>
         <onGetTeamList>
             <Arg>           LONGTIME         </Arg>

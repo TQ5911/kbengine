@@ -7085,33 +7085,11 @@ datas ={
             "TelZ": 199.5444
           }
         },
-        "10358082": {
-          "ActivityID": 0,
-          "ClassName": "Teleporter",
-          "ClassNameType": 2,
-          "CustomID": "10368003",
-          "Dir": 228.2564,
-          "DisplayName": "",
-          "EntityID": 17103502,
-          "ID": 10358082,
-          "PosX": 581.2064,
-          "PosY": 149.7252,
-          "PosZ": 575.2612,
-          "Props": {
-            "CameraId": 0,
-            "GateType": 0,
-            "Remark": "",
-            "TelDir": 228.2564,
-            "TelX": 573.7451,
-            "TelY": 149.7252,
-            "TelZ": 568.6032
-          }
-        },
         "10358084": {
           "ActivityID": 0,
           "ClassName": "Teleporter",
           "ClassNameType": 2,
-          "CustomID": "10368023",
+          "CustomID": "10368003",
           "Dir": 181.4277,
           "DisplayName": "",
           "EntityID": 17103503,

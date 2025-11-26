@@ -103,27 +103,17 @@ class EquipmentItem(BaseItem.BaseItem):
         self.quality = gearBaseData['quality']
         self.equipAttr = EquipAttr()
         savedDict = self.equipAttr.fromJson(savedJson)
-        if savedDict:
-            self.auctionTime = savedDict.get("auctionTime", 0)
         return
 
     def setDropFixEndTime(self, t):
         self.equipAttr.dropFixEndTime = t
 
-    def setAuctionTime(self, t, now=None):
-        super().setAuctionTime(t, now=now)
-        self.equipAttr.setDirtyFlag()
-
     def attr2Json(self):
         extra = {}
-        if self.auctionTime > 0:
-            extra["auctionTime"] = self.auctionTime
         return self.equipAttr.toJson(extraAttrs=extra)
 
     def attr2Dict(self):
         extra = {}
-        if self.auctionTime > 0:
-            extra["auctionTime"] = self.auctionTime
         return self.equipAttr.toDict(extraAttrs=extra)
 
     def toClientBodyEquipItemDict(self, slotId):
@@ -146,7 +136,6 @@ class EquipmentItem(BaseItem.BaseItem):
             'expireTime': self.expireTime,
             'uniqueId': self.uniqueId,
             'bindType': self.bindType,
-            'auctionTime': self.auctionTime,
             'lockStatus' : self.lockStatus,
         }
         cliDic.update(self.equipAttr.toClientDic())
@@ -721,10 +710,9 @@ class EquipmentItem(BaseItem.BaseItem):
         return ret
 
     def checkSpiritApplyGroupId(self, groupId):
-        spiritAffixCount = len(self.equipAttr.spiritDatas)
-        if spiritAffixCount > 0:
-            return spiritAffixCount // 2 >= groupId
-        return False
+        if self.equipAttr.spiritSlotNum <= 0:
+            return False
+        return 0 <= groupId <= (self.equipAttr.spiritSlotNum - 1)
 
     def doApplySpiritGroupId(self, src, groupId):
         ret = self.equipAttr.applySpiritGroupId(groupId)
@@ -1030,25 +1018,18 @@ class EquipAttr(userType.UserSoleType):
         self.templateId = templateId
         return
 
-    def _genGlyphAffix(self,  totalAffixesNum=0, specificAffixId=0):
-        DEBUG_MSG('in _genGlyphAffix:', totalAffixesNum, specificAffixId)
-        return self._doRandomAffix(GLYPHTWD.datas, totalAffixesNum, specificAffixId, True)
-
-    def _genSpiritAffix(self,  totalAffixesNum=0, specificAffixId=0):
-        DEBUG_MSG('in _genSpiritAffix:', totalAffixesNum, specificAffixId)
-        return self._doRandomAffix(AFAFTWD.datas, totalAffixesNum, specificAffixId)
-
-    def _doRandomAffix(self, affixWeights, totalAffixesNum=0, specificAffixId=0, isGlyph = False):
-        DEBUG_MSG('in _doRandomAffix:', totalAffixesNum, specificAffixId)
+    def _genGlyphAffix(self,  totalAffixesNum=0):
+        DEBUG_MSG('in _genGlyphAffix:', totalAffixesNum)
         randomAffixes = []
-        if self.quality in gameconst.ItemQuality.NO_RANDOM_FIX_QUALITY:
-            ERROR_MSG('in _doRandomAffix: error quality', self.quality, totalAffixesNum, specificAffixId)
+        # 明文不可随机词缀的品质
+        if self.quality in gameconst.ItemQuality.GLYPH_NO_RANDOM_FIX_QUALITY:
+            ERROR_MSG('in _genGlyphAffix: error quality', self.quality, totalAffixesNum)
             return randomAffixes
 
         if totalAffixesNum == 0:
             weight_list = AFRAFCWD.affixNumWeightDic.get(self.quality)
             if not weight_list:
-                ERROR_MSG('in _doRandomAffix: missing weight list', self.quality, totalAffixesNum, specificAffixId)
+                ERROR_MSG('in _genGlyphAffix: missing weight list', self.quality, totalAffixesNum)
                 return randomAffixes
             rdIdx = utils.randomByWeight(weight_list)
             rdAfNum = rdIdx
@@ -1058,32 +1039,89 @@ class EquipAttr(userType.UserSoleType):
         key = 'gear_' + str(self.equipSubType) + '_' + str(self.quality)
         affixIdList = []
         affixIdWeightList = []
-        for affixId, val in affixWeights.items():
-            if affixId == specificAffixId:
-                continue
+        for affixId, val in GLYPHTWD.datas.items():
             wt = val.get(key, 0)
             if wt:
                 affixIdList.append(affixId)
                 affixIdWeightList.append(wt)
 
-
         for idx in range(rdAfNum):
-            if specificAffixId > 0:
-                randomAffixId = specificAffixId
-                specificAffixId = 0
-            else:
-                rdIdx = utils.randomByWeight(affixIdWeightList)
-                randomAffixId = affixIdList[rdIdx]
-                if idx < rdAfNum - 1:
-                    affixIdList.pop(rdIdx)
-                    affixIdWeightList.pop(rdIdx)
-            affix = self.generateAffix(randomAffixId, isGlyph)
+            rdIdx = utils.randomByWeight(affixIdWeightList)
+            randomAffixId = affixIdList[rdIdx]
+            if idx < rdAfNum - 1:
+                affixIdList.pop(rdIdx)
+                affixIdWeightList.pop(rdIdx)
+            affix = self.generateAffix(randomAffixId, True)
             if not affix:
                 continue
             randomAffixes.append(affix)
 
         return randomAffixes
 
+    def _genSpiritAffix(self,  totalAffixesNum=0, specificAffixId=0, unbindValue = 0, blessAffixId = 0):
+        DEBUG_MSG('in _genSpiritAffix:', totalAffixesNum, specificAffixId, unbindValue, blessAffixId)
+        randomAffixes = []
+        # 明文不可随机词缀的品质
+        if self.quality in gameconst.ItemQuality.SPIRIT_NO_RANDOM_FIX_QUALITY:
+            ERROR_MSG('in _genSpiritAffix: error quality', self.quality, totalAffixesNum, specificAffixId)
+            return randomAffixes
+
+        if totalAffixesNum == 0:
+            weight_list = AFRAFCWD.affixNumWeightDic.get(self.quality)
+            if not weight_list:
+                ERROR_MSG('in _genSpiritAffix: missing weight list', self.quality, totalAffixesNum, specificAffixId)
+                return randomAffixes
+            rdIdx = utils.randomByWeight(weight_list)
+            rdAfNum = rdIdx
+        else:
+            rdAfNum = totalAffixesNum
+
+        key = 'gear_' + str(self.equipSubType) + '_' + str(self.quality)
+        affixIdList = []
+        affixIdWeightList = []
+        for affixId, val in AFAFTWD.datas.items():
+            if affixId == specificAffixId:
+                continue
+
+            # 没有消耗非绑材料就不给幸运词条了
+            if blessAffixId and affixId == blessAffixId:
+                if unbindValue <= 0:
+                    continue
+                # 如果不是项链也不出
+                if self.equipType != gameconst.EquipTypes.MAIN_TYPE_NECKLACE:
+                    continue
+            
+            wt = val.get(key, 0)
+            if wt:
+                affixIdList.append(affixId)
+                affixIdWeightList.append(wt)
+
+        for idx in range(rdAfNum):
+            needRandom = True
+            if specificAffixId > 0:
+                needRandom = False
+                randomAffixId = specificAffixId
+                specificAffixId = 0
+                # 如果保底的刚好是幸运词条，那就看是否是消耗了未绑定材料
+                if randomAffixId == blessAffixId:
+                    if unbindValue <= 0:
+                        needRandom = True
+                    # 如果不是项链也不出
+                    if self.equipType != gameconst.EquipTypes.MAIN_TYPE_NECKLACE:
+                        needRandom = True
+            if needRandom:
+                rdIdx = utils.randomByWeight(affixIdWeightList)
+                randomAffixId = affixIdList[rdIdx]
+                if idx < rdAfNum - 1:
+                    affixIdList.pop(rdIdx)
+                    affixIdWeightList.pop(rdIdx)
+            affix = self.generateAffix(randomAffixId, False)
+            if not affix:
+                continue
+            randomAffixes.append(affix)
+
+        return randomAffixes
+        
     def generateAffix(self, affixId, isGlyph):
         affixData = AFAFD.datas.get(affixId)
         if not affixData:
@@ -1283,6 +1321,9 @@ class EquipAttr(userType.UserSoleType):
                             if blessAffixId and affixId == blessAffixId:
                                 if unbindValue <= 0:
                                     continue
+                                # 如果不是项链也不出
+                                if self.equipType != gameconst.EquipTypes.MAIN_TYPE_NECKLACE:
+                                    continue
                             wt = AFAFTWD.datas.get(affixId)
                             if wt:
                                 wt = wt.get(key)
@@ -1298,7 +1339,7 @@ class EquipAttr(userType.UserSoleType):
                     triggerLuck = True
         if triggerLuck:
             self._refreshWashingLuckData()
-        newSpiritAffixes = self._genSpiritAffix(totalAffixesNum, specificAffixId)
+        newSpiritAffixes = self._genSpiritAffix(totalAffixesNum, specificAffixId, unbindValue, blessAffixId)
         if len(newSpiritAffixes) == 0:
             ERROR_MSG('in spiritWashing empty spirit affixes', totalAffixesNum)
             return False, None, None

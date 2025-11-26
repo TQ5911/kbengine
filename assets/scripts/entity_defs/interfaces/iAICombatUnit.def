@@ -96,6 +96,11 @@
             <Default>       0                   </Default>
             <Flags>         CELL_PRIVATE        </Flags>
         </nextKeepDistanceTime>
+
+        <beHateCounter>
+            <Type>          HATE_COUNTER_DATA_INFO      </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+        </beHateCounter>
     </Properties>
 
     <BaseMethods>

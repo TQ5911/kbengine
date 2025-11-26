@@ -51,6 +51,7 @@ class IWonderLandCell(object):
 
     @utils.isMyself
     @gamedecorator.limitcall(1)
+    @gamedecorator.checkGameconfigEnable('wonderLand')
     def enterWonderLand(self, exposed, floor):
         if not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']):
             self.showMsg(AC_CD.datas['activity_notOpen']['value'], [])

@@ -95,6 +95,13 @@
             <Default>       0               </Default>
             <Persistent>    true            </Persistent>
         </drugsQuantityBase>
+
+        <giftKeyRecordDic>
+            <Type>    PY_DICT            </Type>
+            <Flags>   BASE              </Flags>
+            <Default>       {}          </Default>
+            <Persistent>    true        </Persistent>
+        </giftKeyRecordDic>
     </Properties>
 
     <BaseMethods>
@@ -219,6 +226,7 @@
             <Arg>       BOOL       </Arg>
             <Arg>       SPACE_NO   </Arg>
             <Arg>       PYTHON     </Arg>
+            <Arg>       UINT8     </Arg>
         </baseDoApplyGather>
 
         <unlockBag>
@@ -392,6 +400,10 @@
         <onDrugsQuantitySync>
             <Arg>       INT32      </Arg>
         </onDrugsQuantitySync>
+
+        <exchangeGiftKeyReward> <Exposed/>
+            <Arg>           UNICODE         </Arg>
+        </exchangeGiftKeyReward>
     </BaseMethods>
 
     <CellMethods>

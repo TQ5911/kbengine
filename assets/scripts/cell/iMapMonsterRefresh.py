@@ -5,9 +5,81 @@ import functools
 import formula
 import utils
 import creep_countRefresh as CCR
+import gameconst
+import collections
+
+# 分区具体知行的刷新action
+class MonsterRefreshAction(object):
+    def __init__(self):
+        # 刷新计数
+        self.refreshCount = 0
+        # 当下死亡或者销毁的刷新怪物记录
+        self.killOrDestroyMonsterIDs = {}
+        # 等待下一次计数
+        self.waitForNextRefresh = False
+        # 上一次记录的时间
+        self.lastRecordTime = 0
+    
+    def doRefreshCalculation(self, spaceNo, spaceId, combatAreaId, spaceMgrId, monsterMgrId, monsterId, monsterInstId, refreshDataKey):
+        DEBUG_MSG("doRefreshCalculation ", spaceNo, spaceId, combatAreaId, spaceMgrId, monsterMgrId, monsterId, monsterInstId, refreshDataKey)
+        if self.lastRecordTime == 0:
+            self.lastRecordTime = utils.getNow()
+        else:
+            lastRecordTime = self.lastRecordTime
+            self.lastRecordTime = utils.getNow()
+            countResetTime = IMapMonsterRefresh.countResetTime(refreshDataKey)
+            if countResetTime and countResetTime > 0:
+                if self.lastRecordTime - lastRecordTime >= countResetTime:
+                    self.refreshCount = 0
+
+        if not self.waitForNextRefresh:
+            countMonsterIDs = IMapMonsterRefresh.countMonsterIDs(refreshDataKey)
+            if countMonsterIDs is None:
+                return
+            if monsterId in countMonsterIDs:
+                self.refreshCount += 1
+                if self.refreshCount >= IMapMonsterRefresh.countLimit(refreshDataKey):
+                    self.refreshCount = 0
+                    self.waitForNextRefresh = True
+                    self.doMapMonsterRefresh(combatAreaId, spaceNo, spaceId, spaceMgrId, monsterMgrId, refreshDataKey)
+            return
+
+        refreshMonsterIDs = IMapMonsterRefresh.refreshMonsterIDs(spaceNo, refreshDataKey)
+        if refreshMonsterIDs is None:
+            return
+
+        if monsterInstId in refreshMonsterIDs.keys():
+            self.killOrDestroyMonsterIDs[monsterInstId] = self.killOrDestroyMonsterIDs.get(monsterInstId, 0) + 1
+            if self.killOrDestroyMonsterIDs == refreshMonsterIDs:
+                self.killOrDestroyMonsterIDs.clear()
+                self.refreshCount = 0
+                self.waitForNextRefresh = False
+                self.lastRecordTime = 0
+    
+    def doMapMonsterRefresh(self, combatAreaId, spaceNo, spaceId, spaceMgrId, monsterMgrId, refreshDataKey):
+        DEBUG_MSG("doMapMonsterRefresh ", combatAreaId, spaceNo, spaceId, spaceMgrId, monsterMgrId, refreshDataKey)
+        refreshMonsterIDs = IMapMonsterRefresh.refreshMonsterIDs(spaceNo, refreshDataKey)
+        if refreshMonsterIDs is None:
+            ERROR_MSG("doMapMonsterRefresh 1, missing refreshMonsterIDs ", spaceNo, spaceId)
+            return
+
+        mapID = formula.getMapId(spaceNo)
+        dunData = utils.getDunModuleData(mapID)
+        instanceIDs = []
+        for refreshMonsterID in refreshMonsterIDs.keys():
+            monsterData = dunData[str(refreshMonsterID)]
+            refreshNum = int(monsterData['Props']['RefreshNum'])
+            for i in utils.generateGameEntityId(refreshMonsterID, refreshNum):
+                instanceIDs.append(i)
+
+        entityProps = []
+        utils.loadLineReadyEntities(spaceNo, instanceIDs, entityProps, True)
+        for _, _, _className, _, _pos, _dir, _params, _ in entityProps:
+            _params['spaceMgrId'] = spaceMgrId
+            _params['monsterGroupId'] = monsterMgrId
+            KBEngine.createEntity(_className, spaceId, _pos, _dir, _params)
 
 class IMapMonsterRefresh(object):
-
     @classmethod
     def clearAllCache(cls):
         cls.countLimit.cache_clear()
@@ -64,73 +136,15 @@ class IMapMonsterRefresh(object):
         if countRefreshData:
             return countRefreshData['countResetTime']
         return None
-    
+
     def __init__(self):
-        # 刷新计数
-        self.refreshCount = 0
-        # 当下死亡或者销毁的刷新怪物记录
-        self.killOrDestroyMonsterIDs = {}
-        # 等待下一次计数
-        self.waitForNextRefresh = False
-        # 上一次记录的时间
-        self.lastRecordTime = 0
+        # 刷新数据记录
+        self.refreshRecords = {}
 
-    def onMonsterDestroy(self, monsterId, monsterInstId, spaceMgrId, monsterMgrId, refreshDataKey):
-        DEBUG_MSG("onMonsterDestroy ", monsterId, monsterInstId, self.spaceNo, self.spaceID, refreshDataKey)
-        if self.lastRecordTime == 0:
-            self.lastRecordTime = utils.getNow()
-        else:
-            lastRecordTime = self.lastRecordTime
-            self.lastRecordTime = utils.getNow()
-            countResetTime = self.countResetTime(refreshDataKey)
-            if countResetTime and countResetTime > 0:
-                if self.lastRecordTime - lastRecordTime >= countResetTime:
-                    self.refreshCount = 0
-
-        if not self.waitForNextRefresh:
-            countMonsterIDs = self.countMonsterIDs(refreshDataKey)
-            if countMonsterIDs is None:
-                return
-            if monsterId in countMonsterIDs:
-                self.refreshCount += 1
-                if self.refreshCount >= self.countLimit(refreshDataKey):
-                    self.refreshCount = 0
-                    self.waitForNextRefresh = True
-                    self.doMapMonsterRefresh(spaceMgrId, monsterMgrId, monsterInstId, refreshDataKey)
-            return
-
-        refreshMonsterIDs = self.refreshMonsterIDs(self.spaceNo, refreshDataKey)
-        if refreshMonsterIDs is None:
-            return
-
-        if monsterInstId in refreshMonsterIDs.keys():
-            self.killOrDestroyMonsterIDs[monsterInstId] = self.killOrDestroyMonsterIDs.get(monsterInstId, 0) + 1
-            if self.killOrDestroyMonsterIDs == refreshMonsterIDs:
-                self.killOrDestroyMonsterIDs.clear()
-                self.refreshCount = 0
-                self.waitForNextRefresh = False
-                self.lastRecordTime = 0
-
-    def doMapMonsterRefresh(self, spaceMgrId, monsterMgrId, monsterInstId, refreshDataKey):
-        DEBUG_MSG("doMapMonsterRefresh ", self.spaceNo, self.spaceID, spaceMgrId, monsterMgrId, refreshDataKey)
-        refreshMonsterIDs = self.refreshMonsterIDs(self.spaceNo, refreshDataKey)
-        if refreshMonsterIDs is None:
-            ERROR_MSG("doMapMonsterRefresh 1, missing refreshMonsterIDs ", self.spaceNo, self.spaceID)
-            return
-
-        mapID = formula.getMapId(self.spaceNo)
-        dunData = utils.getDunModuleData(mapID)
-        instanceIDs = []
-        for refreshMonsterID in refreshMonsterIDs.keys():
-            monsterData = dunData[str(refreshMonsterID)]
-            refreshNum = int(monsterData['Props']['RefreshNum'])
-            for i in utils.generateGameEntityId(refreshMonsterID, refreshNum):
-                instanceIDs.append(i)
-
-        entityProps = []
-        utils.loadLineReadyEntities(self.spaceNo, instanceIDs, entityProps, True)
-        for _, _, _className, _, _pos, _dir, _params, _ in entityProps:
-            _params['spaceMgrId'] = spaceMgrId
-            _params['monsterGroupId'] = monsterMgrId
-            KBEngine.createEntity(_className, self.spaceID, _pos, _dir, _params)
-
+    def onMonsterDestroy(self, combatAreaId, monsterId, monsterInstId, spaceMgrId, monsterMgrId, refreshDataKey):
+        DEBUG_MSG("onMonsterDestroy ", combatAreaId, monsterId, monsterInstId, self.spaceNo, self.spaceID, refreshDataKey)
+        monsterRefreshAction = self.refreshRecords.get(combatAreaId)
+        if not monsterRefreshAction:
+            monsterRefreshAction = MonsterRefreshAction()
+            self.refreshRecords[combatAreaId] = monsterRefreshAction
+        monsterRefreshAction.doRefreshCalculation(self.spaceNo, self.spaceID, combatAreaId, spaceMgrId, monsterMgrId, monsterId, monsterInstId, refreshDataKey)

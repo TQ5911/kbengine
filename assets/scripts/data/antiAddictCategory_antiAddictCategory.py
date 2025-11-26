@@ -193,7 +193,7 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001990,
-        "rewardMessage": ('<color=&color211>购买成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>交易成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     21: _tools.RODict({
         "ID": 21,
@@ -887,7 +887,25 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 54001994,
         "rewardMessage": ('<color=&color211>月卡奖励</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+    }),
+    98: _tools.RODict({
+        "ID": 98,
+        "name": "BONUS_SRC_MONTHCARD_DAILY",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    99: _tools.RODict({
+        "ID": 99,
+        "name": "BONUS_SRC_GIFT_CDK_ITEMS",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001992,
+        "rewardMessage": ('<color=&color211>兑换成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     })
 })
 minKey = 1
-maxKey = 97
+maxKey = 99

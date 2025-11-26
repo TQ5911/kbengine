@@ -26,5 +26,9 @@ datas = _tools.RODict({
     "playerSound_LevelUp": _tools.RODict({
         "ID": "playerSound_LevelUp",
         "value": 85002023,
+    }),
+    "offlineExpFluctuate": _tools.RODict({
+        "ID": "offlineExpFluctuate",
+        "value": (0.95, 1.02),
     })
 })

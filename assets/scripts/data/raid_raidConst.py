@@ -282,5 +282,9 @@ datas = _tools.RODict({
     "raid_playerKicked_msg": _tools.RODict({
         "ID": "raid_playerKicked_msg",
         "value": 58000031,
+    }),
+    "raidTeamNotExist": _tools.RODict({
+        "ID": "raidTeamNotExist",
+        "value": 54000649,
     })
 })

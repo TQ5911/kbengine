@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "55A851221880F97D557F233EDF17AE0A";
+        public string serverEntitydefMD5 = "8E52450E2AB00EE92FF52D4902CB9B32";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -390,12 +390,12 @@ namespace KBEngine
             }
         }
 
-        public void checkAliasListValid(List<Int32> aliasList)
+        public bool checkAliasListValid(List<Int32> aliasList)
         {
             if (aliasList.Count != _entityIDAliasIDList.Count)
             {
                 Dbg.ERROR_MSG("checkAliasListValid: aliasList.Count != _entityIDAliasIDList.Count" + " aliasList.Count=" + aliasList.Count + " _entityIDAliasIDList.Count=" + _entityIDAliasIDList.Count);
-                return;
+                return false;
             }
 
             for (int i = 0; i < aliasList.Count; i++)
@@ -403,11 +403,12 @@ namespace KBEngine
                 if (aliasList[i] != _entityIDAliasIDList[i])
                 {
                     Dbg.ERROR_MSG("checkAliasListValid: aliasList[" + i + "] != _entityIDAliasIDList[" + i + "]" + " aliasList[" + i + "]=" + aliasList[i] + " _entityIDAliasIDList[" + i + "]=" + _entityIDAliasIDList[i]);
-                    return;
+                    return false;
                 }
             }
 
             Dbg.DEBUG_MSG("checkAliasListValid: aliasList valid!");
+            return true;
         }
 
         public void disconnect()

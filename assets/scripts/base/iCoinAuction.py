@@ -210,12 +210,12 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         isPublicity = 0
         # 装备
         if m_itemObj.isEquipmentItem():
-            dataKey = dataUtils.getAuctionPublicityKey(m_itemObj.getEquipType(), m_itemObj.getEquipQuality())
-            if A_PC.equipDataDic.get(dataKey, False):
+            lowestQulity = A_PC.equipDataDic.get(m_itemObj.getEquipType(), -1)
+            if lowestQulity > 0 and m_itemObj.getEquipQuality() >= lowestQulity:
                 isPublicity = 1
         # 道具
         else:
-           if A_PC.equipDataDic.get(m_itemObj.itemId, False):
+           if A_PC.itemDataDic.get(m_itemObj.itemId, False):
                isPublicity = 1
         
         m_opUUID = KBEngine.genUUID64()
@@ -422,8 +422,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         m_desc = "buy-coinAuction-auctionItemUUID-{}-{}-{}".format(_m_auctionItemUUID, _m_itemId, _m_uniqueId)
         m_itemObjList = list(auctionItem.iterToSaledItemDataList(number=extra.get('auctionBuyItemNum')))
 
-        self.setAuctionDealCDTime(m_itemObjList, extra.get("dealCDTime", 0))
-
         m_addWealth = dropAward.AwardVal(itemObjs=m_itemObjList)
         if not self.canAddWealthVal(m_src, m_addWealth):
             ERROR_MSG("onBuyItemInCoinAuctionByAuctionItemUUID not canAddWealthVal", _m_auctionItemUUID, _m_uniqueId,
@@ -451,8 +449,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         buyItemNum = extra.get('auctionBuyItemNum')
         m_desc = "buy-coinAuction-auctionItemUUID-{}-{}-{}".format(_m_auctionItemUUID, _m_itemId, _m_uniqueId)
         m_itemObjList = list(auctionItem.iterToSaledItemDataList(number=extra.get('auctionBuyItemNum')))
-
-        self.setAuctionDealCDTime(m_itemObjList, extra.get("dealCDTime", 0))
 
         m_addWealth = dropAward.AwardVal(itemObjs=m_itemObjList)
         if not self.canAddWealthVal(m_src, m_addWealth):
@@ -817,9 +813,9 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         DEBUG_MSG("onGetItemNumByCategoryIdResp::", categoryId, itemIds, itemNums, prices, isPublicity)
         self.client.onGetItemNumByCategoryIdResp(categoryId, itemIds, itemNums, prices, isPublicity)
 
-    def getAuctionItemNumByItemIdList(self, exposed, itemIdList):
-        INFO_MSG("getAuctionItemNumByItemIdList::", itemIdList)
-        self.stub.getAuctionItemNumByCategoryId(self.gbID, gameconst.AuctionConst.ATTENTION_MY, itemIdList)
+    def getAuctionItemNumByItemIdList(self, exposed, itemIdList, isPublicity):
+        INFO_MSG("getAuctionItemNumByItemIdList::", itemIdList, isPublicity)
+        self.stub.getAuctionItemNumByCategoryId(self.gbID, gameconst.AuctionConst.ATTENTION_MY, itemIdList, isPublicity)
 
     def _buyItemByItemIdCheck(self, itemId, number, price):
         if self.bagData.isFull():
@@ -921,8 +917,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
                 return
             itemObj.uniqueId = KBEngine.genUUID64()
 
-            self.setAuctionDealCDTime([itemObj], extra.get("dealCDTime", 0))
-
             m_src = AAC_AACDD.datas.BONUS_SRC_COIN_AUCTION_BUY_ITEM
             m_opUUID = extra.get('opUUID', KBEngine.genUUID64())
             m_desc = "buy-coinAuction-itemId-{}-{}".format(itemId, buyNum)
@@ -983,22 +977,40 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         self.saleItemMoney = 0
         self.addWealth(m_src, _awardVal, m_opUUID, m_desc)
 
-    # 设置交易行购买物品后，上架冷却时间
-    def setAuctionDealCDTime(self, itemObjs, dealCDTime):
-        isExpired = utils.getNow() > dealCDTime
-        for itemObj in itemObjs:
-            if isExpired:
-                break
-            itemObj.setAuctionTime(0, now = dealCDTime)
-
-    def _initPlayerCollectionAuctionIdList(self):
-        DEBUG_MSG("_initPlayerCollectionAuctionIdList", self.cliConfigDic, self.collectionAuctionIdList)
-        for key in range(gameconst.AuctionItemCollection.START_KEY, gameconst.AuctionItemCollection.START_KEY + gameconst.AuctionItemCollection.MAX_COUNT):
+    def _initPlayerCollectionAuctionList(self):
+        DEBUG_MSG("_initPlayerCollectionAuctionList", self.cliConfigDic, self.collectionAuctionIdList, self.collectionAuctionIdCategoryList, self.collectionAuctionItemCategoryList)
+        for key in range(gameconst.AuctionIdCollection.START_KEY, gameconst.AuctionIdCollection.START_KEY + gameconst.AuctionIdCollection.MAX_COUNT):
             itemId = self.cliConfigDic.get(key, 0)
             self.addCollectionAuctionIdList(key, itemId)
 
+        for key in range(gameconst.AuctionIdCategoryCollection.START_KEY, gameconst.AuctionIdCategoryCollection.START_KEY + gameconst.AuctionIdCategoryCollection.MAX_COUNT):
+            itemId = self.cliConfigDic.get(key, 0)
+            self.addCollectionAuctionIdCategoryList(key, itemId)
+
+        for key in range(gameconst.AuctionItemCategoryCollection.START_KEY, gameconst.AuctionItemCategoryCollection.START_KEY + gameconst.AuctionItemCategoryCollection.MAX_COUNT):
+            itemId = self.cliConfigDic.get(key, 0)
+            self.addCollectionAuctionItemCategoryList(key, itemId)
+
+    def addCollectionAuctionItemCategoryList(self, key, itemId):
+        if key < gameconst.AuctionItemCategoryCollection.START_KEY or key >= gameconst.AuctionItemCategoryCollection.START_KEY + gameconst.AuctionItemCategoryCollection.MAX_COUNT:
+            return
+        if not itemId:
+            return
+        if itemId in self.collectionAuctionItemCategoryList:
+            return
+        self.collectionAuctionItemCategoryList.append(itemId)
+        DEBUG_MSG("addCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
+
+    def removeCollectionAuctionItemCategoryList(self, key, itemId):
+        if key < gameconst.AuctionItemCategoryCollection.START_KEY or key >= gameconst.AuctionItemCategoryCollection.START_KEY + gameconst.AuctionItemCategoryCollection.MAX_COUNT:
+            return
+        if not itemId:
+            return
+        self.collectionAuctionItemCategoryList.remove(itemId)
+        DEBUG_MSG("removeCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
+
     def addCollectionAuctionIdList(self, key, itemId):
-        if key < gameconst.AuctionItemCollection.START_KEY or key >= gameconst.AuctionItemCollection.START_KEY + gameconst.AuctionItemCollection.MAX_COUNT:
+        if key < gameconst.AuctionIdCollection.START_KEY or key >= gameconst.AuctionIdCollection.START_KEY + gameconst.AuctionIdCollection.MAX_COUNT:
             return
         if not itemId:
             return
@@ -1008,19 +1020,37 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         DEBUG_MSG("addCollectionAuctionIdList", self.collectionAuctionIdList)
 
     def removeCollectionAuctionIdList(self, key, itemId):
-        if key < gameconst.AuctionCollection.START_KEY or key >= gameconst.AuctionCollection.START_KEY + gameconst.AuctionCollection.MAX_COUNT:
+        if key < gameconst.AuctionIdCollection.START_KEY or key >= gameconst.AuctionIdCollection.START_KEY + gameconst.AuctionIdCollection.MAX_COUNT:
             return
         if not itemId:
             return
         self.collectionAuctionIdList.remove(itemId)
         DEBUG_MSG("removeCollectionAuctionIdList", self.collectionAuctionIdList)
 
+    def addCollectionAuctionIdCategoryList(self, key, itemId):
+        if key < gameconst.AuctionIdCategoryCollection.START_KEY or key >= gameconst.AuctionIdCategoryCollection.START_KEY + gameconst.AuctionIdCategoryCollection.MAX_COUNT:
+            return
+        if not itemId:
+            return
+        if itemId in self.collectionAuctionIdCategoryList:
+            return
+        self.collectionAuctionIdCategoryList.append(itemId)
+        DEBUG_MSG("addCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
+
+    def removeCollectionAuctionIdCategoryList(self, key, itemId):
+        if key < gameconst.AuctionIdCategoryCollection.START_KEY or key >= gameconst.AuctionIdCategoryCollection.START_KEY + gameconst.AuctionIdCategoryCollection.MAX_COUNT:
+            return
+        if not itemId:
+            return
+        self.collectionAuctionIdCategoryList.remove(itemId)
+        DEBUG_MSG("removeCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
+
     def tipPlayerAuctionItemCollection(self, newAuctionItemCache):
         if not len(newAuctionItemCache):
             return
 
         auctionIdList = []
-        DEBUG_MSG("call tipPlayerAuctionItemCollection", self.gbID, self.collectionItemIdList, newAuctionItemCache, id(newAuctionItemCache))
+        DEBUG_MSG("call tipPlayerAuctionItemCollection", self.gbID, self.collectionAuctionIdList, newAuctionItemCache, id(newAuctionItemCache))
         for auctionId, playerGBID in newAuctionItemCache.items():
             if auctionId not in self.collectionAuctionIdList:
                 continue
@@ -1036,6 +1066,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         INFO_MSG("getAuctionItemsByAuctionIdList::", auctionIdList)
         self.stub.getAuctionItemsByAuctionIdList(self.gbID, gameconst.AuctionConst.ATTENTION_GOODS, auctionIdList)
 
-    def onGetAuctionItemsByAuctionIdsResp(self, categoryId, auctionIds, itemIds, itemNums, prices, addTimes):
-        DEBUG_MSG("onGetAuctionItemsByAuctionIdsResp::", categoryId, auctionIds, itemIds, itemNums, prices, addTimes)
-        self.client.onGetAuctionItemsByAuctionIdsResp(categoryId, auctionIds, itemIds, itemNums, prices, addTimes)
+    def onGetAuctionItemsByAuctionIdsResp(self, categoryId, auctionItems):
+        DEBUG_MSG("onGetAuctionItemsByAuctionIdsResp::", categoryId, auctionItems)
+        self.client.onGetAuctionItemsByAuctionIdsResp(categoryId, auctionItems)

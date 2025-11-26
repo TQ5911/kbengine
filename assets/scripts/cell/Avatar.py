@@ -84,6 +84,7 @@ import json
 import guildAuthorization_authorization_def as GA_A_DD
 import iMeridian
 import iMonthCard
+import iMineWarCell
 
 class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace, impTask.ImpTask, impCombat.ImpCombat,
              EventMgr.EventMgr, iComplexTeleport.IComplexTeleport, impTeam.ImpTeam, impRaid.ImpRaid,
@@ -94,7 +95,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              iCubeCell.ICubeCell, iGuildCell.IGuildCell, iGuildTrainCell.IGuildTrainCell,
              iLeaderBoardCell.ILeaderBoardCell, iWonderLandCell.IWonderLandCell,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief,
-             iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard):
+             iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarCell.IMineWarCell):
     IsAvatar = True
     IsCombatUnit = True
 
@@ -104,6 +105,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         impAutoCombat.ImpAutoCombat.__init__(self)
         impAvatarPK.ImpAvatarPK.__init__(self)
         impRaid.ImpRaid.__init__(self)
+        iCubeCell.ICubeCell.__init__(self)
         iComplexTeleport.IComplexTeleport.__init__(self)
         iMount.IMount.__init__(self)
         impTeam.ImpTeam.__init__(self)
@@ -111,6 +113,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         iLeaderBoardCell.ILeaderBoardCell.__init__(self)
         iSiegeWarCell.ISiegeWarCell.__init__(self)
         iMonthCard.IMonthCard.__init__(self)
+        iMineWarCell.IMineWarCell.__init__(self)
         self.addDatetimeTimerTick()
 
         # 设置每秒允许的最快速度, 超速会被拉回去
@@ -181,6 +184,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             checkUserType.checkProperty(self)
         elif userData == gametimer.CUBE_COW_TICK:
             self.cubeCowTick()
+        elif userData == gametimer.MINE_WAR_PLAYER_GET_SCORE:
+            self.mineWarPlayerGetScoreTick()
         else:
             super(Avatar, self).onTimer(tid, userData)
 
@@ -386,7 +391,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             lineType = formula.getMapId(self.spaceNo)
             lineNo = formula.getLineNo(self.spaceNo)
             self.applyEnterLineInternal(lineType, lineNo, self.position, self.direction, {'isLogin': 1})
-
 
         if self.teamId > 0 and not self.isCrossServerInOtherServer:
             gameengine.getTeamStub(self.teamId).getTeamInfoOnLogin(self.base, self.gbId, self.teamId)
@@ -602,8 +606,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.controlledBy = None
         if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Moving)):
             self.setState(gameconst.State.Moving)
-        # self.botMoveController = self.scriptNavigate(dstPos, self.getSpeed())
-        self.botMoveController = self.moveToPoint(dstPos, self.getSpeed(), 0, None, 1, 0)
+        self.botMoveController = self.moveToPoint(dstPos, self.speed, 0, None, 1, 0)
         if not self.botMoveController:
             self.removeState(gameconst.State.Moving)
 
@@ -790,6 +793,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         telDirection = (0.0, 0.0, props['TelDir'] * math.pi / 180)
 
         if not formula.spaceInWorldLine(self.spaceNo):
+            return
+
+        # 矿战准备期间的检查
+        if not self.onMineWarTeleportCheck(lineType):
             return
 
         if lineType == formula.getLineType(self.spaceNo):
@@ -997,14 +1004,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         self.popTempMiscProp(gameconst.AvatarProps.isLightningArea)
 
-        gamelog.log('Teleport', {
-            'role_id': self.gbId,
-            'role_name': self.name,
-            'map_id': formula.getMapId(self.spaceNo),
-            'from_map_id': formula.getMapId(_spaceNo),
-            'space_no': self.spaceNo,
-            'from_space_no': _spaceNo,
-        })
+        # gamelog.log('Teleport', {
+        #     'role_id': self.gbId,
+        #     'role_name': self.name,
+        #     'map_id': formula.getMapId(self.spaceNo),
+        #     'from_map_id': formula.getMapId(_spaceNo),
+        #     'space_no': self.spaceNo,
+        #     'from_space_no': _spaceNo,
+        # })
 
         return True
 

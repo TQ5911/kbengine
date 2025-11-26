@@ -2341,6 +2341,15 @@ def _isEnemy(src, target):
                 if not src.siegeWarCanAttack:
                     return False
             return src.siegeWarCamp != target.siegeWarCamp
+        
+    if formula.isMineWarSpace(src.spaceNo):
+        if formula.isMineWarSpace(target.spaceNo):
+            if target.IsMonster:
+                if not target.mineWarCanAttack or src.guildUUID == 0:
+                    return False
+                return src.guildUUID != target.mineWarGuildId
+            if src.mineWarCanAttack and not src.IsMonster:
+                return src.guildUUID != target.guildUUID
     #
     # mapId = formula.getMapId(src.spaceNo)
     #
@@ -2689,7 +2698,9 @@ def initBaseProperties(entity, propCurveID=0):
 
         propList = propData.get('propList')
         for prop, val in propList.items():
-            setattr(entity, prop, val * _coefficientDic.get(prop, 1))
+            _oldVal = getattr(entity, prop)
+            _func = type(_oldVal)
+            setattr(entity, prop, _func(val * _coefficientDic.get(prop, 1)))
 
     entity.baseSpeed = float(entity.getConfigData().get('baseSpeed', 0))
     entity.jobHealModify = entity.getConfigData().get('jobHealModify', 0.0)

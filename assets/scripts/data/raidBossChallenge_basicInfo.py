@@ -18,14 +18,20 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "dunID": 2201,
+        "firstReward": 40020249,
+        "clearReward": 0,
     }),
     2: _tools.RODict({
         "ID": 2,
         "dunID": 2202,
+        "firstReward": 40020249,
+        "clearReward": 0,
     }),
     3: _tools.RODict({
         "ID": 3,
         "dunID": 2203,
+        "firstReward": 40020249,
+        "clearReward": 40020543,
     })
 })
 minKey = 1

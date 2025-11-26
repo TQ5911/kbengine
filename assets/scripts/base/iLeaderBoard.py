@@ -79,3 +79,5 @@ class ILeaderBoard(object):
             gameconst.AchieveType.LEADER_BOARD,
             actionContext.AchievementCtx(lbType=leaderBoardType, rank=rank))
 
+        if leaderBoardType == gameconst.LeaderBoardType.AVATAR_SCORE:
+            self.avatarScoreRank = rank

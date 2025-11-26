@@ -18,7 +18,7 @@ datas = _tools.RODict({
     30000224: _tools.RODict({
         "ID": 30000224,
         "materials": _tools.ROList([[30000223, 5]]),
-        "cost": _tools.ROList([[30000013, 1000], [30000100, 2000]]),
+        "cost": _tools.ROList([[30000013, 1000]]),
         "lucky": _tools.ROList([30000224, 1, 0.1, 0.1]),
         "unboundProb": 0.3,
         "isOpen": 1
@@ -26,7 +26,7 @@ datas = _tools.RODict({
     30000225: _tools.RODict({
         "ID": 30000225,
         "materials": _tools.ROList([[30000224, 6]]),
-        "cost": _tools.ROList([[30000013, 1000], [30000100, 2001]]),
+        "cost": _tools.ROList([[30000013, 1000]]),
         "lucky": _tools.ROList([30000224, 2, 0.5, 0.2]),
         "unboundProb": 0.3,
         "isOpen": 1
@@ -34,7 +34,7 @@ datas = _tools.RODict({
     30000226: _tools.RODict({
         "ID": 30000226,
         "materials": _tools.ROList([[30000225, 7]]),
-        "cost": _tools.ROList([[30000013, 1000], [30000100, 2002]]),
+        "cost": _tools.ROList([[30000013, 1000]]),
         "lucky": _tools.ROList([30000224, 3, 0.2, 0.2]),
         "unboundProb": 0.3,
         "isOpen": 1
@@ -42,7 +42,7 @@ datas = _tools.RODict({
     30000231: _tools.RODict({
         "ID": 30000231,
         "materials": _tools.ROList([[30000223, 10]]),
-        "cost": _tools.ROList([[30000013, 1000], [30000100, 2003]]),
+        "cost": _tools.ROList([[30000013, 1000]]),
         "lucky": _tools.ROList([30000224, 4, 1, 0.2]),
         "unboundProb": 0.3,
         "isOpen": 1
@@ -50,7 +50,7 @@ datas = _tools.RODict({
     30000232: _tools.RODict({
         "ID": 30000232,
         "materials": _tools.ROList([[30000224, 5]]),
-        "cost": _tools.ROList([[30000013, 1000], [30000100, 2004]]),
+        "cost": _tools.ROList([[30000013, 1000]]),
         "lucky": _tools.ROList([30000224, 5, 0.1, 0.2]),
         "unboundProb": 0.3,
         "isOpen": 1
@@ -58,7 +58,7 @@ datas = _tools.RODict({
     30000233: _tools.RODict({
         "ID": 30000233,
         "materials": _tools.ROList([[30000225, 10]]),
-        "cost": _tools.ROList([[30000013, 1000], [30000100, 2005]]),
+        "cost": _tools.ROList([[30000013, 1000]]),
         "lucky": _tools.ROList([30000224, 6, 0.5, 0.2]),
         "unboundProb": 0.3,
         "isOpen": 0

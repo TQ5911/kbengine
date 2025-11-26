@@ -29,7 +29,9 @@
 
         <applyJoinTeam>
             <Arg>           TEAMID          </Arg>
+            <Arg>           STRING          </Arg>
             <Arg>           PY_DICT         </Arg>
+            <Arg>           BOOL            </Arg>
         </applyJoinTeam>
 
         <addTeamMember>
@@ -54,6 +56,7 @@
         </replyInviteTeam>
 
         <leaveTeam>
+            <Arg>           UINT32          </Arg>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
@@ -444,6 +447,7 @@
         </onTeamAutoMatchTimeout>
 
         <setTeamTarget>
+            <Arg>           PLAYER_GBID  </Arg>
             <Arg>           TEAMID       </Arg>
             <Arg>           TEAMTARGET   </Arg>
             <Arg>           UINT32       </Arg>
@@ -695,5 +699,9 @@
             <Arg>       TEAMID          </Arg>
             <Arg>       UINT8           </Arg>
         </getTeamStatisticData>
+
+        <setInDungeon>
+            <Arg>       TEAMID          </Arg>
+        </setInDungeon>
     </BaseMethods>
 </root>

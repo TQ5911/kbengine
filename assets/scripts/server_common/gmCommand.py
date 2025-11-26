@@ -1718,13 +1718,13 @@ def _doCommand(su, command, side, args=None, reason=""):
             import sys
             gameengine.exceptHook(*sys.exc_info())
 
-    if not is_forward_cmd and not cmd.logDisable:
-        gamelog.makeWLog("DoGmCmd", {
-            "role_id": su.gbID or 0,
-            "cmd_name": cmd_name,
-            "cmd_args": ','.join(cmd_args),
-            "reason": reason,
-        })
+    # if not is_forward_cmd and not cmd.logDisable:
+    #     gamelog.makeWLog("DoGmCmd", {
+    #         "role_id": su.gbID or 0,
+    #         "cmd_name": cmd_name,
+    #         "cmd_args": ','.join(cmd_args),
+    #         "reason": reason,
+    #     })
 
     if not cmd.hasEntityArgs():
         gmBCastRealDoCommand(cmd.component, su, command, real_args)

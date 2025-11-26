@@ -206,5 +206,9 @@ datas = _tools.RODict({
     "mineBatte_scoreRankMail": _tools.RODict({
         "ID": "mineBatte_scoreRankMail",
         "value": 37001020,
+    }),
+    "mineBatte_neutralMiningAreaCoreProp": _tools.RODict({
+        "ID": "mineBatte_neutralMiningAreaCoreProp",
+        "value": _tools.ROList([51007001, 51007002]),
     })
 })

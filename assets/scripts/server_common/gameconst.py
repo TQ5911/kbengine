@@ -35,12 +35,15 @@ GLOBALDATA_KEY_CELLAPP_INITED = 'kCellappInited'
 BASEAPP_DATA_KEY_SPACE_MARKER = 'kSpaceMarker'
 BASEAPP_DATA_KEY_SPACE_TO_BASE = 'kSpaceToBase'
 
+BASEAPP_STATE_LOCK_WAIT_FULL_PREPARE = 1
+
 GLOBAL_BASE_STUB_ARCHIVE = [
     'GlobalMailStub',
     'SiegeWarStub',
     'CrossSiegeWarStub',
     'WorldBossStub',
     'RedBagStub',
+    'MineWarStub',
     ]
 GLOBAL_BASE_STUB_UNARCHIVE = [
     'PlayerStub',
@@ -1595,6 +1598,7 @@ RAIDSTUB_CONFIG_NUM = 5
 RAID_TEAM_MEMBER_MAX_NUM = 5
 RAID_LSIT_MAX_NUM = 15
 RAID_MEMBER_MAX_NUM = 15
+RAID_APPLY_JOIN_MAX_NUM = 20
 
 class TeamMicsMode(object):
     OFF = 0
@@ -1741,7 +1745,15 @@ class _RaidErrno(object):
     RAID_PASSWORD_IS_WRONG                  = _errno(50102)     # 密码不对
     RAID_LEVEL_IS_LIMITED                   = _errno(50103)     # 等级不足
     RAID_SCORE_LIMITED                      = _errno(50104)     # 战力不足
-
+    RAID_SOCRE_IS_ILLEGAL                   = _errno(50105)     # 战力不合法
+    RAID_LEVEL_IS_ILLEGAL                   = _errno(50106)     # 等级不合法
+    RAID_PASSWORD_IS_ILLEGAL                = _errno(50107)     # 密码不合法
+    RAID_PASSWORD_IS_EMPTY                  = _errno(50108)     # 密码为空
+    RAID_RECRUIT_IS_ILLEGAL                 = _errno(50109)     # 招募不合法
+    RAID_AUTO_EXPEDITION_IS_ILLEGAL         = _errno(50110)     # 自动开启远征不合法
+    RAID_SET_TARGET_ILLEGAL                 = _errno(50111)     # 设置目标不合法
+    RAID_IS_IN_DUNGEON                      = _errno(50112)     # 团队已进入副本
+    RAID_APPLY_LIST_IS_FULL                 = _errno(50113)     # 团队申请列表满了
     RAID_ERR_IGNORE                         = _errno(60000)     # 可以忽略的错误
 
 
@@ -2513,8 +2525,8 @@ class ItemQuality(object):
     RED = 5
 
     COLL_QUALITY = (WHITE, GREEN, BLUE, PURPLE, ORANGE, RED)
-    NO_RANDOM_FIX_QUALITY = (WHITE, GREEN)
-
+    GLYPH_NO_RANDOM_FIX_QUALITY = (WHITE, GREEN)
+    SPIRIT_NO_RANDOM_FIX_QUALITY = (WHITE, GREEN, RED)
     ALL_QUALITY = 255
 
     @classmethod
@@ -2916,13 +2928,21 @@ class AuctionSource(object):
     UNKNOWN = 0
     FROM_PLAYER = 1
 
-class AuctionCollection(object):
+# 推荐关注商品大类
+class AuctionItemCategoryCollection(object):
     START_KEY = 2001
     MAX_COUNT = 20
     CHECK_TIP_INTERVAL = 1
 
-class AuctionItemCollection(object):
+# 公示关注具体商品
+class AuctionIdCollection(object):
     START_KEY = 2501
+    MAX_COUNT = 20
+    CHECK_TIP_INTERVAL = 1
+
+# 公示关注商品大类
+class AuctionIdCategoryCollection(object):
+    START_KEY = 3001
     MAX_COUNT = 20
     CHECK_TIP_INTERVAL = 1
 
@@ -3409,6 +3429,9 @@ ENTER_CUBE_DEDUCT_TIMES = 1
 
 # ----------------------------- cube mock end -----------------------------
 
+HATE_CNT_TYPE_MOVE = 1
+HATE_CNT_TYPE_ATTACK = 2
+
 # ----------------------------- auth avatar start ---------------------------
 class ClientCallChannel:
     MAIN_CHANNEL = 0
@@ -3512,13 +3535,13 @@ class UIUIVisibleType(object):
     TASK = 1
     LEVEL = 2
     DAY = 3
-    
+
 class AuctionConst(object):
     # 我的关注
     ATTENTION_MY = 1
     # 商品关注
     ATTENTION_GOODS = 100
-        
+
 TEAM_STATISTIC_TYPE_TO_LIST = {
     TeamStatisticType.DAMAGE: 'dmgList',
     TeamStatisticType.HEAL: 'healList',
@@ -3530,4 +3553,37 @@ TEAM_STATISTIC_TYPE_TO_KEY = {
     TeamStatisticType.HEAL: 'heal',
     TeamStatisticType.HURT: 'hurt',
 }
+
+class TeamApplyResult(object):
+    # 等级不足
+    TEAM_APPLY_LEVEL_IS_NOT_ENOUGH = 10001
+    # 战力不足
+    TEAM_APPLY_SCORE_IS_NOT_ENOUGH = 10002
+    # 需要密码
+    TEAM_APPLY_NEED_PASSWORD = 10003
+    # 密码不对
+    TEAM_APPLY_WRONG_PASSWORD = 10004
+    # 在副本中
+    TEAM_APPLY_IS_IN_DUNGEON = 10005
+
+class MINE_WAR_STATE(object):
+    PREPARE = 1
+    RUNNING = 2
+    END = 3
+
+class MineWarMonsterCustomId(object):
+    MINE_CORE = 'mineCore'      #矿战核心
+    MINE_FLAG = 'mineFlag'      #矿战旗帜
+    MINE_BROKEN_FLAG = 'mineBrokenFlag' #矿战被毁旗帜
     
+class MineWarMonsterType(object):
+    MINE_NONE = 0
+    MINE_CORE = 1      #矿战核心
+    MINE_FLAG = 2      #矿战旗帜
+    MINE_BROKEN_FLAG = 3 #矿战被毁旗帜
+    
+mineWarMonsterEnumDict = {
+    MineWarMonsterCustomId.MINE_CORE: MineWarMonsterType.MINE_CORE,
+    MineWarMonsterCustomId.MINE_FLAG: MineWarMonsterType.MINE_FLAG,
+    MineWarMonsterCustomId.MINE_BROKEN_FLAG: MineWarMonsterType.MINE_BROKEN_FLAG,
+}

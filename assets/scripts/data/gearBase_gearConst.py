@@ -85,7 +85,7 @@ datas = _tools.RODict({
     }),
     "equipDropMoralBound": _tools.RODict({
         "ID": "equipDropMoralBound",
-        "value": -500,
+        "value": 10000,
     }),
     "equipDropProbFormulaID": _tools.RODict({
         "ID": "equipDropProbFormulaID",

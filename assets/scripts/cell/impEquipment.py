@@ -8,6 +8,7 @@ import mailAssistor
 import const_const as CCT
 import message_Message_def as MMD
 import actionContext
+import gameconfig
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import itemFactory
 import gameengine
@@ -666,6 +667,9 @@ class ImpEquipment(object):
         self.base.takeEquipBase(uniqueId)
 
     def _dealDeathDrop(self, killerGbId, killerName):
+        if not gameconfig.visibleConfigEable('deathDrop'):
+            return
+
         if not (self._isCritInjured() or (self.moralValue <= GB_GCD.datas['equipDropMoralBound']['value'])):
             return
 

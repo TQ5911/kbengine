@@ -899,12 +899,40 @@ datas = _tools.RODict({
         "ID": "offlineRetentionTime",
         "value": 5,
     }),
+    "maxAccumulateTime": _tools.RODict({
+        "ID": "maxAccumulateTime",
+        "value": 3360,
+    }),
+    "offlineTriggerMin": _tools.RODict({
+        "ID": "offlineTriggerMin",
+        "value": 9,
+    }),
+    "offlineMail": _tools.RODict({
+        "ID": "offlineMail",
+        "value": 37000016,
+    }),
     "monsterCombatPathingMaxAngle": _tools.RODict({
         "ID": "monsterCombatPathingMaxAngle",
-        "value": 180,
+        "value": 34010039,
     }),
     "monsterCombatPathingMaxTurnAngle": _tools.RODict({
         "ID": "monsterCombatPathingMaxTurnAngle",
         "value": 6,
+    }),
+    "monsterPathingWeight": _tools.RODict({
+        "ID": "monsterPathingWeight",
+        "value": 1,
+    }),
+    "monsterCombatingWeight": _tools.RODict({
+        "ID": "monsterCombatingWeight",
+        "value": 2,
+    }),
+    "monsterCombatPathingTime": _tools.RODict({
+        "ID": "monsterCombatPathingTime",
+        "value": 3,
+    }),
+    "uiVisibleDayLimit": _tools.RODict({
+        "ID": "uiVisibleDayLimit",
+        "value": 54481004,
     })
 })

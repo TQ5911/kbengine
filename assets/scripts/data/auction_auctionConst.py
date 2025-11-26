@@ -125,7 +125,7 @@ datas = _tools.RODict({
     }),
     "auctionPublicityCountdownText": _tools.RODict({
         "key": "auctionPublicityCountdownText",
-        "value": "{0}后公式结束",
+        "value": "<color=#dea050>{0}后上架</color>",
     }),
     "auctionPublicityTime": _tools.RODict({
         "key": "auctionPublicityTime",
@@ -133,11 +133,11 @@ datas = _tools.RODict({
     }),
     "auctionOnSale": _tools.RODict({
         "key": "auctionOnSale",
-        "value": "出售中",
+        "value": "出售",
     }),
     "auctionOnShow": _tools.RODict({
         "key": "auctionOnShow",
-        "value": "公示中",
+        "value": "公示",
     }),
     "auctionPublicityConfirm": _tools.RODict({
         "key": "auctionPublicityConfirm",
@@ -145,10 +145,22 @@ datas = _tools.RODict({
     }),
     "auctionCountdownTips": _tools.RODict({
         "key": "auctionCountdownTips",
-        "value": "该商品处于公示期，将于{0}后方可购买",
+        "value": "公示期结束后才可购买此商品",
     }),
     "auctionPublicityPeriod": _tools.RODict({
         "key": "auctionPublicityPeriod",
         "value": 54000251,
+    }),
+    "auctionNoItemsInPublicityMsg": _tools.RODict({
+        "key": "auctionNoItemsInPublicityMsg",
+        "value": 54000252,
+    }),
+    "auctionOnSaleRefer": _tools.RODict({
+        "key": "auctionOnSaleRefer",
+        "value": "出售参考",
+    }),
+    "auctionOnShowRefer": _tools.RODict({
+        "key": "auctionOnShowRefer",
+        "value": "公示参考",
     })
 })

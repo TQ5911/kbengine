@@ -489,8 +489,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         """API: 离开团队副本"""
         INFO_MSG('leaveRaidDungeon::~')
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
-        # self._leaveRaidDungeon(src)
-        gameengine.getDungeonStubBySpaceNo(self.spaceNo).leaveRaidDungeon(self.spaceNo, self.raidUUID, src, self.base)
+        self._leaveRaidDungeon(src)
 
     def _leaveRaidDungeon(self, src):
         _, err = self._leaveRaidDungeonCheck()

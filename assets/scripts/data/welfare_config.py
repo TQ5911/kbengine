@@ -21,7 +21,7 @@ datas = _tools.RODict({
     }),
     "SevenSignInSubtitle": _tools.RODict({
         "ID": "SevenSignInSubtitle",
-        "value": "您已累计登录<size=58><color=#f3d58f> {0} </color></size>天！",
+        "value": "您已累计登录 {0} 天！",
     }),
     "SevenSignInsRewardTips1": _tools.RODict({
         "ID": "SevenSignInsRewardTips1",

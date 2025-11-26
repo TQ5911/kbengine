@@ -35,12 +35,13 @@ import sMath
 import iSiegeWarMonster
 import message_Message_def as M_M_D
 import creep_countRefresh as CCR
+import iMineWarMonster
 
 
 class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFubenSpace,
               iGameEntity.IGameEntity, iEntityRefresh.IEntityRefresh, iMonsterDungeon.IMonsterDungeon,
               iMonsterGrp.IMonsterGrp, iRoute.IRoute, iClient.IClient, iSiegeWarMonster.ISiegeWarMonster,
-              iLargeEnt.ILargeEnt):
+              iLargeEnt.ILargeEnt, iMineWarMonster.IMineWarMonster):
     IsMonster = True
 
     MOVE_METHOD_NAV = 1
@@ -55,12 +56,17 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if formula.isSiegeWarSpace(self.spaceNo):
             if self.spaceMgr:
                 self.level = self.spaceMgr.getSiegeWarMonsterLevel(self)
+                
+        if formula.isMineWarSpace(self.spaceNo):
+            if self.spaceMgr:
+                self.level = self.spaceMgr.getMineWarMonsterLevel(self)
 
         self.preOverwriteProps()
         iAICombatUnit.IAICombatUnit.__init__(self)
         EventMgr.EventMgr.__init__(self)
         iGameEntity.IGameEntity.__init__(self)
         iSiegeWarMonster.ISiegeWarMonster.__init__(self)
+        iMineWarMonster.IMineWarMonster.__init__(self)
 
         monData = creep_base.datas[self.monsterId]
         if not self.name:
@@ -88,8 +94,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         self.initPosition()
 
-        if formula.spaceInWorldLine(self.spaceNo):
-            self.spaceMgrId = self.getCurrentSpace().spaceMgrId
+        # if formula.spaceInWorldLine(self.spaceNo):
+        #     self.spaceMgrId = self.getCurrentSpace().spaceMgrId
 
         spaceMgr = self.spaceMgr
         _isLarge = False
@@ -147,7 +153,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self._initCombatAreas()
         # 初始化计算刷新
         self._initCountRefresh()
-        
+
         # 标记相关
         self.teamMarkDict = {}
         self.raidMarkDict = {}
@@ -234,6 +240,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                 if ret:
                     self.needCountNum = True
                     self.refreshDataKey = dataKey
+                    self.combatAreaID = combatAreaID
                     break
 
     def _createMonsterGrpInDungeon(self):
@@ -381,6 +388,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         elif userData == gametimer.TIMER_CELL_SAFE_DESTROY:
             self.onDelayTimerSafeDestroy()
+            
+        elif userData == gametimer.MINE_WAR_CORE_RECOVER_HP:
+            self.onMineWarCoreRecoverHp()
 
         else:
             super(Monster, self).onTimer(tid, userData)
@@ -426,7 +436,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if not isWitnessed:
             if self.needCountRefresh:
                 self.doMonsterDestroy()
-                self.spaceMgr.onMonsterDestroy(self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
+                self.spaceMgr.onMonsterDestroy(self.combatAreaID, self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
 
     def _preSafeDestory(self):
         """
@@ -545,6 +555,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         # 城战处理逻辑，内部会判断是否在城战场景
         self.notifySiegeWarOnDead(killer)
+        
+        # 矿战处理逻辑，内部会判断是否在矿战场景
+        self.notifyMineWarOnDead(killer)
 
         if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
             self.spaceMgr.onWorldBossDead(self.refreshTime)
@@ -559,12 +572,12 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         # 需要计数或者刷新的怪物:
         if self.needCountRefresh or self.needCountNum:
-            self.spaceMgr.onMonsterDestroy(self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
-            
+            self.spaceMgr.onMonsterDestroy(self.combatAreaID, self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
+
         try:
             for teamId in self.teamMarkDict.keys():
                 gameengine.getTeamStub(teamId).onMarkMonsterDead(self.id)
-                
+
             for raidId in self.raidMarkDict.keys():
                 gameengine.getRaidStub(raidId).onMarkMonsterDead(self.id)
         except Exception as e:
@@ -712,6 +725,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
     def modifyHP(self, hpVal, releaseRoleId, srcType, srcId, forceDead=False, context=None):
         hpVal = super(Monster, self).modifyHP(hpVal, releaseRoleId, srcType, srcId, forceDead, context)
         self.notifySiegeWarOnModifyHP(hpVal)
+        self.notifyMineWarOnModifyHP(hpVal, releaseRoleId)
         return hpVal
 
     def setBelongName(self, belongName):
@@ -736,7 +750,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         elif teamType == gameconst.TeamType.RAID:
             self.raidMarkDict[teamId] = index
         DEBUG_MSG("Monster::onBeMarkedAsEnemy: {}, {}, {}, {}".format(self.id, teamId, teamType, index))
-        
+
     def delBeMarkedAsEnemy(self, teamId, teamType):
         if teamType == gameconst.TeamType.TEAM:
             if teamId in self.teamMarkDict:
@@ -745,4 +759,4 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             if teamId in self.raidMarkDict:
                 self.raidMarkDict.pop(teamId)
         DEBUG_MSG("Monster::delBeMarkedAsEnemy: {}, {}, {}".format(self.id, teamId, teamType))
-        
+

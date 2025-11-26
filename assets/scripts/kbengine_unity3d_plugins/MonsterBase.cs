@@ -25,8 +25,6 @@ namespace KBEngine
 		public float adjAntiMortal = 0f;
 		public float adjBloodSuck = 0f;
 		
-		public Int32 adjDebilityAnti = 0;
-		public Int32 adjDebilityEnh = 0;
 		public float adjDmgArmor = 0f;
 		public Int32 adjDodge = 0;
 		public Int32 adjFatal = 0;
@@ -64,14 +62,10 @@ namespace KBEngine
 		
 		
 		public virtual void onBossDeadDisappearTimeChanged(double oldValue) {}
-		public Int32 debilityAnti = 0;
-		public Int32 debilityEnh = 0;
 		public float dmgArmor = 0f;
 		public Int32 dodge = 0;
 		public Int32 drugsQuantity = 0;
 		
-		public float extraDmg = 0f;
-		public float extraDmgDef = 0f;
 		public Int32 fatal = 0;
 		public float finalDmg = 0f;
 		public float finalDmgAnti = 0f;
@@ -115,6 +109,8 @@ namespace KBEngine
 		public float mulHp = 0f;
 		public float mulSpeed = 0f;
 		
+		public Int32 pushAnti = 0;
+		public Int32 pushEnh = 0;
 		public Int32 realDmg = 0;
 		public Int32 realDmgDef = 0;
 		public UInt32 routeState = 0;
@@ -127,7 +123,6 @@ namespace KBEngine
 		public Int32 slowEnh = 0;
 		
 		
-		public Int32 spirit = 0;
 		
 		
 		public Int32 stunAnti = 0;
@@ -334,7 +329,7 @@ namespace KBEngine
 					break;
 				case 293:
 					Int32 onRemoveBuff_arg1 = stream.readInt32();
-					List<UInt64> onRemoveBuff_arg2 = ((DATATYPE_AnonymousArray_10015)method.args[1]).createFromStreamEx(stream);
+					List<UInt64> onRemoveBuff_arg2 = ((DATATYPE_AnonymousArray_10006)method.args[1]).createFromStreamEx(stream);
 					onRemoveBuff(onRemoveBuff_arg1, onRemoveBuff_arg2);
 					break;
 				case 286:
@@ -570,38 +565,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onAdjCDChanged(oldval_adjCD);
-						}
-
-						break;
-					case 635:
-						Int32 oldval_adjDebilityAnti = adjDebilityAnti;
-						adjDebilityAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjDebilityAntiChanged(oldval_adjDebilityAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjDebilityAntiChanged(oldval_adjDebilityAnti);
-						}
-
-						break;
-					case 631:
-						Int32 oldval_adjDebilityEnh = adjDebilityEnh;
-						adjDebilityEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjDebilityEnhChanged(oldval_adjDebilityEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjDebilityEnhChanged(oldval_adjDebilityEnh);
 						}
 
 						break;
@@ -1101,38 +1064,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 634:
-						Int32 oldval_debilityAnti = debilityAnti;
-						debilityAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onDebilityAntiChanged(oldval_debilityAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onDebilityAntiChanged(oldval_debilityAnti);
-						}
-
-						break;
-					case 630:
-						Int32 oldval_debilityEnh = debilityEnh;
-						debilityEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onDebilityEnhChanged(oldval_debilityEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onDebilityEnhChanged(oldval_debilityEnh);
-						}
-
-						break;
 					case 40001:
 						Vector3 oldval_direction = direction;
 						direction = stream.readVector3();
@@ -1210,38 +1141,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-						}
-
-						break;
-					case 504:
-						float oldval_extraDmg = extraDmg;
-						extraDmg = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onExtraDmgChanged(oldval_extraDmg);
-						}
-						else
-						{
-							if(inWorld)
-								onExtraDmgChanged(oldval_extraDmg);
-						}
-
-						break;
-					case 505:
-						float oldval_extraDmgDef = extraDmgDef;
-						extraDmgDef = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onExtraDmgDefChanged(oldval_extraDmgDef);
-						}
-						else
-						{
-							if(inWorld)
-								onExtraDmgDefChanged(oldval_extraDmgDef);
 						}
 
 						break;
@@ -1917,6 +1816,38 @@ namespace KBEngine
 						}
 
 						break;
+					case 521:
+						Int32 oldval_pushAnti = pushAnti;
+						pushAnti = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onPushAntiChanged(oldval_pushAnti);
+						}
+						else
+						{
+							if(inWorld)
+								onPushAntiChanged(oldval_pushAnti);
+						}
+
+						break;
+					case 487:
+						Int32 oldval_pushEnh = pushEnh;
+						pushEnh = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onPushEnhChanged(oldval_pushEnh);
+						}
+						else
+						{
+							if(inWorld)
+								onPushEnhChanged(oldval_pushEnh);
+						}
+
+						break;
 					case 496:
 						Int32 oldval_realDmg = realDmg;
 						realDmg = stream.readInt32();
@@ -2110,22 +2041,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onSpeedChanged(oldval_speed);
-						}
-
-						break;
-					case 493:
-						Int32 oldval_spirit = spirit;
-						spirit = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onSpiritChanged(oldval_spirit);
-						}
-						else
-						{
-							if(inWorld)
-								onSpiritChanged(oldval_spirit);
 						}
 
 						break;
@@ -2326,48 +2241,6 @@ namespace KBEngine
 					else
 					{
 						onAdjCDChanged(oldval_adjCD);
-					}
-				}
-			}
-
-			Int32 oldval_adjDebilityAnti = adjDebilityAnti;
-			Property prop_adjDebilityAnti = pdatas[195];
-			if(prop_adjDebilityAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjDebilityAntiChanged(oldval_adjDebilityAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjDebilityAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjDebilityAntiChanged(oldval_adjDebilityAnti);
-					}
-				}
-			}
-
-			Int32 oldval_adjDebilityEnh = adjDebilityEnh;
-			Property prop_adjDebilityEnh = pdatas[196];
-			if(prop_adjDebilityEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjDebilityEnhChanged(oldval_adjDebilityEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjDebilityEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjDebilityEnhChanged(oldval_adjDebilityEnh);
 					}
 				}
 			}
@@ -3023,48 +2896,6 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_debilityAnti = debilityAnti;
-			Property prop_debilityAnti = pdatas[207];
-			if(prop_debilityAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onDebilityAntiChanged(oldval_debilityAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_debilityAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onDebilityAntiChanged(oldval_debilityAnti);
-					}
-				}
-			}
-
-			Int32 oldval_debilityEnh = debilityEnh;
-			Property prop_debilityEnh = pdatas[208];
-			if(prop_debilityEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onDebilityEnhChanged(oldval_debilityEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_debilityEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onDebilityEnhChanged(oldval_debilityEnh);
-					}
-				}
-			}
-
 			Vector3 oldval_direction = direction;
 			Property prop_direction = pdatas[2];
 			if(prop_direction.isBase())
@@ -3166,48 +2997,6 @@ namespace KBEngine
 					else
 					{
 						onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-					}
-				}
-			}
-
-			float oldval_extraDmg = extraDmg;
-			Property prop_extraDmg = pdatas[51];
-			if(prop_extraDmg.isBase())
-			{
-				if(inited && !inWorld)
-					onExtraDmgChanged(oldval_extraDmg);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_extraDmg.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onExtraDmgChanged(oldval_extraDmg);
-					}
-				}
-			}
-
-			float oldval_extraDmgDef = extraDmgDef;
-			Property prop_extraDmgDef = pdatas[54];
-			if(prop_extraDmgDef.isBase())
-			{
-				if(inited && !inWorld)
-					onExtraDmgDefChanged(oldval_extraDmgDef);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_extraDmgDef.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onExtraDmgDefChanged(oldval_extraDmgDef);
 					}
 				}
 			}
@@ -4094,6 +3883,48 @@ namespace KBEngine
 				}
 			}
 
+			Int32 oldval_pushAnti = pushAnti;
+			Property prop_pushAnti = pdatas[59];
+			if(prop_pushAnti.isBase())
+			{
+				if(inited && !inWorld)
+					onPushAntiChanged(oldval_pushAnti);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_pushAnti.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onPushAntiChanged(oldval_pushAnti);
+					}
+				}
+			}
+
+			Int32 oldval_pushEnh = pushEnh;
+			Property prop_pushEnh = pdatas[65];
+			if(prop_pushEnh.isBase())
+			{
+				if(inited && !inWorld)
+					onPushEnhChanged(oldval_pushEnh);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_pushEnh.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onPushEnhChanged(oldval_pushEnh);
+					}
+				}
+			}
+
 			Int32 oldval_realDmg = realDmg;
 			Property prop_realDmg = pdatas[68];
 			if(prop_realDmg.isBase())
@@ -4342,27 +4173,6 @@ namespace KBEngine
 					else
 					{
 						onSpeedChanged(oldval_speed);
-					}
-				}
-			}
-
-			Int32 oldval_spirit = spirit;
-			Property prop_spirit = pdatas[75];
-			if(prop_spirit.isBase())
-			{
-				if(inited && !inWorld)
-					onSpiritChanged(oldval_spirit);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_spirit.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onSpiritChanged(oldval_spirit);
 					}
 				}
 			}

@@ -179,7 +179,7 @@ class BaseBag(itemContainer.ItemContainer):
                 sortKey = IDITD.ItemTypeSortDic.get(gridObj.itemType * 1000 + gridObj.itemSubType, gridObj.itemSubType)
                 equipLevel = itemData.get('levelRequirement', 0)
                 return (sortKey, -1 * gridObj.quality, equipLevel,
-                        -gridObj.equipAttr.equipLv if gridObj.isEquipmentItem() else 0, gridObj.itemId, gridObj.bindType, gridObj.auctionTime)
+                        -gridObj.equipAttr.equipLv if gridObj.isEquipmentItem() else 0, gridObj.itemId, gridObj.bindType, 0)
 
             gridObjs = self.gridId2GridObj.values()
             gridObjs = sorted(gridObjs, key=sortFunc or _sortFunc)

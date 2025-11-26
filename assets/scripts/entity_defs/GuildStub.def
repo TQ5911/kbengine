@@ -89,5 +89,10 @@
             <Arg>       UUID                    </Arg>
             <Arg>       SERVER_ID               </Arg>
         </doOnCrossGuild>
+
+        <syncGuildMineWarToSpaceMgr>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       MAILBOX                  </Arg>
+        </syncGuildMineWarToSpaceMgr>
     </BaseMethods>
 </root>

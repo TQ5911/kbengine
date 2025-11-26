@@ -854,14 +854,6 @@ namespace KBEngine
             }
         }
 
-        public override void onSpiritChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.Spirit, oldValue);
-            }
-        }
-
         public override void onSkillCDChanged(float oldValue)
         {
             if (isPlayer())
@@ -998,19 +990,19 @@ namespace KBEngine
             }
         }
 
-        public override void onExtraDmgChanged(float oldValue)
+        public override void onPushEnhChanged(Int32 oldValue)
         {
             if (isPlayer())
             {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.ExtraDmg, oldValue);
+                PropCalculator.Instance.SetServerValue(PropDataConsant.PushEnh, oldValue);
             }
         }
 
-        public override void onExtraDmgDefChanged(float oldValue)
+        public override void onPushAntiChanged(Int32 oldValue)
         {
             if (isPlayer())
             {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.ExtraDmgDef, oldValue);
+                PropCalculator.Instance.SetServerValue(PropDataConsant.PushAnti, oldValue);
             }
         }
 
@@ -1059,22 +1051,6 @@ namespace KBEngine
             if (isPlayer())
             {
                 PropCalculator.Instance.SetServerValue(PropDataConsant.KnockAnti, oldValue);
-            }
-        }
-
-        public override void onDebilityEnhChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.DebilityEnh, oldValue);
-            }
-        }
-
-        public override void onDebilityAntiChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.DebilityAnti, oldValue);
             }
         }
 

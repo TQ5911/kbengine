@@ -13,6 +13,7 @@ import platform
 import json
 
 import gameconfig
+import gameengine
 import gameconst
 import formula
 import utils
@@ -168,7 +169,10 @@ def makeRewardRankInfoLog(rakType, rankResp):
 
 ################################## wlog end########################################
 
-def TLOG(name="", logData=""):
+def TLOG(name="", logData="", fromTracking=False):
+    if not fromTracking:
+        gameengine.reportCritical('use old tlog', name)
+
     logFlag = gameconfig.logFlag()
     if logFlag == gameconst.LogType.NORMAL:
         INFO_MSG(logData)

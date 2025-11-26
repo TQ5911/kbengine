@@ -514,6 +514,7 @@ class IAICombatUnit(SkillManager.SkillManager):
             self.moveToRouteNodeCB(True)
             return
 
+        _isTick = False
         if self.route:
             dstPos = self.route.pop(0)
             self.setMoveController(self.scriptNavigate(dstPos, self.speed))
@@ -521,9 +522,11 @@ class IAICombatUnit(SkillManager.SkillManager):
             self.setMoveController(0)
             if self.hasState(gameconst.State.Fighting):
                 self.tickAI()
+                _isTick = True
 
-        if self.aiController:
-            self.aiController.onOwnerMoveOver(userData)
+        if not _isTick:
+            if self.aiController:
+                self.aiController.onOwnerMoveOver(userData)
 
         if isinstance(userData, dict) and userData.get('type') == gamemove.FLOW_CONTROLLER_FORCE_MOVE:
             if "fc_OriginBaseSpeed" in userData:

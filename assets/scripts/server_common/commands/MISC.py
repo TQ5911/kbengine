@@ -202,6 +202,10 @@ def AllsetskillLV(su, player, level):
             self.buildDic.skillLevels[skill_id] = newLevel
             self.updateSkillLevelSetSummonSlotIdx(skill_id, newLevel)
 
+            recommendSlot = self.buildDic.getSkillRecommendSlot(self, skill_id)
+            if recommendSlot is not None:
+                self.buildDic.changeSkillSlot(self, skill_id, None, recommendSlot)
+
             # 被动技能替换的技能一并要升级
             relatedSkills = SSD.datas.get(skill_id, {}).get('conflictSkill') or ()
             skillIdList = [skill_id] + list(relatedSkills)
@@ -209,6 +213,10 @@ def AllsetskillLV(su, player, level):
                 if sid in self.buildDic.skillLevels:
                     self.buildDic.skillLevels[sid] = newLevel
                     self.updateSkillLevelSetSummonSlotIdx(sid, newLevel)
+
+                    recommendSlot = self.buildDic.getSkillRecommendSlot(self, sid)
+                    if recommendSlot is not None:
+                        self.buildDic.changeSkillSlot(self, sid, None, recommendSlot)
 
         self.client.onUpdateSkillLevel(skill_id_list, skill_lv_list)
 
@@ -1019,13 +1027,13 @@ def sendMailByAvatarId(su, toId, mailId, attachStr, despArgsStr, title, cont):
 
 @gm_cmd('$sendglobalmail', (Int('mailId'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont'),
                             Int('minRoleTime'), Int('maxRoleTime'),Int('minRoleLevel'), Int('maxRoleLevel'),),
-        RSU, gameconst.BASE, '发送一封全服邮件', INSIDE, GOD_GROUPS)
+        RONE, gameconst.BASE, '发送一封全服邮件', ALLSIDE, GOD_GROUPS)
 def gmSendGlobalMail(su, mailId, attachStr, despArgsStr, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel):
     # attachStr: 多个物品用分号';'分隔; 每个物品有itemId, itemNum，若有绑定属性配置在第三个位置，例如：[30000001,100; 30001031,1,1]
     attach = mailAssistor.parseAttachStr(attachStr)
     despArgs = mailAssistor.parseDespStr(despArgsStr)
-    title = title.strip("[] ")
-    cont = cont.strip("[] ")
+    title = base64.b64decode(title.encode('ascii'), b'_-').decode('utf-8')
+    cont = base64.b64decode(cont.encode('ascii'), b'_-').decode('utf-8')
     gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime,
                                                               minRoleLevel, maxRoleLevel)
     return True, '执行成功'
@@ -2839,7 +2847,7 @@ def addguildexp(su, player,exp):
 
 @gm_cmd('$modifyBuildingExp', (Player("gbId/Id"),Int('building'),Int('Exp')), RARG(0), BASE, '增加帮会建筑经验', ALLSIDE, GOD_GROUPS)
 def modifybuildingexp(su, player,building,exp):
-    if building not in (gameconst.GuildBuilding.JU_YING,gameconst.GuildBuilding.WU_HUA,gameconst.GuildBuilding.XIANG_FANG,gameconst.GuildBuilding.YAN_WU,gameconst.GuildBuilding.CANG_KU):
+    if building not in (gameconst.GuildBuilding.JU_YING,gameconst.GuildBuilding.WU_HUA,gameconst.GuildBuilding.XIANG_FANG,gameconst.GuildBuilding.YAN_WU,gameconst.GuildBuilding.CANG_KU, gameconst.GuildBuilding.JUN_XU):
         return False, '执行失败，帮会建筑不存在'
     opUUID = KBEngine.genUUID64()
     src = AAC_AACDD.datas.BONUS_SRC_GM

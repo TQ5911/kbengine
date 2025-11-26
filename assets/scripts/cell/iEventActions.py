@@ -917,7 +917,6 @@ class IEventActions(object):
             combatProps['stunEnh'] = self.getProp('stunEnh')
             combatProps['silentEnh'] = self.getProp('silentEnh')
             combatProps['knockEnh'] = self.getProp('knockEnh')
-            combatProps['debilityEnh'] = self.getProp('debilityEnh')
             combatProps['frozenEnh'] = self.getProp('frozenEnh')
             combatProps['force'] = self.force
 
@@ -1033,7 +1032,6 @@ class IEventActions(object):
             combatProps['stunEnh'] = self.getProp('stunEnh')
             combatProps['silentEnh'] = self.getProp('silentEnh')
             combatProps['knockEnh'] = self.getProp('knockEnh')
-            combatProps['debilityEnh'] = self.getProp('debilityEnh')
             combatProps['frozenEnh'] = self.getProp('frozenEnh')
             combatProps['force'] = self.force
 

@@ -2,6 +2,7 @@
 import KBEngine
 from KBEDebug import *
 import utils
+import formula
 
 import threading
 import random
@@ -153,11 +154,12 @@ class SimpleBotBase(object):
     def changeAIState(self, state):
         if self.aiState == state:
             return
-        self.debug(f"changeAIState oldState: {self.aiState}, newState: {state}")
-        oldStateObj = self.aiStateMap.get(self.aiState, None)
+        oldState = self.aiState
+        self.aiState = state
+        self.debug(f"changeAIState oldState: {oldState}, newState: {state}")
+        oldStateObj = self.aiStateMap.get(oldState, None)
         if oldStateObj:
             oldStateObj.exit(self)
-        self.aiState = state
         newStateObj = self.aiStateMap.get(state, None)
         if newStateObj:
             newStateObj.enter(self)
@@ -275,6 +277,18 @@ class SimpleBotBase(object):
     def getSelfMapId(self):
         return self.player.spaceNo // 10000
 
+    def isInDungeonSpace(self):
+        return formula.isDungeonSpace(self.player.spaceNo)
+
+    def doLeaveDungeon(self):
+        spaceNo = self.player.spaceNo
+        if formula.isSingleDungeonSpace(spaceNo):
+            self.cell.leaveSingleDungeon(self.getSelfMapId())
+        elif formula.isRaidDungeonSpace(spaceNo):
+            self.cell.leaveRaidDungeon()
+        elif formula.isTeamDungeonSpace(spaceNo):
+            self.cell.leaveTeamDungeon()
+
     def isInRaid(self):
         return self.player.raidId > 0
 
@@ -323,6 +337,7 @@ class SimpleBotBase(object):
         self.debug(f"获取地图数据: {mapData}")
         posX, posY, posZ = 0, 0, 0
         monsterDatas = mapData.get('InitEntities', {}).get('Monster', {})
+        monsterNum = 0
         if monsterDatas:
             monsterNum = len(monsterDatas)
             monsterIds = list(monsterDatas.keys())
@@ -331,4 +346,4 @@ class SimpleBotBase(object):
             # 随机选择一个怪物的出生位置作为目标位置
             posX, posY, posZ = monsterData.get('PosX', 0), monsterData.get('PosY', 0), monsterData.get('PosZ', 0)
             self.debug(f"获取到怪物数据, 数量: {monsterNum}, 选择怪物ID: {selectedMonsterId}, 位置: {posX, posY, posZ}")
-        return Math.Vector3(posX, posY, posZ)
+        return Math.Vector3(posX, posY, posZ), monsterNum

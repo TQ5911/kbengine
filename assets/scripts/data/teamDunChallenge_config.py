@@ -109,11 +109,11 @@ datas = _tools.RODict({
     }),
     "raidStats_win": _tools.RODict({
         "ID": "raidStats_win",
-        "value": "讨伐胜利",
+        "value": "挑战胜利",
     }),
     "raidStats_lose": _tools.RODict({
         "ID": "raidStats_lose",
-        "value": "讨伐失败",
+        "value": "挑战失败",
     }),
     "raidStats_winTitle": _tools.RODict({
         "ID": "raidStats_winTitle",
@@ -125,11 +125,11 @@ datas = _tools.RODict({
     }),
     "raidStats_reward": _tools.RODict({
         "ID": "raidStats_reward",
-        "value": "讨伐奖励",
+        "value": "挑战奖励",
     }),
     "raidStats_score": _tools.RODict({
         "ID": "raidStats_score",
-        "value": "讨伐分数:",
+        "value": "挑战分数:",
     }),
     "raidStats_time": _tools.RODict({
         "ID": "raidStats_time",
@@ -170,5 +170,21 @@ datas = _tools.RODict({
     "raidStats_rank4": _tools.RODict({
         "ID": "raidStats_rank4",
         "value": "C",
+    }),
+    "firstRewardText": _tools.RODict({
+        "ID": "firstRewardText",
+        "value": "首通",
+    }),
+    "addDunTimesTitle": _tools.RODict({
+        "ID": "addDunTimesTitle",
+        "value": "补充挑战次数",
+    }),
+    "dunTimesText": _tools.RODict({
+        "ID": "dunTimesText",
+        "value": "挑战次数({0}/{1})",
+    }),
+    "startRaidBtnText": _tools.RODict({
+        "ID": "startRaidBtnText",
+        "value": "开始挑战",
     })
 })

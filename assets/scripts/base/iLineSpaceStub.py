@@ -16,6 +16,7 @@ import gameconst
 import formula
 import random
 import utils
+import StaticSpaceVal
 
 import branchData_branchData as BBD
 
@@ -40,9 +41,12 @@ class ILineSpaceStub(iEntityLoaderInBase.IEntityLoaderInBase):
             self._callback(ln*0.2, '_createLineSpaceRemote', (ln,spaceWeight), gametimer.TIMER_TAG_CREATE_LINE_SPACE_REMOTE)
 
     def newLineSpaceVal(self, lineType, lineNo):
-        return lineSpace.LineSpaceVal(lineType, lineNo, lineSpace.LineSpaceVal.LINE_CREATING)
+        # return lineSpace.LineSpaceVal(lineType, lineNo, lineSpace.LineSpaceVal.LINE_CREATING)
+        return StaticSpaceVal.StaticSpaceVal(lineType, lineNo)
 
     def getLineSpaceVal(self, lineNo):
+        #TODO临时改动，等正式策划案出来再正式改
+        lineNo = min(len(self.lineSpaces)-1, lineNo)
         return self.lineSpaces[lineNo]
 
     def createCellEntityInSpace(self, spaceNo, className, bornPosition, bornDirection, params):
@@ -97,9 +101,15 @@ class ILineSpaceStub(iEntityLoaderInBase.IEntityLoaderInBase):
         INFO_MSG('onLineSpaceReady', spaceNo)
         lineNo = formula.getLineNo(spaceNo)
         self.lineSpaces[lineNo].lineSpaceReady()
+        
+        # spaceVal = self.getLineSpaceVal(lineNo)
+        # spaceVal.lineSpaceBox.cell.doLoadEntities(0)
 
+    def onSpaceMgrReady(self, spaceNo, spaceMgrCell):
+        DEBUG_MSG("iLineSpaceStub onSpaceMgrReady", spaceNo, spaceMgrCell)
+        lineNo = formula.getLineNo(spaceNo)
         spaceVal = self.getLineSpaceVal(lineNo)
-        spaceVal.lineSpaceBox.cell.doLoadEntities(0)
+        spaceVal.setSpaceMgrBoxCell(spaceMgrCell)
 
     def onLoadEntitiesEnd(self, spaceNo):
         DEBUG_MSG("iLineSpaceStub onLoadEntitiesEnd", spaceNo)

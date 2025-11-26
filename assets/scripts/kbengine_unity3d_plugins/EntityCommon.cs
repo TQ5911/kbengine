@@ -56,8 +56,6 @@ namespace KBEngine
 		public virtual void onAdjAntiMortalChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onAdjBloodSuckChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onAdjCDChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
-		public virtual void onAdjDebilityAntiChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
-		public virtual void onAdjDebilityEnhChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onAdjDmgArmorChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onAdjDodgeChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onAdjFatalChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
@@ -83,14 +81,10 @@ namespace KBEngine
 		public virtual void onBePushedSpeedChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onBloodSuckChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onBornStateChanged(Byte oldValue) {}	//Monster Summon Npc Collection 
-		public virtual void onDebilityAntiChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
-		public virtual void onDebilityEnhChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onDmgArmorChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onDodgeChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onDrugsQuantityChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onDunTimeFreezeFlagChanged(Byte oldValue) {}	//MonsterGrp Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation RebornPos 
-		public virtual void onExtraDmgChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
-		public virtual void onExtraDmgDefChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFatalChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFinalDmgChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onFinalDmgAntiChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
@@ -131,6 +125,8 @@ namespace KBEngine
 		public virtual void onMulHpChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onMulSpeedChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onNameChanged(string oldValue) {}	//Avatar Monster Summon Teleporter Npc Collection Creation 
+		public virtual void onPushAntiChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
+		public virtual void onPushEnhChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onRealDmgChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onRealDmgDefChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onRouteStateChanged(UInt32 oldValue) {}	//Avatar Monster Npc 
@@ -144,7 +140,6 @@ namespace KBEngine
 		public virtual void onSlowEnhChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onSpaceNoChanged(UInt32 oldValue) {}	//Space CubeSpaceMgr WonderLandSpaceMgr WorldLineSpaceMgr SiegeWarSpaceMgr DungeonSpaceMgr MonsterGrp Avatar Monster Summon Barrier Teleporter CityBattleTeleporter CoreAreaFlag Npc Collection Creation DuelFlag RebornPos 
 		public virtual void onSpeedChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation 
-		public virtual void onSpiritChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onStateChanged(Int64 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onState2Changed(Int64 oldValue) {}	//Avatar Monster Summon Npc Creation 
 		public virtual void onStunAntiChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation 

@@ -3,6 +3,7 @@
         <Interface>     iCell                   </Interface>
         <Interface>     iSpaceMgr               </Interface>
         <Interface>     iTimerCell              </Interface>
+        <Interface>     iMineWarSpaceMgr        </Interface>
     </Interfaces>
 
     <Properties>

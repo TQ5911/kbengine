@@ -1,0 +1,29 @@
+<root>
+    <Properties>
+        <mineWarMonsterType>
+            <Type>              UINT8   </Type>
+            <Flags>             CELL_PRIVATE    </Flags>
+            <Default>           0       </Default>
+        </mineWarMonsterType>
+        <mineWarCanAttack>
+            <Type>              UINT8    </Type>
+            <Flags>             CELL_PRIVATE    </Flags>
+            <Default>           0       </Default>
+        </mineWarCanAttack>
+        <mineWarGuildId>
+            <Type>              GUILD_UUID   </Type>
+            <Flags>             CELL_PRIVATE    </Flags>
+            <Default>           0       </Default>
+        </mineWarGuildId>
+    </Properties>
+
+    <CellMethods>
+
+        <onMineWarStateChange>
+            <Arg>          GUILD_UUID         </Arg>
+            <Arg>          UINT8              </Arg>
+            <Arg>          UINT8              </Arg>
+        </onMineWarStateChange>
+
+    </CellMethods>
+</root>

@@ -132,56 +132,6 @@
             <Default>       0                    </Default>
         </totalPayFreeReliveTimes>
 
-        <mpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </mpRecovery>
-
-        <baseMpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </baseMpRecovery>
-
-        <adjMpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjMpRecovery>
-
-        <mulMpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </mulMpRecovery>
-
-        <adjMpRecoveryPercent>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjMpRecoveryPercent>
-
-        <hpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </hpRecovery>
-
-        <baseHpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </baseHpRecovery>
-
-        <adjHpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjHpRecovery>
-
-        <mulHpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </mulHpRecovery>
-
-        <adjHpRecoveryPercent>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjHpRecoveryPercent>
-
         <mp>
             <Type>          MP          </Type>
             <Flags>         ALL_CLIENTS     </Flags>
@@ -240,14 +190,6 @@
             <Type>          FLOAT               </Type>
             <Flags>         CELL_PRIVATE        </Flags>
         </adjCopper>
-        <dropRate>
-            <Type>          FLOAT          </Type>
-            <Flags>         OWN_CLIENT   </Flags>
-        </dropRate>
-        <adjDropRate>
-            <Type>          FLOAT          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </adjDropRate>
         <medicineRate>
             <Type>          FLOAT          </Type>
             <Flags>         OWN_CLIENT   </Flags>
@@ -319,6 +261,13 @@
             <Arg>            BONUS_SRC                </Arg>
             <Arg>            STRING                   </Arg>
         </addExpByMail>
+
+        <addExpByMonthCard>
+            <Arg>            EXP                      </Arg>
+            <Arg>            OP_UUID                  </Arg>
+            <Arg>            BONUS_SRC                </Arg>
+            <Arg>            STRING                   </Arg>
+        </addExpByMonthCard>
 
         <clientSetIsOnGround>
             <Exposed/>

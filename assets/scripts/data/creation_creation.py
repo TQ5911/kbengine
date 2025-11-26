@@ -158,6 +158,18 @@ def _65000032_enter(self, target, context):
     self.addBuffBySkill(target, context,64000228, 1, 1.0, 2)
     self.addBuffBySkill(target, context,64000224, 1, 1.0, 5)
 
+def _65000033(self, target, context): 
+    self.castSkill(target, context, 90020111)
+
+# def _65000002_enter(self, target, context): 
+#     if self.hasBuff(64000208):
+#         self.addBuffBySkill(target, context,64000207, 1, 1.0, 3.5)
+#     else:
+#         self.addBuffBySkill(target, context,64000207, 1, 1.0, 4.5)
+
+# def _65000002_leave(self, target, context):
+#     self.removeBuffBySkill(target, context, 64000207)
+
 # 生成的技能代码
 def _66000001(self, target, context):
 
@@ -2093,6 +2105,34 @@ datas = _tools.RODict({
         "selectType": 1,
         "selectPar": 8,
         "delayTime": 0.6,
+    }),
+    65000033: _tools.RODict({
+        "ID": 65000033,
+        "name": "法师暴风雪铭文金",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 1,
+        "inherit": 1,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": _65000033,
+        "time": 5.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.4,
+        "hurtNumber": 10,
+        "areaLoop": 10,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 6,
+        "delayTime": 0.3,
     }),
     66000001: _tools.RODict({
         "ID": 66000001,
@@ -5425,7 +5465,35 @@ datas = _tools.RODict({
         "selectType": 1,
         "selectPar": 7,
         "delayTime": 0.0,
+    }),
+    66000120: _tools.RODict({
+        "ID": 66000120,
+        "name": "新手副本石柱底部特效",
+        "type": "FixPosition",
+        "isAttackSkill": 0,
+        "classTag": 3,
+        "relyOnMaster": 0,
+        "inherit": 0,
+        "selectability": 0,
+        "target": "Enemy",
+        "areaAction": None,
+        "time": 0.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.0,
+        "hurtNumber": 99,
+        "areaLoop": 0,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 7,
+        "delayTime": 0.0,
     })
 })
 minKey = 65000001
-maxKey = 66000119
+maxKey = 66000120

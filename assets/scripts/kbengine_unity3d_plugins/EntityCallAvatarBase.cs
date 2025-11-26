@@ -360,6 +360,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void exchangeGiftKeyReward(string arg1)
+		{
+			Bundle pBundle = newCall("exchangeGiftKeyReward", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUnicode(arg1);
+			sendCall(null);
+		}
+
 		public void exchangeItem(UInt32 arg1, UInt32 arg2, UInt32 arg3)
 		{
 			Bundle pBundle = newCall("exchangeItem", 0);
@@ -394,13 +404,14 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void getAuctionItemNumByItemIdList(ITEMID_LIST arg1)
+		public void getAuctionItemNumByItemIdList(ITEMID_LIST arg1, Byte arg2)
 		{
 			Bundle pBundle = newCall("getAuctionItemNumByItemIdList", 0);
 			if(pBundle == null)
 				return;
 
 			((DATATYPE_ITEMID_LIST)EntityDef.id2datatypes[25]).addToStreamEx(bundle, arg1);
+			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
 
@@ -948,7 +959,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -969,7 +980,7 @@ namespace KBEngine
 				return;
 
 			((DATATYPE_AnonymousArray_10052)EntityDef.id2datatypes[10052]).addToStreamEx(bundle, arg1);
-			((DATATYPE_AnonymousArray_10015)EntityDef.id2datatypes[10015]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10006)EntityDef.id2datatypes[10006]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -1184,7 +1195,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10016)EntityDef.id2datatypes[10016]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10015)EntityDef.id2datatypes[10015]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -1227,7 +1238,7 @@ namespace KBEngine
 
 			bundle.writeUint8(arg1);
 			bundle.writeUint8(arg2);
-			((DATATYPE_AnonymousArray_10100)EntityDef.id2datatypes[10100]).addToStreamEx(bundle, arg3);
+			((DATATYPE_AnonymousArray_10099)EntityDef.id2datatypes[10099]).addToStreamEx(bundle, arg3);
 			sendCall(null);
 		}
 
@@ -1286,6 +1297,15 @@ namespace KBEngine
 		public void reqGetMeridianData()
 		{
 			Bundle pBundle = newCall("reqGetMeridianData", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
+		public void reqGetOfflineExp()
+		{
+			Bundle pBundle = newCall("reqGetOfflineExp", 0);
 			if(pBundle == null)
 				return;
 
@@ -1362,7 +1382,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint8(arg2);
 			bundle.writeUint8(arg3);
-			((DATATYPE_AnonymousArray_10100)EntityDef.id2datatypes[10100]).addToStreamEx(bundle, arg4);
+			((DATATYPE_AnonymousArray_10099)EntityDef.id2datatypes[10099]).addToStreamEx(bundle, arg4);
 			sendCall(null);
 		}
 
@@ -1387,7 +1407,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint32(arg1);
-			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg2);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg3);
 			bundle.writeInt8(arg4);
 			sendCall(null);
@@ -1432,7 +1452,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg1);
 			((DATATYPE_AnonymousArray_10031)EntityDef.id2datatypes[10031]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
@@ -1443,8 +1463,17 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg1);
-			((DATATYPE_AnonymousArray_10020)EntityDef.id2datatypes[10020]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10019)EntityDef.id2datatypes[10019]).addToStreamEx(bundle, arg2);
+			sendCall(null);
+		}
+
+		public void reqOfflineHangupData()
+		{
+			Bundle pBundle = newCall("reqOfflineHangupData", 0);
+			if(pBundle == null)
+				return;
+
 			sendCall(null);
 		}
 
@@ -1486,7 +1515,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_AnonymousArray_10019)EntityDef.id2datatypes[10019]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -1881,7 +1910,7 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void setCliConfigData(List<UInt16> arg1, List<UInt32> arg2)
+		public void setCliConfigData(List<UInt16> arg1, List<UInt64> arg2)
 		{
 			Bundle pBundle = newCall("setCliConfigData", 0);
 			if(pBundle == null)
@@ -1998,7 +2027,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10085)EntityDef.id2datatypes[10085]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10084)EntityDef.id2datatypes[10084]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2315,13 +2344,14 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void applyJoinRaidLonely(UInt64 arg1)
+		public void applyJoinRaidLonely(UInt64 arg1, string arg2)
 		{
 			Bundle pBundle = newCall("applyJoinRaidLonely", 0);
 			if(pBundle == null)
 				return;
 
 			bundle.writeUint64(arg1);
+			bundle.writeString(arg2);
 			sendCall(null);
 		}
 
@@ -2335,13 +2365,14 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void applyJoinTeam(UInt64 arg1)
+		public void applyJoinTeam(UInt64 arg1, string arg2)
 		{
 			Bundle pBundle = newCall("applyJoinTeam", 0);
 			if(pBundle == null)
 				return;
 
 			bundle.writeUint64(arg1);
+			bundle.writeString(arg2);
 			sendCall(null);
 		}
 
@@ -3376,7 +3407,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint32(arg2);
 			bundle.writeUint64(arg3);
-			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg4);
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg4);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg5);
 			sendCall(null);
 		}
@@ -3390,7 +3421,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint16(arg2);
 			bundle.writeUint64(arg3);
-			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg4);
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg4);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg5);
 			bundle.writeUint8(arg6);
 			sendCall(null);
@@ -3419,7 +3450,7 @@ namespace KBEngine
 			bundle.writeUint16(arg2);
 			bundle.writeUint8(arg3);
 			bundle.writeUint64(arg4);
-			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg5);
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg5);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg6);
 			sendCall(null);
 		}
@@ -3447,7 +3478,7 @@ namespace KBEngine
 			bundle.writeUint32(arg2);
 			bundle.writeUint8(arg3);
 			bundle.writeUint64(arg4);
-			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg5);
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg5);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg6);
 			sendCall(null);
 		}

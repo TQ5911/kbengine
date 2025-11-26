@@ -448,9 +448,6 @@
             <lockStatus>
                 <Type> INT8 </Type>
             </lockStatus>
-            <auctionTime>
-                <Type>  LONGTIME        </Type>
-            </auctionTime>
             <spiritDatas>
                 <Type>  ARRAY <of>  CLI_SPIRIT_INFO </of>   </Type>
             </spiritDatas>
@@ -1510,6 +1507,9 @@
             <password>
                 <Type> STRING </Type>
             </password>
+            <isInDungeon>
+                <Type>  BOOL  </Type>
+            </isInDungeon>
         </Properties>
     </TEAM_INFO>
 
@@ -4724,4 +4724,46 @@
             </stateList>
         </Properties>
     </BIG_BIT_DATA_INFO>
+
+    <HATE_COUNTER_DATA_INFO> FIXED_DICT
+        <implementedBy>     HateCounterInfo.HateCounterInstance    </implementedBy>
+        <Properties>
+            <cntList>
+                <Type>  PYTHON              </Type>
+            </cntList>
+        </Properties>
+    </HATE_COUNTER_DATA_INFO>
+
+    <MINE_WAR_MAP_INFO> FIXED_DICT
+        <implementedBy>     MineWarInfo.MineWarMapInstance    </implementedBy>
+        <Properties>
+            <mapId>
+                <Type>  SPACE_NO               </Type>
+            </mapId>
+            <guildGbId>
+                <Type>  PLAYER_GBID            </Type>
+            </guildGbId>
+            <tempGuildGbId>
+                <Type>  PLAYER_GBID            </Type>
+            </tempGuildGbId>
+            <flagDestroyedNum>
+                <Type>  UINT8                  </Type>
+            </flagDestroyedNum>
+            <flagDestroyedTime>
+                <Type>  LONGTIME               </Type>
+            </flagDestroyedTime>
+            <guildOwnerTime>
+                <Type>  PY_DICT               </Type>
+            </guildOwnerTime>
+
+        </Properties>
+    </MINE_WAR_MAP_INFO>
+    <MINE_WAR_DATA_INFO> FIXED_DICT
+        <implementedBy>     MineWarInfo.MineWarDataInstance    </implementedBy>
+        <Properties>
+            <mineWarData>
+                <Type>  ARRAY <of> MINE_WAR_MAP_INFO </of>   </Type>
+            </mineWarData>
+        </Properties>
+    </MINE_WAR_DATA_INFO>
 </root>

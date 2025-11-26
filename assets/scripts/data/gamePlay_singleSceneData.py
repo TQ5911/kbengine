@@ -151,6 +151,14 @@ datas = _tools.RODict({
         "tmxRes": "shouLing_02",
         "weatherType": 0,
     }),
+    "field_shouling_03": _tools.RODict({
+        "sceneRes": "field_shouling_03",
+        "sceneName": "首领讨伐3",
+        "defaultMapID": 2202,
+        "returnPos": None,
+        "tmxRes": "shouLing_03",
+        "weatherType": 0,
+    }),
     "field_shouling_04": _tools.RODict({
         "sceneRes": "field_shouling_04",
         "sceneName": "首领讨伐4",

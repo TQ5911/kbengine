@@ -10,10 +10,14 @@ import iTimer
 import formula
 import creep_base
 import const_const as CONST
+import gameglobal
+import iMineWarSpaceMgr
 
-class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
+class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWarSpaceMgr.IMineWarSpaceMgr):
     def __init__(self):
         INFO_MSG('WorldLineSpaceMgr init', self.spaceNo, self.spaceID)
+        
+        iMineWarSpaceMgr.IMineWarSpaceMgr.__init__(self)
         if formula.isWolrdBossSpace(self.spaceNo):
             self._initCreateBoss(0)
             self._initWorldBossGid()
@@ -21,6 +25,17 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
             self.setSceneStates([
                 gameconst.WorldLineSceneState.LEI_JI
             ])
+        stubName = 'WorldLineStub{}'.format(formula.getMapId(self.spaceNo))
+        gameengine.getGlobalBase(stubName).onSpaceMgrReady(self.spaceNo, self)
+        INFO_MSG('WorldLineSpaceMgr init done', self.spaceNo, self.spaceID, stubName)
+        
+        # 矿战另外处理
+        if not formula.isMineWarSpace(self.spaceNo):
+            self._loadEntities()
+
+    def _loadEntities(self):
+        _space = gameglobal.localSpaceIDMap[self.spaceID]
+        _space.doLoadEntities(self.id)
 
     def _initWorldBossGid(self):
         _mapId = formula.getMapId(self.spaceNo)
@@ -86,7 +101,8 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
         self.syncPlayer(lambda box: box.client.onSceneState(self.worldLineSceneState))
 
     def onPlayerEnter(self, eid):
-        super(WorldLineSpaceMgr, self).onPlayerEnter(eid)
+        iSpaceMgr.ISpaceMgr.onPlayerEnter(self, eid)
+        iMineWarSpaceMgr.IMineWarSpaceMgr.onPlayerEnter(self, eid)
         if not formula.isWolrdBossSpace(self.spaceNo):
             return
 
@@ -94,6 +110,10 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
         DEBUG_MSG('onPlayerEnter', self.spaceNo, self.worldLineSceneState)
         ent and ent.client.onSceneState(self.worldLineSceneState)
 
+    def onPlayerLeave(self, gbId, playerId, box):
+        iSpaceMgr.ISpaceMgr.onPlayerLeave(self, gbId, playerId, box)
+        iMineWarSpaceMgr.IMineWarSpaceMgr.onPlayerLeave(self, gbId, playerId, box)
+        
     def onPlayerRelogin(self, player, gbId):
         if not formula.isWolrdBossSpace(self.spaceNo):
             return

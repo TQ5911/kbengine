@@ -1,0 +1,48 @@
+<root>
+    <Properties>
+        <mineWarCanAttack>
+            <Type>          UINT8           </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0               </Default>
+        </mineWarCanAttack>
+
+    </Properties>
+
+    <BaseMethods>
+        <onMineWarStateSync>
+            <Arg>          UINT8         </Arg>
+            <Arg>          TIMESTAMP         </Arg>
+            <Arg>          TIMESTAMP         </Arg>
+            <Arg>   ARRAY   <of>  LINE_NO   </of>   </Arg>
+            <Arg>          PY_DICT         </Arg>
+        </onMineWarStateSync>
+        <onMineWarPreparePlayer>
+            <Arg>          UINT8         </Arg>
+            <Arg>          TIMESTAMP         </Arg>
+        </onMineWarPreparePlayer>
+        <onMineWarStartPlayer>
+            <Arg>          UINT8         </Arg>
+            <Arg>          TIMESTAMP         </Arg>
+        </onMineWarStartPlayer>
+        <onMineWarEndPlayer>
+            <Arg>   ARRAY   <of>    PYTHON     </of>   </Arg>
+        </onMineWarEndPlayer>
+    </BaseMethods>
+    <CellMethods>
+        <syncMineWarInfo>
+            <Arg>          UINT8         </Arg>
+            <Arg>   ARRAY   <of>  LINE_NO   </of>   </Arg>
+        </syncMineWarInfo>
+
+    </CellMethods>
+    <ClientMethods>
+        <showMineWarPrepare>
+            <Arg>          UINT8         </Arg>
+            <Arg>          INT16         </Arg>
+        </showMineWarPrepare>
+        <showMineWarStart>
+            <Arg>          UINT8         </Arg>
+            <Arg>          INT16         </Arg>
+        </showMineWarStart>
+    </ClientMethods>
+</root>

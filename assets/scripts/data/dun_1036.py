@@ -764,26 +764,62 @@ datas ={
       "ShowMonsterGroupID": ""
     }
   },
-  "10368023": {
+  "10368024": {
     "ActivityID": 0,
-    "ClassName": "Teleporter",
-    "ClassNameType": 2,
-    "CustomID": "10358084",
-    "Dir": 173.5679,
-    "DisplayName": "",
-    "EntityID": 17103602,
-    "ID": 10368023,
-    "PosX": 524.1546,
-    "PosY": 99.36002,
-    "PosZ": 382.4822,
+    "ClassName": "Anchor",
+    "ClassNameType": 20,
+    "CustomID": "",
+    "Dir": 208.8788,
+    "DisplayName": "\u795e\u884c\u70b9\u00b7\u7981\u5fcc\u6865\u7aef",
+    "EntityID": 0,
+    "ID": 10368024,
+    "PosX": 306.042,
+    "PosY": 118.0413,
+    "PosZ": 534.8899,
     "Props": {
       "CameraId": 0,
-      "GateType": 0,
-      "Remark": "",
-      "TelDir": 173.5679,
-      "TelX": 526.6967,
-      "TelY": 99.00502,
-      "TelZ": 368.6801
+      "MapEntityType": "26",
+      "Remark": ""
+    }
+  },
+  "10368026": {
+    "ActivityID": 0,
+    "ClassName": "Anchor",
+    "ClassNameType": 20,
+    "CustomID": "",
+    "Dir": 178.2938,
+    "DisplayName": "\u795e\u884c\u70b9\u00b7\u7901\u77f3\u6ee9\u6d82",
+    "EntityID": 0,
+    "ID": 10368026,
+    "PosX": 529.3871,
+    "PosY": 98.93405,
+    "PosZ": 370.5763,
+    "Props": {
+      "CameraId": 0,
+      "MapEntityType": "26",
+      "Remark": ""
+    }
+  },
+  "10368027": {
+    "ActivityID": 0,
+    "ClassName": "AirWall",
+    "ClassNameType": 5,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 9,
+    "ID": 10368027,
+    "PosX": 358.0,
+    "PosY": 98.02,
+    "PosZ": 332.2,
+    "Props": {
+      "AreaType": 1,
+      "Height": 10.0,
+      "MPosX": 321.0,
+      "MPosY": 98.02,
+      "MPosZ": 295.0,
+      "Radius": 35.0,
+      "Remark": ""
     }
   }
 }

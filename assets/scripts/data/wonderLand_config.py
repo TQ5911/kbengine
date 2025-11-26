@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "timeExplanation2": _tools.RODict({
         "ID": "timeExplanation2",
-        "value": "使用试炼峰入场次数1次，可以将限定时间延长30分钟。",
+        "value": "每张入场门票可延长30分钟限定时间",
     }),
     "timeExplanation3": _tools.RODict({
         "ID": "timeExplanation3",

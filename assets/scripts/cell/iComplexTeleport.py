@@ -24,8 +24,6 @@ import cube_config
 import gamePlay_gamePlay as GP_GP
 import conflict_conflict_def as CCD
 import gamePlay_singleSceneData as GPSSDD
-import gamePlay_enterScene as GP_ESD
-import const_const as CONST
 
 class IComplexTeleport(object):
     """处理所有诸如从 场景A --传送--> 场景B 的问题,
@@ -778,6 +776,7 @@ class IComplexTeleport(object):
         #     self.base.activityComplete(gameconst.ACT_ID_CONST.ACTIVITY_GUILD_DONGFU_WAR_ID)
         #     teamMemNum = self.teamInfo.howManyMember() if self.teamInfo else 1
         #     self.base.onEnterDongfuWarDungeon(dungeonNo, toSpaceNo, self.teamId, teamMemNum, self.teamId==0)
+        gameengine.getRaidStub(self.raidUUID).setInDungeon(self.raidUUID)
         return True
 
     def _beforeLeave_raidDungeon(self, fromSpaceNo, toSpaceNo, options, context):
@@ -798,7 +797,7 @@ class IComplexTeleport(object):
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo):
+        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         # if spaceMgr and spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.GUILD_CHALLENGE:
@@ -996,7 +995,7 @@ class IComplexTeleport(object):
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo):
+        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         dungeonPlayMode = spaceMgr.dungeonPlayMode.playMode if spaceMgr else gameconst.DungeonPlayModeEnum.UNKNOWN
@@ -1175,6 +1174,7 @@ class IComplexTeleport(object):
         teamStub = gameengine.getTeamStub(self.teamId)
         teamStub.onEnterTeamDungeon(
             self.base, self.gbId, teamUUID, dungeonNo, toSpaceNo)
+        gameengine.getTeamStub(self.teamId).setInDungeon(self.teamId)
         return True
 
     def _beforeLeave_teamDungeon(self, fromSpaceNo, toSpaceNo, options, context):
@@ -1223,7 +1223,7 @@ class IComplexTeleport(object):
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo):
+        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         context['position'] = position
@@ -1291,8 +1291,9 @@ class IComplexTeleport(object):
         # 【【任务】离开场景关闭自动战斗对gamePlay全部生效】
         self.tryEnableAutoCombatAfterEnterSpace(formula.getDungeonNoBySpaceNo(toSpaceNo))
 
-        # clear all records
-        self.clearTeleportOutsideRecord()
+        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+            # clear all records
+            self.clearTeleportOutsideRecord()
         if context.get('needRelive', True):
             self._onEnterLineRelive()
         return True
@@ -1366,7 +1367,7 @@ class IComplexTeleport(object):
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo):
+        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         context['position'] = position
@@ -1425,7 +1426,7 @@ class IComplexTeleport(object):
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo):
+        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         context['position'] = position
@@ -1480,7 +1481,7 @@ class IComplexTeleport(object):
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
             self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
 
-        if formula.isLineSpace(toSpaceNo):
+        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
             self.clearTeleportOutsideRecord()
 
         context['position'] = position

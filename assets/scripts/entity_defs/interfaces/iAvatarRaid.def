@@ -131,6 +131,7 @@
         <applyJoinRaidLonely>
             <Exposed/>
             <Arg>   RAID_ID     </Arg>
+            <Arg>   STRING      </Arg>
         </applyJoinRaidLonely>
 
         <onApplyJoinRaidLonelySucc>
@@ -874,6 +875,14 @@
             <Arg>           PLAYER_GBID                                             </Arg>
             <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
         </onAddRaidDungeonRewardRecord>
+
+        <onApplyJoinRaidLonelyFailed>
+            <Arg>           UINT16       </Arg>
+            <Arg>           RAID_ID       </Arg>
+            <Arg>           UINT16       </Arg>
+            <Arg>           UINT32       </Arg>
+            <Arg>           STRING       </Arg>
+        </onApplyJoinRaidLonelyFailed>
     </ClientMethods>
 
 </root>

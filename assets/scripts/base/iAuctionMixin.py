@@ -56,9 +56,6 @@ class IAuctionMixin(object):
             if _w_itemObj.bindType != gameconst.ItemBindType.NORMAL:
                 return gameconst.AuctionErrno.AUCTION_ITEM_ALREADY_BE_BINDED
 
-            if not _w_itemObj.isItemAuctionTimeExpired():
-                return gameconst.AuctionErrno.AUCTION_ITEM_IN_COOLDOWN
-
             if 0 < _w_itemObj.expireTime <= curTime:
                 return gameconst.AuctionErrno.AUCTION_IS_EXPIRED
 

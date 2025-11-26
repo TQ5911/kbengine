@@ -282,14 +282,14 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
         _teamStub = gameengine.getTeamStub(teamUUID)
         _teamStub.onCreateTeamDungeon(teamUUID, self.dungeonNo, spaceNo, self.spaces[spaceNo].spaceUUID, playerBox, extra)
 
-    def leaveTeamDungeon(self, spaceNo, raidUUID, src, playerBox):
-        DEBUG_MSG("leaveTeamDungeon~ ", spaceNo, raidUUID, src, playerBox)
+    def leaveTeamDungeon(self, spaceNo, teamID, src, playerBox):
+        DEBUG_MSG("leaveTeamDungeon~ ", spaceNo, teamID, src, playerBox)
         if spaceNo not in self.spaces:
             ERROR_MSG('leaveTeamDungeon:: failed, missing space data', spaceNo, src, playerBox)
             return
         dungeonVal = self.spaces[spaceNo]
         founders = len(dungeonVal.founders)
         if founders <= 1:
-            self.completeTeamDungeon(spaceNo, raidUUID, False, 0)
+            self.completeTeamDungeon(spaceNo, teamID, False, 0)
         else:
             playerBox.cell.selfLeaveTeamDungeon(src)

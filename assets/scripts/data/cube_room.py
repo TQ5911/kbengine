@@ -166,7 +166,7 @@ datas = _tools.RODict({
         "ID": 3121,
         "floor": 1,
         "type": 2,
-        "weight": 5,
+        "weight": 0,
         "sign": 0
     }),
     3200: _tools.RODict({
@@ -320,7 +320,7 @@ datas = _tools.RODict({
         "ID": 3221,
         "floor": 2,
         "type": 2,
-        "weight": 10,
+        "weight": 0,
         "sign": 0
     }),
     3300: _tools.RODict({
@@ -474,7 +474,7 @@ datas = _tools.RODict({
         "ID": 3321,
         "floor": 3,
         "type": 2,
-        "weight": 10,
+        "weight": 0,
         "sign": 0
     }),
     3400: _tools.RODict({
@@ -628,7 +628,7 @@ datas = _tools.RODict({
         "ID": 3421,
         "floor": 4,
         "type": 2,
-        "weight": 10,
+        "weight": 0,
         "sign": 0
     }),
     3500: _tools.RODict({
@@ -782,7 +782,7 @@ datas = _tools.RODict({
         "ID": 3521,
         "floor": 5,
         "type": 2,
-        "weight": 10,
+        "weight": 0,
         "sign": 0
     })
 })

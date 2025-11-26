@@ -1077,6 +1077,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 else:
                     ERROR_MSG('modifyHP:: duelFlagEntity not found', self.id)
 
+        # 矿战怪物免死
+        if formula.isMineWarSpace(self.spaceNo) and curHp <= 0 and self.IsMonster:
+            self.hp = curHp = self.mineWarMonsterImmuneDeath(releaseRole, srcType, srcId, curHp)
+    
         hpDelta = self.hp - oldHp
 
         if self.hp <= 0:
@@ -1925,13 +1929,13 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             host = self.getHost()
             host and host.IsAvatar and host.calcPetAtkStats(dmg)
 
-    def calcBeHurtStats(self, target, context, dmgResult):
+    def calcBeHurtStats(self, target, context, dmgResult, realDmgVal):
         if not dmgResult.hurtDmg:
             return
 
         if self.IsSummon:
             host = self.getHost()
-            host and host.IsAvatar and host.calcBeHurtStats(target, context, dmgResult)
+            host and host.IsAvatar and host.calcBeHurtStats(target, context, dmgResult, realDmgVal)
 
 
     def calcHealStats(self, target, context, hpDelta):
@@ -2097,8 +2101,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 recordDmgVal = 0
             # report to battleFieldDungeon
 
-        target.calcBeHurtStats(dmgSrcEnt, context, dmgResult)
-        dmgSrcEnt.calcAtkStats(target, context, dmg)
+        target.calcBeHurtStats(dmgSrcEnt, context, dmgResult, realDmgVal)
+        dmgSrcEnt.calcAtkStats(target, context, realDmgVal)
         dmgSrcEnt.calcHealStats(dmgSrcEnt, context, suckHpVal)
 
         self.sendDmgMsgs(target, context, dmgResult, absorbDamageDetail, realDmgVal)
@@ -2343,8 +2347,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                        'adjMaxPhysicalAtk', 'adjMaxPhysicalAtkAbs','baseMinMagicAtk', 'adjMinMagicAtk', 'adjMinMagicAtkAbs',
                        'baseMaxMagicAtk', 'adjMaxMagicAtk', 'adjMaxMagicAtkAbs', 'baseHit', 'adjHit', 'baseFatal',
                        'adjFatal', 'baseMortal', 'adjMortal', 'baseStunEnh',
-                       'adjStunEnh', 'baseSilentEnh', 'adjSilentEnh', 'baseKnockEnh', 'adjKnockEnh', 'baseDebilityEnh',
-                       'adjDebilityEnh', 'baseFrozenEnh', 'adjFrozenEnh'
+                       'adjStunEnh', 'baseSilentEnh', 'adjSilentEnh', 'baseKnockEnh', 'adjKnockEnh', 'baseFrozenEnh', 'adjFrozenEnh'
                        ]
 
         for propName in inheritList:

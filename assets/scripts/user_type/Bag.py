@@ -142,7 +142,7 @@ class Bag(BaseBag.BaseBag):
             tmpItem[str(item.itemId)] = tmpItem[str(item.itemId)] + mergeNum
 
             newCount = self.getItemCount(item.itemId, item.bindType)
-            owner.makeItemFlowLog(self.bagType, item, mergeNum, opUUID, src, newCount, detail)
+            #owner.makeItemFlowLog(self.bagType, item, mergeNum, opUUID, src, newCount, detail)
 
         for gridId, planItems in planDict['new'].items():
             item = self.getItemObjByGridId(gridId)
@@ -215,7 +215,7 @@ class Bag(BaseBag.BaseBag):
 
         for item, num in deducteItems:
             newCount = self.getItemCount(item.itemId, item.bindType)
-            owner.makeItemFlowLog(self.bagType, item, -num, opUUID, srcType, newCount, detail)
+            #owner.makeItemFlowLog(self.bagType, item, -num, opUUID, srcType, newCount, detail)
 
         owner.onItemCountChanged(itemIdList)
         return
@@ -230,7 +230,7 @@ class Bag(BaseBag.BaseBag):
                                                                                                         self.bagType))
         owner.onItemCountChanged([itemId])
         newCount = self.getItemCount(cleanItem.itemId, cleanItem.bindType)
-        owner.makeItemFlowLog(self.bagType, cleanItem, -cleanItem.itemNum, opUUID, srcType, newCount, detail)
+        #owner.makeItemFlowLog(self.bagType, cleanItem, -cleanItem.itemNum, opUUID, srcType, newCount, detail)
         if oldObj.uniqueId in self.item2timer:
             tid = self.item2timer.pop(oldObj.uniqueId)
             owner._cancelDatetimeCallback(tid, gametimer.REPLACE_EXPIRED_ITEM)

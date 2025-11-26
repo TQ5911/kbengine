@@ -131,15 +131,15 @@ def _onCheckWhiteList(result, error, isNewAccount, realAccountName, password, da
             INFO_MSG('_onCheckWhiteList check server limit error.', nowNum, cfgNum)
             KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER5)
             return
-        clientData = utils.decodeClientData(dataBytes)
+        #clientData = utils.decodeClientData(dataBytes)
         # accountType, accountName = utils.getAccountTypeAndName(clientData.get(''))
-        gamelog.makeWLog("ServerBanByWhiteList", {
-            "client_id": str(clientData.get('devicePlatId', 0)),
-            "account_id": realAccountName,
-            "udid": clientData.get('deviceUniqueIdentifier', ''),
-            "app_channel": clientData.get('channelId', 0),
-            "account_id": realAccountName
-        })
+        # gamelog.makeWLog("ServerBanByWhiteList", {
+        #     "client_id": str(clientData.get('devicePlatId', 0)),
+        #     "account_id": realAccountName,
+        #     "udid": clientData.get('deviceUniqueIdentifier', ''),
+        #     "app_channel": clientData.get('channelId', 0),
+        #     "account_id": realAccountName
+        # })
         if not gameconfig.permitLogin():
             KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER2)
             return

@@ -28,6 +28,7 @@ import petData_set as PDS
 import conflict_status_def as CSDD
 import creep_set as CSD
 import cityBattle_config as CBC
+import formula_generalFormula as F_GFD
 
 TempSkillVal = collections.namedtuple(
     'TempSkillVal',
@@ -734,12 +735,13 @@ class AuxFunc(object):
 
         return True
 
-    def moveToPosWithAngleDis(self, pos, angle, radius):
+    def moveToPosWithAngleDis(self, pos, radius, target):
+        target.beHateCounter.addHateCnt(gameconst.HATE_CNT_TYPE_MOVE)
         if not self._checkNeedNav(pos):
-            return
+            return True
 
-        _pos = self.getPositionWithinAngle(pos, angle, radius)
-        self.moveToPos(_pos, 0)
+        _pos = self.getPositionWithinAngle(pos, radius, target)
+        return self.moveToPos(_pos, 0)
 
     def moveToPos(self, pos, dis=0, extra=None):
         owner = self.owner
@@ -765,7 +767,7 @@ class AuxFunc(object):
                 #if self.moveToPos(target.position,mDis):
                 # 这里要传进去的是偏转角，策划配的是两个偏转角加一个快的总扇形
                 _angle = CONST.datas['monsterCombatPathingMaxAngle']['value'] / 2
-                if self.moveToPosWithAngleDis(target.position, 90, mDis):
+                if self.moveToPosWithAngleDis(target.position, mDis, target):
                     _needNavTime = False
                     # 可以寻路时，清除计时
                     self.clearNavigationTimes()
@@ -816,6 +818,7 @@ class AuxFunc(object):
                 positionArgs = skill.getSkillDesPosition(owner, target, skillArgs)
                 skillArgs = skillArgs + positionArgs
 
+            target.beHateCounter.addHateCnt(gameconst.HATE_CNT_TYPE_ATTACK)
             if skill.hasTag(gameconst.SkillTag.Casting):
                 owner.castingSkillInternal(skill.skillId, targetId, skillArgs)
             else:
@@ -831,7 +834,7 @@ class AuxFunc(object):
         posList = owner.getRandomPoints(target.position, distance, 1, 0)
         return posList[0] if posList else None
 
-    def getPositionWithinAngle(self, targetPos, angle, radius):
+    def getPositionWithinAngle(self, targetPos, radius, target):
         """
         获取目标位置周围指定半径内，且与自身朝向目标位置方向夹角小于指定角度的随机位置
         根据自身方向选择合适的扇区
@@ -866,6 +869,9 @@ class AuxFunc(object):
 
         # 选择旋转角度范围
         # 如果顺时针180度以内，则选择在 -angle 到 0 区间内随机，否则在 0 到 angle 区间内随机
+        _fomulaId = CONST.datas['monsterCombatPathingMaxAngle']['value']
+        _func = F_GFD.datas[_fomulaId]['serverFormula']
+        angle = _func(target.beHateCounter.getHateCntVal()) / 2
         angle = angle * sMath.pi / 180
         if deltaYaw > 0:
             chosenRange = (-angle, 0)

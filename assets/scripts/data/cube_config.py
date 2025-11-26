@@ -53,27 +53,27 @@ datas = _tools.RODict({
     }),
     "timeExplanation": _tools.RODict({
         "ID": "timeExplanation",
-        "value": "【混沌回廊入场时间】\n进入混沌回廊须消耗入场次数，每次入场时间30分钟。",
+        "value": "【混沌回廊入场时间】\n进入混沌回廊须消耗入场门票，每次入场时间30分钟。",
     }),
     "numExplanation": _tools.RODict({
         "ID": "numExplanation",
-        "value": "【混沌回廊入场次数】\n可使用每日免费入场次数进入混沌回廊。免费入场次数于每日18:00重置。\n用完免费入场次数时，可通过购买入场券的方式进入混沌回廊。",
+        "value": "【混沌回廊入场门票】\n可使用每日免费入场门票进入混沌回廊。免费入场门票于每日5:00重置。\n用完免费入场门票时，可通过兑换的方式进入混沌回廊。",
     }),
     "timeExtensionExplanation": _tools.RODict({
         "ID": "timeExtensionExplanation",
-        "value": "【延长限定时间】\n限定时间小于30分钟时，可以消耗1次入场次数延长限定时间30分钟。\n可以使用金币或入场券补充入场次数。\n限定每日2次使用金币补充入场次数。",
+        "value": "【延长限定时间】\n限定时间小于30分钟时，可以消耗1次入场门票延长限定时间30分钟。\n可以使用金币或通行牌补充入场门票。\n限定每日2次使用金币补充入场门票。",
     }),
     "autoExpansionExplanation": _tools.RODict({
         "ID": "autoExpansionExplanation",
-        "value": "【自动延长】\n自动延长可以指定延长次数，一次设置可指定最多20次自动延长。\n若已设置为自动延长，则当限定时间不足1分钟时，会自动延长限定时间。\n自动延长会以入场次数>入场券>金币的顺序使用。\n限定每日2次使用金币自动延长，需在金币使用选项开启后才能使用。\n若角色死亡或退出混沌回廊，则取消自动延长。",
+        "value": "【自动延长】\n自动延长可以指定延长次数，一次设置可指定最多20次自动延长。\n若已设置为自动延长，则当限定时间不足1分钟时，会自动延长限定时间。\n自动延长会以入场门票>通行牌>金币的顺序使用。\n限定每日2次使用金币自动延长，需在金币使用选项开启后才能使用。\n若角色死亡或退出混沌回廊，则取消自动延长。",
     }),
     "timeExplanation2": _tools.RODict({
         "ID": "timeExplanation2",
-        "value": "使用混沌回廊入场次数1次，可以将限定时间延长30分钟。",
+        "value": "每张入场门票可延长30分钟限定时间",
     }),
     "timeExplanation3": _tools.RODict({
         "ID": "timeExplanation3",
-        "value": "使用金币或背包中的入场券\n可以将限定时间延长30分钟。",
+        "value": "使用金币或背包中的通行牌\n可以将限定时间延长30分钟。",
     }),
     "cubeUseGold": _tools.RODict({
         "ID": "cubeUseGold",
@@ -81,7 +81,7 @@ datas = _tools.RODict({
     }),
     "cubeUseTicket": _tools.RODict({
         "ID": "cubeUseTicket",
-        "value": "使用入场券({0}/{1})",
+        "value": "使用通行牌({0}/{1})",
     }),
     "cube_levelNotOpen": _tools.RODict({
         "ID": "cube_levelNotOpen",

@@ -573,7 +573,10 @@ def armorAvoidance(self, target, classTag, ignoreRatio):
         minArmor = target.getProp("minPhysicalArmor") if target else 0
         maxArmor = target.getProp("maxPhysicalArmor") if target else 0
 
-    dmgAvoidance = random.randint(minArmor, maxArmor)
+    if maxArmor >= minArmor:
+        dmgAvoidance = random.randint(minArmor, maxArmor)
+    else:
+        dmgAvoidance = maxArmor    
 
     ignoreArmor = self.getProp('ignoreArmor')
     dmgArmor = target.getProp('dmgArmor')

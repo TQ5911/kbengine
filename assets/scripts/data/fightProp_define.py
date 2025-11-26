@@ -47,7 +47,7 @@ datas = _tools.RODict({
         "formulaPlayer": lambda e: int(max(1, (e.baseFullHp + e.adjFullHp) * (1 + e.mulFullHp) + e.adjFullHpAbs)),
         "formulaMonster": lambda e: int(max(1, (e.baseFullHp + e.adjFullHp) * (1 + e.mulFullHp) + e.adjFullHpAbs)),
         "defaultValue": 0.0,
-        "changeAffactProp": "hpRecovery;hp",
+        "changeAffactProp": "hp",
         "propertiesType": 1,
         "isPercent": 0,
         "relatedKey": "",
@@ -81,7 +81,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullHp",
-        "perPropertyScore": 1.0
+        "perPropertyScore": 0.2
     }),
     "adjFullHp": _tools.RODict({
         "ID": "adjFullHp",
@@ -96,7 +96,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullHp",
-        "perPropertyScore": 1.0
+        "perPropertyScore": 0.2
     }),
     "adjFullHpAbs": _tools.RODict({
         "ID": "adjFullHpAbs",
@@ -111,7 +111,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullHp",
-        "perPropertyScore": 1.0
+        "perPropertyScore": 0.2
     }),
     "mulFullHp": _tools.RODict({
         "ID": "mulFullHp",
@@ -126,7 +126,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullHp",
-        "perPropertyScore": 70967.0
+        "perPropertyScore": 14193.4
     }),
     "fullMp": _tools.RODict({
         "ID": "fullMp",
@@ -137,7 +137,7 @@ datas = _tools.RODict({
         "formulaPlayer": lambda e: int(max(1, (e.baseFullMp + e.adjFullMp) * (1 + e.mulFullMp) + e.adjFullMpAbs)),
         "formulaMonster": lambda e: int(max(1, (e.baseFullMp + e.adjFullMp) * (1 + e.mulFullMp) + e.adjFullMpAbs)),
         "defaultValue": 0.0,
-        "changeAffactProp": "mpRecovery;mp",
+        "changeAffactProp": "mp",
         "propertiesType": 1,
         "isPercent": 0,
         "relatedKey": "",
@@ -171,7 +171,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullMp",
-        "perPropertyScore": 12.0
+        "perPropertyScore": 2.4
     }),
     "adjFullMp": _tools.RODict({
         "ID": "adjFullMp",
@@ -186,7 +186,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullMp",
-        "perPropertyScore": 12.0
+        "perPropertyScore": 2.4
     }),
     "adjFullMpAbs": _tools.RODict({
         "ID": "adjFullMpAbs",
@@ -201,7 +201,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullMp",
-        "perPropertyScore": 12.0
+        "perPropertyScore": 2.4
     }),
     "mulFullMp": _tools.RODict({
         "ID": "mulFullMp",
@@ -216,7 +216,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullMp",
-        "perPropertyScore": 70967.0
+        "perPropertyScore": 14193.4
     }),
     "hit": _tools.RODict({
         "ID": "hit",
@@ -246,7 +246,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "hit",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjHit": _tools.RODict({
         "ID": "adjHit",
@@ -261,7 +261,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "hit",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "speed": _tools.RODict({
         "ID": "speed",
@@ -338,156 +338,6 @@ datas = _tools.RODict({
         "relatedKey": "speed",
         "perPropertyScore": 0.0
     }),
-    "hpRecovery": _tools.RODict({
-        "ID": "hpRecovery",
-        "name": "生命值回复速率",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": lambda e: (e.baseHpRecovery + e.adjHpRecovery) * (1 + e.mulHpRecovery) + e.fullMp * e.adjHpRecoveryPercent,
-        "formulaMonster": lambda e: (e.baseHpRecovery + e.adjHpRecovery) * (1 + e.mulHpRecovery) + e.fullMp * e.adjHpRecoveryPercent,
-        "defaultValue": 0.0,
-        "changeAffactProp": "",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "",
-        "perPropertyScore": 0.0
-    }),
-    "baseHpRecovery": _tools.RODict({
-        "ID": "baseHpRecovery",
-        "name": "基础生命值回复速率",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "hpRecovery",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "hpRecovery",
-        "perPropertyScore": 0.0
-    }),
-    "adjHpRecovery": _tools.RODict({
-        "ID": "adjHpRecovery",
-        "name": "生命值回复速率调整值",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "hpRecovery",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "hpRecovery",
-        "perPropertyScore": 0.0
-    }),
-    "mulHpRecovery": _tools.RODict({
-        "ID": "mulHpRecovery",
-        "name": "生命值回复速率调整百分比",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "hpRecovery",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "hpRecovery",
-        "perPropertyScore": 0.0
-    }),
-    "adjHpRecoveryPercent": _tools.RODict({
-        "ID": "adjHpRecoveryPercent",
-        "name": "百分比生命值回复调整值",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "hpRecovery",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "hpRecovery",
-        "perPropertyScore": 0.0
-    }),
-    "mpRecovery": _tools.RODict({
-        "ID": "mpRecovery",
-        "name": "能量回复速率",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": lambda e: (e.baseMpRecovery + e.adjMpRecovery) * (1 + e.mulMpRecovery) + e.fullMp * e.adjMpRecoveryPercent,
-        "formulaMonster": lambda e: (e.baseMpRecovery + e.adjMpRecovery) * (1 + e.mulMpRecovery) + e.fullMp * e.adjMpRecoveryPercent,
-        "defaultValue": 0.0,
-        "changeAffactProp": "",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "",
-        "perPropertyScore": 0.0
-    }),
-    "baseMpRecovery": _tools.RODict({
-        "ID": "baseMpRecovery",
-        "name": "基础能量回复速率",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "mpRecovery",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "mpRecovery",
-        "perPropertyScore": 0.0
-    }),
-    "adjMpRecovery": _tools.RODict({
-        "ID": "adjMpRecovery",
-        "name": "能量回复速率调整值",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "mpRecovery",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "mpRecovery",
-        "perPropertyScore": 0.0
-    }),
-    "mulMpRecovery": _tools.RODict({
-        "ID": "mulMpRecovery",
-        "name": "能量回复速率调整百分比",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "mpRecovery",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "mpRecovery",
-        "perPropertyScore": 0.0
-    }),
-    "adjMpRecoveryPercent": _tools.RODict({
-        "ID": "adjMpRecoveryPercent",
-        "name": "百分比能量回复调整值",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "mpRecovery",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "mpRecovery",
-        "perPropertyScore": 0.0
-    }),
     "minPhysicalAtk": _tools.RODict({
         "ID": "minPhysicalAtk",
         "name": "物理攻击力下限",
@@ -516,7 +366,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "adjMinPhysicalAtk": _tools.RODict({
         "ID": "adjMinPhysicalAtk",
@@ -531,7 +381,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "adjMinPhysicalAtkAbs": _tools.RODict({
         "ID": "adjMinPhysicalAtkAbs",
@@ -546,7 +396,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "mulMinPhysicalAtk": _tools.RODict({
         "ID": "mulMinPhysicalAtk",
@@ -561,7 +411,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalAtk",
-        "perPropertyScore": 52842.0
+        "perPropertyScore": 10568.4
     }),
     "maxPhysicalAtk": _tools.RODict({
         "ID": "maxPhysicalAtk",
@@ -591,7 +441,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "adjMaxPhysicalAtk": _tools.RODict({
         "ID": "adjMaxPhysicalAtk",
@@ -606,7 +456,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "adjMaxPhysicalAtkAbs": _tools.RODict({
         "ID": "adjMaxPhysicalAtkAbs",
@@ -621,7 +471,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "mulMaxPhysicalAtk": _tools.RODict({
         "ID": "mulMaxPhysicalAtk",
@@ -636,7 +486,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalAtk",
-        "perPropertyScore": 115259.0
+        "perPropertyScore": 23051.8
     }),
     "minMagicAtk": _tools.RODict({
         "ID": "minMagicAtk",
@@ -666,7 +516,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "adjMinMagicAtk": _tools.RODict({
         "ID": "adjMinMagicAtk",
@@ -681,7 +531,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "adjMinMagicAtkAbs": _tools.RODict({
         "ID": "adjMinMagicAtkAbs",
@@ -696,7 +546,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "mulMinMagicAtk": _tools.RODict({
         "ID": "mulMinMagicAtk",
@@ -711,7 +561,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicAtk",
-        "perPropertyScore": 52842.0
+        "perPropertyScore": 10568.4
     }),
     "maxMagicAtk": _tools.RODict({
         "ID": "maxMagicAtk",
@@ -741,7 +591,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "adjMaxMagicAtk": _tools.RODict({
         "ID": "adjMaxMagicAtk",
@@ -756,7 +606,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "adjMaxMagicAtkAbs": _tools.RODict({
         "ID": "adjMaxMagicAtkAbs",
@@ -771,7 +621,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicAtk",
-        "perPropertyScore": 36.0
+        "perPropertyScore": 7.2
     }),
     "mulMaxMagicAtk": _tools.RODict({
         "ID": "mulMaxMagicAtk",
@@ -786,7 +636,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicAtk",
-        "perPropertyScore": 115259.0
+        "perPropertyScore": 23051.8
     }),
     "atkBless": _tools.RODict({
         "ID": "atkBless",
@@ -816,7 +666,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "atkBless",
-        "perPropertyScore": 3290.0
+        "perPropertyScore": 658.0
     }),
     "dodge": _tools.RODict({
         "ID": "dodge",
@@ -846,7 +696,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "dodge",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjDodge": _tools.RODict({
         "ID": "adjDodge",
@@ -861,7 +711,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "dodge",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "fatal": _tools.RODict({
         "ID": "fatal",
@@ -891,7 +741,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fatal",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjFatal": _tools.RODict({
         "ID": "adjFatal",
@@ -906,7 +756,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fatal",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "antiFatal": _tools.RODict({
         "ID": "antiFatal",
@@ -936,7 +786,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "antiFatal",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjAntiFatal": _tools.RODict({
         "ID": "adjAntiFatal",
@@ -951,7 +801,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "antiFatal",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "ignoreArmor": _tools.RODict({
         "ID": "ignoreArmor",
@@ -981,7 +831,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "ignoreArmor",
-        "perPropertyScore": 26400.0
+        "perPropertyScore": 5280.0
     }),
     "adjIgnoreArmor": _tools.RODict({
         "ID": "adjIgnoreArmor",
@@ -996,7 +846,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "ignoreArmor",
-        "perPropertyScore": 26400.0
+        "perPropertyScore": 5280.0
     }),
     "dmgArmor": _tools.RODict({
         "ID": "dmgArmor",
@@ -1026,7 +876,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "dmgArmor",
-        "perPropertyScore": 26400.0
+        "perPropertyScore": 5280.0
     }),
     "adjDmgArmor": _tools.RODict({
         "ID": "adjDmgArmor",
@@ -1041,7 +891,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "dmgArmor",
-        "perPropertyScore": 26400.0
+        "perPropertyScore": 5280.0
     }),
     "skillCD": _tools.RODict({
         "ID": "skillCD",
@@ -1071,7 +921,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "skillCD",
-        "perPropertyScore": 68000.0
+        "perPropertyScore": 13600.0
     }),
     "adjSkillCD": _tools.RODict({
         "ID": "adjSkillCD",
@@ -1086,7 +936,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "skillCD",
-        "perPropertyScore": 68000.0
+        "perPropertyScore": 13600.0
     }),
     "mortal": _tools.RODict({
         "ID": "mortal",
@@ -1116,7 +966,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "mortal",
-        "perPropertyScore": 31000.0
+        "perPropertyScore": 6200.0
     }),
     "adjMortal": _tools.RODict({
         "ID": "adjMortal",
@@ -1131,7 +981,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "mortal",
-        "perPropertyScore": 31000.0
+        "perPropertyScore": 6200.0
     }),
     "antiMortal": _tools.RODict({
         "ID": "antiMortal",
@@ -1161,7 +1011,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "antiMortal",
-        "perPropertyScore": 31000.0
+        "perPropertyScore": 6200.0
     }),
     "adjAntiMortal": _tools.RODict({
         "ID": "adjAntiMortal",
@@ -1176,7 +1026,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "antiMortal",
-        "perPropertyScore": 31000.0
+        "perPropertyScore": 6200.0
     }),
     "baseStateRate": _tools.RODict({
         "ID": "baseStateRate",
@@ -1221,7 +1071,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "finalDmg",
-        "perPropertyScore": 68000.0
+        "perPropertyScore": 13600.0
     }),
     "adjFinalDmg": _tools.RODict({
         "ID": "adjFinalDmg",
@@ -1236,7 +1086,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "finalDmg",
-        "perPropertyScore": 68000.0
+        "perPropertyScore": 13600.0
     }),
     "finalDmgAnti": _tools.RODict({
         "ID": "finalDmgAnti",
@@ -1266,7 +1116,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "finalDmgAnti",
-        "perPropertyScore": 68000.0
+        "perPropertyScore": 13600.0
     }),
     "adjFinalDmgAnti": _tools.RODict({
         "ID": "adjFinalDmgAnti",
@@ -1281,7 +1131,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "finalDmgAnti",
-        "perPropertyScore": 68000.0
+        "perPropertyScore": 13600.0
     }),
     "PVPDmg": _tools.RODict({
         "ID": "PVPDmg",
@@ -1311,7 +1161,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "PVPDmg",
-        "perPropertyScore": 34000.0
+        "perPropertyScore": 6800.0
     }),
     "adjPVPDmg": _tools.RODict({
         "ID": "adjPVPDmg",
@@ -1326,7 +1176,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "PVPDmg",
-        "perPropertyScore": 34000.0
+        "perPropertyScore": 6800.0
     }),
     "PVPDmgAnti": _tools.RODict({
         "ID": "PVPDmgAnti",
@@ -1356,7 +1206,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "PVPDmgAnti",
-        "perPropertyScore": 34000.0
+        "perPropertyScore": 6800.0
     }),
     "adjPVPDmgAnti": _tools.RODict({
         "ID": "adjPVPDmgAnti",
@@ -1371,7 +1221,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "PVPDmgAnti",
-        "perPropertyScore": 34000.0
+        "perPropertyScore": 6800.0
     }),
     "monsterDmg": _tools.RODict({
         "ID": "monsterDmg",
@@ -1401,7 +1251,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "monsterDmg",
-        "perPropertyScore": 34000.0
+        "perPropertyScore": 6800.0
     }),
     "adjMonsterDmg": _tools.RODict({
         "ID": "adjMonsterDmg",
@@ -1416,7 +1266,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "monsterDmg",
-        "perPropertyScore": 34000.0
+        "perPropertyScore": 6800.0
     }),
     "monsterDmgAnti": _tools.RODict({
         "ID": "monsterDmgAnti",
@@ -1446,7 +1296,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "monsterDmgAnti",
-        "perPropertyScore": 34000.0
+        "perPropertyScore": 6800.0
     }),
     "adjMonsterDmgAnti": _tools.RODict({
         "ID": "adjMonsterDmgAnti",
@@ -1461,7 +1311,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "monsterDmgAnti",
-        "perPropertyScore": 34000.0
+        "perPropertyScore": 6800.0
     }),
     "realDmg": _tools.RODict({
         "ID": "realDmg",
@@ -1491,7 +1341,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "realDmg",
-        "perPropertyScore": 25.0
+        "perPropertyScore": 5.0
     }),
     "adjRealDmg": _tools.RODict({
         "ID": "adjRealDmg",
@@ -1506,7 +1356,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "realDmg",
-        "perPropertyScore": 25.0
+        "perPropertyScore": 5.0
     }),
     "realDmgDef": _tools.RODict({
         "ID": "realDmgDef",
@@ -1536,7 +1386,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "realDmgDef",
-        "perPropertyScore": 25.0
+        "perPropertyScore": 5.0
     }),
     "adjRealDmgDef": _tools.RODict({
         "ID": "adjRealDmgDef",
@@ -1551,172 +1401,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "realDmgDef",
-        "perPropertyScore": 25.0
-    }),
-    "extraDmg": _tools.RODict({
-        "ID": "extraDmg",
-        "name": "额外攻击伤害提升",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": lambda e: e.baseExtraDmg + e.adjExtraDmg,
-        "formulaMonster": lambda e: e.baseExtraDmg + e.adjExtraDmg,
-        "defaultValue": 0.0,
-        "changeAffactProp": "",
-        "propertiesType": 2,
-        "isPercent": 1,
-        "relatedKey": "",
-        "perPropertyScore": 0.0
-    }),
-    "baseExtraDmg": _tools.RODict({
-        "ID": "baseExtraDmg",
-        "name": "额外攻击伤害基础值",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "extraDmg",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "extraDmg",
-        "perPropertyScore": 0.0
-    }),
-    "adjExtraDmg": _tools.RODict({
-        "ID": "adjExtraDmg",
-        "name": "额外攻击伤害调整值",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "extraDmg",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "extraDmg",
-        "perPropertyScore": 0.0
-    }),
-    "extraDmgDef": _tools.RODict({
-        "ID": "extraDmgDef",
-        "name": "所受额外攻击伤害降低",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": lambda e: e.baseExtraDmgDef + e.adjExtraDmgDef,
-        "formulaMonster": lambda e: e.baseExtraDmgDef + e.adjExtraDmgDef,
-        "defaultValue": 0.0,
-        "changeAffactProp": "",
-        "propertiesType": 2,
-        "isPercent": 1,
-        "relatedKey": "",
-        "perPropertyScore": 0.0
-    }),
-    "baseExtraDmgDef": _tools.RODict({
-        "ID": "baseExtraDmgDef",
-        "name": "额外防御减伤基础值",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "extraDmgDef",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "extraDmgDef",
-        "perPropertyScore": 0.0
-    }),
-    "adjExtraDmgDef": _tools.RODict({
-        "ID": "adjExtraDmgDef",
-        "name": "额外防御减伤调整值",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "extraDmgDef",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "extraDmgDef",
-        "perPropertyScore": 0.0
-    }),
-    "spirit": _tools.RODict({
-        "ID": "spirit",
-        "name": "精神力",
-        "type": "int",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": lambda e: int((e.baseSpirit + e.adjSpirit)* (1 + e.mulSpirit) + e.adjSpiritAbs),
-        "formulaMonster": lambda e: int((e.baseSpirit + e.adjSpirit)* (1 + e.mulSpirit) + e.adjSpiritAbs),
-        "defaultValue": 0.0,
-        "changeAffactProp": "",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "",
-        "perPropertyScore": 0.0
-    }),
-    "baseSpirit": _tools.RODict({
-        "ID": "baseSpirit",
-        "name": "精神力基础值",
-        "type": "int",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "spirit",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "spirit",
-        "perPropertyScore": 0.0
-    }),
-    "adjSpirit": _tools.RODict({
-        "ID": "adjSpirit",
-        "name": "精神力调整值",
-        "type": "int",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "spirit",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "spirit",
-        "perPropertyScore": 0.0
-    }),
-    "adjSpiritAbs": _tools.RODict({
-        "ID": "adjSpiritAbs",
-        "name": "精神力绝对调整值",
-        "type": "int",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "spirit",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "spirit",
-        "perPropertyScore": 0.0
-    }),
-    "mulSpirit": _tools.RODict({
-        "ID": "mulSpirit",
-        "name": "精神力百分比",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 0,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "spirit",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "spirit",
-        "perPropertyScore": 0.0
+        "perPropertyScore": 5.0
     }),
     "stunEnh": _tools.RODict({
         "ID": "stunEnh",
@@ -1746,7 +1431,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "stunEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjStunEnh": _tools.RODict({
         "ID": "adjStunEnh",
@@ -1761,7 +1446,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "stunEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "stunAnti": _tools.RODict({
         "ID": "stunAnti",
@@ -1791,7 +1476,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "stunAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjStunAnti": _tools.RODict({
         "ID": "adjStunAnti",
@@ -1806,7 +1491,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "stunAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "silentEnh": _tools.RODict({
         "ID": "silentEnh",
@@ -1836,7 +1521,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "silentEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjSilentEnh": _tools.RODict({
         "ID": "adjSilentEnh",
@@ -1851,7 +1536,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "silentEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "silentAnti": _tools.RODict({
         "ID": "silentAnti",
@@ -1881,7 +1566,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "silentAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjSilentAnti": _tools.RODict({
         "ID": "adjSilentAnti",
@@ -1896,7 +1581,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "silentAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "knockEnh": _tools.RODict({
         "ID": "knockEnh",
@@ -1926,7 +1611,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "knockEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjKnockEnh": _tools.RODict({
         "ID": "adjKnockEnh",
@@ -1941,7 +1626,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "knockEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "knockAnti": _tools.RODict({
         "ID": "knockAnti",
@@ -1971,7 +1656,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "knockAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjKnockAnti": _tools.RODict({
         "ID": "adjKnockAnti",
@@ -1986,97 +1671,97 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "knockAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
-    "debilityEnh": _tools.RODict({
-        "ID": "debilityEnh",
-        "name": "弱化穿透",
+    "pushEnh": _tools.RODict({
+        "ID": "pushEnh",
+        "name": "推拉穿透",
         "type": "int",
         "propType": 3,
         "ifSend": 1,
-        "formulaPlayer": lambda e: e.baseDebilityEnh + e.adjDebilityEnh,
-        "formulaMonster": lambda e: e.baseDebilityEnh + e.adjDebilityEnh,
+        "formulaPlayer": lambda e: e.basePushEnh + e.adjPushEnh,
+        "formulaMonster": lambda e: e.basePushEnh + e.adjPushEnh,
         "defaultValue": 0.0,
         "changeAffactProp": "",
-        "propertiesType": 0,
+        "propertiesType": 2,
         "isPercent": 0,
         "relatedKey": "",
         "perPropertyScore": 0.0
     }),
-    "baseDebilityEnh": _tools.RODict({
-        "ID": "baseDebilityEnh",
-        "name": "基础弱化穿透",
+    "basePushEnh": _tools.RODict({
+        "ID": "basePushEnh",
+        "name": "基础推拉穿透",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
         "formulaPlayer": None,
         "formulaMonster": None,
         "defaultValue": 0.0,
-        "changeAffactProp": "debilityEnh",
+        "changeAffactProp": "pushEnh",
         "propertiesType": 0,
         "isPercent": 0,
-        "relatedKey": "debilityEnh",
-        "perPropertyScore": 620.0
+        "relatedKey": "pushEnh",
+        "perPropertyScore": 124.0
     }),
-    "adjDebilityEnh": _tools.RODict({
-        "ID": "adjDebilityEnh",
-        "name": "弱化穿透调整值",
+    "adjPushEnh": _tools.RODict({
+        "ID": "adjPushEnh",
+        "name": "推拉穿透调整值",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
         "formulaPlayer": None,
         "formulaMonster": None,
         "defaultValue": 0.0,
-        "changeAffactProp": "debilityEnh",
+        "changeAffactProp": "pushEnh",
         "propertiesType": 0,
         "isPercent": 0,
-        "relatedKey": "debilityEnh",
-        "perPropertyScore": 620.0
+        "relatedKey": "pushEnh",
+        "perPropertyScore": 124.0
     }),
-    "debilityAnti": _tools.RODict({
-        "ID": "debilityAnti",
-        "name": "弱化抵抗",
+    "pushAnti": _tools.RODict({
+        "ID": "pushAnti",
+        "name": "推拉抵抗",
         "type": "int",
         "propType": 3,
         "ifSend": 1,
-        "formulaPlayer": lambda e: e.baseDebilityAnti + e.adjDebilityAnti,
-        "formulaMonster": lambda e: e.baseDebilityAnti + e.adjDebilityAnti,
+        "formulaPlayer": lambda e: e.basePushAnti + e.adjPushAnti,
+        "formulaMonster": lambda e: e.basePushAnti + e.adjPushAnti,
         "defaultValue": 0.0,
         "changeAffactProp": "",
-        "propertiesType": 0,
+        "propertiesType": 2,
         "isPercent": 0,
         "relatedKey": "",
         "perPropertyScore": 0.0
     }),
-    "baseDebilityAnti": _tools.RODict({
-        "ID": "baseDebilityAnti",
-        "name": "基础弱化抵抗",
+    "basePushAnti": _tools.RODict({
+        "ID": "basePushAnti",
+        "name": "基础推拉抵抗",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
         "formulaPlayer": None,
         "formulaMonster": None,
         "defaultValue": 0.0,
-        "changeAffactProp": "debilityAnti",
+        "changeAffactProp": "pushAnti",
         "propertiesType": 0,
         "isPercent": 0,
-        "relatedKey": "debilityAnti",
-        "perPropertyScore": 620.0
+        "relatedKey": "pushAnti",
+        "perPropertyScore": 124.0
     }),
-    "adjDebilityAnti": _tools.RODict({
-        "ID": "adjDebilityAnti",
-        "name": "弱化抵抗调整值",
+    "adjPushAnti": _tools.RODict({
+        "ID": "adjPushAnti",
+        "name": "推拉抵抗调整值",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
         "formulaPlayer": None,
         "formulaMonster": None,
         "defaultValue": 0.0,
-        "changeAffactProp": "debilityAnti",
+        "changeAffactProp": "pushAnti",
         "propertiesType": 0,
         "isPercent": 0,
-        "relatedKey": "debilityAnti",
-        "perPropertyScore": 620.0
+        "relatedKey": "pushAnti",
+        "perPropertyScore": 124.0
     }),
     "frozenEnh": _tools.RODict({
         "ID": "frozenEnh",
@@ -2106,7 +1791,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "frozenEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjFrozenEnh": _tools.RODict({
         "ID": "adjFrozenEnh",
@@ -2121,7 +1806,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "frozenEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "frozenAnti": _tools.RODict({
         "ID": "frozenAnti",
@@ -2151,7 +1836,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "frozenAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjFrozenAnti": _tools.RODict({
         "ID": "adjFrozenAnti",
@@ -2166,11 +1851,11 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "frozenAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "slowEnh": _tools.RODict({
         "ID": "slowEnh",
-        "name": "迟缓穿透",
+        "name": "定身穿透",
         "type": "int",
         "propType": 3,
         "ifSend": 1,
@@ -2185,7 +1870,7 @@ datas = _tools.RODict({
     }),
     "baseSlowEnh": _tools.RODict({
         "ID": "baseSlowEnh",
-        "name": "基础迟缓穿透",
+        "name": "基础定身穿透",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
@@ -2196,11 +1881,11 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "slowEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjSlowEnh": _tools.RODict({
         "ID": "adjSlowEnh",
-        "name": "迟缓穿透调整值",
+        "name": "定身穿透调整值",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
@@ -2211,11 +1896,11 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "slowEnh",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "slowAnti": _tools.RODict({
         "ID": "slowAnti",
-        "name": "迟缓抵抗",
+        "name": "定身抵抗",
         "type": "int",
         "propType": 3,
         "ifSend": 1,
@@ -2230,7 +1915,7 @@ datas = _tools.RODict({
     }),
     "baseSlowAnti": _tools.RODict({
         "ID": "baseSlowAnti",
-        "name": "基础迟缓抵抗",
+        "name": "基础定身抵抗",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
@@ -2241,11 +1926,11 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "slowAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "adjSlowAnti": _tools.RODict({
         "ID": "adjSlowAnti",
-        "name": "迟缓抵抗调整值",
+        "name": "定身抵抗调整值",
         "type": "int",
         "propType": 3,
         "ifSend": 0,
@@ -2256,7 +1941,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "slowAnti",
-        "perPropertyScore": 620.0
+        "perPropertyScore": 124.0
     }),
     "expGrow": _tools.RODict({
         "ID": "expGrow",
@@ -2316,36 +2001,6 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "copper",
-        "perPropertyScore": 0.0
-    }),
-    "dropRate": _tools.RODict({
-        "ID": "dropRate",
-        "name": "幸运掉落提升",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": lambda e: e.adjDropRate,
-        "formulaMonster": lambda e: e.adjDropRate,
-        "defaultValue": 0.0,
-        "changeAffactProp": "",
-        "propertiesType": 0,
-        "isPercent": 1,
-        "relatedKey": "",
-        "perPropertyScore": 0.0
-    }),
-    "adjDropRate": _tools.RODict({
-        "ID": "adjDropRate",
-        "name": "幸运掉落率提升调整值",
-        "type": "float",
-        "propType": 3,
-        "ifSend": 1,
-        "formulaPlayer": None,
-        "formulaMonster": None,
-        "defaultValue": 0.0,
-        "changeAffactProp": "dropRate",
-        "propertiesType": 0,
-        "isPercent": 0,
-        "relatedKey": "dropRate",
         "perPropertyScore": 0.0
     }),
     "medicineRate": _tools.RODict({
@@ -2466,7 +2121,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "drugsQuantity",
-        "perPropertyScore": 3600.0
+        "perPropertyScore": 720.0
     }),
     "adjDrugsQuantity": _tools.RODict({
         "ID": "adjDrugsQuantity",
@@ -2481,7 +2136,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "drugsQuantity",
-        "perPropertyScore": 3600.0
+        "perPropertyScore": 720.0
     }),
     "minPhysicalArmor": _tools.RODict({
         "ID": "minPhysicalArmor",
@@ -2511,7 +2166,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "adjMinPhysicalArmor": _tools.RODict({
         "ID": "adjMinPhysicalArmor",
@@ -2526,7 +2181,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "adjMinPhysicalArmorAbs": _tools.RODict({
         "ID": "adjMinPhysicalArmorAbs",
@@ -2541,7 +2196,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "mulMinPhysicalArmor": _tools.RODict({
         "ID": "mulMinPhysicalArmor",
@@ -2556,7 +2211,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalArmor",
-        "perPropertyScore": 102651.0
+        "perPropertyScore": 20530.2
     }),
     "maxPhysicalArmor": _tools.RODict({
         "ID": "maxPhysicalArmor",
@@ -2586,7 +2241,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "adjMaxPhysicalArmor": _tools.RODict({
         "ID": "adjMaxPhysicalArmor",
@@ -2601,7 +2256,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "adjMaxPhysicalArmorAbs": _tools.RODict({
         "ID": "adjMaxPhysicalArmorAbs",
@@ -2616,7 +2271,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "mulMaxPhysicalArmor": _tools.RODict({
         "ID": "mulMaxPhysicalArmor",
@@ -2631,7 +2286,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalArmor",
-        "perPropertyScore": 102651.0
+        "perPropertyScore": 20530.2
     }),
     "minMagicArmor": _tools.RODict({
         "ID": "minMagicArmor",
@@ -2661,7 +2316,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "adjMinMagicArmor": _tools.RODict({
         "ID": "adjMinMagicArmor",
@@ -2676,7 +2331,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "adjMinMagicArmorAbs": _tools.RODict({
         "ID": "adjMinMagicArmorAbs",
@@ -2691,7 +2346,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "mulMinMagicArmor": _tools.RODict({
         "ID": "mulMinMagicArmor",
@@ -2706,7 +2361,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicArmor",
-        "perPropertyScore": 102651.0
+        "perPropertyScore": 20530.2
     }),
     "maxMagicArmor": _tools.RODict({
         "ID": "maxMagicArmor",
@@ -2736,7 +2391,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "adjMaxMagicArmor": _tools.RODict({
         "ID": "adjMaxMagicArmor",
@@ -2751,7 +2406,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "adjMaxMagicArmorAbs": _tools.RODict({
         "ID": "adjMaxMagicArmorAbs",
@@ -2766,7 +2421,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicArmor",
-        "perPropertyScore": 34.0
+        "perPropertyScore": 6.8
     }),
     "mulMaxMagicArmor": _tools.RODict({
         "ID": "mulMaxMagicArmor",
@@ -2781,6 +2436,6 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicArmor",
-        "perPropertyScore": 102651.0
+        "perPropertyScore": 20530.2
     })
 })

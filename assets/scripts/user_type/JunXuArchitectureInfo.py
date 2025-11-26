@@ -3,6 +3,7 @@
 
 import userType
 import JunXuQiXieInfo
+import guildWarEquipment_warEquipmentUpgrate as G_WED
 
 
 class JunXuArchitectureVal(userType.UserSoleType):
@@ -11,6 +12,10 @@ class JunXuArchitectureVal(userType.UserSoleType):
         self.qixieDic = {}
         for qixie in qixieList:
             self.qixieDic[qixie.qixieType] = qixie
+            
+        for _qixieType in G_WED.typeLevelDic.keys():
+            if _qixieType not in self.qixieDic:
+                self.qixieDic[_qixieType] = JunXuQiXieInfo.JunXuQiXieVal(1, 0, _qixieType)
 
     def getQixie(self, qixieType):
         return self.qixieDic.get(qixieType)
@@ -19,14 +24,14 @@ class JunXuArchitectureVal(userType.UserSoleType):
         return {
             'qixieList': list(self.qixieDic.values()),
         }
-    
+
     def addQixie(self, qixieType, level, exp):
         self.qixieDic[qixieType] = JunXuQiXieInfo.JunXuQiXieVal(level, exp, qixieType)
-    
+
     def __eq__(self, value: object) -> bool:
         if not isinstance(value, JunXuArchitectureVal):
             return False
-        
+
         for qixie in value.qixieDic.values():
             if self.qixieDic.get(qixie.qixieType) != qixie:
                 return False

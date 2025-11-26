@@ -672,6 +672,9 @@ def _13090337(self, target, context):
         print(f"没减CD前的  下次释放时间  {skill.tNextCast} ")
         skill.changeNextCast(self,context.args.ActionParam[0])
 
+def _13090338(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
 datas = _tools.RODict({ 
     13090001: _tools.RODict({
         "ID": 13090001,
@@ -1792,7 +1795,15 @@ datas = _tools.RODict({
         "Action": _13090337,
         "Target": "self",
         "EventCD": 0.0
+    }),
+    13090338: _tools.RODict({
+        "ID": 13090338,
+        "Event": "onBeat",
+        "EventSourceType": 0,
+        "Action": _13090338,
+        "Target": "self",
+        "EventCD": 60.0
     })
 })
 minKey = 13090001
-maxKey = 13090337
+maxKey = 13090338

@@ -17,6 +17,7 @@ import impOutfit
 from KBEDebug import *
 import iTimer
 import iBag
+import LogTrackingMgr
 
 import iCycleEvent
 import impTeamDungeon
@@ -43,6 +44,7 @@ import message_chatMessage as MCMD
 import tutorConst_newbieCreate as TCNCD
 import message_Message_def as MMD
 import visible_visible as UVVD
+import experience_exp as EXPD
 import impTask
 import iAvatarVariable
 import impCombat
@@ -90,6 +92,7 @@ import iRedBag
 import iDateData
 import iMeridian
 import iMonthCard
+import iMineWarBase
 
 
 class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, impLine.ImpLine, iClient.IClient,
@@ -102,7 +105,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
              iLeaderBoard.ILeaderBoard, iCoinAuction.ICoinAuction, iNewbie.INewbie, iAchievement.IAchievement,
              iEnemy.IEnemy, iWonderLandBase.IWonderLandBase, iActivityBase.IActivityBase, iCollectible.ICollectible, iSiegeWarBase.ISiegeWarBase,
              iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop,
-             iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian, iMonthCard.IMonthCard):
+             iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarBase.IMineWarBase):
     """
     角色实体
 
@@ -125,6 +128,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         impTask.ImpTask.__init__(self)
         iWorkshop.IWorkshop.__init__(self)
         iMonthCard.IMonthCard.__init__(self)
+        iMineWarBase.IMineWarBase.__init__(self)
 
         # INFO_MSG('Avatar::__init__:%s' % self.id)
 
@@ -523,6 +527,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self._dealDropEquipExpire()
         elif userArg == gametimer.AUTO_DRINK_POTION_TIMER:
             self._onAutoDrinkPotionTimer()
+        elif userArg == gametimer.MONTH_CARD_CHECK_TIMER:
+            self._onMonthCardTimer()
         else:
             super(Avatar, self).onTimer(tid, userArg)
 
@@ -574,7 +580,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         # 无论有没有cell，都等20分钟后销毁，如果没cell，可能是客户端在cell创建好前就断线了
         if not self.isCrossServer:
-            fakeOnlineTime = 20 * 60
+            fakeOnlineTime = EXPD.datas[self.getAvatarLevel()]['fakeOnlineTime'] * 60
             INFO_MSG('startDestroyCountDown cb destroy delay:', fakeOnlineTime)
 
             if self.destroyTimer > 0:
@@ -671,6 +677,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self._callback(delay, 'redbagOnLogin', (), gametimer.TIMER_TAG_ON_RED_BAG_RELOGIN)
             delay += 0.1
             self._callback(delay, 'meridianOnLogin', (), gametimer.TIMER_TAG_ON_MERIDIAN_LOGIN)
+            self._callback(delay, 'checkOfflineHangup', (), gametimer.TIMER_TAG_CHECK_OFFLINE_HANGUP)
+            self._callback(delay, 'onMineWarLogin', (), gametimer.TIMER_TAG_ON_MINE_WAR_LOGIN)
 
             self.sendHotfix()
             if isRelogin:
@@ -858,6 +866,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                 'offlineTime': utils.getNow(),
             })
 
+            self._checkMonthCardOfflineExpMail()
             self._notifyAllFriendsOffline()
             if self.guildBox:
                 self.guildBox.onMemberOffline(self.gbID)
@@ -880,7 +889,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                 lineNo = formula.getLineNo(spaceNo)
                 gameengine.getLineStub(lineType).notifyPlayerOffline(lineNo, self.gbID)
                 # 下线了，移除大世界分线中的占位
-                gameengine.getLineStub(lineType).notifyRemoveFakeLeavePlayer(self.gbID)
 
             elif formula.isCubeSpace(spaceNo):
                 gameengine.getCubeStubBySpaceNo(spaceNo).onAvatarOffline(self.gbID)
@@ -902,7 +910,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                         gameconst.ClientCallChannel.SUB_CHANNEL,
                         gameconst.ClientCallChannel.MAIN_CHANNEL,
                     )
-
         except Exception as e:
             gameengine.reportCritical('_preEntireDestroy error:', self.id, str(e))
 
@@ -950,7 +957,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self._loadGuildInfo()
         try:
             self._loadPlayerCoinAuctionData()
-            self._initPlayerCollectionAuctionIdList()
+            self._initPlayerCollectionAuctionList()
         except Exception as e:
             gameengine.reportCritical('_loadPlayerCoinAuctionData error:', e)
 
@@ -1176,11 +1183,15 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         for key, val in zip(keys, vals):
             self.cliConfigDic[key] = val
             self.addCollectionAuctionIdList(key, val)
+            self.addCollectionAuctionIdCategoryList(key, val)
+            self.addCollectionAuctionItemCategoryList(key, val)
 
     def delCliConfigData(self, exposed, keys):
         for key in keys:
             val = self.cliConfigDic.pop(key, 0)
             self.removeCollectionAuctionIdList(key, val)
+            self.removeCollectionAuctionIdCategoryList(key, val)
+            self.removeCollectionAuctionItemCategoryList(key, val)
 
     def sendCliConfigData(self):
         jsonStr = json.dumps(self.cliConfigDic).encode('ascii')
@@ -1369,6 +1380,14 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         return logData
 
     def makeOfflineRoleLog(self, reason):
+        LogTrackingMgr.LogTrackingMgr.Server_Role_Logout(
+            self.accountEntity.accountName if self.accountEntity else '',
+            self.gbID,
+            self.getRoleCacheAttr('school'),
+            self.getRoleCacheAttr('name'),
+            self.getRoleCacheAttr('level')
+        )
+        return
         emulatorInfo = self.scriptClientData.get(gameconst.ClientUploadDataType.EMULATOR_INFO, {})
         logData = {
             "role_id": str(self.gbID),

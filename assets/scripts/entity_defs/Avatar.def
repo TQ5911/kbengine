@@ -65,6 +65,7 @@
         <Interface>         iDateData                   </Interface>
         <Interface>         iMeridian                   </Interface>
         <Interface>         iMonthCard                  </Interface>
+        <Interface>         iMineWar                   </Interface>
     </Interfaces>
 
     <Properties>
@@ -527,6 +528,11 @@
             <Type>          BIG_BIT_DATA_INFO       </Type>
             <Flags>         CELL_PRIVATE            </Flags>
         </visibleBitsCell>
+
+        <beHateCounter>
+            <Type>          HATE_COUNTER_DATA_INFO      </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+        </beHateCounter>
     </Properties>
 
     <BaseMethods>
@@ -665,7 +671,7 @@
 
         <setCliConfigData> <Exposed/>
             <Arg>       ARRAY    <of>    UINT16        </of>   </Arg>
-            <Arg>       ARRAY    <of>    UINT32        </of>   </Arg>
+            <Arg>       ARRAY    <of>    UINT64        </of>   </Arg>
         </setCliConfigData>
 
         <delCliConfigData> <Exposed/>

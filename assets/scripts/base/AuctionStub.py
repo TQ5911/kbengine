@@ -334,7 +334,6 @@ class AuctionStubService(GameServer):
             "createTime": item.itemData.createTime,
             "expireTime": item.itemData.expireTime,
             "attrJson": item.itemData.attrJson,
-
         }
         itemData = itemFactory.ItemFactory.createItemWithSavedDict(itemDict)
 
@@ -350,8 +349,7 @@ class AuctionStubService(GameServer):
                                           status=item.status,
                                           locked=item.locked,
                                           extraInfo=extraInfo,
-                                          tCreate=item.tCreate,
-                                          isPublicity=item.isPublicity)
+                                          tCreate=item.tCreate)
         auctionItem.fromPlayerGBID = item.fromPlayerGBID
         return auctionItem
 
@@ -402,7 +400,6 @@ class AuctionStubService(GameServer):
         auctionItem = self.transAuctionItem(request.auctionItem)
         extra = json.loads(request.extra)
         DEBUG_MSG("replyDoSaleItem", playerGBID, auctionItem, extra)
-        gameengine.broadcastBaseapp('onSyncNewAuctionItemCache', (playerGBID, auctionItem.auctionItemUUID, auctionItem.itemData.itemId))
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                 [playerGBID], "onSaleItemInCoinAuction", (auctionItem, extra),
@@ -443,21 +440,6 @@ class AuctionStubService(GameServer):
             pass
         else:
             number = extra.get('auctionBuyItemNum')
-            cdTime = dataUtils.getAuctionItemDealCDTime(auctionItem.itemId)
-            if cdTime > 0:
-                extra["dealCDTime"] = utils.getNow() + cdTime
-            # tlogParams = {
-            #     "role_id": playerGBID,
-            #     "role_name": extra.get('tlogProps').get('role_name'),
-            #     "item_id": auctionItem.itemId,
-            #     "item_num": auctionItem.number,
-            #     "auction_uuid": auctionItem.auctionItemUUID,
-            #     "total_price": auctionItem.totalPrice,
-            #     "item_buy_num": number,
-            #     "op_nuid": extra.get('opUUID', ''),
-            # }
-            # gamelog.makeWLog("BuyItemFlow", tlogParams)
-
             if playerGBID:
                 price = auctionItem.price
                 if price > 0:
@@ -693,11 +675,6 @@ class AuctionStubService(GameServer):
         extra = json.loads(request.extra)
         DEBUG_MSG("replyDoBuyItemByItemId", playerGBID, errno, itemId, number, price, remainNum, itemData, totalPrice,
                   extra)
-
-        cdTime = dataUtils.getAuctionItemDealCDTime(itemId)
-        if cdTime > 0:
-            extra["dealCDTime"] = utils.getNow() + cdTime
-
         if playerGBID != 0:
             if totalPrice > 0:
                 now = utils.getNow()
@@ -719,12 +696,12 @@ class AuctionStubService(GameServer):
         itemId = request.itemId
         lastPrice = request.lastPrice
         avgPrice = request.avgPrice
+        isPublicity = request.isPublicity
         extra = json.loads(request.extra)
         auctionItems = []
         for item in request.auctionItems:
             auctionItems.append(self.transAuctionItem(item))
-        isPublicity = request.isPublicity
-        DEBUG_MSG("replyGetCurrentSaleItemInfo", playerGBID, itemId, lastPrice, avgPrice, extra, auctionItems, isPublicity)
+        DEBUG_MSG("replyGetCurrentSaleItemInfo", playerGBID, itemId, lastPrice, avgPrice, extra, auctionItems)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -735,32 +712,16 @@ class AuctionStubService(GameServer):
     def replyGetAuctionItemsByAuctionIds(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
         categoryId = request.categoryId
-        auctionIds = []
-        for itemId in request.auctionIds:
-            auctionIds.append(itemId)
+        auctionItems = []
+        for item in request.auctionItems:
+            auctionItems.append(self.transAuctionItem(item))
 
-        itemIds = []
-        for itemId in request.itemIds:
-            itemIds.append(itemId)
-
-        itemNums = []
-        for itemNum in request.itemNums:
-            itemNums.append(itemNum)
-
-        prices = []
-        for price in request.prices:
-            prices.append(price)
-
-        addTimes = []
-        for addTime in request.addTimes:
-            addTimes.append(addTime)
-
-        DEBUG_MSG("replyGetAuctionItemsByAuctionIds", playerGBID, categoryId, auctionIds, itemIds, itemNums, prices, addTimes)
+        DEBUG_MSG("replyGetAuctionItemsByAuctionIds", playerGBID, categoryId, auctionItems)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                 [playerGBID], "onGetAuctionItemsByAuctionIdsResp",
-                (categoryId, auctionIds, itemIds, itemNums, prices, addTimes),
+                (categoryId, auctionItems),
                 None, '', ())
 
 

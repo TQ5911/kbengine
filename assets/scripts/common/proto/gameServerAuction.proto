@@ -41,7 +41,6 @@ message AuctionItem
   string extraInfo = 11;
   uint32 tCreate = 12;
   uint64 fromPlayerGBID = 13;
-  int32 isPublicity = 14;
 }
 
 message AuctionClientInfo
@@ -330,11 +329,7 @@ message GetAuctionItemByAuctionIdsResp
 {
   uint64 playerGBID = 1;
   uint32 categoryId = 2;
-  repeated uint64 auctionIds = 3;
-  repeated uint32 itemIds = 4;
-  repeated uint32 itemNums = 5;
-  repeated float prices = 6;
-  repeated int64 addTimes = 7;
+  repeated AuctionItem auctionItems = 3;
 }
 //中心服务器向游戏服提供的rpc
 service AuctionServer

@@ -25,7 +25,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 11981205,
         "summonCD": 3.0,
-        "summonLimit": 3
+        "summonLimit": 3,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305101: _tools.RODict({
         "ID": 305101,
@@ -37,7 +39,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 5.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305201: _tools.RODict({
         "ID": 305201,
@@ -49,7 +53,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305202: _tools.RODict({
         "ID": 305202,
@@ -61,7 +67,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305203: _tools.RODict({
         "ID": 305203,
@@ -73,7 +81,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305204: _tools.RODict({
         "ID": 305204,
@@ -85,7 +95,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305205: _tools.RODict({
         "ID": 305205,
@@ -97,7 +109,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305206: _tools.RODict({
         "ID": 305206,
@@ -109,7 +123,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305207: _tools.RODict({
         "ID": 305207,
@@ -121,7 +137,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305208: _tools.RODict({
         "ID": 305208,
@@ -133,7 +151,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305209: _tools.RODict({
         "ID": 305209,
@@ -145,7 +165,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305210: _tools.RODict({
         "ID": 305210,
@@ -157,7 +179,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305211: _tools.RODict({
         "ID": 305211,
@@ -169,7 +193,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305212: _tools.RODict({
         "ID": 305212,
@@ -181,7 +207,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305213: _tools.RODict({
         "ID": 305213,
@@ -193,7 +221,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305214: _tools.RODict({
         "ID": 305214,
@@ -205,7 +235,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305215: _tools.RODict({
         "ID": 305215,
@@ -217,7 +249,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305216: _tools.RODict({
         "ID": 305216,
@@ -229,7 +263,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305217: _tools.RODict({
         "ID": 305217,
@@ -241,7 +277,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     }),
     305218: _tools.RODict({
         "ID": 305218,
@@ -253,7 +291,9 @@ datas = _tools.RODict({
         "resetCdAfterCombat": 0.0,
         "summonID": 0,
         "summonCD": 0.0,
-        "summonLimit": 0
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0
     })
 })
 minKey = 305001

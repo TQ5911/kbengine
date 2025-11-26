@@ -13,6 +13,7 @@ import gameconst
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import itemData_itemData as ID_IDD
 import activityControl_config as AC_CD
+import gamedecorator
 
 
 class IWonderLandBase(object):
@@ -44,6 +45,7 @@ class IWonderLandBase(object):
         #试炼峰进入
         self.completeGuildTask(gameconst.GuildTaskType.ENTERMAP,WL_CD.datas['wonderLandActID']['value'])
 
+    @gamedecorator.checkGameconfigEnable('wonderLand')
     def addWonderLandTicket(self, exposed, itemId, num, isAddDuration):
         INFO_MSG('IWonderLandBase::addWonderLandTicket: itemId: {}, num: {}, isAddDuration: {}'.format(itemId, num, isAddDuration))
         if not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']) and isAddDuration:

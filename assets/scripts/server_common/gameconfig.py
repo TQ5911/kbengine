@@ -575,6 +575,7 @@ def combatMsgFlag():
 def centralServersInfo():
     try:
         
+        '''
         centralServers = ResMgr.getStringContentListForPath(ResMgr.kbengineConfig(), 'game/centralServersInfo')
         centralServersInfo = []
         for centralServer in centralServers:
@@ -584,7 +585,6 @@ def centralServersInfo():
             centralServersInfo.append(csInfo)
         '''
         centralServersInfo = [{'centralServerId': '1', 'ip': '192.168.10.127', 'port': '2030'}]
-        '''
     except:
         centralServersInfo = [{'centralServerId': '1', 'ip': '10.219.68.119', 'port': '2030'}]
     return centralServersInfo
@@ -931,3 +931,19 @@ def wxReportUrl():
 @config(Bool, None, '是否开启工坊制造', (ConfigFlag.CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
 def enableWorkshop():
     return 1
+
+
+def visibleConfigEable(configName):
+    info = CONFIG.get(configName)
+    if not info:
+        ERROR_MSG('gameconfig not found:', configName)
+        return
+
+    configName, convFunc, default, defaultV, desc, cid, flags = info
+
+    v = KBEngine.globalData['CONFIG'][configName]
+    if not v:
+        return False
+
+    return True
+

@@ -107,7 +107,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
 
         self.pyAddTimer(self.INITIAL_INIT + random.random(), 0, gametimer.BASEAPP_TIMER_INIT)
 
-        self.pyAddTimer(1, gameconst.AuctionItemCollection.CHECK_TIP_INTERVAL, gametimer.CHECK_TIP_PLAYER_AUCTION_ITEM_COLLECTION)
+        self.pyAddTimer(1, gameconst.AuctionIdCollection.CHECK_TIP_INTERVAL, gametimer.CHECK_TIP_PLAYER_AUCTION_ITEM_COLLECTION)
 
         self.pyAddTimer(1, gameconst.DrawCardPoolMacro.CHECK_TIME_LIMIT_INTERVAL, gametimer.CHECK_DRAW_CARD_POOL_TIME_LIMIT)
 
@@ -651,4 +651,20 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         for client in self.interfaceClient.values():
             if client and client.channel.dispatcher:
                 client.interfaceStub.setAccountComp(None, _req, None)
+
+    def setBaseAppLockState(self, baseapp, state):
+        DEBUG_MSG('setBaseAppLockState', baseapp.id, state)
+        self.baseAppStateLock.setdefault(state, set()).add(baseapp.id)
+
+        _allOk = len(self.baseAppStateLock[state]) == gameconfig.baseAppCount()
+        baseapp.onSetBaseAppLockResult(_allOk, state)
+
+    def onSetBaseAppLockResult(self, isOk, state):
+        DEBUG_MSG('onSetBaseAppLockResult', isOk, state)
+        if state == gameconst.BASEAPP_STATE_LOCK_WAIT_FULL_PREPARE:
+            if isOk:
+                self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_CHECK_LINE_READY)
+            else:
+                INFO_MSG('still waiting for all stub full prepare in lock')
+                self.pyAddTimer(0.5, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_FULL_PREPARE)
 

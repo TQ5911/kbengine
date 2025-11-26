@@ -125,6 +125,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         self.autoStartTimer = 0
         self.raidRewardDatas = {}
         self.siegeWarCamp = siegeWarCamp
+        self.isInDungeon = False
 
         team.TeamStatisticMixin.__init__(self)
 
@@ -160,6 +161,9 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
     
     def isRaidFull(self):
         return self.memberNum >= self.raidCapacity
+    
+    def isRaidApplyListFull(self):
+        return len(self.raidApplyJoinDic) >= RAID_CONST.datas['raidApplyLimit']['value']
 
     def isEmpty(self):
         return self.memberNum <= 0
@@ -184,6 +188,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
                'recruitInfo': self.recruitInfo,
                'isAutoExpedition': self.isAutoExpedition,
                'password': self.password,
+               'isInDungeon': self.isInDungeon,
         }
         return dic
 
@@ -210,6 +215,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         self.isPublish = dataDic['isPublish']
         self.isAutoExpedition = dataDic['isAutoExpedition']
         self.password = dataDic['password']
+        self.isInDungeon = dataDic['isInDungeon']
         return self
 
     def toClientData(self):
@@ -814,7 +820,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
             return None, gameconst.RaidErrno.RAID_ALREADY_APPLY_JOIN.initkvbody(source='addSingleRaidJoin',
                                                                                 playerGBID=playerGBID,
                                                                                 raidUUID=self.raidUUID)
-        if len(self.raidApplyJoinDic) >= RAID_CONST.datas['raidApplyLimit']['value']:
+        if self.isRaidApplyListFull():
             return None, gameconst.RaidErrno.RAID_APPLY_JOIN_NUMBER_OFR.initkvbody(source='addSingleRaidJoin',
                                                                                    playerGBID=playerGBID,
                                                                                    raidUUID=self.raidUUID,
@@ -833,7 +839,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
                                                                                 captainGBID=captainGBID,
                                                                                 teamUUID=teamUUID,
                                                                                 raidUUID=self.raidUUID)
-        if len(self.raidApplyJoinDic) >= RAID_CONST.datas['raidApplyLimit']['value']:
+        if self.isRaidApplyListFull():
             return None, gameconst.RaidErrno.RAID_APPLY_JOIN_NUMBER_OFR.initkvbody(source='addTeamRaidJoin',
                                                                                    captainGBID=captainGBID,
                                                                                    teamUUID=teamUUID,
@@ -1429,7 +1435,7 @@ class RaidTeamVal(userType.UserSTDSoleType):
     def memberMicsNum(self):
         return len([i for i in self.teamPlayerDic.values() if i.enableMics])
 
-    def isRaidFull(self,):
+    def isRaidFull(self):
         return self.memberNum >= gameconst.RAID_TEAM_MEMBER_MAX_NUM
 
     def isEmpty(self):

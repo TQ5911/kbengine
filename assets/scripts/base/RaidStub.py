@@ -715,9 +715,9 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             WARNING_MSG('doDisbandRaid:: disbandRaid and complete dungeon in force')
             stub.completeRaidDungeon(dunVal.spaceNo, raidUUID, False, 0)
 
-    def applyJoinRaidLonely(self, joinedPlayerBox, joinedPlayerGBID, joinedPlayerProps, raidUUID, extraProps):
-        DEBUG_MSG('applyJoinRaidLonely::', joinedPlayerBox, joinedPlayerGBID, raidUUID, joinedPlayerProps)
-        playerJoinVal, err = self._applyJoinRaidLonely(joinedPlayerBox, joinedPlayerGBID, joinedPlayerProps, raidUUID)
+    def applyJoinRaidLonely(self, joinedPlayerBox, joinedPlayerGBID, joinedPlayerProps, raidUUID, extraProps, password, ignorePassword):
+        DEBUG_MSG('applyJoinRaidLonely::', joinedPlayerBox, joinedPlayerGBID, joinedPlayerProps, raidUUID, extraProps, password, ignorePassword)
+        playerJoinVal, err = self._applyJoinRaidLonely(joinedPlayerBox, joinedPlayerGBID, joinedPlayerProps, raidUUID, password, ignorePassword)
         if err != gameconst.RaidErrno.RAID_OK:
             if err == gameconst.RaidErrno.RAID_APPLY_JOIN_NUMBER_OFR:
                 WARNING_MSG('applyJoinRaidLonely::apply join number out of range', err)
@@ -746,12 +746,52 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.raidJoinRecordTimeout, tag=gametimer.TIMER_TAG_RAID_APPLY_JOIN_TIMEOUT
         )._onRaidApplyJoinRecordTimeout(raidUUID, joinedPlayerGBID)
 
-    def _applyJoinRaidLonely(self, joinedPlayerBox, joinedPlayerGBID, joinPlayerProps, raidUUID):
+    def _applyJoinRaidLonely(self, joinedPlayerBox, joinedPlayerGBID, joinPlayerProps, raidUUID, password, ignorePassword):
         if raidUUID not in self.raidDic:
             return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND.initkvbody(
                 source='_applyJoinRaidLonely', raidUUID=raidUUID)
-
+        
         raidVal = self.raidDic[raidUUID]
+        
+        box = joinPlayerProps['playerBox']
+        level = joinPlayerProps['level']
+        score = joinPlayerProps['score']
+
+        if self.checkInDungeon(raidVal.raidUUID):
+            box.client and box.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.TEAM_APPLY_IS_IN_DUNGEON, raidVal.raidUUID, raidVal.raidMinLevel, raidVal.raidMinScore, raidVal.password)
+            return None, gameconst.RaidErrno.RAID_IS_IN_DUNGEON.initkvbody(
+                source='_applyJoinRaidLonely', raidUUID=raidUUID)
+        
+        if raidVal.isRaidFull():
+            return None, gameconst.RaidErrno.RAID_RAID_TEAM_IS_FULL.initkvbody(
+                source='_applyJoinRaidLonely', raidUUID=raidUUID)
+        
+        if raidVal.isRaidApplyListFull():
+            return None, gameconst.RaidErrno.RAID_APPLY_LIST_IS_FULL.initkvbody(
+                source='_applyJoinRaidLonely', raidUUID=raidUUID)
+        
+        if level < raidVal.raidMinLevel:
+            box.client and box.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.TEAM_APPLY_LEVEL_IS_NOT_ENOUGH, raidVal.raidUUID, raidVal.raidMinLevel, raidVal.raidMinScore, raidVal.password)
+            return None, gameconst.RaidErrno.RAID_LEVEL_IS_ILLEGAL.initkvbody(
+                source='_applyJoinRaidLonely', raidUUID=raidUUID) 
+        
+        if score < raidVal.raidMinScore:
+            box.client and box.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.TEAM_APPLY_SCORE_IS_NOT_ENOUGH, raidVal.raidUUID, raidVal.raidMinLevel, raidVal.raidMinScore, raidVal.password)
+            return None, gameconst.RaidErrno.RAID_SOCRE_IS_ILLEGAL.initkvbody(
+                source='_applyJoinRaidLonely', raidUUID=raidUUID) 
+        
+        if not ignorePassword:
+            if len(raidVal.password) > 0:
+                if len(password) == 0:
+                    box.client and box.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.TEAM_APPLY_NEED_PASSWORD, raidVal.raidUUID, raidVal.raidMinLevel, raidVal.raidMinScore, raidVal.password)
+                    return None, gameconst.RaidErrno.RAID_PASSWORD_IS_EMPTY.initkvbody(
+                        source='_applyJoinRaidLonely', raidUUID=raidUUID)
+                if password != raidVal.password:
+                    box.client and box.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.TEAM_APPLY_WRONG_PASSWORD, raidVal.raidUUID, raidVal.raidMinLevel, raidVal.raidMinScore, raidVal.password)
+                    return None, gameconst.RaidErrno.RAID_PASSWORD_IS_ILLEGAL.initkvbody(
+                        source='_applyJoinRaidLonely', raidUUID=raidUUID)
+   
+
         if gameconfig.isCrossServer() and raidVal.siegeWarCamp != 0 and joinPlayerProps['siegeWarCamp'] != 0 \
             and raidVal.siegeWarCamp != joinPlayerProps['siegeWarCamp']:
             return None, gameconst.RaidErrno.RAID_NOT_SAME_SIEGEWAR_CAMP
@@ -1409,7 +1449,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         # CASE2.2(DEFAULT): 其他情况, 发起方是普通小队成员, 则向团长发起申请
         joinExtraProps = {}
-        self.applyJoinRaidLonely(invitedPlayerBox, invitedPlayerGBID, invitedPlayerProps, raidUUID, joinExtraProps)
+        self.applyJoinRaidLonely(invitedPlayerBox, invitedPlayerGBID, invitedPlayerProps, raidUUID, joinExtraProps, '', True)
         return None, gameconst.RaidErrno.RAID_INVITE_TO_JOIN
 
     def replyInviteRaidWithTeam(self, invitedPlayerBox, invitedPlayerGBID, raidUUID, recordID,
@@ -1502,7 +1542,10 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.doDisbandRaid(raidUUID, extraProps)
 
         raidVal.refreshRaidCacheValToAllPlayers()
-        leavePlayerBox.cell.onLeaveRaid(raidUUID, extraProps)
+        if self.checkInDungeon(raidVal.raidUUID):
+            leavePlayerBox.cell.leaveRaidDungeon()
+        else:
+            leavePlayerBox.cell.onLeaveRaid(raidUUID, extraProps)
 
     def _raidMemberLeaveRaid(self, raidUUID, memberGBID, teamIDX=0):
         """通过离队方法"""
@@ -2298,13 +2341,18 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND
 
         raidVal = self.raidDic[raidUUID]
-        if raidVal.raidTarget != newRaidTargetId:
-            return None, gameconst.RaidErrno.RAID_TARGET_IS_ILLEGAL
-        if raidVal.raidMinLevel == minLevel and raidVal.raidMinScore == minScore:
-            return None, gameconst.RaidErrno.RAID_SAME_RAID_TARGET_ID
         if raidVal.raidLeaderGBID != srcPlayerGBID:
             return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER
-
+        if raidVal.raidTarget != newRaidTargetId:
+            return None, gameconst.RaidErrno.RAID_TARGET_IS_ILLEGAL
+        if raidVal.raidMinLevel != minLevel:
+            return None, gameconst.RaidErrno.RAID_LEVEL_IS_ILLEGAL
+        if raidVal.raidMinScore != minScore:
+            return None, gameconst.RaidErrno.RAID_SOCRE_IS_ILLEGAL
+        if raidVal.password != password:
+            return None, gameconst.RaidErrno.RAID_PASSWORD_IS_ILLEGAL
+        if raidVal.recruitInfo == recruitInfo and raidVal.isAutoExpedition == isAutoExpedition:
+            return None, gameconst.RaidErrno.RAID_SET_TARGET_ILLEGAL
         # check team member's score and level
         if not raidVal.setTarget(newRaidTargetId, minLevel, minScore, recruitInfo, password, isAutoExpedition):
             return None, gameconst.RaidErrno.RAID_TARGET_IS_ILLEGAL
@@ -2969,6 +3017,8 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 continue
             if raidVal.isAllMembersOffline():
                 continue
+            if self.checkInDungeon(raidVal.raidUUID):
+                continue
             raidList.append(raidVal.toClientData())
         box.client.onGetRaidList(checkTime, raidTarget, raidList)
         checkTeamstubNum += 1
@@ -3144,3 +3194,17 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         data = raidVal.getTeamStatisticData()
         for strType, dataList in data.items():
             playerbox.cell.onGetTeamStatisticData(type, strType, dataList)
+
+    def setInDungeon(self, raidId):
+        raidVal = self.raidDic.get(raidId, None)
+        if not raidVal:
+            WARNING_MSG('setInDungeon, not found raid:', raidId)
+            return
+        raidVal.isInDungeon = True
+        
+    def checkInDungeon(self, raidId):
+        raidVal = self.raidDic.get(raidId, None)
+        if not raidVal:
+            WARNING_MSG('setInDungeon, not found raid:', raidId)
+            return False
+        return raidVal.isInDungeon

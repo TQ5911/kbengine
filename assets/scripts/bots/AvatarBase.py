@@ -47,7 +47,8 @@ class AvatarBase(KBEngine.Entity):
     def onApplyBecomeCaptainMsg(self, arg0, arg1): pass
     def onApplyGather(self, arg0, arg1): pass
     def onApplyInviteTeamMsg(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
-    def onApplyJoinTeamFailed(self, arg0): pass
+    def onApplyJoinRaidLonelyFailed(self, arg0, arg1, arg2, arg3, arg4): pass
+    def onApplyJoinTeamFailed(self, arg0, arg1, arg2, arg3, arg4): pass
     def onApplyJoinTeamMsg(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onAskConfirmFollowCaptain(self): pass
     def onAvatarEquipSetChanged(self, arg0, arg1, arg2, arg3): pass
@@ -160,7 +161,7 @@ class AvatarBase(KBEngine.Entity):
     def onGatherSucc(self, arg0): pass
     def onGetAllRaidList(self, arg0): pass
     def onGetAllTeamList(self, arg0): pass
-    def onGetAuctionItemsByAuctionIdsResp(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
+    def onGetAuctionItemsByAuctionIdsResp(self, arg0, arg1): pass
     def onGetAureoleInfo(self, arg0, arg1): pass
     def onGetAvatarCoinBill(self, arg0, arg1, arg2, arg3, arg4): pass
     def onGetBuffIdInfo(self, arg0, arg1): pass
@@ -266,6 +267,7 @@ class AvatarBase(KBEngine.Entity):
     def onNotiyNewAuctionItemCollection(self, arg0): pass
     def onNumResourceChanged(self, arg0, arg1): pass
     def onOfficialMessage(self, arg0, arg1, arg2, arg3, arg4): pass
+    def onOfflineHangupData(self, arg0, arg1): pass
     def onOthersSkillDamage(self, arg0, arg1): pass
     def onOutfitExpired(self, arg0): pass
     def onPickNewEquipDrop(self, arg0): pass
@@ -475,6 +477,8 @@ class AvatarBase(KBEngine.Entity):
     def sendSkillBuilds(self, arg0): pass
     def sendTeamStatisticData(self, arg0, arg1): pass
     def showCombatMsg(self, arg0, arg1): pass
+    def showMineWarPrepare(self, arg0, arg1): pass
+    def showMineWarStart(self, arg0, arg1): pass
     def showPopoverMsg(self, arg0): pass
     def showPopoverMsgWithArg(self, arg0, arg1): pass
     def skillTeleportBefore(self, arg0): pass

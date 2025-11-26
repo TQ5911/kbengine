@@ -299,6 +299,7 @@ class DungeonStubMixin(object):
         _team = self.teamDic[teamUUID]
         _team.onAvatarLeave(dungeonNo, gbId, isOffline=False)
 
+        self._leaveTeam(box, teamUUID, gbId)
         isBigWorldDungeon = gameconst.DungeonType.isBigWorldDungeon(
             DDL.datas[dungeonNo]['type'])
 
@@ -676,7 +677,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
 
-    def getTeamByTeamId(self, teamId) -> team.TeamCacheVal:
+    def getTeamByTeamId(self, teamId) -> team.TeamVal:
         if teamId not in self.teamDic:
             WARNING_MSG('getTeamByTeamId teamId error', teamId)
             return
@@ -734,7 +735,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         siegeWarCamp = teamPlayerInfoDic['siegeWarCamp']
         if gameconfig.isCrossServer() and siegeWarCamp != 0:
             teamTarget = gameconst.SIEGEWAR_PARE_ACTIVITY_ID
-        teamVal = team.TeamCacheVal(teamId, teamTarget, gbId, box, playerName, level, school, sex, picFrameId,
+        teamVal = team.TeamVal(teamId, teamTarget, gbId, box, playerName, level, school, sex, picFrameId,
                                                  score=score, mountState=mountState, openId=openId, siegeWarCamp=siegeWarCamp)
         
         teamVal.teamMinLv = minLevel
@@ -784,10 +785,13 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                     return
             teamVal.autoStartTimer = self._callback(5, 'checkAutoStart', (teamID,), gametimer.TIMER_TAG_TEAM_AUTO_START)
 
-    def isCanApplyJoinTeam(self, box, teamId, gbId, level, score, siegeWarCamp):
+    def isCanApplyJoinTeam(self, box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
             box.onMessagePre(TMMCD.datas['teamDisbandMsg']['value'], [])
+            return False
+        if self.checkInDungeon(teamId):
+            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_IS_IN_DUNGEON, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
             return False
         if teamVal.isTeamFull():
             if box.client:
@@ -797,10 +801,22 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if box.client:
                 box.onMessagePre(TMMCD.datas['applyFullMsg']['value'], [])
             return False
-        if teamVal.teamMinLv > level or score < teamVal.teamMinScore:
-            if box.client:
-                box.onMessagePre(MMD.datas.insufficientConditions, [])
+        if level < teamVal.teamMinLv:
+            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_LEVEL_IS_NOT_ENOUGH, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
             return False
+        if score < teamVal.teamMinScore:
+            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_SCORE_IS_NOT_ENOUGH, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+            return False
+        
+        if not ignorePassword:
+            if len(teamVal.password) > 0:
+                if len(password) == 0:
+                    box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_NEED_PASSWORD, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+                    return False
+                if password != teamVal.password:
+                    box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_WRONG_PASSWORD, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+                    return False
+            
         if gameconfig.isCrossServer():
             if siegeWarCamp != teamVal.siegeWarCamp and siegeWarCamp != 0 and teamVal.siegeWarCamp != 0:
                 if box.client:
@@ -860,18 +876,14 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         self._callback(60, 'notifyRemoveApplyInfo', (teamId, gbId), gametimer.TIMER_TAG_NOTIFY_REMOVE_APPLY_INFO)
 
-    def applyJoinTeam(self, teamId, teamPlayerInfoDic):
-        ret = True
+    def applyJoinTeam(self, teamId, password, teamPlayerInfoDic, ignorePassword):
         gbId = teamPlayerInfoDic['gbId']
         box = teamPlayerInfoDic['box']
         level = teamPlayerInfoDic['level']
         score = teamPlayerInfoDic['score']
         siegeWarCamp = teamPlayerInfoDic['siegeWarCamp']
 
-        if not self.isCanApplyJoinTeam(box, teamId, gbId, level, score, siegeWarCamp):
-            box.client.onApplyJoinTeamFailed(teamId)
-            ret = False
-        else:
+        if self.isCanApplyJoinTeam(box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp):
             self._applyJoinTeam(teamId, teamPlayerInfoDic)
 
 
@@ -1005,7 +1017,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if srcPlayerGbId == teamVal.getCaptainGbId():
                 self.addTeamMember(srcTeamId, teamPlayerInfoDic)
             else:
-                self.applyJoinTeam(srcTeamId, teamPlayerInfoDic)
+                self.applyJoinTeam(srcTeamId, '', teamPlayerInfoDic, True)
 
     def isCanLeaveTeam(self, teamId, gbId):
         if not teamId:
@@ -1020,7 +1032,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return False
         return True
 
-    def _leaveTeam(self, teamId, gbId, notifySelf=True):
+    def _leaveTeam(self, leaveBox, teamId, gbId, notifySelf=True):
         teamVal = self.getTeamByTeamId(teamId)
         if len(teamVal.teamPlayerDic) <= 1:
             self._disbandTeam(teamId)
@@ -1044,12 +1056,15 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if teamVal.teamDuelData.hasTeamDuel():
             gameengine.getGlobalBase('TeamDuelStub').onAvatarLeaveTeam(teamVal.teamDuelData.duelSpaceNo, teamVal.teamDuelData.duelUUID, gbId)
 
-    def leaveTeam(self, box, teamId, gbId, notifySelf=True):
-        INFO_MSG('leaveTeam', teamId, gbId)
+    def leaveTeam(self, spaceNo, box, teamId, gbId, notifySelf=True):
+        INFO_MSG('leaveTeam', spaceNo, teamId, gbId, notifySelf)
         if not self.isCanLeaveTeam(teamId, gbId):
             ret = False
         else:
-            self._leaveTeam(teamId, gbId, notifySelf)
+            if self.checkInDungeon(teamId):
+                box.cell.leaveTeamDungeon()
+            else:
+                self._leaveTeam(box, teamId, gbId, notifySelf)
 
     def isCanKickTeamMember(self, teamId, gbId, kickGbId):
         teamVal = self.getTeamByTeamId(teamId)
@@ -1576,9 +1591,22 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         teamVal.stopAutoMatch(timeout=True)
         return
 
-    def setTeamTarget(self, teamId, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition, guildUUID):
+    def setTeamTarget(self, gbID, teamId, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition, guildUUID):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
+            ERROR_MSG('in setTeamTarget: missing team, ', teamId, teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
+            return
+        if teamVal.teamCaptainGbId != gbID:
+            ERROR_MSG('in setTeamTarget: only leader can set team target, ', teamId, teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
+            return
+        if teamTarget != teamVal.teamTarget:
+            ERROR_MSG('in setTeamTarget: target not same, ', teamId, teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
+            return
+        if minLv != teamVal.teamMinLv or minScore != teamVal.teamMinScore or password != teamVal.password:
+            ERROR_MSG('in setTeamTarget: base team info is not same, ', teamId, teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
+            return
+        if recruitInfo == teamVal.recruitInfo and isAutoExpedition == teamVal.isAutoExpedition:
+            ERROR_MSG('in setTeamTarget: set team info is same, ', teamId, teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
             return
         # check team member's level and score
         if not teamVal.setTarget(teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition):
@@ -1611,6 +1639,8 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if teamVal.isTeamFull():
                 continue
             if teamVal.isAllMembersOffline():
+                continue
+            if self.checkInDungeon(teamId):
                 continue
             teamList.append(teamVal.getClientData())
         box.client.onGetTeamList(checkTime, teamTarget, teamList)
@@ -1949,6 +1979,20 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             DEBUG_MSG("addTeamDungeonRewardRecord, team is missing", teamID, gbID)
             return
         teamVal.addTeamDungeonRewardRecord(gbID, rewardList)
+
+    def setInDungeon(self, teamId):
+        teamVal = self.teamDic.get(teamId, None)
+        if not teamVal:
+            WARNING_MSG('setInDungeon, not found team:', teamId)
+            return
+        teamVal.isInDungeon = True
+        
+    def checkInDungeon(self, teamId):
+        teamVal = self.teamDic.get(teamId, None)
+        if not teamVal:
+            WARNING_MSG('checkInDungeon, not found team:', teamId)
+            return False
+        return teamVal.isInDungeon
 
     # ----------------------------- 统计相关 --------------------------------
     def addTeamStatisticPlayerVal(self, teamId, playerGbId, type, value):

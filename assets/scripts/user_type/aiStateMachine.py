@@ -456,7 +456,7 @@ class StateIdleSummonPet(StateImp):
         else:
             if ctrl.summonFarFromHostNormal():
                 ctrl.goBackToHost(True)
-            
+
 @withName('summon')
 class StateIdleSummon(StateImp):
     '''召唤物'''
@@ -698,7 +698,7 @@ class StateHanQingKunKun(StateImp):
             ctrl.useRandomSkill()
         else:
             ctrl.startRoutingMove()
-            
+
 @withName('waitAndAttack')
 class StateWaitAndAttack(StateImp):
     '''职业联赛假人'''
@@ -736,7 +736,7 @@ class StateBackAndTurn(StateImp):
 
 @withName('angryWithAiSkill')
 class StateAngryWithAiSkill(StateImp):
-    '''激怒（会执行aiAction）''' 
+    '''激怒（会执行aiAction）'''
     name = State.ANGRY
 
     def tick(self, ctrl):
@@ -749,7 +749,7 @@ class StateAngryWithAiSkill(StateImp):
 
 @withName('siegeWarBossIdle')
 class StateSiegeWarBossIdle(StateImp):
-    '''攻城兽''' 
+    '''攻城兽'''
     name = State.IDLE
 
     def tick(self, ctrl):
@@ -761,7 +761,7 @@ class StateSiegeWarBossIdle(StateImp):
 
 @withName('siegeWarBossAngry')
 class StateSiegeWarBossAngry(StateImp):
-    '''攻城兽''' 
+    '''攻城兽'''
     name = State.ANGRY
     mask = Event.ATTACK
 
@@ -771,7 +771,7 @@ class StateSiegeWarBossAngry(StateImp):
 
 @withName('siegeWarStoneThrower')
 class SiegeWarStoneThrower(StateImp):
-    '''投石车''' 
+    '''投石车'''
     name = State.IDLE
 
     def tick(self, ctrl):
@@ -824,7 +824,7 @@ class MachineWithChangeTime(MachineImp):
 
     def elapsedTime(self):
         return time.time() - self.changeStateTime
-    
+
     def setChangeTimer(self, timerId):
         self.changeTimer = timerId
 

@@ -107,6 +107,8 @@
             <Arg>   PY_DICT         </Arg>
             <Arg>   RAID_ID         </Arg>
             <Arg>   PYTHON          </Arg>
+            <Arg>   STRING          </Arg>
+            <Arg>   BOOL            </Arg>
         </applyJoinRaidLonely>
 
         <applyJoinRaidWithTeam>
@@ -640,5 +642,8 @@
             <Arg>       UINT8           </Arg>
         </getTeamStatisticData>
         
+        <setInDungeon>
+            <Arg>       RAID_ID          </Arg>
+        </setInDungeon>
     </BaseMethods>
 </root>

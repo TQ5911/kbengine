@@ -18,7 +18,7 @@ import crontab
 datas = _tools.RODict({ 
     32000001: _tools.RODict({
         "ID": 32000001,
-        "name": "首领讨伐",
+        "name": "首领巢穴",
         "membersRequire": 15,
         "isOpen": 1,
         "needTeam": 2,
@@ -55,7 +55,7 @@ datas = _tools.RODict({
         "refreshMode": 0,
         "activityTime": -1,
         "openLevel": 0,
-        "openTimeCron": _tools.ROList([[[0], [0], [], [], [], []]]),
+        "openTimeCron": _tools.ROList([[[], [], [], [], [], []]]),
         "endTimeCron": _tools.ROList([[[], [], [], [], [], []]]),
         "activityTask": 0,
         "openGuildLevel": 1,
@@ -63,7 +63,7 @@ datas = _tools.RODict({
     }),
     32000004: _tools.RODict({
         "ID": 32000004,
-        "name": "普通讨伐",
+        "name": "魔物巢穴",
         "membersRequire": 5,
         "isOpen": 1,
         "needTeam": 1,

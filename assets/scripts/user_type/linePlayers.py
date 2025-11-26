@@ -47,7 +47,6 @@ class LinePlayers(userType.UserDictType):
         self.teamPlayers = {}
         self.pendingEnterPlayers = {}
         self.lastUpPlayerNum = 0
-        self.fakeLeavePlayers = set()
 
     def clearTimeOutInfo(self, timestamp):
         _clearList = []
@@ -191,15 +190,6 @@ class LinePlayers(userType.UserDictType):
 
     def isLinePlayerEmpty(self):
         return not bool(len(self) + self.getPendingEnterNum())
-
-    def getFakeLeaveNum(self):
-        return len(self.fakeLeavePlayers)
-
-    def addFakeLeavePlayer(self, gbid):
-        self.fakeLeavePlayers.add(gbid)
-
-    def delFakeLeavePlayer(self, gbid):
-        self.fakeLeavePlayers.discard(gbid)
 
 
 class AllLinePlayers(userType.UserDictType):

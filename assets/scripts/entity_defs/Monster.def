@@ -20,6 +20,7 @@
         <Interface>    iClient          </Interface>
         <Interface>     iMonsterDungeon </Interface>
         <Interface>     iLargeEnt       </Interface>
+        <Interface>     iMineWarMonster </Interface>
     </Interfaces>
 
     <Properties>
@@ -165,7 +166,14 @@
             <Flags>     CELL_PRIVATE     </Flags>
             <Default>   0                </Default>
         </refreshDataKey>
-        
+
+        <combatAreaID>
+            <Type>      INT32            </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>   0                </Default>
+        </combatAreaID>
+
+
     </Properties>
 
     <BaseMethods>

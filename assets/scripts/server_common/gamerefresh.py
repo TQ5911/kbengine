@@ -331,6 +331,7 @@ def _refreshData(includeModules):
         ('combatSkill', 'SkillBase', 'clearAllCache'),
         ('buff', 'Buff', 'clearAllCache'),
         ('dataUtils', 'getTaskData', 'cache_clear'),
+        ('iMapMonsterRefresh', 'IMapMonsterRefresh', 'clearAllCache')
     ]
 
     KBEngine.addTimer(0.1, 0.1, functools.partial(clearCacheInTick, cacheList))

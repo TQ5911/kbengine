@@ -43,6 +43,10 @@ datas = _tools.RODict({
         "ID": "itemDisassemblyLimit",
         "value": 3,
     }),
+    "itemDisassemblyLimitMsg": _tools.RODict({
+        "ID": "itemDisassemblyLimitMsg",
+        "value": 54000285,
+    }),
     "evilMeterLimit": _tools.RODict({
         "ID": "evilMeterLimit",
         "value": -1000,

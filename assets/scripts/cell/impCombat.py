@@ -127,8 +127,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.baseFullHp = CHD.datas[self.school].get('baseFullHp', 0)
         self.baseFullMp = CHD.datas[self.school].get('baseFullMp', 0)
         self.baseSpeed = float(CHD.datas[self.school].get('baseSpeed', 0))
-        self.baseHpRecovery = CHD.datas[self.school].get('baseHpRecovery', 0.0)
-        self.baseMpRecovery = CHD.datas[self.school].get('baseMpRecovery', 0.0)
         self.baseMinPhysicalAtk = CHD.datas[self.school].get('baseMinPhysicalAtk', 0)
         self.baseMaxPhysicalAtk = CHD.datas[self.school].get('baseMaxPhysicalAtk', 0)
         self.baseMinMagicAtk = CHD.datas[self.school].get('baseMinMagicAtk', 0)
@@ -460,14 +458,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if self.isDie():
             return
 
-        if self.mpRecovery > 0 and self.mp < self.fullMp:
-            self.modifyMP(self.mpRecovery * self.fullMp)
-        elif self.mpRecovery < 0 and (not self.hasState(gameconst.State.Fighting)) and self.mp > 0:
-            self.modifyMP(self.mpRecovery * self.fullMp)
-
-        if self.hpRecovery > 0 and self.hp < self.fullHp:
-            self.modifyHP(self.hpRecovery * self.fullHp, self.id, gameconst.SourceType.Default, 0)
-
         self._checkAndRecoveryByItemHp()
         self._checkAndRecoveryByItemMp()
 
@@ -671,6 +661,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def addExpByMail(self, baseExp, opUUID, src, desc):
         self._addExp(baseExp, opUUID, src, desc)
+
+    def addExpByMonthCard(self, baseExp, opUUID, src, detail):
+        self._addExp(baseExp, opUUID, src, detail)
 
     def _addExp(self, expVal, opUUID, src, detail, rewardId=0, isNeedAddition=False):
         if expVal <= 0:
@@ -1033,7 +1026,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         return utils.hasBit(self.commonFlagCell, flagType)
 
     def doCalcTeamStatistic(self, target, context, valType, deltaVal):
-
+        if deltaVal <= 0:
+            return
+        
         if utils.isEnemy(self, target):
             # target不能是玩家，host也不能是玩家
             if target.IsAvatarMirror or target.IsSummon or target.IsCreation:
@@ -1059,8 +1054,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         self.statisticsDmg += dmg
 
-    def calcBeHurtStats(self, srcEnt, context, dmgResult):
-        self.doCalcTeamStatistic(srcEnt, context, gameconst.TeamStatisticType.HURT, dmgResult.hurtDmg)
+    def calcBeHurtStats(self, srcEnt, context, dmgResult, realDmgVal):
+        self.doCalcTeamStatistic(srcEnt, context, gameconst.TeamStatisticType.HURT, realDmgVal)
 
         if not gameconfig.enableStatistic():
             return
@@ -1381,7 +1376,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def getSummonId(self):
         slotIdx = SRSU.minKey
         if self.summonSlotIdx <= 0 or self.summonSlotIdx > SRSU.maxKey:
-            ERROR_MSG('getSummonId error', self.summonSlotIdx)
+            WARNING_MSG('getSummonId error', self.summonSlotIdx)
             self.summonSlotIdx = 0
             self.base.setSummonSlotIdxAck(self.summonSlotIdx)
         else:

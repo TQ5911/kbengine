@@ -229,6 +229,8 @@ class ImpRaid(object):
         if oldRaidId != newRaidUUID:
             self.raidId = newRaidUUID
             self.resetAllTargetTypeCache()
+            #
+            self.clearStatisticDataRecord()
         if not oldRaidId and newRaidUUID:
             self._unlockRaidProcess()
             self._onEnterNewRaid()
@@ -567,6 +569,12 @@ class ImpRaid(object):
     def createRaidLonely(self, exposed, capacity, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         """API: 创建一个团队(单人)"""
         INFO_MSG('createRaidLonely::~', capacity, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
+        if utils.formula.isTeamDungeonSpace(self.spaceNo):
+            ERROR_MSG("createRaidLonely, current space check fail")
+            return
+        if not dataUtils.checkTeamPassword(password):
+            ERROR_MSG("createRaidLonely, illegal password", password)
+            return
         _, err = self._createRaidLonelyCheck(capacity)
         if err != gameconst.RaidErrno.RAID_OK:
             ERROR_MSG('createRaidLonely:: check failed, {}'.format(
@@ -588,17 +596,7 @@ class ImpRaid(object):
                 ERROR_MSG("createRaidLonely, wrong activity control need team type", raidTarget)
                 return
 
-        cfgMinScore = teamTargetInfo['minScore']
-        if minScore < cfgMinScore:
-            WARNING_MSG("createRaidLonely, invalid minScore", minScore, cfgMinScore)
-            minScore = cfgMinScore
-
-        cfgMinLevel = teamTargetInfo['minLevel']
-        if minLevel < cfgMinLevel:
-            WARNING_MSG("createRaidLonely, invalid minLevel", minLevel, cfgMinLevel)
-            minLevel = cfgMinLevel
-
-        if not self.isCanCreateTeam(raidTarget, minLevel, minScore):
+        if not self.checkTeamCond(raidTarget, minLevel, minScore):
             return
 
         raidUUID = KBEngine.genUUID64()
@@ -622,8 +620,6 @@ class ImpRaid(object):
         if self.isInTeam(self.gbId):
             return None, errno.RAID_ALREADY_IN_TEAM
 
-        if utils.formula.isTeamDungeonSpace(self.spaceNo):
-            return None, errno.RAIDDUN_NOT_IN_AVAILABLE_SPACE
         return None, errno.RAID_OK
 
     @utils.isMyself
@@ -650,9 +646,12 @@ class ImpRaid(object):
         return None, gameconst.RaidErrno.RAID_OK
 
     @utils.isMyself
-    def applyJoinRaidLonely(self, exposed, raidUUID):
+    def applyJoinRaidLonely(self, exposed, raidUUID, password):
         """API: 申请加入一个团队"""
-        INFO_MSG('applyJoinRaidLonely::', raidUUID)
+        INFO_MSG('applyJoinRaidLonely::', raidUUID, password)
+        if not dataUtils.checkTeamPassword(password):
+            ERROR_MSG('applyJoinRaidLonely:: illegal password', password)
+            return
         _, err = self._applyJoinRaidLonelyCheck(raidUUID)
         if err != gameconst.RaidErrno.RAID_OK:
             err = err.initkvbody(source=self._applyJoinRaidLonelyCheck.__name__)
@@ -662,7 +661,7 @@ class ImpRaid(object):
             return
 
         joinProps, extraProps = self._getAvatarPropsForRaid().toSavedDict(), {}
-        gameengine.getRaidStub(raidUUID).applyJoinRaidLonely(self.base, self.gbId, joinProps, raidUUID, extraProps)
+        gameengine.getRaidStub(raidUUID).applyJoinRaidLonely(self.base, self.gbId, joinProps, raidUUID, extraProps, password, False)
 
     def _applyJoinRaidLonelyCheck(self, raidUUID):
         _errno = gameconst.RaidErrno
@@ -675,6 +674,9 @@ class ImpRaid(object):
         if self.isInRaid():
             return None, _errno.RAID_ALREADY_IN_RAID.initkvbody(raidUUID=raidUUID)
 
+        if self.isInTeam():
+            return None, _errno.RAID_ALREADY_IN_TEAM.initkvbody(teamId=self.teamId)
+        
         if raidUUID in self.raidJoinRecord and self.raidJoinRecord[raidUUID] == gameconst.RaidJoinType.SINGLE:
             return None, _errno.RAID_ALREADY_APPLY_JOIN.initkvbody(raidUUID=raidUUID)
 
@@ -1380,12 +1382,6 @@ class ImpRaid(object):
         self.raidInfo.reset()
         self.onRefreshPlayerRaidCacheVal(self.raidInfo)
 
-        # 【【任务】在团本中退出团队，会被传送出去，同小队】
-        # 需求: 团队副本中A玩家离开团队, 将该玩家踢出副本
-        if self.isInRaidDungeon():
-            INFO_MSG('_onLeaveRaid:: player leave dungeon {}'.format(self.spaceNo))
-            self.selfLeaveRaidDungeon(dungeonSrc.BasicDungeonSrc())
-
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
     def kickOutRaidMember(self, exposed, raidTeamIDX, playerGBID):
@@ -1775,20 +1771,9 @@ class ImpRaid(object):
                 ERROR_MSG("setRaidTarget, wrong activity control need team type", raidTarget, minLevel, minScore)
                 return
 
-        cfgMinLv = raidTargetInfo['minLevel']
-        if minLevel < cfgMinLv:
-            ERROR_MSG("setRaidTarget, minLevel not enough", raidTarget, minLevel, cfgMinLv)
+        if not self.checkBaseTeamCond(raidTarget, minScore, minLevel):
             return
-
-        cfgMinScore = raidTargetInfo['minScore']
-        if minScore < cfgMinScore:
-            ERROR_MSG("setRaidTarget, minScore not enough", raidTarget, minScore, cfgMinScore)
-            return
-
-        if self.getTotalScore() < minScore:
-            ERROR_MSG("setRaidTarget, totalScore not enough", raidTarget, self.getTotalScore(), minScore, cfgMinScore)
-            return
-
+        
         gameengine.getRaidStub(self.raidUUID).setRaidTarget(self.base, self.gbId, self.raidUUID, raidTarget, minLevel, minScore, recuitInfo, password, isAutoExpedition)
         return
 
@@ -2149,12 +2134,8 @@ class ImpRaid(object):
             ERROR_MSG("reqRaidPlayerAutoMatch, wrong activity control need team type", target)
             return
 
-        if not self.isReachTeamMemMinLevel():
-            WARNING_MSG('   in reqRaidPlayerAutoMatch, level cond failed:', self.level)
-            return
-
-        if not self.isReachTeamMemMinScore(target):
-            WARNING_MSG('   in reqRaidPlayerAutoMatch, score cond failed:', self.getTotalScore())
+        if not self.isReachTeamMinCond(target):
+            WARNING_MSG('   in reqRaidPlayerAutoMatch, cond failed:', self.getTotalScore(), self.level)
             return
 
         playerMatchDic = {

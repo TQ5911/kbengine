@@ -423,14 +423,14 @@ datas ={
     "EntityID": 3,
     "ID": 60000023,
     "PosX": 355.4514,
-    "PosY": 87.53575,
+    "PosY": 86.87,
     "PosZ": 194.2474,
     "Props": {
       "AreaType": 2,
       "Height": 60.0,
       "Length": 40.0,
       "MPosX": 327.0,
-      "MPosY": 87.54,
+      "MPosY": 86.87,
       "MPosZ": 160.0,
       "Remark": ""
     }
@@ -567,14 +567,14 @@ datas ={
     "EntityID": 3,
     "ID": 60008001,
     "PosX": 295.6092,
-    "PosY": 71.98412,
+    "PosY": 70.3,
     "PosZ": 371.5737,
     "Props": {
       "AreaType": 2,
       "Height": 50.0,
       "Length": 80.0,
       "MPosX": 266.0,
-      "MPosY": 71.98,
+      "MPosY": 70.3,
       "MPosZ": 294.0,
       "Remark": ""
     }

@@ -329,10 +329,11 @@ class SkillBase(userType.UserSoleType):
             if 0 <= _lv < len(_cd):
                 cd = _cd[_lv]
             else:
-                ERROR_MSG('getCD but range invalid', _lv, _cd)
-                cd = 0
+                cd = _cd[-1]
+
         elif _cd is None:
             cd = 0
+
         else:
             cd = _cd
 
@@ -537,7 +538,7 @@ class SkillBase(userType.UserSoleType):
         if not damageRangeData:
             return (0,)
         return damageRangeData
-    
+
     def getEffectRange(self, owner, skillId, skillLv=1):
         effectRangeData = self.getEffectRangeData(skillId)
         return effectRangeData[-1] if skillLv > len(effectRangeData) else effectRangeData[skillLv - 1]
@@ -631,15 +632,15 @@ class SkillBase(userType.UserSoleType):
         if target.IsMonster:
             targetRadius = target.getConfigData().get('attackDistanceCompensation')
         if self.needReleaseTarget():
-            return self.getEffectRange(owner, self.skillId) + targetRadius + 1
-        return self.getEffectRange(owner, self.skillId) + targetRadius
+            return self.getEffectRange(owner, self.skillId, self.skillLv) + targetRadius + 1
+        return self.getEffectRange(owner, self.skillId, self.skillLv) + targetRadius
 
     def inEffectRange(self, src, target):
         pos1 = src.position
         pos2 = target.position
         if not utils.checkCombatRangeY(src, target):
             return False
-        if self.getEffectRange(src, self.skillId) <= 0:
+        if self.getEffectRange(src, self.skillId, self.skillLv) <= 0:
             return True
         # 为了解决客户端打到，服务端判断出了范围加个延迟的范围值
         if sMath.distance2DToCompareFrom3DPosition(pos1, pos2) < math.pow(self.getServerEffectRangeWithTarget(src, target), 2):
@@ -652,15 +653,15 @@ class SkillBase(userType.UserSoleType):
         if target.IsMonster:
             targetRadius = target.getConfigData().get('attackDistanceCompensation')
         if self.needReleaseTarget():
-            return self.getRange(owner, self.skillId) + targetRadius + 1
-        return self.getRange(owner, self.skillId) + targetRadius
+            return self.getRange(owner, self.skillId, self.skillLv) + targetRadius + 1
+        return self.getRange(owner, self.skillId, self.skillLv) + targetRadius
 
     def inRange(self, src, target):
         pos1 = src.position
         pos2 = target.position
         if not utils.checkCombatRangeY(src, target):
             return False
-        if self.getRange(src, self.skillId) <= 0:
+        if self.getRange(src, self.skillId, self.skillLv) <= 0:
             return True
         # 为了解决客户端打到，服务端判断出了范围加个延迟的范围值
         if sMath.distance2DToCompareFrom3DPosition(pos1, pos2) < math.pow(self.getServerRangeWithTarget(src, target), 2):
@@ -1551,7 +1552,7 @@ class SkillBase(userType.UserSoleType):
         if needReleaseTarget:
             target = KBEngine.entities.get(targetId)
             if not target:
-                return gameconst.UseSkillCheck.CHEKC_OK
+                return gameconst.UseSkillCheck.INVALID_TARGET
 
             code = gameconst.UseSkillCheck.INVALID_TARGET
             if not code & ignoreReasons and not utils.checkTargetType(self.getTarget(self.skillId), owner, target):
@@ -2048,7 +2049,7 @@ class CommonSkillVal(SkillBase):
             bulletTimeScale = self.getBulletTimeScale(self.skillId)
             timeEx = self.getBulletFxTime(self.skillId) * (
                     1 - bulletTimeScale + bulletTimeScale * sMath.distance2D(owner.position,
-                                                                             target.position) / self.getRange(owner, self.skillId))
+                                                                             target.position) / self.getRange(owner, self.skillId, self.skillLv))
         else:
             timeEx = self.getBulletFxTime(self.skillId) if self.getBulletFxTime(self.skillId) else 0.5
         return timeEx

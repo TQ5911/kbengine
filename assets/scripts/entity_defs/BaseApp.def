@@ -4,18 +4,18 @@
         <Interface> iBaseNoCell </Interface>
         <Interface> iTimerBase </Interface>
     </Interfaces>
-    
+
     <Properties>
         <timerToLoad>
             <Type>          UINT32          </Type>
             <Flags>         BASE            </Flags>
         </timerToLoad>
-        
+
         <entityToLoad>
             <Type>          PYTHON          </Type>
             <Flags>         BASE            </Flags>
         </entityToLoad>
-        
+
         <cursorToLoad>
             <Type>          UINT16          </Type>
             <Flags>         BASE            </Flags>
@@ -30,12 +30,12 @@
             <Type>          UINT32          </Type>
             <Flags>         BASE            </Flags>
         </timerToLoadCell>
-        
+
         <entityToLoadCell>
             <Type>          PYTHON          </Type>
             <Flags>         BASE            </Flags>
         </entityToLoadCell>
-        
+
         <cursorToLoadCell>
             <Type>          UINT16          </Type>
             <Flags>         BASE            </Flags>
@@ -113,8 +113,13 @@
             <Flags>         BASE            </Flags>
             <Default>       0               </Default>
         </lastCheckDrawCardPoolTimestamp>
+
+        <baseAppStateLock>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+        </baseAppStateLock>
     </Properties>
-    
+
     <BaseMethods>
         <setStartGbId>
             <Arg>           UINT32      </Arg>
@@ -138,12 +143,12 @@
         </createUnarchiveStub>
 
         <createArchiveStub>
-            <Arg>           ENT_TYPE    </Arg>      
+            <Arg>           ENT_TYPE    </Arg>
             <Arg>           PYTHON      </Arg>
             <Arg>           STRING      </Arg>
         </createArchiveStub>
 
-        <destroyMarker> 
+        <destroyMarker>
             <Arg>           SPACE_NO    </Arg>
         </destroyMarker>
 
@@ -226,5 +231,15 @@
             <Arg>       PYTHON      </Arg>
             <Arg>       STRING      </Arg>
         </replyHttpCommand>
+
+        <setBaseAppLockState>
+            <Arg>       ENTITYCALL  </Arg>
+            <Arg>       UINT8       </Arg>
+        </setBaseAppLockState>
+
+        <onSetBaseAppLockResult>
+            <Arg>       BOOL        </Arg>
+            <Arg>       UINT8       </Arg>
+        </onSetBaseAppLockResult>
     </BaseMethods>
 </root>

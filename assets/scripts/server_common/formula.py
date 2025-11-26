@@ -9,6 +9,7 @@ import math
 import gamePlay_gamePlay as GGD
 import decimal
 import KBEngine
+import mineBattle_miningArea as MBMA
 
 
 @functools.lru_cache(maxsize=1024)
@@ -41,6 +42,10 @@ def whatSpaceMap(spaceNo):
     path = 'spaces/%s' % _['map']
     return path
 
+def whatSpaceName(spaceNo):
+    lineType = getLineType(spaceNo)
+    mapCfg = GGD.datas.get(lineType, {})
+    return mapCfg.get('name', '')
 
 @functools.lru_cache(1024, typed=False)
 def whatSpaceType(spaceNo):
@@ -50,6 +55,13 @@ def whatSpaceType(spaceNo):
 
     return GGD.datas[mapId]['type']
 
+@functools.lru_cache(1024, typed=False)
+def whatSpaceSubType(spaceNo):
+    mapId = getMapId(spaceNo)
+    if not mapId:
+        return gameconst.SpaceSubType.Yanwu
+
+    return GGD.datas[mapId]['subType']
 
 @functools.lru_cache(1024, typed=False)
 def whatSpaceTypeWithSub(spaceNo):
@@ -139,6 +151,9 @@ def isWonderLandSpace(spaceNo):
 
 def isSiegeWarSpace(spaceNo):
     return whatSpaceType(spaceNo) == gameconst.SpaceType.SpaceSiegeWar
+
+def isYanWuSpace(spaceNo):
+    return whatSpaceType(spaceNo) == gameconst.SpaceType.SpaceLine and whatSpaceSubType(spaceNo) == gameconst.SpaceSubType.Yanwu
 
 def getCubeSpaceNo(mapId):
     return getLineSpaceNo(mapId, 0)
@@ -298,6 +313,9 @@ def getEntityId(gameEntityId):
 def isDungeonSpace(spaceNo):
     return whatSpaceType(spaceNo) in (gameconst.SpaceType.SpaceWorldDungeon,
                                       gameconst.SpaceType.SpaceNormalDungeon)
+
+def isMineWarSpace(spaceNo):
+    return getMapId(spaceNo) in MBMA.datas.keys() and getLineNo(spaceNo) == 0
 
 def spaceForbidTeamFollow(spaceNo):
     if not spaceNo:

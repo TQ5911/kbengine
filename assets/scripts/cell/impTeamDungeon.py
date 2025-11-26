@@ -578,9 +578,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
     def leaveTeamDungeon(self, exposed):
         INFO_MSG("leaveTeamDungeon::~")
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
-        # self._leaveTeamDungeon(src)
-        gameengine.getDungeonStubBySpaceNo(self.spaceNo).leaveTeamDungeon(self.spaceNo, self.raidUUID, src, self.base)
-
+        self._leaveTeamDungeon(src)
 
     def _leaveTeamDungeon(self, src):
         teamStub = gameengine.getTeamStub(self.teamId)

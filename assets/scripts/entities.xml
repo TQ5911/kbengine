@@ -55,4 +55,5 @@
 	<WorldRefreshEntityStub/>
 	<RebornPos hasClient="true"></RebornPos>
 	<RedBagStub/>
+	<MineWarStub/>
 </root>

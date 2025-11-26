@@ -423,6 +423,19 @@ class IBag(object):
             self.endApplyGather(gameconst.CancelGatherReason.GatherCheck)
 
         return
+    
+    def _calPickTime(self, target):
+        pickData = NPD.datas.get(target.collectionId, None)
+        if not pickData:
+            return 1
+        
+        pickTime = pickData['time']
+        if target.type == gameconst.CollectionType.MINERAL:
+            pickTime = pickTime * (1 - self.getProp('miningRate'))
+        elif target.type == gameconst.CollectionType.ZHEN_QI:
+            pickTime = pickTime * (1 - self.getProp('gatherRate'))
+        pickTime = pickTime if pickTime > 0 else 0
+        return pickTime
 
     def _prepareApplyGather(self, targetId):
         DEBUG_MSG('_prepareApplyGather', targetId)
@@ -458,16 +471,7 @@ class IBag(object):
         gatherTargetInfo = {'targetId': targetId, 'gatherTime': gatherTime, 'isUnstoppble': pickData['isUnstoppble'],
                             'collection': target, 'collectionId': target.collectionId}
 
-        def _calPickTime():
-            pickTime = pickData['time']
-            if target.type == gameconst.CollectionType.MINERAL:
-                pickTime = pickTime * (1 - self.getProp('miningRate'))
-            elif target.type == gameconst.CollectionType.ZHEN_QI:
-                pickTime = pickTime * (1 - self.getProp('gatherRate'))
-            pickTime = pickTime if pickTime > 0 else 0
-            return pickTime
-
-        pickTime = _calPickTime()
+        pickTime = self._calPickTime(target)
 
         timer = None
         if pickData['pickType'] in gameconst.CollectionPickType.CountdownTypes:
@@ -572,7 +576,7 @@ class IBag(object):
             self.client.onUpdateCollectionGatherFlag(targetId, 0)
             return False
 
-        self.base.baseDoApplyGather(collectionId, gameEntityId, targetId, isCaptain, spaceNo, deductWealthVal)
+        self.base.baseDoApplyGather(collectionId, gameEntityId, targetId, isCaptain, spaceNo, deductWealthVal, self._calPickTime(target))
 
         target.addGatherAvatar(self.id, self.gbId, collectionId)
         targetClient = self.clientEntity(targetId)

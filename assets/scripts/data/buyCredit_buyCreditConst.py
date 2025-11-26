@@ -106,9 +106,5 @@ datas = _tools.RODict({
     "dailyBaseTime": _tools.RODict({
         "ID": "dailyBaseTime",
         "value": 720,
-    }),
-    "maxAccumulateTime": _tools.RODict({
-        "ID": "maxAccumulateTime",
-        "value": 3360,
     })
 })

@@ -98,6 +98,24 @@ def _34000017(lv):
         a = i*2
         sum = a
     return sum
+def _34000018(lv):
+    sum = 0
+    for i in range(1, lv+1):
+        a = i*75
+        sum = a
+    return sum
+def _34000019(lv):
+    sum = 0
+    for i in range(1, lv+1):
+        a = i*6
+        sum = a
+    return sum
+def _34000020(lv):
+    sum = 0
+    for i in range(1, lv+1):
+        a = i*0.003
+        sum = a
+    return sum
 def _34010001(e):
     return int(e.level*40+360)
 def _34010002(e):
@@ -174,6 +192,8 @@ def _34010037(e):
     return int(e.level*1)
 def _34010038(e):
      return int(e.level*1)
+def _34010039(e):
+    return min(int(e*1), 180)
 datas = _tools.RODict({ 
     34000001: _tools.RODict({
         "ID": 34000001,
@@ -242,6 +262,18 @@ datas = _tools.RODict({
     34000017: _tools.RODict({
         "ID": 34000017,
         'serverFormula':_34000017,
+    }),
+    34000018: _tools.RODict({
+        "ID": 34000018,
+        'serverFormula':_34000018,
+    }),
+    34000019: _tools.RODict({
+        "ID": 34000019,
+        'serverFormula':_34000019,
+    }),
+    34000020: _tools.RODict({
+        "ID": 34000020,
+        'serverFormula':_34000020,
     }),
     34900000: _tools.RODict({
         "ID": 34900000,
@@ -418,6 +450,10 @@ datas = _tools.RODict({
     34010038: _tools.RODict({
         "ID": 34010038,
         'serverFormula':_34010038,
+    }),
+    34010039: _tools.RODict({
+        "ID": 34010039,
+        'serverFormula':_34010039,
     })
 })
 minKey = 34000001

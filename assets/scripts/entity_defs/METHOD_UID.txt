@@ -63,6 +63,7 @@ Avatar addCubeRoomRewardRecord CELL 31242
 Avatar addDeathPenaltyVal BASE 31154
 Avatar addExpByKill CELL 30087
 Avatar addExpByMail CELL 30097
+Avatar addExpByMonthCard CELL 32019
 Avatar addExpByTask CELL 30086
 Avatar addExpByWealthVal CELL 30088
 Avatar addFullHpByNpc CELL 30463
@@ -326,6 +327,7 @@ Avatar enterTeamCaptainTrap CELL 30028
 Avatar enterWonderLand CELL 868
 Avatar enterWorldLine CELL 306
 Avatar entireDestroy BASE 30278
+Avatar exchangeGiftKeyReward BASE 1077
 Avatar exchangeItem BASE 99
 Avatar exitGuild BASE 744
 Avatar exitRiding CELL 564
@@ -509,6 +511,7 @@ Avatar onAppearanceUpdated CLIENT 577
 Avatar onApplyBecomeCaptainMsg CLIENT 356
 Avatar onApplyGather CLIENT 122
 Avatar onApplyInviteTeamMsg CLIENT 349
+Avatar onApplyJoinRaidLonelyFailed CLIENT 1002
 Avatar onApplyJoinRaidLonelySucc CELL 30474
 Avatar onApplyJoinRaidWithTeamSucc CELL 30476
 Avatar onApplyJoinTeam CELL 30410
@@ -865,6 +868,10 @@ Avatar onMeridianAward CELL 32015
 Avatar onMessage CLIENT 79
 Avatar onMessagePre BASE 30292
 Avatar onMessagePre_localCross BASE 31807
+Avatar onMineWarEndPlayer BASE 32048
+Avatar onMineWarPreparePlayer BASE 32046
+Avatar onMineWarStartPlayer BASE 32047
+Avatar onMineWarStateSync BASE 32045
 Avatar onModifyNameResult CLIENT 84
 Avatar onMoveRaidTeamMemberSucc CELL 30494
 Avatar onMultiAtkStage CLIENT 234
@@ -885,6 +892,7 @@ Avatar onNotifyOnline BASE 30081
 Avatar onNotiyNewAuctionItemCollection CLIENT 128
 Avatar onNumResourceChanged CLIENT 140
 Avatar onOfficialMessage CLIENT 65
+Avatar onOfflineHangupData CLIENT 1075
 Avatar onOtherRemoveDropEquip BASE 31402
 Avatar onOthersSkillDamage CLIENT 211
 Avatar onOutfitExpired CLIENT 576
@@ -1283,6 +1291,7 @@ Avatar reqFetchRedBag BASE 923
 Avatar reqGetAllMailsAttach BASE 675
 Avatar reqGetGuaranteedPetEgg BASE 987
 Avatar reqGetMeridianData BASE 1061
+Avatar reqGetOfflineExp BASE 1073
 Avatar reqGetOneMailAttach BASE 674
 Avatar reqGetOnlineTimeReward BASE 100
 Avatar reqGetRaidList CELL 924
@@ -1303,6 +1312,7 @@ Avatar reqMoveItemToBag BASE 766
 Avatar reqMoveItemToWarehouse BASE 765
 Avatar reqMultiEquipDisassemble BASE 632
 Avatar reqMultiItemDisassemble BASE 1007
+Avatar reqOfflineHangupData BASE 1076
 Avatar reqPetDrawCardRecord BASE 722
 Avatar reqPlayerAutoMatch CELL 331
 Avatar reqPlayerStopAutoMatch CELL 332
@@ -1425,6 +1435,8 @@ Avatar setSummonSlotIdx BASE 993
 Avatar setSummonSlotIdx CELL 30530
 Avatar setSummonSlotIdxAck BASE 30977
 Avatar showCombatMsg CLIENT 76
+Avatar showMineWarPrepare CLIENT 1078
+Avatar showMineWarStart CLIENT 1079
 Avatar showPopoverMsg CLIENT 148
 Avatar showPopoverMsgWithArg CLIENT 149
 Avatar siegeWarDefenseDeclaration BASE 997
@@ -1461,6 +1473,7 @@ Avatar syncGuildTaskInfo CLIENT 649
 Avatar syncMethodCallToLocalServerBase BASE 31802
 Avatar syncMethodCallToLocalServerCell BASE 31804
 Avatar syncMethodCallToLocalServerCell CELL 31791
+Avatar syncMineWarInfo CELL 32061
 Avatar syncModifyGuildInfo CELL 31263
 Avatar syncServerTime CLIENT 45
 Avatar syncSpaceVariable BASE 30229
@@ -1584,10 +1597,12 @@ BaseApp onGmFindAccount BASE 30080
 BaseApp onGmFindEntity BASE 30079
 BaseApp onGmLookUpAvatar BASE 30078
 BaseApp onLineReady BASE 30385
+BaseApp onSetBaseAppLockResult BASE 32063
 BaseApp onWorldRefreshEntityReady BASE 31717
 BaseApp recordOfflinePlayerMailLog BASE 31244
 BaseApp renewalBase BASE 30093
 BaseApp replyHttpCommand BASE 31929
+BaseApp setBaseAppLockState BASE 32062
 BaseApp setStartGbId BASE 30072
 CityBattleTeleporter callMethod CELL 31568
 CityBattleTeleporter delaySafeDestroy CELL 31566
@@ -1991,6 +2006,7 @@ Guild doSendGuildChatMsg BASE 31277
 Guild doSendGuildClientData BASE 31254
 Guild doSendGuildDetailInfo BASE 31273
 Guild doSendGuildRedBagMsg BASE 31994
+Guild doSendMineWarHpWarning BASE 32036
 Guild doSiegeWarSignUpBidding BASE 31535
 Guild doTransformGuildMoneyToFund BASE 31289
 Guild doUpgradeGuildBuilding BASE 31287
@@ -2000,6 +2016,7 @@ Guild exitGuildButMemberNotOnline BASE 31270
 Guild exitGuildButOffline BASE 31348
 Guild getCacheBeforeEnterCrossSiegeWar BASE 31825
 Guild getGuildDetailFromOtherServer BASE 31699
+Guild getJunxuQiXieLevel BASE 32037
 Guild getMemberJob BASE 31966
 Guild joinGuildButOffline BASE 31347
 Guild modifyBuildingExp BASE 31854
@@ -2055,6 +2072,7 @@ GuildStub getGuildsCacheData BASE 31668
 GuildStub getGuildsGbIdAndBox BASE 31260
 GuildStub guildWillDestroy BASE 31255
 GuildStub renewalBase BASE 30950
+GuildStub syncGuildMineWarToSpaceMgr BASE 32035
 GuildStub updateGuildCache BASE 31272
 ItemLinkStub callMethod BASE 30764
 ItemLinkStub createCellNearHere BASE 30766
@@ -2093,6 +2111,17 @@ LoginStub onAccountLogin BASE 30183
 LoginStub renewalBase BASE 30188
 LoginStub unlockLoginSwitchServer BASE 30947
 LoginStub updateCharacterInfo BASE 30179
+MineWarStub callMethod BASE 32056
+MineWarStub createCellNearHere BASE 32058
+MineWarStub createCellNearSelf BASE 32057
+MineWarStub doLast BASE 32060
+MineWarStub doNext BASE 32059
+MineWarStub entireDestroy BASE 32054
+MineWarStub onMineWarCoreBeKill BASE 32052
+MineWarStub onMineWarFlagBeKill BASE 32053
+MineWarStub playerGetMineWarState BASE 32051
+MineWarStub registerMineWarSpaceMgr BASE 32050
+MineWarStub renewalBase BASE 32055
 Monster addBuff CELL 30359
 Monster addDungeonKillCount CELL 31831
 Monster addInMonsterGroup CELL 31002
@@ -2155,6 +2184,7 @@ Monster onGetAureoleInfo CLIENT 296
 Monster onGetBuffInfo CLIENT 295
 Monster onKillTarget CELL 30372
 Monster onMessage CLIENT 288
+Monster onMineWarStateChange CELL 32049
 Monster onMultiAtkStage CLIENT 301
 Monster onOthersSkillDamage CLIENT 277
 Monster onRemoveAureole CLIENT 280
@@ -2460,6 +2490,7 @@ RaidStub reqAddRaidMarkMember BASE 31865
 RaidStub reqChangeRaidOnlyLeader BASE 31867
 RaidStub reqDelRaidMarkMember BASE 31866
 RaidStub reqJoinRaid BASE 31937
+RaidStub setInDungeon BASE 32033
 RaidStub setRaidTarget BASE 30642
 RaidStub startRaidStandbyChecker BASE 30643
 RaidStub switchRaidMicsMode BASE 30649
@@ -2898,6 +2929,7 @@ TeamStub requestStartTeamDuel BASE 30541
 TeamStub sendChatMsgFromTeamMember BASE 30546
 TeamStub sendTeamMemberMessage BASE 30573
 TeamStub sendTeamMemberMessage_localCross BASE 30574
+TeamStub setInDungeon BASE 32024
 TeamStub setTeamTarget BASE 30558
 TeamStub switchTeamMicsMode BASE 30578
 TeamStub teamDungeonFinished BASE 31987
@@ -3007,6 +3039,7 @@ WorldBossStub getBossCreateTime BASE 31919
 WorldBossStub onWorldBossDeadAddTimer BASE 31921
 WorldBossStub renewalBase BASE 31923
 WorldLineSpaceMgr addEntity CELL 31881
+WorldLineSpaceMgr addMineWarMonsterOnInit CELL 32042
 WorldLineSpaceMgr beNotifiedSpaceEvent CELL 31880
 WorldLineSpaceMgr callMethod CELL 31912
 WorldLineSpaceMgr delaySafeDestroy CELL 31910
@@ -3039,6 +3072,8 @@ WorldLineSpaceMgr flowCtrlOnTaskInProgress CELL 31887
 WorldLineSpaceMgr flowCtrrlDungeonEntityReleaseCompleteByEventId CELL 31902
 WorldLineSpaceMgr innerSetSpaceVar CELL 31882
 WorldLineSpaceMgr onGetCreateBossTime CELL 31918
+WorldLineSpaceMgr onMineWarDayChange CELL 32041
+WorldLineSpaceMgr onMineWarStateChange CELL 32040
 WorldLineSpaceMgr onMonsterDestroy CELL 31983
 WorldLineSpaceMgr onPlayerDead CELL 31879
 WorldLineSpaceMgr onPlayerEnter CELL 31873
@@ -3046,13 +3081,17 @@ WorldLineSpaceMgr onPlayerLeave CELL 31875
 WorldLineSpaceMgr onPlayerOffline CELL 31876
 WorldLineSpaceMgr onPlayerRelive CELL 31878
 WorldLineSpaceMgr onPlayerRelogin CELL 31877
+WorldLineSpaceMgr onRegisterMineWarSpaceMgr CELL 32038
+WorldLineSpaceMgr onSyncGuildMineWarResult CELL 32044
 WorldLineSpaceMgr onTeleportNear CELL 31914
+WorldLineSpaceMgr removeMineWarMonsterWhenDie CELL 32043
 WorldLineSpaceMgr renewalCell CELL 31911
 WorldLineSpaceMgr safeDestroy CELL 31909
 WorldLineSpaceMgr safeTeleport CELL 31913
 WorldLineSpaceMgr setBaseGlobalIdx CELL 31915
 WorldLineSpaceMgr setSpaceVar CELL 31883
 WorldLineSpaceMgr teleportEntityById CELL 31874
+WorldLineSpaceMgr transferAllAvatarInSpace CELL 32039
 WorldLineStub autoSwitchLine BASE 30120
 WorldLineStub callMethod BASE 30112
 WorldLineStub checkAllLineSpaceReady BASE 30133
@@ -3076,7 +3115,6 @@ WorldLineStub handleCellappDeath BASE 30136
 WorldLineStub leaveLine BASE 30124
 WorldLineStub notifyCreateWorldBoss BASE 31917
 WorldLineStub notifyPlayerOffline BASE 30126
-WorldLineStub notifyRemoveFakeLeavePlayer BASE 30386
 WorldLineStub onCellappRelive BASE 30137
 WorldLineStub onCollectionBeCollectAndDestroyed BASE 30140
 WorldLineStub onLineSpaceGone BASE 30135
@@ -3084,6 +3122,7 @@ WorldLineStub onLineSpaceReady BASE 30134
 WorldLineStub onLoadEntitiesEnd BASE 31543
 WorldLineStub onLoadGroupEntities BASE 31718
 WorldLineStub onRefreshGroupEntities BASE 31719
+WorldLineStub onSpaceMgrReady BASE 32034
 WorldLineStub removePendingEnterOnBaseDestroy BASE 30129
 WorldLineStub renewalBase BASE 30111
 WorldLineStub switchLine BASE 30121

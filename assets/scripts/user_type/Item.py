@@ -42,7 +42,6 @@ class Item(BaseItem.BaseItem):
 
         if itemData.get('usableTime'):
             self.enableTime = utils.parseTimeStr(itemData['usableTime'])
-        self.auctionTime = 0
         self.lockStatus = gameconst.ItemLockStatus.UNLOCKED
         return True
 
@@ -63,8 +62,6 @@ class Item(BaseItem.BaseItem):
 
     def attr2Dict(self):
         m_dict = {}
-        if self.auctionTime > 0:
-            m_dict["auctionTime"] = self.auctionTime
         m_dict["lockStatus"] = self.lockStatus
         return m_dict
 
@@ -79,12 +76,6 @@ class Item(BaseItem.BaseItem):
         if self.expireTime != withIt.expireTime:
             return False
         if self.enableTime != withIt.enableTime:
-            return False
-        if now >= self.auctionTime:
-            self.auctionTime = 0
-        if now >= withIt.auctionTime:
-            withIt.auctionTime = 0
-        if self.auctionTime != withIt.auctionTime:
             return False
         if self.lockStatus != withIt.lockStatus:
             return False

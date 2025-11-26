@@ -34,6 +34,8 @@ class BotAIState_Init(AIState):
             return
         self.stateTime = now
         owner.debug("执行初始化状态逻辑 当前地图ID:%s" % curMapId)
+        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+            return
         if int(curMapId) == owner.dstMapId:
             for idx, itemId in enumerate(owner.itemIds):
                 slotInfo = {"slotId": idx, "itemId": itemId, "potionState": 1}
@@ -41,6 +43,9 @@ class BotAIState_Init(AIState):
             owner.runGmCommand('$dressallequipments 0')
             owner.runGmCommand('$goto 0 %s %s %s' % (owner.dstPos.x, owner.dstPos.y, owner.dstPos.z))
             owner.changeAIState(AISTATE_GO_BATTLE_AREA)
+            return
+        if owner.isInDungeonSpace():
+            owner.doLeaveDungeon()
             return
         owner.runGmCommand(f'$entermap 0 {owner.dstMapId}')
 
@@ -57,8 +62,11 @@ class BotAIState_Combat(AIState):
         if owner.hasState(gameconst.State.Death) or not owner.goBattleArea():
             owner.changeAIState(AISTATE_GO_BATTLE_AREA)
             return
-        if owner.hasState(gameconst.State.Fighting):
+        if not owner.hasState(gameconst.State.autoFight):
+            owner.cell.startAutoCombat(False)
             return
+        # if owner.hasState(gameconst.State.Fighting):
+        #     return
         
     def exit(self, owner):
         owner.debug("退出战斗状态")
@@ -100,9 +108,8 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             AISTATE_COMBAT: BotAIState_Combat(),
             AISTATE_GO_BATTLE_AREA: BotAIState_GoBattleArea(),
         }
-        # self.botIdx = self.getBotIndx()
         
-
+        
 
     def initBot(self):
         if self.getSelfMapId() == 4002 or self.player.level < 20:
@@ -110,15 +117,18 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             
         self.runGmCommand('$getitems 0 0 9999 0 30010005 30010006')
         if self.player.totalScore < 150000:
-            self.runGmCommand("$getequipment 0 0 3")
-        self.dstPos = self.getDstPos()
+            self.runGmCommand("$getequipment 0 0 3 4")
+        self.getDstPos()
 
     def getDstPos(self):
-        return self.getMapMonsterPos(self.dstMapId)
+        self.dstPos, monsterNum = self.getMapMonsterPos(self.dstMapId)
+        # 只有一只怪的话， 分散一下
+        if monsterNum == 1:
+            self.pointRadius = 30
 
-    def randompos(self):
-        randomspeed = random.randint(-5, 5)
-        return randomspeed
+    def inDstMap(self):
+        return self.getSelfMapId() == self.dstMapId
+
 
     def onBecomePlayer(self):
         self.debug('check_login:%s'%self.botClient.accountName)
@@ -128,14 +138,18 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
         self.debug(f'onTeleportDone{args}')
 
     def goBattleArea(self):
+        if not self.inDstMap():
+            self.debug(f"不在目标地图，重新传送 {self.getSelfMapId()} {self.dstMapId}")
+            self.runGmCommand(f'$entermap 0 {self.dstMapId}')
+            return False
         if botUtils.distance2D(self.position, self.dstPos) < self.pointRadius:
             self.debug(f"到达战斗区域")
             return True
         if self.hasState(gameconst.State.Moving):
             return False
-        # dstPos = botUtils.getRandomPosVec3(self.dstPos, self.pointRadius)
-        self.moveTo(self.dstPos)
-        self.debug(f"移动到战斗区域 {self.dstPos}")
+        dstPos = botUtils.getRandomPosVec3(self.dstPos, self.pointRadius)
+        self.moveTo(dstPos)
+        self.debug(f"移动到战斗区域 {dstPos}")
         return False
 
     #服务器给客户端发传送消息

@@ -764,7 +764,7 @@ class ImpTask(TaskProgress, TaskEvent):
         return True, [(taskId, 1)]
 
     def afterTaskSubmitted(self, opUUID, taskId):
-        self.taskFlowLog(taskId, "TaskSubmit", opUUID=opUUID)
+        #self.taskFlowLog(taskId, "TaskSubmit", opUUID=opUUID)
         return True, [(taskId, 1)]
 
     def reqTaskEnterSpace(self, exposed, taskId):

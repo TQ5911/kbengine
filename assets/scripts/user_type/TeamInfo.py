@@ -44,7 +44,7 @@ teamDungeonSpaceCacheInstance = TeamDungeonSpaceInfo()
 
 class TeamInfo(object):
     def createObjFromDict(self, dataDict):
-        teamObj = team.TeamCacheVal()
+        teamObj = team.TeamVal()
         teamObj.initFromDict(dataDict)
         return teamObj
 
@@ -52,7 +52,7 @@ class TeamInfo(object):
         return obj.toSavedDict()
 
     def isSameType(self, obj):
-        return type(obj) is team.TeamCacheVal
+        return type(obj) is team.TeamVal
 
 teamInstance = TeamInfo()
 

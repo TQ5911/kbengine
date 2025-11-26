@@ -19,6 +19,16 @@
             <Type>      ARRAY <of>  AUCTION_ITEM_UUID </of>    </Type>
             <Flags>     BASE                                   </Flags>
         </collectionAuctionIdList>
+
+        <collectionAuctionIdCategoryList>
+            <Type>      ARRAY <of>  ITEMID </of>    </Type>
+            <Flags>     BASE                                   </Flags>
+        </collectionAuctionIdCategoryList>
+
+        <collectionAuctionItemCategoryList>
+            <Type>      ARRAY <of>  ITEMID </of>    </Type>
+            <Flags>     BASE                                   </Flags>
+        </collectionAuctionItemCategoryList>
     </Properties>
 
     <BaseMethods>
@@ -199,6 +209,7 @@
         <getAuctionItemNumByItemIdList>
             <Exposed/>
 			<Arg> ITEMID_LIST </Arg>
+            <Arg> BOOL        </Arg>
         </getAuctionItemNumByItemIdList>
 
         <getAuctionSaleItemMoney>
@@ -216,11 +227,7 @@
         
         <onGetAuctionItemsByAuctionIdsResp>
             <Arg> UINT32 </Arg>
-            <Arg> AUCTIONID_LIST </Arg>
-            <Arg>   ARRAY <of>  UINT32 </of>      </Arg>
-            <Arg>   ARRAY <of>  UINT32 </of>      </Arg>
-            <Arg>   ARRAY <of>  FLOAT  </of>      </Arg>
-            <Arg>   ARRAY <of>  INT64  </of>      </Arg>
+            <Arg>   ARRAY <of>  AUCTION_ITEM  </of>      </Arg>
         </onGetAuctionItemsByAuctionIdsResp>
 
     </BaseMethods>
@@ -314,11 +321,7 @@
 
         <onGetAuctionItemsByAuctionIdsResp>
             <Arg> UINT32 </Arg>
-            <Arg> AUCTIONID_LIST </Arg>
-            <Arg>   ARRAY <of>  UINT32 </of>      </Arg>
-            <Arg>   ARRAY <of>  UINT32 </of>      </Arg>
-            <Arg>   ARRAY <of>  FLOAT  </of>      </Arg>
-            <Arg>   ARRAY <of>  INT64  </of>      </Arg>
+            <Arg>   ARRAY <of>  AUCTION_ITEM  </of>      </Arg>
         </onGetAuctionItemsByAuctionIdsResp>
     </ClientMethods>
 </root>

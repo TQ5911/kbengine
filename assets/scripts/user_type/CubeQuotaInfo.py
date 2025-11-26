@@ -13,6 +13,9 @@ class CubeQuotaVal(userType.UserSoleType):
         self.enterTime = enterTime
         self.cubeDurState = cubeDurState
 
+    def __str__(self):
+        return 'CubeQuotaVal(leftTime=%d, enterTime=%d, cubeDurState=%d)' % (self.leftTime, self.enterTime, self.cubeDurState)
+
     def toCubeQuotaSavedDict(self):
         return {
             'leftTime': self.leftTime,
@@ -49,6 +52,11 @@ class CubeQuotaVal(userType.UserSoleType):
         self.leftTime = max(0, self.leftTime - _cost)
         self.enterTime = 0
         self.cubeDurState = gameconst.CubeDurStatus.NORMAL
+
+    def resetOnLogin(self):
+        # 走到这里说明出问题了，要不就是非法关服
+        self.cubeDurState = gameconst.CubeDurStatus.NORMAL
+        self.enterTime = 0
 
 
 class CubeQuotaInfo(object):

@@ -81,11 +81,9 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         _linePlayers = self.allPlayers.getLinePlayers(lineNo)
 
         teamUUID = succInfo.get('teamUUID', 0)
-        areaId = 0
         isLeader = succInfo.get('isLeader', False)
 
         _linePlayers.onPlayerTeamChanged(gbId, 0, teamUUID, isLeader)
-        _linePlayers.delFakeLeavePlayer(gbId)
         # _linePlayers.onPlayerAreaChanged(gbId, areaId)
         if abs(len(_linePlayers) - _linePlayers.lastUpPlayerNum) >= gameconst.WORLD_LINE_UPDATE_WEIGHT_VAL:
             _linePlayers.lastUpPlayerNum = len(_linePlayers)
@@ -136,8 +134,6 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         lineNo = formula.getLineNo(fromSpaceNo)
         _linePlayers = self.allPlayers.getLinePlayers(lineNo)
         # 进入副本，大世界需要继续占坑位
-        if formula.spaceInWorldLine(fromSpaceNo):
-            _linePlayers.addFakeLeavePlayer(gbId)
         if abs(len(_linePlayers) - _linePlayers.lastUpPlayerNum) >= gameconst.WORLD_LINE_UPDATE_WEIGHT_VAL:
             _linePlayers.lastUpPlayerNum = len(_linePlayers)
             spaceVal = self.getLineSpaceVal(lineNo)
@@ -194,10 +190,6 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             spaceVal.lineSpaceBox.cell.updateSpaceWeight(utils.calcSpaceWeight(_linePlayers.lastUpPlayerNum, False,
                                                                                gameconst.EntNumPerPlayerInAOI.worldLine,
                                                                                gameconst.WORLD_LINE_BASE_WEIGHT))
-
-    def notifyRemoveFakeLeavePlayer(self, gbId):
-        for _linePlayers in self.allPlayers.values():
-            _linePlayers.delFakeLeavePlayer(gbId)
 
     def onLoadGroupEntities(self, info):
         DEBUG_MSG("WorldLineStub::onLoadGroupEntities", info)

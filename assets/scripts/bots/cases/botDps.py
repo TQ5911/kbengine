@@ -19,9 +19,11 @@ import activityControl_activityData as AC_ADD
 
 BOT_CONFIG = botBase.initBotConfig(__file__)
 
+AISTATE_NONE = -1
 AISTATE_INIT = 1
 AISTATE_COMBAT = 2
 AISTATE_GO_BATTLE_AREA = 3
+AISTATE_AFTER_COMPLETED = 4
 
 STATUS_DURATION = 180
 
@@ -46,14 +48,20 @@ class BotAIState_Init(AIState):
             return
         self.stateTime = now
         owner.debug("执行初始化状态逻辑 当前地图ID:%s, 目标地图:%s" % (curMapId, owner.dstMapId))
+        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+            return
         if int(curMapId) == owner.dstMapId:
             owner.receiveDamage = True
-            for idx, itemId in enumerate(owner.itemIds):
-                slotInfo = {"slotId": idx, "itemId": itemId, "potionState": 1}
-                owner.setInstantPotionSlots(slotInfo)
+            # 先不装配药物了，目前客户端没法过滤这部分治疗量
+            # for idx, itemId in enumerate(owner.itemIds):
+            #     slotInfo = {"slotId": idx, "itemId": itemId, "potionState": 1}
+            #     owner.setInstantPotionSlots(slotInfo)
             owner.runGmCommand('$dressallequipments 0')
             owner.runGmCommand('$goto 0 %s %s %s' % (owner.dstPos.x, owner.dstPos.y, owner.dstPos.z))
             owner.changeAIState(AISTATE_GO_BATTLE_AREA)
+            return
+        if owner.isInDungeonSpace():
+            owner.doLeaveDungeon()
             return
         # owner.runGmCommand(f'$entermap 0 {owner.dstMapId}')
         owner.reqPlayerAutoMatch()
@@ -68,17 +76,19 @@ class BotAIState_Combat(AIState):
         owner.cell.startAutoCombat(False)
 
     def execute(self, owner):
-        owner.debug("执行战斗状态逻辑 %s" % owner.state)
+        owner.debug("执行战斗状态逻辑 %s %s" % (owner.state, owner.receiveDamage))
+        if owner.receiveDamage is False:
+            owner.changeAIState(AISTATE_AFTER_COMPLETED)
+            return
         if owner.hasState(gameconst.State.Death) or not owner.goBattleArea():
             owner.changeAIState(AISTATE_GO_BATTLE_AREA)
             return
         now = utils.getNow()
         if now - self.stateTime > 3:
             self.stateTime = now
-            owner.reqGetTeamStatisticData()
+            # owner.reqGetTeamStatisticData()
         if owner.hasState(gameconst.State.Fighting):
             return
-        
         
     def exit(self, owner):
         owner.debug("退出战斗状态")
@@ -89,7 +99,6 @@ class BotAIState_GoBattleArea(AIState):
         owner.debug("进入前往战斗区域状态 当前状态:%s" % owner.state)
         self.stateTime = time.time()
         
-
     def execute(self, owner):
         random_wait = owner.getRandomTimeDelay(1, 5)
         now = time.time()
@@ -107,15 +116,44 @@ class BotAIState_GoBattleArea(AIState):
     def exit(self, owner):
         owner.debug("退出前往战斗区域状态")
 
+class BotAIState_AfterCompleted(AIState):
+    LIMIT_CALL_TIME = 2
+    DESTORY_DELAY = 30
+    def enter(self, owner):
+        owner.debug("副本结束，开始收集数据:%s" % owner.state)
+        now = time.time()
+        self.stateTickTime = now - BotAIState_AfterCompleted.LIMIT_CALL_TIME
+        self.stateEnterTime = now
+        
+    def execute(self, owner):
+        now = time.time()
+        if now - self.stateTickTime < BotAIState_AfterCompleted.LIMIT_CALL_TIME:
+            return
+        elif now - self.stateEnterTime > BotAIState_AfterCompleted.DESTORY_DELAY:
+            owner.changeAIState(AISTATE_NONE) # 超时了
+            return
+        self.stateTickTime = now
+        statsType = owner.getReqStatsType()
+        owner.debug(f"正在请求 {statsType} 数据")
+        if statsType:
+            owner.reqGetTeamStatisticData(statsType)
+        else:
+            owner.changeAIState(AISTATE_NONE)
+        
+    def exit(self, owner):
+        owner.debug("收集结束")
+        owner.allDone()
+
 class PlayerDelegate(simpleBotBase.SimpleBotBase):
     def __init__(self, robot, botClient):
         super(PlayerDelegate, self).__init__(robot, botClient)
-        self.useRandomTimeDelay = False
+        self.useRandomTimeDelay = True
         self.dstPos = Math.Vector3(0,0,0)
         self.matchTargetId = 151
         self.itemIds = [30010006,30010005]
         self.skillDamages = {}
-        self.receiveDamage = False
+        self.entityHostMap = {}
+        self.receiveDamage = None
         self.teamStatisticData = {}
         self.pointRadius = 20
         self.isAIinit = False
@@ -123,6 +161,7 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             AISTATE_INIT: BotAIState_Init(),
             AISTATE_COMBAT: BotAIState_Combat(),
             AISTATE_GO_BATTLE_AREA: BotAIState_GoBattleArea(),
+            AISTATE_AFTER_COMPLETED: BotAIState_AfterCompleted()
         }
 
     def _getMatchData(self):
@@ -134,10 +173,15 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             
         self.runGmCommand('$getitems 0 0 9999 0 30010005 30010006')
         if self.player.totalScore < 150000:
-            self.runGmCommand("$getequipment 0 0 3")
+            self.runGmCommand("$getequipment 0 0 3 4")
+        self.setMatchInfo()
+
+    def setMatchInfo(self, matchTargetId=None):
+        if matchTargetId:
+            self.matchTargetId = matchTargetId
         matchData = self._getMatchData()
         self.dstMapId = matchData.get("enterDunID", 0)
-        self.dstPos = self.getMapMonsterPos(self.dstMapId)
+        self.dstPos, _ = self.getMapMonsterPos(self.dstMapId)
 
     def changeRandomTimeDelay(self, useRandom=None):
         if useRandom is None:
@@ -150,10 +194,6 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             return random.randint(minDelay, maxDelay)
         return 0
 
-    def randompos(self):
-        randomspeed = random.randint(-5, 5)
-        return randomspeed
-
     def onBecomePlayer(self):
         self.debug('check_login:%s'%self.botClient.accountName)
         if not self.isAIinit:
@@ -162,74 +202,6 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
 
     def onTeleportDone(self, *args):
         self.debug(f'onTeleportDone{args}')
-
-
-    # #这里通过服务器给客户端发送聊天消息，指示机器人干什么
-    # def onRecvAvatarChannelMsg(self, channelID,avatarInfo,msgId):
-    #     if '$' in msgId:
-    #         self.base.runGmCommand(msgId)
-    #     elif channelID == gameconst.ChatChannel.SYSTEM and 'self.' in msgId:
-    #         try:
-    #             exec(msgId)
-    #         except Exception as e:
-    #             self.debug(f"执行错误: {e}")
-
-    #     if msgId == '升级':
-    #         self.base.runGmCommand(f'$setlv 0 {random.randint(20,70)}')
-
-    #     if msgId == '添加血量':
-    #         self.base.runGmCommand(f'$adjfullHp 0 99999')
-
-
-    #     # 传送到坐标(36.4585,39.0038,48.3531)
-    #     if msgId.startswith('传送到坐标'):
-    #         position = re.search(r"\((\d+\.\d+),(\d+\.\d+),(\d+\.\d+)\)", msgId)
-    #         if position:
-    #             x, y, z = position.groups()
-    #             x = float(x) + self.randompos()
-    #             y = float(y)
-    #             z = float(z) + self.randompos()
-    #             self.base.runGmCommand(f'$setpos 0 {x} {y} {z}')
-
-
-    #     if '设置善恶值' in msgId:
-    #         match = re.match(r'(.*?)(-?\d+)', msgId)
-    #         if match:
-    #             str = match.group(1)
-    #             moralValue = int(match.group(2))  # 获取后面的整数并转换为整数类型
-    #             self.base.runGmCommand(f'$moralValue 0 {moralValue}')
-    #         else:
-    #             self.debug('未设置成功善恶值')
-
-    #     if msgId == "PK模式":
-    #         self.cell.switchPKModel(3)
-    #         self.debug(f"开启PK模式")
-
-    #     if msgId == '随机切换一个模式':
-    #         self.cell.switchPKModel(random.randint(0,2))
-
-    #     if msgId == "关闭帮派保护":
-    #         self.cell.setPKProtect(2, 0)
-
-    #     if msgId == '开启帮派保护':
-    #         self.cell.setPKProtect(2, 1)
-
-    #     if msgId == '开启自动战斗':
-    #         self.cell.startAutoCombat(160)
-
-    #     if msgId == "机器人离线":
-    #         self.player.offlineBot()
-    #     if msgId == "复活":
-    #         self.cell.relive(2)
-    #     if msgId == "死亡立即复活":
-    #         self.Relive = True
-    #         self.cell.relive(2)
-
-    #     if msgId.startswith('加入队伍'):
-    #         itemid = re.search(r"加入队伍(\d+)", msgId).group(1)
-    #         self.cell.applyJoinTeam(int(itemid))
-    #     else:
-    #         self.debug(f'{msgId}输入无效')
 
     def quitTeamOrRaid(self):
         if self.getSelfMapId() == self.dstMapId: # 可能断线重连， 目标是副本用这个应该还行，大世界不太行
@@ -252,14 +224,16 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             self.cell.createRaidLonely(membersRequire, matchTargetId, 0, 0, '', '', 1)
 
     def reqPlayerAutoMatch(self, matchTargetId=None):
-        # 末位做队长，如果只创建14个，说明主控会创建队伍
-        if self.botIdx == 15 and not self.isInTeam() and not self.isInRaid():
-            self.createTeamOrRaid()
-            return
         matchTargetId = matchTargetId or self.matchTargetId
         teamTargetInfo = self._getMatchData()
         actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
         teamType = int(actData['needTeam'])
+        membersRequire = actData['membersRequire'] or 1
+        # 末位做队长，如果只创建14个，说明主控会创建队伍
+        if self.botIdx % membersRequire == 0 and not self.isInTeam() and not self.isInRaid():
+            self.createTeamOrRaid()
+            return
+
         self.debug(f"reqPlayerAutoMatch: {matchTargetId} {teamType}")
 
         if teamType == gameconst.ActivityControlType.TEAM:
@@ -269,9 +243,9 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             if self.player.autoRaidMatchTarget != matchTargetId and not self.isInRaid():
                 self.cell.reqRaidPlayerAutoMatch(matchTargetId)
 
-    def reqGetTeamStatisticData(self):
-        self.debug("reqGetTeamStatisticData")
-        self.cell.reqGetTeamStatisticData()
+    def reqGetTeamStatisticData(self, statsType):
+        self.debug("reqGetTeamStatisticData: %s" % statsType)
+        self.cell.reqGetTeamStatisticData(statsType)
 
     #服务器给客户端发传送消息
     def startTeleport(self,*args):
@@ -280,33 +254,51 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
     def onStartAutoCombat(self):
         self.debug(f"开启自动战斗")
 
-    def onSkillDamage(self, skillDamage):
-        self.debug(f"技能伤害事件:  {skillDamage} {self.receiveDamage}")
-        if not self.receiveDamage:
-            return
-        casterId = skillDamage.get('casterId', None)
-        if casterId != self.player.id:
-            caster = self.entities.get(casterId)
-            if caster:
-                if hasattr(caster, 'hostId'):
-                    casterId = caster.hostId
-        if casterId not in self.skillDamages:
-            self.skillDamages[casterId] = []
-        self.skillDamages[casterId].append(skillDamage)
+    def _getHostId(self, entId):
+        if entId in self.entityHostMap:
+            return self.entityHostMap[entId]
+        ent = self.entities.get(entId)
+        if ent:
+            if hasattr(ent, 'hostId'):
+                hostId = ent.hostId
+                self.entityHostMap[entId] = hostId
+                return hostId
+            self.entityHostMap[entId] = entId
+        return entId
 
-    def sendTeamStatisticData(self, data):
-        self.debug(f"sendTeamStatisticData: {data}")
-        self.teamStatisticData = data
-        
+    def onSkillDamage(self, skillDamage):
+        # self.debug(f"技能伤害事件:  {skillDamage} {self.receiveDamage}")
+        if self.receiveDamage:    
+            casterId = skillDamage.get('casterId', None)
+            self._getHostId(casterId)
+            damageInfos = skillDamage.get('damageInfo', [])
+            for damageInfo in damageInfos:
+                targetId = damageInfo.get('targetId', 0)
+                self._getHostId(targetId) # 这里damageInfo是个自定义结构，没法塞数据进去，先更新map缓存
+            if casterId not in self.skillDamages:
+                self.skillDamages[casterId] = []
+            self.skillDamages[casterId].append(skillDamage)
+
+    def sendTeamStatisticData(self, statsType, data):
+        self.debug(f"sendTeamStatisticData: {statsType} {data}")
+        typeStr = gameconst.TEAM_STATISTIC_TYPE_TO_LIST[statsType]
+        self.teamStatisticData[typeStr] = data
+
+    def getReqStatsType(self):
+        for statsType, typeStr in gameconst.TEAM_STATISTIC_TYPE_TO_LIST.items():
+            if statsType and typeStr not in self.teamStatisticData:
+                return statsType
+        return None
 
     def onDungeonCompleted(self, dungeonId, isWin, elapsedTime, endTime):
         self.debug(f"onDungeonCompleted {dungeonId} {isWin} {elapsedTime} {endTime}")
-        self.reqGetTeamStatisticData()
+        self.receiveDamage = False
+        
+    def allDone(self):
+        self.unregBotAI()
         self.statsSkillDamage()
 
     def statsSkillDamage(self):
-        self.unregBotAI()
-        self.receiveDamage = False
         def _stats(mainKey, sub1Key, sub2Key, sourceKey, hurt, statsDict):
             if mainKey not in statsDict:
                 statsDict[mainKey] = {}
@@ -323,17 +315,24 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
 
         def _statsTotal(mainKey, hitType, hurt, statsDict):
             if mainKey not in statsDict:
-                statsDict[mainKey] = {}
-            if hitType not in statsDict[mainKey]:
-                statsDict[mainKey][hitType] = 0
-            statsDict[mainKey][hitType] += hurt
-
+                statsDict[mainKey] = {"dmg": {"total": 0, "details": {}}, "heal": {"total": 0, "details": {}}}
+            if hitType in HEAL_HITTYPES:
+                tmpDict = statsDict[mainKey]["heal"]
+            else:
+                tmpDict = statsDict[mainKey]["dmg"]
+            if hitType not in tmpDict["details"]:
+                tmpDict["details"][hitType] = 0
+            tmpDict["details"][hitType] += hurt
+            tmpDict["total"] += hurt
 
         self.damageStats = {}
         self.behurtStats = {}
         self.totalDamageStats = {}
         self.totalBehurtStats = {}
+        self.selfStats = {"dmg": 0, "heal": 0, "hurt": 0, "sourceDetails": {}}
+        idset = set()
         for casterId, skillDamages in self.skillDamages.items():
+            idset.add(casterId)
             for skillDamage in skillDamages:
                 sourceType = skillDamage.get('sourceType', 0)
                 if sourceType in IGNORE_SOURCETYPES:
@@ -343,50 +342,78 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
                 damageInfos = skillDamage.get('damageInfo', {})
                 for damageInfo in damageInfos:
                     targetId = damageInfo.get('targetId', 0)
+                    idset.add(targetId)
                     hurt = damageInfo.get('hurt', 0)
                     hitType = damageInfo.get('hitType', 0)
                     _stats(casterId, targetId, hitType, sourceKey, hurt, self.damageStats)
                     _stats(targetId, casterId, hitType, sourceKey, hurt, self.behurtStats)
                     _statsTotal(casterId, hitType, hurt, self.totalDamageStats)
                     _statsTotal(targetId, hitType, hurt, self.totalBehurtStats)
-
-        self.debug(f"totalDamageStats: {self.totalDamageStats}")
-        self.debug(f"totalBehurtStats: {self.totalBehurtStats}")
+        selfId = self.player.id
+        for casterId in idset:
+            castHostId = self._getHostId(casterId)
+            if castHostId != selfId:
+                continue
+            totalDamageStats = self.totalDamageStats.get(casterId, {})
+            totalBehurtStats = self.totalBehurtStats.get(casterId, {})
+            totalDmg = totalDamageStats.get("dmg", {})
+            totalHeal = totalDamageStats.get("heal", {})
+            totalHurt = totalBehurtStats.get("dmg", {})
+            self.selfStats["dmg"] += totalDmg.get("total", 0)
+            self.selfStats["heal"] += totalHeal.get("total", 0)
+            self.selfStats["hurt"] += totalHurt.get("total", 0)
+            self.selfStats["sourceDetails"][casterId] = {"dmg": totalDmg, "heal": totalHeal, "hurt": totalHurt}
+            
         self._writeToJson()
 
     # 本身是个自定义的数据结构
     def _processTeamStatisticData(self):
-        def _getSelfInfo(infList, type, data):
+        def _getSelfInfo(infList, statsType, stats, data):
+            selfGbId = self.player.gbId
+            selfId = self.player.id
             for info in infList:
-                if info.get('gbId', 0) == self.player.gbId:
-                    data[type] = info.get('value', 0)
-                    break    
+                if info.get('gbId', 0) == selfGbId:
+                    clientValue = stats.get(statsType, 0)
+                    serverValue = info.get('value', 0)
+                    data[statsType] = {"server": serverValue, "client": clientValue}
+                    if serverValue != clientValue:
+                        self.warn(f"{statsType} 的服务器数据{serverValue}与客户端数据统计不一致{clientValue}")
+                    break
         dmgList = self.teamStatisticData.get("dmgList", [])
         healList = self.teamStatisticData.get("healList", [])
         hurtList = self.teamStatisticData.get("hurtList", [])
         data = {}
-        _getSelfInfo(dmgList, 'dmg', data)
-        _getSelfInfo(healList, 'heal', data)
-        _getSelfInfo(hurtList, 'hurt', data)
+        _getSelfInfo(dmgList, 'dmg', self.selfStats, data)
+        _getSelfInfo(healList, 'heal', self.selfStats, data)
+        _getSelfInfo(hurtList, 'hurt', self.selfStats, data)
         return data
-        
-
 
     def _writeToJson(self):
         import json
         if not os.path.exists("outputs"):
             os.makedirs("outputs", exist_ok=True)
-        with open(f'outputs/damageInfo_{self.dstMapId}_{self.botName}_{self.school}','w') as f:
+        fileName = f'outputs/damageInfo_{self.dstMapId}_{self.school}_{self.botName}.json'
+        with open(fileName,'w') as f:
+            skillDamagesStr = str(self.skillDamages)
+            try:
+                skillDamages = eval(skillDamagesStr)
+            except:
+                skillDamages = skillDamagesStr
             data = {
+                "updateTime": time.strftime("%Y-%m-%d %H:%M:%S %Y", time.localtime()),
                 "selfId": self.player.id,
+                "selfGbId": self.player.gbId,
                 "teamStatisticData": self._processTeamStatisticData(),
+                "selfStats": self.selfStats,
                 "totalDamageStats": self.totalDamageStats,
                 "totalBehurtStats": self.totalBehurtStats,
                 "damageStats": self.damageStats,
-                "behurtStats": self.behurtStats
+                "behurtStats": self.behurtStats,
+                "entityHostMap": self.entityHostMap,
+                "damages": skillDamages
             }
             json.dump(data, f, indent=4)
-
+        self.debug(f"结果写入：{fileName}")
 
     def inDstMap(self):
         return self.getSelfMapId() == self.dstMapId

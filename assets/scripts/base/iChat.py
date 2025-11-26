@@ -395,7 +395,7 @@ class IChat(object):
         chatMsgKey = 'teamChannel_applyTeamMsg' if isTeam else 'teamChannel_applyRaidMsg'
         teamMemberCount = gameconst.TEAM_MEMBER_MAX_NUM if isTeam else gameconst.RAID_MEMBER_MAX_NUM
         isRaid = 0 if isTeam else 1
-        
+
         #活动：%s%d-%d级%s的队伍正在招募:<link team name=申请加入 teamId=%d>
         msg = MCM.datas[TMMCD.datas[chatMsgKey]['value']]['Message'].format(targetInfo['value'], content, curNum, teamMemberCount, teamId, isRaid, teamTarget)
 

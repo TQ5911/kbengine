@@ -22,6 +22,7 @@ import awardContext
 import gameglobal
 import itemData_itemData_set as IDIDS
 import copy
+import rank_rankDrop as R_RD
 
 
 class WealthUnit(userType.UserSoleType):
@@ -47,6 +48,10 @@ class WealthNumeric(WealthUnit):
 
     def __add__(self, other):
         self.data += other.data
+        return self
+    
+    def __mul__(self, factor):
+        self.data = int(self.data * factor)
         return self
 
     def clear(self):
@@ -388,6 +393,17 @@ class BaseAwardVal(WealthVal, AwardMixin):
         self.guildExp += other.guildExp
 
         return self
+    
+    def __mul__(self, factor):
+        """重写乘法操作"""
+        if not isinstance(factor, (int, float)):
+            gameengine.reportCritical(f"Unsupported operand type(s) for *: 'BaseAwardVal' and '{type(factor).__name__}'")
+            return self
+        
+        for attr in self.getNumericWealth():
+            attr *= factor
+        
+        return self
 
     def __getstate__(self):
         st = {}
@@ -500,6 +516,14 @@ class AwardVal(BaseAwardVal):
     def __add__(self, other):
         super().__add__(other)
         self.fightProps += other.fightProps
+        return self
+    
+    def __mul__(self, factor):
+        """重写乘法操作"""
+        if not isinstance(factor, (int, float)):
+            gameengine.reportCritical(f"Unsupported operand type(s) for *: 'AwardVal' and '{type(factor).__name__}'")
+            return self
+        super().__mul__(factor)
         return self
 
     def getAllWealth(self):
@@ -1041,12 +1065,28 @@ def _getSinAward(singleAward, context, itemType):
             _addItemToAward(awardVal, itemId, num, bindType, quality, context)
     return awardVal
 
+def _getBindWeightRank(avatar):
+    bindWeightRank = 0
+    for _, v in R_RD.datas.items():
+        l, r = v['rankRange'][0], v['rankRange'][1]
+        if avatar.avatarScoreRank >= l and avatar.avatarScoreRank <= r:
+            bindWeightRank = v['bindWeightRank']
+            break
+    return bindWeightRank
 
 def _calSubPackDrop(dropTarget, times, context):
     #单次子包掉落与策划约定最大掉100次，如未来有需求更大得用numpy重构
     if times > 100:
         ERROR_MSG("drop times is too large:", times, "dropTarget:", dropTarget, "context:", context)
         return [], [], [], [], []
+
+    avatarId = context.extra['avatarId']
+    avatar = KBEngine.entities.get(avatarId)
+    if not avatar:
+        ERROR_MSG("avatar is None, avatarId:", avatarId, "context:", context)
+        return [], [], [], [], []
+    monthCard = 0 if avatar.isMonthCardExpired() else 1
+    bindWeightRank = _getBindWeightRank(avatar)
 
     dropSubPackageData = DDS.dropPackageData.get(dropTarget)
     if dropSubPackageData:
@@ -1061,7 +1101,7 @@ def _calSubPackDrop(dropTarget, times, context):
         dropTargetList = [item['dropTarget'] for item in data]
         numMinList = [item['dropNumMin'] for item in data]
         numMaxList = [item['dropNumMax'] for item in data]
-        bindWeightList = [(10000 - item.get('bindWeight', 10000)) for item in data]
+        bindWeightList = [(10000 - item.get('bindWeight', 10000) - monthCard * item.get('bindWeightMonth', 10000) - bindWeightRank) for item in data]
         gradeList = [item['grade'] for item in data]
         return dropTargetList, numMinList, numMaxList, bindWeightList, gradeList
     return [], [], [], [], []
@@ -1069,10 +1109,18 @@ def _calSubPackDrop(dropTarget, times, context):
 
 #处理掉落子包还是掉落物品
 def _getRealDropTarget(dropTargetData, context):
+    avatarId = context.extra['avatarId']
+    avatar = KBEngine.entities.get(avatarId)
+    if not avatar:
+        ERROR_MSG("avatar is None, avatarId:", avatarId, "context:", context)
+        return [], [], [], [], []
+    monthCard = 0 if avatar.isMonthCardExpired() else 1
+    bindWeightRank = _getBindWeightRank(avatar)
+
     dropTargetList = [dropTargetData['dropTarget']]
     numMinList = [dropTargetData['dropNumMin']]
     numMaxList = [dropTargetData['dropNumMax']]
-    bindWeightList = [10000 - dropTargetData.get('bindWeight', 10000)]
+    bindWeightList = [10000 - dropTargetData.get('bindWeight', 10000) - monthCard * dropTargetData.get('bindWeightMonth', 10000) - bindWeightRank]
     gradeList = [dropTargetData['grade']]
     #子包
     if dropTargetData['dropType'] == gameconst.DropWayType.DROP_WAY_TYPE_2:
@@ -1309,6 +1357,9 @@ def getAwardOne(awardId, context, isNeedDisturb=False):
 
     if dropID:
         award += _getDropAward(dropID, context)
+        
+    if context.args and hasattr(context.args, 'factor'):
+        award *= context.args.factor
 
     return award
 

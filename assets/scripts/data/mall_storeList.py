@@ -161,8 +161,8 @@ datas = _tools.RODict({
     }),
     13: _tools.RODict({
         "ID": 13,
-        "name": "矿产出售",
-        "type": 2,
+        "name": "矿产收购",
+        "type": 4,
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,

@@ -5740,7 +5740,6 @@ namespace KBEngine
 		public UInt64 uniqueId = 0;
 		public Byte bindType = 0;
 		public SByte lockStatus = 0;
-		public UInt32 auctionTime = 0;
 		public List<CLI_SPIRIT_INFO> spiritDatas = new List<CLI_SPIRIT_INFO>();
 		public List<CLI_GLYPH_INFO> glyphInfo = new List<CLI_GLYPH_INFO>();
 		public Byte enhanceLv = 0;

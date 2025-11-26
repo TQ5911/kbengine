@@ -410,6 +410,10 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         if err != gameconst.RaidDungeonErrno.RAIDDUN_OK:
             ERROR_MSG('leaveDungeonSpaceSucc:: failed, {}'.format(err))
 
+        # 退出团队
+        extraProps = {}
+        gameengine.getRaidStub(raidUUID).leaveRaid(playerBox, playerGbId, raidUUID, extraProps)
+
     def _leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGBID, raidUUID):
         if spaceNo not in self.spaces:
             return None, gameconst.RaidDungeonErrno.RAIDDUN_DUNGEON_VAL_NOT_FOUND

@@ -250,20 +250,39 @@ class ImpTeam(AvatarTeamStatisticMixin):
         else:
             self.client.onLeaveTeam()
 
-    def isCanCreateTeam(self, teamTarget, minLevel, minScore):
+    def checkBaseTeamCond(self, teamTarget, minLevel, minScore):
+        teamTargetInfo = TMACTD.datas.get(teamTarget)
+        if teamTargetInfo is None:
+            ERROR_MSG("checkBaseTeamCond, invalid teamTarget", teamTarget)
+            return False
+
+        # 检查传入的战力是否满足副本的最低要求, 不满足给最小值
+        cfgMinScore = teamTargetInfo['minScore']
+        if minScore < cfgMinScore:
+            minScore = cfgMinScore
+            WARNING_MSG("checkBaseTeamCond, invalid minScore", minScore, cfgMinScore)
+
+        # 检查传入的等级是否满足副本的最低要求, 不满足给最小值
+        cfgMinLevel = teamTargetInfo['minLevel']
+        if minLevel < cfgMinLevel:
+            minLevel = cfgMinLevel
+            WARNING_MSG("checkBaseTeamCond, invalid minLevel", minLevel, cfgMinLevel)
+
+        # 检查玩家本身是否满足副本条件
+        if not self.isReachTeamMinCond(teamTarget):
+            WARNING_MSG('checkBaseTeamCond:', self.getTotalScore(), self.level)
+            return False
+    
+        return True
+
+    def checkTeamCond(self, teamTarget, minLevel, minScore):
         if self.isInTeam(self.gbId):
-            ERROR_MSG("isReachTeamMisCanCreateTeam player is already in team")
+            ERROR_MSG("checkTeamCond player is already in team")
             return False
         if self.isInRaid():
-            ERROR_MSG("isReachTeamMisCanCreateTeam player is already in raid")
+            ERROR_MSG("checkTeamCond player is already in raid")
             return False
-        if not self.isReachTeamMemMinScore(teamTarget):
-            ERROR_MSG("isReachTeamMisCanCreateTeam minscore check fail")
-            return False
-        if not self.isReachTeamMemMinLevel():
-            ERROR_MSG("isReachTeamMisCanCreateTeam minlevel check fail")
-            return False
-        return True
+        return self.checkBaseTeamCond(teamTarget, minLevel, minScore)
 
     def _getTeamPlayerInfoDic(self):
         return {
@@ -287,9 +306,12 @@ class ImpTeam(AvatarTeamStatisticMixin):
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     @gamedecorator.limitcall(3)
     def applyCreateTeam(self, exposed, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
-        INFO_MSG('applyCreateTeam', teamTarget)
+        INFO_MSG('applyCreateTeam', teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
         if utils.formula.isRaidDungeonSpace(self.spaceNo):
-            ERROR_MSG("applyCreateTeam, check fail")
+            ERROR_MSG("applyCreateTeam, , current space check fail")
+            return
+        if not dataUtils.checkTeamPassword(password):
+            ERROR_MSG("applyCreateTeam, illegal password", password)
             return
         if teamTarget <=0:
             ERROR_MSG("applyCreateTeam, illegal teamTarget", teamTarget)
@@ -307,17 +329,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
                 ERROR_MSG("applyCreateTeam, wrong activity control need team type", teamTarget)
                 return
 
-        cfgMinLv = teamTargetInfo['minLevel']
-        if minLevel < cfgMinLv:
-            WARNING_MSG("applyCreateTeam, invalid minLevel", minLevel, cfgMinLv)
-            minLevel = cfgMinLv
-
-        cfgMinScore = teamTargetInfo['minScore']
-        if minScore < cfgMinScore:
-            WARNING_MSG("applyCreateTeam, invalid minScore", minScore, cfgMinScore)
-            minScore = cfgMinScore
-
-        if not self.isCanCreateTeam(teamTarget, minLevel, minScore):
+        if not self.checkTeamCond(teamTarget, minLevel, minScore):
             return
 
         # 这里其实是为了给去team stub上进行rpc调用留出时间
@@ -358,25 +370,34 @@ class ImpTeam(AvatarTeamStatisticMixin):
             return False
         return True
 
-    def isReachTeamMemMinScore(self, teamTarget):
+    def isReachTeamMinCond(self, teamTarget):
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if not teamTargetInfo:
-            ERROR_MSG("isReachTeamMemMinScore, missing target", teamTarget)
+            ERROR_MSG("isReachTeamMinCond, missing target", teamTarget)
+            return False
+        cfgLevel = teamTargetInfo['minLevel']
+        if self.level < cfgLevel:
+            ERROR_MSG("isReachTeamMinCond, minLevel not enough", self.level, cfgLevel)
             return False
         cfgMinScore = teamTargetInfo['minScore']
         if self.getTotalScore() < cfgMinScore:
-            ERROR_MSG("isReachTeamMemMinScore, minScore not enough", self.getTotalScore(), cfgMinScore)
+            ERROR_MSG("isReachTeamMinCond, minScore not enough", self.getTotalScore(), cfgMinScore)
             return False
         return True
 
     @utils.isMyself
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
-    def applyJoinTeam(self, exposed, teamId):
-        INFO_MSG('applyJoinTeam', teamId)
-        if not self.isCanJoinTeam(teamId):
+    def applyJoinTeam(self, exposed, teamId, password):
+        if self.isInTeam():
+            ERROR_MSG("applyJoinTeam player is already in raid ", self.teamId)
             return
-
-        gameengine.getTeamStub(teamId).applyJoinTeam(teamId, self._getTeamPlayerInfoDic())
+        if self.isInRaid():
+            ERROR_MSG("applyJoinTeam player is already in team ", self.raidInfo.raidUUID)
+            return
+        if not dataUtils.checkTeamPassword(password):
+            ERROR_MSG("applyJoinTeam, illegal password", password)
+            return
+        gameengine.getTeamStub(teamId).applyJoinTeam(teamId, password, self._getTeamPlayerInfoDic(), False)
 
     def onApplyJoinTeam(self, teamId, captainGbId):
         DEBUG_MSG('onApplyJoinTeam::', teamId)
@@ -547,6 +568,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if self.isInTryAddTeamCD():
             WARNING_MSG('createAndAddTeamMember, is in add team cd')
             return
+        
         teamTarget = 1
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if teamTargetInfo is None:
@@ -557,7 +579,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
 
         cfgMinScore = teamTargetInfo['minScore']
 
-        if not self.isCanCreateTeam(teamTarget, cfgMinLv, cfgMinScore):
+        if not self.checkTeamCond(teamTarget, cfgMinLv, cfgMinScore):
             return
 
         teamId = KBEngine.genUUID64()
@@ -579,7 +601,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if not self.isCanLeaveTeam():
             return
 
-        gameengine.getTeamStub(self.teamId).leaveTeam(self.base, self.teamId, self.gbId, True)
+        gameengine.getTeamStub(self.teamId).leaveTeam(self.spaceNo, self.base, self.teamId, self.gbId, True)
 
     def onLeaveTeam(self):
         INFO_MSG('onLeaveTeam')
@@ -2197,10 +2219,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
             WARNING_MSG('   in reqPlayerAutoMatchTeam, already in a raid:', self.raidUUID)
             return
 
-        if not self.isReachTeamMemMinLevel():
-            WARNING_MSG('   in reqPlayerAutoMatchTeam, level cond failed:', self.level)
-            return
-
         teamTargetInfo = TMACTD.datas.get(target)
         if teamTargetInfo is None:
             ERROR_MSG("reqPlayerAutoMatch, misssing target", target)
@@ -2211,8 +2229,8 @@ class ImpTeam(AvatarTeamStatisticMixin):
             ERROR_MSG("reqPlayerAutoMatch, wrong activity control need team type", target)
             return
 
-        if not self.isReachTeamMemMinScore(target):
-            WARNING_MSG('   in reqPlayerAutoMatchTeam, score cond failed:', self.getTotalScore())
+        if not self.isReachTeamMinCond(target):
+            WARNING_MSG('reqPlayerAutoMatch:', self.getTotalScore(), self.level)
             return
 
         playerMatchDic = {
@@ -2295,8 +2313,8 @@ class ImpTeam(AvatarTeamStatisticMixin):
         return
 
     @utils.isMyself
-    def reqSetTeamTarget(self, exposed, minLv, minScore, recruitInfo, password, isAutoExpedition):
-        DEBUG_MSG("reqSetTeamTarget:", minLv, minScore, recruitInfo, isAutoExpedition)
+    def reqSetTeamTarget(self, exposed, minLevel, minScore, recruitInfo, password, isAutoExpedition):
+        DEBUG_MSG("reqSetTeamTarget:", minLevel, minScore, recruitInfo, isAutoExpedition)
         if not self.isInTeam(self.gbId):
             ERROR_MSG("reqSetTeamTarget, not in team")
             return
@@ -2317,21 +2335,10 @@ class ImpTeam(AvatarTeamStatisticMixin):
                 ERROR_MSG("reqSetTeamTarget, wrong activity control need team type", teamTargetInfo)
                 return
 
-        cfgMinLv = teamTargetInfo['minLevel']
-        if minLv < cfgMinLv:
-            ERROR_MSG("reqSetTeamTarget, minLv is not enough", minLv, cfgMinLv)
+        if not self.checkBaseTeamCond(teamTarget, minScore, minLevel):
             return
 
-        cfgMinScore = teamTargetInfo['minScore']
-        if minScore < cfgMinScore:
-            ERROR_MSG("reqSetTeamTarget, minScore is not enough", minScore, cfgMinScore)
-            return
-
-        if self.getTotalScore() < minScore:
-            ERROR_MSG("reqSetTeamTarget, totalScore not enough")
-            return
-
-        gameengine.getTeamStub(self.teamId).setTeamTarget(self.teamId, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition, self.guildUUID)
+        gameengine.getTeamStub(self.teamId).setTeamTarget(self.gbId, self.teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, self.guildUUID)
         return
 
     @utils.isMyself

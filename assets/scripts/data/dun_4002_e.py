@@ -38,37 +38,36 @@ datas ={
         1010,
         1011,
         1017,
+        1009,
         1012,
         1014,
+        1027,
         1015,
         1016,
         1035,
-        1046,
-        1031,
-        1034,
-        1070,
-        1095,
-        1094,
-        1066,
-        1065,
-        1058,
-        1060,
-        1059,
-        1064,
-        1087,
-        1088,
-        1061,
-        1062,
-        1063,
-        1090,
-        1115,
         1057,
         1096,
+        1046,
+        1117,
+        1115,
+        1031,
+        1059,
+        1066,
+        1058,
+        1060,
+        1064,
+        1061,
+        1087,
+        1088,
+        1070,
+        1090,
         1097,
         1098,
         1093,
         1103,
         1105,
+        1118,
+        1119,
         1041,
         1108,
         1013,
@@ -163,11 +162,7 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1027
-      ]
-    }
+    "transition": {}
   },
   "1027": {
     "type": "taskFinished",
@@ -358,29 +353,9 @@ datas ={
   "1061": {
     "type": "addBuffToAllPlayer",
     "buffID": [
-      64006022
-    ],
-    "lv": "1",
-    "messageID": 0,
-    "lvlmt": -1,
-    "duration": -1.0,
-    "transition": {}
-  },
-  "1062": {
-    "type": "addBuffToAllPlayer",
-    "buffID": [
+      64006022,
+      64006028,
       64006023
-    ],
-    "lv": "1",
-    "messageID": 0,
-    "lvlmt": -1,
-    "duration": -1.0,
-    "transition": {}
-  },
-  "1063": {
-    "type": "addBuffToAllPlayer",
-    "buffID": [
-      64006028
     ],
     "lv": "1",
     "messageID": 0,
@@ -597,11 +572,7 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1009
-      ]
-    }
+    "transition": {}
   },
   "1018": {
     "type": "taskFinished",
@@ -699,7 +670,8 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1032
+        1032,
+        1069
       ]
     }
   },
@@ -712,17 +684,6 @@ datas ={
     "randomCollectionNum": 0,
     "checkHaveInFixed": 0,
     "transition": {}
-  },
-  "1034": {
-    "type": "taskFinished",
-    "taskID": 86060051,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1069
-      ]
-    }
   },
   "1069": {
     "type": "removeNPC",
@@ -1023,45 +984,15 @@ datas ={
     ],
     "transition": {}
   },
-  "1065": {
-    "type": "createCreationInFixedPosition",
-    "monsterID": [
-      -1
-    ],
-    "entityID": [
-      40028024
-    ],
-    "num": 1,
-    "transition": {}
-  },
   "1066": {
     "type": "createCreationInFixedPosition",
     "monsterID": [
       -1
     ],
     "entityID": [
-      40028025
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1094": {
-    "type": "createCreationInFixedPosition",
-    "monsterID": [
-      -1
-    ],
-    "entityID": [
-      40028026
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1095": {
-    "type": "createCreationInFixedPosition",
-    "monsterID": [
-      -1
-    ],
-    "entityID": [
+      40028025,
+      40028026,
+      40028024,
       40028027
     ],
     "num": 1,
@@ -1256,6 +1187,35 @@ datas ={
     "transition": {
       "finished": [
         1032
+      ]
+    }
+  },
+  "1117": {
+    "type": "taskInProgress",
+    "taskID": 86060098,
+    "transition": {
+      "finished": [
+        1038
+      ]
+    }
+  },
+  "1118": {
+    "type": "taskInProgress",
+    "taskID": 86060070,
+    "transition": {
+      "finished": [
+        1106
+      ]
+    }
+  },
+  "1119": {
+    "type": "taskFinished",
+    "taskID": 86060071,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1106
       ]
     }
   }

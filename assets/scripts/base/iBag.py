@@ -59,6 +59,10 @@ import bagData_set as BagDataSet
 import itemData_set as IDSD
 
 import randomSynthesis_config as RSCD
+import giftKey_keyGroup as GK_KG
+import giftKey_keyLibrary as GK_KL
+import giftKey_config as GK_CFG
+import taskDesc_taskDesc as TD_TDD
 
 class AwardMixin(object):
     def __init__(self):
@@ -1480,6 +1484,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                                   [pickData['castDesc']])
                 return False
 
+        # 矿战预检查
+        if not self.mineWarPrecheckCollection(collectionId):
+            return False
+
         itemCheck = pickData['toolCheck']
         checkResult, _ = self.checkGatherDeductWealthVal(itemCheck)
         if not checkResult:
@@ -1538,8 +1546,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     def onUpdateCollectionGatherFlag(self, targetId, flag):
         self.client and self.client.onUpdateCollectionGatherFlag(targetId, flag)
 
-    def baseDoApplyGather(self, collectionId, gameEntityId, targetId, isCaptain, spaceNo, deductWealthVal):
-        DEBUG_MSG("baseDoApplyGather::", collectionId, gameEntityId, targetId, isCaptain, spaceNo, deductWealthVal)
+    def baseDoApplyGather(self, collectionId, gameEntityId, targetId, isCaptain, spaceNo, deductWealthVal, pickTime):
+        DEBUG_MSG("baseDoApplyGather::", collectionId, gameEntityId, targetId, isCaptain, spaceNo, deductWealthVal, pickTime)
         if deductWealthVal:
             opUUID = KBEngine.genUUID64()
             srcType = AAC_AACDD.datas.BONUS_SRC_GATHER
@@ -1547,6 +1555,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
         self.cell.giveGatherAwardCell(collectionId)
+
+        # 矿战采矿时间记录
+        self.onMineWarCollectionSuccess(collectionId, pickTime)
 
         self.giveGatherAwardBase(collectionId, targetId, spaceNo, deductWealthVal)
         self.client.onGatherSucc(targetId)
@@ -1598,7 +1609,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 awardCtx = awardContext.DropAwardCtx(targetId, 1, eventTipId=collectionId, monsterSpaceNo=_monsterSpaceNo)
                 self.dropAwards(AAC_AACDD.datas.BONUS_SRC_GATHER_DROP, rewardID, 1, opUUID, detail, awardCtx)
             else:
-                awardCtx = awardContext.CommonContext(gameconst.MailConstID.REWARD_MAIL_ID, {'lv': 1},
+                awardCtx = awardContext.CommonContext(gameconst.MailConstID.REWARD_MAIL_ID, {'lv': 1, 'factor': self.getAwardFactor()},
                                                       eventTipId=collectionId, monsterSpaceNo=_monsterSpaceNo)
                 self.addAwards(AAC_AACDD.datas.BONUS_SRC_GATHER, rewardID, 1, opUUID, detail, awardCtx)
 
@@ -1619,6 +1630,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 'rewards': rewardID if rewardID else ''
             })
 
+    def getAwardFactor(self):
+        factor = 1.0
+        factor += self.getMineWarFactor()
+
+        return factor
     ################################## 采集 end ######################################
     def onCheckAndCostWealth(self, callbackComponent, srcType, callbackName, deductWealthVal, extraProps):
         checkResult = True
@@ -2201,6 +2217,64 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             return
 
         return awardVal
+
+    @gamedecorator.limitcall(2)
+    def exchangeGiftKeyReward(self, exposed, giftKey):
+        giftKey = giftKey.lower()
+        DEBUG_MSG("exchangeGiftKeyReward", giftKey)
+        now = utils.getNow()
+        giftID = GK_KL.key2ID.get(giftKey, 0)
+        if giftID == 0:
+            INFO_MSG("exchangeGiftKeyReward wrong giftKey", giftKey)
+            self.onMessagePre(GK_CFG.datas['CDK_error']['value'], [])
+            return
+
+        groupID = GK_KL.datas[giftID]['groupID']
+        if groupID in self.giftKeyRecordDic:
+            INFO_MSG("exchangeGiftKeyReward already used", giftKey)
+            self.onMessagePre(GK_CFG.datas['CDK_redeemed']['value'], [])
+            return
+
+        if utils.getSvrOpenDays() < GK_KG.datas[groupID]['day']:
+            INFO_MSG("exchangeGiftKeyReward not start", giftKey)
+            self.onMessagePre(GK_CFG.datas['CDK_day']['value'], [])
+            return
+
+        if self.getRoleCacheAttr('level', 0) < GK_KG.datas[groupID]['level']:
+            INFO_MSG("exchangeGiftKeyReward level not enough", giftKey)
+            self.onMessagePre(GK_CFG.datas['CDK_level']['value'], [])
+            return
+
+        taskID = GK_KG.datas[groupID]['task']
+        if taskID and not self.isTaskComplete(taskID):
+            INFO_MSG("exchangeGiftKeyReward task not complete", giftKey)
+            taskName = TD_TDD.datas[taskID]['TaskName']
+            self.onMessagePre(GK_CFG.datas['CDK_task']['value'], [taskName])
+            return
+
+        if now < int(GK_KG.datas[groupID]['effectTime']):
+            INFO_MSG("exchangeGiftKeyReward not start", giftKey)
+            self.onMessagePre(GK_CFG.datas['CDK_invalid']['value'], [])
+            return
+
+        if now > int(GK_KG.datas[groupID]['failureTime']):
+            INFO_MSG("exchangeGiftKeyReward over due", giftKey)
+            self.onMessagePre(GK_CFG.datas['CDK_invalid']['value'], [])
+            return
+
+        self.giftKeyRecordDic[groupID] = now
+        rewardId = GK_KG.datas[groupID]['rewardID']
+
+
+        _detail = gameclass.AwardDetail()
+        _src = AAC_AACDD.datas.BONUS_SRC_MONTHCARD_DAILY
+        _awardVal = dropAward.AwardVal()
+        _ctx = self._getAvatarAwardCtx(rewardId, None)
+        _awardVal += dropAward.getAwardOne(
+            rewardId,
+            _ctx
+        )
+        self.addWealth(_src, _awardVal, KBEngine.genUUID64(), _detail)
 
     @gamedecorator.offlineCallback
     def setMallSpend(self, val):

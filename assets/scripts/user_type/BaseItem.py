@@ -44,7 +44,6 @@ class PureItem(userType.UserSoleType):
 
         self.__dict__['enableTime'] = dataDic.get('enableTime', enableTime)
         self.__dict__['expireTime'] = expireTime
-        self.__dict__['auctionTime'] = dataDic.get('auctionTime', 0)
         self.__dict__['attrJson'] = dataDic['attrJson']
         self.__dict__['lockStatus'] = dataDic.get('lockStatus', gameconst.ItemLockStatus.UNLOCKED)
 
@@ -133,20 +132,11 @@ class BaseItem(userType.UserSoleType, metaclass=abc.ABCMeta):
         if bindType != gameconst.ItemBindType.BIND and bindType != gameconst.ItemBindType.NORMAL:
             bindType = dataUtils.getItemDefaultBindType()
         self.bindType = bindType
-        self.auctionTime = 0
         self.lockStatus = gameconst.ItemLockStatus.UNLOCKED
 
     def __setstate__(self, state):
         self.__init__(state['itemId'], state['itemNum'], bindType=state['bindType'])
         self.__dict__.update(state)
-
-    def isItemAuctionTimeExpired(self, now=None):
-        now = now if now is not None else utils.getNow()
-        return now > self.auctionTime
-
-    def setAuctionTime(self, t, now=None):
-        now = now if now is not None else utils.getNow()
-        self.auctionTime = t + now
     
     def setLockStatus(self, status):
         self.lockStatus = status

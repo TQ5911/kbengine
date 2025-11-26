@@ -45,6 +45,7 @@ import raid_raidConst as RAID_CONST
 import gearBase_gearConst as GBGCD
 import skill_specialMonsterAI as S_SMAD
 import character_charData as CCD
+import teamMatch_matchConfig as TMMCD
 
 def getRaidConstDataValue(key):
     raidConstData = RAID_CONST.datas.get(key, None)
@@ -571,15 +572,6 @@ def checkEquipGrowingForbidden(equipItem):
         return True
     return False
 
-def getAuctionItemDealCDTime(itemID):
-    itemData = GBGBD.datas.get(itemID, None)
-    if itemData:
-        return itemData['auctionItemCoolingDown']
-    itemData = ITEMDATA.datas.get(itemID, None)
-    if itemData:
-        return itemData['auctionItemCoolingDown']
-    return None
-
 def checkLockAvailableStatus(itemID):
     itemData = GBGBD.datas.get(itemID, None)
     if itemData:
@@ -634,3 +626,8 @@ def filterFightPropScore(school, propName):
 
 def getAuctionPublicityKey(equipType, equipQuality):
     return equipType * 100 + equipQuality
+
+def checkTeamPassword(password):
+    if len(password) == 0:
+        return True
+    return password.isdigit() and len(password) == TMMCD.datas['teamMatch_pwLen']['value']

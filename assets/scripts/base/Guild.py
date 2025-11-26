@@ -1008,6 +1008,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             lambda box: box.client.onReleaseRedBagMsg(redbagId, redbagType, channel, money, desc, avatarInfo),
             None
         )
+
+    def doSendMineWarHpWarning(self, spaceNo, percent):
+        self._braodcastAsync(
+            lambda box: box.onMineWarHpWarning(spaceNo, percent),
+            None
+        )
     def addGuildExp(self, delta, src, opUUID, detail):
         DEBUG_MSG('addGuildExp', delta, src, opUUID, detail)
         if delta < 0:
@@ -1651,6 +1657,15 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         DEBUG_MSG('[lj]syncJunXuQiXieLevel', res)
         gameengine.getGlobalBase('SiegeWarStub').onJunXuQiXieLevelSync(self.guildUUID, res)
 
+    def getJunxuQiXieLevel(self, guildUUID, box):
+        data = self.junXuArchitecture.toJunXuArchitectureSavedDict()
+        res = {}
+        for v in data['qixieList']:
+            qxdict = v.toJunXuQiXieSavedDict()
+            res[qxdict['qixieType']] = qxdict['level']
+
+        if hasattr(box, 'onSyncGuildMineWarResult'):
+            box.onSyncGuildMineWarResult(guildUUID, res)
 
     def onSiegeWarGetWinnerData(self, box):
         redisUtils.RedisUtils.getSingleUserInfo(

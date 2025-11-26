@@ -9,6 +9,7 @@ import formula
 import complexTeleportOption
 import gameconst
 import gameengine
+import gamedecorator
 import dungeonSrc
 import utils
 import actionContext
@@ -42,6 +43,11 @@ class CubeSwitch(object):
 
 
 class ICubeCell(object):
+    def __init__(self):
+        if self.cubeQuota.cubeDurState == gameconst.CubeDurStatus.ENTER:
+            ERROR_MSG('cube dur state invalid', self.cubeQuota)
+            self.cubeQuota.resetOnLogin()
+
     def startCubeCowTimer(self):
         if self.cubeCowTimerId:
             return
@@ -120,6 +126,7 @@ class ICubeCell(object):
         self.cubeQuota.checkout()
 
     @utils.isMyself
+    @gamedecorator.limitcall(1)
     def enterCube(self, exposed, floor):
         INFO_MSG('ICubeCell::enterCube', floor)
         self.enterCubeInternal(floor)
@@ -149,7 +156,7 @@ class ICubeCell(object):
 
         extra = {'enterCubeType': gameconst.ENTER_CUBE_HAS_LEFT_TIME}
         gameengine.getCubeStubBySpaceNo(_targetSpaceNo).doEnterCube(
-            self.base, cube_config.datas['cube_hall']['value'], self.gbId, extra)
+            self.base, _mapId, self.gbId, extra)
 
     @utils.isMyself
     def randomCubeRoom(self, exposed):
@@ -371,7 +378,8 @@ class ICubeCell(object):
             _renewSwitch = True
             _switchData = _switchVal.toClientData()
 
-        self.client.onCubeLoginData(self.cubeQuota.leftTime, _renewSwitch, _switchData, _rewardList)
+        _time = self.cubeQuota.calcLeftTime() + utils.getNow()
+        self.client.onCubeLoginData(_time, _renewSwitch, _switchData, _rewardList)
 
     def onLogonEnterCubeCB(self, spaceMgrId):
         INFO_MSG('ICubeCell::onLogonEnterCubeCB: {}'.format(spaceMgrId))

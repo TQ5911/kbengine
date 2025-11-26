@@ -162,14 +162,6 @@
             <Type>          INT32          </Type>
             <Flags>         OWN_CLIENT     </Flags>
         </adjKnockEnh>
-        <debilityEnh>
-            <Type>          INT32          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </debilityEnh>
-        <adjDebilityEnh>
-            <Type>          INT32          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjDebilityEnh>
         <stunAnti>
             <Type>          INT32          </Type>
             <Flags>         OWN_CLIENT     </Flags>
@@ -194,14 +186,6 @@
             <Type>          INT32          </Type>
             <Flags>         OWN_CLIENT     </Flags>
         </adjKnockAnti>
-        <debilityAnti>
-            <Type>          INT32          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </debilityAnti>
-        <adjDebilityAnti>
-            <Type>          INT32          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjDebilityAnti>
         <adjFullHp>
             <Type>          INT32          </Type>
             <Flags>         OWN_CLIENT     </Flags>
@@ -560,14 +544,6 @@
             <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
         </baseKnockAnti>
-        <baseDebilityEnh>
-            <Type>          INT32          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </baseDebilityEnh>
-        <baseDebilityAnti>
-            <Type>          INT32          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </baseDebilityAnti>
 
         <minPhysicalAtk>
             <Type>          INT32          </Type>
@@ -793,27 +769,6 @@
             <Flags>         CELL_PRIVATE   </Flags>
         </adjSlowAnti>
 
-        <spirit>
-            <Type>          INT32          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </spirit>
-        <baseSpirit>
-            <Type>          INT32          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </baseSpirit>
-        <adjSpirit>
-            <Type>          INT32          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </adjSpirit>
-        <adjSpiritAbs>
-            <Type>          INT32          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </adjSpiritAbs>
-        <mulSpirit>
-            <Type>          FLOAT          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </mulSpirit>
-
         <realDmg>
             <Type>          INT32          </Type>
             <Flags>         OWN_CLIENT     </Flags>
@@ -839,32 +794,6 @@
             <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
         </adjRealDmgDef>
-
-        <extraDmg>
-            <Type>          FLOAT          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </extraDmg>
-        <baseExtraDmg>
-            <Type>          FLOAT          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </baseExtraDmg>
-        <adjExtraDmg>
-            <Type>          FLOAT          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </adjExtraDmg>
-
-        <extraDmgDef>
-            <Type>          FLOAT          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </extraDmgDef>
-        <baseExtraDmgDef>
-            <Type>          FLOAT          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </baseExtraDmgDef>
-        <adjExtraDmgDef>
-            <Type>          FLOAT          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </adjExtraDmgDef>
         <PVPDmg>
             <Type>          FLOAT          </Type>
             <Flags>         OWN_CLIENT   </Flags>
@@ -968,6 +897,14 @@
             <Type>          INT32          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
         </adjDrugsQuantity>
+        <pushEnh>
+            <Type>          INT32        </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </pushEnh>
+        <pushAnti>
+            <Type>          INT32        </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </pushAnti>
     </Properties>
 
     <CellMethods>

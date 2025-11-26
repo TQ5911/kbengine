@@ -38,12 +38,18 @@ def startBot(delegateCls, botPrefix, numAll, numPerSec, fromIdx, avatarName, sch
     print(f'target login server: {loginHost}:{loginPort}')
     import random
     faceData = FACE_DATA()
+    school_list = [1001,1002,1003]
     for i in range(numAll):
         idx = fromIdx + i
         random_school = school
+        # 随机
         if random_school == 0:
-            random_school = random.choice([1001,1002,1003])
-            print(f"{'%s%d' % (avatarName, idx)}机器人随机选择职业{random_school}")
+            random_school = random.choice(school_list)
+            # print(f"{'%s%d' % (avatarName, idx)}机器人随机选择职业{random_school}")
+        # 均匀分布
+        elif random_school == 1:
+            random_school = school_list[idx%len(school_list)]
+        print(f"{'%s%d' % (avatarName, idx)}机器人选择职业{random_school}")
         faceData.random_set_face_data_by_id(random_school)
         client = BotClient.BotClient('%s%d' % (botPrefix, idx), '%s%d' % (avatarName, idx), random_school,faceData.toSavedDict())
         # 如果提供了登录服务器地址和端口，则使用指定服务器登录

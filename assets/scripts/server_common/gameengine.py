@@ -139,6 +139,15 @@ def getAllBaseApps():
 def getAllBaseAppName():
     return list(gameglobal.baseAppCache.keys())
 
+def getFirstBaseApp():
+    _minEntId = 0
+    _retApp = None
+    for baseapp in gameglobal.baseAppCache.values():
+        if not _minEntId or baseapp.id < _minEntId:
+            _minEntId = baseapp.id
+            _retApp = baseapp
+
+    return _retApp
 
 def isFirstBaseApp():
     localBase = gameglobal.localBaseApp

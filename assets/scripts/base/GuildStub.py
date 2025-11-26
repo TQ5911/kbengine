@@ -302,3 +302,10 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         args = cPickle.loads(args)
         getattr(_gcVal.guildBox, func)(uuid, senderServerId, *args)
 
+    def syncGuildMineWarToSpaceMgr(self, guildUUID, box):
+        _gcVal = self.guildDic.get(guildUUID)
+        if not _gcVal:
+            box.onSyncGuildMineWarResult(guildUUID, {})
+            return
+
+        _gcVal.guildBox.getJunxuQiXieLevel(guildUUID, box)

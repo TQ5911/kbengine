@@ -275,7 +275,12 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if avatar:
             INFO_MSG('create avatar success', avatar.id)
             avatar.pyWriteToDB(functools.partial(self._onAvatarSaved, props))
-            #self.makeCreateAvatarLog(_appearance, str(avatarProps["gbId"]), avatarProps["name"], True)
+            LogTrackingMgr.LogTrackingMgr.Server_Create_Role(
+                self.accountName,
+                avatarProps['gbId'],
+                avatarProps['school'],
+                avatarProps['name'],
+            )
         else:
             ERROR_MSG('failed to create avatar', self.accountName)
             self.accountStatus = AccountStatus.normal
@@ -344,7 +349,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         avatar.updateRoleCache({
         })
-        #self.makeLoginRoleLog(avatar)
+        self.makeLoginRoleLog(avatar)
 
     def _onCreateAvatarFailed(self, name, reason):
         self.delAvatarName(name)
@@ -1203,11 +1208,17 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.avatar.destroySelf()
         self.disconnect(gameconst.ClientCallChannel.ALL_CHANNEL)
 
-    # def makeLoginRoleLog(self, avatar):
-    #     clientData = self.getClientData()
-    #     logData = avatar.loginLogInfo()
-    #     logData.update(clientData)
-        #gamelog.makeWLog("LoginRole", logData)
+    def makeLoginRoleLog(self, avatar):
+        clientData = self.getClientData()
+        logData = avatar.loginLogInfo()
+        logData.update(clientData)
+        LogTrackingMgr.LogTrackingMgr.Server_Role_Login(
+            self.accountName,
+            avatar.gbID,
+            avatar.getRoleCacheAttr('school'),
+            avatar.getRoleCacheAttr('name'),
+            avatar.getRoleCacheAttr('level')
+        )
 
 # ---------------------------- switch avatar server start ----------------------------
     def onAvatarSwitchServer(self, avatar):

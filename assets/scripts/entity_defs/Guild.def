@@ -665,5 +665,14 @@
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
         </doSendGuildRedBagMsg>
 
+        <doSendMineWarHpWarning>
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           UINT8            </Arg>
+        </doSendMineWarHpWarning>
+
+        <getJunxuQiXieLevel>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       MAILBOX                  </Arg>
+        </getJunxuQiXieLevel>
     </BaseMethods>
 </root>

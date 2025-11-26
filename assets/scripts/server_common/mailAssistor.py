@@ -174,7 +174,7 @@ def _loadOfflinePlayerDataCallback(ret, num, insertId, err, toGBID, mailId, mail
 
     if not ret:
         INFO_MSG('_loadOfflinePlayerDataCallback, no ret', toGBID)
-        return   
+        return
 
     accountName = ret[0][0].decode()
     accountType = int(ret[0][1].decode())

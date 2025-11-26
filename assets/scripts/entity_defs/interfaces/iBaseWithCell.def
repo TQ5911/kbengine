@@ -3,7 +3,7 @@
     <Interfaces>
         <Interface> iBase </Interface>
     </Interfaces>
-    
+
     <Properties>
         <spaceid>
             <Type>          SPACE_ID    </Type>
@@ -26,7 +26,7 @@
     <BaseMethods>
         <semiDestroy>
         </semiDestroy>
-        
+
         <delayDestroy>
             <Arg>           BOOL            </Arg>
         </delayDestroy>

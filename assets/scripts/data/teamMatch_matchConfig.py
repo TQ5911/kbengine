@@ -269,7 +269,7 @@ datas = _tools.RODict({
     }),
     "maxNumberFb": _tools.RODict({
         "ID": "maxNumberFb",
-        "value": 30,
+        "value": 20,
     }),
     "maxNumberHh": _tools.RODict({
         "ID": "maxNumberHh",
@@ -438,5 +438,25 @@ datas = _tools.RODict({
     "teamMatch_settlementInterval": _tools.RODict({
         "ID": "teamMatch_settlementInterval",
         "value": 3.5,
+    }),
+    "team_color_self": _tools.RODict({
+        "ID": "team_color_self",
+        "value": 57,
+    }),
+    "teamMatch_pwLen": _tools.RODict({
+        "ID": "teamMatch_pwLen",
+        "value": 4,
+    }),
+    "teamGoal_1": _tools.RODict({
+        "ID": "teamGoal_1",
+        "value": "巢穴副本",
+    }),
+    "teamGoal_2": _tools.RODict({
+        "ID": "teamGoal_2",
+        "value": "自由目标",
+    }),
+    "teamFullAutoStart": _tools.RODict({
+        "ID": "teamFullAutoStart",
+        "value": "满员自动开始挑战",
     })
 })

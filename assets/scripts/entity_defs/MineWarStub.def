@@ -1,0 +1,38 @@
+<root>
+    <Interfaces>
+        <Interface> iBaseNoCell        </Interface>
+        <Interface> iGlobal            </Interface>
+        <Interface> iTimerBase         </Interface>
+        <Interface> iCycleEvent      </Interface>
+    </Interfaces>
+
+    <Properties>
+        <mineMapData>
+            <Type>      MINE_WAR_DATA_INFO         </Type>
+            <Flags>     BASE           </Flags>
+            <Persistent>   true        </Persistent>
+        </mineMapData>
+    </Properties>
+
+    <BaseMethods>
+        <registerMineWarSpaceMgr>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          MAILBOX         </Arg>
+        </registerMineWarSpaceMgr>
+
+        <playerGetMineWarState>
+            <Arg>          MAILBOX         </Arg>
+            <Arg>          GUILD_UUID      </Arg>
+        </playerGetMineWarState>
+
+        <onMineWarCoreBeKill>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          ENTITY_ID         </Arg>
+            <Arg>          GUILD_UUID         </Arg>
+        </onMineWarCoreBeKill>
+        <onMineWarFlagBeKill>
+            <Arg>          LINE_NO         </Arg>
+        </onMineWarFlagBeKill>
+
+    </BaseMethods>
+</root>

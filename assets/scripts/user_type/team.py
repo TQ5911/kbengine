@@ -345,7 +345,7 @@ class TeamDungeonFounderVal(userType.UserSoleType):
 
 
 class TeamDungeonMixin(object):
-    """team dungeon mixin in TeamCacheVal"""
+    """team dungeon mixin in TeamVal"""
 
     def checkDungeonNo(self, dungeonNo):
         return dungeonNo in self.teamDungeonDic
@@ -503,7 +503,7 @@ class TeamStatisticMixin(object):
         INFO_MSG('showStatisticData', self.teamStatistic.dmgDict, self.teamStatistic.healDict, self.teamStatistic.hurtDict)
     
 
-class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
+class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
     def __init__(self, teamId=0, teamTarget=0, teamCaptainGbId=0, playerBox=None, playerName='', level=0, school=0,
                  sex=0, picFrameId=0, bFollow=False, bOnline=True, score=0, mountState=0, isDead=False,
                  openId='', siegeWarCamp=0, teamMicsSwitch=gameconst.TeamMicsMode.OFF, teamMicsBlocked=False):
@@ -513,9 +513,8 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
         self.teamAutoMatchTime = 0
         self.isSilent = 0
         self.teamHonorPKMatchTime = 0
-        teamTargetInfo = TMACTD.datas.get(teamTarget)
-        self.teamMinLv = max(teamTargetInfo['minLevel'], gameconst.MIN_LEVEL)
-        self.teamMinScore = 0
+        self.teamMinLv = level
+        self.teamMinScore = score
 
         self.teamCaptainGbId = teamCaptainGbId
         self.banditKillerInfo = BanditCacheVal.getBanditCacheVal({})  # type: BanditCacheVal
@@ -548,12 +547,13 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
         self.teamMemberList = []
         self.teamRewardDatas = {}
         self.siegeWarCamp = siegeWarCamp
+        self.isInDungeon = False
         # endregion
 
         TeamStatisticMixin.__init__(self)
 
     def _lateReload(self):
-        super(TeamCacheVal, self)._lateReload()
+        super(TeamVal, self)._lateReload()
         for v in self.teamPlayerDic.values():
             v.reloadScript()
 
@@ -586,6 +586,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
         self.recruitInfo = savedDataDict['recruitInfo']
         self.isAutoExpedition = savedDataDict['isAutoExpedition']
         self.password = savedDataDict['password']
+        self.isInDungeon = savedDataDict['isInDungeon']
         for i in savedDataDict['teamDungeonList']:
             self.teamDungeonDic[i.dungeonNo] = i
 
@@ -634,6 +635,7 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
                      'isAutoExpedition': self.isAutoExpedition,
                      'password': self.password,
                      'isPublish': self.isPublish,
+                     'isInDungeon': self.isInDungeon,
                      }
         return savedDict
     
@@ -1220,12 +1222,8 @@ class TeamCacheVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
 
     def setTarget(self, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition):
         DEBUG_MSG('in setTarget:', teamTarget, minLv, minScore, recruitInfo, isAutoExpedition)
-        if teamTarget != self.teamTarget:
-            return False
-        if minLv == self.teamMinLv and minScore == self.teamMinScore and recruitInfo == self.recruitInfo and password == self.password:
-            return False
         if not self.checkTeamTarget(minLv, minScore):
-            return False    
+            return False
         self.teamTarget = teamTarget
         self.teamMinLv = minLv
         self.teamMinScore = minScore

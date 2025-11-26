@@ -33,6 +33,8 @@ class BotAIState_Init(AIState):
             return
         self.stateTime = now
         owner.debug("执行初始化状态逻辑 当前地图ID:%s" % curMapId)
+        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+            return
         if int(curMapId) == owner.dstMapId:
             for idx, itemId in enumerate(owner.itemIds):
                 slotInfo = {"slotId": idx, "itemId": itemId, "potionState": 1}
@@ -40,6 +42,9 @@ class BotAIState_Init(AIState):
             owner.runGmCommand('$dressallequipments 0')
             owner.runGmCommand('$goto 0 %s %s %s' % (owner.dstPos.x, owner.dstPos.y, owner.dstPos.z))
             owner.changeAIState(AISTATE_GO_BATTLE_AREA)
+            return
+        if owner.isInDungeonSpace():
+            owner.doLeaveDungeon()
             return
         owner.runGmCommand(f'$entermap 0 {owner.dstMapId}')
 
@@ -108,7 +113,7 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             
         self.runGmCommand('$getitems 0 0 9999 0 30010005 30010006')
         if self.player.totalScore < 150000:
-            self.runGmCommand("$getequipment 0 0 3")
+            self.runGmCommand("$getequipment 0 0 3 4")
 
     def changeRandomTimeDelay(self, useRandom=None):
         if useRandom is None:

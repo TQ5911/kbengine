@@ -185,16 +185,13 @@ class ILinePlayersStub(object):
         if not sVal.isReadyEnter():
             return gameconst.EnterLineCode.FAIL_SPACE_IS_NOT_READY
 
-        if gbId in lineMembers.fakeLeavePlayers:
-            return gameconst.EnterLineCode.CAN_ENTER
-
         hasLeader = extraInfo.teamUUID and lineMembers.getLeaderGbId(extraInfo.teamUUID)
         hasMember = hasLeader or (extraInfo.teamUUID and lineMembers.hasTeamMember(extraInfo.teamUUID))
         failCode = gameconst.EnterLineCode.FAIL_COMMON
 
         playerNum = len(lineMembers) + lineMembers.getPendingEnterNum()
         if gameconfig.enableCheckEnterLineNew():
-            playerNum = len(lineMembers) + lineMembers.getPendingEnterNum() + lineMembers.getFakeLeaveNum()
+            playerNum = len(lineMembers) + lineMembers.getPendingEnterNum()
         # 单条线人数超过上限，禁止进入
         if playerNum + needCnt > lineMaxCnt:
             return gameconst.EnterLineCode.FAIL_REACH_MAX_MEMBER

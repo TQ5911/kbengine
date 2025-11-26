@@ -28,7 +28,7 @@ datas = _tools.RODict({
     3: _tools.RODict({
         "ID": 3,
         "summonId": 11002007,
-        "UnlockLevel": 13,
+        "UnlockLevel": 8,
     })
 })
 minKey = 1

@@ -37,7 +37,7 @@ class ImpTask(impTalk.ImpTalk):
             return
 
         dis = sMath.distance2D(self.position, npcEnt.position)
-        if dis >= self.getSpeed() * 2:
+        if dis >= self.speed * 2:
             WARNING_MSG('reqUpdateTaskByTalkToNpc, not enough distance:', self.position, npcEnt.position)
             return
 
@@ -262,10 +262,9 @@ class ImpTask(impTalk.ImpTalk):
                 actionId = oneTgtData.get('ActionId')
                 if not actionId or actionId != tgtId:
                     continue
-                cfgMapId = oneTgtData['MapId']
                 cfgPos = (oneTgtData['X'], oneTgtData['Y'], oneTgtData['Z'])
                 dis = sMath.distance2D(self.position, cfgPos)
-                if oneTgtData['MapId'] == curDungonNo and dis < self.getSpeed() * 2:
+                if oneTgtData['MapId'] == curDungonNo and dis < self.speed * 2:
                     result = True
                 break
         self.base.onCheckTaskCompleteActionTargetCallback(result, taskId, tgtType, tgtId)
