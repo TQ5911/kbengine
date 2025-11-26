@@ -64,6 +64,7 @@ type LoginClientService struct {
 	qsHost           string
 	isCaptchaValid   bool
 	captchaBeginTime int64
+	tokenTimeout	 uint32
 }
 
 type PayLoad struct {
@@ -107,10 +108,33 @@ type TapTapResponseData struct {
 	UnionId  	         string `json:"unionid"`
 }
 
- type TapTapAccessTokenResponse  struct {
+type TapTapAccessTokenResponse  struct {
 	Data    		TapTapResponseData    `json:"data"`
 	Now     		int64                 `json:"now"`
 	Success 		bool                  `json:"success"`
+}
+
+type OfficialAccessToken struct {
+	Token 			string `json:"token"`
+}
+
+type OfficialResponseData struct {
+	GameId					string 	`json:"gameId"`
+	TokenRefreshed			bool 	`json:"tokenRefreshed"`
+	UserGameId				string 	`json:"userGameId"`
+	Phone               	string 	`json:"phone"`
+	TokenValid				bool 	`json:"tokenValid"`
+	TokenTimeout   			uint32 	`json:"tokenTimeout"`
+	UserInfoId   		  	string 	`json:"userInfoId"`
+	NewToken  	         	string 	`json:"token"`
+}
+
+type OfficialAccessTokenResponse  struct {
+	Success			bool					`json:"-"`
+	Code			int32					`json:"code"`
+	Message 		string                	`json:"message"`
+	Data    		OfficialResponseData  	`json:"data"`
+	Timestamp     	int64                 	`json:"timestamp"`
 }
 
 func (self *LoginClientService) startCheckValidTimer() {
@@ -202,14 +226,14 @@ func (self *LoginClientService) _verifyCDkey(accType clientService.AccountType, 
 
 func (self *LoginClientService) _replyNeedCDKey() error {
 	appLog.Debug("login need cdkey ", self.accountType, self.accountName, self.loginToken)
-	reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_NEED_CDKEY, Token: "", CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost}
+	reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_NEED_CDKEY, Token: "", CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: ""}
 	_, err := self.GetClientEndPoint().(clientService.IGameClientInterface).OnLoginReply(&reply)
 	return err
 }
 
 func (self *LoginClientService) _replyLoginSuccess() error {
-	appLog.Info("login success ", self.accountType, self.accountName, self.loginToken, self.serverId, self.gsHost, self.qsHost)
-	reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_SUCCESS, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost}
+	appLog.Info("login success ", self.accountType, self.accountName, self.loginToken, self.serverId, self.gsHost, self.qsHost, self.tokenTimeout)
+	reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_SUCCESS, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: ""}
 	_, err := self.GetClientEndPoint().(clientService.IGameClientInterface).OnLoginReply(&reply)
 	return err
 }
@@ -345,7 +369,7 @@ func (self *LoginClientService) CheckCDkey(in *clientService.CheckCDKeyRequest) 
 	}
 
 	if self.loginResult == clientService.LoginReply_LOGIN_SUCCESS {
-		reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_SUCCESS, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost}
+		reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_SUCCESS, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: ""}
 		_, err = self.GetClientEndPoint().(clientService.IGameClientInterface).OnLoginReply(&reply)
 	}
 
@@ -555,7 +579,7 @@ func (self *LoginClientService) LoginByToken(r *clientService.TokenLogin) (*clie
 			}
 			curTime := time.Now().Unix()
 			if curTime > payLoad.Exp {
-				reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_TOKEN_ERROR, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost}
+				reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_TOKEN_ERROR, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: ""}
 				self.GetClientEndPoint().(clientService.IGameClientInterface).OnLoginReply(&reply)
 				appLog.Warn("LoginByToken: token expired", curTime, payLoad.Exp)
 				return nil, nil
@@ -565,7 +589,7 @@ func (self *LoginClientService) LoginByToken(r *clientService.TokenLogin) (*clie
 	}
 
 	if len(parts) < 3 {
-		reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_TOKEN_ERROR, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost}
+		reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_TOKEN_ERROR, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: ""}
 		self.GetClientEndPoint().(clientService.IGameClientInterface).OnLoginReply(&reply)
 		appLog.Warn("LoginByToken: token len err", r.Phone, r.Token)
 		return nil, nil
@@ -574,7 +598,7 @@ func (self *LoginClientService) LoginByToken(r *clientService.TokenLogin) (*clie
 	method := jwt.GetSigningMethod("ES256")
 	err = method.Verify(strings.Join(parts[0:2], "."), parts[2], ecdsaKey)
 	if err != nil {
-		reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_TOKEN_ERROR, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost}
+		reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_TOKEN_ERROR, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: ""}
 		self.GetClientEndPoint().(clientService.IGameClientInterface).OnLoginReply(&reply)
 		appLog.Warn("LoginByToken: token err", r.Phone, r.Token)
 		return nil, nil
@@ -612,7 +636,7 @@ func (self *LoginClientService) LoginByToken(r *clientService.TokenLogin) (*clie
 				appLog.Error("LoginByToken HMSET deviceId failed", deviceId, accountName, curTime, err.Error())
 			}
 		} else {
-			reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_DEVICE_LIMIT, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost}
+			reply := clientService.LoginReply{Result: clientService.LoginReply_LOGIN_DEVICE_LIMIT, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: ""}
 			self.GetClientEndPoint().(clientService.IGameClientInterface).OnLoginReply(&reply)
 			appLog.Warn("LoginByToken: device limit err", deviceId, accountNum, isExist)
 			return nil, nil
@@ -680,11 +704,17 @@ func (self *LoginClientService) _attemptTapTapRequest(reqURL, authorization stri
 		appLog.Warn(fmt.Sprintf("_attemptTapTapRequest respBody false: %d, %s, %s, %s", tapTapAccessTokenResponse.Data.Code, tapTapAccessTokenResponse.Data.Msg,
 		tapTapAccessTokenResponse.Data.Error, tapTapAccessTokenResponse.Data.ErrorDescription))
 		*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
+		self.accountType = clientService.AccountType_ACCOUNT_UNKNOW
+		self.accountName = ""
+		self.loginToken = ""
+		self.tokenTimeout = 0
 	} else {
 		appLog.Info(fmt.Sprintf("_attemptTapTapRequest respBody true: %s, %s, %s, %s, %s", tapTapAccessTokenResponse.Data.Avatar, tapTapAccessTokenResponse.Data.Gender,
 		tapTapAccessTokenResponse.Data.Name, tapTapAccessTokenResponse.Data.OpenId, tapTapAccessTokenResponse.Data.UnionId))
 		self.accountType = clientService.AccountType_ACCOUNT_TAPTAP
 		self.accountName = tapTapAccessTokenResponse.Data.OpenId
+		self.loginToken = common.RandString(LOGIN_TOKEN_LEN)
+		self.tokenTimeout = 0
 	}
 	return tapTapAccessTokenResponse.Success
 }
@@ -743,6 +773,85 @@ func (self *LoginClientService) _loginByTapTap(channelInfo *ChannelInfo, tapTapA
 	return self._attemptTapTapRequest(reqURL, authorization, loginResult)
 }
 
+func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, loginResult *clientService.LoginReply_LoginResult) bool {
+	client := http.Client{}
+	req, err := http.NewRequest(http.MethodPost, reqURL, nil)
+	if err != nil {
+		appLog.Warn(fmt.Sprintf("_attemptOfficialRequest NewRequest: %s", err.Error()))
+		return false
+	}
+
+	req.Header.Add("satoken", token)
+	resp, err := client.Do(req)
+	if err != nil {
+		appLog.Warn(fmt.Sprintf("_attemptOfficialRequest DoRequest: %s", err.Error()))
+		return false
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		appLog.Warn(fmt.Sprintf("_attemptOfficialRequest ReadAll: %s", err.Error()))
+		return false
+	}
+
+	appLog.Info(fmt.Sprintf("_attemptOfficialRequest respBody: %s ", string(respBody)))
+
+	var officialAccessTokenResponse OfficialAccessTokenResponse
+	err = json.Unmarshal([]byte(respBody), &officialAccessTokenResponse)
+	if err != nil {
+		appLog.Warn(fmt.Sprintf("_attemptOfficialRequest fails to unmarshal err: %s", err.Error()))
+	   	return false
+	}
+	if officialAccessTokenResponse.Code != 200 {
+		appLog.Warn(fmt.Sprintf("_attemptOfficialRequest respBody false: %d, %s", officialAccessTokenResponse.Code, officialAccessTokenResponse.Message))
+		*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
+		self.accountType = clientService.AccountType_ACCOUNT_UNKNOW
+		self.accountName = ""
+		self.loginToken = ""
+		self.tokenTimeout = 0
+		officialAccessTokenResponse.Success = false
+	} else {
+		appLog.Info(fmt.Sprintf("_attemptOfficialRequest respBody true: %s, %t, %s, %s, %t, %d, %s, %s", officialAccessTokenResponse.Data.GameId, officialAccessTokenResponse.Data.TokenRefreshed,
+		officialAccessTokenResponse.Data.UserGameId, officialAccessTokenResponse.Data.Phone, officialAccessTokenResponse.Data.TokenValid,
+		officialAccessTokenResponse.Data.TokenTimeout, officialAccessTokenResponse.Data.UserInfoId, officialAccessTokenResponse.Data.NewToken))
+		self.accountType = clientService.AccountType_ACCOUNT_OFFICIAL
+		self.accountName = officialAccessTokenResponse.Data.UserGameId
+		self.loginToken = officialAccessTokenResponse.Data.NewToken
+		self.tokenTimeout = officialAccessTokenResponse.Data.TokenTimeout
+		officialAccessTokenResponse.Success = true
+	}
+	return officialAccessTokenResponse.Success
+}
+
+func (self *LoginClientService) _loginByOfficial(channelInfo *ChannelInfo, officialAccessToken *OfficialAccessToken, loginResult *clientService.LoginReply_LoginResult) (bool) {
+	appLog.Info("_loginByOfficial: verify request")
+
+	token := officialAccessToken.Token
+
+	var reqHost string
+	if value, ok := LoginConfig.Official["reqhost"]; ok {
+		reqHost = value.(string)
+	} else {
+		appLog.Error("_loginByOfficial LoginConfig.Official[reqHost]")
+		return false
+	}
+
+	var reqURI string
+	if value, ok := LoginConfig.Official["requri"]; ok {
+		reqURI = value.(string)
+	} else {
+		appLog.Error("_loginByOfficial LoginConfig.Official[reqURI]")
+		return false
+	}
+
+	reqURL := "http://" + reqHost + reqURI
+
+	appLog.Info(fmt.Sprintf("_loginByOfficial reqURL: %s, token: %s", reqURL, token))
+
+	return self._attemptOfficialRequest(reqURL, token, loginResult)
+}
+
 func (self *LoginClientService) LoginByThird(r *clientService.ThirdLogin) (*clientService.Void, error) {
 	appLog.Info(fmt.Sprintf("LoginByThird: verify request: %s, %s", r.ChannelInfo, r.AccessToken))
 	self.isReqLogin = true
@@ -765,13 +874,21 @@ func (self *LoginClientService) LoginByThird(r *clientService.ThirdLogin) (*clie
 			return nil, errors.New(fmt.Sprintf("fails to unmarshal tapTapAccessToken: %s", r.AccessToken))
 		}
 		res = self._loginByTapTap(&channelInfo, &tapTapAccessToken, &loginResult)
+	} else if channelInfo.Id == uint32(clientService.ThirdLoginType_THIRD_LOGIN_OFFICIAL) {
+		var officialAccessToken OfficialAccessToken
+		err := json.Unmarshal([]byte(r.AccessToken), &officialAccessToken)
+		if err != nil {
+			appLog.Warn(fmt.Sprintf("fails to unmarshal officialAccessToken: %s, err: %s", r.AccessToken, err.Error()))
+			return nil, errors.New(fmt.Sprintf("fails to unmarshal officialAccessToken: %s", r.AccessToken))
+		}
+		res = self._loginByOfficial(&channelInfo, &officialAccessToken, &loginResult)
 	} else {
 		appLog.Warn(fmt.Sprintf("unsupported channel id: %d", channelInfo.Id))
 		return nil, errors.New(fmt.Sprintf("unsupported channel id: %d", channelInfo.Id))
 	}
 
 	if !res {
-		reply := clientService.LoginReply{Result: loginResult, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost}
+		reply := clientService.LoginReply{Result: loginResult, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: ""}
 		self.GetClientEndPoint().(clientService.IGameClientInterface).OnLoginReply(&reply)
 		appLog.Warn(fmt.Sprintf("loginByThird verify failed res : %d", loginResult))
 		return nil, errors.New(fmt.Sprintf("loginByThird verify failed res : %d", loginResult))
@@ -779,7 +896,6 @@ func (self *LoginClientService) LoginByThird(r *clientService.ThirdLogin) (*clie
 	appLog.Info(fmt.Sprintf("LoginByThird: verify success, accountType: %d, accountName: %s", self.accountType, self.accountName))
 
 	self.loginResult = clientService.LoginReply_LOGIN_SUCCESS
-	self.loginToken = common.RandString(LOGIN_TOKEN_LEN)
 	self.channelId = channelInfo.Id
 	self.app.addClient(self)
 

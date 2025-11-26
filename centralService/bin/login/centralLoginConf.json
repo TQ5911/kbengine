@@ -37,7 +37,7 @@
     	"5":"5"
     },
     "redisServer":{
-    	"addr":"192.168.10.13:6379",
+    	"addr":"127.0.0.1:6379",
     	"passwd":"",
     	"db":""
     },
@@ -53,5 +53,9 @@
         "nonce":"y7xakqLCz6rCsuN9lldRQ3fi",
         "reqHost":"open.tapapis.cn",
         "reqURI":"/account/profile/v1?client_id="
+    },
+    "official":{
+        "reqHost":"192.168.10.46:8084",
+        "reqURI":"/api/v1/user-info/check-token"
     }
 }

@@ -36,6 +36,7 @@ type AppConfig struct {
 	YidunSecurityID       string
 	YidunSecurityKey      string
 	TapTap				  map[string]interface{}
+	Official			  map[string]interface{}
 }
 
 type ServerListConfig struct {

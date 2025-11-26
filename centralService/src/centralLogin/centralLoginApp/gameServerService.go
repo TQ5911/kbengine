@@ -39,7 +39,7 @@ func (self *GameServerService) DoVerifyLogin(in *gameServerService.VerifyAccount
 			return gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_FAIL
 		}
 	}
-	// 设置最后登录的服务器id
+
 	if in.HostId != ServerListCfg.GetUint32("auditServerId") {
 		_, err := redis.String(conn.Do("set", common.LAST_SERVER_ID+in.AccountName, in.HostId))
 		if err != nil {

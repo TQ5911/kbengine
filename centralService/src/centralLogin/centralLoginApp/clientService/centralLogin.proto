@@ -11,6 +11,7 @@ enum AccountType
     ACCOUNT_TOKEN = 2;
     ACCOUNT_CROSS_SERVER = 3;
     ACCOUNT_TAPTAP = 4;
+    ACCOUNT_OFFICIAL = 5;
 }
 
 message Void {
@@ -62,6 +63,7 @@ enum ThirdLoginType
 {
     THIRD_LOGIN_UNKNOW = 0;
     THIRD_LOGIN_TAPTAP = 4;
+    THIRD_LOGIN_OFFICIAL = 5;
 }
 
 message ThirdLogin
@@ -85,6 +87,8 @@ message LoginReply
         LOGIN_THIRD_TAPTAP_FORBIDDEN = 402;
         LOGIN_THIRD_TAPTAP_SERVER_ERROR = 403;
         LOGIN_THIRD_TAPTAP_INSUFFICIENT_SCOPE = 404;
+        LOGIN_THIRD_OFFICIAL_1 = 501;
+        LOGIN_THIRD_OFFICIAL_2 = 502;
     }
 
     LoginResult result=1;
@@ -93,6 +97,8 @@ message LoginReply
     string serverId = 4;
     string gameServerHost = 5;
     string queueServerHost = 6;
+    uint32 tokenTimeout = 7;
+    string reserved = 8;
 }
 
 message CharacterInfo
