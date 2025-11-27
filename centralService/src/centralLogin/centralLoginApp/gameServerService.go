@@ -94,7 +94,7 @@ func (self *GameServerService) DoVerifyLogin(in *gameServerService.VerifyAccount
 
 func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRequest) (*gameServerService.Void, error) {
 	res := gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_UNKNOWN
-	isLogin, channelId := self.app.checkClientLogin(self, in.AccountType, in.AccountName, in.Token)
+	isLogin, channelId, accountId := self.app.checkClientLogin(self, in.AccountType, in.AccountName, in.Token)
 	if !isLogin {
 		res = gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_FAIL
 		appLog.Error("verifyLogin failed: ", in.AccountType, in.AccountName, in.Token)
@@ -118,7 +118,7 @@ func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRe
 		}
 	}
 
-	appLog.Info(fmt.Sprintf("verifyLogin: res=%d, AccountType=%d, AccountName=%s, Token=%s, channelId=%d", res, in.AccountType, in.AccountName, in.Token, channelId))
+	appLog.Info(fmt.Sprintf("verifyLogin: res=%d, AccountType=%d, AccountId=%s, AccountName=%s, Token=%s, channelId=%d", res, in.AccountType, accountId, in.AccountName, in.Token, channelId))
 	result := gameServerService.VerifyAccountReply{
 		Result: res, AccountName: in.AccountName,
 		AccountType:      in.AccountType,
@@ -126,7 +126,8 @@ func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRe
 		BanAccountTime:   banAccountTime,
 		BanPostTime:      banPostTime,
 		BanAccountReason: banAccountReason,
-		BanPostReason:    banPostReason}
+		BanPostReason:    banPostReason,
+		AccountId:        accountId}
 	self.Client.(*gameServerService.GameServerClient).OnVerifyLogin(&result)
 
 	return nil, nil

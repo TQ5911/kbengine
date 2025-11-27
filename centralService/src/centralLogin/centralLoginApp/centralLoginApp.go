@@ -213,20 +213,20 @@ func (self *CentralLoginApp) getClient(accountType uint32, accountName string) *
 	return nil
 }
 
-func (self *CentralLoginApp) checkClientLogin(gs *GameServerService, accountType uint32, accountName string, token string) (bool, uint32) {
+func (self *CentralLoginApp) checkClientLogin(gs *GameServerService, accountType uint32, accountName string, token string) (bool, uint32, string) {
 	cs := self.getClient(accountType, accountName)
 	if cs == nil {
 		appLog.Error("checkClientLogin failed: cannot find client", accountType, accountName)
-		return false, 0
+		return false, 0, ""
 	}
 
 	if cs.loginResult == clientService.LoginReply_LOGIN_SUCCESS && token == cs.loginToken {
-		return true, cs.channelId
+		return true, cs.channelId, cs.accountId
 	} else {
 		appLog.Error("checkClientLogin failed: ", cs.loginResult, cs.loginToken, token)
 	}
 
-	return false, 0
+	return false, 0, ""
 }
 
 func (self *CentralLoginApp) addGameServer(service *GameServerService) {
