@@ -1014,6 +1014,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             WARNING_MSG("updateCommonFlagCell flagType is error:", flagType)
             return
 
+        if not gameconfig.visibleConfigEable('quickSettings')\
+                and flagType in gameconst.AvatarFlagCell.QUICK_SETTING_RANGE:
+            return
+
         self._updateCommonFlagCell(flagType, flag)
 
     def _updateCommonFlagCell(self, flagType, flag):
@@ -1028,7 +1032,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def doCalcTeamStatistic(self, target, context, valType, deltaVal):
         if deltaVal <= 0:
             return
-        
+
         if utils.isEnemy(self, target):
             # target不能是玩家，host也不能是玩家
             if target.IsAvatarMirror or target.IsSummon or target.IsCreation:

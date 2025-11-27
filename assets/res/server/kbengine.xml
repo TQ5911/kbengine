@@ -16,14 +16,12 @@
         <cellAppCount> 2 </cellAppCount>
         <serverId> 20227  </serverId>
         <gusId> 1 </gusId>
+        <gameId> fengyan </gameId>
         <permitLogin> 1 </permitLogin>
         <branchLineCnt>
             <subType1> 2 </subType1>
+            <subType2> $LINETYPE </subType2>
         </branchLineCnt>
-
-		<crossServerInfo>
-				<item crossServerId='20228'></item>
-		</crossServerInfo>
 
         <serverOpenTime> 1624608806 </serverOpenTime>
         <enableAdminServer> 0 </enableAdminServer>
@@ -47,10 +45,14 @@
         <socialTokenKey> 19ee0530b20a6ba84d1567280a2210a6 </socialTokenKey>
 
         <crossDataServerInfo>
-                        <item crossDataServerId='1' ip='192.168.10.13' port='2140'></item>
+            <item crossDataServerId='1' ip='192.168.10.13' port='2140'></item>
         </crossDataServerInfo>
 
         <mapleAllServerUrl> http://192.168.10.13:9527/getAllServer </mapleAllServerUrl>
+        
+        <crossSiegeWarServerInfo>
+            <item crossServerId='20228'></item>
+        </crossSiegeWarServerInfo>
 
         <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
         <enableGlobalAuction> 1 </enableGlobalAuction>
@@ -62,7 +64,7 @@
         <elasticPort> 9200 </elasticPort>
 
         <gmVerifyByGroup> 0 </gmVerifyByGroup>
-        <debugLevel> 1 </debugLevel>
+        <debugLevel> $DEBUGLEVEL </debugLevel>
         <wxErrNumPerSecond> 5 </wxErrNumPerSecond>
         <wxErrFlag> 1 </wxErrFlag>
         <tlogFlag> 0 </tlogFlag>
@@ -100,11 +102,11 @@
     <debug>
         <waitEntityLoading> 0 </waitEntityLoading>
         <loadEntity> 1 </loadEntity>
-        <entityLoadSpeed> 20 </entityLoadSpeed>
+        <entityLoadSpeed> 5 </entityLoadSpeed>
         <enableBotLogin> 1 </enableBotLogin>
         <callbackNumThreshold> 100 </callbackNumThreshold>
         <enableCentralLogin> 1 </enableCentralLogin>
-        <debugErrorLogHost>  </debugErrorLogHost>
+        <debugErrorLogHost> 192.168.10.13:58080 </debugErrorLogHost>
     </debug>
 
     <enable_packet_history> 1 </enable_packet_history>

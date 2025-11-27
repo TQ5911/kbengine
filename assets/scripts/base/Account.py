@@ -68,6 +68,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.onDailyEvent()
         self._hasLoadData = False # 先加载角色数据，再加载appearance数据
 
+        accountId = clientData.get('accountId', '')
         devicePlatId = clientData.get('devicePlatId', 0)
         channelId = clientData.get('channelId', 0)
         self.udid = clientData.get('deviceUniqueIdentifier', '')
@@ -505,6 +506,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             isForceHost = False
 
         if not self.isAuthHost(gbId):
+            if not gameconfig.visibleConfigEable('roleAuthorization'):
+                return
+
             gamesql.getAuthExpire(gbId, functools.partial(self._onGetAuthDataWhenSelectAvatar, isForceHost))
             return
 

@@ -1343,8 +1343,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             }
             self.applyEnterLineInternal(lineType, -1, dstPos, dstDir, extra)
             self._stopCommonCast()
-        else:
-            func = getattr(self, fCallback)
+        elif fCallback:
+            func = getattr(self, fCallback, None)
             func and func(*fCallbackArgs)
             self._stopCommonCast()
 

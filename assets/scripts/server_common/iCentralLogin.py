@@ -46,7 +46,8 @@ class LoginService(GameServer):
         banAccountReason = reply.banAccountReason
         banPostReason = reply.banPostReason
         res = reply.result
-        self.loginMgr.onVerifyPlayerLogin(accountType, accountName, res, channelId, banAccountTime, banPostTime,
+        accountId = reply.accountId
+        self.loginMgr.onVerifyPlayerLogin(accountType, accountId, accountName, res, channelId, banAccountTime, banPostTime,
                                           banAccountReason, banPostReason)
 
     def onKickAccount(self, rpc_controller, reply, done):
@@ -134,14 +135,14 @@ class ICentralLogin(object):
         pass
 
     # 将在interfaces进程上执行账号验证相关逻辑
-    def onVerifyPlayerLogin(self, accountType, accountName, resCode, channelId=0, banAccountTime=0, banPostTime=0,
+    def onVerifyPlayerLogin(self, accountType, accountId, accountName, resCode, channelId=0, banAccountTime=0, banPostTime=0,
                             banAccountReason="", banPostReason=""):
         realAccountName = utils.getRealAccountName(accountType, accountName)
         userInfo = self.accountCache.pop(realAccountName, None)
         if not userInfo:
             return
 
-        INFO_MSG('onVerifyLogin:', accountType, accountName, resCode, userInfo)
+        INFO_MSG('onVerifyLogin:', accountType, accountId, accountName, resCode, userInfo)
 
         tid, token, dataBytes = userInfo
 
@@ -150,7 +151,7 @@ class ICentralLogin(object):
         clientData = utils.decodeClientData(dataBytes)
         clientData.pop("banPostTime", None)
         clientData.pop("banPostReason", None)
-        clientData.update({"channelId": channelId, "banAccountTime": banAccountTime})
+        clientData.update({"channelId": channelId, "banAccountTime": banAccountTime, "accountId": accountId})
         if banPostTime != 0:
             clientData.update({"banPostTime": banPostTime, "banPostReason": banPostReason})
         dataBytes = utils.encodeClientData(clientData)
@@ -191,18 +192,18 @@ class ICentralLogin(object):
         cacheKeyName = utils.getRealAccountName(accountType, accountName)
         if not gameconfig.enableCentralLogin():
             self.accountCache[cacheKeyName] = (0, '', data)
-            self.onVerifyPlayerLogin(accountType, accountName, VerifyAccountReply.VERIFY_ACCOUNT_OK)
+            self.onVerifyPlayerLogin(accountType, "NOT:"+cacheKeyName, accountName, VerifyAccountReply.VERIFY_ACCOUNT_OK)
             return
 
         if accountType == centralLogin.ACCOUNT_UNKNOW:
             if gameconfig.enableBotLogin():
                 self.accountCache[cacheKeyName] = (0, '', data)
-                self.onVerifyPlayerLogin(accountType, accountName, VerifyAccountReply.VERIFY_ACCOUNT_OK)
+                self.onVerifyPlayerLogin(accountType, "BOT:"+cacheKeyName, accountName, VerifyAccountReply.VERIFY_ACCOUNT_OK)
                 return
             else:
                 ERROR_MSG('check login err:', accountName)
                 self.accountCache[cacheKeyName] = (0, '', data)
-                self.onVerifyPlayerLogin(accountType, accountName, VerifyAccountReply.VERIFY_ACCOUNT_FAIL)
+                self.onVerifyPlayerLogin(accountType, "", accountName, VerifyAccountReply.VERIFY_ACCOUNT_FAIL)
                 return
 
         clientData = utils.decodeClientData(data)
