@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/garyburd/redigo/redis"
@@ -74,8 +75,12 @@ func StrToUInt32(str string) uint32 {
 }
 
 type HttpCommandService struct {
-	app         *AdminApp
-	rateLimiter *rate.Limiter
+	app               *AdminApp
+	rateLimiter       *rate.Limiter
+	idempotencyMap    map[string]*CommandResponse      // Stores processed requests for idempotency
+	idempotencyMutex  sync.RWMutex                     // Protects the idempotency map
+	pendingRequests   map[string][]chan *CommandResponse  // Tracks pending requests
+	pendingMutex      sync.Mutex                      // Protects the pending requests map
 }
 
 func (self *HttpCommandService) _buildErrResponse(errCode int32, errMsg string) []byte {
@@ -206,6 +211,67 @@ func (self *HttpCommandService) handleHttpCmdRequest(w http.ResponseWriter, req 
 		sn = strconv.FormatUint(reqData.Seqid, 10)
 	}
 
+	// Initialize idempotency map if nil
+	if self.idempotencyMap == nil {
+		self.idempotencyMap = make(map[string]*CommandResponse)
+	}
+
+	// Idempotency check: return stored response if already processed (fast path)
+	self.idempotencyMutex.RLock()
+	if storedResp, exists := self.idempotencyMap[sn]; exists {
+		self.idempotencyMutex.RUnlock()
+		respBytes, _ := json.Marshal(storedResp)
+		self.sendIDIPResponse(w, 200, respBytes)
+		return
+	}
+	self.idempotencyMutex.RUnlock()
+
+	// Check and handle concurrent requests
+	// Initialize response channel
+	var finalResp *CommandResponse
+
+	// Check pending requests
+	respChan := make(chan *CommandResponse, 1)
+
+	self.pendingMutex.Lock()
+	if pendingChans, exists := self.pendingRequests[sn]; exists {
+		// Request already in progress
+		self.pendingRequests[sn] = append(pendingChans, respChan)
+		self.pendingMutex.Unlock()
+
+		// Wait for response from ongoing request
+		appLog.Info("Waiting for concurrent request to complete\n")
+		finalResp := <-respChan
+		respBytes, _ := json.Marshal(finalResp)
+		self.sendIDIPResponse(w, 200, respBytes)
+		return
+	} else {
+		// Start processing the first request
+		self.pendingRequests[sn] = []chan *CommandResponse{respChan}
+		self.pendingMutex.Unlock()
+	}
+
+	// Ensure we clean up and notify pending requests
+	defer func() {
+		if finalResp != nil {
+			// Store response in idempotency map
+			self.idempotencyMutex.Lock()
+			self.idempotencyMap[sn] = finalResp
+			self.idempotencyMutex.Unlock()
+
+			// Notify all pending requests
+			self.pendingMutex.Lock()
+			if pendingChans, exists := self.pendingRequests[sn]; exists {
+				for _, ch := range pendingChans {
+					ch <- finalResp
+					close(ch)
+				}
+				delete(self.pendingRequests, sn)
+			}
+			self.pendingMutex.Unlock()
+		}
+	}()
+
 	if reqData.Partition != 0 {
 		var partition uint32 = 0
 		if reqData.Partition < 0 {
@@ -247,12 +313,24 @@ func (self *HttpCommandService) handleHttpCmdRequest(w http.ResponseWriter, req 
 				appLog.Errorf("command serial exists: %+v\n", reqData)
 			}
 			responseBytes = self.buildIDIPResponse(response, &reqData)
+
+			// Parse responseBytes to CommandResponse
+			var resp CommandResponse
+			if json.Unmarshal(responseBytes, &resp) == nil {
+				finalResp = &resp
+			}
 		case <-time.After(10 * time.Second):
 			appLog.Warnf("exec cmd timeout: %v\n", reqData)
 			gameserver.RemovePendingHttpCommands(uuidStr)
 			errMsg := "game server timeout"
 			responseBytes = self._buildErrResponse(HTTP_CMD_ERR_GAME_SERVER_TIMEOUT, errMsg)
 			statusCode = 400
+
+			// Parse responseBytes to CommandResponse
+			var resp CommandResponse
+			if json.Unmarshal(responseBytes, &resp) == nil {
+				finalResp = &resp
+			}
 		}
 
 	} else {
@@ -276,12 +354,17 @@ func (self *HttpCommandService) handleHttpCmdRequest(w http.ResponseWriter, req 
 		respData.Msg = "success"
 		respData.Body = nil
 
+		// Set finalResp for broadcast case
+		finalResp = &respData
+
 		respBytes, err := json.Marshal(respData)
 		if err != nil {
 			appLog.Errorf("handleHttpCmdRequest: encode data err: %s %v\n", err.Error(), respData)
 		}
 		statusCode, responseBytes = 200, respBytes
 	}
+
+	// Store response for idempotency for non-broadcast case (this line should remain empty)
 
 	self.sendIDIPResponse(w, statusCode, responseBytes)
 }
@@ -390,6 +473,16 @@ func (self *HttpCommandService) handlePlayerHttpCmdRequest(w http.ResponseWriter
 		errMsg := "game server timeout"
 		responseBytes = self._buildErrResponse(HTTP_CMD_ERR_GAME_SERVER_TIMEOUT, errMsg)
 		statusCode = 400
+	}
+
+	// Store response for idempotency if valid JSON
+	if responseBytes != nil {
+		var resp CommandResponse
+		if err := json.Unmarshal(responseBytes, &resp); err == nil {
+			self.idempotencyMutex.Lock()
+			self.idempotencyMap[sn] = &resp
+			self.idempotencyMutex.Unlock()
+		}
 	}
 
 	self.sendIDIPResponse(w, statusCode, responseBytes)
@@ -848,14 +941,36 @@ OUT_LOOP:
 	self.sendIDIPResponse(w, statusCode, responseBytes)
 }
 
+// CORS middleware to add appropriate headers to HTTP responses
+func (self *HttpCommandService) corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Allow all origins (can restrict to specific domains if needed)
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		// Allow POST and OPTIONS methods (OPTIONS is used for preflight requests)
+		w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+		// Allow Content-Type header
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		// Handle preflight OPTIONS requests immediately
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		// Call the original handler
+		next(w, r)
+	}
+}
+
 func (self *HttpCommandService) startHttpApiServer(listenAddr string) {
-	http.HandleFunc("/docmd", self.handleHttpCmdRequest)
-	http.HandleFunc("/doPlayerCmd", self.handlePlayerHttpCmdRequest)
-	http.HandleFunc("/transferAvatarData", self.handlerTransferAvatarData)
-	// http.HandleFunc("/apiNeteaseMusic/redirect", self.handlerNeteaseMusicRedirect)
-	http.HandleFunc("/doAccountCmd", self.handleAccountHttpCmdRequest)
-	http.HandleFunc("/queryRoleId", self.handleQueryRoleId)
-	http.HandleFunc("/doAllCmd", self.handleHttpAddSkuIdRequest) //仅支持skuId设置
+	// Wrap all handlers with CORS middleware
+	http.HandleFunc("/docmd", self.corsMiddleware(self.handleHttpCmdRequest))
+	http.HandleFunc("/doPlayerCmd", self.corsMiddleware(self.handlePlayerHttpCmdRequest))
+	http.HandleFunc("/transferAvatarData", self.corsMiddleware(self.handlerTransferAvatarData))
+	// http.HandleFunc("/apiNeteaseMusic/redirect", self.corsMiddleware(self.handlerNeteaseMusicRedirect))
+	http.HandleFunc("/doAccountCmd", self.corsMiddleware(self.handleAccountHttpCmdRequest))
+	http.HandleFunc("/queryRoleId", self.corsMiddleware(self.handleQueryRoleId))
+	http.HandleFunc("/doAllCmd", self.corsMiddleware(self.handleHttpAddSkuIdRequest)) //仅支持skuId设置
 	err := http.ListenAndServe(listenAddr, nil)
 	if err != nil {
 		appLog.Error("fail to serve at", listenAddr)

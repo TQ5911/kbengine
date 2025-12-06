@@ -1,0 +1,57 @@
+syntax = "proto3";
+option go_package = "../clientService";
+option py_generic_services = true;
+
+package QueueClient;
+
+
+enum AccountType
+{
+    ACCOUNT_UNKNOW = 0;
+    ACCOUNT_PASSWD = 1;
+    ACCOUNT_TOKEN = 2;
+    ACCOUNT_CROSS_SERVER = 3;
+}
+
+message Void {
+}
+
+
+message QueueRequest
+{
+    string accountName = 1;
+    string serverId = 2;
+}
+
+message QueueReply
+{
+    enum QueueState
+    {
+        QUEUE_SUCCESS = 0;
+        QUEUE_IN_PROCESS = 1;
+        QUEUE_FAILED = 2;
+    }
+
+    QueueState state=1;
+    uint32 queueId = 2;
+    string serverId = 3;
+    string serverHost = 4;
+    uint64 waitTime = 5;
+}
+
+
+
+//中心服务器提供的rpc
+service QueueServer
+{
+    rpc startQueue(QueueRequest) returns(Void);
+    rpc getQueueInfo(QueueRequest) returns(Void);
+    rpc activeTick(Void) returns(Void);
+}
+
+//客户端接受的rpc
+service GameClient
+{
+    rpc onQueueReply(QueueReply) returns(Void);
+    rpc activeTickCallback(Void) returns(Void);
+}

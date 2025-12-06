@@ -418,8 +418,8 @@ func corsMiddleware(next http.Handler) http.Handler {
 }
 
 func (mhs *MapleHttpService) start(listenAddr string) {
-    http.HandleFunc("/getAllServer", mhs.getAllServer)
-    http.HandleFunc("/getAllZoneData", mhs.getAllZoneData)
+    http.Handle("/getAllServer", corsMiddleware(http.HandlerFunc(mhs.getAllServer)))
+    http.Handle("/getAllZoneData", corsMiddleware(http.HandlerFunc(mhs.getAllZoneData)))
     http.Handle("/import", corsMiddleware(http.HandlerFunc(mhs.handleImport)))
     http.Handle("/export", corsMiddleware(http.HandlerFunc(mhs.handleExport)))
     http.Handle("/addZone", corsMiddleware(http.HandlerFunc(mhs.addZone)))

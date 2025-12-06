@@ -196,7 +196,14 @@ func (self *AdminApp) Start() {
 	go self.StartDebugService(adminConfig.AddressForDebug)
 
 	limiter := rate.NewLimiter(1.2, 1)
-	self.httpService = &HttpCommandService{self, limiter}
+	self.httpService = &HttpCommandService{
+		app:               self,
+		rateLimiter:       limiter,
+		idempotencyMap:    make(map[string]*CommandResponse),
+		idempotencyMutex:  sync.RWMutex{},
+		pendingRequests:   make(map[string][]chan *CommandResponse),
+		pendingMutex:      sync.Mutex{},
+	}
 	go self.httpService.startHttpApiServer(adminConfig.HttpAPIAddress)
 
 	self.httpSDKService = &HttpSDKService{self}

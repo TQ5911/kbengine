@@ -157,6 +157,7 @@ func (self *CentralLoginApp) NewService(conn net.Conn, serviceType uint8) trpc.I
 			captchaBeginTime: 0,
 		}
 		channel.SetEndPoint(service)
+		service.(*LoginClientService).resetThirdData()
 		service.(*LoginClientService).startCheckValidTimer()
 	}
 
@@ -213,20 +214,20 @@ func (self *CentralLoginApp) getClient(accountType uint32, accountName string) *
 	return nil
 }
 
-func (self *CentralLoginApp) checkClientLogin(gs *GameServerService, accountType uint32, accountName string, token string) (bool, uint32, string) {
+func (self *CentralLoginApp) checkClientLogin(gs *GameServerService, accountType uint32, accountName string, token string) (bool, uint32, string, string) {
 	cs := self.getClient(accountType, accountName)
 	if cs == nil {
 		appLog.Error("checkClientLogin failed: cannot find client", accountType, accountName)
-		return false, 0, ""
+		return false, 0, "", "{}"
 	}
 
 	if cs.loginResult == clientService.LoginReply_LOGIN_SUCCESS && token == cs.loginToken {
-		return true, cs.channelId, cs.accountId
+		return true, cs.channelId, cs.accountId, cs.otherJsonData
 	} else {
 		appLog.Error("checkClientLogin failed: ", cs.loginResult, cs.loginToken, token)
 	}
 
-	return false, 0, ""
+	return false, 0, "", "{}"
 }
 
 func (self *CentralLoginApp) addGameServer(service *GameServerService) {

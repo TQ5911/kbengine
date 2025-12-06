@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `auction_auctionItemData`
     `extraInfo` varchar(1024) not null DEFAULT '',
     `tCreate` int unsigned not null DEFAULT 0,
 	`fromPlayerGBID` bigint unsigned not null DEFAULT 0,
+    `isPublicity` tinyint unsigned not null DEFAULT 0,
     UNIQUE INDEX (`auctionItemUUID`),
     PRIMARY KEY idKey (id)
     );

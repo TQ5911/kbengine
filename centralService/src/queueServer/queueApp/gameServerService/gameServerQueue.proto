@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package QueueGameServer;
+option go_package = "../gameServerService";
+option py_generic_services = true;
+
+message Void {
+}
+
+message GameServerInfo
+{
+    uint32 hostId = 1;
+    uint32 onlineNum = 2;
+}
+
+//中心服务器向游戏服提供的rpc
+service QueueServer
+{
+    rpc registerServer(GameServerInfo) returns(Void);
+    rpc updateServerInfo(GameServerInfo) returns(Void);
+    rpc activeTick(Void) returns(Void);
+}
+
+//游戏服向中心服的rpc
+service GameServer
+{
+    rpc activeTickCallback(Void) returns(Void);
+}

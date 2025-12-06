@@ -112,6 +112,12 @@ var doBuyItemByItemIdRespPool = sync.Pool{
 	},
 }
 
+var getAuctionItemsByAuctionIdsRespPool = sync.Pool{
+	New: func() interface{} {
+		return &gameServerService.GetAuctionItemByAuctionIdsResp{}
+	},
+}
+
 func (gs *GameServerService) newAuctionItem() *gameServerService.AuctionItem {
 	item := protoAuctionItemPool.Get().(*gameServerService.AuctionItem)
 	item.Reset()
@@ -423,8 +429,8 @@ func (gs *GameServerService) DoCancelSaleItem(in *gameServerService.DoCancelSale
 func (gs *GameServerService) SearchItemsByItemId(in *gameServerService.SearchItemsByItemIdReq) (*gameServerService.Void, error) {
 	go func() {
 
-		appLog.Debugw("SearchItemsByItemId", "PlayerGBID", in.PlayerGBID, "ItemIds", in.ItemIds, "Limit", in.Limit, "Offset", in.Offset, "Extra", in.Extra)
-		auctionItems, allCount, err := gs.app.SearchItemsByItemId(in.PlayerGBID, in.ItemIds, in.Limit, in.Offset, in.Extra)
+		appLog.Debugw("SearchItemsByItemId", "PlayerGBID", in.PlayerGBID, "ItemIds", in.ItemIds, "Limit", in.Limit, "Offset", in.Offset, "IsPublicity", in.IsPublicity, "Extra", in.Extra)
+		auctionItems, allCount, err := gs.app.SearchItemsByItemId(in.PlayerGBID, in.ItemIds, in.Limit, in.Offset, in.IsPublicity, in.Extra)
 		if err != nil {
 			appLog.Errorw("SearchItemsByItemId", "err", err)
 			return
@@ -444,6 +450,7 @@ func (gs *GameServerService) SearchItemsByItemId(in *gameServerService.SearchIte
 		response.AuctionItems = dstAuctionItems
 		response.TotalNum = allCount
 		response.Extra = in.Extra
+		response.IsPublicity = in.IsPublicity
 
 		_, err = gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplySearchItemsByItemId(response)
 		if err != nil {
@@ -496,8 +503,8 @@ func (gs *GameServerService) GetItemLastAndAvgPrice(in *gameServerService.GetIte
 func (gs *GameServerService) GetCurrentSaleItemInfo(in *gameServerService.GetCurrentSaleItemInfoReq) (*gameServerService.Void, error) {
 	go func() {
 
-		appLog.Debugw("GetCurrentSaleItemInfo", "ItemId", in.ItemId, "PlayerGBID", in.PlayerGBID, "Extra", in.Extra)
-		auctionItems, _, err := gs.app.GetCurrentSaleItemInfo(in.ItemId, in.PlayerGBID)
+		appLog.Debugw("GetCurrentSaleItemInfo", "ItemId", in.ItemId, "PlayerGBID", in.PlayerGBID, "Extra", in.Extra, "IsPublicity", in.IsPublicity)
+		auctionItems, _, err := gs.app.GetCurrentSaleItemInfo(in.ItemId, in.PlayerGBID, in.IsPublicity)
 		if err != nil {
 			appLog.Errorw("GetCurrentSaleItemInfo", "err", err)
 			return
@@ -518,6 +525,7 @@ func (gs *GameServerService) GetCurrentSaleItemInfo(in *gameServerService.GetCur
 		response.Extra = in.Extra
 		response.LastPrice = lastPrice
 		response.AvgPrice = avgPrice
+		response.IsPublicity = in.IsPublicity
 
 		_, err = gs.GetClientEndPoint().(*gameServerService.GameServerClient).ReplyGetCurrentSaleItemInfo(response)
 		if err != nil {
@@ -612,8 +620,8 @@ func (gs *GameServerService) DoCommand(in *gameServerService.DoCommandReq) (*gam
 
 func (gs *GameServerService) GetAuctionItemNumByCategoryId(in *gameServerService.GetItemNumByCategoryIdReq) (*gameServerService.Void, error) {
 	go func() {
-		appLog.Debugw("GetAuctionItemNumByCategoryId", "PlayerGBID", in.PlayerGBID, "CategoryId", in.CategoryId, "itemIds", in.ItemIds)
-		itemIds, itemNums, eachPrices, err := gs.app.getAuctionItemNumByCategoryId(in.ItemIds)
+		appLog.Debugw("GetAuctionItemNumByCategoryId", "PlayerGBID", in.PlayerGBID, "CategoryId", in.CategoryId, "itemIds", in.ItemIds, "isPublicity", in.IsPublicity)
+		itemIds, itemNums, eachPrices, err := gs.app.getAuctionItemNumByCategoryId(in.ItemIds, in.IsPublicity)
 		if err != nil {
 			appLog.Errorw("GetAuctionItemNumByCategoryId", "err", err)
 			return
@@ -625,7 +633,7 @@ func (gs *GameServerService) GetAuctionItemNumByCategoryId(in *gameServerService
 		response.ItemIds = itemIds
 		response.ItemNums = itemNums
 		response.Prices = eachPrices
-
+		response.IsPublicity = in.IsPublicity
 		_, err = gs.GetClientEndPoint().(*gameServerService.GameServerClient).ReplyGetAuctionItemNumByCategoryId(response)
 		if err != nil {
 			appLog.Errorw("GetAuctionItemNumByCategoryId->ReplyGetItemNumByCategoryId", "err", err)
@@ -701,5 +709,40 @@ func (gs *GameServerService) DoBuyItemByItemId(in *gameServerService.DoBuyItemBy
 		doBuyItemByItemIdRespPool.Put(response)
 	}
 
+	return nil, nil
+}
+
+func (gs *GameServerService) GetAuctionItemsByAuctionIds(in *gameServerService.GetAuctionItemByAuctionIdsReq) (*gameServerService.Void, error) {
+	go func() {
+		appLog.Debugw("getAuctionItemsByAuctionIds", "PlayerGBID", in.PlayerGBID, "CategoryId", in.CategoryId, "itemIds", in.AuctionIds)
+		auctionItems, err := gs.app.getAuctionItemsByAuctionIds(in.AuctionIds)
+		if err != nil {
+			appLog.Errorw("getAuctionItemsByAuctionIds", "err", err)
+			return
+		}
+
+		var dstAuctionItems []*gameServerService.AuctionItem
+		for _, auctionItem := range auctionItems {
+			dstAuctionItem := gs.newAuctionItem()
+			gs.transAuctionItem(auctionItem, dstAuctionItem)
+			dstAuctionItems = append(dstAuctionItems, dstAuctionItem)
+		}
+
+		response := getAuctionItemsByAuctionIdsRespPool.Get().(*gameServerService.GetAuctionItemByAuctionIdsResp)
+		response.PlayerGBID = in.PlayerGBID
+		response.CategoryId = in.CategoryId
+		response.AuctionItems = dstAuctionItems
+
+		_, err = gs.GetClientEndPoint().(*gameServerService.GameServerClient).ReplyGetAuctionItemsByAuctionIds(response)
+		if err != nil {
+			appLog.Errorw("getAuctionItemsByAuctionIds->ReplyGetItemNumByCategoryId", "err", err)
+		}
+
+		for _, dstAuctionItem := range dstAuctionItems {
+			gs.putAuctionItem(dstAuctionItem)
+		}
+		response.Reset()
+		getAuctionItemsByAuctionIdsRespPool.Put(response)
+	}()
 	return nil, nil
 }

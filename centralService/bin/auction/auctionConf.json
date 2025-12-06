@@ -5,7 +5,7 @@
     "auctionServerId":1,
     "addressForDebug":"localhost:8989",
     "logPath":"auction.log",
-    "logLevel":0,
+    "logLevel":-1,
     "logRotateSize":500,
     "mysql":{
     	"addr":"127.0.0.1:3306",

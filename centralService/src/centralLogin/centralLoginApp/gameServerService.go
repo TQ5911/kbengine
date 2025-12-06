@@ -7,6 +7,7 @@ import (
 	sqllib "database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/garyburd/redigo/redis"
@@ -94,7 +95,7 @@ func (self *GameServerService) DoVerifyLogin(in *gameServerService.VerifyAccount
 
 func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRequest) (*gameServerService.Void, error) {
 	res := gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_UNKNOWN
-	isLogin, channelId, accountId := self.app.checkClientLogin(self, in.AccountType, in.AccountName, in.Token)
+	isLogin, channelId, accountId, otherJsonData := self.app.checkClientLogin(self, in.AccountType, in.AccountName, in.Token)
 	if !isLogin {
 		res = gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_FAIL
 		appLog.Error("verifyLogin failed: ", in.AccountType, in.AccountName, in.Token)
@@ -118,7 +119,7 @@ func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRe
 		}
 	}
 
-	appLog.Info(fmt.Sprintf("verifyLogin: res=%d, AccountType=%d, AccountId=%s, AccountName=%s, Token=%s, channelId=%d", res, in.AccountType, accountId, in.AccountName, in.Token, channelId))
+	appLog.Info(fmt.Sprintf("verifyLogin: res=%d, AccountType=%d, AccountId=%s, AccountName=%s, OtherJsonData=%s, Token=%s, channelId=%d", res, in.AccountType, accountId, in.AccountName, otherJsonData, in.Token, channelId))
 	result := gameServerService.VerifyAccountReply{
 		Result: res, AccountName: in.AccountName,
 		AccountType:      in.AccountType,
@@ -148,6 +149,14 @@ func (self *GameServerService) RegisterServer(in *gameServerService.GameServerIn
 	self.hostId = in.HostId
 	self.onlineNum = in.OnlineNum
 
+	conn := self.app.redisPool.Get()
+	defer conn.Close()
+	_, err := conn.Do("set", self.ServerOnlineNumKey(in.HostId), 0)
+	if err != nil {
+		appLog.Error("ServerRegister set failed", in.HostId, err.Error())
+		return nil, err
+	}
+
 	self.app.addGameServer(self)
 	return nil, nil
 }
@@ -156,6 +165,15 @@ func (self *GameServerService) UpdateServerInfo(in *gameServerService.GameServer
 	self.app.serversLock.Lock()
 	defer self.app.serversLock.Unlock()
 	self.onlineNum = in.OnlineNum
+
+	conn := self.app.redisPool.Get()
+	defer conn.Close()
+	_, err := conn.Do("set", self.ServerOnlineNumKey(in.HostId), in.OnlineNum)
+	if err != nil {
+		appLog.Error("UpdateServerInfo set failed", in.HostId, err.Error())
+		return nil, err
+	}
+
 	return nil, nil
 }
 
@@ -246,6 +264,10 @@ func (self *GameServerService) ActiveTick(in *gameServerService.Void) (*gameServ
 
 func (self *GameServerService) LockLoginSwitchServerKey(accountName string) string {
 	return "lockLogin_" + accountName
+}
+
+func (self *GameServerService) ServerOnlineNumKey(serverId uint32) string {
+	return "ServerOnlineNum_" + strconv.Itoa(int(serverId))
 }
 
 func (self *GameServerService) LockLoginSwitchServer(in *gameServerService.LockLoginSwitchServerVal) (*gameServerService.Void, error) {

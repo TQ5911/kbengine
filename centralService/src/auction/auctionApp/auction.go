@@ -60,30 +60,32 @@ func convert(i interface{}) (uint64, error) {
 //}
 
 type AuctionItem struct {
-	AuctionType     uint8                            `json:"auctionType"`     // 交易行类型
-	AuctionItemUUID uint64                           `json:"auctionItemUUID"` // 上架物品唯一UUID
-	AddTime         uint32                           `json:"addTime"`         // 上架物品时间
-	ItemData        *ItemData                        `json:"itemData"`        // 物品信息
-	Price           uint64                           `json:"price"`           // 总价
-	Number          uint32                           `json:"number"`          // 物品数量
-	BagType         uint8                            `json:"bagType"`         // 商家时的背包类型
-	Source          uint8                            `json:"source"`          // 拍卖来源
-	Status          uint8                            `json:"status"`          // 物品交易状态
-	Locked          uint32                           `json:"locked"`          // 物品是否被锁
-	ExtraInfo       string                           `json:"extraInfo"`       // 其他信息
-	TCreate         uint32                           `json:"tCreate"`         // 创建时间
-	FromPlayerGBID  uint64                           `json:"fromPlayerGBID"`  // 交易物品的玩家GBID
-	ServerId        uint32                           `json:"serverId"`        // 服务器ID
-	LockPlayerGBID  uint64                           `json:"lockPlayerGBID"`  // 锁定的玩家GBID
-	LockTimer       *time.Timer                      `json:"lockTimer"`       // 锁定的定时器
-	IsDestroyed     bool                             `json:"isDestroyed"`     // 是否已经销毁
-	mu              *sync.RWMutex                    `json:"-"`               // 读写锁
-	IsInIndexMap    cmap.ConcurrentMap[string, bool] `json:"-"`               // 是否在索引中
-	IsNeedRemove    bool                             `json:"-"`               // 是否需要从商品缓存列表中移除
-	EachPrice       float32                          `json:"-"`               // 单价
+	AuctionType           uint8                            `json:"auctionType"`     // 交易行类型
+	AuctionItemUUID       uint64                           `json:"auctionItemUUID"` // 上架物品唯一UUID
+	AddTime               int64                            `json:"addTime"`         // 上架物品时间
+	ItemData              *ItemData                        `json:"itemData"`        // 物品信息
+	Price                 uint64                           `json:"price"`           // 总价
+	Number                uint32                           `json:"number"`          // 物品数量
+	BagType               uint8                            `json:"bagType"`         // 商家时的背包类型
+	Source                uint8                            `json:"source"`          // 拍卖来源
+	Status                uint8                            `json:"status"`          // 物品交易状态
+	Locked                uint32                           `json:"locked"`          // 物品是否被锁
+	ExtraInfo             string                           `json:"extraInfo"`       // 其他信息
+	TCreate               uint32                           `json:"tCreate"`         // 创建时间
+	FromPlayerGBID        uint64                           `json:"fromPlayerGBID"`  // 交易物品的玩家GBID
+	ServerId              uint32                           `json:"serverId"`        // 服务器ID
+	LockPlayerGBID        uint64                           `json:"lockPlayerGBID"`  // 锁定的玩家GBID
+	LockTimer             *time.Timer                      `json:"lockTimer"`       // 锁定的定时器
+	IsDestroyed           bool                             `json:"isDestroyed"`     // 是否已经销毁
+	mu                    *sync.RWMutex                    `json:"-"`               // 读写锁
+	IsInIndexMap          cmap.ConcurrentMap[string, bool] `json:"-"`               // 是否在索引中
+	IsInPublicityIndexMap cmap.ConcurrentMap[string, bool] `json:"-"`               // 是否在公示索引中
+	IsNeedRemove          bool                             `json:"-"`               // 是否需要从商品缓存列表中移除
+	EachPrice             float32                          `json:"-"`               // 单价
+	IsPublicity           uint32                           `json:"isPublicity"`     // 是否是公示的商品
 }
 
-func NewAuctionItem(auctionType uint8, auctionItemUUID uint64, addTime uint32, itemData *ItemData, price uint64, number uint32, bagType uint8, source uint8, status uint8, locked uint32, extraInfo string, fromPlayerGBID uint64) *AuctionItem {
+func NewAuctionItem(auctionType uint8, auctionItemUUID uint64, addTime int64, itemData *ItemData, price uint64, number uint32, bagType uint8, source uint8, status uint8, locked uint32, extraInfo string, fromPlayerGBID uint64, isPublicity uint32) *AuctionItem {
 	auctionItem := &AuctionItem{
 		AuctionType:     auctionType,
 		AuctionItemUUID: auctionItemUUID,
@@ -99,6 +101,7 @@ func NewAuctionItem(auctionType uint8, auctionItemUUID uint64, addTime uint32, i
 		TCreate:         uint32(time.Now().Unix()),
 		FromPlayerGBID:  fromPlayerGBID,
 		mu:              &sync.RWMutex{},
+		IsPublicity:     isPublicity,
 	}
 
 	var m map[string]interface{}
@@ -118,6 +121,11 @@ func (a *AuctionItem) init() bool {
 	for _, indexKey := range auctionIndexKeys {
 		a.IsInIndexMap.Set(indexKey, false)
 	}
+
+	a.IsInPublicityIndexMap = cmap.New[bool]()
+	for _, indexKey := range auctionIndexKeys {
+		a.IsInPublicityIndexMap.Set(indexKey, false)
+	}
 	return true
 }
 
@@ -129,6 +137,16 @@ func (a *AuctionItem) Less(other btree.Item) bool {
 		return a.AddTime < other.(*AuctionItem).AddTime
 	}
 	return a.EachPrice < other.(*AuctionItem).EachPrice
+}
+
+func (a *AuctionItem) Compare(other *AuctionItem) bool {
+	if a.EachPrice == other.EachPrice {
+		if a.AddTime == other.AddTime {
+			return a.AuctionItemUUID < other.AuctionItemUUID
+		}
+		return a.AddTime < other.AddTime
+	}
+	return a.EachPrice < other.EachPrice
 }
 
 func (a *AuctionItem) getServerId() uint32 {
@@ -164,25 +182,35 @@ func (a *AuctionItem) isItemExpired(cutTime int64) bool {
 	if a.Status == AUCTION_STATUS_EXPIRED {
 		return true
 	}
-	if a.ItemData.ExpireTime > 0 && cutTime >= int64(a.ItemData.ExpireTime) {
+	if a.ItemData.ExpireTime > 0 && cutTime >= a.ItemData.ExpireTime {
 		return true
 	}
-	return a.itemExpiredTime() <= uint32(cutTime)
+	return a.itemExpiredTime() <= cutTime
 }
 
 func (a *AuctionItem) lock(timeout uint32, lockPlayerGbId uint64, app *AuctionApp, isRemoveIndex bool) bool {
 	if a.isLocked() {
 		return false
 	}
-
+	isPublicity := false
 	if isRemoveIndex {
 		a.IsNeedRemove = true
-		app.auctionMgr.removeAuctionItemFromIndex(INDEX_KEY_ITEMID, a.getIndexVal(INDEX_KEY_ITEMID), a)
+		// 正在公示
+		if a.Status == AUCTION_STATUS_PUBLICITY {
+			isPublicity = true
+			app.auctionMgr.removeAuctionItemFromPublicityIndex(INDEX_KEY_ITEMID, a.getIndexVal(INDEX_KEY_ITEMID), a)
+		} else {
+			app.auctionMgr.removeAuctionItemFromIndex(INDEX_KEY_ITEMID, a.getIndexVal(INDEX_KEY_ITEMID), a)
+		}
 	}
 	if !a.mu.TryLock() {
 		if isRemoveIndex {
 			a.IsNeedRemove = false
-			app.auctionMgr.addAuctionItemToIndex(INDEX_KEY_ITEMID, a.getIndexVal(INDEX_KEY_ITEMID), a, false)
+			if isPublicity {
+				app.auctionMgr.addAuctionItemToPublicityIndex(INDEX_KEY_ITEMID, a.getIndexVal(INDEX_KEY_ITEMID), a)
+			} else {
+				app.auctionMgr.addAuctionItemToIndex(INDEX_KEY_ITEMID, a.getIndexVal(INDEX_KEY_ITEMID), a)
+			}
 		}
 		return false
 	}
@@ -225,7 +253,7 @@ func (a *AuctionItem) isLocked() bool {
 	return a.Locked != 0
 }
 
-func (a *AuctionItem) itemExpiredSecond() uint32 {
+func (a *AuctionItem) itemExpiredSecond() int64 {
 	normalItemSalePeriod := AuctionConfig.GetStringMap("auctionAutoUnlist")
 	if normalItemSalePeriod == nil {
 		appLog.Error("itemExpiredSecond normalItemSalePeriod is nil")
@@ -236,20 +264,43 @@ func (a *AuctionItem) itemExpiredSecond() uint32 {
 		appLog.Error("itemExpiredSecond normalItemSalePeriod value is nil")
 		return 0
 	}
-	return uint32(normalItemSalePeriodValue.(float64) * 3600)
+	t := int64(normalItemSalePeriodValue.(float64) * 3600)
+	if a.IsPublicity == 1 {
+		t += a.GetPublicityGap()
+	}
+	return t
 }
 
-func (a *AuctionItem) itemExpiredTime() uint32 {
+func (a *AuctionItem) GetPublicityGap() int64 {
+	auctionPublicityTime := AuctionConfig.GetStringMap("auctionPublicityTime")
+	if auctionPublicityTime == nil {
+		appLog.Error("GetPublicityGap auctionPublicityTime is nil")
+		return 0
+	}
+	auctionPublicityTimeValue, ok := auctionPublicityTime["value"]
+	if !ok {
+		appLog.Error("GetPublicityGap auctionPublicityTime value is nil")
+		return 0
+	}
+	return int64(auctionPublicityTimeValue.(float64) * 3600)
+}
+
+func (a *AuctionItem) itemExpiredTime() int64 {
 	return a.AddTime + a.itemExpiredSecond()
 }
 
-func (a *AuctionItem) setStatus(status uint8, db *sql.DB) error {
+func (a *AuctionItem) setStatus(status uint8, db *sql.DB, isInit bool) error {
 	if a.Status == status {
 		return nil
 	}
 
 	a.Status = status
-	if status != AUCTION_STATUS_SELLING {
+	// 初始化期间，直接插入db或者从db捞数据出来，无需进行再次插入，只有状态发生改变的才需要插入
+	if isInit {
+		if status == AUCTION_STATUS_SELLING || status == AUCTION_STATUS_PUBLICITY {
+			return nil
+		}
+	} else {
 		err := a.Update(db, []string{"status"}, []interface{}{a.Status})
 		if err != nil {
 			appLog.Error("setStatus Update err:", err)
@@ -261,8 +312,8 @@ func (a *AuctionItem) setStatus(status uint8, db *sql.DB) error {
 }
 
 func (a *AuctionItem) Add(db *sql.DB, status uint8) error {
-	sql := "INSERT INTO `auction_auctionItemData` (`auctionType`, `auctionItemUUID`, `addTime`, `itemData_itemId`, `itemData_itemNum`, `itemData_createTime`, `itemData_expireTime`, `itemData_uniqueId`, `itemData_bindType`, `itemData_attrJson`, `price`, `number`, `bagType`, `source`, `status`, `locked`, `extraInfo`, `tCreate`, `fromPlayerGBID`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, err := db.Exec(sql, a.AuctionType, a.AuctionItemUUID, a.AddTime, a.ItemData.ItemId, a.ItemData.ItemNum, a.ItemData.CreateTime, a.ItemData.ExpireTime, a.ItemData.UniqueId, a.ItemData.BindType, a.ItemData.AttrJson, a.Price, a.Number, a.BagType, a.Source, status, a.Locked, a.ExtraInfo, a.TCreate, a.FromPlayerGBID)
+	sql := "INSERT INTO `auction_auctionItemData` (`auctionType`, `auctionItemUUID`, `addTime`, `itemData_itemId`, `itemData_itemNum`, `itemData_createTime`, `itemData_expireTime`, `itemData_uniqueId`, `itemData_bindType`, `itemData_attrJson`, `price`, `number`, `bagType`, `source`, `status`, `locked`, `extraInfo`, `tCreate`, `fromPlayerGBID`, `isPublicity`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, err := db.Exec(sql, a.AuctionType, a.AuctionItemUUID, a.AddTime, a.ItemData.ItemId, a.ItemData.ItemNum, a.ItemData.CreateTime, a.ItemData.ExpireTime, a.ItemData.UniqueId, a.ItemData.BindType, a.ItemData.AttrJson, a.Price, a.Number, a.BagType, a.Source, status, a.Locked, a.ExtraInfo, a.TCreate, a.FromPlayerGBID, a.IsPublicity)
 	if err != nil {
 		appLog.Error("Add AuctionItem Exec err:", err)
 		return err
@@ -306,8 +357,8 @@ type ItemData struct {
 	ItemNum    uint32 `json:"itemNum"`    // 物品数量
 	UniqueId   uint64 `json:"uniqueId"`   // 物品唯一ID
 	BindType   uint8  `json:"bindType"`   // 绑定类型
-	CreateTime uint32 `json:"createTime"` // 创建时间
-	ExpireTime uint32 `json:"expireTime"` // 过期时间
+	CreateTime int64  `json:"createTime"` // 创建时间
+	ExpireTime int64  `json:"expireTime"` // 过期时间
 	AttrJson   string `json:"attrJson"`   // 属性数据
 }
 
@@ -521,7 +572,7 @@ type LockedBTree struct {
 }
 
 func NewLockedBTree() *LockedBTree {
-	btreeG := btree.NewG[*AuctionItem](32, func(a, b *AuctionItem) bool {
+	btreeG := btree.NewG(32, func(a, b *AuctionItem) bool {
 		return a.Less(b)
 	})
 	return &LockedBTree{tree: btreeG, mu: &sync.RWMutex{}}
@@ -535,19 +586,21 @@ type CacheItem struct {
 }
 
 type AuctionMgr struct {
-	auctionItems     cmap.ConcurrentMap[string, *AuctionItem]
-	db               *sql.DB
-	app              *AuctionApp
-	priceRecord      *AuctionPriceRecords
-	isDBLoaded       bool
-	auctionItemIndex cmap.ConcurrentMap[string, cmap.ConcurrentMap[string, *LockedBTree]]
-	expiredTimerMap  cmap.ConcurrentMap[string, *time.Timer]
-	gmTimerMap       map[string]interface{}
-	gmTimerLock      *sync.RWMutex
-	blackList        []uint64
-	blackListLock    *sync.RWMutex
-	updateTimerMap   cmap.ConcurrentMap[string, *time.Timer]
-	addCh            chan *CacheItem
+	auctionItems              cmap.ConcurrentMap[string, *AuctionItem]
+	db                        *sql.DB
+	app                       *AuctionApp
+	priceRecord               *AuctionPriceRecords
+	isDBLoaded                bool
+	auctionItemIndex          cmap.ConcurrentMap[string, cmap.ConcurrentMap[string, *LockedBTree]]
+	auctionItemPublicityIndex cmap.ConcurrentMap[string, cmap.ConcurrentMap[string, *LockedBTree]]
+	expiredTimerMap           cmap.ConcurrentMap[string, *time.Timer]
+	endPublicityTimerMap      cmap.ConcurrentMap[string, *time.Timer]
+	gmTimerMap                map[string]interface{}
+	gmTimerLock               *sync.RWMutex
+	blackList                 []uint64
+	blackListLock             *sync.RWMutex
+	updateTimerMap            cmap.ConcurrentMap[string, *time.Timer]
+	addCh                     chan *CacheItem
 }
 
 func NewAuctionMgr(db *sql.DB, app *AuctionApp) *AuctionMgr {
@@ -559,18 +612,20 @@ func NewAuctionMgr(db *sql.DB, app *AuctionApp) *AuctionMgr {
 	}
 
 	auctionMgr := &AuctionMgr{
-		auctionItems:     cmap.New[*AuctionItem](),
-		db:               db,
-		priceRecord:      priceRecord,
-		app:              app,
-		expiredTimerMap:  cmap.New[*time.Timer](),
-		gmTimerMap:       make(map[string]interface{}),
-		gmTimerLock:      &sync.RWMutex{},
-		auctionItemIndex: cmap.New[cmap.ConcurrentMap[string, *LockedBTree]](),
-		blackList:        make([]uint64, 0),
-		blackListLock:    &sync.RWMutex{},
-		updateTimerMap:   cmap.New[*time.Timer](),
-		addCh:            make(chan *CacheItem, 1000000),
+		auctionItems:              cmap.New[*AuctionItem](),
+		db:                        db,
+		priceRecord:               priceRecord,
+		app:                       app,
+		expiredTimerMap:           cmap.New[*time.Timer](),
+		endPublicityTimerMap:      cmap.New[*time.Timer](),
+		gmTimerMap:                make(map[string]interface{}),
+		gmTimerLock:               &sync.RWMutex{},
+		auctionItemIndex:          cmap.New[cmap.ConcurrentMap[string, *LockedBTree]](),
+		auctionItemPublicityIndex: cmap.New[cmap.ConcurrentMap[string, *LockedBTree]](),
+		blackList:                 make([]uint64, 0),
+		blackListLock:             &sync.RWMutex{},
+		updateTimerMap:            cmap.New[*time.Timer](),
+		addCh:                     make(chan *CacheItem, 1000000),
 	}
 
 	auctionMgr.Init()
@@ -590,12 +645,11 @@ func (am *AuctionMgr) Init() {
 	am._loadAuctionBlackListData()
 	am.onInitAuctionFromDB()
 	am.isDBLoaded = true
-
 }
 
 func (am *AuctionMgr) procAuctionItemIndex() {
 	for cacheItem := range am.addCh {
-		am.addAuctionItemToIndex(cacheItem.IndexKey, cacheItem.IndexVal, cacheItem.AuctionItem, cacheItem.IsInit)
+		am.addAuctionItemToIndex(cacheItem.IndexKey, cacheItem.IndexVal, cacheItem.AuctionItem)
 	}
 }
 
@@ -767,7 +821,7 @@ func (am *AuctionMgr) _loadAuctionAllItemData() error {
 
 func (am *AuctionMgr) loadAuctionItemsFromDB(lastId int) ([]*AuctionItem, int, error) {
 	var auctionItems []*AuctionItem
-	query := fmt.Sprintf("SELECT id, auctionType, auctionItemUUID, addTime, itemData_itemId, itemData_itemNum, itemData_createTime, itemData_expireTime, itemData_uniqueId, itemData_bindType, itemData_attrJson, price, number, bagType, source, status, locked, extraInfo, tCreate, fromPlayerGBID FROM auction_auctionItemData where id > %d order by id asc LIMIT 100000 ", lastId)
+	query := fmt.Sprintf("SELECT id, auctionType, auctionItemUUID, addTime, itemData_itemId, itemData_itemNum, itemData_createTime, itemData_expireTime, itemData_uniqueId, itemData_bindType, itemData_attrJson, price, number, bagType, source, status, locked, extraInfo, tCreate, fromPlayerGBID, isPublicity FROM auction_auctionItemData where id > %d order by id asc LIMIT 100000 ", lastId)
 	rows, err := am.db.Query(query)
 	if err != nil {
 		return auctionItems, lastId, err
@@ -778,7 +832,7 @@ func (am *AuctionMgr) loadAuctionItemsFromDB(lastId int) ([]*AuctionItem, int, e
 		var itemData = ItemData{}
 
 		var ai = AuctionItem{ItemData: &itemData, mu: &sync.RWMutex{}}
-		err := rows.Scan(&lastId, &ai.AuctionType, &ai.AuctionItemUUID, &ai.AddTime, &ai.ItemData.ItemId, &ai.ItemData.ItemNum, &ai.ItemData.CreateTime, &ai.ItemData.ExpireTime, &ai.ItemData.UniqueId, &ai.ItemData.BindType, &ai.ItemData.AttrJson, &ai.Price, &ai.Number, &ai.BagType, &ai.Source, &ai.Status, &ai.Locked, &ai.ExtraInfo, &ai.TCreate, &ai.FromPlayerGBID)
+		err := rows.Scan(&lastId, &ai.AuctionType, &ai.AuctionItemUUID, &ai.AddTime, &ai.ItemData.ItemId, &ai.ItemData.ItemNum, &ai.ItemData.CreateTime, &ai.ItemData.ExpireTime, &ai.ItemData.UniqueId, &ai.ItemData.BindType, &ai.ItemData.AttrJson, &ai.Price, &ai.Number, &ai.BagType, &ai.Source, &ai.Status, &ai.Locked, &ai.ExtraInfo, &ai.TCreate, &ai.FromPlayerGBID, &ai.IsPublicity)
 		if err != nil {
 			appLog.Error("loadAuctionItemsFromDB: Scan err", err)
 			return auctionItems, lastId, err
@@ -895,40 +949,71 @@ func (am *AuctionMgr) refreshItemPriceData() {
 }
 
 func (am *AuctionMgr) refreshAuctionIndexData() {
+	// 当前时间
 	curTime := time.Now().Unix()
+	// 公示时间
 	appLog.Info("refreshAuctionIndexData: start ", am.auctionItems.Count())
 	for item := range am.auctionItems.IterBuffered() {
 		auctionItem := item.Val
-		for _, indexKey := range auctionIndexKeys {
-			if indexKey == INDEX_KEY_ITEMID {
-				if auctionItem.Status == AUCTION_STATUS_SELLING {
-					if auctionItem.isItemExpired(curTime) {
-						am.setStatus(AUCTION_STATUS_EXPIRED, auctionItem, true)
-						continue
-					} else {
-						auctionItemUUID := auctionItem.AuctionItemUUID
-						auctionItemUUIDStr := strconv.FormatUint(auctionItemUUID, 10)
-						if _, ok := am.expiredTimerMap.Get(auctionItemUUIDStr); ok {
-							appLog.Error("refreshAuctionIndexData: timer already exist:", auctionItemUUID)
-							continue
-						}
-						curTime := uint32(time.Now().Unix())
-						duration := auctionItem.itemExpiredTime() - curTime
-						timer := time.AfterFunc(time.Duration(duration)*time.Second, func() {
-							am.setItemExpired(auctionItemUUID)
-						})
-						am.expiredTimerMap.Set(auctionItemUUIDStr, timer)
-					}
-				} else {
+		if auctionItem.Status == AUCTION_STATUS_PUBLICITY {
+			// 检查是否在公示期
+			if auctionItem.AddTime+auctionItem.GetPublicityGap() > curTime {
+				auctionItemUUID := auctionItem.AuctionItemUUID
+				auctionItemUUIDStr := strconv.FormatUint(auctionItemUUID, 10)
+				if _, ok := am.endPublicityTimerMap.Get(auctionItemUUIDStr); ok {
+					appLog.Error("refreshAuctionIndexData: publicity timer already exist:", auctionItemUUID)
 					continue
 				}
+				// 加入公示索引
+				for _, indexKey := range auctionIndexKeys {
+					am.addAuctionItemToPublicityIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem)
+				}
+				// 挂公示结束定时器
+				curTime := time.Now().Unix()
+				duration := auctionItem.AddTime + auctionItem.GetPublicityGap() - curTime
+				timer := time.AfterFunc(time.Duration(duration)*time.Second, func() {
+					am.setItemSelling(auctionItemUUID)
+				})
+				am.endPublicityTimerMap.Set(auctionItemUUIDStr, timer)
+				continue
+				// 处理正常公示期结束
 			}
-			am.addAuctionItemToIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem, true)
 		}
+		// 不管是否已过期公示期，出售期，都需要检查是否过期
+		if auctionItem.Status == AUCTION_STATUS_SELLING || auctionItem.Status == AUCTION_STATUS_PUBLICITY {
+			if auctionItem.isItemExpired(curTime) {
+				am.setStatus(AUCTION_STATUS_EXPIRED, auctionItem, false)
+				// 加入玩家队列
+				am.addAuctionItemToIndex(INDEX_KEY_PLAYERGBID, auctionItem.getIndexVal(INDEX_KEY_PLAYERGBID), auctionItem)
+			} else {
+				// 未过期，公示期需要进入出售期
+				am.setStatus(AUCTION_STATUS_SELLING, auctionItem, false)
+				// 加入出售索引
+				for _, indexKey := range auctionIndexKeys {
+					am.addAuctionItemToIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem)
+				}
+				// 挂出售期超时定期器
+				auctionItemUUID := auctionItem.AuctionItemUUID
+				auctionItemUUIDStr := strconv.FormatUint(auctionItemUUID, 10)
+				if _, ok := am.expiredTimerMap.Get(auctionItemUUIDStr); ok {
+					appLog.Error("refreshAuctionIndexData: expired timer already exist:", auctionItemUUID)
+					continue
+				}
+				curTime := time.Now().Unix()
+				duration := auctionItem.itemExpiredTime() - curTime
+				timer := time.AfterFunc(time.Duration(duration)*time.Second, func() {
+					am.setItemExpired(auctionItemUUID)
+				})
+				am.expiredTimerMap.Set(auctionItemUUIDStr, timer)
+			}
+			continue
+		}
+		// 其他的状态，一律放在玩家索引里
+		am.addAuctionItemToIndex(INDEX_KEY_PLAYERGBID, auctionItem.getIndexVal(INDEX_KEY_PLAYERGBID), auctionItem)
 	}
 }
 
-func (am *AuctionMgr) addAuctionItemToIndex(indexKey string, indexValue string, auctionItem *AuctionItem, isInit bool) {
+func (am *AuctionMgr) addAuctionItemToIndex(indexKey string, indexValue string, auctionItem *AuctionItem) {
 	if auctionItem.IsDestroyed || auctionItem.Number == 0 {
 		appLog.Debug("addAuctionItemToIndex: auctionItem is removed", auctionItem.AuctionItemUUID)
 		return
@@ -971,8 +1056,64 @@ func (am *AuctionMgr) addAuctionItemToIndex(indexKey string, indexValue string, 
 	lockedBTree.tree.ReplaceOrInsert(auctionItem)
 }
 
+func (am *AuctionMgr) addAuctionItemToPublicityIndex(indexKey string, indexValue string, auctionItem *AuctionItem) {
+	if auctionItem.IsDestroyed || auctionItem.Number == 0 {
+		appLog.Debug("addAuctionItemToPublicityIndex: auctionItem is removed", auctionItem.AuctionItemUUID)
+		return
+	}
+
+	isIn, ok := auctionItem.IsInPublicityIndexMap.Get(indexKey)
+	if ok && isIn {
+		appLog.Debugw("addAuctionItemToPublicityIndex: auctionItem is already in index", "auctionItemUUID", auctionItem.AuctionItemUUID, "indexKey", indexKey)
+		return
+	}
+
+	innerMap, _ := am.auctionItemPublicityIndex.GetOrCreate(indexKey, func() cmap.ConcurrentMap[string, *LockedBTree] {
+		return cmap.New[*LockedBTree]()
+	})
+
+	lockedBTree, _ := innerMap.GetOrCreate(indexValue, func() *LockedBTree {
+		return NewLockedBTree()
+	})
+
+	lockedBTree.mu.Lock()
+	defer lockedBTree.mu.Unlock()
+	if auctionItem.IsDestroyed || auctionItem.Number == 0 || auctionItem.IsNeedRemove {
+		appLog.Debugw("addAuctionItemToPublicityIndex: auctionItem is removed in lock", "auctionItemUUID", auctionItem.AuctionItemUUID)
+		return
+	}
+
+	isIn, ok = auctionItem.IsInPublicityIndexMap.Get(indexKey)
+	if ok && isIn {
+		appLog.Debugw("addAuctionItemToPublicityIndex: auctionItem is already in index in lock", "auctionItemUUID", auctionItem.AuctionItemUUID, "indexKey", indexKey)
+		return
+	}
+	auctionItem.IsInPublicityIndexMap.Set(indexKey, true)
+
+	if indexKey == INDEX_KEY_ITEMID {
+		if auctionItem.Status == AUCTION_STATUS_SELLING {
+			appLog.Debugw("addAuctionItemToPublicityIndex: auctionItem is selling", "auctionItemUUID", auctionItem.AuctionItemUUID)
+			return
+		}
+	}
+	lockedBTree.tree.ReplaceOrInsert(auctionItem)
+}
+
 func (am *AuctionMgr) getAuctionItemIndex(indexKey string, indexValue string) *LockedBTree {
 	innerMap, ok := am.auctionItemIndex.Get(indexKey)
+	if !ok {
+		return nil
+	}
+	lockedBtree, ok := innerMap.Get(indexValue)
+	if !ok {
+		return nil
+	}
+
+	return lockedBtree
+}
+
+func (am *AuctionMgr) getAuctionItemPublicityIndex(indexKey string, indexValue string) *LockedBTree {
+	innerMap, ok := am.auctionItemPublicityIndex.Get(indexKey)
 	if !ok {
 		return nil
 	}
@@ -1023,6 +1164,45 @@ func (am *AuctionMgr) GetLowestPriceItem(indexKey string, indexValue string) flo
 	return auctionItem.EachPrice
 }
 
+func (am *AuctionMgr) getAuctionItemPublicityIndexNum(indexKey string, indexValue string) uint32 {
+	innerMap, ok := am.auctionItemPublicityIndex.Get(indexKey)
+	if !ok {
+		return 0
+	}
+	lockedBtree, ok := innerMap.Get(indexValue)
+	if !ok {
+		return 0
+	}
+	if lockedBtree == nil {
+		return 0
+	}
+
+	if lockedBtree.tree == nil {
+		return 0
+	}
+
+	return uint32(lockedBtree.tree.Len())
+}
+
+// 获取最低售价的物品
+func (am *AuctionMgr) GetLowestPricePublicityItem(indexKey string, indexValue string) float32 {
+	lockedBtree := am.getAuctionItemPublicityIndex(indexKey, indexValue)
+	if lockedBtree == nil {
+		return 0
+	}
+	lockedBtree.mu.RLock()
+	defer lockedBtree.mu.RUnlock()
+	if lockedBtree.tree.Len() == 0 {
+		return 0
+	}
+	auctionItem, ok := lockedBtree.tree.Min()
+	if !ok {
+		return 0
+	}
+
+	return auctionItem.EachPrice
+}
+
 func (am *AuctionMgr) removeAuctionItemFromIndex(indexKey string, indexVal string, dstAuctionItem *AuctionItem) *AuctionItem {
 	isIn, ok := dstAuctionItem.IsInIndexMap.Get(indexKey)
 	if !ok || !isIn {
@@ -1039,6 +1219,32 @@ func (am *AuctionMgr) removeAuctionItemFromIndex(indexKey string, indexVal strin
 	lockedBtree, ok := innerMap.Get(indexVal)
 	if !ok {
 		appLog.Errorw("removeAuctionItemFromIndex: auctionItem is not in index", "auctionItemUUID", dstAuctionItem.AuctionItemUUID, "indexKey", indexKey)
+		return nil
+	}
+
+	lockedBtree.mu.Lock()
+	defer lockedBtree.mu.Unlock()
+	lockedBtree.tree.Delete(dstAuctionItem)
+
+	return nil
+}
+
+func (am *AuctionMgr) removeAuctionItemFromPublicityIndex(indexKey string, indexVal string, dstAuctionItem *AuctionItem) *AuctionItem {
+	isIn, ok := dstAuctionItem.IsInPublicityIndexMap.Get(indexKey)
+	if !ok || !isIn {
+		appLog.Debugw("removeAuctionItemFromPublicityIndex: auctionItem is not in index", "auctionItemUUID", dstAuctionItem.AuctionItemUUID, "indexKey", indexKey)
+		return nil
+	}
+	dstAuctionItem.IsInPublicityIndexMap.Set(indexKey, false)
+
+	innerMap, ok := am.auctionItemPublicityIndex.Get(indexKey)
+	if !ok {
+		appLog.Errorw("removeAuctionItemFromPublicityIndex: auctionItem is not in index", "auctionItemUUID", dstAuctionItem.AuctionItemUUID, "indexKey", indexKey)
+		return nil
+	}
+	lockedBtree, ok := innerMap.Get(indexVal)
+	if !ok {
+		appLog.Errorw("removeAuctionItemFromPublicityIndex: auctionItem is not in index", "auctionItemUUID", dstAuctionItem.AuctionItemUUID, "indexKey", indexKey)
 		return nil
 	}
 
@@ -1074,8 +1280,8 @@ func (am *AuctionMgr) removeAuctionItemsFromIndex(indexKey string, indexVal stri
 	return nil
 }
 
-func (am *AuctionMgr) AddAuctionItem(auctionType uint8, auctionItemUUID uint64, addTime uint32, itemData *ItemData, price uint64, number uint32, bagType uint8, source uint8, status uint8, locked uint32, extraInfo string, fromPlayerGBID uint64) (*AuctionItem, error) {
-	auctionItem := NewAuctionItem(auctionType, auctionItemUUID, addTime, itemData, price, number, bagType, source, status, locked, extraInfo, fromPlayerGBID)
+func (am *AuctionMgr) AddAuctionItem(auctionType uint8, auctionItemUUID uint64, addTime int64, itemData *ItemData, price uint64, number uint32, bagType uint8, source uint8, status uint8, locked uint32, extraInfo string, fromPlayerGBID uint64, isPublicity uint32) (*AuctionItem, error) {
+	auctionItem := NewAuctionItem(auctionType, auctionItemUUID, addTime, itemData, price, number, bagType, source, status, locked, extraInfo, fromPlayerGBID, isPublicity)
 
 	_, err := am.GetAuctionItem(auctionItem.AuctionItemUUID)
 	if err == nil {
@@ -1111,12 +1317,21 @@ func (am *AuctionMgr) DeleteAuctionItem(auctionItemUUID uint64, isNeedRemoveInde
 		am.expiredTimerMap.Remove(auctionItemUUIDStr)
 	}
 
+	timer, ok = am.endPublicityTimerMap.Get(auctionItemUUIDStr)
+	if ok {
+		if timer != nil {
+			timer.Stop()
+		}
+		am.endPublicityTimerMap.Remove(auctionItemUUIDStr)
+	}
+
 	auctionItem.IsDestroyed = true
 	for _, indexKey := range auctionIndexKeys {
 		if indexKey == INDEX_KEY_ITEMID && !isNeedRemoveIndex {
 			continue
 		}
 		am.removeAuctionItemFromIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem)
+		am.removeAuctionItemFromPublicityIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem)
 	}
 
 	if auctionItem.FromPlayerGBID != 0 {
@@ -1239,7 +1454,7 @@ func (am *AuctionMgr) CheckCancelSaleItem(auctionItemUUID uint64, fromPlayerGBID
 		return auctionItem, AUCTION_CANCEL_SALE_ITEM_NOT_FOUND
 	}
 
-	if auctionItem.Status != AUCTION_STATUS_INIT && auctionItem.Status != AUCTION_STATUS_SELLING && auctionItem.Status != AUCTION_STATUS_EXPIRED {
+	if auctionItem.Status != AUCTION_STATUS_INIT && auctionItem.Status != AUCTION_STATUS_SELLING && auctionItem.Status != AUCTION_STATUS_EXPIRED && auctionItem.Status != AUCTION_STATUS_PUBLICITY {
 		return auctionItem, AUCTION_ITEM_CANNOT_CANCEL_SALE
 	}
 
@@ -1260,7 +1475,7 @@ func (am *AuctionMgr) doCancelSaleItemCheck(auctionItemUUID uint64, fromPlayerGB
 		return auctionItem, AUCTION_CANCEL_SALE_ITEM_NOT_FOUND
 	}
 
-	if auctionItem.Status != AUCTION_STATUS_INIT && auctionItem.Status != AUCTION_STATUS_SELLING && auctionItem.Status != AUCTION_STATUS_EXPIRED {
+	if auctionItem.Status != AUCTION_STATUS_INIT && auctionItem.Status != AUCTION_STATUS_SELLING && auctionItem.Status != AUCTION_STATUS_EXPIRED && auctionItem.Status != AUCTION_STATUS_PUBLICITY {
 		return auctionItem, AUCTION_ITEM_CANNOT_CANCEL_SALE
 	}
 
@@ -1280,86 +1495,132 @@ func (am *AuctionMgr) doCancelSaleItem(auctionItem *AuctionItem) error {
 	return nil
 }
 
-func (am *AuctionMgr) SearchItemByItemIds(itemIds []uint32, fromPlayerGBID uint64, limit uint32, offset uint32) ([]*AuctionItem, uint32) {
+func (am *AuctionMgr) SearchItemByItemIds(itemIds []uint32, fromPlayerGBID uint64, limit uint32, offset uint32, isPublicity uint32) ([]*AuctionItem, uint32) {
 	var auctionItems []*AuctionItem
 	var count uint32
 	var allCount uint32
 
-	for _, itemId := range itemIds {
-		innerMap, ok := am.auctionItemIndex.Get(INDEX_KEY_ITEMID)
-		if !ok {
-			continue
-		}
-		lockedBtree, ok := innerMap.Get(strconv.FormatUint(uint64(itemId), 10))
-		if !ok {
-			continue
-		}
-
-		if lockedBtree == nil {
-			continue
-		}
-		idx := 0
-		lockedBtree.mu.RLock()
-		lockedBtree.tree.Ascend(func(auctionItem *AuctionItem) bool {
-			if auctionItem.Status != AUCTION_STATUS_SELLING {
-				return true
+	if isPublicity == 1 {
+		for _, itemId := range itemIds {
+			innerMap, ok := am.auctionItemPublicityIndex.Get(INDEX_KEY_ITEMID)
+			if !ok {
+				continue
+			}
+			lockedBtree, ok := innerMap.Get(strconv.FormatUint(uint64(itemId), 10))
+			if !ok {
+				continue
 			}
 
-			//if auctionItem.FromPlayerGBID == fromPlayerGBID {
-			//	return true
-			//}
+			if lockedBtree == nil {
+				continue
+			}
+			idx := 0
+			lockedBtree.mu.RLock()
+			lockedBtree.tree.Ascend(func(auctionItem *AuctionItem) bool {
+				if auctionItem.Status != AUCTION_STATUS_PUBLICITY {
+					return true
+				}
 
-			//if am.checkIsInBlackList(auctionItem.FromPlayerGBID) {
-			//	return true
-			//}
+				if uint32(idx) < offset {
+					idx++
+					return true
+				}
 
-			if uint32(idx) < offset {
+				auctionItems = append(auctionItems, auctionItem)
 				idx++
-				return true
+				count++
+
+				return count < limit
+			})
+			allCount += uint32(lockedBtree.tree.Len())
+			lockedBtree.mu.RUnlock()
+		}
+	} else {
+		for _, itemId := range itemIds {
+			innerMap, ok := am.auctionItemIndex.Get(INDEX_KEY_ITEMID)
+			if !ok {
+				continue
+			}
+			lockedBtree, ok := innerMap.Get(strconv.FormatUint(uint64(itemId), 10))
+			if !ok {
+				continue
 			}
 
-			auctionItems = append(auctionItems, auctionItem)
+			if lockedBtree == nil {
+				continue
+			}
+			idx := 0
+			lockedBtree.mu.RLock()
+			lockedBtree.tree.Ascend(func(auctionItem *AuctionItem) bool {
+				if auctionItem.Status != AUCTION_STATUS_SELLING {
+					return true
+				}
 
-			idx++
-			count++
+				if uint32(idx) < offset {
+					idx++
+					return true
+				}
 
-			return count < limit
-		})
-		allCount += uint32(lockedBtree.tree.Len())
-		lockedBtree.mu.RUnlock()
+				auctionItems = append(auctionItems, auctionItem)
+				idx++
+				count++
+
+				return count < limit
+			})
+			allCount += uint32(lockedBtree.tree.Len())
+			lockedBtree.mu.RUnlock()
+		}
 	}
-
 	return auctionItems, allCount
 }
 
 func (am *AuctionMgr) GetPlayerAuctionItemsByPlayerGBID(playerGBID uint64) []*AuctionItem {
-	lockedBtree := am.getAuctionItemIndex(INDEX_KEY_PLAYERGBID, strconv.FormatUint(playerGBID, 10))
-	if lockedBtree == nil {
-		return nil
-	}
 	var auctionItems []*AuctionItem
-	lockedBtree.mu.RLock()
-	defer lockedBtree.mu.RUnlock()
-	lockedBtree.tree.Ascend(func(item *AuctionItem) bool {
-		auctionItems = append(auctionItems, item)
-		return true
-	})
+	lockedBtree := am.getAuctionItemIndex(INDEX_KEY_PLAYERGBID, strconv.FormatUint(playerGBID, 10))
+	if lockedBtree != nil {
+		lockedBtree.mu.RLock()
+		defer lockedBtree.mu.RUnlock()
+		lockedBtree.tree.Ascend(func(item *AuctionItem) bool {
+			auctionItems = append(auctionItems, item)
+			return true
+		})
+	}
+
+	lockedBtree = am.getAuctionItemPublicityIndex(INDEX_KEY_PLAYERGBID, strconv.FormatUint(playerGBID, 10))
+	if lockedBtree != nil {
+		lockedBtree.mu.RLock()
+		defer lockedBtree.mu.RUnlock()
+		lockedBtree.tree.Ascend(func(item *AuctionItem) bool {
+			auctionItems = append(auctionItems, item)
+			return true
+		})
+	}
 	return auctionItems
 }
 
 func (am *AuctionMgr) LoadPlayerAuctionItemUUIDs(playerGBID uint64) []uint64 {
 	var auctionItemUUIDs = make([]uint64, 0)
-
+	// 出售的数据
 	lockedBtree := am.getAuctionItemIndex(INDEX_KEY_PLAYERGBID, strconv.FormatUint(playerGBID, 10)) // from auction item index
-	if lockedBtree == nil {
-		return auctionItemUUIDs
+	if lockedBtree != nil {
+		lockedBtree.mu.RLock()
+		defer lockedBtree.mu.RUnlock()
+		lockedBtree.tree.Ascend(func(item *AuctionItem) bool {
+			auctionItemUUIDs = append(auctionItemUUIDs, item.AuctionItemUUID)
+			return true
+		})
 	}
-	lockedBtree.mu.RLock()
-	defer lockedBtree.mu.RUnlock()
-	lockedBtree.tree.Ascend(func(item *AuctionItem) bool {
-		auctionItemUUIDs = append(auctionItemUUIDs, item.AuctionItemUUID)
-		return true
-	})
+
+	// 公示的数据
+	lockedBtree = am.getAuctionItemPublicityIndex(INDEX_KEY_PLAYERGBID, strconv.FormatUint(playerGBID, 10)) // from auction item index
+	if lockedBtree != nil {
+		lockedBtree.mu.RLock()
+		defer lockedBtree.mu.RUnlock()
+		lockedBtree.tree.Ascend(func(item *AuctionItem) bool {
+			auctionItemUUIDs = append(auctionItemUUIDs, item.AuctionItemUUID)
+			return true
+		})
+	}
 
 	return auctionItemUUIDs
 }
@@ -1368,62 +1629,71 @@ func (am *AuctionMgr) setStatus(status uint8, auctionItem *AuctionItem, isInit b
 	if status == auctionItem.Status {
 		return
 	}
-
-	err := auctionItem.setStatus(status, am.db)
+	oldStatus := auctionItem.Status
+	err := auctionItem.setStatus(status, am.db, isInit)
 	if err != nil {
 		appLog.Errorw("setStatus error", "err", err)
 		return
 	}
 
 	if status == AUCTION_STATUS_SELLING {
-		for _, indexKey := range auctionIndexKeys {
-			if indexKey == INDEX_KEY_ITEMID {
-				am.addAuctionItemToIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem, isInit)
-			} else {
-				am.addAuctionItemToIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem, isInit)
+		// 如果是从公示期过来的，需要移除公示期数据
+		if oldStatus == AUCTION_STATUS_PUBLICITY {
+			for _, indexKey := range auctionIndexKeys {
+				am.removeAuctionItemFromPublicityIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem)
 			}
 		}
+		// 加入出售索引
+		for _, indexKey := range auctionIndexKeys {
+			am.addAuctionItemToIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem)
+		}
 	} else if status == AUCTION_STATUS_EXPIRED {
+		// 过期移除物品索引
 		am.removeAuctionItemFromIndex(INDEX_KEY_ITEMID, auctionItem.getIndexVal(INDEX_KEY_ITEMID), auctionItem)
+	} else if status == AUCTION_STATUS_PUBLICITY {
+		// 加入公示期索引
+		for _, indexKey := range auctionIndexKeys {
+			am.addAuctionItemToPublicityIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem)
+		}
 	}
 }
 
 func (am *AuctionMgr) gmSaleAuctionItem(itemId uint32, itemNum uint32, price uint64, num uint32, startTime uint32, endTime uint32) (string, error) {
-	if time.Now().Unix() < int64(startTime) || (time.Now().Unix() > int64(endTime) && endTime != 0) {
-		appLog.Errorw("gmSaleAuctionItem: time err", "now", time.Now().Unix(), "startTime", startTime, "endTime", endTime)
-		return "", nil
-	}
+	// if time.Now().Unix() < int64(startTime) || (time.Now().Unix() > int64(endTime) && endTime != 0) {
+	// 	appLog.Errorw("gmSaleAuctionItem: time err", "now", time.Now().Unix(), "startTime", startTime, "endTime", endTime)
+	// 	return "", nil
+	// }
 
-	for i := 0; i < int(num); i++ {
-		var curTime = uint32(time.Now().Unix())
-		var item = &ItemData{
-			ItemId:     itemId,
-			ItemNum:    itemNum,
-			BindType:   1,
-			CreateTime: curTime,
-		}
+	// for i := 0; i < int(num); i++ {
+	// 	var curTime = time.Now().Unix()
+	// 	var item = &ItemData{
+	// 		ItemId:     itemId,
+	// 		ItemNum:    itemNum,
+	// 		BindType:   1,
+	// 		CreateTime: curTime,
+	// 	}
 
-		auctionItemUUID := am.app.GenUUID()
-		extraMap := make(map[string]interface{})
-		extraMap["opUUID"] = am.app.GenUUID()
-		extraMap["serverId"] = AuctionAppConfig.GmLogServerId
-		tlogPropsMap := make(map[string]interface{})
-		tlogPropsMap["role_name"] = "GM"
-		extraMap["tlogProps"] = tlogPropsMap
-		extraInfo, err := json.Marshal(extraMap)
-		if err != nil {
-			appLog.Errorw("gmSaleAuctionItem: Marshal err", "err", err)
-			return "", err
-		}
+	// 	auctionItemUUID := am.app.GenUUID()
+	// 	extraMap := make(map[string]interface{})
+	// 	extraMap["opUUID"] = am.app.GenUUID()
+	// 	extraMap["serverId"] = AuctionAppConfig.GmLogServerId
+	// 	tlogPropsMap := make(map[string]interface{})
+	// 	tlogPropsMap["role_name"] = "GM"
+	// 	extraMap["tlogProps"] = tlogPropsMap
+	// 	extraInfo, err := json.Marshal(extraMap)
+	// 	if err != nil {
+	// 		appLog.Errorw("gmSaleAuctionItem: Marshal err", "err", err)
+	// 		return "", err
+	// 	}
 
-		auctionItem, err := am.AddAuctionItem(AUCTION_TYPE_COIN, auctionItemUUID, curTime, item, price, itemNum, BAG_TYPE_NORMAL, AUCTION_SOURCE_PLAYER, AUCTION_STATUS_INIT, 0, string(extraInfo), 0)
-		if err != nil {
-			appLog.Errorw("gmSaleAuctionItem: AddAuctionItem err", "err", err)
-			return "", err
-		}
+	// 	auctionItem, err := am.AddAuctionItem(AUCTION_TYPE_COIN, auctionItemUUID, curTime, item, price, itemNum, BAG_TYPE_NORMAL, AUCTION_SOURCE_PLAYER, AUCTION_STATUS_INIT, 0, string(extraInfo), 0)
+	// 	if err != nil {
+	// 		appLog.Errorw("gmSaleAuctionItem: AddAuctionItem err", "err", err)
+	// 		return "", err
+	// 	}
 
-		am.app.DoSaleItem(auctionItem.AuctionItemUUID, 0, string(extraInfo), true, nil)
-	}
+	// 	am.app.DoSaleItem(auctionItem.AuctionItemUUID, 0, string(extraInfo), true, nil)
+	// }
 
 	return "", nil
 }
@@ -1465,6 +1735,31 @@ func (am *AuctionMgr) setItemExpired(auctionItemUUID uint64) {
 		}
 		am.expiredTimerMap.Remove(auctionItemUUIDStr)
 	}
+}
+
+func (am *AuctionMgr) setItemSelling(auctionItemUUID uint64) {
+	auctionItem, err := am.GetAuctionItem(auctionItemUUID)
+	if err != nil {
+		appLog.Errorw("setItemSelling: GetAuctionItem err", "err", err)
+		return
+	}
+	// 置成出售状态
+	am.setStatus(AUCTION_STATUS_SELLING, auctionItem, false)
+	// 移除公示结束定时器
+	auctionItemUUIDStr := strconv.FormatUint(auctionItemUUID, 10)
+	if timer, ok := am.endPublicityTimerMap.Get(auctionItemUUIDStr); ok {
+		if timer != nil {
+			timer.Stop()
+		}
+		am.endPublicityTimerMap.Remove(auctionItemUUIDStr)
+	}
+	// 挂出售过期定时器
+	curTime := time.Now().Unix()
+	duration := auctionItem.itemExpiredTime() - curTime
+	timer := time.AfterFunc(time.Duration(duration)*time.Second, func() {
+		am.setItemExpired(auctionItemUUID)
+	})
+	am.expiredTimerMap.Set(auctionItemUUIDStr, timer)
 }
 
 func (am *AuctionMgr) gmBuyAuctionItem(itemId uint32, buyNum uint32, price uint64, startTime uint32) (string, uint32, error) {

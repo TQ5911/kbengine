@@ -125,6 +125,13 @@ func AuctionServer_DoBuyItemByItemId_Handler(endPoint prpc.IEndPoint, dec func(i
     }
     return endPoint.(IAuctionServerInterface).DoBuyItemByItemId(in)
 }
+func AuctionServer_GetAuctionItemsByAuctionIds_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(GetAuctionItemByAuctionIdsReq)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IAuctionServerInterface).GetAuctionItemsByAuctionIds(in)
+}
 var AuctionServerServiceDesc = prpc.ServiceDesc{
     ServiceName: "AuctionGameServer.AuctionServer",
     Methods: []prpc.MethodDesc{
@@ -213,6 +220,11 @@ var AuctionServerServiceDesc = prpc.ServiceDesc{
             MethodIndex: 16,
             Handler:     AuctionServer_DoBuyItemByItemId_Handler,
         },
+        {
+            MethodName:  "GetAuctionItemsByAuctionIds",
+            MethodIndex: 17,
+            Handler:     AuctionServer_GetAuctionItemsByAuctionIds_Handler,
+        },
     },
 }
 
@@ -295,6 +307,10 @@ func (self *AuctionServerClient) DoBuyItemByItemId(in *DoBuyItemByItemIdReq) (*V
     err := self.Channel.CallMethod(&AuctionServerServiceDesc.Methods[16], in)
     return &Void{}, err
 }
+func (self *AuctionServerClient) GetAuctionItemsByAuctionIds(in *GetAuctionItemByAuctionIdsReq) (*Void, error) {
+    err := self.Channel.CallMethod(&AuctionServerServiceDesc.Methods[17], in)
+    return &Void{}, err
+}
 type IAuctionServerInterface interface {
     RegisterServer(*ServerInfoMessage) (*Void, error)
     ActiveTick(*Void) (*Void, error)
@@ -313,6 +329,7 @@ type IAuctionServerInterface interface {
     GetAuctionItemNumByCategoryId(*GetItemNumByCategoryIdReq) (*Void, error)
     BuyItemByItemId(*BuyItemByItemIdReq) (*Void, error)
     DoBuyItemByItemId(*DoBuyItemByItemIdReq) (*Void, error)
+    GetAuctionItemsByAuctionIds(*GetAuctionItemByAuctionIdsReq) (*Void, error)
 }
 
 func GameServer_ActiveTickCallback_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
@@ -434,6 +451,13 @@ func GameServer_ReplyDoBuyItemByItemId_Handler(endPoint prpc.IEndPoint, dec func
     }
     return endPoint.(IGameServerInterface).ReplyDoBuyItemByItemId(in)
 }
+func GameServer_ReplyGetAuctionItemsByAuctionIds_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(GetAuctionItemByAuctionIdsResp)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).ReplyGetAuctionItemsByAuctionIds(in)
+}
 var GameServerServiceDesc = prpc.ServiceDesc{
     ServiceName: "AuctionGameServer.GameServer",
     Methods: []prpc.MethodDesc{
@@ -522,6 +546,11 @@ var GameServerServiceDesc = prpc.ServiceDesc{
             MethodIndex: 16,
             Handler:     GameServer_ReplyDoBuyItemByItemId_Handler,
         },
+        {
+            MethodName:  "ReplyGetAuctionItemsByAuctionIds",
+            MethodIndex: 17,
+            Handler:     GameServer_ReplyGetAuctionItemsByAuctionIds_Handler,
+        },
     },
 }
 
@@ -604,6 +633,10 @@ func (self *GameServerClient) ReplyDoBuyItemByItemId(in *DoBuyItemByItemIdResp) 
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[16], in)
     return &Void{}, err
 }
+func (self *GameServerClient) ReplyGetAuctionItemsByAuctionIds(in *GetAuctionItemByAuctionIdsResp) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[17], in)
+    return &Void{}, err
+}
 type IGameServerInterface interface {
     ActiveTickCallback(*Void) (*Void, error)
     ReplySaleItem(*SaleItemResp) (*Void, error)
@@ -622,5 +655,6 @@ type IGameServerInterface interface {
     ReplyGetAuctionItemNumByCategoryId(*GetItemNumByCategoryIdResp) (*Void, error)
     ReplyBuyItemByItemId(*BuyItemByItemIdResp) (*Void, error)
     ReplyDoBuyItemByItemId(*DoBuyItemByItemIdResp) (*Void, error)
+    ReplyGetAuctionItemsByAuctionIds(*GetAuctionItemByAuctionIdsResp) (*Void, error)
 }
 

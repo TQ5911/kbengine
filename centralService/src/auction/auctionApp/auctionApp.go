@@ -76,8 +76,6 @@ func NewAuctionApp() *AuctionApp {
 		return nil
 	}
 
-	//gmBuyInterception = AuctionAppConfig.GmBuyInterception
-
 	AuctionConfig = viper.New()
 	auctionConfigPath := "../data/auction.auctionConst.txt"
 	AuctionConfig.SetConfigType("json")
@@ -151,113 +149,6 @@ func NewAuctionApp() *AuctionApp {
 		}
 	})
 
-	//AuctionCategoryConfig = viper.New()
-	//auctionCategoryConfigPath := "../data/transaction.auctionCategory.txt"
-	//AuctionCategoryConfig.SetConfigType("json")
-	//AuctionCategoryConfig.SetConfigFile(auctionCategoryConfigPath)
-	//err = AuctionCategoryConfig.ReadInConfig()
-	//if err != nil {
-	//	appLog.Error("Error reading AuctionCategoryConfig file", err.Error())
-	//	return nil
-	//}
-	//
-	//AuctionCategoryConfMD5, err = common.ReadFileMd5(auctionCategoryConfigPath)
-	//if err != nil {
-	//	appLog.Error("fail to get AuctionCategoryConfig md5:", err.Error())
-	//	return nil
-	//}
-	//
-	//AuctionCategoryConfig.WatchConfig()
-	//AuctionCategoryConfig.OnConfigChange(func(e fsnotify.Event) {
-	//	appLog.Info("AuctionCategoryConfig file changed:", e.Name)
-	//	curMD5, err := common.ReadFileMd5(auctionCategoryConfigPath)
-	//	if err != nil {
-	//		appLog.Error("fail to get AuctionCategoryConfig md5:", err.Error())
-	//		return
-	//	}
-	//
-	//	if curMD5 == AuctionCategoryConfMD5 {
-	//		return
-	//	}
-	//	appLog.Info("AuctionCategoryConfig file real changed:", e.Name)
-	//	AuctionCategoryConfMD5 = curMD5
-	//	err = AuctionCategoryConfig.ReadInConfig()
-	//	if err != nil {
-	//		appLog.Error("Error reading AuctionCategoryConfig file", err.Error())
-	//	}
-	//})
-
-	//ItemIdToCategoryConfig = viper.New()
-	//itemIdToCategoryConfigPath := "../data/transaction_auctionCategory_with_itemId.txt"
-	//ItemIdToCategoryConfig.SetConfigType("json")
-	//ItemIdToCategoryConfig.SetConfigFile(itemIdToCategoryConfigPath)
-	//err = ItemIdToCategoryConfig.ReadInConfig()
-	//if err != nil {
-	//	appLog.Error("Error reading ItemIdToCategoryConfig file", err.Error())
-	//	return nil
-	//}
-	//
-	//ItemIdToCategoryConfMD5, err = common.ReadFileMd5(itemIdToCategoryConfigPath)
-	//if err != nil {
-	//	appLog.Error("fail to get ItemIdToCategoryConfig md5:", err.Error())
-	//	return nil
-	//}
-	//
-	//ItemIdToCategoryConfig.WatchConfig()
-	//ItemIdToCategoryConfig.OnConfigChange(func(e fsnotify.Event) {
-	//	appLog.Info("ItemIdToCategoryConfig file changed:", e.Name)
-	//	curMD5, err := common.ReadFileMd5(itemIdToCategoryConfigPath)
-	//	if err != nil {
-	//		appLog.Error("fail to get ItemIdToCategoryConfig md5:", err.Error())
-	//		return
-	//	}
-	//
-	//	if curMD5 == ItemIdToCategoryConfMD5 {
-	//		return
-	//	}
-	//	appLog.Info("ItemIdToCategoryConfig file real changed:", e.Name)
-	//	ItemIdToCategoryConfMD5 = curMD5
-	//	err = ItemIdToCategoryConfig.ReadInConfig()
-	//	if err != nil {
-	//		appLog.Error("Error reading ItemIdToCategoryConfig file", err.Error())
-	//	}
-	//})
-	//
-	//interceptionConfigPath := "../data/transaction.transactionInterception.txt"
-	//InterceptionConfig.SetConfigType("json")
-	//InterceptionConfig.SetConfigFile(interceptionConfigPath)
-	//err = InterceptionConfig.ReadInConfig()
-	//if err != nil {
-	//	appLog.Error("Error reading InterceptionConfig file", err.Error())
-	//	return nil
-	//}
-	//
-	//InterceptionConfMD5, err = common.ReadFileMd5(interceptionConfigPath)
-	//if err != nil {
-	//	appLog.Error("fail to get InterceptionConfig md5:", err.Error())
-	//	return nil
-	//}
-	//
-	//InterceptionConfig.WatchConfig()
-	//InterceptionConfig.OnConfigChange(func(e fsnotify.Event) {
-	//	appLog.Info("InterceptionConfig file changed:", e.Name)
-	//	curMD5, err := common.ReadFileMd5(interceptionConfigPath)
-	//	if err != nil {
-	//		appLog.Error("fail to get InterceptionConfig md5:", err.Error())
-	//		return
-	//	}
-	//
-	//	if curMD5 == InterceptionConfMD5 {
-	//		return
-	//	}
-	//	appLog.Info("InterceptionConfig file real changed:", e.Name)
-	//	InterceptionConfMD5 = curMD5
-	//	err = InterceptionConfig.ReadInConfig()
-	//	if err != nil {
-	//		appLog.Error("Error reading InterceptionConfig file", err.Error())
-	//	}
-	//})
-
 	app := AuctionApp{common.App{AppName: "AuctionApp"},
 		gameServers,
 		channelMap,
@@ -268,7 +159,6 @@ func NewAuctionApp() *AuctionApp {
 		0,
 		0,
 		make(chan func())}
-
 	app.auctionMgr = NewAuctionMgr(db, &app)
 	return &app
 }
@@ -409,180 +299,26 @@ func (au *AuctionApp) SaleItem(playerGBID uint64, itemDict string, totalPrice ui
 		return nil, extra, err
 	}
 
-	//isReplace := false
-	//if replace, ok := m["isReplace"]; !ok {
-	//	appLog.Debugw("SaleItem: isReplace not exist", "extra", extra)
-	//} else {
-	//	isReplace = replace.(bool)
-	//}
-
-	//var res = au.checkSaleItemPrice(item.ItemId, eachPrice, isReplace)
-	//if !res {
-	//	appLog.Warnw("SaleItem: checkSaleItemPrice err", "eachPrice", eachPrice, "itemId", item.ItemId)
-	//	return nil, extra, errors.New("SaleItem: checkSaleItemPrice err")
-	//}
-
 	auctionItemUUID, err := m["opUUID"].(json.Number).Int64()
 	if err != nil {
 		appLog.Errorw("SaleItem: opUUID err", "extra", extra)
 		return nil, extra, err
 	}
-	addTime := uint32(time.Now().Unix())
-	auctionItem, err := au.auctionMgr.AddAuctionItem(AUCTION_TYPE_COIN, uint64(auctionItemUUID), addTime, item, totalPrice, number, bagType, AUCTION_SOURCE_PLAYER, AUCTION_STATUS_INIT, 0, extra, playerGBID)
+
+	isPublicity, err := m["isPublicity"].(json.Number).Int64()
+	if err != nil {
+		appLog.Errorw("SaleItem: isPublicity err", "extra", extra)
+		return nil, extra, err
+	}
+
+	addTime := time.Now().Unix()
+	auctionItem, err := au.auctionMgr.AddAuctionItem(AUCTION_TYPE_COIN, uint64(auctionItemUUID), addTime, item, totalPrice, number, bagType, AUCTION_SOURCE_PLAYER, AUCTION_STATUS_INIT, 0, extra, playerGBID, uint32(isPublicity))
 	if err != nil {
 		appLog.Errorw("SaleItem: AddAuctionItem err", "err", err)
 		return nil, extra, err
 	}
 	return auctionItem, extra, nil
 }
-
-//func (au *AuctionApp) checkSaleItemPrice(itemId uint32, eachPrice uint64, isReplace bool) bool {
-//	var rcdPrice = au.auctionMgr.GetItemLastPrice(itemId)
-//	if rcdPrice == 0 {
-//		appLog.Errorw("SaleItem: rcdPrice == 0", "itemId", itemId)
-//		return false
-//	}
-//
-//	cfgData := ItemConfig.GetStringMap(strconv.FormatUint(uint64(itemId), 10))
-//	if cfgData == nil || len(cfgData) == 0 {
-//		appLog.Errorw("SaleItem: cfgData == nil", "itemId", itemId)
-//		return false
-//	}
-//
-//	var systemPriceCoinUpperBound float64
-//	var systemPriceCoinLowerBound float64
-//
-//	if isReplace {
-//		sysUpperBound, ok := cfgData["systempricecoinupperbound2"].(float64)
-//		if !ok {
-//			appLog.Errorw("SaleItem: systemPriceCoinUpperBound err", "itemId", itemId)
-//			return false
-//		}
-//		sysLowerBound, ok := cfgData["systempricecoinlowerbound2"].(float64)
-//		if !ok {
-//			appLog.Errorw("SaleItem: systemPriceCoinLowerBound err", "itemId", itemId)
-//			return false
-//		}
-//		systemPriceCoinUpperBound = sysUpperBound
-//		systemPriceCoinLowerBound = sysLowerBound
-//	} else {
-//		sysUpperBound, ok := cfgData["systempricecoinupperbound"].(float64)
-//		if !ok {
-//			appLog.Errorw("SaleItem: systemPriceCoinUpperBound err", "itemId", itemId)
-//			return false
-//		}
-//		sysLowerBound, ok := cfgData["systempricecoinlowerbound"].(float64)
-//		if !ok {
-//			appLog.Errorw("SaleItem: systemPriceCoinLowerBound err", "itemId", itemId)
-//			return false
-//		}
-//		systemPriceCoinUpperBound = sysUpperBound
-//		systemPriceCoinLowerBound = sysLowerBound
-//	}
-//
-//	bottomPrice, ok := cfgData["normalpricebottomlinecoin"].(float64)
-//	if !ok {
-//		appLog.Errorw("SaleItem: bottomPrice err", "itemId", itemId)
-//		return false
-//	}
-//	topPrice, ok := cfgData["normalpricetoplinecoin"].(float64)
-//	if !ok {
-//		appLog.Errorw("SaleItem: topPrice err", "itemId", itemId)
-//		return false
-//	}
-//	lowPrice := math.Floor(math.Max(1-systemPriceCoinLowerBound/100, 0.0) * float64(rcdPrice))
-//	highPrice := math.Ceil(math.Max(1+systemPriceCoinUpperBound/100, 1.0) * float64(rcdPrice))
-//	lowPrice = math.Max(lowPrice, bottomPrice)
-//	highPrice = math.Min(highPrice, topPrice)
-//
-//	if eachPrice < uint64(lowPrice) || eachPrice > uint64(highPrice) {
-//		appLog.Warnw("SaleItem: eachPrice < lowPrice || eachPrice > highPrice", "eachPrice", eachPrice, "lowPrice", lowPrice, "highPrice", highPrice)
-//		return false
-//	}
-//
-//	return true
-//}
-
-func (au *AuctionApp) getAuctionConfig(key string) interface{} {
-	cfgData := AuctionConfig.GetStringMap(key)
-	if cfgData == nil {
-		appLog.Errorw("getAuctionConfig is nil", "key", key)
-		return 0
-	}
-	val, ok := cfgData["value"]
-	if !ok {
-		appLog.Errorw("getAuctionConfig value is nil", "key", key)
-		return 0
-	}
-	return val
-}
-
-//func (au *AuctionApp) getCoinAuctionPriceTax(totalPrice uint64, itemId uint32) (uint64, uint64) {
-//	itemData := ItemConfig.GetStringMap(strconv.FormatUint(uint64(itemId), 10))
-//	if len(itemData) == 0 || itemData == nil {
-//		appLog.Errorw("getCoinAuctionPriceTax: itemData == nil", "itemId", itemId)
-//		return 0, 0
-//	}
-//
-//	taxRate, ok := itemData["taxrate"].(float64)
-//	if !ok {
-//		appLog.Errorw("getCoinAuctionPriceTax: taxRate err", "itemId", itemId)
-//		return 0, 0
-//	}
-//	totalPriceTax := math.Round(float64(totalPrice) * (taxRate / 100))
-//	maxTaxPrice, ok := au.getAuctionConfig("maxtaxprice").(float64)
-//	if !ok {
-//		appLog.Errorw("getCoinAuctionPriceTax: maxTaxPrice err")
-//		return 0, 0
-//	}
-//
-//	minTaxPrice, ok := au.getAuctionConfig("mintaxprice").(float64)
-//	if !ok {
-//		appLog.Errorw("getCoinAuctionPriceTax: minTaxPrice err")
-//		return 0, 0
-//	}
-//	totalPriceTax = math.Min(maxTaxPrice, math.Max(minTaxPrice, totalPriceTax))
-//	return totalPrice - uint64(totalPriceTax), uint64(totalPriceTax)
-//}
-
-//func (au *AuctionApp) checkInterception(auctionItem *AuctionItem) bool {
-//	price := auctionItem.Price
-//	itemId := strconv.FormatUint(uint64(auctionItem.ItemData.ItemId), 10)
-//	config := InterceptionConfig.GetStringMap(itemId)
-//	if config == nil {
-//		appLog.Debug("checkInterception: config is nil, itemId:", itemId)
-//		return false
-//	}
-//
-//	lowerLimit, ok := config["lowerlimit"].(float64)
-//	if !ok {
-//		appLog.Errorw("checkInterception lowerLimit value is nil", "itemId", itemId)
-//		return false
-//	}
-//
-//	threshold, ok := config["threshold"].(float64)
-//	if !ok {
-//		appLog.Errorw("checkInterception threshold value is nil", "itemId", itemId)
-//		return false
-//	}
-//
-//	floatingValue, ok := config["floatingvalue"].(float64)
-//	if !ok {
-//		appLog.Errorw("checkInterception floatingValue value is nil", "itemId", itemId)
-//		return false
-//	}
-//
-//	recommendPrice := au.auctionMgr.GetItemLastPrice(auctionItem.ItemData.ItemId)
-//	minPrice := math.Max(float64(recommendPrice)*lowerLimit/100, threshold)
-//	maxPrice := minPrice + floatingValue
-//
-//	if price >= uint64(minPrice) && price <= uint64(maxPrice) {
-//		appLog.Debugw("checkInterception: price in interception", "price", price, "minPrice", minPrice, "maxPrice", maxPrice)
-//		return true
-//	}
-//
-//	return false
-//}
 
 func (au *AuctionApp) DoSaleItem(auctionItemUUID uint64, playerGBID uint64, extra string, result bool, service *GameServerService) (*AuctionItem, string, error) {
 	appLog.Debugw("DoSaleItem", "auctionItemUUID", auctionItemUUID, "playerGBID", playerGBID, "extra", extra, "result", result)
@@ -593,22 +329,58 @@ func (au *AuctionApp) DoSaleItem(auctionItemUUID uint64, playerGBID uint64, extr
 	}
 
 	if result {
-		err = auctionItem.Add(au.db, AUCTION_STATUS_SELLING)
+		var m map[string]interface{}
+		dec := json.NewDecoder(strings.NewReader(extra))
+		dec.UseNumber()
+		err := dec.Decode(&m)
+		if err != nil {
+			appLog.Errorw("DoSaleItem: Decode err", "extra", extra)
+			return nil, extra, err
+		}
+
+		isPublicity, err := m["isPublicity"].(json.Number).Int64()
+		if err != nil {
+			appLog.Errorw("DoSaleItem: isPublicity err", "extra", extra)
+			return nil, extra, err
+		}
+
+		status := AUCTION_STATUS_SELLING
+		curTime := time.Now().Unix()
+		// 检查是否需要公示
+		if isPublicity == 1 && auctionItem.GetPublicityGap()+auctionItem.AddTime > curTime {
+			status = AUCTION_STATUS_PUBLICITY
+		}
+
+		err = auctionItem.Add(au.db, uint8(status))
 		if err != nil {
 			appLog.Errorw("DoSaleItem: Add err", "err", err, "auctionItemUUID", auctionItemUUID, "playerGBID", playerGBID, "extra", extra, "result", result)
 			return nil, extra, err
 		}
-		au.auctionMgr.setStatus(AUCTION_STATUS_SELLING, auctionItem, false)
+
+		au.auctionMgr.setStatus(uint8(status), auctionItem, true)
 		auctionItemUUIDStr := strconv.FormatUint(auctionItemUUID, 10)
-		if _, ok := au.auctionMgr.expiredTimerMap.Get(auctionItemUUIDStr); ok {
-			return nil, extra, errors.New("DoSaleItem: already in expiredTidMap")
+
+		if status == AUCTION_STATUS_SELLING {
+			if _, ok := au.auctionMgr.expiredTimerMap.Get(auctionItemUUIDStr); ok {
+				return nil, extra, errors.New("DoSaleItem: already in expiredTimerMap")
+			}
+
+			duration := auctionItem.itemExpiredTime() - curTime
+			timer := time.AfterFunc(time.Duration(duration)*time.Second, func() {
+				au.auctionMgr.setItemExpired(auctionItemUUID)
+			})
+			au.auctionMgr.expiredTimerMap.Set(auctionItemUUIDStr, timer)
+		} else if status == AUCTION_STATUS_PUBLICITY {
+			if _, ok := au.auctionMgr.endPublicityTimerMap.Get(auctionItemUUIDStr); ok {
+				return nil, extra, errors.New("DoSaleItem: already in endPublicityTimerMap")
+			}
+
+			duration := auctionItem.GetPublicityGap() + auctionItem.AddTime - curTime
+			timer := time.AfterFunc(time.Duration(duration)*time.Second, func() {
+				au.auctionMgr.setItemSelling(auctionItemUUID)
+			})
+			au.auctionMgr.endPublicityTimerMap.Set(auctionItemUUIDStr, timer)
 		}
-		curTime := uint32(time.Now().Unix())
-		duration := auctionItem.itemExpiredTime() - curTime
-		timer := time.AfterFunc(time.Duration(duration)*time.Second, func() {
-			au.auctionMgr.setItemExpired(auctionItemUUID)
-		})
-		au.auctionMgr.expiredTimerMap.Set(auctionItemUUIDStr, timer)
 
 		au.RefreshPlayerCoinAuctionData(playerGBID, service)
 
@@ -655,6 +427,7 @@ func (au *AuctionApp) GenUUID() uint64 {
 // 购买物品
 func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number uint32, extra string) (uint64, string, uint64, uint32, error) {
 	appLog.Debugw("BuyItem", "playerGBID", playerGBID, "auctionItemUUID", auctionItemUUID, "number", number, "extra", extra)
+
 	auctionItem, ret := au.auctionMgr.CheckBuyItem(auctionItemUUID, number, playerGBID)
 	if ret != AUCTION_OK {
 		switch ret {
@@ -669,14 +442,14 @@ func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number 
 		default:
 			appLog.Errorw("BuyItem: failed", "ret", ret, "auctionItemUUID", auctionItemUUID)
 		}
-		return 0, extra, 0, uint32(ret), nil
+		return auctionItemUUID, extra, 0, uint32(ret), nil
 	}
 
 	getLock := auctionItem.lock(60, playerGBID, au, true)
 	if !getLock {
 		appLog.Debugw("BuyItem: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
 		ret = AUCTION_ITEM_IS_LOCKED
-		return 0, extra, 0, uint32(ret), nil
+		return auctionItemUUID, extra, 0, uint32(ret), nil
 	}
 
 	var m map[string]interface{}
@@ -684,18 +457,20 @@ func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number 
 	dec.UseNumber()
 	err := dec.Decode(&m)
 	if err != nil {
+		ret = PARAM_ERROR
 		appLog.Errorw("BuyItem: NewDecoder err", "err", err)
-		return 0, extra, 0, uint32(ret), err
+		return auctionItemUUID, extra, 0, uint32(ret), err
 	}
 
 	m["selectItemLocked"] = auctionItem.LockPlayerGBID
 	m["auctionBuyItemId"] = auctionItem.ItemData.ItemId
 	m["auctionBuyItemNum"] = number
 
-	extraB, er := json.Marshal(m)
-	if er != nil {
+	extraB, err := json.Marshal(m)
+	if err != nil {
+		ret = PARAM_ERROR
 		appLog.Errorw("BuyItem: Marshal err", "err", err)
-		return 0, extra, 0, uint32(ret), err
+		return auctionItemUUID, extra, 0, uint32(ret), err
 	}
 	price := auctionItem.Price
 	return auctionItemUUID, string(extraB), price, uint32(ret), nil
@@ -859,24 +634,29 @@ func (au *AuctionApp) DoCancelSaleItem(auctionItemUUID uint64, playerGBID uint64
 		if auctionItem != nil {
 			auctionItem.unLock()
 			auctionItem.IsNeedRemove = false
-			au.auctionMgr.addAuctionItemToIndex(INDEX_KEY_ITEMID, auctionItem.getIndexVal(INDEX_KEY_ITEMID), auctionItem, false)
+			if auctionItem.Status == AUCTION_STATUS_PUBLICITY {
+				au.auctionMgr.addAuctionItemToPublicityIndex(INDEX_KEY_ITEMID, auctionItem.getIndexVal(INDEX_KEY_ITEMID), auctionItem)
+
+			} else {
+				au.auctionMgr.addAuctionItemToIndex(INDEX_KEY_ITEMID, auctionItem.getIndexVal(INDEX_KEY_ITEMID), auctionItem)
+			}
 		}
 	}
 
 	return auctionItem, extra, errno
 }
 
-func (au *AuctionApp) SearchItemsByItemId(playerGBID uint64, itemIds []uint32, limit uint32, offset uint32, extra string) ([]*AuctionItem, uint32, error) {
-	auctionItems, allCount := au.auctionMgr.SearchItemByItemIds(itemIds, playerGBID, limit, offset)
+func (au *AuctionApp) SearchItemsByItemId(playerGBID uint64, itemIds []uint32, limit uint32, offset uint32, isPublicity uint32, extra string) ([]*AuctionItem, uint32, error) {
+	auctionItems, allCount := au.auctionMgr.SearchItemByItemIds(itemIds, playerGBID, limit, offset, isPublicity)
 	appLog.Debugw("SearchItemsByItemId", "auctionItems", auctionItems, "allCount", allCount)
 	return auctionItems, allCount, nil
 }
 
-func (au *AuctionApp) GetCurrentSaleItemInfo(itemId uint32, playerGBID uint64) ([]*AuctionItem, uint32, error) {
-	appLog.Debugw("GetCurrentSaleItemInfo", "playerGBID", playerGBID, "itemId", itemId)
+func (au *AuctionApp) GetCurrentSaleItemInfo(itemId uint32, playerGBID uint64, isPublicity uint32) ([]*AuctionItem, uint32, error) {
+	appLog.Debugw("GetCurrentSaleItemInfo", "playerGBID", playerGBID, "itemId", itemId, "isPublicity", isPublicity)
 	itemIds := []uint32{itemId}
-	auctionItems, allCount := au.auctionMgr.SearchItemByItemIds(itemIds, playerGBID, 3, 0)
-	appLog.Debugw("GetCurrentSaleItemInfo", "auctionItems", auctionItems, "allCount", allCount)
+	auctionItems, allCount := au.auctionMgr.SearchItemByItemIds(itemIds, playerGBID, 3, 0, isPublicity)
+	appLog.Debugw("GetCurrentSaleItemInfo 2", "auctionItems", auctionItems, "allCount", allCount)
 	return auctionItems, allCount, nil
 }
 
@@ -1469,17 +1249,28 @@ func (au *AuctionApp) gmEndBuyAuctionItem(extra string) (string, error) {
 	return "执行成功", nil
 }
 
-func (au *AuctionApp) getAuctionItemNumByCategoryId(itemIds []uint32) ([]uint32, []uint32, []float32, error) {
+func (au *AuctionApp) getAuctionItemNumByCategoryId(itemIds []uint32, isPublicity int32) ([]uint32, []uint32, []float32, error) {
 	itemIdArr := make([]uint32, 0)
 	itemNumArr := make([]uint32, 0)
 	eachPriceArr := make([]float32, 0)
 
+	num := uint32(0)
+	eachPrice := float32(0)
 	for _, itemId := range itemIds {
-		var num = au.auctionMgr.getAuctionItemIndexNum(INDEX_KEY_ITEMID, strconv.FormatUint(uint64(itemId), 10))
+		if isPublicity == 1 {
+			num = au.auctionMgr.getAuctionItemPublicityIndexNum(INDEX_KEY_ITEMID, strconv.FormatUint(uint64(itemId), 10))
+		} else {
+			num = au.auctionMgr.getAuctionItemIndexNum(INDEX_KEY_ITEMID, strconv.FormatUint(uint64(itemId), 10))
+		}
 		if num == 0 {
 			continue
 		}
-		var eachPrice = au.auctionMgr.GetLowestPriceItem(INDEX_KEY_ITEMID, strconv.FormatUint(uint64(itemId), 10))
+		if isPublicity == 1 {
+			eachPrice = au.auctionMgr.GetLowestPricePublicityItem(INDEX_KEY_ITEMID, strconv.FormatUint(uint64(itemId), 10))
+		} else {
+			eachPrice = au.auctionMgr.GetLowestPriceItem(INDEX_KEY_ITEMID, strconv.FormatUint(uint64(itemId), 10))
+		}
+
 		if eachPrice == 0 {
 			appLog.Errorw("getAuctionItemNumByCategoryId: get lowest price err", "itemId", itemId)
 			continue
@@ -1554,13 +1345,6 @@ func (au *AuctionApp) gmSetInterception(extra string) (string, error) {
 		return "执行失败", err
 	}
 
-	//interception, err := m["interception"].(json.Number).Int64()
-	//if err != nil {
-	//	appLog.Errorw("gmSetInterception: parse interception err", "err", err)
-	//	return "执行失败", err
-	//}
-
-	//gmBuyInterception = uint32(interception)
 	return "执行成功", nil
 }
 
@@ -1577,6 +1361,7 @@ func (au *AuctionApp) buyItemByItemId(playerGbId uint64, itemId uint32, num uint
 	}
 	lockedBtree.mu.Lock()
 	defer lockedBtree.mu.Unlock()
+
 	lockedBtree.tree.Ascend(func(auctionItem *AuctionItem) bool {
 		if auctionItem.isLocked() {
 			return true
@@ -1733,4 +1518,16 @@ func (au *AuctionApp) doBuyItemByItemId(playerGbId uint64, errno uint32, itemId 
 	}
 
 	return itemData, string(extraB), nil
+}
+
+func (au *AuctionApp) getAuctionItemsByAuctionIds(auctionIds []uint64) ([]*AuctionItem, error) {
+	auctionItems := make([]*AuctionItem, 0)
+	for _, autionId := range auctionIds {
+		auctionItem, ok := au.auctionMgr.auctionItems.Get(strconv.FormatUint(autionId, 10))
+		if !ok {
+			continue
+		}
+		auctionItems = append(auctionItems, auctionItem)
+	}
+	return auctionItems, nil
 }

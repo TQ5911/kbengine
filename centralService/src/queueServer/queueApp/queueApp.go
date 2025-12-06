@@ -1,0 +1,327 @@
+package Queue
+
+import (
+	"centralService/src/common"
+	clientService "centralService/src/queueServer/queueApp/clientService"
+	gameServerService "centralService/src/queueServer/queueApp/gameServerService"
+	"centralService/src/trpc"
+	"fmt"
+	"net"
+	"sync"
+	"syscall"
+	"time"
+
+	"github.com/garyburd/redigo/redis"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
+	"github.com/spf13/viper"
+	"golang.org/x/time/rate"
+)
+
+var QueueConfig = AppConfig{}
+var ServerListCfg = viper.New()
+var ConfMD5 = ""
+var MaxOnlineNum int = 10000
+var LimitPerSecond = 10
+
+const (
+	_ = iota
+	SERVICE_CLIENT_AUTH
+	SERVICE_GAME_SERVER
+)
+
+type LoginAction func(*QueueApp) error
+
+type QueueApp struct {
+	common.App
+	gameServers     map[uint32]*GameServerService
+	channelToHost   map[uuid.UUID]*GameServerService
+	serversLock     *sync.RWMutex
+	gameClients     map[string]*QueueClientService
+	channelToClient map[uuid.UUID]*QueueClientService
+	clientsLock     *sync.RWMutex
+	actions         chan LoginAction
+	serverQueues    map[uint32]*Queue
+	queuesLock      *sync.RWMutex
+	httpServer      *HttpService
+	redisPool       *redis.Pool
+}
+
+func NewQueueApp() *QueueApp {
+	gameServers := make(map[uint32]*GameServerService)
+	channelToHost := make(map[uuid.UUID]*GameServerService)
+	gameClients := make(map[string]*QueueClientService)
+	channelToClient := make(map[uuid.UUID]*QueueClientService)
+	actions := make(chan LoginAction, 10)
+	serverQueues := make(map[uint32]*Queue)
+
+	redisPool := &redis.Pool{
+		MaxIdle:     16,  //最大空闲连接数
+		MaxActive:   100, //与数据库的最大链接数，0表示没有限制
+		IdleTimeout: 100, //最大空闲时间
+		Wait:        true,
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", QueueConfig.RedisServer.Addr)
+			if err != nil {
+				fmt.Println("conn redis failed,", err)
+				return nil, err
+			}
+			if QueueConfig.RedisServer.Passwd != "" {
+				if _, err := c.Do("AUTH", QueueConfig.RedisServer.Passwd); err != nil {
+					c.Close()
+					return nil, err
+				}
+			}
+
+			if QueueConfig.RedisServer.Db != "" {
+				if _, err := c.Do("SELECT", QueueConfig.RedisServer.Db); err != nil {
+					c.Close()
+					return nil, err
+				}
+			}
+			return c, nil
+		},
+	}
+
+	app := QueueApp{common.App{AppName: "QueueApp"},
+		gameServers, channelToHost, new(sync.RWMutex), gameClients, channelToClient, new(sync.RWMutex), actions, serverQueues, new(sync.RWMutex), nil, redisPool}
+
+	return &app
+}
+
+func (self *QueueApp) GetServices() []*common.ServiceInfo {
+	services := []*common.ServiceInfo{
+		&common.ServiceInfo{SERVICE_CLIENT_AUTH, "客户端连接监听", QueueConfig.ClientServiceAddr},
+		&common.ServiceInfo{SERVICE_GAME_SERVER, "游戏服连接监听", QueueConfig.GameServerServiceAddr},
+	}
+	return services
+}
+
+func (self *QueueApp) Start() {
+	self.App.Start()
+
+	self.RegisterSignals(syscall.SIGINT, syscall.SIGKILL, syscall.SIGTERM)
+
+	fmt.Printf("app starting: %+v\n", QueueConfig)
+
+	go func() {
+		<-self.SignalChan
+		self.Stop()
+	}()
+
+	self.httpServer = &HttpService{self}
+	go self.httpServer.startHttpServer(QueueConfig.HttpServer)
+	go self.StartDebugService(QueueConfig.AddressForDebug)
+}
+
+func (self *QueueApp) Stop() {
+
+}
+
+func (self *QueueApp) NewService(conn net.Conn, serviceType uint8) trpc.IServerEndPoint {
+	var service trpc.IServerEndPoint = nil
+	if serviceType == SERVICE_GAME_SERVER {
+		rpcUUID := uuid.New()
+		channel := trpc.NewRpcChannel(rpcUUID, conn)
+		service = &GameServerService{ServerEndPoint: gameServerService.NewQueueServerService(gameServerService.NewGameServerClient(channel)), app: self}
+		channel.SetEndPoint(service)
+	} else if serviceType == SERVICE_CLIENT_AUTH {
+		rpcUUID := uuid.New()
+		channel := trpc.NewRpcChannel(rpcUUID, conn)
+		service = &QueueClientService{
+			ServerEndPoint: clientService.NewQueueServerService(clientService.NewGameClientClient(channel)),
+			app:            self,
+			activeTickCnt:  0,
+			isReqQueue:     false,
+			isValid:        true,
+			isQueueSuc:     false,
+		}
+		channel.SetEndPoint(service)
+		service.(*QueueClientService).startCheckValidTimer()
+	}
+
+	return service
+}
+
+func (self *QueueApp) NewHttpClientService(accountName string, serverId string) *QueueClientService {
+	serverHost := ServerListCfg.GetString(fmt.Sprintf("serverList.%s", serverId))
+	service := &QueueClientService{
+		ServerEndPoint: nil,
+		app:            self,
+		activeTickCnt:  0,
+		isReqQueue:     false,
+		isValid:        true,
+		isQueueSuc:     false,
+		serverId:       serverId,
+		accountName:    accountName,
+		serverHost:     serverHost,
+		tLastRecv:      time.Now().Unix(),
+	}
+	go service.startCheckLastRecvTimer()
+	return service
+}
+
+func (self *QueueApp) NewHttpServerService(serverId uint32) *GameServerService {
+	service := &GameServerService{
+		ServerEndPoint: nil,
+		app:            self,
+		hostId:         serverId,
+		limiter:        rate.NewLimiter(rate.Limit(LimitPerSecond), LimitPerSecond),
+		queueTicker:    time.NewTicker(time.Second * 1),
+	}
+	self.addGameServer(service)
+	go service.tickQueue()
+	return service
+}
+
+func (self *QueueApp) addClient(service *QueueClientService) {
+	keyName := service.accountName
+	//如果有老的，先把老的删了，否则客户端不断开快速连过来时，上一个连接超时会把当前的删掉
+	self.clientsLock.Lock()
+	defer self.clientsLock.Unlock()
+
+	oldClient, ok := self.gameClients[keyName]
+
+	if ok {
+		self.removeClient(oldClient, false)
+	}
+
+	self.gameClients[keyName] = service
+	//self.channelToClient[service.GetRpcChannel().ChannelUUID] = service
+}
+
+func (self *QueueApp) removeClient(service *QueueClientService, optional ...bool) {
+	if !service.isValid {
+		return
+	}
+	needLock := true
+	if len(optional) == 1 {
+		needLock = optional[0]
+	}
+
+	if needLock {
+		self.clientsLock.Lock()
+		defer self.clientsLock.Unlock()
+	}
+
+	service.isValid = false
+	keyName := service.accountName
+	delete(self.gameClients, keyName)
+	//delete(self.channelToClient, service.GetRpcChannel().ChannelUUID)
+	//serverId := common.Str2UInt32(service.serverId)
+	//accountName := service.accountName
+	//if !service.isQueueSuc {
+	//	self.removeFromQueue(serverId, accountName)
+	//}
+}
+
+func (self *QueueApp) getClient(accountName string) *QueueClientService {
+	self.clientsLock.RLock()
+	defer self.clientsLock.RUnlock()
+	keyName := accountName
+	if clientSvc, ok := self.gameClients[keyName]; ok {
+		return clientSvc
+	}
+	return nil
+}
+
+func remove(slice []uint32, elem uint32) []uint32 {
+	for i := range slice {
+		if slice[i] == elem {
+			slice = append(slice[:i], slice[i+1:]...)
+			return slice
+		}
+	}
+	return slice
+}
+
+func (self *QueueApp) addGameServer(service *GameServerService) {
+	self.serversLock.Lock()
+	defer self.serversLock.Unlock()
+
+	self.gameServers[service.hostId] = service
+	//self.channelToHost[service.GetRpcChannel().ChannelUUID] = service
+}
+
+func (self *QueueApp) removeGameServer(service *GameServerService) {
+	self.serversLock.Lock()
+	defer self.serversLock.Unlock()
+
+	delete(self.gameServers, service.hostId)
+	//delete(self.channelToHost, service.GetRpcChannel().ChannelUUID)
+}
+
+func (self *QueueApp) getGameServer(hostId uint32) *GameServerService {
+	self.serversLock.RLock()
+	defer self.serversLock.RUnlock()
+
+	if gs, ok := self.gameServers[hostId]; ok {
+		return gs
+	}
+	return nil
+}
+
+func (self *QueueApp) enQueue(serverId uint32, accountName string) int {
+	self.queuesLock.Lock()
+	defer self.queuesLock.Unlock()
+	queueId := -1
+
+	if queue, ok := self.serverQueues[serverId]; ok {
+		queueId = queue.Enqueue(Item(accountName))
+	} else {
+		queue := NewQueue()
+		queueId = queue.Enqueue(Item(accountName))
+		self.serverQueues[serverId] = queue
+	}
+	return queueId
+}
+
+func (self *QueueApp) deQueue(serverId uint32) *Item {
+	self.queuesLock.Lock()
+	defer self.queuesLock.Unlock()
+
+	if queue, ok := self.serverQueues[serverId]; ok {
+		return queue.Dequeue()
+	}
+	return nil
+}
+
+func (self *QueueApp) getQueue(serverId uint32) *Queue {
+	self.queuesLock.Lock()
+	defer self.queuesLock.Unlock()
+
+	if queue, ok := self.serverQueues[serverId]; ok {
+		return queue
+	}
+	return nil
+}
+
+func (self *QueueApp) removeFromQueue(serverId uint32, accountName string) {
+	self.queuesLock.Lock()
+	defer self.queuesLock.Unlock()
+
+	if queue, ok := self.serverQueues[serverId]; ok {
+		queue.Remove(Item(accountName))
+	}
+}
+
+func (self *QueueApp) buildAccountKey(accountType string, accountName string) string {
+	return common.JoinToStr(accountName, ":", accountType)
+}
+
+func (self *QueueApp) QueueTick(serverId uint32) *Queue {
+	self.queuesLock.Lock()
+	defer self.queuesLock.Unlock()
+
+	if queue, ok := self.serverQueues[serverId]; ok {
+		queue.mut.Lock()
+		defer queue.mut.Unlock()
+		for i := range queue.Items {
+			client := self.getClient(string(queue.Items[i]))
+			if client != nil {
+				client.SetQueueId(i + 1)
+			}
+		}
+	}
+	return nil
+}

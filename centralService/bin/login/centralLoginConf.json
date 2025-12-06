@@ -37,7 +37,7 @@
     	"5":"5"
     },
     "redisServer":{
-    	"addr":"192.168.10.13:6379",
+    	"addr":"192.168.10.167:6379",
     	"passwd":"",
     	"db":""
     },
@@ -55,7 +55,7 @@
         "reqURI":"/account/profile/v1?client_id="
     },
     "official":{
-        "reqHost":"192.168.10.46:8084",
+        "reqHost":"192.168.10.16:8084",
         "reqURI":"/api/v1/user-info/check-token"
     }
 }
