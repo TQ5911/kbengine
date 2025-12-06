@@ -47,29 +47,29 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def destoryDungeonSpace(self, spaceNo, spaceUUID, reason):
         raise Exception('not implemented')
 
-    def applyCreateDungeon(self, box, gbId, teamUUID, extra):
+    def applyCreateDungeon(self, box, gbId, dungeonUUID, extra):
         raise Exception('not implemented')
 
-    def doEnterDungeon(self, box, gbId, teamUUID, spaceNo, extra):
+    def doEnterDungeon(self, box, gbId, dungeonUUID, spaceNo, extra):
         raise Exception('not implemented')
 
     def getDungeonSpaceNoRange(self):
         return gameconst.SpaceType.getCopiedSpaceNoRange(self.dungeonNo)
 
-    def createDungeonSpaceRemote(self, box, gbId, teamUUID, extra):
+    def createDungeonSpaceRemote(self, box, gbId, dungeonUUID, extra):
         spaceNoStart, spaceNoEnd = self.getDungeonSpaceNoRange()
         if self.crtGenSpaceNo < spaceNoStart or self.crtGenSpaceNo >= spaceNoEnd:
             self.crtGenSpaceNo = spaceNoStart
         for spaceNo in itertools.chain(range(self.crtGenSpaceNo, spaceNoEnd), range(spaceNoStart, self.crtGenSpaceNo)):
             if spaceNo not in self.spaces:
-                self._createSpaceRemote(spaceNo, box, gbId, teamUUID, extra)
+                self._createSpaceRemote(spaceNo, box, gbId, dungeonUUID, extra)
                 _crtGenSpaceNo = spaceNo + 1
                 self.crtGenSpaceNo = _crtGenSpaceNo if _crtGenSpaceNo < spaceNoEnd else spaceNoStart
                 break
         else:
             ERROR_MSG('cannot createDungeonSpaceRemote', len(self.spaces))
 
-    def _getDungeonSpaceVal(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
+    def _getDungeonSpaceVal(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
         raise Exception('not implemented')
 
     def _needSpaceMgr(self, spaceNo):
@@ -78,10 +78,10 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def _getDungeonSpaceWeight(self, enterNum=0) -> int:
         return enterNum
 
-    def _createSpaceRemote(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
-        INFO_MSG('zt: create home space', spaceNo, playerBox.id, playerGbId,teamUUID, extra)
+    def _createSpaceRemote(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
+        INFO_MSG('zt: create home space', spaceNo, playerBox.id, playerGbId,dungeonUUID, extra)
 
-        self.spaces[spaceNo]=self._getDungeonSpaceVal(spaceNo, playerBox, playerGbId, teamUUID, extra)
+        self.spaces[spaceNo]=self._getDungeonSpaceVal(spaceNo, playerBox, playerGbId, dungeonUUID, extra)
 
         spaceProps = {
             'spaceno': spaceNo,
@@ -92,12 +92,12 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if spaceWeight > 0:
             spaceProps["spaceWeight"] = spaceWeight
         KBEngine.createEntityAnywhere('Space', spaceProps,
-                                      lambda spaceBox, spaceNo=spaceNo, playerBox=playerBox, playerGbId=playerGbId, teamUUID=teamUUID, extra=extra: \
-                                          self._onCreateSpaceRemote(spaceBox, spaceNo, playerBox, playerGbId, teamUUID, extra)
+                                      lambda spaceBox, spaceNo=spaceNo, playerBox=playerBox, playerGbId=playerGbId, dungeonUUID=dungeonUUID, extra=extra: \
+                                          self._onCreateSpaceRemote(spaceBox, spaceNo, playerBox, playerGbId, dungeonUUID, extra)
                                       )
 
-    def _onCreateSpaceRemote(self, spaceBox, spaceNo, playerBox, playerGbId, teamUUID, extra):
-        INFO_MSG('_onCreateSpaceRemote', spaceBox, spaceNo, playerBox.id, playerGbId, teamUUID, extra)
+    def _onCreateSpaceRemote(self, spaceBox, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
+        INFO_MSG('_onCreateSpaceRemote', spaceBox, spaceNo, playerBox.id, playerGbId, dungeonUUID, extra)
         if not spaceBox:
             if self.spaces.has_key(spaceNo):
                 self.spaces.pop(spaceNo)
@@ -106,7 +106,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             sVal=self.spaces[spaceNo]
             sVal.spaceBox=spaceBox
             sVal.spaceUUID=spaceUUID
-            self.argsCache[spaceNo]=(playerBox, playerGbId, teamUUID, extra)
+            self.argsCache[spaceNo]=(playerBox, playerGbId, dungeonUUID, extra)
 
         return
 
@@ -150,6 +150,8 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             tempMiscProps[gameconst.DungeonSpaceMgrProps.teamDungeonBelongTeamUUID] = spaceVal.teamUUID
         elif formula.isRaidDungeonSpace(spaceNo):
             tempMiscProps[gameconst.DungeonSpaceMgrProps.raidDungeonBelongRaidUUID] = spaceVal.raidUUID
+        elif formula.isGuildBossDungeonSpace(spaceNo):
+            tempMiscProps[gameconst.DungeonSpaceMgrProps.guildBossDungeonBelongGuildUUID] = spaceVal.guildUUID
 
         if tempMiscProps:
             props.setdefault("tempMiscProps", {}).update(tempMiscProps)
@@ -167,17 +169,17 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if not args:
             return
 
-        (playerBox, playerGbId, teamUUID, extra)=args
+        (playerBox, playerGbId, dungeonUUID, extra)=args
 
-        self._loadDungeonSpaceEntities(spaceNo, playerBox, playerGbId, teamUUID, extra)
+        self._loadDungeonSpaceEntities(spaceNo, playerBox, playerGbId, dungeonUUID, extra)
 
-    def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
+    def _loadDungeonSpaceEntities(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
         pass
 
-    def enterDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
+    def enterDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
         pass
 
-    def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
+    def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
         pass
 
     def onAvatarDie(self, spaceNo, playerBox, playerGbId):
@@ -232,13 +234,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             rebornPosDict = {}
             if 'RebornPos' in dungeonSInfo:
                 rebornPosDict = dungeonSInfo['RebornPos']
-
-            # elif gameconst.DungeonType.isGuildDungeon(dungeonSpaceType):
-            #     # 【【任务】副本类型扩展-帮会副本】
-            #     guildSInfo = utils.getDunStructureModuleData(gameconst.MapIdDef.mapGuildSpace)
-            #     if 'RebornPos' in guildSInfo:
-            #         rebornPosDict = guildSInfo['RebornPos']
-
+                
             if not rebornPosDict:
                 gameengine.reportCritical(
                     'Reborn position not defined in dungeon {0}, '
@@ -296,7 +292,14 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         # calculate tDungeonLostTime to client
         endTime = int(spaceVal.tCreate + DDI.datas[self.dungeonNo]['timeOut'] * 60 + 1)
         if spaceVal.isCompleted():
-            box.client.onDungeonCompleted(self.dungeonNo, not spaceVal.isFailed(), spaceVal.getElapsedTime(), endTime)
+            if spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.RAID:
+                spaceVal.spaceMgr.cell.onRaidDungeonCompleted(spaceNo, spaceVal.raidUUID, not spaceVal.isFailed(), 0, spaceVal.dungeonCreepBaseKillDic, spaceVal.getAllPlayerGbidAndNamePair(), spaceVal.getElapsedTime(), gbId)
+            elif spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.TEAM:
+                spaceVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, spaceVal.teamUUID, not spaceVal.isFailed(), 0,  spaceVal.getElapsedTime(), gbId)
+            elif spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.SINGLE:
+                spaceVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, gbId, not spaceVal.isFailed(), 0, spaceVal.getElapsedTime())
+            elif spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.SINGLE:
+                spaceVal.spaceMgr.cell.onGuildBossDungeonCompleted(spaceNo, spaceVal.guildUUID, not spaceVal.isFailed(), 0, spaceVal.getElapsedTime(), gbId)
         box.client.changeDungeonRemainTime(spaceNo, endTime)
 
     def requestSpaceCell(self, requestBox, spaceNo):
@@ -304,3 +307,51 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onDungeonSpaceGone(self, spaceNo, reason):
         pass
+    
+    def getDungeonStatisticData(self, spaceNo, uniqueID):
+        INFO_MSG("getDungeonStatisticData::", spaceNo, uniqueID)
+        spaceVal = self.spaces[spaceNo]
+        if spaceVal.founders.getTotalFounderCount() <= 0:
+            ERROR_MSG("getDungeonStatisticData:: no players", spaceNo, uniqueID)
+            return False
+        # TODO：通往数据统计stub上发起请求
+        # getDungeonStatisticData(spaceNo, uniqueID)
+        # 构造假数据
+        idx = 0
+        for gbID in spaceVal.founders.getFounderGBIDs():
+            idx += 1
+            dataRecords = [{
+                'gbId':gbID, 
+                'name':'我是一个小测试 '+str(idx), 
+                'rank': idx,
+                'dmg': idx,
+                'hurt':idx,
+                'heal':idx, 
+                'dead':idx
+            }]
+        self.onGetDungeonStatisticData(spaceNo, uniqueID, 1, 1, dataRecords)
+        return True
+    
+    def onGetDungeonStatisticData(self, spaceNo, uniqueID, batchCount, batchID, dataRecords):
+        INFO_MSG("onGetDungeonStatisticData::", spaceNo, uniqueID, batchCount, batchID, dataRecords)
+        spaceVal = self.spaces[spaceNo]
+        spaceVal.statisticBatchCount += 1
+        # 开始塞数据
+        for dataRecord in dataRecords:
+            founder = spaceVal.statisticFounders.getFounderVal(dataRecord['gbId'])
+            if not founder:
+                spaceVal.statisticFounders.addFounder(dataRecord['gbId'], dataRecord['name'], dataRecord['rank'], dataRecord['dmg'], dataRecord['hurt'], dataRecord['heal'], dataRecord['dead'])
+        if spaceVal.statisticBatchCount == batchCount:
+            spaceVal.refreshFoundersSortRankCache()
+        spaceVal.spaceMgr.cell.notifyDungeonStatisticRecords(batchCount, dataRecords)
+        
+    def clearAllDungeonStatisticData(self, spaceNo, uniqueID):
+        INFO_MSG("clearAllDungeonStatisticData::", spaceNo, uniqueID)
+        # TODO：通往数据统计stub上发起清理请求
+        # clearAllDungeonStatisticData(spaceNo, uniqueID)
+
+    def clearDungeonStatisticDataByPlayerGbIds(self, spaceNo, uniqueID, playerGbIds):
+        INFO_MSG("clearDungeonStatisticDataByPlayerGbIds::", spaceNo, uniqueID, playerGbIds)
+        # TODO：通往数据统计stub上发起清理请求
+        # clearDungeonStatisticDataByPlayerGbIds(spaceNo, uniqueID)
+ 

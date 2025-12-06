@@ -253,6 +253,9 @@ class IComplexTeleport(object):
             leaveContext.update({'spaceMgrCell': self.spaceMgr})
             return gameclass.BoolResult(True, gameconst.CompleteTeleportLeaveFailedReason.ARGS_DEFINED)
 
+        elif leaveFnName == 'guildBossDungeon':
+            leaveContext.update({'spaceMgrCell': self.spaceMgr})
+            return gameclass.BoolResult(True, gameconst.CompleteTeleportLeaveFailedReason.ARGS_DEFINED)
         else:
             not noErrorMsg and ERROR_MSG('packageComplexTeleportLeaveData:: leave from current space unknown', self.spaceNo, leaveFnName)
             return gameclass.BoolResult(False, gameconst.CompleteTeleportLeaveFailedReason.UNDEFINED_SPACE)
@@ -351,6 +354,7 @@ class IComplexTeleport(object):
             'cube': '',             # 魔方
             'wonderLand': '',       # 秘境峰
             'siegeWar': '',         # 城战
+            'guildBossDungeon': '',         # 公会boss
         }
 
         # ----------------------------------------------------------
@@ -390,6 +394,8 @@ class IComplexTeleport(object):
             return 'wonderLand'
         elif formula.isSiegeWarSpace(spaceNo):
             return 'siegeWar'
+        elif formula.isGuildBossDungeonSpace(spaceNo):
+            return 'guildBossDungeon'
         else:
             return ''
 
@@ -653,54 +659,15 @@ class IComplexTeleport(object):
         dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
         dungeonEnterType = self._getPrmBydungeonNo(dungeonNo, 'enterType')
         if not position:
-            if gameconst.DungeonType.isNormalRaidDungeon(dungeonSpaceType, dungeonEnterType):
-                # NOTE: position in common raid dungeon must set position
-                gameengine.reportCritical('_beforeEnter_raidDungeon:: common dungeon entrance position not defined', dungeonNo, toSpaceNo)
-                return
-
-            # 【【任务】副本类型扩展-帮会副本】
-            elif gameconst.DungeonType.isGuildRaidDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_raidDungeon:: try resetting guild dungeon entrance position to guild entrance', dungeonNo, toSpaceNo)
-                position = self._getPrmBydungeonNo(gameconst.MapIdDef.mapGuildSpace, 'entrance')
-                if not position:
-                    # NOTE: position in guild raid dungeon must set position in self or guild space
-                    gameengine.reportCritical('_beforeEnter_raidDungeon:: guild dungeon entrance position not defined', dungeonNo, toSpaceNo)
-                    return
-
-            # 【【任务】副本类型支持小世界场景副本】
-            elif gameconst.DungeonType.isHomeRaidDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_raidDungeon:: try resetting home dungeon entrance position to home entrance', dungeonNo, toSpaceNo)
-                position = self._getPrmBydungeonNo(gameconst.MapIdDef.mapMyHome, 'entrance')
-                if not position:
-                    # NOTE: position in home raid dungeon must set position in self or home space
-                    gameengine.reportCritical('_beforeEnter_raidDungeon:: home dungeon entrance position not defined', dungeonNo, toSpaceNo)
-                    return
-
-            else:
-                WARNING_MSG('_beforeEnter_raidDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
-                position = self.position
+            WARNING_MSG('_beforeEnter_raidDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
+            position = self.position
 
         direction = self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
 
         if direction is not None:
             direction = (0, 0, direction * math.pi / 180)
-
         else:
-            # 【【任务】副本类型扩展-帮会副本】
-            if gameconst.DungeonType.isGuildRaidDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_raidDungeon:: try resetting guild dungeon entrance direction to guild entrance', dungeonNo, toSpaceNo)
-                direction = self._getEntranceDirByDungeonNo(gameconst.MapIdDef.mapGuildSpace)
-                direction = (0, 0, direction * math.pi / 180) if direction is not None else self.direction
-
-            # 【【任务】副本类型支持小世界场景副本】
-            elif gameconst.DungeonType.isHomeRaidDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_raidDungeon:: try resetting home dungeon entrance direction to home entrance', dungeonNo, toSpaceNo)
-                direction = self._getEntranceDirByDungeonNo(gameconst.MapIdDef.mapMyHome)
-                direction = (0, 0, direction * math.pi / 180) if direction is not None else self.direction
-
-            else:
-                WARNING_MSG('_beforeEnter_raidDungeon:: reset entrance direction to self direction', dungeonNo, toSpaceNo, self.position)
-                direction = self.direction
+            direction = self.direction
 
         # set teleport lock
         self.aquireTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
@@ -875,25 +842,6 @@ class IComplexTeleport(object):
                 # common dungeon un-support no entrance configs
                 gameengine.reportCritical('_beforeEnter_singleDungeon:: common dungeon entrance position not define', dungeonNo, toSpaceNo)
                 return
-
-            # 【【任务】副本类型扩展-帮会副本】
-            elif gameconst.DungeonType.isGuildSingleDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_singleDungeon:: try to reset entrance position to guild entrance', dungeonNo, toSpaceNo)
-                position = self._getPrmBydungeonNo(gameconst.MapIdDef.mapGuildSpace, 'entrance')
-                if not position:
-                    # NOTE: position in guild single dungeon must set position in self or guild space
-                    gameengine.reportCritical('_beforeEnter_singleDungeon:: guild dungeon entrance position not defined', dungeonNo, toSpaceNo)
-                    return
-
-            # 【【任务】副本类型支持小世界场景副本】
-            elif gameconst.DungeonType.isHomeSingleDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_singleDungeon:: try to reset entrance position to guild entrance', dungeonNo, toSpaceNo)
-                position = self._getPrmBydungeonNo(gameconst.MapIdDef.mapMyHome, 'entrance')
-                if not position:
-                    # NOTE: position in home single dungeon must set position in self or home space
-                    gameengine.reportCritical('_beforeEnter_singleDungeon:: home dungeon entrance position not defined', dungeonNo, toSpaceNo)
-                    return
-
             else:
                 WARNING_MSG('_beforeEnter_singleDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
                 position = self.position
@@ -903,23 +851,8 @@ class IComplexTeleport(object):
             direction = self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
         if direction is not None:
             direction = (0, 0, direction * math.pi / 180)
-
         else:
-            # 【【任务】副本类型扩展-帮会副本】
-            if gameconst.DungeonType.isGuildSingleDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_singleDungeon:: try resetting guild dungeon entrance direction to guild entrance', dungeonNo, toSpaceNo)
-                direction = self._getEntranceDirByDungeonNo(gameconst.MapIdDef.mapGuildSpace)
-                direction = (0, 0, direction * math.pi / 180) if direction is not None else self.direction
-
-            # 【【任务】副本类型支持小世界场景副本】
-            elif gameconst.DungeonType.isHomeSingleDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG("_beforeEnter_singleDungeon:: try resetting home dungeon entrance direction to home entrance", dungeonNo, toSpaceNo)
-                direction = self._getEntranceDirByDungeonNo(gameconst.MapIdDef.mapMyHome)
-                direction = (0, 0, direction * math.pi / 180) if direction is not None else self.direction
-
-            else:
-                WARNING_MSG('_beforeEnter_singleDungeon:: reset entrance direction to self direction', dungeonNo, toSpaceNo, self.position)
-                direction = self.direction
+            direction = self.direction
 
         # set teleport lock
         self.aquireTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
@@ -1074,25 +1007,6 @@ class IComplexTeleport(object):
                 # common dungeon un-support no entrance configs
                 gameengine.reportCritical('_beforeEnter_teamDungeon:: common dungeon entrance position not define', dungeonNo, toSpaceNo)
                 return
-
-            # 【【任务】副本类型扩展-帮会副本】
-            elif gameconst.DungeonType.isGuildTeamDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_teamDungeon:: try to reset entrance position to guild entrance', dungeonNo, toSpaceNo)
-                position = self._getPrmBydungeonNo(gameconst.MapIdDef.mapGuildSpace, 'entrance')
-                if not position:
-                    # NOTE: position in guild team dungeon must set position in self or guild space
-                    gameengine.reportCritical('_beforeEnter_teamDungeon:: guild dungeon entrance position not defined', dungeonNo, toSpaceNo)
-                    return
-
-            # 【【任务】副本类型支持小世界场景副本】
-            elif gameconst.DungeonType.isHomeTeamDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_teamDungeon:: try to reset entrance position to home entrance', dungeonNo, toSpaceNo)
-                position = self._getPrmBydungeonNo(gameconst.MapIdDef.mapMyHome, 'entrance')
-                if not position:
-                    # NOTE: position in home team dungeon must set position in self or home space
-                    gameengine.reportCritical('_beforeEnter_teamDungeon:: home dungeon entrance position not defined', dungeonNo, toSpaceNo)
-                    return
-
             else:
                 WARNING_MSG('_beforeEnter_teamDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
                 position = self.position
@@ -1100,23 +1014,6 @@ class IComplexTeleport(object):
         direction = extra.get("direction") or self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
         if direction is not None:
             direction = (0, 0, direction * math.pi / 180)
-
-        else:
-            # 【【任务】副本类型扩展-帮会副本】
-            if gameconst.DungeonType.isGuildTeamDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_teamDungeon:: try resetting guild dungeon entrance direction to guild entrance', dungeonNo, toSpaceNo)
-                direction = self._getEntranceDirByDungeonNo(gameconst.MapIdDef.mapGuildSpace)
-                direction = (0, 0, direction * math.pi / 180) if direction is not None else self.direction
-
-            # 【【任务】副本类型支持小世界场景副本】
-            elif gameconst.DungeonType.isHomeTeamDungeon(dungeonSpaceType, dungeonEnterType):
-                WARNING_MSG('_beforeEnter_teamDungeon:: try resetting home dungeon entrance direction to home entrance', dungeonNo, toSpaceNo)
-                direction = self._getEntranceDirByDungeonNo(gameconst.MapIdDef.mapMyHome)
-                direction = (0, 0, direction * math.pi / 180) if direction is not None else self.direction
-
-            else:
-                WARNING_MSG('_beforeEnter_teamDungeon:: reset entrance direction to self direction', dungeonNo, toSpaceNo, self.position)
-                direction = self.direction
 
         # set teleport lock
         self.aquireTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
@@ -1496,6 +1393,141 @@ class IComplexTeleport(object):
         _spaceMgrCell.onPlayerLeave(self.gbId, self.id, self.base)
 
         self.spaceMgrId = 0
+        return True
+
+    # ----------------------------------------------------------------------
+    # Guild Boss DUNGEON
+    # ----------------------------------------------------------------------
+
+    @gamedecorator.checkTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
+    def _beforeEnter_guildBossDungeon(self, fromSpaceNo, toSpaceNo, options, context):
+        INFO_MSG('_beforeEnter_guildBossDungeon::~')
+        extra = context['e']['extra']
+
+        self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
+
+        dungeonNo = formula.getDungeonNoBySpaceNo(toSpaceNo)
+        position = extra.get("position") or self._getPrmBydungeonNo(dungeonNo, 'entrance')
+        dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
+        dungeonEnterType = self._getPrmBydungeonNo(dungeonNo, 'enterType')
+        if not position:
+            if gameconst.DungeonType.isNormalTeamDungeon(dungeonSpaceType, dungeonEnterType):
+                # common dungeon un-support no entrance configs
+                gameengine.reportCritical('_beforeEnter_guildBossDungeon:: common dungeon entrance position not define', dungeonNo, toSpaceNo)
+                return
+            else:
+                WARNING_MSG('_beforeEnter_guildBossDungeon:: reset entrance position to self position', dungeonNo, toSpaceNo, self.position)
+                position = self.position
+
+        direction = extra.get("direction") or self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
+        if direction is not None:
+            direction = (0, 0, direction * math.pi / 180)
+
+        # set teleport lock
+        self.aquireTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
+
+        context['position'] = position
+        context['direction'] = direction
+        context['spaceNo'] = toSpaceNo
+        return True
+
+    def _afterEnter_guildBossDungeon(self, fromSpaceNo, toSpaceNo, options, context):
+        INFO_MSG('_afterEnter_guildBossDungeon::~')
+        spaceMgrBox = context['e']['spaceMgrBox']
+        dungeonNo = formula.getDungeonNoBySpaceNo(toSpaceNo)
+        guildUUID = context['e']['guildUUID']
+        extra = context['e']['extra']
+
+        # release lock
+        self.releaseTeleportLock(gameconst.TeleportLock.ENTER_DUNGEON)
+        self.releaseGlobalTeleportLock('telsucc')
+
+
+        self.spaceMgrId = spaceMgrBox.id
+        self.spaceMgr.onPlayerEnter(self.id)
+        self.spaceMgr.dungeonGoodManColl.update(extra.get("goodManList", ()))
+        if not self.spaceMgr.dungeonGoodManActId:
+            self.spaceMgr.dungeonGoodManActId = extra.get("goodManActId", 0)
+
+        # 【【死亡复活】玩家在大世界内死亡后，通过点击个人资料-头像-驭灵殿按钮进入副本后需要复活玩家】
+        # NOTE(): 进入副本前复活会导致hp同步不到客户端导致显示问题, 先放在后面
+        if self.isDie():
+            self._relive()
+            self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+
+        # send real end time to avatar self client
+        endTime = int(self.spaceMgr.dungeonPlayMode.getTEnd(dungeonNo))
+        endTime and self.client.changeDungeonRemainTime(toSpaceNo, endTime)
+
+        dungeonStub = gameengine.getDungeonStubBySpaceNo(toSpaceNo)
+        dungeonStub.enterDungeonSpaceSucc(toSpaceNo, self.base, self.gbId, guildUUID, extra)
+        return True
+
+    def _beforeLeave_guildBossDungeon(self, fromSpaceNo, toSpaceNo, options, context):
+        INFO_MSG('_beforeLeave_guildBossDungeon::~')
+        dungeonNo = formula.getDungeonNoBySpaceNo(fromSpaceNo)
+        spaceMgr = self.spaceMgr
+        if spaceMgr:
+            spaceMgr.onLeaveWholeAureoleSpace(self.id)
+
+        dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
+        dungeonEnterType = self._getPrmBydungeonNo(dungeonNo, 'enterType')
+        if not gameconst.DungeonType.isGuildBossDungeon(dungeonSpaceType, dungeonEnterType):
+            ERROR_MSG('error dungeonType: {}/{}'.format(dungeonNo, dungeonSpaceType))
+            return
+
+        self.tryDisableAutoCombatWhenLeaveSpace(dungeonNo)
+
+        self.removeBuffByTag(gameconst.BuffTag.Dungeon)
+
+        position, direction, spaceNo = self._fetchCommonLeavePosAndDir(fromSpaceNo, toSpaceNo, options, context)
+        _m_outRecord = self.tryGetTeleportOutesideRecord(toSpaceNo)
+        if _m_outRecord and _m_outRecord.isDie:
+            context['needRelive'] = False
+            if not self.isDie():
+                self.modifyHP(-self.hp, self.id, gameconst.SourceType.Default, self.id)
+        else:
+            if self.isDie():
+                self._relive()
+                self.modifyHP(self.getDefaultReliveHp(), self.id, gameconst.SourceType.Default, self.id)
+
+        bigWorldDungeonLeaveType = self._getPrmBydungeonNo(dungeonNo, 'leave')
+        dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
+        if dungeonSpaceType and gameconst.DungeonType.isBigWorldDungeon(dungeonSpaceType) \
+                and not bigWorldDungeonLeaveType:
+            leave = GP_GP.datas[dungeonNo].get('leave', 0)
+            if leave == 0:
+                sceneRes = GP_GP.datas[dungeonNo].get('sceneRes', '')
+                if sceneRes:
+                    defaultMapID = GPSSDD.datas[sceneRes]['defaultMapID']
+                    position = self.position
+                    direction = self.direction
+                    spaceNo = defaultMapID
+
+        if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
+            self.tryUnRegiTeleportOutsideRecord(toSpaceNo)
+
+        if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
+            self.clearTeleportOutsideRecord()
+
+        context['position'] = position
+        context['direction'] = direction
+        context['spaceNo'] = spaceNo
+        return True
+
+    def _afterLeave_guildBossDungeon(self, fromSpaceNo, toSpaceNo, options, context):
+        INFO_MSG('_afterLeave_guildBossDungeon::~')
+        guildUUID = context['l']['guildUUID']
+        spaceMgrBox = context['l']['spaceMgrBox']
+
+        self.base.onLeaveDungeon(self.spaceNo, fromSpaceNo)
+        if spaceMgrBox:
+            spaceMgrBox.cell.onPlayerLeave(self.gbId, self.id, self.base)
+        self.spaceMgrId = 0
+
+        self.selfStopAutoCombat('leave guild boss dungeon')
+        dungeonStub = gameengine.getDungeonStubBySpaceNo(fromSpaceNo)
+        dungeonStub.leaveDungeonSpaceSucc(fromSpaceNo, self.base, self.gbId, guildUUID, {})
         return True
 
 # -----------------------------------------

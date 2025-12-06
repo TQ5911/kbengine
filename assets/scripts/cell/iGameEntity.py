@@ -32,6 +32,37 @@ class IGameEntity(object):
                 pass
                 # DEBUG_MSG("will not disappear")
 
+        self.createAttachedEntities()
+        self.beAttachedToHost()
+
+    def createAttachedEntities(self):
+        _dunData = self.dunData()
+        if not _dunData:
+            return
+
+        attachedGIDList = _dunData.get('AttachedGIDList', [])
+        if not attachedGIDList:
+            return
+
+        attachedGIDStrList = [str(gid) for gid in attachedGIDList]
+        cellSpace = self.getCurrentSpace()
+        cellAvatarMgrId = getattr(self, 'spaceMgrId', 0)
+        cellSpace.doLoadSpecifiedEntities(attachedGIDStrList, cellAvatarMgrId, self.id)
+        DEBUG_MSG("iGameEntity.IGameEntity attachedGIDList", self.id, self.gameEntityId, attachedGIDList, cellAvatarMgrId)
+
+    def beAttachedToHost(self):
+        attachedHostId = self.getTempMiscProp(gameconst.AvatarProps.beAttachedHostID, 0)
+        if not attachedHostId:
+            return
+        attachedHost = KBEngine.entities.get(attachedHostId)
+        if not attachedHost:
+            return
+
+        DEBUG_MSG("iGameEntity.IGameEntity attachedHostId", self.id, self.gameEntityId, attachedHostId)
+        attachedIDList = attachedHost.getTempMiscProp(gameconst.AvatarProps.attachedIDList, [])
+        attachedIDList.append(self.id)
+        attachedHost.setTempMiscProp(gameconst.AvatarProps.attachedIDList, attachedIDList)
+
     def onDisappearTimerEnded(self):
         DEBUG_MSG('id={} gameEntityId={} over time limit, destroy'.format(self.id, self.gameEntityId))
         self.safeDestroy()

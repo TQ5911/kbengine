@@ -178,6 +178,8 @@ def getDungeonStubGlobalName(dungeonNo, dungeonEnterType=gameconst.DungeonEnterT
         return 'dungeon_{}_s'.format(dungeonNo)
     elif dungeonEnterType == gameconst.DungeonEnterType.RAID:
         return 'dungeon_{}_r'.format(dungeonNo)
+    elif dungeonEnterType == gameconst.DungeonEnterType.GUILD:
+        return 'dungeon_{}_g'.format(dungeonNo)
     else:
         return 'dungeon_%s' % dungeonNo
 
@@ -312,7 +314,8 @@ def getEntityId(gameEntityId):
 
 def isDungeonSpace(spaceNo):
     return whatSpaceType(spaceNo) in (gameconst.SpaceType.SpaceWorldDungeon,
-                                      gameconst.SpaceType.SpaceNormalDungeon)
+                                      gameconst.SpaceType.SpaceNormalDungeon,
+                                      gameconst.SpaceType.SpaceGuild)
 
 def isMineWarSpace(spaceNo):
     return getMapId(spaceNo) in MBMA.datas.keys() and getLineNo(spaceNo) == 0
@@ -379,5 +382,16 @@ def isRaidDungeonSpace(spaceNo):
     dungeonNo = getDungeonNoBySpaceNo(spaceNo)
     enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.UNKNOWN)
     if enterType == gameconst.DungeonEnterType.RAID:
+        return True
+    return False
+
+def isGuildBossDungeonSpace(spaceNo):
+    if not isDungeonSpace(spaceNo):
+        return False
+    dungeonNo = getDungeonNoBySpaceNo(spaceNo)
+    spaceType = GGD.datas[dungeonNo].get('type', gameconst.DungeonSpaceType.UNKNOWN)
+    enterType = GGD.datas[dungeonNo].get('enterType', gameconst.DungeonEnterType.UNKNOWN)
+    if spaceType == gameconst.DungeonSpaceType.GUILD_BOSS \
+        and enterType == gameconst.DungeonEnterType.GUILD:
         return True
     return False

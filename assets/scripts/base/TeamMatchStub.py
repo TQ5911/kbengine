@@ -137,7 +137,6 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         pmVal = PlayerMatchVal(playerMatchDic, utils.getNow())
         self._playerStartMatch(pmVal)
         playerMatchDic['playerBox'].cell.onCellPlayerStartAutoMatch(now, playerMatchDic['target'])
-        #playerMatchDic['playerBox'].client.onPlayerAutoMatch()
         return
 
     def _playerStartMatch(self, pmVal):
@@ -159,7 +158,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if not pmVal:
             return
         if self._rmPlayerFromMatchPool(playerGbId):
-            pmVal.playerBox.client.onPlayerStopAutoMatch()
+            pass
         return
 
     def playerAutoMatchTimeout(self, playerGbId):

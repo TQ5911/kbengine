@@ -26,6 +26,8 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
 
     def __init__(self):
         iCell.ICell.__init__(self)
+        iGameEntity.IGameEntity.__init__(self)
+
         # try:
         #     # raise error if fail to init engine airwall
         #     self.addEngineAirWall()
@@ -70,9 +72,7 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
 
     def getTmxName(self):
         def _getTmxName():
-            if formula.spaceInWorldLine(self.spaceNo):
-                return utils.getDunModuleName(self.spaceNo)
-            return utils.getDunModuleName(self.spaceNo // gameconst.SPACE_NO_HOME_INTERVAL)
+            return utils.getDunModuleName(formula.getMapId(self.spaceNo))
 
         dunName = _getTmxName()
         gid = utils.getGidFromGameEntityId(self.gameEntityId)
@@ -82,9 +82,7 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
 
     def getTmxAnchorPoint(self):
         def _getTmxModuleData():
-            if formula.spaceInWorldLine(self.spaceNo):
-                return utils.getDunModuleData(self.spaceNo)
-            return utils.getDunModuleData(self.spaceNo // gameconst.SPACE_NO_HOME_INTERVAL)
+            return utils.getDunModuleData(formula.getMapId(self.spaceNo))
 
         data = _getTmxModuleData()
         gid = utils.getGidFromGameEntityId(self.gameEntityId)

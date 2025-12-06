@@ -38,6 +38,7 @@ import skillRelevant_summonUnlock as SRSU
 import skillRelevant_skillConst as SRSC
 import PKData_PKData as PKD
 import skill_skill as SSD
+import creep_base as CBD
 import guild_guildConst as G_GCD
 
 
@@ -171,8 +172,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                     self.savedBuffDic.setdefault(buffId, {})[buffSrcKey] = buffVal
 
     def sendLeftFreeReliveTimes(self):
-        self.client.onLeftFreeReliveTimesChanged(
-            max(self.dayFreeReliveDirectlyTimesLimit - self.dailyFreeReliveTimes, 0))
+        pass
 
     def addSkill(self, skillId, skillLv, tNextCast=0):
         skill = SkillManager.SkillManager.addSkill(self, skillId, skillLv, tNextCast)
@@ -334,6 +334,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             if host.guildUUID and host.guildBoxCell:
                 host.guildBoxCell.broadcastMsg(_msgId, _args)
 
+        self.calcDeadStats(killer)
+
         self.base.triggerAchievement(gameconst.AchieveType.DEAD_TIMES)
 
     def onKillAvatar(self, deadAvatar):
@@ -434,9 +436,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def _setInteractState(self, state, interactId, taskId):
         self.setState(state)
-        if interactId:
-            self.otherClients.onInteractStateChange(interactId)
-            self.client.onSelfInteractStateChange(interactId, taskId)
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
@@ -827,7 +826,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def doUseTargetSkill(self, skillID, targetID, arr, compensateTime, isClient):
         if not self.hasTakeSkill(skillID):
-            self.client.onUseSkill(False, skillID, targetID, [], [])
+            self.client.onUseSkill(False, skillID, targetID, [], [], [])
             return
 
         # _beforeTeleport后，有概率会再放技能，这时候已经不会再resetUsingSkills
@@ -845,13 +844,13 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         target = KBEngine.entities.get(targetID)
         if targetID and not target:
-            self.client.onUseSkill(False, skillID, targetID, [], [])
+            self.client.onUseSkill(False, skillID, targetID, [], [], [])
             return
 
         if realSkillVal.getTarget(realSkillVal.skillId) != "None" and target and (
                 not target.IsCombatUnit or target.isDie()):
             self.showMsg(MMD.datas.SkillTargetWrong, [])
-            self.client.onUseSkill(False, skillID, targetID, [], [])
+            self.client.onUseSkill(False, skillID, targetID, [], [], [])
             DEBUG_MSG('dead target', skillID, targetID)
             return
 
@@ -955,6 +954,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.statisticsDmg = 0
         self.statisticsHeal = 0
         self.statisticsHurt = 0
+        self.statisticsDead = 0
 
     def isVisible(self, target):
         if self.IsAvatar and target.IsAvatar:
@@ -966,8 +966,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def sendCombatMsg(self, msgId, args):
         args = [str(arg) for arg in args]
-        if gameconfig.combatMsgFlag():
-            self.client.showCombatMsg(msgId, args)
 
     def onBeDamaged(self, srcEntId, damageVal, absorbVal, srcType, srcId):
         # 采集时受到伤害
@@ -1033,7 +1031,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if deltaVal <= 0:
             return
 
-        if utils.isEnemy(self, target):
+        if valType == gameconst.TeamStatisticType.DEAD:
+            self.addTeamStatisticPlayerVal(valType, deltaVal)
+
+        elif utils.isEnemy(self, target):
             # target不能是玩家，host也不能是玩家
             if target.IsAvatarMirror or target.IsSummon or target.IsCreation:
                 tHost = target.getHost()
@@ -1073,6 +1074,14 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return
 
         self.statisticsHeal += hpDelta
+
+    def calcDeadStats(self, target):
+        self.doCalcTeamStatistic(target, None, gameconst.TeamStatisticType.DEAD, 1)
+
+        if not gameconfig.enableStatistic():
+            return
+
+        self.statisticsDead += 1
 
     def _notifySkillDuration(self, eid):
         e = KBEngine.entities.get(eid)
@@ -1151,23 +1160,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.onUpdateRewardFightProp(newScore)
 
     def startDunTimeFreeze(self):
-        self.client.onGetDunTimeFreezeFlag(True)
-        self._changeBelongEntityTimeFreeze(True)
+        pass
 
     def stopDunTimeFreeze(self):
-        self.client.onGetDunTimeFreezeFlag(False)
-        self._changeBelongEntityTimeFreeze(False)
-
-    def _changeBelongEntityTimeFreeze(self, status):
-        for cid in list(self.cloneList):
-            cln = KBEngine.entities.get(cid)
-            if cln:
-                cln.dunTimeFreezeFlag = status
-
-        for summonId in list(self.petList):
-            summon = KBEngine.entities.get(summonId)
-            if summon:
-                summon.dunTimeFreezeFlag = status
+        pass
 
     def getDunTimeFreezeFlag(self):
         spaceMgr = self.spaceMgr
@@ -1182,7 +1178,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def sendDunTimeFreezeFlag(self):
         _f = self.getDunTimeFreezeFlag()
         DEBUG_MSG("sendDunTimeFreezeFlag::", _f)
-        self.client.onGetDunTimeFreezeFlag(_f)
+
     def getBuffIdInfo(self, exposed, entityId):
         if not self._isMyself(exposed):
             return
@@ -1397,4 +1393,25 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if e.id in self.viewCrossServerSet:
             self.viewCrossServerSet.remove(e.id)
             self.checkRelationType(e)
+
+    def levelUpSkill(self, exposed, skillId, levelDelta):
+        INFO_MSG('levelUpSkill 1', skillId, levelDelta)
+        newSkillId = self.glyphEquipData.getInscriptionSrcSkillId(skillId)
+        INFO_MSG('levelUpSkill 2, after check inscription', skillId, newSkillId, levelDelta)
+        self.base.baseLevelUpSkill(newSkillId, levelDelta)
+
+
+    def checkCombatRangeY(self, target):
+        if target.IsMonster:
+            underAttackHeightLimit = CBD.datas[target.monsterId]['underAttackHeightLimit']
+            if underAttackHeightLimit:
+                heightLimit = underAttackHeightLimit
+            else:
+                heightLimit = CONST.datas['damageHeightLimit'].get('value')
+        else:
+            heightLimit = CONST.datas['damageHeightLimit'].get('value')
+
+        return abs(self.position[1] - target.position[1]) <= heightLimit
+
+
 

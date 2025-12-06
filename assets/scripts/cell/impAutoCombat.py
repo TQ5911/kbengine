@@ -586,7 +586,7 @@ class ImpAutoCombat(object):
             if not target or not target.IsCombatUnit or target.isDie() or target.spaceNo != self.spaceNo \
                     or sMath.distance2D(target.position, self.position) > CONST.datas['autoFightRange']['value'] \
                     or not utils.checkTargetType('Enemy', self, target) \
-                    or not utils.checkCombatRangeY(self, target):
+                    or not self.checkCombatRangeY(target):
                 target = self.getEffectSelectTarget(skill)
         return target
 
@@ -619,7 +619,7 @@ class ImpAutoCombat(object):
                 continue
             if sMath.distance2D(mEnt.position, self.position) > CONST.datas['autoFightRange']['value']:
                 continue
-            if not utils.checkCombatRangeY(self, mEnt):
+            if not self.checkCombatRangeY(mEnt):
                 continue
             hpPercent = mEnt.hp / mEnt.fullHp
             if minHpPercent != -1 and hpPercent > minHpPercent:
@@ -728,7 +728,7 @@ class ImpAutoCombat(object):
         if not target or target.spaceNo != self.spaceNo or not target.IsCombatUnit\
                 or sMath.distance2D(target.position, self.position) > CONST.datas['autoFightRange']['value'] \
                 or not utils.checkTargetType('Enemy', self, target)\
-                or not utils.checkCombatRangeY(self, target):
+                or not self.checkCombatRangeY(target):
             # 调整后：下面是顺序
             #反击
             #正在打得目标
@@ -749,7 +749,7 @@ class ImpAutoCombat(object):
                     continue
                 if entity.id == self.id:
                     continue
-                if not utils.checkCombatRangeY(self, entity):
+                if not self.checkCombatRangeY(entity):
                     continue
                 if _inFightBack and eId not in _hateRecord:
                     # 反击过程中，不攻击非仇恨目标
@@ -758,7 +758,7 @@ class ImpAutoCombat(object):
                     targetsList.append(entity)
                     _val = (
                         # 1.仇恨目标
-                        _hateRecord.get(eId, 0),
+                        1 if eId in _hateRecord else 0,
                         # 2.任务目标
                         1 if entity.IsMonster and entity.monsterId == priorityTargetEnemyId else 0,
                         # 3.队伍目标
@@ -792,7 +792,7 @@ class ImpAutoCombat(object):
         if not target or target.spaceNo != self.spaceNo \
                 or sMath.distance2D(target.position, self.position) > CONST.datas['autoFightRange']['value'] \
                 or not utils.checkTargetType(targetType, self, target) \
-                or not utils.checkCombatRangeY(self, target):
+                or not self.checkCombatRangeY(target):
 
             entityIds = self.getTargetIdsByTargetType(targetType)
             random.shuffle(entityIds)
@@ -800,7 +800,7 @@ class ImpAutoCombat(object):
                 entity = KBEngine.entities.get(eId)
                 if entity and entity.IsCombatUnit and utils.checkCachedTargetType(targetType, self, entity) \
                         and sMath.inRectRange2D(skillRange, entity.position, self.position)\
-                        and utils.checkCombatRangeY(self, entity):
+                        and self.checkCombatRangeY(entity):
                     return target
         return target
 

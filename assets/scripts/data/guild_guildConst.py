@@ -701,11 +701,11 @@ datas = _tools.RODict({
     }),
     "guild_warEquipmentAssets": _tools.RODict({
         "key": "guild_warEquipmentAssets",
-        "value": ('Assets/Res/ui/texturenp/guild/guild_department01_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department02_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department03_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department05_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department04_bg_img.png'),
+        "value": ('Assets/Res/ui/texturenp/guild/guild_department01_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department02_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department03_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department05_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department04_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department06_bg_img.png', 'Assets/Res/ui/texturenp/guild/guild_department07_bg_img.png'),
     }),
     "guild_warEquipmentName": _tools.RODict({
         "key": "guild_warEquipmentName",
-        "value": ('主城门', '副城门', '旗帜', '攻城兽', '守城弩'),
+        "value": ('主城门', '副城门', '新元旗帜', '攻城兽', '守城弩', '矿区核心', '荣誉旗帜'),
     }),
     "guild_unionApplicationTimeLimit": _tools.RODict({
         "key": "guild_unionApplicationTimeLimit",

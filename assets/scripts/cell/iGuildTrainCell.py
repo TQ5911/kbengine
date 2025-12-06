@@ -43,7 +43,6 @@ class IGuildTrainCell(object):
     def onUpgradeTrainLevel(self, trainId, targetLevel, score):
         gtData = GT_GTD.datas[trainId]
         func = F_GFD.datas[gtData['valueFormula']]['serverFormula']
-        self.client.onRecordFightProps()
 
         lastLevel = targetLevel - 1
         if lastLevel:
@@ -57,7 +56,6 @@ class IGuildTrainCell(object):
         self.addProp(propName, targetValue - curValue, gameconst.SourceType.GuildTrain)
 
         self.onUpdateGuildTrainScore(score)
-        # self.base.showCombatScoreTip()
 
     def onResetGuildTrain(self, syncDic):
         for trainId, level in syncDic.items():
@@ -68,9 +66,7 @@ class IGuildTrainCell(object):
             self.addProp(propName, -propVal, gameconst.SourceType.GuildTrainReset)
 
         self.client.onGuildTrainResetClient()
-        self.client.onRecordFightProps()
         self.onUpdateGuildTrainScore(0)
-        # self.base.showCombatScoreTip()
 
     def gmAddGuildTrainLevelCell(self, trainId, curLevel, targetLevel):
         gtData = GT_GTD.datas[trainId]

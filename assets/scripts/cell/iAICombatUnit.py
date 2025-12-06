@@ -43,6 +43,11 @@ class IAICombatUnit(SkillManager.SkillManager):
 
         self._initBornState()
 
+        self.checkUnVisibleTimerId = 0
+        self.unVisibleList = []
+        if hasattr(self, 'getAIParam') and self.getAIParam():
+            utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI)
+
     def _initBornState(self):
         if not self.bornState:
             self.changeBornState(gameconst.BornStateType.move)
@@ -230,7 +235,7 @@ class IAICombatUnit(SkillManager.SkillManager):
 
         self.resetAllSkillByDelayCD()
 
-    def getRandomSkill(self):
+    def getRandomSkill(self, targetType=None):
         skillList = []
         if self.skillPropInfo:
             propList = []
@@ -240,6 +245,9 @@ class IAICombatUnit(SkillManager.SkillManager):
                     continue
 
                 if skillVal.inCDTime():
+                    continue
+
+                if targetType and skillVal.getTarget(skillId) != targetType:
                     continue
 
                 propVal = self.skillPropInfo[1][i]
@@ -254,6 +262,8 @@ class IAICombatUnit(SkillManager.SkillManager):
                 return utils.weightChoice(skillList, propList)[0][0]
 
         for skillId, skillVal in self.getSkillDic().items():
+            if targetType and skillVal.getTarget(skillId) != targetType:
+                continue
             if not skillVal.inCDTime():
                 skillList.append(skillId)
 
@@ -396,12 +406,58 @@ class IAICombatUnit(SkillManager.SkillManager):
         return self.canBeAttack and utils.isJoinCombat(self, src)
 
     def aiTriggerEvent(self, srcId, eventId, args):
-        pass
         #这个应该是之前给场景AI用的，自从有了副本编辑器之后应该就用不到了
         # if self.spaceMgr:
         #     self.spaceMgr.beNotifiedSpaceEvent(srcId, eventId, args)
         # elif self.checkEventListened(eventId):
         #     self.receiveAIEvent(srcId, eventId, args)
+
+        if not self.IsMonster or not self.isActiveAttack():
+            return
+        if eventId == gameconst.AI_EVENT_ENENY_ENTER_TRAP:
+            target = KBEngine.entities.get(args[0])
+            if target and not self.isVisible(target) and target.id not in self.unVisibleList and \
+                self.aiController and not self.aiController.hateDict.isInHateList(target.id):
+                self.unVisibleList.append(target.id)
+                # INFO_MSG('IAICombatUnit::enemy_enter_unvisible_trap: {}, unVisibleList: {}'.format(self.id, self.unVisibleList))
+                self.checkUnVisibleTimer()
+
+        elif eventId == gameconst.AI_EVENT_ENENY_LEAVE_TRAP:
+            targetId = args[0]
+            if targetId in self.unVisibleList:
+                self.unVisibleList.remove(targetId)
+                # INFO_MSG('IAICombatUnit::enemy_leave_unvisible_trap: {}, unVisibleList: {}'.format(self.id, self.unVisibleList))
+            self.checkUnVisibleTimer()
+
+    def checkUnVisibleTimer(self):
+        if len(self.unVisibleList) == 0:
+            if self.checkUnVisibleTimerId > 0:
+                self.pyDelTimer(self.checkUnVisibleTimerId, gametimer.ENEMY_TRAP_UNVISIBLE_CHECK)
+                # INFO_MSG('IAICombatUnit:: stop unVisibleTimer: {}'.format(self.id))
+                self.checkUnVisibleTimerId = 0
+        elif self.checkUnVisibleTimerId == 0:
+            self.checkUnVisibleTimerId = self.pyAddTimer(5, 5, gametimer.ENEMY_TRAP_UNVISIBLE_CHECK)
+            # INFO_MSG('IAICombatUnit:: start unVisibleTimer: {}'.format(self.id))
+
+    def checkUnVisibleTargets(self):
+        if len(self.unVisibleList) == 0:
+            self.checkUnVisibleTimer()
+            return
+
+        reEnterList = []
+        for targetId in self.unVisibleList:
+            target = KBEngine.entities.get(targetId)
+            if target and self.isVisible(target):
+                reEnterList.append(targetId)
+
+        INFO_MSG('IAICombatUnit::checkUnVisibleTargets: {}, reEnterList: {}'.format(self.id, reEnterList), self.unVisibleList)
+        if len(reEnterList) == 0:
+            return
+        for targetId in reEnterList:
+            self.unVisibleList.remove(targetId)
+            self.aiController and self.aiController.onEnemyEnter(targetId)
+
+        self.checkUnVisibleTimer()
 
     def checkEventListened(self, eventId):
         return eventId in self.aiEventListener
@@ -458,20 +514,12 @@ class IAICombatUnit(SkillManager.SkillManager):
         return True
 
     def navigateToPosition(self, pos, dis=0, userData=None):
-        #navigate( self, destination, velocity, distance, maxMoveDistance, maxSearchDistance, faceMovement, layer, userData ):
-        # if sMath.distance2DToCompareFrom3DPosition(pos, self.position) < 0.4:
-        #     navController = self.moveToPoint(pos, self.speed, 0, userData, 1, 1)
-        #     self.setMoveController(navController)
-        #     return
-
         navController = self.scriptNavigate(pos, self.speed, dis, userData=userData)
         self.setMoveController(navController)
 
         if not self.moveController:
             self.cancelController('Movement')
             WARNING_MSG('navigate fail', self.spaceNo, self.position, pos)
-            # self.setMoveController(self.moveToPoint(pos, self.speed, 0, userData, 1, 1))
-            #self.printDebugMap((71,0,73),(145,0,41))
             return False
 
         return True
@@ -689,6 +737,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         deadAction and deadAction(self, self, actionContext.ACTION_CONTEXT_DEFAULT)
 
     def _preSafeDestory(self):
+        super(IAICombatUnit, self)._preSafeDestory()
         if self.aiController:
             self.aiController.clearSourceHate()
             self.stopThink()

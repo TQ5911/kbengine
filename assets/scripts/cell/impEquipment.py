@@ -166,7 +166,10 @@ class ImpEquipment(object):
         equipItem = self.bodyEquipData.getEquipItem(slotId)
         if bindValue > 0:
             equipItem.updateBindValue()
-        if equipItem and equipItem.checkEnhancementValid(enhanceLv + 1, isGM):
+        checkEnhanceLv = enhanceLv + 1
+        if isGM:
+            checkEnhanceLv = enhanceLv
+        if equipItem and equipItem.checkEnhancementValid(checkEnhanceLv, isGM):
             enhanceVal = equipItem.doEnhanceEquip(self, opUUID, enhanceLv, onBody=True, isGM = isGM)
             # 装备破碎了
             if enhanceVal == gameconst.EquipConstVale.ENHANCEMENT_BROKEN_FLAG:
@@ -498,6 +501,9 @@ class ImpEquipment(object):
         equipItem.removeEquipEffectToAvatar(self)
         ret = equipItem.doEquipBlessing(self)
         equipItem.applyEquipEffectToAvatar(self)
+
+        self.bodyEquipData.changeAvatarAttrs(self)
+
         self.updateEquipmentScore()
         if ret:
             blessAffixes = []
@@ -623,8 +629,9 @@ class ImpEquipment(object):
         return True
 
     def gmModifyEquipEnhanceLevel(self, slotID, enhanceLevel):
+        opUUID = KBEngine.genUUID64()
         INFO_MSG('in modifyEquipEnhanceLevel, slotId:', slotID, enhanceLevel)
-        return self.enhanceSuccess(0, slotID, enhanceLevel, isGM = True)
+        return self.enhanceSuccess(opUUID, slotID, enhanceLevel, isGM = True)
 
     def gmGlyphWashingEquips(self, equipPos, glyphPos, itemId, affixId1, affixId2):
         if equipPos == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:

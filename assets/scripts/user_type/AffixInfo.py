@@ -53,10 +53,10 @@ class Affix(userType.UserSoleType):
 class GlyphAffix(Affix):
     def __init__(self, affixId = 0, affixLv=1):
         super(GlyphAffix, self).__init__(affixId, affixLv)
-        self.effectValues = []
-        self.effectTypes = []
-        self.effectSkillIds = []
-        self.effectQualitys = []
+        self.glyphSkillId = 0
+        self.glyphQuality = 0
+        self.glyphTypes = []
+        self.glyphValues = []
         self.applyEffects()
 
     def applyEffects(self):
@@ -64,56 +64,56 @@ class GlyphAffix(Affix):
             return
         affixData = AFAFD.datas.get(self.afxId)
         if not affixData:
+            ERROR_MSG('GlyphAffix-->applyEffects, missing affix data ', self.afxId)
             return
-        inscriptionIds = affixData['inscription']
-        if inscriptionIds:
-            if type(inscriptionIds) is int:
-                self.analysisEffects(inscriptionIds)
-            else:
-                for inscriptionId in inscriptionIds:
-                    self.analysisEffects(inscriptionId)
+        self.analysisEffects(affixData['inscription'])
 
     def analysisEffects(self, inscriptionId):
-        ret, effectSkillId, effectQuality, effectType, effectValue = inscriptionEffectInfo.InscriptionEffectInfo.getEffectValue(inscriptionId)
+        ret, glyphSkillId, glyphQuality, glyphTypes, glyphValues = inscriptionEffectInfo.InscriptionEffectInfo.getEffectValues(inscriptionId)
         if not ret:
+            ERROR_MSG('GlyphAffix-->analysisEffects, analysis effects failed ', inscriptionId)
             return
-        self.effectValues.append(effectValue)
-        self.effectTypes.append(effectType)
-        self.effectSkillIds.append(effectSkillId)
-        self.effectQualitys.append(effectQuality)
+        self.glyphSkillId = glyphSkillId
+        self.glyphQuality = glyphQuality
+        self.glyphTypes.extend(glyphTypes)
+        self.glyphValues.extend(glyphValues)
 
     def _lateReload(self):
         super(GlyphAffix, self)._lateReload()
 
     def toAffixValList(self):
         vals = super().toAffixValList()
-        vals.append(self.effectValues)
-        vals.append(self.effectTypes)
-        vals.append(self.effectSkillIds)
-        vals.append(self.effectQualitys)
+        vals.append(self.glyphSkillId)
+        vals.append(self.glyphQuality)
+        vals.append(self.glyphTypes)
+        vals.append(self.glyphValues)
         return vals
 
     def fromAffixValList(self, val):
         val = super().fromAffixValList(val)
         if len(val) > 0:
-            self.effectValues = val[0]
-            self.effectTypes = val[1]
-            self.effectSkillIds = val[2]
-            self.effectQualitys = val[3]
+            self.glyphSkillId = val[0]
+            self.glyphQuality = val[1]
+            self.glyphTypes = val[2]
+            self.glyphValues = val[3]
 
     def toAfxClientDic(self):
         return {
             'affixId': self.afxId,
             'affixVal': self.affixVal,
-            'affixEffect': self.getAffixEffect(),
+            'glyphTypes': self.glyphTypes,
+            'glyphEffects': self.getGlyphEffects(),
         }
 
-    def getAffixEffect(self):
-        return ','.join(map(str, self.effectValues))
+    def getGlyphEffects(self):
+        ret = []
+        for glyphValue in self.glyphValues:
+            ret.append(','.join(map(str, glyphValue)))
+        return ret
 
     def iterGlyphEffect(self):
-        for i in range(len(self.effectSkillIds)):
-            yield self.effectTypes[i], self.effectSkillIds[i], self.effectQualitys[i], self.effectValues[i]
+        for idx in range(len(self.glyphTypes)):
+            yield self.glyphSkillId, self.glyphQuality, self.glyphTypes[idx], self.glyphValues[idx]
 
 class AffixAdjustType(object):
     AFFIX_ADJUST_EQUIP_DROP = 0

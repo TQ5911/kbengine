@@ -1210,7 +1210,6 @@ def killEnt(su, player, eid=0):
         return False, '%s不存在或者不是战斗单位' % eid
 
     e.modifyHP(-e.hp, player.id, gameconst.SourceType.Skill, 0)
-    e._endBigWorldDuel(e)
     return True, '执行成功'
 
 
@@ -2513,15 +2512,16 @@ def queryWPWhiteList(su):
         GOD_GROUPS)
 def setChatForbidden(su, player, seconds):
     # 离线玩家处理
+    _args = (gameconst.IDIPBanType.CHAT, utils.getNow() + seconds)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
         INFO_MSG(f"gm offline setChatForbidden, gbID:{gbId}")
-        gamesql.recordAvatarOfflineCallback(gbId, 'setChatForbidden', (seconds, True))
+        gamesql.recordAvatarOfflineCallback(gbId, 'IDIPBanState', _args)
         su.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
     # 在线玩家处理
     else:
         INFO_MSG(f"gm online setChatForbidden, gbID:{player.gbID}")
-        if not player.setChatForbidden(seconds, True):
+        if not player.IDIPBanState(*_args):
             su.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': player.gbID, 'isOffline': False})
             return False, '执行失败'
         su.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': player.gbID, 'isOffline': False})
@@ -2531,15 +2531,16 @@ def setChatForbidden(su, player, seconds):
 @gm_cmd('$removeChatForbidden', (Player("gbId/Id", raw=True),), RARG(0), BASE, '移除聊天禁止', ALLSIDE, GOD_GROUPS)
 def removeChatForbidden(su, player):
     # 离线玩家处理
+    _args = (gameconst.IDIPBanType.CHAT,)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
         INFO_MSG(f"gm offline removeChatForbidden, gbID:{gbId}")
-        gamesql.recordAvatarOfflineCallback(gbId, 'removeChatForbidden', (True,))
+        gamesql.recordAvatarOfflineCallback(gbId, 'IDIPRemoveBanState', _args)
         su.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': gbId, 'isOffline': True})
     # 在线玩家处理
     else:
         INFO_MSG(f"gm online removeChatForbidden, gbID:{player.gbID}")
-        if not player.removeChatForbidden(True):
+        if not player.IDIPRemoveBanState(*_args):
             su.onCommandResult(gameconst.ChatSysGMErr.FAIL, '', {'gbId': player.gbID, 'isOffline': False})
             return False, '执行失败'
         su.onCommandResult(gameconst.ChatSysGMErr.OK, '', {'gbId': player.gbID, 'isOffline': False})
@@ -3102,3 +3103,12 @@ def clearPickedCollections(su, player, collectionId):
 
     return True, '执行成功'
 
+@gm_cmd('$setVIP', (Player("gbId/Id"), Str("account"),), RARG(0), gameconst.BASE, '设置特权', ALLSIDE, GOD_GROUPS)
+def setVIP(su, player, account):
+    redisUtils.RedisUtils.set(gameconst.PrivilegeRedisKey.VIP + account, "1")
+    return True, '执行成功'
+
+@gm_cmd('$setSVIP', (Player("gbId/Id"), Str("account"),), RARG(0), gameconst.BASE, '设置特权', ALLSIDE, GOD_GROUPS)
+def setSVIP(su, player, account):
+    redisUtils.RedisUtils.set(gameconst.PrivilegeRedisKey.SVIP + account, "1")
+    return True, '执行成功'

@@ -16,4 +16,5 @@ import crontab
 
 class datas(object, metaclass=_tools.VarNameDefinedMeta):
     BONUS_SRC_UNKNOWN = 0
+    newBridge = 70100001
 

@@ -224,10 +224,10 @@
         </replyInviteRaidWithTeam>
 
         <leaveRaid>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   PYTHON      </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   PYTHON          </Arg>
         </leaveRaid>
 
         <raidLeaderKickOutRaidMember>
@@ -645,5 +645,10 @@
         <setInDungeon>
             <Arg>       RAID_ID          </Arg>
         </setInDungeon>
+
+        <getTeamStatisticFinalData>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       TEAMID          </Arg>
+        </getTeamStatisticFinalData>
     </BaseMethods>
 </root>

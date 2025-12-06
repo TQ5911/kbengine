@@ -93,21 +93,21 @@ datas ={
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10058002",
-          "Dir": 268.1667,
-          "DisplayName": "",
+          "Dir": 177.9762,
+          "DisplayName": "\u7cbe\u7075\u6751",
           "EntityID": 17100601,
           "ID": 10068003,
-          "PosX": 170.19,
-          "PosY": 102.4516,
-          "PosZ": 163.36,
+          "PosX": 144.2091,
+          "PosY": 102.4235,
+          "PosZ": 182.83,
           "Props": {
             "CameraId": 0,
             "GateType": 0,
             "Remark": "",
-            "TelDir": 268.1667,
-            "TelX": 163.2036,
-            "TelY": 102.4516,
-            "TelZ": 163.1364
+            "TelDir": 177.9762,
+            "TelX": 144.2163,
+            "TelY": 102.5335,
+            "TelZ": 163.9385
           }
         }
       },

@@ -93,6 +93,21 @@
         <syncGuildMineWarToSpaceMgr>
             <Arg>       GUILD_UUID              </Arg>
             <Arg>       MAILBOX                  </Arg>
+            <Arg>       BOOL                    </Arg>
         </syncGuildMineWarToSpaceMgr>
+
+        <addMineWarScoreFromGuild>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          GUILD_UUID              </Arg>
+            <Arg>          PLAYER_GBID     </Arg>
+            <Arg>          UNICODE         </Arg>
+            <Arg>          INT32         </Arg>
+            <Arg>          UINT8         </Arg> 
+        </addMineWarScoreFromGuild>
+        <onMineWarFlagBeKillFromGuild>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          GUILD_UUID              </Arg>
+            <Arg>          UNICODE         </Arg>
+        </onMineWarFlagBeKillFromGuild>
     </BaseMethods>
 </root>

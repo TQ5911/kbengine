@@ -3199,7 +3199,7 @@ datas ={
     "ActivityID": 0,
     "ClassName": "Teleporter",
     "ClassNameType": 2,
-    "CustomID": "31218019",
+    "CustomID": "31218002",
     "Dir": 0.0,
     "DisplayName": "",
     "EntityID": 17310101,
@@ -3221,7 +3221,7 @@ datas ={
     "ActivityID": 0,
     "ClassName": "Teleporter",
     "ClassNameType": 2,
-    "CustomID": "31218019",
+    "CustomID": "31218002",
     "Dir": 150.3255,
     "DisplayName": "",
     "EntityID": 17310101,
@@ -3233,17 +3233,17 @@ datas ={
       "CameraId": 0,
       "GateType": 3,
       "Remark": "\u5de6",
-      "TelDir": 150.3255,
-      "TelX": 263.6344,
-      "TelY": 525.0379,
-      "TelZ": 87.186
+      "TelDir": 0.0,
+      "TelX": 167.7789,
+      "TelY": 526.2747,
+      "TelZ": 12.8379
     }
   },
   "31018009": {
     "ActivityID": 0,
     "ClassName": "Teleporter",
     "ClassNameType": 2,
-    "CustomID": "31218019",
+    "CustomID": "31218002",
     "Dir": 26.8039,
     "DisplayName": "",
     "EntityID": 17310101,
@@ -3255,10 +3255,10 @@ datas ={
       "CameraId": 0,
       "GateType": 3,
       "Remark": "\u53f3",
-      "TelDir": 26.8039,
-      "TelX": 39.79882,
-      "TelY": 525.1331,
-      "TelZ": 28.65691
+      "TelDir": 0.0,
+      "TelX": 167.7789,
+      "TelY": 526.2747,
+      "TelZ": 12.8379
     }
   }
 }

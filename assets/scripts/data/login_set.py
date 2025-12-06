@@ -686,5 +686,13 @@ datas = _tools.RODict({
     "withdrawalOfConsent": _tools.RODict({
         "ID": "withdrawalOfConsent",
         "value": 54990267,
+    }),
+    "queuingWhiteList": _tools.RODict({
+        "ID": "queuingWhiteList",
+        "value": 4500,
+    }),
+    "accountsDinghao": _tools.RODict({
+        "ID": "accountsDinghao",
+        "value": 54001589,
     })
 })

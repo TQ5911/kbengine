@@ -114,5 +114,9 @@ datas = _tools.RODict({
     "modifySuccess": _tools.RODict({
         "ID": "modifySuccess",
         "value": 54000284,
+    }),
+    "offlineDaili": _tools.RODict({
+        "ID": "offlineDaili",
+        "value": 54000286,
     })
 })

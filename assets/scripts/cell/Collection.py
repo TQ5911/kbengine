@@ -53,15 +53,15 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         self._initBornState()
 
         spaceMgr = self.spaceMgr
+        gid = utils.getGidFromGameEntityId(self.gameEntityId)
         if formula.isWonderLandSpace(self.spaceNo) or formula.isSiegeWarSpace(self.spaceNo):
-            spaceMgr.addEntity(self.id, (str(self.collectionId), self.__class__.__name__,))
+            spaceMgr.addEntity(self.id, (str(self.collectionId), 'gid_{}'.format(gid), self.__class__.__name__,))
         elif formula.isDungeonSpace(self.spaceNo):
             if spaceMgr:
-                gid = utils.getGidFromGameEntityId(self.gameEntityId)
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.collectionId),
                                              'gid_{}'.format(gid), self.__class__.__name__,))
         elif spaceMgr:
-            spaceMgr.addEntity(self.id, (str(self.collectionId), self.__class__.__name__,))
+            spaceMgr.addEntity(self.id, (str(self.collectionId), 'gid_{}'.format(gid), self.__class__.__name__,))
 
 
     def _initBornState(self):

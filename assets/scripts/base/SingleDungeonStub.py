@@ -77,7 +77,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
                 if sVal.destroyTimer:
                     self._cancelCallback(sVal.destroyTimer, gametimer.TIMER_TAG_DESTORY_DUNGEON_SPACE_DELAY)
                 sVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_SINGLE_DUNGEON_COMPLETED_CALLBACK)
-
+                sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
                 self.cancelSpaceEntitiesLoadingProcess(spaceNo)
                 sVal.spaceBox.entireDestroy(False, False)
                 self.spaces.pop(spaceNo)
@@ -110,7 +110,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
         # 【副本服务端报错】
         # 销毁时停止所有该space的completeCallback
         sVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_SINGLE_DUNGEON_COMPLETED_CALLBACK)
-
+        sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
         # 【大量机器人新号登录后立刻下线后副本报错】
         self.cancelSpaceEntitiesLoadingProcess(spaceNo)
 
@@ -242,7 +242,6 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             return
 
         fVal.onAvatarEnter(playerGbId)
-        playerBox.client.onEnterSingleDungeon(self.dungeonNo)
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
         DEBUG_MSG('wl :leaveDungeonSpaceSucc', spaceNo, playerBox, playerGbId, teamUUID, extra)
@@ -253,7 +252,6 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             return
 
         fVal.onAvatarLeave(playerGbId, False)
-        playerBox.client.onLeaveSingleDungeon(self.dungeonNo)
 
         if spaceNo in self.spaces:
             sVal = self.spaces[spaceNo]

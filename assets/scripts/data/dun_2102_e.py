@@ -780,7 +780,7 @@ datas ={
   },
   "1193": {
     "type": "dunEnd",
-    "exitTime": 15.0,
+    "exitTime": 65.0,
     "isDungeonDone": 1,
     "transition": {}
   },

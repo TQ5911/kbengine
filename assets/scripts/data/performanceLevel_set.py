@@ -23,6 +23,10 @@ datas = _tools.RODict({
         "ID": "defaultLevel_PC",
         "value": 103,
     }),
+    "minLevelToPlay": _tools.RODict({
+        "ID": "minLevelToPlay",
+        "value": 102,
+    }),
     "adjustLevelLimit": _tools.RODict({
         "ID": "adjustLevelLimit",
         "value": 1,
@@ -69,7 +73,7 @@ datas = _tools.RODict({
     }),
     "deviceNotInTestList_msgID": _tools.RODict({
         "ID": "deviceNotInTestList_msgID",
-        "value": 54001380,
+        "value": 54481005,
     }),
     "monster_empty_prefab": _tools.RODict({
         "ID": "monster_empty_prefab",

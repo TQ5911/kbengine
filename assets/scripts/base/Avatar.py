@@ -93,7 +93,8 @@ import iDateData
 import iMeridian
 import iMonthCard
 import iMineWarBase
-
+import iDungeonSettlement
+import iGuildBossChallenge
 
 class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, impLine.ImpLine, iClient.IClient,
              impTask.ImpTask, iAvatarVariable.ImpAvatarVariable, impCombat.ImpCombat, impTeam.ImpTeam, IScore.IScore,
@@ -105,7 +106,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
              iLeaderBoard.ILeaderBoard, iCoinAuction.ICoinAuction, iNewbie.INewbie, iAchievement.IAchievement,
              iEnemy.IEnemy, iWonderLandBase.IWonderLandBase, iActivityBase.IActivityBase, iCollectible.ICollectible, iSiegeWarBase.ISiegeWarBase,
              iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop,
-             iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarBase.IMineWarBase):
+             iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarBase.IMineWarBase, iDungeonSettlement.IDungeonSettlement,
+             iGuildBossChallenge.IGuildBossChallenge):
     """
     角色实体
 
@@ -129,7 +131,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         iWorkshop.IWorkshop.__init__(self)
         iMonthCard.IMonthCard.__init__(self)
         iMineWarBase.IMineWarBase.__init__(self)
-
+        iDungeonSettlement.IDungeonSettlement.__init__(self)
+        iGuildBossChallenge.IGuildBossChallenge.__init__(self)
         # INFO_MSG('Avatar::__init__:%s' % self.id)
 
         self.initRoleCache()
@@ -389,10 +392,14 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         _logonEnterType = gameconst.LogOnEnterType.NONE
         _cubeQuota = cellData.get('cubeQuota', 0)
-        if _cubeQuota.calcLeftTime() > 0 and formula.isCubeSpace(spaceNo):
+        if _cubeQuota.calcLeftTime() > 0\
+                and formula.isCubeSpace(spaceNo)\
+                and gameconfig.visibleConfigEable('square'):
             _logonEnterType = gameconst.LogOnEnterType.CUBE
 
-        if cellData.get('wonderLandLeftTime', 0) > _now and formula.isWonderLandSpace(spaceNo):
+        elif cellData.get('wonderLandLeftTime', 0) > _now \
+                and formula.isWonderLandSpace(spaceNo)\
+                and gameconfig.visibleConfigEable('wonderLand'):
             _logonEnterType = gameconst.LogOnEnterType.WONDER_LAND
 
         spaceNo, lineType = self._restoreFromOutsideRecord(cellData, lineType, spaceNo, _logonEnterType)
@@ -680,7 +687,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self._callback(delay, 'checkOfflineHangup', (), gametimer.TIMER_TAG_CHECK_OFFLINE_HANGUP)
             self._callback(delay, 'onMineWarLogin', (), gametimer.TIMER_TAG_ON_MINE_WAR_LOGIN)
 
-            self.sendHotfix()
+            delay += 0.1
+            self._callback(delay, 'updateRedisVIPFlag', (), gametimer.TIMER_TAG_UPDATE_REDIS_VIP_FLAG)
+
+            self.sendHotfix(gameconfig.hotfixVersion())
             if isRelogin:
                 self._callback(delay, 'sendAllMailList', (), gametimer.TIMER_TAG_SEND_MAIL_LIST)
                 pass
@@ -702,10 +712,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.client.onClientDataSyncFinished()
         self.popTempMiscProp(gameconst.AvatarProps.disableTimerNumErrMsg)
 
-    def sendHotfix(self):
-        pass
-        # hotfix = gameglobal.hotfix
-        # self.streamStringProxy(hotfix, '', gameconst.StreamStringID.HOTFIX_DATA)
+    def sendHotfix(self, version):
+        DEBUG_MSG('send hot fix', version)
+        if version:
+            self.client.onHotfixVersion(version)
 
     def backSelectCharacterBase(self, isFromMain):
         INFO_MSG('backSelectCharacterBase', isFromMain)
@@ -730,7 +740,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.cell.offline(gameconst.AVATAR_OFFLINE_REASON_SELECT_CHARACTER)
 
     def subBackLoginBase(self):
-        self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL).onBackLogin()
         self.disconnect(gameconst.ClientCallChannel.SUB_CHANNEL)
         self.subAccount.onAvatarSubClientBackLogin()
         self.setSubAccount(0, gameconst.AccountHostType.NONE)
@@ -739,10 +748,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         if self.accountEntity != None:
             self.accountEntity.onAvatarDestroy()
             self.setAccountInfo(0, gameconst.AccountHostType.NONE)
+            DEBUG_MSG('clear main account info')
 
         if self.subAccount != None:
             self.subAccount.onAvatarDestroy()
             self.setSubAccount(0, gameconst.AccountHostType.NONE)
+            DEBUG_MSG('clear sub account info')
 
     def _removePendingEnter(self):
         spaceNo = self.getCellData('spaceNo', 0)
@@ -847,8 +858,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         try:
             if self.getTempMiscProp(gameconst.AvatarProps.backAccount, False):
                 self.client.onBackSelectCharacter()
-            else:
-                self.client.onBackLogin()
 
             self.tLastOfflineBase = utils.getNow()
 
@@ -1022,11 +1031,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def feedbackCommandSucc(self, message):
         INFO_MSG('gm command succ:', message)
-        self.client.onGmCommandResult(True, message)
 
     def feedbackCommandFail(self, message):
         INFO_MSG('gm command fail:', message)
-        self.client.onGmCommandResult(False, message)
 
     def realDoGmCommandProxy(self, args):
         gmCommand.realDoCommand(*args)
@@ -1079,10 +1086,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             ERROR_MSG('smCell is none')
 
         return
-
-    def showCombatScoreTip(self):
-        if self._isNewbieFinished():
-            self.client.onFightPropsChanged()
 
     def onLeaveDungeon(self, mySpaceNo, fromSpaceNo):
         DEBUG_MSG('in onLeaveDungeon::', mySpaceNo, fromSpaceNo)
@@ -1240,14 +1243,15 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         timeStr = time.strftime('%Y年%m月%d日%H时%M分%S秒', time.localtime(self.idipBanDict[banType]))
         self.onMessagePre(msgId, [self.idipBanDataDict[banType]['promptContent'], timeStr])
 
+    @gamedecorator.offlineCallback
     def IDIPBanState(self, banType, endTime, data=None):
-        if banType == gameconst.IDIPBanType.teamInvite:
-            self.cell.IDIPBanTeam(endTime, data)
-            return
-
         self.idipBanDict[banType] = endTime
-        if data:
-            self.idipBanDataDict[banType] = data
+        return True
+
+    @gamedecorator.offlineCallback
+    def IDIPRemoveBanState(self, banType):
+        self.idipBanDict.pop(banType, None)
+        return True
 
     def getIDIPBanData(self, banType, default=None):
         return self.idipBanDataDict.get(banType, None)
@@ -1259,14 +1263,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def onAvatarCheckNameDuplicate(self, props, cid, err, result):
         if err:
             ERROR_MSG('check name duplicate err:', self.gbID, props['name'], err)
-            self.client.onModifyNameResult(gameconst.ModifyNameResult.internalError, '')
             if props.get("pendingCheckId"):
                 self.cell.onPendingCheckItem(props["pendingCheckId"], gameconst.UseItem.FALSE)
             return
 
         if result == 0:
             self.onMessagePre(MMD.datas.theNameAlreadyExists, [])
-            self.client.onModifyNameResult(gameconst.ModifyNameResult.nameExist, '')
             if props.get("pendingCheckId"):
                 self.cell.onPendingCheckItem(props["pendingCheckId"], gameconst.UseItem.FALSE)
             return
@@ -1287,14 +1289,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.cell.modifyNameFailedRestore(oldName)
             if isFromItem:
                 self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
-                self.client.onModifyNameResult(gameconst.ModifyNameResult.nameExist, '')
             return
 
         self.accountEntity.delAvatarName(oldName)
         self.updateRoleCache({'name': name})
         if isFromItem:
             self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
-        self.client.onModifyNameResult(gameconst.ModifyNameResult.success, name)
 
         gamelog.makeWLog('ChangeName', {
             "role_id": self.gbID,
@@ -1484,18 +1484,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def popForbiddenData(self, forbiddenType):
         return self.forbiddenFlags.pop(forbiddenType, None)
 
-    def setCommonFlag(self, flagType):
-        if flagType < 0:
-            ERROR_MSG("flagType is error:", flagType)
-            return
-        if self.getCommonFlag(flagType):
-            return
-        self.commonFlag = utils.bitSet(self.commonFlag, flagType)
-        return True
-
-    def getCommonFlag(self, flagType):
-        return utils.hasBit(self.commonFlag, flagType)
-
     def isUIVisible(self, uiId):
         uiData = UVVD.datas.get(uiId)
         if not uiData:
@@ -1546,6 +1534,13 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                 gameconst.ClientCallChannel.SUB_CHANNEL,
             )
 
+    def getHostAccount(self):
+        if self.mainAccountCache.isAccountHost():
+            return self.accountEntity
+
+        elif self.subAccountCache.isAccountHost():
+            return self.subAccount
+
     @property
     def accountEntity(self):
         return KBEngine.entities.get(self.mainAccountCache.eid)
@@ -1559,10 +1554,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.crossServerState = gameconst.CrossServerState.IN_CROSS_SERVER if self.accountEntity.isCrossServer \
                 else gameconst.CrossServerState.IN_CURRENT_SERVER
             self.otherServerAvatarBox = self.accountEntity.otherServerAvatarBox
-            # newLv = self.getAvatarLevel()
-            # if newLv == 1:
-            #     self.accountEntity.updateCharacterLevel(self.gbID, newLv, self.tLoginBase)
-                # self.onTaskAvatarLvUp(0, newLv)
 
     def getAccountChn(self, accountEid):
         if accountEid == self.mainAccountCache.eid:
@@ -1670,4 +1661,19 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         _days = utils.getSvrOpenDays()
         if _days in UVVD.dayDic:
             self.updateVisibleByList(UVVD.dayDic[_days])
+
+    def onGameConfigChangedBase(self, configType, val):
+        DEBUG_MSG("onGameConfigChangedBase", configType, val)
+        if configType == gameconst.GAME_CONFIG_TYPE_WONDER_LAND:
+            if not val:
+                self.cell.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_CONFIG)
+
+        elif configType == gameconst.GAME_CONFIG_TYPE_SQUARE:
+            if not val:
+                self.cell.leaveCubeInternal(gameconst.DungeonSrcEnum.FROM_CONFIG)
+
+        elif configType == gameconst.GAME_CONFIG_TYPE_ROLE_AUTHORIZATION:
+            if not val:
+                self.forceAuthOffline()
+
 

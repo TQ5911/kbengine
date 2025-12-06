@@ -22,6 +22,8 @@ import actionContext
 import combatSkill
 import dataUtils
 import iEntityRefresh
+import const_const as C_CD
+import creep_base as C_BD
 
 class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                iFubenSpace.IFubenSpace, iGameEntity.IGameEntity,iEntityRefresh.IEntityRefresh):
@@ -40,6 +42,9 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         SkillManager.SkillManager.__init__(self)
 
         hostEnt = self.getHost()
+        if hostEnt and hostEnt.IsAvatar:
+            utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR)
+
         if not self.hostId or (hostEnt and not hostEnt.IsAvatar and not hostEnt.isBot()):
             self.isWitnessComplete = gameconst.WitnessType.WITNESS_TYPE_IGNORE
         self.name = creation_creation.datas[self.creationId].get('name', '无名创生物')
@@ -562,7 +567,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
     def getTargetEntityIds(self):
         if self.selectActionType==self.CREATION_AREA_CIRCLE:
             entIds = []
-            for eid in self.trapEntities:
+            for eid in self.getTargetIdsByTargetType(self.target):
                 e = KBEngine.entities.get(eid)
                 if not e:
                     #小概率会找不到，e正好被销毁刚刚从坐标系删除，但onLeaveTrap可能被buffered还没执行时会找不到
@@ -571,7 +576,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 if e.isDestroyed:
                     continue
 
-                if not utils.checkCombatRangeY(self, e):
+                if not self.checkCombatRangeY(e):
                     continue
 
                 if utils.checkTargetType(self.target, self, e):
@@ -805,11 +810,21 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         DEBUG_MSG('myh: onMoveFailure', userData)
         # self.moveController = self.moveToPoint(userData, 5.0, 0.0, None, 1, 1)
 
-    def sendCombatMsg(self, msgId, args):
-        hostEnt = self.getHost()
-        if hostEnt:
-            hostEnt.sendCombatMsg(msgId, args)
-
     def onEntityRefresh(self):
         # 解耦，spaceNo在iCell， posIndex 在iGameEntity
         super().onEntityRefresh(self.spaceNo, self.calculateRefreshTime())
+
+    def checkCombatRangeY(self, target):
+        if utils.hasBit(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR) and target.IsMonster:
+            underAttackHeightLimit = C_BD.datas[target.monsterId]['underAttackHeightLimit']
+            if underAttackHeightLimit:
+                heightLimit = underAttackHeightLimit
+            else:
+                heightLimit = C_CD.datas['damageHeightLimit'].get('value')
+        else:
+            heightLimit = C_CD.datas['damageHeightLimit'].get('value')
+
+        return abs(self.position[1] - target.position[1]) <= heightLimit
+
+
+

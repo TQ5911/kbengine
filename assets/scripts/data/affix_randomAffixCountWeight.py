@@ -26,43 +26,34 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "weight0": 0.0,
-        "weight1": 90.0,
-        "weight2": 10.0,
+        "weight1": 8571.0,
+        "weight2": 1429.0,
         "weight3": 0.0,
         "weight4": 0.0
     }),
     3: _tools.RODict({
         "ID": 3,
         "weight0": 0.0,
-        "weight1": 110.0,
-        "weight2": 30.0,
-        "weight3": 10.0,
+        "weight1": 7231.0,
+        "weight2": 2000.0,
+        "weight3": 769.0,
         "weight4": 0.0
     }),
     4: _tools.RODict({
         "ID": 4,
         "weight0": 0.0,
-        "weight1": 105.0,
-        "weight2": 30.0,
-        "weight3": 15.0,
-        "weight4": 0.0
-    }),
-    5: _tools.RODict({
-        "ID": 5,
-        "weight0": 0.0,
-        "weight1": 105.0,
-        "weight2": 30.0,
-        "weight3": 15.0,
+        "weight1": 7000.000000000001,
+        "weight2": 2000.0,
+        "weight3": 1000.0,
         "weight4": 0.0
     })
 })
 minKey = 1
-maxKey = 5
+maxKey = 4
 
 affixNumWeightDic = _tools.RODict({ 
         1:[0.0, 0.0, 0.0, 0.0, 0.0],
-        2:[0.0, 90.0, 10.0, 0.0, 0.0],
-        3:[0.0, 110.0, 30.0, 10.0, 0.0],
-        4:[0.0, 105.0, 30.0, 15.0, 0.0],
-        5:[0.0, 105.0, 30.0, 15.0, 0.0],
+        2:[0.0, 8571.0, 1429.0, 0.0, 0.0],
+        3:[0.0, 7231.0, 2000.0, 769.0, 0.0],
+        4:[0.0, 7000.000000000001, 2000.0, 1000.0, 0.0],
 })

@@ -239,46 +239,70 @@ datas = _tools.RODict({
     }),
     58000201: _tools.RODict({
         "ID": 58000201,
-        "name": "mineBatte_chatChannelMsg1",
+        "name": "mineBattle_chatChannelMsg1",
         "Message": "矿区争夺战已开始，攻破矿区核心的帮会，可获得矿区归属，群雄逐鹿，舍我其谁！",
         "channelID": (2, 3, 99)
     }),
     58000202: _tools.RODict({
         "ID": 58000202,
-        "name": "mineBatte_chatChannelMsg2",
+        "name": "mineBattle_chatChannelMsg2",
         "Message": "经过浴血奋战，帮主{0}率领帮众占领了{1}矿区",
         "channelID": (2, 3, 99)
     }),
     58000203: _tools.RODict({
         "ID": 58000203,
-        "name": "mineBatte_chatChannelMsg3",
+        "name": "mineBattle_chatChannelMsg3",
         "Message": "{0}矿区的荣誉旗帜正在遭受攻击，请前往保护",
         "channelID": (3,)
     }),
     58000204: _tools.RODict({
         "ID": 58000204,
-        "name": "mineBatte_chatChannelMsg4",
+        "name": "mineBattle_chatChannelMsg4",
         "Message": "{0}矿区荣誉旗帜被破坏，本周已被破坏{1}/{2}次，帮会权威受到挑战",
         "channelID": (3,)
     }),
     58000205: _tools.RODict({
         "ID": 58000205,
-        "name": "mineBatte_chatChannelMsg5",
+        "name": "mineBattle_chatChannelMsg5",
         "Message": "{0}矿区荣誉旗帜被破坏，本周已被破坏{1}/{2}次，不再获得矿区额外收益",
         "channelID": (3,)
     }),
     58000206: _tools.RODict({
         "ID": 58000206,
-        "name": "mineBatte_chatChannelMsg6",
+        "name": "mineBattle_chatChannelMsg6",
         "Message": "{0}矿区的核心血量已不足50%，请及时修复",
         "channelID": (3,)
     }),
     58000207: _tools.RODict({
         "ID": 58000207,
-        "name": "mineBatte_chatChannelMsg7",
+        "name": "mineBattle_chatChannelMsg7",
         "Message": "{0}帮会占领的{1}矿区被多次破坏，帮会颜面扫地，不再获得该矿区额外收益",
+        "channelID": (3, 99)
+    }),
+    58000208: _tools.RODict({
+        "ID": 58000208,
+        "name": "cityBattle_auctionStart",
+        "Message": "群雄逐鹿，谁与争锋？奉现任新元城城主<color=#e4dabd>{0}</color>之命布告天下，凡自认实力超群者，皆可于接下来的5天内猎杀任意魔物，以获取魔物灵核。所得灵核将于5天后上缴至新元城府衙，上缴数量最多之帮派，可获取本期新元城攻城令。\n<color=#dea050>{1}</color>",
+        "channelID": (3, 99)
+    }),
+    58000209: _tools.RODict({
+        "ID": 58000209,
+        "name": "cityBattle_declareWar1",
+        "Message": "<color=#fe6a6a>{0}</color>帮会对新元城宣战，此次新元城决战，攻城帮会：<color=#fe6a6a>{1}</color>，守城帮会：<color=#45a6f1>{2}</color>。<color=#038304>{3}年{4}月{5}号21点</color>，本次新元城战正式开始。烽烟再起，舍我其谁！\n<color=#dea050>{6}</color>",
+        "channelID": (3, 99)
+    }),
+    58000210: _tools.RODict({
+        "ID": 58000210,
+        "name": "cityBattle_declareWar2",
+        "Message": "此次新元城决战，攻城帮会：无，守城帮会：<color=#45a6f1>{0}</color>。<color=#038304>{1}年{2}月{3}号21点</color>，本次新元城战正式开始。烽烟再起，舍我其谁！",
+        "channelID": (3, 99)
+    }),
+    58000211: _tools.RODict({
+        "ID": 58000211,
+        "name": "cityBattle_declareWar3",
+        "Message": "<color=#fe6a6a>{0}</color>帮会对新元城宣战，此次新元城决战，攻城帮会：<color=#fe6a6a>{1}</color>，守城帮会：无。<color=#038304>{2}年{3}月{4}号21点</color>，本次新元城战正式开始。烽烟再起，舍我其谁！",
         "channelID": (3, 99)
     })
 })
 minKey = 58000001
-maxKey = 58000207
+maxKey = 58000211

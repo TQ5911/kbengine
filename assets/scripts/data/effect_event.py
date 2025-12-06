@@ -663,13 +663,11 @@ def _13090335(self, target, context):
 def _13090336(self, target, context):
     skill = self._getSkillByActionContext(context)
     if skill.hasTag(56) and skill.inCDTime():
-        print(f"没减CD前的  下次释放时间  {skill.tNextCast} ")
         skill.changeNextCast(self,context.args.ActionParam[0])
 
 def _13090337(self, target, context):
     skill = self._getSkillByActionContext(context)
     if skill.hasTag(46) and skill.inCDTime():
-        print(f"没减CD前的  下次释放时间  {skill.tNextCast} ")
         skill.changeNextCast(self,context.args.ActionParam[0])
 
 def _13090338(self, target, context):

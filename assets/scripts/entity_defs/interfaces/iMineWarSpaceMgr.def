@@ -35,7 +35,12 @@
 
         <onSyncGuildMineWarResult>
             <Arg>       GUILD_UUID     </Arg>
+            <Arg>       UNICODE        </Arg>
+            <Arg>       UINT8          </Arg>
+            <Arg>       UINT8          </Arg>
+            <Arg>       UNICODE        </Arg>
             <Arg>       PY_DICT        </Arg>
+            <Arg>       BOOL        </Arg>
         </onSyncGuildMineWarResult>
     </CellMethods>
 </root>

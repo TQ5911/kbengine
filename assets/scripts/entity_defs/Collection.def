@@ -16,9 +16,9 @@
         </name>
 
         <type>
-            <Type>      UINT8   </Type>
-            <Flags>     ALL_CLIENTS     </Flags>
-            <Default>   1       </Default>
+            <Type>      UINT8           </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>   1               </Default>
         </type>
 
         <collectionId>
@@ -49,12 +49,6 @@
             <Flags>     CELL_PRIVATE    </Flags>
             <Default>   0               </Default>
         </tLocked>
-
-        <belongAvatarGBID>
-            <Type>  PLAYER_GBID     </Type>
-            <Flags> OTHER_CLIENTS   </Flags>
-            <Default>   0           </Default>
-        </belongAvatarGBID>
 
         <extraJson>
             <Type>  UNICODE         </Type>

@@ -29,13 +29,13 @@ datas = _tools.RODict({
     }),
     10010001: _tools.RODict({
         "ID": 10010001,
-        "refreshNum": 20,
+        "refreshNum": 90,
         "refreshTime": 800,
         "entityID": ((16001001, 56), (16001002, 40), (16001003, 4), (16001004, 0))
     }),
     10020001: _tools.RODict({
         "ID": 10020001,
-        "refreshNum": 20,
+        "refreshNum": 90,
         "refreshTime": 800,
         "entityID": ((16001001, 56), (16001002, 40), (16001003, 4), (16001004, 0))
     }),

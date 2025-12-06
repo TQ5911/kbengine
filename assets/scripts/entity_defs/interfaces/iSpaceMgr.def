@@ -4,6 +4,7 @@
         <Interface>     iFlowControllerCell     </Interface>
         <Interface>     iFlowControllerBase     </Interface>
         <Interface>     iMapMonsterRefresh      </Interface>
+        <Interface>     iTimerEntityRefresh     </Interface>
     </Interfaces>
 
     <Properties>

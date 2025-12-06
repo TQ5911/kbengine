@@ -898,11 +898,8 @@ class IEventActions(object):
         props['casterType'] = self.classname()
         props['selectedTargetId'] = target.id if target else 0
 
-        if self.IsAvatar:
-            props['casterTeamId'] = self.teamId
-        elif self.IsCreation:
+        if self.IsCreation:
             props['hostId'] = self.hostId
-            props['casterTeamId'] = self.casterTeamId
             props['casterType'] = self.casterType
 
         if CCD.datas[creationId].get('inherit'):
@@ -1013,11 +1010,8 @@ class IEventActions(object):
         props['casterType'] = self.classname()
         props['selectedTargetId'] = target.id if target else 0
 
-        if self.IsAvatar:
-            props['casterTeamId'] = self.teamId
-        elif self.IsCreation:
+        if self.IsCreation:
             props['hostId'] = self.hostId
-            props['casterTeamId'] = self.casterTeamId
             props['casterType'] = self.casterType
 
         if CCD.datas[creationId].get('inherit'):
@@ -1137,39 +1131,6 @@ class IEventActions(object):
 
         return True
 
-    def addStatus(self, target, context, *args):
-        pass
-
-    def suicide(self, target, context, *args):
-        self.modifyHP(-(self.hp), self.id, context.getDmgSourceType(), context.getDmgSourceId())
-        self._endBigWorldDuel(self)
-
-    def avatarSuicide(self, target, context, *args):
-        killerId = 0
-        if context.effectedEntIds:
-            killerId = random.choice(context.effectedEntIds)
-            DEBUG_MSG("avatarSuicide have effectedEntIds ", killerId, context.effectedEntIds)
-        if not killerId and context.useTargetId:
-            killerId = context.useTargetId
-        hateRecord = self.getTempMiscProp(gameconst.AvatarProps.hateRecord)
-        if not killerId and hateRecord:
-            killerIdList = []
-            DEBUG_MSG("avatarSuicide hateRecord ", hateRecord)
-            for targetId in list(hateRecord.keys()):
-                target = KBEngine.entities.get(targetId)
-                if target and target.IsAvatar and sMath.distance2D(self.position, target.position) < CONST.datas['suicideKillerRange']['value']:
-                    killerIdList.append(targetId)
-            if killerIdList:
-                killerId = random.choice(killerIdList)
-                DEBUG_MSG("have killerIdList ", killerId, killerIdList)
-
-        DEBUG_MSG("avatarSuicide killerId ", killerId)
-        if not killerId:
-            killerId = self.id
-
-        self.modifyHP(-(self.hp), killerId, context.getDmgSourceType(), context.getDmgSourceId())
-        self._endBigWorldDuel(self)
-
     def changeSkill(self, target, context, *args):
         if len(args) < 2:
             ERROR_MSG('changeSkill args error')
@@ -1192,10 +1153,7 @@ class IEventActions(object):
                     toSkill.onChangedFromSkill(fromSkill)
 
             self.base.onChangeSkill(fromSkillId, toSkillId)
-            #这里不能下发，因为切换build时会装好几个被动，每个都下发数据量很大，切换build完成时本来就会下发一次
-            #其他地方执行这个action要确保数据更新完成后只发一次
-            # if self.client:
-            #     self.client.onUpdateSkills(self.buildDic.getClientData(self.buildId))
+            
         else:
             self.removeSkill(fromSkillId)
             self.addSkill(toSkillId, fromSkill.skillLv)

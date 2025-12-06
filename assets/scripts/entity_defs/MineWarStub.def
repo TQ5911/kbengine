@@ -25,14 +25,62 @@
             <Arg>          GUILD_UUID      </Arg>
         </playerGetMineWarState>
 
-        <onMineWarCoreBeKill>
-            <Arg>          LINE_NO         </Arg>
-            <Arg>          ENTITY_ID         </Arg>
-            <Arg>          GUILD_UUID         </Arg>
-        </onMineWarCoreBeKill>
         <onMineWarFlagBeKill>
             <Arg>          LINE_NO         </Arg>
+            <Arg>          UNICODE        </Arg>
+            <Arg>          UNICODE        </Arg>
         </onMineWarFlagBeKill>
 
+        <playerGetMineWarInfo>
+            <Arg>          MAILBOX         </Arg>
+            <Arg>          GUILD_UUID      </Arg>
+        </playerGetMineWarInfo>
+
+        <doShareGuildMineWarBonusToMember>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          PLAYER_GBID         </Arg>
+            <Arg>         ARRAY   <of>  MINE_WAR_GUILD_SHARE_INFO   </of>   </Arg>
+            <Arg>          MAILBOX         </Arg>
+        </doShareGuildMineWarBonusToMember>
+
+        <doGetMineWarGuildOwnerRank>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          MAILBOX         </Arg>
+            <Arg>          MINE_WAR_GUILD_INFO         </Arg>
+        </doGetMineWarGuildOwnerRank>
+        <doGetMineWarGuildPlayerRank>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          MAILBOX         </Arg>
+            <Arg>          PLAYER_GBID         </Arg>
+            <Arg>          UNICODE         </Arg>
+            <Arg>          MINE_WAR_GUILD_INFO         </Arg>
+        </doGetMineWarGuildPlayerRank>
+
+        <doOnMineWarKillCoreForGuild>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          MAILBOX         </Arg>
+            <Arg>          MINE_WAR_GUILD_INFO         </Arg>
+        </doOnMineWarKillCoreForGuild>
+
+        <addMineWarScore>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          PLAYER_GBID     </Arg>
+            <Arg>          UNICODE         </Arg>
+            <Arg>          UNICODE         </Arg>
+            <Arg>          UINT8         </Arg>
+            <Arg>          UINT8         </Arg>
+            <Arg>          INT32         </Arg>
+            <Arg>          UINT8         </Arg> 
+        </addMineWarScore>
+
+        <playerCollectAward>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          INT32         </Arg>
+        </playerCollectAward>
+
+        <SyncMineWarFlagHp>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          INT32         </Arg>
+        </SyncMineWarFlagHp>
     </BaseMethods>
 </root>

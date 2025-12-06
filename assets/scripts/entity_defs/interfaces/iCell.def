@@ -59,6 +59,12 @@
             <Persistent>    true            </Persistent>
             <WitnessName>   true                </WitnessName>
         </force>
+
+        <cellFlags>
+            <Type>          UINT64              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </cellFlags>
     </Properties>
     <CellMethods>
         <safeDestroy/>

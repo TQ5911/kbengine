@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     "workShop_typeName": _tools.RODict({
         "ID": "workShop_typeName",
-        "value": _tools.ROList(['成长材料', '制造材料']),
+        "value": _tools.ROList(['强化石', '装备制造', '经脉养成']),
     }),
     "workShop_autoConfirm1": _tools.RODict({
         "ID": "workShop_autoConfirm1",

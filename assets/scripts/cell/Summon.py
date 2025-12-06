@@ -22,6 +22,7 @@ import formula
 import iAICombatUnit
 
 import creep_base as CBD
+import const_const as C_CD
 import creep_bornState as CBSD
 
 
@@ -45,6 +46,9 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         iGameEntity.IGameEntity.__init__(self)
         self.name = CBD.datas[self.summonId].get('name', '无名怪')
         hostEnt = self.getHost()
+        if hostEnt and hostEnt.IsAvatar:
+            utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR)
+
         if not self.hostId or (hostEnt and not hostEnt.IsAvatar and not hostEnt.isBot()):
             self.isWitnessComplete = gameconst.WitnessType.WITNESS_TYPE_IGNORE
 
@@ -168,12 +172,12 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
             otherProps = ['adjFullHp', 'adjFullHpAbs', 'mulFullHp', 'adjMinPhysicalAtk', 'adjMinPhysicalAtkAbs',
                         'adjMinMagicAtk', 'adjMinMagicAtkAbs', 'adjMaxPhysicalAtk', 'adjMaxPhysicalAtkAbs', 'adjMaxMagicAtk',
                         'adjMaxMagicAtkAbs',
-                        'baseHit', 'adjHit', 'baseDodge', 'adjDodge', 
+                        'baseHit', 'adjHit', 'baseDodge', 'adjDodge',
                        'baseFatal', 'adjFatal', 'baseAntiFatal',
                        'adjAntiFatal', 'baseMortal', 'adjMortal', 'baseAntiMortal', 'adjAntiMortal',
                        ]
             # 没有被定义和使用的属性,先移出来,不然报错
-            # 'mulHit', 'mulDodge', 'baseDodgeDmg', 'adjDodgeDmg', 
+            # 'mulHit', 'mulDodge', 'baseDodgeDmg', 'adjDodgeDmg',
             # 'mulDodgeDmg', 'mulFatal', 'mulAntiFatal', 'mulMortal', 'mulAntiMortal'
             for propName in otherProps:
                 propVal = owner.getProp(propName)
@@ -313,4 +317,18 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
 
     def getAIParam(self):
         return dataUtils.getAIParameters(self.summonId)
+
+    def checkCombatRangeY(self, target):
+        if utils.hasBit(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR) and target.IsMonster:
+            underAttackHeightLimit = CBD.datas[target.monsterId]['underAttackHeightLimit']
+            if underAttackHeightLimit:
+                heightLimit = underAttackHeightLimit
+            else:
+                heightLimit = C_CD.datas['damageHeightLimit'].get('value')
+        else:
+            heightLimit = C_CD.datas['damageHeightLimit'].get('value')
+
+        return abs(self.position[1] - target.position[1]) <= heightLimit
+
+
 

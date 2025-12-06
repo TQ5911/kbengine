@@ -70,14 +70,8 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
     def _raidDungeonTrapCallback(self, dungeonNo, exitCount):
         if formula.getMapId(self.spaceNo) != dungeonNo:
             return
-
-        dungeonSpaceType = self._getPrmBydungeonNo(dungeonNo, 'type')
+        
         mapInfo = self._getMapInfoByDungeonNo(dungeonNo)
-        if not mapInfo:
-            if gameconst.DungeonType.isGuildDungeon(dungeonSpaceType):
-                # 【【任务】副本类型扩展-帮会副本】
-                mapInfo = self._getMapInfoByDungeonNo(gameconst.MapIdDef.mapGuildSpace)
-
         if not mapInfo:
             return
 

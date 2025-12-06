@@ -1,6 +1,7 @@
 <root>
     <Interfaces>
-        <Interface>       iSkillManager    </Interface>
+        <Interface>         iSkillManager       </Interface>
+		<Interface>	        iSkillPropPriProp	</Interface>
     </Interfaces>
 
     <Properties>
@@ -81,7 +82,7 @@
 
         <moveAni>
             <Type>          UINT8               </Type>
-            <Flags>         OTHER_CLIENTS       </Flags>
+            <Flags>         CELL_PRIVATE        </Flags>
             <Default>       0                   </Default>
         </moveAni>
 

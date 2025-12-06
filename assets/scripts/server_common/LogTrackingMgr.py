@@ -62,7 +62,7 @@ class LogTrackingMgr:
 
     # 角色登录事件
     @staticmethod
-    def Server_Role_Login(accountId, gbId, school, name, level):
+    def Server_Role_Login(accountId, gbId, school, name, level, gameId, userInfoId, createTimestamp):
         args = {}
         args["path"] = LogTrackingMgr.Path_Server_Role_Login
         args["accountId"] = accountId
@@ -70,6 +70,9 @@ class LogTrackingMgr:
         args["school"] = school
         args["name"] = name
         args["level"] = level
+        args["gameId"] = gameId
+        args["userInfoId"] = userInfoId
+        args["createTimestamp"] = createTimestamp
         LogTrackingMgr.LOG(args)
 
     # 角色登出事件
@@ -86,13 +89,16 @@ class LogTrackingMgr:
 
     # 创建角色事件
     @staticmethod
-    def Server_Create_Role(accountId, gbId, school, name):
+    def Server_Create_Role(accountId, gbId, school, name, gameId, userInfoId, createTimestamp):
         args = {}
         args["path"] = LogTrackingMgr.Path_Server_Create_Role
         args["accountId"] = accountId
         args["gbId"] = gbId
         args["school"] = school
         args["name"] = name
+        args["gameId"] = gameId
+        args["userInfoId"] = userInfoId
+        args["createTimestamp"] = createTimestamp
         LogTrackingMgr.LOG(args)
 
     @staticmethod

@@ -458,5 +458,17 @@ datas = _tools.RODict({
     "teamFullAutoStart": _tools.RODict({
         "ID": "teamFullAutoStart",
         "value": "满员自动开始挑战",
+    }),
+    "copySettlementInterval": _tools.RODict({
+        "ID": "copySettlementInterval",
+        "value": 5,
+    }),
+    "needPassword": _tools.RODict({
+        "ID": "needPassword",
+        "value": "请输入密码",
+    }),
+    "errorPassword": _tools.RODict({
+        "ID": "errorPassword",
+        "value": "<color=red>密码错误</color>",
     })
 })

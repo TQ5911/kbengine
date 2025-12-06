@@ -1,0 +1,118 @@
+/*
+ Navicat Premium Dump SQL
+
+ Source Server         : 192.168.10.13
+ Source Server Type    : MySQL
+ Source Server Version : 101113 (10.11.13-MariaDB-0ubuntu0.24.04.1)
+ Source Host           : 192.168.10.13:3306
+ Source Schema         : maple
+
+ Target Server Type    : MySQL
+ Target Server Version : 101113 (10.11.13-MariaDB-0ubuntu0.24.04.1)
+ File Encoding         : 65001
+
+ Date: 28/11/2025 11:30:52
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for maple
+-- ----------------------------
+DROP TABLE IF EXISTS `maple`;
+CREATE TABLE `maple`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `server_id` int NOT NULL,
+  `server_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `zone_id` int NOT NULL,
+  `game_server` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `queue_server` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `server_group` int NOT NULL,
+  `server_state` int NOT NULL,
+  `server_flag_state` int NOT NULL,
+  `alias` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `start_time` int NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `server_id`(`server_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of maple
+-- ----------------------------
+INSERT INTO `maple` VALUES (2, 10002, '公共服', 2000, '192.168.10.12:20013', '192.168.10.31:10010', 1, 4, 2, '公共服', 1742160600);
+INSERT INTO `maple` VALUES (3, 10003, '公共跨服', 2000, '192.168.10.13:20013', '192.168.10.31:10010', 9, 4, 2, '公共服', 1742160600);
+INSERT INTO `maple` VALUES (4, 20002, '苹果审核服', 2000, '52.4.3.220:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (5, 20003, '压测LT服', 2000, '10.34.28.122:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (6, 20004, '预发布', 2000, '192.168.11.143:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (7, 20005, '预发布1', 2000, '192.168.8.120:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (8, 20088, 'MYH', 2003, '192.168.10.130:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (9, 20101, 'WZW', 2002, '192.168.10.72:20013', '192.168.10.31:10010', 1, 1, 6, '', 0);
+INSERT INTO `maple` VALUES (10, 20102, 'LZY', 2002, '192.168.10.63:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (11, 20103, 'YY', 2002, '192.168.10.61:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (12, 20104, 'LY', 2002, '192.168.10.139:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (13, 20105, 'ZXH', 2003, '192.168.10.221:20013', '192.168.10.31:10010', 8, 2, 0, '17611787063', 1742160600);
+INSERT INTO `maple` VALUES (14, 20806, '跨服ZXH', 2003, '192.168.10.179:20013', '192.168.10.31:10010', 8, 2, 0, '17611787063', 0);
+INSERT INTO `maple` VALUES (15, 20241, 'ZC', 2002, '192.168.10.65:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (16, 20107, 'TJY', 2002, '192.168.10.241:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (17, 20108, 'WP', 2003, '192.168.10.181:20013', '192.168.10.31:10010', 8, 2, 0, '13071827430', 0);
+INSERT INTO `maple` VALUES (18, 20109, 'WZW2', 2002, '192.168.10.72:20013', '192.168.10.31:10010', 1, 0, 6, '', 0);
+INSERT INTO `maple` VALUES (19, 20110, 'YWM', 2003, '192.168.10.112:20013', '192.168.10.31:10010', 1, 2, 0, '18958811299', 0);
+INSERT INTO `maple` VALUES (20, 20201, 'WYL', 2003, '192.168.10.80:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (22, 20212, 'XFL', 2003, '192.168.10.230:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (23, 20222, 'SiYiH', 2003, '192.168.10.175:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (24, 20223, 'ckz', 2003, '192.168.10.133:20013', '192.168.10.31:10010', 1, 2, 0, '13972814954', 0);
+INSERT INTO `maple` VALUES (25, 20225, 'ckz2', 2003, '192.168.10.129:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (26, 20226, 'lh', 2002, '192.168.10.247:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (27, 20224, '公共2服', 2000, '192.168.10.146:20013', '192.168.10.31:10010', 1, 2, 0, '', 1742160600);
+INSERT INTO `maple` VALUES (28, 20256, 'LQY', 2003, '192.168.10.70:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (29, 20257, 'LH', 2003, '192.168.10.206:20013', '192.168.10.31:10010', 1, 2, 0, '13277311706', 0);
+INSERT INTO `maple` VALUES (30, 20258, 'TT', 2003, '192.168.10.67:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (31, 20259, 'MJJ', 2002, '192.168.10.108:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (32, 20227, 'ZTQ', 2003, '192.168.10.127:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (33, 20228, 'LJ', 2003, '192.168.10.219:20013', '192.168.10.31:10010', 2, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (34, 20229, 'WZY', 2003, '192.168.10.227:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (35, 20298, 'ZR', 2002, '192.168.10.233:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (36, 20230, 'clys', 2003, '192.168.10.210:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (37, 20231, 'QW', 2003, '192.168.10.166:20013', '192.168.10.13:10011', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (38, 20232, 'GJQ', 2003, '192.168.10.109:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (39, 20233, 'zww', 2002, '192.168.10.234:20013', '192.168.10.31:10010', 9, 2, 0, '15868183280', 0);
+INSERT INTO `maple` VALUES (40, 20234, 'DCL', 2003, '192.168.10.172:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (41, 20235, 'CYF', 2003, '192.168.10.240:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (42, 20236, 'LM', 2003, '192.168.10.226:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (43, 20237, 'YL', 2002, '192.168.10.54:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (44, 20238, 'LJCS', 2003, '192.168.10.222:20013', '192.168.10.31:10010', 2, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (45, 20239, 'LZJ', 2003, '192.168.10.29:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (46, 20240, 'XGT', 2002, '192.168.10.157:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (47, 20250, 'SXS', 2003, '192.168.10.219:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (48, 20251, 'ZCCS', 2002, '192.168.10.193:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (49, 20242, 'WY', 2002, '192.168.10.185:20013', '192.168.10.31:10010', 9, 2, 0, '17774012912', 0);
+INSERT INTO `maple` VALUES (50, 20216, 'WYB', 2003, '192.168.10.168:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (51, 20252, 'WJD', 2002, '192.168.10.51:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (52, 10004, '压测服', 2000, '192.168.10.14:20013', '192.168.10.31:10010', 1, 4, 2, '', 1742160600);
+INSERT INTO `maple` VALUES (53, 20253, 'LXQ', 2003, '192.168.10.97:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (55, 10005, 'cg服', 2000, '192.168.10.122:20013', '192.168.10.31:10010', 1, 4, 2, '', 1742160600);
+INSERT INTO `maple` VALUES (56, 20166, 'QW', 2003, '192.168.10.166:20013', '192.168.10.13:10011', 1, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (57, 20807, 'zww跨服', 2003, '192.168.10.242:20013', '192.168.10.31:10010', 12, 2, 0, '', 0);
+INSERT INTO `maple` VALUES (58, 20260, 'ZD', 2003, '192.168.10.36:20013', '192.168.10.31:10010', 1, 2, 0, '', 0);
+
+-- ----------------------------
+-- Table structure for maple_zone
+-- ----------------------------
+DROP TABLE IF EXISTS `maple_zone`;
+CREATE TABLE `maple_zone`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `zone_id` int NOT NULL,
+  `zone_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `zone_id`(`zone_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of maple_zone
+-- ----------------------------
+INSERT INTO `maple_zone` VALUES (1, 2000, '公共分区');
+INSERT INTO `maple_zone` VALUES (8, 2003, '技术分区');
+INSERT INTO `maple_zone` VALUES (9, 2002, '策划分区');
+
+SET FOREIGN_KEY_CHECKS = 1;

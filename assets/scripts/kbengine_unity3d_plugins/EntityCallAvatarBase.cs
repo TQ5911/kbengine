@@ -121,7 +121,7 @@ namespace KBEngine
 
 			bundle.writeUint64(arg1);
 			bundle.writeUint8(arg2);
-			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[344]).addToStreamEx(bundle, arg3);
+			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[348]).addToStreamEx(bundle, arg3);
 			sendCall(null);
 		}
 
@@ -152,6 +152,15 @@ namespace KBEngine
 
 			bundle.writeUint64(arg1);
 			bundle.writeUint32(arg2);
+			sendCall(null);
+		}
+
+		public void cancalGuildDungeonOrder()
+		{
+			Bundle pBundle = newCall("cancalGuildDungeonOrder", 0);
+			if(pBundle == null)
+				return;
+
 			sendCall(null);
 		}
 
@@ -241,7 +250,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_GUILD_CREATE_DATA)EntityDef.id2datatypes[194]).addToStreamEx(bundle, arg1);
+			((DATATYPE_GUILD_CREATE_DATA)EntityDef.id2datatypes[196]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -351,6 +360,15 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void enterBossChallengeDungeon()
+		{
+			Bundle pBundle = newCall("enterBossChallengeDungeon", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void enterCrossServerSiegeWarSpace()
 		{
 			Bundle pBundle = newCall("enterCrossServerSiegeWarSpace", 0);
@@ -441,6 +459,15 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
+		public void getChangllengeDataInfo()
+		{
+			Bundle pBundle = newCall("getChangllengeDataInfo", 0);
+			if(pBundle == null)
+				return;
+
 			sendCall(null);
 		}
 
@@ -623,6 +650,17 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void getSettlementRankList(Byte arg1, Byte arg2)
+		{
+			Bundle pBundle = newCall("getSettlementRankList", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint8(arg2);
+			sendCall(null);
+		}
+
 		public void getTakerWaitReward(UInt64 arg1)
 		{
 			Bundle pBundle = newCall("getTakerWaitReward", 0);
@@ -693,6 +731,15 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void leaveBossChallengeDungeon()
+		{
+			Bundle pBundle = newCall("leaveBossChallengeDungeon", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void leaveCrossServerSiegeWarSpace()
 		{
 			Bundle pBundle = newCall("leaveCrossServerSiegeWarSpace", 0);
@@ -702,24 +749,13 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void levelUpSkill(UInt32 arg1, SByte arg2)
-		{
-			Bundle pBundle = newCall("levelUpSkill", 0);
-			if(pBundle == null)
-				return;
-
-			bundle.writeUint32(arg1);
-			bundle.writeInt8(arg2);
-			sendCall(null);
-		}
-
 		public void modifyAuthPermission(AUTH_PERMISSION_DATA_INFO arg1, Byte arg2)
 		{
 			Bundle pBundle = newCall("modifyAuthPermission", 0);
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[344]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[348]).addToStreamEx(bundle, arg1);
 			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
@@ -771,7 +807,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_GUILD_JOIN_COND_DATA_INFO)EntityDef.id2datatypes[193]).addToStreamEx(bundle, arg1);
+			((DATATYPE_GUILD_JOIN_COND_DATA_INFO)EntityDef.id2datatypes[195]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -833,7 +869,19 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10062)EntityDef.id2datatypes[10062]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10056)EntityDef.id2datatypes[10056]).addToStreamEx(bundle, arg1);
+			sendCall(null);
+		}
+
+		public void openGuildDungeon(Int64 arg1, Byte arg2, UInt16 arg3)
+		{
+			Bundle pBundle = newCall("openGuildDungeon", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeInt64(arg1);
+			bundle.writeUint8(arg2);
+			bundle.writeUint16(arg3);
 			sendCall(null);
 		}
 
@@ -868,6 +916,17 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
+			sendCall(null);
+		}
+
+		public void queryFirstPassRewardStatus(Byte arg1, UInt32 arg2)
+		{
+			Bundle pBundle = newCall("queryFirstPassRewardStatus", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint32(arg2);
 			sendCall(null);
 		}
 
@@ -959,7 +1018,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10016)EntityDef.id2datatypes[10016]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -979,7 +1038,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10052)EntityDef.id2datatypes[10052]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10047)EntityDef.id2datatypes[10047]).addToStreamEx(bundle, arg1);
 			((DATATYPE_AnonymousArray_10006)EntityDef.id2datatypes[10006]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
@@ -1195,7 +1254,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10015)EntityDef.id2datatypes[10015]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10014)EntityDef.id2datatypes[10014]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -1238,7 +1297,7 @@ namespace KBEngine
 
 			bundle.writeUint8(arg1);
 			bundle.writeUint8(arg2);
-			((DATATYPE_AnonymousArray_10099)EntityDef.id2datatypes[10099]).addToStreamEx(bundle, arg3);
+			((DATATYPE_AnonymousArray_10093)EntityDef.id2datatypes[10093]).addToStreamEx(bundle, arg3);
 			sendCall(null);
 		}
 
@@ -1348,7 +1407,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10060)EntityDef.id2datatypes[10060]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10054)EntityDef.id2datatypes[10054]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -1382,7 +1441,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint8(arg2);
 			bundle.writeUint8(arg3);
-			((DATATYPE_AnonymousArray_10099)EntityDef.id2datatypes[10099]).addToStreamEx(bundle, arg4);
+			((DATATYPE_AnonymousArray_10093)EntityDef.id2datatypes[10093]).addToStreamEx(bundle, arg4);
 			sendCall(null);
 		}
 
@@ -1407,7 +1466,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint32(arg1);
-			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10016)EntityDef.id2datatypes[10016]).addToStreamEx(bundle, arg2);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg3);
 			bundle.writeInt8(arg4);
 			sendCall(null);
@@ -1421,6 +1480,55 @@ namespace KBEngine
 
 			bundle.writeUint32(arg1);
 			bundle.writeUint8(arg2);
+			sendCall(null);
+		}
+
+		public void reqMineWarCollectInfo()
+		{
+			Bundle pBundle = newCall("reqMineWarCollectInfo", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
+		public void reqMineWarGuildOwnerRank(UInt16 arg1)
+		{
+			Bundle pBundle = newCall("reqMineWarGuildOwnerRank", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint16(arg1);
+			sendCall(null);
+		}
+
+		public void reqMineWarGuildPlayerRank(UInt16 arg1)
+		{
+			Bundle pBundle = newCall("reqMineWarGuildPlayerRank", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint16(arg1);
+			sendCall(null);
+		}
+
+		public void reqMineWarInfo()
+		{
+			Bundle pBundle = newCall("reqMineWarInfo", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
+		public void reqMineWarShareBonus(UInt16 arg1, List<MINE_WAR_GUILD_SHARE_INFO> arg2)
+		{
+			Bundle pBundle = newCall("reqMineWarShareBonus", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint16(arg1);
+			((DATATYPE_AnonymousArray_10095)EntityDef.id2datatypes[10095]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -1452,8 +1560,8 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg1);
-			((DATATYPE_AnonymousArray_10031)EntityDef.id2datatypes[10031]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10016)EntityDef.id2datatypes[10016]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10026)EntityDef.id2datatypes[10026]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -1463,8 +1571,8 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg1);
-			((DATATYPE_AnonymousArray_10019)EntityDef.id2datatypes[10019]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10016)EntityDef.id2datatypes[10016]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -1515,7 +1623,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_AnonymousArray_10018)EntityDef.id2datatypes[10018]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -1601,7 +1709,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10038)EntityDef.id2datatypes[10038]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10034)EntityDef.id2datatypes[10034]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -1958,7 +2066,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_INSTANT_POTION_DATA_INFO)EntityDef.id2datatypes[320]).addToStreamEx(bundle, arg1);
+			((DATATYPE_INSTANT_POTION_DATA_INFO)EntityDef.id2datatypes[324]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2027,7 +2135,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10084)EntityDef.id2datatypes[10084]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10078)EntityDef.id2datatypes[10078]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2930,6 +3038,15 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void getMineWarMonsterInfo()
+		{
+			Bundle pBundle = newCall("getMineWarMonsterInfo", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void getRaidAllMembersAttrs(AVATARGBID_LIST arg1)
 		{
 			Bundle pBundle = newCall("getRaidAllMembersAttrs", 0);
@@ -3041,6 +3158,17 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
+			sendCall(null);
+		}
+
+		public void levelUpSkill(UInt32 arg1, SByte arg2)
+		{
+			Bundle pBundle = newCall("levelUpSkill", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint32(arg1);
+			bundle.writeInt8(arg2);
 			sendCall(null);
 		}
 
@@ -3274,7 +3402,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_CUBE_SWITCH)EntityDef.id2datatypes[220]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CUBE_SWITCH)EntityDef.id2datatypes[222]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -3305,7 +3433,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_WONDER_LAND_SWITCH)EntityDef.id2datatypes[221]).addToStreamEx(bundle, arg2);
+			((DATATYPE_WONDER_LAND_SWITCH)EntityDef.id2datatypes[223]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -3407,7 +3535,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint32(arg2);
 			bundle.writeUint64(arg3);
-			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg4);
+			((DATATYPE_AnonymousArray_10016)EntityDef.id2datatypes[10016]).addToStreamEx(bundle, arg4);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg5);
 			sendCall(null);
 		}
@@ -3421,7 +3549,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint16(arg2);
 			bundle.writeUint64(arg3);
-			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg4);
+			((DATATYPE_AnonymousArray_10016)EntityDef.id2datatypes[10016]).addToStreamEx(bundle, arg4);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg5);
 			bundle.writeUint8(arg6);
 			sendCall(null);
@@ -3450,7 +3578,7 @@ namespace KBEngine
 			bundle.writeUint16(arg2);
 			bundle.writeUint8(arg3);
 			bundle.writeUint64(arg4);
-			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg5);
+			((DATATYPE_AnonymousArray_10016)EntityDef.id2datatypes[10016]).addToStreamEx(bundle, arg5);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg6);
 			sendCall(null);
 		}
@@ -3478,7 +3606,7 @@ namespace KBEngine
 			bundle.writeUint32(arg2);
 			bundle.writeUint8(arg3);
 			bundle.writeUint64(arg4);
-			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg5);
+			((DATATYPE_AnonymousArray_10016)EntityDef.id2datatypes[10016]).addToStreamEx(bundle, arg5);
 			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg6);
 			sendCall(null);
 		}
@@ -3880,7 +4008,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL)EntityDef.id2datatypes[243]).addToStreamEx(bundle, arg1);
+			((DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL)EntityDef.id2datatypes[245]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 

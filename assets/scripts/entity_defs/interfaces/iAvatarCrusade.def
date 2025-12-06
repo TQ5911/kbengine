@@ -45,6 +45,7 @@
 		    <Exposed/>
             <Arg>   UINT8   </Arg>
         </setCrusadeDungeonAutoConfirmConfig>
+
     </BaseMethods>
 
     <ClientMethods>

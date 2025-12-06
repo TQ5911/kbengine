@@ -281,7 +281,7 @@ class ICycleEvent(object):
     def registerDailyEvent(self, cbFunc, cbArg=(), cycleTime=gameconst.COMMON_CYCLE_TIME):
         self.register_Event(EventType.EVENT_DAY, cbFunc, cbArg, cycleTime)
 
-    # 默认周6的5点刷新
+    # 默认周一的5点刷新
     def registerWeekEvent(self, cbFunc, cbArg=(), cycleTime=gameconst.ONE_DAY_SECONDS * (
             WeekCycleEvent.DEFAULT_REFRESH_WEEKDAY - 1) + gameconst.COMMON_CYCLE_TIME):
         self.register_Event(EventType.EVENT_WEEK, cbFunc, cbArg, cycleTime)

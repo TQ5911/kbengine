@@ -50,9 +50,9 @@
 
         <mapleAllServerUrl> http://192.168.10.13:9527/getAllServer </mapleAllServerUrl>
         
-        <crossSiegeWarServerInfo>
-            <item crossServerId='20228'></item>
-        </crossSiegeWarServerInfo>
+        <crossServerInfo>
+                <item crossServerId='20228'></item>
+        </crossServerInfo>
 
         <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
         <enableGlobalAuction> 1 </enableGlobalAuction>

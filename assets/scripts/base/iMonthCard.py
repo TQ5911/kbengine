@@ -20,6 +20,7 @@ import random
 import const_const as CC
 import mailAssistor
 import itemData_set as IDSD
+import redisUtils
 
 class IMonthCard(object):
     def __init__(self):
@@ -68,6 +69,7 @@ class IMonthCard(object):
             )
         self.addWealth(_src, _awardVal, KBEngine.genUUID64(), _detail)
         self.checkMonthCardAward()
+        self.updateRedisVIPFlag()
 
         return True
     
@@ -283,3 +285,19 @@ class IMonthCard(object):
         _addVal = dropAward.MailWealthVal()
         _addVal.addWealthByItemId(gameconst.ItemId.EXP, exp)
         mailAssistor.sendMailToPlayers([self.gbID], CC.datas['offlineMail']['value'], extraAttach=_addVal)
+
+    #更新redis的特权标识(排队优先)
+    def updateRedisVIPFlag(self):
+        redisUtils.RedisUtils.checkAndSetSVIP(gameconst.PrivilegeRedisKey.SVIP + self.accountName, self._onUpdateRedisSVIPFlag)
+
+        if self.isMonthCardExpired():
+            return
+        
+        redisUtils.SetUtils.setMaxNumber(gameconst.PrivilegeRedisKey.VIP + self.accountName, self.monthCardExpireTime, self._onUpdateRedisVIPFlag)
+
+    def _onUpdateRedisVIPFlag(self, cid, err, res):
+        INFO_MSG("_onUpdateRedisVIPFlag", "cid", cid, "err", err, "res", res)
+
+    def _onUpdateRedisSVIPFlag(self, cid, err, res):
+        INFO_MSG("_onUpdateRedisSVIPFlag", "cid", cid, "err", err, "res", res)
+

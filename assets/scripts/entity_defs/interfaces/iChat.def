@@ -222,25 +222,5 @@
         <onQueryPlayerLink>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
         </onQueryPlayerLink>
-
-        <onSetChatCD>
-            <Arg>           UINT8         </Arg>
-            <Arg>           LONGTIME         </Arg>
-        </onSetChatCD>
-
-        <onClearSpeak>
-            <Arg>           PLAYER_GBID         </Arg>
-        </onClearSpeak>
-
-        <onSendForbidChat>
-            <Arg>           INT32         </Arg>
-            <Arg>           UNICODE         </Arg>
-        </onSendForbidChat>
-
-        <onSendForbidVoiceChat>
-            <Arg>           INT32         </Arg>
-            <Arg>           UNICODE         </Arg>
-        </onSendForbidVoiceChat>
-
     </ClientMethods>
 </root>

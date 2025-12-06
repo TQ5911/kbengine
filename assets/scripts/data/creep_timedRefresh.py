@@ -15,4 +15,16 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
+    1: _tools.RODict({
+        "ID": 1,
+        "initialRefresh": _tools.ROList([[[0], [0], [], [], [], []]]),
+        "refreshInterval": 360
+    }),
+    2: _tools.RODict({
+        "ID": 2,
+        "initialRefresh": _tools.ROList([[[30], [0], [], [], [], []]]),
+        "refreshInterval": 30
+    })
 })
+minKey = 1
+maxKey = 2

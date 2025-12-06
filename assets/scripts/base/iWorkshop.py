@@ -198,7 +198,11 @@ class IWorkshop(object):
 
     def calculateWorkshopLuckyItem(self, outItems, produceCfgData):
         luckyRule = produceCfgData['lucky']
-        if luckyRule is None or len(luckyRule) != 4:
+        # 支持空的配置
+        if luckyRule is None:
+            return gameconst.WorkshopResult.WORKSHOP_SUCCESS
+        # 如果已配置，检查配置规则
+        if len(luckyRule) != 4:
             ERROR_MSG("calculateWorkshopLuckyItem ~ lucky config error", produceCfgData)
             return gameconst.WorkshopResult.WORKSHOP_LIMIT_ILLEGAL_CONFIG
         

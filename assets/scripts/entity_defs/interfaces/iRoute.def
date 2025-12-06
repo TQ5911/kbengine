@@ -3,7 +3,7 @@
     <Properties>
         <routeState>
             <Type>          UINT32          </Type>
-            <Flags>         OWN_CLIENT      </Flags>
+            <Flags>         CELL_PRIVATE    </Flags>
             <Default>       0               </Default>
         </routeState>
 

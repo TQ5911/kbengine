@@ -703,5 +703,10 @@
         <setInDungeon>
             <Arg>       TEAMID          </Arg>
         </setInDungeon>
+
+        <getTeamStatisticFinalData>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       TEAMID          </Arg>
+        </getTeamStatisticFinalData>
     </BaseMethods>
 </root>

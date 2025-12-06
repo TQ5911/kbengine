@@ -1331,17 +1331,9 @@ class TaskInfo(userType.UserSoleType):
                     awardCtx.itemArgs.update(rewardItemArgs)
             wealthVal = dropAward.getAward(rewardId, 1, awardCtx)
 
-            task = self.getTask(taskId)
-
-            # if taskId == TCGCD.datas['autoEquip']['value']:
-            #     equipList = wealthVal.itemWealth.popDropEquipObjs()
-            #     owner.addAutoDressEquipItem(equipList, opUUID, srcType, taskId, awardCtx)
-
             if not wealthVal.isEmpty():
                 detail = gameclass.AwardDetail(taskId=[taskId], popRewardUUID=popRewardUUID)
                 owner.addWealth(srcType, wealthVal, opUUID, detail=detail, awardCtx=awardCtx, directly=(popRewardUUID==0))
-
-            owner.client.onGetTaskReward(taskId, wealthVal.toClientDisplayVal())
 
     def doSubmitReward(self, owner, taskId, opUUID, srcType, popRewardUUID=0):
         # 检查发奖次数是否满足

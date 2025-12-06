@@ -82,12 +82,7 @@ class ILinePlayersStub(object):
             return
 
         if formula.isWorldLineType(self.lineType) and isAutoSelectedLine and lineNo < 0:
-            oldLine = lineNo
-            oldArea = utils.getAreaId(self.lineType, position)
-
             lineNo = random.choice(self.getLineNoReadyForEnter())
-            box.client and box.client.onSendtoRandomLineAndArea(self.lineType, oldLine, oldArea, lineNo,
-                                                                utils.getAreaId(self.lineType, position))
 
         if lineNo < 0:
             ERROR_MSG('enterLine _autoSelectLine failed:', box.id, gbId, extra)
@@ -290,16 +285,10 @@ class ILinePlayersStub(object):
         toLineNo = self._autoSelectLine(box, gbId, ext, exlude=None, isSwitchLine=True)
 
         if formula.isWorldLineType(self.lineType) and toLineNo < 0:
-            oldLine = toLineNo
-            # TODO X: calc area id
-            oldArea = 1
-
             toLineNo = random.choice(self.getLineNoReadyForEnter())
             # TODO X: valid world position config
             pos, dir = formula.whatSpaceBornPosAndDir(self.lineType)
             extra['position'] = pos
-            box.client and box.client.onSendtoRandomLineAndArea(self.lineType, oldLine, oldArea, toLineNo,
-                                                                utils.getAreaId(self.lineType, extra['position']))
 
         if fromLineNo != toLineNo:
             lineMembers = self.allPlayers.getLinePlayers(toLineNo)

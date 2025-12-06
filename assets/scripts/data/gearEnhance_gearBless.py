@@ -15,86 +15,262 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    10: _tools.RODict({
-        "ID": 10,
+    110: _tools.RODict({
+        "ID": 110,
         "gearBlessGoldCost": ((30000013, 10000),),
         "gearBlessItem": ((30000220, 1),),
-        "result": _tools.ROList([[0, 1], [50, 50]]),
-        "backtrack": 10,
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 0, 50, 50]]),
+        "backtrack": 5,
         "guaranteedCount": 0
     }),
-    11: _tools.RODict({
-        "ID": 11,
-        "gearBlessGoldCost": ((30000013, 20000),),
-        "gearBlessItem": ((30000220, 2),),
-        "result": _tools.ROList([[-1, 0, 1], [25, 40, 35]]),
-        "backtrack": 10,
+    111: _tools.RODict({
+        "ID": 111,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 20, 40, 40]]),
+        "backtrack": 5,
         "guaranteedCount": 0
     }),
-    12: _tools.RODict({
-        "ID": 12,
-        "gearBlessGoldCost": ((30000013, 30000),),
-        "gearBlessItem": ((30000220, 4),),
-        "result": _tools.ROList([[-1, 0, 1], [40, 35, 25]]),
-        "backtrack": 10,
+    112: _tools.RODict({
+        "ID": 112,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 35, 35, 30]]),
+        "backtrack": 5,
         "guaranteedCount": 0
     }),
-    13: _tools.RODict({
-        "ID": 13,
-        "gearBlessGoldCost": ((30000013, 40000),),
-        "gearBlessItem": ((30000220, 8),),
-        "result": _tools.ROList([[-1, 0, 1], [55, 30, 15]]),
+    113: _tools.RODict({
+        "ID": 113,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 50, 25, 25]]),
         "backtrack": 15,
         "guaranteedCount": 0
     }),
-    14: _tools.RODict({
-        "ID": 14,
-        "gearBlessGoldCost": ((30000013, 50000),),
-        "gearBlessItem": ((30000220, 12), (30000221, 1)),
-        "result": _tools.ROList([[-1, 0, 1], [60, 30, 10]]),
-        "backtrack": 40,
+    114: _tools.RODict({
+        "ID": 114,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 60, 20, 20]]),
+        "backtrack": 30,
         "guaranteedCount": 0
     }),
-    15: _tools.RODict({
-        "ID": 15,
-        "gearBlessGoldCost": ((30000013, 60000),),
-        "gearBlessItem": ((30000220, 20), (30000221, 1)),
-        "result": _tools.ROList([[-1, 0, 1], [75, 20, 5]]),
-        "backtrack": 150,
+    115: _tools.RODict({
+        "ID": 115,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 60, 20, 20]]),
+        "backtrack": 100,
         "guaranteedCount": 0
     }),
-    16: _tools.RODict({
-        "ID": 16,
-        "gearBlessGoldCost": ((30000013, 70000),),
-        "gearBlessItem": ((30000220, 40), (30000221, 1)),
-        "result": _tools.ROList([[-1, 0, 1], [88, 10, 2]]),
+    116: _tools.RODict({
+        "ID": 116,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 40, 59, 1]]),
         "backtrack": 200,
-        "guaranteedCount": 9
+        "guaranteedCount": 5
     }),
-    17: _tools.RODict({
-        "ID": 17,
-        "gearBlessGoldCost": ((30000013, 70000),),
-        "gearBlessItem": ((30000220, 40), (30000221, 1)),
-        "result": _tools.ROList([[-1, 0, 1], [88, 10, 2]]),
-        "backtrack": 250,
-        "guaranteedCount": 0
-    }),
-    18: _tools.RODict({
-        "ID": 18,
-        "gearBlessGoldCost": ((30000013, 70000),),
-        "gearBlessItem": ((30000220, 40), (30000221, 1)),
-        "result": _tools.ROList([[-1, 0, 1], [88, 10, 2]]),
-        "backtrack": 300,
-        "guaranteedCount": 0
-    }),
-    19: _tools.RODict({
-        "ID": 19,
+    117: _tools.RODict({
+        "ID": 117,
         "gearBlessGoldCost": 0,
         "gearBlessItem": 0,
         "result": 0,
-        "backtrack": 0,
+        "backtrack": 300,
+        "guaranteedCount": 0
+    }),
+    120: _tools.RODict({
+        "ID": 120,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 0, 50, 50]]),
+        "backtrack": 5,
+        "guaranteedCount": 0
+    }),
+    121: _tools.RODict({
+        "ID": 121,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 20, 40, 40]]),
+        "backtrack": 5,
+        "guaranteedCount": 0
+    }),
+    122: _tools.RODict({
+        "ID": 122,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 35, 35, 30]]),
+        "backtrack": 5,
+        "guaranteedCount": 0
+    }),
+    123: _tools.RODict({
+        "ID": 123,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 50, 25, 25]]),
+        "backtrack": 15,
+        "guaranteedCount": 0
+    }),
+    124: _tools.RODict({
+        "ID": 124,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 60, 20, 20]]),
+        "backtrack": 30,
+        "guaranteedCount": 0
+    }),
+    125: _tools.RODict({
+        "ID": 125,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 60, 20, 20]]),
+        "backtrack": 100,
+        "guaranteedCount": 0
+    }),
+    126: _tools.RODict({
+        "ID": 126,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 40, 59, 1]]),
+        "backtrack": 200,
+        "guaranteedCount": 5
+    }),
+    127: _tools.RODict({
+        "ID": 127,
+        "gearBlessGoldCost": 0,
+        "gearBlessItem": 0,
+        "result": 0,
+        "backtrack": 300,
+        "guaranteedCount": 0
+    }),
+    130: _tools.RODict({
+        "ID": 130,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 0, 50, 50]]),
+        "backtrack": 5,
+        "guaranteedCount": 0
+    }),
+    131: _tools.RODict({
+        "ID": 131,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 20, 40, 40]]),
+        "backtrack": 5,
+        "guaranteedCount": 0
+    }),
+    132: _tools.RODict({
+        "ID": 132,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 35, 35, 30]]),
+        "backtrack": 5,
+        "guaranteedCount": 0
+    }),
+    133: _tools.RODict({
+        "ID": 133,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 50, 25, 25]]),
+        "backtrack": 15,
+        "guaranteedCount": 0
+    }),
+    134: _tools.RODict({
+        "ID": 134,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 60, 20, 20]]),
+        "backtrack": 30,
+        "guaranteedCount": 0
+    }),
+    135: _tools.RODict({
+        "ID": 135,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 60, 20, 20]]),
+        "backtrack": 100,
+        "guaranteedCount": 0
+    }),
+    136: _tools.RODict({
+        "ID": 136,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 40, 59, 1]]),
+        "backtrack": 200,
+        "guaranteedCount": 10
+    }),
+    137: _tools.RODict({
+        "ID": 137,
+        "gearBlessGoldCost": 0,
+        "gearBlessItem": 0,
+        "result": 0,
+        "backtrack": 300,
+        "guaranteedCount": 0
+    }),
+    140: _tools.RODict({
+        "ID": 140,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 0, 50, 50]]),
+        "backtrack": 5,
+        "guaranteedCount": 0
+    }),
+    141: _tools.RODict({
+        "ID": 141,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 20, 40, 40]]),
+        "backtrack": 5,
+        "guaranteedCount": 0
+    }),
+    142: _tools.RODict({
+        "ID": 142,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 35, 35, 30]]),
+        "backtrack": 5,
+        "guaranteedCount": 0
+    }),
+    143: _tools.RODict({
+        "ID": 143,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 50, 25, 25]]),
+        "backtrack": 15,
+        "guaranteedCount": 0
+    }),
+    144: _tools.RODict({
+        "ID": 144,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 60, 20, 20]]),
+        "backtrack": 30,
+        "guaranteedCount": 0
+    }),
+    145: _tools.RODict({
+        "ID": 145,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 60, 20, 20]]),
+        "backtrack": 100,
+        "guaranteedCount": 0
+    }),
+    146: _tools.RODict({
+        "ID": 146,
+        "gearBlessGoldCost": ((30000013, 10000),),
+        "gearBlessItem": ((30000220, 1),),
+        "result": _tools.ROList([[-2, -1, 0, 1], [0, 40, 59, 1]]),
+        "backtrack": 200,
+        "guaranteedCount": 20
+    }),
+    147: _tools.RODict({
+        "ID": 147,
+        "gearBlessGoldCost": 0,
+        "gearBlessItem": 0,
+        "result": 0,
+        "backtrack": 300,
         "guaranteedCount": 0
     })
 })
-minKey = 10
-maxKey = 19
+minKey = 110
+maxKey = 147

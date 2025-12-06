@@ -83,6 +83,14 @@ datas = _tools.RODict({
         "ID": "autoGearDisassembleQuality",
         "value": 2,
     }),
+    "autoResolveOn": _tools.RODict({
+        "ID": "autoResolveOn",
+        "value": 54001100,
+    }),
+    "autoResolveOff": _tools.RODict({
+        "ID": "autoResolveOff",
+        "value": 54001102,
+    }),
     "putInFail_bankFull_msg": _tools.RODict({
         "ID": "putInFail_bankFull_msg",
         "value": 54000164,
@@ -106,10 +114,6 @@ datas = _tools.RODict({
     "bankExpansionOverflow_msgID": _tools.RODict({
         "ID": "bankExpansionOverflow_msgID",
         "value": 54000383,
-    }),
-    "bagItemAuctionCD": _tools.RODict({
-        "ID": "bagItemAuctionCD",
-        "value": "交易冷却期：{0}",
     }),
     "bagItemLimitTimeCD": _tools.RODict({
         "ID": "bagItemLimitTimeCD",

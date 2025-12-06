@@ -69,8 +69,6 @@
         <onDelMails>
             <Arg>         ARRAY <of>  MAIL_GBID  </of>        </Arg>
         </onDelMails>
-        <onDelAllMails>
-        </onDelAllMails>
     </ClientMethods>
 </root>
 

@@ -635,6 +635,26 @@ datas = _tools.RODict({
         "ID": "cityBattle_prohibitTeam",
         "value": 54003109,
     }),
+    "cityBattle_targetDestroyed": _tools.RODict({
+        "ID": "cityBattle_targetDestroyed",
+        "value": 54003110,
+    }),
+    "cityBattle_auctionStart": _tools.RODict({
+        "ID": "cityBattle_auctionStart",
+        "value": 58000208,
+    }),
+    "cityBattle_declareWar1": _tools.RODict({
+        "ID": "cityBattle_declareWar1",
+        "value": 58000209,
+    }),
+    "cityBattle_declareWar2": _tools.RODict({
+        "ID": "cityBattle_declareWar2",
+        "value": 58000210,
+    }),
+    "cityBattle_declareWar3": _tools.RODict({
+        "ID": "cityBattle_declareWar3",
+        "value": 58000211,
+    }),
     "cityBattle_buffPosition": _tools.RODict({
         "ID": "cityBattle_buffPosition",
         "value": _tools.ROList([(577.34, 47.46, 470.47), (557.51, 34.87, 401.95), (483.17, 44.74, 462.68), (438.37, 27.05, 316.68), (400.15, 32.54, 434.58), (594.68, 24.25, 347.78), (689.19, 36.62, 401.51), (731.03, 54.68, 510.65), (674.37, 53.04, 635.71), (657.11, 39.84, 647.12), (664.4, 27.19, 614.57), (649.48, 20.86, 662.53), (585.88, 23.43, 727.02), (637.18, 20.47, 732.81), (592.18, 20.74, 768.89), (577.53, 20.74, 783.65), (546.6, 28.36, 760.39), (477.95, 28.36, 760.39), (513.35, 52.32, 853.43), (431.71, 28.06, 749.83), (431.41, 20.86, 707.53), (435.56, 34.76, 720.35), (455.39, 33.05, 702.47), (380.4, 26.14, 709.73), (394.17, 15.01, 691.18), (379.39, 19.05, 630.68), (412.91, 27.58, 605.1), (463.41, 26.43, 619.42), (516.49, 27.96, 605.1), (584.72, 26.48, 605.1), (584.72, 21.9, 627.39), (516.22, 11.02, 517.68), (291.0, 29.22, 438.68), (340.64, 27.84, 499.51), (388.3, 35.67, 815.45), (342.94, 20.75, 755.3), (345.08, 40.17, 784.91), (326.91, 40.94, 743.04), (584.67, 38.07, 797.6), (624.11, 29.41, 809.54), (618.49, 20.74, 795.87), (614.41, 27.83, 845.47), (685.94, 20.74, 845.1)]),
@@ -686,10 +706,6 @@ datas = _tools.RODict({
     "cityBattle_damaged": _tools.RODict({
         "ID": "cityBattle_damaged",
         "value": "已损坏",
-    }),
-    "cityBattle_targetDestroyed": _tools.RODict({
-        "ID": "cityBattle_targetDestroyed",
-        "value": 54003110,
     }),
     "cityBattle_durationHitEffect": _tools.RODict({
         "ID": "cityBattle_durationHitEffect",

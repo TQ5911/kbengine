@@ -234,8 +234,7 @@ class ICityOwnerMgr(object):
         _stub.onCityDataRequest(srcId)
 
     def cityRecentActivityRequest(self, srcServerId, box):
-        _stub = iRouter.RemoteServerStubEntityCall(srcServerId, 'SiegeWarStub')
-        _stub.cityRecentActivityResponse(box, self.cityRecentActivityList)
+        pass
 
     def useCityOfficerPrivilege(self, srcServerId, box, srcGbId, orderId, targetGbId, targetName):
         DEBUG_MSG('[lj]useCityOfficerPrivilege', srcGbId, orderId, targetGbId, targetName)

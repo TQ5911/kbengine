@@ -19,11 +19,8 @@ namespace KBEngine
 		public EntityBaseEntityCall_AccountBase baseEntityCall = null;
 		public EntityCellEntityCall_AccountBase cellEntityCall = null;
 
-		public string accountName = "";
-		public virtual void onAccountNameChanged(string oldValue) {}
 		public UInt64 lastSelectGbId = 0;
 		public virtual void onLastSelectGbIdChanged(UInt64 oldValue) {}
-		public UInt16 serverId = 0;
 
 		public virtual void onAvatarDetailInAccount(UInt64 arg1, Int32 arg2, UInt32 arg3, string arg4, Int32 arg5) {} 
 		public virtual void onAvatarOfflineTime(UInt64 arg1, UInt32 arg2) {} 
@@ -159,6 +156,10 @@ namespace KBEngine
 					List<Byte> onGameConfigChanged_arg2 = ((DATATYPE_AnonymousArray_10003)method.args[1]).createFromStreamEx(stream);
 					onGameConfigChanged(onGameConfigChanged_arg1, onGameConfigChanged_arg2);
 					break;
+				case 49:
+					string onHotfixVersion_arg1 = stream.readString();
+					onHotfixVersion(onHotfixVersion_arg1);
+					break;
 				case 17:
 					onKickAnotherAccount();
 					break;
@@ -236,22 +237,6 @@ namespace KBEngine
 
 				switch(prop.properUtype)
 				{
-					case 2:
-						string oldval_accountName = accountName;
-						accountName = stream.readString();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAccountNameChanged(oldval_accountName);
-						}
-						else
-						{
-							if(inWorld)
-								onAccountNameChanged(oldval_accountName);
-						}
-
-						break;
 					case 40001:
 						Vector3 oldval_direction = direction;
 						direction = stream.readVector3();
@@ -300,22 +285,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 4:
-						UInt16 oldval_serverId = serverId;
-						serverId = stream.readUint16();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onServerIdChanged(oldval_serverId);
-						}
-						else
-						{
-							if(inWorld)
-								onServerIdChanged(oldval_serverId);
-						}
-
-						break;
 					case 40002:
 						stream.readUint32();
 						break;
@@ -329,27 +298,6 @@ namespace KBEngine
 		{
 			ScriptModule sm = EntityDef.moduledefs["Account"];
 			Dictionary<UInt16, Property> pdatas = sm.idpropertys;
-
-			string oldval_accountName = accountName;
-			Property prop_accountName = pdatas[4];
-			if(prop_accountName.isBase())
-			{
-				if(inited && !inWorld)
-					onAccountNameChanged(oldval_accountName);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_accountName.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAccountNameChanged(oldval_accountName);
-					}
-				}
-			}
 
 			Vector3 oldval_direction = direction;
 			Property prop_direction = pdatas[2];
@@ -410,27 +358,6 @@ namespace KBEngine
 					else
 					{
 						onPositionChanged(oldval_position);
-					}
-				}
-			}
-
-			UInt16 oldval_serverId = serverId;
-			Property prop_serverId = pdatas[9];
-			if(prop_serverId.isBase())
-			{
-				if(inited && !inWorld)
-					onServerIdChanged(oldval_serverId);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_serverId.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onServerIdChanged(oldval_serverId);
 					}
 				}
 			}

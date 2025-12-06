@@ -459,6 +459,8 @@ class TeamStatisticMixin(object):
             self.teamStatistic.addStatisticHeal(gbId, val)
         elif type == gameconst.TeamStatisticType.HURT:
             self.teamStatistic.addStatisticHurt(gbId, val)
+        elif type == gameconst.TeamStatisticType.DEAD:
+            self.teamStatistic.addStatisticDead(gbId, val)
         
         INFO_MSG('addTeamStatisticValue', gbId, type, val)
 
@@ -466,6 +468,7 @@ class TeamStatisticMixin(object):
         dmgList = []
         healList = []
         hurtList = []
+        deadList = []
         teamPlayerDic = self.getPlayerDic()
 
         for gbId in teamPlayerDic:
@@ -494,13 +497,20 @@ class TeamStatisticMixin(object):
                 pData['value'] = 0
             hurtList.append(copy.copy(pData))
 
+            if gbId in self.teamStatistic.deadDict:
+                pData['value'] = self.teamStatistic.deadDict[gbId]
+            else:
+                pData['value'] = 0
+            deadList.append(copy.copy(pData))
+            
         return {
             'dmgList': dmgList,
             'healList': healList,
             'hurtList': hurtList,
+            'deadList': deadList,
         }
     def showStatisticData(self):
-        INFO_MSG('showStatisticData', self.teamStatistic.dmgDict, self.teamStatistic.healDict, self.teamStatistic.hurtDict)
+        INFO_MSG('showStatisticData', self.teamStatistic.dmgDict, self.teamStatistic.healDict, self.teamStatistic.hurtDict, self.teamStatistic.deadDict)
     
 
 class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
@@ -673,6 +683,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
             'isAutoExpedition': self.isAutoExpedition,
             'password': self.password,
             'memberNum': self.getTeamMemberNum(),
+            'siegeWarCamp': self.siegeWarCamp,
         }
         return clientData
     
@@ -907,10 +918,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
             box = teamPlayerVal.playerBox
             if not teamPlayerVal.bOnline:
                 continue
-            if box.client:
-                box.client.onFollowCaptainChanged(changeGbId, bFollow)
-            else:
-                WARNING_MSG('onMemberFollowChanged teamMember has no client', gbId)
 
             if box.cell:
                 box.cell.onFollowCaptainChangedCell(changeGbId, bFollow)
@@ -991,9 +998,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
 
             if 'score' in attrDic:
                 box.client.onUpdateTeamMemberScore(playerGbId, memberInfo.score)
-
-            if 'sex' in attrDic:
-                box.client.onUpdateTeamMembeSex(playerGbId, memberInfo.sex)
             # ---------------------------------------------------------------------------
         return
 
@@ -1268,9 +1272,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
             if teamMemberVal.isBlockMics:
                 _blockList.append(teamMemberVal.playerGbId)
 
-        toClient and self.broadcastAllMembersClient('onSyncAllTeamMemberMiscStatus',
-                                                    (self.teamId, _onList, _offList, _blockList))
-
         return _onList, _offList, _blockList
 
     def switchTeamMiscMode(self, srcPlayerGBID, mode, extraProps, toClient=False):
@@ -1293,8 +1294,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
 
         self.teamMicsSwitch = mode
 
-        toClient and self.broadcastAllMembersClient('onSwitchTeamMicsMode',
-                                                    (self.teamId, srcPlayerGBID, oldMode, mode))
         return self, ""
 
     def _onTeamMiscModeSwitchOff(self):
@@ -1345,9 +1344,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
         if toClient:
             _unblockMics and self.broadcastAllMembersClient('onUnblockTeamMemberMisc',
                                                             (self.teamId, playerGBID))
-            self.broadcastAllMembersClient('onTurnOnTeamMemberMics',
-                                           (srcPlayerGBID, self.teamId, playerGBID))
-
         return memberVal, ""
 
     def turnOffTeamMemberMics(self, srcPlayerGBID, playerGBID, blockMics=False, toClient=False):
@@ -1371,10 +1367,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
 
         if blockMics:
             memberVal.isBlockMics = True
-
-        if toClient:
-            self.broadcastAllMembersClient('onTurnOffTeamMemberMics',
-                                           (srcPlayerGBID, self.teamId, playerGBID, blockMics))
 
         return memberVal, ""
 
@@ -1843,6 +1835,7 @@ class TeamStatisticCacheVal(userType.UserSoleType):
         self.dmgDict = {}  # type: {int: int}
         self.healDict = {}  # type: {int: int}
         self.hurtDict = {}  # type: {int: int}
+        self.deadDict = {}  # type: {int: int}
 
     def addStatisticDmg(self, gbId, dmg):
         if gbId not in self.dmgDict:
@@ -1860,4 +1853,9 @@ class TeamStatisticCacheVal(userType.UserSoleType):
         self.hurtDict[gbId] += hurt
     
             
+    def addStatisticDead(self, gbId, dead):
+        if gbId not in self.deadDict:
+            self.deadDict[gbId] = 0
+        self.deadDict[gbId] += dead
+
     

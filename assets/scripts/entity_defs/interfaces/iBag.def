@@ -76,8 +76,8 @@
         </isNeedDisturb>
 
         <coinFraction>
-            <Type>          UINT8            </Type>
-            <Flags>         BASE_AND_CLIENT </Flags>
+            <Type>          UINT8           </Type>
+            <Flags>         BASE            </Flags>
             <Default>       0               </Default>
             <Persistent>    true            </Persistent>
         </coinFraction>
@@ -542,20 +542,6 @@
             <Arg>      INT32    </Arg>
             <Arg>      ARRAY <of> AWARD_ITEM_VAL </of>  </Arg>
         </onDropAward>
-        <onUseItemWithAnimation>
-            <Arg>      ITEM_ID  </Arg>
-        </onUseItemWithAnimation>
-
-        <onDigTreasureSucc>
-            <Arg>      UINT8  </Arg>
-        </onDigTreasureSucc>
-
-        <onCancelDigTreasure>
-            <Arg>      UINT32  </Arg>
-        </onCancelDigTreasure>
-
-        <onUseMapCasting>
-        </onUseMapCasting>
 
         <onApplyGather>
             <Arg>      OBJECT_ID</Arg>
@@ -573,13 +559,6 @@
             <Arg>      UINT8      </Arg>
             <Arg>      UINT32     </Arg>
         </onBindItemSucc>
-
-        <onCheckUseHomeItemCond>
-            <Arg>       ITEM_ID     </Arg>
-            <Arg>       UINT32      </Arg>
-            <Arg>       GRIDID      </Arg>
-            <Arg>       UNICODE     </Arg>
-        </onCheckUseHomeItemCond>
 
         <onUpdateDailyUseLimit>
             <Arg>       ITEM_ID     </Arg>
@@ -600,74 +579,6 @@
             <Arg>       UINT32       </Arg>
             <Arg>       UINT32       </Arg>
         </onUpdateCollectionGatherPickTimes>
-
-        <onGetOnlineTimeReward>
-            <Arg>       UINT8    </Arg>
-        </onGetOnlineTimeReward>
-
-        <onGetOnlineRewardData>
-            <Arg>       UINT32    </Arg>
-            <Arg>       ARRAY    <of>   UINT32    </of>     </Arg>
-        </onGetOnlineRewardData>
-
-        <onGetHolyArtifactsData>
-            <Arg>       UINT8    </Arg>
-        </onGetHolyArtifactsData>
-
-        <onCollectHolyArtifactFragment>
-            <Arg>       UINT8    </Arg>
-        </onCollectHolyArtifactFragment>
-
-        <onCancelChangeAppearance>
-            <Arg>       BOOL        </Arg>
-        </onCancelChangeAppearance>
-
-        <onDoChangeAppearanceToMakeUpFace>
-            <Arg>       ENTITY_ID   </Arg>
-            <Arg>       BOOL        </Arg>
-            <Arg>       FACE_DATA   </Arg>
-        </onDoChangeAppearanceToMakeUpFace>
-
-        <onDoChangeAppearanceToMakeUpSex>
-            <Arg>       ENTITY_ID   </Arg>
-            <Arg>       BOOL        </Arg>
-            <Arg>       SEX         </Arg>
-            <Arg>       FACE_DATA   </Arg>
-        </onDoChangeAppearanceToMakeUpSex>
-
-        <sendPickedCollectoins>
-            <Arg>       ARRAY    <of>   UINT32    </of>     </Arg>
-            <Arg>       ARRAY    <of>   INT16    </of>     </Arg>
-        </sendPickedCollectoins>
-
-        <onCompoundRes>
-            <Arg>   INT32       </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   ITEM_ID      </Arg>
-            <Arg>   UINT32      </Arg>
-        </onCompoundRes>
-
-        <onNumResourceChanged>
-            <Arg>   ITEMID       </Arg>
-            <Arg>   UINT32       </Arg>
-        </onNumResourceChanged>
-
-        <onMultiNumResourceChanged>
-            <Arg>       ARRAY    <of>   ITEMID    </of>     </Arg>
-            <Arg>       ARRAY    <of>   UINT32    </of>     </Arg>
-        </onMultiNumResourceChanged>
-
-        <onGetAvatarCoinBill>
-            <Arg>   UINT32       </Arg>
-            <Arg>   UINT32       </Arg>
-            <Arg>   UINT16       </Arg>
-            <Arg>   UINT16       </Arg>
-            <Arg>    ARRAY <of> CoinBillVal </of>    </Arg>
-        </onGetAvatarCoinBill>
-
-        <onClientLaunchReward>
-            <Arg>   UINT32       </Arg>
-        </onClientLaunchReward>
 
         <onRandomSynthesis>
             <Arg>       ARRAY    <of>   BAG_ITEM_BRIEF_VAL    </of>     </Arg>

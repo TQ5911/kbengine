@@ -109,13 +109,19 @@ globalSiegeWarData = {
     'isBidding': False
 }
 
+# 帮会关系记录
 guildRelationDic = {}
+# 帮会关系记录的版本
 guildRelationVersion = 0
 
+# 当前服务器别名
 curServerAlias = ''
 curServerName = ''
 mapleServerInfo = {}
 
+# 账号设置下次登录的base 进程的compId用的
 accountCompIdCache = {}
 
+# 同个进程内限制调用次数的字典
+callLimitDic = {}
 

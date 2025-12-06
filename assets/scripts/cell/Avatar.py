@@ -85,6 +85,7 @@ import guildAuthorization_authorization_def as GA_A_DD
 import iMeridian
 import iMonthCard
 import iMineWarCell
+import iGuildBossChallenge
 
 class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace, impTask.ImpTask, impCombat.ImpCombat,
              EventMgr.EventMgr, iComplexTeleport.IComplexTeleport, impTeam.ImpTeam, impRaid.ImpRaid,
@@ -95,7 +96,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              iCubeCell.ICubeCell, iGuildCell.IGuildCell, iGuildTrainCell.IGuildTrainCell,
              iLeaderBoardCell.ILeaderBoardCell, iWonderLandCell.IWonderLandCell,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief,
-             iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarCell.IMineWarCell):
+             iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarCell.IMineWarCell,
+             iGuildBossChallenge.IGuildBossChallenge):
+
     IsAvatar = True
     IsCombatUnit = True
 
@@ -114,6 +117,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         iSiegeWarCell.ISiegeWarCell.__init__(self)
         iMonthCard.IMonthCard.__init__(self)
         iMineWarCell.IMineWarCell.__init__(self)
+        iGuildBossChallenge.IGuildBossChallenge.__init__(self)
         self.addDatetimeTimerTick()
 
         # 设置每秒允许的最快速度, 超速会被拉回去
@@ -335,6 +339,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         self.handleCrossServerWaitingClientInitReason()
 
+        #self._callback(10, 'getAliasIDs', (), gametimer.TIMER_TAG_SEND_ALL_ALIAS_IDS)
+
     # 客户端加载完成的回调
     @gamedecorator.crossServer
     def loadSceneFinish(self, exposed, isRelogin):
@@ -438,11 +444,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def feedbackCommandSucc(self, message):
         INFO_MSG('gm command succ:', message)
-        self.client.onGmCommandResult(True, message)
 
     def feedbackCommandFail(self, message):
         INFO_MSG('gm command fail:', message)
-        self.client.onGmCommandResult(False, message)
 
     def _onSetGmMode(self, gmMode):
         self.gmModeCell = gmMode
@@ -460,7 +464,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 if mEnt.spaceNo != self.spaceNo:
                     continue
                 mEnt.base.followCaptainToTeleporter(desTelId, fromTelId, teleporter, dstSpaceNo, dstPos, dstDir, tuple(mEnt.position))
-        self.client.onTeleport()
         self._onTeleportCallBack()
 
     def _onTeleportCallBack(self):
@@ -514,9 +517,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         DEBUG_MSG('releaseGlobalTeleportLock::', reason)
         self.teleportGlobalLockRlsT = 0
         return True
-
-    def broadPlayAnimation(self, strAnimation):
-        self.otherClients.onBroadPlayAnimation(self.id, strAnimation)
 
     @gamedecorator.crossServer
     def reachNewArea(self, exposed, areaId):
@@ -909,7 +909,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         lastBreakAwayTime = self.getTempMiscProp(gameconst.AvatarProps.lastBreakAwayTime, 0)
         now = utils.getNow()
         if now <= lastBreakAwayTime + 1:
-            self.client.breakAwayStuckFailed()
+            WARNING_MSG('breakAwayStuck:: too soon')
             return
 
         # TODO x: get valid pos
@@ -959,8 +959,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             WARNING_MSG("onTeleportSuccess:: failure handle method", self._getTeleportInfoCache())
             if not gameconfig.enableTeleportDict():
                 self.teleportInfoCache = None
-
-            self.client.onTeleportFail()
 
     def resetStateTeleport(self, oldSpaceNo):
         for i in self.stateList:
@@ -1024,8 +1022,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if not gameconfig.enableTeleportDict():
             self.teleportInfoCache = None
 
-        self.client.onTeleportFail()
-
     # -------------------------------------------------------------------
     # Arrow trackers
     # -------------------------------------------------------------------
@@ -1083,7 +1079,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.base.onMessagePre(msgId, args)
 
     def showPopDialog(self, dialogId):
-        self.client.onPopDialog(dialogId)
+        pass
 
     def scriptNavigate(self, dstPos, speed, dis=0, faceMovement=True, layer=gameconst.SpaceLayer.DEFAULT,
                        userData=None):
@@ -1308,7 +1304,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             ctx.callFailedFunc(self)
             return
 
-        self.client.onCommonCastSuccess()
         getattr(self, funcName)(*args)
 
     def onTelToMainCityWithCast(self, toCell, lineType, dstPos, dstDir, callback, callbackArgs, fCallback, fCallbackArgs):

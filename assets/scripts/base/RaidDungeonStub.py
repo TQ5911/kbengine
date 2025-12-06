@@ -133,7 +133,8 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             ERROR_MSG("RaidDungeonStub::onDungeonSpaceGone::", spaceNo, reason)
             if spaceNo in self.spaces:
                 spaceVal = self.spaces[spaceNo]
-
+                spaceVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_SINGLE_DUNGEON_COMPLETED_CALLBACK)
+                spaceVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(spaceVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
                 _raidStub = gameengine.getRaidStub(spaceVal.raidUUID)
                 _raidStub.clearRaidDungeonInfo(spaceVal.raidUUID, self.dungeonNo, spaceNo, spaceVal.spaceUUID)
 
@@ -193,6 +194,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             # 【【上灵试炼】组队进入单人副本，打完boss后再次进入副本，会出现报错】
             # 提前cancel的时机到markDestroy
             spaceVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_RAID_DUNGEON_COMPLETED_CALLBACK)
+            spaceVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(spaceVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
             gameengine.getRaidStub(spaceVal.raidUUID).clearRaidDungeonInfo(
                 spaceVal.raidUUID, self.dungeonNo, spaceNo, spaceUUID)
 
@@ -297,7 +299,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
         sVal.spaceMgr.cell.destroyAllEntities()
 
-        sVal.spaceMgr.cell.onRaidDungeonCompleted(spaceNo, raidUUID, win, delay, sVal.dungeonCreepBaseKillDic, sVal.getAllPlayerGbidAndNamePair(), sVal.getElapsedTime())
+        sVal.spaceMgr.cell.onRaidDungeonCompleted(spaceNo, raidUUID, win, delay, sVal.dungeonCreepBaseKillDic, sVal.getAllPlayerGbidAndNamePair(), sVal.getElapsedTime(), 0)
 
         # 副本完成后倒计时
         if delay > 0:
@@ -411,7 +413,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             ERROR_MSG('leaveDungeonSpaceSucc:: failed, {}'.format(err))
 
         # 退出团队
-        extraProps = {}
+        extraProps = {'leaveDungen':True}
         gameengine.getRaidStub(raidUUID).leaveRaid(playerBox, playerGbId, raidUUID, extraProps)
 
     def _leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGBID, raidUUID):

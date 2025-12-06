@@ -25,7 +25,6 @@ namespace KBEngine
 		
 		
 		
-		
 
 
 		public CityBattleTeleporterBase()
@@ -194,22 +193,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 156:
-						Byte oldval_dunTimeFreezeFlag = dunTimeFreezeFlag;
-						dunTimeFreezeFlag = stream.readUint8();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-						}
-						else
-						{
-							if(inWorld)
-								onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-						}
-
-						break;
 					case 152:
 						Int32 oldval_force = force;
 						force = stream.readInt32();
@@ -343,27 +326,6 @@ namespace KBEngine
 					else
 					{
 						onDirectionChanged(oldval_direction);
-					}
-				}
-			}
-
-			Byte oldval_dunTimeFreezeFlag = dunTimeFreezeFlag;
-			Property prop_dunTimeFreezeFlag = pdatas[4];
-			if(prop_dunTimeFreezeFlag.isBase())
-			{
-				if(inited && !inWorld)
-					onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_dunTimeFreezeFlag.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
 					}
 				}
 			}

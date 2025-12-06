@@ -5,7 +5,7 @@
             <Flags>         BASE            </Flags>
             <Persistent>    true            </Persistent>
         </propChangedTimes>
-        
+
         <avatarScoreRank>
             <Type>          LEADER_BOARD_IDX         </Type>
             <Flags>         BASE                     </Flags>

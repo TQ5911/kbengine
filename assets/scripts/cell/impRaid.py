@@ -238,7 +238,7 @@ class ImpRaid(object):
 
     def _onEnterNewRaid(self):
         if self.isCanLeaveTeam():
-            gameengine.getTeamStub(self.teamId).leaveTeam(self.base, self.teamId, self.gbId, True)
+            gameengine.getTeamStub(self.teamId).leaveTeam(self.spaceNo, self.base, self.teamId, self.gbId, True)
         self._reqPlayerStopAutoMatch()
 
     @property
@@ -1084,10 +1084,6 @@ class ImpRaid(object):
 
         if inviteSource == gameconst.RaidPermission.LEADER:
             self.client.onBeInvitedRaidByLeader(raidUUID, raidTarget, recordId, teamUUID, srcPlayerGBID, srcPlayerName, leaderName)
-        elif inviteSource == gameconst.RaidPermission.DEPUTY:
-            self.client.onBeInvitedRaidByDeputy(raidUUID, raidTarget, recordId, teamUUID, srcPlayerGBID, srcPlayerName, leaderName)
-        #elif inviteSource == gameconst.RaidPermission.CAPTAIN:
-        #    self.client.onBeInvitedRaidByTeamCaptain(raidUUID, raidTarget, recordId, srcPlayerGBID, srcPlayerName, leaderName, raidTeamIDX)
         elif inviteSource == gameconst.RaidPermission.MEMBER:
             self.client.onBeInvitedRaidByMember(raidUUID, raidTarget, recordId, teamUUID, srcPlayerGBID, srcPlayerName, leaderName)
         else:
@@ -2330,7 +2326,6 @@ class ImpRaid(object):
         _, err = self._onJoinRaidCheck(raidUUID)
         if err != gameconst.RaidErrno.RAID_OK:
             ERROR_MSG('onJoinPlayerReplyJoinRaidLonely::, check failed, {}'.format(err))
-            self.client.onJoinRaid(err.errno, raidUUID, password)
         else:
             playerProps = self._getAvatarPropsForRaid().toSavedDict()
             gameengine.getRaidStub(raidUUID).reqJoinRaid(self.base, raidUUID, password, playerProps)

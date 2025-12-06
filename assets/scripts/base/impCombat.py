@@ -46,8 +46,8 @@ class AvatarBuildsMixin(object):
         return skillId if skillId else None
 
     # 技能升级
-    def levelUpSkill(self, exposed, skillId, levelDelta):
-        INFO_MSG('levelUpSkill', skillId, levelDelta)
+    def baseLevelUpSkill(self, skillId, levelDelta):
+        INFO_MSG('baseLevelUpSkill', skillId, levelDelta)
         _skillId = dataUtils.getSkillIdByMorphState(skillId, self.morphState)
         self._levelUpSkill(_skillId, levelDelta)
         self.updateSkillScore()
@@ -112,7 +112,6 @@ class AvatarBuildsMixin(object):
                             unlockedSkills.append(skillId)
 
         if unlockedSkills:
-            self.client.onUnlockSkills(unlockedSkills)
             self.updateSkillScore()
 
     def unlockActiveSkill(self, _buildSkillId, skillId, isNotify, lv, mid):
@@ -251,21 +250,6 @@ class AvatarBuildsMixin(object):
 
 class ImpCombat(AvatarBuildsMixin):
     # ------------------- dead and relive start -------------------
-    def onReliveDirectly(self, needBindCoin, resId):
-        if resId == gameconst.ItemId.BINDING_MONEY:
-            deductWealthVal = dropAward.DeductWealthVal(bindingMoney=needBindCoin)
-        else:
-            deductWealthVal = dropAward.DeductWealthVal(bindingCoin=needBindCoin)
-
-        if not self.canDeductWealth(deductWealthVal, sendMsg=True):
-            return
-
-        reliveType = gameconst.RELIVE_TYPE_DIRECTLY
-        opUUID = KBEngine.genUUID64()
-        src = AAC_AACDD.datas.BONUS_SRC_RELIVE
-        detail = gameclass.AwardDetail(reliveType=reliveType)
-        self.deductWealth(src, deductWealthVal, opUUID, detail)
-        self.cell.doRelive(reliveType)
 
     def addDeathPenaltyVal(self, expChange, coinChange, killerGbId, killerName, opUUID, killerData):
         _showList = []
@@ -394,7 +378,6 @@ class ImpCombat(AvatarBuildsMixin):
 
     def sendServerLevel(self, serverLevel=0):
         serverLevel = serverLevel or utils.getServerLevel()
-        self.client.onGetServerLevel(serverLevel)
 
     def playerExpFlowLog(self, expChange, oldLevel, newLevel, iTime, srcType, srcSubType=0, detail=None, idipSource=0):
         roleInfo = gameglobal.roleCache.get(self.id)
@@ -445,7 +428,6 @@ class ImpCombat(AvatarBuildsMixin):
 
         if unlockedSkills:
             self.tmpTaskSkillIds[taskId] = unlockedSkills
-            self.client.onUnlockSkills(unlockedSkills)
             self.updateSkillScore()
         self.sendCliSkillBuildInfo()
 
@@ -503,6 +485,7 @@ class ImpCombat(AvatarBuildsMixin):
 
     # 快捷吃药 start ---------------------------------
 
+    @gamedecorator.checkGameconfigEnable('quickSettings')
     def setInstantPotionSlots(self, exposed, potion):
         INFO_MSG('setInstantPotionSlots', potion)
         _oldAutoHealHp = self.instantPotionSlots._hasAutoHealHp()

@@ -15,18 +15,20 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    1026: _tools.RODict({
-        "ID": 1026,
-        "sceneList": _tools.ROList([1022, 1024, 1026]),
-        "sceneID": 1026,
+    1028: _tools.RODict({
+        "ID": 1028,
+        "sceneList": _tools.ROList([1024, 1027, 1026]),
+        "sceneID": 1028,
         "prop": 51007001,
+        "order": 1
     }),
     1123: _tools.RODict({
         "ID": 1123,
         "sceneList": _tools.ROList([1121, 1122, 1123]),
         "sceneID": 1123,
         "prop": 51007002,
+        "order": 2
     })
 })
-minKey = 1026
+minKey = 1028
 maxKey = 1123

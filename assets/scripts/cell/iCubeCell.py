@@ -82,6 +82,7 @@ class ICubeCell(object):
     def isCubeCowDurFull(self):
         return self.todayCubeCowDur >= cube_config.datas['cube_cowRoomEntrancePersonalTime']['value'] * 60
 
+    @gamedecorator.checkGameconfigEnable('square')
     @utils.isMyself
     def setEnterCubeFloor(self, exposed, floor):
         INFO_MSG('ICubeCell::setEnterCubeFloor: {}'.format(floor))
@@ -125,6 +126,7 @@ class ICubeCell(object):
 
         self.cubeQuota.checkout()
 
+    @gamedecorator.checkGameconfigEnable('square')
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def enterCube(self, exposed, floor):
@@ -158,6 +160,7 @@ class ICubeCell(object):
         gameengine.getCubeStubBySpaceNo(_targetSpaceNo).doEnterCube(
             self.base, _mapId, self.gbId, extra)
 
+    @gamedecorator.checkGameconfigEnable('square')
     @utils.isMyself
     def randomCubeRoom(self, exposed):
         if not formula.isCubeSpace(self.spaceNo):
@@ -209,6 +212,7 @@ class ICubeCell(object):
         gameengine.getCubeStub(_floor).doEnterCube(
             self.base, _mapId, self.gbId, {})
 
+    @gamedecorator.checkGameconfigEnable('square')
     @utils.isMyself
     def followCaptainInCube(self, exposed):
         INFO_MSG('ICubeCell::followCaptainInCube: {}'.format(self.spaceNo))

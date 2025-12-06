@@ -1,6 +1,7 @@
 <root>
     <Interfaces>
-        <Interface>       iSkillManager    </Interface>
+        <Interface>       iSkillManager         </Interface>
+        <Interface>       iSkillPropOwnClient   </Interface>
     </Interfaces>
 
     <Properties>
@@ -51,17 +52,10 @@
 
         <expAddRatioByTeam>
             <Type>                 UINT16               </Type>
-            <Flags>                OWN_CLIENT           </Flags>
+            <Flags>                CELL_PRIVATE         </Flags>
             <Default>              0                    </Default>
             <Persistent>           true                 </Persistent>
         </expAddRatioByTeam>
-
-        <chaseExpFactor>
-            <Type>                 FLOAT               </Type>
-            <Flags>         OWN_CLIENT        </Flags>
-            <Default>               0                  </Default>
-            <Persistent>           true                </Persistent>
-        </chaseExpFactor>
 
         <dailyChaseExpFactorUpdateTime>
             <Type>          LONGTIME            </Type>
@@ -85,6 +79,11 @@
             <Flags>         CELL_PRIVATE          </Flags>
         </statisticsHurt>
 
+        <statisticsDead>
+            <Type>          INT32               </Type>
+            <Flags>         CELL_PRIVATE          </Flags>
+        </statisticsDead>
+
         <regenTimer>
             <Type>     TIMER_ID                      </Type>
             <Flags>    CELL_PRIVATE                  </Flags>
@@ -92,12 +91,12 @@
 
         <zedPoint>
             <Type>          UINT8               </Type>
-            <Flags>         OWN_CLIENT          </Flags>
+            <Flags>         CELL_PRIVATE        </Flags>
         </zedPoint>
 
         <maxZedPoint>
             <Type>          UINT8               </Type>
-            <Flags>         OWN_CLIENT          </Flags>
+            <Flags>         CELL_PRIVATE        </Flags>
             <Default>       4                   </Default>
         </maxZedPoint>
 
@@ -419,6 +418,11 @@
         <changeMorphPreAddSkill>
             <Arg>          MORPH_STATE  </Arg>
         </changeMorphPreAddSkill>
+
+        <levelUpSkill> <Exposed/>
+            <Arg>        SKILLID        </Arg>
+            <Arg>        INT8           </Arg>
+        </levelUpSkill>
     </CellMethods>
 
     <BaseMethods>
@@ -430,11 +434,6 @@
             <Arg>          SLOTID       </Arg>
         </setSummonSlotIdxAck>
 
-        <onReliveDirectly>
-            <Arg>       COIN        </Arg>
-            <Arg>       OBJECT_ID   </Arg>
-        </onReliveDirectly>
-
         <onAvatarLevelUpBase>
             <Arg>           LEVEL               </Arg>
             <Arg>           LEVEL               </Arg>
@@ -444,10 +443,10 @@
             <Arg>        ARRAY <of> SKILL_SLOT_INFO </of>        </Arg>
         </updateSkills>
 
-        <levelUpSkill> <Exposed/>
+        <baseLevelUpSkill>
             <Arg>        SKILLID        </Arg>
             <Arg>        INT8           </Arg>
-        </levelUpSkill>
+        </baseLevelUpSkill>
 
         <onCheckUpdateSkillRet>
             <Arg>          BOOL              </Arg>
@@ -522,30 +521,10 @@
             <Arg>        DOUBLETIME     </Arg>
         </onUseStageSkill>
 
-        <onRelive>
-        </onRelive>
-
-        <showCombatMsg>
-            <Arg>        UINT32    </Arg>
-            <Arg>        ARRAY <of> UNICODE </of>  </Arg>
-        </showCombatMsg>
-
         <onUpdateSkillLevel>
             <Arg>        ARRAY <of> SKILLID </of>     </Arg>
             <Arg>        ARRAY <of> LEVEL </of>     </Arg>
         </onUpdateSkillLevel>
-
-        <onUpdateSkillBuildInfo>
-            <Arg>        BUILD_INFO   </Arg>
-        </onUpdateSkillBuildInfo>
-
-        <onUpdateSkills>
-            <Arg>        BUILD_INFO   </Arg>
-        </onUpdateSkills>
-
-        <switchBuildChangeSkills>
-            <Arg>        BLOB         </Arg>
-        </switchBuildChangeSkills>
 
         <dragSkillChangeBuildSkills>
             <Arg>        BLOB           </Arg>
@@ -565,21 +544,6 @@
             <Arg>        ARRAY <of> UINT8 </of>        </Arg>
         </updateSkillsExtraLevel>
 
-        <onRecordFightProps>
-        </onRecordFightProps>
-
-        <onAvatarLevelUp>
-            <Arg>        LEVEL      </Arg>
-            <Arg>        LEVEL      </Arg>
-        </onAvatarLevelUp>
-
-        <onFightPropsChanged>
-        </onFightPropsChanged>
-
-        <onUnlockSkills>
-            <Arg>        ARRAY <of> SKILLID </of>        </Arg>
-        </onUnlockSkills>
-
         <onPlayerGetExp>
             <Arg>        BONUS_SRC      </Arg>
             <Arg>        EXP            </Arg>
@@ -591,39 +555,10 @@
             <Arg>        ARRAY <of> OBJECT_ID </of>   </Arg>
         </onRemoveCompleteWitness>
 
-        <onRemoveCompletePetWitness>
-            <Arg>        ARRAY <of> OBJECT_ID </of>   </Arg>
-        </onRemoveCompletePetWitness>
-
-        <onGetDunTimeFreezeFlag>
-            <Arg>   BOOL    </Arg>
-        </onGetDunTimeFreezeFlag>
-
-        <onLeftFreeReliveTimesChanged>
-            <Arg>   UINT8    </Arg>
-        </onLeftFreeReliveTimesChanged>
-
-        <onInteractStateChange>
-            <Arg>        UINT32         </Arg>
-        </onInteractStateChange>
-
-        <onSelfInteractStateChange>
-            <Arg>        UINT32         </Arg>
-            <Arg>        TASK_ID         </Arg>
-        </onSelfInteractStateChange>
-
-        <onGetServerLevel>
-            <Arg>        LEVEL         </Arg>
-        </onGetServerLevel>
-
         <onGetBuffIdInfo>
             <Arg>   OBJECT_ID          </Arg>
             <Arg>   ARRAY <of> CLIENT_BUFF_ID_VAL </of> </Arg>
         </onGetBuffIdInfo>
-
-        <onSendCommonFlagCellInfo>
-            <Arg>        UINT8         </Arg>
-        </onSendCommonFlagCellInfo>
 
         <onHealItemResult>
             <Arg>        UINT32        </Arg>
@@ -642,10 +577,6 @@
         <onRemoveInstantPotionSlots>
             <Arg>        UINT8           </Arg>
         </onRemoveInstantPotionSlots>
-
-        <onReliveByOthers>
-            <Arg>        OBJECT_ID       </Arg>
-        </onReliveByOthers>
 
         <onKillAvatar>
             <Arg>        UNICODE       </Arg>

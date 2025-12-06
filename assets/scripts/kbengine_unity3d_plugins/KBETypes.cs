@@ -454,33 +454,6 @@ namespace KBEngine
 		}
 	}
 
-	public struct ENTITYCALL
-	{
-		byte[] value;
-
-		ENTITYCALL(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](ENTITYCALL value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator ENTITYCALL(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new ENTITYCALL(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
-		}
-	}
-
 	public struct BLOB
 	{
 		byte[] value;
@@ -905,33 +878,6 @@ namespace KBEngine
 			{
 				return UInt64.MinValue;
 			}
-		}
-	}
-
-	public struct MAILBOX
-	{
-		byte[] value;
-
-		MAILBOX(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](MAILBOX value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator MAILBOX(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new MAILBOX(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -5715,7 +5661,8 @@ namespace KBEngine
 	{
 		public UInt32 affixId = 0;
 		public float affixVal = 0f;
-		public string affixEffect = "";
+		public List<Int16> glyphTypes = new List<Int16>();
+		public List<string> glyphEffects = new List<string>();
 
 	}
 
@@ -5741,17 +5688,17 @@ namespace KBEngine
 		public Byte bindType = 0;
 		public SByte lockStatus = 0;
 		public List<CLI_SPIRIT_INFO> spiritDatas = new List<CLI_SPIRIT_INFO>();
-		public List<CLI_GLYPH_INFO> glyphInfo = new List<CLI_GLYPH_INFO>();
-		public Byte enhanceLv = 0;
+		public Byte spiritGroup = 0;
 		public List<AFFIX_VAL> blessAffixes = new List<AFFIX_VAL>();
+		public List<CLI_GLYPH_INFO> glyphInfos = new List<CLI_GLYPH_INFO>();
+		public Byte glyphGroup = 0;
+		public Byte enhanceLv = 0;
 		public Byte maxBlessLv = 0;
 		public UInt16 blessLvRate = 0;
 		public UInt32 dropFixEndTime = 0;
 		public Int64 score = 0;
 		public UInt16 bindValue = 0;
 		public Byte isAddBindValue = 0;
-		public Byte glyphGroup = 0;
-		public Byte spiritGroup = 0;
 		public Byte grade = 0;
 
 	}
@@ -5817,33 +5764,6 @@ namespace KBEngine
 
 	}
 
-	public class AVATAR_GENERAL_INFO
-	{
-		public UInt64 gbId = 0;
-		public UInt16 school = 0;
-		public Byte sex = 0;
-		public UInt32 level = 0;
-		public APPEARANCE_INFO appearanceData = new APPEARANCE_INFO();
-
-	}
-
-	public class AWARD_DISPLAY_SINGLE_VAL
-	{
-		public UInt32 itemId = 0;
-		public UInt32 itemNum = 0;
-
-	}
-
-	public class CoinBillVal
-	{
-		public UInt32 timestamp = 0;
-		public UInt16 srcType = 0;
-		public string changeVal = "";
-		public string lastVal = "";
-		public UInt32 subSrc = 0;
-
-	}
-
 	public class SKILL_SLOT_INFO
 	{
 		public UInt32 skillId = 0;
@@ -5855,13 +5775,6 @@ namespace KBEngine
 	{
 		public UInt32 skillId = 0;
 		public UInt32 level = 0;
-
-	}
-
-	public class BUILD_INFO
-	{
-		public List<SKILL_SLOT_INFO> skills = new List<SKILL_SLOT_INFO>();
-		public List<SKILL_LEVEL_ITEM> skillLevels = new List<SKILL_LEVEL_ITEM>();
 
 	}
 
@@ -6009,6 +5922,7 @@ namespace KBEngine
 		public Byte memberNum = 0;
 		public Byte isAutoExpedition = 0;
 		public string password = "";
+		public Byte siegeWarCamp = 0;
 
 	}
 
@@ -6070,6 +5984,7 @@ namespace KBEngine
 		public CLIENT_TEAM_MARK_INFO raidMarkInfo = new CLIENT_TEAM_MARK_INFO();
 		public Byte isAutoExpedition = 0;
 		public string password = "";
+		public Byte siegeWarCamp = 0;
 
 	}
 
@@ -6156,18 +6071,6 @@ namespace KBEngine
 
 	}
 
-	public class AVATAR_SCORES_VAL
-	{
-		public Int32 equipments = 0;
-		public Int32 level = 0;
-		public Int32 rewardFightProp = 0;
-		public Int32 mount = 0;
-		public Int32 skill = 0;
-		public Int32 guildtrain = 0;
-		public Int32 pet = 0;
-
-	}
-
 	public class AVATAR_INTER_VAL
 	{
 		public UInt64 gbId = 0;
@@ -6195,13 +6098,6 @@ namespace KBEngine
 		public Byte outfitType = 0;
 		public UInt32 expireTime = 0;
 		public Byte isNew = 0;
-
-	}
-
-	public class CLIENT_OUTFIT_EXPIRED
-	{
-		public Byte outfitId = 0;
-		public Byte outfitType = 0;
 
 	}
 
@@ -6532,6 +6428,18 @@ namespace KBEngine
 		public GUILD_ARCHITECTURE_DATA_INFO yanWu = new GUILD_ARCHITECTURE_DATA_INFO();
 		public GUILD_ARCHITECTURE_DATA_INFO cangKu = new GUILD_ARCHITECTURE_DATA_INFO();
 		public GUILD_ARCHITECTURE_DATA_INFO junXu = new GUILD_ARCHITECTURE_DATA_INFO();
+
+	}
+
+	public class CLI_GUILD_CHALLENGE_DATA_INFO
+	{
+		public Byte openedFundCount = 0;
+		public Byte openedMoneyCount = 0;
+		public Int64 openedTime = 0;
+		public Byte openedType = 0;
+		public UInt32 openedDungeonId = 0;
+		public Byte consumedType = 0;
+		public Byte openedDungeonStatus = 0;
 
 	}
 
@@ -6986,6 +6894,15 @@ namespace KBEngine
 
 	}
 
+	public class TEAM_STATISTIC_CLIENT_VAL1
+	{
+		public List<TEAM_STATISTIC_PLAYER_VAL> dmgList = new List<TEAM_STATISTIC_PLAYER_VAL>();
+		public List<TEAM_STATISTIC_PLAYER_VAL> healList = new List<TEAM_STATISTIC_PLAYER_VAL>();
+		public List<TEAM_STATISTIC_PLAYER_VAL> hurtList = new List<TEAM_STATISTIC_PLAYER_VAL>();
+		public List<TEAM_STATISTIC_PLAYER_VAL> deadList = new List<TEAM_STATISTIC_PLAYER_VAL>();
+
+	}
+
 	public class MERIDIAN_POINT_INFO
 	{
 		public Byte pointIdx = 0;
@@ -7005,6 +6922,77 @@ namespace KBEngine
 	{
 		public UInt16 gridId = 0;
 		public Byte itemNum = 0;
+
+	}
+
+	public class MINE_WAR_SINGLE_INFO
+	{
+		public UInt32 mapId = 0;
+		public UInt32 startTime = 0;
+		public UInt32 endTime = 0;
+		public Byte flagDestroyed = 0;
+		public UInt32 flagRecoverTime = 0;
+		public UInt64 guildGbId = 0;
+		public Byte guildIcon = 0;
+		public string guildName = "";
+		public string guildOwnerName = "";
+		public Byte guildDspFlag = 0;
+		public UInt32 ownerTimeStamp = 0;
+		public Byte guildRevenueRate = 0;
+		public UInt32 revenue = 0;
+		public UInt32 allNum = 0;
+		public UInt32 flagHp = 0;
+		public List<GUILD_EVENT_LOG_DATA_INFO> mineEvents = new List<GUILD_EVENT_LOG_DATA_INFO>();
+
+	}
+
+	public class MINE_WAR_GUILD_RANK_INFO
+	{
+		public Byte rankId = 0;
+		public Byte guildIcon = 0;
+		public string guildName = "";
+		public Byte guildDspFlag = 0;
+		public UInt16 ownerTime = 0;
+		public Byte revenue = 0;
+
+	}
+
+	public class MINE_WAR_GUILD_PLAYER_RANK_INFO
+	{
+		public Byte rankId = 0;
+		public string playerName = "";
+		public Byte guildIcon = 0;
+		public string guildName = "";
+		public Byte guildDspFlag = 0;
+		public UInt32 killScore = 0;
+		public UInt32 destroyScore = 0;
+		public UInt32 totalScore = 0;
+
+	}
+
+	public class MINE_WAR_GUILD_SHARE_INFO
+	{
+		public UInt64 playerGbId = 0;
+		public UInt32 bonusNum = 0;
+
+	}
+
+	public class CLI_DUNGEON_SETTLEMENT_DATA
+	{
+		public Int32 elapsedTime = 0;
+		public Int64 endTime = 0;
+		public UInt16 rank = 0;
+		public Int32 dmg = 0;
+		public List<BAG_ITEM_BRIEF_VAL> dungeonRewards = new List<BAG_ITEM_BRIEF_VAL>();
+		public List<BAG_ITEM_BRIEF_VAL> firstPassRewards = new List<BAG_ITEM_BRIEF_VAL>();
+
+	}
+
+	public class CLI_DUNGEON_SETTLEMENT_RANK_DATA
+	{
+		public string name = "";
+		public UInt16 rank = 0;
+		public Int32 dmg = 0;
 
 	}
 

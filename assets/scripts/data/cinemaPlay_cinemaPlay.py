@@ -351,18 +351,6 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
-    98000058: _tools.RODict({
-        "ID": 98000058,
-        "cinemaTime": 12,
-        "event": "",
-        "parm": "",
-    }),
-    98000059: _tools.RODict({
-        "ID": 98000059,
-        "cinemaTime": 12,
-        "event": "",
-        "parm": "",
-    }),
     98000060: _tools.RODict({
         "ID": 98000060,
         "cinemaTime": 12,
@@ -383,6 +371,24 @@ datas = _tools.RODict({
     }),
     98000063: _tools.RODict({
         "ID": 98000063,
+        "cinemaTime": 12,
+        "event": "setPositionByTag",
+        "parm": "1",
+    }),
+    98000064: _tools.RODict({
+        "ID": 98000064,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000065: _tools.RODict({
+        "ID": 98000065,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000066: _tools.RODict({
+        "ID": 98000066,
         "cinemaTime": 12,
         "event": "",
         "parm": "",
@@ -483,18 +489,18 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
-    98010017: _tools.RODict({
-        "ID": 98010017,
+    98010018: _tools.RODict({
+        "ID": 98010018,
         "cinemaTime": 12,
         "event": "",
         "parm": "",
     }),
-    98010018: _tools.RODict({
-        "ID": 98010018,
+    98010019: _tools.RODict({
+        "ID": 98010019,
         "cinemaTime": 12,
         "event": "",
         "parm": "",
     })
 })
 minKey = 98000001
-maxKey = 98010018
+maxKey = 98010019

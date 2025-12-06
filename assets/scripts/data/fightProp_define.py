@@ -2043,7 +2043,7 @@ datas = _tools.RODict({
         "formulaMonster": lambda e: e.adjMiningRate,
         "defaultValue": 0.0,
         "changeAffactProp": "",
-        "propertiesType": 0,
+        "propertiesType": 2,
         "isPercent": 1,
         "relatedKey": "",
         "perPropertyScore": 0.0

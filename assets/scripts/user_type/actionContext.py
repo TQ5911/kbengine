@@ -458,14 +458,11 @@ class CastCommonCtx(object):
     def notifyClient(self, box, castType, extraProps=None):
         extraProps = extraProps or {}
         if castType == gameconst.CastType.ride:
-            box.client.onRideMountCast()
+            pass
         elif castType == gameconst.CastType.teleportClientDelay:
             pass
         else:
             box.client.onTeleportCasting(castType, self.getCastTime(castType))
-            dstSpaceNo, dstPos = extraProps.get('dstSpaceNo'), extraProps.get('dstPos')
-            if dstPos and dstSpaceNo:
-                box.client.teleportCastingPreNotify(dstSpaceNo, dstPos)
 
     def clearTimerId(self):
         self.timer = 0

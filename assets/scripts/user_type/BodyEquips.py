@@ -1,12 +1,14 @@
 # -*- encoding:utf-8 -*-
 
 from KBEDebug import *
+import itertools
 import utils
 import gameconst
 import userType
 import itemFactory
 import gameengine
 import dataUtils
+import gearEnhance_blessEffect as GEBE
 
 class BodyEquips(userType.UserSoleType):
     EQUIPS_LOCK_TIME = 5
@@ -17,6 +19,7 @@ class BodyEquips(userType.UserSoleType):
         self.lockData = {}
         self._resetSetInfo()
         self.addSkillLvDic = {}
+        self.blessAttrs = {}
 
     def _lateReload(self):
         super(BodyEquips, self)._lateReload()
@@ -54,7 +57,7 @@ class BodyEquips(userType.UserSoleType):
         self.lockData = dataDic.get('lockData', {})
         self.setInfo = dataDic.get('setInfo', {})
         self.addSkillLvDic = dataDic.get('addSkillLvDic', {})
-
+        self.blessAttrs = dataDic.get('blessAttrs', {})
         if not self.setInfo:
             self._resetSetInfo()
 
@@ -72,6 +75,7 @@ class BodyEquips(userType.UserSoleType):
                     'lockData':self.lockData,
                     'setInfo':self.setInfo,
                     'addSkillLvDic':self.addSkillLvDic,
+                    'blessAttrs':self.blessAttrs,
                 }
 
     def toBodyEquipsClientDict(self):
@@ -93,12 +97,6 @@ class BodyEquips(userType.UserSoleType):
                 'score':equipObj.getEquipScore(),
             }
         return slotDressDic
-
-    def removeBodyEquipsProps(self, owner):
-        for slotId, equipItem in self.equips_map.items():
-            equipItem.removeEquipEffectToAvatar(owner)
-        self.addSkillLvDic = {}
-        return
 
     def loadEquipItem(self, slotId, equipItem):
         self.equips_map[slotId] = equipItem
@@ -232,8 +230,9 @@ class BodyEquips(userType.UserSoleType):
         # bagEquipItem.setItemBind()
         self.addEquipItem(owner, slotId, bagEquipItem)
         bagEquipItem.applyEquipEffectToAvatar(owner)
-        owner.updateEquipmentScore()
         owner.appearance.setEquip(owner, slotId, bagEquipItem.itemId)
+        self.changeAvatarAttrs(owner)
+        owner.updateEquipmentScore()
 
     def doBodyUndressEquip(self, owner, slotId):
         DEBUG_MSG('in doBodyUndressEquip, slotId:', slotId)
@@ -244,9 +243,26 @@ class BodyEquips(userType.UserSoleType):
 
         equipItem.removeEquipEffectToAvatar(owner)
         owner.appearance.setEquip(owner, slotId, 0)
+        self.changeAvatarAttrs(owner)
         owner.updateEquipmentScore()
         owner.client.onUndressEquipment(slotId)
         return equipItem
+    
+    def changeAvatarAttrs(self, owner):
+        DEBUG_MSG('in _changeAvatarAttrs')
+        # 先移除
+        self.modifyAvatarAttrs(owner, -1)
+        # 重新计算
+        totalAffixVal = self.calcAllBlessVal()
+        newAttrs = self.calculateBlessAttrs(totalAffixVal)
+        self.blessAttrs = newAttrs if newAttrs else {}
+        # 再加回来
+        self.modifyAvatarAttrs(owner, 1)
+    
+    def modifyAvatarAttrs(self, owner, factor):
+        for attrName, attrValue in itertools.chain.from_iterable([self.blessAttrs.items()]):
+            attrValue *= factor
+            owner.addProp(attrName, attrValue, gameconst.SourceType.Equip)
 
     def getAllEquipItems(self):
         return self.equips_map
@@ -296,3 +312,25 @@ class BodyEquips(userType.UserSoleType):
             owner.client.updateSkillsExtraLevel(gameconst.SkillUpdateSrc.Equip, skillIdList, newSkillLv)
         return
     
+    def calculateBlessAttrs(self, totalAffixVal):
+        blessAttrs = None
+        cfg = GEBE.datas.get(totalAffixVal, 0)
+        if not cfg:
+            return blessAttrs
+        
+        attrs = cfg['effect']
+        if not attrs:
+            return blessAttrs
+        
+        for attr in attrs:
+            if blessAttrs is None:
+                blessAttrs = {}
+            attrName, attrValue = attr
+            blessAttrs[attrName] = attrValue
+        return blessAttrs
+    
+    def calcAllBlessVal(self):
+        allBlessVal = 0
+        for equipItem in self.equips_map.values():
+            allBlessVal += equipItem.getBlessVal()
+        return allBlessVal    

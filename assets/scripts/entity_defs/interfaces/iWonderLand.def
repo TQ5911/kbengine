@@ -134,6 +134,10 @@
         <addWonderLandRewardRecord>
             <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
         </addWonderLandRewardRecord>
+
+        <leaveWonderLandInternal>
+            <Arg>           UINT8                       </Arg>
+        </leaveWonderLandInternal>
     </CellMethods>
 
     <ClientMethods>

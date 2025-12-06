@@ -146,5 +146,9 @@ datas = _tools.RODict({
     "sendPacketNumLimitMsg": _tools.RODict({
         "ID": "sendPacketNumLimitMsg",
         "value": 54000339,
+    }),
+    "chat_banned": _tools.RODict({
+        "ID": "chat_banned",
+        "value": 54001558,
     })
 })

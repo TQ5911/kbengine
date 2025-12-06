@@ -24,48 +24,41 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "ID": 2,
-        "type": 1,
-        "num": 30,
-        "para": 2,
-        "reward": 40020227
-    }),
-    3: _tools.RODict({
-        "ID": 3,
         "type": 2,
         "num": 1,
         "para": 30000001,
         "reward": 40020228
     }),
-    4: _tools.RODict({
-        "ID": 4,
+    3: _tools.RODict({
+        "ID": 3,
         "type": 2,
         "num": 1000,
         "para": 30000002,
         "reward": 40020229
     }),
-    5: _tools.RODict({
-        "ID": 5,
+    4: _tools.RODict({
+        "ID": 4,
         "type": 3,
         "num": 1,
         "para": 32000002,
         "reward": 40020230
     }),
-    6: _tools.RODict({
-        "ID": 6,
+    5: _tools.RODict({
+        "ID": 5,
         "type": 3,
         "num": 1,
         "para": 32000003,
         "reward": 40020231
     }),
-    7: _tools.RODict({
-        "ID": 7,
+    6: _tools.RODict({
+        "ID": 6,
         "type": 3,
         "num": 1,
         "para": 32000001,
         "reward": 40020232
     }),
-    8: _tools.RODict({
-        "ID": 8,
+    7: _tools.RODict({
+        "ID": 7,
         "type": 4,
         "num": 1,
         "para": 32000004,
@@ -73,4 +66,4 @@ datas = _tools.RODict({
     })
 })
 minKey = 1
-maxKey = 8
+maxKey = 7

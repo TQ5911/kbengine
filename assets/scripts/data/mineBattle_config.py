@@ -79,6 +79,10 @@ datas = _tools.RODict({
         "ID": "mineBattle_rewardThreshold",
         "value": 200,
     }),
+    "mineBattle_rewardParticipation": _tools.RODict({
+        "ID": "mineBattle_rewardParticipation",
+        "value": 30000502,
+    }),
     "mineBattle_miningPersonalDuration": _tools.RODict({
         "ID": "mineBattle_miningPersonalDuration",
         "value": _tools.ROList([30, 60]),
@@ -86,6 +90,10 @@ datas = _tools.RODict({
     "mineBattle_incomeCoefficient": _tools.RODict({
         "ID": "mineBattle_incomeCoefficient",
         "value": 1.5,
+    }),
+    "mineBattle_MoneyID": _tools.RODict({
+        "ID": "mineBattle_MoneyID",
+        "value": 30000013,
     }),
     "mineBattle_extraIncome": _tools.RODict({
         "ID": "mineBattle_extraIncome",
@@ -101,7 +109,19 @@ datas = _tools.RODict({
     }),
     "mineBattle_flagDamageEffect": _tools.RODict({
         "ID": "mineBattle_flagDamageEffect",
-        "value": _tools.ROList([3, 5]),
+        "value": _tools.ROList([3, 50]),
+    }),
+    "mineBatte_rankPersonNum": _tools.RODict({
+        "ID": "mineBatte_rankPersonNum",
+        "value": 50,
+    }),
+    "mineBatte_rankGuildNum": _tools.RODict({
+        "ID": "mineBatte_rankGuildNum",
+        "value": 20,
+    }),
+    "mineBatte_neutralMiningAreaCoreProp": _tools.RODict({
+        "ID": "mineBatte_neutralMiningAreaCoreProp",
+        "value": _tools.ROList([51007001, 51007002]),
     }),
     "mineBattle_InterfaceButtonText": _tools.RODict({
         "ID": "mineBattle_InterfaceButtonText",
@@ -135,33 +155,21 @@ datas = _tools.RODict({
         "ID": "mineBattle_dividendText",
         "value": "再次分红",
     }),
-    "mineBattle_damageImmunityMsg": _tools.RODict({
-        "ID": "mineBattle_damageImmunityMsg",
-        "value": 54003201,
+    "mineBattle_rewardParticipationDesc": _tools.RODict({
+        "ID": "mineBattle_rewardParticipationDesc",
+        "value": "个人积分达到{0}可获得参与奖",
     }),
-    "mineBattle_forbidTeleportMsg": _tools.RODict({
-        "ID": "mineBattle_forbidTeleportMsg",
-        "value": 54003202,
+    "mineBattle_occupationTips": _tools.RODict({
+        "ID": "mineBattle_occupationTips",
+        "value": "成功占领{0}矿区",
     }),
-    "mineBattle_teleportSafeZoneMsg": _tools.RODict({
-        "ID": "mineBattle_teleportSafeZoneMsg",
-        "value": 54003203,
+    "mineBattle_occupationTimeText": _tools.RODict({
+        "ID": "mineBattle_occupationTimeText",
+        "value": "占领第{0}天",
     }),
-    "mineBattle_coreHpInsufficientMsg": _tools.RODict({
-        "ID": "mineBattle_coreHpInsufficientMsg",
-        "value": 54003204,
-    }),
-    "mineBattle_notAffiliationMsg": _tools.RODict({
-        "ID": "mineBattle_notAffiliationMsg",
-        "value": 54003205,
-    }),
-    "mineBattle_notPickableMsg": _tools.RODict({
-        "ID": "mineBattle_notPickableMsg",
-        "value": 54003206,
-    }),
-    "mineBattle_notEnoughStock": _tools.RODict({
-        "ID": "mineBattle_notEnoughStock",
-        "value": 54003207,
+    "mineBattle_occupyMsg": _tools.RODict({
+        "ID": "mineBattle_occupyMsg",
+        "value": "欢迎来到[{0}]的帮会领地",
     }),
     "mineBatte_chatChannelMsg1": _tools.RODict({
         "ID": "mineBatte_chatChannelMsg1",
@@ -207,8 +215,52 @@ datas = _tools.RODict({
         "ID": "mineBatte_scoreRankMail",
         "value": 37001020,
     }),
-    "mineBatte_neutralMiningAreaCoreProp": _tools.RODict({
-        "ID": "mineBatte_neutralMiningAreaCoreProp",
-        "value": _tools.ROList([51007001, 51007002]),
+    "mineBattle_damageImmunityMsg": _tools.RODict({
+        "ID": "mineBattle_damageImmunityMsg",
+        "value": 54003201,
+    }),
+    "mineBattle_forbidTeleportMsg": _tools.RODict({
+        "ID": "mineBattle_forbidTeleportMsg",
+        "value": 54003202,
+    }),
+    "mineBattle_teleportSafeZoneMsg": _tools.RODict({
+        "ID": "mineBattle_teleportSafeZoneMsg",
+        "value": 54003203,
+    }),
+    "mineBattle_coreHpInsufficientMsg": _tools.RODict({
+        "ID": "mineBattle_coreHpInsufficientMsg",
+        "value": 54003204,
+    }),
+    "mineBattle_notAffiliationMsg": _tools.RODict({
+        "ID": "mineBattle_notAffiliationMsg",
+        "value": 54003205,
+    }),
+    "mineBattle_notPickableMsg": _tools.RODict({
+        "ID": "mineBattle_notPickableMsg",
+        "value": 54003206,
+    }),
+    "mineBattle_notEnoughStock": _tools.RODict({
+        "ID": "mineBattle_notEnoughStock",
+        "value": 54003207,
+    }),
+    "mineBattle_noDividend": _tools.RODict({
+        "ID": "mineBattle_noDividend",
+        "value": 54003208,
+    }),
+    "mineBattle_noEnoughTime": _tools.RODict({
+        "ID": "mineBattle_noEnoughTime",
+        "value": 54003209,
+    }),
+    "mineBattle_dividendSuccessMsg": _tools.RODict({
+        "ID": "mineBattle_dividendSuccessMsg",
+        "value": 54003210,
+    }),
+    "mineBattle_dividendSuccessMsg2": _tools.RODict({
+        "ID": "mineBattle_dividendSuccessMsg2",
+        "value": 54003211,
+    }),
+    "mineBattle_dividendInputMsg": _tools.RODict({
+        "ID": "mineBattle_dividendInputMsg",
+        "value": 54003212,
     })
 })

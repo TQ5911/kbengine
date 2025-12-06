@@ -94,13 +94,13 @@ class IWonderLandCell(object):
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def leaveWonderLand(self, exposed):
+        self.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_CLIENT)
+
+    def leaveWonderLandInternal(self, srcId):
         if not formula.isWonderLandSpace(self.spaceNo):
             WARNING_MSG('IWonderLandCell::leaveWonderLand: spaceNo not line: {}'.format(self.spaceNo))
             return
 
-        self._leaveWonderLand(gameconst.DungeonSrcEnum.FROM_CLIENT)
-
-    def _leaveWonderLand(self, srcId):
         _src = dungeonSrc.BasicDungeonSrc(srcId=srcId)
         _l = {}
         _context = {
@@ -267,7 +267,7 @@ class IWonderLandCell(object):
             return
 
         INFO_MSG('IWonderLandCell::wonderLandEndTimeCB: {}'.format(self.spaceNo))
-        self._leaveWonderLand(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
+        self.leaveWonderLandInternal(gameconst.DungeonSrcEnum.FROM_TIME_OUT)
         self.wonderLandDurStatus = 0
 
     def _checkAddWonderLandDurationCondition(self):

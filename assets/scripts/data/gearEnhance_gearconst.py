@@ -55,9 +55,9 @@ datas = _tools.RODict({
         "ID": "glyphUnlockEnhLv",
         "value": (2, 5, 8),
     }),
-    "glyphCraftNumWeights": _tools.RODict({
-        "ID": "glyphCraftNumWeights",
-        "value": (100, 10),
+    "gearWeaponGlyphNumWeight": _tools.RODict({
+        "ID": "gearWeaponGlyphNumWeight",
+        "value": (80, 20),
     }),
     "gearBlessMaxValue": _tools.RODict({
         "ID": "gearBlessMaxValue",
@@ -137,15 +137,19 @@ datas = _tools.RODict({
     }),
     "gearButtonAction_rune": _tools.RODict({
         "ID": "gearButtonAction_rune",
-        "value": "Openinterface,UIEquipTrainingPanel,5",
+        "value": "Openinterface,UIEquipTrainingPanel,4",
     }),
     "gearButtonAction_bless": _tools.RODict({
         "ID": "gearButtonAction_bless",
-        "value": "Openinterface,UIEquipTrainingPanel,4",
+        "value": "Openinterface,UIEquipTrainingPanel,5",
     }),
     "gearButtonAction_identify": _tools.RODict({
         "ID": "gearButtonAction_identify",
         "value": "Openinterface,UIEquipTrainingPanel,2",
+    }),
+    "gearButtonAction_class": _tools.RODict({
+        "ID": "gearButtonAction_class",
+        "value": "Openinterface,UIEquipTrainingPanel,3",
     }),
     "gearButtonAction_unbounding": _tools.RODict({
         "ID": "gearButtonAction_unbounding",
@@ -193,11 +197,11 @@ datas = _tools.RODict({
     }),
     "strengthenDes2": _tools.RODict({
         "ID": "strengthenDes2",
-        "value": "强化失败时，强化等级概率下降",
+        "value": "强化失败时，强化等级概率<color=#dea050>下降</color>",
     }),
     "strengthenDes3": _tools.RODict({
         "ID": "strengthenDes3",
-        "value": "强化失败时，装备概率破损直接销毁",
+        "value": "强化失败时，装备概率破损，直接<color=#c60c0c>销毁</color>",
     }),
     "gearFuLing_AccessFailed": _tools.RODict({
         "ID": "gearFuLing_AccessFailed",
@@ -255,10 +259,6 @@ datas = _tools.RODict({
         "ID": "glyphExplain",
         "value": "<color=#fffbd7>{0}：</color>{1}",
     }),
-    "gearWeaponGlyphNumWeight": _tools.RODict({
-        "ID": "gearWeaponGlyphNumWeight",
-        "value": (90, 10),
-    }),
     "gearFuLingRating": _tools.RODict({
         "ID": "gearFuLingRating",
         "value": ('C', 'B', 'A', 'S'),
@@ -298,5 +298,9 @@ datas = _tools.RODict({
     "equipmentClassLevel": _tools.RODict({
         "ID": "equipmentClassLevel",
         "value": 4,
+    }),
+    "gearBlessFulingValue": _tools.RODict({
+        "ID": "gearBlessFulingValue",
+        "value": ((1, 0), (2, 2), (3, 3), (4, 3), (5, 3)),
     })
 })

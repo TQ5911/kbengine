@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "31080001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -16,6 +17,7 @@ datas ={
         "Props": {
           "Num": 0,
           "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": "",
           "TelDir": 0.0,
           "TelX": 39.52325,
@@ -28,6 +30,7 @@ datas ={
       "Monster": {
         "31080002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -47,13 +50,15 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 1800.0,
+            "RefreshTime": 3600.0,
+            "RefreshTimedID": 0,
             "Remark": "\u9996\u9886",
             "ShowMonsterGroupID": ""
           }
         },
         "31080003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -73,7 +78,8 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 1800.0,
+            "RefreshTime": 3600.0,
+            "RefreshTimedID": 0,
             "Remark": "\u9996\u9886",
             "ShowMonsterGroupID": ""
           }
@@ -82,6 +88,7 @@ datas ={
       "CombatArea": {
         "31088002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -100,10 +107,12 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "Cube": {
       "Teleporter": {
         "31088001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",

@@ -21,6 +21,8 @@ import awardContext
 import GuildTaskInfo
 import cityBattle_config as CBC
 import agent_agentFunction as A_AFD
+import guildChallenge_basicInfo as GCBI
+import guildChallenge_config as GCC
 
 
 class IGuild(object):
@@ -1275,3 +1277,4 @@ class IGuild(object):
             TaskInfoList.append(GuildTaskInfo.GuildTaskInfoVal(taskID,taskInfo['num'],taskInfo['isCompleted']))
         self.client.syncGuildTaskInfo(TaskInfoList)
     # -------------------------------------- 帮会任务 end --------------------------------------
+    

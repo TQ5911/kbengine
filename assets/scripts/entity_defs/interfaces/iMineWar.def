@@ -6,6 +6,13 @@
             <Default>       0               </Default>
         </mineWarCanAttack>
 
+        <mineWarCamp>
+            <Type>          UINT8           </Type>
+            <Flags>         ALL_CLIENTS     </Flags>
+            <Default>       0               </Default>
+            <WitnessName>   true            </WitnessName>
+        </mineWarCamp>
+
     </Properties>
 
     <BaseMethods>
@@ -27,12 +34,43 @@
         <onMineWarEndPlayer>
             <Arg>   ARRAY   <of>    PYTHON     </of>   </Arg>
         </onMineWarEndPlayer>
+
+        <reqMineWarInfo> <Exposed/>
+        </reqMineWarInfo>
+        <reqMineWarShareBonus> <Exposed/>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>         ARRAY   <of>  MINE_WAR_GUILD_SHARE_INFO   </of>   </Arg>
+        </reqMineWarShareBonus>
+        <reqMineWarGuildOwnerRank> <Exposed/>
+            <Arg>          LINE_NO         </Arg>
+        </reqMineWarGuildOwnerRank>
+        <reqMineWarGuildPlayerRank> <Exposed/>
+            <Arg>          LINE_NO         </Arg>
+        </reqMineWarGuildPlayerRank>
+
+        <reqMineWarCollectInfo> <Exposed/>
+        </reqMineWarCollectInfo>
+
+        <getMineWarInfo>
+        </getMineWarInfo>
+
+        <onMineWarKillCore>
+            <Arg>          LINE_NO         </Arg>
+        </onMineWarKillCore>
+        <onMineWarHpWarning>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          UINT8         </Arg>
+        </onMineWarHpWarning>
+
     </BaseMethods>
     <CellMethods>
         <syncMineWarInfo>
             <Arg>          UINT8         </Arg>
             <Arg>   ARRAY   <of>  LINE_NO   </of>   </Arg>
         </syncMineWarInfo>
+
+        <getMineWarMonsterInfo> <Exposed/>
+        </getMineWarMonsterInfo>
 
     </CellMethods>
     <ClientMethods>
@@ -44,5 +82,45 @@
             <Arg>          UINT8         </Arg>
             <Arg>          INT16         </Arg>
         </showMineWarStart>
+        <showMineWarEnd>
+        </showMineWarEnd>
+
+        <onMineWarInfo>
+            <Arg>   ARRAY   <of>    MINE_WAR_SINGLE_INFO     </of>   </Arg>
+        </onMineWarInfo>
+        <onMineWarGuildOwnerRank>
+            <Arg>   MINE_WAR_GUILD_RANK_INFO   </Arg>
+            <Arg>   ARRAY   <of>    MINE_WAR_GUILD_RANK_INFO     </of>   </Arg>
+        </onMineWarGuildOwnerRank>
+        <onMineWarGuildPlayerRank>
+            <Arg>   MINE_WAR_GUILD_PLAYER_RANK_INFO   </Arg>
+            <Arg>   ARRAY   <of>    MINE_WAR_GUILD_PLAYER_RANK_INFO     </of>   </Arg>
+        </onMineWarGuildPlayerRank>
+        <onMineWarEndInfo>
+            <Arg>   LINE_NO         </Arg>
+            <Arg>   UINT8           </Arg>
+            <Arg>   UNICODE             </Arg>
+            <Arg>   UINT8           </Arg>
+        </onMineWarEndInfo>
+
+        <onShowMineWarMonsterInfo>
+            <Arg>   ENTITY_ID     </Arg>
+            <Arg>   ENTITY_ID     </Arg>
+            <Arg>   GUILD_UUID        </Arg>
+            <Arg>   UINT8        </Arg>
+            <Arg>   UNICODE      </Arg>
+            <Arg>   UINT8        </Arg>
+        </onShowMineWarMonsterInfo>
+
+        <onMineWarShareBonusResult>
+            <Arg>   BOOL        </Arg>
+        </onMineWarShareBonusResult>
+
+        <onGetMineWarCollectInfo>
+            <Arg>   UINT16     </Arg>
+            <Arg>   UINT8      </Arg>
+        </onGetMineWarCollectInfo>
+        
+        
     </ClientMethods>
 </root>

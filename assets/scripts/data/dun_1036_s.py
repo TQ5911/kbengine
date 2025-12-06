@@ -4,9 +4,12 @@ datas ={
       "Monster": {
         "10360001": {
           "ActivityID": 0,
+          "AttachedGIDList": [
+            10368027
+          ],
           "ClassName": "Monster",
           "ClassNameType": 0,
-          "CustomID": "1",
+          "CustomID": "",
           "Dir": 279.376,
           "DisplayName": "",
           "EntityID": 11227001,
@@ -16,14 +19,16 @@ datas ={
           "PosZ": 334.2467,
           "Props": {
             "GroupID": "",
+            "InitLoad": 0,
             "Level": 52,
             "MapEntityScale": 0,
             "MapEntityType": "18",
             "MonsterGroupID": "",
             "PathID": "",
             "Radius": 0.0,
-            "RefreshNum": 0,
-            "RefreshTime": 900.0,
+            "RefreshNum": 1,
+            "RefreshTime": 0.0,
+            "RefreshTimedID": 1,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
@@ -32,6 +37,7 @@ datas ={
       "Npc": {
         "10364001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -48,6 +54,7 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": ""
           }
         }
@@ -55,6 +62,7 @@ datas ={
       "Teleporter": {
         "10368003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10358082",
@@ -79,6 +87,7 @@ datas ={
       "Creation": {
         "10368017": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "1",
@@ -110,12 +119,14 @@ datas ={
               10.0,
               11.0
             ],
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "10368018": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "1",
@@ -147,12 +158,14 @@ datas ={
               10.0,
               11.0
             ],
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "10368019": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "1",
@@ -184,12 +197,14 @@ datas ={
               10.0,
               11.0
             ],
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "10368020": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "1",
@@ -253,12 +268,14 @@ datas ={
               3.0,
               5.0
             ],
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "10368021": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "1",
@@ -322,12 +339,14 @@ datas ={
               3.0,
               5.0
             ],
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "10368022": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "1",
@@ -391,6 +410,7 @@ datas ={
               3.0,
               5.0
             ],
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
@@ -399,6 +419,7 @@ datas ={
       "AirWall": {
         "10368027": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -412,6 +433,7 @@ datas ={
           "Props": {
             "AreaType": 1,
             "Height": 10.0,
+            "InitLoad": 0,
             "MPosX": 321.0,
             "MPosY": 98.02,
             "MPosZ": 295.0,
@@ -421,29 +443,43 @@ datas ={
         }
       }
     },
-    "RebornPos": {
-      "10368002": {
+    "TimerEntities": {
+      "10360001": {
         "ActivityID": 0,
-        "ClassName": "RebornPos",
-        "ClassNameType": 7,
+        "AttachedGIDList": [
+          10368027
+        ],
+        "ClassName": "Monster",
+        "ClassNameType": 0,
         "CustomID": "",
-        "Dir": 211.5666,
+        "Dir": 279.376,
         "DisplayName": "",
-        "EntityID": 0,
-        "ID": 10368002,
-        "PosX": 305.9333,
-        "PosY": 118.0822,
-        "PosZ": 534.9097,
+        "EntityID": 11227001,
+        "ID": 10360001,
+        "PosX": 357.3505,
+        "PosY": 98.02,
+        "PosZ": 334.2467,
         "Props": {
-          "Num": 0,
+          "GroupID": "",
+          "InitLoad": 0,
+          "Level": 52,
+          "MapEntityScale": 0,
+          "MapEntityType": "18",
+          "MonsterGroupID": "",
+          "PathID": "",
           "Radius": 0.0,
-          "Remark": ""
+          "RefreshNum": 1,
+          "RefreshTime": 0.0,
+          "RefreshTimedID": 1,
+          "Remark": "",
+          "ShowMonsterGroupID": ""
         }
       }
     },
     "2": {
       "10368004": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "2",
@@ -474,6 +510,7 @@ datas ={
       },
       "10368005": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "2",
@@ -504,6 +541,7 @@ datas ={
       },
       "10368006": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "2",
@@ -534,6 +572,7 @@ datas ={
       },
       "10368007": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "2",
@@ -564,6 +603,7 @@ datas ={
       },
       "10368008": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "2",
@@ -594,6 +634,7 @@ datas ={
       },
       "10368009": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "2",
@@ -626,6 +667,7 @@ datas ={
     "FastMovePoint": {
       "10368010": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "",
@@ -656,6 +698,7 @@ datas ={
       },
       "10368011": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "",
@@ -663,9 +706,9 @@ datas ={
         "DisplayName": "",
         "EntityID": 13000003,
         "ID": 10368011,
-        "PosX": 197.5564,
-        "PosY": 138.1533,
-        "PosZ": 248.5278,
+        "PosX": 210.617,
+        "PosY": 137.8214,
+        "PosZ": 258.582,
         "Props": {
           "Remark": "",
           "SubPoints": [
@@ -686,6 +729,7 @@ datas ={
       },
       "10368012": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "",
@@ -693,21 +737,21 @@ datas ={
         "DisplayName": "",
         "EntityID": 13000003,
         "ID": 10368012,
-        "PosX": 155.1027,
-        "PosY": 141.6642,
-        "PosZ": 331.5061,
+        "PosX": 155.6526,
+        "PosY": 152.2684,
+        "PosZ": 330.9777,
         "Props": {
           "Remark": "",
           "SubPoints": [
             [
-              174.887,
-              138.450226,
-              268.436462,
+              173.975754,
+              139.09729,
+              278.455048,
               4.0,
               10.0,
-              176.744614,
-              138.3479,
-              263.31778,
+              178.207687,
+              138.021042,
+              260.754547,
               30.0,
               10.0
             ]
@@ -716,6 +760,7 @@ datas ={
       },
       "10368013": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "",
@@ -723,9 +768,9 @@ datas ={
         "DisplayName": "",
         "EntityID": 13000003,
         "ID": 10368013,
-        "PosX": 209.2019,
-        "PosY": 146.9887,
-        "PosZ": 520.5233,
+        "PosX": 192.7076,
+        "PosY": 144.2546,
+        "PosZ": 511.1234,
         "Props": {
           "Remark": "",
           "SubPoints": [
@@ -746,6 +791,7 @@ datas ={
       },
       "10368014": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "",
@@ -760,14 +806,14 @@ datas ={
           "Remark": "",
           "SubPoints": [
             [
-              233.1264,
-              148.801056,
-              544.0472,
+              243.707138,
+              145.576172,
+              547.767944,
               4.0,
               10.0,
-              226.33493,
-              149.958069,
-              543.8456,
+              222.98,
+              146.500092,
+              544.477539,
               30.0,
               10.0
             ]
@@ -776,6 +822,7 @@ datas ={
       },
       "10368015": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "",
@@ -783,9 +830,9 @@ datas ={
         "DisplayName": "",
         "EntityID": 13000003,
         "ID": 10368015,
-        "PosX": 482.4313,
-        "PosY": 169.8775,
-        "PosZ": 458.3487,
+        "PosX": 475.2457,
+        "PosY": 169.8869,
+        "PosZ": 440.6078,
         "Props": {
           "Remark": "",
           "SubPoints": [
@@ -803,11 +850,43 @@ datas ={
             ]
           ]
         }
+      },
+      "10368028": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "FastMovePoint",
+        "ClassNameType": 19,
+        "CustomID": "",
+        "Dir": 105.1295,
+        "DisplayName": "",
+        "EntityID": 13000003,
+        "ID": 10368028,
+        "PosX": 300.0669,
+        "PosY": 148.5642,
+        "PosZ": 161.5721,
+        "Props": {
+          "Remark": "",
+          "SubPoints": [
+            [
+              344.795563,
+              136.017166,
+              162.3523,
+              4.0,
+              10.0,
+              349.750061,
+              136.156479,
+              160.58551,
+              30.0,
+              10.0
+            ]
+          ]
+        }
       }
     },
     "Anchor": {
       "10368024": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "Anchor",
         "ClassNameType": 20,
         "CustomID": "",
@@ -826,6 +905,7 @@ datas ={
       },
       "10368026": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "Anchor",
         "ClassNameType": 20,
         "CustomID": "",

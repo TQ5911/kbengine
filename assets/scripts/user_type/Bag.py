@@ -165,28 +165,10 @@ class Bag(BaseBag.BaseBag):
         if notify:
             for itemId, sumNum in tmpItem.items():
                 itemsDictList[0][int(itemId)] = itemsDictList[0].get(int(itemId), 0) + sumNum
-                '''
-                itemData = dataUtils.getCommItemData(itemId)
-                itemData['messageTipsID'] and owner.onMessagePre(
-                    itemData['messageTipsID'],
-                    [str(sumNum), itemId])
-                itemData['messageChatID'] and owner.onMessagePre(
-                    itemData['messageChatID'],
-                    [str(sumNum), itemId, str(0), extraDesp])
-                '''
 
         if notify:
             for item in tmpEquipList:
                 itemsDictList[1].append([item.itemId, item.uniqueId])
-                '''
-                itemData = dataUtils.getCommItemData(item.itemId)
-                itemData['messageTipsID'] and owner.onMessagePre(
-                    itemData['messageTipsID'],
-                    [str(1), str(item.itemId)])
-                itemData['messageChatID'] and owner.onMessagePre(
-                    itemData['messageChatID'],
-                    [str(item.itemId), str(item.uniqueId), extraDesp])
-                '''
 
         if src != AAC_AACDD.datas.BONUS_SRC_BAG_SORT:
             itemIdSet = set()
@@ -641,7 +623,6 @@ class Bag(BaseBag.BaseBag):
             return
         owner.client.onUpdateGridItemsNum(self.bagType, clientData)
         owner.addWealth(srcType, totalWealthVal, opUUID, detail, awardCtx)
-        owner.client.onEquipDisassemble(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, succGridIdList, succUniqueIdList)
         return
 
     def getItemObjByItemID(self, itemID, bindType):

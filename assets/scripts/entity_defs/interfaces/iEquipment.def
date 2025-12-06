@@ -530,12 +530,6 @@
             <Arg>      GRIDID               </Arg>
         </onEquipEnhanceFailed>
 
-        <onEquipBaseAttrWashingSucc>
-            <Arg>      UINT8                </Arg>
-            <Arg>      GRIDID               </Arg>
-            <Arg>      CLI_EQUIP_ITEM_VAL   </Arg>
-        </onEquipBaseAttrWashingSucc>
-
         <onEquipSpiritWashingSucc>
             <Arg>      UINT8            </Arg>
             <Arg>      GRIDID           </Arg>
@@ -575,31 +569,6 @@
             <Arg>      UINT16                       </Arg>
             <Arg>      UINT32                       </Arg>
         </onEquipBackBlessSucc>
-
-        <onEquipDisassemble>
-            <Arg>      UINT8                    </Arg>
-            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
-            <Arg>      ARRAY <of> UUID </of>    </Arg>
-        </onEquipDisassemble>
-
-        <onAvatarEquipSetChanged>
-            <Arg>      ENTITY_ID        </Arg>
-            <Arg>      UINT8            </Arg>
-            <Arg>      UINT8            </Arg>
-            <Arg>      BOOL             </Arg>
-        </onAvatarEquipSetChanged>
-
-        <onAffixWashingFailed>
-        </onAffixWashingFailed>
-
-        <onBodyEquipDailyUpdate>
-            <Arg>      ARRAY <of> SLOT_ID </of>    </Arg>
-        </onBodyEquipDailyUpdate>
-
-        <onFirstUnlockEquipSet>
-            <Arg>      UINT8    </Arg>
-            <Arg>      BOOL     </Arg>
-        </onFirstUnlockEquipSet>
 
         <onPickNewEquipDrop>
             <Arg>      EQUIP_DROP_TAKER_DATA_INFO   </Arg>
@@ -678,6 +647,11 @@
             <Arg>      UINT8                </Arg>
             <Arg>      GRIDID               </Arg>
         </onEquipBroken>
+
+        <onGlyphReplacedSkillIdx>
+            <Arg>       ARRAY <of> UINT32 </of>     </Arg>
+            <Arg>       ARRAY <of> UINT32 </of>     </Arg>
+        </onGlyphReplacedSkillIdx>
     </ClientMethods>
 </root>
 

@@ -6,6 +6,7 @@ Account avatarDatabaseID 30241
 Account avatarID 30240
 Account banAllServerPostReason 30279
 Account banAllServerPostTime 30278
+Account banDict 31203
 Account callbackList 30898
 Account centralServerId 30247
 Account channelId 30264
@@ -27,11 +28,11 @@ Account isNewAccount 30287
 Account lastSelectGbId 255
 Account loginChannel 30274
 Account loginCount 30285
+Account loginObOnClient 31668
 Account loginState 30251
 Account operatingSystem 31492
 Account otherServerAvatarBox 31035
 Account registerChannel 30275
-Account serverId 4
 Account streamDic 30283
 Account switchServerAvatars 30897
 Account tLastDayUpdateTimeDict 30299
@@ -40,6 +41,7 @@ Account tLastMonthUpdateTimeDict 30301
 Account tLastUpdateTime 30302
 Account tLastWeekUpdateTimeDict 30300
 Account timerDataBase 30293
+Account userInfoId 31202
 ActStub actTimeQueue 30969
 ActStub actTimerId 30968
 ActStub birthInDB 30959
@@ -83,7 +85,6 @@ Avatar achievementInfo 31468
 Avatar adjAntiFatal 155
 Avatar adjAntiMortal 136
 Avatar adjAtkBless 30923
-Avatar adjBloodSuck 142
 Avatar adjCD 139
 Avatar adjChaosBeDmgRatio 30434
 Avatar adjChaosModifyRatio 30433
@@ -105,7 +106,6 @@ Avatar adjFullMp 126
 Avatar adjFullMpAbs 128
 Avatar adjGatherRate 31537
 Avatar adjHit 137
-Avatar adjHp 28
 Avatar adjIgnoreArmor 446
 Avatar adjKnockAnti 591
 Avatar adjKnockEnh 587
@@ -132,6 +132,8 @@ Avatar adjMonsterDmgAnti 31545
 Avatar adjMortal 130
 Avatar adjPVPDmg 31539
 Avatar adjPVPDmgAnti 31541
+Avatar adjPushAnti 190
+Avatar adjPushEnh 34
 Avatar adjRealDmg 31523
 Avatar adjRealDmgDef 31525
 Avatar adjSilentAnti 112
@@ -209,6 +211,8 @@ Avatar baseMonsterDmgAnti 31544
 Avatar baseMortal 30246
 Avatar basePVPDmg 31538
 Avatar basePVPDmgAnti 31540
+Avatar basePushAnti 30405
+Avatar basePushEnh 30281
 Avatar baseRealDmg 31522
 Avatar baseRealDmgDef 31524
 Avatar baseScoreInfo 30046
@@ -238,12 +242,13 @@ Avatar cacheSelfSet 30444
 Avatar cellCrossServerState 31189
 Avatar cellDataCache 30329
 Avatar cellEquipEncExtraTimesList 31266
+Avatar cellFlags 31569
 Avatar challengeAvatars 30651
-Avatar chaseExpFactor 7
 Avatar chatChannel 89
 Avatar checkAreaTgtTaskTimer 30226
 Avatar checkCSTokenTimerId 31584
 Avatar checkTargetTypeTimeId 30445
+Avatar chiefFirstPassRecords 31500
 Avatar chiefInfo 145
 Avatar cliConfigDic 30045
 Avatar clientIP 30348
@@ -257,7 +262,6 @@ Avatar collectionAuctionIdCategoryList 31493
 Avatar collectionAuctionIdList 30993
 Avatar collectionAuctionItemCategoryList 31494
 Avatar combatReturnInfo 31433
-Avatar commonFlag 274
 Avatar commonFlagCell 431
 Avatar controlledByReasonDic 30036
 Avatar controlledStates 30439
@@ -268,6 +272,7 @@ Avatar crossServerHeartbeatTimer 31581
 Avatar crossServerState 247
 Avatar crossServerTickBackTime 31580
 Avatar crossServerTickStartTime 31191
+Avatar crusadeFirstPassRecords 31499
 Avatar crusadeInfo 413
 Avatar cubeCowTimerId 31942
 Avatar cubeEnterFloor 349
@@ -357,6 +362,8 @@ Avatar gmModeBase 30313
 Avatar gmModeCell 30312
 Avatar goBackServerTimerId 31585
 Avatar guildAssistTimes 31394
+Avatar guildBossDungeonID 32163
+Avatar guildBossFirstPassRecords 31628
 Avatar guildBox 31366
 Avatar guildBoxCell 31891
 Avatar guildContrib 427
@@ -374,7 +381,6 @@ Avatar hateRatio 30412
 Avatar healHpRatio 121
 Avatar healMpRatio 122
 Avatar hit 24
-Avatar hitRate 203
 Avatar holidayPayInfo 31364
 Avatar hp 27
 Avatar idipBanDataDict 30340
@@ -430,6 +436,7 @@ Avatar minMagicArmor 378
 Avatar minMagicAtk 100
 Avatar minPhysicalArmor 374
 Avatar minPhysicalAtk 98
+Avatar mineWarCamp 4
 Avatar mineWarCanAttack 31557
 Avatar miningRate 31534
 Avatar miscProps 30373
@@ -445,13 +452,10 @@ Avatar morphState 30992
 Avatar mortal 23
 Avatar mp 212
 Avatar mpCostRatio 60
-Avatar mulBloodSuck 143
-Avatar mulBossDmg 192
 Avatar mulCD 140
 Avatar mulFullHp 125
 Avatar mulFullMp 127
 Avatar mulGCD 30401
-Avatar mulHp 29
 Avatar mulHurtMagical 30436
 Avatar mulHurtPhysical 30435
 Avatar mulMaxMagicArmor 32080
@@ -559,6 +563,7 @@ Avatar speed 20
 Avatar state 36
 Avatar state2 37
 Avatar stateList 30415
+Avatar statisticsDead 31521
 Avatar statisticsDmg 30070
 Avatar statisticsDmgRecords 30234
 Avatar statisticsHeal 30071
@@ -633,6 +638,7 @@ Barrier baseGlobalIdx 31443
 Barrier birthInDB 31456
 Barrier birthInMem 31438
 Barrier bodySize 31467
+Barrier cellFlags 31576
 Barrier datetimeTimerDataCell 31449
 Barrier datetimeTimerDataNextTCell 31451
 Barrier datetimeTimerDataTimeCacheCell 31450
@@ -642,7 +648,6 @@ Barrier delayDestroyTimerID 31440
 Barrier dirIndex 31463
 Barrier disappearTime 31465
 Barrier disappearTimer 31466
-Barrier dunTimeFreezeFlag 440
 Barrier fbEntityId 31461
 Barrier force 438
 Barrier gameEntityId 439
@@ -686,7 +691,6 @@ BaseApp localStubCreated 30102
 BaseApp lockDict 30092
 BaseApp methodPoolBase 30108
 BaseApp nonce 30093
-BaseApp officialMesOverTimer 30097
 BaseApp officialMesTickTimerDic 30096
 BaseApp officialMesTimerDic 30095
 BaseApp startGbId 30085
@@ -697,6 +701,7 @@ BaseApp timerToLoadCell 30086
 CityBattleTeleporter CBTimes 230
 CityBattleTeleporter baseGlobalIdx 31765
 CityBattleTeleporter birthInMem 31760
+CityBattleTeleporter cellFlags 31578
 CityBattleTeleporter datetimeTimerDataCell 31781
 CityBattleTeleporter datetimeTimerDataNextTCell 31783
 CityBattleTeleporter datetimeTimerDataTimeCacheCell 31782
@@ -706,7 +711,6 @@ CityBattleTeleporter delayDestroyTimerID 31762
 CityBattleTeleporter dirIndex 31785
 CityBattleTeleporter disappearTime 31787
 CityBattleTeleporter disappearTimer 31788
-CityBattleTeleporter dunTimeFreezeFlag 156
 CityBattleTeleporter fbEntityId 31777
 CityBattleTeleporter force 152
 CityBattleTeleporter gameEntityId 153
@@ -723,11 +727,11 @@ CityBattleTeleporter timerDataCell 31778
 CityBattleTeleporter tmpProps 31763
 CityBattleTeleporter ttl 31764
 Collection baseGlobalIdx 30203
-Collection belongAvatarGBID 48
 Collection birthInDB 30210
 Collection birthInMem 30198
 Collection bornState 442
 Collection canGather 47
+Collection cellFlags 31619
 Collection collectionId 46
 Collection datetimeTimerDataCell 30216
 Collection datetimeTimerDataNextTCell 30218
@@ -740,7 +744,6 @@ Collection disappearTime 30222
 Collection disappearTimer 30223
 Collection dropEquipId 31481
 Collection dropEquipItemId 443
-Collection dunTimeFreezeFlag 51
 Collection extraJson 30197
 Collection fbEntityId 30893
 Collection force 573
@@ -771,6 +774,7 @@ Collection ttl 30202
 Collection type 45
 CoreAreaFlag baseGlobalIdx 31736
 CoreAreaFlag birthInMem 31731
+CoreAreaFlag cellFlags 31579
 CoreAreaFlag datetimeTimerDataCell 31913
 CoreAreaFlag datetimeTimerDataNextTCell 31915
 CoreAreaFlag datetimeTimerDataTimeCacheCell 31914
@@ -781,7 +785,6 @@ CoreAreaFlag delayDestroyTimerID 31733
 CoreAreaFlag dirIndex 31917
 CoreAreaFlag disappearTime 31919
 CoreAreaFlag disappearTimer 31920
-CoreAreaFlag dunTimeFreezeFlag 347
 CoreAreaFlag fbEntityId 31909
 CoreAreaFlag force 263
 CoreAreaFlag gameEntityId 346
@@ -802,7 +805,6 @@ Creation PVPDmgAnti 603
 Creation adjAntiFatal 360
 Creation adjAntiMortal 350
 Creation adjAtkBless 31216
-Creation adjBloodSuck 357
 Creation adjCD 352
 Creation adjChaosBeDmgRatio 31171
 Creation adjChaosModifyRatio 31170
@@ -821,7 +823,6 @@ Creation adjFullHpAbs 338
 Creation adjFullMp 340
 Creation adjFullMpAbs 342
 Creation adjHit 351
-Creation adjHp 304
 Creation adjIgnoreArmor 565
 Creation adjKnockAnti 334
 Creation adjKnockEnh 324
@@ -846,6 +847,8 @@ Creation adjMonsterDmgAnti 31745
 Creation adjMortal 343
 Creation adjPVPDmg 31739
 Creation adjPVPDmgAnti 31741
+Creation adjPushAnti 335
+Creation adjPushEnh 326
 Creation adjRealDmg 31723
 Creation adjRealDmgDef 31725
 Creation adjSilentAnti 332
@@ -897,6 +900,8 @@ Creation baseMonsterDmgAnti 31744
 Creation baseMortal 31194
 Creation basePVPDmg 31738
 Creation basePVPDmgAnti 31740
+Creation basePushAnti 31046
+Creation basePushEnh 30726
 Creation baseRealDmg 31722
 Creation baseRealDmgDef 31724
 Creation baseSilentAnti 31199
@@ -914,8 +919,8 @@ Creation birthInMem 31238
 Creation bloodSuck 356
 Creation buffDic 31140
 Creation cacheSelfSet 31180
-Creation casterTeamId 280
 Creation casterType 31131
+Creation cellFlags 31620
 Creation checkTargetTypeTimeId 31181
 Creation cloneList 31162
 Creation controlledStates 31175
@@ -936,7 +941,6 @@ Creation disappearTimer 31260
 Creation dmgArmor 566
 Creation dodge 308
 Creation drugsQuantity 639
-Creation dunTimeFreezeFlag 412
 Creation enemyCacheSet 31176
 Creation eventDic 31246
 Creation fatal 291
@@ -953,7 +957,6 @@ Creation gameEntityId 411
 Creation gameEntityIdentifyID 31258
 Creation hateRatio 31160
 Creation hit 293
-Creation hitRate 364
 Creation hostId 278
 Creation hostType 279
 Creation hp 302
@@ -982,13 +985,10 @@ Creation monsterDmgAnti 605
 Creation mortal 292
 Creation moveController 31138
 Creation mpCostRatio 318
-Creation mulBloodSuck 358
-Creation mulBossDmg 362
 Creation mulCD 353
 Creation mulFullHp 339
 Creation mulFullMp 341
 Creation mulGCD 31157
-Creation mulHp 306
 Creation mulHurtMagical 31173
 Creation mulHurtPhysical 31172
 Creation mulMaxMagicArmor 32152
@@ -1138,6 +1138,7 @@ CubeSpaceMgr aiEventListener 31316
 CubeSpaceMgr aiEvents 31315
 CubeSpaceMgr baseGlobalIdx 31305
 CubeSpaceMgr birthInMem 31300
+CubeSpaceMgr cellFlags 31527
 CubeSpaceMgr collBeCollectedDict 31319
 CubeSpaceMgr collToBoss 31381
 CubeSpaceMgr datetimeTimerDataCell 31324
@@ -1153,6 +1154,8 @@ CubeSpaceMgr methodPool 31301
 CubeSpaceMgr miscProps 31307
 CubeSpaceMgr notifyNearPosList 31317
 CubeSpaceMgr players 31310
+CubeSpaceMgr refreshEntityQueue 30097
+CubeSpaceMgr refreshEntityTimerId 32158
 CubeSpaceMgr refreshRecords 31707
 CubeSpaceMgr spaceEntities 31308
 CubeSpaceMgr spaceNo 420
@@ -1196,6 +1199,7 @@ DropStub timerDataBase 31473
 DuelFlag avatarInDuelDatas 31759
 DuelFlag baseGlobalIdx 31080
 DuelFlag birthInMem 31071
+DuelFlag cellFlags 31621
 DuelFlag checkTimer 31223
 DuelFlag datetimeTimerDataCell 31217
 DuelFlag datetimeTimerDataNextTCell 31219
@@ -1219,6 +1223,7 @@ DungeonSpaceMgr aiEvents 30877
 DungeonSpaceMgr baseGlobalIdx 30867
 DungeonSpaceMgr birthInDB 30859
 DungeonSpaceMgr birthInMem 30862
+DungeonSpaceMgr cellFlags 31531
 DungeonSpaceMgr collBeCollectedDict 30879
 DungeonSpaceMgr datetimeTimerDataCell 30884
 DungeonSpaceMgr datetimeTimerDataNextTCell 30886
@@ -1226,15 +1231,20 @@ DungeonSpaceMgr datetimeTimerDataTimeCacheCell 30885
 DungeonSpaceMgr datetimeTimerIdCell 30883
 DungeonSpaceMgr datetimeTimerIdCellCount 30882
 DungeonSpaceMgr delayDestroyTimerID 30864
+DungeonSpaceMgr dungeonCompleteDelayNotifyTimer 31047
 DungeonSpaceMgr dungeonGoodManActId 30854
 DungeonSpaceMgr dungeonGoodManColl 30853
 DungeonSpaceMgr dungeonPlayMode 30849
 DungeonSpaceMgr dungeonPlayerReliveRecordDic 30852
+DungeonSpaceMgr dungeonSettlementDataCache 32167
 DungeonSpaceMgr dungeonStage 30850
 DungeonSpaceMgr dungeonStageStartT 30851
+DungeonSpaceMgr dungeonStatisticData 31501
+DungeonSpaceMgr dungeonStatisticRecords 32166
 DungeonSpaceMgr entsForControl 30907
 DungeonSpaceMgr flowController 30875
 DungeonSpaceMgr force 91
+DungeonSpaceMgr guildBox 32170
 DungeonSpaceMgr initCellCallbacks 30856
 DungeonSpaceMgr isDestroying 30858
 DungeonSpaceMgr methodPool 30863
@@ -1243,6 +1253,8 @@ DungeonSpaceMgr miscProps 30869
 DungeonSpaceMgr notifyNearPosList 30908
 DungeonSpaceMgr onLoseCellReason 30857
 DungeonSpaceMgr players 30872
+DungeonSpaceMgr refreshEntityQueue 32168
+DungeonSpaceMgr refreshEntityTimerId 32169
 DungeonSpaceMgr refreshRecords 31711
 DungeonSpaceMgr spaceEntities 30870
 DungeonSpaceMgr spaceNo 90
@@ -1283,6 +1295,7 @@ Guild datetimeTimerIdBaseCount 31351
 Guild desc 31358
 Guild dspFlag 31374
 Guild guildBuilding 31378
+Guild guildChallengeData 31627
 Guild guildEvent 31384
 Guild guildExp 31376
 Guild guildFlag 31369
@@ -1320,6 +1333,23 @@ Guild tLastUpdateTime 31391
 Guild tLastWeekUpdateTimeDict 31389
 Guild tempMiscPropsBase 31349
 Guild timerDataBase 31350
+GuildBossDungeonStub argsCache 31671
+GuildBossDungeonStub birthInDB 31678
+GuildBossDungeonStub creatingGuildBossDic 32157
+GuildBossDungeonStub crtGameEntityIdentifyID 31729
+GuildBossDungeonStub crtGenSpaceNo 31670
+GuildBossDungeonStub datetimeTimerDataBase 31726
+GuildBossDungeonStub datetimeTimerDataNextTBase 31728
+GuildBossDungeonStub datetimeTimerDataTimeCacheBase 31727
+GuildBossDungeonStub datetimeTimerIdBase 31721
+GuildBossDungeonStub datetimeTimerIdBaseCount 31720
+GuildBossDungeonStub dungeonNo 31669
+GuildBossDungeonStub isDestroying 31677
+GuildBossDungeonStub methodPoolBase 31679
+GuildBossDungeonStub rebornPosCache 31676
+GuildBossDungeonStub spaces 31629
+GuildBossDungeonStub tempMiscPropsBase 31718
+GuildBossDungeonStub timerDataBase 31719
 GuildStub birthInDB 31337
 GuildStub datetimeTimerDataBase 31343
 GuildStub datetimeTimerDataNextTBase 31345
@@ -1400,7 +1430,6 @@ Monster PVPDmgAnti 507
 Monster adjAntiFatal 514
 Monster adjAntiMortal 494
 Monster adjAtkBless 30957
-Monster adjBloodSuck 501
 Monster adjCD 497
 Monster adjChaosBeDmgRatio 30691
 Monster adjChaosModifyRatio 30690
@@ -1419,7 +1448,6 @@ Monster adjFullHpAbs 482
 Monster adjFullMp 484
 Monster adjFullMpAbs 486
 Monster adjHit 495
-Monster adjHp 406
 Monster adjIgnoreArmor 476
 Monster adjKnockAnti 633
 Monster adjKnockEnh 629
@@ -1444,6 +1472,8 @@ Monster adjMonsterDmgAnti 31595
 Monster adjMortal 488
 Monster adjPVPDmg 31589
 Monster adjPVPDmgAnti 31591
+Monster adjPushAnti 201
+Monster adjPushEnh 193
 Monster adjRealDmg 31573
 Monster adjRealDmgDef 31575
 Monster adjSilentAnti 470
@@ -1500,6 +1530,8 @@ Monster baseMonsterDmgAnti 31594
 Monster baseMortal 30409
 Monster basePVPDmg 31588
 Monster basePVPDmgAnti 31590
+Monster basePushAnti 30450
+Monster basePushEnh 30406
 Monster baseRealDmg 31572
 Monster baseRealDmgDef 31574
 Monster baseSilentAnti 30437
@@ -1517,8 +1549,6 @@ Monster bePushedSpeed 71
 Monster belongActId 390
 Monster belongEntityId 389
 Monster belongGbId 387
-Monster belongName 386
-Monster belongTeamId 388
 Monster birthInDB 30588
 Monster birthInMem 30712
 Monster bloodSuck 500
@@ -1530,6 +1560,7 @@ Monster bossDeadDisappearTime 391
 Monster buffDic 30603
 Monster cacheSelfSet 30701
 Monster canBeAttack 30598
+Monster cellFlags 31570
 Monster checkTargetTypeTimeId 30702
 Monster cloneList 30672
 Monster combatAreaID 31712
@@ -1548,7 +1579,6 @@ Monster dmgArmor 477
 Monster dodge 416
 Monster dropBelongId 30573
 Monster drugsQuantity 597
-Monster dunTimeFreezeFlag 576
 Monster dungeonFlagId 31687
 Monster enemyCacheSet 30697
 Monster escortDistance 31117
@@ -1571,12 +1601,10 @@ Monster gameEntityIdentifyID 30722
 Monster hateRatio 30670
 Monster hateTrapId 30568
 Monster hit 402
-Monster hitRate 562
 Monster hp 405
 Monster ignoreArmor 474
 Monster initCellCallbacks 30585
 Monster instanceId 32058
-Monster isBling 392
 Monster isBoss 393
 Monster isBossHasSetFlag 30597
 Monster isCanBeAttackHasSet 30599
@@ -1598,6 +1626,7 @@ Monster minMagicArmor 595
 Monster minMagicAtk 118
 Monster minPhysicalArmor 558
 Monster minPhysicalAtk 116
+Monster mineWarCamp 7
 Monster mineWarCanAttack 31559
 Monster mineWarGuildId 31560
 Monster mineWarMonsterType 31558
@@ -1610,13 +1639,10 @@ Monster mortal 401
 Monster moveAni 395
 Monster moveController 30567
 Monster mpCostRatio 418
-Monster mulBloodSuck 502
-Monster mulBossDmg 551
 Monster mulCD 498
 Monster mulFullHp 483
 Monster mulFullMp 485
 Monster mulGCD 30658
-Monster mulHp 407
 Monster mulHurtMagical 30693
 Monster mulHurtPhysical 30692
 Monster mulMaxMagicArmor 32098
@@ -1689,6 +1715,7 @@ Monster viewRadius 31988
 MonsterGrp baseGlobalIdx 30424
 MonsterGrp birthInDB 30533
 MonsterGrp birthInMem 30419
+MonsterGrp cellFlags 31568
 MonsterGrp datetimeTimerDataBase 30612
 MonsterGrp datetimeTimerDataCell 30680
 MonsterGrp datetimeTimerDataNextTBase 30676
@@ -1703,7 +1730,6 @@ MonsterGrp delayDestroyTimerID 30421
 MonsterGrp dirIndex 30731
 MonsterGrp disappearTime 30733
 MonsterGrp disappearTimer 30734
-MonsterGrp dunTimeFreezeFlag 54
 MonsterGrp eventDic 30727
 MonsterGrp fbEntityId 31931
 MonsterGrp force 31
@@ -1734,7 +1760,6 @@ Npc PVPDmgAnti 555
 Npc adjAntiFatal 329
 Npc adjAntiMortal 309
 Npc adjAtkBless 30991
-Npc adjBloodSuck 316
 Npc adjCD 312
 Npc adjChaosBeDmgRatio 30546
 Npc adjChaosModifyRatio 30545
@@ -1753,7 +1778,6 @@ Npc adjFullHpAbs 297
 Npc adjFullMp 299
 Npc adjFullMpAbs 301
 Npc adjHit 310
-Npc adjHp 221
 Npc adjIgnoreArmor 539
 Npc adjKnockAnti 612
 Npc adjKnockEnh 608
@@ -1778,6 +1802,8 @@ Npc adjMonsterDmgAnti 31695
 Npc adjMortal 303
 Npc adjPVPDmg 31689
 Npc adjPVPDmgAnti 31691
+Npc adjPushAnti 325
+Npc adjPushEnh 211
 Npc adjRealDmg 31673
 Npc adjRealDmgDef 31675
 Npc adjSilentAnti 285
@@ -1834,6 +1860,8 @@ Npc baseMonsterDmgAnti 31694
 Npc baseMortal 30309
 Npc basePVPDmg 31688
 Npc basePVPDmgAnti 31690
+Npc basePushAnti 30725
+Npc basePushEnh 30457
 Npc baseRealDmg 31672
 Npc baseRealDmgDef 31674
 Npc baseSilentAnti 30358
@@ -1856,6 +1884,7 @@ Npc bornState 62
 Npc buffDic 30459
 Npc cacheSelfSet 30556
 Npc canBeAttack 30476
+Npc cellFlags 31618
 Npc checkTargetTypeTimeId 30557
 Npc cloneList 30527
 Npc controlledStates 30551
@@ -1873,7 +1902,6 @@ Npc disappearTimer 30190
 Npc dmgArmor 540
 Npc dodge 231
 Npc drugsQuantity 626
-Npc dunTimeFreezeFlag 41
 Npc dungeonFlagId 30890
 Npc enemyCacheSet 30552
 Npc escortDistance 31123
@@ -1895,7 +1923,6 @@ Npc gameEntityId 40
 Npc gameEntityIdentifyID 30188
 Npc hateRatio 30525
 Npc hit 217
-Npc hitRate 377
 Npc hp 220
 Npc ignoreArmor 537
 Npc initCellCallbacks 30153
@@ -1925,13 +1952,10 @@ Npc mortal 216
 Npc moveAni 63
 Npc moveController 30139
 Npc mpCostRatio 233
-Npc mulBloodSuck 317
-Npc mulBossDmg 366
 Npc mulCD 313
 Npc mulFullHp 298
 Npc mulFullMp 300
 Npc mulGCD 30513
-Npc mulHp 222
 Npc mulHurtMagical 30548
 Npc mulHurtPhysical 30547
 Npc mulMaxMagicArmor 32134
@@ -1966,7 +1990,6 @@ Npc route 30141
 Npc routeState 273
 Npc routeSuspendReason 31120
 Npc savedBuffDic 30460
-Npc scale 35
 Npc selectedTargetId 383
 Npc shieldDic 30463
 Npc silentAnti 284
@@ -2060,6 +2083,7 @@ RaidStub timerDataBase 30642
 RebornPos baseGlobalIdx 32017
 RebornPos birthInDB 32030
 RebornPos birthInMem 31928
+RebornPos cellFlags 31626
 RebornPos datetimeTimerDataCell 32023
 RebornPos datetimeTimerDataNextTCell 32025
 RebornPos datetimeTimerDataTimeCacheCell 32024
@@ -2069,7 +2093,6 @@ RebornPos delayDestroyTimerID 32014
 RebornPos dirIndex 32037
 RebornPos disappearTime 32039
 RebornPos disappearTimer 32040
-RebornPos dunTimeFreezeFlag 433
 RebornPos fbEntityId 32035
 RebornPos force 425
 RebornPos gameEntityId 432
@@ -2115,6 +2138,7 @@ SiegeWarSpaceMgr aiEventListener 31816
 SiegeWarSpaceMgr aiEvents 31815
 SiegeWarSpaceMgr baseGlobalIdx 31805
 SiegeWarSpaceMgr birthInMem 31800
+SiegeWarSpaceMgr cellFlags 31530
 SiegeWarSpaceMgr collBeCollectedDict 31819
 SiegeWarSpaceMgr datetimeTimerDataCell 31824
 SiegeWarSpaceMgr datetimeTimerDataNextTCell 31826
@@ -2129,6 +2153,8 @@ SiegeWarSpaceMgr methodPool 31801
 SiegeWarSpaceMgr miscProps 31807
 SiegeWarSpaceMgr notifyNearPosList 31817
 SiegeWarSpaceMgr players 31810
+SiegeWarSpaceMgr refreshEntityQueue 32164
+SiegeWarSpaceMgr refreshEntityTimerId 32165
 SiegeWarSpaceMgr refreshRecords 31710
 SiegeWarSpaceMgr spaceEntities 31808
 SiegeWarSpaceMgr spaceNo 157
@@ -2209,6 +2235,7 @@ SingleDungeonStub timerDataBase 30814
 Space baseGlobalIdx 30023
 Space birthInDB 30015
 Space birthInMem 30018
+Space cellFlags 31526
 Space cellappIndex 30005
 Space chunkAlready 30003
 Space datetimeTimerDataCell 30029
@@ -2245,7 +2272,6 @@ Summon PVPDmgAnti 531
 Summon adjAntiFatal 244
 Summon adjAntiMortal 234
 Summon adjAtkBless 31060
-Summon adjBloodSuck 241
 Summon adjCD 236
 Summon adjChaosBeDmgRatio 31015
 Summon adjChaosModifyRatio 31014
@@ -2264,7 +2290,6 @@ Summon adjFullHpAbs 205
 Summon adjFullMp 207
 Summon adjFullMpAbs 223
 Summon adjHit 235
-Summon adjHp 179
 Summon adjIgnoreArmor 517
 Summon adjKnockAnti 200
 Summon adjKnockEnh 189
@@ -2289,6 +2314,8 @@ Summon adjMonsterDmgAnti 31645
 Summon adjMortal 224
 Summon adjPVPDmg 31639
 Summon adjPVPDmgAnti 31641
+Summon adjPushAnti 210
+Summon adjPushEnh 202
 Summon adjRealDmg 31623
 Summon adjRealDmgDef 31625
 Summon adjSilentAnti 197
@@ -2345,6 +2372,8 @@ Summon baseMonsterDmgAnti 31644
 Summon baseMortal 31038
 Summon basePVPDmg 31638
 Summon basePVPDmgAnti 31640
+Summon basePushAnti 30456
+Summon basePushEnh 30451
 Summon baseRealDmg 31622
 Summon baseRealDmgDef 31624
 Summon baseSilentAnti 31043
@@ -2367,6 +2396,7 @@ Summon bornState 167
 Summon buffDic 30759
 Summon cacheSelfSet 31024
 Summon canBeAttack 30754
+Summon cellFlags 31571
 Summon checkTargetTypeTimeId 31025
 Summon cloneList 30789
 Summon controlledStates 31019
@@ -2384,7 +2414,6 @@ Summon disappearTimer 31113
 Summon dmgArmor 518
 Summon dodge 181
 Summon drugsQuantity 621
-Summon dunTimeFreezeFlag 271
 Summon dungeonFlagId 31108
 Summon enemyCacheSet 31020
 Summon eventDic 31096
@@ -2404,9 +2433,7 @@ Summon gameEntityIdentifyID 31111
 Summon hateRatio 30783
 Summon hateTrapId 30742
 Summon hit 175
-Summon hitRate 248
 Summon hostId 56
-Summon hostTeamId 162
 Summon hp 178
 Summon ignoreArmor 515
 Summon inheritPropRatio 30746
@@ -2429,6 +2456,7 @@ Summon minMagicArmor 617
 Summon minMagicAtk 252
 Summon minPhysicalArmor 615
 Summon minPhysicalAtk 250
+Summon mineWarCamp 28
 Summon miscProps 31089
 Summon monsterDmg 532
 Summon monsterDmgAnti 533
@@ -2437,13 +2465,10 @@ Summon mortal 174
 Summon moveAni 168
 Summon moveController 30737
 Summon mpCostRatio 183
-Summon mulBloodSuck 242
-Summon mulBossDmg 246
 Summon mulCD 237
 Summon mulFullHp 206
 Summon mulFullMp 208
 Summon mulGCD 30780
-Summon mulHp 180
 Summon mulHurtMagical 31017
 Summon mulHurtPhysical 31016
 Summon mulMaxMagicArmor 32116
@@ -2544,6 +2569,7 @@ TeamStub timerDataBase 30617
 Teleporter baseGlobalIdx 30487
 Teleporter birthInDB 30495
 Teleporter birthInMem 30482
+Teleporter cellFlags 31577
 Teleporter datetimeTimerDataCell 30507
 Teleporter datetimeTimerDataNextTCell 30517
 Teleporter datetimeTimerDataTimeCacheCell 30516
@@ -2553,7 +2579,6 @@ Teleporter delayDestroyTimerID 30484
 Teleporter dirIndex 30519
 Teleporter disappearTime 30521
 Teleporter disappearTimer 30522
-Teleporter dunTimeFreezeFlag 69
 Teleporter fbEntityId 30502
 Teleporter force 67
 Teleporter gameEntityId 68
@@ -2583,6 +2608,7 @@ WonderLandSpaceMgr aiEventListener 30929
 WonderLandSpaceMgr aiEvents 30928
 WonderLandSpaceMgr baseGlobalIdx 30763
 WonderLandSpaceMgr birthInMem 30739
+WonderLandSpaceMgr cellFlags 31528
 WonderLandSpaceMgr collBeCollectedDict 30932
 WonderLandSpaceMgr collToBoss 30976
 WonderLandSpaceMgr datetimeTimerDataCell 30941
@@ -2600,6 +2626,8 @@ WonderLandSpaceMgr notifyNearPosList 30930
 WonderLandSpaceMgr players 30787
 WonderLandSpaceMgr randomBossGameEntityId 30978
 WonderLandSpaceMgr randomBossId 30977
+WonderLandSpaceMgr refreshEntityQueue 32159
+WonderLandSpaceMgr refreshEntityTimerId 32160
 WonderLandSpaceMgr refreshRecords 31708
 WonderLandSpaceMgr spaceEntities 30785
 WonderLandSpaceMgr spaceNo 103
@@ -2640,6 +2668,7 @@ WorldLineSpaceMgr aiEventListener 31952
 WorldLineSpaceMgr aiEvents 31951
 WorldLineSpaceMgr baseGlobalIdx 31962
 WorldLineSpaceMgr birthInMem 31957
+WorldLineSpaceMgr cellFlags 31529
 WorldLineSpaceMgr collBeCollectedDict 31955
 WorldLineSpaceMgr datetimeTimerDataCell 31968
 WorldLineSpaceMgr datetimeTimerDataNextTCell 31970
@@ -2654,6 +2683,8 @@ WorldLineSpaceMgr methodPool 31958
 WorldLineSpaceMgr miscProps 31964
 WorldLineSpaceMgr notifyNearPosList 31953
 WorldLineSpaceMgr players 31946
+WorldLineSpaceMgr refreshEntityQueue 32161
+WorldLineSpaceMgr refreshEntityTimerId 32162
 WorldLineSpaceMgr refreshRecords 31709
 WorldLineSpaceMgr spaceEntities 31944
 WorldLineSpaceMgr spaceNo 365

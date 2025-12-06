@@ -8,6 +8,5 @@ class CollectionBase(KBEngine.Entity):
     def onCancelCollect(self): pass
     def onEnterCollect(self): pass
     def popDialog(self, arg0): pass
-    def popDialogWithSelfHead(self, arg0): pass
     def showPopoverMsg(self, arg0): pass
     def showPopoverMsgWithArg(self, arg0, arg1): pass

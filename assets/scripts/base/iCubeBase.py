@@ -4,6 +4,7 @@ from KBEDebug import *
 
 import gameconst
 import formula
+import gamedecorator
 import gameengine
 import dropAward
 import actionContext
@@ -80,6 +81,7 @@ class ICubeBase(object):
     def addRoomDurationFailedRewindTimes(self):
         self.leftCubeTimes += 1
 
+    @gamedecorator.checkGameconfigEnable('square')
     @AuthClsWraper.authWithPermission(A_AFD.UISquarePanel)
     def reqUseItemAddCubeTimes(self, exposed, itemId, num, isAddDuration):
         INFO_MSG('reqUseItemAddCubeTimes: {} {}'.format(itemId, num), isAddDuration)

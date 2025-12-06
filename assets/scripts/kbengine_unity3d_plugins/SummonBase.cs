@@ -19,104 +19,33 @@ namespace KBEngine
 		public EntityBaseEntityCall_SummonBase baseEntityCall = null;
 		public EntityCellEntityCall_SummonBase cellEntityCall = null;
 
-		public float PVPDmg = 0f;
-		public float PVPDmgAnti = 0f;
-		public Int32 adjAntiFatal = 0;
-		public float adjAntiMortal = 0f;
-		public float adjBloodSuck = 0f;
 		
-		public float adjDmgArmor = 0f;
-		public Int32 adjDodge = 0;
-		public Int32 adjFatal = 0;
-		public Int32 adjFullHp = 0;
-		public Int32 adjFullHpAbs = 0;
-		public Int32 adjFullMp = 0;
-		public Int32 adjFullMpAbs = 0;
-		public Int32 adjHit = 0;
-		public float adjHp = 0f;
-		public float adjIgnoreArmor = 0f;
-		public Int32 adjKnockAnti = 0;
-		public Int32 adjKnockEnh = 0;
-		public float adjMortal = 0f;
-		public Int32 adjSilentAnti = 0;
-		public Int32 adjSilentEnh = 0;
-		public Int32 adjStunAnti = 0;
-		public Int32 adjStunEnh = 0;
 		public Int32 antiFatal = 0;
-		public float antiMortal = 0f;
-		public Int32 atkBless = 0;
-		public float baseDmgArmor = 0f;
-		public float baseIgnoreArmor = 0f;
 		public float bePushedSpeed = 0f;
 		public Int32 bindedEntityId = 0;
 		public virtual void onBindedEntityIdChanged(Int32 oldValue) {}
-		public float bloodSuck = 0f;
 		
-		
-		public virtual void onDieWithHostChanged(Byte oldValue) {}
 		public float dmgArmor = 0f;
-		public Int32 dodge = 0;
-		public Int32 drugsQuantity = 0;
-		
-		public Int32 fatal = 0;
-		public float finalDmg = 0f;
-		public float finalDmgAnti = 0f;
-		
-		public Int32 frozenAnti = 0;
-		public Int32 frozenEnh = 0;
 		
 		
 		
-		public Int32 hit = 0;
-		public float hitRate = 0.0f;
 		
 		
-		public virtual void onHostTeamIdChanged(UInt64 oldValue) {}
 		
 		public float ignoreArmor = 0f;
 		
 		
-		public Int32 knockAnti = 0;
-		public Int32 knockEnh = 0;
 		
-		public Int32 maxMagicArmor = 0;
-		public Int32 maxMagicAtk = 0;
-		public Int32 maxPhysicalArmor = 0;
-		public Int32 maxPhysicalAtk = 0;
-		public Int32 minMagicArmor = 0;
-		public Int32 minMagicAtk = 0;
-		public Int32 minPhysicalArmor = 0;
-		public Int32 minPhysicalAtk = 0;
-		public float monsterDmg = 0f;
-		public float monsterDmgAnti = 0f;
-		public float mortal = 0f;
+		public Byte mineWarCamp = 0;
 		
-		
-		public float mulBloodSuck = 0f;
-		public float mulBossDmg = 0.0f;
-		
-		public float mulFullHp = 0f;
-		public float mulFullMp = 0f;
-		public float mulHp = 0f;
 		public float mulSpeed = 0f;
 		
-		public Int32 pushAnti = 0;
-		public Int32 pushEnh = 0;
-		public Int32 realDmg = 0;
-		public Int32 realDmgDef = 0;
 		
 		public Int32 siegeWarCamp = 0;
-		public Int32 silentAnti = 0;
-		public Int32 silentEnh = 0;
-		public float skillCD = 0f;
-		public Int32 slowAnti = 0;
-		public Int32 slowEnh = 0;
 		
 		
 		
 		
-		public Int32 stunAnti = 0;
-		public Int32 stunEnh = 0;
 		
 		public virtual void onSummonIdChanged(Int32 oldValue) {}
 
@@ -247,13 +176,6 @@ namespace KBEngine
 					Byte onAddSkill_arg6 = stream.readUint8();
 					onAddSkill(onAddSkill_arg1, onAddSkill_arg2, onAddSkill_arg3, onAddSkill_arg4, onAddSkill_arg5, onAddSkill_arg6);
 					break;
-				case 540:
-					Int32 onAddStateRet_arg1 = stream.readInt32();
-					Int32 onAddStateRet_arg2 = stream.readInt32();
-					Int32 onAddStateRet_arg3 = stream.readInt32();
-					Int32 onAddStateRet_arg4 = stream.readInt32();
-					onAddStateRet(onAddStateRet_arg1, onAddStateRet_arg2, onAddStateRet_arg3, onAddStateRet_arg4);
-					break;
 				case 542:
 					Int32 onBreakCastingSkill_arg1 = stream.readInt32();
 					UInt32 onBreakCastingSkill_arg2 = stream.readUint32();
@@ -270,16 +192,6 @@ namespace KBEngine
 					Int32 onDead_arg1 = stream.readInt32();
 					onDead(onDead_arg1);
 					break;
-				case 538:
-					List<float> onDropRuneIds_arg1 = ((DATATYPE_AnonymousArray_10008)method.args[0]).createFromStreamEx(stream);
-					Int32 onDropRuneIds_arg2 = stream.readInt32();
-					List<Int32> onDropRuneIds_arg3 = ((DATATYPE_AnonymousArray_10014)method.args[2]).createFromStreamEx(stream);
-					onDropRuneIds(onDropRuneIds_arg1, onDropRuneIds_arg2, onDropRuneIds_arg3);
-					break;
-				case 555:
-					Byte onFlashSkillZed_arg1 = stream.readUint8();
-					onFlashSkillZed(onFlashSkillZed_arg1);
-					break;
 				case 549:
 					Int32 onGetAureoleInfo_arg1 = stream.readInt32();
 					CLIENT_AUREOLES onGetAureoleInfo_arg2 = ((DATATYPE_CLIENT_AUREOLES)method.args[1]).createFromStreamEx(stream);
@@ -294,14 +206,6 @@ namespace KBEngine
 					Int32 onMessage_arg1 = stream.readInt32();
 					List<string> onMessage_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
 					onMessage(onMessage_arg1, onMessage_arg2);
-					break;
-				case 554:
-					Byte onMultiAtkStage_arg1 = stream.readUint8();
-					UInt32 onMultiAtkStage_arg2 = stream.readUint32();
-					Int32 onMultiAtkStage_arg3 = stream.readInt32();
-					List<float> onMultiAtkStage_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
-					List<Int32> onMultiAtkStage_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
-					onMultiAtkStage(onMultiAtkStage_arg1, onMultiAtkStage_arg2, onMultiAtkStage_arg3, onMultiAtkStage_arg4, onMultiAtkStage_arg5);
 					break;
 				case 530:
 					Int32 onOthersSkillDamage_arg1 = stream.readInt32();
@@ -320,15 +224,6 @@ namespace KBEngine
 					Int32 onRemoveBuff_arg1 = stream.readInt32();
 					List<UInt64> onRemoveBuff_arg2 = ((DATATYPE_AnonymousArray_10006)method.args[1]).createFromStreamEx(stream);
 					onRemoveBuff(onRemoveBuff_arg1, onRemoveBuff_arg2);
-					break;
-				case 539:
-					UInt32 onRemoveRune_arg1 = stream.readUint32();
-					Int32 onRemoveRune_arg2 = stream.readInt32();
-					onRemoveRune(onRemoveRune_arg1, onRemoveRune_arg2);
-					break;
-				case 531:
-					UInt32 onServerUseSkill_arg1 = stream.readUint32();
-					onServerUseSkill(onServerUseSkill_arg1);
 					break;
 				case 550:
 					UInt32 onSetAddSkillCd_arg1 = stream.readUint32();
@@ -349,11 +244,6 @@ namespace KBEngine
 				case 529:
 					SKILL_DAMAGE_INFO onSkillDamage_arg1 = ((DATATYPE_SKILL_DAMAGE_INFO)method.args[0]).createFromStreamEx(stream);
 					onSkillDamage(onSkillDamage_arg1);
-					break;
-				case 552:
-					UInt32 onSkillTeleport_arg1 = stream.readUint32();
-					Vector3 onSkillTeleport_arg2 = stream.readVector3();
-					onSkillTeleport(onSkillTeleport_arg1, onSkillTeleport_arg2);
 					break;
 				case 534:
 					CLIENT_AUREOLES onUpdateAureoles_arg1 = ((DATATYPE_CLIENT_AUREOLES)method.args[0]).createFromStreamEx(stream);
@@ -377,7 +267,8 @@ namespace KBEngine
 					Int32 onUseCasting_arg3 = stream.readInt32();
 					List<float> onUseCasting_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onUseCasting_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
-					onUseCasting(onUseCasting_arg1, onUseCasting_arg2, onUseCasting_arg3, onUseCasting_arg4, onUseCasting_arg5);
+					List<float> onUseCasting_arg6 = ((DATATYPE_AnonymousArray_10008)method.args[5]).createFromStreamEx(stream);
+					onUseCasting(onUseCasting_arg1, onUseCasting_arg2, onUseCasting_arg3, onUseCasting_arg4, onUseCasting_arg5, onUseCasting_arg6);
 					break;
 				case 528:
 					Int32 onUseChanneling_arg1 = stream.readInt32();
@@ -386,7 +277,8 @@ namespace KBEngine
 					List<float> onUseChanneling_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onUseChanneling_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
 					Int32 onUseChanneling_arg6 = stream.readInt32();
-					onUseChanneling(onUseChanneling_arg1, onUseChanneling_arg2, onUseChanneling_arg3, onUseChanneling_arg4, onUseChanneling_arg5, onUseChanneling_arg6);
+					List<float> onUseChanneling_arg7 = ((DATATYPE_AnonymousArray_10008)method.args[6]).createFromStreamEx(stream);
+					onUseChanneling(onUseChanneling_arg1, onUseChanneling_arg2, onUseChanneling_arg3, onUseChanneling_arg4, onUseChanneling_arg5, onUseChanneling_arg6, onUseChanneling_arg7);
 					break;
 				case 526:
 					Byte onUseSkill_arg1 = stream.readUint8();
@@ -394,15 +286,12 @@ namespace KBEngine
 					Int32 onUseSkill_arg3 = stream.readInt32();
 					List<float> onUseSkill_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onUseSkill_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
-					onUseSkill(onUseSkill_arg1, onUseSkill_arg2, onUseSkill_arg3, onUseSkill_arg4, onUseSkill_arg5);
+					List<float> onUseSkill_arg6 = ((DATATYPE_AnonymousArray_10008)method.args[5]).createFromStreamEx(stream);
+					onUseSkill(onUseSkill_arg1, onUseSkill_arg2, onUseSkill_arg3, onUseSkill_arg4, onUseSkill_arg5, onUseSkill_arg6);
 					break;
 				case 557:
 					Int32 popDialog_arg1 = stream.readInt32();
 					popDialog(popDialog_arg1);
-					break;
-				case 558:
-					Int32 popDialogWithSelfHead_arg1 = stream.readInt32();
-					popDialogWithSelfHead(popDialogWithSelfHead_arg1);
 					break;
 				case 559:
 					UInt32 showPopoverMsg_arg1 = stream.readUint32();
@@ -412,10 +301,6 @@ namespace KBEngine
 					UInt32 showPopoverMsgWithArg_arg1 = stream.readUint32();
 					List<string> showPopoverMsgWithArg_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
 					showPopoverMsgWithArg(showPopoverMsgWithArg_arg1, showPopoverMsgWithArg_arg2);
-					break;
-				case 551:
-					UInt32 skillTeleportBefore_arg1 = stream.readUint32();
-					skillTeleportBefore(skillTeleportBefore_arg1);
 					break;
 				default:
 					break;
@@ -461,86 +346,6 @@ namespace KBEngine
 
 				switch(prop.properUtype)
 				{
-					case 530:
-						float oldval_PVPDmg = PVPDmg;
-						PVPDmg = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onPVPDmgChanged(oldval_PVPDmg);
-						}
-						else
-						{
-							if(inWorld)
-								onPVPDmgChanged(oldval_PVPDmg);
-						}
-
-						break;
-					case 531:
-						float oldval_PVPDmgAnti = PVPDmgAnti;
-						PVPDmgAnti = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onPVPDmgAntiChanged(oldval_PVPDmgAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onPVPDmgAntiChanged(oldval_PVPDmgAnti);
-						}
-
-						break;
-					case 244:
-						Int32 oldval_adjAntiFatal = adjAntiFatal;
-						adjAntiFatal = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjAntiFatalChanged(oldval_adjAntiFatal);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjAntiFatalChanged(oldval_adjAntiFatal);
-						}
-
-						break;
-					case 234:
-						float oldval_adjAntiMortal = adjAntiMortal;
-						adjAntiMortal = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjAntiMortalChanged(oldval_adjAntiMortal);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjAntiMortalChanged(oldval_adjAntiMortal);
-						}
-
-						break;
-					case 241:
-						float oldval_adjBloodSuck = adjBloodSuck;
-						adjBloodSuck = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjBloodSuckChanged(oldval_adjBloodSuck);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjBloodSuckChanged(oldval_adjBloodSuck);
-						}
-
-						break;
 					case 236:
 						float oldval_adjCD = adjCD;
 						adjCD = stream.readFloat();
@@ -557,278 +362,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 520:
-						float oldval_adjDmgArmor = adjDmgArmor;
-						adjDmgArmor = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjDmgArmorChanged(oldval_adjDmgArmor);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjDmgArmorChanged(oldval_adjDmgArmor);
-						}
-
-						break;
-					case 225:
-						Int32 oldval_adjDodge = adjDodge;
-						adjDodge = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjDodgeChanged(oldval_adjDodge);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjDodgeChanged(oldval_adjDodge);
-						}
-
-						break;
-					case 176:
-						Int32 oldval_adjFatal = adjFatal;
-						adjFatal = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjFatalChanged(oldval_adjFatal);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjFatalChanged(oldval_adjFatal);
-						}
-
-						break;
-					case 204:
-						Int32 oldval_adjFullHp = adjFullHp;
-						adjFullHp = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjFullHpChanged(oldval_adjFullHp);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjFullHpChanged(oldval_adjFullHp);
-						}
-
-						break;
-					case 205:
-						Int32 oldval_adjFullHpAbs = adjFullHpAbs;
-						adjFullHpAbs = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjFullHpAbsChanged(oldval_adjFullHpAbs);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjFullHpAbsChanged(oldval_adjFullHpAbs);
-						}
-
-						break;
-					case 207:
-						Int32 oldval_adjFullMp = adjFullMp;
-						adjFullMp = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjFullMpChanged(oldval_adjFullMp);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjFullMpChanged(oldval_adjFullMp);
-						}
-
-						break;
-					case 223:
-						Int32 oldval_adjFullMpAbs = adjFullMpAbs;
-						adjFullMpAbs = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjFullMpAbsChanged(oldval_adjFullMpAbs);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjFullMpAbsChanged(oldval_adjFullMpAbs);
-						}
-
-						break;
-					case 235:
-						Int32 oldval_adjHit = adjHit;
-						adjHit = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjHitChanged(oldval_adjHit);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjHitChanged(oldval_adjHit);
-						}
-
-						break;
-					case 179:
-						float oldval_adjHp = adjHp;
-						adjHp = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjHpChanged(oldval_adjHp);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjHpChanged(oldval_adjHp);
-						}
-
-						break;
-					case 517:
-						float oldval_adjIgnoreArmor = adjIgnoreArmor;
-						adjIgnoreArmor = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjIgnoreArmorChanged(oldval_adjIgnoreArmor);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjIgnoreArmorChanged(oldval_adjIgnoreArmor);
-						}
-
-						break;
-					case 200:
-						Int32 oldval_adjKnockAnti = adjKnockAnti;
-						adjKnockAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjKnockAntiChanged(oldval_adjKnockAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjKnockAntiChanged(oldval_adjKnockAnti);
-						}
-
-						break;
-					case 189:
-						Int32 oldval_adjKnockEnh = adjKnockEnh;
-						adjKnockEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjKnockEnhChanged(oldval_adjKnockEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjKnockEnhChanged(oldval_adjKnockEnh);
-						}
-
-						break;
-					case 224:
-						float oldval_adjMortal = adjMortal;
-						adjMortal = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjMortalChanged(oldval_adjMortal);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjMortalChanged(oldval_adjMortal);
-						}
-
-						break;
-					case 197:
-						Int32 oldval_adjSilentAnti = adjSilentAnti;
-						adjSilentAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjSilentAntiChanged(oldval_adjSilentAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjSilentAntiChanged(oldval_adjSilentAnti);
-						}
-
-						break;
-					case 187:
-						Int32 oldval_adjSilentEnh = adjSilentEnh;
-						adjSilentEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjSilentEnhChanged(oldval_adjSilentEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjSilentEnhChanged(oldval_adjSilentEnh);
-						}
-
-						break;
-					case 195:
-						Int32 oldval_adjStunAnti = adjStunAnti;
-						adjStunAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjStunAntiChanged(oldval_adjStunAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjStunAntiChanged(oldval_adjStunAnti);
-						}
-
-						break;
-					case 185:
-						Int32 oldval_adjStunEnh = adjStunEnh;
-						adjStunEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAdjStunEnhChanged(oldval_adjStunEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onAdjStunEnhChanged(oldval_adjStunEnh);
-						}
-
-						break;
 					case 243:
 						Int32 oldval_antiFatal = antiFatal;
 						antiFatal = stream.readInt32();
@@ -842,70 +375,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onAntiFatalChanged(oldval_antiFatal);
-						}
-
-						break;
-					case 226:
-						float oldval_antiMortal = antiMortal;
-						antiMortal = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAntiMortalChanged(oldval_antiMortal);
-						}
-						else
-						{
-							if(inWorld)
-								onAntiMortalChanged(oldval_antiMortal);
-						}
-
-						break;
-					case 254:
-						Int32 oldval_atkBless = atkBless;
-						atkBless = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onAtkBlessChanged(oldval_atkBless);
-						}
-						else
-						{
-							if(inWorld)
-								onAtkBlessChanged(oldval_atkBless);
-						}
-
-						break;
-					case 519:
-						float oldval_baseDmgArmor = baseDmgArmor;
-						baseDmgArmor = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onBaseDmgArmorChanged(oldval_baseDmgArmor);
-						}
-						else
-						{
-							if(inWorld)
-								onBaseDmgArmorChanged(oldval_baseDmgArmor);
-						}
-
-						break;
-					case 516:
-						float oldval_baseIgnoreArmor = baseIgnoreArmor;
-						baseIgnoreArmor = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onBaseIgnoreArmorChanged(oldval_baseIgnoreArmor);
-						}
-						else
-						{
-							if(inWorld)
-								onBaseIgnoreArmorChanged(oldval_baseIgnoreArmor);
 						}
 
 						break;
@@ -941,22 +410,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 240:
-						float oldval_bloodSuck = bloodSuck;
-						bloodSuck = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onBloodSuckChanged(oldval_bloodSuck);
-						}
-						else
-						{
-							if(inWorld)
-								onBloodSuckChanged(oldval_bloodSuck);
-						}
-
-						break;
 					case 167:
 						Byte oldval_bornState = bornState;
 						bornState = stream.readUint8();
@@ -970,22 +423,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onBornStateChanged(oldval_bornState);
-						}
-
-						break;
-					case 165:
-						Byte oldval_dieWithHost = dieWithHost;
-						dieWithHost = stream.readUint8();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onDieWithHostChanged(oldval_dieWithHost);
-						}
-						else
-						{
-							if(inWorld)
-								onDieWithHostChanged(oldval_dieWithHost);
 						}
 
 						break;
@@ -1021,102 +458,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 181:
-						Int32 oldval_dodge = dodge;
-						dodge = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onDodgeChanged(oldval_dodge);
-						}
-						else
-						{
-							if(inWorld)
-								onDodgeChanged(oldval_dodge);
-						}
-
-						break;
-					case 621:
-						Int32 oldval_drugsQuantity = drugsQuantity;
-						drugsQuantity = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onDrugsQuantityChanged(oldval_drugsQuantity);
-						}
-						else
-						{
-							if(inWorld)
-								onDrugsQuantityChanged(oldval_drugsQuantity);
-						}
-
-						break;
-					case 271:
-						Byte oldval_dunTimeFreezeFlag = dunTimeFreezeFlag;
-						dunTimeFreezeFlag = stream.readUint8();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-						}
-						else
-						{
-							if(inWorld)
-								onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-						}
-
-						break;
-					case 173:
-						Int32 oldval_fatal = fatal;
-						fatal = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onFatalChanged(oldval_fatal);
-						}
-						else
-						{
-							if(inWorld)
-								onFatalChanged(oldval_fatal);
-						}
-
-						break;
-					case 534:
-						float oldval_finalDmg = finalDmg;
-						finalDmg = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onFinalDmgChanged(oldval_finalDmg);
-						}
-						else
-						{
-							if(inWorld)
-								onFinalDmgChanged(oldval_finalDmg);
-						}
-
-						break;
-					case 535:
-						float oldval_finalDmgAnti = finalDmgAnti;
-						finalDmgAnti = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onFinalDmgAntiChanged(oldval_finalDmgAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onFinalDmgAntiChanged(oldval_finalDmgAnti);
-						}
-
-						break;
 					case 265:
 						Int32 oldval_force = force;
 						force = stream.readInt32();
@@ -1130,38 +471,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onForceChanged(oldval_force);
-						}
-
-						break;
-					case 261:
-						Int32 oldval_frozenAnti = frozenAnti;
-						frozenAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onFrozenAntiChanged(oldval_frozenAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onFrozenAntiChanged(oldval_frozenAnti);
-						}
-
-						break;
-					case 260:
-						Int32 oldval_frozenEnh = frozenEnh;
-						frozenEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onFrozenEnhChanged(oldval_frozenEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onFrozenEnhChanged(oldval_frozenEnh);
 						}
 
 						break;
@@ -1213,38 +522,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 175:
-						Int32 oldval_hit = hit;
-						hit = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onHitChanged(oldval_hit);
-						}
-						else
-						{
-							if(inWorld)
-								onHitChanged(oldval_hit);
-						}
-
-						break;
-					case 248:
-						float oldval_hitRate = hitRate;
-						hitRate = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onHitRateChanged(oldval_hitRate);
-						}
-						else
-						{
-							if(inWorld)
-								onHitRateChanged(oldval_hitRate);
-						}
-
-						break;
 					case 56:
 						Int32 oldval_hostId = hostId;
 						hostId = stream.readInt32();
@@ -1258,22 +535,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onHostIdChanged(oldval_hostId);
-						}
-
-						break;
-					case 162:
-						UInt64 oldval_hostTeamId = hostTeamId;
-						hostTeamId = stream.readUint64();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onHostTeamIdChanged(oldval_hostTeamId);
-						}
-						else
-						{
-							if(inWorld)
-								onHostTeamIdChanged(oldval_hostTeamId);
 						}
 
 						break;
@@ -1341,38 +602,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 198:
-						Int32 oldval_knockAnti = knockAnti;
-						knockAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onKnockAntiChanged(oldval_knockAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onKnockAntiChanged(oldval_knockAnti);
-						}
-
-						break;
-					case 188:
-						Int32 oldval_knockEnh = knockEnh;
-						knockEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onKnockEnhChanged(oldval_knockEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onKnockEnhChanged(oldval_knockEnh);
-						}
-
-						break;
 					case 170:
 						UInt32 oldval_level = level;
 						level = stream.readUint32();
@@ -1389,243 +618,19 @@ namespace KBEngine
 						}
 
 						break;
-					case 618:
-						Int32 oldval_maxMagicArmor = maxMagicArmor;
-						maxMagicArmor = stream.readInt32();
+					case 28:
+						Byte oldval_mineWarCamp = mineWarCamp;
+						mineWarCamp = stream.readUint8();
 
 						if(prop.isBase())
 						{
 							if(inited)
-								onMaxMagicArmorChanged(oldval_maxMagicArmor);
+								onMineWarCampChanged(oldval_mineWarCamp);
 						}
 						else
 						{
 							if(inWorld)
-								onMaxMagicArmorChanged(oldval_maxMagicArmor);
-						}
-
-						break;
-					case 253:
-						Int32 oldval_maxMagicAtk = maxMagicAtk;
-						maxMagicAtk = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMaxMagicAtkChanged(oldval_maxMagicAtk);
-						}
-						else
-						{
-							if(inWorld)
-								onMaxMagicAtkChanged(oldval_maxMagicAtk);
-						}
-
-						break;
-					case 616:
-						Int32 oldval_maxPhysicalArmor = maxPhysicalArmor;
-						maxPhysicalArmor = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMaxPhysicalArmorChanged(oldval_maxPhysicalArmor);
-						}
-						else
-						{
-							if(inWorld)
-								onMaxPhysicalArmorChanged(oldval_maxPhysicalArmor);
-						}
-
-						break;
-					case 251:
-						Int32 oldval_maxPhysicalAtk = maxPhysicalAtk;
-						maxPhysicalAtk = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMaxPhysicalAtkChanged(oldval_maxPhysicalAtk);
-						}
-						else
-						{
-							if(inWorld)
-								onMaxPhysicalAtkChanged(oldval_maxPhysicalAtk);
-						}
-
-						break;
-					case 617:
-						Int32 oldval_minMagicArmor = minMagicArmor;
-						minMagicArmor = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMinMagicArmorChanged(oldval_minMagicArmor);
-						}
-						else
-						{
-							if(inWorld)
-								onMinMagicArmorChanged(oldval_minMagicArmor);
-						}
-
-						break;
-					case 252:
-						Int32 oldval_minMagicAtk = minMagicAtk;
-						minMagicAtk = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMinMagicAtkChanged(oldval_minMagicAtk);
-						}
-						else
-						{
-							if(inWorld)
-								onMinMagicAtkChanged(oldval_minMagicAtk);
-						}
-
-						break;
-					case 615:
-						Int32 oldval_minPhysicalArmor = minPhysicalArmor;
-						minPhysicalArmor = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMinPhysicalArmorChanged(oldval_minPhysicalArmor);
-						}
-						else
-						{
-							if(inWorld)
-								onMinPhysicalArmorChanged(oldval_minPhysicalArmor);
-						}
-
-						break;
-					case 250:
-						Int32 oldval_minPhysicalAtk = minPhysicalAtk;
-						minPhysicalAtk = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMinPhysicalAtkChanged(oldval_minPhysicalAtk);
-						}
-						else
-						{
-							if(inWorld)
-								onMinPhysicalAtkChanged(oldval_minPhysicalAtk);
-						}
-
-						break;
-					case 532:
-						float oldval_monsterDmg = monsterDmg;
-						monsterDmg = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMonsterDmgChanged(oldval_monsterDmg);
-						}
-						else
-						{
-							if(inWorld)
-								onMonsterDmgChanged(oldval_monsterDmg);
-						}
-
-						break;
-					case 533:
-						float oldval_monsterDmgAnti = monsterDmgAnti;
-						monsterDmgAnti = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMonsterDmgAntiChanged(oldval_monsterDmgAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onMonsterDmgAntiChanged(oldval_monsterDmgAnti);
-						}
-
-						break;
-					case 174:
-						float oldval_mortal = mortal;
-						mortal = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMortalChanged(oldval_mortal);
-						}
-						else
-						{
-							if(inWorld)
-								onMortalChanged(oldval_mortal);
-						}
-
-						break;
-					case 168:
-						Byte oldval_moveAni = moveAni;
-						moveAni = stream.readUint8();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMoveAniChanged(oldval_moveAni);
-						}
-						else
-						{
-							if(inWorld)
-								onMoveAniChanged(oldval_moveAni);
-						}
-
-						break;
-					case 183:
-						float oldval_mpCostRatio = mpCostRatio;
-						mpCostRatio = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMpCostRatioChanged(oldval_mpCostRatio);
-						}
-						else
-						{
-							if(inWorld)
-								onMpCostRatioChanged(oldval_mpCostRatio);
-						}
-
-						break;
-					case 242:
-						float oldval_mulBloodSuck = mulBloodSuck;
-						mulBloodSuck = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMulBloodSuckChanged(oldval_mulBloodSuck);
-						}
-						else
-						{
-							if(inWorld)
-								onMulBloodSuckChanged(oldval_mulBloodSuck);
-						}
-
-						break;
-					case 246:
-						float oldval_mulBossDmg = mulBossDmg;
-						mulBossDmg = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMulBossDmgChanged(oldval_mulBossDmg);
-						}
-						else
-						{
-							if(inWorld)
-								onMulBossDmgChanged(oldval_mulBossDmg);
+								onMineWarCampChanged(oldval_mineWarCamp);
 						}
 
 						break;
@@ -1642,54 +647,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onMulCDChanged(oldval_mulCD);
-						}
-
-						break;
-					case 206:
-						float oldval_mulFullHp = mulFullHp;
-						mulFullHp = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMulFullHpChanged(oldval_mulFullHp);
-						}
-						else
-						{
-							if(inWorld)
-								onMulFullHpChanged(oldval_mulFullHp);
-						}
-
-						break;
-					case 208:
-						float oldval_mulFullMp = mulFullMp;
-						mulFullMp = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMulFullMpChanged(oldval_mulFullMp);
-						}
-						else
-						{
-							if(inWorld)
-								onMulFullMpChanged(oldval_mulFullMp);
-						}
-
-						break;
-					case 180:
-						float oldval_mulHp = mulHp;
-						mulHp = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMulHpChanged(oldval_mulHp);
-						}
-						else
-						{
-							if(inWorld)
-								onMulHpChanged(oldval_mulHp);
 						}
 
 						break;
@@ -1741,70 +698,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 543:
-						Int32 oldval_pushAnti = pushAnti;
-						pushAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onPushAntiChanged(oldval_pushAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onPushAntiChanged(oldval_pushAnti);
-						}
-
-						break;
-					case 522:
-						Int32 oldval_pushEnh = pushEnh;
-						pushEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onPushEnhChanged(oldval_pushEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onPushEnhChanged(oldval_pushEnh);
-						}
-
-						break;
-					case 526:
-						Int32 oldval_realDmg = realDmg;
-						realDmg = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onRealDmgChanged(oldval_realDmg);
-						}
-						else
-						{
-							if(inWorld)
-								onRealDmgChanged(oldval_realDmg);
-						}
-
-						break;
-					case 527:
-						Int32 oldval_realDmgDef = realDmgDef;
-						realDmgDef = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onRealDmgDefChanged(oldval_realDmgDef);
-						}
-						else
-						{
-							if(inWorld)
-								onRealDmgDefChanged(oldval_realDmgDef);
-						}
-
-						break;
 					case 249:
 						Int32 oldval_selectedTargetId = selectedTargetId;
 						selectedTargetId = stream.readInt32();
@@ -1834,86 +727,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onSiegeWarCampChanged(oldval_siegeWarCamp);
-						}
-
-						break;
-					case 196:
-						Int32 oldval_silentAnti = silentAnti;
-						silentAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onSilentAntiChanged(oldval_silentAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onSilentAntiChanged(oldval_silentAnti);
-						}
-
-						break;
-					case 186:
-						Int32 oldval_silentEnh = silentEnh;
-						silentEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onSilentEnhChanged(oldval_silentEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onSilentEnhChanged(oldval_silentEnh);
-						}
-
-						break;
-					case 536:
-						float oldval_skillCD = skillCD;
-						skillCD = stream.readFloat();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onSkillCDChanged(oldval_skillCD);
-						}
-						else
-						{
-							if(inWorld)
-								onSkillCDChanged(oldval_skillCD);
-						}
-
-						break;
-					case 524:
-						Int32 oldval_slowAnti = slowAnti;
-						slowAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onSlowAntiChanged(oldval_slowAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onSlowAntiChanged(oldval_slowAnti);
-						}
-
-						break;
-					case 523:
-						Int32 oldval_slowEnh = slowEnh;
-						slowEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onSlowEnhChanged(oldval_slowEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onSlowEnhChanged(oldval_slowEnh);
 						}
 
 						break;
@@ -1985,38 +798,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 194:
-						Int32 oldval_stunAnti = stunAnti;
-						stunAnti = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onStunAntiChanged(oldval_stunAnti);
-						}
-						else
-						{
-							if(inWorld)
-								onStunAntiChanged(oldval_stunAnti);
-						}
-
-						break;
-					case 184:
-						Int32 oldval_stunEnh = stunEnh;
-						stunEnh = stream.readInt32();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onStunEnhChanged(oldval_stunEnh);
-						}
-						else
-						{
-							if(inWorld)
-								onStunEnhChanged(oldval_stunEnh);
-						}
-
-						break;
 					case 55:
 						Int32 oldval_summonId = summonId;
 						summonId = stream.readInt32();
@@ -2044,111 +825,6 @@ namespace KBEngine
 			ScriptModule sm = EntityDef.moduledefs["Summon"];
 			Dictionary<UInt16, Property> pdatas = sm.idpropertys;
 
-			float oldval_PVPDmg = PVPDmg;
-			Property prop_PVPDmg = pdatas[91];
-			if(prop_PVPDmg.isBase())
-			{
-				if(inited && !inWorld)
-					onPVPDmgChanged(oldval_PVPDmg);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_PVPDmg.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onPVPDmgChanged(oldval_PVPDmg);
-					}
-				}
-			}
-
-			float oldval_PVPDmgAnti = PVPDmgAnti;
-			Property prop_PVPDmgAnti = pdatas[92];
-			if(prop_PVPDmgAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onPVPDmgAntiChanged(oldval_PVPDmgAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_PVPDmgAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onPVPDmgAntiChanged(oldval_PVPDmgAnti);
-					}
-				}
-			}
-
-			Int32 oldval_adjAntiFatal = adjAntiFatal;
-			Property prop_adjAntiFatal = pdatas[5];
-			if(prop_adjAntiFatal.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjAntiFatalChanged(oldval_adjAntiFatal);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjAntiFatal.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjAntiFatalChanged(oldval_adjAntiFatal);
-					}
-				}
-			}
-
-			float oldval_adjAntiMortal = adjAntiMortal;
-			Property prop_adjAntiMortal = pdatas[6];
-			if(prop_adjAntiMortal.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjAntiMortalChanged(oldval_adjAntiMortal);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjAntiMortal.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjAntiMortalChanged(oldval_adjAntiMortal);
-					}
-				}
-			}
-
-			float oldval_adjBloodSuck = adjBloodSuck;
-			Property prop_adjBloodSuck = pdatas[8];
-			if(prop_adjBloodSuck.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjBloodSuckChanged(oldval_adjBloodSuck);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjBloodSuck.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjBloodSuckChanged(oldval_adjBloodSuck);
-					}
-				}
-			}
-
 			float oldval_adjCD = adjCD;
 			Property prop_adjCD = pdatas[9];
 			if(prop_adjCD.isBase())
@@ -2170,363 +846,6 @@ namespace KBEngine
 				}
 			}
 
-			float oldval_adjDmgArmor = adjDmgArmor;
-			Property prop_adjDmgArmor = pdatas[93];
-			if(prop_adjDmgArmor.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjDmgArmorChanged(oldval_adjDmgArmor);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjDmgArmor.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjDmgArmorChanged(oldval_adjDmgArmor);
-					}
-				}
-			}
-
-			Int32 oldval_adjDodge = adjDodge;
-			Property prop_adjDodge = pdatas[12];
-			if(prop_adjDodge.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjDodgeChanged(oldval_adjDodge);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjDodge.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjDodgeChanged(oldval_adjDodge);
-					}
-				}
-			}
-
-			Int32 oldval_adjFatal = adjFatal;
-			Property prop_adjFatal = pdatas[13];
-			if(prop_adjFatal.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjFatalChanged(oldval_adjFatal);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjFatal.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjFatalChanged(oldval_adjFatal);
-					}
-				}
-			}
-
-			Int32 oldval_adjFullHp = adjFullHp;
-			Property prop_adjFullHp = pdatas[14];
-			if(prop_adjFullHp.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjFullHpChanged(oldval_adjFullHp);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjFullHp.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjFullHpChanged(oldval_adjFullHp);
-					}
-				}
-			}
-
-			Int32 oldval_adjFullHpAbs = adjFullHpAbs;
-			Property prop_adjFullHpAbs = pdatas[15];
-			if(prop_adjFullHpAbs.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjFullHpAbsChanged(oldval_adjFullHpAbs);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjFullHpAbs.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjFullHpAbsChanged(oldval_adjFullHpAbs);
-					}
-				}
-			}
-
-			Int32 oldval_adjFullMp = adjFullMp;
-			Property prop_adjFullMp = pdatas[16];
-			if(prop_adjFullMp.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjFullMpChanged(oldval_adjFullMp);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjFullMp.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjFullMpChanged(oldval_adjFullMp);
-					}
-				}
-			}
-
-			Int32 oldval_adjFullMpAbs = adjFullMpAbs;
-			Property prop_adjFullMpAbs = pdatas[17];
-			if(prop_adjFullMpAbs.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjFullMpAbsChanged(oldval_adjFullMpAbs);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjFullMpAbs.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjFullMpAbsChanged(oldval_adjFullMpAbs);
-					}
-				}
-			}
-
-			Int32 oldval_adjHit = adjHit;
-			Property prop_adjHit = pdatas[18];
-			if(prop_adjHit.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjHitChanged(oldval_adjHit);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjHit.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjHitChanged(oldval_adjHit);
-					}
-				}
-			}
-
-			float oldval_adjHp = adjHp;
-			Property prop_adjHp = pdatas[19];
-			if(prop_adjHp.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjHpChanged(oldval_adjHp);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjHp.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjHpChanged(oldval_adjHp);
-					}
-				}
-			}
-
-			float oldval_adjIgnoreArmor = adjIgnoreArmor;
-			Property prop_adjIgnoreArmor = pdatas[94];
-			if(prop_adjIgnoreArmor.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjIgnoreArmorChanged(oldval_adjIgnoreArmor);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjIgnoreArmor.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjIgnoreArmorChanged(oldval_adjIgnoreArmor);
-					}
-				}
-			}
-
-			Int32 oldval_adjKnockAnti = adjKnockAnti;
-			Property prop_adjKnockAnti = pdatas[20];
-			if(prop_adjKnockAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjKnockAntiChanged(oldval_adjKnockAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjKnockAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjKnockAntiChanged(oldval_adjKnockAnti);
-					}
-				}
-			}
-
-			Int32 oldval_adjKnockEnh = adjKnockEnh;
-			Property prop_adjKnockEnh = pdatas[21];
-			if(prop_adjKnockEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjKnockEnhChanged(oldval_adjKnockEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjKnockEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjKnockEnhChanged(oldval_adjKnockEnh);
-					}
-				}
-			}
-
-			float oldval_adjMortal = adjMortal;
-			Property prop_adjMortal = pdatas[22];
-			if(prop_adjMortal.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjMortalChanged(oldval_adjMortal);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjMortal.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjMortalChanged(oldval_adjMortal);
-					}
-				}
-			}
-
-			Int32 oldval_adjSilentAnti = adjSilentAnti;
-			Property prop_adjSilentAnti = pdatas[23];
-			if(prop_adjSilentAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjSilentAntiChanged(oldval_adjSilentAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjSilentAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjSilentAntiChanged(oldval_adjSilentAnti);
-					}
-				}
-			}
-
-			Int32 oldval_adjSilentEnh = adjSilentEnh;
-			Property prop_adjSilentEnh = pdatas[24];
-			if(prop_adjSilentEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjSilentEnhChanged(oldval_adjSilentEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjSilentEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjSilentEnhChanged(oldval_adjSilentEnh);
-					}
-				}
-			}
-
-			Int32 oldval_adjStunAnti = adjStunAnti;
-			Property prop_adjStunAnti = pdatas[25];
-			if(prop_adjStunAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjStunAntiChanged(oldval_adjStunAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjStunAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjStunAntiChanged(oldval_adjStunAnti);
-					}
-				}
-			}
-
-			Int32 oldval_adjStunEnh = adjStunEnh;
-			Property prop_adjStunEnh = pdatas[26];
-			if(prop_adjStunEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onAdjStunEnhChanged(oldval_adjStunEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_adjStunEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAdjStunEnhChanged(oldval_adjStunEnh);
-					}
-				}
-			}
-
 			Int32 oldval_antiFatal = antiFatal;
 			Property prop_antiFatal = pdatas[28];
 			if(prop_antiFatal.isBase())
@@ -2544,90 +863,6 @@ namespace KBEngine
 					else
 					{
 						onAntiFatalChanged(oldval_antiFatal);
-					}
-				}
-			}
-
-			float oldval_antiMortal = antiMortal;
-			Property prop_antiMortal = pdatas[29];
-			if(prop_antiMortal.isBase())
-			{
-				if(inited && !inWorld)
-					onAntiMortalChanged(oldval_antiMortal);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_antiMortal.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAntiMortalChanged(oldval_antiMortal);
-					}
-				}
-			}
-
-			Int32 oldval_atkBless = atkBless;
-			Property prop_atkBless = pdatas[31];
-			if(prop_atkBless.isBase())
-			{
-				if(inited && !inWorld)
-					onAtkBlessChanged(oldval_atkBless);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_atkBless.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onAtkBlessChanged(oldval_atkBless);
-					}
-				}
-			}
-
-			float oldval_baseDmgArmor = baseDmgArmor;
-			Property prop_baseDmgArmor = pdatas[95];
-			if(prop_baseDmgArmor.isBase())
-			{
-				if(inited && !inWorld)
-					onBaseDmgArmorChanged(oldval_baseDmgArmor);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_baseDmgArmor.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onBaseDmgArmorChanged(oldval_baseDmgArmor);
-					}
-				}
-			}
-
-			float oldval_baseIgnoreArmor = baseIgnoreArmor;
-			Property prop_baseIgnoreArmor = pdatas[96];
-			if(prop_baseIgnoreArmor.isBase())
-			{
-				if(inited && !inWorld)
-					onBaseIgnoreArmorChanged(oldval_baseIgnoreArmor);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_baseIgnoreArmor.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onBaseIgnoreArmorChanged(oldval_baseIgnoreArmor);
 					}
 				}
 			}
@@ -2674,27 +909,6 @@ namespace KBEngine
 				}
 			}
 
-			float oldval_bloodSuck = bloodSuck;
-			Property prop_bloodSuck = pdatas[35];
-			if(prop_bloodSuck.isBase())
-			{
-				if(inited && !inWorld)
-					onBloodSuckChanged(oldval_bloodSuck);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_bloodSuck.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onBloodSuckChanged(oldval_bloodSuck);
-					}
-				}
-			}
-
 			Byte oldval_bornState = bornState;
 			Property prop_bornState = pdatas[36];
 			if(prop_bornState.isBase())
@@ -2712,27 +926,6 @@ namespace KBEngine
 					else
 					{
 						onBornStateChanged(oldval_bornState);
-					}
-				}
-			}
-
-			Byte oldval_dieWithHost = dieWithHost;
-			Property prop_dieWithHost = pdatas[43];
-			if(prop_dieWithHost.isBase())
-			{
-				if(inited && !inWorld)
-					onDieWithHostChanged(oldval_dieWithHost);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_dieWithHost.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onDieWithHostChanged(oldval_dieWithHost);
 					}
 				}
 			}
@@ -2779,132 +972,6 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_dodge = dodge;
-			Property prop_dodge = pdatas[44];
-			if(prop_dodge.isBase())
-			{
-				if(inited && !inWorld)
-					onDodgeChanged(oldval_dodge);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_dodge.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onDodgeChanged(oldval_dodge);
-					}
-				}
-			}
-
-			Int32 oldval_drugsQuantity = drugsQuantity;
-			Property prop_drugsQuantity = pdatas[7];
-			if(prop_drugsQuantity.isBase())
-			{
-				if(inited && !inWorld)
-					onDrugsQuantityChanged(oldval_drugsQuantity);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_drugsQuantity.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onDrugsQuantityChanged(oldval_drugsQuantity);
-					}
-				}
-			}
-
-			Byte oldval_dunTimeFreezeFlag = dunTimeFreezeFlag;
-			Property prop_dunTimeFreezeFlag = pdatas[45];
-			if(prop_dunTimeFreezeFlag.isBase())
-			{
-				if(inited && !inWorld)
-					onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_dunTimeFreezeFlag.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-					}
-				}
-			}
-
-			Int32 oldval_fatal = fatal;
-			Property prop_fatal = pdatas[46];
-			if(prop_fatal.isBase())
-			{
-				if(inited && !inWorld)
-					onFatalChanged(oldval_fatal);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_fatal.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onFatalChanged(oldval_fatal);
-					}
-				}
-			}
-
-			float oldval_finalDmg = finalDmg;
-			Property prop_finalDmg = pdatas[100];
-			if(prop_finalDmg.isBase())
-			{
-				if(inited && !inWorld)
-					onFinalDmgChanged(oldval_finalDmg);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_finalDmg.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onFinalDmgChanged(oldval_finalDmg);
-					}
-				}
-			}
-
-			float oldval_finalDmgAnti = finalDmgAnti;
-			Property prop_finalDmgAnti = pdatas[101];
-			if(prop_finalDmgAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onFinalDmgAntiChanged(oldval_finalDmgAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_finalDmgAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onFinalDmgAntiChanged(oldval_finalDmgAnti);
-					}
-				}
-			}
-
 			Int32 oldval_force = force;
 			Property prop_force = pdatas[47];
 			if(prop_force.isBase())
@@ -2922,48 +989,6 @@ namespace KBEngine
 					else
 					{
 						onForceChanged(oldval_force);
-					}
-				}
-			}
-
-			Int32 oldval_frozenAnti = frozenAnti;
-			Property prop_frozenAnti = pdatas[48];
-			if(prop_frozenAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onFrozenAntiChanged(oldval_frozenAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_frozenAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onFrozenAntiChanged(oldval_frozenAnti);
-					}
-				}
-			}
-
-			Int32 oldval_frozenEnh = frozenEnh;
-			Property prop_frozenEnh = pdatas[49];
-			if(prop_frozenEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onFrozenEnhChanged(oldval_frozenEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_frozenEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onFrozenEnhChanged(oldval_frozenEnh);
 					}
 				}
 			}
@@ -3031,48 +1056,6 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_hit = hit;
-			Property prop_hit = pdatas[53];
-			if(prop_hit.isBase())
-			{
-				if(inited && !inWorld)
-					onHitChanged(oldval_hit);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_hit.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onHitChanged(oldval_hit);
-					}
-				}
-			}
-
-			float oldval_hitRate = hitRate;
-			Property prop_hitRate = pdatas[54];
-			if(prop_hitRate.isBase())
-			{
-				if(inited && !inWorld)
-					onHitRateChanged(oldval_hitRate);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_hitRate.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onHitRateChanged(oldval_hitRate);
-					}
-				}
-			}
-
 			Int32 oldval_hostId = hostId;
 			Property prop_hostId = pdatas[55];
 			if(prop_hostId.isBase())
@@ -3090,27 +1073,6 @@ namespace KBEngine
 					else
 					{
 						onHostIdChanged(oldval_hostId);
-					}
-				}
-			}
-
-			UInt64 oldval_hostTeamId = hostTeamId;
-			Property prop_hostTeamId = pdatas[56];
-			if(prop_hostTeamId.isBase())
-			{
-				if(inited && !inWorld)
-					onHostTeamIdChanged(oldval_hostTeamId);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_hostTeamId.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onHostTeamIdChanged(oldval_hostTeamId);
 					}
 				}
 			}
@@ -3199,48 +1161,6 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_knockAnti = knockAnti;
-			Property prop_knockAnti = pdatas[60];
-			if(prop_knockAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onKnockAntiChanged(oldval_knockAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_knockAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onKnockAntiChanged(oldval_knockAnti);
-					}
-				}
-			}
-
-			Int32 oldval_knockEnh = knockEnh;
-			Property prop_knockEnh = pdatas[61];
-			if(prop_knockEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onKnockEnhChanged(oldval_knockEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_knockEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onKnockEnhChanged(oldval_knockEnh);
-					}
-				}
-			}
-
 			UInt32 oldval_level = level;
 			Property prop_level = pdatas[62];
 			if(prop_level.isBase())
@@ -3262,317 +1182,23 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_maxMagicArmor = maxMagicArmor;
-			Property prop_maxMagicArmor = pdatas[27];
-			if(prop_maxMagicArmor.isBase())
+			Byte oldval_mineWarCamp = mineWarCamp;
+			Property prop_mineWarCamp = pdatas[5];
+			if(prop_mineWarCamp.isBase())
 			{
 				if(inited && !inWorld)
-					onMaxMagicArmorChanged(oldval_maxMagicArmor);
+					onMineWarCampChanged(oldval_mineWarCamp);
 			}
 			else
 			{
 				if(inWorld)
 				{
-					if(prop_maxMagicArmor.isOwnerOnly() && !isPlayer())
+					if(prop_mineWarCamp.isOwnerOnly() && !isPlayer())
 					{
 					}
 					else
 					{
-						onMaxMagicArmorChanged(oldval_maxMagicArmor);
-					}
-				}
-			}
-
-			Int32 oldval_maxMagicAtk = maxMagicAtk;
-			Property prop_maxMagicAtk = pdatas[64];
-			if(prop_maxMagicAtk.isBase())
-			{
-				if(inited && !inWorld)
-					onMaxMagicAtkChanged(oldval_maxMagicAtk);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_maxMagicAtk.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMaxMagicAtkChanged(oldval_maxMagicAtk);
-					}
-				}
-			}
-
-			Int32 oldval_maxPhysicalArmor = maxPhysicalArmor;
-			Property prop_maxPhysicalArmor = pdatas[30];
-			if(prop_maxPhysicalArmor.isBase())
-			{
-				if(inited && !inWorld)
-					onMaxPhysicalArmorChanged(oldval_maxPhysicalArmor);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_maxPhysicalArmor.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMaxPhysicalArmorChanged(oldval_maxPhysicalArmor);
-					}
-				}
-			}
-
-			Int32 oldval_maxPhysicalAtk = maxPhysicalAtk;
-			Property prop_maxPhysicalAtk = pdatas[66];
-			if(prop_maxPhysicalAtk.isBase())
-			{
-				if(inited && !inWorld)
-					onMaxPhysicalAtkChanged(oldval_maxPhysicalAtk);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_maxPhysicalAtk.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMaxPhysicalAtkChanged(oldval_maxPhysicalAtk);
-					}
-				}
-			}
-
-			Int32 oldval_minMagicArmor = minMagicArmor;
-			Property prop_minMagicArmor = pdatas[32];
-			if(prop_minMagicArmor.isBase())
-			{
-				if(inited && !inWorld)
-					onMinMagicArmorChanged(oldval_minMagicArmor);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_minMagicArmor.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMinMagicArmorChanged(oldval_minMagicArmor);
-					}
-				}
-			}
-
-			Int32 oldval_minMagicAtk = minMagicAtk;
-			Property prop_minMagicAtk = pdatas[68];
-			if(prop_minMagicAtk.isBase())
-			{
-				if(inited && !inWorld)
-					onMinMagicAtkChanged(oldval_minMagicAtk);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_minMagicAtk.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMinMagicAtkChanged(oldval_minMagicAtk);
-					}
-				}
-			}
-
-			Int32 oldval_minPhysicalArmor = minPhysicalArmor;
-			Property prop_minPhysicalArmor = pdatas[37];
-			if(prop_minPhysicalArmor.isBase())
-			{
-				if(inited && !inWorld)
-					onMinPhysicalArmorChanged(oldval_minPhysicalArmor);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_minPhysicalArmor.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMinPhysicalArmorChanged(oldval_minPhysicalArmor);
-					}
-				}
-			}
-
-			Int32 oldval_minPhysicalAtk = minPhysicalAtk;
-			Property prop_minPhysicalAtk = pdatas[70];
-			if(prop_minPhysicalAtk.isBase())
-			{
-				if(inited && !inWorld)
-					onMinPhysicalAtkChanged(oldval_minPhysicalAtk);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_minPhysicalAtk.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMinPhysicalAtkChanged(oldval_minPhysicalAtk);
-					}
-				}
-			}
-
-			float oldval_monsterDmg = monsterDmg;
-			Property prop_monsterDmg = pdatas[104];
-			if(prop_monsterDmg.isBase())
-			{
-				if(inited && !inWorld)
-					onMonsterDmgChanged(oldval_monsterDmg);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_monsterDmg.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMonsterDmgChanged(oldval_monsterDmg);
-					}
-				}
-			}
-
-			float oldval_monsterDmgAnti = monsterDmgAnti;
-			Property prop_monsterDmgAnti = pdatas[105];
-			if(prop_monsterDmgAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onMonsterDmgAntiChanged(oldval_monsterDmgAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_monsterDmgAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMonsterDmgAntiChanged(oldval_monsterDmgAnti);
-					}
-				}
-			}
-
-			float oldval_mortal = mortal;
-			Property prop_mortal = pdatas[71];
-			if(prop_mortal.isBase())
-			{
-				if(inited && !inWorld)
-					onMortalChanged(oldval_mortal);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_mortal.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMortalChanged(oldval_mortal);
-					}
-				}
-			}
-
-			Byte oldval_moveAni = moveAni;
-			Property prop_moveAni = pdatas[72];
-			if(prop_moveAni.isBase())
-			{
-				if(inited && !inWorld)
-					onMoveAniChanged(oldval_moveAni);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_moveAni.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMoveAniChanged(oldval_moveAni);
-					}
-				}
-			}
-
-			float oldval_mpCostRatio = mpCostRatio;
-			Property prop_mpCostRatio = pdatas[73];
-			if(prop_mpCostRatio.isBase())
-			{
-				if(inited && !inWorld)
-					onMpCostRatioChanged(oldval_mpCostRatio);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_mpCostRatio.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMpCostRatioChanged(oldval_mpCostRatio);
-					}
-				}
-			}
-
-			float oldval_mulBloodSuck = mulBloodSuck;
-			Property prop_mulBloodSuck = pdatas[74];
-			if(prop_mulBloodSuck.isBase())
-			{
-				if(inited && !inWorld)
-					onMulBloodSuckChanged(oldval_mulBloodSuck);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_mulBloodSuck.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMulBloodSuckChanged(oldval_mulBloodSuck);
-					}
-				}
-			}
-
-			float oldval_mulBossDmg = mulBossDmg;
-			Property prop_mulBossDmg = pdatas[75];
-			if(prop_mulBossDmg.isBase())
-			{
-				if(inited && !inWorld)
-					onMulBossDmgChanged(oldval_mulBossDmg);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_mulBossDmg.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMulBossDmgChanged(oldval_mulBossDmg);
+						onMineWarCampChanged(oldval_mineWarCamp);
 					}
 				}
 			}
@@ -3594,69 +1220,6 @@ namespace KBEngine
 					else
 					{
 						onMulCDChanged(oldval_mulCD);
-					}
-				}
-			}
-
-			float oldval_mulFullHp = mulFullHp;
-			Property prop_mulFullHp = pdatas[77];
-			if(prop_mulFullHp.isBase())
-			{
-				if(inited && !inWorld)
-					onMulFullHpChanged(oldval_mulFullHp);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_mulFullHp.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMulFullHpChanged(oldval_mulFullHp);
-					}
-				}
-			}
-
-			float oldval_mulFullMp = mulFullMp;
-			Property prop_mulFullMp = pdatas[78];
-			if(prop_mulFullMp.isBase())
-			{
-				if(inited && !inWorld)
-					onMulFullMpChanged(oldval_mulFullMp);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_mulFullMp.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMulFullMpChanged(oldval_mulFullMp);
-					}
-				}
-			}
-
-			float oldval_mulHp = mulHp;
-			Property prop_mulHp = pdatas[79];
-			if(prop_mulHp.isBase())
-			{
-				if(inited && !inWorld)
-					onMulHpChanged(oldval_mulHp);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_mulHp.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMulHpChanged(oldval_mulHp);
 					}
 				}
 			}
@@ -3724,90 +1287,6 @@ namespace KBEngine
 				}
 			}
 
-			Int32 oldval_pushAnti = pushAnti;
-			Property prop_pushAnti = pdatas[39];
-			if(prop_pushAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onPushAntiChanged(oldval_pushAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_pushAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onPushAntiChanged(oldval_pushAnti);
-					}
-				}
-			}
-
-			Int32 oldval_pushEnh = pushEnh;
-			Property prop_pushEnh = pdatas[40];
-			if(prop_pushEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onPushEnhChanged(oldval_pushEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_pushEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onPushEnhChanged(oldval_pushEnh);
-					}
-				}
-			}
-
-			Int32 oldval_realDmg = realDmg;
-			Property prop_realDmg = pdatas[107];
-			if(prop_realDmg.isBase())
-			{
-				if(inited && !inWorld)
-					onRealDmgChanged(oldval_realDmg);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_realDmg.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onRealDmgChanged(oldval_realDmg);
-					}
-				}
-			}
-
-			Int32 oldval_realDmgDef = realDmgDef;
-			Property prop_realDmgDef = pdatas[108];
-			if(prop_realDmgDef.isBase())
-			{
-				if(inited && !inWorld)
-					onRealDmgDefChanged(oldval_realDmgDef);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_realDmgDef.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onRealDmgDefChanged(oldval_realDmgDef);
-					}
-				}
-			}
-
 			Int32 oldval_selectedTargetId = selectedTargetId;
 			Property prop_selectedTargetId = pdatas[81];
 			if(prop_selectedTargetId.isBase())
@@ -3846,111 +1325,6 @@ namespace KBEngine
 					else
 					{
 						onSiegeWarCampChanged(oldval_siegeWarCamp);
-					}
-				}
-			}
-
-			Int32 oldval_silentAnti = silentAnti;
-			Property prop_silentAnti = pdatas[82];
-			if(prop_silentAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onSilentAntiChanged(oldval_silentAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_silentAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onSilentAntiChanged(oldval_silentAnti);
-					}
-				}
-			}
-
-			Int32 oldval_silentEnh = silentEnh;
-			Property prop_silentEnh = pdatas[83];
-			if(prop_silentEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onSilentEnhChanged(oldval_silentEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_silentEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onSilentEnhChanged(oldval_silentEnh);
-					}
-				}
-			}
-
-			float oldval_skillCD = skillCD;
-			Property prop_skillCD = pdatas[109];
-			if(prop_skillCD.isBase())
-			{
-				if(inited && !inWorld)
-					onSkillCDChanged(oldval_skillCD);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_skillCD.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onSkillCDChanged(oldval_skillCD);
-					}
-				}
-			}
-
-			Int32 oldval_slowAnti = slowAnti;
-			Property prop_slowAnti = pdatas[110];
-			if(prop_slowAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onSlowAntiChanged(oldval_slowAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_slowAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onSlowAntiChanged(oldval_slowAnti);
-					}
-				}
-			}
-
-			Int32 oldval_slowEnh = slowEnh;
-			Property prop_slowEnh = pdatas[111];
-			if(prop_slowEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onSlowEnhChanged(oldval_slowEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_slowEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onSlowEnhChanged(oldval_slowEnh);
 					}
 				}
 			}
@@ -4035,48 +1409,6 @@ namespace KBEngine
 					else
 					{
 						onState2Changed(oldval_state2);
-					}
-				}
-			}
-
-			Int32 oldval_stunAnti = stunAnti;
-			Property prop_stunAnti = pdatas[88];
-			if(prop_stunAnti.isBase())
-			{
-				if(inited && !inWorld)
-					onStunAntiChanged(oldval_stunAnti);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_stunAnti.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onStunAntiChanged(oldval_stunAnti);
-					}
-				}
-			}
-
-			Int32 oldval_stunEnh = stunEnh;
-			Property prop_stunEnh = pdatas[89];
-			if(prop_stunEnh.isBase())
-			{
-				if(inited && !inWorld)
-					onStunEnhChanged(oldval_stunEnh);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_stunEnh.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onStunEnhChanged(oldval_stunEnh);
 					}
 				}
 			}

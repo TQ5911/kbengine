@@ -47,7 +47,7 @@ datas ={
   },
   "1008": {
     "type": "dunFailed",
-    "exitTime": 5.0,
+    "exitTime": 65.0,
     "transition": {}
   },
   "1009": {
@@ -114,7 +114,7 @@ datas ={
       21010006,
       21010007,
       21010008,
-      2101009
+      21010009
     ],
     "num": 0,
     "lv": "33",
@@ -616,7 +616,6 @@ datas ={
     "transition": {
       "finished": [
         1119,
-        1022,
         1147,
         1148
       ]
@@ -642,42 +641,9 @@ datas ={
     "dialogID": 19019004,
     "transition": {}
   },
-  "1022": {
-    "type": "delayLoop",
-    "firstDelay": 75.0,
-    "loopDelay": 75.0,
-    "loopNum": 2,
-    "transition": {
-      "loop": [
-        1142
-      ]
-    }
-  },
-  "1025": {
-    "type": "castSkill",
-    "entityID": [
-      21010051
-    ],
-    "skillID": 91025015,
-    "lv": "1",
-    "forceToUse": 1,
-    "transition": {}
-  },
-  "1142": {
-    "type": "popupdialog",
-    "entityID": [
-      21010051
-    ],
-    "dialogID": 19019005,
-    "transition": {
-      "finished": [
-        1025
-      ]
-    }
-  },
   "1007": {
     "type": "dunEnd",
-    "exitTime": 5.0,
+    "exitTime": 65.0,
     "isDungeonDone": 1,
     "transition": {}
   },
@@ -707,7 +673,6 @@ datas ={
     "transition": {
       "finished": [
         1010,
-        1021,
         1191,
         1999
       ]
@@ -737,86 +702,6 @@ datas ={
       ]
     }
   },
-  "1019": {
-    "type": "castSkill",
-    "entityID": [
-      21010082
-    ],
-    "skillID": 91026008,
-    "lv": "1",
-    "forceToUse": 0,
-    "transition": {
-      "finished": [
-        1024
-      ]
-    }
-  },
-  "1024": {
-    "type": "createMonster",
-    "entityID": [
-      21010083
-    ],
-    "num": 1,
-    "lv": "20",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1023
-      ]
-    }
-  },
-  "1012": {
-    "type": "playerRestNum",
-    "compare": 3,
-    "num": 1,
-    "checkNow": 1,
-    "checkOnce": 1,
-    "transition": {
-      "finished": [
-        1026
-      ]
-    }
-  },
-  "1023": {
-    "type": "monsterHp",
-    "monsterID": [
-      21010083
-    ],
-    "compare": 1,
-    "hpPercent": 0.0,
-    "checkNow": 1,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1020
-      ]
-    }
-  },
-  "1020": {
-    "type": "removeBuffFromAllPlayer",
-    "buffID": [
-      64004046
-    ],
-    "transition": {}
-  },
-  "1021": {
-    "type": "delayLoop",
-    "firstDelay": 65.0,
-    "loopDelay": 0.0,
-    "loopNum": 1,
-    "transition": {
-      "finished": [
-        1012,
-        1028
-      ]
-    }
-  },
   "1027": {
     "type": "removeBuffFromAllPlayer",
     "buffID": [
@@ -827,101 +712,6 @@ datas ={
         1007
       ]
     }
-  },
-  "1026": {
-    "type": "popupdialog",
-    "entityID": [
-      21010082
-    ],
-    "dialogID": 20020002,
-    "transition": {
-      "finished": [
-        1019
-      ]
-    }
-  },
-  "1028": {
-    "type": "playerRestNum",
-    "compare": 1,
-    "num": 1,
-    "checkNow": 1,
-    "checkOnce": 1,
-    "transition": {
-      "finished": [
-        1030
-      ]
-    }
-  },
-  "1030": {
-    "type": "popupdialog",
-    "entityID": [
-      21010082
-    ],
-    "dialogID": 20020002,
-    "transition": {
-      "finished": [
-        1032,
-        1037
-      ]
-    }
-  },
-  "1032": {
-    "type": "createMonster",
-    "entityID": [
-      21010083
-    ],
-    "num": 1,
-    "lv": "20",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1035
-      ]
-    }
-  },
-  "1035": {
-    "type": "monsterHp",
-    "monsterID": [
-      21010083
-    ],
-    "compare": 1,
-    "hpPercent": 0.0,
-    "checkNow": 1,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1143
-      ]
-    }
-  },
-  "1037": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      21010083
-    ],
-    "buffID": [
-      64004040
-    ],
-    "lv": "1",
-    "lvlmt": -1,
-    "duration": -1.0,
-    "transition": {}
-  },
-  "1143": {
-    "type": "removeBuffFromMonster",
-    "monsterID": [
-      21010083
-    ],
-    "buffID": [
-      64004040
-    ],
-    "transition": {}
   },
   "1144": {
     "type": "createRebornPos",

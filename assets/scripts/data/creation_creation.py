@@ -100,10 +100,6 @@ def _65000016(self, target, context):
 def _65000017(self, target, context):
     self.castSkill(target, context, 90020066)
 
-def _65000017_enter(self, target, context):
-    self.addBuffBySkill(target, context,64000228, 1, 1.0, 2)
-    self.addBuffBySkill(target, context,64000224, 1, 1.0, 5)
-
 def _65000018(self, target, context):
     self.castSkill(target, context, 90020056)
 
@@ -152,11 +148,7 @@ def _65000031(self, target, context):
     self.castSkill(target, context, 90020602)
 
 def _65000032(self, target, context):
-    self.castSkill(target, context, 90020066)
-
-def _65000032_enter(self, target, context):
-    self.addBuffBySkill(target, context,64000228, 1, 1.0, 2)
-    self.addBuffBySkill(target, context,64000224, 1, 1.0, 5)
+    self.castSkill(target, context, 90020651)
 
 def _65000033(self, target, context): 
     self.castSkill(target, context, 90020111)
@@ -1281,7 +1273,7 @@ datas = _tools.RODict({
         "triggeredTime": 0.0,
         "loopIntervalTime": 0.4,
         "hurtNumber": 10,
-        "areaLoop": 10,
+        "areaLoop": 15,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
@@ -1309,7 +1301,7 @@ datas = _tools.RODict({
         "triggeredTime": 0.0,
         "loopIntervalTime": 1.0,
         "hurtNumber": 10,
-        "areaLoop": 8,
+        "areaLoop": 15,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
@@ -1599,7 +1591,7 @@ datas = _tools.RODict({
         "targetNum": 0,
         "flySpeed": 0.0,
         "selectType": 1,
-        "selectPar": 6,
+        "selectPar": 5,
         "delayTime": 0.0,
     }),
     65000015: _tools.RODict({
@@ -1627,7 +1619,7 @@ datas = _tools.RODict({
         "targetNum": 0,
         "flySpeed": 0.0,
         "selectType": 1,
-        "selectPar": 6,
+        "selectPar": 5,
         "delayTime": 0.0,
     }),
     65000016: _tools.RODict({
@@ -1655,7 +1647,7 @@ datas = _tools.RODict({
         "targetNum": 0,
         "flySpeed": 0.0,
         "selectType": 1,
-        "selectPar": 8.5,
+        "selectPar": 7,
         "delayTime": 0.3,
     }),
     65000017: _tools.RODict({
@@ -1674,7 +1666,7 @@ datas = _tools.RODict({
         "loopIntervalTime": 0.2,
         "hurtNumber": 10,
         "areaLoop": 5,
-        "enterAction": _65000017_enter,
+        "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
         "timeIsUpAction": None,
@@ -1683,7 +1675,7 @@ datas = _tools.RODict({
         "targetNum": 0,
         "flySpeed": 0.0,
         "selectType": 1,
-        "selectPar": 8,
+        "selectPar": 6.5,
         "delayTime": 0.6,
     }),
     65000018: _tools.RODict({
@@ -1785,7 +1777,7 @@ datas = _tools.RODict({
         "triggeredTime": 0.0,
         "loopIntervalTime": 0.3,
         "hurtNumber": 10,
-        "areaLoop": 10,
+        "areaLoop": 15,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
@@ -1953,7 +1945,7 @@ datas = _tools.RODict({
         "triggeredTime": 0.0,
         "loopIntervalTime": 0.3,
         "hurtNumber": 10,
-        "areaLoop": 10,
+        "areaLoop": 15,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
@@ -2037,7 +2029,7 @@ datas = _tools.RODict({
         "triggeredTime": 0.0,
         "loopIntervalTime": 1.0,
         "hurtNumber": 10,
-        "areaLoop": 8,
+        "areaLoop": 15,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
@@ -2094,7 +2086,7 @@ datas = _tools.RODict({
         "loopIntervalTime": 0.2,
         "hurtNumber": 10,
         "areaLoop": 5,
-        "enterAction": _65000032_enter,
+        "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
         "timeIsUpAction": None,
@@ -2121,7 +2113,7 @@ datas = _tools.RODict({
         "triggeredTime": 0.0,
         "loopIntervalTime": 0.4,
         "hurtNumber": 10,
-        "areaLoop": 10,
+        "areaLoop": 15,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,

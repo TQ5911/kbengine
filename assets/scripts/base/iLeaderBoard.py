@@ -4,6 +4,7 @@ import gameconst
 import gametimer
 import actionContext
 import gameengine
+import gamedecorator
 import gameglobal
 import LeaderBoardAvatarCacheInfo
 import LeaderBoardAvatarScoreInfo
@@ -20,6 +21,7 @@ class ILeaderBoard(object):
             _dur,
             gametimer.UPDATE_AVATAR_LEADERBOARD)
 
+    @gamedecorator.checkGameconfigEnable('rank')
     def getLeaderBoardList(self, exposed, leaderBoardType, leaderBoardIdx, school, page):
         if leaderBoardType == gameconst.LeaderBoardType.GUILD:
             gameengine.getLeaderStub(leaderBoardType).doGetLeaderBoardGuildList(

@@ -39,4 +39,5 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     cityBattleDeclare = 20
     guildUnion = 21
     guildEnmity = 22
+    guildChallenge = 23
 

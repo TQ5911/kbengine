@@ -10,6 +10,7 @@ import formula
 import dataUtils
 import gamelog
 import iMapMonsterRefresh
+import iTimerEntityRefresh
 
 class PlayerInfo(int):
     def __init__(self, *args, **kwargs):
@@ -25,12 +26,13 @@ class PlayerInfo(int):
         self._isDead = False
 
 
-class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterRefresh):
+class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterRefresh, iTimerEntityRefresh.ITimerEntityRefresh):
 
     def __init__(self):
         DEBUG_MSG('ISpaceMgr.__init__', self.id, self.spaceNo)
         self.initFlowController()
         iMapMonsterRefresh.IMapMonsterRefresh.__init__(self)
+        iTimerEntityRefresh.ITimerEntityRefresh.__init__(self)
         self.beNotifiedSpaceEvent(0, gameconst.AI_EVENT_BEFORE_LOADING_ENTITIES, ())
         self.addEntity(self.id, ('_spaceMgr_',))
 
@@ -100,7 +102,6 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         ent = self.getEntityById(palyerEntId)
         if ent:
             self.spaceVars and ent.base.syncSpaceVariable(self.spaceNo, self.spaceVars)
-            ent.client.onGetSpaceState(self.spaceState)
 
     def onPlayerLeave(self, gbId, playerId, box):
         self.players.pop(playerId, None)
@@ -119,6 +120,9 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         ent = KBEngine.entities.get(entId)
         if not ent:
             return
+
+        if formula.isMineWarSpace(self.spaceNo) and not ent.IsMonster:
+            self.addMineWarEntity(ent)
 
         # if ent.IsMonster:
         #     attrId = CBD.datas[ent.monsterId]['attribute']
@@ -292,9 +296,6 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         self.players.pop(playerId, None)
         self.setAvatarNearNotifyState(playerId, False)
 
-    def reloginBeforeLoadScene(self, box, playerGbId):
-        box.client.onGetSpaceState(self.spaceState)
-
     def onPlayerRelogin(self, box, playerGbId):
         pass
 
@@ -353,7 +354,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         if oldVal == newVal:
             return
         self.spaceVars[varId] = newVal
-        gamelog.makeSpaceVarChangedLog(self.spaceNo, varId, oldVal, newVal, opUUID, varSrc, desc)
+        #gamelog.makeSpaceVarChangedLog(self.spaceNo, varId, oldVal, newVal, opUUID, varSrc, desc)
 
         for entId in self.players:
             ent = self.getEntityById(entId)

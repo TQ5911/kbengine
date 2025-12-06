@@ -194,7 +194,7 @@ class IBroadcastEvent(object):
         if len(newSendList) > 0:
             self._callback(0.1, '_doBroadcastToAccountHotfix', (newSendList,),
                            gametimer.TIMER_TAG_DO_BROADCAST_TO_ACCOUNT)
-    
+
     def onSyncNewAuctionItemCache(self, playerGBID, auctionId, itemId):
         playerGBIDSet = gameglobal.newAuctionItemCache.setdefault(itemId, set())
         playerGBIDSet.add(playerGBID)

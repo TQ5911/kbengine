@@ -159,7 +159,6 @@ def hotfix(su):
 def setRequiredClientVersion(su, platId, verStr):
     gameglobal.requiredClientVersion[platId] = verStr
     avatarFilter = lambda a:a.accountEntity.devicePlatId==platId
-    gameglobal.localBaseApp.onBroadcastToAllClients('onSendRequiredVersion', (verStr,), filter=avatarFilter)
 
 def _setGameConstInternal(su, className, field, val):
     if className=='""' or not className:

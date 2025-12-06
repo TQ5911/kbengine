@@ -63,12 +63,6 @@
             <Default>   0                </Default>
         </belongFestivalId>
 
-        <scale>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         ALL_CLIENTS     </Flags>
-            <Default>       1.0                   </Default>
-        </scale>
-
         <danceTime>
             <Type>      TIMESTAMP   </Type>
             <Flags>     ALL_CLIENTS     </Flags>

@@ -5,6 +5,8 @@ import gameconst
 import dataUtils
 
 import prop_fightprop  as  PPROPERTY
+import meridian_meridian as  MMD
+import meridian_acupoint as MAD
 
 class IMeridian(object):
     """ 
@@ -13,8 +15,23 @@ class IMeridian(object):
     
     def onMeridianAward(self, propIndexList):
         DEBUG_MSG('onMeridianAward', propIndexList)
-        for propIndex in propIndexList:
-            propDict = PPROPERTY.datas.get(propIndex, {}).get('propList', {})
+
+        for index in propIndexList:
+            config = MMD.datas.get(index, None)
+            if config is None:
+                config = MAD.datas.get(index, None)
+            if config is None:
+                continue
+
+            propDict = {}
+            needList = [0, self.school]
+            for val in needList:
+                propKey = 'prop{}'.format(val)
+                propList = config.get(propKey, None)
+                if propList:
+                    for prop in propList:
+                        propDict[prop[0]] = prop[1]
+
             self._addAwardMeridianPropsCell(propDict)
 
     def _addAwardMeridianPropsCell(self, syncPropDict):

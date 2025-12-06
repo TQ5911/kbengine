@@ -383,9 +383,6 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.cityOwnerChange(self.serverId, data)
 
-    def cityRecentActivityResponse(self, box, cityRecentActivityList):
-        box.client.cityRecentActivityResponse(cityRecentActivityList)
-
     def onCityOfficerChange(self, addOfficerList, removeOfficerList):
         DEBUG_MSG('[lj]on city officer change', addOfficerList, removeOfficerList)
 

@@ -302,10 +302,24 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         args = cPickle.loads(args)
         getattr(_gcVal.guildBox, func)(uuid, senderServerId, *args)
 
-    def syncGuildMineWarToSpaceMgr(self, guildUUID, box):
+    def syncGuildMineWarToSpaceMgr(self, guildUUID, box, onRegister):
         _gcVal = self.guildDic.get(guildUUID)
         if not _gcVal:
-            box.onSyncGuildMineWarResult(guildUUID, {})
+            box.onSyncGuildMineWarResult(guildUUID, '', 0, 0, '', {}, onRegister)
             return
 
-        _gcVal.guildBox.getJunxuQiXieLevel(guildUUID, box)
+        _gcVal.guildBox.getJunxuQiXieLevel(guildUUID, box, onRegister)
+        
+    def addMineWarScoreFromGuild(self, mapId, guildUUID, playerGbId, playerName, score, scoreType):
+        _gcVal = self.guildDic.get(guildUUID)
+        if not _gcVal:
+            return
+
+        gameengine.getGlobalBase('MineWarStub').addMineWarScore(mapId, playerGbId, playerName, _gcVal.guildName, _gcVal.icon, _gcVal.dspFlag, score, scoreType)
+
+    def onMineWarFlagBeKillFromGuild(self, mapId, guildUUID, killerName):
+        _gcVal = self.guildDic.get(guildUUID)
+        if not _gcVal:
+            return
+
+        gameengine.getGlobalBase('MineWarStub').onMineWarFlagBeKill(mapId, _gcVal.guildName, killerName)

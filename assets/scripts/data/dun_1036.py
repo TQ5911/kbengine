@@ -1,32 +1,41 @@
 datas ={
   "10360001": {
     "ActivityID": 0,
+    "AttachedGIDList": [
+      10368027
+    ],
+    "AttachedGIDListStr": "10368027",
     "ClassName": "Monster",
     "ClassNameType": 0,
-    "CustomID": "1",
+    "CustomID": "",
     "Dir": 279.376,
     "DisplayName": "",
     "EntityID": 11227001,
     "ID": 10360001,
+    "Name": "\u6df1\u6d77\u4e4b\u738b",
     "PosX": 357.3505,
     "PosY": 98.02,
     "PosZ": 334.2467,
     "Props": {
       "GroupID": "",
+      "InitLoad": 0,
       "Level": 52,
       "MapEntityScale": 0,
       "MapEntityType": "18",
       "MonsterGroupID": "",
       "PathID": "",
       "Radius": 0.0,
-      "RefreshNum": 0,
-      "RefreshTime": 900.0,
+      "RefreshNum": 1,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 1,
       "Remark": "",
       "ShowMonsterGroupID": ""
     }
   },
   "10364001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Npc",
     "ClassNameType": 1,
     "CustomID": "",
@@ -34,6 +43,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 18000628,
     "ID": 10364001,
+    "Name": "\u6807\u8bb0\u7528\u7279\u6b8a\u4efb\u52a1\u5730\u70b9",
     "PosX": 258.6646,
     "PosY": 118.4166,
     "PosZ": 421.9466,
@@ -43,29 +53,14 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
-    }
-  },
-  "10368002": {
-    "ActivityID": 0,
-    "ClassName": "RebornPos",
-    "ClassNameType": 7,
-    "CustomID": "",
-    "Dir": 211.5666,
-    "DisplayName": "",
-    "EntityID": 0,
-    "ID": 10368002,
-    "PosX": 305.9333,
-    "PosY": 118.0822,
-    "PosZ": 534.9097,
-    "Props": {
-      "Num": 0,
-      "Radius": 0.0,
+      "RefreshTimedID": 0,
       "Remark": ""
     }
   },
   "10368003": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "10358082",
@@ -73,6 +68,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 17103601,
     "ID": 10368003,
+    "Name": "\u6708\u5149\u6d77\u6e2f\u56db\u5c42",
     "PosX": 318.9712,
     "PosY": 119.3382,
     "PosZ": 555.6104,
@@ -88,6 +84,8 @@ datas ={
   },
   "10368004": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "2",
@@ -95,6 +93,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000002,
     "ID": 10368004,
+    "Name": "\u75be\u63a0\u70b9",
     "PosX": 332.8864,
     "PosY": 118.1332,
     "PosZ": 291.8064,
@@ -118,6 +117,8 @@ datas ={
   },
   "10368005": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "2",
@@ -125,6 +126,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000002,
     "ID": 10368005,
+    "Name": "\u75be\u63a0\u70b9",
     "PosX": 404.3828,
     "PosY": 118.068,
     "PosZ": 315.8271,
@@ -148,6 +150,8 @@ datas ={
   },
   "10368006": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "2",
@@ -155,6 +159,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000002,
     "ID": 10368006,
+    "Name": "\u75be\u63a0\u70b9",
     "PosX": 314.7689,
     "PosY": 117.4125,
     "PosZ": 310.0027,
@@ -178,6 +183,8 @@ datas ={
   },
   "10368007": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "2",
@@ -185,6 +192,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000002,
     "ID": 10368007,
+    "Name": "\u75be\u63a0\u70b9",
     "PosX": 406.9446,
     "PosY": 118.7003,
     "PosZ": 345.4006,
@@ -208,6 +216,8 @@ datas ={
   },
   "10368008": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "2",
@@ -215,6 +225,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000002,
     "ID": 10368008,
+    "Name": "\u75be\u63a0\u70b9",
     "PosX": 357.5483,
     "PosY": 118.5398,
     "PosZ": 386.0183,
@@ -238,6 +249,8 @@ datas ={
   },
   "10368009": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "2",
@@ -245,6 +258,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000002,
     "ID": 10368009,
+    "Name": "\u75be\u63a0\u70b9",
     "PosX": 330.5929,
     "PosY": 117.645,
     "PosZ": 374.5021,
@@ -268,6 +282,8 @@ datas ={
   },
   "10368010": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "",
@@ -275,6 +291,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000001,
     "ID": 10368010,
+    "Name": "\u75be\u63a0\u70b9",
     "PosX": 375.8157,
     "PosY": 138.2128,
     "PosZ": 149.8392,
@@ -298,6 +315,8 @@ datas ={
   },
   "10368011": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "",
@@ -305,9 +324,10 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000003,
     "ID": 10368011,
-    "PosX": 197.5564,
-    "PosY": 138.1533,
-    "PosZ": 248.5278,
+    "Name": "\u75be\u63a0\u70b9",
+    "PosX": 210.617,
+    "PosY": 137.8214,
+    "PosZ": 258.582,
     "Props": {
       "Remark": "",
       "SubPoints": [
@@ -328,6 +348,8 @@ datas ={
   },
   "10368012": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "",
@@ -335,21 +357,22 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000003,
     "ID": 10368012,
-    "PosX": 155.1027,
-    "PosY": 141.6642,
-    "PosZ": 331.5061,
+    "Name": "\u75be\u63a0\u70b9",
+    "PosX": 155.6526,
+    "PosY": 152.2684,
+    "PosZ": 330.9777,
     "Props": {
       "Remark": "",
       "SubPoints": [
         [
-          174.887,
-          138.450226,
-          268.436462,
+          173.975754,
+          139.09729,
+          278.455048,
           4.0,
           10.0,
-          176.744614,
-          138.3479,
-          263.31778,
+          178.207687,
+          138.021042,
+          260.754547,
           30.0,
           10.0
         ]
@@ -358,6 +381,8 @@ datas ={
   },
   "10368013": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "",
@@ -365,9 +390,10 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000003,
     "ID": 10368013,
-    "PosX": 209.2019,
-    "PosY": 146.9887,
-    "PosZ": 520.5233,
+    "Name": "\u75be\u63a0\u70b9",
+    "PosX": 192.7076,
+    "PosY": 144.2546,
+    "PosZ": 511.1234,
     "Props": {
       "Remark": "",
       "SubPoints": [
@@ -388,6 +414,8 @@ datas ={
   },
   "10368014": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "",
@@ -395,6 +423,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000003,
     "ID": 10368014,
+    "Name": "\u75be\u63a0\u70b9",
     "PosX": 288.4386,
     "PosY": 157.8625,
     "PosZ": 490.3329,
@@ -402,14 +431,14 @@ datas ={
       "Remark": "",
       "SubPoints": [
         [
-          233.1264,
-          148.801056,
-          544.0472,
+          243.707138,
+          145.576172,
+          547.767944,
           4.0,
           10.0,
-          226.33493,
-          149.958069,
-          543.8456,
+          222.98,
+          146.500092,
+          544.477539,
           30.0,
           10.0
         ]
@@ -418,6 +447,8 @@ datas ={
   },
   "10368015": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
     "CustomID": "",
@@ -425,9 +456,10 @@ datas ={
     "DisplayName": "",
     "EntityID": 13000003,
     "ID": 10368015,
-    "PosX": 482.4313,
-    "PosY": 169.8775,
-    "PosZ": 458.3487,
+    "Name": "\u75be\u63a0\u70b9",
+    "PosX": 475.2457,
+    "PosY": 169.8869,
+    "PosZ": 440.6078,
     "Props": {
       "Remark": "",
       "SubPoints": [
@@ -448,6 +480,8 @@ datas ={
   },
   "10368017": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Creation",
     "ClassNameType": 4,
     "CustomID": "1",
@@ -455,6 +489,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 66000096,
     "ID": 10368017,
+    "Name": "\u5927\u843d\u96f7\uff08\u4e16\u754cboss\uff09",
     "PosX": 320.7739,
     "PosY": 118.0502,
     "PosZ": 297.1007,
@@ -479,12 +514,15 @@ datas ={
         10.0,
         11.0
       ],
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowMonsterGroupID": ""
     }
   },
   "10368018": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Creation",
     "ClassNameType": 4,
     "CustomID": "1",
@@ -492,6 +530,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 66000096,
     "ID": 10368018,
+    "Name": "\u5927\u843d\u96f7\uff08\u4e16\u754cboss\uff09",
     "PosX": 343.86,
     "PosY": 118.0471,
     "PosZ": 380.6906,
@@ -516,12 +555,15 @@ datas ={
         10.0,
         11.0
       ],
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowMonsterGroupID": ""
     }
   },
   "10368019": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Creation",
     "ClassNameType": 4,
     "CustomID": "1",
@@ -529,6 +571,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 66000096,
     "ID": 10368019,
+    "Name": "\u5927\u843d\u96f7\uff08\u4e16\u754cboss\uff09",
     "PosX": 408.6914,
     "PosY": 118.518,
     "PosZ": 329.102,
@@ -553,12 +596,15 @@ datas ={
         10.0,
         11.0
       ],
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowMonsterGroupID": ""
     }
   },
   "10368020": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Creation",
     "ClassNameType": 4,
     "CustomID": "1",
@@ -566,6 +612,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 66000039,
     "ID": 10368020,
+    "Name": "\u6d77\u9762\u573a\u666f\u843d\u96f7",
     "PosX": 343.224,
     "PosY": 118.062,
     "PosZ": 381.7119,
@@ -622,12 +669,15 @@ datas ={
         3.0,
         5.0
       ],
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowMonsterGroupID": ""
     }
   },
   "10368021": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Creation",
     "ClassNameType": 4,
     "CustomID": "1",
@@ -635,6 +685,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 66000039,
     "ID": 10368021,
+    "Name": "\u6d77\u9762\u573a\u666f\u843d\u96f7",
     "PosX": 320.7219,
     "PosY": 118.0479,
     "PosZ": 296.9129,
@@ -691,12 +742,15 @@ datas ={
         3.0,
         5.0
       ],
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowMonsterGroupID": ""
     }
   },
   "10368022": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Creation",
     "ClassNameType": 4,
     "CustomID": "1",
@@ -704,6 +758,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 66000039,
     "ID": 10368022,
+    "Name": "\u6d77\u9762\u573a\u666f\u843d\u96f7",
     "PosX": 408.7761,
     "PosY": 118.2876,
     "PosZ": 328.3405,
@@ -760,12 +815,15 @@ datas ={
         3.0,
         5.0
       ],
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowMonsterGroupID": ""
     }
   },
   "10368024": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Anchor",
     "ClassNameType": 20,
     "CustomID": "",
@@ -773,6 +831,7 @@ datas ={
     "DisplayName": "\u795e\u884c\u70b9\u00b7\u7981\u5fcc\u6865\u7aef",
     "EntityID": 0,
     "ID": 10368024,
+    "Name": "\u795e\u884c\u70b9",
     "PosX": 306.042,
     "PosY": 118.0413,
     "PosZ": 534.8899,
@@ -784,6 +843,8 @@ datas ={
   },
   "10368026": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Anchor",
     "ClassNameType": 20,
     "CustomID": "",
@@ -791,6 +852,7 @@ datas ={
     "DisplayName": "\u795e\u884c\u70b9\u00b7\u7901\u77f3\u6ee9\u6d82",
     "EntityID": 0,
     "ID": 10368026,
+    "Name": "\u795e\u884c\u70b9",
     "PosX": 529.3871,
     "PosY": 98.93405,
     "PosZ": 370.5763,
@@ -802,6 +864,8 @@ datas ={
   },
   "10368027": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "AirWall",
     "ClassNameType": 5,
     "CustomID": "",
@@ -809,17 +873,52 @@ datas ={
     "DisplayName": "",
     "EntityID": 9,
     "ID": 10368027,
+    "Name": "\u7a7a\u6c14\u5899",
     "PosX": 358.0,
     "PosY": 98.02,
     "PosZ": 332.2,
     "Props": {
       "AreaType": 1,
       "Height": 10.0,
+      "InitLoad": 0,
       "MPosX": 321.0,
       "MPosY": 98.02,
       "MPosZ": 295.0,
       "Radius": 35.0,
       "Remark": ""
+    }
+  },
+  "10368028": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "FastMovePoint",
+    "ClassNameType": 19,
+    "CustomID": "",
+    "Dir": 105.1295,
+    "DisplayName": "",
+    "EntityID": 13000003,
+    "ID": 10368028,
+    "Name": "\u75be\u63a0\u70b9",
+    "PosX": 300.0669,
+    "PosY": 148.5642,
+    "PosZ": 161.5721,
+    "Props": {
+      "Remark": "",
+      "SubPoints": [
+        [
+          344.795563,
+          136.017166,
+          162.3523,
+          4.0,
+          10.0,
+          349.750061,
+          136.156479,
+          160.58551,
+          30.0,
+          10.0
+        ]
+      ]
     }
   }
 }

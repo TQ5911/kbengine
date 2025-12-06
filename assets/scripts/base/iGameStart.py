@@ -20,7 +20,7 @@ import dataUtils
 import gamePlay_gamePlay as DDL
 import wonderLand_floor as WL_FD
 import cube_floor as C_FD
-
+import guildChallenge_basicInfo as GC_BI
 
 class IGameStart(object):
     def __init__(self):
@@ -70,6 +70,7 @@ class IGameStart(object):
             _url = gameconfig.mapleAllServerUrl()
             if gameglobal.isBootstrap and _url:
                 KBEngine.urlopenv2(_url, self._onGetAllServerResult, method='GET')
+                return
 
             self.pyAddTimer(0.1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
 
@@ -444,6 +445,13 @@ class IGameStart(object):
                     'RaidDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
                 hasSpace = True
 
+            # 公会boss副本
+            if gameconst.DungeonType.isGuildBossDungeon(dungeonSpaceType, dungeonEnterType):
+                globalName = formula.getDungeonStubGlobalName(dungeonNo, gameconst.DungeonEnterType.GUILD)
+                random.choice(baseApps).createUnarchiveStub(
+                    'GuildBossDungeonStub', {'dungeonNo': dungeonNo}, globalName, )
+                hasSpace = True
+
             if not hasSpace:
                 WARNING_MSG('_createGlobalStubs:: UN-KNOWN DungeonType', dungeonNo, dungeonSpaceType, dungeonEnterType)
                 if not hasattr(self, '_skipInitDungeonStubs'):
@@ -517,6 +525,7 @@ class IGameStart(object):
     def _onGetAllServerResult(self, httpCode, data, headers, success, *args):
         if not (httpCode == 200 and success):
             ERROR_MSG('_onGetAllServerResult', httpCode)
+            self.pyAddTimer(0.1, 0, gametimer.GET_ALL_SERVER_INFO)
             return
 
         _datas = json.loads(data)
@@ -532,4 +541,6 @@ class IGameStart(object):
         gameengine.callAllApps(
             'gameengine.setMapleServerInfo',
             (_dic, _alias, _serverName))
+
+        self.pyAddTimer(0.1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
 

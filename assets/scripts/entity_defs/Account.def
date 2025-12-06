@@ -18,7 +18,7 @@
 
         <accountName>
             <Type>              STRING              </Type>
-            <Flags>             BASE_AND_CLIENT     </Flags>
+            <Flags>             BASE                </Flags>
             <Persistent>        true                </Persistent>
             <Index>             INDEX               </Index>
             <DatabaseLength>    255                 </DatabaseLength>
@@ -148,12 +148,6 @@
             <Default>       0                       </Default>
         </clientIP>
 
-        <serverId>
-            <Type>          UINT16                   </Type>
-            <Flags>         BASE_AND_CLIENT          </Flags>
-            <Default>       0                       </Default>
-        </serverId>
-
         <isDelete>
             <Type>         BOOL                </Type>
             <Flags>         BASE                </Flags>
@@ -178,6 +172,23 @@
             <Default>       0                       </Default>
             <Persistent>    true                    </Persistent>
         </lastSelectGbId>
+
+        <userInfoId>
+            <Type>          STRING                  </Type>
+            <Flags>         BASE                    </Flags>
+        </userInfoId>
+
+        <banDict>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+        </banDict>
+
+        <loginObOnClient>
+            <Type>          PYTHON                  </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       None                    </Default>
+            <Persistent>    true                    </Persistent>
+        </loginObOnClient>
     </Properties>
 
     <ClientMethods>
@@ -244,6 +255,10 @@
             <Arg>       PLAYER_GBID     </Arg>
             <Arg>       UINT8           </Arg>
         </onSelectGameFailed>
+
+        <onHotfixVersion>
+            <Arg>   STRING              </Arg>
+        </onHotfixVersion>
     </ClientMethods>
 
     <BaseMethods>
@@ -324,6 +339,15 @@
         <getAvatarOfflineTime> <Exposed/>
             <Arg>    PLAYER_GBID    </Arg>
         </getAvatarOfflineTime>
+
+        <banAvatar>
+            <Arg>    PLAYER_GBID    </Arg>
+            <Arg>    LONGTIME       </Arg>
+        </banAvatar>
+
+        <disbanAvatar>
+            <Arg>    PLAYER_GBID    </Arg>
+        </disbanAvatar>
     </BaseMethods>
 
     <CellMethods>

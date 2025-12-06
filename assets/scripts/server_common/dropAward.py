@@ -1243,7 +1243,7 @@ def _getDropAwardType4or5(dropPackage, dropType, dropCount, context):
             for idx in range(len(dropDataList)):
                 dropTargetData = dropDataList[idx]
                 weight = dropTargetData['weight']
-                if random.randint(1, 10000) <= weight:
+                if random.randint(1, 1000000) <= weight:
                     dropTargetList, numMinList, numMaxList, bindWeightList, gradeList = _getRealDropTarget(dropTargetData, context)
                     for dropTarget, numMin, numMax, bindWeight, grade in zip(dropTargetList, numMinList, numMaxList, bindWeightList, gradeList):
                         if dropTarget:

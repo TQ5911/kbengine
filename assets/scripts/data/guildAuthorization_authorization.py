@@ -19,14 +19,14 @@ datas = _tools.RODict({
         "ID": 1,
         "guildJob": "leader",
         "name": "帮主",
-        "authorization": _tools.ROList([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]),
+        "authorization": _tools.ROList([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]),
         "level": 1
     }),
     2: _tools.RODict({
         "ID": 2,
         "guildJob": "coleader",
         "name": "副帮主",
-        "authorization": _tools.ROList([2, 4, 5, 6, 9, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22]),
+        "authorization": _tools.ROList([2, 4, 5, 6, 9, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23]),
         "level": 2
     }),
     3: _tools.RODict({
@@ -71,4 +71,5 @@ authorization2Job = _tools.RODict({
     20: _tools.ROList(['1', '2']),
     21: _tools.ROList(['1', '2']),
     22: _tools.ROList(['1', '2']),
+    23: _tools.ROList(['1', '2']),
 })

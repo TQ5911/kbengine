@@ -20,7 +20,7 @@ class DungeonSpaceVal(userType.UserSoleType):
     SPACE_STATE_TO_DESTORY = 4
     SPACE_STATE_FAILED = 5
 
-    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=1,extraPropsDic = {}):
+    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=1, extraPropsDic = {}, dungeonSpaceValType=gameconst.DungeonSpaceValType.NONE):
         self.spaceNo = spaceNo
         self.spaceUUID = spaceUUID
         self.spaceBox = spaceBox
@@ -35,6 +35,7 @@ class DungeonSpaceVal(userType.UserSoleType):
         self.state = self.SPACE_STATE_DURING
         self.src = 0
         self.extraProps = extraPropsDic
+        self.dungeonSpaceValType = dungeonSpaceValType
 
     def isActive(self):
         return self.state == self.SPACE_STATE_DURING
@@ -272,7 +273,7 @@ class DungeonEntityGeneratorQueueMixin(object):
 #----------------------------单人副本----------------------------------------------
 class SingleDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin):
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, ownerGbId, spaceLevel=1):
-        super(SingleDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=spaceLevel)
+        super(SingleDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=spaceLevel,dungeonSpaceValType=gameconst.DungeonSpaceValType.SINGLE)
         super(DungeonSpaceVal, self).__init__()
         super(DungeonSpaceTimeLineMixin, self).__init__()
 
@@ -354,7 +355,7 @@ SingleDungeonFoundersInstance = SingleDungeonFoundersInfo()
 #----------------------------队伍副本--------------------------------------------------------
 class TeamDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin):
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, teamUUID, spaceLevel=1,extraDic={}):
-        super(TeamDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel,extraDic)
+        super(TeamDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel,extraDic,dungeonSpaceValType=gameconst.DungeonSpaceValType.TEAM)
         super(DungeonSpaceVal, self).__init__()
         super(DungeonSpaceTimeLineMixin, self).__init__()
         self.teamUUID=teamUUID
@@ -371,7 +372,7 @@ class RaidDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEnt
     """RaidStub 团队副本Space结构体"""
 
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, raidUUID, spaceLevel=1):
-        super(RaidDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel)
+        super(RaidDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel,dungeonSpaceValType=gameconst.DungeonSpaceValType.RAID)
         super(DungeonSpaceVal, self).__init__()
         super(DungeonSpaceTimeLineMixin, self).__init__()
         self.founders = RaidDungeonFounders()
@@ -390,7 +391,6 @@ class RaidDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEnt
             if i.playerName:
                 result.append((i.playerGBID, i.playerName))
         return result
-
 
 class RaidDungeonFounders(userType.UserDictType):
     """RaidStub 团队副本中存在成员集合字典"""
@@ -443,31 +443,132 @@ class RaidDungeonFounderVal(userType.UserSoleType):
     def hasAvatar(self):
         return self.tEnter and not self.tLeave
 
+class BaseDungeonFoundersMixin(userType.UserSoleType):
+    def __init__(self):
+        self.founders = DungeonFounderVals()
+    
+    def _lateReload(self):
+        self.founders.reloadScript()
 
-# ----------------------------------------------------------------------
-#----------------------------婚礼副本--------------------------------------------------------
-class WeddingPartySpaceVal(DungeonSpaceVal, DungeonEntityGeneratorQueueMixin):
-    def __init__(self, reserveTime, partyUUID, spaceNo, spaceUUID, spaceBox, spaceMgr, playerInfo):
-        super(WeddingPartySpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr)
-        super(DungeonSpaceVal, self).__init__()
+class BaseDungeonStatisticFoundersMixin(userType.UserSoleType):
+    def __init__(self):
+        self.statisticFounders = DungeonStatisticFounderVals()
+        self.statisticBatchCount = 0
+        self.sortedStatisticFoundersRankCache = None
+    
+    def refreshFoundersSortRankCache(self):
+        self.sortedStatisticFoundersRankCache = self.statisticFounders.getSortRankFounders()
+
+    def _lateReload(self):
+        self.statisticFounders.reloadScript()
+    
+class GuildBossDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin, BaseDungeonFoundersMixin, BaseDungeonStatisticFoundersMixin):
+    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, guildUUID, spaceLevel=1,extraDic={}):
+        DungeonSpaceVal.__init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel, extraDic, dungeonSpaceValType=gameconst.DungeonSpaceValType.GUILD_BOSS)
+        DungeonSpaceTimeLineMixin.__init__(self)
+        DungeonEntityGeneratorQueueMixin.__init__(self)
+        BaseDungeonFoundersMixin.__init__(self)
+        BaseDungeonStatisticFoundersMixin.__init__(self)
+        self.guildUUID = guildUUID
         self.markCreate = True
         self.markDestroy = 0
-        self.homeEnts = []
-        self.reserveTime = reserveTime
-        self.partyUUID = partyUUID
-        self.playerInfo = playerInfo
+        self.homeEnts = [] 
 
-#----------------------------婚礼副本--------------------------------------------------------
-class HonorPKDungeonSpaceVal(DungeonSpaceVal, DungeonEntityGeneratorQueueMixin):
-    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=1):
-        super(HonorPKDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel)
-        super(DungeonSpaceVal, self).__init__()
-        self.markDestroy = 0
-        self.homeEnts = []
+class DungeonStatisticMixin(userType.UserSoleType):
+    def __init__(self, gbID = 0, name = "", rank = 0, dmg = 0, hurt = 0, heal = 0, dead = 0):
+        self.gbID = gbID
+        self.name = name
+        self.dmg = dmg
+        self.hurt = hurt
+        self.heal = heal
+        self.dead = dead
+        self.rank = rank
 
-class SchoolPKDungeonSpaceVal(DungeonSpaceVal, DungeonEntityGeneratorQueueMixin):
-    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=1):
-        super(SchoolPKDungeonSpaceVal, self).__init__(spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel)
-        super(DungeonSpaceVal, self).__init__()
-        self.markDestroy = 0
-        self.homeEnts = []
+    def getRank(self):
+        return self.rank
+
+class DungeonFounderValMixin(userType.UserSoleType):
+    def __init__(self, spaceNo, spaceUUID, playerBox, playerGBID, tEnter=0, tLeave=0, playerName=""):
+        self.spaceNo = spaceNo
+        self.spaceUUID = spaceUUID
+        self.playerBox = playerBox
+        self.playerGBID = playerGBID
+        self.tEnter = tEnter            # 进入时间
+        self.tLeave = tLeave            # 离开时间
+        self.playerName = playerName
+
+    def onAvatarEnter(self, gbId):
+        if gbId == self.playerGBID:
+            self.tEnter = utils.getNow()
+            self.tLeave = 0
+
+    def onAvatarLeave(self, gbId, isOffline=False):
+        if gbId == self.playerGBID:
+            self.tEnter = 0
+            self.tLeave = utils.getNow()
+            if isOffline:
+                self.playerBox = None
+
+    def hasAvatar(self):
+        return self.tEnter and not self.tLeave
+
+class DungeonStatisticFounderVal(DungeonStatisticMixin):
+    def __init__(self, gbId = 0, name = "", rankId = 0, dmg = 0, hurt = 0, heal = 0, dead = 0):
+        DungeonStatisticMixin.__init__(self, gbId, name, rankId, dmg, hurt, heal, dead)
+
+class DungeonStatisticFounderVals(userType.UserDictType):
+    def _lateReload(self):
+        for founderVal in self.values():
+            founderVal.reloadScript()
+
+    def isNoFounders(self):
+        for founderVal in self.values():
+            if founderVal.hasAvatar():
+                return False
+        return True
+
+    def addFounder(self, gbId, name, rankId, dmg, hurt, heal, dead):
+        self[gbId] = DungeonStatisticFounderVal(gbId, name, rankId, dmg, hurt, heal, dead)
+
+    def getFounderVal(self, playerGBID):
+        return self[playerGBID] if playerGBID in self else None
+        
+    def getSortRankFounders(self):
+        return sorted(list(self.values()), key=lambda x:getattr(x, 'rank'))
+
+class DungeonFounderVal(DungeonFounderValMixin):
+    def __init__(self, spaceNo, spaceUUID, playerBox, playerGBID, tEnter=0, tLeave=0,
+                 playerName=""):
+        DungeonFounderValMixin.__init__(self, spaceNo, spaceUUID, playerBox, playerGBID, tEnter, tLeave, playerName)
+
+class DungeonFounderVals(userType.UserDictType):
+    def __init__(self):
+        self.totalFounders = 0
+
+    def _lateReload(self):
+        for founderVal in self.values():
+            founderVal.reloadScript()
+
+    def isNoFounders(self):
+        for founderVal in self.values():
+            if founderVal.hasAvatar():
+                return False
+        return True
+
+    def addFounder(self, spaceNo, spaceUUID, playerGBID, playerBox):
+        # 这里只统计进来的founder个数
+        self.totalFounders += 1
+        self[playerGBID] = DungeonFounderVal(spaceNo, spaceUUID, playerBox, playerGBID)
+
+    def getFounderVal(self, playerGBID):
+        return self[playerGBID] if playerGBID in self else None
+    
+    def getTotalFounderCount(self):
+        return self.totalFounders
+
+    def destoryFounder(self, playerGBID):
+        self.pop(playerGBID, None)
+
+    def getFounderGBIDs(self):
+        return list(self.keys())   
+

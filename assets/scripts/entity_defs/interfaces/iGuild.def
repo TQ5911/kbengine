@@ -126,7 +126,7 @@
         <guildTask>
             <Type>          PY_DICT                      </Type>
             <Flags>         BASE                         </Flags>
-            <Persistent>    true                        </Persistent>
+            <Persistent>    true                         </Persistent>
         </guildTask>
     </Properties>
 
@@ -523,10 +523,6 @@
         <onCityBattleTokenChanged>
             <Arg>       CITY_BATTLE_TOKEN       </Arg>
         </onCityBattleTokenChanged>
-
-        <onJunXuArchitectureChanged>
-            <Arg>       JUN_XU_ARCHITECTURE_DATA_INFO       </Arg>
-        </onJunXuArchitectureChanged>
 
         <onQixieChanged>
             <Arg>       JUN_XU_QI_XIE_DATA_INFO             </Arg>

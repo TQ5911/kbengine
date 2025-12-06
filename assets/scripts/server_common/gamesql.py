@@ -634,6 +634,39 @@ def removeAllFriends(gbId, callback):
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
+def _onRecordAccountOfflineCallback(ret, num, insertId, err, accountName, callbackName, args):
+    if err:
+        ERROR_MSG('_onRecordAccountOfflineCallback error:', err, accountName, callbackName, args)
+        return
+
+
+def recordAccountOfflineCallback(accountName, callbackName, args):
+    """
+    记录账号离线回调
+    """
+    data = cPickle.dumps(args)
+    if len(data) > 1024 * 60:
+        ERROR_MSG('offline callback data overflow:', accountName, callbackName, data.hex())
+        return
+
+    sql = 'INSERT INTO game_account_offline_callbacks (accountName, callbackName, args) VALUES (%s, %s, 0x%s)' % (
+        utils.escape_string(accountName), utils.escape_string(callbackName), data.hex())
+    KBEngine.executeRawDatabaseCommand(
+        sql,
+        lambda ret, num, insertId, err: _onRecordAccountOfflineCallback(
+            ret, num, insertId, err,
+            accountName, callbackName,
+            args))
+
+
+def loadAccountOfflineCallbacks(accountName, callback):
+    """
+    加载账号离线回调
+    """
+    sql = 'SELECT `id`, `callbackName`, hex(`args`) FROM `game_account_offline_callbacks` where accountName=%s order by id limit 2000' % utils.escape_string(accountName)
+    KBEngine.executeRawDatabaseCommand(sql, callback)
+
+
 def makeFriends(gbId1, gbId2, callback):
     if gbId1 < gbId2:
         sGbId = gbId1

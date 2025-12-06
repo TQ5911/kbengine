@@ -4,14 +4,15 @@ datas ={
       "Monster": {
         "22020001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
           "Dir": 207.733,
-          "DisplayName": "",
+          "DisplayName": "\u5b88\u62a4\u8005\u00b7\u8fe6\u5a1c",
           "EntityID": 11032001,
           "ID": 22020001,
-          "PosX": 377.98,
+          "PosX": 377.97,
           "PosY": 317.0118,
           "PosZ": 362.5731,
           "Props": {
@@ -24,17 +25,19 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "22020002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
           "Dir": 207.733,
-          "DisplayName": "",
+          "DisplayName": "\u541f\u8bf5\u8005\u00b7\u827e\u83b2",
           "EntityID": 11032002,
           "ID": 22020002,
           "PosX": 374.9342,
@@ -50,6 +53,7 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
@@ -58,6 +62,7 @@ datas ={
       "Creation": {
         "22028003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -81,6 +86,7 @@ datas ={
         },
         "22028004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -104,9 +110,11 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "BornPos": {
       "22028001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -120,6 +128,7 @@ datas ={
         "Props": {
           "Num": 0,
           "Radius": 10.0,
+          "RefreshTimedID": 0,
           "Remark": ""
         }
       }
@@ -127,6 +136,7 @@ datas ={
     "RebornPos": {
       "22028002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",

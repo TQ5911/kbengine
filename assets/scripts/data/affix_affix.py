@@ -87,18 +87,6 @@ def _78001016(self, target, context, *args):
     context.props = ['adjSlowAnti']
     self.addPropByGear(target, context, ['adjSlowAnti'])
 
-def _78001017(self, target, context, *args):
-    context.props = ['mulMaxPhysicalAtk']
-    self.addPropByGear(target, context, ['mulMaxPhysicalAtk'])
-
-def _78001018(self, target, context, *args):
-    context.props = ['mulMaxMagicAtk']
-    self.addPropByGear(target, context, ['mulMaxMagicAtk'])
-
-def _78001019(self, target, context, *args):
-    context.props = ['mulFullHp']
-    self.addPropByGear(target, context, ['mulFullHp'])
-
 def _78001020(self, target, context, *args):
     context.props = ['adjMonsterDmg']
     self.addPropByGear(target, context, ['adjMonsterDmg'])
@@ -148,16 +136,16 @@ datas = _tools.RODict({
         "ID": 78000030,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 1,
         "event": "onDress",
         "actionEffect": _78000030,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjAtkBless",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [1, 1], [2, 2], [3, 3]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001001: _tools.RODict({
@@ -168,12 +156,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001001,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjHit",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [4, 4]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001002: _tools.RODict({
@@ -184,12 +172,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001002,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjDodge",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [4, 4]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001003: _tools.RODict({
@@ -200,12 +188,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001003,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjFatal",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [9, 9]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001004: _tools.RODict({
@@ -216,12 +204,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001004,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjAntiFatal",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001005: _tools.RODict({
@@ -232,12 +220,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001005,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjMortal",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.04, 0.04], [0.06, 0.06]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001006: _tools.RODict({
@@ -248,28 +236,28 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001006,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjAntiMortal",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.04, 0.04], [0.06, 0.06]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001007: _tools.RODict({
         "ID": 78001007,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001007,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjIgnoreArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.08, 0.08]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001008: _tools.RODict({
@@ -280,12 +268,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001008,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjDmgArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.08, 0.08]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001009: _tools.RODict({
@@ -296,12 +284,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001009,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjStunEnh",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001010: _tools.RODict({
@@ -312,12 +300,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001010,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjStunAnti",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001011: _tools.RODict({
@@ -328,12 +316,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001011,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjSilentEnh",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001012: _tools.RODict({
@@ -344,12 +332,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001012,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjSilentAnti",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001013: _tools.RODict({
@@ -360,12 +348,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001013,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjFrozenEnh",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001014: _tools.RODict({
@@ -376,12 +364,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001014,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjFrozenAnti",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001015: _tools.RODict({
@@ -392,12 +380,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001015,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjSlowEnh",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001016: _tools.RODict({
@@ -408,60 +396,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001016,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjSlowAnti",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
-        "score": 0
-    }),
-    78001017: _tools.RODict({
-        "ID": 78001017,
-        "levelGap": 1,
-        "maxLevel": 1,
-        "rarityLevel": 0,
-        "type": 1,
-        "event": "onDress",
-        "actionEffect": _78001017,
-        "inscription": None,
-        "prop": "mulMaxPhysicalAtk",
-        "floor": None,
-        "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.008, 0.008], [0.014, 0.014], [0.02, 0.02], [0.026, 0.026]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
-        "score": 0
-    }),
-    78001018: _tools.RODict({
-        "ID": 78001018,
-        "levelGap": 1,
-        "maxLevel": 1,
-        "rarityLevel": 0,
-        "type": 1,
-        "event": "onDress",
-        "actionEffect": _78001018,
-        "inscription": None,
-        "prop": "mulMaxMagicAtk",
-        "floor": None,
-        "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.008, 0.008], [0.014, 0.014], [0.02, 0.02], [0.026, 0.026]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
-        "score": 0
-    }),
-    78001019: _tools.RODict({
-        "ID": 78001019,
-        "levelGap": 1,
-        "maxLevel": 1,
-        "rarityLevel": 1,
-        "type": 1,
-        "event": "onDress",
-        "actionEffect": _78001019,
-        "inscription": None,
-        "prop": "mulFullHp",
-        "floor": None,
-        "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.014, 0.014], [0.028, 0.028], [0.042, 0.042], [0.056, 0.056]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001020: _tools.RODict({
@@ -472,12 +412,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001020,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjMonsterDmg",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.04, 0.04], [0.06, 0.06]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001021: _tools.RODict({
@@ -488,12 +428,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001021,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjMonsterDmgAnti",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.04, 0.04], [0.06, 0.06]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001022: _tools.RODict({
@@ -504,12 +444,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001022,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjPVPDmg",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.04, 0.04], [0.06, 0.06]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001023: _tools.RODict({
@@ -520,12 +460,12 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001023,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjPVPDmgAnti",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.04, 0.04], [0.06, 0.06]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001024: _tools.RODict({
@@ -536,92 +476,92 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001024,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjFinalDmg",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.04, 0.04], [0.06, 0.06]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001025: _tools.RODict({
         "ID": 78001025,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001025,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjFinalDmgAnti",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.04, 0.04], [0.06, 0.06]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001026: _tools.RODict({
         "ID": 78001026,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001026,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjKnockEnh",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001027: _tools.RODict({
         "ID": 78001027,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001027,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjKnockAnti",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001028: _tools.RODict({
         "ID": 78001028,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001028,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjPushEnh",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78001029: _tools.RODict({
         "ID": 78001029,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 1,
         "event": "onDress",
         "actionEffect": _78001029,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjPushAnti",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [4, 4], [6, 6]]),
-        "assessmentWeight": _tools.ROList([389, 100, 10, 1]),
+        "assessmentWeight": _tools.ROList([778, 200, 20, 2]),
         "score": 0
     }),
     78003000: _tools.RODict({
@@ -632,7 +572,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": None,
+        "inscription": 0,
         "prop": "",
         "floor": lambda alv:[alv*2],
         "ceiling": lambda alv:[alv*2],
@@ -1416,7 +1356,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": None,
+        "inscription": 0,
         "prop": "",
         "floor": lambda alv:[alv*2],
         "ceiling": lambda alv:[alv*2],
@@ -2200,7 +2140,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": None,
+        "inscription": 0,
         "prop": "",
         "floor": lambda alv:[alv*2],
         "ceiling": lambda alv:[alv*2],
@@ -2984,7 +2924,7 @@ datas = _tools.RODict({
         "type": 1,
         "event": "onDress",
         "actionEffect": _78002001,
-        "inscription": None,
+        "inscription": 0,
         "prop": "adjAtkBless",
         "floor": None,
         "ceiling": None,
@@ -2996,7 +2936,7 @@ datas = _tools.RODict({
 minKey = 78000030
 maxKey = 78003248
 
-rarityLevelDic = {1: [78000030, 78001003, 78001019, 78001024, 78001025, 78001026, 78001027, 78001028, 78001029]}
+rarityLevelDic = {1: [78001003, 78001007, 78001024]}
 
 glypRarityLevelDic = {1: [78003000, 78003001, 78003002, 78003003, 78003004, 78003005, 78003006, 78003007, 78003008, 78003009, 78003010, 78003011, 78003012, 78003013, 78003014, 78003015, 78003016, 78003017, 78003018, 78003019, 78003020, 78003021, 78003022, 78003023, 78003024, 78003025, 78003026, 78003027, 78003028, 78003029, 78003030, 78003031, 78003032, 78003033, 78003034, 78003035, 78003036, 78003037, 78003038, 78003039, 78003040, 78003041, 78003042, 78003043, 78003044, 78003045, 78003046, 78003047, 78003048, 78003100, 78003101, 78003102, 78003103, 78003104, 78003105, 78003106, 78003107, 78003108, 78003109, 78003110, 78003111, 78003112, 78003113, 78003114, 78003115, 78003116, 78003117, 78003118, 78003119, 78003120, 78003121, 78003122, 78003123, 78003124, 78003125, 78003126, 78003127, 78003128, 78003129, 78003130, 78003131, 78003132, 78003133, 78003134, 78003135, 78003136, 78003137, 78003138, 78003139, 78003140, 78003141, 78003142, 78003143, 78003144, 78003145, 78003146, 78003147, 78003148, 78003200, 78003201, 78003202, 78003203, 78003204, 78003205, 78003206, 78003207, 78003208, 78003209, 78003210, 78003211, 78003212, 78003213, 78003214, 78003215, 78003216, 78003217, 78003218, 78003219, 78003220, 78003221, 78003222, 78003223, 78003224, 78003225, 78003226, 78003227, 78003228, 78003229, 78003230, 78003231, 78003232, 78003233, 78003234, 78003235, 78003236, 78003237, 78003238, 78003239, 78003240, 78003241, 78003242, 78003243, 78003244, 78003245, 78003246, 78003247, 78003248]}
 

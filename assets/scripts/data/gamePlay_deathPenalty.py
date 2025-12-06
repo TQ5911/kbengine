@@ -68,16 +68,7 @@ datas = _tools.RODict({
         "addReliveTime": 0,
         "beInjured": 0,
         "dropGear": 0
-    }),
-    7: _tools.RODict({
-        "ID": 7,
-        "ifMoral": 0,
-        "dropExp": 0,
-        "dropMoney": 0,
-        "addReliveTime": 0,
-        "beInjured": 0,
-        "dropGear": 0
     })
 })
 minKey = 1
-maxKey = 7
+maxKey = 6

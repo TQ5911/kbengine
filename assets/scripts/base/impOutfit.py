@@ -68,13 +68,6 @@ class ImpOutfit(object):
         if outfitType == gameconst.OutfitType.picFrame:
             self.onMessagePre(AC.datas['getFrame']['value'], [configData['names']])
 
-        # if not self.getCommonFlag(gameconst.CommonFlagType.WingFlag) and outfitType == gameconst.OutfitType.wing:
-        #     self.setCommonFlag(gameconst.CommonFlagType.WingFlag)
-
-        # NOTE(ACHIEVE): 坐骑::获得的坐骑种类
-        # if outfitType == gameconst.OutfitType.mount and not expireTime:
-        #     self.checkAchievementTrigger(gameconst.AchieveTargetType.PLAYER_MOUNTS_TYPES)
-
     def getBuyOutfitPrice(self, configData):
         costItemNum = configData.get('price')
         return costItemNum
@@ -152,7 +145,6 @@ class ImpOutfit(object):
             self.outfitInfo.removeOutfit(self, outfitType, outfitId)
 
         if expiredOutfitList:
-            self.client.onOutfitExpired(expiredOutfitClient)
             self.cell.checkOutfitExpired(expiredOutfitList)
 
         if minLeftSec > gameconst.ONE_HOUR_SECONDES+gameconst.DelayCallOffsetSec:

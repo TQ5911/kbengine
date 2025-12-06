@@ -129,5 +129,28 @@
             <Arg>       VECTOR3        </Arg>
         </onCreateNewRebornPos>
 
+        <getDungeonStatisticData>
+            <Arg> SPACE_NO  </Arg>
+            <Arg> UUID      </Arg>
+        </getDungeonStatisticData>
+
+        <onGetDungeonStatisticData>
+            <Arg>   SPACE_NO                                   </Arg>
+            <Arg>   UUID                                       </Arg>
+            <Arg>   UINT8                                      </Arg>
+            <Arg>   UINT8                                      </Arg>
+            <Arg>   ARRAY <of> DUNGEON_STATISTIC_DATA </of>    </Arg>
+        </onGetDungeonStatisticData>
+
+        <clearAllDungeonStatisticData>
+            <Arg> SPACE_NO  </Arg>
+            <Arg> UUID      </Arg>
+        </clearAllDungeonStatisticData>
+
+        <clearDungeonStatisticDataByPlayerGbIds>
+            <Arg>   SPACE_NO                        </Arg>
+            <Arg>   UUID                            </Arg>
+            <Arg>   ARRAY <of> PLAYER_GBID </of>    </Arg>
+        </clearDungeonStatisticDataByPlayerGbIds>
     </BaseMethods>
 </root>

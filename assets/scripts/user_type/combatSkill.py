@@ -638,7 +638,7 @@ class SkillBase(userType.UserSoleType):
     def inEffectRange(self, src, target):
         pos1 = src.position
         pos2 = target.position
-        if not utils.checkCombatRangeY(src, target):
+        if not src.checkCombatRangeY(target):
             return False
         if self.getEffectRange(src, self.skillId, self.skillLv) <= 0:
             return True
@@ -659,7 +659,7 @@ class SkillBase(userType.UserSoleType):
     def inRange(self, src, target):
         pos1 = src.position
         pos2 = target.position
-        if not utils.checkCombatRangeY(src, target):
+        if not src.checkCombatRangeY(target):
             return False
         if self.getRange(src, self.skillId, self.skillLv) <= 0:
             return True
@@ -1957,14 +1957,16 @@ class CommonSkillVal(SkillBase):
         return rootSkill
 
     def getNotifyClientSkillId(self):
-        return self.skillId
+        return self.skillId, self.skillLv
 
     def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
         isSucc, actionCtx, effectTargetIds = super(CommonSkillVal, self).beginUseSkill(owner, targetId, skillArgs,
                                                                                        compensateTime,
                                                                                        doSetState, enterCD, parentCtx)
+        skillId, skillLv = self.getNotifyClientSkillId()
+        skillArgsExtra = [self.getRange(owner, skillId, skillLv), self.getEffectRange(owner, skillId, skillLv)]
         if not isSucc:
-            owner.client.onUseSkill(False, self.getNotifyClientSkillId(), targetId, [], [])
+            owner.client.onUseSkill(False, skillId, targetId, [], [], [])
             return isSucc, None, effectTargetIds
 
         if self.isChangePositionSkill(self.skillId):
@@ -1980,7 +1982,7 @@ class CommonSkillVal(SkillBase):
 
             owner.combatDebugMsg('CommonSkillVal.beginUseSkill channel skill: skillId:%s, targetId:%s, skillArgs:%s, compensateTime:%s, calcDelay:%s, ownerPosition:%s', self.skillId, targetId, skillArgs, compensateTime, calcDelay, owner.position)
             self.startChanneling(owner, targetId, skillArgs, calcDelay, actionCtx)
-            owner.allClients.onUseSkill(isSucc, self.getNotifyClientSkillId(), targetId, skillArgs, effectTargetIds)
+            owner.allClients.onUseSkill(isSucc, skillId, targetId, skillArgs, effectTargetIds, skillArgsExtra)
         else:
             owner.combatDebugMsg('CommonSkillVal.beginUseSkill: skillId:%s, targetId:%s, skillArgs:%s, compensateTime:%s, calcDelay:%s', self.skillId, targetId, skillArgs, compensateTime, calcDelay)
             # skillStateDuration = self.getSkillTime(self.skillId)
@@ -2019,8 +2021,8 @@ class CommonSkillVal(SkillBase):
                                 doSetState),
                             gametimer.TIMER_TAG_SKILL_DELAY_CALC))
 
-                    owner.allClients.onUseSkill(True, self.getNotifyClientSkillId(), targetId, skillArgs,
-                                                effectTargetIds)
+                    owner.allClients.onUseSkill(True, skillId, targetId, skillArgs,
+                                                effectTargetIds, skillArgsExtra)
                 else:
                     # 保证onUseSkill在_doUseSkill前
                     self.targetIds = effectTargetIds
@@ -2029,8 +2031,8 @@ class CommonSkillVal(SkillBase):
                         if bkData:
                             skillArgs.extend(list(bkData.position))
                     if owner.isReal():
-                        owner.allClients.onUseSkill(True, self.getNotifyClientSkillId(), targetId, skillArgs,
-                                                    effectTargetIds)
+                        owner.allClients.onUseSkill(True, skillId, targetId, skillArgs,
+                                                    effectTargetIds, skillArgsExtra)
                     owner._doUseSkill(self, targetId, skillArgs, actionCtx, calcDelay, doSetState)
 
         return isSucc, actionCtx, effectTargetIds
@@ -2105,7 +2107,7 @@ class ChongfengSkillVal(CommonSkillVal):
                                                                                           doSetState, enterCD,
                                                                                           parentCtx)
         if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [])
+            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
 
         return isSucc, actionCtx, effectTargetIds
 
@@ -2128,7 +2130,7 @@ class LungeSkillVal(CommonSkillVal):
                                                                                       compensateTime,
                                                                                       doSetState, enterCD, parentCtx)
         if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [])
+            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
 
         return isSucc, actionCtx, effectTargetIds
 
@@ -2149,7 +2151,7 @@ class DodgeSkillVal(CommonSkillVal):
                                                                                       compensateTime,
                                                                                       doSetState, enterCD, parentCtx)
         if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [])
+            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
 
         return isSucc, None, effectTargetIds
 
@@ -2293,7 +2295,7 @@ class ZedSkillVal(CommonSkillVal):
     # A技能被强化为B技能，onUseSkill里总是发A技能id
     def getNotifyClientSkillId(self):
         rootSkillVal = self.getRootSkillVal()
-        return rootSkillVal.skillId
+        return rootSkillVal.skillId, rootSkillVal.skillLv
 
     def enhancedZedSkillId(self, owner):
         sd = self.getSkillData(self.skillId)
@@ -2382,8 +2384,8 @@ class StagedSkill(ZedSkillVal):
     def getNotifyClientSkillId(self):
         rootSkillVal = self.getRootSkillVal()
         if rootSkillVal.enhanceZedSkill and rootSkillVal.stageIndex == 0:
-            return rootSkillVal.skillId
-        return self.skillId
+            return rootSkillVal.skillId, rootSkillVal.skillLv
+        return self.skillId, self.skillLv
 
     def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         realSkillVal, _ = self.getRealSkillVal(owner)
@@ -2559,7 +2561,7 @@ class ShooterSkillVal(CommonSkillVal):
                                                                                         compensateTime,
                                                                                         doSetState, enterCD, parentCtx)
         if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [])
+            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
 
         endTime = self.tCanUseEndTime - time.time()
         cdTimer = owner._callback(endTime, '_onSkillCallback', (self, 'resetSkill', (owner,)),
@@ -2608,7 +2610,7 @@ class UltraSkillVal(CommonSkillVal):
                                                                                       compensateTime,
                                                                                       doSetState, enterCD, parentCtx)
         if not isSucc:
-            owner.client.onUseSkill(False, self.skillId, targetId, [], [])
+            owner.client.onUseSkill(False, self.skillId, targetId, [], [], [])
 
 
         return isSucc, actionCtx, effectTargetIds

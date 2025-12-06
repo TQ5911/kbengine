@@ -74,6 +74,17 @@ class FriendCacheVal(object):
 
 
 class RedisUtils(object):
+    @classmethod
+    def set(cls, key, val, callback=None):
+        gameglobal.localBaseApp.getRedisClient().set(key, val,
+                                                      functools.partial(cls.onSetRedis, callback, key, val))
+
+    @classmethod
+    def onSetRedis(cls, callback, key, value, cid, err, result):
+        if err == "":
+            if callback:
+                callback(key, value)
+
     @staticmethod
     def getTableName(gbId):
         return 'AvatarInfo_' + str(gbId)
@@ -305,6 +316,14 @@ class RedisUtils(object):
     def getTestStr(cls, func):
         gameglobal.localBaseApp.getRedisClient().get('testStr', func)
 
+    @classmethod
+    def checkAndSetSVIP(cls, lName, cb):
+        gameglobal.localBaseApp.getRedisClient().evalsha(
+            gameconst.LuaScriptID.CHECK_AND_SET_SVIP,
+            [lName],
+            [],
+            cb
+        )
 
 class FriendUtils(object):
     @classmethod
@@ -645,6 +664,15 @@ class SetUtils(object):
             callback and callback(True, result)
         else:
             callback and callback(False, result)
+
+    @classmethod
+    def setMaxNumber(cls, lName, value, cb):
+        gameglobal.localBaseApp.getRedisClient().evalsha(
+            gameconst.LuaScriptID.SET_MAX_NUMBER,
+            [lName],
+            [value],
+            cb
+        )
 
 class PlayerCoinAuctionRecord(object):
 

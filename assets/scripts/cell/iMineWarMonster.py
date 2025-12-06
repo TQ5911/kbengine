@@ -28,12 +28,13 @@ class IMineWarMonster(object):
         if self.isMineWarFlag():# and self.mineWarGuildId > 0:
             self.mineWarCanAttack = True
             
+        self.recoverTimer = 0
         if self.spaceMgr and self.mineWarMonsterType in gameconst.mineWarMonsterEnumDict.values():
             self.spaceMgr.addMineWarMonsterOnInit(self.mineWarMonsterType, self)
 
-        self.recoverTimer = 0
-        # ================== lxq测试用
-        self.hp = self.fullHp = 10000
+            # ================== lxq测试用
+            self.hp = self.fullHp = 10000
+            INFO_MSG('IMineWarMonster::initGuildProp', self.gameEntityId, self.mineWarMonsterType, self.mineWarGuildId)
 
     def isMineWarCore(self):
         return self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_CORE
@@ -91,10 +92,12 @@ class IMineWarMonster(object):
         
         if hpVal >= 0:
             return
+        
+        percentNow = int(self.hp / self.fullHp * 100)
+        percentOld = int((self.hp - hpVal) / self.fullHp * 100)
         # 核心处理
         if self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_CORE:
-            percentNow = int(self.hp / self.fullHp * 100)
-            percentOld = int((self.hp - hpVal) / self.fullHp * 100)
+            
             syncPercent = 10
             if percentOld >= syncPercent and percentNow < syncPercent:
                 INFO_MSG("notifyMineWarOnModifyHP: ", percentOld, percentNow, self.hp, hpVal)
@@ -105,10 +108,11 @@ class IMineWarMonster(object):
             # 通知 sapceMgr
             self.spaceMgr.onMineWarCoreBeAttack(hpVal, releaseRoleId)
                 
+        # 旗帜处理
         if self.mineWarGuildId > 0 and self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_FLAG:
-            # 旗帜被攻击，通知帮派玩家
-            # self.spaceMgr.onMineWarFlagBeAttacked(self.id, self.mineWarGuildId)
-            pass
+            # 旗帜被攻击，通知
+            self.spaceMgr.onMineWarFlagBeAttacked()
+            
     
     def doSendGuildHpWarning(self, percent):
         self._doMineWarSendGuild('doSendMineWarHpWarning', (self.spaceNo, percent))
@@ -122,7 +126,8 @@ class IMineWarMonster(object):
     def notifyMineWarOnDead(self, killer):
         if not formula.isMineWarSpace(self.spaceNo):
             return
-        
+        killer = utils.getEntityRealEntity(killer)
+
         if not self.spaceMgr or not self.mineWarMonsterType:
             INFO_MSG("notifyMineWarOnDead: self.spaceMgr is None", self.spaceNo, self.gameEntityId)
             return
@@ -132,7 +137,8 @@ class IMineWarMonster(object):
 
         # 旗帜被毁，生成被毁旗帜实体
         if self.isMineWarFlag():
-            gameengine.getGlobalBase('MineWarStub').onMineWarFlagBeKill(formula.getLineType(self.spaceNo))
+            # gameengine.getGlobalBase('MineWarStub').onMineWarFlagBeKill(formula.getLineType(self.spaceNo))
+            gameengine.getGlobalBase('GuildStub').onMineWarFlagBeKillFromGuild(formula.getLineType(self.spaceNo), killer.guildUUID, killer.name)
             
             # 创建被毁旗帜
             props = {
@@ -145,10 +151,7 @@ class IMineWarMonster(object):
             }
             ent = KBEngine.createEntity("Monster", self.spaceID, self.position, self.direction, props)
             INFO_MSG("notifyMineWarOnDead: create broken flag entity id {}".format(ent.id))
-            
-            # 掉落宝箱 ===todo
-            
-        
+               
     
     def mineWarMonsterImmuneDeath(self, killer, srcType, srcId, curHp):
         """矿战核心免死处理"""
@@ -162,12 +165,13 @@ class IMineWarMonster(object):
             curHp = 1 if curHp <= 0 else curHp
             return curHp
         
+        killer = utils.getEntityRealEntity(killer)
         # 免死处理
         INFO_MSG("mineWarMonsterImmuneDeath: monster {} immune death, curHp {}, killer {}, srcType {}, srcId {}".format(
             self.id, curHp, killer.id, srcType, srcId))
         
-        # 通知stub
-        gameengine.getGlobalBase('MineWarStub').onMineWarCoreBeKill(formula.getLineType(self.spaceNo), killer.id, killer.guildUUID)
+        # 通知killer
+        killer.base.onMineWarKillCore(formula.getLineType(self.spaceNo))
         # 通知spaceMgr
         self.spaceMgr.onMineWarCoreBeKill(killer)
         

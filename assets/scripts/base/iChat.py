@@ -51,22 +51,19 @@ class IChat(object):
     def sendWorldChatMsg(self, exposed, msg):
         DEBUG_MSG('sendWorldChatMsg', msg)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason, utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
-            self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
+            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.getNow()
         if now < self.sendWorldMsgTime + CCCH.datas[gameconst.ChatChannel.WORLD]['channelCD']:
             timeDelta = self.sendWorldMsgTime + CCCH.datas[gameconst.ChatChannel.WORLD]['channelCD']-now
             self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
-            self.client.onSetChatCD(gameconst.ChatChannel.WORLD,self.sendWorldMsgTime + CCCH.datas[gameconst.ChatChannel.WORLD]['channelCD'])
             return
 
         if gameglobal.roleCache[self.id]['level'] < CCCH.datas[gameconst.ChatChannel.WORLD]['channelMinLevel']:
             return
 
         self.sendWorldMsgTime = now
-        self.client.onSetChatCD(gameconst.ChatChannel.WORLD,self.sendWorldMsgTime + CCCH.datas[gameconst.ChatChannel.WORLD]['channelCD'])
         self.afterCheckWorldChatMsg(msg)
 
     def afterCheckWorldChatMsg(self, originalMsg):
@@ -84,15 +81,13 @@ class IChat(object):
     def sendSiegeWarChatMsg(self, exposed, msg):
         DEBUG_MSG('sendSiegeWarChatMsg', msg)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason, utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
-            self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
+            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.getNow()
         if now < self.sendSiegeWarMsgTime + CCCH.datas[gameconst.ChatChannel.SIEGE_WAR]['channelCD']:
             timeDelta = self.sendSiegeWarMsgTime + CCCH.datas[gameconst.ChatChannel.SIEGE_WAR]['channelCD']-now
             self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
-            self.client.onSetChatCD(gameconst.ChatChannel.SIEGE_WAR,self.sendSiegeWarMsgTime + CCCH.datas[gameconst.ChatChannel.SIEGE_WAR]['channelCD'])
             return
 
         gameengine.broadcastBaseapp('broadcastToAllAvatar',
@@ -104,8 +99,7 @@ class IChat(object):
     def sendGuildChatMsg(self, exposed, msg):
         DEBUG_MSG('sendGuildChatMsg', msg)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
-            self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
+            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         self._sendMsgToGuild(msg,True)
@@ -115,7 +109,6 @@ class IChat(object):
         if now < self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannel.GUILD]['channelCD']):
             timeDelta = self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannel.GUILD]['channelCD']) - now
             self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
-            self.client.onSetChatCD(gameconst.ChatChannel.GUILD, self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannel.GUILD]['channelCD']))
             return
 
         if not self.guildBox:
@@ -124,7 +117,6 @@ class IChat(object):
             return
 
         self.sendGuildMsgTime = now
-        self.client.onSetChatCD(gameconst.ChatChannel.GUILD, self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannel.GUILD]['channelCD']))
         self.afterCheckGuildChatMsg(includeMe, isTeamZhaomu, sendByServer, msg)
 
     def afterCheckGuildChatMsg(self, includeMe, isTeamZhaomu, sendByServer,originalMsg):
@@ -152,8 +144,7 @@ class IChat(object):
     def sendGuildPickChatMsg(self, messageId):
         DEBUG_MSG('sendGuildPickChatMsg', messageId)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
-            self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
+            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.getNow()
@@ -177,8 +168,7 @@ class IChat(object):
             return
 
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
-            self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
+            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         self._sendMsgToTeam(teamId, msg, True)
@@ -188,11 +178,9 @@ class IChat(object):
         if now < self.sendTeamMsgTime + int(CCCH.datas[gameconst.ChatChannel.TEAM]['channelCD']):
             timeDelta = self.sendTeamMsgTime + int(CCCH.datas[gameconst.ChatChannel.TEAM]['channelCD']) - now
             self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
-            self.client.onSetChatCD(gameconst.ChatChannel.TEAM, self.sendTeamMsgTime + int(CCCH.datas[gameconst.ChatChannel.TEAM]['channelCD']))
             return
 
         self.sendTeamMsgTime = now
-        self.client.onSetChatCD(gameconst.ChatChannel.TEAM, self.sendTeamMsgTime + int(CCCH.datas[gameconst.ChatChannel.TEAM]['channelCD']))
         self.afterCheckTeamChatMsg(teamId, includeMe, msg)
 
     def afterCheckTeamChatMsg(self, teamId, includeMe, originalMsg):
@@ -207,22 +195,19 @@ class IChat(object):
     def sendNearbyChatMsg(self, exposed, msg):
         DEBUG_MSG('sendNearbyChatMsg', msg)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
-            self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
+            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.getNow()
         if now < self.sendNearbyMsgTime + CCCH.datas[gameconst.ChatChannel.NEARBY]['channelCD']:
             timeDelta = self.sendNearbyMsgTime + CCCH.datas[gameconst.ChatChannel.NEARBY]['channelCD'] - now
             self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
-            self.client.onSetChatCD(gameconst.ChatChannel.NEARBY, self.sendNearbyMsgTime + CCCH.datas[gameconst.ChatChannel.NEARBY]['channelCD'])
             return
 
         if gameglobal.roleCache[self.id]['level'] < CCCH.datas[gameconst.ChatChannel.NEARBY]['channelMinLevel']:
             return
 
         self.sendNearbyMsgTime = now
-        self.client.onSetChatCD(gameconst.ChatChannel.NEARBY, self.sendNearbyMsgTime + CCCH.datas[gameconst.ChatChannel.NEARBY]['channelCD'])
         self.afterCheckNearbyChatMsg(msg)
 
     def afterCheckNearbyChatMsg(self, originalMsg):
@@ -243,21 +228,18 @@ class IChat(object):
             return
 
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
-            self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
+            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         now = utils.getNow()
         if now < self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannel.RAID]['channelCD']):
             timeDelta = self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannel.RAID]['channelCD']) - now
             self.onMessagePre(int(CCD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
-            self.client.onSetChatCD(gameconst.ChatChannel.RAID, self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannel.RAID]['channelCD']))
             return
 
         avatarInfo = self._getChatChannelAvatarInfo()
         extraProps = {}
         self.sendRaidMsgTime = now
-        self.client.onSetChatCD(gameconst.ChatChannel.RAID, self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannel.RAID]['channelCD']))
         self.afterCheckRaidChatMsg(raidUUID, avatarInfo, extraProps, msg)
 
     def afterCheckRaidChatMsg(self,raidUUID, avatarInfo, extraProps, originalMsg):
@@ -294,8 +276,7 @@ class IChat(object):
     def checkUseTrumpetBase(self, pendingCheckId,msg):
         DEBUG_MSG("checkUseTrumpetBase ",pendingCheckId)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
-            self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
+            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         self.cell.afterCheckTrumpetMsg(pendingCheckId, msg)
@@ -378,8 +359,7 @@ class IChat(object):
     def _sendMatchMessage(self, teamId, content, teamTarget, curNum, channel, isTeam):
         DEBUG_MSG('in sendTeamMatchMessage:', teamId, content, teamTarget, curNum, channel)
         if self.isAllServerForbidChat():
-            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [self.accountEntity.banAllServerPostReason,utils.getBanEndTimeString(self.accountEntity.banAllServerPostTime)])
-            self.client.onSendForbidChat(self.accountEntity.banAllServerPostTime, self.accountEntity.banAllServerPostReason)
+            self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
 
         # 只处理自身目标和具体活动目标
@@ -471,9 +451,11 @@ class IChat(object):
 
 
     def isAllServerForbidChat(self):
-        if self.accountEntity.banAllServerPostTime:
-            if self.accountEntity.banAllServerPostTime == -1 or self.accountEntity.banAllServerPostTime>utils.getNow():
-                return True
+        # if self.accountEntity.banAllServerPostTime:
+        #     if self.accountEntity.banAllServerPostTime == -1 or self.accountEntity.banAllServerPostTime>utils.getNow():
+        #         return True
+        if self.isIDIPBan(gameconst.IDIPBanType.CHAT):
+            return True
 
         return False
 

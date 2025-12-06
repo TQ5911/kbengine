@@ -42,6 +42,9 @@ class AvatarBaseEntityCall(object):
     def buyItemInCoinAuctionByAuctionItemUUID(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'buyItemInCoinAuctionByAuctionItemUUID', (arg1, arg2, )))
 
+    def cancalGuildDungeonOrder(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'cancalGuildDungeonOrder', ()))
+
     def cancelApplyGuildUnion(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'cancelApplyGuildUnion', (arg1, )))
 
@@ -99,6 +102,9 @@ class AvatarBaseEntityCall(object):
     def editJobPermissions(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'editJobPermissions', (arg1, arg2, )))
 
+    def enterBossChallengeDungeon(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'enterBossChallengeDungeon', ()))
+
     def enterCrossServerSiegeWarSpace(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'enterCrossServerSiegeWarSpace', ()))
 
@@ -125,6 +131,9 @@ class AvatarBaseEntityCall(object):
 
     def getAvatarInterInfo(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getAvatarInterInfo', (arg1, )))
+
+    def getChangllengeDataInfo(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getChangllengeDataInfo', ()))
 
     def getCoinAuctionPlayerInfo(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getCoinAuctionPlayerInfo', ()))
@@ -180,6 +189,9 @@ class AvatarBaseEntityCall(object):
     def getRedBagRankList(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getRedBagRankList', ()))
 
+    def getSettlementRankList(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getSettlementRankList', (arg1, arg2, )))
+
     def getTakerWaitReward(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getTakerWaitReward', (arg1, )))
 
@@ -201,11 +213,11 @@ class AvatarBaseEntityCall(object):
     def kickMember(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'kickMember', (arg1, )))
 
+    def leaveBossChallengeDungeon(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'leaveBossChallengeDungeon', ()))
+
     def leaveCrossServerSiegeWarSpace(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'leaveCrossServerSiegeWarSpace', ()))
-
-    def levelUpSkill(self, arg1, arg2, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'levelUpSkill', (arg1, arg2, )))
 
     def modifyAuthPermission(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'modifyAuthPermission', (arg1, arg2, )))
@@ -243,6 +255,9 @@ class AvatarBaseEntityCall(object):
     def oneKeyGuildApply(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'oneKeyGuildApply', (arg1, )))
 
+    def openGuildDungeon(self, arg1, arg2, arg3, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'openGuildDungeon', (arg1, arg2, arg3, )))
+
     def openNChoiceGift(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'openNChoiceGift', (arg1, arg2, arg3, )))
 
@@ -251,6 +266,9 @@ class AvatarBaseEntityCall(object):
 
     def qixieAssist(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'qixieAssist', (arg1, )))
+
+    def queryFirstPassRewardStatus(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'queryFirstPassRewardStatus', (arg1, arg2, )))
 
     def queryItemLink(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'queryItemLink', (arg1, arg2, arg3, )))
@@ -407,6 +425,21 @@ class AvatarBaseEntityCall(object):
 
     def reqMark(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMark', (arg1, arg2, )))
+
+    def reqMineWarCollectInfo(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMineWarCollectInfo', ()))
+
+    def reqMineWarGuildOwnerRank(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMineWarGuildOwnerRank', (arg1, )))
+
+    def reqMineWarGuildPlayerRank(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMineWarGuildPlayerRank', (arg1, )))
+
+    def reqMineWarInfo(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMineWarInfo', ()))
+
+    def reqMineWarShareBonus(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMineWarShareBonus', (arg1, arg2, )))
 
     def reqMoveItemToBag(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMoveItemToBag', (arg1, arg2, )))
@@ -848,6 +881,9 @@ class AvatarCellEntityCall(object):
     def getCubeRoomLeftTime(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getCubeRoomLeftTime', ()))
 
+    def getMineWarMonsterInfo(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getMineWarMonsterInfo', ()))
+
     def getRaidAllMembersAttrs(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getRaidAllMembersAttrs', (arg1, )))
 
@@ -883,6 +919,9 @@ class AvatarCellEntityCall(object):
 
     def leaveWonderLand(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'leaveWonderLand', ()))
+
+    def levelUpSkill(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'levelUpSkill', (arg1, arg2, )))
 
     def loadSceneFinish(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'loadSceneFinish', (arg1, )))

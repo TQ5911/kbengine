@@ -42,13 +42,12 @@ datas ={
         1012,
         1014,
         1027,
-        1015,
-        1016,
         1035,
         1057,
         1096,
         1046,
-        1117,
+        1128,
+        1108,
         1115,
         1031,
         1059,
@@ -68,10 +67,13 @@ datas ={
         1105,
         1118,
         1119,
-        1041,
-        1108,
+        1122,
+        1124,
+        1125,
         1013,
-        1004
+        1004,
+        1041,
+        1129
       ]
     }
   },
@@ -171,59 +173,18 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1028
+        1029
       ]
     }
   },
   "1028": {
     "type": "createMonster",
     "entityID": [
-      40020034,
-      40020035,
-      40020036,
-      40020037,
-      40020038,
-      40020039,
-      40020040,
-      40020041,
-      40020042,
-      40020043,
-      40020044,
-      40020045
-    ],
-    "num": 1,
-    "lv": "1",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1029
-      ]
-    }
-  },
-  "1029": {
-    "type": "taskFinished",
-    "taskID": 86060078,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1030
-      ]
-    }
-  },
-  "1030": {
-    "type": "createMonster",
-    "entityID": [
       40020030,
       40020031,
       40020032,
-      40020033
+      40020033,
+      40020034
     ],
     "num": 1,
     "lv": "1",
@@ -319,7 +280,11 @@ datas ={
       40024024,
       40024025,
       40024026,
-      40024027
+      40024027,
+      40024028,
+      40024029,
+      40024030,
+      40024031
     ],
     "num": 1,
     "lv": "1",
@@ -390,24 +355,6 @@ datas ={
       ]
     }
   },
-  "1015": {
-    "type": "taskInProgress",
-    "taskID": 86060078,
-    "transition": {
-      "finished": [
-        1028
-      ]
-    }
-  },
-  "1016": {
-    "type": "taskInProgress",
-    "taskID": 86060080,
-    "transition": {
-      "finished": [
-        1030
-      ]
-    }
-  },
   "1041": {
     "type": "taskFinished",
     "taskID": 86060101,
@@ -451,9 +398,9 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1038,
         1037,
-        1068
+        1068,
+        1126
       ]
     }
   },
@@ -993,7 +940,11 @@ datas ={
       40028025,
       40028026,
       40028024,
-      40028027
+      40028027,
+      40028032,
+      40028033,
+      40028034,
+      40028035
     ],
     "num": 1,
     "transition": {}
@@ -1045,7 +996,8 @@ datas ={
   "1099": {
     "type": "removeNoHostCreation",
     "entityID": [
-      40028026
+      40028026,
+      40028032
     ],
     "usePrototypeID": 0,
     "transition": {}
@@ -1053,7 +1005,8 @@ datas ={
   "1100": {
     "type": "removeNoHostCreation",
     "entityID": [
-      40028024
+      40028024,
+      40028035
     ],
     "usePrototypeID": 0,
     "transition": {}
@@ -1061,7 +1014,8 @@ datas ={
   "1101": {
     "type": "removeNoHostCreation",
     "entityID": [
-      40028027
+      40028027,
+      40028034
     ],
     "usePrototypeID": 0,
     "transition": {}
@@ -1069,7 +1023,8 @@ datas ={
   "1102": {
     "type": "removeNoHostCreation",
     "entityID": [
-      40028025
+      40028025,
+      40028033
     ],
     "usePrototypeID": 0,
     "transition": {}
@@ -1190,15 +1145,6 @@ datas ={
       ]
     }
   },
-  "1117": {
-    "type": "taskInProgress",
-    "taskID": 86060098,
-    "transition": {
-      "finished": [
-        1038
-      ]
-    }
-  },
   "1118": {
     "type": "taskInProgress",
     "taskID": 86060070,
@@ -1216,6 +1162,102 @@ datas ={
     "transition": {
       "finished": [
         1106
+      ]
+    }
+  },
+  "1122": {
+    "type": "taskInProgress",
+    "taskID": 86060055,
+    "transition": {
+      "finished": [
+        1123
+      ]
+    }
+  },
+  "1123": {
+    "type": "changeSpaceVar",
+    "varID": 70100001,
+    "formula": "34990001",
+    "paramVarIDs": [
+      70100001
+    ],
+    "transition": {}
+  },
+  "1124": {
+    "type": "taskInProgress",
+    "taskID": 86060061,
+    "transition": {
+      "finished": [
+        1123
+      ]
+    }
+  },
+  "1125": {
+    "type": "taskInProgress",
+    "taskID": 86060071,
+    "transition": {
+      "finished": [
+        1123
+      ]
+    }
+  },
+  "1126": {
+    "type": "jumpCinemaPlay",
+    "cinemaPlayID": 98010015,
+    "exitTime": 21.0,
+    "transition": {
+      "finished": [
+        1038
+      ]
+    }
+  },
+  "1127": {
+    "type": "jumpCinemaPlay",
+    "cinemaPlayID": 98010015,
+    "exitTime": 21.0,
+    "transition": {
+      "finished": [
+        1038
+      ]
+    }
+  },
+  "1128": {
+    "type": "taskInProgress",
+    "taskID": 86060098,
+    "transition": {
+      "finished": [
+        1127
+      ]
+    }
+  },
+  "1029": {
+    "type": "jumpCinemaPlay",
+    "cinemaPlayID": 98000057,
+    "exitTime": 8.0,
+    "transition": {
+      "finished": [
+        1028
+      ]
+    }
+  },
+  "1129": {
+    "type": "taskFinished",
+    "taskID": 86060053,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1130
+      ]
+    }
+  },
+  "1130": {
+    "type": "jumpCinemaPlay",
+    "cinemaPlayID": 98000063,
+    "exitTime": 20.0,
+    "transition": {
+      "finished": [
+        1123
       ]
     }
   }

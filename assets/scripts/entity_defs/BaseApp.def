@@ -87,12 +87,6 @@
             <Flags>         BASE            </Flags>
         </officialMesTickTimerDic>
 
-        <officialMesOverTimer>
-            <Type>          TIMER_ID          </Type>
-            <Flags>         BASE            </Flags>
-            <Default>       0               </Default>
-        </officialMesOverTimer>
-
         <localStubCreated>
             <Type>          BOOL           </Type>
             <Flags>         BASE            </Flags>

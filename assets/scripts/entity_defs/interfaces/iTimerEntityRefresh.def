@@ -1,0 +1,17 @@
+<root>
+    <Properties>
+        <refreshEntityQueue>
+            <Type>            PY_LIST             </Type>
+            <Flags>           CELL_PRIVATE       </Flags>
+        </refreshEntityQueue>
+
+        <refreshEntityTimerId>
+            <Type>      TIMER_ID            </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   0                   </Default>
+        </refreshEntityTimerId>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+</root>

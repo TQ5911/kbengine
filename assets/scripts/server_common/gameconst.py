@@ -120,6 +120,10 @@ CENTRAL_SERVER_HEARTBEAT_INTERVAL = 10
 ENTITY_POS_POLICY_MAX_NUM = 1000
 
 
+GAME_CONFIG_TYPE_WONDER_LAND = 1
+GAME_CONFIG_TYPE_SQUARE = 2
+GAME_CONFIG_TYPE_ROLE_AUTHORIZATION = 3
+
 class UniqueIntEnum(type):
     def __new__(cls, name, bases, dct):
         __blocklist__ = dct.get('__blocklist__', ())
@@ -262,6 +266,7 @@ class SpaceType(metaclass=UniqueIntEnum):
     SpaceLine = 6
     SpaceWonderLand = 7
     SpaceSiegeWar = 8
+    SpaceGuild = 9
 
     @staticmethod
     def getCopiedSpaceNoRange(mapId):
@@ -450,6 +455,9 @@ class AvatarProps(metaclass=UniqueIntEnum):
     teamStatisticDataDict = 341
 
     deadLaterCallbackInfo = 350
+
+    attachedIDList = 361
+    beAttachedHostID = 362
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
@@ -925,6 +933,10 @@ class CollectionPickType(object):
     ClientJudgeTypes = (CountdownAndClientJudge_1,)
 
 
+class IDIPBanType(object):
+    CHAT = 1
+
+
 class GMCommandErr(object):
     OK = 0
     TARGET_NOT_EXISTS = 1
@@ -1006,7 +1018,8 @@ class RedisKey(object):
     LOGIN_ACCOUNT_GBID_KEY = "__LOGIN_ACCOUNT_GBID_KEY__"
     WP_WHITE_LSIT_KEY = "__WP_WHITE_LSIT_KEY__"
     GUILD_NAME_TBL = 'global:guild_names'
-
+    GIFT_CODE_TBL = 'global:gift_codes'
+    PRIVILEGE_TBL = 'g:vip'
 
 class ForbidType(object):
     SHORT_FORBID = 1  # 临时封禁
@@ -1062,6 +1075,8 @@ class LuaScriptID:
     SEND_FRINED_REQUEST = 4
     SEND_FRIEND_MSG = 5
     GET_FRIEND_MSG = 6
+    SET_MAX_NUMBER = 7
+    CHECK_AND_SET_SVIP = 8
 
 
 class AvatarPhotoType(object):
@@ -1546,6 +1561,7 @@ class DungeonSrcEnum(object):
     FROM_KICKOUT_DUNGEON = 5                      # 踢出副本
     FROM_TIME_OUT = 6                             # 副本超时
     FROM_FLOW_CONTROLLER = 7                      # 副本流程控制节点
+    FROM_CONFIG = 8                               # custom config变更导致的传送
 
     COLL_FROM_TASK = (FROM_TASK, )
 
@@ -1646,6 +1662,7 @@ class TeamStatisticType(object):
     DAMAGE = 1
     HEAL = 2
     HURT = 3
+    DEAD = 4
 
 class _RaidErrno(object):
     from userType import Error as _errno
@@ -1900,9 +1917,10 @@ class DungeonPlayModeEnum(object):
     UNKNOWN = 0
     CRUSADE = 1
     CHIEF = 2
+    GUILD_BOSS = 3
 
-    COLL_ALL = (CRUSADE, CHIEF)
-    COLL_SYNC_SPACELEVEL = (CRUSADE, CHIEF)
+    COLL_ALL = (CRUSADE, CHIEF, GUILD_BOSS)
+    COLL_SYNC_SPACELEVEL = (CRUSADE, CHIEF, GUILD_BOSS)
 
 class DungeonSpaceMgrProps(object):
     dungeonRewardBossID = 1000
@@ -1913,6 +1931,7 @@ class DungeonSpaceMgrProps(object):
     transPetId = 1005
     triggerGuideId = 1006
     dungeonTimeFreezeSpaceMgrFlag = 1007 # linkeed: AvatarProps. dungeonTimeFreezeEntityFlag
+    guildBossDungeonBelongGuildUUID = 1008
 
 class DungeonSpaceType(object):
     """
@@ -1922,14 +1941,10 @@ class DungeonSpaceType(object):
     BIG_WORLD = 1
     COMMON = 2
     BATTLE_FIELD = 5
-    GUILD = 8
-    HOME = 9
-    WEDDING_PARTY = 11
-    HONOR_PK = 12
-    SINGLE_TOWER = 13
-    SCHOOL_PK = 16
+    SIEGE_WAR = 8
+    GUILD_BOSS = 9
 
-    COLL_DUNGEON = (BIG_WORLD, COMMON, BATTLE_FIELD, GUILD, HOME, WEDDING_PARTY, HONOR_PK, SINGLE_TOWER,SCHOOL_PK)
+    COLL_DUNGEON = (BIG_WORLD, COMMON, BATTLE_FIELD, SIEGE_WAR, GUILD_BOSS)
 
 class DungeonEnterType(object):
     UNKNOWN = 0
@@ -1937,12 +1952,14 @@ class DungeonEnterType(object):
     TEAM = 2
     BOTH = 3
     RAID = 4
+    GUILD = 5
 
     COLL_TEAM = (TEAM, BOTH)
     COLL_SINGLE = (SINGLE, BOTH)
 
+    COLL_GUILD = (GUILD)
     COLL_BOTH = (TEAM, SINGLE)
-    COLL_ALL = (TEAM, SINGLE, RAID)
+    COLL_ALL = (TEAM, SINGLE, RAID, GUILD)
 
 
 _DUNGEON_TYPE_LRU_CACHE_SIZE = 4 * 4
@@ -1977,22 +1994,6 @@ class DungeonType(object):
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
-    def isGuildTeamDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.GUILD \
-                and dungeonEnterType in dungeonEnterType.COLL_TEAM:
-            return True
-        return False
-
-    @classmethod
-    @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
-    def isHomeTeamDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.HOME \
-                and dungeonEnterType in DungeonEnterType.COLL_TEAM:
-            return True
-        return False
-
-    @classmethod
-    @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isSingleDungeon(cls, dungeonSpaceType, dungeonEnterType):
         if dungeonSpaceType in DungeonSpaceType.COLL_DUNGEON \
                 and dungeonEnterType in DungeonEnterType.COLL_SINGLE:
@@ -2017,22 +2018,6 @@ class DungeonType(object):
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
-    def isGuildSingleDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.GUILD \
-                and dungeonEnterType in DungeonEnterType.COLL_SINGLE:
-            return True
-        return False
-
-    @classmethod
-    @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
-    def isHomeSingleDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.HOME \
-                and dungeonEnterType in DungeonEnterType.COLL_SINGLE:
-            return True
-        return False
-
-    @classmethod
-    @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
     def isBothDungeon(cls, dungeonSpaceType, dungeonEnterType):
         if dungeonSpaceType in DungeonSpaceType.COLL_DUNGEON \
                 and dungeonEnterType == DungeonEnterType.BOTH:
@@ -2049,25 +2034,10 @@ class DungeonType(object):
 
     @classmethod
     @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
-    def isNormalRaidDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.COMMON \
-                and dungeonEnterType == DungeonEnterType.RAID:
-            return True
-        return False
-
-    @classmethod
-    @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
-    def isGuildRaidDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.GUILD \
-                and dungeonEnterType == DungeonEnterType.RAID:
-            return True
-        return False
-
-    @classmethod
-    @functools.lru_cache(_DUNGEON_TYPE_LRU_CACHE_SIZE)
-    def isHomeRaidDungeon(cls, dungeonSpaceType, dungeonEnterType):
-        if dungeonSpaceType == DungeonSpaceType.HOME \
-                and dungeonEnterType == DungeonEnterType.RAID:
+    def isGuildBossDungeon(cls, dungeonSpaceType, dungeonEnterType):
+        if dungeonSpaceType in DungeonSpaceType.COLL_DUNGEON \
+                and dungeonSpaceType == DungeonSpaceType.GUILD_BOSS \
+                and dungeonEnterType == DungeonEnterType.GUILD:
             return True
         return False
 
@@ -2078,30 +2048,6 @@ class DungeonType(object):
     @classmethod
     def isBigWorldDungeon(cls, dungeonSpaceType: int):
         return dungeonSpaceType == DungeonSpaceType.BIG_WORLD
-
-    @classmethod
-    def isGuildDungeon(cls, dungeonSpaceType: int):
-        return dungeonSpaceType == DungeonSpaceType.GUILD
-
-    @classmethod
-    def isHomeDungeon(cls, dungeonSpaceType: int):
-        return dungeonSpaceType == DungeonSpaceType.HOME
-
-    @classmethod
-    def isPVPDungeon(cls, dungeonSpaceType: int):
-        return dungeonSpaceType == DungeonSpaceType.BATTLE_FIELD
-
-    @classmethod
-    def isWeddingParty(cls, dungeonSpaceType: int):
-        return dungeonSpaceType == DungeonSpaceType.WEDDING_PARTY
-
-    @classmethod
-    def isHonorPKDungeon(cls, dungeonSpaceType: int):
-        return dungeonSpaceType == DungeonSpaceType.HONOR_PK
-
-    @classmethod
-    def isSchoolPKDungeon(cls, dungeonSpaceType: int):
-        return dungeonSpaceType == DungeonSpaceType.SCHOOL_PK
 
 class _ACT_ID_CONST_META(UniqueIntEnum):
     pass
@@ -2438,6 +2384,17 @@ class CreationHostType(object):
     NPC = 7
     Other = 8
 
+class EntityType(object):
+    NONE = 0
+    AVATAR = 1
+    MONSTER = 2
+    SUMMON = 3
+    CREATION = 4
+    PET = 5
+    AVATAR_MIRROR = 6
+    NPC = 7
+    Other = 8
+
 class DressEquipOpStat(object):
     EQUIP_OP_FAILED = 0
     EQUIP_OP_ONLY_DRESS = 1
@@ -2548,13 +2505,22 @@ class CliConfigDef(object):
     EQUIP_AUTO_DISA_DEFAULT_VAL = 0                        #装备进背包是否自动分解默认值: 0 不分解
 
 class AUTO_DISA_QUALITY_KEY(object):
+    # 白
     WHITE = 0
+    # 绿
     GREEN = 1
+    # 蓝
     BLUE = 2
+    # 紫
     PURPLE = 3
+    # 金
     ORANGE = 4
+    # 红
     RED = 5
+    # 可交易
     TRADE = 7
+    # 自动分解开关
+    AUTOS_WITCH = 8
 
 class MessageType(object):
     MESSAGE_TYPE_1 = 1
@@ -2772,6 +2738,8 @@ class AvatarFlagCell(object):
     AUTO_RETURN_AFTER_REVIVE = 5
     # 反击状态
     FIGHT_BACK = 6
+
+    QUICK_SETTING_RANGE = (AUTO_HEAL_HP, AUTO_HEAL_MP, AUTO_FIGHT_BACK, AUTO_RETURN_AFTER_REVIVE)
 
 
 DEATH_PENALTY_INVALID_REC_TIMES = 255
@@ -3196,6 +3164,13 @@ siegeWarMonsterEnumDict = {
     SiegeWarMonsterCustomId.DEFEND_REBORN: SiegeWarMonsterType.DEFEND_REBORN,
 }
 
+siegeWarMonsterPropIdTypeDict = {
+    SiegeWarMonsterCustomId.MAIN_GATE: 1,
+    SiegeWarMonsterCustomId.REINFORCE: 3,
+    SiegeWarMonsterCustomId.SIEGE_BOSS: 4,
+    SiegeWarMonsterCustomId.BOW: 5,
+}
+
 siegeWarMiniMapNeedSync = {
     SiegeWarMonsterType.SIEGE_BOSS: True,
     SiegeWarMonsterType.REINFORCE: True,
@@ -3475,6 +3450,12 @@ class AuthPerFlags(object):
     GUILD = 7 # 帮会
 # ----------------------------- auth avatar end ---------------------------
 
+# bit 位
+CELL_FLAGS_IS_HOST_AVATAR = 0
+CELL_FLAGS_IS_SPECIAL_AI = 1
+
+
+CALL_LIMIT_SCATTER = 1
 
 class ItemLockStatus(object):
     UNLOCKED = 0 # 未上锁
@@ -3546,15 +3527,21 @@ TEAM_STATISTIC_TYPE_TO_LIST = {
     TeamStatisticType.DAMAGE: 'dmgList',
     TeamStatisticType.HEAL: 'healList',
     TeamStatisticType.HURT: 'hurtList',
+    TeamStatisticType.DEAD: 'deadList',
 }
 
 TEAM_STATISTIC_TYPE_TO_KEY = {
     TeamStatisticType.DAMAGE: 'dmg',
     TeamStatisticType.HEAL: 'heal',
     TeamStatisticType.HURT: 'hurt',
+    TeamStatisticType.DEAD: 'dead',
 }
 
 class TeamApplyResult(object):
+    # 成功
+    TEAM_APPLY_OK = 0
+    # 申请失败
+    TEAM_APPLY_FAIL = 1
     # 等级不足
     TEAM_APPLY_LEVEL_IS_NOT_ENOUGH = 10001
     # 战力不足
@@ -3565,6 +3552,14 @@ class TeamApplyResult(object):
     TEAM_APPLY_WRONG_PASSWORD = 10004
     # 在副本中
     TEAM_APPLY_IS_IN_DUNGEON = 10005
+    # 队伍不存在
+    TEAM_IS_NOT_EXIST = 10006
+    # 团队不存在
+    RAID_IS_NOT_EXIST = 10007
+    # 团队满了
+    RAID_IS_FULL = 10008
+    # 团队申请列表满了
+    RAID_APPLY_LIST_IS_FULL = 10009
 
 class MINE_WAR_STATE(object):
     PREPARE = 1
@@ -3575,15 +3570,109 @@ class MineWarMonsterCustomId(object):
     MINE_CORE = 'mineCore'      #矿战核心
     MINE_FLAG = 'mineFlag'      #矿战旗帜
     MINE_BROKEN_FLAG = 'mineBrokenFlag' #矿战被毁旗帜
-    
+
 class MineWarMonsterType(object):
     MINE_NONE = 0
     MINE_CORE = 1      #矿战核心
     MINE_FLAG = 2      #矿战旗帜
     MINE_BROKEN_FLAG = 3 #矿战被毁旗帜
-    
+
+class MINE_WAR_CAMP(object):
+    CAMP_DEFEND = 1
+    CAMP_ATTACK = 2
+
 mineWarMonsterEnumDict = {
     MineWarMonsterCustomId.MINE_CORE: MineWarMonsterType.MINE_CORE,
     MineWarMonsterCustomId.MINE_FLAG: MineWarMonsterType.MINE_FLAG,
     MineWarMonsterCustomId.MINE_BROKEN_FLAG: MineWarMonsterType.MINE_BROKEN_FLAG,
 }
+
+class GiftKeyType(object):
+    NORMAL = 1              #不限次数兑换
+    ONLY_ONE = 2            #全服只能一次
+
+class GiftCodeRedisKey(object):
+    KEY = RedisKey.GIFT_CODE_TBL + ":key"
+    GROUP = RedisKey.GIFT_CODE_TBL + ":group"
+    USED = RedisKey.GIFT_CODE_TBL + ":used"
+
+class DungeonSpaceValType(object):
+    NONE = 0
+    SINGLE = 1
+    TEAM = 2
+    RAID = 3
+    GUILD_BOSS = 4
+
+class GuildChallengeDungeonOpenType(metaclass=UniqueIntEnum):
+    # 直接开启
+    DIRECT = 1
+    # 预约开启
+    APPOINT = 2
+
+    VALID_TYPE=(DIRECT, APPOINT)
+
+class GuildChallengeDungeonOpenFundType(metaclass=UniqueIntEnum):
+    # 公会资金
+    FUND = 1
+    # 公会金币
+    MONEY = 2
+
+class GuildChallengeOpenDungeonResult(metaclass=UniqueIntEnum):
+    # 成功
+    OK = 0
+    # 失败
+    FAIL = 1
+    # 不在正常开启的时间
+    NOT_VALID_TIME = 2
+    # 战力不足
+    NO_ENOUGH_SCORE = 3
+    # 不在帮会
+    NO_IN_GUILD= 4
+    # 权限不足
+    NO_ENOUGH_PERMISSION= 5
+    # 副本未解锁
+    OPEN_DUNGEON_LOCKED= 6
+    # 重复开启
+    OPEN_DUNGEON_REPEAT = 7
+    # 本周开启副本已达上限
+    OPEN_DUNGEON_IS_LIMIT = 8
+    # 帮会资金不足
+    NO_ENOUGH_FUND = 9
+    # 帮会金币不足
+    NO_ENOUGH_MONEY = 10
+    # 在帮会副本中
+    IN_GUILD_DUNGEON = 11
+    # 没有预约
+    NO_GUILD_DUNGEON_ORDER = 12
+
+class SpecialMonsterAIAPType(object):
+    NONE = 0
+    BUFF_ID = 1
+
+class GuildBossChallengeStatus(object):
+    # 初始化
+    INIT = 0
+    # 预约中
+    APPOINT = 1
+    # 预约倒计时
+    APPOINT_CD = 2
+    # 挑战开启
+    CHALLENGE_OPEN = 3
+    # 创建中
+    CREATING = 4
+    # 已创建
+    CREATED = 5
+    # 结算中
+    SETTLEMENT = 6
+
+    VALID_STATUS = (INIT, APPOINT, APPOINT_CD, CHALLENGE_OPEN, CREATING, CREATED, SETTLEMENT)
+
+class WorldBossRefreshType(object):
+    NONE = 0
+    DEAD_TIMER = 1
+    INTERVAL_TIMER = 2
+
+#特权用户
+class PrivilegeRedisKey(object):
+    VIP = RedisKey.PRIVILEGE_TBL + ":v:"         #特权用户    (排队优先)
+    SVIP = RedisKey.PRIVILEGE_TBL + ":sv:"       #超级特权    (排队直达)

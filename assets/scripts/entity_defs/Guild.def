@@ -215,6 +215,13 @@
             <Type>          LEADER_BOARD_GUILD_DATA_INFO        </Type>
             <Flags>         BASE                                </Flags>
         </leaderBoardGuildCache>
+
+        <guildChallengeData>
+            <Type>          GUILD_CHALLENGE_DATA_INFO           </Type>
+            <Flags>         BASE                                </Flags>
+            <Persistent>    true                                </Persistent>
+        </guildChallengeData>
+
     </Properties>
 
     <BaseMethods>
@@ -673,6 +680,87 @@
         <getJunxuQiXieLevel>
             <Arg>       GUILD_UUID              </Arg>
             <Arg>       MAILBOX                  </Arg>
+            <Arg>       BOOL                    </Arg>
         </getJunxuQiXieLevel>
+        <reqShareBonusFromMineWar>
+            <Arg>       LINE_NO                   </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>         ARRAY   <of>  MINE_WAR_GUILD_SHARE_INFO   </of>   </Arg>
+            <Arg>       MAILBOX                 </Arg>
+        </reqShareBonusFromMineWar>
+        <getMineWarGuildOwnerRank>
+            <Arg>       LINE_NO                 </Arg>
+            <Arg>       MAILBOX                 </Arg>
+        </getMineWarGuildOwnerRank>
+        <getMineWarGuildPlayerRank>
+            <Arg>       LINE_NO                 </Arg>
+            <Arg>       MAILBOX                 </Arg>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       UNICODE                 </Arg>
+        </getMineWarGuildPlayerRank>
+        <onMineWarKillCoreForGuild>
+            <Arg>       LINE_NO                 </Arg>
+            <Arg>       MAILBOX                 </Arg>
+        </onMineWarKillCoreForGuild>
+        <openGuildChallenge>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT8            </Arg>
+            <Arg>       UINT16           </Arg>
+            <Arg>       INT64            </Arg>
+        </openGuildChallenge>
+
+        <getChangllengeDataInfo>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       MAILBOX             </Arg>
+        </getChangllengeDataInfo>
+
+        <cancalGuildDungeonOrder>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+        </cancalGuildDungeonOrder>
+
+        <onGuildChallengeDungeonCreated>
+            <Arg>   MAILBOX         </Arg>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   GUILD_UUID      </Arg>
+            <Arg>   DUNGEON_NO      </Arg>
+            <Arg>   SPACE_NO        </Arg>
+            <Arg>   UUID            </Arg>
+            <Arg>   MAILBOX         </Arg>
+            <Arg>   MAILBOX         </Arg>
+            <Arg>   PYTHON  </Arg>
+        </onGuildChallengeDungeonCreated>
+
+        <onGuildChallengeDungeonCompleted>
+        </onGuildChallengeDungeonCompleted>
+
+        <onGuildChallengeDungeonSettlement>
+        </onGuildChallengeDungeonSettlement>
+
+        <enterBossChallengeDungeon>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+            <Arg>       PYTHON           </Arg>
+        </enterBossChallengeDungeon>
+
+        <leaveBossChallengeDungeon>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+        </leaveBossChallengeDungeon>
+
+        <getSettlementRankList>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT8            </Arg>
+            <Arg>       UINT8            </Arg>
+        </getSettlementRankList>
+
+        <gmModifyGuildBossChallengeStatus>
+            <Arg>   UINT8   </Arg>
+        </gmModifyGuildBossChallengeStatus>
+
+        <gmResetGuildDungeonOpenCount>
+        </gmResetGuildDungeonOpenCount>
     </BaseMethods>
 </root>

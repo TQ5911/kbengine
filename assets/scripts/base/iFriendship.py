@@ -945,6 +945,7 @@ class IFriendship(object):
         redisUtils.RedisUtils.getSingleUserInfo(gbId, __tmp)
 
     # ------------------------ 角色授权开始 ---------------------------------------
+    @gamedecorator.checkGameconfigEnable('roleAuthorization')
     @AuthClsWraper.onlyHost
     def authorizeRole(self, exposed, gbId, days, authPermission):
         INFO_MSG('authorizeRole', gbId)
@@ -1102,7 +1103,12 @@ class IFriendship(object):
 
     @AuthClsWraper.onlyHost
     def stopAuthInAvatar(self, exposed):
-        self.accountEntity.stopCharacterAuthInternal(self.gbID)
+        _hostAccount = self.getHostAccount()
+        if not _hostAccount:
+            ERROR_MSG('IFriends::stopAuthInAvatar not host')
+            return
+
+        _hostAccount.stopCharacterAuthInternal(self.gbID)
 
     def sendClientAuthState(self, chn):
         # bit 0: 1 host, 0 auth
@@ -1129,7 +1135,7 @@ class IFriendship(object):
                 self.accountEntity.modifyAuthExpire(self.gbID, _authExpire)
 
             elif self.subAccountCache.isAccountHost():
-                self.accountEntity.modifyAuthExpire(self.gbID, _authExpire)
+                self.subAccount.modifyAuthExpire(self.gbID, _authExpire)
 
     def onAuthExpireChanged(self, newAuthExpire):
         if self.authExpireTimerId:
@@ -1139,7 +1145,7 @@ class IFriendship(object):
         self.authStatistics.doModifyAuthExpire(newAuthExpire)
         self.authStatistics = self.authStatistics
         if not self.accountEntity.isAuthHost(self.gbID):
-            self.accountEntity.modifyAuthExpire(self.gbID, newAuthExpire)
+            self.accountEntity.modifyAuthExpireInAuth(self.gbID, newAuthExpire)
             self.startAuthExpireTime()
 
     def _authDailyReset(self):
@@ -1192,12 +1198,12 @@ class IFriendship(object):
 
         self.authStatistics.doModifyAuthExpire(_authExpire)
         self.authStatistics = self.authStatistics
-        self.accountEntity.modifyAuthExpire(self.gbID, _authExpire)
+        self.accountEntity.modifyAuthExpireInAuth(self.gbID, _authExpire)
         self.startAuthExpireTime()
 
     def startAuthExpireTime(self):
         _fireTime = self.accountEntity.getExpireDelay(self.gbID)
-        self.authExpireTimerId = self._datetimeCallback(_fireTime, 'onAuthExpire', gametimer.TIMER_TAG_OFFLINE_BY_AUTH_EXPIRE, 'authExpireTimerId')
+        self.authExpireTimerId = self._datetimeCallback(_fireTime, 'onAuthExpire', (), gametimer.TIMER_TAG_OFFLINE_BY_AUTH_EXPIRE, 'authExpireTimerId')
 
     def onAuthExpire(self):
         self.authStatistics.reset()
@@ -1219,10 +1225,12 @@ class IFriendship(object):
             self.authStatistics = self.authStatistics
 
     def forceAuthOffline(self):
+        if self.accountEntity.isAuthHost(self.gbID):
+            return
+
         self.backSelectCharacterBase(True)
 
     def addAuthStatistics(self, awardVal):
         self.authStatistics.addItemByAward(awardVal)
-
     # ------------------------ 角色授权结束 ---------------------------------------
 

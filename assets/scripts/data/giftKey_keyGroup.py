@@ -18,25 +18,36 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "groupID": 1,
         "type": 1,
-        "effectTime": "1763974800",
-        "failureTime": "1764072000",
+        "effectTime": "1764518400",
+        "failureTime": "1769875199",
         "rewardID": 40020261,
         "level": 9,
-        "task": 86060090,
+        "task": 0,
         "day": 0,
         "function": ""
     }),
     2: _tools.RODict({
         "groupID": 2,
         "type": 2,
-        "effectTime": "1763985600",
-        "failureTime": "1764072000",
+        "effectTime": "1764518400",
+        "failureTime": "1769875199",
         "rewardID": 40020262,
-        "level": 20,
-        "task": 86060090,
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "function": ""
+    }),
+    3: _tools.RODict({
+        "groupID": 3,
+        "type": 2,
+        "effectTime": "1764518400",
+        "failureTime": "1769875199",
+        "rewardID": 40020262,
+        "level": 0,
+        "task": 0,
         "day": 0,
         "function": ""
     })
 })
 minKey = 1
-maxKey = 2
+maxKey = 3

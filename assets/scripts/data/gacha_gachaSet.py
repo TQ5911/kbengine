@@ -114,5 +114,13 @@ datas = _tools.RODict({
     "PoolEndMailID": _tools.RODict({
         "ID": "PoolEndMailID",
         "value": 37000015,
+    }),
+    "petScaleFactor": _tools.RODict({
+        "ID": "petScaleFactor",
+        "value": 2.0,
+    }),
+    "petModelMoveOffset": _tools.RODict({
+        "ID": "petModelMoveOffset",
+        "value": -1.5,
     })
 })

@@ -496,14 +496,20 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         playerStub.doOnOthersClient([gbId, ], 'onOfficialMessage', (95, content, 1, channelList, seqId), None, '', ())
 
     def sendOfficialMessage(self, beginTime, endTime, content, tick, registerChannel, seqId, priority=0):
+        if seqId in self.officialMesTimerDic:
+            ERROR_MSG('official message is already exist', seqId)
+            return
+
+        if seqId in self.officialMesTickTimerDic:
+            ERROR_MSG('official message is already exist', seqId)
+            return
+
         channelList = registerChannel.split(',')
         officialMesTimerId = self._datetimeCallback(beginTime, '_sendOfficialMessage',
                                                     (content, tick, channelList, seqId, endTime, priority),
                                                     gametimer.TIMER_GM_OFFICIAL_MESSAGE)
 
         self.officialMesTimerDic[seqId] = officialMesTimerId
-        self.officialMesOverTimer = self._datetimeCallback(endTime, '_overOfficialMessage',
-                                                           (seqId,), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
         if gameglobal.isBootstrap:
             value = ";".join((str(beginTime), str(endTime), content, str(tick), registerChannel))
             self.getRedisClient().hset(gameconst.RedisKey.IDIPMARQUEE_KEY, str(seqId), value)
@@ -513,7 +519,6 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             self._cancelCallback(self.officialMesTickTimerDic.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
         if self.officialMesTimerDic.get(seqId, 0):
             self._cancelDatetimeCallback(self.officialMesTimerDic.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
-        self.officialMesOverTimer = 0
         self.officialMesTimerDic.pop(seqId, None)
         self.officialMesTickTimerDic.pop(seqId, None)
         if gameglobal.isBootstrap:
@@ -533,12 +538,10 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         self.officialMesTickTimerDic[seqId] = officialMesTickTimerId
 
     def stopOfficialMessage(self, seqId):
-        self._cancelDatetimeCallback(self.officialMesOverTimer, gametimer.TIMER_GM_OFFICIAL_MESSAGE)
         if self.officialMesTickTimerDic.get(seqId, 0):
             self._cancelCallback(self.officialMesTickTimerDic.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
         if self.officialMesTimerDic.get(seqId, 0):
             self._cancelDatetimeCallback(self.officialMesTimerDic.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
-        self.officialMesOverTimer = 0
         self.officialMesTimerDic.pop(seqId, None)
         self.officialMesTickTimerDic.pop(seqId, None)
         self.onBroadcastToAllClients('stopOfficialMessage', (seqId,))

@@ -29,8 +29,6 @@ def setPersistBaseClientProp(attr):
     def f(self, v):
         oldVal = self.BASE_CLIENT_PROPS[0][attr]
         self.BASE_CLIENT_PROPS[0][attr] = v
-        if self.client and oldVal != v:
-            self.client.onBasePersistPropChanged(attr, str(v))
 
     return f
 
@@ -73,8 +71,6 @@ def setPersistCellClientProp(attr):
     def f(self, v):
         oldVal = self.CELL_CLIENT_PROPS[0][attr]
         self.CELL_CLIENT_PROPS[0][attr] = v
-        if self.client and oldVal != v:
-            self.client.onCellPersistPropChanged(attr, str(v))
 
     return f
 

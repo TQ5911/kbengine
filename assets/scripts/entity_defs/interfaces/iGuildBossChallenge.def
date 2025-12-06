@@ -1,0 +1,81 @@
+<root>
+    <Properties>
+        <guildBossDungeonID>
+            <Type>          UINT32           </Type>
+            <Flags>         CELL_PRIVATE     </Flags>
+            <Default>       0                </Default>
+        </guildBossDungeonID>
+    </Properties>
+
+    <BaseMethods>
+        <openGuildDungeon> <Exposed/>
+            <Arg>   INT64    </Arg>
+            <Arg>   UINT8    </Arg>
+            <Arg>   UINT16   </Arg>
+        </openGuildDungeon>
+
+        <cancalGuildDungeonOrder> <Exposed/>
+        </cancalGuildDungeonOrder>
+
+        <getChangllengeDataInfo> <Exposed/>
+
+        </getChangllengeDataInfo>
+
+        <enterBossChallengeDungeon> <Exposed/>
+        </enterBossChallengeDungeon>
+
+        <leaveBossChallengeDungeon> <Exposed/>
+        </leaveBossChallengeDungeon>
+
+        <getSettlementRankList> <Exposed/>
+            <Arg>   UINT8   </Arg>
+            <Arg>   UINT8   </Arg>
+        </getSettlementRankList>
+        
+    </BaseMethods>
+
+    <CellMethods>
+        <setGuildBossDungeonID>
+            <Arg> UINT32 </Arg>
+        </setGuildBossDungeonID>
+
+        <clearGuildBossDungeonID>
+            <Arg> UINT32 </Arg>
+        </clearGuildBossDungeonID>
+
+        <doEnterGuildBossDungeon>
+            <Arg>           SPACE_NO            </Arg>
+            <Arg>           UUID                </Arg>
+            <Arg>           MAILBOX             </Arg>
+            <Arg>           MAILBOX             </Arg>
+            <Arg>           PYTHON              </Arg>
+        </doEnterGuildBossDungeon>
+
+        <doLeaveGuildBossDungeon>
+            <Arg>           PYTHON              </Arg>
+        </doLeaveGuildBossDungeon>
+
+    </CellMethods>
+
+    <ClientMethods>
+        <onOpenGuildDungeon>
+            <Arg>   UINT32  </Arg>
+            <Arg>   UINT8   </Arg>
+            <Arg>   UINT16  </Arg>
+        </onOpenGuildDungeon>
+
+        <onCancalGuildDungeonOrder>
+            <Arg> UINT32 </Arg>
+        </onCancalGuildDungeonOrder>
+
+        <onGetChagllengeDataInfo>
+            <Arg> CLI_GUILD_CHALLENGE_DATA_INFO </Arg>
+        </onGetChagllengeDataInfo>
+
+        <onGetSettlementRankList> <Exposed/>
+            <Arg>   UINT8   </Arg>
+            <Arg>   UINT8   </Arg>
+            <Arg>   ARRAY       <of>        CLI_DUNGEON_SETTLEMENT_RANK_DATA      </of>  </Arg>
+        </onGetSettlementRankList>
+    </ClientMethods>
+</root>

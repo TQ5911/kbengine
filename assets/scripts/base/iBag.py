@@ -104,6 +104,16 @@ class AwardMixin(object):
         awardCtx.addContextVar('avatarGbId', self.gbID)
         awardCtx.addContextVar('avatarId', self.id)
         return awardCtx
+    
+    def _getAvatarAwardsCtx(self, awardIds, awardCtx, mailId=0):
+        awardCtx = awardCtx or awardContext.CommonContext(mailId)
+        awardCtx.addContextVar('awardIds', awardIds)
+        awardCtx.addContextVar('school', self.getRoleCacheAttr('school', 0))
+        awardCtx.args.addArg('avatarLv', self.getRoleCacheAttr('level', 0))
+        awardCtx.args.addArg('avatarSex', self.getRoleCacheAttr('sex', 0))
+        awardCtx.addContextVar('avatarGbId', self.gbID)
+        awardCtx.addContextVar('avatarId', self.id)
+        return awardCtx
 
     def doAwardAdditionProps(self, award, context):
         props = context.extra.get('additionProps', None)
@@ -271,6 +281,8 @@ class AwardMixin(object):
     def _doAddAwards(self, srcType, awardId, awardVal, num, opUUID, detail, awardCtx, notify=True, popWindow=False):
         self.addWealth(srcType, awardVal, opUUID, detail, awardCtx, notify=notify, popWindow=popWindow)
         self.dailyAwardDic[awardId] = self.dailyAwardDic.get(awardId, 0) + num
+
+        self.onMineWarCollectionReward(srcType, awardId, awardVal, awardCtx)
 
     def calcAddAwardValByAwardId(self, awardId, num, awardCtx=None):
         DEBUG_MSG("calcAddAwardValByAwardId::", awardId, num, awardCtx)
@@ -456,8 +468,8 @@ class AwardMixin(object):
                     itemsDictList[0][it.itemId] = itemsDictList[0].get(it.itemId, 0) + it.data
 
         if notify and directly:
-            self._showPopReward(srcType, popRewardUUID, detail)
-
+            self._showPopReward(srcType, popRewardUUID, detail)          
+        # 副本里的杀怪奖励
         if formula.isCubeSpace(awardCtx.extra.get('monsterSpaceNo', 0)):
             _briefList = awardVal.toBriefList()
             DEBUG_MSG('add cube brief:', _briefList)
@@ -516,12 +528,6 @@ class AwardMixin(object):
             if needMsg and _num:
                 itemData = dataUtils.getCommItemData(_id)
                 extraDesp = dataUtils.getAddItemExtraDesp(srcType)
-                '''
-                itemData['messageTipsID'] and self.onMessagePre(
-                    itemData['messageTipsID'],
-                    [str(_num), str(_id)]
-                )
-                '''
                 if isEquip:
                     itemData['messageChatID'] and self.onMessagePre(
                         itemData['messageChatID'],
@@ -531,21 +537,6 @@ class AwardMixin(object):
                         itemData['messageChatID'],
                         [str(_num), str(_id), str(0), extraDesp]
                     )
-
-        '''
-        tipExpVal = itemsDictList[0].get(gameconst.ItemId.EXP, 0)
-        if deCellExpVal:
-            if tipExpVal > deCellExpVal:
-                tipExpVal = tipExpVal - deCellExpVal
-            else:
-                tipExpVal = 0
-        for _id, _num in itemsDictList[0].items():
-            popList.append({
-                'itemId': _id,
-                'itemNum': _num,
-            })
-            _tip(_id, tipExpVal if _id == gameconst.ItemId.EXP else _num, 0, False)
-        '''
 
         for _id, _num in itemsDictList[0].items():
             popList.append({
@@ -820,8 +811,6 @@ class CoinBillMixin(object):
             })
         recordCount = len(billRecord)
         DEBUG_MSG('reqAvatarCoinBill ret:', coinType, recordCount, tabIndex, tabCount, billInfo)
-        self.client.onGetAvatarCoinBill(coinType, recordCount, tabIndex, tabCount, billInfo)
-
 
 class ShareAwardMixin(object):
     def canAddShareReward(self, shareChannelId):
@@ -1617,18 +1606,18 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             # 生活技能采集
             self.gatherItemsByLifeSkill(lifeSkMakeItemId, collectionId)
 
-        else:
-            gamelog.makeWLog("PickSuccess", {
-                "role_id": self.gbID,
-                "role_name": self.getRoleCacheAttr('name', ''),
-                "op_nuid": opUUID,
-                "pick_id": collectionId,
-                "pick_num": 1,
-                "space_id": spaceNo,
-                "item_cost": deductWealthVal if deductWealthVal else '',
-                "task": taskId if taskId else '',
-                'rewards': rewardID if rewardID else ''
-            })
+        # else:
+        #     gamelog.makeWLog("PickSuccess", {
+        #         "role_id": self.gbID,
+        #         "role_name": self.getRoleCacheAttr('name', ''),
+        #         "op_nuid": opUUID,
+        #         "pick_id": collectionId,
+        #         "pick_num": 1,
+        #         "space_id": spaceNo,
+        #         "item_cost": deductWealthVal if deductWealthVal else '',
+        #         "task": taskId if taskId else '',
+        #         'rewards': rewardID if rewardID else ''
+        #     })
 
     def getAwardFactor(self):
         factor = 1.0
@@ -2090,7 +2079,6 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
             INFO_MSG('checkModifyNameBase item use failed', gridId, itemId, name)
             bag.useItemsFailed(self, opStat, itemId)
-            self.client.onModifyNameResult(gameconst.ModifyNameResult.internalError, '')
             self.cell.onPendingCheckItem(pendingCheckId, gameconst.UseItem.FALSE)
             return
 
@@ -2218,18 +2206,38 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         return awardVal
 
+    #两条链路：
+    # 1.策划表key命中->检查group条件->tp1直接发, tp2 hmset查redis通过后发
+    # 2.redis key命中->检查group条件->tp1直接发, tp2 hmset查redis通过后发
     @gamedecorator.limitcall(2)
     def exchangeGiftKeyReward(self, exposed, giftKey):
         giftKey = giftKey.lower()
         DEBUG_MSG("exchangeGiftKeyReward", giftKey)
-        now = utils.getNow()
         giftID = GK_KL.key2ID.get(giftKey, 0)
         if giftID == 0:
-            INFO_MSG("exchangeGiftKeyReward wrong giftKey", giftKey)
-            self.onMessagePre(GK_CFG.datas['CDK_error']['value'], [])
+            INFO_MSG("exchangeGiftKeyReward no local giftKey", giftKey)
+            gameglobal.localBaseApp.getRedisClient().hget(
+                gameconst.GiftCodeRedisKey.KEY,
+                giftKey,
+                functools.partial(self._checkGiftKeyResult, giftKey)
+            )
             return
 
         groupID = GK_KL.datas[giftID]['groupID']
+        self._checkGroupAndSendReward(groupID, giftKey)
+
+    def _checkGiftKeyResult(self, giftKey, cid, err, result):
+        INFO_MSG("_checkGiftKeyResult", giftKey, cid, err, result)
+        if not result or err:
+            INFO_MSG("exchangeGiftKeyReward incorecct key", giftKey)
+            self.onMessagePre(GK_CFG.datas['CDK_error']['value'], [])
+            return
+        
+        groupID = int(result.decode())
+        self._checkGroupAndSendReward(groupID, giftKey)
+
+    def _checkGroupAndSendReward(self, groupID, giftKey):
+        now = utils.getNow()
         if groupID in self.giftKeyRecordDic:
             INFO_MSG("exchangeGiftKeyReward already used", giftKey)
             self.onMessagePre(GK_CFG.datas['CDK_redeemed']['value'], [])
@@ -2237,12 +2245,13 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         if utils.getSvrOpenDays() < GK_KG.datas[groupID]['day']:
             INFO_MSG("exchangeGiftKeyReward not start", giftKey)
-            self.onMessagePre(GK_CFG.datas['CDK_day']['value'], [])
+            self.onMessagePre(GK_CFG.datas['CDK_day']['value'], [utils.getSvrOpenDays()])
             return
 
-        if self.getRoleCacheAttr('level', 0) < GK_KG.datas[groupID]['level']:
+        level = self.getRoleCacheAttr('level', 0)
+        if level < GK_KG.datas[groupID]['level']:
             INFO_MSG("exchangeGiftKeyReward level not enough", giftKey)
-            self.onMessagePre(GK_CFG.datas['CDK_level']['value'], [])
+            self.onMessagePre(GK_CFG.datas['CDK_level']['value'], [str(GK_KG.datas[groupID]['level'])])
             return
 
         taskID = GK_KG.datas[groupID]['task']
@@ -2262,12 +2271,33 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             self.onMessagePre(GK_CFG.datas['CDK_invalid']['value'], [])
             return
 
+        tp = GK_KG.datas[groupID]['type']
+        if tp == gameconst.GiftKeyType.NORMAL:
+            self._doSendGiftKeyReward(groupID, now)
+        elif tp == gameconst.GiftKeyType.ONLY_ONE:
+            gameglobal.localBaseApp.getRedisClient().hsetnx(
+                gameconst.GiftCodeRedisKey.USED,
+                giftKey,
+                self.gbID,
+                functools.partial(self._onCheckGiftKeyUsed, giftKey, groupID, now)
+            )
+
+    def _onCheckGiftKeyUsed(self, giftKey, groupID, now, cid, err, result):
+        INFO_MSG("_onCheckGiftKeyUsed", giftKey, groupID, now, cid, err, result)
+
+        if not result or err:
+            INFO_MSG("exchangeGiftKeyReward used", giftKey)
+            self.onMessagePre(GK_CFG.datas['CDK_used']['value'], [])
+            return
+        
+        self._doSendGiftKeyReward(groupID, now)
+
+    def _doSendGiftKeyReward(self, groupID, now):
         self.giftKeyRecordDic[groupID] = now
         rewardId = GK_KG.datas[groupID]['rewardID']
 
-
         _detail = gameclass.AwardDetail()
-        _src = AAC_AACDD.datas.BONUS_SRC_MONTHCARD_DAILY
+        _src = AAC_AACDD.datas.BONUS_SRC_GIFT_CDK_ITEMS
         _awardVal = dropAward.AwardVal()
         _ctx = self._getAvatarAwardCtx(rewardId, None)
         _awardVal += dropAward.getAwardOne(
@@ -2275,6 +2305,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             _ctx
         )
         self.addWealth(_src, _awardVal, KBEngine.genUUID64(), _detail)
+        
 
     @gamedecorator.offlineCallback
     def setMallSpend(self, val):

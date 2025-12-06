@@ -7,6 +7,7 @@ import iBaseNoCell
 import iTimer
 import gamesql
 import random
+import time
 import gametimer
 import utils
 import redisUtils
@@ -39,6 +40,9 @@ import itemData_set as ID_SD
 import guildWarEquipment_warEquipmentUpgrate as G_WED
 import cityBattle_config as G_CBD
 import message_Message_def as M_M_DD
+import guildChallenge_basicInfo as GCBI
+import guildChallenge_config as GCC
+import gamePlay_gamePlay as GP_GP
 import iRouter
 import gameconfig
 import LeaderBoardGuildInfo
@@ -52,6 +56,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         INFO_MSG('Guild::__init__:', self.guildUUID)
         iCycleEvent.ICycleEvent.__init__(self)
         self._initBuilding()
+        self._initGuildChallenge()
         self._initPermissions()
         self._loadGuildAvatars()
         self.guildSyncDataToCrossDataCache = None
@@ -73,6 +78,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         _dur = 5
         self.pyAddTimer(_dur, _dur, gametimer.UPDATE_GUILD_SCORE)
         self.registerDailyEvent('_checkDissolveGuild')
+        self.registerWeekEvent('_checkGuildChallengeData')
         self.onDailyEvent()
 
         # 检查帮会属性变化发客户端
@@ -125,6 +131,10 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             leaderGbId,
             lambda fcVal: self._onFirstCreateGuild(fcVal, leaderBox),
         )
+
+    def _checkGuildChallengeData(self, *args):
+        INFO_MSG('_checkGuildChallengeData ~')
+        self.guildChallengeData.reset()
 
     def _checkDissolveGuild(self, *args):
         _random = random.randint(1, 60)
@@ -436,6 +446,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         for _qixieType in G_WED.typeLevelDic.keys():
             self.junXuArchitecture.addQixie(_qixieType, 1, 0)
 
+    def _initGuildChallenge(self):
+        pass
+
     def _initPermissions(self):
         if len(self.permissions) == 0:
             for _job, _data in GA_AD.datas.items():
@@ -527,18 +540,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 0
             )
 
-        if self.junXuArchitecture != self.lastGuildClientCache['junXuArchitecture']:
-            self._braodcastAsync(
-                lambda box: box.client.onJunXuArchitectureChanged(self.junXuArchitecture),
-                0
-            )
-
-        # if self.guildIcon != self.lastGuildClientCache['icon']:
-        #     self._braodcastAsync(
-        #         lambda box: box.client.onGuildIconChanged(self.guildIcon),
-        #         0
-        #     )
-
         self.lastGuildClientCache = copy.deepcopy(self._toClientGuildInfo())
 
     def _toClientGuildInfo(self):
@@ -573,6 +574,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         if self._checkHasPermission(gbId, GA_AI_DD.datas.guildUnion):
             box.client.onAllApplyGuildUnion(list(self.guildUnionApplyMgr.applyUnionDic.values()))
+        
+        box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo())
 
     def addGuildEvent(self, eventId, args):
         _e = self.guildEvent.doAddGuildEvent(eventId, args)
@@ -1657,7 +1660,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         DEBUG_MSG('[lj]syncJunXuQiXieLevel', res)
         gameengine.getGlobalBase('SiegeWarStub').onJunXuQiXieLevelSync(self.guildUUID, res)
 
-    def getJunxuQiXieLevel(self, guildUUID, box):
+    def getJunxuQiXieLevel(self, guildUUID, box, onRegister=True):
         data = self.junXuArchitecture.toJunXuArchitectureSavedDict()
         res = {}
         for v in data['qixieList']:
@@ -1665,7 +1668,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             res[qxdict['qixieType']] = qxdict['level']
 
         if hasattr(box, 'onSyncGuildMineWarResult'):
-            box.onSyncGuildMineWarResult(guildUUID, res)
+            box.onSyncGuildMineWarResult(guildUUID, self.guildName, self.guildIcon, self.dspFlag, self.desc, res, onRegister)
 
     def onSiegeWarGetWinnerData(self, box):
         redisUtils.RedisUtils.getSingleUserInfo(
@@ -1722,6 +1725,38 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         box.onGetMemberJob(_gmVal.job, args)
 
+    def reqShareBonusFromMineWar(self, mapId, srcGbId, shareList, box):
+        if srcGbId != self.leaderGbId:
+            WARNING_MSG('reqShareBonusFromMineWar: no permission', srcGbId)
+            # return
+        
+        gameengine.getGlobalBase('MineWarStub').doShareGuildMineWarBonusToMember(mapId, srcGbId, shareList, box)
+        
+    def _toMineWarData(self):
+        info = {
+            'guildGbId': self.guildUUID,
+            'guildName': self.guildName,
+            'guildIcon': self.guildIcon,
+            'guildDspFlag': self.dspFlag,
+            'leaderGbId': self.leaderGbId,
+            'leaderName': self.members[self.leaderGbId].name if self.leaderGbId in self.members else '',
+        }
+        return info
+    def getMineWarGuildOwnerRank(self, mapId, box):
+        
+        info = self._toMineWarData()
+        gameengine.getGlobalBase('MineWarStub').doGetMineWarGuildOwnerRank(mapId, box, info)
+        
+    def getMineWarGuildPlayerRank(self, mapId, box, playerGbId, playerName):
+        
+        info = self._toMineWarData()
+        gameengine.getGlobalBase('MineWarStub').doGetMineWarGuildPlayerRank(mapId, box, playerGbId, playerName, info)
+        
+    def onMineWarKillCoreForGuild(self, mapId, box):
+        info = self._toMineWarData()
+        gameengine.getGlobalBase('MineWarStub').doOnMineWarKillCoreForGuild(mapId, box, info)
+        
+        
     # ------------------------------------- cross data start -------------------------------------
     def _toCrossData(self):
         _data = {
@@ -2157,3 +2192,263 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.guildUnionApplyMgr.removeSender(otherGuildUUID)
 
     # ------------------------------------- cross data end -------------------------------------
+
+    def openGuildChallenge(self, gbID, box, openType, openID, openedTime):
+        INFO_MSG('openGuildChallenge', gbID, openType, openID, openedTime)
+        _gmVal = self.members.get(gbID)
+        if not _gmVal:
+            box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NO_IN_GUILD, openType, openID)
+            WARNING_MSG('openGuildChallenge: gbId not in guild', gbID, openType, openID)
+            return
+
+        if not self._checkHasPermission(gbID, GA_AI_DD.datas.guildChallenge):
+            box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NO_ENOUGH_PERMISSION, openType, openID)
+            WARNING_MSG('openGuildChallenge: not leader or coleader', gbID, openType, openID)
+            return
+        
+        dungeonID = GCBI.datas[openID]['dunID']
+        guildChallengeCfg = GCBI.datas[GCBI.dungeonIdxDic[dungeonID]]
+        if guildChallengeCfg['yanWuGeLvReq'] > self.guildBuilding.yanWu.level:
+            box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.OPEN_DUNGEON_LOCKED, openType, openID)
+            WARNING_MSG('openGuildChallenge: dungeon is locked', gbID, openType, openID)
+            return
+        
+        if not self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.INIT):
+            box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.FAIL, openType, openID)
+            WARNING_MSG('openGuildChallenge: dungeon status is not in init', gbID, openType, openID)
+            return
+        
+        nowTime = utils.getNow()
+        if self.guildChallengeData.openedTime > nowTime:
+            box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.OPEN_DUNGEON_REPEAT, openType, openID)
+            WARNING_MSG('openGuildChallenge: dungeon open repeat', gbID, openType, openID)
+            return
+        
+        if self.guildChallengeData.openedFundCount < int(GCC.datas['guildCoinOpen']['value']):
+            if self.guildFund < guildChallengeCfg['guildCoinCost']:
+                box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NO_ENOUGH_FUND, openType, openID)
+                WARNING_MSG('openGuildChallenge: guild fund is not enough', gbID, openType, openID)
+                return
+            self.guildChallengeData.openedFundCount += 1
+            self.guildChallengeData.consumedType = gameconst.GuildChallengeDungeonOpenFundType.FUND
+            _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_OPEN_COIN
+            if openType == gameconst.GuildChallengeDungeonOpenType.APPOINT:
+                _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_RESERVE_COIN
+            _opUUID = KBEngine.genUUID64()
+            _detail = gameclass.AwardDetail()
+            self.modifyGuildFund(-guildChallengeCfg['guildCoinCost'], _src, _opUUID, _detail)
+        elif self.guildChallengeData.openedMoneyCount < int(GCC.datas['guildMoneyOpen']['value']):
+            if self.guildMoney < guildChallengeCfg['guildMoneyCost']:
+                box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NO_ENOUGH_MONEY, openType, openID)
+                WARNING_MSG('openGuildChallenge: guild money is not enough', gbID, openType, openID)
+                return
+            self.guildChallengeData.openedMoneyCount += 1
+            self.guildChallengeData.consumedType = gameconst.GuildChallengeDungeonOpenFundType.MONEY
+            _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_OPEN_MONEY
+            if openType == gameconst.GuildChallengeDungeonOpenType.APPOINT:
+                _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_RESERVE_MONEY
+            _opUUID = KBEngine.genUUID64()
+            _detail = gameclass.AwardDetail()
+            self.modifyGuildMoney(-guildChallengeCfg['guildMoneyCost'], _src, _opUUID, _detail)
+        else:
+            box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.OPEN_DUNGEON_IS_LIMIT, openType, openID)
+            WARNING_MSG('openGuildChallenge: dungeon open limit', gbID, openType, openID)
+            return
+        
+        self.guildChallengeData.openedType = openType
+        self.guildChallengeData.openedDungeonId = dungeonID
+        self.guildChallengeData.openedTime = openedTime
+
+        if openType == gameconst.GuildChallengeDungeonOpenType.DIRECT:
+            self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CHALLENGE_OPEN)
+        else:
+            self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.APPOINT)
+
+        box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.OPEN_DUNGEON_REPEAT, openType, openID)
+        box.client and box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo())
+        # 预约成功发布邮件
+        if openType == gameconst.GuildChallengeDungeonOpenType.APPOINT:
+            _mailId = int(GCC.datas['emailReservation']['value'])
+            _mailArgs = [time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.guildChallengeData.openedTime)), GCBI.datas[openID]['name']]
+            self._sendMailToGuildMembers(_mailId, _mailArgs)
+            # 开启前N分钟发通知邮件
+            cdTime = openedTime - nowTime - int(GCC.datas['countdownOpen']['value'])
+            self._callback(cdTime, '_doAppointOpenCD', (openID,), gametimer.TIMER_TAG_GUILD_CHALLENGE_APPOINT_OPEN_CD)
+
+            # 开启副本发通知邮件
+            cdTime = openedTime - nowTime - int(GCC.datas['countdownOpen']['value'])
+            self._callback(cdTime, '_doDungeonOpen', (openID,), gametimer.TIMER_TAG_GUILD_CHALLENGE_OPEN_DUNGEON)
+        else:
+            self._doDungeonOpen(openID)    
+
+    def _doAppointOpenCD(self, openID):
+        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.APPOINT_CD)
+        _mailId = int(GCC.datas['emailCountdown']['value'])
+        _mailArgs = [GCBI.datas[openID]['name']]
+        self._sendMailToGuildMembers(_mailId, _mailArgs)
+
+    def _doDungeonOpen(self, openID):
+        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CHALLENGE_OPEN)
+        _mailId = int(GCC.datas['emailStart']['value'])
+        _mailArgs = [GCBI.datas[openID]['name']]
+        self._sendMailToGuildMembers(_mailId, _mailArgs)
+    
+    def _broadcastChallengeDataInfo(self):
+        guildChallengeData = self.guildChallengeData.toClientInfo()
+        for player in self.members.values():
+            if utils.isBoxOffline(player.box):
+                continue
+            player.box.client.onGetChagllengeDataInfo(guildChallengeData)
+
+    def _updateGuildChallengeDungeonStatus(self, status):
+        INFO_MSG('_updateGuildChallengeDungeonStatus', self.guildUUID, status)
+        if status in gameconst.GuildBossChallengeStatus.VALID_STATUS:
+            self.guildChallengeData.openedDungeonStatus = status
+            self._broadcastChallengeDataInfo()
+
+    def onGuildChallengeDungeonCreated(self, playerBox, playerGbId, guildUUID, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
+        INFO_MSG('onGuildChallengeDungeonCreated', guildUUID, playerGbId, dungeonNo, spaceNo, spaceUUID, extra)
+        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATED)
+        extra.update({'spaceUUID': spaceUUID})
+        self.guildChallengeData.spaceNo = spaceNo
+        dungeonStub = gameengine.getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterType.GUILD)
+        for gbId, box in self.guildChallengeData.waitEnterDungeonData.items():
+            dungeonStub.doEnterDungeon(box, gbId, guildUUID, spaceNo, extra)
+        
+    def onGuildChallengeDungeonSettlement(self):
+        INFO_MSG('onGuildChallengeDungeonSettlement', self.guildUUID)
+        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.SETTLEMENT)
+
+    def onGuildChallengeDungeonCompleted(self):
+        INFO_MSG('onGuildChallengeDungeonCompleted', self.guildUUID)
+        self.guildChallengeData.reset()
+        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.INIT)
+
+    def checkGuildChallengeDungeonStatus(self, status):
+        return self.guildChallengeData.openedDungeonStatus == status
+
+    def _sendMailToGuildMembers(self, mailID, mailArgs):
+        _gbIds = list(self.members.keys())
+        _opUUID = KBEngine.genUUID64()
+
+        mailAssistor.sendMailToPlayers(_gbIds, mailID, opUUID=_opUUID, despArgs=mailArgs)
+
+    def getChangllengeDataInfo(self, gbID, box):
+        INFO_MSG('getChangllengeDataInfo', gbID)
+        _gmVal = self.members.get(gbID)
+        if not _gmVal:
+            WARNING_MSG('openGuildChallenge: gbId not in guild', gbID)
+            return
+        box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo()) 
+
+    def cancalGuildDungeonOrder(self, gbID, box):
+        INFO_MSG('cancalGuildDungeonOrder', self.guildUUID, gbID)
+        _gmVal = self.members.get(gbID)
+        if not _gmVal:
+            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_IN_GUILD)
+            WARNING_MSG('cancalGuildDungeonOrder: gbId not in guild', gbID)
+            return
+
+        if not self._checkHasPermission(gbID, GA_AI_DD.datas.guildChallenge):
+            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_ENOUGH_PERMISSION)
+            WARNING_MSG('cancalGuildDungeonOrder: not leader or coleader', gbID)
+            return
+        
+        if self.guildChallengeData.openedDungeonId == 0:
+            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
+            WARNING_MSG('cancalGuildDungeonOrder: no guild dungeon order 1', gbID)
+            return
+
+        if self.guildChallengeData.openedType != gameconst.GuildChallengeDungeonOpenType.APPOINT:
+            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
+            WARNING_MSG('cancalGuildDungeonOrder: no guild dungeon order 2', gbID)
+            return
+        
+        if not self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.APPOINT):
+            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
+            WARNING_MSG('cancalGuildDungeonOrder: no guild dungeon order 3', gbID)
+            return
+        
+        curTime = utils.getNow()
+        dungeonID = self.guildChallengeData.openedDungeonId
+        cdTime = GCBI.datas[GCBI.dungeonIdxDic[dungeonID]]['countdownOpen']
+        if self.guildChallengeData.openedTime - cdTime <= curTime:
+            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
+            WARNING_MSG('cancalGuildDungeonOrder: no guild dungeon order 4', gbID, dungeonID)
+            return
+        
+        guildChallengeCfg = GCBI.datas[GCBI.dungeonIdxDic[dungeonID]]
+        if self.guildChallengeData.consumedType == gameconst.GuildChallengeDungeonOpenFundType.FUND:
+            _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_CANCEL_COIN
+            _opUUID = KBEngine.genUUID64()
+            _detail = gameclass.AwardDetail()
+            self.modifyGuildFund(guildChallengeCfg['guildCoinCost'], _src, _opUUID, _detail)
+        elif self.guildChallengeData.consumedType == gameconst.GuildChallengeDungeonOpenFundType.MONEY:
+            _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_CANCEL_MONEY
+            _opUUID = KBEngine.genUUID64()
+            _detail = gameclass.AwardDetail()
+            self.modifyGuildMoney(guildChallengeCfg['guildMoneyCost'], _src, _opUUID, _detail)
+        else:
+            WARNING_MSG('cancalGuildDungeonOrder: unknow comsumed type', gbID)
+            return
+        box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.OK)
+        box.client and box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo())
+
+    def _addWaitEnterDungeonCache(self, gbID, box):
+        self.guildChallengeData.waitEnterDungeonData[gbID] = box
+
+    def enterBossChallengeDungeon(self, gbID, box, extra):
+        INFO_MSG('doGuildCreateDungeon', self.guildUUID, gbID, extra)
+        if self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CHALLENGE_OPEN):
+            self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATING)
+            # 进入等待队列
+            self._addWaitEnterDungeonCache(gbID, box)
+            self.doGuildCreateDungeon(box, gbID, extra)
+        elif self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATING):
+            # 进入等待队列
+            self._addWaitEnterDungeonCache(gbID, box)
+        elif self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATED):
+            # 直接进入
+            self.doGuildEnterDungeon(box, gbID, extra)
+
+    def doGuildCreateDungeon(self, box, gbID, extra):
+        INFO_MSG('doGuildCreateDungeon', self.guildUUID, gbID, extra)
+        extraInfo = {}
+        extraInfo['guildUUID'] = self.guildUUID
+        extraInfo['guildBox'] = self
+        extraInfo['dungeonNo'] = self.guildChallengeData.openedDungeonId
+        dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
+        dungeonStub.applyCreateDungeon(box, gbID, self.guildUUID, extraInfo)
+                
+    def doGuildEnterDungeon(self, box, gbID, extra):
+        INFO_MSG('doGuildEnterDungeon', self.guildUUID, gbID, extra)
+        extraInfo = {}
+        extraInfo['playerName'] = extra.get('playerName', '')
+        extraInfo['guildUUID'] = self.guildUUID
+        extraInfo['guildBox'] = self
+        extraInfo['dungeonNo'] = self.guildChallengeData.openedDungeonId
+        dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
+        dungeonStub.doEnterDungeon(box, gbID, self.guildUUID, self.guildChallengeData.spaceNo, extraInfo)
+
+    def leaveBossChallengeDungeon(self, gbID, box):
+        INFO_MSG('leaveBossChallengeDungeon', self.guildUUID, gbID)
+        if self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATED):
+            dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
+            dungeonStub.leaveGuildBossDungeon(self.guildChallengeData.spaceNo, self.guildUUID, 0, box, gbID)
+
+    def gmModifyGuildBossChallengeStatus(self, status):
+        INFO_MSG('getSettlementRankList', self.guildUUID, status)
+        self._updateGuildChallengeDungeonStatus(status)
+        self._broadcastChallengeDataInfo()
+        
+    def gmResetGuildDungeonOpenCount(self):
+        INFO_MSG('gmResetGuildDungeonOpenCount', self.guildUUID)
+        self.guildChallengeData.openedFundCount = 0
+        self.guildChallengeData.openedMoneyCount = 0
+        self._broadcastChallengeDataInfo()
+
+    def getSettlementRankList(self, gbID, box, idx, offset):
+        INFO_MSG('getSettlementRankList', self.guildUUID, gbID, idx, offset)
+        if self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.SETTLEMENT):
+            dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
+            dungeonStub.getSettlementRankList(self.guildChallengeData.spaceNo, self.guildUUID, box, gbID, idx, offset)

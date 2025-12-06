@@ -1145,6 +1145,27 @@ datas ={
             "RefreshTime": 1,
             "Remark": ""
           }
+        },
+        "10044054": {
+          "ActivityID": 0,
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 39.99735,
+          "DisplayName": "",
+          "EntityID": 18000629,
+          "ID": 10044054,
+          "PosX": 41.32,
+          "PosY": 0.08000469,
+          "PosZ": 165.26,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "Remark": ""
+          }
         }
       },
       "Collection": {

@@ -423,12 +423,12 @@ class IBag(object):
             self.endApplyGather(gameconst.CancelGatherReason.GatherCheck)
 
         return
-    
+
     def _calPickTime(self, target):
         pickData = NPD.datas.get(target.collectionId, None)
         if not pickData:
             return 1
-        
+
         pickTime = pickData['time']
         if target.type == gameconst.CollectionType.MINERAL:
             pickTime = pickTime * (1 - self.getProp('miningRate'))
@@ -855,9 +855,6 @@ class IBag(object):
             self.pickedCollections[collectionId] = -1
             collectionEnt.setWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_HIDE)
 
-        if self.pickedCollections[collectionId] > 0:
-            self.client.sendPickedCollectoins([collectionId], [self.pickedCollections[collectionId]])
-
     def getCollectionAlreadyPickTime(self, collectionId):
         return self.pickedCollections.get(collectionId, 0)
 
@@ -869,8 +866,6 @@ class IBag(object):
                 continue
             collectionIds.append(cid)
             nums.append(num)
-
-        self.client.sendPickedCollectoins(collectionIds, nums)
 
     def checkUseTelToMainCity(self, itemId, *args):
         mapId = formula.getMapId(self.spaceNo)

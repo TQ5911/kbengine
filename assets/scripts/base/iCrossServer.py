@@ -365,4 +365,3 @@ class ICrossServer(object):
 
     def onAvatarLevelUp_localCrossClient(self, oldLevel, level):
         INFO_MSG("onAvatarLevelUp_localCrossClient::", oldLevel, level)
-        self.localCrossClient.onAvatarLevelUp(oldLevel, level)

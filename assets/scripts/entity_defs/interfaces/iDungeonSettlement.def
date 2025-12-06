@@ -1,0 +1,81 @@
+<root>
+    <Interfaces>
+    </Interfaces>
+
+    <Properties>
+        <chiefFirstPassRecords>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       {}                      </Default>
+            <Persistent>    true                    </Persistent>
+        </chiefFirstPassRecords>
+
+        <crusadeFirstPassRecords>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       {}                      </Default>
+            <Persistent>    true                    </Persistent>
+        </crusadeFirstPassRecords>
+
+        <guildBossFirstPassRecords>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       {}                      </Default>
+            <Persistent>    true                    </Persistent>
+        </guildBossFirstPassRecords>
+    </Properties>
+
+    <CellMethods>
+
+    </CellMethods>
+
+    <BaseMethods>
+        <queryFirstPassRewardStatus>
+		    <Exposed/>
+            <Arg>   UINT8               </Arg>
+            <Arg>   DUNGEON_NO          </Arg>
+        </queryFirstPassRewardStatus>
+
+        <onDungeonFinished>
+            <Arg>   UINT8           </Arg>
+            <Arg>   UINT8           </Arg>
+            <Arg>   DUNGEON_NO      </Arg>
+            <Arg>   UINT16          </Arg>
+        </onDungeonFinished>
+
+        <onDungeonSettlement>
+            <Arg>   UINT8                                                  </Arg>
+            <Arg>   DUNGEON_NO                                             </Arg>
+            <Arg>   UUID                                                   </Arg>
+            <Arg>   GUILD_UUID                                             </Arg>
+            <Arg>   DUNGEON_SETTLEMENT_DATA                                </Arg>
+        </onDungeonSettlement>
+    </BaseMethods>
+
+    <ClientMethods>
+        <onQueryFirstPassRewardStatus>
+            <Arg>   UINT8               </Arg>
+            <Arg>   DUNGEON_NO          </Arg>
+            <Arg>   UINT8               </Arg>
+        </onQueryFirstPassRewardStatus>
+
+        <onDungenFinishRewards>
+            <Arg>  UINT8                                                   </Arg>
+            <Arg>  DUNGEON_NO                                              </Arg>
+            <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+            <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+            <Arg>  UINT16                                                  </Arg>
+        </onDungenFinishRewards>
+
+        <onDungeonChallengeSettlement>
+            <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+        </onDungeonChallengeSettlement>
+
+        <onDungeonSettlement>
+            <Arg>   UINT8                                                  </Arg>
+            <Arg>   CLI_DUNGEON_SETTLEMENT_DATA                            </Arg>
+        </onDungeonSettlement>
+    </ClientMethods>
+
+</root>
+

@@ -13,12 +13,14 @@ import mailAssistor
 
 import mail_mail as MAMAD
 import mineBattle_config as MBC
+import gamePlay_gamePlay as GGD
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 
 class IMineWarBase(object):
     def __init__(self):
         self.myMineList = []    # 玩家拥有的矿场列表
-        self.MineTimeDict = {}  # mapId: factor
+        self.MineRevenueDict = {}  # mapId: factor
         self.mineWarState = gameconst.MINE_WAR_STATE.END
 
     def onMineWarLogin(self):
@@ -28,13 +30,13 @@ class IMineWarBase(object):
         INFO_MSG('IMineWarBase.onMineWarLogin called for player:', self.id)
         gameengine.getGlobalBase('MineWarStub').playerGetMineWarState(self, self.guildUUIDBase)
 
-    def onMineWarStateSync(self, state, startTime, endTime, mineList, mineTimeMap):
+    def onMineWarStateSync(self, state, startTime, endTime, mineList, MineRevenueDict):
         """
         矿战状态获取回调
         """
         self.myMineList = mineList
-        self.MineTimeDict = mineTimeMap
-        INFO_MSG('Avatar.onMineWarStateSync state:', state, 'startTime:', startTime, 'endTime:', endTime, mineList, mineTimeMap)
+        self.MineRevenueDict = MineRevenueDict
+        INFO_MSG('Avatar.onMineWarStateSync state:', state, 'startTime:', startTime, 'endTime:', endTime, mineList, MineRevenueDict)
         if state == gameconst.MINE_WAR_STATE.PREPARE:
             self.onMineWarPreparePlayer(state, startTime)
         elif state == gameconst.MINE_WAR_STATE.RUNNING:
@@ -84,13 +86,17 @@ class IMineWarBase(object):
         )
         
         # 跑马灯
-        self.client.onOfficialMessage(95, content, 1, [], 0)
+        msgId = MBC.datas['mineBatte_chatChannelMsg1']['value']
+        self.onMessagePre(msgId, [])
+
         
     def onMineWarEndPlayer(self, changeInfo):
         """
         MINE_WAR_STATE.END状态开始
         """
         INFO_MSG('Avatar.onMineWarEndPlayer state:', changeInfo)
+        msgId = MBC.datas['mineBatte_chatChannelMsg2']['value']
+
         for info in changeInfo:
             mapId = info['mapId']
             oldGuildId = info['oldGuildId']
@@ -105,12 +111,22 @@ class IMineWarBase(object):
                 self.myMineList.append(mapId)
                 INFO_MSG('Avatar.onMineWarEndPlayer won mine:', self.id, mapId)
 
-            ownerTimeMap = info.get('ownerTimeMap', {})
-            if self.guildUUIDBase in ownerTimeMap:
-                self.MineTimeDict[mapId] = ownerTimeMap[self.guildUUIDBase]
+            guildRevenueRate = info.get('guildRevenueRate', {})
+            if self.guildUUIDBase in guildRevenueRate:
+                self.MineRevenueDict[mapId] = guildRevenueRate[self.guildUUIDBase]
+
+            mapCfg = GGD.datas.get(mapId, {})
+            mapName = mapCfg.get('name', '')
+            self.onMessagePre(utils.getNeedTranslateMsgId(msgId), [info['leaderName'], mapName])
         
         # 同步cell
         self.syncCellMineWarInfo(gameconst.MINE_WAR_STATE.END)
+        # 同步client
+        self.client.showMineWarEnd()
+
+        # 重新拉数据
+        if formula.isMineWarSpace(self.baseSpaceNo):
+            self.getMineWarInfo()
 
     def onMineWarLeaveGuild(self):
         """
@@ -140,8 +156,18 @@ class IMineWarBase(object):
         """
         获取矿战采集Key
         """
-        self.client.onOfficialMessage(95, '测试测试', 1, [], 0)
         return 'MineWarLine{}'.format(lineType)
+    
+    def getMineWarCollectionTime(self, lineType):
+        """
+        获取矿战采集时间
+        """
+        mineKey = self.getMineWarCollectionKey(lineType)
+        mineTime = self.getDailyData(mineKey, 0)
+        limitTimeCfg = MBC.datas['mineBattle_miningPersonalDuration']['value']
+        limitTime = limitTimeCfg[0] if lineType not in self.myMineList else limitTimeCfg[1]
+
+        return limitTime * 60 - mineTime
     
     def mineWarPrecheckCollection(self, collectionId):
         """
@@ -155,16 +181,16 @@ class IMineWarBase(object):
             return True
         
         lineType = formula.getLineType(self.baseSpaceNo)
-        mineKey = self.getMineWarCollectionKey(lineType)
-        mineTime = self.getDailyData(mineKey, 0)
-
-        limitTimeCfg = MBC.datas['mineBattle_miningPersonalDuration']['value']
-        limitTime = limitTimeCfg[0] if lineType not in self.myMineList else limitTimeCfg[1]
-
-        # 采矿事件检查
-        if mineTime >= limitTime * 60:
-            # 弹消息 todo
-
+        # 矿战宝箱检查  # ==todo
+        if collectionId == 1000001 and lineType in self.myMineList:
+            self.onMessagePre(MBC.datas['mineBattle_notPickableMsg']['value'], [])
+            return False
+            
+        leftTime = self.getMineWarCollectionTime(lineType)
+        # 采矿时间检查
+        if leftTime <= 0:
+            # 弹消息
+            self.onMessagePre(MBC.datas['mineBattle_notEnoughTime']['value'], [])
             return False
     
         return True
@@ -173,13 +199,34 @@ class IMineWarBase(object):
         """
         矿战采集成功回调
         """
-        INFO_MSG('iMineWarCell.onMineWarCollectionSuccess called for player:', self.id, 'args:', collectionId, pickTime)
+        
         if not formula.isMineWarSpace(self.baseSpaceNo):
             return
 
         lineType = formula.getLineType(self.baseSpaceNo)
         mineKey = self.getMineWarCollectionKey(lineType)
         self.addDailyData(mineKey, pickTime)
+
+        INFO_MSG('iMineWarCell.onMineWarCollectionSuccess :', self.id, 'args:', collectionId, pickTime, self.getDailyData(mineKey, 0))
+
+    def onMineWarCollectionReward(self, srcType, awardId, awardVal, awardCtx):
+        """
+        矿战采集奖励回调
+        """
+        # 月卡过期
+        # if self.isMonthCardExpired():
+        #     return
+        
+        if not formula.isMineWarSpace(self.baseSpaceNo) or srcType != AAC_AACDD.datas.BONUS_SRC_GATHER:
+            return
+
+        num = 0
+        darkIron = getattr(awardVal, 'darkIron', None)
+        if darkIron:
+            num = int(darkIron.data)
+        INFO_MSG('iMineWarCell.onMineWarCollectionReward :', self.id, 'darkIron num:', num)
+        if num > 0:
+            gameengine.getGlobalBase('MineWarStub').playerCollectAward(formula.getLineType(self.baseSpaceNo), num)
 
     def getMineWarFactor(self):
         """
@@ -194,7 +241,70 @@ class IMineWarBase(object):
         lineType = formula.getLineType(self.baseSpaceNo)
         if lineType in self.myMineList:
             factor = MBC.datas['mineBattle_incomeCoefficient']['value'] - 1.0
-        elif lineType in self.MineTimeDict:
-            factor = self.MineTimeDict[lineType] * 0.01
-
+        elif lineType in self.MineRevenueDict:
+            factor = self.MineRevenueDict[lineType] * 0.01
+        # INFO_MSG('iMineWarCell.getMineWarFactor :', self.id, 'lineType:', lineType, 'factor:', factor)
         return factor
+    
+    # ======================== 客户端请求 ========================
+    def reqMineWarInfo(self, exposed):
+        """
+        客户端请求矿战信息
+        """
+        INFO_MSG('iMineWarBase.reqMineWarInfo called for player:', self.id)
+        self.getMineWarInfo()
+        
+    def getMineWarInfo(self):
+        """"""
+        gameengine.getGlobalBase('MineWarStub').playerGetMineWarInfo(self, self.guildUUIDBase)
+        
+    def reqMineWarShareBonus(self, exposed, mapId, shareList):
+        """
+        客户端请求矿战分享奖励
+        """
+        INFO_MSG('iMineWarBase.reqMineWarShareBonus called for player:', self.id, 'mapId:', mapId, shareList)
+        if self.guildUUIDBase <= 0 or self.guildBox is None:
+            return
+        
+        self.guildBox.reqShareBonusFromMineWar(mapId, self.gbID, shareList, self)
+        
+        
+    def reqMineWarGuildOwnerRank(self, exposed, mapId):
+        """
+        客户端请求矿战帮派占领排名
+        """
+        INFO_MSG('iMineWarBase.reqMineWarGuildOwnerRank called for player:', self.id, 'mapId:', mapId)
+        if self.guildUUIDBase <= 0 or self.guildBox is None:
+            return
+        # gameengine.getGlobalBase('MineWarStub').doGetMineWarGuildOwnerRank(mapId, self, {})
+        
+        self.guildBox.getMineWarGuildOwnerRank(mapId, self)
+        
+    def reqMineWarGuildPlayerRank(self, exposed, mapId):
+        """
+        客户端请求矿战个人贡献排名
+        """
+        INFO_MSG('iMineWarBase.reqMineWarGuildPlayerRank called for player:', self.id, 'mapId:', mapId)
+        if self.guildUUIDBase <= 0 or self.guildBox is None:
+            return
+
+        self.guildBox.getMineWarGuildPlayerRank(mapId, self, self.gbID, self.getRoleCacheAttr('name'))
+        
+    def onMineWarKillCore(self, lineType):
+        """
+        矿战摧毁核心回调
+        """
+        INFO_MSG('iMineWarBase.onMineWarKillCore called for player:', self.id, 'mapId:', lineType)
+        if self.guildUUIDBase <= 0 or self.guildBox is None:
+            return
+        
+        self.guildBox.onMineWarKillCoreForGuild(lineType, self)
+
+    def reqMineWarCollectInfo(self, exposed):
+        if not formula.isMineWarSpace(self.baseSpaceNo):
+            return
+        lineType = formula.getLineType(self.baseSpaceNo)
+        leftTime = self.getMineWarCollectionTime(lineType)
+        revenue = self.getMineWarFactor() * 100
+
+        self.client.onGetMineWarCollectInfo(leftTime, revenue)

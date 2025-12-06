@@ -264,10 +264,5 @@
         <onStartPlayCinema>
             <Arg>  UINT32  </Arg>
         </onStartPlayCinema>
-
-        <onGetTaskReward>
-            <Arg>  TASK_ID  </Arg>
-            <Arg>  ARRAY <of>  AWARD_DISPLAY_SINGLE_VAL </of> </Arg>
-        </onGetTaskReward>
     </ClientMethods>
 </root>

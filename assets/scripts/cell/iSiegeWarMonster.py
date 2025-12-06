@@ -6,6 +6,8 @@ import utils
 from gameconst import siegeWarMonsterEnumDict as siegeTpInt
 from gameconst import SiegeWarMonsterType as siegeTpEnum
 from gameconst import siegeWarMiniMapNeedSync as smNeedSync
+from gameconst import siegeWarMonsterPropIdTypeDict as smPropIdType
+import guildWarEquipment_warEquipmentUpgrate as GWED
 
 class ISiegeWarMonster(object):
 	def __init__(self):
@@ -13,14 +15,22 @@ class ISiegeWarMonster(object):
 		self.siegeWarMonsterType = 0
 		self.isSiegeWarBossInvoked = False
 		self.siegeWarBossTargetPos = None
+		self.siegeWarMonsterPropId = None
 		if formula.isSiegeWarSpace(self.spaceNo):
 			customId, gid = utils.getCustomIdAndGid(self.spaceNo, self.gameEntityId)
 			if customId:
 				if customId in siegeTpInt:
 					self.siegeWarMonsterType = siegeTpInt[customId]
+					if self.spaceMgr:
+						tp = smPropIdType.get(customId)
+						if tp:
+							lv = self.spaceMgr.getSiegeWarMonsterLevel(self)
+							dataId = GWED.typeLevelDic[tp].get(lv)
+							if dataId:
+								self.siegeWarMonsterPropId = GWED.datas[dataId].get('prop')
+								DEBUG_MSG("[lj]ISiegeWarMonster: self.siegeWarMonsterPropId", self.siegeWarMonsterPropId)
 				else:
 					DEBUG_MSG("[lj]ISiegeWarMonster: customId is not in siegeTpInt", customId)
-
 
 	def notifySiegeWarOnDead(self, killer):
 		if not formula.isSiegeWarSpace(self.spaceNo):

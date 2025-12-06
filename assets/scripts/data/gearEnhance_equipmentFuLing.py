@@ -18,27 +18,21 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "consumedItem": ((30000227, 1),),
-        "consumedCoin": ((30000013, 100),),
+        "consumedCoin": ((30000013, 1000),),
         "consumedRune": 0
     }),
     3: _tools.RODict({
         "ID": 3,
-        "consumedItem": ((30000227, 3),),
-        "consumedCoin": ((30000013, 200),),
+        "consumedItem": ((30000227, 2),),
+        "consumedCoin": ((30000013, 2000),),
         "consumedRune": 0
     }),
     4: _tools.RODict({
         "ID": 4,
-        "consumedItem": ((30000227, 10),),
-        "consumedCoin": ((30000013, 500),),
-        "consumedRune": 0
-    }),
-    5: _tools.RODict({
-        "ID": 5,
-        "consumedItem": ((30000227, 10),),
-        "consumedCoin": ((30000013, 500),),
+        "consumedItem": ((30000227, 4),),
+        "consumedCoin": ((30000013, 3000),),
         "consumedRune": 0
     })
 })
 minKey = 2
-maxKey = 5
+maxKey = 4

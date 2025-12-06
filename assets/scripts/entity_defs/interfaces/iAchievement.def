@@ -22,19 +22,13 @@
     </CellMethods>
 
     <ClientMethods>
-        <onInitAchieveData>
-            <Arg>   ARRAY <of>  ACHIEVEMENT_VAL_DATA_INFO   </of>   </Arg>
-            <Arg>   ARRAY <of>  ACHIEVE_ID                  </of>   </Arg>
-            <Arg>   ACHIEVE_POINT                           </Arg>      
-        </onInitAchieveData>
-
         <onUpdateAchieveDatas>
             <Arg>   ARRAY <of>  ACHIEVEMENT_VAL_DATA_INFO   </of>   </Arg>
         </onUpdateAchieveDatas>
 
         <onTakeAchievementRewards>
             <Arg>   ARRAY <of>  ACHIEVE_ID                  </of>   </Arg>
-            <Arg>   ACHIEVE_POINT                           </Arg>      
+            <Arg>   ACHIEVE_POINT                           </Arg>
         </onTakeAchievementRewards>
     </ClientMethods>
 </root>

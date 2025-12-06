@@ -23,14 +23,6 @@ datas = _tools.RODict({
         "ID": "gearReplaceUnboundProb",
         "value": 0.3,
     }),
-    "gearMakeAttachSubType": _tools.RODict({
-        "ID": "gearMakeAttachSubType",
-        "value": ((70, 68, 69), (80, 78, 79)),
-    }),
-    "gearMakeUseConsumeItem2": _tools.RODict({
-        "ID": "gearMakeUseConsumeItem2",
-        "value": ((70, 68), (80, 78)),
-    }),
     "gearMakeButtonName1": _tools.RODict({
         "ID": "gearMakeButtonName1",
         "value": "制造",

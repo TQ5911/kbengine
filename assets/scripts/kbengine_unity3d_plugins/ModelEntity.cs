@@ -69,13 +69,13 @@ namespace KBEngine
         /// </summary>
         /// <param name="objID">释放者id</param>
         /// <param name="skillID"></param>
-        public override void onUseSkill(Byte success, UInt32 skillID, Int32 targetID, List<float> skillParam, List<Int32> targetIDList)
+        public override void onUseSkill(Byte success, UInt32 skillID, Int32 targetID, List<float> skillParam, List<Int32> targetIDList, List<float> extraParams)
         {
             Int32 objID = this.id;
             bool isSuccess = success > 0 ? true : false;
             int index = 0;
             if (hasView)
-                view.OnUseSkill(skillID, targetID, skillParam, targetIDList, index, isSuccess, 0);
+                view.OnUseSkill(skillID, targetID, skillParam, extraParams, targetIDList, index, isSuccess, 0);
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_USE_SKILL, objID, skillID, targetID, skillParam, targetIDList, index, isSuccess, 0);
         }
 
@@ -88,11 +88,11 @@ namespace KBEngine
         /// <param name="skillParam"></param>
         /// <param name="targetIDList"></param>
         /// <param name="index">当前是引导技能的第几次回调</param>
-        public override void onUseChanneling(Int32 objID, UInt32 skillID, Int32 targetID, List<float> skillParam, List<Int32> targetIDList, Int32 index)
+        public override void onUseChanneling(Int32 objID, UInt32 skillID, Int32 targetID, List<float> skillParam, List<Int32> targetIDList, Int32 index, List<float> extraParams)
         {
             bool isSuccess = true;
             if (hasView)
-                view.OnUseSkill(skillID, targetID, skillParam, targetIDList, index, isSuccess, 0);
+                view.OnUseSkill(skillID, targetID, skillParam, extraParams, targetIDList, index, isSuccess, 0);
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_USE_SKILL, objID, skillID, targetID, skillParam, targetIDList, index, isSuccess, 0);
             //EventMgr.Instance.SendEvent(EventDef.EVENT_TARGET_ONCASTSKILL, this.id, skillID, KBEngineTime.GetServerRealTimeMS() / 1000d);
         }
@@ -105,10 +105,10 @@ namespace KBEngine
         /// <param name="targetID"></param>
         /// <param name="skillParam"></param>
         /// <param name="targetIDList"></param>
-        public override void onUseCasting(Int32 objID, UInt32 skillID, Int32 targetID, List<float> skillParam, List<Int32> targetIDList)
+        public override void onUseCasting(Int32 objID, UInt32 skillID, Int32 targetID, List<float> skillParam, List<Int32> targetIDList, List<float> extraParams)
         {
             if (hasView)
-                view.OnStartCasting(skillID, targetID, skillParam, targetIDList);
+                view.OnStartCasting(skillID, targetID, skillParam, extraParams, targetIDList);
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_USE_CASTING, objID, skillID, targetID, skillParam, targetIDList);
             //EventMgr.Instance.SendEvent(EventDef.EVENT_TARGET_ONCASTSKILL, objID, skillID, KBEngineTime.GetServerRealTimeMS() / 1000d);
         }
@@ -207,15 +207,15 @@ namespace KBEngine
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SKILL_SIMPLE_DAMAGE, id, sourceId, targetIdList);
         }
 
-        /// <summary>
-        /// 闪现结束回调
-        /// </summary>
-        /// <param name="skillid"></param>
-        public override void onSkillTeleport(UInt32 skillid, Vector3 pos)
-        {
-            BattleManager.Instance.OnHandleSkillTeleport(this, skillid, pos);
-            //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SKILL_TELEPORT, id, skillid, pos);
-        }
+        ///// <summary>
+        ///// 闪现结束回调
+        ///// </summary>
+        ///// <param name="skillid"></param>
+        //public override void onSkillTeleport(UInt32 skillid, Vector3 pos)
+        //{
+        //    BattleManager.Instance.OnHandleSkillTeleport(this, skillid, pos);
+        //    //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SKILL_TELEPORT, id, skillid, pos);
+        //}
 
         ///// <summary>
         ///// 对抗状态（用于飄字）
@@ -579,9 +579,7 @@ namespace KBEngine
         #endregion 服务器调用客户端方法
 
         #region 属性变化
-        public override void onAdjBloodSuckChanged(float oldValue)
-        {
-        }
+
         public override void onAdjCDChanged(float oldValue)
         {
             if (hasView)
@@ -703,15 +701,7 @@ namespace KBEngine
 
         //public override void onMortalChanged(float oldValue) { }
 
-        public override void onMpCostRatioChanged(float oldValue)
-        {
-            if (mpCostRatio != oldValue)
-            {
-                if (hasView)
-                    view.m_mpCostLevel = mpCostRatio;
-                //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SET_MPCOST_RATIO, this.id, mpCostRatio);
-            }
-        }
+        
         //public override void onMulBloodSuckChanged(float oldValue) { }
         public override void onMulCDChanged(float oldValue)
         {
@@ -790,101 +780,7 @@ namespace KBEngine
             //EventMgr.Instance.SendEvent(EventDef.EVENT_GATHER_ONSELECT_COLLECTION, this.selectedTargetId);
         }
 
-        public override void onMinPhysicalAtkChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MinPhysicalAtk, oldValue);
-            }
-        }
-
-        public override void onMaxPhysicalAtkChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MaxPhysicalAtk, oldValue);
-            }
-        }
-
-        public override void onMinPhysicalArmorChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MinPhysicalArmor, oldValue);
-            }
-        }
-
-        public override void onMaxPhysicalArmorChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MaxPhysicalArmor, oldValue);
-            }
-        }
-
-        public override void onMinMagicAtkChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MinMagicAtk, oldValue);
-            }
-        }
-
-        public override void onMaxMagicAtkChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MaxMagicAtk, oldValue);
-            }
-        }
-
-        public override void onMinMagicArmorChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MinMagicArmor, oldValue);
-            }
-        }
-
-        public override void onMaxMagicArmorChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MaxMagicArmor, oldValue);
-            }
-        }
-
-        public override void onSkillCDChanged(float oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.SkillCD, oldValue);
-            }
-        }
-
-        public override void onHitChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.Hit, oldValue);
-            }
-        }
-
-        public override void onDodgeChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.Dodge, oldValue);
-            }
-        }
-
-        public override void onFatalChanged(int oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.Fatal, oldValue);
-            }
-        }
+        
 
         public override void onAntiFatalChanged(int oldValue)
         {
@@ -910,189 +806,7 @@ namespace KBEngine
             }
         }
 
-        public override void onMortalChanged(float oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.Mortal, oldValue);
-            }
-        }
-
-        public override void onAntiMortalChanged(float oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.AntiMortal, oldValue);
-            }
-        }
-
-        public override void onFinalDmgChanged(float oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.FinalDmg, oldValue);
-            }
-        }
-
-        public override void onFinalDmgAntiChanged(float oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.FinalDmgAnti, oldValue);
-            }
-        }
-
-        public override void onPVPDmgChanged(float oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.PVPDmg, oldValue);
-            }
-        }
-
-        public override void onPVPDmgAntiChanged(float oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.PVPDmgAnti, oldValue);
-            }
-        }
-
-        public override void onMonsterDmgChanged(float oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MonsterDmg, oldValue);
-            }
-        }
-
-        public override void onMonsterDmgAntiChanged(float oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.MonsterDmgAnti, oldValue);
-            }
-        }
-
-        public override void onRealDmgChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.RealDmg, oldValue);
-            }
-        }
-
-        public override void onRealDmgDefChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.RealDmgDef, oldValue);
-            }
-        }
-
-        public override void onPushEnhChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.PushEnh, oldValue);
-            }
-        }
-
-        public override void onPushAntiChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.PushAnti, oldValue);
-            }
-        }
-
-        public override void onStunEnhChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.StunEnh, oldValue);
-            }
-        }
-
-        public override void onStunAntiChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.StunAnti, oldValue);
-            }
-        }
-
-        public override void onSilentEnhChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.SilentEnh, oldValue);
-            }
-        }
-
-        public override void onSilentAntiChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.SilentAnti, oldValue);
-            }
-        }
-
-        public override void onKnockEnhChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.KnockEnh, oldValue);
-            }
-        }
-
-        public override void onKnockAntiChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.KnockAnti, oldValue);
-            }
-        }
-
-        public override void onFrozenEnhChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.FrozenEnh, oldValue);
-            }
-        }
-
-        public override void onFrozenAntiChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.FrozenAnti, oldValue);
-            }
-        }
-
-        public override void onSlowEnhChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.SlowEnh, oldValue);
-            }
-        }
-
-        public override void onSlowAntiChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.SlowAnti, oldValue);
-            }
-        }
-
-        public override void onDrugsQuantityChanged(Int32 oldValue)
-        {
-            if (isPlayer())
-            {
-                PropCalculator.Instance.SetServerValue(PropDataConsant.DrugsQuantity, oldValue);
-            }
-        }
+        
 
         #endregion 属性变化
 

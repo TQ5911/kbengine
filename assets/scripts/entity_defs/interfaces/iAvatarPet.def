@@ -103,11 +103,6 @@
             <Arg>   ARRAY <of> CLIENT_LINGSHOU_ITEM_VAL </of>    </Arg>
         </onUpdateLingShouData>
 
-        <onUpdateLingShouScore>
-            <Arg>   PETID    </Arg>
-            <Arg>   SCORE       </Arg>
-        </onUpdateLingShouScore>
-
         <onUpdateLingShouBattleList>
             <Arg>   UINT8       </Arg>
             <Arg>   PETID       </Arg>

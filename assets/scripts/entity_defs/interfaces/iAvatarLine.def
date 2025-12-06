@@ -83,14 +83,6 @@
         <onGetLineInfo>
             <Arg>        UNICODE    </Arg>
         </onGetLineInfo>
-
-        <onSendtoRandomLineAndArea>
-            <Arg>        LINE_TYPE        </Arg>
-            <Arg>        LINE_NO          </Arg>
-            <Arg>        AREA_ID          </Arg>
-            <Arg>        LINE_NO          </Arg>
-            <Arg>        AREA_ID          </Arg>
-        </onSendtoRandomLineAndArea>
     </ClientMethods>
 
 </root>

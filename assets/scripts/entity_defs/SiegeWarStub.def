@@ -4,7 +4,7 @@
         <Interface> iGlobal                     </Interface>
         <Interface> iTimerBase                  </Interface>
     </Interfaces>
-    
+
     <Properties>
         <siegeWarState>
             <Type>          INT32                   </Type>
@@ -145,7 +145,7 @@
             <Flags>         BASE                    </Flags>
             <Persistent>	true					</Persistent>
         </cityOwnerGuildName>
-        
+
         <cityOwnerGuildUUID>
             <Type>          GUILD_UUID              </Type>
             <Flags>         BASE                    </Flags>
@@ -203,7 +203,7 @@
             <Arg>          BOOL                         </Arg>
             <Arg>          INT32                        </Arg>
         </onBiddingResult>
-        
+
         <onSiegeWarBiddingDataUpdate>
             <Arg>        ARRAY <of> UNICODE </of>       </Arg>
             <Arg>        ARRAY <of> UNICODE </of>       </Arg>
@@ -212,7 +212,7 @@
             <Arg>        PLAYER_GBID                    </Arg>
             <Arg>        GUILD_UUID                     </Arg>
         </onSiegeWarBiddingDataUpdate>
-        
+
         <onQuerySiegeWarBiddingWinnerData>
             <Arg>          ENTITYCALL                    </Arg>
         </onQuerySiegeWarBiddingWinnerData>
@@ -284,11 +284,6 @@
         <onSiegeWarGuildWinnerData>
             <Arg>           PY_LIST                     </Arg>
         </onSiegeWarGuildWinnerData>
-
-        <cityRecentActivityResponse>
-            <Arg>          ENTITYCALL                                       </Arg>
-            <Arg>          ARRAY <of> CITY_RECENT_ACTIVITY_VAL </of>        </Arg>
-        </cityRecentActivityResponse>
 
         <onCityOfficerChange>
             <Arg>          PY_LIST                      </Arg>

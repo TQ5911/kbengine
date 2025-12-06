@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "31160001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -16,6 +17,7 @@ datas ={
         "Props": {
           "Num": 0,
           "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": "",
           "TelDir": 0.0,
           "TelX": 39.52325,
@@ -28,6 +30,7 @@ datas ={
       "Monster": {
         "31160002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -40,20 +43,22 @@ datas ={
           "PosZ": 60.30103,
           "Props": {
             "GroupID": "",
-            "Level": 28.0,
+            "Level": 25,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 3.0,
+            "RefreshTime": 2.0,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "31160003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -66,20 +71,22 @@ datas ={
           "PosZ": 67.67553,
           "Props": {
             "GroupID": "",
-            "Level": 28.0,
+            "Level": 25,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 3.0,
+            "RefreshTime": 2.0,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "31160004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -92,20 +99,22 @@ datas ={
           "PosZ": 62.23657,
           "Props": {
             "GroupID": "",
-            "Level": 28.0,
+            "Level": 25,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 3.0,
+            "RefreshTime": 2.0,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "31160005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -118,20 +127,22 @@ datas ={
           "PosZ": 59.41984,
           "Props": {
             "GroupID": "",
-            "Level": 28.0,
+            "Level": 25,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 2,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 3.0,
+            "RefreshTime": 2.0,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "31160006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -144,20 +155,22 @@ datas ={
           "PosZ": 62.44145,
           "Props": {
             "GroupID": "",
-            "Level": 28.0,
+            "Level": 25,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 2,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 3.0,
+            "RefreshTime": 2.0,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "31160007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -170,14 +183,15 @@ datas ={
           "PosZ": 66.81326,
           "Props": {
             "GroupID": "",
-            "Level": 28.0,
+            "Level": 25,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 2,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 3.0,
+            "RefreshTime": 2.0,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
@@ -186,6 +200,7 @@ datas ={
       "Collection": {
         "31168001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -201,11 +216,13 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": ""
           }
         },
         "31168002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -221,6 +238,7 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": ""
           }
         }
@@ -228,6 +246,7 @@ datas ={
       "CombatArea": {
         "31168003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -246,6 +265,7 @@ datas ={
         },
         "31168004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -264,10 +284,12 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "Cube": {
       "Teleporter": {
         "31168005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",

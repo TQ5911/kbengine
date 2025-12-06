@@ -88,6 +88,9 @@ class IScore(object):
         totalScore = 0
         for equipObj in self.bodyEquipData.equips_map.values():
             totalScore += equipObj.getEquipScore()
+        
+        for attrName, attrValue in self.bodyEquipData.blessAttrs.items():
+            totalScore += int(dataUtils.filterFightPropScore(self.school, attrName) * attrValue)
         return totalScore
 
     # --------------------------------------------------------------

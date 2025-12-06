@@ -82,7 +82,7 @@ datas = _tools.RODict({
     }),
     "expirationTips": _tools.RODict({
         "ID": "expirationTips",
-        "value": "{0}后过期",
+        "value": "{0}后下架",
         "Type": "string"
     }),
     "expiredTips": _tools.RODict({
@@ -168,6 +168,21 @@ datas = _tools.RODict({
     "selectedMonsterLv": _tools.RODict({
         "ID": "selectedMonsterLv",
         "value": "等级：{0}",
+        "Type": "string"
+    }),
+    "TapTapLoginText": _tools.RODict({
+        "ID": "TapTapLoginText",
+        "value": "TapTap登录",
+        "Type": "string"
+    }),
+    "YXGNumberLoginText": _tools.RODict({
+        "ID": "YXGNumberLoginText",
+        "value": "一键登录",
+        "Type": "string"
+    }),
+    "YXGSMSLoginText": _tools.RODict({
+        "ID": "YXGSMSLoginText",
+        "value": "短信登录",
         "Type": "string"
     })
 })

@@ -59,6 +59,8 @@ import urllib.parse
 import combatSkill
 import localizeConst_localizeConst as LC_LCD
 
+import mineBattle_config as MBC
+
 tempTime = time.time
 ASCII_LIST = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
               'V', 'W', 'X', 'Y', 'Z',
@@ -236,13 +238,27 @@ def getEntityRealEntity(ent):
     return ent
 
 
+def bitSet(val, bit):
+    return val | (1 << bit)
+
+
+def hasBit(val, bit):
+    return val & (1 << bit)
+
+
+def bitReset(val, bit):
+    return val & (~(1 << bit))
+
+
+
 def isJoinCombat(entity, src):
     if (src.IsCombatUnit or src.IsCreation) and entity.IsAICombatUnit and entity.bornState not in \
             gameconst.BornStateType.joinCombatTup:
         return False
 
     if entity.IsAICombatUnit and entity.aiController and entity.bornState in \
-            gameconst.BornStateType.speialAIInvalidCombatTup and entity.aiController.isSpecialMonsterAI():
+            gameconst.BornStateType.speialAIInvalidCombatTup\
+            and hasBit(entity.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI):
         return False
 
     if entity.hasState(C_S_DD.datas.relive) or src.hasState(C_S_DD.datas.relive):
@@ -1858,19 +1874,6 @@ def _testCheckAvatarName():
 
 # _testCheckAvatarName()
 
-
-def bitSet(val, bit):
-    return val | (1 << bit)
-
-
-def hasBit(val, bit):
-    return val & (1 << bit)
-
-
-def bitReset(val, bit):
-    return val & (~(1 << bit))
-
-
 def getWholeBits(*bits):
     val = 0
     for bit in bits:
@@ -2220,21 +2223,6 @@ def encodeHexJson(dataDict):
     return extraJson
 
 
-def isEnemyInBigWorldDuel(src, target, includeEnded=False):
-    src, target = getEntityRealEntity(src), getEntityRealEntity(target)
-    if src.IsAvatar and target.IsAvatar and \
-            src.bigWorldDuelCacheInfo.duelUUID == target.bigWorldDuelCacheInfo.duelUUID:
-        return _isEnemyInBigWorldDuel(src, target, includeEnded=includeEnded)
-    return False
-
-
-def _isEnemyInBigWorldDuel(src, target, includeEnded=False):
-    if src.bigWorldDuelCacheInfo.isInFighting(includeEnded) and target.bigWorldDuelCacheInfo.isInFighting(includeEnded):
-        if src.bigWorldDuelCacheInfo.duelSide != target.bigWorldDuelCacheInfo.duelSide:
-            return True
-    return False
-
-
 def getGuildUUIDPair(guildUUID1, guildUUID2):
     if guildUUID1 < guildUUID2:
         return (guildUUID1, guildUUID2)
@@ -2341,14 +2329,17 @@ def _isEnemy(src, target):
                 if not src.siegeWarCanAttack:
                     return False
             return src.siegeWarCamp != target.siegeWarCamp
-        
+
     if formula.isMineWarSpace(src.spaceNo):
         if formula.isMineWarSpace(target.spaceNo):
             if target.IsMonster:
-                if not target.mineWarCanAttack or src.guildUUID == 0:
+                if not target.mineWarCanAttack:
                     return False
-                return src.guildUUID != target.mineWarGuildId
-            if src.mineWarCanAttack and not src.IsMonster:
+                if src.IsAvatar:
+                    if src.guildUUID == 0:
+                        return False
+                    return src.mineWarCamp != target.mineWarCamp
+            if not src.IsMonster:
                 return src.guildUUID != target.guildUUID
     #
     # mapId = formula.getMapId(src.spaceNo)
@@ -2686,6 +2677,10 @@ def initBaseProperties(entity, propCurveID=0):
         propType = creepData.get('propType')
         if propType == 1:
            propId = propId + entity.level - 1
+        elif propType == 2:
+            if formula.isSiegeWarSpace(entity.spaceNo):
+                if entity.siegeWarMonsterPropId:
+                    propId = entity.siegeWarMonsterPropId
 
         propData = PFPD.datas.get(propId)
         cfgPropType = propData.get('type')
@@ -3291,19 +3286,6 @@ def isBelongTimerTag(timerTag):
 def isBelongTimerIdTag(timerIdTag):
     return gametimer.TIMER_ID_START <= timerIdTag < gametimer.TIMER_ID_END
 
-def checkCombatRangeY(src, target):
-    heightLimit = CCT.datas['damageHeightLimit'].get('value')
-    host = getHostEntity(src)
-    if src.IsMonster:
-        attackHeightLimit = CBD.datas[src.monsterId]['attackHeightLimit']
-        if attackHeightLimit:
-            heightLimit = attackHeightLimit
-    if host.IsAvatar and target.IsMonster:
-        underAttackHeightLimit = CBD.datas[target.monsterId]['underAttackHeightLimit']
-        if underAttackHeightLimit:
-            heightLimit = underAttackHeightLimit
-    return abs(src.position[1] - target.position[1]) <= heightLimit
-
 
 def getCollisionDistance(creepBaseId, default=0):
     return CBD.datas[creepBaseId].get('collisionDistance', default)
@@ -3376,3 +3358,42 @@ def group2ServerIds(groupId):
             _serverIds.append(_serverId)
 
     return _serverIds
+
+def getMineWarStartOffsetSec():
+    warStartWeekDay = MBC.datas['mineBattle_startTime']['value'][0]  # 每周几
+    warStartHour = MBC.datas['mineBattle_startTime']['value'][1]  // 100   # 几点开始
+    warStartMin = MBC.datas['mineBattle_startTime']['value'][1]  % 100    # 几分开始
+    offset = ((warStartWeekDay - 1) * 24 + warStartHour) * 3600 + warStartMin * 60
+    return offset
+
+def getMineWarEndOffsetSec():
+    warStartWeekDay = MBC.datas['mineBattle_startTime']['value'][0]  # 每周几
+    warEndHour = MBC.datas['mineBattle_startTime']['value'][2]  // 100   # 几点结束
+    warEndMin = MBC.datas['mineBattle_startTime']['value'][2]  % 100    # 几分结束
+    offset = ((warStartWeekDay - 1) * 24 + warEndHour) * 3600 + warEndMin * 60
+    return offset
+
+def getMineWarPrepareNeedSec():
+    return MBC.datas['mineBattle_interfacePromptTime']['value'] * 60    # 准备时间需要提前多少时间
+
+def getNextHoursTimestamp(curTimestamp, deltaSecs, deltaHours):
+    return ((curTimestamp+deltaSecs)//3600+deltaHours)*3600
+
+
+def callLimitAdd(callType):
+    _ts, _times = gameglobal.callLimitDic.get(callType, (0, 0))
+    _now = getNow()
+    if _ts == _now:
+        gameglobal.callLimitDic[callType] = (_now, _times+1)
+    else:
+        gameglobal.callLimitDic[callType] = (_now, 1)
+
+
+def getCallLimitNum(callType):
+    _ts, _times = gameglobal.callLimitDic.get(callType, (0, 0))
+    _now = getNow()
+    if _ts == _now:
+        return _times
+    else:
+        return 0
+

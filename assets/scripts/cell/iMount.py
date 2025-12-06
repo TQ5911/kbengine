@@ -56,8 +56,6 @@ class IMount(object):
         else:
             self.setPersistentMiscProp(gameconst.AvatarProps.followNotRideFlag, True)
 
-        self.client.onGetFollowRideFlag(self.getFollowRideFlag())
-
     def getFollowRideFlag(self):
         return not self.getPersistentMiscProp(gameconst.AvatarProps.followNotRideFlag, False)
 
@@ -93,13 +91,11 @@ class IMount(object):
         if not self._isCanRide(bMsg) or\
                 (not self.checkConflictState(CCD.datas.ride, bMsg=bMsg)) or\
                 (not self._setMountState(gameconst.State.riding)):
-            self.client.onRideMount(False, False)
             if finishFunc:
                 getattr(self, finishFunc)(*finishArgs)
             return
 
         self.setCurMountSpeedBuff(False)
-        self.client.onRideMount(False, True)
         if finishFunc:
             getattr(self, finishFunc)(*finishArgs)
 

@@ -32,11 +32,6 @@
             <WitnessName>     true                  </WitnessName>
         </hostId>
 
-        <hostTeamId>
-            <Type>          TEAMID              </Type>
-            <Flags>         OTHER_CLIENTS       </Flags>
-        </hostTeamId>
-
         <bindedEntityId>
             <Type>  OBJECT_ID                         </Type>
             <Flags> OTHER_CLIENTS               </Flags>
@@ -51,7 +46,7 @@
 
         <dieWithHost>
             <Type>  BOOL                            </Type>
-            <Flags> OTHER_CLIENTS               </Flags>
+            <Flags> CELL_PRIVATE                    </Flags>
         </dieWithHost>
 
         <moveController>
@@ -92,6 +87,13 @@
             <Default>       0               </Default>
             <WitnessName>   true            </WitnessName>
         </siegeWarCamp>
+
+        <mineWarCamp>
+            <Type>          UINT8           </Type>
+            <Flags>         ALL_CLIENTS     </Flags>
+            <Default>       0               </Default>
+            <WitnessName>   true            </WitnessName>
+        </mineWarCamp>
     </Properties>
 
     <BaseMethods>

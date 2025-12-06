@@ -206,6 +206,31 @@ def loadCustomConfig(data):
 
 def onGameConfigChanged(name, value, fromBaseappGroupdOrder):
     # 从isBootstrap发起，所以bootstrap进程不需要设置
+    # 这里触发下回调，有些开关可能打开或关闭一瞬间有操作
+    _type = 0
+    if name == 'wonderLand':
+        _type = gameconst.GAME_CONFIG_TYPE_WONDER_LAND
+
+    elif name == 'square':
+        _type = gameconst.GAME_CONFIG_TYPE_SQUARE
+
+    elif name == 'roleAuthorization':
+        _type = gameconst.GAME_CONFIG_TYPE_ROLE_AUTHORIZATION
+
+    elif name == 'hotfixVersion' and gameglobal.localBaseApp:
+        gameglobal.localBaseApp.broadcastToAllAvatar(
+            gameconst.BASE,
+            'sendHotfix',
+            (value,)
+        )
+
+    if _type and gameglobal.localBaseApp:
+        gameglobal.localBaseApp.broadcastToAllAvatar(
+            gameconst.BASE,
+            'onGameConfigChangedBase',
+            (_type, value)
+        )
+
     if KBEngine.getComponentGroupOrder() == fromBaseappGroupdOrder:
         return
 
@@ -453,9 +478,12 @@ def enableBotLogin():
 @cache
 def redisServer():
     try:
+        '''
         url = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/redisServer')
         res = socket.getaddrinfo(url, None)
         address = res[0][4][0]
+        '''
+        address = '192.168.10.167'
     except:
         address = '192.168.16.252'
     return address
@@ -574,7 +602,6 @@ def combatMsgFlag():
 @cache
 def centralServersInfo():
     try:
-        
         '''
         centralServers = ResMgr.getStringContentListForPath(ResMgr.kbengineConfig(), 'game/centralServersInfo')
         centralServersInfo = []
@@ -584,7 +611,7 @@ def centralServersInfo():
             csInfo = {'centralServerId': centralServer['centralServerId'], 'ip': address, 'port': centralServer['port']}
             centralServersInfo.append(csInfo)
         '''
-        centralServersInfo = [{'centralServerId': '1', 'ip': '192.168.10.127', 'port': '2030'}]
+        centralServersInfo = [{'centralServerId': '1', 'ip': '192.168.10.167', 'port': '2030'}]
     except:
         centralServersInfo = [{'centralServerId': '1', 'ip': '10.219.68.119', 'port': '2030'}]
     return centralServersInfo
@@ -618,6 +645,12 @@ def crossDataServerInfo():
         crossDataServersInfo = []
 
     return crossDataServersInfo
+
+
+@config(Str, '', 'hotfix version')
+def hotfixVersion():
+    return ''
+
 
 @config(Bool, 'true', '是否连接admin')
 def enableAdminServer():
@@ -759,6 +792,14 @@ def wxErrFlag():
 def mapleAllServerUrl():
     try:
         ret = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/mapleAllServerUrl')
+    except:
+        ret = ''
+    return ret
+
+@cache
+def gameId():
+    try:
+        ret = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/gameId')
     except:
         ret = ''
     return ret

@@ -138,7 +138,7 @@ class EquipmentItem(BaseItem.BaseItem):
             'bindType': self.bindType,
             'lockStatus' : self.lockStatus,
         }
-        cliDic.update(self.equipAttr.toClientDic())
+        cliDic.update(self.equipAttr.toClientDict())
         return cliDic
 
     def getItemName(self):
@@ -219,24 +219,7 @@ class EquipmentItem(BaseItem.BaseItem):
         return itemsDic
 
     def spiritWashingNeedItems(self):
-        cfgData = GEEFL.datas.get(self.quality)
-        if not cfgData:
-            ERROR_MSG('in spiritWashingNeedItems, cfgData not found', self.quality)
-            return None, None
-
-        itemsDic = {}
-        currencyDic = {}
-        consumedItem = cfgData.get('consumedItem')
-        if consumedItem:
-            for val in consumedItem:
-                costItemId, itemNum = val
-                itemsDic[costItemId] = itemsDic.get(costItemId, 0) + itemNum
-
-        consumedCoin = cfgData.get('consumedCoin')
-        if consumedCoin:
-            for val in consumedCoin:
-                costItemId, itemNum = val
-                currencyDic[costItemId] = currencyDic.get(costItemId, 0) + itemNum
+        itemsDic, currencyDic, _ = self.equipAttr.spiritWashingNeedItems()
 
         return itemsDic, currencyDic
 
@@ -262,6 +245,14 @@ class EquipmentItem(BaseItem.BaseItem):
 
         return itemsDic, currencyDic
 
+    def glyphWashingCraftResult(self):
+        key = self.quality * 10 + self.getGrade()
+        cfgData = GEWGD.datas.get(key)
+        if not cfgData:
+            ERROR_MSG('   in glyphWashingCraftResult, cfgData not found:', key)
+            return None
+        return cfgData['glyphCraftResult']
+        
     def bindValueWashingNeedItems(self, washCount):
         # 计算实际消耗，也不能多扣
         bindValue = self.getBindValue()
@@ -281,20 +272,13 @@ class EquipmentItem(BaseItem.BaseItem):
                 itemsDic[costItemId] = itemsDic.get(costItemId, 0) + itemNum * washCount
         return itemsDic
 
-    def getBlessCfgData(self, addVal):
-        if len(self.equipAttr.blessAffixes) == 0:
-            key = self.equipAttr.equipType * 10 + addVal
-        else:
-            key = self.equipAttr.equipType * 10 + self.equipAttr.blessAffixes[0].affixVal + addVal
-        return GEBLD.datas.get(key)
-
     def blessNeedItems(self):
-        cfgData = self.getBlessCfgData(1)
+        cfgData = self.equipAttr.getBlessCfgData(1)
         if not cfgData:
             ERROR_MSG('   in blessNeedItems, bless is up to max lucky value:')
             return None, None
 
-        cfgData = self.getBlessCfgData(0)
+        cfgData = self.equipAttr.getBlessCfgData(0)
         if not cfgData:
             ERROR_MSG('   in blessNeedItems, cfgData not found:')
             return None, None
@@ -320,7 +304,7 @@ class EquipmentItem(BaseItem.BaseItem):
             return False
 
         curBlessVal = self.equipAttr.blessAffixes[0].affixVal
-        key = self.equipAttr.equipType * 10 + self.equipAttr.maxBlessLv
+        key = self.equipAttr.getBlessKey(self.equipAttr.maxBlessLv)
         cfgData = GEBLD.datas.get(key)
         if not cfgData:
             ERROR_MSG('   in isCanBackBless, cfgData not found:', key)
@@ -495,7 +479,10 @@ class EquipmentItem(BaseItem.BaseItem):
         return ret, oldSpiritAffixes, newSpiritAffixes
 
     def doEquipGlyphWashing(self, owner, glyphPos, affixIds = None):
-        ret, oldGlyphAffixes, newGlyphAffixes = self.equipAttr.glyphWashing(glyphPos, affixIds)
+        glyphCraftResult = self.glyphWashingCraftResult()
+        if not glyphCraftResult:
+            return False, None, None
+        ret, oldGlyphAffixes, newGlyphAffixes = self.equipAttr.glyphWashing(glyphPos, glyphCraftResult, affixIds)
         if ret:
             self.onEquipAffixChanged()
         return ret, oldGlyphAffixes, newGlyphAffixes
@@ -760,6 +747,12 @@ class EquipmentItem(BaseItem.BaseItem):
     def getEquipQuality(self):
         return self.equipAttr.quality
 
+    def getBlessVal(self):
+        totalVal = 0
+        for blessAffix in self.equipAttr.blessAffixes:
+            totalVal += blessAffix.affixVal
+        return totalVal
+
 class EquipAttr(userType.UserSoleType):
 
     def __init__(self):
@@ -783,6 +776,7 @@ class EquipAttr(userType.UserSoleType):
         self.blessAffixes = []
         self.washingLuckData = {}    #词条洗练保底数据
         self.enhanceLv = 0
+        self.maxEnhanceLv = 0
         self.maxBlessLv = 0
         self.blessLvRate = 0
         self.dropFixEndTime = 0 # 掉落修复结束时间
@@ -798,6 +792,7 @@ class EquipAttr(userType.UserSoleType):
         self.bindValue = 0
         self.isAddBindValue = False
         self.school = 0
+        self.blessLvFailedCount = {}
         self.setDirtyFlag(False)
 
     def __setstate__(self, state):
@@ -835,7 +830,7 @@ class EquipAttr(userType.UserSoleType):
     def spiritSlotNum(self):
         if not dataUtils.checkEquipmentSpiritType(self.equipType):
             return 0
-        enhanceLevelKey = self.getEnhanceLevelKey(self.enhanceLv)
+        enhanceLevelKey = self.getEnhanceLevelKey(self.maxEnhanceLv)
         cfgData =  GEGS.datas.get(enhanceLevelKey)
         if not cfgData:
             return 0
@@ -850,7 +845,17 @@ class EquipAttr(userType.UserSoleType):
 
     def getUpgradePropKey(self, grade):
         return self.templateId* 100 + grade
+    
+    def getBlessKey(self, affixVal):
+        return self.equipType * 100 + self.quality * 10 + affixVal
 
+    def getBlessCfgData(self, addVal):
+        if len(self.blessAffixes) == 0:
+            key = self.getBlessKey(addVal)
+        else:
+            key = self.getBlessKey(self.blessAffixes[0].affixVal + addVal)
+        return GEBLD.datas.get(key)
+    
     def resetEquipAffixPropsData(self):
         # 装备的词缀加成数据清空
         self.baseAttrsByAfxVal = {}
@@ -874,7 +879,7 @@ class EquipAttr(userType.UserSoleType):
             self.setDirtyFlag(False)
         return self.attrJson
 
-    def toClientDic(self):
+    def toClientDict(self):
         blessAffixes = []
         for oneAffix in self.blessAffixes:
             blessAffixes.append(oneAffix.toAfxClientDic())
@@ -883,15 +888,15 @@ class EquipAttr(userType.UserSoleType):
         for spiritData in self.spiritDatas:
             spiritDatas.append(spiritData.toClientData())
 
-        glyphDatas = []
+        glyphInfos = []
         for glyphData in self.glyphInfo:
-            glyphDatas.append(glyphData.toClientData())
+            glyphInfos.append(glyphData.toClientData())
 
         return {
             'spiritDatas': spiritDatas,
             'spiritGroup': self.spiritGroup,
             'blessAffixes': blessAffixes,
-            'glyphInfo': glyphDatas,
+            'glyphInfos': glyphInfos,
             'glyphGroup': self.glyphGroup,
             'enhanceLv': self.enhanceLv,
             'maxBlessLv': self.maxBlessLv,
@@ -912,9 +917,9 @@ class EquipAttr(userType.UserSoleType):
         for spiritData in self.spiritDatas:
             spiritDatas.append(spiritData.toDBData())
 
-        glyphDatas = []
+        glyphInfos = []
         for glyphData in self.glyphInfo:
-            glyphDatas.append(glyphData.toDBData())
+            glyphInfos.append(glyphData.toDBData())
 
         jsonDic = {
             'templateId': self.templateId,
@@ -922,10 +927,11 @@ class EquipAttr(userType.UserSoleType):
             'spiritDatas': spiritDatas,
             'spiritGroup': self.spiritGroup,
             'blessAffixes': blessAffixes,
-            'glyphInfo': glyphDatas,
+            'glyphInfos': glyphInfos,
             'glyphGroup': self.glyphGroup,
             'washingLuckData': self.washingLuckData,
             'enhanceLv': self.enhanceLv,
+            'maxEnhanceLv': self.maxEnhanceLv,
             'maxBlessLv': self.maxBlessLv,
             'blessLvRate': self.blessLvRate,
             'baseAttrsByAfxVal': self.baseAttrsByAfxVal,
@@ -933,6 +939,7 @@ class EquipAttr(userType.UserSoleType):
             'dropFixEndTime': self.dropFixEndTime,
             'bindValue': self.bindValue,
             'isAddBindValue': self.isAddBindValue,
+            'blessLvFailedCount': self.blessLvFailedCount,
             'grade': self.grade,
             'school': self.school,
         }
@@ -966,8 +973,8 @@ class EquipAttr(userType.UserSoleType):
             self.spiritGroup = value.get('spiritGroup', 0)
 
             self.glyphInfo = []
-            glyphInfo = value.get('glyphInfo', [])
-            for glyphData in glyphInfo:
+            glyphInfos = value.get('glyphInfos', [])
+            for glyphData in glyphInfos:
                 newGlyphData = GlyphInfo.GlyphInfo()
                 newGlyphData.fromDBData(glyphData)
                 self.glyphInfo.append(newGlyphData)
@@ -984,6 +991,7 @@ class EquipAttr(userType.UserSoleType):
             self.washingLuckData = value.get('washingLuckData', {})
 
             self.enhanceLv = value.get('enhanceLv', 0)
+            self.maxEnhanceLv = value.get('maxEnhanceLv', 0)
             self.maxBlessLv = value.get('maxBlessLv', 0)
             self.blessLvRate = value.get('blessLvRate', 0)
             self.baseAttrsByAfxVal = value.get('baseAttrsByAfxVal', {})
@@ -996,6 +1004,9 @@ class EquipAttr(userType.UserSoleType):
 
             self.bindValue = value.get('bindValue', 0)
             self.isAddBindValue = value.get('isAddBindValue', False)
+            blessLvFailedCount = value.get('blessLvFailedCount', {})
+            for k,v in blessLvFailedCount.items():
+                self.blessLvFailedCount[int(k)] = v
             self.school = value.get('school', 0)
             self.calcBaseAttrs()
             oldScore = value.get('score', 0)
@@ -1058,8 +1069,8 @@ class EquipAttr(userType.UserSoleType):
 
         return randomAffixes
 
-    def _genSpiritAffix(self,  totalAffixesNum=0, specificAffixId=0, unbindValue = 0, blessAffixId = 0):
-        DEBUG_MSG('in _genSpiritAffix:', totalAffixesNum, specificAffixId, unbindValue, blessAffixId)
+    def _genSpiritAffix(self,  totalAffixesNum=0, specificAffixId=0, hasUnbindCond = False, blessAffixId = 0):
+        DEBUG_MSG('in _genSpiritAffix:', totalAffixesNum, specificAffixId, hasUnbindCond, blessAffixId)
         randomAffixes = []
         # 明文不可随机词缀的品质
         if self.quality in gameconst.ItemQuality.SPIRIT_NO_RANDOM_FIX_QUALITY:
@@ -1085,7 +1096,7 @@ class EquipAttr(userType.UserSoleType):
 
             # 没有消耗非绑材料就不给幸运词条了
             if blessAffixId and affixId == blessAffixId:
-                if unbindValue <= 0:
+                if not hasUnbindCond:
                     continue
                 # 如果不是项链也不出
                 if self.equipType != gameconst.EquipTypes.MAIN_TYPE_NECKLACE:
@@ -1104,7 +1115,7 @@ class EquipAttr(userType.UserSoleType):
                 specificAffixId = 0
                 # 如果保底的刚好是幸运词条，那就看是否是消耗了未绑定材料
                 if randomAffixId == blessAffixId:
-                    if unbindValue <= 0:
+                    if not hasUnbindCond:
                         needRandom = True
                     # 如果不是项链也不出
                     if self.equipType != gameconst.EquipTypes.MAIN_TYPE_NECKLACE:
@@ -1177,9 +1188,6 @@ class EquipAttr(userType.UserSoleType):
         self.calculateEnhanceAndUpgradeAttrs(self.enhanceLv, self.grade, True)
         return True
 
-    def setGradeAttrs(self, attrName, attrVal):
-        self.upgradeAttrs[attrName] = attrVal
-
     def calcScore(self):
         affixTotalScore = 0
         totalAttrScore = 0
@@ -1238,6 +1246,8 @@ class EquipAttr(userType.UserSoleType):
         enhanceLv = max(0, lv)
         oldEnhanceLv = self.enhanceLv
         self.enhanceLv = enhanceLv
+        if self.enhanceLv > self.maxEnhanceLv:
+            self.maxEnhanceLv = self.enhanceLv
         self.calculateEnhanceAndUpgradeAttrs(oldEnhanceLv, self.grade)
         self.calcScore()
 
@@ -1287,6 +1297,11 @@ class EquipAttr(userType.UserSoleType):
 
         if 0 == len(self.washingLuckData):
             self._refreshWashingLuckData(reset=True)
+        
+        hasUnbindCond = False
+        _,_, needUnbindCount = self.spiritWashingNeedItems()
+        if unbindValue == needUnbindCount:
+            hasUnbindCond = True
 
         totalAffixesNum = 0
         specificAffixId = 0
@@ -1319,7 +1334,7 @@ class EquipAttr(userType.UserSoleType):
                         for affixId in ranAffixIdList:
                             # 幸运词条，只有非绑定消耗才能参与随机
                             if blessAffixId and affixId == blessAffixId:
-                                if unbindValue <= 0:
+                                if not hasUnbindCond:
                                     continue
                                 # 如果不是项链也不出
                                 if self.equipType != gameconst.EquipTypes.MAIN_TYPE_NECKLACE:
@@ -1339,7 +1354,7 @@ class EquipAttr(userType.UserSoleType):
                     triggerLuck = True
         if triggerLuck:
             self._refreshWashingLuckData()
-        newSpiritAffixes = self._genSpiritAffix(totalAffixesNum, specificAffixId, unbindValue, blessAffixId)
+        newSpiritAffixes = self._genSpiritAffix(totalAffixesNum, specificAffixId, hasUnbindCond, blessAffixId)
         if len(newSpiritAffixes) == 0:
             ERROR_MSG('in spiritWashing empty spirit affixes', totalAffixesNum)
             return False, None, None
@@ -1372,8 +1387,8 @@ class EquipAttr(userType.UserSoleType):
         INFO_MSG('after refresh, _refreshWashingLuckData:', self.washingLuckData)
         return
 
-    def glyphWashing(self, glyphPos, affixIds = None):
-        DEBUG_MSG('in glyphWashing', glyphPos, affixIds)
+    def glyphWashing(self, glyphPos, glyphCraftResult, affixIds = None):
+        DEBUG_MSG('in glyphWashing', glyphPos, glyphCraftResult, affixIds)
         if self.glyphSlotNum <= 0:
             ERROR_MSG('in glyphWashing glyphSlotNum is 0')
             return False, None, None
@@ -1390,8 +1405,7 @@ class EquipAttr(userType.UserSoleType):
                     newGlyphAffixes.append(affixData)
         else:
             # 随机铭文个数
-            randomVals = GEGCD.datas['gearWeaponGlyphNumWeight']['value']
-            idx = utils.randomByWeight(randomVals)
+            idx = utils.randomByWeight(glyphCraftResult)
             totalAffixCount = idx + 1
             newGlyphAffixes = self._genGlyphAffix(totalAffixCount)
 
@@ -1433,16 +1447,27 @@ class EquipAttr(userType.UserSoleType):
         affixId = dataUtils.getBlessAffixIdByGearType(self.equipType)
         if len(self.blessAffixes) == 0:
             blessAffix = AffixInfo.genBlessAffix(iLevel, affixId)
-            key = self.equipType * 10
+            key = self.getBlessKey(0)
+            blessLv = 0
         else:
             blessAffix = self.blessAffixes[0]
-            key = self.equipType * 10 + blessAffix.affixVal
-
+            key = self.getBlessKey(blessAffix.affixVal)
+            blessLv = blessAffix.affixVal
+        
         result = GEBLD.datas[key]['result']
+        guaranteedCount = GEBLD.datas[key]['guaranteedCount']
         gearBlessMaxValue = GEGCD.datas['gearBlessMaxValue']['value']
         blessNum = result[0][utils.randomByWeight(result[1])]
+        # 检查是否触发了保底
+        if guaranteedCount > 0:
+            if blessNum > 0:
+                self.clearBlessFailedCount(blessLv)
+            elif blessNum < 0:
+                ret = self.addBlessFailedCount(blessLv, guaranteedCount)
+                if ret:
+                    blessNum = 1
         blessAffix.affixVal = max(0, min(blessAffix.affixVal + blessNum, gearBlessMaxValue))
-        key = self.equipType * 10 + max(blessAffix.affixVal, self.maxBlessLv)
+        key = self.getBlessKey(max(blessAffix.affixVal, self.maxBlessLv))
         backtrack = GEBLD.datas[key]['backtrack']
         if backtrack:
             if blessAffix.affixVal > self.maxBlessLv:
@@ -1480,6 +1505,48 @@ class EquipAttr(userType.UserSoleType):
             self.calcScore()
             ret = True
         return ret
+
+    def getBlessFailedCount(self, blessLv):
+        return self.blessLvFailedCount.get(blessLv, 0)
+    
+    def addBlessFailedCount(self, blessLv, guaranteedCount):
+        ret = False
+        blessLvFailedCount = self.blessLvFailedCount.get(blessLv, 0)
+        blessLvFailedCount += 1
+        if blessLvFailedCount >= guaranteedCount:
+            ret = True
+            self.clearBlessFailedCount(blessLv)
+        else:  
+            self.blessLvFailedCount[blessLv] = blessLvFailedCount + 1
+            self.setDirtyFlag(True)
+        return ret
+    
+    def clearBlessFailedCount(self, blessLv):
+        self.blessLvFailedCount.pop(blessLv, None)
+        self.setDirtyFlag(True)
+
+    def spiritWashingNeedItems(self):
+        cfgData = GEEFL.datas.get(self.quality)
+        if not cfgData:
+            ERROR_MSG('in spiritWashingNeedItems, cfgData not found', self.quality)
+            return None, None, None
+
+        itemsDic = {}
+        currencyDic = {}
+        totalNeedUnbindCount = 0
+        consumedItem = cfgData.get('consumedItem')
+        if consumedItem:
+            for val in consumedItem:
+                costItemId, itemNum = val
+                itemsDic[costItemId] = itemsDic.get(costItemId, 0) + itemNum
+                totalNeedUnbindCount += itemNum
+
+        consumedCoin = cfgData.get('consumedCoin')
+        if consumedCoin:
+            for val in consumedCoin:
+                costItemId, itemNum = val
+                currencyDic[costItemId] = currencyDic.get(costItemId, 0) + itemNum
+        return itemsDic, currencyDic, totalNeedUnbindCount
 
 class EquipItemIdGen(object):
     LV_OFFSET_MIN = -14

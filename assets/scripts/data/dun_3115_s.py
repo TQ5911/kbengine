@@ -35,9 +35,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11011022,
           "ID": 31150002,
-          "PosX": 70.53864,
+          "PosX": 70.51095,
           "PosY": 5.398143,
-          "PosZ": 129.6528,
+          "PosZ": 130.2683,
           "Props": {
             "GroupID": "",
             "Level": 30.0,
@@ -191,10 +191,10 @@ datas ={
           "ID": 31158002,
           "PosX": 69.52554,
           "PosY": 5.398143,
-          "PosZ": 131.3642,
+          "PosZ": 134.8,
           "Props": {
             "AreaType": 1,
-            "Radius": 40.0,
+            "Radius": 43.0,
             "Remark": ""
           }
         }

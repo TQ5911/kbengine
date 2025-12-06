@@ -79,7 +79,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             if spaceNo in self.spaces:
                 sVal = self.spaces[spaceNo]
                 sVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_TEAM_DUNGEON_COMPLETED_CALLBACK)
-
+                sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
                 _teamStub = gameengine.getTeamStub(sVal.teamUUID)
                 _teamStub.onDestroyTeamDungeon(sVal.teamUUID, self.dungeonNo, spaceNo, sVal.spaceUUID)
 
@@ -108,6 +108,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             # 【【上灵试炼】组队进入单人副本，打完boss后再次进入副本，会出现报错】
             # 提前cancel的时机到markDestroy
             sVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_TEAM_DUNGEON_COMPLETED_CALLBACK)
+            sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
             sVal.toDestoryDungeon()
 
             DEBUG_MSG('destoryDungeonSpace::space will be destroyed in next check,', spaceNo, sVal.markDestroy)
@@ -184,7 +185,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             return
 
         sVal.spaceMgr.cell.destroyAllEntities()
-        sVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, teamUUID, win, delay, sVal.getElapsedTime())
+        sVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, teamUUID, win, delay, sVal.getElapsedTime(), 0)
 
         if delay:
             sVal.completeDungeonTimer = self._callback(

@@ -351,9 +351,6 @@ class BehaveCtrl(object):
 
     def useRandomSkill(self, msgid=0):
         owner = self.owner
-        # if owner.IsPet :
-        #     skill = self.petSelectSkill()
-        #     target = self.petSelectTarget()
         if owner.IsSummon:
             skill = self.selectSkill()
             target = self.summonHostSelectTarget()
@@ -364,8 +361,8 @@ class BehaveCtrl(object):
         if not skill or not target:
             self.useSkillFail(self.skillId)
 
-            # 找不到目标时，设置一个0的tag的计时
-            if not target and not self.isSiegeWarMonster():
+            # 有技能但是找不到目标时，设置一个0的tag的计时
+            if (skill and not target) and not self.isSiegeWarMonster():
                 _navigationTimeTag = self.navigationTimeTagWithTarget(0)
                 if not owner.actGetVar(_navigationTimeTag, None):
                     # 先把其他的全部清除
@@ -384,6 +381,13 @@ class BehaveCtrl(object):
             self.attackTarget(skill, target, msgid)
 
         return self.selectTarget()
+
+    def useTargetTypeSkill(self):
+        # 这里"None"可以读取配置表
+        skillId = self.selectSkillByTargetType("None")
+        if not skillId:
+            return None
+        return self.useRandomSkill()
 
     def patrolTickSkip(self):
         self.patrolTick = (self.patrolTick + 1) % gameconst.AIDefine.PatrolTick
@@ -903,6 +907,11 @@ class AuxFunc(object):
             self.skillId = owner.getRandomSkill()
         return owner.getSkill(self.skillId)
 
+    def selectSkillByTargetType(self, targetType):
+        skillId = self.owner.getRandomSkill(targetType)
+        self.skillId = skillId if skillId else self.skillId
+        return skillId
+
     def isSiegeWarMonster(self):
         owner = self.owner
         if owner.IsMonster:
@@ -929,7 +938,7 @@ class AuxFunc(object):
             if self.targetId and self.hateDict.isInHateList(self.targetId):
                 target = KBEngine.entities.get(self.targetId)
                 if target and not target.isDie():
-                    if (not sMath.inRectRange2D(owner.getAlertDistance(), owner.position, target.position)) or (not utils.checkCombatRangeY(owner, target)):
+                    if (not sMath.inRectRange2D(owner.getAlertDistance(), owner.position, target.position)) or (not owner.checkCombatRangeY(target)):
                         self.hateDict.removeHate(self.targetId)
                         self.targetId = 0
 
@@ -1183,6 +1192,10 @@ class AuxFunc(object):
 
     # 尝试分散可能聚在一堆的野怪
     def scatterMonsters(self, targetPos, radius):
+        # 一秒内调用超过10次就直接返回False，看看能不能优化下性能
+        if utils.getCallLimitNum(gameconst.CALL_LIMIT_SCATTER) > 10:
+            return False
+
         owner = self.owner
 
         flag = False
@@ -1192,6 +1205,7 @@ class AuxFunc(object):
                 break
         if not flag: return False
 
+        utils.callLimitAdd(gameconst.CALL_LIMIT_SCATTER)
         return self.moveToRandPosAroundCircle(targetPos, radius)
 
     def broadcastMessagePreUseSkill(self, msgid, skillid):
@@ -1468,7 +1482,6 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         if targetId in self.iTimerDict:
             owner._cancelCallback(self.iTimerDict[targetId], gametimer.TIMER_TAG_MODIFY_OUT_VISION_HATE_CB)
             self.iTimerDict.pop(targetId, None)
-
         if (self.isActive and (owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt))) and not self.hateDict.isInHateList(targetId):
             isFirstHate = True if self.hateDict.length == 0 else False
             self.increaseHate(targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
@@ -1821,5 +1834,15 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def isInTickCallBack(self):
         return self.machine.getChangeTimer() != 0
 
-    def isSpecialMonsterAI(self):
-        return False if not self.owner.getAIParam() else True
+    def checkSpecialMonsterHasBuff(self):
+        if not utils.hasBit(self.owner.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI):
+            return False
+
+        owner = self.owner
+        type = owner.getAIParam().get('additionalParameterType', 0)
+        if type != gameconst.SpecialMonsterAIAPType.BUFF_ID:
+            return False
+
+        buffId = owner.getAIParam().get('additionalParameter', 0)
+
+        return owner.hasBuff(buffId)

@@ -14,40 +14,19 @@ import iMapMonsterRefresh
 import gameglobal
 import random
 import mineBattle_config as MBC
-import mineBattle_rankReward as MBRR
 import mineBattle_miningArea as MBBA
 import message_Message as MMD
 import dropAward
 import mailAssistor
+import gameclass
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 mineWarQiXieLevel = {
     gameconst.MineWarMonsterCustomId.MINE_CORE: 6,
     gameconst.MineWarMonsterCustomId.MINE_FLAG: 7,
 }
 
-class MineWarScore:
-    def __init__(self, gbId, school, name, scoreList):
-        self.gbId = gbId
-        self.school = school
-        self.name = name
-        self.killScore = scoreList[0]
-        self.damageScore = scoreList[1]
-        self.totalScore = self.killScore + self.damageScore        
-        
-    def getData(self):
-        return {
-            'school': self.school,
-            'name': self.name,
-            'killScore': self.killScore,
-            'damageScore': self.damageScore
-        }
 
-    def addScore(self, v, tp, reset=False):
-        if tp == 0:
-            self.killScore = v if reset else self.killScore + v
-        elif tp == 1:
-            self.damageScore = v if reset else self.damageScore + v
-        self.totalScore = self.killScore + self.damageScore
 
 class IMineWarSpaceMgr(object):
     def __init__(self):        
@@ -59,6 +38,10 @@ class IMineWarSpaceMgr(object):
         self._callback(2, 'registerToMineWarStub', (), gametimer.TIMER_TAG_LINE_SPACE_MGR_REGISTER)
         
         self.mineWarGuildId = 0  # 当前矿战工会ID
+        self.mineWarGuildName = ''
+        self.mineWarGuildIcon = 0
+        self.mineWarGuildDspFlag = 0
+        self.mineWarGuildDesc = ''
         self.mineWarState = gameconst.MINE_WAR_STATE.END
         
         self.mineWarMonsters = {}
@@ -66,11 +49,19 @@ class IMineWarSpaceMgr(object):
 
         self.junXuQiXieLevel = {}   # 军需器械等级
         self.hasLoadEntities = False
+
+        # 暂存召唤数据
+        self.summonDict = {}
+
+        self.flagMonsterId = 0
+        self.flagPos = 0
+        self.flagDir = 0
+
+        self.mineWarFlagBeAttackTimer = 0
         
     def resetMineWarScoreData(self):
         """重置矿战积分数据"""
         INFO_MSG('resetMineWarScoreData', self.spaceNo)
-        self.mineWarScores = {}  # 矿战玩家积分记录 {playerId: score, ...}
         self.mineWarDmgs = {}    # 矿战玩家伤害记录 {playerId: damage, ...}
         self.mineWarKills = {}   # 矿战玩家击杀记录 {playerId: {playerId: killCount, ...}, ...}
         self.mineWarTakePartScore = {}  # 矿战玩家参与奖励记录 {playerId: bool, ...}
@@ -100,28 +91,57 @@ class IMineWarSpaceMgr(object):
         # 首次初始化
         self.onMineWarStateChange(guildId, state, state)
 
-    def reqSyncGuildMineWarInfo(self, guildId):
+    def reqSyncGuildMineWarInfo(self, guildId, onRegister=True):
         """请求同步工会矿战信息"""
-        INFO_MSG('reqSyncGuildMineWarInfo', self.spaceNo, guildId)
+        INFO_MSG('reqSyncGuildMineWarInfo', self.spaceNo, guildId, onRegister)
         if guildId <= 0:
             return
-        gameengine.getGlobalBase('GuildStub').syncGuildMineWarToSpaceMgr(guildId, self)
+        gameengine.getGlobalBase('GuildStub').syncGuildMineWarToSpaceMgr(guildId, self, onRegister)
         
-    def onSyncGuildMineWarResult(self, guildId, res):
+    def onSyncGuildMineWarResult(self, guildId, guildName, guildIcon, guildDspFlag, guildDesc, res, onRegister):
         """同步工会矿战信息回调"""
-        INFO_MSG('onSyncGuildMineWarResult', self.spaceNo, guildId, res)
+        INFO_MSG('onSyncGuildMineWarResult', self.spaceNo, guildId, guildName, guildIcon, guildDspFlag, guildDesc, res, onRegister)
         # 设置junxu器械等级
         if not res:
             return
         
+        self.mineWarGuildId = guildId
         self.junXuQiXieLevel = res
+        self.mineWarGuildName = guildName
+        self.mineWarGuildIcon = guildIcon
+        self.mineWarGuildDspFlag = guildDspFlag
+        self.mineWarGuildDesc = guildDesc
+        
         # 再开始导入实体
         if not self.hasLoadEntities:
             self.hasLoadEntities = True
             self._loadEntities()
-        else:
-            # 重建旗帜
-            self.rebuildFlag(guildId, 0)
+            
+        if not onRegister:
+            if self.mineWarState == gameconst.MINE_WAR_STATE.END:
+                # 矿战玩法结束 奖励玩家
+                self.onEndMineWar()
+            elif self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+                self.reSetCoreHp()
+
+                # 重新推送信息
+                for eid, val in self.players.items():
+                    ent = self.getEntityById(eid)
+                    if ent:
+                        self.sendMineWarMonsterInfo(ent)
+
+            #
+            self.checkAllEntityCamp()
+
+    # 重置矿战核心血量
+    def reSetCoreHp(self):
+        INFO_MSG('resetCoreHp', self.spaceNo, self.junXuQiXieLevel)
+        coreEnt = self.mineWarMonsters.get(gameconst.MineWarMonsterType.MINE_CORE)
+        coreEnt.level = self.getMineWarMonsterLevel(coreEnt)
+        coreEnt.initBaseProperties()
+        coreEnt.hp = coreEnt.fullHp // 2
+        INFO_MSG('resetCoreHp set core hp', self.spaceNo, coreEnt.level, coreEnt.hp, coreEnt.fullHp)
+
 
     def getMineWarMonsterLevel(self, ent):
         lv = 1
@@ -144,26 +164,23 @@ class IMineWarSpaceMgr(object):
 
     def rebuildFlag(self, guildId, lastDestroyedTime):
         # 对于旗帜重建，与上次破坏时间在同一天 则不处理
-        if utils.isDiffDay(utils.getNow(), lastDestroyedTime, gameconst.COMMON_CYCLE_TIME):
+        if not utils.isDiffDay(utils.getNow(), lastDestroyedTime, gameconst.COMMON_CYCLE_TIME):
             return
         
+        if self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING or guildId == 0:
+            return
+
         INFO_MSG('Rebuilding flag for guildId:', guildId)
-        pos = None
-        dir = None
         brokenFlag = self.mineWarMonsters.pop(gameconst.MineWarMonsterType.MINE_BROKEN_FLAG, None)
         if brokenFlag:
             brokenFlagEnt = self.getEntityById(brokenFlag.id)
             if brokenFlagEnt:
-                pos = brokenFlagEnt.position
-                dir = brokenFlagEnt.direction
                 brokenFlagEnt.safeDestroy()
                 
         flag = self.mineWarMonsters.pop(gameconst.MineWarMonsterType.MINE_FLAG, None)
         if flag:
             flagEnt = self.getEntityById(flag.id)
             if flagEnt:
-                pos = flagEnt.position
-                dir = flagEnt.direction
                 flagEnt.safeDestroy()
                 
         # 新建旗帜
@@ -172,24 +189,83 @@ class IMineWarSpaceMgr(object):
             'mineWarGuildId': self.mineWarGuildId,
             'mineWarCanAttack': True,
             'spaceMgrId': self.id,
-            'monsterId': self.monsterId,
+            'monsterId': self.flagMonsterId,
             'spaceNo': self.spaceNo,
         }
-        ent = KBEngine.createEntity("Monster", self.spaceID, pos, dir, props)
+        ent = KBEngine.createEntity("Monster", self.spaceID, self.flagPos, self.flagDir, props)
         INFO_MSG("rebuildFlag: create flag entity id {}".format(ent.id))
 
+    def addMineWarEntity(self, ent):
+        host = utils.getEntityRealEntity(ent)
+
+        if ent.IsCreation:
+            return
+        # 宠物
+        if host.IsAvatar:
+            self.summonDict[ent.id] = 1
+        #
+        self.checkAndChangeCamp(ent)
         
     def onPlayerEnter(self, eid):
         if not self.checkMineWarSpace():
             return
-        
-        if self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
-            self._onPlayerEnterWar(eid)
+
+        self._onPlayerEnterWar(eid)
 
     def _onPlayerEnterWar(self, eid):
         ent = self.getEntityById(eid)
         if ent:
-            ent.onEnterMineWarSpace()
+            # 攻守设置
+            self.checkAndChangeCamp(ent)
+
+            if self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+                ent.onEnterMineWarSpace()
+            
+            self.sendMineWarMonsterInfo(ent)
+
+    def checkAllEntityCamp(self, onlySummon=False):
+        INFO_MSG('checkAllEntityCamp', self.spaceNo, onlySummon, self.players.keys())
+        """检查所有实体阵营"""
+        remList = []
+        # 宠物
+        for eid in self.summonDict.keys():
+            ent = self.getEntityById(eid)
+            if ent:
+                self.checkAndChangeCamp(ent)
+            else:
+                remList.append(eid)
+        # 找不到的宠物删除
+        for eid in remList:
+            self.summonDict.pop(eid, None)
+
+        if onlySummon:
+            return
+        # 玩家
+        for eid, val in self.players.items():
+            ent = self.getEntityById(eid)
+            if ent:
+                self.checkAndChangeCamp(ent)
+
+    def checkAndChangeCamp(self, ent):
+        # 初始都是攻方
+        ent.mineWarCamp = gameconst.MINE_WAR_CAMP.CAMP_ATTACK
+
+        host = utils.getEntityRealEntity(ent)
+        # 帮派相同才是守方
+        if host.IsAvatar and host.guildUUID > 0 and host.guildUUID == self.mineWarGuildId:
+            ent.mineWarCamp = gameconst.MINE_WAR_CAMP.CAMP_DEFEND
+            INFO_MSG('checkAndChangeCamp set defend camp', self.spaceNo, ent.id, host.guildUUID, self.mineWarGuildId)
+
+    def sendMineWarMonsterInfo(self, ent):
+        flag = self.mineWarMonsters.get(gameconst.MineWarMonsterType.MINE_FLAG, None)
+        if not flag:
+            flag = self.mineWarMonsters.get(gameconst.MineWarMonsterType.MINE_BROKEN_FLAG, None)
+        flagId = flag.id if flag else 0
+
+        coreEnt = self.mineWarMonsters.get(gameconst.MineWarMonsterType.MINE_CORE, None)
+        coreId = coreEnt.id if coreEnt else 0
+        ent.client.onShowMineWarMonsterInfo(flagId, coreId, self.mineWarGuildId, self.mineWarGuildIcon, self.mineWarGuildName, self.mineWarGuildDspFlag)
+        INFO_MSG('sendMineWarMonsterInfo: ', self.spaceNo, flagId, coreId, self.mineWarGuildIcon, self.mineWarGuildName, self.mineWarGuildDspFlag)
 
     def onPlayerLeave(self, gbId, playerId, box):
         if not self.checkMineWarSpace():
@@ -197,6 +273,7 @@ class IMineWarSpaceMgr(object):
         
         ent = self.getEntityById(playerId)
         if ent:
+            ent.mineWarCamp = 0
             ent.onLeaveMineWarSpace()
 
     def onPlayerRelogin(self, player, gbId):
@@ -232,6 +309,15 @@ class IMineWarSpaceMgr(object):
         INFO_MSG('_onMineWarPrepare', guildId, self.spaceNo)
         # 重置积分数据
         self.resetMineWarScoreData()
+
+        # 删除旗帜
+        flag = self.mineWarMonsters.get(gameconst.MineWarMonsterType.MINE_FLAG, None)
+        if not flag:
+            flag = self.mineWarMonsters.get(gameconst.MineWarMonsterType.MINE_BROKEN_FLAG, None)
+        if flag:
+            self.mineWarMonsters.pop(gameconst.MineWarMonsterType.MINE_FLAG, None)
+            self.mineWarMonsters.pop(gameconst.MineWarMonsterType.MINE_BROKEN_FLAG, None)
+            flag.safeDestroy()
         
     def _onMineWarStart(self, guildId):
         """矿战开始"""
@@ -240,18 +326,20 @@ class IMineWarSpaceMgr(object):
         # 开始时，给帮派玩家设置可攻击状态
         for eid, val in self.players.items():
             ent = self.getEntityById(eid)
-            if hasattr(ent, 'guildUUID') and ent.guildUUID > 0 and ent.guildUUID == self.mineWarGuildId:
+            if ent and hasattr(ent, 'guildUUID') and ent.guildUUID > 0 and ent.guildUUID == self.mineWarGuildId:
                 self._onPlayerEnterWar(eid)
         
+        self.checkAllEntityCamp(True)
 
     def _onMineWarEnd(self, guildId):
         """矿战结束"""
         INFO_MSG('_onMineWarEnd', guildId, self.spaceNo)
-        # 奖励玩家
-        self.onEndRewardByScore()
-
+        
         # 重新同步工会矿战信息
-        self.reqSyncGuildMineWarInfo(guildId)
+        self.reqSyncGuildMineWarInfo(guildId, False)
+
+        #
+        self.rebuildFlag(guildId, 0)
 
         
     # 传走所有玩家
@@ -303,6 +391,24 @@ class IMineWarSpaceMgr(object):
         if monsterType in self.mineWarMonsters.keys() and self.mineWarMonsters[monsterType]:
             self.mineWarMonsters[monsterType].safeDestroy()
         self.mineWarMonsters[monsterType] = monsterBox
+
+        if monsterType == gameconst.MineWarMonsterType.MINE_FLAG:
+            self.flagMonsterId = monsterBox.monsterId
+            self.flagPos = monsterBox.position
+            self.flagDir = monsterBox.direction
+            INFO_MSG('addMineWarMonsterOnInit set flag pos', self.spaceNo, self.flagMonsterId, self.flagPos, self.flagDir)
+            
+            # 无归属时，删除旗帜
+            if self.mineWarGuildId == 0:
+                monsterBox.safeDestroy()
+                self.mineWarMonsters.pop(monsterType, None)
+                return
+            
+            # 同步旗帜血量
+            self.syncMineWarFlagHpToStub()
+        
+        # 怪物一直都是守方
+        monsterBox.mineWarCamp = gameconst.MINE_WAR_CAMP.CAMP_DEFEND
         
     def removeMineWarMonsterWhenDie(self, monsterType):
         """移除矿战怪物"""
@@ -312,20 +418,38 @@ class IMineWarSpaceMgr(object):
         INFO_MSG('removeMineWarMonsterWhenDie', self.spaceNo, monsterType)
         if monsterType in self.mineWarMonsters.keys():
             self.mineWarMonsters.pop(monsterType)
-            
+
+    def onMineWarFlagBeAttacked(self):
+        """矿战旗帜被攻击回调"""
+
+        #定时器通知stub
+        if self.mineWarFlagBeAttackTimer > 0:
+            return
+        self.mineWarFlagBeAttackTimer = self._callback(5, 'onMineWarFlagBeAttackTick', (), gametimer.TIMER_TAG_MINE_WAR_FLAG_BE_ATTACK)
+
+    def onMineWarFlagBeAttackTick(self):
+        # 立即置零
+        self.mineWarFlagBeAttackTimer = 0
+        
+        #
+        self.syncMineWarFlagHpToStub()
+
+    def syncMineWarFlagHpToStub(self):
+        hp = 0
+        flag = self.mineWarMonsters.get(gameconst.MineWarMonsterType.MINE_FLAG, None)
+        if flag and flag.mineWarGuildId > 0:
+            hp = (flag.hp / flag.fullHp * 100)
+
+        # 通知stub
+        gameengine.getGlobalBase('MineWarStub').SyncMineWarFlagHp(formula.getLineType(self.spaceNo), hp)
+        INFO_MSG('syncMineWarFlagHpToStub', self.spaceNo, hp)
             
     def addPlayerMineWarScore(self, playerBox, playerGbId, score, Tp, reset=False):
         """添加玩家矿战积分"""
-        if playerGbId not in self.mineWarScores:
-            name = playerBox.name
-            school = playerBox.school
-            self.mineWarScores[playerGbId] = MineWarScore(playerGbId, school, name, [0,0])
-            
-        scoreObj = self.mineWarScores[playerGbId]
-        scoreObj.addScore(score, Tp, reset)
-        self.mineWarScores[playerGbId] = scoreObj
+        # gameengine.getGlobalBase('MineWarStub').addMineWarScore(formula.getLineType(self.spaceNo), playerGbId, playerBox.name, playerBox.school, score, Tp)
+        gameengine.getGlobalBase('GuildStub').addMineWarScoreFromGuild(formula.getLineType(self.spaceNo), playerBox.guildUUID, playerGbId, playerBox.name, score, Tp)
         
-        INFO_MSG('addPlayerMineWarScore', self.spaceNo, playerGbId, score, Tp, self.mineWarScores[playerGbId].getData())
+        INFO_MSG('addPlayerMineWarScore', self.spaceNo, playerGbId, score, Tp)
         
     def onMineWarCoreBeAttack(self, hpVal, releaseRoleId):
         """矿战核心被攻击回调"""
@@ -335,12 +459,11 @@ class IMineWarSpaceMgr(object):
             fullHp = self.mineWarMonsters[gameconst.MineWarMonsterType.MINE_CORE].fullHp
             percentScore = MBC.datas['mineBattle_damageScore']['value']
             entGbId = ent.gbId
-            if entGbId not in self.mineWarDmgs:
-                self.mineWarDmgs[entGbId] = 0
+            self.mineWarDmgs.setdefault(entGbId, 0)
             self.mineWarDmgs[entGbId] += abs(hpVal)
             score = int(self.mineWarDmgs[entGbId] / fullHp * percentScore)
             if score > 0:
-                self.addPlayerMineWarScore(ent, entGbId, score, 1, True)
+                self.addPlayerMineWarScore(ent, entGbId, score, 0)
             
             INFO_MSG('onMineWarCoreBeAttack add damage', self.spaceNo, entGbId, hpVal, self.mineWarDmgs[entGbId])
             
@@ -349,39 +472,40 @@ class IMineWarSpaceMgr(object):
         INFO_MSG('onMineWarCoreBeKill', self.spaceNo, killerBox.id, killerBox.guildUUID)
         
         entGbId = killerBox.gbId
-        self.addPlayerMineWarScore(killerBox, entGbId, MBC.datas['mineBattle_lastHitScore']['value'], 0)
+        self.addPlayerMineWarScore(killerBox, entGbId, MBC.datas['mineBattle_lastHitScore']['value'], 1)
+
+        # 再次同步工会矿战信息
+        self.reqSyncGuildMineWarInfo(killerBox.guildUUID, False)
         
     def onMineWarPlayerBeKill(self, killerId, killedId):
         """矿战玩家被击杀回调"""
-        INFO_MSG('onMineWarPlayerBeKill', self.spaceNo, killedBox.id, killerBox.id)
+        INFO_MSG('onMineWarPlayerBeKill', self.spaceNo, killedId, killerId)
         
         killScoreList = MBC.datas['mineBattle_killScore']['value']
         killerBox = self.getEntityById(killerId)
         killedBox = self.getEntityById(killedId)
+        killerBox = utils.getEntityRealEntity(killerBox)
+        killedBox = utils.getEntityRealEntity(killedBox)
         
         if not killerBox or not killedBox:
             return
         
-        if not killerBox.IsAvatar() or not killedBox.IsAvatar():
+        if not killerBox.IsAvatar or not killedBox.IsAvatar:
             return
         
         # 被杀者记录
         killedGbId = killedBox.gbId
         killerGbId = killerBox.gbId
         
-        if killerGbId not in self.mineWarKills:
-            self.mineWarKills[killerGbId] = {}
-            
-        
-        if killedGbId not in self.mineWarKills[killerGbId]:
-            self.mineWarKills[killerGbId][killedGbId] = 0
+        self.mineWarKills.setdefault(killerGbId, {})
+        self.mineWarKills[killerGbId].setdefault(killedGbId, 0)
         # 上限检查    
         if self.mineWarKills[killerGbId][killedGbId] > killScoreList[1] // killScoreList[0]:
             return
         
         self.mineWarKills[killerGbId][killedGbId] += 1
-        self.addPlayerMineWarScore(killerBox, killerGbId, killScoreList[0], 0)
-        INFO_MSG('onMineWarPlayerBeKill add kill count', self.spaceNo, killedGbId, self.mineWarKills[killedGbId])
+        self.addPlayerMineWarScore(killerBox, killerGbId, killScoreList[0], 2)
+        INFO_MSG('onMineWarPlayerBeKill add kill count', self.spaceNo, killedGbId, self.mineWarKills[killerGbId])
         
         
     def onMineWarPlayerTakePartAward(self, playerBox):
@@ -391,6 +515,9 @@ class IMineWarSpaceMgr(object):
         
         if self.mineWarState != gameconst.MINE_WAR_STATE.RUNNING:
             playerBox.cancelMineWarScoreTimer()
+            return
+        
+        if playerBox.guildUUID <= 0:
             return
         
         playerGbId = playerBox.gbId
@@ -404,62 +531,31 @@ class IMineWarSpaceMgr(object):
             return
         # 加分
         self.mineWarTakePartScore[playerGbId] += takePartScore[1]
-        self.addPlayerMineWarScore(playerBox, playerGbId, takePartScore[1], 0)
+        self.addPlayerMineWarScore(playerBox, playerGbId, takePartScore[1], 1)
         INFO_MSG('onMineWarPlayerTakePartAward add take part score', self.spaceNo, playerGbId,
                  takePartScore[1], self.mineWarTakePartScore[playerGbId])
 
-    def getRewardIdByRankCfg(self):
-        """根据排名获取奖励ID"""
-        rankCfg = {}
-        for rank, cfg in MBRR.datas.items():
-            minRank = cfg['rankMin']
-            maxRank = cfg['rankMax']
-            rewardId = cfg['rewardID']
-            for r in range(minRank, maxRank + 1):
-                rankCfg[r] = rewardId
-                
-        return rankCfg
-    
-    def getMapIdName(self):
-        """获取矿战地图ID和名称"""
-        lineType = formula.getLineType(self.spaceNo)
-        mapId = formula.getMapIdByLineType(lineType)
-        mapName = gameglobal.g_mapFactory.getMapName(mapId)
-        return mapId, mapName
 
-    def onEndRewardByScore(self):
-        """矿战结束按积分奖励回调"""
-        INFO_MSG('onEndRewardByScore', self.spaceNo, len(self.mineWarScores))
-                
-        # 排名并奖励
-        mineWarScoreList = list(self.mineWarScores.values())
-        mineWarScoreList.sort(key=lambda x: x.totalScore, reverse=True)
+    def onEndMineWar(self):
+        """矿战结束回调"""
+        if not self.checkMineWarSpace():
+            return
         
-        rankCfg = self.getRewardIdByRankCfg()
+        INFO_MSG('onEndMineWar', self.spaceNo)
+        if self.mineWarState != gameconst.MINE_WAR_STATE.END:
+            return
+        if self.mineWarGuildId <= 0:
+            return
+        for eid, val in self.players.items():
+            ent = self.getEntityById(eid)
+            if ent:
+                ent.client.onMineWarEndInfo(formula.getLineType(self.spaceNo), self.mineWarGuildIcon, self.mineWarGuildName, self.mineWarGuildDspFlag)
+                INFO_MSG('onEndMineWar send end info to player', self.spaceNo, eid, self.mineWarGuildIcon, self.mineWarGuildName, self.mineWarGuildDspFlag)
         
-        res = []
-        # mineWarScoreList = mineWarScoreList[:len(rankCfg)]
-        for i, obj in enumerate(mineWarScoreList):
-            if i < len(rankCfg):
-                res.append({
-                    'rank': i + 1,
-                    'gbId': obj.gbId,
-                    'name': obj.name,
-                    'school': obj.school,
-                    'score': obj.totalScore,
-                })
                 
-                _addVal = dropAward.MailWealthVal()
-                # _addVal.addWealthByRewardId(rankCfg[i + 1])
-                _addVal.addWealthByItemId(rankCfg[i + 1], 1)
-                mailAssistor.sendMailToPlayers([obj.gbId], MBC.datas['mineBatte_scoreRankMail']['value'], 
-                                            extraAttach=_addVal, despArgs=(formula.whatSpaceName(self.spaceNo),))
-                INFO_MSG('onEndRewardByScore send mail', self.spaceNo, obj.gbId, i + 1, rankCfg[i + 1])
-            else:
-                # 参与奖 ======== todo  可能得做批处理
-                pass
+        
             
-        # 广播排名
+            
                      
             
             

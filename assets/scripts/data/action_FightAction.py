@@ -601,11 +601,11 @@ def realDmgRatio(self, target, context):
             DefDmgRatio = target.getProp("PVPDmgAnti")
         elif target.IsMonster:
             AtkDmgRatio = self.getProp("monsterDmg")
-            DefDmgRatio = target.getProp("PVPDmgAnti")
+            DefDmgRatio = target.getProp("monsterDmgAnti")
     elif self.IsMonster:
         if target.IsAvatar:
             AtkDmgRatio = self.getProp("PVPDmg")
-            DefDmgRatio = target.getProp("monsterDmgAnti")
+            DefDmgRatio = target.getProp("PVPDmgAnti")
         elif target.IsMonster:
             AtkDmgRatio = self.getProp("monsterDmg")
             DefDmgRatio = target.getProp("monsterDmgAnti")
@@ -656,6 +656,10 @@ def dragTarget(self, target, context, *args):
     # 击退速度
     arg5 = args[4] if len(args) >= 5 else 0.0
     # 额外僵直时间
+    arg6 = args[5] if len(args) >= 6 else 1
+    # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
+    arg7 = args[6] if len(args) >= 7 else 0
+    # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
 
     if not target:
         return False
@@ -668,10 +672,30 @@ def dragTarget(self, target, context, *args):
     elif arg3 == 2 and utils.isPVP(self, target):
         return False
     else:
-        if random.randint(1, 100) <= arg2 * 100:
+        # 控制BuffID (使用默认值，因为drag没有特定的buff)
+        controlBuffID = 64000106
+        # 控制状态ID (使用2表示位移控制)
+        stateID = 2
+        # 控制穿透
+        controlEnh = self.getProp("pushEnh") or 0
+        # 控制抵抗
+        controlAnti = target.getProp("pushAnti") or 0
+        # 控制抵抗调整值
+        adjControlAnti = target.getProp("adjPushAnti") or 0
+        # 可被驱散的Buff Tag (使用默认值)
+        dispelTag = 26
+
+        # 使用controlResist计算控制结果
+        result = controlResist(self, target, context, arg5, arg2, arg6, arg7,
+                             controlBuffID, stateID, controlEnh, controlAnti,
+                             adjControlAnti, dispelTag)
+        
+        # 根据控制结果决定是否执行drag
+        if result == 1 :  # 1表示控制命中
             ret = self.dragTarget(target, context, arg1, arg4, arg5)
             target.tagDispelAll(26)
             return ret
+        return False
 
 def commonPlayerSkillPush(self, target, context, *args):
     arg1 = args[0] if len(args) >= 1 else 1
@@ -901,7 +925,11 @@ def dragTargetToPos(self, target, context, *args):
     # 击退速度
     arg5 = args[4] if len(args) >= 5 else 0.0
     # 额外僵直时间
-
+    arg6 = args[5] if len(args) >= 6 else 1
+    # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
+    arg7 = args[6] if len(args) >= 7 else 0
+    # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+    
     if not target:
         return
 
@@ -913,7 +941,26 @@ def dragTargetToPos(self, target, context, *args):
     elif arg3 == 2 and utils.isPVP(self, target):
         return
     else:
-        if random.randint(1, 100) <= arg2 * 100:
+        # 控制BuffID (使用默认值，因为drag没有特定的buff)
+        controlBuffID = 64000106
+        # 控制状态ID (使用2表示位移控制)
+        stateID = 2
+        # 控制穿透
+        controlEnh = self.getProp("pushEnh") or 0
+        # 控制抵抗
+        controlAnti = target.getProp("pushAnti") or 0
+        # 控制抵抗调整值
+        adjControlAnti = target.getProp("adjPushAnti") or 0
+        # 可被驱散的Buff Tag (使用默认值)
+        dispelTag = 26
+
+        # 使用controlResist计算控制结果
+        result = controlResist(self, target, context, arg5, arg2, arg6, arg7,
+                             controlBuffID, stateID, controlEnh, controlAnti,
+                             adjControlAnti, dispelTag)
+        
+        # 根据控制结果决定是否执行drag
+        if result == 1:  # 1表示控制命中
             self.dragTargetToPos(target, context, arg1, arg4, arg5)
             target.tagDispelAll(26)
     return

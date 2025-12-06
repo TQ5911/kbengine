@@ -20,19 +20,27 @@ datas = _tools.RODict({
         "dunID": 2201,
         "firstReward": 40020249,
         "clearReward": 0,
+        "goldReward": 40000080,
     }),
     2: _tools.RODict({
         "ID": 2,
         "dunID": 2202,
         "firstReward": 40020249,
         "clearReward": 0,
+        "goldReward": 40000080,
     }),
     3: _tools.RODict({
         "ID": 3,
         "dunID": 2203,
         "firstReward": 40020249,
         "clearReward": 40020543,
+        "goldReward": 40000080,
     })
 })
 minKey = 1
 maxKey = 3
+
+fistPassRewardDic = {2201: 40020249, 2202: 40020249, 2203: 40020249}
+
+
+clearPassRewardDic = {2203: 40020543}

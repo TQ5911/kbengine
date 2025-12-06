@@ -54,39 +54,25 @@ class IMeridian(object):
         """从配置表中获取经脉槽位配置"""
         slotConfig = MMD.datas.get(slotIdx, {})
         return slotConfig
-    
-    def _getPropListFromConfig(self, config):
-        """从配置表中获取属性列表"""
-        propIndexList = []
-        schoolList = [0, self.getAvatarSchool()]
-        propDict = config.get('prop', {})
-        for sch in schoolList:
-            if sch in propDict.keys():
-                propIndexList.append(propDict[sch])
-        return propIndexList
 
     def _refreshMeridianProperty(self):
         """刷新经脉属性加成"""
         if not self.checkMeridianLimit():
             return
 
-        propIndexList = []
+        indexList = []
         for slotIdx, slotVal in self.meridianData.slotDict.items():
             for pointIdx, pointVal in slotVal.pointDict.items():
                 level = pointVal.getCurLevel()
                 if level <= 0:
                     continue
-                config = self._getPropFromPointConfig(slotIdx, pointIdx, level)
-                tempList = self._getPropListFromConfig(config)
-                propIndexList.extend(tempList)
+                indexList.append(self.getConfigId(slotIdx, pointIdx, level))
             
             if slotVal.hasEnhance:
-                config = self._getPropFromSlotConfig(slotIdx)
-                tempList = self._getPropListFromConfig(config)
-                propIndexList.extend(tempList)
+                indexList.append(slotIdx)
 
-        self.cell.onMeridianAward(propIndexList)
-        # INFO_MSG("IMeridian._refreshMeridianProperty: {}".format(propIndexList))
+        self.cell.onMeridianAward(indexList)
+        # INFO_MSG("IMeridian._refreshMeridianProperty: {}".format(indexList))
 
 
     def reqGetMeridianData(self, exposed):
@@ -165,8 +151,7 @@ class IMeridian(object):
         ret, newLevel = self.meridianData.levelUpPoint(slotIdx, pointIdx)
         INFO_MSG("IMeridian.reqLevelUpMeridianPoint: {}, {}, {}, {}".format(slotIdx, pointIdx, ret, newLevel))
         if ret:
-            propIndexList = self._getPropListFromConfig(config)
-            self.cell.onMeridianAward(propIndexList)
+            self.cell.onMeridianAward([self.getConfigId(slotIdx, pointIdx, newLevel)])
             self.client.onLeveUpMeridianPointTo(slotIdx, pointIdx, newLevel)
             
             self._syncMeridianDataToClient()
@@ -224,8 +209,7 @@ class IMeridian(object):
         ret, newSlot = self.meridianData.doEnhanceCurSlot(slotIdx)
         INFO_MSG("IMeridian.reqEnhanceMeridianSlot: {}, {}, {}".format(slotIdx, ret, newSlot))
         if ret:
-            propIndexList = self._getPropListFromConfig(slotConfig)
-            self.cell.onMeridianAward(propIndexList)
+            self.cell.onMeridianAward([slotIdx])
             self.client.onEnhanceMeridian(slotIdx)
             
             self._syncMeridianDataToClient()

@@ -941,8 +941,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         else:
             iInfo.status = gameconst.ImmuneDeathState.IMMUNE_VALID
 
-        self._endBigWorldDuel(self)
-
     def cancelImmuneDeath(self):
         iInfo = self.getTempMiscProp(gameconst.AvatarProps.immuneDeath)
         if not iInfo:
@@ -963,7 +961,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if iInfo:
             iInfo.status = gameconst.ImmuneDeathState.IMMUNE_FINISHED
         self.modifyHP(-self.hp, self.id, sourceType, 0)
-        self._endBigWorldDuel(self)
 
     def goDie(self, killer, srcType, srcId, forceDead=False, context=None):
         WARNING_MSG('goDie', killer.id, srcType, srcId, forceDead, context)
@@ -1080,7 +1077,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         # 矿战怪物免死
         if formula.isMineWarSpace(self.spaceNo) and curHp <= 0 and self.IsMonster:
             self.hp = curHp = self.mineWarMonsterImmuneDeath(releaseRole, srcType, srcId, curHp)
-    
+
         hpDelta = self.hp - oldHp
 
         if self.hp <= 0:
@@ -1190,7 +1187,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             self.state2 = stateVec[1]
             isSetState = True
         if isSetState:
-            self.stateList = formula.getInt64VectorOnIndexes(self.getStateBitVector())
+            self.stateList = formula.getInt64VectorOnIndexes(stateVec)
 
     def setState(self, state, reportErr=True, isInit=False):
         if state < 0:
@@ -1480,7 +1477,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 targetID = 0
             else:
                 self.combatDebugMsg('_useSkillBySkillObj doUseSkill fail: targetId:%s, ret:%s, skillArgs:%s', targetID, ret, arr)
-                self.client.onUseSkill(False, skillId, targetID, [], [])
+                self.client.onUseSkill(False, skillId, targetID, [], [], [])
                 return False
 
         # 多段技能check时按当前段check，但是replaceSkill是false，表示使用时还调用第一段的使用
@@ -1488,7 +1485,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if isClient and not realSkill.checkSkillArgs(arr):
             ERROR_MSG("doUseSkill: invalid skill args", realSkill.skillId, targetID, arr)
             if realSkill.isChangePositionSkill(realSkill.skillId):
-                self.client.onUseSkill(False, skillId, targetID, [], [])
+                self.client.onUseSkill(False, skillId, targetID, [], [], [])
             return False
 
         if utils.hasSkillTag(skillId, gameconst.SkillTag.UltraSkill):
@@ -1561,6 +1558,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             return
 
         skillID = skillObj.skillId
+        skillLv = skillObj.skillLv
         realSkillVal, replaceSkill = skillObj.getRealSkillVal(self)
         if replaceSkill:
             self._useSkillBySkillObj(realSkillVal, targetID, arr, isClient)
@@ -1578,8 +1576,9 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         self.removeState(gameconst.State.Moving)
         self.setState(gameconst.State.Casting)
-        self.client and self.client.onUseCasting(self.id, skillID, targetID, arr, [])
-        self.otherClients.onUseCasting(self.id, skillID, targetID, arr, [])
+        skillArgsExtra = [skillObj.getRange(self, skillID, skillLv), skillObj.getEffectRange(self, skillID, skillLv)]
+        self.client and self.client.onUseCasting(self.id, skillID, targetID, arr, [], skillArgsExtra)
+        self.otherClients.onUseCasting(self.id, skillID, targetID, arr, [], skillArgsExtra)
         self.setTempMiscProp(gameconst.AvatarProps.currentCastingSkill, skillObj)
         skillObj.startCasting(self, targetID, arr)
 
@@ -1633,6 +1632,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
     def channelingSkillTick(self, skillObj, targetID, arr, channelPos, actionCtx):
         skillId = skillObj.skillId
+        skillLv = skillObj.skillLv
         self.popTempMiscProp(gameconst.AvatarProps.channelSkillTimer)
         skillObj.popTempData('channelingCalcTimer')
         cfgData = SSD.datas[skillId]
@@ -1665,8 +1665,9 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                     return
 
         skillObj.channelCount += 1
+        skillArgsExtra = [skillObj.getRange(self, skillId, skillLv), skillObj.getEffectRange(self, skillId, skillLv)]
         self.allClients.onUseChanneling(self.id, skillId, targetID, arr, effectTargetIds,
-                                        skillObj.channelCount)
+                                        skillObj.channelCount, skillArgsExtra)
 
         isFinished = skillObj.channelCount >= skillObj.getChannelTime(skillObj.skillId)
 
@@ -2110,17 +2111,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         # 策划需求返回真实伤害，方便后面做一些吸血之类的操作
         return recordDmgVal
 
-    def _endBigWorldDuel(self, target):
-        pass
-        # tbInfo = target.bigWorldDuelCacheInfo if target.IsAvatar else None
-        # if tbInfo and tbInfo.duelStatus == gameconst.BigWorldDuelStatus.END:
-        #     duelFlagEntId = target.getTempMiscProp(gameconst.AvatarProps.bigWorldDuelTempCacheVal).duelFlagEntId
-        #     duelFlagEnt = KBEngine.entities.get(duelFlagEntId)
-        #     if not duelFlagEnt:
-        #         gameengine.reportCritical("FATAL when end big world duel", target.gbId, self.gbId)
-        #     else:
-        #         duelFlagEnt.onAvatarFailedInBigWorldDuel(target.id, tbInfo.duelSide)
-
     def sendDmgMsgs(self, target, context, dmgResult, absorbDamageDetail, realDmgVal):
         ctx = context or context.parentContext
         dmgDesc = gameconst.SKILL_DMG_DESC[dmgResult.dmgType]
@@ -2495,7 +2485,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 if not sMath.inRectRange2D(targetRange, entity.position, self.position):
                     continue
 
-            if not utils.checkCombatRangeY(self, entity):
+            if not self.checkCombatRangeY(entity):
                 continue
 
             if utils.checkCachedTargetType(targetString, self, entity, target):
@@ -2518,7 +2508,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             if not sMath.inRectRange2D(targetRange, entity.position, self.position):
                 return False
 
-        if not utils.checkCombatRangeY(self, entity):
+        if not self.checkCombatRangeY(entity):
             return False
 
         if not utils.checkCachedTargetType(targetString, self, entity, target):
@@ -2585,8 +2575,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                  'inheritPropRatio': inheritPropRatio}
 
         summonProps and props.update(summonProps)
-        if self.IsAvatar:
-            props.update({'hostTeamId': self.teamId})
 
         summon = KBEngine.createEntity('Summon', self.spaceID, pos, direction, props)
         if not summon:
@@ -2907,8 +2895,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if context.actionProgress == gameconst.ActionProgressType.startActionDoing:
             context.actionProgress = gameconst.ActionProgressType.startActionDone
             if isSucc:
-                self.allClients.onUseSkill(True, skill.getNotifyClientSkillId(), targetId, context.skillArgs,
-                                           context.effectedEntIds)
+                skillId, skillLv = skill.getNotifyClientSkillId()
+                skillArgsExtra = [skill.getRange(self, skillId, skillLv), skill.getEffectRange(self, skillId, skillLv)]
+                self.allClients.onUseSkill(True, skillId, targetId, context.skillArgs,
+                                           context.effectedEntIds, skillArgsExtra)
             self._doUseSkill(skill, targetId, context.skillArgs, context, calcDelay)
         elif context.actionProgress == gameconst.ActionProgressType.actionDoing and context.isLastActionStage:
             if skill.hasTempData('duration'):
@@ -2958,8 +2948,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if context.actionProgress == gameconst.ActionProgressType.startActionDoing:
             context.actionProgress = gameconst.ActionProgressType.startActionDone
             if isSucc:
-                self.allClients.onUseSkill(True, skill.getNotifyClientSkillId(), targetId, context.skillArgs,
-                                           context.effectedEntIds)
+                skillId, skillLv = skill.getNotifyClientSkillId()
+                skillArgsExtra = [skill.getRange(self, skillId, skillLv), skill.getEffectRange(self, skillId, skillLv)]
+                self.allClients.onUseSkill(True, skillId, targetId, context.skillArgs,
+                                           context.effectedEntIds, skillArgsExtra)
             self._doUseSkill(skill, targetId, context.skillArgs, context, calcDelay)
         elif context.actionProgress == gameconst.ActionProgressType.actionDoing and context.isLastActionStage:
             if skill.hasTempData('duration'):
@@ -3007,8 +2999,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if context.actionProgress == gameconst.ActionProgressType.startActionDoing:
             context.actionProgress = gameconst.ActionProgressType.startActionDone
             if isSucc:
-                self.allClients.onUseSkill(True, skill.getNotifyClientSkillId(), targetId, context.skillArgs,
-                                           context.effectedEntIds)
+                skillId, skillLv = skill.getNotifyClientSkillId()
+                skillArgsExtra = [skill.getRange(self, skillId, skillLv), skill.getEffectRange(self, skillId, skillLv)]
+                self.allClients.onUseSkill(True, skillId, targetId, context.skillArgs,
+                                           context.effectedEntIds, skillArgsExtra)
             self._doUseSkill(skill, targetId, context.skillArgs, context, calcDelay)
         elif context.actionProgress == gameconst.ActionProgressType.actionDoing and context.isLastActionStage:
             if skill.hasTempData('duration'):
@@ -3024,43 +3018,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                                      (skill, 'useSkillDone', (targetId, context.skillArgs, True, False, True)),
                                      gametimer.TIMER_TAG_SKILL_DONE)
                 skill.setTempData('skillDoneTimer', tid)
-
-    def onKillTarget(self, spaceNo, targetId, targetUID, belongOwnerGbId=0, belongTeamId=0):
-        pass
-        # hostKiller, isKillerBot = utils.getRealAvatarEnt(self)
-        # # if hostKiller and hostKiller.IsAvatarMirror and hostKiller.teamRobotHostId > 0 and hostKiller.teamId > 0:
-        # #     teamRobotHost = KBEngine.entities.get(hostKiller.teamRobotHostId)
-        # #     if teamRobotHost:
-        # #         teamRobotHost.checkKillMonsterTrigger(targetId, targetUID)
-        # #     else:
-        # #         gameengine.getTeamStub(hostKiller.teamId).teamRobotKillMonster(hostKiller.teamId, spaceNo, targetId,
-        # #                                                                        targetUID,
-        # #                                                                        hostKiller.gbId)
-        # #     return
-        #
-        # if isKillerBot:
-        #     WARNING_MSG('in onKillTarget, killer is killerbot')
-        #     return
-        # if hostKiller and hostKiller.IsAvatar:
-        #     if not belongTeamId and not belongOwnerGbId:
-        #         # 没有归属信息，默认归属hostkiller
-        #         hostKiller.checkKillMonsterTrigger(targetId, targetUID)
-        #     else:
-        #     #     # 归属于某个队伍和归属指定玩家可以同时存在（尚羽之争帮主镜像）
-        #     #     # 归属于队伍
-        #     #     if belongTeamId:
-        #     #         gameengine.getTeamStub(belongTeamId).killMonster(belongTeamId, spaceNo, targetId, targetUID,
-        #     #                                                          hostKiller.gbId)
-        #     #     # 归属于指定玩家
-        #         if belongOwnerGbId:
-        #             if belongOwnerGbId != hostKiller.gbId:
-        #                 # belongTeamId 需要设置为0，否则会再次进入 gameengine.getTeamStub(belongTeamId).killMonster 逻辑
-        #                 belongTeamId = 0
-        #                 gameengine.getGlobalBase('PlayerStub').doOnOthersCell([belongOwnerGbId], 'onKillTarget', (
-        #                     spaceNo, targetId, targetUID, belongOwnerGbId, belongTeamId), None, '', ())
-        #             else:
-        #                 hostKiller.checkKillMonsterTrigger(targetId, targetUID)
-            # hostKiller.monsterDeadAddFriendDegree()
 
     def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
         if hasattr(super(), 'onEnterTrap'):
@@ -3180,7 +3137,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             antiRes.dispelBuffTag and self.dispelBuffByTag(target, context, antiRes.dispelBuffTag)
 
             if hitType == 0:
-                ERROR_MSG('unexpected anti control hitType', hitType)
                 return
             skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, 0, hitType))
 
@@ -3301,10 +3257,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         return False
 
     def isVisible(self, target):
-        if target.hasBuffTag(gameconst.BuffTag.DisableSelfHiddenTag):
-            return True
-
-        if not utils.checkCombatRangeY(self, target):
+        if not self.checkCombatRangeY(target):
             return False
         # return not target.hasState(gameconst.State.Invisible)
         return True
@@ -3340,15 +3293,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if pos:
             self.telToPos(pos, toDir)
         self._trapInViews()
-
-        if context is not None:
-            srcEntId = None
-            if hasattr(context, 'casterEntId'):
-                srcEntId = context.casterEntId
-            elif hasattr(context, 'srcEntId'):
-                srcEntId = context.srcEntId
-            if srcEntId:
-                self.client.onReliveByOthers(srcEntId)
 
         if self.IsAvatar:
             spaceMgr = self.spaceMgr

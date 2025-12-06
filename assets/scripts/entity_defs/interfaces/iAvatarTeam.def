@@ -29,7 +29,7 @@
 
         <bTeamCaptain>
             <Type>          BOOL            </Type>
-            <Flags>         ALL_CLIENTS     </Flags>
+            <Flags>         CELL_PRIVATE    </Flags>
             <Default>       0               </Default>
         </bTeamCaptain>
 
@@ -82,7 +82,7 @@
 
         <autoAskTeam>
             <Type>          INT32           </Type>
-            <Flags>         OWN_CLIENT      </Flags>
+            <Flags>         CELL_PRIVATE    </Flags>
             <Default>       0               </Default>
             <Persistent>    true            </Persistent>
         </autoAskTeam>
@@ -514,7 +514,7 @@
         <reqChangeOnlyCaptain> <Exposed/>
             <Arg>           BOOL            </Arg>
         </reqChangeOnlyCaptain>
-        
+
         <reqJoinTeam> <Exposed/>
             <Arg> TEAMID  </Arg>
             <Arg> STRING  </Arg>
@@ -581,37 +581,6 @@
             <Arg>           POSITION_ARG    </Arg>
         </onFollowTeamCaptainAsk>
 
-        <onFollowCaptainChanged>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           BOOL            </Arg>
-        </onFollowCaptainChanged>
-
-        <onCaptainCancleFollowTeam>
-        </onCaptainCancleFollowTeam>
-
-        <onGetCaptainPos>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           SPACE_ID        </Arg>
-            <Arg>           POSITION_ARG    </Arg>
-        </onGetCaptainPos>
-
-        <onReplyInviteTeam>
-            <Arg>           PLAYER_GBID     </Arg>
-        </onReplyInviteTeam>
-
-        <onReplyFollowTeamCaptain>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           BOOL            </Arg>
-        </onReplyFollowTeamCaptain>
-
-        <!-- 组队跟随 客户端弹窗: 是否需要直接传送到队长身边 -->
-        <applyFollowTeamCaptainTransDirectlyNotify>
-        </applyFollowTeamCaptainTransDirectlyNotify>
-
-        <!-- 组队跟随 客户端痰喘: 是否需要传送到最近传送点 -->
-        <applyFollowTeamCaptainTransToTelNotify>
-        </applyFollowTeamCaptainTransToTelNotify>
-
         <onUpdateMemberAttr>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           UNICODE         </Arg>
@@ -634,37 +603,19 @@
             <Arg>           SCORE           </Arg>
         </onUpdateTeamMemberScore>
 
-        <onUpdateTeamMembeSex>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           SEX             </Arg>
-        </onUpdateTeamMembeSex>
-
         <onUpdateTeamMemberPos>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           SPACE_NO        </Arg>
             <Arg>           POSITION_ARG    </Arg>
         </onUpdateTeamMemberPos>
 
-        <onReplyBecomeCaptain>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           BOOL            </Arg>
-        </onReplyBecomeCaptain>
-
-        <onAskConfirmFollowCaptain>
-        </onAskConfirmFollowCaptain>
-
         <onTeamAutoMatch>
             <Arg>           LONGTIME           </Arg>
         </onTeamAutoMatch>
+
         <onTeamStopAutoMatch>
         </onTeamStopAutoMatch>
-        <onPlayerAutoMatch>
-        </onPlayerAutoMatch>
-        <onPlayerStopAutoMatch>
-        </onPlayerStopAutoMatch>
-        <onGetTeamInfo>
-            <Arg>   CLIENT_TEAM_INFO    </Arg>
-        </onGetTeamInfo>
+
         <onSetTeamTarget>
             <Arg>           TEAMID           </Arg>
             <Arg>           TEAMTARGET       </Arg>
@@ -687,74 +638,15 @@
             <Arg>      ARRAY <of> CLIENT_TEAM_INFO  </of>      </Arg>
         </onGetTeamList>
 
-        <qureyAddTeamCaptainFriend>
-            <Arg>           PLAYER_GBID       </Arg>
-        </qureyAddTeamCaptainFriend>
-
         <onGetAllTeamList>
             <Arg>           TEAMTARGET       </Arg>
         </onGetAllTeamList>
-
-        <onSwitchTeamMicsMode>
-            <Arg>   TEAMID     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   UINT8       </Arg>
-            <Arg>   UINT8       </Arg>
-        </onSwitchTeamMicsMode>
-
-        <onSyncAllTeamMemberMiscStatus>
-            <Arg>   TEAMID    </Arg>
-            <!-- on -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-            <!-- off -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-            <!-- block -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-        </onSyncAllTeamMemberMiscStatus>
-
-        <onTurnOnTeamMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-        </onTurnOnTeamMemberMics>
-
-        <onTurnOffTeamMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <!-- 是否因队长禁言被闭麦 -->
-            <Arg>   BOOL        </Arg>
-        </onTurnOffTeamMemberMics>
 
         <onUnblockTeamMemberMisc>
             <Arg>   TEAMID      </Arg>
             <Arg>   PLAYER_GBID     </Arg>
         </onUnblockTeamMemberMisc>
 
-        <onBlockAllTeamMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID      </Arg>
-        </onBlockAllTeamMemberMics>
-
-        <onUnblockAllTeamMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID      </Arg>
-        </onUnblockAllTeamMemberMics>
-
-        <!-- 压测用 -->
-        <startCreateRandomTeam>
-        </startCreateRandomTeam>
-        <startCreateEquipTeam>
-        </startCreateEquipTeam>
-        <startLeaveTeam>
-        </startLeaveTeam>
-
-        <onGetCaptainFollowInfo>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           SPACE_NO        </Arg>
-            <Arg>           POSITION_ARG    </Arg>
-        </onGetCaptainFollowInfo>
-        
         <onDelTeamMember>
             <Arg>           PLAYER_GBID     </Arg>
         </onDelTeamMember>
@@ -762,12 +654,6 @@
         <onChangeTeamMark>
             <Arg>           CLIENT_TEAM_MARK_INFO           </Arg>
         </onChangeTeamMark>
-
-        <onJoinTeam>
-            <Arg>   ERRNO       </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   STRING      </Arg> 
-        </onJoinTeam>
 
         <onAddTeamDungeonRewardRecord>
             <Arg>           TEAMID                                                  </Arg>

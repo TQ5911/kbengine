@@ -53,19 +53,16 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             self.level = gameconst.MIN_LEVEL
         elif self.level > utils.getPlayerMaxLevel():
             self.level = utils.getPlayerMaxLevel()
-        if formula.isSiegeWarSpace(self.spaceNo):
-            if self.spaceMgr:
-                self.level = self.spaceMgr.getSiegeWarMonsterLevel(self)
-                
+
         if formula.isMineWarSpace(self.spaceNo):
             if self.spaceMgr:
                 self.level = self.spaceMgr.getMineWarMonsterLevel(self)
 
         self.preOverwriteProps()
+        iSiegeWarMonster.ISiegeWarMonster.__init__(self)
         iAICombatUnit.IAICombatUnit.__init__(self)
         EventMgr.EventMgr.__init__(self)
         iGameEntity.IGameEntity.__init__(self)
-        iSiegeWarMonster.ISiegeWarMonster.__init__(self)
         iMineWarMonster.IMineWarMonster.__init__(self)
 
         monData = creep_base.datas[self.monsterId]
@@ -94,8 +91,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         self.initPosition()
 
-        # if formula.spaceInWorldLine(self.spaceNo):
-        #     self.spaceMgrId = self.getCurrentSpace().spaceMgrId
+        if formula.spaceInWorldLine(self.spaceNo):
+            self.spaceMgrId = self.getCurrentSpace().spaceMgrId
 
         spaceMgr = self.spaceMgr
         _isLarge = False
@@ -103,19 +100,19 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             _isLarge = True
             self.setBodySize((gameconst.LARGE_ENTITY_DEFAULT_AOI, gameconst.LARGE_ENTITY_DEFAULT_AOI))
 
+        gid = utils.getGidFromGameEntityId(self.gameEntityId)
         if formula.isDungeonSpace(self.spaceNo):
-            gid = utils.getGidFromGameEntityId(self.gameEntityId)
             if spaceMgr:
                 spaceMgr.addEntity(self.id, (str(self.fbEntityId), str(self.monsterId),
                                              'gid_{}'.format(gid), self.__class__.__name__))
                 self.isBoss and spaceMgr.setBossEntity(self.id)
-        #     spaceMgr.addEntity(self.id, (str(self.monsterId), self.__class__.__name__))
+        #     spaceMgr.addEntity(self.id, (str(self.monsterId), 'gid_{}'.format(gid), self.__class__.__name__))
         #     self.isBoss and spaceMgr.setBossEntity(self.id)
         elif spaceMgr:
             if _isLarge:
-                _args = (str(self.monsterId), self.__class__.__name__, 'largeEnt')
+                _args = (str(self.monsterId), 'gid_{}'.format(gid), self.__class__.__name__, 'largeEnt')
             else:
-                _args = (str(self.monsterId), self.__class__.__name__)
+                _args = (str(self.monsterId), 'gid_{}'.format(gid), self.__class__.__name__)
             spaceMgr.addEntity(self.id, _args)
             self.isBoss and spaceMgr.setBossEntity(self.id)
 
@@ -364,11 +361,6 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             return True
         return False
 
-    def isBelongTeam(self):
-        if self.belongTeamId > 0:
-            return True
-        return False
-
     def getDropBelongEntityId(self):
         if self.aiController and self.aiController.hateDict:
             return self.aiController.hateDict.firstEnterTargetId
@@ -388,10 +380,12 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         elif userData == gametimer.TIMER_CELL_SAFE_DESTROY:
             self.onDelayTimerSafeDestroy()
-            
+
         elif userData == gametimer.MINE_WAR_CORE_RECOVER_HP:
             self.onMineWarCoreRecoverHp()
 
+        elif userData == gametimer.ENEMY_TRAP_UNVISIBLE_CHECK:
+            self.checkUnVisibleTargets()
         else:
             super(Monster, self).onTimer(tid, userData)
 
@@ -529,7 +523,6 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
             self.aiTriggerEvent(self.id, gameconst.AI_EVENT_DEAD, (killer.id,))
 
-            # killer.onKillTarget(spaceNo, self.monsterId, self.id, self.belongGbId, self.belongTeamId)
             self._addAttackAvatarId(killer.id)
             self.triggerAllAttackerTask()
 
@@ -555,7 +548,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         # 城战处理逻辑，内部会判断是否在城战场景
         self.notifySiegeWarOnDead(killer)
-        
+
         # 矿战处理逻辑，内部会判断是否在矿战场景
         self.notifyMineWarOnDead(killer)
 
@@ -728,10 +721,6 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.notifyMineWarOnModifyHP(hpVal, releaseRoleId)
         return hpVal
 
-    def setBelongName(self, belongName):
-        INFO_MSG("setBelongName", belongName)
-        self.belongName = belongName
-
     def getAIParam(self):
         return dataUtils.getAIParameters(self.monsterId)
 
@@ -759,4 +748,13 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             if teamId in self.raidMarkDict:
                 self.raidMarkDict.pop(teamId)
         DEBUG_MSG("Monster::delBeMarkedAsEnemy: {}, {}, {}".format(self.id, teamId, teamType))
+
+    def checkCombatRangeY(self, target):
+        attackHeightLimit = creep_base.datas[self.monsterId]['attackHeightLimit']
+        if attackHeightLimit:
+            heightLimit = attackHeightLimit
+        else:
+            heightLimit = CCD.datas['damageHeightLimit'].get('value')
+
+        return abs(self.position[1] - target.position[1]) <= heightLimit
 

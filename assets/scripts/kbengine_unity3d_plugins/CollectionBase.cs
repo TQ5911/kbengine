@@ -19,8 +19,6 @@ namespace KBEngine
 		public EntityBaseEntityCall_CollectionBase baseEntityCall = null;
 		public EntityCellEntityCall_CollectionBase cellEntityCall = null;
 
-		public UInt64 belongAvatarGBID = 0;
-		public virtual void onBelongAvatarGBIDChanged(UInt64 oldValue) {}
 		
 		
 		public virtual void onCanGatherChanged(Byte oldValue) {}
@@ -32,13 +30,10 @@ namespace KBEngine
 		public virtual void onDropEquipItemIdChanged(UInt32 oldValue) {}
 		
 		
-		
 		public UInt32 gatherCnt = 0;
 		public virtual void onGatherCntChanged(UInt32 oldValue) {}
 		
 		
-		public Byte type = 1;
-		public virtual void onTypeChanged(Byte oldValue) {}
 
 		public virtual void onAfterCollect() {} 
 		public virtual void onCancelCollect() {} 
@@ -147,10 +142,6 @@ namespace KBEngine
 					Int32 popDialog_arg1 = stream.readInt32();
 					popDialog(popDialog_arg1);
 					break;
-				case 167:
-					Int32 popDialogWithSelfHead_arg1 = stream.readInt32();
-					popDialogWithSelfHead(popDialogWithSelfHead_arg1);
-					break;
 				case 168:
 					UInt32 showPopoverMsg_arg1 = stream.readUint32();
 					showPopoverMsg(showPopoverMsg_arg1);
@@ -204,22 +195,6 @@ namespace KBEngine
 
 				switch(prop.properUtype)
 				{
-					case 48:
-						UInt64 oldval_belongAvatarGBID = belongAvatarGBID;
-						belongAvatarGBID = stream.readUint64();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onBelongAvatarGBIDChanged(oldval_belongAvatarGBID);
-						}
-						else
-						{
-							if(inWorld)
-								onBelongAvatarGBIDChanged(oldval_belongAvatarGBID);
-						}
-
-						break;
 					case 442:
 						Byte oldval_bornState = bornState;
 						bornState = stream.readUint8();
@@ -313,22 +288,6 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onDropEquipItemIdChanged(oldval_dropEquipItemId);
-						}
-
-						break;
-					case 51:
-						Byte oldval_dunTimeFreezeFlag = dunTimeFreezeFlag;
-						dunTimeFreezeFlag = stream.readUint8();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-						}
-						else
-						{
-							if(inWorld)
-								onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
 						}
 
 						break;
@@ -432,22 +391,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 45:
-						Byte oldval_type = type;
-						type = stream.readUint8();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onTypeChanged(oldval_type);
-						}
-						else
-						{
-							if(inWorld)
-								onTypeChanged(oldval_type);
-						}
-
-						break;
 					default:
 						break;
 				};
@@ -458,27 +401,6 @@ namespace KBEngine
 		{
 			ScriptModule sm = EntityDef.moduledefs["Collection"];
 			Dictionary<UInt16, Property> pdatas = sm.idpropertys;
-
-			UInt64 oldval_belongAvatarGBID = belongAvatarGBID;
-			Property prop_belongAvatarGBID = pdatas[4];
-			if(prop_belongAvatarGBID.isBase())
-			{
-				if(inited && !inWorld)
-					onBelongAvatarGBIDChanged(oldval_belongAvatarGBID);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_belongAvatarGBID.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onBelongAvatarGBIDChanged(oldval_belongAvatarGBID);
-					}
-				}
-			}
 
 			Byte oldval_bornState = bornState;
 			Property prop_bornState = pdatas[13];
@@ -606,27 +528,6 @@ namespace KBEngine
 				}
 			}
 
-			Byte oldval_dunTimeFreezeFlag = dunTimeFreezeFlag;
-			Property prop_dunTimeFreezeFlag = pdatas[7];
-			if(prop_dunTimeFreezeFlag.isBase())
-			{
-				if(inited && !inWorld)
-					onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_dunTimeFreezeFlag.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onDunTimeFreezeFlagChanged(oldval_dunTimeFreezeFlag);
-					}
-				}
-			}
-
 			Int32 oldval_force = force;
 			Property prop_force = pdatas[12];
 			if(prop_force.isBase())
@@ -749,27 +650,6 @@ namespace KBEngine
 					else
 					{
 						onSpaceNoChanged(oldval_spaceNo);
-					}
-				}
-			}
-
-			Byte oldval_type = type;
-			Property prop_type = pdatas[11];
-			if(prop_type.isBase())
-			{
-				if(inited && !inWorld)
-					onTypeChanged(oldval_type);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_type.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onTypeChanged(oldval_type);
 					}
 				}
 			}

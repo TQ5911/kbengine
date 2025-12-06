@@ -165,7 +165,6 @@ class ImpEquipment(object):
             gameengine.reportCritical('addAutoDressEquipItem, no space')
             return
 
-        self.client.onRecordFightProps()
         succGridIdList = []
         for it in equipList:
             opStat, gridId = self.bagData.addItemsToNewGrid(self, it, opUUID, srcType, str(taskId), notify=True, syncToClient=False)
@@ -618,6 +617,10 @@ class ImpEquipment(object):
 
     def canEquipAutoDisassemble(self, owner, equipItem):
         cliConfig = self.cliConfigDic.get(gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY, 0)
+        # 自动分解开关
+        autoSwitch = utils.hasBit(cliConfig, gameconst.AUTO_DISA_QUALITY_KEY.AUTOS_WITCH)
+        if not autoSwitch:
+            return False
         isCanTrade = utils.hasBit(cliConfig, gameconst.AUTO_DISA_QUALITY_KEY.TRADE)
         if not isCanTrade and equipItem.bindType != gameconst.ItemBindType.BIND:
             return False

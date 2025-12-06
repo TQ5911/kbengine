@@ -177,6 +177,12 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "mineBattleData": _tools.RODict({
+        "ID": "mineBattleData",
+        "EventID": 10028,
+        "sendType": 0,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,

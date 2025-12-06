@@ -766,6 +766,49 @@ def _get_friend_msg_():
         return _ret
     '''
 
+@load_lua_script(gameconst.LuaScriptID.SET_MAX_NUMBER)
+def _set_max_number_():
+    return '''
+        local current = redis.call('GET', KEYS[1])
+        local new_val = tonumber(ARGV[1])
+        if current then
+            current = tonumber(current)
+            if new_val > current then
+                redis.call('SET', KEYS[1], new_val)
+                return 1
+            end
+        else
+            redis.call('SET', KEYS[1], new_val)
+            return 1
+        end
+        return 0
+    '''
+
+#一测临时需求，最早登录的5000人设置为svip
+@load_lua_script(gameconst.LuaScriptID.CHECK_AND_SET_SVIP)
+def _check_and_set_svip_():
+    return '''
+        local current = redis.call('GET', KEYS[1])
+        if current then
+            return 0
+        end
+
+        current = redis.call('GET', "g:svip_cnt")
+        if current then
+            current = tonumber(current)
+            if current < 5000 then
+                redis.call('SET', "g:svip_cnt", current + 1)
+                redis.call('SET', KEYS[1], 1)
+                return 1
+            end
+        else
+            redis.call('SET', "g:svip_cnt", 1)
+            redis.call('SET', KEYS[1], 1)
+            return 1
+        end
+        return 0
+    '''
+
 # ----------------------------test------------------------------------
 def ResultCallback_test(cid, error, result):
     pass

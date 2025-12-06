@@ -71,8 +71,8 @@ class RaidDungeonCacheVal(userType.UserSTDSoleType):
 
 class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
     def __init__(self, raidUUID=0, raidCapacity=0,
-                 raidLeaderGBID=0, raidLeaderTeamIDX=0, 
-                 raidDeputyGBID=0, raidDeputyTeamIDX=0, 
+                 raidLeaderGBID=0, raidLeaderTeamIDX=0,
+                 raidDeputyGBID=0, raidDeputyTeamIDX=0,
                  raidTarget=0,
                  raidMinLevel = 0,
                  raidMinScore = 0,
@@ -158,10 +158,10 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
                 if memberVal.bOnline:
                     return memberVal
         return None
-    
+
     def isRaidFull(self):
         return self.memberNum >= self.raidCapacity
-    
+
     def isRaidApplyListFull(self):
         return len(self.raidApplyJoinDic) >= RAID_CONST.datas['raidApplyLimit']['value']
 
@@ -200,7 +200,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         self.raidDeputyGBID = dataDic['raidDeputyGBID']
         self.raidDeputyTeamIDX = dataDic['raidDeputyTeamIDX']
         self.raidTarget = dataDic['raidTarget']
-        self.raidMinLevel = dataDic['raidMinLevel'] 
+        self.raidMinLevel = dataDic['raidMinLevel']
         self.raidMinScore = dataDic['raidMinScore']
         self.raidMicsSwitch = dataDic['raidMicsSwitch']
         self.raidMicsBlocked = dataDic['raidMicsBlocked']
@@ -243,9 +243,10 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
             'raidMarkInfo': raidMarkInfo,
             'isAutoExpedition': self.isAutoExpedition,
             'password': self.password,
+            'siegeWarCamp': self.siegeWarCamp,
             }
         return clientData
-    
+
     def _lateReload(self):
         super(RaidVal, self)._lateReload()
 
@@ -432,7 +433,6 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
 
         del self.raidDungeonRecords[dungeonNo]
         toCell and self.broadcastAllRaidMembersCell('onClearRaidDungeonInfo', (dungeonNo, spaceNo, spaceUUID))
-        toClient and self.broadcastAllRaidMembersClient('onClearRaidDungeonInfo', (dungeonNo, spaceNo, spaceUUID))
 
     def addNewTeam(self, teamIDX):
         if teamIDX in self.raidTeamDic:
@@ -635,7 +635,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
                 raidTeamVal = self.raidTeamDic[raidTeamIDX]
                 if raidTeamVal.isRaidFull():
                     continue
-                
+
                 raidTeamleftNum = raidTeamMaxNum - raidTeamVal.memberNum
                 curTeamleftNum = teamMemberLen
                 curTeamAddNum = teamMemberLen
@@ -656,7 +656,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
                 memberValDic, err = raidTeamVal.addTeamMembers({i['playerGbId']: i for i in curTeamMemberAddList})
                 if err != gameconst.RaidErrno.RAID_OK:
                     return None, err.initkvbody(source='addNewTeamMembers')
-                
+
                 if curTeamleftNum:
                     teamMemberList = teamMemberList[curTeamAddNum:]
                     memberValDic1, err1 = self._addNewTeamMembers(teamMemberList, captainGBID, False)
@@ -672,7 +672,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
                         self.broadcastAllRaidMembersClient(
                             'onAddNewRaidMember', (self.raidUUID, self.getRaidTeamIDX(memberGBID), memberGBID, memberVal.toClientData()),
                             exclude=tuple(memberValDic))
-                        
+
                 return memberValDic, err
             else:
                 # create new team and add members here
@@ -683,16 +683,16 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
                 memberValDic, err = raidTeamVal.addTeamMembers({i['playerGbId']: i for i in teamMemberList})
                 if err != gameconst.RaidErrno.RAID_OK:
                     return None, err.initkvbody(source='addNewTeamMembers')
-                
+
                 if toClient:
                     for memberGBID, memberVal in memberValDic.items():
                         memberVal.playerBox and memberVal.playerBox.client.onGetRaidData(self.toClientData())
                         self.broadcastAllRaidMembersClient(
                             'onAddNewRaidMember', (self.raidUUID, raidTeamIDX, memberGBID, memberVal.toClientData()),
                             exclude=tuple(memberValDic))
-                        
+
                 return memberValDic, gameconst.RaidErrno.RAID_OK
-            
+
         return None, gameconst.RaidErrno.RAID_RAID_NOT_ENOUGH_SIT.initkvbody(source='addNewTeamMembers')
 
     def popMember(self, teamIDX, playerGBID, toClient=False):
@@ -762,7 +762,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
                                                                             raidUUID=self.raidUUID,
                                                                             teamIDX=deputyTeamIDX,
                                                                             playerGBID=deputyGBID)
-            
+
             return None, gameconst.RaidErrno.RAID_OK
 
         if deputyGBID:
@@ -809,7 +809,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         if not raidTeam:
             return None
         return raidTeam.teamPlayerDic.get(self.raidDeputyGBID, None)
-    
+
     def isRaidDeputy(self, gbid):
         if not self.raidDeputyGBID or not gbid:
             return False
@@ -907,9 +907,6 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
 
                 if raidMemberVal.isBlockMics:
                     _blockList.append(raidMemberVal.playerGbId)
-
-        toClient and self.broadcastAllRaidMembersClient('onSyncAllRaidMemberMiscStatus',
-                                                        (self.raidUUID, _onList, _offList, _blockList))
         return _onList, _offList, _blockList
 
     def switchRaidMiscMode(self, srcPlayerGBID, mode, extraProps, toClient=False):
@@ -941,7 +938,6 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
 
         self.raidMicsSwitch = mode
 
-        self.broadcastAllRaidMembersClient('onSwitchRaidMicsMode', (self.raidUUID, srcPlayerGBID, oldMode, mode))
         return self, gameconst.RaidErrno.RAID_OK
 
     def _onRaidMiscModeSwitchOff(self):
@@ -1036,7 +1032,6 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
 
         if toClient:
             _unblockMics and self.broadcastAllRaidMembersClient('onUnblockRaidMemberMisc', (self.raidUUID, teamIDX, playerGBID))
-            self.broadcastAllRaidMembersClient('onTurnOnRaidMemberMics', (srcPlayerGBID, self.raidUUID, teamIDX, playerGBID))
 
         return memberVal, gameconst.RaidErrno.RAID_OK
 
@@ -1086,9 +1081,6 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
 
         if blockMics or self.raidMicsSwitch == gameconst.RaidMicsMode.LEADER:
             memberVal.isBlockMics = True
-
-        if toClient:
-            self.broadcastAllRaidMembersClient('onTurnOffRaidMemberMics', (srcPlayerGBID, self.raidUUID, teamIDX, playerGBID, blockMics))
 
         return memberVal, gameconst.RaidErrno.RAID_OK
 
@@ -1149,12 +1141,11 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         if not self.isRaidInAutoMatch():
             return
         self.raidAutoMatchTime = 0
-        self.broadcastAllMembersClient('onRaidStopAutoMatch', ())
         if timeout:
             self.broadcastAllMembersBase('onMessagePre', (TMMCD.datas['leaveMatch_timeOverMsg']['value'], []))
         gameengine.getGlobalBase('RaidMatchStub').raidStopAutoMatch(self.raidUUID)
         return
-    
+
     def startAutoMatch(self):
         if self.isRaidFull():
             self.getRaidLeader().playerBox.onMessagePre(TMMCD.datas['teamMatch_fullMsg']['value'], [])
@@ -1162,9 +1153,8 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         self.raidAutoMatchTime = utils.getNow()
         raidInfoDic = self._getRaidMatchInfoDic()
         gameengine.getGlobalBase('RaidMatchStub').raidAutoMatch(raidInfoDic)
-        self.broadcastAllMembersClient('onRaidStartAutoMatch', (self.raidAutoMatchTime, ))
         return
-    
+
     def _getRaidMatchInfoDic(self):
         raidPlayerDic = {}
 
@@ -1183,7 +1173,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
             'raidPlayerDic': raidPlayerDic
         }
         return raidInfoDic
-    
+
     def setTarget(self, target, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         if not self.checkRaidTarget(minLevel, minScore):
             return False
@@ -1196,7 +1186,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         if len(self.password) > 0:
             self.isPublish = True
         return True
-    
+
     def checkRaidTarget(self, minLevel, minScore):
         for _, raidTeam in self.raidTeamDic.items():
             for _, pVal in raidTeam.teamPlayerDic.items():
@@ -1210,9 +1200,9 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         for _, raidTeam in self.raidTeamDic.items():
             if raidTeam.hasActivePlayer():
                 return False
-                
+
         return True
-    
+
     def broadcastAllMembersClient(self, func, args, exclude=None):
         for gbID, raidPlayerVal in self.iterRaidPlayers():
             if exclude and gbID in exclude:
@@ -1297,7 +1287,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
             if gbId in teamVal.teamPlayerDic:
                 return teamIDX
         return 0
-    
+
     def getRaidLeader(self, default=None):
         if self.raidLeaderTeamIDX not in self.raidTeamDic:
             return default
@@ -1308,13 +1298,13 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         if not _raidLeader:
             return utils.Swallower()
         return _raidLeader.playerBox
-    
+
     # ------ 标记 -----
     def addRaidMarkMember(self, owner, type, index, name, gbId, entId, pos, spaceNo=0):
         INFO_MSG('addRaidMarkMember', owner, type, index, name, gbId, entId, pos, spaceNo)
         if self.onlyCaptainCanMark and owner and owner.id != self.getRaidLeaderBox().id:
             return
-        
+
         ret = False
         if type == gameconst.TeamMarkType.MARK_SCENE:
             ret = self.raidMark.addSceneMark(type, index, name, gbId, entId, pos, spaceNo)
@@ -1324,46 +1314,46 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         # sync data
         if ret:
             self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.ADD)
-    
+
     def addRaidMarkMemberFromData(self, markDataInfo):
         INFO_MSG('addRaidMarkMemberFromData', markDataInfo)
         self.raidMark.initFromClientData(markDataInfo)
         self.onlyCaptainCanMark = markDataInfo.get('onlyCaptainCanMark', False)
         # 全量通知
         self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.ADD)
-        
+
     def delRaidMarkMember(self, owner, type, index):
         if self.onlyCaptainCanMark and owner and owner.id != self.getRaidLeaderBox().id:
             return False
-        
+
         ret = False
         entId = 0
         if type == gameconst.TeamMarkType.MARK_SCENE:
             ret, entId = self.raidMark.delSceneMark(index)
         else:
             ret, entId = self.raidMark.delPlayerMark(index)
-        
+
         if ret:
             self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.DELETE)
         return entId
-    
+
     def clearMarkRecord(self, ownerStub):
         self.raidMark.clearMarkRecord(ownerStub, self.raidUUID)
-    
+
     def changeRaidOnlyLeader(self, owner, state):
         if state == self.onlyCaptainCanMark:
             return
-        
+
         if owner.id != self.getRaidLeaderBox().id:
             return
-            
+
         self.onlyCaptainCanMark = state
         self.onChangeRaidMarkInfo(gameconst.TeamMarkChangeType.CAPTAIN)
-        
+
     def onChangeRaidMarkInfo(self, changeType=gameconst.TeamMarkChangeType.NONE):
         markInfoDict = self.raidMark.toClientData()
         markInfoDict['onlyCaptainCanMark'] = self.onlyCaptainCanMark
-            
+
         for teamIDX, teamVal in self.raidTeamDic.items():
             for gbId, teamPlayerVal in teamVal.teamPlayerDic.items():
                 box = teamPlayerVal.playerBox
@@ -1373,7 +1363,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
 
         INFO_MSG('onChangeRaidMarkInfo', markInfoDict)
 
-    
+
     def updateMemberVolatileAttr(self, playerGBID, playerUpdateProps):
         if 'spaceNo' in playerUpdateProps and 'position' in playerUpdateProps:
             fn = "onUpdateRaidMemberPos"
@@ -1415,8 +1405,8 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         for teamVal in self.raidTeamDic.values():
             allMembersDict.update(teamVal.teamPlayerDic)  # Corrected to use update instead of +=
         return allMembersDict
- 
-    
+
+
 class RaidTeamVal(userType.UserSTDSoleType):
 
     def __init__(self, teamIDX=0, teamCaptainGBID=0, teamPlayerDic=None):
@@ -1516,8 +1506,8 @@ class RaidTeamVal(userType.UserSTDSoleType):
         return 0, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND.initkvbody(source='getTeamMemberPos')
 
     def setTeamCaptain(self, gbId):
-        # 没有小队长了,就不设置 
-        return None, gameconst.RaidErrno.RAID_OK 
+        # 没有小队长了,就不设置
+        return None, gameconst.RaidErrno.RAID_OK
         if gbId not in self.teamPlayerDic:
             return None, gameconst.RaidErrno.RAID_NOT_IN_TEAM.initkvbody(source='setTeamCaptain')
         self.teamCaptainGBID = gbId
@@ -1538,10 +1528,6 @@ class RaidTeamVal(userType.UserSTDSoleType):
             box = teamPlayerVal.playerBox
             if not teamPlayerVal.bOnline:
                 continue
-            if box.client:
-                box.client.onFollowCaptainChanged(changeGbId, bFollow)
-            else:
-                WARNING_MSG('onMemberFollowChanged::teamMember has no client', gbId)
 
             if box.cell:
                 box.cell.onFollowCaptainChangedCell(changeGbId, bFollow)
@@ -1607,8 +1593,8 @@ class RaidApplyJoinPlayerVal(userType.UserSTDSoleType):
 class PlayerRaidCacheVal(userType.UserSTDSoleType):
 
     def __init__(self, raidUUID=0, raidTeamIDX=0, raidCaptainGBID=0,
-                 raidLeaderGBID=0, raidLeaderTeamIDX=0, 
-                 raidDeputyGBID=0, raidDeputyTeamIDX=0, 
+                 raidLeaderGBID=0, raidLeaderTeamIDX=0,
+                 raidDeputyGBID=0, raidDeputyTeamIDX=0,
                  raidTarget=0,
                  raidMinLevel=0,
                  raidMinScore=0,
@@ -1668,7 +1654,7 @@ class PlayerRaidCacheVal(userType.UserSTDSoleType):
                'followPlayerGbId': self.followPlayerGbId,
                'raidLeaderBigWorldMapFollowPos': self.raidLeaderBigWorldMapFollowPos,
                'recruitInfo': self.recruitInfo,
-               'password':self.password, 
+               'password':self.password,
                'isAutoExpedition':self.isAutoExpedition}
         return dic
 

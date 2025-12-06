@@ -8,13 +8,14 @@
 	</Volatile>
 
 	<Interfaces>
-	    <Interface>	   iBaseWithCell    </Interface>
-		<Interface>	   iSkillManager    </Interface>
-		<Interface>    iEventMgr     </Interface>
-		<Interface>	   iTimerCell    </Interface>
-		<Interface>	   iFubenSpace   </Interface>
-		<Interface>    iGameEntity 	 </Interface>
-		<Interface>    iEntityRefresh   </Interface>
+	    <Interface>	   iBaseWithCell		</Interface>
+		<Interface>	   iSkillManager		</Interface>
+		<Interface>	   iSkillPropPriProp	</Interface>
+		<Interface>    iEventMgr			</Interface>
+		<Interface>	   iTimerCell			</Interface>
+		<Interface>	   iFubenSpace			</Interface>
+		<Interface>    iGameEntity			</Interface>
+		<Interface>    iEntityRefresh		</Interface>
 	</Interfaces>
 
 	<Properties>
@@ -41,11 +42,6 @@
 			<Flags>	CELL_PRIVATE					</Flags>
 		</casterType>
 
-		<casterTeamId>
-			<Type>	TEAMID   						</Type>
-			<Flags>	OTHER_CLIENTS					</Flags>
-		</casterTeamId>
-
 		<name>
 			<Type>	UNICODE							</Type>
 			<Flags>	OTHER_CLIENTS				    </Flags>
@@ -54,7 +50,7 @@
 
 		<type>
 			<Type>	STRING							</Type>
-			<Flags>	OTHER_CLIENTS				</Flags>
+			<Flags>	CELL_PRIVATE					</Flags>
 		</type>
 
 		<trapId>

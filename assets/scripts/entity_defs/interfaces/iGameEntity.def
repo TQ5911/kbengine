@@ -35,12 +35,6 @@
             <Flags>     CELL_PRIVATE     </Flags>
             <Default>   0                </Default>
         </disappearTimer>
-
-        <dunTimeFreezeFlag>
-            <Type>      BOOL             </Type>
-            <Flags>     OTHER_CLIENTS    </Flags>
-            <Default>   0                </Default>
-        </dunTimeFreezeFlag>
     </Properties>
 
 </root>

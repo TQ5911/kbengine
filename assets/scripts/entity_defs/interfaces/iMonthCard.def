@@ -1,10 +1,10 @@
 <root>
     <Properties>
         <monthCardExpireTime>
-            <Type>          LONGTIME             </Type>
-            <Flags>         BASE_AND_CLIENT      </Flags>
-            <Default>       0                    </Default>
-            <Persistent>    true                 </Persistent>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
         </monthCardExpireTime>
 
         <lastMonthCardDailyRewardTime>
@@ -49,7 +49,7 @@
             <Arg>       UINT64       </Arg>
             <Arg>       PYTHON       </Arg>
         </addMonthCardByItem>
-        
+
         <tryGetMonthCardDailyReward> <Exposed/>
         </tryGetMonthCardDailyReward>
 

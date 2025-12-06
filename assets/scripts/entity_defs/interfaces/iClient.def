@@ -16,10 +16,6 @@
             <Arg>   OBJECT_ID   </Arg>
         </popDialog>
 
-        <popDialogWithSelfHead>
-            <Arg>   OBJECT_ID   </Arg>
-        </popDialogWithSelfHead>
-
         <showPopoverMsg>
             <Arg>   UINT32      </Arg>
         </showPopoverMsg>

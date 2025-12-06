@@ -182,6 +182,15 @@ CALL `sp_add_expireTime_if_not_exists`;
 DROP PROCEDURE `sp_add_expireTime_if_not_exists`;
 
 
+CREATE TABLE IF NOT EXISTS `game_account_offline_callbacks`
+        (
+        `id` int auto_increment primary key,
+        `accountName` varchar(128) NOT NULL,
+        `callbackName`  varchar(128) NOT NULL,
+        `args`  BLOB NOT NULL,
+         index `accountName` (`accountName`)
+        );
+
 DROP PROCEDURE IF EXISTS gamesp_record_avatar_offline_callbacks;
 DELIMITER ;;
 CREATE PROCEDURE gamesp_record_avatar_offline_callbacks(

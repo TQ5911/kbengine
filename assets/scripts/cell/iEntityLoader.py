@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import KBEngine
 import formula
 from KBEDebug import *
 import gametimer
@@ -21,7 +22,7 @@ class IEntityLoader(object):
             or _type == gameconst.SpaceType.SpaceWonderLand\
             or _type == gameconst.SpaceType.SpaceSiegeWar
 
-    def loadLineEntities(self, spaceNo, entityIDs, readyEntitiesList):
+    def loadLineEntities(self, spaceNo, entityIDs, readyEntitiesList, isRefresh=False):
         if not entityIDs:
             return
 
@@ -30,9 +31,9 @@ class IEntityLoader(object):
         if not tmp_list:
             return
 
-        utils.loadLineReadyEntities(spaceNo, tmp_list, readyEntitiesList)
+        utils.loadLineReadyEntities(spaceNo, tmp_list, readyEntitiesList, isRefresh)
 
-    def loadEntitiesBatchly(self, spaceNo, entIter, batchNum, interval, isInit=False, spaceMgrId=0):
+    def loadEntitiesBatchly(self, spaceNo, entIter, batchNum, interval, isInit=False, spaceMgrId=0, attachedHostId=0):
         DEBUG_MSG("loadEntitiesBatchly-----------", batchNum, interval)
         for i in range(batchNum):
             (entId, _, clsName, needCreateBase, pos, direction, props, rGid) = next(entIter, (
@@ -45,10 +46,13 @@ class IEntityLoader(object):
 
             if spaceMgrId:
                 props['spaceMgrId'] = spaceMgrId
+            if attachedHostId:
+                tempMiscProps = props.setdefault('tempMiscProps', {})
+                tempMiscProps[gameconst.AvatarProps.beAttachedHostID] = attachedHostId
 
             self.createCellLocally(clsName, pos, direction, props)
 
-        self._callback(interval, 'loadEntitiesBatchly', (spaceNo, entIter, batchNum, interval, isInit, spaceMgrId),
+        self._callback(interval, 'loadEntitiesBatchly', (spaceNo, entIter, batchNum, interval, isInit, spaceMgrId, attachedHostId),
                        gametimer.TIMER_TAG_LOAD_ENTITIES_CALL_BACK)
 
     def loadMonsterGroups(self, spaceNo, spaceMgrId):
@@ -89,6 +93,7 @@ class IEntityLoader(object):
 
         _iter = self.loadMonsterGroups(self.spaceNo, spaceMgrId)
         self.batchlyCall(_iter, 1, 0.1)
+        self.doLoadTimerEntities(spaceMgrId)
 
     def _initEntities(self, spaceNo):
         _mapId = formula.getMapId(spaceNo)
@@ -151,3 +156,97 @@ class IEntityLoader(object):
 
             self.createCellLocally(_className, _pos, _dir, _params)
 
+    def _initSpecifiedEntities(self, spaceNo, gidList):
+        _mapId = formula.getMapId(spaceNo)
+        def _iterGameEntityId():
+            if self.isSpaceLeagal(spaceNo):
+                dunData = utils.getDunModuleData(_mapId)
+                for gid in gidList:
+                    if not dunData:
+                        continue
+                    data = dunData.get(gid, None)
+                    if not data:
+                        continue
+
+                    className = data.get('ClassName', '')
+                    if className not in ('AirWall', 'Monster',):
+                        continue
+
+                    id_ = int(gid)
+                    _d = data.get('Props', {})
+                    if not _d.get('IsOpen', True):
+                        WARNING_MSG('_initSpecifiedEntities::Skip not isOpen Monster', id_)
+                        continue
+                    count_ = int(_d.get('RefreshNum', 1))
+                    if not count_:
+                        continue
+
+                    if count_ > 999:
+                        ERROR_MSG('_initSpecifiedEntities::RefreshNum too large', count_)
+                        count_ = 999
+
+                    self._maxCreateIndex.setdefault(id_, 0)
+                    self._maxCreateIndex[id_] += count_
+                    for i in utils.generateGameEntityId(id_, count_):
+                        yield i
+
+        _retList = BalancedObjectGenerator.BalancedObjectGenerator(_iterGameEntityId())
+        random.shuffle(_retList)
+        return _retList
+
+    def doLoadSpecifiedEntities(self, gids, spaceMgrId, attachedHostId=0):
+        entityIDs = self._initSpecifiedEntities(self.spaceNo, gids)
+        readyEntitiesList = []
+        self.loadLineEntities(self.spaceNo, entityIDs, readyEntitiesList, True)
+        self.loadEntitiesBatchly(self.spaceNo, iter(readyEntitiesList),
+                                 gameconfig.entityLoadSpeed(),
+                                 gameconst.LoadEntitySetting.BATCH_DELAY, False, spaceMgrId, attachedHostId)
+
+    def doLoadTimerEntities(self, spaceMgrId):
+        if not spaceMgrId:
+            return
+        spaceMgr = KBEngine.entities.get(spaceMgrId)
+        if not spaceMgr:
+            return
+
+        readyTimerEntitiesMap = {}
+        self.loadTimerEntities(self.spaceNo, readyTimerEntitiesMap)
+        spaceMgr.initTimerEntities(self, readyTimerEntitiesMap)
+
+    def loadTimerEntities(self, spaceNo, readyTimerEntitiesMap):
+        if not self.isSpaceLeagal(spaceNo):
+            return
+
+        _mapId = formula.getMapId(spaceNo)
+        spaceConfig = utils.getDunStructureModuleData(_mapId)
+        datas = spaceConfig.get('TimerEntities', {})
+        for id_, data in datas.items():
+            className = data.get('ClassName', '')
+            entityID = data.get('EntityID', 0)
+            if className not in ('Monster',):
+                WARNING_MSG('loadTimerEntities::className error, ', className)
+                continue
+
+            id_ = int(id_)
+            _d = data.get('Props', {})
+            refreshTimedID = _d.get('RefreshTimedID', 0)
+            if not refreshTimedID:
+                WARNING_MSG('loadTimerEntities::refreshTimedID error, ', refreshTimedID)
+                continue
+
+            if not _d.get('IsOpen', True):
+                WARNING_MSG('loadTimerEntities::Skip not isOpen Monster', id_)
+                continue
+            count_ = int(_d.get('RefreshNum', 1))
+
+            if not count_:
+                WARNING_MSG("loadTimerEntities::RefreshNum not exist",spaceNo)
+                continue
+
+            if count_ > 999:
+                WARNING_MSG('loadTimerEntities::RefreshNum too large', count_)
+                count_ = 999
+
+            refreshData = (id_, gameconst.EntityType.MONSTER, entityID, count_)
+            readyTimerEntitiesMap.setdefault(refreshTimedID, []).append(refreshData)
+            DEBUG_MSG("loadTimerEntities", spaceNo, id_, refreshTimedID, refreshData)

@@ -86,6 +86,13 @@ class ICell(KBEngine.Entity):
         if self.base and hasattr(self.base, 'onCellSafeDestroy'):
             self.base.onCellSafeDestroy()
 
+        attachedIDList = self.getTempMiscProp(gameconst.AvatarProps.attachedIDList, [])
+        for attachedID in attachedIDList:
+            attachedEntity = KBEngine.entities.get(attachedID)
+            if attachedEntity:
+                DEBUG_MSG("iCell.ICell _preSafeDestory", attachedEntity.id)
+                attachedEntity.delaySafeDestroy()
+
     def _postSafeDestory(self):
         pass
 

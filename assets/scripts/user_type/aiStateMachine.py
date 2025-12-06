@@ -78,6 +78,16 @@ class StateIdleNoMove(StateImp):
         if ctrl.inHate():
             ctrl.useRandomSkill()
 
+@withName('idleNoMoveWithBuff')
+class StateIdleNoMoveWithBuff(StateImp):
+    '''无法移动'''
+    name = State.IDLE
+
+    def tick(self, ctrl):
+        if ctrl.inHate():
+            ctrl.useRandomSkill()
+        elif ctrl.checkSpecialMonsterHasBuff():
+            ctrl.useTargetTypeSkill()
 
 @withName('waitAnim')
 class StateWaitAnim(StateImp):
@@ -351,6 +361,20 @@ class StateAngryNoMove(StateImp):
     def tick(self, ctrl):
         if ctrl.inHate():
             ctrl.useRandomSkill()
+        else:
+            ctrl.stand()
+
+@withName('angryNoMoveWithBuff')
+class StateAngryNoMoveWithBuff(StateImp):
+    '''激怒（无法移动）'''
+    name = State.ANGRY
+    mask = Event.ATTACK
+
+    def tick(self, ctrl):
+        if ctrl.inHate():
+            ctrl.useRandomSkill()
+        elif ctrl.checkSpecialMonsterHasBuff():
+            ctrl.useTargetTypeSkill()
         else:
             ctrl.stand()
 
@@ -1321,6 +1345,19 @@ class Machine3052(MachineWithChangeTime):
         ctrl.backWait()
         ctrl.changeBornState(gameconst.BornStateType.reMove)
 
+class Machine3053(MachineImp):
+    '''spec
+    1. 驻守
+    2. 攻击仇恨目标,若无仇恨目标,当自身携带某种buff时,也会释放无目标技能
+    3. 不能移动
+    '''
+    def __init__(self):
+        super(Machine3053, self).__init__({
+            State.IDLE: 'idleNoMoveWithBuff',
+            State.ANGRY: 'angryNoMoveWithBuff',
+            State.STAND: 'standAndRestart',
+        })
+        self.moveable = False
 
 _machineDic = {
     3001: Machine3001,
@@ -1360,6 +1397,7 @@ _machineDic = {
     3050: Machine3050,
     3051: Machine3051,
     3052: Machine3052,
+    3053: Machine3053,
 }
 
 

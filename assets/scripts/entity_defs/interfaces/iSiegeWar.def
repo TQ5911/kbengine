@@ -329,11 +329,6 @@
             <Arg>          SEX                                              </Arg>
         </onSiegeWarBattleEnd>
 
-        <cityRecentActivityResponse>
-            <Arg>          ENTITYCALL                                       </Arg>
-            <Arg>          ARRAY <of> CITY_RECENT_ACTIVITY_VAL </of>        </Arg>
-        </cityRecentActivityResponse>
-
         <onCityDataResponse>
             <Arg>          PLAYER_GBID                                      </Arg>
             <Arg>          UNICODE                                          </Arg>

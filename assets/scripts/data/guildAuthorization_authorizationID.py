@@ -106,7 +106,11 @@ datas = _tools.RODict({
     22: _tools.RODict({
         "ID": 22,
         "authorization": "guildEnmity",
+    }),
+    23: _tools.RODict({
+        "ID": 23,
+        "authorization": "guildChallenge",
     })
 })
 minKey = 0
-maxKey = 22
+maxKey = 23

@@ -42,5 +42,9 @@ datas = _tools.RODict({
     "CDK_task": _tools.RODict({
         "ID": "CDK_task",
         "value": 54000349,
+    }),
+    "CDK_used": _tools.RODict({
+        "ID": "CDK_used",
+        "value": 54000352,
     })
 })

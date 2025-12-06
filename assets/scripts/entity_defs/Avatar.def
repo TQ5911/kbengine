@@ -65,7 +65,9 @@
         <Interface>         iDateData                   </Interface>
         <Interface>         iMeridian                   </Interface>
         <Interface>         iMonthCard                  </Interface>
-        <Interface>         iMineWar                   </Interface>
+        <Interface>         iMineWar                    </Interface>
+        <Interface>         iDungeonSettlement          </Interface>
+        <Interface>         iGuildBossChallenge         </Interface>
     </Interfaces>
 
     <Properties>
@@ -80,7 +82,7 @@
 
         <accountName>
             <Type>     UNICODE                      </Type>
-            <Flags>    BASE_AND_CLIENT              </Flags>
+            <Flags>    BASE                         </Flags>
             <Index>            INDEX                </Index>
             <Persistent>    true                    </Persistent>
             <DatabaseLength>  50                    </DatabaseLength>
@@ -391,12 +393,6 @@
             <Persistent>    true                </Persistent>
         </CELL_CLIENT_PROPS>
         -->
-        <commonFlag>
-            <Type>          UINT8                   </Type>
-            <Flags>         BASE_AND_CLIENT         </Flags>
-            <Default>       0                       </Default>
-            <Persistent>    true                    </Persistent>
-        </commonFlag>
 
         <commonFlagCell>
             <Type>          UINT32                  </Type>
@@ -412,8 +408,8 @@
         </clientIP>
 
         <serverId>
-            <Type>          UINT16                   </Type>
-            <Flags>         BASE_AND_CLIENT          </Flags>
+            <Type>          UINT16                  </Type>
+            <Flags>         BASE                    </Flags>
             <Default>       0                       </Default>
         </serverId>
 
@@ -642,6 +638,7 @@
         </setBaseSpaceNo>
 
         <sendHotfix>
+            <Arg>        UNICODE                            </Arg>
         </sendHotfix>
 
         <onCommandResult>
@@ -684,6 +681,11 @@
 
         <subBackLoginBase>
         </subBackLoginBase>
+
+        <onGameConfigChangedBase>
+            <Arg>        UINT8                          </Arg>
+            <Arg>        OBJECT_ID                      </Arg>
+        </onGameConfigChangedBase>
     </BaseMethods>
 
     <CellMethods>
@@ -737,10 +739,6 @@
         <realDoGmCommandProxy>
             <Arg>       PYTHON      </Arg>
         </realDoGmCommandProxy>
-
-        <broadPlayAnimation>
-            <Arg>        UNICODE           </Arg>
-        </broadPlayAnimation>
 
         <reachNewArea> <Exposed/>
             <Arg>        UINT32                        </Arg>
@@ -831,31 +829,15 @@
     </CellMethods>
 
     <ClientMethods>
-        <onGmCommandResult>
-            <Arg>       BOOL      </Arg>
-            <Arg>       UNICODE      </Arg>
-        </onGmCommandResult>
-
         <syncServerTime>
             <Arg>       INT64       </Arg>
             <Arg>       FLOAT       </Arg>
         </syncServerTime>
 
-        <onTeleport>
-        </onTeleport>
-
-        <onBroadPlayAnimation>
-            <Arg>        OBJECT_ID            </Arg>
-            <Arg>        UNICODE              </Arg>
-        </onBroadPlayAnimation>
-
         <onTeleportDone>
             <Arg>   SPACE_NO    </Arg>
             <Arg>   SPACE_NO    </Arg>
         </onTeleportDone>
-
-        <onTeleportFail>
-        </onTeleportFail>
 
         <onGetServerOpenTime>
             <Arg>       UINT32       </Arg>
@@ -872,15 +854,8 @@
         <onBackSelectCharacter>
         </onBackSelectCharacter>
 
-        <onBackLogin>
-        </onBackLogin>
-
         <onAnotherClientLogin>
         </onAnotherClientLogin>
-
-        <onPopDialog>
-            <Arg>       OBJECT_ID                   </Arg>
-        </onPopDialog>
 
         <startTeleport>
             <Arg> SPACE_NO </Arg>
@@ -905,11 +880,8 @@
             <Arg>       BOOL            </Arg>
             <Arg>       INT32           </Arg>
             <Arg>       INT32           </Arg>
+            <Arg>       TEAM_STATISTIC_CLIENT_VAL1           </Arg>
         </onDungeonCompleted>
-        <notifyClientSelfBigWorldLineCachedPos>
-            <Arg> POSITION_ARG </Arg>
-            <Arg> DIRECTION_ARG </Arg>
-        </notifyClientSelfBigWorldLineCachedPos>
 
         <changeSelfCameraStatus>
             <Arg> CAMERA_ID </Arg>
@@ -919,48 +891,14 @@
             <Arg> POSITION_ARG  </Arg>
         </changeSelfCameraLookPos>
 
-        <triggerNewbieGuide>
-            <Arg> INT32 </Arg>
-        </triggerNewbieGuide>
-
         <revertSelfCameraStatus>
         </revertSelfCameraStatus>
-
-        <breakAwayStuckFailed>
-        </breakAwayStuckFailed>
-
-        <onBasePersistPropChanged>
-            <Arg>   STRING     </Arg>
-            <Arg>   UNICODE    </Arg>
-        </onBasePersistPropChanged>
-
-        <onCellPersistPropChanged>
-            <Arg>   STRING     </Arg>
-            <Arg>   UNICODE    </Arg>
-        </onCellPersistPropChanged>
 
         <onShowPopReward>
             <Arg>        BONUS_SRC                       </Arg>
             <Arg>        ARRAY <of> POP_REWARD_ITEM_VAL </of>     </Arg>
             <Arg>        UNICODE    </Arg>
         </onShowPopReward>
-
-        <onModifyNameResult>
-            <Arg>           UINT8                   </Arg>
-            <Arg>           UNICODE                 </Arg>
-        </onModifyNameResult>
-
-        <onSendRequiredVersion>
-            <Arg>        STRING     </Arg>
-        </onSendRequiredVersion>
-
-        <onCsharpTest>
-            <Arg>        AVATAR_GENERAL_INFO     </Arg>
-        </onCsharpTest>
-
-        <onGetSpaceState>
-            <Arg>           BOOL                        </Arg>
-        </onGetSpaceState>
 
         <changeDungeonRemainTime>
             <Arg>   SPACE_NO    </Arg>
@@ -982,14 +920,6 @@
             <Arg>        FLOAT        </Arg>
         </onTeleportCasting>
 
-        <teleportCastingPreNotify>
-            <Arg> SPACE_NO </Arg>
-            <Arg> POSITION_ARG </Arg>
-        </teleportCastingPreNotify>
-
-        <onCommonCastSuccess>
-        </onCommonCastSuccess>
-
         <onNewBlazeId>
             <Arg>   OBJECT_ID   </Arg>
         </onNewBlazeId>
@@ -1001,5 +931,9 @@
         <onAllAliasIds>
             <Arg>   ARRAY   <of>    OBJECT_ID   </of>   </Arg>
         </onAllAliasIds>
+
+        <onHotfixVersion>
+            <Arg>   STRING              </Arg>
+        </onHotfixVersion>
     </ClientMethods>
 </root>

@@ -47,32 +47,26 @@ datas ={
   "86010049": {
     "TaskType": 1
   },
-  "86010051": {
-    "TaskType": 1
-  },
   "86010053": {
-    "TaskType": 1
-  },
-  "86010055": {
     "TaskType": 1
   },
   "86010057": {
     "TaskType": 1
   },
   "86010068": {
-    "TaskType": 1
+    "TaskType": 5
   },
   "86010069": {
-    "TaskType": 1
+    "TaskType": 5
   },
   "86010070": {
-    "TaskType": 1
+    "TaskType": 5
   },
   "86010071": {
     "TaskType": 1
   },
   "86010075": {
-    "TaskType": 1
+    "TaskType": 5
   },
   "86020001": {
     "TaskType": 4
@@ -744,7 +738,7 @@ datas ={
     "TaskType": 9
   },
   "86090002": {
-    "TaskType": 9
+    "TaskType": 0
   },
   "86090003": {
     "TaskType": 9
@@ -936,6 +930,9 @@ datas ={
     "TaskType": 9
   },
   "86090170": {
+    "TaskType": 9
+  },
+  "86090179": {
     "TaskType": 9
   },
   "86100001": {

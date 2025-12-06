@@ -23,6 +23,7 @@ import creep_base as CBD
 import skill_skill as SSD
 import buff_buff as BUFF
 import NPC_NPC as NPC_DATA
+import formula_generalFormula as F_GFD
 
 from ._conditions import *
 from ._events import *
@@ -1780,6 +1781,8 @@ def handleEndDungeon(e, src_e, ctx, **ref_params):
         dunStubBox.completeTeamDungeon(spaceNo, spaceMgr.teamDungeonBelongTeamUUID, not isFail, delayTime)
     elif formula.isRaidDungeonSpace(spaceNo):
         dunStubBox.completeRaidDungeon(spaceNo, spaceMgr.raidDungeonBelongRaidUUID, not isFail, delayTime)
+    elif formula.isGuildBossDungeonSpace(spaceNo):
+        dunStubBox.completeGuildBossDungeon(spaceNo, spaceMgr.guildBossDungeonBelongGuildUUID, not isFail, delayTime)
     else:
         ERROR_MSG('flowController::handleEndDungeon:', dungeonNo, spaceNo)
         return
@@ -2601,7 +2604,7 @@ def handlePopDialog(e, src_e, ctx, **ref_param):
         for pid in spaceMgr.players:
             ent = KBEngine.entities.get(pid)
             if ent and ent.isReal():
-                ent.client.onPopDialog(dlogID)
+                pass
         return
 
     gidTag = 'gid_{}'.format(entityGID)
@@ -2838,7 +2841,8 @@ def handleChangeSpaceVar(e, src_e, ctx, **ref_param):
             m_params[_i_varID] = _i_varVal
 
     # calc new val
-    m_varVal = utils.getValByFormula(formula_, m_params)
+    formula_func = F_GFD.datas[int(formula_)]['serverFormula']
+    m_varVal = formula_func(m_params)
 
     # set var val
     m_opUUID = KBEngine.genUUID64()
@@ -3031,7 +3035,6 @@ def handleDungeonTriggerGuide(e, src_e, ctx, **ref_param):
         if not ent:
             ERROR_MSG('flowController::handleDungeonTriggerGuide::player ent not found Avatar({})'.format(pid))
             continue
-        ent.client.triggerNewbieGuide(triggerGuideId)
 
 def handleNewTransPetStart(e, src_e, ctx, **ref_param):
     transPetId = e.get_param('transPetId')

@@ -627,6 +627,9 @@ def filterFightPropScore(school, propName):
 def getAuctionPublicityKey(equipType, equipQuality):
     return equipType * 100 + equipQuality
 
+def getGuildBossRankRewardKey(dungenNo, rankId):
+    return dungenNo * 1000 + rankId
+
 def checkTeamPassword(password):
     if len(password) == 0:
         return True

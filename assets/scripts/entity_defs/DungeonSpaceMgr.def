@@ -41,6 +41,34 @@
             <Flags>     CELL_PRIVATE       </Flags>
             <Default>   0                  </Default>
         </dungeonGoodManActId>
+
+        <dungeonCompleteDelayNotifyTimer>
+            <Type> UINT64 </Type>
+            <Flags> CELL_PRIVATE </Flags>
+            <Default> 0 </Default>
+        </dungeonCompleteDelayNotifyTimer>
+
+        <dungeonStatisticData>
+            <Type> TEAM_STATISTIC_CLIENT_VAL1 </Type>
+            <Flags> CELL_PRIVATE </Flags>
+        </dungeonStatisticData>
+
+        <dungeonStatisticRecords>
+            <Type>      PYTHON              </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   {}                  </Default>
+        </dungeonStatisticRecords>
+        
+        <dungeonSettlementDataCache>
+            <Type>      PYTHON              </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   {}                  </Default>
+        </dungeonSettlementDataCache>
+
+        <guildBox>
+            <Type>      MAILBOX             </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+        </guildBox>
     </Properties>
 
     <BaseMethods>
@@ -65,6 +93,7 @@
             <Arg>            BOOL            </Arg>
             <Arg>            FLOAT           </Arg>
             <Arg>            INT32           </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
         </onTeamDungeonCompleted>
 
         <onRaidDungeonCompleted>
@@ -75,7 +104,16 @@
             <Arg>            PY_DICT         </Arg>
             <Arg>            PY_LIST         </Arg>
             <Arg>            INT32           </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
         </onRaidDungeonCompleted>
+
+        <onGuildBossDungeonCompleted>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            GUILD_UUID      </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            INT32           </Arg>
+            <Arg>            INT64           </Arg>
+        </onGuildBossDungeonCompleted>
 
         <doEnterTeamDungeon>
             <Arg>   MAILBOX                 </Arg>
@@ -94,5 +132,33 @@
             <Arg>   PYTHON                  </Arg>
         </enterRaidDungeonDirectly>
 
+        <cancelCompleteDelayNotifyTimer>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   UINT16                  </Arg>
+        </cancelCompleteDelayNotifyTimer>
+
+        <onGetTeamStatisticData>
+            <Arg>   TEAM_STATISTIC_CLIENT_VAL1   </Arg>
+        </onGetTeamStatisticData>
+
+        <doEnterGuildBossDungeon>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   PLAYER_GBID             </Arg>
+            <Arg>   UUID                    </Arg>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   PYTHON                  </Arg>
+        </doEnterGuildBossDungeon>
+
+        <notifyDungeonStatisticRecords>
+            <Arg>      UINT16                                      </Arg>
+            <Arg>      ARRAY <of> DUNGEON_STATISTIC_DATA </of>     </Arg>
+        </notifyDungeonStatisticRecords>
+
+        <setGuildBox>
+            <Arg>   MAILBOX                 </Arg>
+        </setGuildBox>
+
+        <dungeonCompleted>
+        </dungeonCompleted>
     </CellMethods>
 </root>

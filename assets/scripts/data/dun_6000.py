@@ -427,7 +427,7 @@ datas ={
     "PosZ": 194.2474,
     "Props": {
       "AreaType": 2,
-      "Height": 60.0,
+      "Height": 6.0,
       "Length": 40.0,
       "MPosX": 327.0,
       "MPosY": 86.87,
@@ -571,7 +571,7 @@ datas ={
     "PosZ": 371.5737,
     "Props": {
       "AreaType": 2,
-      "Height": 50.0,
+      "Height": 6.0,
       "Length": 80.0,
       "MPosX": 266.0,
       "MPosY": 70.3,

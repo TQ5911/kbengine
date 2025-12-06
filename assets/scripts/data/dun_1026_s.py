@@ -86,7 +86,7 @@ datas ={
           "ActivityID": 0,
           "ClassName": "Teleporter",
           "ClassNameType": 2,
-          "CustomID": "10248004",
+          "CustomID": "10278006",
           "Dir": 40.01916,
           "DisplayName": "",
           "EntityID": 17102601,
@@ -141,6 +141,96 @@ datas ={
         "PosZ": 69.29521,
         "Props": {
           "Num": 0,
+          "Radius": 0.0,
+          "Remark": ""
+        }
+      }
+    },
+    "Anchor": {
+      "10268004": {
+        "ActivityID": 0,
+        "ClassName": "Anchor",
+        "ClassNameType": 20,
+        "CustomID": "",
+        "Dir": 48.04909,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 10268004,
+        "PosX": 260.1048,
+        "PosY": 524.7987,
+        "PosZ": 35.50793,
+        "Props": {
+          "CameraId": 0,
+          "MapEntityType": "26",
+          "Remark": ""
+        }
+      }
+    },
+    "EntityRefreshPoint": {
+      "10268005": {
+        "ActivityID": 0,
+        "ClassName": "EntityRefreshPoint",
+        "ClassNameType": 18,
+        "CustomID": "",
+        "Dir": 341.5883,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 10268005,
+        "PosX": 252.7931,
+        "PosY": 524.7754,
+        "PosZ": 58.50212,
+        "Props": {
+          "Radius": 0.0,
+          "Remark": ""
+        }
+      },
+      "10268006": {
+        "ActivityID": 0,
+        "ClassName": "EntityRefreshPoint",
+        "ClassNameType": 18,
+        "CustomID": "",
+        "Dir": 77.00161,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 10268006,
+        "PosX": 267.8579,
+        "PosY": 524.8101,
+        "PosZ": 85.80345,
+        "Props": {
+          "Radius": 0.0,
+          "Remark": ""
+        }
+      },
+      "10268007": {
+        "ActivityID": 0,
+        "ClassName": "EntityRefreshPoint",
+        "ClassNameType": 18,
+        "CustomID": "",
+        "Dir": 127.2466,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 10268007,
+        "PosX": 299.508,
+        "PosY": 524.7827,
+        "PosZ": 66.29422,
+        "Props": {
+          "Radius": 0.0,
+          "Remark": ""
+        }
+      },
+      "10268008": {
+        "ActivityID": 0,
+        "ClassName": "EntityRefreshPoint",
+        "ClassNameType": 18,
+        "CustomID": "",
+        "Dir": 228.9277,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 10268008,
+        "PosX": 305.8322,
+        "PosY": 524.7753,
+        "PosZ": 47.18791,
+        "Props": {
           "Radius": 0.0,
           "Remark": ""
         }

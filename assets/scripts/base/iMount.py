@@ -102,7 +102,6 @@ class IMount(object):
             return
 
         self.outfitInfo.removeOutfit(self, gameconst.OutfitType.mount, mountId)
-        self.client.onOutfitExpired([{'outfitId': outfit.outfitId, 'outfitType': outfit.outfitType}])
         self.cell.checkOutfitExpired([(outfit.outfitType, outfit.outfitId)])
 
 

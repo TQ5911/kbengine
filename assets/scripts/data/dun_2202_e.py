@@ -240,7 +240,7 @@ datas ={
   },
   "1005": {
     "type": "dunEnd",
-    "exitTime": 15.0,
+    "exitTime": 65.0,
     "isDungeonDone": 1,
     "transition": {}
   },

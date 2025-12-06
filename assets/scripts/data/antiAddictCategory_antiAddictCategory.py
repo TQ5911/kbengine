@@ -890,7 +890,7 @@ datas = _tools.RODict({
     }),
     98: _tools.RODict({
         "ID": 98,
-        "name": "BONUS_SRC_MONTHCARD_DAILY",
+        "name": "BONUS_SRC_HANG_UP_INCOME",
         "isAntiAddicted": 0,
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
@@ -905,7 +905,133 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 54001992,
         "rewardMessage": ('<color=&color211>兑换成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+    }),
+    100: _tools.RODict({
+        "ID": 100,
+        "name": "BONUS_SRC_TEAM_FIRST_PASS_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    101: _tools.RODict({
+        "ID": 101,
+        "name": "BONUS_SRC_TEAM_CLEAR_PASS_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    102: _tools.RODict({
+        "ID": 102,
+        "name": "BONUS_SRC_RAID_FIRST_PASS_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    103: _tools.RODict({
+        "ID": 103,
+        "name": "BONUS_SRC_RAID_CLEAR_PASS_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    104: _tools.RODict({
+        "ID": 104,
+        "name": "BONUS_SRC_GULID_DUNGEON_FIRST_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    105: _tools.RODict({
+        "ID": 105,
+        "name": "BONUS_SRC_GULID_DUNGEON_CLEAR_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    106: _tools.RODict({
+        "ID": 106,
+        "name": "BONUS_SRC_GULID_DUNGEON_OPEN_COIN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    107: _tools.RODict({
+        "ID": 107,
+        "name": "BONUS_SRC_GULID_DUNGEON_OPEN_MONEY",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    108: _tools.RODict({
+        "ID": 108,
+        "name": "BONUS_SRC_GULID_DUNGEON_RESERVE_COIN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    109: _tools.RODict({
+        "ID": 109,
+        "name": "BONUS_SRC_GULID_DUNGEON_RESERVE_MONEY",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    110: _tools.RODict({
+        "ID": 110,
+        "name": "BONUS_SRC_GULID_DUNGEON_CANCEL_COIN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    111: _tools.RODict({
+        "ID": 111,
+        "name": "BONUS_SRC_GULID_DUNGEON_CANCEL_MONEY",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    112: _tools.RODict({
+        "ID": 112,
+        "name": "BONUS_SRC_MINE_WAR_SCORE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    113: _tools.RODict({
+        "ID": 113,
+        "name": "BONUS_SRC_MINE_WAR_GUILD_SHARE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
     })
 })
 minKey = 1
-maxKey = 99
+maxKey = 113

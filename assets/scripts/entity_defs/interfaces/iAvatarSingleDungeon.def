@@ -84,13 +84,6 @@
     </BaseMethods>
 
     <ClientMethods>
-        <onEnterSingleDungeon>
-            <Arg>           DUNGEON_NO         </Arg>
-        </onEnterSingleDungeon>
-
-        <onLeaveSingleDungeon>
-            <Arg>           DUNGEON_NO         </Arg>
-        </onLeaveSingleDungeon>
     </ClientMethods>
 
 </root>

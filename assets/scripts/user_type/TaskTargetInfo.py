@@ -134,10 +134,10 @@ class TaskTargetMonsters(BaseTarget):
 
     def genExtraStr(self):
         datas = {
-            'mapId': self.mapId, 
-            'killMode': self.killMode, 
-            'killTotalCountTarget': self.killTotalCountTarget, 
-            'killedTotalCount': self.killedTotalCount, 
+            'mapId': self.mapId,
+            'killMode': self.killMode,
+            'killTotalCountTarget': self.killTotalCountTarget,
+            'killedTotalCount': self.killedTotalCount,
             'monsterIDsTarget': self.monsterIDsTarget,
         }
         return json.dumps(datas)

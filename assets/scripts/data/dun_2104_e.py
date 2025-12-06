@@ -670,8 +670,9 @@ datas ={
     }
   },
   "1151": {
-    "type": "dunFailed",
-    "exitTime": 20.0,
+    "type": "dunEnd",
+    "exitTime": 65.0,
+    "isDungeonDone": 1,
     "transition": {}
   },
   "1153": {

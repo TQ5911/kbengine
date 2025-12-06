@@ -91,6 +91,10 @@ datas = _tools.RODict({
         "key": "auctionTimeUpMsg",
         "value": 54000240,
     }),
+    "auctionPurchaseConfirm": _tools.RODict({
+        "key": "auctionPurchaseConfirm",
+        "value": 54000235,
+    }),
     "auctionBuyItemSuccessMsg": _tools.RODict({
         "key": "auctionBuyItemSuccessMsg",
         "value": 54000241,
@@ -129,7 +133,7 @@ datas = _tools.RODict({
     }),
     "auctionPublicityTime": _tools.RODict({
         "key": "auctionPublicityTime",
-        "value": 4,
+        "value": 8,
     }),
     "auctionOnSale": _tools.RODict({
         "key": "auctionOnSale",

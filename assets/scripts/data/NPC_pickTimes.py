@@ -603,6 +603,22 @@ datas = _tools.RODict({
         "ID": 16002004,
         "pickTimes": 1
     }),
+    16002005: _tools.RODict({
+        "ID": 16002005,
+        "pickTimes": 25
+    }),
+    16002006: _tools.RODict({
+        "ID": 16002006,
+        "pickTimes": 60
+    }),
+    16002007: _tools.RODict({
+        "ID": 16002007,
+        "pickTimes": 90
+    }),
+    16002008: _tools.RODict({
+        "ID": 16002008,
+        "pickTimes": 150
+    }),
     16002101: _tools.RODict({
         "ID": 16002101,
         "pickTimes": 1

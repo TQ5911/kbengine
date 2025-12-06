@@ -103,20 +103,26 @@ class AvatarTeamStatisticMixin(object):
         for val in dataRecord['dmgList']:
             gbId = val['gbId']
             if gbId not in dataDict:
-                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0}
+                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0, 'dead': 0}
             dataDict[gbId]['dmg'] += val['value']
 
         for val in dataRecord['healList']:
             gbId = val['gbId']
             if gbId not in dataDict:
-                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0}
+                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0, 'dead': 0}
             dataDict[gbId]['heal'] += val['value']
 
         for val in dataRecord['hurtList']:
             gbId = val['gbId']
             if gbId not in dataDict:
-                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0}
+                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0, 'dead': 0}
             dataDict[gbId]['hurt'] += val['value']
+
+        for val in dataRecord['deadList']:
+            gbId = val['gbId']
+            if gbId not in dataDict:
+                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0, 'dead': 0}
+            dataDict[gbId]['dead'] += val['value']
 
         # 结构化之后存储
         self.setTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict, dataDict)
@@ -136,9 +142,9 @@ class AvatarTeamStatisticMixin(object):
     def _onGetTeamStatisticData(self, type, data):
 
         self.tempStatisticData = self.getTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict, {})
-        
+
         strKey = gameconst.TEAM_STATISTIC_TYPE_TO_KEY[type]
-        
+
         data = copy.deepcopy(data)
         for val in data:
             if val['gbId'] in self.tempStatisticData:
@@ -272,7 +278,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if not self.isReachTeamMinCond(teamTarget):
             WARNING_MSG('checkBaseTeamCond:', self.getTotalScore(), self.level)
             return False
-    
+
         return True
 
     def checkTeamCond(self, teamTarget, minLevel, minScore):
@@ -473,7 +479,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
 
         if not self.isCanInviteTeam(gbId):
             return
-        
+
         if gameconfig.isCrossServer():
             target = utils.getAvatarByGbId(gbId)
             if target and target.siegeWarCamp != self.siegeWarCamp and target.siegeWarCamp != 0 and self.siegeWarCamp != 0:
@@ -525,10 +531,10 @@ class ImpTeam(AvatarTeamStatisticMixin):
             return
 
         timerId = teamInviteRecord.pop((srcTeamId, gbId))
-        timerId and self._cancelCallback(timerId, gametimer.TIMER_TAG_REPLY_INVITE_TEAM_TIMEOUT)
+        timerId and self._cancelCallback(
+            timerId,
+            gametimer.TIMER_TAG_REPLY_INVITE_TEAM_TIMEOUT)
 
-        gameengine.getGlobalBase('PlayerStub').doOnOthersClient([gbId], 'onReplyInviteTeam', (self.gbId,), None, '',
-                                                                ())
         if not self.isCanInviteTeam(gbId):
             return
 
@@ -568,7 +574,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if self.isInTryAddTeamCD():
             WARNING_MSG('createAndAddTeamMember, is in add team cd')
             return
-        
+
         teamTarget = 1
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if teamTargetInfo is None:
@@ -630,7 +636,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
         self.setFollowCaptain(False)
         self.setTeamCaptainFlag(False)
         self.base.onLeaveTeamBase()
-        self.updateSummonTeamId(self.teamId)
         self.autoCancelDungeonTeammateBeConfirmed()
 
         # leave team dungeon
@@ -713,22 +718,19 @@ class ImpTeam(AvatarTeamStatisticMixin):
                                               (TMMCD.datas['applyCaptainDeniedMsg']['value'], []), None, '', ())
             return
 
-        gameengine.getGlobalBase('PlayerStub').doOnOthersClient([gbId], 'onReplyBecomeCaptain', (gbId, bAgree), None, '', ())
-
         gameengine.getTeamStub(self.teamId).replyBecomeCaptain(self.base, self.teamId, self.gbId, gbId)
 
     def onJoinTeam(self, teamId):
         INFO_MSG('onJoinTeam', teamId)
         if self.teamId > 0 and teamId != self.teamId:
             # 此时执行离开第一个队伍的操作，并且不需要回调 onLeaveTeam，否则会覆盖新的teamId
-            gameengine.getTeamStub(self.teamId).leaveTeam(self.base, self.teamId, self.gbId, False)
+            gameengine.getTeamStub(self.teamId).leaveTeam(self.spaceNo, self.base, self.teamId, self.gbId, False)
 
         if self.isInRaid() and teamId > 0:
-            gameengine.getTeamStub(teamId).leaveTeam(self.base, teamId, self.gbId, True)
+            gameengine.getTeamStub(teamId).leaveTeam(self.spaceNo, self.base, teamId, self.gbId, True)
 
         self.teamId = teamId
         self.base.onJoinTeamBase(self.teamId)
-        self.updateSummonTeamId(self.teamId)
         if self.autoMatchStartTime > 0:
             self.autoMatchStartTime = 0
             gameengine.getGlobalBase('TeamMatchStub').playerStopAutoMatch(self.gbId)
@@ -776,12 +778,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
             return
 
         gameengine.getTeamStub(self.teamId).clearApplyJoinDic(self.base, self.gbId, self.teamId)
-
-    def updateSummonTeamId(self, teamId):
-        for summonId in list(self.petList):
-            summon = KBEngine.entities.get(summonId, None)
-            if summon:
-                summon.hostTeamId = teamId
 
     #开始检查每个队员的条件
     #@checkType:检查类型
@@ -1344,16 +1340,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
             else:
                 self.getCaptainBox().cell.requestCaptainFollowProps(self.base, captainSpaceNo, src)
 
-        # elif _canTeleportInGuide and formula.isGuildSpace(_captainSpaceNo):
-        #     if self.guildUUID:
-        #         if _captainSpaceNo == self.guildSpaceNo:
-        #             self.cellEnterGuildSpace(self.guildUUID, src)
-        #         else:
-        #             self.base.followCaptainEnterTargetGuildSpace(_captainSpaceNo, self.guildSpaceNo)
-        #     else:
-        #         self.selfCancelFollowTeamCaptain('')
-        #         # self.showTeamFollowFailMsg()
-        #         self.client.notifyClientCaptainInGuild()
         else:
             self.showTeamFollowFailMsg()
 
@@ -1830,10 +1816,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
         if not box or not box.client:
             return
 
-        spaceNo = self.spaceNo
-        position = self.position
-        box.client.onGetCaptainFollowInfo(self.gbId, spaceNo, position)
-
     def onRequestCaptainFollowProps(self, gbId, captainSpaceNo, captainPosition, src):
         if self.followCaptain != gameconst.TeamFollowState.Follow:
             return
@@ -2001,7 +1983,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
             self._cancelCallback(self.replyFollowCaptainTimer, gametimer.TIMER_TAG_DO_REPLY_CAPTAIN_FOLLOW)
             self.replyFollowCaptainTimer = 0
         self.setFollowCaptain(False)
-        self.client.onCaptainCancleFollowTeam()
 
     @gamedecorator.crossServer
     @utils.isMyself
@@ -2251,7 +2232,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
     def onCellPlayerStartAutoMatch(self, startMatchTime, target):
         self.autoMatchStartTime = startMatchTime
         self.autoMatchTarget = target
-        self.client.onPlayerAutoMatch()
 
     def playerMatchInfoUpdate(self):
         DEBUG_MSG('in playerMatchInfoUpdate self.autoMatchStartTime:', self.autoMatchStartTime)
@@ -2288,7 +2268,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
     def onPlayerMatchedSucc(self):
         self.autoMatchStartTime = 0
         self.autoMatchTarget = 0
-        self.client.onPlayerStopAutoMatch()
         return
 
     def leaveTeamAutoMatch(self):
@@ -2300,15 +2279,14 @@ class ImpTeam(AvatarTeamStatisticMixin):
 
         if self.teamId > 0 and self.isCaptain():
             gameengine.getTeamStub(self.teamId).teamPrepareStopAutoMatch(self.teamId)
-            
+
         if self.isInTeam(self.gbId):
-            gameengine.getTeamStub(self.teamId).leaveTeam(self.base, self.teamId, self.gbId, True)
+            gameengine.getTeamStub(self.teamId).leaveTeam(self.spaceNo, self.base, self.teamId, self.gbId, True)
         return
 
     def onPlayerAutoMatchTimeout(self):
         self.autoMatchStartTime = 0
         self.autoMatchTarget = 0
-        self.client.onPlayerStopAutoMatch()
         self.showMsg(TMMCD.datas['leaveMatch_timeOverMsg']['value'], [])
         return
 
@@ -2397,8 +2375,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
             return
         if teamCaptainGbId != self.teamInfo.getCaptainGbId():
             return
-        # self.showMsg(MMD.datas.addCaptainToFriend, [])
-        self.client.qureyAddTeamCaptainFriend(teamCaptainGbId)
         return
 
     @utils.isMyself
@@ -2734,7 +2710,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
         _, err = self._onJoinRaidCheck(teamID)
         if err != gameconst.RaidErrno.RAID_OK:
             ERROR_MSG('onJoinPlayerReplyJoinRaidLonely::, check failed, {}'.format(err))
-            self.client.onJoinTeam(err.errno, teamID, password)
         else:
             playerProps = self._getTeamPlayerInfoDic()
             gameengine.getTeamStub(teamID).reqJoinTeam(self.base, teamID, password, playerProps)

@@ -39,8 +39,14 @@ class IMineWarCell(object):
         if lineType in self.myMineList:
             return True
         INFO_MSG('iMineWarCell.onMineWarTeleportCheck called for player:', self.id, lineType, self.mineWarState, self.myMineList)
-        # 通知 ====todo====
-        
+        startOffset = utils.getMineWarStartOffsetSec()
+        prepareNeedSec = utils.getMineWarPrepareNeedSec()
+        startTime = utils.getCurrentWeekTS(offsetSec=startOffset)
+        nowTime = utils.getNow()
+        # if nowTime > startTime or nowTime < startTime - prepareNeedSec:
+        #     return True
+        # 通知
+        self.base.onMessagePre(MBC.datas['mineBattle_forbidTeleportMsg']['value'], [])
         return False
 
     def onMineWarPlayerDead(self, event, *callbackArgs):
@@ -66,7 +72,7 @@ class IMineWarCell(object):
         
         INFO_MSG('iMineWarCell.onEnterMineWarSpace called for player:', self.id)
         self.mineWarCanAttack = True
-        self.base.onMessagePre(54003203, []) #54003203 MMD.datas.mineBattle_teleportSafeZoneMsg
+        self.base.onMessagePre(MBC.datas['mineBattle_teleportSafeZoneMsg']['value'], [])
 
         takePartScore = MBC.datas['mineBattle_takePartScore']['value']
         self.scoreTimer = self.pyAddTimer(0, takePartScore[0], gametimer.MINE_WAR_PLAYER_GET_SCORE)
@@ -84,6 +90,11 @@ class IMineWarCell(object):
         """
         矿战玩家定时获取积分
         """
+        if self.guildUUID <= 0:
+            return
+        if not hasattr(self.spaceMgr, 'onMineWarPlayerTakePartAward'):
+            self.cancelMineWarScoreTimer()
+            return
         self.spaceMgr.onMineWarPlayerTakePartAward(self)
 
     def cancelMineWarScoreTimer(self):
@@ -94,3 +105,8 @@ class IMineWarCell(object):
             self.pyDelTimer(self.scoreTimer, gametimer.MINE_WAR_PLAYER_GET_SCORE)
             self.scoreTimer = 0
     
+    def getMineWarMonsterInfo(self, exposed):
+         if not formula.isMineWarSpace(self.spaceNo):
+            return
+         
+         self.spaceMgr.sendMineWarMonsterInfo(self)

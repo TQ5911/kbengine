@@ -14,6 +14,7 @@ import gameclass
 import iTimer
 import iCycleEvent
 import Bag
+import _pickle as cPickle
 import appearance
 import gameconfig
 import json
@@ -36,6 +37,7 @@ import iRouter
 import tutorConst_newbieStep as TC_NSD
 import agent_agentConfig as A_ACD
 import LogTrackingMgr
+import login_set as L_SD
 
 
 class AccountStatus(object):
@@ -63,14 +65,12 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.centralServerId = clientData.get('loginServerId', 1)
 
         self.accountType, self.accountName = utils.getAccountTypeAndName(self.__ACCOUNT_NAME__)
-        self.serverId = gameconfig.serverId()
-
         self.onDailyEvent()
         self._hasLoadData = False # 先加载角色数据，再加载appearance数据
 
-        accountId = clientData.get('accountId', '')
         devicePlatId = clientData.get('devicePlatId', 0)
         channelId = clientData.get('channelId', 0)
+        self.userInfoId = clientData.get('accountId', '')
         self.udid = clientData.get('deviceUniqueIdentifier', '')
         self.devicePlatId = devicePlatId
         self.channelId = channelId
@@ -93,6 +93,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         _interval = 5 * 60
         self.pyAddTimer(_interval, _interval, gametimer.ACCOUNT_WRITE_CHAR)
+        self._loadAccountOfflineFunc()
 
     def loadSwitchServerRecrod(self):
         INFO_MSG('loadSwitchServerRecrod:', self.accountFullName())
@@ -246,6 +247,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         position, bornDirection = utils.getPlayerBornInfo()
         direction = (0.0, 0.0, bornDirection * math.pi / 180)
         bornGamePlayID = utils.getPlayerBornMapId()
+        _now = utils.getNow()
         props = {
             'gbID': avatarProps["gbId"],
             "name": avatarProps["name"],
@@ -256,7 +258,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 range(utils.getLineMaxNumber(bornGamePlayID)))),
             "direction": direction,
             "position": position,  # TODO X: set born position
-            'birthInDB': utils.getNow(),
+            'birthInDB': _now,
             'accountName': self.accountName,
             'accountType': self.accountType,
             'accountDBID': self.databaseID,
@@ -281,6 +283,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 avatarProps['gbId'],
                 avatarProps['school'],
                 avatarProps['name'],
+                gameconfig.gameId(),
+                self.userInfoId,
+                _now
             )
         else:
             ERROR_MSG('failed to create avatar', self.accountName)
@@ -338,6 +343,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     # avatar的base创建成功：新建角色或从数据加载
     def _onAvatarBaseCreated(self, avatar, chn):
+        DEBUG_MSG('_onAvatarBaseCreated', avatar, chn)
         if chn == gameconst.ClientCallChannel.MAIN_CHANNEL:
             avatar.setAccountInfo(self.id, self.getAccountHostType(avatar.gbID))
 
@@ -500,10 +506,18 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         客户端选择某个角色进行游戏
         isForceHost: 是否强制以host登录游戏
         """
-        if self.checkHasAuth(gbId) and self.isAuthHost(gbId):
+        _banEndTime = self.banDict.get(gbId, None)
+        if _banEndTime == 0:
+            WARNING_MSG('avatar has been banned', gbId)
+            return
+
+        elif _banEndTime is None:
             pass
-        else:
-            isForceHost = False
+
+        elif utils.getNow() < _banEndTime:
+            DEBUG_MSG('avatar is banned', gbId, _banEndTime)
+            self.client.onMessage(L_SD.datas['idip_roleBanned_msg']['value'], [str(_banEndTime)])
+            return
 
         if not self.isAuthHost(gbId):
             if not gameconfig.visibleConfigEable('roleAuthorization'):
@@ -569,7 +583,17 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             INFO_MSG('avatar is loading:', self.accountStatus, self.accountName, gbId)
             return
 
-        if gbId in self.characters:
+        if self.checkHasAuth(gbId) and self.isAuthHost(gbId) and not isForceHost:
+            # 自己是号主想要OB时候走这里
+            _cVal = self.characters.get(gbId)
+            self.accountStatus = AccountStatus.avatarLoading
+            KBEngine.lookUpEntityByDBID(
+                'Avatar',
+                _cVal.dbId,
+                functools.partial(self._selectByLookUp, gbId)
+            )
+
+        elif gbId in self.characters:
             self.lastSelCharacter = gbId
             # 由于需要从数据库加载角色，因此是一个异步过程，加载成功或者失败会调用__onAvatarCreated接口
             # 当角色创建好之后，account会调用giveClientTo将客户端控制权（可理解为网络连接与某个实体的绑定）切换到Avatar身上，
@@ -580,6 +604,32 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             KBEngine.createEntityFromDBID("Avatar", cVal.dbId, functools.partial(self._onAvatarLoaded, gbId, isForceHost))
         else:
             ERROR_MSG("Account[%i]::selectAvatarGame: not found database id(%s)" % (self.id, gbId))
+
+    def _selectByLookUp(self, gbId, avatarBox):
+        if avatarBox == False:
+            ERROR_MSG('selectAvatarGame avatar not found:', self.accountName, gbId)
+            self.accountStatus = AccountStatus.normal
+            return
+
+        if avatarBox == True:
+            WARNING_MSG('selectAvatarGame avatar is offline:', self.accountName, gbId)
+            self.accountStatus = AccountStatus.normal
+            return
+
+        _avatar = KBEngine.entities.get(avatarBox.id)
+        if not _avatar:
+            # 玩家登录ob且代理在其他进程登录
+            _accountName = utils.getRealAccountName(self.accountType, self.accountName)
+            gameglobal.localBaseApp.setAccountCompIdToInterface(
+                _accountName,
+                avatarBox.cid,
+                self.id
+            )
+            self.loginObOnClient = (gbId,)
+            # 回调是onSetAccountCompSuccess
+            return
+
+        self._onAvatarLoaded(gbId, False, _avatar, _avatar.databaseID, True)
 
     def _onAvatarLoaded(self, gbId, isForceHost, baseRef, dbid, wasActive):
         """
@@ -625,11 +675,15 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             avatar.destroy()
             return
 
-        INFO_MSG('create avatar succ', avatar.id, avatar.gbID)
         # 如果wasActive说明当前已经存在avatar，这时候就设置为
         otherChn = avatar.getAvaliableClientChn(self.id)
+        INFO_MSG('create avatar succ', avatar.id, avatar.gbID, otherChn)
         if otherChn is None:
             ERROR_MSG('_onAvatarLoaded but not has valid client')
+            return
+
+        if not isForceHost and otherChn != gameconst.ClientCallChannel.SUB_CHANNEL:
+            ERROR_MSG('_onAvatarLoaded but not has valid client', isForceHost)
             return
 
         if otherChn == gameconst.ClientCallChannel.SUB_CHANNEL:
@@ -836,9 +890,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 self.characters.removeCharacter(gbId)
 
     def sendHotfix(self):
-        pass
-        # hotfix = gameglobal.hotfix
-        # self.streamStringProxy(hotfix, '', gameconst.StreamStringID.HOTFIX_DATA)
+        if gameconfig.hotfixVersion():
+            self.client.onHotfixVersion(gameconfig.hotfixVersion())
 
     def registerCBStream(self, dataId, func, args):
         self.streamDic[dataId].append((func, args))
@@ -1221,7 +1274,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             avatar.gbID,
             avatar.getRoleCacheAttr('school'),
             avatar.getRoleCacheAttr('name'),
-            avatar.getRoleCacheAttr('level')
+            avatar.getRoleCacheAttr('level'),
+            gameconfig.gameId(),
+            self.userInfoId,
+            avatar.birthInDB
         )
 
 # ---------------------------- switch avatar server start ----------------------------
@@ -1479,6 +1535,11 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self._hasLoadData = True
         self._sendAvatarList()
 
+        if self.loginObOnClient:
+            INFO_MSG('loginObOnClient', self.loginObOnClient)
+            #self._selectAvatarGame(self.loginObOnClient[0], False)
+            self.loginObOnClient = None
+
     def lendAvatar(self, gbId, otherDbId, days, cb):
         INFO_MSG('lendAvatar', gbId, otherDbId)
         _cVal = self.characters.get(gbId)
@@ -1557,13 +1618,20 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         return _cVal.authExpire
 
-    def modifyAuthExpire(self, gbId, authExpire):
-        _cVal = self.characters.get(gbId)
-        if not _cVal:
-            ERROR_MSG('modifyAuthExpire not find character', gbId)
+    # 代理端修改过期时间
+    def modifyAuthExpireInAuth(self, gbId, authExpire):
+        if self.isAuthHost(gbId):
+            ERROR_MSG('modifyAuthExpireInAuth not auth host', gbId)
             return
 
-        _cVal.setAuthDbId(self.databaseID, authExpire)
+        _cVal = self.characters.get(gbId)
+        if not _cVal:
+            ERROR_MSG('_onStopCharacterAuth not find character', gbId)
+            return
+
+        _cVal.setAuthDbId(_cVal.authDbId, authExpire)
+        if self.client:
+            self.client.onCharInfoChange(_cVal)
 
     def modifyAuthExpire(self, gbId, authExpire):
         if not self.isAuthHost(gbId):
@@ -1683,5 +1751,48 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self._selectAvatarGame(gbId, isForceHost)
 # --------------------------- auth avatar end --------------------------------
 
+    def _onLoadAccountOfflineCallbacks(self, ret, num, insertId, err):
+        """
+        加载账号离线回调后的处理
+        """
+        if err:
+            ERROR_MSG('_onLoadAccountOfflineCallback err', err, self.accountName)
+            return
+
+        if ret:
+            def _onDeleteCallbacks(ret1, num1, insertId1, err1):
+                if err1:
+                    ERROR_MSG('_onDeleteAccountCallbacks err', err1, self.accountName)
+                    return
+
+                for _id, callbackName, argData in ret:
+                    try:
+                        args = cPickle.loads(bytes.fromhex(argData.decode('ascii')))
+                        funcName = callbackName.decode('ascii')
+                        func = getattr(self, funcName)
+                        func(*args)
+                    except Exception as e:
+                        ERROR_MSG('account offline callback error:', self.accountName, callbackName, argData, e)
+
+            delIds = []
+            for _id, callbackName, argData in ret:
+                delIds.append(str(int(_id)))
+
+            delSql = 'delete from game_account_offline_callbacks where id in (%s)' % (','.join(delIds))
+            KBEngine.executeRawDatabaseCommand(delSql, _onDeleteCallbacks)
+
+
+    def _loadAccountOfflineFunc(self):
+        gamesql.loadAccountOfflineCallbacks(self.accountName, self._onLoadAccountOfflineCallbacks)
+
+    def banAvatar(self, gbId, endTime):
+        INFO_MSG('account ban avatar', gbId, endTime)
+        self.banDict[gbId] = endTime
+        if self.avatar and self.avatar.gbID == gbId:
+            self.avatar.backSelectCharacterBase(True)
+
+    def disbanAvatar(self, gbId):
+        INFO_MSG('account disban avatar', gbId)
+        self.banDict.pop(gbId, None)
 
 

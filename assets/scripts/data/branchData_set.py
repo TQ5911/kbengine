@@ -26,5 +26,25 @@ datas = _tools.RODict({
     "Branch_targetAreaFull": _tools.RODict({
         "ID": "Branch_targetAreaFull",
         "value": 54001900,
+    }),
+    "Branch_mergeInterval": _tools.RODict({
+        "ID": "Branch_mergeInterval",
+        "value": 60,
+    }),
+    "Branch_mergeWaitingTime": _tools.RODict({
+        "ID": "Branch_mergeWaitingTime",
+        "value": 15,
+    }),
+    "Branch_mergeNoticeMsg": _tools.RODict({
+        "ID": "Branch_mergeNoticeMsg",
+        "value": 54001084,
+    }),
+    "Branch_mergeChangeMsg": _tools.RODict({
+        "ID": "Branch_mergeChangeMsg",
+        "value": 54001085,
+    }),
+    "Branch_fullCapacityMsg": _tools.RODict({
+        "ID": "Branch_fullCapacityMsg",
+        "value": 54001086,
     })
 })

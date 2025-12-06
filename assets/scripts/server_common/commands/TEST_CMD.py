@@ -18,6 +18,7 @@ import ast
 import time
 import types
 import fightProp_define as FDD
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 # 判断当前进程类型
 IS_BASE = (KBEngine.component == 'baseapp')
@@ -857,6 +858,72 @@ def glyphWashingEquipments(su, player, equipPos, slotId, itemId, affixId1, affix
     ret = player.gmGlyphWashingEquips(equipPos, slotId, itemId, affixId1, affixId2)
     if not ret:
         return False, '执行失败'
+    return True, '执行成功'
+
+@gm_cmd('$openGuildDungeon', (Player("gbId/Id"), Int("openTime"), Int("openType"), Int("openID")), RARG(0), gameconst.BASE, '测试公会boss开启', ALLSIDE, GOD_GROUPS)
+def openGuildDungeon(su, player, openTime, openType, openID):
+    ret = player.openGuildDungeon(player.id, openTime, openType, openID)
+    if not ret:
+        return False, '执行失败'
+    return True, '执行成功'
+
+@gm_cmd('$cancalGuildDungeonOrder', (Player("gbId/Id"), ), RARG(0), gameconst.BASE, '测试公会boss预约取消', ALLSIDE, GOD_GROUPS)
+def cancalGuildDungeonOrder(su, player):
+    ret = player.cancalGuildDungeonOrder(player.id)
+    if not ret:
+        return False, '执行失败'
+    return True, '执行成功'
+
+@gm_cmd('$enterBossChallengeDungeon', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '测试公会boss进入', ALLSIDE, GOD_GROUPS)
+def enterBossChallengeDungeon(su, player):
+    ret = player.enterBossChallengeDungeon(player.id)
+    if not ret:
+        return False, '执行失败'
+    return True, '执行成功'
+
+@gm_cmd('$leaveBossChallengeDungeon', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '测试公会boss离开', ALLSIDE, GOD_GROUPS)
+def leaveBossChallengeDungeon(su, player):
+    ret = player.leaveBossChallengeDungeon(player.id)
+    if not ret:
+        return False, '执行失败'
+    return True, '执行成功'
+
+@gm_cmd('$modifyGuildFund', (Player("gbId/Id"), Int("addCount")), RARG(0), gameconst.BASE, '加公会资金', ALLSIDE, GOD_GROUPS)
+def modifyGuildFund(su, player, addCount):
+    opUUID = KBEngine.genUUID64()
+    src = AAC_AACDD.datas.BONUS_SRC_GM
+    detail = gameclass.AwardDetail(gm_cmd='$modifyGuildFund', addCount=addCount)
+    if addCount < 1:
+        return False, '执行失败，资金不能小于1'
+    elif player.guildBox is None:
+        return False, '当前玩家没有帮会'
+    player.guildBox.modifyGuildFund(addCount, src, opUUID, detail)
+    return True, '执行成功'
+
+@gm_cmd('$modifyGuildMoney', (Player("gbId/Id"), Int("addCount")), RARG(0), gameconst.BASE, '加公会金币', ALLSIDE, GOD_GROUPS)
+def modifyGuildMoney(su, player, addCount):
+    opUUID = KBEngine.genUUID64()
+    src = AAC_AACDD.datas.BONUS_SRC_GM
+    detail = gameclass.AwardDetail(gm_cmd='$modifyGuildMoney', addCount=addCount)
+    if addCount < 1:
+        return False, '执行失败，金币不能小于1'
+    elif player.guildBox is None:
+        return False, '当前玩家没有帮会'
+    player.guildBox.modifyGuildMoney(addCount, src, opUUID, detail)
+    return True, '执行成功'
+
+@gm_cmd('$modifyGuildDungeonStatus', (Player("gbId/Id"), Int("status")), RARG(0), gameconst.BASE, '修改公会副本状态', ALLSIDE, GOD_GROUPS)
+def modifyGuildDungeonStatus(su, player, status):
+    if player.guildBox is None:
+        return False, '当前玩家没有帮会'
+    player.guildBox.gmModifyGuildBossChallengeStatus(status)
+    return True, '执行成功'
+
+@gm_cmd('$resetGuildDungeonOpenCount', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '重置公会副本开启次数', ALLSIDE, GOD_GROUPS)
+def resetGuildDungeonOpenCount(su, player):
+    if player.guildBox is None:
+        return False, '当前玩家没有帮会'
+    player.guildBox.gmResetGuildDungeonOpenCount()
     return True, '执行成功'
 
 # --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

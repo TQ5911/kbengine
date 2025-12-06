@@ -887,6 +887,10 @@ datas = _tools.RODict({
         "ID": "dpsResetFeedback",
         "value": 54000387,
     }),
+    "dpsUpdateCD": _tools.RODict({
+        "ID": "dpsUpdateCD",
+        "value": 3,
+    }),
     "dialogbuttonleave": _tools.RODict({
         "ID": "dialogbuttonleave",
         "value": 15.0,
@@ -931,8 +935,16 @@ datas = _tools.RODict({
         "ID": "monsterCombatPathingTime",
         "value": 3,
     }),
+    "chat_banned": _tools.RODict({
+        "ID": "chat_banned",
+        "value": 54001558,
+    }),
     "uiVisibleDayLimit": _tools.RODict({
         "ID": "uiVisibleDayLimit",
         "value": 54481004,
+    }),
+    "bossRefreshSystem": _tools.RODict({
+        "ID": "bossRefreshSystem",
+        "value": 2,
     })
 })
