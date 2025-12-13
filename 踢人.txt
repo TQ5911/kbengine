@@ -1,0 +1,19 @@
+客户端请求下线会调用这个
+@gamedecorator.crossServer
+def offline(self, exposed, reason):
+
+
+选择角色进入游戏会调用这个
+@gamedecorator.limitcall(1)
+def selectAvatarGame(self, exposed, gbId, isForceHost):
+
+
+
+def kickAccount(self, reason, accountName, accountType):
+def delAccount(self):
+def destroyAccount(self, reason=gameconst.AVATAR_OFFLINE_REASON_DESTORY):
+
+
+注意还有子账户 看 getAccountByChn
+
+进游戏杀进程先收到 onClientDeath，然后定时销毁角色, 最后account收到onDestroy 向loginstub发送onAccountDestroy
