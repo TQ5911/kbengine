@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "35080001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -28,6 +29,7 @@ datas ={
       "Monster": {
         "35080002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -50,6 +52,7 @@ datas ={
           }
         }
       }
-    }
+    },
+    "TimerEntities": {}
   }
 }

@@ -20,16 +20,16 @@ import gameconst
 class ICrusade(object):
     def onCrusadeDailyRewardNumUpdate(self, *args):
         DEBUG_MSG('onCrusadeDailyRewardNumUpdate::')
-        dailyRewardNum = int(TDC_CFG.datas['dailyRewardNum']['value'])
+        dailyRewardNum = self.crusadeInfo.dailyRewardNum
         if self.crusadeInfo.rewardNumber < dailyRewardNum:
-            self.crusadeInfo.addRewardNum(dailyRewardNum - self.crusadeInfo.rewardNumber)
+            self.crusadeInfo.addRewardNumByDefault(dailyRewardNum - self.crusadeInfo.rewardNumber)
         self.crusadeInfo.rewardDailyCount = 0
-        self.crusadeInfo.useCoinAddRewardNum = int(TDC_CFG.datas['rewardNumCoinDailyLimit']['value'])
+        self.crusadeInfo.resetUseCoinAddRewardDailyNum()
         self.crusadeInfo = self.crusadeInfo
 
     def onCrusadeWeeklyAddRewardItemNumUpdate(self, *args):
         DEBUG_MSG('onCrusadeWeeklyAddRewardItemNumUpdate::')
-        self.crusadeInfo.resetUseItemAddRewardNumber()
+        self.crusadeInfo.resetUseItemAddRewardWeeklyNum()
         self.crusadeInfo = self.crusadeInfo
 
     def useItemToIncreaseCrusadeRewardNumber(self, exposed, useNum):
@@ -104,21 +104,10 @@ class ICrusade(object):
         self.crusadeInfo.addRewardNumByUseCoin(useNum)
         self.crusadeInfo = self.crusadeInfo
 
-    def onEnterCrusadeDungeon(self, spaceNo, spaceMgrBox, extra):
-        DEBUG_MSG('in onEnterCrusadeDungeon::', spaceNo, spaceMgrBox, extra)
+    def onEnterCrusadeDungeon(self, spaceNo, dungeonNo, spaceMgrBox, extra):
         crusadeInfo = self.crusadeInfo
-        crusadeInfo.addRewardNum(-1)
+        crusadeInfo.deductRewardNum()
         self.crusadeInfo = crusadeInfo
         self.onEnterDungeon(spaceNo, spaceMgrBox, extra)
         self.activityComplete(TDC_CFG.datas['teamDunChallengeActID']['value'])
-
-    def setCrusadeDungeonAutoConfirmConfig(self, exposed, storyLevel):
-        self.setPersistentMiscProp(gameconst.AvatarProps.CrusadeDunAutoConfirmConfig, storyLevel)
-        self.client.onSetCrusadeDungeonAutoConfirmConfig(storyLevel)
-
-    def getCrusadeDungeonAutoConfirmConfig(self):
-        return self.getPersistentMiscProp(gameconst.AvatarProps.CrusadeDunAutoConfirmConfig, 1)
-
-    def sendCrusadeDungeonAutoConfirmConfig(self):
-        storyLevel = self.getCrusadeDungeonAutoConfirmConfig()
-        self.client.onSetCrusadeDungeonAutoConfirmConfig(storyLevel)
+        INFO_MSG('in onEnterCrusadeDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

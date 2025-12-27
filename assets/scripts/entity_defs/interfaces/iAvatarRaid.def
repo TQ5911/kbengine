@@ -122,7 +122,7 @@
             <Arg>   TEAMTARGET      </Arg>
             <Arg>   UINT32          </Arg>
             <Arg>   UINT32          </Arg>
-            <Arg>   STRING          </Arg>
+            <Arg>   UNICODE         </Arg>
             <Arg>   STRING          </Arg>
             <Arg>   BOOL            </Arg>
         </onSetRaidTargetAllMemberNotify>
@@ -551,10 +551,7 @@
             <Arg> RAID_ID </Arg>
             <Arg> STRING  </Arg>
         </reqJoinRaid>
-
-        <addRaidDungeonRewardRecord>
-            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
-        </addRaidDungeonRewardRecord>
+        
     </CellMethods>
 
     <ClientMethods>
@@ -718,7 +715,7 @@
             <Arg>   TEAMTARGET  </Arg>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT32      </Arg>
-            <Arg>   STRING      </Arg>
+            <Arg>   UNICODE     </Arg>
             <Arg>   STRING      </Arg>
             <Arg>   BOOL        </Arg>
         </onSetRaidTarget>
@@ -775,12 +772,6 @@
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           UINT32          </Arg>
         </onUpdateRaidMemberLevel>
-
-        <onAddRaidDungeonRewardRecord>
-            <Arg>           RAID_ID                                                 </Arg>
-            <Arg>           PLAYER_GBID                                             </Arg>
-            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
-        </onAddRaidDungeonRewardRecord>
 
         <onApplyJoinRaidLonelyFailed>
             <Arg>           UINT16       </Arg>

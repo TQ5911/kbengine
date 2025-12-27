@@ -73,22 +73,14 @@ class AuctionItem(userType.UserSTDSoleType):
         return json.loads(jsonData)
 
     def toClientData(self, recommendPrice=-1):
-        m_resultData = {
-            "auctionType": self.auctionType,
-            "auctionItemUUID": self.auctionItemUUID,
-            "addTime": self.addTime,
-            "itemId": self.itemId,
-            "uniqueId": self.uniqueId,
-            "price": self.price,
-            "number": self.number,
-            "status": self.status,
-            'createTime': self.tCreate,
+        return {
+            'auctionItemUUID': self.auctionItemUUID,
+            'addTime': self.addTime,
+            'price': self.price,
+            'number': self.number,
+            'status': self.status,
+            'itemData': self.itemData.toItemSavedDict(),
         }
-
-        m_extra = {}
-        m_extra.update({"attrJson": self.itemData.attr2Dict()})
-        m_resultData['extra'] = json.dumps(m_extra)
-        return m_resultData
 
     def _lateReload(self):
         self.itemData.reloadScript()

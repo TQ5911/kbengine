@@ -277,7 +277,7 @@ class DungeonStubMixin(object):
             return
 
         extraInfo.setdefault("teamEnterCheckDic", {}).update({gbId: 1})
-        box.cell.selfCheckAndEnterTeamDungeon(dungeonNo, extraInfo)
+        box.selfCheckAndEnterTeamDungeon(teamUUID, dungeonNo, extraInfo)
 
     def onEnterTeamDungeon(self, box, gbId, teamUUID, dungeonNo, spaceNo):
         if teamUUID not in self.teamDic:
@@ -788,7 +788,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def isCanApplyJoinTeam(self, box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
-            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_IS_NOT_EXIST, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_IS_NOT_EXIST, 0, 0, 0, '')
             return False
         if self.checkInDungeon(teamId):
             box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_IS_IN_DUNGEON, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
@@ -1034,10 +1034,13 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return True
 
     def _leaveTeam(self, leaveBox, teamId, gbId, notifySelf=True):
+        INFO_MSG('_leaveTeam', leaveBox, teamId, gbId, notifySelf)
         teamVal = self.getTeamByTeamId(teamId)
-        if len(teamVal.teamPlayerDic) <= 1:
+        if len(teamVal.teamPlayerDic) < 1:
             self._disbandTeam(teamId)
-
+        if not teamVal.isInTeam(gbId):
+            WARNING_MSG("_leaveTeam:: player not found in team", teamId, gbId)
+            return
         leavePlayerName = teamVal.getPlayerName(gbId)
         teamVal.delMember(gbId, notifySelf)
         teamVal.broadcastAllMembersBase('onMessagePre',
@@ -1053,7 +1056,6 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 self._disbandTeam(teamId)
 
         teamVal.resetTeamFollowQueue(gbId, False)
-        teamVal.clearTeamDungeonRewardRecord(gbId)
         if teamVal.teamDuelData.hasTeamDuel():
             gameengine.getGlobalBase('TeamDuelStub').onAvatarLeaveTeam(teamVal.teamDuelData.duelSpaceNo, teamVal.teamDuelData.duelUUID, gbId)
 
@@ -1078,6 +1080,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return True
 
     def _kickTeamMember(self, teamId, kickGbId, isMemOffline=False):
+        INFO_MSG('_kickTeamMember', teamId, kickGbId, isMemOffline)
         teamVal = self.getTeamByTeamId(teamId)
         kickPlayerName = teamVal.getPlayerName(kickGbId)
         teamVal.delMember(kickGbId)
@@ -1959,20 +1962,6 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         _, err = self.addTeamMember(teamID, playerProps)
         return err
 
-    def clearTeamDungeonRewardRecord(self, teamID, gbID):
-        teamVal = self.getTeamByTeamId(teamID)
-        if not teamVal:
-            DEBUG_MSG("clearTeamDungeonRewardRecord, team is missing", teamID, gbID)
-            return
-        teamVal.clearTeamDungeonRewardRecord(gbID)
-
-    def addTeamDungeonRewardRecord(self, teamID, gbID, rewardList):
-        teamVal = self.getTeamByTeamId(teamID)
-        if not teamVal:
-            DEBUG_MSG("addTeamDungeonRewardRecord, team is missing", teamID, gbID)
-            return
-        teamVal.addTeamDungeonRewardRecord(gbID, rewardList)
-
     def setInDungeon(self, teamId):
         teamVal = self.teamDic.get(teamId, None)
         if not teamVal:
@@ -1987,36 +1976,4 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return False
         return teamVal.isInDungeon
 
-    # ----------------------------- 统计相关 --------------------------------
-    def addTeamStatisticPlayerVal(self, teamId, playerGbId, type, value):
-        teamVal = self.getTeamByTeamId(teamId)
-        if not teamVal:
-            DEBUG_MSG("addTeamStatisticPlayerVal, team is missing", teamId, playerGbId, type, value)
-            return
-
-        teamVal.addTeamStatisticValue(playerGbId, type, value)
-
-    def getTeamStatisticData(self, playerbox, teamId, type):
-        teamVal = self.getTeamByTeamId(teamId)
-        if not teamVal:
-            DEBUG_MSG("getTeamStatisticData, team is missing", teamId)
-            return {}
-
-        teamVal.showStatisticData()
-
-        data = teamVal.getTeamStatisticData()
-        for strType, dataList in data.items():
-            playerbox.cell.onGetTeamStatisticData(type, strType, dataList)
-
-    def getTeamStatisticFinalData(self, mgrbox, teamId):
-        DEBUG_MSG('team getTeamStatisticFinalData2::', teamId)
-        teamVal = self.getTeamByTeamId(teamId)
-        if not teamVal:
-            DEBUG_MSG("getTeamStatisticFinalData, team is missing", teamId)
-            return {}
-
-        teamVal.showStatisticData()
-
-        data = teamVal.getTeamStatisticData()
-        mgrbox.onGetTeamStatisticData(data)
 

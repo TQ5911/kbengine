@@ -52,7 +52,7 @@ datas = _tools.RODict({
     }),
     "skillConsumeMp": _tools.RODict({
         "ID": "skillConsumeMp",
-        "value": "{0}能量",
+        "value": "{0}法力",
         "Type": "string"
     }),
     "skillRange": _tools.RODict({
@@ -82,7 +82,7 @@ datas = _tools.RODict({
     }),
     "expirationTips": _tools.RODict({
         "ID": "expirationTips",
-        "value": "{0}后下架",
+        "value": "{0}后过期",
         "Type": "string"
     }),
     "expiredTips": _tools.RODict({

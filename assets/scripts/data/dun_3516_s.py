@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "35160001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -28,6 +29,7 @@ datas ={
       "Monster": {
         "35160002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -51,6 +53,7 @@ datas ={
         },
         "35160003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -74,6 +77,7 @@ datas ={
         },
         "35160004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -97,6 +101,7 @@ datas ={
         },
         "35160005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -120,6 +125,7 @@ datas ={
         },
         "35160006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -143,6 +149,7 @@ datas ={
         },
         "35160007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -168,6 +175,7 @@ datas ={
       "Collection": {
         "35168001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -188,6 +196,7 @@ datas ={
         },
         "35168002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -207,6 +216,7 @@ datas ={
           }
         }
       }
-    }
+    },
+    "TimerEntities": {}
   }
 }

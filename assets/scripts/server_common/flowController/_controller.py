@@ -1576,6 +1576,28 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSoleType,
         e.add_param('angle', angle)
         return e
 
+    def buildNotifyStartBattleCD(self, eventId, dungeonNo, spaceNo, cdTime):
+        """开始战斗前cd"""
+        e = self.build_element(
+            FlowEvent,
+            element_id=eventId,
+            event_handler=handleNotifyStartBattleCD,
+            name=gameconst.DungeonFlowEventName.notifyStartBattleCD,
+        )
+        e.add_param('dungeonNo', dungeonNo)
+        e.add_param('spaceNo', spaceNo)
+        e.add_param('cdTime', cdTime)
+        return e
+    
+    def buildCreateBreakAwayStuckPosEvent(self, eventId, entityId, entityNum):
+        """脱离卡死点"""
+        e = self.build_element(FlowEvent, element_id=eventId,
+                               event_handler=handleCreateBreakAwayStuckPos,
+                               name=gameconst.DungeonFlowEventName.createBreakAwayStuckPos)
+        e.add_param('entityId', entityId)
+        e.add_param('entityNum', entityNum)
+        return e
+
 def _createNoHostCreation(spaceID, target, context, *args, spaceMgrId=0, spaceNo=0, extraProps=None):
     ttl, cnt, dirOffset, posOffset = 0, 0, None, None
     creationLv, skillLv = 1, 0
@@ -3036,6 +3058,8 @@ def handleDungeonTriggerGuide(e, src_e, ctx, **ref_param):
             ERROR_MSG('flowController::handleDungeonTriggerGuide::player ent not found Avatar({})'.format(pid))
             continue
 
+        ent.client.onTriggerGuide(triggerGuideId)
+
 def handleNewTransPetStart(e, src_e, ctx, **ref_param):
     transPetId = e.get_param('transPetId')
     triggerGuideId = e.get_param('triggerGuideId')
@@ -3213,3 +3237,38 @@ def handleTransferToTheDesignatedMap(e, src_e, ctx, **ref_params):
         return
 
     spaceMgr.syncPlayer(lambda boxCell: boxCell.transferToTheDesignatedMap(lineNo, pos, angle))
+
+
+def handleNotifyStartBattleCD(e, src_e, ctx, **ref_params):
+    dungeonNo = e.get_param('dungeonNo', 0)
+    spaceNo = e.get_param('spaceNo', 0)
+    cdTime = e.get_param('cdTime', 0)
+
+    WARNING_MSG('DUNGEON FLOW -- EVENT[{}]: notify start battle cd -> space:{} dungeon:{} cdTime:{}'.format(e.id, spaceNo, dungeonNo, cdTime))
+
+    spaceMgr = e.controller.owner
+    if not spaceMgr:
+        return
+    
+    spaceMgr.doDungeonStartBattleCD(spaceNo, dungeonNo, cdTime)
+
+def handleCreateBreakAwayStuckPos(e, src_e, ctx, **ref_params):
+    entityId = e.get_param('entityId', 0)
+    eneityNum = e.get_param('eneityNum', 0)
+    WARNING_MSG('DUNGEON FLOW -- EVENT[{}]: create break away stuck pos -> {}:{}'.format(e.id, entityId, eneityNum))
+
+    spaceMgr = e.controller.owner
+    dungeonNo = formula.getDungeonNoBySpaceNo(spaceMgr.spaceNo)
+    if len(entityId) == 0:
+        ERROR_MSG('handleCreateBreakAwayStuckPos:: no entityId', spaceMgr.spaceNo, dungeonNo, e.id, entityId, eneityNum)
+        return
+
+    dunAllDatas = utils.getDunModuleData(dungeonNo)
+    entityData = dunAllDatas.get(str(entityId[0]), {})
+    if entityData:
+        spaceMgr.breakStuckPos = (entityData['PosX'], entityData['PosY'], entityData['PosZ'])
+        spaceMgr.breakStuckDir = entityData['Dir']
+
+
+
+    

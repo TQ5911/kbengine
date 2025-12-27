@@ -18,1802 +18,1802 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "grade": 1,
-        "expPlayer": 40,
+        "expPlayer": 15,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 10000], [10001, 18000], [18001]),
-        "idleIncome": (50, 55, 60)
+        "powerRange": ([0, 2878], [2879, 3181], [3182]),
+        "idleIncome": (749, 789, 828)
     }),
     2: _tools.RODict({
         "ID": 2,
         "grade": 2,
-        "expPlayer": 120,
+        "expPlayer": 150,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 12000], [12001, 22000], [22001]),
-        "idleIncome": (55, 60, 65)
+        "powerRange": ([0, 3161], [3162, 3494], [3495]),
+        "idleIncome": (749, 789, 828)
     }),
     3: _tools.RODict({
         "ID": 3,
         "grade": 3,
-        "expPlayer": 170,
+        "expPlayer": 250,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 14000], [14001, 26000], [26001]),
-        "idleIncome": (60, 65, 70)
+        "powerRange": ([0, 3693], [3694, 4082], [4083]),
+        "idleIncome": (749, 789, 828)
     }),
     4: _tools.RODict({
         "ID": 4,
         "grade": 4,
-        "expPlayer": 210,
+        "expPlayer": 500,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 16000], [16001, 30000], [30001]),
-        "idleIncome": (65, 70, 75)
+        "powerRange": ([0, 3976], [3977, 4395], [4396]),
+        "idleIncome": (749, 789, 828)
     }),
     5: _tools.RODict({
         "ID": 5,
         "grade": 5,
-        "expPlayer": 220,
+        "expPlayer": 650,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 18000], [18001, 34000], [34001]),
-        "idleIncome": (70, 75, 80)
+        "powerRange": ([0, 4508], [4509, 4983], [4984]),
+        "idleIncome": (749, 789, 828)
     }),
     6: _tools.RODict({
         "ID": 6,
         "grade": 6,
-        "expPlayer": 230,
+        "expPlayer": 2000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 20000], [20001, 38000], [38001]),
-        "idleIncome": (75, 80, 85)
+        "powerRange": ([0, 8116], [8117, 8971], [8972]),
+        "idleIncome": (749, 789, 828)
     }),
     7: _tools.RODict({
         "ID": 7,
         "grade": 7,
-        "expPlayer": 260,
+        "expPlayer": 4000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 22000], [22001, 42000], [42001]),
-        "idleIncome": (80, 85, 90)
+        "powerRange": ([0, 8529], [8530, 9426], [9427]),
+        "idleIncome": (749, 789, 828)
     }),
     8: _tools.RODict({
         "ID": 8,
         "grade": 8,
-        "expPlayer": 290,
+        "expPlayer": 7000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 24000], [24001, 46000], [46001]),
-        "idleIncome": (85, 90, 95)
+        "powerRange": ([0, 9158], [9159, 10122], [10123]),
+        "idleIncome": (749, 789, 828)
     }),
     9: _tools.RODict({
         "ID": 9,
         "grade": 9,
-        "expPlayer": 320,
+        "expPlayer": 11000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 26000], [26001, 50000], [50001]),
-        "idleIncome": (90, 95, 100)
+        "powerRange": ([0, 9676], [9677, 10695], [10696]),
+        "idleIncome": (749, 789, 828)
     }),
     10: _tools.RODict({
         "ID": 10,
         "grade": 10,
-        "expPlayer": 350,
+        "expPlayer": 15000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 28000], [28001, 54000], [54001]),
-        "idleIncome": (95, 100, 105)
+        "powerRange": ([0, 11216], [11217, 12397], [12398]),
+        "idleIncome": (749, 789, 828)
     }),
     11: _tools.RODict({
         "ID": 11,
         "grade": 11,
-        "expPlayer": 380,
+        "expPlayer": 16000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 30000], [30001, 58000], [58001]),
-        "idleIncome": (100, 105, 110)
+        "powerRange": ([0, 12136], [12137, 13413], [13414]),
+        "idleIncome": (749, 789, 828)
     }),
     12: _tools.RODict({
         "ID": 12,
         "grade": 12,
-        "expPlayer": 630,
+        "expPlayer": 22000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 32000], [32001, 62000], [62001]),
-        "idleIncome": (105, 110, 115)
+        "powerRange": ([0, 12481], [12482, 13794], [13795]),
+        "idleIncome": (749, 789, 828)
     }),
     13: _tools.RODict({
         "ID": 13,
         "grade": 13,
-        "expPlayer": 1140,
+        "expPlayer": 25000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 34000], [34001, 66000], [66001]),
-        "idleIncome": (110, 115, 120)
+        "powerRange": ([0, 13013], [13014, 14382], [14383]),
+        "idleIncome": (749, 789, 828)
     }),
     14: _tools.RODict({
         "ID": 14,
         "grade": 14,
-        "expPlayer": 2050,
+        "expPlayer": 45000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 36000], [36001, 70000], [70001]),
-        "idleIncome": (115, 120, 125)
+        "powerRange": ([0, 13357], [13358, 14763], [14764]),
+        "idleIncome": (749, 789, 828)
     }),
     15: _tools.RODict({
         "ID": 15,
         "grade": 15,
-        "expPlayer": 3700,
+        "expPlayer": 55000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 38000], [38001, 74000], [74001]),
-        "idleIncome": (120, 125, 130)
+        "powerRange": ([0, 14240], [14241, 15739], [15740]),
+        "idleIncome": (749, 789, 828)
     }),
     16: _tools.RODict({
         "ID": 16,
         "grade": 16,
-        "expPlayer": 6610,
+        "expPlayer": 85000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 40000], [40001, 78000], [78001]),
-        "idleIncome": (125, 130, 135)
+        "powerRange": ([0, 15514], [15515, 17147], [17148]),
+        "idleIncome": (749, 789, 828)
     }),
     17: _tools.RODict({
         "ID": 17,
         "grade": 17,
-        "expPlayer": 8751,
+        "expPlayer": 115000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 42000], [42001, 82000], [82001]),
-        "idleIncome": (130, 135, 140)
+        "powerRange": ([0, 16074], [16075, 17767], [17768]),
+        "idleIncome": (749, 789, 828)
     }),
     18: _tools.RODict({
         "ID": 18,
         "grade": 18,
-        "expPlayer": 11146,
+        "expPlayer": 150000,
         "fakeOnlineTime": 4,
         "score": 0,
-        "powerRange": ([0, 44000], [44001, 86000], [86001]),
-        "idleIncome": (135, 140, 145)
+        "powerRange": ([0, 16435], [16436, 18166], [18167]),
+        "idleIncome": (749, 789, 828)
     }),
     19: _tools.RODict({
         "ID": 19,
         "grade": 19,
-        "expPlayer": 14113,
+        "expPlayer": 180000,
         "fakeOnlineTime": 4,
         "score": 0,
-        "powerRange": ([0, 46000], [46001, 90000], [90001]),
-        "idleIncome": (140, 145, 150)
+        "powerRange": ([0, 16954], [16955, 18739], [18740]),
+        "idleIncome": (749, 789, 828)
     }),
     20: _tools.RODict({
         "ID": 20,
         "grade": 20,
-        "expPlayer": 17418,
+        "expPlayer": 210000,
         "fakeOnlineTime": 4,
         "score": 0,
-        "powerRange": ([0, 48000], [48001, 94000], [94001]),
-        "idleIncome": (145, 150, 155)
+        "powerRange": ([0, 19965], [19966, 22066], [22067]),
+        "idleIncome": (749, 789, 828)
     }),
     21: _tools.RODict({
         "ID": 21,
         "grade": 21,
-        "expPlayer": 21060,
+        "expPlayer": 250000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 50000], [50001, 98000], [98001]),
-        "idleIncome": (150, 155, 160)
+        "powerRange": ([0, 20881], [20882, 23080], [23081]),
+        "idleIncome": (771, 812, 852)
     }),
     22: _tools.RODict({
         "ID": 22,
         "grade": 22,
-        "expPlayer": 25486,
+        "expPlayer": 500000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 52000], [52001, 102000], [102001]),
-        "idleIncome": (155, 160, 165)
+        "powerRange": ([0, 21527], [21528, 23794], [23795]),
+        "idleIncome": (795, 837, 878)
     }),
     23: _tools.RODict({
         "ID": 23,
         "grade": 23,
-        "expPlayer": 30333,
+        "expPlayer": 1000000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 54000], [54001, 106000], [106001]),
-        "idleIncome": (160, 165, 170)
+        "powerRange": ([0, 22082], [22083, 24407], [24408]),
+        "idleIncome": (818, 862, 905)
     }),
     24: _tools.RODict({
         "ID": 24,
         "grade": 24,
-        "expPlayer": 36132,
+        "expPlayer": 1300000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 56000], [56001, 110000], [110001]),
-        "idleIncome": (165, 170, 175)
+        "powerRange": ([0, 23099], [23100, 25530], [25531]),
+        "idleIncome": (843, 888, 932)
     }),
     25: _tools.RODict({
         "ID": 25,
         "grade": 25,
-        "expPlayer": 42438,
+        "expPlayer": 1330000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 58000], [58001, 114000], [114001]),
-        "idleIncome": (170, 175, 180)
+        "powerRange": ([0, 26443], [26444, 29226], [29227]),
+        "idleIncome": (868, 914, 959)
     }),
     26: _tools.RODict({
         "ID": 26,
         "grade": 26,
-        "expPlayer": 52488,
+        "expPlayer": 1360000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 60000], [60001, 118000], [118001]),
-        "idleIncome": (175, 180, 185)
+        "powerRange": ([0, 27779], [27780, 30704], [30705]),
+        "idleIncome": (894, 942, 989)
     }),
     27: _tools.RODict({
         "ID": 27,
         "grade": 27,
-        "expPlayer": 68429,
+        "expPlayer": 1390000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 62000], [62001, 122000], [122001]),
-        "idleIncome": (180, 185, 190)
+        "powerRange": ([0, 28670], [28671, 31687], [31688]),
+        "idleIncome": (921, 970, 1018)
     }),
     28: _tools.RODict({
         "ID": 28,
         "grade": 28,
-        "expPlayer": 87091,
+        "expPlayer": 1420000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 64000], [64001, 126000], [126001]),
-        "idleIncome": (185, 190, 195)
+        "powerRange": ([0, 29634], [29635, 32753], [32754]),
+        "idleIncome": (949, 999, 1048)
     }),
     29: _tools.RODict({
         "ID": 29,
         "grade": 29,
-        "expPlayer": 108864,
+        "expPlayer": 1450000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 66000], [66001, 130000], [130001]),
-        "idleIncome": (190, 195, 200)
+        "powerRange": ([0, 30153], [30154, 33327], [33328]),
+        "idleIncome": (977, 1029, 1080)
     }),
     30: _tools.RODict({
         "ID": 30,
         "grade": 30,
-        "expPlayer": 132970,
+        "expPlayer": 1600000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 68000], [68001, 134000], [134001]),
-        "idleIncome": (195, 200, 205)
+        "powerRange": ([0, 36376], [36377, 40205], [40206]),
+        "idleIncome": (1007, 1060, 1113)
     }),
     31: _tools.RODict({
         "ID": 31,
         "grade": 31,
-        "expPlayer": 160704,
+        "expPlayer": 1750000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 70000], [70001, 138000], [138001]),
-        "idleIncome": (200, 205, 210)
+        "powerRange": ([0, 38294], [38295, 42325], [42326]),
+        "idleIncome": (1037, 1092, 1146)
     }),
     32: _tools.RODict({
         "ID": 32,
         "grade": 32,
-        "expPlayer": 196830,
+        "expPlayer": 1950000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 72000], [72001, 142000], [142001]),
-        "idleIncome": (205, 210, 215)
+        "powerRange": ([0, 40212], [40213, 44445], [44446]),
+        "idleIncome": (1068, 1125, 1181)
     }),
     33: _tools.RODict({
         "ID": 33,
         "grade": 33,
-        "expPlayer": 238140,
+        "expPlayer": 2950000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 74000], [74001, 146000], [146001]),
-        "idleIncome": (210, 215, 220)
+        "powerRange": ([0, 42130], [42131, 46565], [46566]),
+        "idleIncome": (1100, 1158, 1215)
     }),
     34: _tools.RODict({
         "ID": 34,
         "grade": 34,
-        "expPlayer": 285120,
+        "expPlayer": 3950000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 76000], [76001, 150000], [150001]),
-        "idleIncome": (215, 220, 225)
+        "powerRange": ([0, 44047], [44048, 48684], [48685]),
+        "idleIncome": (1133, 1193, 1252)
     }),
     35: _tools.RODict({
         "ID": 35,
         "grade": 35,
-        "expPlayer": 338256,
+        "expPlayer": 3960000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 78000], [78001, 154000], [154001]),
-        "idleIncome": (220, 225, 230)
+        "powerRange": ([0, 45965], [45966, 50804], [50805]),
+        "idleIncome": (1167, 1229, 1290)
     }),
     36: _tools.RODict({
         "ID": 36,
         "grade": 36,
-        "expPlayer": 400140,
+        "expPlayer": 3970000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 80000], [80001, 158000], [158001]),
-        "idleIncome": (225, 230, 235)
+        "powerRange": ([0, 47883], [47884, 52924], [52925]),
+        "idleIncome": (1202, 1266, 1329)
     }),
     37: _tools.RODict({
         "ID": 37,
         "grade": 37,
-        "expPlayer": 469476,
+        "expPlayer": 3980000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 82000], [82001, 162000], [162001]),
-        "idleIncome": (230, 235, 240)
+        "powerRange": ([0, 49801], [49802, 55044], [55045]),
+        "idleIncome": (1238, 1304, 1369)
     }),
     38: _tools.RODict({
         "ID": 38,
         "grade": 38,
-        "expPlayer": 549180,
+        "expPlayer": 3990000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 84000], [84001, 166000], [166001]),
-        "idleIncome": (235, 240, 245)
+        "powerRange": ([0, 51719], [51720, 57164], [57165]),
+        "idleIncome": (1275, 1343, 1410)
     }),
     39: _tools.RODict({
         "ID": 39,
         "grade": 39,
-        "expPlayer": 637632,
+        "expPlayer": 4000000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 86000], [86001, 170000], [170001]),
-        "idleIncome": (240, 245, 250)
+        "powerRange": ([0, 53637], [53638, 59284], [59285]),
+        "idleIncome": (1313, 1383, 1452)
     }),
     40: _tools.RODict({
         "ID": 40,
         "grade": 40,
-        "expPlayer": 764122,
+        "expPlayer": 4010000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 88000], [88001, 174000], [174001]),
-        "idleIncome": (245, 250, 255)
+        "powerRange": ([0, 55556], [55557, 61404], [61405]),
+        "idleIncome": (1366, 1438, 1509)
     }),
     41: _tools.RODict({
         "ID": 41,
         "grade": 41,
-        "expPlayer": 908237,
+        "expPlayer": 6110000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 90000], [90001, 178000], [178001]),
-        "idleIncome": (250, 255, 260)
+        "powerRange": ([0, 56885], [56886, 62872], [62873]),
+        "idleIncome": (1421, 1496, 1570)
     }),
     42: _tools.RODict({
         "ID": 42,
         "grade": 42,
-        "expPlayer": 1071533,
+        "expPlayer": 8810000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 92000], [92001, 182000], [182001]),
-        "idleIncome": (255, 260, 265)
+        "powerRange": ([0, 58214], [58215, 64341], [64342]),
+        "idleIncome": (1478, 1556, 1633)
     }),
     43: _tools.RODict({
         "ID": 43,
         "grade": 43,
-        "expPlayer": 1259194,
+        "expPlayer": 9260000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 94000], [94001, 186000], [186001]),
-        "idleIncome": (260, 265, 270)
+        "powerRange": ([0, 59543], [59544, 65810], [65811]),
+        "idleIncome": (1537, 1618, 1698)
     }),
     44: _tools.RODict({
         "ID": 44,
         "grade": 44,
-        "expPlayer": 1469664,
+        "expPlayer": 9590000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 96000], [96001, 190000], [190001]),
-        "idleIncome": (265, 270, 275)
+        "powerRange": ([0, 60872], [60873, 67279], [67280]),
+        "idleIncome": (1598, 1683, 1767)
     }),
     45: _tools.RODict({
         "ID": 45,
         "grade": 45,
-        "expPlayer": 1708646,
+        "expPlayer": 10790000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 98000], [98001, 194000], [194001]),
-        "idleIncome": (270, 275, 280)
+        "powerRange": ([0, 62201], [62202, 68748], [68749]),
+        "idleIncome": (1662, 1750, 1837)
     }),
     46: _tools.RODict({
         "ID": 46,
         "grade": 46,
-        "expPlayer": 1978474,
+        "expPlayer": 10890000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 100000], [100001, 198000], [198001]),
-        "idleIncome": (275, 280, 285)
+        "powerRange": ([0, 63530], [63531, 70217], [70218]),
+        "idleIncome": (1729, 1820, 1911)
     }),
     47: _tools.RODict({
         "ID": 47,
         "grade": 47,
-        "expPlayer": 2281478,
+        "expPlayer": 10990000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 102000], [102001, 202000], [202001]),
-        "idleIncome": (280, 285, 290)
+        "powerRange": ([0, 64860], [64861, 71687], [71688]),
+        "idleIncome": (1798, 1893, 1987)
     }),
     48: _tools.RODict({
         "ID": 48,
         "grade": 48,
-        "expPlayer": 2624918,
+        "expPlayer": 14120000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 104000], [104001, 206000], [206001]),
-        "idleIncome": (285, 290, 295)
+        "powerRange": ([0, 66189], [66190, 73156], [73157]),
+        "idleIncome": (1870, 1969, 2067)
     }),
     49: _tools.RODict({
         "ID": 49,
         "grade": 49,
-        "expPlayer": 3011904,
+        "expPlayer": 14750000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 106000], [106001, 210000], [210001]),
-        "idleIncome": (290, 295, 300)
+        "powerRange": ([0, 67518], [67519, 74625], [74626]),
+        "idleIncome": (1945, 2048, 2150)
     }),
     50: _tools.RODict({
         "ID": 50,
         "grade": 50,
-        "expPlayer": 3691656,
+        "expPlayer": 15380000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 108000], [108001, 214000], [214001]),
-        "idleIncome": (295, 300, 305)
+        "powerRange": ([0, 68847], [68848, 76094], [76095]),
+        "idleIncome": (2023, 2130, 2236)
     }),
     51: _tools.RODict({
         "ID": 51,
         "grade": 51,
-        "expPlayer": 4471200,
+        "expPlayer": 49110000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 110000], [110001, 218000], [218001]),
-        "idleIncome": (300, 305, 310)
+        "powerRange": ([0, 70585], [70586, 78015], [78016]),
+        "idleIncome": (2104, 2215, 2325)
     }),
     52: _tools.RODict({
         "ID": 52,
         "grade": 52,
-        "expPlayer": 5360256,
+        "expPlayer": 51200000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 112000], [112001, 222000], [222001]),
-        "idleIncome": (305, 310, 315)
+        "powerRange": ([0, 72322], [72323, 79935], [79936]),
+        "idleIncome": (2187, 2303, 2418)
     }),
     53: _tools.RODict({
         "ID": 53,
         "grade": 53,
-        "expPlayer": 6376320,
+        "expPlayer": 53490000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 114000], [114001, 226000], [226001]),
-        "idleIncome": (310, 315, 320)
+        "powerRange": ([0, 74060], [74061, 81855], [81856]),
+        "idleIncome": (2276, 2396, 2515)
     }),
     54: _tools.RODict({
         "ID": 54,
         "grade": 54,
-        "expPlayer": 7531056,
+        "expPlayer": 55770000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 116000], [116001, 230000], [230001]),
-        "idleIncome": (315, 320, 325)
+        "powerRange": ([0, 75797], [75798, 83776], [83777]),
+        "idleIncome": (2366, 2491, 2615)
     }),
     55: _tools.RODict({
         "ID": 55,
         "grade": 55,
-        "expPlayer": 8836128,
+        "expPlayer": 58270000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 118000], [118001, 234000], [234001]),
-        "idleIncome": (320, 325, 330)
+        "powerRange": ([0, 77535], [77536, 85696], [85697]),
+        "idleIncome": (2461, 2591, 2720)
     }),
     56: _tools.RODict({
         "ID": 56,
         "grade": 56,
-        "expPlayer": 11010816,
+        "expPlayer": 60750000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 120000], [120001, 238000], [238001]),
-        "idleIncome": (325, 330, 335)
+        "powerRange": ([0, 79272], [79273, 87617], [87618]),
+        "idleIncome": (2560, 2695, 2829)
     }),
     57: _tools.RODict({
         "ID": 57,
         "grade": 57,
-        "expPlayer": 13506912,
+        "expPlayer": 63460000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 122000], [122001, 242000], [242001]),
-        "idleIncome": (330, 335, 340)
+        "powerRange": ([0, 81010], [81011, 89537], [89538]),
+        "idleIncome": (2662, 2803, 2943)
     }),
     58: _tools.RODict({
         "ID": 58,
         "grade": 58,
-        "expPlayer": 16355520,
+        "expPlayer": 66160000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 124000], [124001, 246000], [246001]),
-        "idleIncome": (335, 340, 345)
+        "powerRange": ([0, 82747], [82748, 91458], [91459]),
+        "idleIncome": (2769, 2915, 3060)
     }),
     59: _tools.RODict({
         "ID": 59,
         "grade": 59,
-        "expPlayer": 19616256,
+        "expPlayer": 69120000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 126000], [126001, 250000], [250001]),
-        "idleIncome": (340, 345, 350)
+        "powerRange": ([0, 84485], [84486, 93378], [93379]),
+        "idleIncome": (2879, 3031, 3182)
     }),
     60: _tools.RODict({
         "ID": 60,
         "grade": 60,
-        "expPlayer": 23328000,
+        "expPlayer": 72060000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 128000], [128001, 254000], [254001]),
-        "idleIncome": (345, 350, 355)
+        "powerRange": ([0, 86222], [86223, 95299], [95300]),
+        "idleIncome": (2995, 3153, 3310)
     }),
     61: _tools.RODict({
         "ID": 61,
         "grade": 61,
-        "expPlayer": 28605960,
+        "expPlayer": 75270000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 130000], [130001, 258000], [258001]),
-        "idleIncome": (350, 355, 360)
+        "powerRange": ([0, 87697], [87698, 96928], [96929]),
+        "idleIncome": (3115, 3279, 3442)
     }),
     62: _tools.RODict({
         "ID": 62,
         "grade": 62,
-        "expPlayer": 34642080,
+        "expPlayer": 78470000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 132000], [132001, 262000], [262001]),
-        "idleIncome": (355, 360, 365)
+        "powerRange": ([0, 89172], [89173, 98559], [98560]),
+        "idleIncome": (3239, 3410, 3580)
     }),
     63: _tools.RODict({
         "ID": 63,
         "grade": 63,
-        "expPlayer": 41527728,
+        "expPlayer": 81980000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 134000], [134001, 266000], [266001]),
-        "idleIncome": (360, 365, 370)
+        "powerRange": ([0, 90647], [90648, 100188], [100189]),
+        "idleIncome": (3368, 3546, 3723)
     }),
     64: _tools.RODict({
         "ID": 64,
         "grade": 64,
-        "expPlayer": 49385376,
+        "expPlayer": 85460000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 136000], [136001, 270000], [270001]),
-        "idleIncome": (365, 370, 375)
+        "powerRange": ([0, 92121], [92122, 101818], [101819]),
+        "idleIncome": (3503, 3688, 3872)
     }),
     65: _tools.RODict({
         "ID": 65,
         "grade": 65,
-        "expPlayer": 58327776,
+        "expPlayer": 89270000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 138000], [138001, 274000], [274001]),
-        "idleIncome": (370, 375, 380)
+        "powerRange": ([0, 93596], [93597, 103449], [103450]),
+        "idleIncome": (3644, 3836, 4027)
     }),
     66: _tools.RODict({
         "ID": 66,
         "grade": 66,
-        "expPlayer": 73366560,
+        "expPlayer": 93060000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 140000], [140001, 278000], [278001]),
-        "idleIncome": (375, 380, 385)
+        "powerRange": ([0, 95071], [95072, 105078], [105079]),
+        "idleIncome": (3789, 3989, 4188)
     }),
     67: _tools.RODict({
         "ID": 67,
         "grade": 67,
-        "expPlayer": 88840800,
+        "expPlayer": 97200000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 142000], [142001, 282000], [282001]),
-        "idleIncome": (380, 385, 390)
+        "powerRange": ([0, 96545], [96546, 106708], [106709]),
+        "idleIncome": (3941, 4149, 4356)
     }),
     68: _tools.RODict({
         "ID": 68,
         "grade": 68,
-        "expPlayer": 106527960,
+        "expPlayer": 101330000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 144000], [144001, 286000], [286001]),
-        "idleIncome": (385, 390, 395)
+        "powerRange": ([0, 98021], [98022, 108339], [108340]),
+        "idleIncome": (4099, 4315, 4530)
     }),
     69: _tools.RODict({
         "ID": 69,
         "grade": 69,
-        "expPlayer": 126671040,
+        "expPlayer": 105840000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 146000], [146001, 290000], [290001]),
-        "idleIncome": (390, 395, 400)
+        "powerRange": ([0, 99495], [99496, 109968], [109969]),
+        "idleIncome": (4262, 4487, 4711)
     }),
     70: _tools.RODict({
         "ID": 70,
         "grade": 70,
-        "expPlayer": 149568120,
+        "expPlayer": 110330000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 148000], [148001, 294000], [294001]),
-        "idleIncome": (395, 400, 405)
+        "powerRange": ([0, 100970], [100971, 111599], [111600]),
+        "idleIncome": (4433, 4667, 4900)
     }),
     71: _tools.RODict({
         "ID": 71,
         "grade": 71,
-        "expPlayer": 169317540,
+        "expPlayer": 129650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 150000], [150001, 298000], [298001]),
-        "idleIncome": (400, 405, 410)
+        "powerRange": ([0, 102684], [102685, 113493], [113494]),
+        "idleIncome": (4610, 4853, 5095)
     }),
     72: _tools.RODict({
         "ID": 72,
         "grade": 72,
-        "expPlayer": 191373840,
+        "expPlayer": 135150000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 152000], [152001, 302000], [302001]),
-        "idleIncome": (405, 410, 415)
+        "powerRange": ([0, 104399], [104400, 115388], [115389]),
+        "idleIncome": (4795, 5048, 5300)
     }),
     73: _tools.RODict({
         "ID": 73,
         "grade": 73,
-        "expPlayer": 216061020,
+        "expPlayer": 141160000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 154000], [154001, 306000], [306001]),
-        "idleIncome": (410, 415, 420)
+        "powerRange": ([0, 106114], [106115, 117283], [117284]),
+        "idleIncome": (4987, 5250, 5512)
     }),
     74: _tools.RODict({
         "ID": 74,
         "grade": 74,
-        "expPlayer": 243631800,
+        "expPlayer": 147140000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 156000], [156001, 310000], [310001]),
-        "idleIncome": (415, 420, 425)
+        "powerRange": ([0, 107828], [107829, 119179], [119180]),
+        "idleIncome": (5187, 5460, 5733)
     }),
     75: _tools.RODict({
         "ID": 75,
         "grade": 75,
-        "expPlayer": 274402080,
+        "expPlayer": 153680000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 158000], [158001, 314000], [314001]),
-        "idleIncome": (420, 425, 430)
+        "powerRange": ([0, 109542], [109543, 121073], [121074]),
+        "idleIncome": (5394, 5678, 5961)
     }),
     76: _tools.RODict({
         "ID": 76,
         "grade": 76,
-        "expPlayer": 308759040,
+        "expPlayer": 320390000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 160000], [160001, 318000], [318001]),
-        "idleIncome": (425, 430, 435)
+        "powerRange": ([0, 111257], [111258, 122968], [122969]),
+        "idleIncome": (5609, 5905, 6200)
     }),
     77: _tools.RODict({
         "ID": 77,
         "grade": 77,
-        "expPlayer": 347062320,
+        "expPlayer": 334620000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 162000], [162001, 322000], [322001]),
-        "idleIncome": (430, 435, 440)
+        "powerRange": ([0, 112972], [112973, 124863], [124864]),
+        "idleIncome": (5833, 6141, 6448)
     }),
     78: _tools.RODict({
         "ID": 78,
         "grade": 78,
-        "expPlayer": 389746080,
+        "expPlayer": 348790000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 164000], [164001, 326000], [326001]),
-        "idleIncome": (435, 440, 445)
+        "powerRange": ([0, 114686], [114687, 126759], [126760]),
+        "idleIncome": (6067, 6387, 6706)
     }),
     79: _tools.RODict({
         "ID": 79,
         "grade": 79,
-        "expPlayer": 437327100,
+        "expPlayer": 363450000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 166000], [166001, 330000], [330001]),
-        "idleIncome": (440, 445, 450)
+        "powerRange": ([0, 116400], [116401, 128653], [128654]),
+        "idleIncome": (6309, 6642, 6974)
     }),
     80: _tools.RODict({
         "ID": 80,
         "grade": 80,
-        "expPlayer": 490296240,
+        "expPlayer": 377990000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 168000], [168001, 334000], [334001]),
-        "idleIncome": (445, 450, 455)
+        "powerRange": ([0, 118115], [118116, 130548], [130549]),
+        "idleIncome": (6562, 6908, 7253)
     }),
     81: _tools.RODict({
         "ID": 81,
         "grade": 81,
-        "expPlayer": 549290160,
+        "expPlayer": 393870000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 170000], [170001, 338000], [338001]),
-        "idleIncome": (450, 455, 460)
+        "powerRange": ([0, 121046], [121047, 133787], [133788]),
+        "idleIncome": (6825, 7185, 7544)
     }),
     82: _tools.RODict({
         "ID": 82,
         "grade": 82,
-        "expPlayer": 614922840,
+        "expPlayer": 655400000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 172000], [172001, 342000], [342001]),
-        "idleIncome": (455, 460, 465)
+        "powerRange": ([0, 123975], [123976, 137026], [137027]),
+        "idleIncome": (7098, 7472, 7845)
     }),
     83: _tools.RODict({
         "ID": 83,
         "grade": 83,
-        "expPlayer": 687903840,
+        "expPlayer": 682940000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 174000], [174001, 346000], [346001]),
-        "idleIncome": (460, 465, 470)
+        "powerRange": ([0, 126906], [126907, 140265], [140266]),
+        "idleIncome": (7382, 7771, 8159)
     }),
     84: _tools.RODict({
         "ID": 84,
         "grade": 84,
-        "expPlayer": 769046400,
+        "expPlayer": 710250000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 176000], [176001, 350000], [350001]),
-        "idleIncome": (465, 470, 475)
+        "powerRange": ([0, 129837], [129838, 143504], [143505]),
+        "idleIncome": (7677, 8082, 8486)
     }),
     85: _tools.RODict({
         "ID": 85,
         "grade": 85,
-        "expPlayer": 859209120,
+        "expPlayer": 740090000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 178000], [178001, 354000], [354001]),
-        "idleIncome": (470, 475, 480)
+        "powerRange": ([0, 132768], [132769, 146743], [146744]),
+        "idleIncome": (7984, 8405, 8825)
     }),
     86: _tools.RODict({
         "ID": 86,
         "grade": 86,
-        "expPlayer": 959364000,
+        "expPlayer": 769700000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 180000], [180001, 358000], [358001]),
-        "idleIncome": (475, 480, 485)
+        "powerRange": ([0, 135698], [135699, 149982], [149983]),
+        "idleIncome": (8303, 8741, 9178)
     }),
     87: _tools.RODict({
         "ID": 87,
         "grade": 87,
-        "expPlayer": 1070604540,
+        "expPlayer": 802030000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 182000], [182001, 362000], [362001]),
-        "idleIncome": (480, 485, 490)
+        "powerRange": ([0, 138628], [138629, 153221], [153222]),
+        "idleIncome": (8636, 9091, 9545)
     }),
     88: _tools.RODict({
         "ID": 88,
         "grade": 88,
-        "expPlayer": 1194082560,
+        "expPlayer": 1390180000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 184000], [184001, 366000], [366001]),
-        "idleIncome": (485, 490, 495)
+        "powerRange": ([0, 141559], [141560, 156460], [156461]),
+        "idleIncome": (8981, 9454, 9926)
     }),
     89: _tools.RODict({
         "ID": 89,
         "grade": 89,
-        "expPlayer": 1331154000,
+        "expPlayer": 1448580000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 186000], [186001, 370000], [370001]),
-        "idleIncome": (490, 495, 500)
+        "powerRange": ([0, 144489], [144490, 159698], [159699]),
+        "idleIncome": (9341, 9833, 10324)
     }),
     90: _tools.RODict({
         "ID": 90,
         "grade": 90,
-        "expPlayer": 1483171560,
+        "expPlayer": 1506520000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 188000], [188001, 374000], [374001]),
-        "idleIncome": (495, 500, 505)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     91: _tools.RODict({
         "ID": 91,
         "grade": 91,
-        "expPlayer": 1483171560,
+        "expPlayer": 1566780000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 190000], [190001, 378000], [378001]),
-        "idleIncome": (500, 505, 510)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     92: _tools.RODict({
         "ID": 92,
         "grade": 92,
-        "expPlayer": 1483171560,
+        "expPlayer": 1629450000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 192000], [192001, 382000], [382001]),
-        "idleIncome": (505, 510, 515)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     93: _tools.RODict({
         "ID": 93,
         "grade": 93,
-        "expPlayer": 1483171560,
+        "expPlayer": 1694630000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 194000], [194001, 386000], [386001]),
-        "idleIncome": (510, 515, 520)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     94: _tools.RODict({
         "ID": 94,
         "grade": 94,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 196000], [196001, 390000], [390001]),
-        "idleIncome": (515, 520, 525)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     95: _tools.RODict({
         "ID": 95,
         "grade": 95,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 198000], [198001, 394000], [394001]),
-        "idleIncome": (520, 525, 530)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     96: _tools.RODict({
         "ID": 96,
         "grade": 96,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 200000], [200001, 398000], [398001]),
-        "idleIncome": (525, 530, 535)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     97: _tools.RODict({
         "ID": 97,
         "grade": 97,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 202000], [202001, 402000], [402001]),
-        "idleIncome": (530, 535, 540)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     98: _tools.RODict({
         "ID": 98,
         "grade": 98,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 204000], [204001, 406000], [406001]),
-        "idleIncome": (535, 540, 545)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     99: _tools.RODict({
         "ID": 99,
         "grade": 99,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 206000], [206001, 410000], [410001]),
-        "idleIncome": (540, 545, 550)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     100: _tools.RODict({
         "ID": 100,
         "grade": 100,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 208000], [208001, 414000], [414001]),
-        "idleIncome": (545, 550, 555)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     101: _tools.RODict({
         "ID": 101,
         "grade": 101,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 210000], [210001, 418000], [418001]),
-        "idleIncome": (550, 555, 560)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     102: _tools.RODict({
         "ID": 102,
         "grade": 102,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 212000], [212001, 422000], [422001]),
-        "idleIncome": (555, 560, 565)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     103: _tools.RODict({
         "ID": 103,
         "grade": 103,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 214000], [214001, 426000], [426001]),
-        "idleIncome": (560, 565, 570)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     104: _tools.RODict({
         "ID": 104,
         "grade": 104,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 216000], [216001, 430000], [430001]),
-        "idleIncome": (565, 570, 575)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     105: _tools.RODict({
         "ID": 105,
         "grade": 105,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 218000], [218001, 434000], [434001]),
-        "idleIncome": (570, 575, 580)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     106: _tools.RODict({
         "ID": 106,
         "grade": 106,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 220000], [220001, 438000], [438001]),
-        "idleIncome": (575, 580, 585)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     107: _tools.RODict({
         "ID": 107,
         "grade": 107,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 222000], [222001, 442000], [442001]),
-        "idleIncome": (580, 585, 590)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     108: _tools.RODict({
         "ID": 108,
         "grade": 108,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 224000], [224001, 446000], [446001]),
-        "idleIncome": (585, 590, 595)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     109: _tools.RODict({
         "ID": 109,
         "grade": 109,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 226000], [226001, 450000], [450001]),
-        "idleIncome": (590, 595, 600)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     110: _tools.RODict({
         "ID": 110,
         "grade": 110,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 228000], [228001, 454000], [454001]),
-        "idleIncome": (595, 600, 605)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     111: _tools.RODict({
         "ID": 111,
         "grade": 111,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 230000], [230001, 458000], [458001]),
-        "idleIncome": (600, 605, 610)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     112: _tools.RODict({
         "ID": 112,
         "grade": 112,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 232000], [232001, 462000], [462001]),
-        "idleIncome": (605, 610, 615)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     113: _tools.RODict({
         "ID": 113,
         "grade": 113,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 234000], [234001, 466000], [466001]),
-        "idleIncome": (610, 615, 620)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     114: _tools.RODict({
         "ID": 114,
         "grade": 114,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 236000], [236001, 470000], [470001]),
-        "idleIncome": (615, 620, 625)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     115: _tools.RODict({
         "ID": 115,
         "grade": 115,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 238000], [238001, 474000], [474001]),
-        "idleIncome": (620, 625, 630)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     116: _tools.RODict({
         "ID": 116,
         "grade": 116,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 240000], [240001, 478000], [478001]),
-        "idleIncome": (625, 630, 635)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     117: _tools.RODict({
         "ID": 117,
         "grade": 117,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 242000], [242001, 482000], [482001]),
-        "idleIncome": (630, 635, 640)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     118: _tools.RODict({
         "ID": 118,
         "grade": 118,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 244000], [244001, 486000], [486001]),
-        "idleIncome": (635, 640, 645)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     119: _tools.RODict({
         "ID": 119,
         "grade": 119,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 246000], [246001, 490000], [490001]),
-        "idleIncome": (640, 645, 650)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     120: _tools.RODict({
         "ID": 120,
         "grade": 120,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 248000], [248001, 494000], [494001]),
-        "idleIncome": (645, 650, 655)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     121: _tools.RODict({
         "ID": 121,
         "grade": 121,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 250000], [250001, 498000], [498001]),
-        "idleIncome": (650, 655, 660)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     122: _tools.RODict({
         "ID": 122,
         "grade": 122,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 252000], [252001, 502000], [502001]),
-        "idleIncome": (655, 660, 665)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     123: _tools.RODict({
         "ID": 123,
         "grade": 123,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 254000], [254001, 506000], [506001]),
-        "idleIncome": (660, 665, 670)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     124: _tools.RODict({
         "ID": 124,
         "grade": 124,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 256000], [256001, 510000], [510001]),
-        "idleIncome": (665, 670, 675)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     125: _tools.RODict({
         "ID": 125,
         "grade": 125,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 258000], [258001, 514000], [514001]),
-        "idleIncome": (670, 675, 680)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     126: _tools.RODict({
         "ID": 126,
         "grade": 126,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 260000], [260001, 518000], [518001]),
-        "idleIncome": (675, 680, 685)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     127: _tools.RODict({
         "ID": 127,
         "grade": 127,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 262000], [262001, 522000], [522001]),
-        "idleIncome": (680, 685, 690)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     128: _tools.RODict({
         "ID": 128,
         "grade": 128,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 264000], [264001, 526000], [526001]),
-        "idleIncome": (685, 690, 695)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     129: _tools.RODict({
         "ID": 129,
         "grade": 129,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 266000], [266001, 530000], [530001]),
-        "idleIncome": (690, 695, 700)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     130: _tools.RODict({
         "ID": 130,
         "grade": 130,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 268000], [268001, 534000], [534001]),
-        "idleIncome": (695, 700, 705)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     131: _tools.RODict({
         "ID": 131,
         "grade": 131,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 270000], [270001, 538000], [538001]),
-        "idleIncome": (700, 705, 710)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     132: _tools.RODict({
         "ID": 132,
         "grade": 132,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 272000], [272001, 542000], [542001]),
-        "idleIncome": (705, 710, 715)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     133: _tools.RODict({
         "ID": 133,
         "grade": 133,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 274000], [274001, 546000], [546001]),
-        "idleIncome": (710, 715, 720)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     134: _tools.RODict({
         "ID": 134,
         "grade": 134,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 276000], [276001, 550000], [550001]),
-        "idleIncome": (715, 720, 725)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     135: _tools.RODict({
         "ID": 135,
         "grade": 135,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 278000], [278001, 554000], [554001]),
-        "idleIncome": (720, 725, 730)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     136: _tools.RODict({
         "ID": 136,
         "grade": 136,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 280000], [280001, 558000], [558001]),
-        "idleIncome": (725, 730, 735)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     137: _tools.RODict({
         "ID": 137,
         "grade": 137,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 282000], [282001, 562000], [562001]),
-        "idleIncome": (730, 735, 740)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     138: _tools.RODict({
         "ID": 138,
         "grade": 138,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 284000], [284001, 566000], [566001]),
-        "idleIncome": (735, 740, 745)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     139: _tools.RODict({
         "ID": 139,
         "grade": 139,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 286000], [286001, 570000], [570001]),
-        "idleIncome": (740, 745, 750)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     140: _tools.RODict({
         "ID": 140,
         "grade": 140,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 288000], [288001, 574000], [574001]),
-        "idleIncome": (745, 750, 755)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     141: _tools.RODict({
         "ID": 141,
         "grade": 141,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 290000], [290001, 578000], [578001]),
-        "idleIncome": (750, 755, 760)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     142: _tools.RODict({
         "ID": 142,
         "grade": 142,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 292000], [292001, 582000], [582001]),
-        "idleIncome": (755, 760, 765)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     143: _tools.RODict({
         "ID": 143,
         "grade": 143,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 294000], [294001, 586000], [586001]),
-        "idleIncome": (760, 765, 770)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     144: _tools.RODict({
         "ID": 144,
         "grade": 144,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 296000], [296001, 590000], [590001]),
-        "idleIncome": (765, 770, 775)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     145: _tools.RODict({
         "ID": 145,
         "grade": 145,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 298000], [298001, 594000], [594001]),
-        "idleIncome": (770, 775, 780)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     146: _tools.RODict({
         "ID": 146,
         "grade": 146,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 300000], [300001, 598000], [598001]),
-        "idleIncome": (775, 780, 785)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     147: _tools.RODict({
         "ID": 147,
         "grade": 147,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 302000], [302001, 602000], [602001]),
-        "idleIncome": (780, 785, 790)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     148: _tools.RODict({
         "ID": 148,
         "grade": 148,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 304000], [304001, 606000], [606001]),
-        "idleIncome": (785, 790, 795)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     149: _tools.RODict({
         "ID": 149,
         "grade": 149,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 306000], [306001, 610000], [610001]),
-        "idleIncome": (790, 795, 800)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     150: _tools.RODict({
         "ID": 150,
         "grade": 150,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 308000], [308001, 614000], [614001]),
-        "idleIncome": (795, 800, 805)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     151: _tools.RODict({
         "ID": 151,
         "grade": 151,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 310000], [310001, 618000], [618001]),
-        "idleIncome": (800, 805, 810)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     152: _tools.RODict({
         "ID": 152,
         "grade": 152,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 312000], [312001, 622000], [622001]),
-        "idleIncome": (805, 810, 815)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     153: _tools.RODict({
         "ID": 153,
         "grade": 153,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 314000], [314001, 626000], [626001]),
-        "idleIncome": (810, 815, 820)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     154: _tools.RODict({
         "ID": 154,
         "grade": 154,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 316000], [316001, 630000], [630001]),
-        "idleIncome": (815, 820, 825)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     155: _tools.RODict({
         "ID": 155,
         "grade": 155,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 318000], [318001, 634000], [634001]),
-        "idleIncome": (820, 825, 830)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     156: _tools.RODict({
         "ID": 156,
         "grade": 156,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 320000], [320001, 638000], [638001]),
-        "idleIncome": (825, 830, 835)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     157: _tools.RODict({
         "ID": 157,
         "grade": 157,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 322000], [322001, 642000], [642001]),
-        "idleIncome": (830, 835, 840)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     158: _tools.RODict({
         "ID": 158,
         "grade": 158,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 324000], [324001, 646000], [646001]),
-        "idleIncome": (835, 840, 845)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     159: _tools.RODict({
         "ID": 159,
         "grade": 159,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 326000], [326001, 650000], [650001]),
-        "idleIncome": (840, 845, 850)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     160: _tools.RODict({
         "ID": 160,
         "grade": 160,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 328000], [328001, 654000], [654001]),
-        "idleIncome": (845, 850, 855)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     161: _tools.RODict({
         "ID": 161,
         "grade": 161,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 330000], [330001, 658000], [658001]),
-        "idleIncome": (850, 855, 860)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     162: _tools.RODict({
         "ID": 162,
         "grade": 162,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 332000], [332001, 662000], [662001]),
-        "idleIncome": (855, 860, 865)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     163: _tools.RODict({
         "ID": 163,
         "grade": 163,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 334000], [334001, 666000], [666001]),
-        "idleIncome": (860, 865, 870)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     164: _tools.RODict({
         "ID": 164,
         "grade": 164,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 336000], [336001, 670000], [670001]),
-        "idleIncome": (865, 870, 875)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     165: _tools.RODict({
         "ID": 165,
         "grade": 165,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 338000], [338001, 674000], [674001]),
-        "idleIncome": (870, 875, 880)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     166: _tools.RODict({
         "ID": 166,
         "grade": 166,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 340000], [340001, 678000], [678001]),
-        "idleIncome": (875, 880, 885)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     167: _tools.RODict({
         "ID": 167,
         "grade": 167,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 342000], [342001, 682000], [682001]),
-        "idleIncome": (880, 885, 890)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     168: _tools.RODict({
         "ID": 168,
         "grade": 168,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 344000], [344001, 686000], [686001]),
-        "idleIncome": (885, 890, 895)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     169: _tools.RODict({
         "ID": 169,
         "grade": 169,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 346000], [346001, 690000], [690001]),
-        "idleIncome": (890, 895, 900)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     170: _tools.RODict({
         "ID": 170,
         "grade": 170,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 348000], [348001, 694000], [694001]),
-        "idleIncome": (895, 900, 905)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     171: _tools.RODict({
         "ID": 171,
         "grade": 171,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 350000], [350001, 698000], [698001]),
-        "idleIncome": (900, 905, 910)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     172: _tools.RODict({
         "ID": 172,
         "grade": 172,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 352000], [352001, 702000], [702001]),
-        "idleIncome": (905, 910, 915)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     173: _tools.RODict({
         "ID": 173,
         "grade": 173,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 354000], [354001, 706000], [706001]),
-        "idleIncome": (910, 915, 920)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     174: _tools.RODict({
         "ID": 174,
         "grade": 174,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 356000], [356001, 710000], [710001]),
-        "idleIncome": (915, 920, 925)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     175: _tools.RODict({
         "ID": 175,
         "grade": 175,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 358000], [358001, 714000], [714001]),
-        "idleIncome": (920, 925, 930)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     176: _tools.RODict({
         "ID": 176,
         "grade": 176,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 360000], [360001, 718000], [718001]),
-        "idleIncome": (925, 930, 935)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     177: _tools.RODict({
         "ID": 177,
         "grade": 177,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 362000], [362001, 722000], [722001]),
-        "idleIncome": (930, 935, 940)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     178: _tools.RODict({
         "ID": 178,
         "grade": 178,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 364000], [364001, 726000], [726001]),
-        "idleIncome": (935, 940, 945)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     179: _tools.RODict({
         "ID": 179,
         "grade": 179,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 366000], [366001, 730000], [730001]),
-        "idleIncome": (940, 945, 950)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     180: _tools.RODict({
         "ID": 180,
         "grade": 180,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 368000], [368001, 734000], [734001]),
-        "idleIncome": (945, 950, 955)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     181: _tools.RODict({
         "ID": 181,
         "grade": 181,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 370000], [370001, 738000], [738001]),
-        "idleIncome": (950, 955, 960)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     182: _tools.RODict({
         "ID": 182,
         "grade": 182,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 372000], [372001, 742000], [742001]),
-        "idleIncome": (955, 960, 965)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     183: _tools.RODict({
         "ID": 183,
         "grade": 183,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 374000], [374001, 746000], [746001]),
-        "idleIncome": (960, 965, 970)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     184: _tools.RODict({
         "ID": 184,
         "grade": 184,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 376000], [376001, 750000], [750001]),
-        "idleIncome": (965, 970, 975)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     185: _tools.RODict({
         "ID": 185,
         "grade": 185,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 378000], [378001, 754000], [754001]),
-        "idleIncome": (970, 975, 980)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     186: _tools.RODict({
         "ID": 186,
         "grade": 186,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 380000], [380001, 758000], [758001]),
-        "idleIncome": (975, 980, 985)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     187: _tools.RODict({
         "ID": 187,
         "grade": 187,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 382000], [382001, 762000], [762001]),
-        "idleIncome": (980, 985, 990)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     188: _tools.RODict({
         "ID": 188,
         "grade": 188,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 384000], [384001, 766000], [766001]),
-        "idleIncome": (985, 990, 995)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     189: _tools.RODict({
         "ID": 189,
         "grade": 189,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 386000], [386001, 770000], [770001]),
-        "idleIncome": (990, 995, 1000)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     190: _tools.RODict({
         "ID": 190,
         "grade": 190,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 388000], [388001, 774000], [774001]),
-        "idleIncome": (995, 1000, 1005)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     191: _tools.RODict({
         "ID": 191,
         "grade": 191,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 390000], [390001, 778000], [778001]),
-        "idleIncome": (1000, 1005, 1010)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     192: _tools.RODict({
         "ID": 192,
         "grade": 192,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 392000], [392001, 782000], [782001]),
-        "idleIncome": (1005, 1010, 1015)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     193: _tools.RODict({
         "ID": 193,
         "grade": 193,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 394000], [394001, 786000], [786001]),
-        "idleIncome": (1010, 1015, 1020)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     194: _tools.RODict({
         "ID": 194,
         "grade": 194,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 396000], [396001, 790000], [790001]),
-        "idleIncome": (1015, 1020, 1025)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     195: _tools.RODict({
         "ID": 195,
         "grade": 195,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 398000], [398001, 794000], [794001]),
-        "idleIncome": (1020, 1025, 1030)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     196: _tools.RODict({
         "ID": 196,
         "grade": 196,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 400000], [400001, 798000], [798001]),
-        "idleIncome": (1025, 1030, 1035)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     197: _tools.RODict({
         "ID": 197,
         "grade": 197,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 402000], [402001, 802000], [802001]),
-        "idleIncome": (1030, 1035, 1040)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     198: _tools.RODict({
         "ID": 198,
         "grade": 198,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 404000], [404001, 806000], [806001]),
-        "idleIncome": (1035, 1040, 1045)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     199: _tools.RODict({
         "ID": 199,
         "grade": 199,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 406000], [406001, 810000], [810001]),
-        "idleIncome": (1040, 1045, 1050)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     }),
     200: _tools.RODict({
         "ID": 200,
         "grade": 200,
-        "expPlayer": 1483171560,
+        "expPlayer": 1763650000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 408000], [408001, 814000], [814001]),
-        "idleIncome": (1045, 1050, 1055)
+        "powerRange": ([0, 147420], [147421, 162937], [162938]),
+        "idleIncome": (9714, 10226, 10737)
     })
 })
 minKey = 1

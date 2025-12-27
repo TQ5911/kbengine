@@ -181,7 +181,7 @@ datas = _tools.RODict({
     }),
     "WonderLandExpansionTitle": _tools.RODict({
         "ID": "WonderLandExpansionTitle",
-        "value": "延长时间：{0}",
+        "value": "限定时间：{0}",
     }),
     "AutoExpansionUseItemText": _tools.RODict({
         "ID": "AutoExpansionUseItemText",

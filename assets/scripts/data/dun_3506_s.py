@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "35060001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -28,6 +29,7 @@ datas ={
       "Monster": {
         "35060002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -51,6 +53,7 @@ datas ={
         },
         "35060003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -74,6 +77,7 @@ datas ={
         },
         "35060004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -97,6 +101,7 @@ datas ={
         },
         "35060005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -120,6 +125,7 @@ datas ={
         },
         "35060006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -142,6 +148,7 @@ datas ={
           }
         }
       }
-    }
+    },
+    "TimerEntities": {}
   }
 }

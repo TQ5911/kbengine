@@ -24,17 +24,19 @@ class IMineWarMonster(object):
     # 根据帮会信息初始化旗帜属性
     def initGuildProp(self):
         self.mineWarGuildId = self.spaceMgr.mineWarGuildId
-        # 旗帜创建出来就可以被攻击
-        if self.isMineWarFlag():# and self.mineWarGuildId > 0:
-            self.mineWarCanAttack = True
+
+        self.mineWarCanAttack = True
+        if self.isMineWarCore() or self.isMineWarFlagBroken():
+            self.mineWarCanAttack = False
             
         self.recoverTimer = 0
         if self.spaceMgr and self.mineWarMonsterType in gameconst.mineWarMonsterEnumDict.values():
             self.spaceMgr.addMineWarMonsterOnInit(self.mineWarMonsterType, self)
-
-            # ================== lxq测试用
-            self.hp = self.fullHp = 10000
+            # self.hp = self.fullHp = 10000
             INFO_MSG('IMineWarMonster::initGuildProp', self.gameEntityId, self.mineWarMonsterType, self.mineWarGuildId)
+            
+            # 初始化状态
+            self.onMineWarStateChange(self.spaceMgr.mineWarGuildId, self.spaceMgr.mineWarState, self.spaceMgr.mineWarState)
 
     def isMineWarCore(self):
         return self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_CORE
@@ -71,20 +73,38 @@ class IMineWarMonster(object):
                 
     def switchMonsterState(self, flagState, coreState, hasGuild=False):
         """切换怪物状态"""
-        if self.isMineWarFlag() or self.isMineWarFlagBroken():
+        if self.isMineWarFlag():
             if hasGuild:
                 if self.mineWarGuildId > 0:
                     self.mineWarCanAttack = flagState
+                else:
+                    self.mineWarCanAttack = False
             else:
                 self.mineWarCanAttack = flagState
         elif self.isMineWarCore():
             self.mineWarCanAttack = coreState
+            if coreState:
+                self.isBoss = True
+                self.spaceMgr.setBossEntity(self.id)
+            else:
+                self.isBoss = False
+                self.spaceMgr.unsetBossEntity(self.id)
+        #INFO_MSG('Monster::switchMonsterState', self.id, self.mineWarMonsterType, self.mineWarCanAttack, flagState, coreState, self.isBoss)
     
     def onGuildChange(self, guildId, guildName):
         INFO_MSG('Monster::onGuildChange', self.gameEntityId, guildId, guildName)
         self.mineWarGuildId = guildId
         
-    
+    def checkMineWarEnemy(self, attacker):
+        if not (self.isMineWarCore() and attacker.IsAvatar):
+            return
+
+        attacker = utils.getEntityRealEntity(attacker)
+        if attacker:
+            _enemy, needReturn = utils.isMineWarEnemy(attacker, self)
+            if needReturn and not _enemy:
+                attacker.base.onMessagePre(MBC.datas['mineBattle_prohibitAttacksMsg']['value'], ())
+
     # monster 血量变化处理
     def notifyMineWarOnModifyHP(self, hpVal, releaseRoleId):
         if not formula.isMineWarSpace(self.spaceNo):
@@ -97,25 +117,22 @@ class IMineWarMonster(object):
         percentOld = int((self.hp - hpVal) / self.fullHp * 100)
         # 核心处理
         if self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_CORE:
-            
+            notifyAll = False
             syncPercent = 10
             if percentOld >= syncPercent and percentNow < syncPercent:
                 INFO_MSG("notifyMineWarOnModifyHP: ", percentOld, percentNow, self.hp, hpVal)
                 # 通知帮派玩家
-                if self.mineWarGuildId > 0:
-                    self.doSendGuildHpWarning(syncPercent)
+                # if self.mineWarGuildId > 0:
+                #     self._doMineWarSendGuild('doBroadcastGuildMemberBase', ('onMineWarHpWarning', (self.spaceNo, syncPercent)))
+                notifyAll = True
                 
             # 通知 sapceMgr
-            self.spaceMgr.onMineWarCoreBeAttack(hpVal, releaseRoleId)
+            self.spaceMgr.onMineWarCoreBeAttack(hpVal, releaseRoleId, notifyAll)
                 
         # 旗帜处理
         if self.mineWarGuildId > 0 and self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_FLAG:
             # 旗帜被攻击，通知
             self.spaceMgr.onMineWarFlagBeAttacked()
-            
-    
-    def doSendGuildHpWarning(self, percent):
-        self._doMineWarSendGuild('doSendMineWarHpWarning', (self.spaceNo, percent))
     
     def _doMineWarSendGuild(self, funcName, args):
         if self.mineWarGuildId > 0:
@@ -137,20 +154,20 @@ class IMineWarMonster(object):
 
         # 旗帜被毁，生成被毁旗帜实体
         if self.isMineWarFlag():
-            # gameengine.getGlobalBase('MineWarStub').onMineWarFlagBeKill(formula.getLineType(self.spaceNo))
-            gameengine.getGlobalBase('GuildStub').onMineWarFlagBeKillFromGuild(formula.getLineType(self.spaceNo), killer.guildUUID, killer.name)
+            gameengine.getGlobalBase('MineWarStub').onMineWarFlagBeKill(formula.getLineType(self.spaceNo), killer.guildName, killer.name)
             
-            # 创建被毁旗帜
-            props = {
-                'mineWarMonsterType': gameconst.MineWarMonsterType.MINE_BROKEN_FLAG,
-                'mineWarGuildId': self.mineWarGuildId,
-                'mineWarCanAttack': False,
-                'spaceMgrId': self.spaceMgr.id,
-                'monsterId': self.monsterId,
-                'spaceNo': self.spaceNo,
-            }
-            ent = KBEngine.createEntity("Monster", self.spaceID, self.position, self.direction, props)
-            INFO_MSG("notifyMineWarOnDead: create broken flag entity id {}".format(ent.id))
+            # 创建被毁旗帜，暂时不创建损坏的旗帜了
+            # props = {
+            #     'mineWarMonsterType': gameconst.MineWarMonsterType.MINE_BROKEN_FLAG,
+            #     'mineWarGuildId': self.mineWarGuildId,
+            #     'mineWarCanAttack': False,
+            #     'spaceMgrId': self.spaceMgr.id,
+            #     'monsterId': self.monsterId,
+            #     'spaceNo': self.spaceNo,
+            #     'gameEntityId': self.gameEntityId,
+            # }
+            # ent = KBEngine.createEntity("Monster", self.spaceID, self.position, self.direction, props)
+            # INFO_MSG("notifyMineWarOnDead: create broken flag entity id {}".format(ent.id))
                
     
     def mineWarMonsterImmuneDeath(self, killer, srcType, srcId, curHp):
@@ -177,14 +194,11 @@ class IMineWarMonster(object):
         
         # 设置旗帜状态
         self.mineWarGuildId = killer.guildUUID
-        self.mineWarCanAttack = False
+        # self.mineWarCanAttack = False
 
         # 加回血回调
-        self.recoverTimer = self.pyAddTimer(0, 1, gametimer.MINE_WAR_CORE_RECOVER_HP)
         recoverTime = MBC.datas['mineBattle_invincibleTime']['value'] * 60
-        self.addBuff(64000070, 1, self.id, recoverTime)
-        
-        self._callback(recoverTime, 'onMineWarCoreRecoverEnd', (), gametimer.TIMER_TAG_MINE_WAR_RECOVER_END)
+        self.addBuff(MBC.datas['mineBattle_coreInvincibleBuffID']['value'], 1, self.id, recoverTime)
         
         # 恢复到1点血
         return 1
@@ -200,8 +214,16 @@ class IMineWarMonster(object):
             return
         
         recoverCfg = MBC.datas['mineBattle_recoveryRatio']['value']
-        playerNums = len(self.mineWarNearPlayers.get(self.mineWarGuildId, []))
-        recoverRate = min(max(playerNums * recoverCfg[0], 0.01), recoverCfg[1]) / 100.0
+        playerNums = 0
+        guildPlayers = self.mineWarNearPlayers.get(self.mineWarGuildId, [])
+        for eid in guildPlayers:
+            player = KBEngine.entities.get(eid)
+            if player and not player.isDie():
+                playerNums += 1
+        if playerNums <= 0:
+            self.doCancelRecoverHp()
+            return
+        recoverRate = min(max(playerNums * recoverCfg[0], 0.001), recoverCfg[1]) / 100.0
         recoverHp = int(self.fullHp * recoverRate)
         if recoverHp <= 0:
             return
@@ -210,26 +232,35 @@ class IMineWarMonster(object):
         INFO_MSG("onMineWarCoreRecoverHp: monster {} recover hp {}, new hp {}".format(
             self.id, recoverHp, self.hp))
         
-    def onMineWarCoreRecoverEnd(self):
-        """矿战核心回血结束回调"""
-        if not formula.isMineWarSpace(self.spaceNo):
-            return
-        
+    def doAddRecoverHp(self):
+        if self.isMineWarFlag():
+            self.addBuff(MBC.datas['mineBattle_flagRecoverBuffID']['value'], 1, self.id)
+        elif self.isMineWarCore():
+            self.addBuff(MBC.datas['mineBattle_coreRecoverBuffID']['value'], 1, self.id)
+
+        if self.recoverTimer == 0:
+            self.recoverTimer = self.pyAddTimer(0, 1, gametimer.MINE_WAR_CORE_RECOVER_HP)
+    
+    def doCancelRecoverHp(self):
+        if self.isMineWarFlag():
+            self.removeBuff(MBC.datas['mineBattle_flagRecoverBuffID']['value'])
+        elif self.isMineWarCore():
+            self.removeBuff(MBC.datas['mineBattle_coreRecoverBuffID']['value'])
+
         if self.recoverTimer > 0:
             self.pyDelTimer(self.recoverTimer, gametimer.MINE_WAR_CORE_RECOVER_HP)
             self.recoverTimer = 0
-            self.mineWarCanAttack = True
-            
-        INFO_MSG("onMineWarCoreRecoverHpEnd: monster {}, type {} recover hp end canAttack {}".format(self.id, self.mineWarMonsterType, self.mineWarCanAttack))
-        
+                
     def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
-        if hasattr(super(), 'onEnterTrap'):
-            super().onEnterTrap(entity, rangeXZ, rangeY, controllerId, userArg)
-            
+        if hasattr(super(IMineWarMonster, self), 'onEnterTrap'):
+            super(IMineWarMonster, self).onEnterTrap(entity, rangeXZ, rangeY, controllerId, userArg)
         """进入触发器回调"""
         if not formula.isMineWarSpace(self.spaceNo):
             return
         
+        if not self.isMineWarCore() and not self.isMineWarFlag():
+            return
+
         if userArg == gameconst.HATE_TRAP:
             if entity.IsAvatar and entity.guildUUID > 0:
                 if entity.guildUUID not in self.mineWarNearPlayers:
@@ -237,11 +268,15 @@ class IMineWarMonster(object):
                 if entity.id not in self.mineWarNearPlayers[entity.guildUUID]:
                     self.mineWarNearPlayers[entity.guildUUID].append(entity.id)
                     INFO_MSG("onEnterTrap: monster {} near players {}".format(self.id, entity.id))
+                    if self.isMineWarCore() and not self.mineWarCanAttack:  # 非战斗期间，水晶不回血
+                        return
+                    if self.mineWarGuildId == entity.guildUUID and self.recoverTimer == 0:
+                        # 帮会成员靠近，回血
+                        self.doAddRecoverHp()
             
     def onLeaveTrap(self, entity, rangeXZ, rangeY, controllerID, userArg):
-        if hasattr(super(), 'onLeaveTrap'):
-            super().onLeaveTrap(entity, rangeXZ, rangeY, controllerID, userArg)
-        
+        if hasattr(super(IMineWarMonster, self), 'onLeaveTrap'):
+            super(IMineWarMonster, self).onLeaveTrap(entity, rangeXZ, rangeY, controllerID, userArg)
         """离开触发器回调"""
         if not formula.isMineWarSpace(self.spaceNo):
             return
@@ -251,3 +286,7 @@ class IMineWarMonster(object):
                 if entity.id in self.mineWarNearPlayers[entity.guildUUID]:
                     self.mineWarNearPlayers[entity.guildUUID].remove(entity.id)
                     INFO_MSG("onLeaveTrap: monster {} leave trap {}".format(self.id, entity.id))
+
+                    if self.mineWarGuildId in self.mineWarNearPlayers.keys() and len(self.mineWarNearPlayers[self.mineWarGuildId]) == 0:
+                        # 帮会成员全部离开自己的旗帜，去掉回血
+                        self.doCancelRecoverHp()

@@ -28,7 +28,7 @@ class ICollectible(object):
             prop_len = len(info['props']) if info['props'] else 0
             if not collectData.isCompleteAll(equipment_len + prop_len):
                 continue
-            propIndex = info['prop']
+            propIndex = collectId
             propIndexList.append(propIndex)
 
         self.cell.onCollectAward(propIndexList)
@@ -105,7 +105,7 @@ class ICollectible(object):
             self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
             return
         # 获得本次收集项对应的奖励
-        collectProp = info['prop']
+        collectProp = collectID
         # 获得奖励
         self._onScore(collectProp)
         # 发送进度信息给客户端
@@ -128,7 +128,7 @@ class ICollectible(object):
             return False
         deductWealthVal = dropAward.DeductWealthVal()
         # 是否是装备，是否达到了强化的等级
-        bagItem = self.bagData.getItemObjByGridId(bagGridID)
+        bagItem = bag.getItemObjByGridId(bagGridID)
         if not bagItem:
             WARNING_MSG('     in _completeCollect, item not found:', bagGridID)
             return False

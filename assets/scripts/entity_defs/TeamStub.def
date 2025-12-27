@@ -672,41 +672,12 @@
             <Arg>   PY_DICT     </Arg>
         </reqJoinTeam>
 
-        <addTeamDungeonRewardRecord>
-            <Arg>           TEAMID                                                  </Arg>
-            <Arg>           PLAYER_GBID                                             </Arg>
-            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
-        </addTeamDungeonRewardRecord>
-
-        <clearTeamDungeonRewardRecord>
-            <Arg>       TEAMID          </Arg>
-            <Arg>       PLAYER_GBID     </Arg>
-        </clearTeamDungeonRewardRecord>
-
         <teamDungeonFinished>
             <Arg>           TEAMID          </Arg>
         </teamDungeonFinished>
 
-        <addTeamStatisticPlayerVal>
-            <Arg>       TEAMID          </Arg>
-            <Arg>       PLAYER_GBID     </Arg>
-            <Arg>       UINT8           </Arg>
-            <Arg>       UINT32          </Arg>
-        </addTeamStatisticPlayerVal>
-
-        <getTeamStatisticData>
-            <Arg>       MAILBOX        </Arg>
-            <Arg>       TEAMID          </Arg>
-            <Arg>       UINT8           </Arg>
-        </getTeamStatisticData>
-
         <setInDungeon>
             <Arg>       TEAMID          </Arg>
         </setInDungeon>
-
-        <getTeamStatisticFinalData>
-            <Arg>       MAILBOX        </Arg>
-            <Arg>       TEAMID          </Arg>
-        </getTeamStatisticFinalData>
     </BaseMethods>
 </root>

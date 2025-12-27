@@ -135,86 +135,6 @@ datas = _tools.RODict({
         "slot": 4,
         "recommendClass": 1003
     }),
-    58: _tools.RODict({
-        "ID": 58,
-        "type": 5,
-        "SubType": 58,
-        "Name": "物理项链",
-        "RemindClass": 0,
-        "weight": 40,
-        "slot": 5,
-        "recommendClass": (1001, 1002, 1003)
-    }),
-    59: _tools.RODict({
-        "ID": 59,
-        "type": 5,
-        "SubType": 59,
-        "Name": "法术项链",
-        "RemindClass": 0,
-        "weight": 40,
-        "slot": 5,
-        "recommendClass": (1001, 1002, 1003)
-    }),
-    68: _tools.RODict({
-        "ID": 68,
-        "type": 6,
-        "SubType": 68,
-        "Name": "物理戒指",
-        "RemindClass": 0,
-        "weight": 40,
-        "slot": (6, 7),
-        "recommendClass": (1001, 1002, 1003)
-    }),
-    69: _tools.RODict({
-        "ID": 69,
-        "type": 6,
-        "SubType": 69,
-        "Name": "法术戒指",
-        "RemindClass": 0,
-        "weight": 40,
-        "slot": (6, 7),
-        "recommendClass": (1001, 1002, 1003)
-    }),
-    70: _tools.RODict({
-        "ID": 70,
-        "type": 6,
-        "SubType": 70,
-        "Name": "道士戒指",
-        "RemindClass": 0,
-        "weight": 40,
-        "slot": (6, 7),
-        "recommendClass": (1001, 1002, 1003)
-    }),
-    78: _tools.RODict({
-        "ID": 78,
-        "type": 7,
-        "SubType": 78,
-        "Name": "物理手镯",
-        "RemindClass": 0,
-        "weight": 40,
-        "slot": (8, 9),
-        "recommendClass": (1001, 1002, 1003)
-    }),
-    79: _tools.RODict({
-        "ID": 79,
-        "type": 7,
-        "SubType": 79,
-        "Name": "法术手镯",
-        "RemindClass": 0,
-        "weight": 40,
-        "slot": (8, 9),
-        "recommendClass": (1001, 1002, 1003)
-    }),
-    80: _tools.RODict({
-        "ID": 80,
-        "type": 7,
-        "SubType": 80,
-        "Name": "防御手镯",
-        "RemindClass": 0,
-        "weight": 40,
-        "slot": (8, 9),
-        "recommendClass": (1001, 1002, 1003)
-    }),
     81: _tools.RODict({
         "ID": 81,
         "type": 8,
@@ -244,12 +164,92 @@ datas = _tools.RODict({
         "weight": 100,
         "slot": 10,
         "recommendClass": 1003
+    }),
+    58: _tools.RODict({
+        "ID": 58,
+        "type": 5,
+        "SubType": 58,
+        "Name": "物理项链",
+        "RemindClass": 1003,
+        "weight": 40,
+        "slot": 5,
+        "recommendClass": 1003
+    }),
+    59: _tools.RODict({
+        "ID": 59,
+        "type": 5,
+        "SubType": 59,
+        "Name": "法术项链",
+        "RemindClass": (1001, 1002),
+        "weight": 40,
+        "slot": 5,
+        "recommendClass": (1001, 1002)
+    }),
+    68: _tools.RODict({
+        "ID": 68,
+        "type": 6,
+        "SubType": 68,
+        "Name": "物理戒指",
+        "RemindClass": 1003,
+        "weight": 40,
+        "slot": (6, 7),
+        "recommendClass": 1003
+    }),
+    69: _tools.RODict({
+        "ID": 69,
+        "type": 6,
+        "SubType": 69,
+        "Name": "法术戒指",
+        "RemindClass": (1001, 1002),
+        "weight": 40,
+        "slot": (6, 7),
+        "recommendClass": (1001, 1002)
+    }),
+    70: _tools.RODict({
+        "ID": 70,
+        "type": 6,
+        "SubType": 70,
+        "Name": "道士戒指",
+        "RemindClass": 0,
+        "weight": 40,
+        "slot": (6, 7),
+        "recommendClass": (1001, 1002)
+    }),
+    78: _tools.RODict({
+        "ID": 78,
+        "type": 7,
+        "SubType": 78,
+        "Name": "物理手镯",
+        "RemindClass": 1003,
+        "weight": 40,
+        "slot": (8, 9),
+        "recommendClass": 1003
+    }),
+    79: _tools.RODict({
+        "ID": 79,
+        "type": 7,
+        "SubType": 79,
+        "Name": "法术手镯",
+        "RemindClass": (1001, 1002),
+        "weight": 40,
+        "slot": (8, 9),
+        "recommendClass": (1001, 1002)
+    }),
+    80: _tools.RODict({
+        "ID": 80,
+        "type": 7,
+        "SubType": 80,
+        "Name": "防御手镯",
+        "RemindClass": 0,
+        "weight": 40,
+        "slot": (8, 9),
+        "recommendClass": (1001, 1002, 1003)
     })
 })
 minKey = 11
 maxKey = 83
 
-dropTypeWeightList = {1001: [(11, 100), (21, 100), (31, 100), (41, 100), (81, 100)], 1002: [(12, 100), (22, 100), (32, 100), (42, 100), (82, 100)], 1003: [(13, 100), (23, 100), (33, 100), (43, 100), (83, 100)], 0: [(58, 40), (59, 40), (68, 40), (69, 40), (70, 40), (78, 40), (79, 40), (80, 40)]}
+dropTypeWeightList = {1001: [(11, 100), (21, 100), (31, 100), (41, 100), (59, 40), (69, 40), (79, 40), (81, 100)], 1002: [(12, 100), (22, 100), (32, 100), (42, 100), (59, 40), (69, 40), (79, 40), (82, 100)], 1003: [(13, 100), (23, 100), (33, 100), (43, 100), (58, 40), (68, 40), (78, 40), (83, 100)], 0: [(70, 40), (80, 40)]}
 
 
 
@@ -266,15 +266,15 @@ auctionDic = _tools.RODict({
         (4, 1001):[(4, 41)],
         (4, 1002):[(4, 42)],
         (4, 1003):[(4, 43)],
-        (5, 1001):[(5, 58), (5, 59)],
-        (5, 1002):[(5, 58), (5, 59)],
-        (5, 1003):[(5, 58), (5, 59)],
-        (6, 1001):[(6, 68), (6, 69), (6, 70)],
-        (6, 1002):[(6, 68), (6, 69), (6, 70)],
-        (6, 1003):[(6, 68), (6, 69), (6, 70)],
-        (7, 1001):[(7, 78), (7, 79), (7, 80)],
-        (7, 1002):[(7, 78), (7, 79), (7, 80)],
-        (7, 1003):[(7, 78), (7, 79), (7, 80)],
+        (5, 1003):[(5, 58)],
+        (5, 1001):[(5, 59)],
+        (5, 1002):[(5, 59)],
+        (6, 1003):[(6, 68)],
+        (6, 1001):[(6, 69), (6, 70)],
+        (6, 1002):[(6, 69), (6, 70)],
+        (7, 1003):[(7, 78), (7, 80)],
+        (7, 1001):[(7, 79), (7, 80)],
+        (7, 1002):[(7, 79), (7, 80)],
         (8, 1001):[(8, 81)],
         (8, 1002):[(8, 82)],
         (8, 1003):[(8, 83)],

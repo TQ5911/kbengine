@@ -13,7 +13,5 @@
     </Properties>
 
     <CellMethods>
-        <createRefreshTimer>
-        </createRefreshTimer>
     </CellMethods>
 </root>

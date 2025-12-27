@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "35000001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -27,6 +28,7 @@ datas ={
     "RebornPos": {
       "35000002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",
@@ -52,6 +54,7 @@ datas ={
       "Npc": {
         "35004001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -75,6 +78,7 @@ datas ={
       "Collection": {
         "35008001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -98,6 +102,7 @@ datas ={
         },
         "35008002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -121,6 +126,7 @@ datas ={
         },
         "35008003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -143,6 +149,7 @@ datas ={
           }
         }
       }
-    }
+    },
+    "TimerEntities": {}
   }
 }

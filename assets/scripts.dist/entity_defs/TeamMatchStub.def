@@ -12,12 +12,7 @@
     <BaseMethods>
         <teamAutoMatch>
             <Arg>           PY_DICT         </Arg>
-            <Arg>           BOOL            </Arg>
         </teamAutoMatch>
-        <setTeamMatchAllowAddRobot>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           BOOL            </Arg>
-        </setTeamMatchAllowAddRobot>
         <onTeamInfoUpdate>
             <Arg>           PY_DICT         </Arg>
         </onTeamInfoUpdate>
@@ -33,13 +28,5 @@
         <onPlayerMatchInfoUpdate>
             <Arg>           PY_DICT         </Arg>
         </onPlayerMatchInfoUpdate>
-        <removeTeamRobot>
-            <Arg>   TEAMID         </Arg>
-            <Arg>   ARRAY       <of>    PLAYER_GBID          </of>    </Arg>
-        </removeTeamRobot>
-        <replyForceMatchRobot>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           BOOL            </Arg>
-        </replyForceMatchRobot>
     </BaseMethods>
 </root>

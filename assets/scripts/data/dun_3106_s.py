@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "31060001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -28,6 +29,7 @@ datas ={
       "Monster": {
         "31060002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -54,6 +56,7 @@ datas ={
         },
         "31060003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -80,6 +83,7 @@ datas ={
         },
         "31060004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -106,6 +110,7 @@ datas ={
         },
         "31060005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -132,6 +137,7 @@ datas ={
         },
         "31060006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -160,6 +166,7 @@ datas ={
       "CombatArea": {
         "31068002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -178,10 +185,12 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "Cube": {
       "Teleporter": {
         "31068001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -196,6 +205,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "",
+            "ShowInSceneMap": 0,
             "TelDir": 260.3864,
             "TelX": 207.9903,
             "TelY": 526.2047,

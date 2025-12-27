@@ -53,7 +53,7 @@ datas = _tools.RODict({
     }),
     "pityCounterTips": _tools.RODict({
         "ID": "pityCounterTips",
-        "value": "距离下次获得{0}，还剩{1}次召唤\n赠送次数不含在统计内",
+        "value": "召唤{1}次得礼包\n<color=#9e9886>赠送不在统计内</color>",
     }),
     "countdownTips": _tools.RODict({
         "ID": "countdownTips",
@@ -69,11 +69,11 @@ datas = _tools.RODict({
     }),
     "pullInfoText": _tools.RODict({
         "ID": "pullInfoText",
-        "value": "概率详情",
+        "value": "概率",
     }),
     "pullRecordText": _tools.RODict({
         "ID": "pullRecordText",
-        "value": "历史记录",
+        "value": "记录",
     }),
     "upItemText": _tools.RODict({
         "ID": "upItemText",
@@ -115,12 +115,20 @@ datas = _tools.RODict({
         "ID": "PoolEndMailID",
         "value": 37000015,
     }),
-    "petScaleFactor": _tools.RODict({
-        "ID": "petScaleFactor",
-        "value": 2.0,
+    "petFxScale": _tools.RODict({
+        "ID": "petFxScale",
+        "value": 0.6,
     }),
-    "petModelMoveOffset": _tools.RODict({
-        "ID": "petModelMoveOffset",
-        "value": -1.5,
+    "petFxOffset": _tools.RODict({
+        "ID": "petFxOffset",
+        "value": -1.7,
+    }),
+    "gachaPageTitle": _tools.RODict({
+        "ID": "gachaPageTitle",
+        "value": "召唤",
+    }),
+    "pullInfoTitle": _tools.RODict({
+        "ID": "pullInfoTitle",
+        "value": "概率详情",
     })
 })

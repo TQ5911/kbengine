@@ -107,6 +107,20 @@ class ImpEquipment(object):
             grade = args.pop(0)
             ret, bindValue = self.calculateUpgradeConditions(box, methodName, args, consumeGridId, itemId, grade)
             if not ret:
+                WARNING_MSG(methodName, 'no upgrade')
+                self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_ARG_ERR, 0, 0)
+                return
+
+        if methodName == 'cellEquipBindValueWashing' or methodName == 'bagEquipBindValueWashingDeductItemsCB':
+            needUnbindItemDic = args.pop(0)
+            if not needUnbindItemDic:
+                WARNING_MSG(methodName, 'no needUnbindItemDic')
+                self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_ARG_ERR, 0, 0)
+                return
+            gridNeedItems = self.calculateConsumePlanGrids(needUnbindItemDic, gameconst.ItemBindType.NORMAL)
+            if not gridNeedItems:
+                WARNING_MSG(methodName, 'no gridNeedItems')
+                self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_ARG_ERR, 0, 0)
                 return
 
         if self.bagData.isLocked():
@@ -131,10 +145,10 @@ class ImpEquipment(object):
 
         #非自动购买情况下，才需要发送物品不足message
         if self.canDeductWealth(deductWealthVal, not autoBuy):
-            self.deductWealth(srcType, deductWealthVal, opUUID, detail)
             # 额外的格子消耗
             if needGridIdList:
                 self.bagData.deductItemsByGrid(self, needGridIdList, opUUID, srcType, detail)
+            self.deductWealth(srcType, deductWealthVal, opUUID, detail)
             DEBUG_MSG('in baseEquipDeductItems ', methodName, args)
             self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_STAT_OK, bindValue, unbindValue)
             return
@@ -177,7 +191,6 @@ class ImpEquipment(object):
             self.dressEquipment(gridId, gameconst.EQUIP_DRESS_TYPE.OP_AUTO_DRESS, False, 0)
         return
 
-    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     @gamedecorator.crossServer
     def dressEquipment(self, exposed, gridId, dressType, dstSlotId):
         INFO_MSG('in dressEquipment:', gridId, dressType, dstSlotId, self.baseSpaceNo)
@@ -197,7 +210,6 @@ class ImpEquipment(object):
         INFO_MSG('in replaceEquipment:', uniqId, result, self.baseSpaceNo, oldBodyEquipDic)
         self.bagData.doDressEquipCB(self, uniqId, result, oldBodyEquipDic)
 
-    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     @gamedecorator.crossServer
     def undressEquipment(self, exposed, slotId):
         INFO_MSG("in undressEquipment:", slotId, self.baseSpaceNo)
@@ -213,6 +225,8 @@ class ImpEquipment(object):
 
     def updateAccountCharacterAppearance(self, updateDic):
         self.accountEntity.updateAppearance(self.gbID, updateDic)
+        if self.subAccount:
+            self.subAccount.updateAppearance(self.gbID, updateDic)
 
     def cellUndressEquipmentSucc(self, bodyEquipDic):
         DEBUG_MSG('in cellUndressEquipmentSucc', bodyEquipDic)
@@ -580,14 +594,15 @@ class ImpEquipment(object):
             ERROR_MSG('     in bagEquipBindWashing, no bind value remain:', bagEquipItem.uniqueId)
             return
 
-        costItemDic = bagEquipItem.bindValueWashingNeedItems(washCount)
-        if not costItemDic:
+        costItemDic, needUnbindItemDic = bagEquipItem.bindValueWashingNeedItems(washCount)
+        if not costItemDic or not needUnbindItemDic:
             ERROR_MSG('     in bagEquipBindWashing, cost is empty')
             return
+        
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_BINDVALUE_WASHING_BAG_EQUIP
         detail = gameclass.AwardDetail(uniqueId=bagEquipItem.uniqueId)
-        args = (opUUID, gridId, washCount)
+        args = [needUnbindItemDic, opUUID, gridId, washCount]
         self.baseEquipDeductItems(costItemDic, None, None, None, opUUID, srcType, detail, self, 'bagEquipBindValueWashingDeductItemsCB', args,
                                   False, True)
 
@@ -603,7 +618,6 @@ class ImpEquipment(object):
         self.client.onEquipBindValueWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, bagEquipItem.getBindValue(), bagEquipItem.getAddBindValueStatus(), bagEquipItem.bindType)
         return
 
-    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     @gamedecorator.limitcall(1)
     def reqMultiEquipDisassemble(self, exposed, gridIdList, uniqueIdList):
         DEBUG_MSG('reqMultiEquipDisassemble:', gridIdList, uniqueIdList)
@@ -642,7 +656,7 @@ class ImpEquipment(object):
                 return False
         return True
 
-    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
+    @AuthClsWraper.authWithPermission(A_AFD.UIEquipMakePanel)
     @gamedecorator.limitcall(1)
     def reqMakeEquipment(self, exposed, itemId, gridIdList, gridCountList, makeType):
         DEBUG_MSG('reqMakeEquipment:', itemId, gridIdList, gridCountList, makeType)
@@ -726,11 +740,11 @@ class ImpEquipment(object):
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_MANUFACTURE
         detail = gameclass.AwardDetail(itemId=itemId)
-        # 扣货币
-        self.deductWealth(srcType, deductVal, opUUID, detail)
         # 扣指定格子指定数量的道具
         self.bagData.deductItemsByGrid(self, needGridIdList, opUUID, srcType, detail)
-
+        # 扣货币
+        self.deductWealth(srcType, deductVal, opUUID, detail)
+        
         # 获得制造好的道具
         bindType = gameconst.ItemBindType.BIND if bindValue > 0 else gameconst.ItemBindType.NORMAL
         equipItem = itemFactory.ItemFactory.createItem(itemId, 1, bindType=bindType)
@@ -820,17 +834,23 @@ class ImpEquipment(object):
         return opStat
 
 
-    def gmBaseDressEquips(self, bodyDressSlotIds):
-        INFO_MSG("gmBaseDressEquips ", bodyDressSlotIds)
+    def gmBaseDressEquips(self, bodyDressSlotIds, quality):
+        INFO_MSG("gmBaseDressEquips ", bodyDressSlotIds, quality)
         myLevel = gameglobal.roleCache[self.id]['level']
         myClass = gameglobal.roleCache[self.id]['school']
         for gridId, it in self.bagData.gridId2GridObj.items():
             if not it.isEquipmentItem():
                 continue
+
+            if quality >= 0:
+                if it.quality != quality:
+                    continue
+
             gearData = dataUtils.getEquipItemData(it.itemId)
             reqClassList = gearData.get('reqClass', [])
             if 0 not in reqClassList and myClass not in reqClassList:
                 continue
+
             equipLevel = gearData['equipLevel']
             if equipLevel > myLevel:
                 continue
@@ -841,6 +861,7 @@ class ImpEquipment(object):
                     bodyDressSlotIds.remove(slotId)
                     self._callback(0.2, 'gmSendDressEquips', (gridId, slotId, it), gametimer.TIMER_TAG_GM_SEND_DRESS_EQUIPS)
                     break
+
             if len(bodyDressSlotIds) == 0:
                 break
         return
@@ -1047,7 +1068,6 @@ class ImpEquipment(object):
             GBGCD.datas['pickOthersDropEquip_msgID']['value'],
             [str(equipItem.itemId)])
 
-    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     def giveUpDropEquip(self, exposed, uniqueId):
         INFO_MSG('giveUpDropEquip:', uniqueId)
         if not self.equipDropData.hasTakeDrop(uniqueId):
@@ -1056,7 +1076,6 @@ class ImpEquipment(object):
 
         gameengine.getGlobalBase('DropStub').giveUpDropEquip(self.gbID, uniqueId, self)
 
-    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     def redeemEquipDrop(self, exposed, uniqueId):
         INFO_MSG('redeemEquipDrop:', uniqueId)
         _dropVal = self.equipDropData.getDropVal(uniqueId)
@@ -1133,7 +1152,6 @@ class ImpEquipment(object):
         self.equipDropData.addTakerWait(uniqueId, _takerVal.equip, _takerVal.endTime, _takerVal.price)
         self.client.onEquipDropStateChange(uniqueId, gameconst.DropType.TYPE_REDEEM)
 
-    @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     def getTakerWaitReward(self, exposed, uniqueId):
         _takerVal = self.equipDropData.removeTakerWait(self, uniqueId)
         if not _takerVal:
@@ -1487,3 +1505,15 @@ class ImpEquipment(object):
             if okCount == len(needCostItems):
                 return True, needGridIdList, bindValue, unbindValue
         return False, None, 0, 0
+
+    def calculateConsumePlanGrids(self, itemsDic, bindType):
+        results = {}
+        for itemId, itemNum in itemsDic.items():
+            ret = self.getGridDatasWithConds(itemId, bindType, itemNum)
+            # 出现不满足
+            if not ret:
+                results = {}
+                break
+            for k, v in ret.items():
+                results[k] = results.get(k, 0) + v
+        return results

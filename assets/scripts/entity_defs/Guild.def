@@ -222,6 +222,24 @@
             <Persistent>    true                                </Persistent>
         </guildChallengeData>
 
+        <mineWarSpaceMgrBoxs>
+            <Type>      PYTHON         </Type>
+            <Flags>     BASE            </Flags>
+            <Default>       []          </Default>
+        </mineWarSpaceMgrBoxs>
+
+        <openDungeonCDTimer>
+            <Type>      PYTHON     </Type>
+            <Flags>     BASE       </Flags>
+            <Default>   0          </Default>
+        </openDungeonCDTimer>
+
+        <openDungeonTimer>
+            <Type>      PYTHON     </Type>
+            <Flags>     BASE       </Flags>
+            <Default>   0          </Default>
+        </openDungeonTimer>
+
     </Properties>
 
     <BaseMethods>
@@ -657,11 +675,11 @@
         <onSiegeWarEnd>
         </onSiegeWarEnd>
 
-        <getMemberJob>
+        <getMemberJobAndGuildCache>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       PYTHON                  </Arg>
-        </getMemberJob>
+        </getMemberJobAndGuildCache>
 
         <doSendGuildRedBagMsg>
             <Arg>           UINT64           </Arg>
@@ -672,36 +690,24 @@
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
         </doSendGuildRedBagMsg>
 
-        <doSendMineWarHpWarning>
-            <Arg>           SPACE_NO           </Arg>
-            <Arg>           UINT8            </Arg>
-        </doSendMineWarHpWarning>
+        <doBroadcastGuildMemberBase>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </doBroadcastGuildMemberBase>
 
-        <getJunxuQiXieLevel>
-            <Arg>       GUILD_UUID              </Arg>
+        <getGuildMineWarForRegister>
             <Arg>       MAILBOX                  </Arg>
             <Arg>       BOOL                    </Arg>
-        </getJunxuQiXieLevel>
+        </getGuildMineWarForRegister>
         <reqShareBonusFromMineWar>
             <Arg>       LINE_NO                   </Arg>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>         ARRAY   <of>  MINE_WAR_GUILD_SHARE_INFO   </of>   </Arg>
             <Arg>       MAILBOX                 </Arg>
         </reqShareBonusFromMineWar>
-        <getMineWarGuildOwnerRank>
-            <Arg>       LINE_NO                 </Arg>
+        <playerGetGuildInfo>
             <Arg>       MAILBOX                 </Arg>
-        </getMineWarGuildOwnerRank>
-        <getMineWarGuildPlayerRank>
-            <Arg>       LINE_NO                 </Arg>
-            <Arg>       MAILBOX                 </Arg>
-            <Arg>       PLAYER_GBID         </Arg>
-            <Arg>       UNICODE                 </Arg>
-        </getMineWarGuildPlayerRank>
-        <onMineWarKillCoreForGuild>
-            <Arg>       LINE_NO                 </Arg>
-            <Arg>       MAILBOX                 </Arg>
-        </onMineWarKillCoreForGuild>
+        </playerGetGuildInfo>
         <openGuildChallenge>
             <Arg>       PLAYER_GBID      </Arg>
             <Arg>       MAILBOX          </Arg>
@@ -715,46 +721,45 @@
             <Arg>       MAILBOX             </Arg>
         </getChangllengeDataInfo>
 
-        <cancalGuildDungeonOrder>
+        <cancelGuildDungeonOrder>
             <Arg>       PLAYER_GBID      </Arg>
             <Arg>       MAILBOX          </Arg>
-        </cancalGuildDungeonOrder>
+            <Arg>       UINT16           </Arg>
+        </cancelGuildDungeonOrder>
 
         <onGuildChallengeDungeonCreated>
-            <Arg>   MAILBOX         </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
             <Arg>   GUILD_UUID      </Arg>
             <Arg>   DUNGEON_NO      </Arg>
             <Arg>   SPACE_NO        </Arg>
             <Arg>   UUID            </Arg>
             <Arg>   MAILBOX         </Arg>
             <Arg>   MAILBOX         </Arg>
-            <Arg>   PYTHON  </Arg>
+            <Arg>   PYTHON          </Arg>
         </onGuildChallengeDungeonCreated>
 
         <onGuildChallengeDungeonCompleted>
         </onGuildChallengeDungeonCompleted>
 
         <onGuildChallengeDungeonSettlement>
+            <Arg>   INT64   </Arg>
         </onGuildChallengeDungeonSettlement>
+
+        <onGuildChallengeDungeonStartBattleCD>
+            <Arg>   INT64   </Arg>
+        </onGuildChallengeDungeonStartBattleCD>
 
         <enterBossChallengeDungeon>
             <Arg>       PLAYER_GBID      </Arg>
             <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT16           </Arg>
             <Arg>       PYTHON           </Arg>
         </enterBossChallengeDungeon>
 
         <leaveBossChallengeDungeon>
             <Arg>       PLAYER_GBID      </Arg>
             <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT16           </Arg>
         </leaveBossChallengeDungeon>
-
-        <getSettlementRankList>
-            <Arg>       PLAYER_GBID      </Arg>
-            <Arg>       MAILBOX          </Arg>
-            <Arg>       UINT8            </Arg>
-            <Arg>       UINT8            </Arg>
-        </getSettlementRankList>
 
         <gmModifyGuildBossChallengeStatus>
             <Arg>   UINT8   </Arg>
@@ -762,5 +767,19 @@
 
         <gmResetGuildDungeonOpenCount>
         </gmResetGuildDungeonOpenCount>
+
+        <gmResetGuildDungeonAllData>
+        </gmResetGuildDungeonAllData>
+        
+        <syncGuildBossHP>
+            <Arg>   INT32   </Arg>
+            <Arg>   INT32   </Arg>
+        </syncGuildBossHP>
+
+        <getGuildBossHP>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT16           </Arg>
+        </getGuildBossHP>
     </BaseMethods>
 </root>

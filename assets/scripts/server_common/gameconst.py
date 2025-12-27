@@ -5,6 +5,7 @@ import functools
 import random
 import time
 import re
+import functools
 
 import itemData_set as IDSD
 import const_const as CSTD
@@ -57,10 +58,13 @@ GLOBAL_BASE_STUB_UNARCHIVE = [
     'RaidMatchStub',
     'CrossDataStub',
     'WorldRefreshEntityStub',
+    'AntiAddictionStub',
     ]
 GLOBAL_BASE_STUB_TEAMSTUB = 'TeamStub'
 
 GLOBAL_BASE_STUB_RAIDSTUB = 'RaidStub'
+
+GLOBAL_BASE_STUB_STATISTICSTUB = 'StatisticStub'
 
 SPACE_NO_DUNGEON_START = 1000
 SPACE_NO_DUNGEON_END = 4999
@@ -114,6 +118,8 @@ AVATAR_OFFLINE_REASON_SWITCH_SERVER = 19
 AVATAR_OFFLINE_REASON_NEWBIE_KICKOUT = 20
 AVATAR_OFFLINE_REASON_STOP_AUTH = 21
 AVATAR_OFFLINE_AUTH_NEED_RECONNECT = 22
+AVATAR_OFFLINE_AUTH_LOW_MORAL = 23 # 善恶值太低，并且是代理状态
+AVATAR_OFFLINE_REASON_ANIT_ADDICTION = 24
 
 CENTRAL_SERVER_HEARTBEAT_INTERVAL = 10
 
@@ -123,6 +129,8 @@ ENTITY_POS_POLICY_MAX_NUM = 1000
 GAME_CONFIG_TYPE_WONDER_LAND = 1
 GAME_CONFIG_TYPE_SQUARE = 2
 GAME_CONFIG_TYPE_ROLE_AUTHORIZATION = 3
+
+LEGAL_AGE_OF_MAJORITY = 18
 
 class UniqueIntEnum(type):
     def __new__(cls, name, bases, dct):
@@ -312,6 +320,38 @@ class SpaceLayer(object):
     AIRWALL = 1
 
 
+INIT_CLIENT_SEND = (
+    # 第一个是函数名， 第二个代表OB客户端是否需要下发
+        ('sendBagData', True),
+        ('sendVariableData', True),
+        ('sendServerOpenTime', True),
+        ('sendTaskList', True),
+        ('sendCliSkillBuildInfo', True),
+        ('sendCliConfigData', True),
+        ('sendOutfitData', True),
+        ('sendLingShouInfo', True),
+        ('emitMiniPayload', True),
+        ('_sendFriendInfoToClient', True),
+        ('sendPlayerPayInfo', True),
+        ('sendHolidayPayInfo', True),
+        ('_sendGuildInfo', True),
+        ('sendDrawCardInfo', True),
+        ('sendGuildTrains', True),
+        ('_sendAchievementInitData', True),
+        ('sendEnemyRecordDatas', True),
+        ('_sendDropEquipInfo', True),
+        ('sendCollectInfo', True),
+        ('sendWonderLandLoginData', True),
+        ('sendSiegeWarLoginData', True),
+        ('sendAllWelfareSignInInfo', True),
+        ('avatarLogin', True),
+        ('_sendAllGuildRelation', True),
+        ('redbagOnLogin', True),
+        ('checkOfflineHangup', True),
+        ('onMineWarLogin', True),
+        ('updateRedisVIPFlag', True),
+)
+
 class ItemType(object):
     Normal = 0
     LingShou = 1
@@ -441,7 +481,6 @@ class AvatarProps(metaclass=UniqueIntEnum):
     petEquipNumCache = 316
     isLightningArea = 317
 
-    popRewardItemsDict = 330
     reqSubmitTaskList = 331
     spawnSummonByAI = 332
     spawnSummonList = 333
@@ -453,11 +492,22 @@ class AvatarProps(metaclass=UniqueIntEnum):
 
     teamStatisticDataRecord = 340
     teamStatisticDataDict = 341
+    statisticDataRecord = 342
+    statisticDataRecordSpaceNo = 343
 
     deadLaterCallbackInfo = 350
 
     attachedIDList = 361
     beAttachedHostID = 362
+    popRewardItemsDict = 363
+
+    tempBindPhone = 365
+    reqBindPhoneCnt = 366
+    resetBindPhoneCntTime = 367
+    reqBindPhoneTimestamp = 368
+    verifyCodeTimestamp = 369
+    firstPcLoginTimestamp = 370
+    claimPcLoginRewardTimestamp = 371
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
@@ -502,6 +552,7 @@ class ItemId(object):
     COLL_SKIP_MSG_HANDLE = ()
     # 真气
     GENIUS_QI = 30000100
+    BIND_MONEY = IDSD.datas['itemID_bind_money']['value']
 
 class ItemBindType(object):
     BIND = 0
@@ -542,7 +593,7 @@ class EnterLineCode(object):
     FAIL_REACH_AREAM_MAX = 10
     FAIL_REACH_AREAM_LIMIT = 11
     FAIL_REACH_SEC_LIMIT = 12
-
+    FAIL_MERGE_LINE = 13
 
 class StreamStringID(object):
     NIL = 0
@@ -1020,6 +1071,7 @@ class RedisKey(object):
     GUILD_NAME_TBL = 'global:guild_names'
     GIFT_CODE_TBL = 'global:gift_codes'
     PRIVILEGE_TBL = 'g:vip'
+    LEVEL_RUSH_RANK_DATA_KEY = 'g:alrr'
 
 class ForbidType(object):
     SHORT_FORBID = 1  # 临时封禁
@@ -1118,7 +1170,7 @@ class SkillTag(metaclass=UniqueIntEnum):
     GeneralSkill = 99
     UltraSkill = 100
     talentSkill = 110
-
+    changeCDStatusSkill = 130
 
 class BuffTag(object):
     SeeHiddenEnt = 41
@@ -1175,6 +1227,17 @@ class SkillCategory(object):
     CAST_SKILL_WITHOUT_ACTION = 1
     CAST_SKILL_WITH_ACTION = 2
 
+class SkillTempDataKey(object):
+    CHANGE_SKILL_CD_STATUS = 'CHANGE_SKILL_CD_STATUS'
+
+class SkillCDStatus(object):
+    DEFAULT = 0
+    # 启用
+    ENABLED = 1
+    # 禁用
+    DISABLED = 2
+
+    VALID = (ENABLED, DISABLED)
 
 SKILL_DMG_DESC = ("", "（水系）", "（雷系）", "（火系）", "（混沌系）")
 
@@ -1615,6 +1678,7 @@ RAID_TEAM_MEMBER_MAX_NUM = 5
 RAID_LSIT_MAX_NUM = 15
 RAID_MEMBER_MAX_NUM = 15
 RAID_APPLY_JOIN_MAX_NUM = 20
+STATISTICSTUB_CONFIG_NUM = 5
 
 class TeamMicsMode(object):
     OFF = 0
@@ -1922,6 +1986,14 @@ class DungeonPlayModeEnum(object):
     COLL_ALL = (CRUSADE, CHIEF, GUILD_BOSS)
     COLL_SYNC_SPACELEVEL = (CRUSADE, CHIEF, GUILD_BOSS)
 
+class DungeonTicketType(metaclass=UniqueIntEnum):
+    # 常规使用
+    NORMAL = 1
+    # 金币使用
+    GOLD = 2
+    # 道具使用
+    ITEM = 3
+
 class DungeonSpaceMgrProps(object):
     dungeonRewardBossID = 1000
     singleDungeonBelongPlayerGBID = 1001
@@ -1932,6 +2004,8 @@ class DungeonSpaceMgrProps(object):
     triggerGuideId = 1006
     dungeonTimeFreezeSpaceMgrFlag = 1007 # linkeed: AvatarProps. dungeonTimeFreezeEntityFlag
     guildBossDungeonBelongGuildUUID = 1008
+    breakStuckPos = 1009
+    breakStuckDir = 1010
 
 class DungeonSpaceType(object):
     """
@@ -2244,6 +2318,9 @@ class DungeonFlowEventName(object):
 
     transferToTheDesignatedMap = 'transferToTheDesignatedMap'
 
+    notifyStartBattleCD = 'notifyStartBattleCD' # 开始战斗前的倒计时
+    createBreakAwayStuckPos = 'createBreakAwayStuckPos'                     # 脱离卡点
+
 class DungeonFlowPlayerChooseType(object):
     UNKNOWN = 0
     MONSTER_CURRENT_TARGET = 1
@@ -2290,19 +2367,23 @@ def getWorldLineStubCnt():
     import gameconfig
     return gameconfig.baseAppCount()
 
-lineStubMap = {}
+@functools.lru_cache(maxsize=None)
+def lineStubMap():
+    _dic = {}
 
-for mapId in MapIdDef.mapWorldSet:
-    lineStubMap.setdefault(mapId, {
-        'stubName': 'WorldLineStub',
-        'lineCount': getBranchLineCnt(mapId),
-    })
+    for mapId in MapIdDef.mapWorldSet:
+        _dic.setdefault(mapId, {
+            'stubName': 'WorldLineStub',
+            'lineCount': getBranchLineCnt(mapId),
+        })
 
 # 演武场 单独添加，因为其subType不为1
-lineStubMap[7000] = {
-    'stubName': 'WorldLineStub',
-    'lineCount': getBranchLineCnt(7000),
-}
+    _dic[7000] = {
+        'stubName': 'WorldLineStub',
+        'lineCount': getBranchLineCnt(7000),
+    }
+
+    return _dic
 
 spaceDict = {
 }
@@ -2385,7 +2466,7 @@ class CreationHostType(object):
     Other = 8
 
 class EntityType(object):
-    NONE = 0
+    OTHER = 0
     AVATAR = 1
     MONSTER = 2
     SUMMON = 3
@@ -2393,7 +2474,13 @@ class EntityType(object):
     PET = 5
     AVATAR_MIRROR = 6
     NPC = 7
-    Other = 8
+    COLLECTION = 8
+
+className2EntityType = {
+    "Monster": EntityType.MONSTER,
+    "Collection": EntityType.COLLECTION,
+}
+
 
 class DressEquipOpStat(object):
     EQUIP_OP_FAILED = 0
@@ -2588,8 +2675,9 @@ class LeaderBoardType(object):
     AVATAR_LEVEL = 1
     AVATAR_SCORE = 2
     GUILD = 3
+    AVATAR_LEVEL_RUSH_RANK = 100
 
-    ALL_KEYS = (AVATAR_LEVEL, AVATAR_SCORE, GUILD)
+    ALL_KEYS = (AVATAR_LEVEL, AVATAR_SCORE, GUILD, AVATAR_LEVEL_RUSH_RANK)
 
 
 class DissolveGuildReason(object):
@@ -3204,7 +3292,7 @@ class ActivityControlType(object):
     # 组团
     RAID = 2
 
-PARE_ACTIVITY_ID = 2
+PARE_ACTIVITY_ID = 100
 
 class GuildTaskType(object):
     COLLECTION = 1  #采集
@@ -3453,6 +3541,9 @@ class AuthPerFlags(object):
 # bit 位
 CELL_FLAGS_IS_HOST_AVATAR = 0
 CELL_FLAGS_IS_SPECIAL_AI = 1
+CELL_FLAGS_IS_AUTH = 2
+CELL_FLAGS_PK_SAFE = 3
+CELL_FLAGS_IS_MINE_WAR_SPACE = 4
 
 
 CALL_LIMIT_SCATTER = 1
@@ -3537,6 +3628,24 @@ TEAM_STATISTIC_TYPE_TO_KEY = {
     TeamStatisticType.DEAD: 'dead',
 }
 
+class StatisticType(object):
+    STA_TYPE_DAMAGE = 1
+    STA_TYPE_HEAL = 2
+    STA_TYPE_HURT = 3
+    STA_TYPE_DEAD = 4
+    STA_TYPE_DAMAGE_WITH_PET = 5
+    STA_TYPE_HURT_WITH_PET = 6
+    STA_TYPE_HEAL_WITH_PET = 7
+    STA_TYPE_DAMAGE_PER_SECOND = 8
+    STA_TYPE_DAMAGE_WITH_PET_PER_SECOND = 9
+    STA_TYPE_HURT_PER_SECOND = 10
+    STA_TYPE_HURT_WITH_PET_PER_SECOND = 11
+    STA_TYPE_HEAL_PER_SECOND = 12
+    STA_TYPE_HEAL_WITH_PET_PER_SECOND = 13
+    STA_TYPE_WITH_PET = 14
+
+    DUNGEON_VALID_TYPES = (STA_TYPE_DAMAGE, STA_TYPE_HEAL, STA_TYPE_HURT, STA_TYPE_DEAD)
+
 class TeamApplyResult(object):
     # 成功
     TEAM_APPLY_OK = 0
@@ -3560,6 +3669,14 @@ class TeamApplyResult(object):
     RAID_IS_FULL = 10008
     # 团队申请列表满了
     RAID_APPLY_LIST_IS_FULL = 10009
+    # 已经在团队中了
+    RAID_APPLY_IS_IN_RAID = 10010
+    # 已经在队伍中了
+    RAID_APPLY_IS_IN_TEAM = 10011
+    # 团队已申请
+    RAID_APPLY_IS_APPLIED = 10013
+    # 团队UI不可见
+    RAID_APPLY_RAID_UI_IS_NOT_VISIBLE = 10014
 
 class MINE_WAR_STATE(object):
     PREPARE = 1
@@ -3656,23 +3773,83 @@ class GuildBossChallengeStatus(object):
     APPOINT = 1
     # 预约倒计时
     APPOINT_CD = 2
-    # 挑战开启
-    CHALLENGE_OPEN = 3
     # 创建中
-    CREATING = 4
+    CREATING = 3
     # 已创建
-    CREATED = 5
+    CREATED = 4
+    # 开始战斗CD
+    START_BATTLE_CD = 5
+    # 开始战斗
+    START_BATTLE= 6
     # 结算中
-    SETTLEMENT = 6
+    SETTLEMENT = 7
 
-    VALID_STATUS = (INIT, APPOINT, APPOINT_CD, CHALLENGE_OPEN, CREATING, CREATED, SETTLEMENT)
+    VALID_STATUS = (INIT, APPOINT, APPOINT_CD, CREATING, CREATED, START_BATTLE_CD, START_BATTLE, SETTLEMENT)
 
 class WorldBossRefreshType(object):
     NONE = 0
     DEAD_TIMER = 1
-    INTERVAL_TIMER = 2
+    TIMED_INTERVALS_TIMER = 2
+
+class TimeLimitedStageType(object):
+    START = 1
+    END = 2
+
+class TimerEntityRefreshType(object):
+    NONE = 0
+    TIMED_INTERVALS = 1
+    TIME_LIMITED = 2
+
+    SIZE = 3    # 类型数量
 
 #特权用户
 class PrivilegeRedisKey(object):
     VIP = RedisKey.PRIVILEGE_TBL + ":v:"         #特权用户    (排队优先)
     SVIP = RedisKey.PRIVILEGE_TBL + ":sv:"       #超级特权    (排队直达)
+
+INVINCIBLE_BUFF_ID = 64000070  # 无敌buffId
+
+class DungeonAddRewardNumCountType(metaclass=UniqueIntEnum):
+    # 默认次数
+    DEFAULT_COUNT = 1
+    # 道具次数
+    ITEM_COUNT= 2
+    # 金币次数
+    COIN_COUNT= 3
+    # 有效的类型
+    VALID_TYPE = (DEFAULT_COUNT, ITEM_COUNT, COIN_COUNT)
+
+class AntiAddictionDateType(object):
+    WEEKEND = 0
+    HOLIDAY = 1
+    WORKDAY = 2
+
+class AntiAddictionTimeType(object):
+    PERMIT = 0
+    PROHIBIT = 1
+
+GiftCodeResultMsg = {
+    40001: 54000343,
+    40002: 54000346,
+    40003: 54000352,
+    40004: 54000353,
+    40005: 54000354,
+}
+
+class ShieldType(metaclass=UniqueIntEnum):
+    # 生命盾
+    LIFE = 1
+    # 减伤盾
+    REDUCE_DMG = 2
+
+class DevicePlatId(object):
+    IOS = 0             # iOS
+    ANDROID = 1         # Android
+    RESERVE = 2         # reserved
+    PC_CLIENT = 3       # PC client
+    MICRO_WEB = 4       # Micro web
+    MICRO_CLIENT = 5    # Micro client
+    SWITCH = 6          # Switch client
+    PS_CLIENT = 7       # PS client
+    XBOX_CLIENT = 8     # XBOX client
+    UNKNOWN = 9

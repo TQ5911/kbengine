@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "31190001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -28,6 +29,7 @@ datas ={
       "Monster": {
         "31190047": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -54,6 +56,7 @@ datas ={
         },
         "31190048": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -80,6 +83,7 @@ datas ={
         },
         "31190050": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -106,6 +110,7 @@ datas ={
         },
         "31190051": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -132,6 +137,7 @@ datas ={
         },
         "31190052": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -158,6 +164,7 @@ datas ={
         },
         "31190053": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -184,6 +191,7 @@ datas ={
         },
         "31190054": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -210,6 +218,7 @@ datas ={
         },
         "31190055": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -236,6 +245,7 @@ datas ={
         },
         "31190056": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -262,6 +272,7 @@ datas ={
         },
         "31190057": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -288,6 +299,7 @@ datas ={
         },
         "31190058": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -314,6 +326,7 @@ datas ={
         },
         "31190059": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -340,6 +353,7 @@ datas ={
         },
         "31190060": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -366,6 +380,7 @@ datas ={
         },
         "31190061": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -392,6 +407,7 @@ datas ={
         },
         "31190062": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -418,6 +434,7 @@ datas ={
         },
         "31190063": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -444,6 +461,7 @@ datas ={
         },
         "31190064": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -470,6 +488,7 @@ datas ={
         },
         "31190065": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -496,6 +515,7 @@ datas ={
         },
         "31190066": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -522,6 +542,7 @@ datas ={
         },
         "31190067": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -548,6 +569,7 @@ datas ={
         },
         "31190068": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -574,6 +596,7 @@ datas ={
         },
         "31190069": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -600,6 +623,7 @@ datas ={
         },
         "31190070": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -626,6 +650,7 @@ datas ={
         },
         "31190071": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -652,6 +677,7 @@ datas ={
         },
         "31190072": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -678,6 +704,7 @@ datas ={
         },
         "31190073": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -704,6 +731,7 @@ datas ={
         },
         "31190074": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -730,6 +758,7 @@ datas ={
         },
         "31190075": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -756,6 +785,7 @@ datas ={
         },
         "31190076": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -782,6 +812,7 @@ datas ={
         },
         "31190077": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -808,6 +839,7 @@ datas ={
         },
         "31190078": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -834,6 +866,7 @@ datas ={
         },
         "31190079": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -860,6 +893,7 @@ datas ={
         },
         "31190080": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -886,6 +920,7 @@ datas ={
         },
         "31190081": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -912,6 +947,7 @@ datas ={
         },
         "31190082": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -938,6 +974,7 @@ datas ={
         },
         "31190083": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -964,6 +1001,7 @@ datas ={
         },
         "31190084": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -990,6 +1028,7 @@ datas ={
         },
         "31190085": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1016,6 +1055,7 @@ datas ={
         },
         "31190086": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1042,6 +1082,7 @@ datas ={
         },
         "31190087": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1068,6 +1109,7 @@ datas ={
         },
         "31190088": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1095,6 +1137,7 @@ datas ={
         },
         "31190089": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1121,6 +1164,7 @@ datas ={
         },
         "31190090": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1147,6 +1191,7 @@ datas ={
         },
         "31190091": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1173,6 +1218,7 @@ datas ={
         },
         "31190092": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1199,6 +1245,7 @@ datas ={
         },
         "31190093": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1225,6 +1272,7 @@ datas ={
         },
         "31190094": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1251,6 +1299,7 @@ datas ={
         },
         "31190095": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1277,6 +1326,7 @@ datas ={
         },
         "31190096": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1303,6 +1353,7 @@ datas ={
         },
         "31190097": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1329,6 +1380,7 @@ datas ={
         },
         "31190098": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1355,6 +1407,7 @@ datas ={
         },
         "31190099": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1381,6 +1434,7 @@ datas ={
         },
         "31190100": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1407,6 +1461,7 @@ datas ={
         },
         "31190101": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1433,6 +1488,7 @@ datas ={
         },
         "31190102": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1459,6 +1515,7 @@ datas ={
         },
         "31190103": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1485,6 +1542,7 @@ datas ={
         },
         "31190104": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1511,6 +1569,7 @@ datas ={
         },
         "31190105": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1537,6 +1596,7 @@ datas ={
         },
         "31190106": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1563,6 +1623,7 @@ datas ={
         },
         "31190107": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1589,6 +1650,7 @@ datas ={
         },
         "31190108": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1615,6 +1677,7 @@ datas ={
         },
         "31190109": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1641,6 +1704,7 @@ datas ={
         },
         "31190110": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1667,6 +1731,7 @@ datas ={
         },
         "31190111": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1693,6 +1758,7 @@ datas ={
         },
         "31190112": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1719,6 +1785,7 @@ datas ={
         },
         "31190113": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1745,6 +1812,7 @@ datas ={
         },
         "31190114": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1771,6 +1839,7 @@ datas ={
         },
         "31190115": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1797,6 +1866,7 @@ datas ={
         },
         "31190116": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1823,6 +1893,7 @@ datas ={
         },
         "31190117": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1849,6 +1920,7 @@ datas ={
         },
         "31190118": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1875,6 +1947,7 @@ datas ={
         },
         "31190119": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1901,6 +1974,7 @@ datas ={
         },
         "31190120": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1927,6 +2001,7 @@ datas ={
         },
         "31190121": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1953,6 +2028,7 @@ datas ={
         },
         "31190122": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1979,6 +2055,7 @@ datas ={
         },
         "31190123": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2005,6 +2082,7 @@ datas ={
         },
         "31190124": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2031,6 +2109,7 @@ datas ={
         },
         "31190125": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2057,6 +2136,7 @@ datas ={
         },
         "31190126": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2083,6 +2163,7 @@ datas ={
         },
         "31190127": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2109,6 +2190,7 @@ datas ={
         },
         "31190128": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2135,6 +2217,7 @@ datas ={
         },
         "31190129": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2162,6 +2245,7 @@ datas ={
         },
         "31190130": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2188,6 +2272,7 @@ datas ={
         },
         "31190131": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2214,6 +2299,7 @@ datas ={
         },
         "31190132": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2240,6 +2326,7 @@ datas ={
         },
         "31190133": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2266,6 +2353,7 @@ datas ={
         },
         "31190134": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2292,6 +2380,7 @@ datas ={
         },
         "31190135": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2318,6 +2407,7 @@ datas ={
         },
         "31190136": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2344,6 +2434,7 @@ datas ={
         },
         "31190137": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2370,6 +2461,7 @@ datas ={
         },
         "31190138": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2396,6 +2488,7 @@ datas ={
         },
         "31190139": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2422,6 +2515,7 @@ datas ={
         },
         "31190140": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2448,6 +2542,7 @@ datas ={
         },
         "31190141": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2474,6 +2569,7 @@ datas ={
         },
         "31190142": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2500,6 +2596,7 @@ datas ={
         },
         "31190143": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2526,6 +2623,7 @@ datas ={
         },
         "31190144": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2552,6 +2650,7 @@ datas ={
         },
         "31190145": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2578,6 +2677,7 @@ datas ={
         },
         "31190146": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2604,6 +2704,7 @@ datas ={
         },
         "31190147": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2630,6 +2731,7 @@ datas ={
         },
         "31190148": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2656,6 +2758,7 @@ datas ={
         },
         "31190149": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2682,6 +2785,7 @@ datas ={
         },
         "31190150": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2708,6 +2812,7 @@ datas ={
         },
         "31190151": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2734,6 +2839,7 @@ datas ={
         },
         "31190152": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2760,6 +2866,7 @@ datas ={
         },
         "31190153": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2786,6 +2893,7 @@ datas ={
         },
         "31190154": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2812,6 +2920,7 @@ datas ={
         },
         "31190155": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2838,6 +2947,7 @@ datas ={
         },
         "31190156": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2864,6 +2974,7 @@ datas ={
         },
         "31190157": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2890,6 +3001,7 @@ datas ={
         },
         "31190158": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2916,6 +3028,7 @@ datas ={
         },
         "31190159": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2942,6 +3055,7 @@ datas ={
         },
         "31190160": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2968,6 +3082,7 @@ datas ={
         },
         "31190161": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2994,6 +3109,7 @@ datas ={
         },
         "31190162": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3020,6 +3136,7 @@ datas ={
         },
         "31190163": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3046,6 +3163,7 @@ datas ={
         },
         "31190164": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3072,6 +3190,7 @@ datas ={
         },
         "31190165": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3098,6 +3217,7 @@ datas ={
         },
         "31190166": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3124,6 +3244,7 @@ datas ={
         },
         "31190167": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3150,6 +3271,7 @@ datas ={
         },
         "31190168": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3176,6 +3298,7 @@ datas ={
         },
         "31190169": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3202,6 +3325,7 @@ datas ={
         },
         "31190170": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3231,6 +3355,7 @@ datas ={
       "CombatArea": {
         "31198004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -3249,6 +3374,7 @@ datas ={
         },
         "31198005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -3267,6 +3393,7 @@ datas ={
         },
         "31198006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -3285,10 +3412,12 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "Cube": {
       "Teleporter": {
         "31198007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -3303,6 +3432,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "\u4e2d",
+            "ShowInSceneMap": 0,
             "TelDir": 0.0,
             "TelX": 167.5635,
             "TelY": 526.2747,
@@ -3311,6 +3441,7 @@ datas ={
         },
         "31198008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -3325,6 +3456,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "\u5de6",
+            "ShowInSceneMap": 0,
             "TelDir": 0.0,
             "TelX": 167.5635,
             "TelY": 526.2747,
@@ -3333,6 +3465,7 @@ datas ={
         },
         "31198009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -3347,6 +3480,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "\u53f3",
+            "ShowInSceneMap": 0,
             "TelDir": 0.0,
             "TelX": 167.5635,
             "TelY": 526.2747,

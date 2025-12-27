@@ -979,6 +979,7 @@
             <Arg>        DOUBLETIMESTAMP  </Arg>
             <Arg>        INT8             </Arg>
             <Arg>        INT8             </Arg>
+            <Arg>        BOOL             </Arg>
         </onSetAddSkillCd>
 
         <notifyCastingSkill>

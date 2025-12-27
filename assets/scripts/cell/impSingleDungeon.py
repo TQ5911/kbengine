@@ -298,13 +298,18 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
     #副本流程控制节点传送到其他场景（目前支持传到大世界or大世界副本）
     def transferToTheDesignatedMap(self, dstNo, dstPos, dstDir):
+        _dir = (0, 0, dstDir * math.pi / 180)
         if formula.isWorldLineType(dstNo):
-            self.doLeaveSingleDungeonWithDstPos(dstNo, dstPos, (0, 0, dstDir * math.pi / 180))
+            self.doLeaveSingleDungeonWithDstPos(dstNo, dstPos, _dir)
             return
         
         dungeonSpaceType = DDID.datas[dstNo]['type']
         dungeonEnterType = DDID.datas[dstNo]['enterType']
+
+        if dstNo == formula.getMapId(self.spaceNo):
+            self.telToPos(dstPos, _dir)
         
-        if gameconst.DungeonType.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
+        elif gameconst.DungeonType.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
             src = dungeonSrc.DungeonFromFlowController(self.base, self.gbId)
             self._enterSingleDungeon(dstNo, src, {'position': (dstPos.x, dstPos.y, dstPos.z)})
+

@@ -423,6 +423,10 @@
             <Arg>        SKILLID        </Arg>
             <Arg>        INT8           </Arg>
         </levelUpSkill>
+
+        <setShowCompleteNum> <Exposed/>
+            <Arg>        UINT8          </Arg>
+        </setShowCompleteNum>
     </CellMethods>
 
     <BaseMethods>
@@ -444,6 +448,7 @@
         </updateSkills>
 
         <baseLevelUpSkill>
+            <Arg>        SKILLID        </Arg>
             <Arg>        SKILLID        </Arg>
             <Arg>        INT8           </Arg>
         </baseLevelUpSkill>

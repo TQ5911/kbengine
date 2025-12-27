@@ -22,6 +22,7 @@ import json
 
 import branchData_branchData as BBD
 import gamePlay_gamePlay as GGD
+import branchData_set as BDS
 
 
 class EnterLineExtra(object):
@@ -49,7 +50,7 @@ class EnterLineExtra(object):
 
 class ILinePlayersStub(object):
     def __init__(self):
-        pass
+        self.mergeRes = []
 
     def onLineSpaceReady(self, spaceNo):
         lineNo = formula.getLineNo(spaceNo)
@@ -165,6 +166,7 @@ class ILinePlayersStub(object):
                                                            gametimer.TIMER_TAG_CHECK_PLAYER_ENTER_LINE)
 
     def _checkSelectLine(self, lineNo, box, gbId, extraInfo, exlude=None, isSwitchLine=False):
+        DEBUG_MSG("checkSelectLine", lineNo, box, gbId, extraInfo, exlude, isSwitchLine)
         needCnt = len(extraInfo.followers) + 1
 
         if exlude and lineNo in exlude:
@@ -172,8 +174,8 @@ class ILinePlayersStub(object):
 
         # TODO X: validate line config
         lineMaxCnt = BBD.datas[self.lineType]['N1']
-        teamEnterCnt = BBD.datas[self.lineType]['N2']
-        autoEnterCnt = BBD.datas[self.lineType]['N3']
+        N2Cnt = BBD.datas[self.lineType]['N2']
+        N3Cnt = BBD.datas[self.lineType]['N3']
         lineMembers = self.allPlayers[lineNo]
         sVal = self.getLineSpaceVal(lineNo)
 
@@ -185,19 +187,28 @@ class ILinePlayersStub(object):
         failCode = gameconst.EnterLineCode.FAIL_COMMON
 
         playerNum = len(lineMembers) + lineMembers.getPendingEnterNum()
-        if gameconfig.enableCheckEnterLineNew():
-            playerNum = len(lineMembers) + lineMembers.getPendingEnterNum()
+
         # 单条线人数超过上限，禁止进入
         if playerNum + needCnt > lineMaxCnt:
             return gameconst.EnterLineCode.FAIL_REACH_MAX_MEMBER
 
         # 单线每秒人数超过上限，禁止进入(只在登录时限制)
-        elif extraInfo.isLogin and lineMembers.getPendingEnterNumNowSec() >= gameconfig.loginLinePlayerNumLimit():
+        if extraInfo.isLogin and lineMembers.getPendingEnterNumNowSec() >= gameconfig.loginLinePlayerNumLimit():
             return gameconst.EnterLineCode.FAIL_REACH_SEC_LIMIT
-        else:
-            return gameconst.EnterLineCode.CAN_ENTER
+        
+        # 人数 > N2 且 该线没有队友
+        if playerNum > N2Cnt and not hasMember:
+            return gameconst.EnterLineCode.FAIL_ONLY_TEAM_MEMBER
+        
+        # 人数 > N3 且 是自动就不能进了
+        if playerNum > N3Cnt and extraInfo.isAuto:
+            return gameconst.EnterLineCode.FAIL_CANNOT_AUTO_ENTER
+        
+        for i, res in self.mergeRes:
+            if lineNo in res:
+                return gameconst.EnterLineCode.FAIL_MERGE_LINE
 
-        return failCode
+        return gameconst.EnterLineCode.CAN_ENTER
 
     def _autoSelectLine(self, box, gbId, extraInfo, exlude=None, isSwitchLine=False):
         needCnt = len(extraInfo.followers) + 1
@@ -206,31 +217,12 @@ class ILinePlayersStub(object):
         # 有队伍且不是队长，优先找队长
         if extraInfo.teamUUID and not extraInfo.isLeader:
             for lineNo, lineMembers in self.allPlayers.items():
-                if lineMembers.getLeaderGbId(extraInfo.teamUUID) and len(lineMembers) + needCnt < lineMaxCnt + 50:
+                if lineMembers.getLeaderGbId(extraInfo.teamUUID) and len(lineMembers) + needCnt <= lineMaxCnt:
                     return lineNo
 
         n5list = []
         lineNoList = sorted(self.allPlayers.keys())
-        if gameconfig.enableSelectLineNew():
-            memberCnt1 = lineMaxCnt // 2
-            lineInfoList = []
-            for lineNo in lineNoList:
-                _linePlayers = self.allPlayers.getLinePlayers(lineNo) or ()
-                lineInfoList.append((len(_linePlayers), lineNo))
-
-            if all([info[0] > memberCnt1 for info in lineInfoList]):
-                lineNoList = [info[1] for info in sorted(lineInfoList)]
-            else:
-                for i, info in enumerate(lineInfoList):
-                    if info[0] < memberCnt1:
-                        if i != 0:
-                            lineInfoList[i] = lineInfoList[0]
-                            lineInfoList[0] = info
-                        break
-
-                lineNoList = [info[1] for info in lineInfoList]
-
-        elif extraInfo.fromLineNo in lineNoList:
+        if extraInfo.fromLineNo in lineNoList:
             lineNoList.remove(extraInfo.fromLineNo)
             lineNoList.insert(0, extraInfo.fromLineNo)
 
@@ -482,19 +474,31 @@ class ILinePlayersStub(object):
 
     def doQueryLineInfo(self, spaceNo, box, gbId):
         res = {'lineType': self.lineType, 'info': {}}
-        havePlayerLineList = [lineNo for lineNo, lineMembers in self.allPlayers.items() if len(lineMembers) > 0]
-        maxPlayerLineNo = min(max(havePlayerLineList, default=0) + 1, utils.getLineMaxNumber(self.lineType) - 1)
-        for lineNo, lineMembers in self.allPlayers.items():
-            if lineNo > maxPlayerLineNo:
-                continue
+        
+        baseLineNum = BBD.datas[self.lineType]['num']
+        maxLineNum = gameconst.getBranchLineCnt(self.lineType)
+        addRequired = BBD.datas[self.lineType]['AddRequired']
 
+        needNewLine = True
+        for lineNo, lineMembers in self.allPlayers.items():
             sVal = self.getLineSpaceVal(lineNo)
 
             if not sVal.isReadyEnter():
                 continue
 
-            res['info'][lineNo] = len(lineMembers)
+            if lineNo < baseLineNum or len(lineMembers) > 0:
+                res['info'][lineNo] = len(lineMembers)
+                if len(lineMembers) < addRequired:
+                    needNewLine = False
+                continue
 
+        if needNewLine:
+            for i in range(1, maxLineNum):
+                if i not in res['info']:
+                    res['info'][i] = len(self.allPlayers.getLinePlayers(i))
+                    break
+
+        DEBUG_MSG('doQueryLineInfo', res)
         box.client.onGetLineInfo(json.dumps(res))
 
     def notifyPlayerOffline(self, lineNo, gbId):
@@ -509,3 +513,75 @@ class ILinePlayersStub(object):
 
     def debugPlayerAreaInfo(self):
         pass
+
+    def _checkLineMerge(self):
+        DEBUG_MSG('_checkLineMerge')
+        baseLineNum = BBD.datas[self.lineType]['num']
+        mergeRequired = BBD.datas[self.lineType]['MergeRequired']
+        
+        sortedData = []
+        for lineNo, lineMembers in self.allPlayers.items():
+            if lineNo >= baseLineNum and len(lineMembers) > 0:
+                sortedData.append((lineNo, len(lineMembers)))
+        
+        sortedData = sorted(sortedData, key=lambda x: x[1])
+
+        if not sortedData:
+            return
+        DEBUG_MSG('sortedData', sortedData)
+
+        self.mergeRes = []
+        idx = 0
+
+        for i in range(len(self.allPlayers)):
+            sumCnt = len(self.allPlayers.getLinePlayers(i))
+            res = []
+            for j in range(idx, len(sortedData)):
+                #要合的线no大于当前的，就结算
+                if i >= sortedData[j][0]:
+                    break
+
+                num = sortedData[j][1]
+                if sumCnt + num <= mergeRequired:
+                    res.append(sortedData[j][0])
+                    sumCnt += num
+                    idx = j + 1
+                else:
+                    break
+            if res:
+                self.mergeRes.append((i, res))
+
+        if not self.mergeRes:
+            return
+
+        DEBUG_MSG('mergeRes', self.mergeRes)
+        msgID = BDS.datas["Branch_mergeNoticeMsg"]["value"]
+        for i, res in self.mergeRes:
+            for lineNo in res:
+                lineMembers = self.allPlayers.getLinePlayers(lineNo)
+                for gbId in list(lineMembers.keys()):
+                    pVal = lineMembers.get(gbId)
+                    if not pVal:
+                        continue
+                    if not pVal.playerBox:
+                        continue
+                    pVal.playerBox.onMessagePre(msgID, [])
+
+    def _doLineMerge(self):
+        if self.mergeRes:
+            DEBUG_MSG('_doLineMerge')
+            for i, res in self.mergeRes:
+                self.mergeLine(i, res)
+            self.mergeRes = []
+
+    def mergeLine(self, i, res):
+        DEBUG_MSG('mergeLine', i, res)
+        for fromLineNo in res:
+            lineMembers = self.allPlayers.getLinePlayers(fromLineNo)
+            for gbId in list(lineMembers.keys()):
+                pVal = lineMembers.get(gbId)
+                if not pVal:
+                    continue
+                if not pVal.playerBox:
+                    continue
+                pVal.playerBox.cell.onMergeLine(i)

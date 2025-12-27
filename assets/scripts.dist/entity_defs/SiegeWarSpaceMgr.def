@@ -14,5 +14,18 @@
         <onGetWinnerDataFromCityOwnerMgr>
             <Arg>       PY_LIST     </Arg>
         </onGetWinnerDataFromCityOwnerMgr>
+
+        <onGmAddTime>
+            <Arg>       INT32     </Arg>
+        </onGmAddTime>
+
+        <onGmTestScores>
+        </onGmTestScores>
+
+        <checkCanEnterCell>
+            <Arg>           INT32                   </Arg>
+            <Arg>           ENTITYCALL              </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </checkCanEnterCell>
     </CellMethods>
 </root>

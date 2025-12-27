@@ -26,7 +26,6 @@ import raidBossChallenge_config as RBC_CFG
 
 
 class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
-
     @property
     def createRaidDungeonCheckRecord(self) -> dict:
         if not self.hasTempMiscProp(gameconst.AvatarProps.raidDungeonCheckRecord):
@@ -242,12 +241,12 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         raidUUID = self.raidUUID
         for _, memberGbId, memberVal in self.raidInfo.iterGetRaidMember():
             _extra = {'checkUUID': newCheckUUID, 'dungeonPlayMode': dungeonPlayMode}
-            if memberGbId == self.gbId:
-                _extra['_avatarProps'] = {'level': self.level, 'guildUUID': self.guildUUID, 'name': self.name}
-                self.onCreateAndEnterRaidDungeonAllMemberPreCheck(
-                    gameconst.RaidDungeonErrno.RAIDDUN_OK.errno,
-                    raidUUID, dungeonNo, src, self.gbId, self.name, _extra)
-                continue
+            # if memberGbId == self.gbId:
+            #     _extra['_avatarProps'] = {'level': self.level, 'guildUUID': self.guildUUID, 'name': self.name}
+            #     self.onCreateAndEnterRaidDungeonAllMemberPreCheck(
+            #         gameconst.RaidDungeonErrno.RAIDDUN_OK.errno,
+            #         raidUUID, dungeonNo, src, self.gbId, self.name, _extra)
+            #     continue
 
             if memberVal.playerBox and memberVal.playerBox.cell:
                 memberVal.playerBox.cell.createAndEnterRaidDungeonAllMemberPreCheck(
@@ -428,7 +427,6 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
     def doEnterRaidDungeonAfterCheck(self, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps):
         """每个团员检查完毕后直接进入团队副本"""
-
         def _enterCheck():
             if extraProps.get('createAndEnter', 0) != self.gbId:
                 # lock for raid members
@@ -454,6 +452,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
             pass
 
     def _doEnterRaidDungeon(self, dungeonNo, spaceNo, spaceUUID, spaceBox, src, spaceMgrBox, extra):
+        DEBUG_MSG('_doEnterRaidDungeon:', dungeonNo, spaceNo, spaceUUID, spaceBox, src, spaceMgrBox, extra)
         eContext = {'spaceUUID': spaceUUID,
                     'spaceBox': spaceBox,
                     'spaceMgrBox': spaceMgrBox,
@@ -488,7 +487,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
     def _leaveRaidDungeon(self, src):
         _, err = self._leaveRaidDungeonCheck()
         if err != gameconst.RaidDungeonErrno.RAIDDUN_OK:
-            ERROR_MSG('leaveRaidDungeon:: check failed, {}'.format(err))
+            WARNING_MSG('leaveRaidDungeon:: check failed, {}'.format(err))
             return
         extraProps = {}
         self._doLeaveRaidDungeon(src, extraProps)

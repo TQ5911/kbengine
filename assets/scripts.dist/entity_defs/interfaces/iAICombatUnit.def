@@ -1,6 +1,7 @@
 <root>
     <Interfaces>
-        <Interface>       iSkillManager    </Interface>
+        <Interface>         iSkillManager       </Interface>
+		<Interface>	        iSkillPropPriProp	</Interface>
     </Interfaces>
 
     <Properties>
@@ -81,9 +82,26 @@
 
         <moveAni>
             <Type>          UINT8               </Type>
-            <Flags>         OTHER_CLIENTS       </Flags>
+            <Flags>         CELL_PRIVATE        </Flags>
             <Default>       0                   </Default>
         </moveAni>
+
+        <stopByFuben>
+            <Type>          BOOL                </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </stopByFuben>
+
+        <nextKeepDistanceTime>
+            <Type>          LONGTIME            </Type>
+            <Default>       0                   </Default>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </nextKeepDistanceTime>
+
+        <beHateCounter>
+            <Type>          HATE_COUNTER_DATA_INFO      </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+        </beHateCounter>
     </Properties>
 
     <BaseMethods>

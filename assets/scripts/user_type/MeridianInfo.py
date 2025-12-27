@@ -183,7 +183,7 @@ class MeridianVal(userType.UserSoleType):
     
     def levelUpPoint(self, slotIdx, pointIdx):
         if not self.canLevelUpSlotPoint(slotIdx, pointIdx):
-            return False
+            return False, 0
         level = self.slotDict[slotIdx].doLevelUpPoint(pointIdx)
         if level > 0:
             return True, level

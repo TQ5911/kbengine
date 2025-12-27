@@ -184,6 +184,11 @@ class IRelive(object):
         INFO_MSG('in doRelive:', reliveType, self.spaceNo, self.gbId)
         _mapId = formula.getMapId(self.spaceNo)
 
+        if formula.isMineWarSpace(self.spaceNo) \
+              and self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+            if self.mineWarTryRelive():
+                return
+
         _pos = None
         _dir = None
         if reliveType == gameconst.RELIVE_TYPE_TO_NEAR:
@@ -227,27 +232,23 @@ class IRelive(object):
             return
 
         DEBUG_MSG('relive1', reliveType, self.spaceNo)
-        costCoin = 0
-        resId = 0
-        reliveRest = -1
         if reliveType == gameconst.RELIVE_TYPE_DIRECTLY:
-
             self.doRelive(reliveType)
         else:
             self.doRelive(reliveType)
-
-        reliveTlogProps = {
-            'GameSvrId': None,
-            'dtEventTime': None,
-            'vGameAppid': None,
-            'MapId': formula.getMapId(self.spaceNo),
-            'AreaId': 0,
-            'ReliveType': reliveType,
-            'ItemId': resId,
-            'ItemNum': costCoin,
-            'RestReliveNum': reliveRest
-        }
-
-        self.base.playerReliveTlog(reliveTlogProps)
-
+        #
+        # reliveTlogProps = {
+        #     'GameSvrId': None,
+        #     'dtEventTime': None,
+        #     'vGameAppid': None,
+        #     'MapId': formula.getMapId(self.spaceNo),
+        #     'AreaId': 0,
+        #     'ReliveType': reliveType,
+        #     'ItemId': resId,
+        #     'ItemNum': costCoin,
+        #     'RestReliveNum': reliveRest
+        # }
+        #
+        # self.base.playerReliveTlog(reliveTlogProps)
+        #
 

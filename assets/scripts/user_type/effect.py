@@ -20,6 +20,7 @@ import utils
 import functools
 import dataUtils
 import gametimer
+import gamedecorator
 
 #effect的调用者
 class EffectCaller(userType.UserSoleType):
@@ -303,7 +304,8 @@ class BasicEffect(EffectBase):
             ERROR_MSG('cannot get shieldId', callerInfo)
             return
 
-        if owner.IsAvatar:
+        host = owner.getAvatar()
+        if host:
             skillId = 0
             if callerInfo.callerType == EffectCaller.BUFF:
                 buffVal = callerInfo.getCaller(owner)
@@ -312,26 +314,73 @@ class BasicEffect(EffectBase):
                         skillId = buffVal.rootContext.skillId
             if skillId > 0:
                 totalAddValue = 0
-                ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO)
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO)
                 if ret:
                     if len(datas) == 1:
                         addValue = datas[0]
-                        totalAddValue = value * (1+addValue)
+                        totalAddValue = value * addValue
                         DEBUG_MSG("in addShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, datas)
 
-                ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE)
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE)
                 if ret:
                     if len(datas) == 1:
                         addValue = datas[0]
-                        totalAddValue += addValue
+                        totalAddValue = addValue
                         DEBUG_MSG("in addShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, datas)
 
 
                 value += totalAddValue
 
-        owner.addShield(shieldId, value)
+        owner.addShield(shieldId, gameconst.ShieldType.LIFE, value)
+        return
+    
+    def addDefensiveShield(self, owner, callerInfo):
+        effectDict = self.getEffectDict(owner, callerInfo)
+        value = effectDict.get('hpValue')
+        hpValue = self.getRealValue(owner, callerInfo, value)
+        value = effectDict.get('reduceDmgRatio')
+        reduceDmgRatio = self.getRealValue(owner, callerInfo, value)
+
+        if callerInfo.callerType in (EffectCaller.BUFF,):
+            shieldId = callerInfo.buffId
+        else:
+            ERROR_MSG('cannot get shieldId', callerInfo)
+            return
+
+        host = owner.getAvatar()
+        if host:
+            skillId = 0
+            if callerInfo.callerType == EffectCaller.BUFF:
+                buffVal = callerInfo.getCaller(owner)
+                if buffVal and buffVal.rootContext:
+                    if hasattr(buffVal.rootContext, 'skillId'):
+                        skillId = buffVal.rootContext.skillId
+            if skillId > 0:
+                totalAddValue = 0
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO)
+                if ret:
+                    if len(datas) == 1:
+                        addValue = datas[0]
+                        totalAddValue = hpValue * addValue
+                        DEBUG_MSG("in addDefensiveShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_RATIO, datas)
+
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE)
+                if ret:
+                    if len(datas) == 1:
+                        addValue = datas[0]
+                        totalAddValue = addValue
+                        DEBUG_MSG("in addDefensiveShield, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SHIELD_INCREASE_VALUE, datas)
+
+
+                hpValue += totalAddValue
+
+        owner.addShield(shieldId, gameconst.ShieldType.REDUCE_DMG, hpValue, {'reduceDmgRatio':reduceDmgRatio})
         return
 
+    def undoAddDefensiveShield(self, owner, callerInfo, isOverleap):
+        owner.removeShield(callerInfo.buffId)
+        return 0
+    
     def undoAddShield(self, owner, callerInfo, isOverleap):
         owner.removeShield(callerInfo.buffId)
         return 0
@@ -399,6 +448,7 @@ class EventEffect(EffectBase):
         eventKey = self._getEffectEventKey(owner, callerInfo)
         owner.removeListener(eventName, eventKey)
 
+    @gamedecorator.prevent_instance_reentry
     def onActionEvent(self, owner, callerInfo, event):
         DEBUG_MSG('onActionEvent: the event context -', event)
 
@@ -445,13 +495,13 @@ class EventEffect(EffectBase):
                 return
             target = releaseRole
 
-        self.tNextTime = time.time() + effectData.get('EventCD', 0)
         if effectData.get('EventSourceType') == gameconst.EffetEventSourceType.LINGSHOU_SKILL_BUFF:
             bufVal = callerInfo.getCaller(owner)
             if bufVal and bufVal.rootContext and bufVal.rootContext.actionType == actionContext.ACTION_PASSIVE_SKILL:
                 owner.updateLingShouEffectEventInfo(bufVal.rootContext.objId, bufVal.rootContext.skillId, bufVal.buffId, self.effectId, self.tNextTime)
 
         #有可能不是combatUnit触发的事件，比如Creation
+        _ret = None
         if (target and target.IsCombatUnit) or targetType=='None':
             argsDict = self.getActionArgs(owner, callerInfo)
             if event.eventContext is not effectEventCtx.EE_DEFAULT_CONTEXT:
@@ -465,7 +515,12 @@ class EventEffect(EffectBase):
                 else:
                     ERROR_MSG('unsupported effect caller', callerInfo, self)
                     return
-                owner.doCombatActions(action, owner, target, callerInfo.getFromEntId(owner), ctxBuilder)
+                _ret = owner.doCombatActions(action, owner, target, callerInfo.getFromEntId(owner), ctxBuilder)
+
+        if _ret is None:
+            self.tNextTime = time.time() + effectData.get('EventCD', 0)
+        elif _ret:
+            self.tNextTime = time.time() + effectData.get('EventCD', 0)
 
     def removeEffect(self, owner, callerInfo, isOverleap=False):
         self.isValid = False

@@ -91,6 +91,10 @@ datas = _tools.RODict({
         "ID": "autoResolveOff",
         "value": 54001102,
     }),
+    "autoResolveDefault": _tools.RODict({
+        "ID": "autoResolveDefault",
+        "value": 54001103,
+    }),
     "putInFail_bankFull_msg": _tools.RODict({
         "ID": "putInFail_bankFull_msg",
         "value": 54000164,
@@ -118,5 +122,37 @@ datas = _tools.RODict({
     "bagItemLimitTimeCD": _tools.RODict({
         "ID": "bagItemLimitTimeCD",
         "value": "过期删除：{0}",
+    }),
+    "autoSelectQualityList": _tools.RODict({
+        "ID": "autoSelectQualityList",
+        "value": _tools.ROList([1, 2]),
+    }),
+    "autoGearDisassembleQualityList": _tools.RODict({
+        "ID": "autoGearDisassembleQualityList",
+        "value": _tools.ROList([1, 2]),
+    }),
+    "bagToStorage": _tools.RODict({
+        "ID": "bagToStorage",
+        "value": "放入仓库",
+    }),
+    "storageToBag": _tools.RODict({
+        "ID": "storageToBag",
+        "value": "放入背包",
+    }),
+    "storageInteract1": _tools.RODict({
+        "ID": "storageInteract1",
+        "value": "点击全部移动",
+    }),
+    "storageInteract2": _tools.RODict({
+        "ID": "storageInteract2",
+        "value": "点击单个移动",
+    }),
+    "storageInteract3": _tools.RODict({
+        "ID": "storageInteract3",
+        "value": "点击预览",
+    }),
+    "bankForbiddenList": _tools.RODict({
+        "ID": "bankForbiddenList",
+        "value": (30010007,),
     })
 })

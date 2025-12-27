@@ -5,6 +5,12 @@
             <Flags>         BASE             </Flags>
             <Persistent>    true             </Persistent>
         </storeData>
+
+        <limitStoreRefreshDict>
+            <Type>          PY_DICT          </Type>
+            <Flags>         BASE             </Flags>
+            <Persistent>    true             </Persistent>
+        </limitStoreRefreshDict>
     </Properties>
 
 
@@ -13,11 +19,22 @@
             <Arg>   ARRAY <of> STOREID </of>  </Arg>
         </reqGetStoreList>
 
+        <reqGetStoreLimitedItemList><Exposed/>
+            <Arg>   STOREID  </Arg>
+        </reqGetStoreLimitedItemList>
+
         <reqBuyItemsInStore><Exposed/>
             <Arg>       STOREID     </Arg>
             <Arg>       ITEMID      </Arg>
             <Arg>       UINT32      </Arg>
         </reqBuyItemsInStore>
+
+        <reqBuyItemsInStoreWithSelection><Exposed/>
+            <Arg>       STOREID     </Arg>
+            <Arg>       ITEMID      </Arg>
+            <Arg>       UINT32      </Arg>
+            <Arg>       UINT8       </Arg>
+        </reqBuyItemsInStoreWithSelection>
 
         <makeMallFlowLog>
             <Arg>       UINT64         </Arg>
@@ -35,10 +52,16 @@
             <Arg>   ARRAY <of> CLIENT_STORE_VAL </of>  </Arg>
         </onGetStoreList>
 
+        <onGetStoreLimitedItemList>
+            <Arg>       CLIENT_STORE_VAL    </Arg>
+            <Arg>       LONGTIME            </Arg>
+        </onGetStoreLimitedItemList>
+
         <onBuyStoreItems>
             <Arg>       STOREID     </Arg>
             <Arg>       ITEMID      </Arg>
             <Arg>       UINT32      </Arg>
+            <Arg>       UINT8       </Arg>
             <Arg>       INT32       </Arg>
         </onBuyStoreItems>
     </ClientMethods>

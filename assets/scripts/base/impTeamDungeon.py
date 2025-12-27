@@ -3,6 +3,7 @@ import KBEngine
 from KBEDebug import *
 
 import gameconst
+import gameengine
 
 import dropAward
 import dungeonSrc
@@ -48,6 +49,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
     # GOODMAN CARD METHOD
 
     def getCurrentActRewardStatus(self, srcId=gameconst.DungeonSrcEnum.DEFAULT, playMode=gameconst.DungeonPlayModeEnum.UNKNOWN):
+        INFO_MSG('getCurrentActRewardStatus::', srcId, playMode)
         actId, canGetReward = 0, False
 
         if playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
@@ -93,10 +95,6 @@ class ImpTeamDungeon(DungeonSheetMixin):
         checkBox, reason = self._checkMemberTeamDungeonConditions(dungeonNo, extra)
 
         dungeonPlayMode = extra.get('dungeonPlayMode')
-        if dungeonPlayMode and dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
-            dunLevel = self.getCrusadeDungeonAutoConfirmConfig()
-            if dungeonPlayMode.dunLevel == dunLevel:
-                extra['teammateAutoComplete'] = True
 
         _src, _dunPlayMode = extra.get('src'), dungeonPlayMode
         _actId, _canGetReward = self.getCurrentActRewardStatus(
@@ -140,3 +138,18 @@ class ImpTeamDungeon(DungeonSheetMixin):
         self.deductWealth(src, deductWealthVal, opUUID, detail)
         self.cell.readyUseItemAndEnterTeamDungeon(
             gameconst.BagOPStat.BAG_OP_STAT_OK, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra)
+        
+    def selfCheckAndEnterTeamDungeon(self, teamId, dungeonNo, extra):
+        extra.update({
+
+            'name': self.characterName,
+            'school': self.getRoleCacheAttr('school', 0),
+            'level': self.getRoleCacheAttr('level', 0),
+            'sex': self.getRoleCacheAttr('sex', 0),
+            'gbId': self.gbID,
+            'eId': self.id,
+        })
+
+        INFO_MSG('selfCheckAndEnterTeamDungeon::', teamId, dungeonNo, extra)
+        teamStub = gameengine.getTeamStub(teamId)
+        teamStub.enterTeamDungeonDirectly(self, self.gbID, teamId, dungeonNo, extra)

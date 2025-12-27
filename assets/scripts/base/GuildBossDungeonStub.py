@@ -8,6 +8,8 @@ import gameengine
 import gameconst
 import gametimer
 
+import DungeonSettlement
+
 import iDungeonStub
 import iDungeonStubMonster
 
@@ -178,7 +180,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
         sVal.spaceMgr.cell.destroyAllEntities()
 
         sVal = self.spaces[spaceNo]
-        sVal.spaceMgr.cell.onGuildBossDungeonCompleted(spaceNo, sVal.guildUUID, not sVal.isFailed(), delay, sVal.getElapsedTime())
+        sVal.spaceMgr.cell.onGuildBossDungeonCompleted(spaceNo, sVal.guildUUID, win, delay, sVal.getElapsedTime())
         if delay:
             sVal.completeDungeonTimer = self._callback(
                 delay, '_onGuildBossDungeonCompletedCallback',
@@ -206,7 +208,6 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
         extra = {}
         extra['guildUUID'] = guildUUID
         self._kickOutAllFounders(spaceNo, extra)
-        self.clearAllDungeonStatisticData(spaceNo, guildUUID)
         
         sVal.clearCompleteTimer()
         sVal.completeDungeon(win)
@@ -269,7 +270,10 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             founderVal = dungeonVal.founders.getFounderVal(playerGbId)
         founderVal.onAvatarEnter(playerGbId)
         founderVal.playerBox = playerBox
-        founderVal.playerName = extra.pop('playerName', '')
+
+        data = DungeonSettlement.DungeonExtraData()
+        data.loadDatas(extra)
+        dungeonVal.spaceMgr.cell.notifyDungeonExtarData(playerGbId, data)
         return True
     
     def applyCreateDungeon(self, box, gbId, guildUUID, extra):
@@ -278,7 +282,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
     def _getDungeonSpaceVal(self, spaceNo, playerBox, playerGbId, guildUUID, extra):
         return dungeon.GuildBossDungeonSpaceVal(spaceNo=spaceNo,
                                            spaceUUID=0, spaceBox=None, spaceMgr=None,
-                                           guildUUID=guildUUID)
+                                           guildUUID=guildUUID, guildBox = playerBox)
 
     def _getDungeonSpaceWeight(self, enterNum=5) -> int:
         return utils.calcSpaceWeight(enterNum, False, gameconst.EntNumPerPlayerInAOI.teamDungeon)
@@ -302,19 +306,15 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             spaceNo, playerBox, playerGbId, guildUUID, extra)
 
     def onLoadDungeonSpaceReady(self, playerBox, playerGbId, spaceNo, guildUUID, extra):
-        DEBUG_MSG('onLoadDungeonSpaceReady::')
-        guildBox = extra.get('guildBox', None)
-        if not guildBox:
-            ERROR_MSG('onLoadDungeonSpaceReady:: failed, missing guild box', playerBox, playerGbId, spaceNo, guildUUID, extra)
-            return
+        DEBUG_MSG('onLoadDungeonSpaceReady::', playerBox, playerGbId, spaceNo, guildUUID, extra)
         
         if spaceNo not in self.spaces:
             ERROR_MSG('onLoadDungeonSpaceReady:: failed, missing space data', playerBox, playerGbId, spaceNo, guildUUID, extra)
             return
         
         spaceVal = self.spaces[spaceNo]
-        spaceVal.spaceMgr.cell.setGuildBox(guildBox)
-        guildBox.onGuildChallengeDungeonCreated(playerBox, playerGbId, guildUUID, self.dungeonNo, spaceNo, spaceVal.spaceUUID, spaceVal.spaceBox, spaceVal.spaceMgr, extra)
+        spaceVal.spaceMgr.cell.setGuildBox(playerBox)
+        playerBox.onGuildChallengeDungeonCreated(guildUUID, self.dungeonNo, spaceNo, spaceVal.spaceUUID, spaceVal.spaceBox, spaceVal.spaceMgr, extra)
 
     def leaveGuildBossDungeon(self, spaceNo, guildUUID, src, playerBox, playerGBID):
         DEBUG_MSG("leaveGuildBossDungeon~ ", spaceNo, guildUUID, src, playerBox)
@@ -322,34 +322,22 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
             ERROR_MSG('leaveGuildBossDungeon:: failed, missing space data', spaceNo, src, playerBox)
             return
         
-        extra = {}
-        extra['guildUUID'] = guildUUID
-        playerBox.cell.doLeaveGuildBossDungeon(extra)
+        dungeonVal = self.spaces[spaceNo]
+        founderVal = dungeonVal.founders.getFounderVal(playerGBID)
+        if founderVal:
+            extra = {}
+            extra['guildUUID'] = guildUUID
+            playerBox.cell.doLeaveGuildBossDungeon(extra)
 
-    def getSettlementRankList(self, spaceNo, guildUUID, playerBox, gbID, idx, offset):
-        DEBUG_MSG("getSettlementRankList~ ", spaceNo, guildUUID, playerBox, gbID, idx, offset)
+    def getExtraData(self, spaceNo, gbId):
+        dungeonVal = self.spaces[spaceNo]
+        founderVal = dungeonVal.founders.getFounderVal(gbId)
+        return founderVal.firstPass
+    
+    def syncGuildBossHP(self, spaceNo, curHP, fullHP):
+        DEBUG_MSG('syncGuildBossHP:: ', spaceNo, curHP, fullHP)
         if spaceNo not in self.spaces:
-            ERROR_MSG('getSettlementRankList:: failed, missing space data', spaceNo)
+            ERROR_MSG('syncGuildBossHP:: failed, missing space data', spaceNo)
             return
-
         spaceVal = self.spaces[spaceNo]
-
-        datas = None
-        results = []
-        if offset > 10:
-            offset = 10
-        if idx >= 0 \
-            and offset > 0 \
-            and idx < len(spaceVal.sortedStatisticFoundersRankCache) \
-            and idx + offset - 1 < len(spaceVal.sortedStatisticFoundersRankCache):
-            datas = spaceVal.sortedStatisticFoundersRankCache[idx:idx+offset]
-
-        if datas:
-            for data in datas:
-                result = {
-                    'name':data.name,
-                    'rank':data.rank,
-                    'dmg':data.dmg
-                }
-                results.append(result)
-        playerBox.cell.onGetSettlementRankList(idx, offset, results)
+        spaceVal.guildBox.syncGuildBossHP(curHP, fullHP)

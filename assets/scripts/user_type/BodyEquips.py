@@ -110,6 +110,7 @@ class BodyEquips(userType.UserSoleType):
         for slotId, equipItem in self.equips_map.items():
             equipItem.applyEquipEffectToAvatar(owner, isLogin=isLogin)
         self.recalculateAllInscriptionEffects(owner)
+        self.modifyAvatarAttrs(owner, 1)
         DEBUG_MSG("BodyEquips-->applyBodyEquipsProps, end~ ")
 
     def tryLockBodyEquips(self, desp=''):

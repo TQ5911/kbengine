@@ -65,7 +65,7 @@ datas = _tools.RODict({
     }),
     "guildMoneyToCoinRatio": _tools.RODict({
         "key": "guildMoneyToCoinRatio",
-        "value": 100,
+        "value": 10,
     }),
     "guild_coinLimitCantConvert_msg": _tools.RODict({
         "key": "guild_coinLimitCantConvert_msg",
@@ -101,7 +101,7 @@ datas = _tools.RODict({
     }),
     "assistTimesRecIntvl": _tools.RODict({
         "key": "assistTimesRecIntvl",
-        "value": 1800,
+        "value": 3600,
     }),
     "guildInviteCooldown": _tools.RODict({
         "key": "guildInviteCooldown",
@@ -177,7 +177,7 @@ datas = _tools.RODict({
     }),
     "guildDonateCoinCopper": _tools.RODict({
         "key": "guildDonateCoinCopper",
-        "value": 100,
+        "value": 200,
     }),
     "guildDonateCoinToGuildCoin": _tools.RODict({
         "key": "guildDonateCoinToGuildCoin",
@@ -705,7 +705,7 @@ datas = _tools.RODict({
     }),
     "guild_warEquipmentName": _tools.RODict({
         "key": "guild_warEquipmentName",
-        "value": ('主城门', '副城门', '新元旗帜', '攻城兽', '守城弩', '矿区核心', '荣誉旗帜'),
+        "value": ('主城门', '副城门', '新元旗帜', '攻城兽', '守城弩', '矿区核心', '矿区荣誉旗帜'),
     }),
     "guild_unionApplicationTimeLimit": _tools.RODict({
         "key": "guild_unionApplicationTimeLimit",

@@ -22,6 +22,17 @@
             <Flags>                 BASE            </Flags>
             <Default>               {}              </Default>
         </gameEntityIdSet>
+
+        <refreshGroupEntityQueue>
+            <Type>                  PY_LIST         </Type>
+            <Flags>                 BASE            </Flags>
+        </refreshGroupEntityQueue>
+
+        <timeLimitedGroupEntityTimerId>
+            <Type>                  TIMER_ID        </Type>
+            <Flags>                 BASE            </Flags>
+            <Default>               0               </Default>
+        </timeLimitedGroupEntityTimerId>
     </Properties>
     
     <BaseMethods>

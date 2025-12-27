@@ -13,6 +13,11 @@
             <Persistent>    true                    </Persistent>
             <Default>       {}                       </Default>
         </fetchRedBagDict>
+        <rbVersion>
+            <Type>          UINT32                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </rbVersion>
     </Properties>
 
     <BaseMethods>

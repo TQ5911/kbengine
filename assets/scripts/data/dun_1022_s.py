@@ -4,6 +4,7 @@ datas ={
       "Teleporter": {
         "10220001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10210002",
@@ -23,6 +24,7 @@ datas ={
           }
         }
       }
-    }
+    },
+    "TimerEntities": {}
   }
 }

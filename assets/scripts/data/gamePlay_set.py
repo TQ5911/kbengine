@@ -226,5 +226,9 @@ datas = _tools.RODict({
     "HealingWoundsConfirm2": _tools.RODict({
         "ID": "HealingWoundsConfirm2",
         "value": 54003124,
+    }),
+    "usageJumpBanMsg": _tools.RODict({
+        "ID": "usageJumpBanMsg",
+        "value": 54000931,
     })
 })

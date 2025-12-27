@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "40010002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -26,6 +27,7 @@ datas ={
     "RebornPos": {
       "40010003": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",
@@ -47,6 +49,7 @@ datas ={
       "Npc": {
         "40010004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -68,6 +71,7 @@ datas ={
         },
         "40010005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -89,6 +93,7 @@ datas ={
         },
         "40014001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -110,6 +115,7 @@ datas ={
         },
         "40014002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -131,6 +137,7 @@ datas ={
         },
         "40014003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -152,6 +159,7 @@ datas ={
         },
         "40014004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -175,6 +183,7 @@ datas ={
       "Monster": {
         "40010006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -188,6 +197,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 5.0,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -195,12 +205,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "40010007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -227,6 +240,7 @@ datas ={
         },
         "40010008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -250,6 +264,7 @@ datas ={
         },
         "40010009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -273,6 +288,7 @@ datas ={
         },
         "40010010": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -296,6 +312,7 @@ datas ={
         },
         "40010011": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -319,6 +336,7 @@ datas ={
         },
         "40010012": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -342,6 +360,7 @@ datas ={
         },
         "40010013": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -365,6 +384,7 @@ datas ={
         },
         "40010014": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -378,16 +398,23 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 5.0,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": "",
+            "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "ShowMonsterGroupID": ""
           }
         },
         "40010015": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -401,16 +428,23 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 6.0,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
+            "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "ShowMonsterGroupID": ""
           }
         },
         "40010016": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -426,6 +460,7 @@ datas ={
             "Level": 5.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
@@ -434,6 +469,7 @@ datas ={
         },
         "40010017": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -449,6 +485,7 @@ datas ={
             "Level": 5.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
@@ -457,6 +494,7 @@ datas ={
         },
         "40010018": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -472,6 +510,7 @@ datas ={
             "Level": 5.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
@@ -480,6 +519,7 @@ datas ={
         },
         "40010019": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -495,6 +535,7 @@ datas ={
             "Level": 5.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
@@ -503,6 +544,7 @@ datas ={
         },
         "40010020": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -518,6 +560,7 @@ datas ={
             "Level": 5.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
@@ -526,6 +569,7 @@ datas ={
         },
         "40010021": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -541,6 +585,7 @@ datas ={
             "Level": 5.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
@@ -549,6 +594,7 @@ datas ={
         },
         "40010022": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -564,6 +610,7 @@ datas ={
             "Level": 5.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
@@ -572,6 +619,7 @@ datas ={
         },
         "40010023": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -587,6 +635,7 @@ datas ={
             "Level": 5.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
@@ -595,6 +644,7 @@ datas ={
         },
         "40010024": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -610,6 +660,7 @@ datas ={
             "Level": 5.0,
             "MapEntityScale": 0,
             "MapEntityType": 0,
+            "MonsterGroupID": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 2000.0,
@@ -618,6 +669,7 @@ datas ={
         },
         "40010025": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -646,6 +698,7 @@ datas ={
       "AirWall": {
         "40018001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -668,6 +721,7 @@ datas ={
         },
         "40018002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -690,6 +744,7 @@ datas ={
         },
         "40018003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -712,6 +767,7 @@ datas ={
         },
         "40018004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -734,6 +790,7 @@ datas ={
         },
         "40018005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -756,6 +813,7 @@ datas ={
         },
         "40018006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -778,6 +836,7 @@ datas ={
         },
         "40018007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -800,6 +859,7 @@ datas ={
         },
         "40018008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -822,6 +882,7 @@ datas ={
         },
         "40018009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -844,6 +905,7 @@ datas ={
         },
         "40018010": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -866,6 +928,7 @@ datas ={
         },
         "40018011": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -888,6 +951,7 @@ datas ={
         },
         "40018012": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -910,6 +974,7 @@ datas ={
         },
         "40018013": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -932,6 +997,7 @@ datas ={
         },
         "40018014": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -953,6 +1019,7 @@ datas ={
           }
         }
       }
-    }
+    },
+    "TimerEntities": {}
   }
 }

@@ -9,8 +9,13 @@
     <Properties>
         <teleporterId>
 			<Type>	        OBJECT_ID 	        </Type>
-            <Flags>         CELL_PRIVATE        </Flags>
+            <Flags>         OTHER_CLIENTS       </Flags>
         </teleporterId>
+
+        <CBTimes>
+			<Type>	        INT32 	            </Type>
+            <Flags>         OTHER_CLIENTS       </Flags>
+        </CBTimes>
     </Properties>
 
     <BaseMethods>

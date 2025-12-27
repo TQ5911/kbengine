@@ -24,5 +24,12 @@
             <Arg>            BOOL            </Arg>
             <Arg>            UINT32          </Arg>
         </completeTeamDungeon>
+
+        <leaveTeamDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            RAID_ID         </Arg>
+            <Arg>            PYTHON          </Arg>
+            <Arg>            MAILBOX         </Arg>
+        </leaveTeamDungeon>
     </BaseMethods>
 </root>

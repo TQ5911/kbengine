@@ -1,0 +1,82 @@
+<root>
+    <Interfaces>
+        <Interface>     iBaseNoCell     </Interface>
+        <Interface>     iGlobal         </Interface>
+        <Interface>     iTimerBase      </Interface>
+    </Interfaces>
+
+    <Properties>
+        <statisticDic>
+            <Type>      PYTHON       </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}               </Default>
+        </statisticDic>
+    </Properties>
+
+
+    <BaseMethods>
+        <startReportStatistics>
+            <Arg>          PLAYER_GBID         </Arg>
+            <Arg>           MAILBOX            </Arg>
+            <Arg>          SPACE_NO            </Arg>
+            <Arg>          PYTHON              </Arg>
+        </startReportStatistics>
+
+        <stopReportStatistics>
+            <Arg>          PLAYER_GBID          </Arg>
+            <Arg>          MAILBOX              </Arg>
+            <Arg>          SPACE_NO             </Arg>
+        </stopReportStatistics>
+
+        <reportStatistics>
+            <Arg>          PLAYER_GBID         </Arg>
+            <Arg>          SPACE_NO         </Arg>
+            <Arg>          PYTHON         </Arg>
+        </reportStatistics>
+
+        <startGetStatistics>
+            <Arg>          PLAYER_GBID         </Arg>
+            <Arg>          MAILBOX         </Arg>
+            <Arg>          SPACE_NO         </Arg>
+            <Arg>          UINT8         </Arg>
+            <Arg>          PYTHON         </Arg>
+        </startGetStatistics>
+
+        <stopGetStatistics>
+            <Arg>          PLAYER_GBID         </Arg>
+            <Arg>          SPACE_NO         </Arg>
+        </stopGetStatistics>
+            
+        <getStatisticsDetail>
+            <Arg>          PLAYER_GBID         </Arg>
+            <Arg>          MAILBOX         </Arg>
+            <Arg>          SPACE_NO         </Arg>
+            <Arg>          UINT8         </Arg>
+            <Arg>          PYTHON         </Arg>
+        </getStatisticsDetail>
+
+        <getDungeonStatisticData>
+            <Arg>   SPACE_NO                          </Arg>
+            <Arg>   UUID                              </Arg>
+            <Arg>   MAILBOX                           </Arg>
+            <Arg>   UINT32                            </Arg>
+        </getDungeonStatisticData>
+
+        <onSpaceGone>
+            <Arg>          SPACE_NO         </Arg>
+        </onSpaceGone>
+
+        <showData>
+        </showData>
+
+	</BaseMethods>
+
+	<CellMethods>
+
+	</CellMethods>
+
+	<ClientMethods>
+
+	</ClientMethods>
+
+</root>

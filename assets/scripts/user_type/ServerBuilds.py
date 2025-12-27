@@ -178,11 +178,13 @@ class Build(userType.UserSoleType):
         else:
             self.activeSkills[toSlotId] = skillId
 
-    def getMaxLevel(self, owner, skillId):
+    def getMaxLevel(self, owner, skillId, oldSkillId):
         cfgData = SRSUD.datas.get(skillId, None)
         if not cfgData:
-            ERROR_MSG('getMaxLevel cfgData is None', skillId)
-            return 1
+            cfgData = SRSUD.datas.get(oldSkillId, None)
+            if not cfgData:
+                ERROR_MSG('getMaxLevel cfgData is None', skillId, oldSkillId)
+                return 1
         return len(cfgData.get('levelLimit')) + 1
 
     def canLevelUp(self, owner, skillId, delta):
@@ -190,7 +192,7 @@ class Build(userType.UserSoleType):
             return False
 
         _morphBaseSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
-        if delta > 0 and self.skillLevels[skillId] + delta > self.getMaxLevel(owner, _morphBaseSkillId):
+        if delta > 0 and self.skillLevels[skillId] + delta > self.getMaxLevel(owner, _morphBaseSkillId, _morphBaseSkillId):
             DEBUG_MSG('skillLv reach max', owner.id, skillId, self.skillLevels)
             return False
 
@@ -204,7 +206,7 @@ class Build(userType.UserSoleType):
 
         return True
 
-    def levelUp(self, owner, skillId, delta):
+    def levelUp(self, owner, skillId, oldSkillId, delta):
         if skillId not in self.skillLevels:
             return False
 
@@ -213,7 +215,7 @@ class Build(userType.UserSoleType):
             return
 
         _morphBaseSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
-        if delta > 0 and self.skillLevels[skillId] >= self.getMaxLevel(owner, _morphBaseSkillId):
+        if delta > 0 and self.skillLevels[skillId] >= self.getMaxLevel(owner, _morphBaseSkillId, oldSkillId):
             DEBUG_MSG('skillLv reach max', owner.id, skillId, self.skillLevels)
             return False
 
@@ -223,7 +225,9 @@ class Build(userType.UserSoleType):
 
         oldLevel = self.skillLevels[skillId]
 
-        cfgData = SRSUD.datas[_morphBaseSkillId]
+        cfgData = SRSUD.datas.get(_morphBaseSkillId, None)
+        if not cfgData:
+            cfgData = SRSUD.datas[oldSkillId]
 
         selfLevel = gameglobal.roleCache[owner.id]['level']
         levelLimit = cfgData.get('levelLimit')[oldLevel-1]
@@ -248,7 +252,7 @@ class Build(userType.UserSoleType):
         src = AAC_AACDD.datas.BONUS_SRC_SKILL_UPGRADE
         detail = gameclass.AwardDetail(skillId=skillId)
         owner.deductWealth(src, deductVal, opUUID, detail)
-        newLevel = int(min(oldLevel + delta, self.getMaxLevel(owner, _morphBaseSkillId)))
+        newLevel = int(min(oldLevel + delta, self.getMaxLevel(owner, _morphBaseSkillId, oldSkillId)))
         self.skillLevels[skillId] = newLevel
         owner.updateSkillLevelSetSummonSlotIdx(skillId, newLevel)
 

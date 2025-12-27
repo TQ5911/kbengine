@@ -13,7 +13,7 @@
             <Flags>                 BASE            </Flags>
             <Default>               0                       </Default>
         </checkLoaded>
-        
+
         <spaceCreated>
             <Type>                  ARRAY <of> SPACE_NO </of>                     </Type>
             <Flags>                 BASE            </Flags>
@@ -62,13 +62,13 @@
             <Default>               0                </Default>
         </airWallLoadCount>
     </Properties>
-    
-    <BaseMethods> 
-        <halfPrepare> 
+
+    <BaseMethods>
+        <halfPrepare>
             <Arg>           ENT_TYPE    </Arg>          <!-- global base type -->
         </halfPrepare>
 
-        <fullPrepare> 
+        <fullPrepare>
             <Arg>           ENT_TYPE    </Arg>          <!-- global base type -->
         </fullPrepare>
 

@@ -19,15 +19,34 @@
         <reqMoveItemToWarehouse><Exposed/>
             <Arg>       UINT32     </Arg>
             <Arg>       ITEMID     </Arg>
+            <Arg>       UINT32     </Arg>
         </reqMoveItemToWarehouse>
 
         <reqMoveItemToBag><Exposed/>
-            <Arg>       UINT32     </Arg>
+            <Arg>       UINT32      </Arg>
             <Arg>       ITEMID      </Arg>
+            <Arg>       UINT32      </Arg>
         </reqMoveItemToBag>
 
         <reqWarehouseSort><Exposed/>
         </reqWarehouseSort>
+
+        <reqWarehouseLockItem><Exposed/>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UNIQUE_ID   </Arg>
+            <Arg>       UINT8       </Arg>
+        </reqWarehouseLockItem>
+
+        <warehouseExpansion>
+            <Arg>       UINT16      </Arg>
+            <Arg>       UINT16      </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT16      </Arg>
+            <Arg>       UUID        </Arg>
+            <Arg>       PYTHON      </Arg>
+        </warehouseExpansion>
     </BaseMethods>
 
     <ClientMethods>
@@ -44,8 +63,14 @@
         <onWarehouseOutItems>
             <Arg>     UINT8     </Arg>
             <Arg>     UINT32    </Arg>
+            <Arg>     UINT32    </Arg>
         </onWarehouseOutItems>
 
+        <onWarehouseLockItemSucc>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT8       </Arg>
+        </onWarehouseLockItemSucc>
     </ClientMethods>
 </root>
 

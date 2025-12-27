@@ -19,19 +19,40 @@ import struct
 import formula
 
 class ShieldVal(userType.UserSoleType):
-    def __init__(self, buffId, shieldValue):
+    def __init__(self, buffId, shieldType, shieldMaxValue, shieldValue, shieldEffects = None):
         self.buffId = buffId
+        self.shieldMaxValue = shieldMaxValue
         self.shieldValue = int(shieldValue)
         self.absorbedVal = 0
+        if not shieldEffects:
+            self.shieldEffects = {}
+        else:
+            self.shieldEffects = shieldEffects
+        self.shieldType = shieldType
 
     def doAbsorbDmg(self, val):
         val = int(val)
-        if val>self.shieldValue:
+        if val > self.shieldValue:
             val = self.shieldValue
         self.shieldValue -= val
         self.absorbedVal += val
         return val
 
+    def getShieldValue(self):
+        return self.shieldValue
+    
+    def getShieldMaxValue(self):
+        return self.shieldMaxValue
+    
+    def addShieldValue(self, val):
+        self.shieldValue += val
+        self.shieldMaxValue += val
+    
+    def getShieldType(self):
+        return self.shieldType
+    
+    def getShieldReduceDmgRatio(self):
+        return self.shieldEffects and self.shieldEffects.get('reduceDmgRatio', 0)
 
 class Shields(userType.UserDictType):
     def _lateReload(self):
@@ -288,6 +309,9 @@ class Buff(userType.UserSoleType):
     def releaseRole(self):
         return KBEngine.entities.get(self.releaseRoleId)
 
+    def getContext(self):
+        return self.rootContext
+    
     def getBuffRemainTime(self):
         duration = self.getBuffDuration()
         if duration<=0:
@@ -506,9 +530,7 @@ class Buff(userType.UserSoleType):
             if newDura <= 0:
                 newDura = float('inf')
 
-            if newDura < remainTime :
-                return
-            DEBUG_MSG("trace overlayBuff 2 ", remainTime, self)
+            DEBUG_MSG("trace overlayBuff 2 ", newDura, remainTime, self)
 
         self.tStartTime = time.time()
         self.skillNum = 0

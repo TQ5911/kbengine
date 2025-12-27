@@ -19,6 +19,7 @@ import gamedecorator
 import const_const as CONST
 import PKData_moralValueEffect as PKMVE
 import duel_config as D_CD
+import agent_agentConfig as A_ACD
 
 
 class ImpAvatarPK(object):
@@ -245,6 +246,15 @@ class ImpAvatarPK(object):
         if not oldInRedName and self.inRedName():
             self.resetAllTargetTypeCache()
 
+        if utils.hasBit(self.cellFlags, gameconst.CELL_FLAGS_IS_AUTH):
+            if self.moralValue <= A_ACD.datas['evilMeterLow']['value']:
+                self.showMsg(A_ACD.datas['evilMeterLowMsg']['value'], [])
+                # 这里直接下线后面流程会出问题，因为这里比较深
+                self._callback(0.1, '_offline', (gameconst.AVATAR_OFFLINE_AUTH_LOW_MORAL,), gametimer.TIMER_TAG_AUTH_MORAL_LOW)
+
+            if self.moralValue <= A_ACD.datas['evilMeterLimit']['value'] < oldLeft:
+                self.showMsg(A_ACD.datas['evilMeterLimitMsg']['value'], [])
+
         return gameconst.UseItem.TRUE
 
     def getMoralEffectItemPercent(self):
@@ -385,10 +395,7 @@ class ImpAvatarPK(object):
         value = PKD.datas['deductingMoralValues']['value']
         self.reduceMoralValue(value)
 
-    def inPKProtect(self, target, levelCheck=True):
-        # if self.hasPKProtect(gameconst.PKProtectType.LEVEL) and target.level + PKD.datas['protectLvLimit']['value'] <= self.level:
-        #     return True
-
+    def inPKProtect(self, target):
         if self.hasPKProtect(gameconst.PKProtectType.TEAM) and self.isInTeam(target.gbId):
             return True
 

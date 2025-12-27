@@ -105,6 +105,7 @@ class ImpAutoCombat(object):
             return True
         return False
 
+    @gamedecorator.checkGameconfigEnable('autoCombat')
     @gamedecorator.crossServer
     @utils.isMyself
     def startAutoCombat(self, exposed, isSuspend):
@@ -794,7 +795,7 @@ class ImpAutoCombat(object):
                 or not utils.checkTargetType(targetType, self, target) \
                 or not self.checkCombatRangeY(target):
 
-            entityIds = self.getTargetIdsByTargetType(targetType)
+            entityIds = list(self.getTargetIdsByTargetType(targetType))
             random.shuffle(entityIds)
             for eId in entityIds:
                 entity = KBEngine.entities.get(eId)
@@ -810,6 +811,16 @@ class ImpAutoCombat(object):
         hpPercent = self.hp / self.fullHp if self.fullHp else 1
         treatmentSkillLimit = CONST.datas['treatmentSkillLimit'].get('value')
         isHpLow = hpPercent < treatmentSkillLimit
+        _load = KBEngine.getAverageLoad()
+        if _load > 0.8:
+            _useCreationSkill = False
+
+        elif _load > 0.5:
+            _useCreationSkill = random.random() < 0.5
+
+        else:
+            _useCreationSkill = True
+
         for skillId, skill in self.getSkillDic().items():
             ret = self.getSkillDic().checkSkillSwitch(skillId, gameconst.SkillSwitchStatus.AUTO)
             if not ret:
@@ -831,6 +842,16 @@ class ImpAutoCombat(object):
                 continue
             if utils.hasSkillTag(skillId, gameconst.SkillTag.HealSkill) and not isHpLow:
                 continue
+            # 改变技能CD状态
+            if utils.hasSkillTag(skillId, gameconst.SkillTag.changeCDStatusSkill):
+                # 不能用
+                if skill.getTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, gameconst.SkillCDStatus.DEFAULT) == gameconst.SkillCDStatus.DISABLED:
+                    continue
+
+            if not _useCreationSkill and skillId in SSD.hasCreationSkill:
+                # 如果负载过高， 不使用创生物技能技能
+                continue
+
             skillList.append(skill)
             weight = SSD.datas[skillId].get('autoBattleWeight')
             skillWeightList.append(weight)

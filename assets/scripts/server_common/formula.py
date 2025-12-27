@@ -10,7 +10,7 @@ import gamePlay_gamePlay as GGD
 import decimal
 import KBEngine
 import mineBattle_miningArea as MBMA
-
+import experience_revenue as ERD
 
 @functools.lru_cache(maxsize=1024)
 def getMapId(spaceNo):
@@ -260,17 +260,41 @@ def getInt64VectorBit(intList, index):
 # 获得int64整数列表表示的bit vector中所有1所在的bit所在的下标
 def getInt64VectorOnIndexes(intList):
     bitList = []
-    i = 0
-    for staBit in intList:
-        if not staBit:
+    for i, num in enumerate(intList):
+        if not num:
             continue
-        binStrRev = bin(staBit)[2:][::-1]
-        idx = binStrRev.find('1')
-        while idx != -1:
-            bitList.append(int(idx + i * 64))
-            idx = binStrRev.find('1', idx + 1)
-        i += 1
+        # 使用位运算查找置位的比特位，比字符串操作更快
+        while num:
+            # 找到最低位的1的位置
+            bit_pos = (num & -num).bit_length() - 1
+            # 计算全局索引
+            bit_index = bit_pos + i * 64
+            bitList.append(bit_index)
+            # 清除当前最低位的1
+            num &= num - 1
     return bitList
+
+
+def test_getInt64VectorOnIndexes():
+    """
+    测试getInt64VectorOnIndexes函数的正确性
+    """
+    # 测试单个数组元素
+    assert getInt64VectorOnIndexes([0x1]) == [0]
+    assert getInt64VectorOnIndexes([0x2]) == [1]
+    assert getInt64VectorOnIndexes([0x3]) == [0, 1]
+    assert getInt64VectorOnIndexes([0x8000000000000000]) == [63]
+
+    # 测试多个数组元素
+    assert getInt64VectorOnIndexes([0x0, 0x1]) == [64]
+    assert getInt64VectorOnIndexes([0x1, 0x1]) == [0, 64]
+    assert getInt64VectorOnIndexes([0x3, 0x5]) == [0, 1, 64, 66]
+
+    # 测试全1的情况
+    assert len(getInt64VectorOnIndexes([0xFFFFFFFFFFFFFFFF])) == 64
+    assert getInt64VectorOnIndexes([0xFFFFFFFFFFFFFFFF]) == list(range(64))
+
+    print("All tests passed!")
 
 
 def hashableJsonHook(obj):
@@ -319,6 +343,20 @@ def isDungeonSpace(spaceNo):
 
 def isMineWarSpace(spaceNo):
     return getMapId(spaceNo) in MBMA.datas.keys() and getLineNo(spaceNo) == 0
+
+def getMineWarMineArea(spaceNo):
+    mapId = getMapId(spaceNo)
+    for line, data in MBMA.datas.items():
+        if mapId in data['sceneList']:
+            return data['sceneList']
+    return []
+
+def getMineWarBattleArea(spaceNo):
+    sceneList = getMineWarMineArea(spaceNo)
+    return sceneList[-1] if sceneList else 0
+
+def isMineWarMineArea(spaceNo):
+    return getMineWarBattleArea(spaceNo) > 0
 
 def spaceForbidTeamFollow(spaceNo):
     if not spaceNo:
@@ -395,3 +433,14 @@ def isGuildBossDungeonSpace(spaceNo):
         and enterType == gameconst.DungeonEnterType.GUILD:
         return True
     return False
+
+def getKillMonsterRewardConfig(monsterLevel, playerLevel):
+        maxLevel = (ERD.maxKey - 1) // 2
+        deltaLevel = monsterLevel - playerLevel
+        if deltaLevel >= 0:
+            levelDelta = min(deltaLevel, maxLevel)
+        else:
+            levelDelta = max(deltaLevel, -maxLevel)
+
+        config = ERD.revenueLevelGapDic[levelDelta]
+        return config

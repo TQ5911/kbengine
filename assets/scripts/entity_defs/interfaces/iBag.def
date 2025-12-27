@@ -55,6 +55,13 @@
             <Persistent>    true                  </Persistent>
         </money>
 
+        <bindMoney>
+            <Type>          MONEY_NUM             </Type>
+            <Flags>         BASE_AND_CLIENT       </Flags>
+            <Default>       0                     </Default>
+            <Persistent>    true                  </Persistent>
+        </bindMoney>
+
         <coinBillInfo>
             <Type>          PY_DICT         </Type>
             <Default>       {}              </Default>

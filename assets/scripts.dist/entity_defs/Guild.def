@@ -174,6 +174,12 @@
             <Default>       false               </Default>
         </siegeWarDeclared>
 
+        <siegeWarDeclareTarget>
+            <Type>          GUILD_UUID      </Type>
+            <Flags>         BASE            </Flags>
+            <Persistent>    true            </Persistent>
+        </siegeWarDeclareTarget>
+
         <guildSyncDataToCrossDataCache>
             <Type>          PYTHON              </Type>
             <Flags>         BASE                </Flags>
@@ -197,6 +203,31 @@
             <Persistent>    true                </Persistent>
             <Default>       0                   </Default>
         </cityBattleToken>
+
+        <biddingFailRedPointUnchecked>
+            <Type>          BOOL                </Type>
+            <Flags>         BASE                </Flags>
+            <Persistent>    true                </Persistent>
+            <Default>       false               </Default>
+        </biddingFailRedPointUnchecked>
+
+        <leaderBoardGuildCache>
+            <Type>          LEADER_BOARD_GUILD_DATA_INFO        </Type>
+            <Flags>         BASE                                </Flags>
+        </leaderBoardGuildCache>
+
+        <guildChallengeData>
+            <Type>          GUILD_CHALLENGE_DATA_INFO           </Type>
+            <Flags>         BASE                                </Flags>
+            <Persistent>    true                                </Persistent>
+        </guildChallengeData>
+
+        <mineWarSpaceMgrBoxs>
+            <Type>      PYTHON         </Type>
+            <Flags>     BASE            </Flags>
+            <Default>       []          </Default>
+        </mineWarSpaceMgrBoxs>
+
     </Properties>
 
     <BaseMethods>
@@ -376,6 +407,13 @@
             <Arg>       PYTHON                  </Arg>
         </onGuildMemberPropUpdate>
 
+        <modifyGuildMoney>
+            <Arg>       INT32                   </Arg>
+            <Arg>       BONUS_SRC               </Arg>
+            <Arg>       UUID                    </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </modifyGuildMoney>
+
         <modifyGuildFund>
             <Arg>       INT32                   </Arg>
             <Arg>       BONUS_SRC               </Arg>
@@ -429,6 +467,7 @@
         </onSiegeWarDeclareWarQuery>
 
         <onSiegeWarDeclareWarOfficial>
+            <Arg>          GUILD_UUID           </Arg>
         </onSiegeWarDeclareWarOfficial>
 
         <checkCanChangeCityMoneyToGuildMoney>
@@ -445,6 +484,21 @@
         <onSiegeWarGetWinnerData>
             <Arg>       ENTITYCALL              </Arg>
         </onSiegeWarGetWinnerData>
+
+        <tryDeductCityBattleToken>
+            <Arg>          ENTITYCALL           </Arg>
+            <Arg>          INT32                </Arg>
+            <Arg>          UNICODE              </Arg>
+            <Arg>          GUILD_UUID           </Arg>
+        </tryDeductCityBattleToken>
+
+        <onBiddingFailed>
+            <Arg>          INT32                </Arg>
+            <Arg>          INT32                </Arg>
+        </onBiddingFailed>
+
+        <onResetSiegeWarCityBattleToken>
+        </onResetSiegeWarCityBattleToken>
 
         <onChangeCityOwnerFlag>
             <Arg>       BOOL                    </Arg>
@@ -535,7 +589,7 @@
         <onApplyGuildUnionResult>
             <Arg>       BOOL                        </Arg>
             <Arg>       PYTHON                      </Arg>
-            <Arg>       ENTITYCALL                  </Arg> 
+            <Arg>       ENTITYCALL                  </Arg>
         </onApplyGuildUnionResult>
 
         <doGetGuildUnionApplySender>
@@ -577,11 +631,144 @@
         </disagreeRemoveOtherSender>
 
         <onAddGuildEnemyToGuild>
+            <Arg>       GUILD_UUID              </Arg>
             <Arg>       UNICODE                 </Arg>
         </onAddGuildEnemyToGuild>
 
         <onAddGuildEnemyToOtherGuild>
+            <Arg>       GUILD_UUID              </Arg>
             <Arg>       UNICODE                 </Arg>
         </onAddGuildEnemyToOtherGuild>
+
+        <getCacheBeforeEnterCrossSiegeWar>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </getCacheBeforeEnterCrossSiegeWar>
+
+        <checkBiddingFailRedPoint>
+        </checkBiddingFailRedPoint>
+
+        <checkBiddingFailRedPointWhenLogin>
+            <Arg>       ENTITYCALL              </Arg>
+        </checkBiddingFailRedPointWhenLogin>
+
+        <modifyBuildingExp>
+            <Arg>       OBJECT_ID               </Arg>
+            <Arg>       INT32                   </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </modifyBuildingExp>
+
+        <onSiegeWarEnd>
+        </onSiegeWarEnd>
+
+        <getMemberJobAndGuildCache>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </getMemberJobAndGuildCache>
+
+        <doSendGuildRedBagMsg>
+            <Arg>           UINT64           </Arg>
+            <Arg>           UINT8            </Arg>
+            <Arg>           UINT8            </Arg>
+            <Arg>           UINT32           </Arg>
+            <Arg>           UNICODE          </Arg>
+            <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
+        </doSendGuildRedBagMsg>
+
+        <doBroadcastGuildMemberBase>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </doBroadcastGuildMemberBase>
+
+        <getGuildMineWarForRegister>
+            <Arg>       MAILBOX                  </Arg>
+            <Arg>       BOOL                    </Arg>
+        </getGuildMineWarForRegister>
+        <reqShareBonusFromMineWar>
+            <Arg>       LINE_NO                   </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>         ARRAY   <of>  MINE_WAR_GUILD_SHARE_INFO   </of>   </Arg>
+            <Arg>       MAILBOX                 </Arg>
+        </reqShareBonusFromMineWar>
+        <playerGetGuildInfo>
+            <Arg>       MAILBOX                 </Arg>
+        </playerGetGuildInfo>
+        <openGuildChallenge>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT8            </Arg>
+            <Arg>       UINT16           </Arg>
+            <Arg>       INT64            </Arg>
+        </openGuildChallenge>
+
+        <getChangllengeDataInfo>
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       MAILBOX             </Arg>
+            <Arg>       UINT16              </Arg>
+        </getChangllengeDataInfo>
+
+        <cancelGuildDungeonOrder>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT16           </Arg>
+        </cancelGuildDungeonOrder>
+
+        <onGuildChallengeDungeonCreated>
+            <Arg>   GUILD_UUID      </Arg>
+            <Arg>   DUNGEON_NO      </Arg>
+            <Arg>   SPACE_NO        </Arg>
+            <Arg>   UUID            </Arg>
+            <Arg>   MAILBOX         </Arg>
+            <Arg>   MAILBOX         </Arg>
+            <Arg>   PYTHON          </Arg>
+        </onGuildChallengeDungeonCreated>
+
+        <onGuildChallengeDungeonCompleted>
+        </onGuildChallengeDungeonCompleted>
+
+        <onGuildChallengeDungeonSettlement>
+            <Arg>   INT64   </Arg>
+        </onGuildChallengeDungeonSettlement>
+
+        <onGuildChallengeDungeonStartBattleCD>
+            <Arg>   INT64   </Arg>
+        </onGuildChallengeDungeonStartBattleCD>
+
+        <enterBossChallengeDungeon>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT16           </Arg>
+            <Arg>       PYTHON           </Arg>
+        </enterBossChallengeDungeon>
+
+        <leaveBossChallengeDungeon>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT16           </Arg>
+        </leaveBossChallengeDungeon>
+
+        <gmModifyGuildBossChallengeStatus>
+            <Arg>   UINT8   </Arg>
+        </gmModifyGuildBossChallengeStatus>
+
+        <gmResetGuildDungeonOpenCount>
+        </gmResetGuildDungeonOpenCount>
+
+        <gmResetGuildDungeonAllData>
+        </gmResetGuildDungeonAllData>
+        
+        <syncGuildBossHP>
+            <Arg>   INT32   </Arg>
+            <Arg>   INT32   </Arg>
+        </syncGuildBossHP>
+
+        <getGuildBossHP>
+            <Arg>       PLAYER_GBID      </Arg>
+            <Arg>       MAILBOX          </Arg>
+            <Arg>       UINT16           </Arg>
+        </getGuildBossHP>
     </BaseMethods>
 </root>

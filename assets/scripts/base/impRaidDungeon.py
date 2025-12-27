@@ -16,4 +16,16 @@ class ImpRaidDungeon(object):
         extraData.pop('dungeonPlayMode', None)
         srcPlayerBox.cell.onCreateAndEnterRaidDungeonAllMemberPreCheck(
             errno.errno, raidUUID, dungeonNo, dungeonSrc, extraData['_avatarProps']['gbId'], extraData['_avatarProps']['name'], extraData)
-        
+    
+    def doEnterRaidDungeonSelfCheck(self, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps):
+        extraProps.update({
+
+            'name': self.characterName,
+            'school': self.getRoleCacheAttr('school', 0),
+            'level': self.getRoleCacheAttr('level', 0),
+            'sex': self.getRoleCacheAttr('sex', 0),
+            'gbId': self.gbID,
+            'eId': self.id,
+        })
+        INFO_MSG('doEnterRaidDungeonSelfCheck::', dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps)
+        self.cell.doEnterRaidDungeonAfterCheck(dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps)

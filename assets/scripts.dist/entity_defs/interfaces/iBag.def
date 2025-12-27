@@ -27,6 +27,20 @@
             <Persistent>    true        </Persistent>
         </pickedCollections>
 
+        <darkIron>
+            <Type>          DARK_IRON       </Type>
+            <Flags>         BASE_AND_CLIENT </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </darkIron>
+
+        <geniusQi>
+            <Type>          GENIUS_QI       </Type>
+            <Flags>         BASE_AND_CLIENT </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </geniusQi>
+
         <coin>
             <Type>          SCOIN           </Type>
             <Flags>         BASE_AND_CLIENT </Flags>
@@ -40,6 +54,13 @@
             <Default>       0                     </Default>
             <Persistent>    true                  </Persistent>
         </money>
+
+        <bindMoney>
+            <Type>          MONEY_NUM             </Type>
+            <Flags>         BASE_AND_CLIENT       </Flags>
+            <Default>       0                     </Default>
+            <Persistent>    true                  </Persistent>
+        </bindMoney>
 
         <coinBillInfo>
             <Type>          PY_DICT         </Type>
@@ -62,8 +83,8 @@
         </isNeedDisturb>
 
         <coinFraction>
-            <Type>          UINT8            </Type>
-            <Flags>         BASE_AND_CLIENT </Flags>
+            <Type>          UINT8           </Type>
+            <Flags>         BASE            </Flags>
             <Default>       0               </Default>
             <Persistent>    true            </Persistent>
         </coinFraction>
@@ -74,6 +95,20 @@
             <Default>       {}          </Default>
             <Persistent>    true        </Persistent>
         </randomSynthesisDic>
+
+        <drugsQuantityBase>
+            <Type>          INT32           </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+            <Persistent>    true            </Persistent>
+        </drugsQuantityBase>
+
+        <giftKeyRecordDic>
+            <Type>    PY_DICT            </Type>
+            <Flags>   BASE              </Flags>
+            <Default>       {}          </Default>
+            <Persistent>    true        </Persistent>
+        </giftKeyRecordDic>
     </Properties>
 
     <BaseMethods>
@@ -198,6 +233,7 @@
             <Arg>       BOOL       </Arg>
             <Arg>       SPACE_NO   </Arg>
             <Arg>       PYTHON     </Arg>
+            <Arg>       UINT8     </Arg>
         </baseDoApplyGather>
 
         <unlockBag>
@@ -218,10 +254,6 @@
         <addSignInAwards><Exposed/>
             <Arg>      UINT32       </Arg>
         </addSignInAwards>
-
-        <addLevelAwards><Exposed/>
-            <Arg>       LEVEL           </Arg>
-        </addLevelAwards>
 
         <checkBaseUseTreasureBoxCond>
             <Arg>       PYTHON          </Arg>
@@ -295,10 +327,7 @@
         </reqShareReward>
 
         <doAwardOnKillMonster>
-            <Arg>      BONUS_SRC    </Arg>
-            <Arg>      INT32        </Arg>
-            <Arg>      INT32        </Arg>
-            <Arg>      UUID         </Arg>
+            <Arg>      PYTHON       </Arg>
             <Arg>      PYTHON       </Arg>
             <Arg>      PYTHON       </Arg>
         </doAwardOnKillMonster>
@@ -331,11 +360,57 @@
             <Arg>       UNICODE                 </Arg>
         </delOldName>
 
-        <useItemWithActionInternal>
-            <Arg>       UINT8                   </Arg>
-            <Arg>       ITEM_ID                 </Arg>
-            <Arg>       ENTITY_ID               </Arg>
-        </useItemWithActionInternal>
+        <onCheckAndCostWealth>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT16          </Arg>
+            <Arg>       METHOD_NAME     </Arg>
+            <Arg>       PYTHON          </Arg>
+            <Arg>       PY_DICT         </Arg>
+        </onCheckAndCostWealth>
+
+        <bagExpansion>
+            <Arg>       UINT16      </Arg>
+            <Arg>       UINT16      </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT16      </Arg>
+            <Arg>       UUID        </Arg>
+            <Arg>       PYTHON      </Arg>
+        </bagExpansion>
+
+        <reqLockItem><Exposed/>
+            <Arg>       UINT8       </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UNIQUE_ID   </Arg>
+            <Arg>       UINT8       </Arg>
+        </reqLockItem>
+
+        <reqSellItem><Exposed/>
+            <Arg>       UINT8       </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT32       </Arg>
+        </reqSellItem>
+
+        <reqMultiItemDisassemble><Exposed/>
+            <Arg>       ARRAY <of> GRIDID </of>     </Arg>
+            <Arg>      ARRAY <of> UNIQUE_ID </of>   </Arg>
+        </reqMultiItemDisassemble>
+
+        <reqItemDisassemble><Exposed/>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT32      </Arg>
+        </reqItemDisassemble>
+
+        <onDrugsQuantitySync>
+            <Arg>       INT32      </Arg>
+        </onDrugsQuantitySync>
+
+        <exchangeGiftKeyReward> <Exposed/>
+            <Arg>           UNICODE         </Arg>
+        </exchangeGiftKeyReward>
     </BaseMethods>
 
     <CellMethods>
@@ -368,6 +443,7 @@
 
         <onBaseAvatarGatherCheckSucc>
             <Arg>        OBJECT_ID      </Arg>
+            <Arg>        BOOL           </Arg>
         </onBaseAvatarGatherCheckSucc>
 
         <onDoApplyGatherPreCheck>
@@ -377,6 +453,7 @@
             <Arg>       BOOL       </Arg>
             <Arg>       SPACE_NO   </Arg>
             <Arg>       PYTHON     </Arg>
+            <Arg>       BOOL       </Arg>
         </onDoApplyGatherPreCheck>
 
         <cancelGather>
@@ -420,6 +497,14 @@
             <Arg>       PENDING_USE_ID              </Arg>
             <Arg>       UNICODE                     </Arg>
         </onPendingUseRenameItemResult>
+
+        <bodyItemLock>
+            <Arg>       UINT8       </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UNIQUE_ID   </Arg>
+            <Arg>       UINT8       </Arg>
+        </bodyItemLock>
     </CellMethods>
 
     <ClientMethods>
@@ -464,20 +549,6 @@
             <Arg>      INT32    </Arg>
             <Arg>      ARRAY <of> AWARD_ITEM_VAL </of>  </Arg>
         </onDropAward>
-        <onUseItemWithAnimation>
-            <Arg>      ITEM_ID  </Arg>
-        </onUseItemWithAnimation>
-
-        <onDigTreasureSucc>
-            <Arg>      UINT8  </Arg>
-        </onDigTreasureSucc>
-
-        <onCancelDigTreasure>
-            <Arg>      UINT32  </Arg>
-        </onCancelDigTreasure>
-
-        <onUseMapCasting>
-        </onUseMapCasting>
 
         <onApplyGather>
             <Arg>      OBJECT_ID</Arg>
@@ -495,21 +566,6 @@
             <Arg>      UINT8      </Arg>
             <Arg>      UINT32     </Arg>
         </onBindItemSucc>
-
-        <onCheckUseHomeItemCond>
-            <Arg>       ITEM_ID     </Arg>
-            <Arg>       UINT32      </Arg>
-            <Arg>       GRIDID      </Arg>
-            <Arg>       UNICODE     </Arg>
-        </onCheckUseHomeItemCond>
-
-        <onAddLevelAwards>
-            <Arg>      ARRAY    <of>   LEVEL    </of>     </Arg>
-        </onAddLevelAwards>
-
-        <onSendLevelRewardInfo>
-            <Arg>      ARRAY    <of>   LEVEL    </of>     </Arg>
-        </onSendLevelRewardInfo>
 
         <onUpdateDailyUseLimit>
             <Arg>       ITEM_ID     </Arg>
@@ -531,76 +587,8 @@
             <Arg>       UINT32       </Arg>
         </onUpdateCollectionGatherPickTimes>
 
-        <onGetOnlineTimeReward>
-            <Arg>       UINT8    </Arg>
-        </onGetOnlineTimeReward>
-
-        <onGetOnlineRewardData>
-            <Arg>       UINT32    </Arg>
-            <Arg>       ARRAY    <of>   UINT32    </of>     </Arg>
-        </onGetOnlineRewardData>
-
-        <onGetHolyArtifactsData>
-            <Arg>       UINT8    </Arg>
-        </onGetHolyArtifactsData>
-
-        <onCollectHolyArtifactFragment>
-            <Arg>       UINT8    </Arg>
-        </onCollectHolyArtifactFragment>
-
-        <onCancelChangeAppearance>
-            <Arg>       BOOL        </Arg>
-        </onCancelChangeAppearance>
-
-        <onDoChangeAppearanceToMakeUpFace>
-            <Arg>       ENTITY_ID   </Arg>
-            <Arg>       BOOL        </Arg>
-            <Arg>       FACE_DATA   </Arg>
-        </onDoChangeAppearanceToMakeUpFace>
-
-        <onDoChangeAppearanceToMakeUpSex>
-            <Arg>       ENTITY_ID   </Arg>
-            <Arg>       BOOL        </Arg>
-            <Arg>       SEX         </Arg>
-            <Arg>       FACE_DATA   </Arg>
-        </onDoChangeAppearanceToMakeUpSex>
-
-        <sendPickedCollectoins>
-            <Arg>       ARRAY    <of>   UINT32    </of>     </Arg>
-            <Arg>       ARRAY    <of>   INT16    </of>     </Arg>
-        </sendPickedCollectoins>
-
-        <onCompoundRes>
-            <Arg>   INT32       </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   ITEM_ID      </Arg>
-            <Arg>   UINT32      </Arg>
-        </onCompoundRes>
-
-        <onNumResourceChanged>
-            <Arg>   ITEMID       </Arg>
-            <Arg>   UINT32       </Arg>
-        </onNumResourceChanged>
-
-        <onMultiNumResourceChanged>
-            <Arg>       ARRAY    <of>   ITEMID    </of>     </Arg>
-            <Arg>       ARRAY    <of>   UINT32    </of>     </Arg>
-        </onMultiNumResourceChanged>
-
-        <onGetAvatarCoinBill>
-            <Arg>   UINT32       </Arg>
-            <Arg>   UINT32       </Arg>
-            <Arg>   UINT16       </Arg>
-            <Arg>   UINT16       </Arg>
-            <Arg>    ARRAY <of> CoinBillVal </of>    </Arg>
-        </onGetAvatarCoinBill>
-
-        <onClientLaunchReward>
-            <Arg>   UINT32       </Arg>
-        </onClientLaunchReward>
-
         <onRandomSynthesis>
-            <Arg>       ARRAY    <of>   ITEMID    </of>     </Arg>
+            <Arg>       ARRAY    <of>   BAG_ITEM_BRIEF_VAL    </of>     </Arg>
         </onRandomSynthesis>
 
         <onUpgradeSynthesis>
@@ -614,5 +602,20 @@
         <onUpdateSynthesisUpgradeNum>
             <Arg>       ARRAY    <of>   CLIENT_RANDOM_SYNTHESIS_NUM_VAL    </of>     </Arg>
         </onUpdateSynthesisUpgradeNum>
+
+        <onLockItemSucc>
+            <Arg>       UINT8       </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       INT8        </Arg>
+        </onLockItemSucc>
+
+        <onSellItemSucc>
+            <Arg>       UINT8       </Arg>
+            <Arg>       GRIDID      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UINT32      </Arg>
+        </onSellItemSucc>
+
     </ClientMethods>
 </root>

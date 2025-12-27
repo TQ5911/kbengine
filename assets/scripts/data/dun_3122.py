@@ -116,6 +116,7 @@ datas ={
       "RefreshTime": 5.0,
       "RefreshTimedID": 0,
       "Remark": "\u56fa\u5b9a\u8def\u7ebf4",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -145,7 +146,8 @@ datas ={
       "RefreshNum": 0,
       "RefreshTime": 5.0,
       "RefreshTimedID": 0,
-      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0\uff0c\u540e\u5220",
+      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -175,7 +177,8 @@ datas ={
       "RefreshNum": 0,
       "RefreshTime": 5.0,
       "RefreshTimedID": 0,
-      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0\uff0c\u540e\u5220",
+      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -197,6 +200,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 55,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": "",
@@ -205,7 +209,8 @@ datas ={
       "RefreshNum": 0,
       "RefreshTime": 5.0,
       "RefreshTimedID": 0,
-      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0\uff0c\u540e\u5220",
+      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -235,7 +240,8 @@ datas ={
       "RefreshNum": 0,
       "RefreshTime": 5.0,
       "RefreshTimedID": 0,
-      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0\uff0c\u540e\u5220",
+      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -265,7 +271,8 @@ datas ={
       "RefreshNum": 0,
       "RefreshTime": 5.0,
       "RefreshTimedID": 0,
-      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0\uff0c\u540e\u5220",
+      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -295,7 +302,8 @@ datas ={
       "RefreshNum": 0,
       "RefreshTime": 5.0,
       "RefreshTimedID": 0,
-      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0\uff0c\u540e\u5220",
+      "Remark": "\u5b9a\u4f4d\u7528\uff0c\u5237\u65b0\u6570\u91cf0",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -317,6 +325,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 55,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -326,6 +335,7 @@ datas ={
       "RefreshTime": 5.0,
       "RefreshTimedID": 0,
       "Remark": "\u968f\u673a\u505c\u75595",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -345,10 +355,12 @@ datas ={
     "PosY": 4.787661,
     "PosZ": 26.06564,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 0.0,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "31228002": {
@@ -372,7 +384,8 @@ datas ={
       "RefreshNum": 1,
       "RefreshTime": 300.0,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "31228003": {
@@ -387,17 +400,18 @@ datas ={
     "EntityID": 3,
     "ID": 31228003,
     "Name": "\u7a7a\u6c14\u5899",
-    "PosX": 98.11,
+    "PosX": 91.0,
     "PosY": 3.85355,
     "PosZ": 83.54,
     "Props": {
       "AreaType": 2,
       "Height": 5.0,
       "Length": 60.0,
-      "MPosX": 95.0,
+      "MPosX": 88.0,
       "MPosY": 3.85,
       "MPosZ": 21.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "31228004": {
@@ -412,17 +426,67 @@ datas ={
     "EntityID": 3,
     "ID": 31228004,
     "Name": "\u7a7a\u6c14\u5899",
-    "PosX": 42.99,
+    "PosX": 49.0,
     "PosY": 3.85355,
     "PosZ": 85.17,
     "Props": {
       "AreaType": 2,
       "Height": 5.0,
       "Length": 60.0,
-      "MPosX": 40.0,
+      "MPosX": 46.0,
       "MPosY": 3.85,
       "MPosZ": 23.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "31228005": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Teleporter",
+    "ClassNameType": 2,
+    "CustomID": "31218002",
+    "Dir": 230.2314,
+    "DisplayName": "",
+    "EntityID": 17312201,
+    "ID": 31228005,
+    "Name": "\u6df7\u6c8c\u4e4b\u5883",
+    "PosX": 82.8048,
+    "PosY": 3.650003,
+    "PosZ": 45.22427,
+    "Props": {
+      "CameraId": 0,
+      "GateType": 3,
+      "Remark": "",
+      "ShowInSceneMap": 0,
+      "TelDir": 230.2314,
+      "TelX": 82.8048,
+      "TelY": 3.650003,
+      "TelZ": 45.22427
+    }
+  },
+  "31228006": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 31228006,
+    "Name": "\u6218\u6597\u533a",
+    "PosX": 69.42093,
+    "PosY": 3.811837,
+    "PosZ": 106.1,
+    "Props": {
+      "AreaType": 0,
+      "Length": 80.0,
+      "Remark": "",
+      "ShowInSceneMap": 1,
+      "Width": 150.0
     }
   }
 }

@@ -129,6 +129,11 @@
             <Arg>       STRING          </Arg>
             <Arg>       PYTHON          </Arg>
         </callOnSpaceMgr>
+
+        <callOnSpace>
+            <Arg>       STRING          </Arg>
+            <Arg>       PYTHON          </Arg>
+        </callOnSpace>
     </CellMethods>
 
 </root>

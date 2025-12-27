@@ -20,11 +20,16 @@
         <checkAutoSwitchLine>
             <Arg>       MAILBOX        </Arg>
             <Arg>       PLAYER_GBID    </Arg>
-            <Arga>       SPACE_NO       </Arga>
+            <Arg>       SPACE_NO       </Arg>
         </checkAutoSwitchLine>
 
-        <notifyRemoveFakeLeavePlayer>
-            <Arg>       PLAYER_GBID    </Arg>
-        </notifyRemoveFakeLeavePlayer>
+        <onSpaceMgrReady>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       ENTITYCALL     </Arg>
+        </onSpaceMgrReady>
+
+        <notifyCreateWorldBoss>
+            <Arg>       SPACE_NO       </Arg>
+        </notifyCreateWorldBoss>
    </BaseMethods>
 </root>

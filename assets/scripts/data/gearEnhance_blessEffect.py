@@ -17,43 +17,43 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "effect": _tools.ROList([['adjFullHp', 21]])
+        "effect": None
     }),
     2: _tools.RODict({
         "ID": 2,
-        "effect": _tools.ROList([['adjFullHp', 22]])
+        "effect": None
     }),
     3: _tools.RODict({
         "ID": 3,
-        "effect": _tools.ROList([['adjFullHp', 23]])
+        "effect": None
     }),
     4: _tools.RODict({
         "ID": 4,
-        "effect": _tools.ROList([['adjFullHp', 24]])
+        "effect": None
     }),
     5: _tools.RODict({
         "ID": 5,
-        "effect": _tools.ROList([['adjFullHp', 25]])
+        "effect": None
     }),
     6: _tools.RODict({
         "ID": 6,
-        "effect": _tools.ROList([['adjFullHp', 26]])
+        "effect": None
     }),
     7: _tools.RODict({
         "ID": 7,
-        "effect": _tools.ROList([['adjFullHp', 27]])
+        "effect": None
     }),
     8: _tools.RODict({
         "ID": 8,
-        "effect": _tools.ROList([['adjFullHp', 28]])
+        "effect": _tools.ROList([['adjMortal', 0.1]])
     }),
     9: _tools.RODict({
         "ID": 9,
-        "effect": _tools.ROList([['adjFullHp', 29]])
+        "effect": _tools.ROList([['adjMortal', 0.2]])
     }),
     10: _tools.RODict({
         "ID": 10,
-        "effect": _tools.ROList([['adjFullHp', 30]])
+        "effect": _tools.ROList([['adjMortal', 0.2]])
     })
 })
 minKey = 1

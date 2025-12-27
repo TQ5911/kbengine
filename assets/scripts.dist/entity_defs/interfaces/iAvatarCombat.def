@@ -1,6 +1,7 @@
 <root>
     <Interfaces>
-        <Interface>       iSkillManager    </Interface>
+        <Interface>       iSkillManager         </Interface>
+        <Interface>       iSkillPropOwnClient   </Interface>
     </Interfaces>
 
     <Properties>
@@ -11,11 +12,31 @@
             <Default>       1                          </Default>
         </morphState>
 
+        <summonSlotIdxBase>
+            <Type>          SLOTID                      </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    true                        </Persistent>
+            <Default>       0                           </Default>
+        </summonSlotIdxBase>
+
+        <summonSlotIdx>
+            <Type>          SLOTID                      </Type>
+            <Flags>         OWN_CLIENT                  </Flags>
+            <Default>       0                           </Default>
+        </summonSlotIdx>
+
         <buildDic>
             <Type>            BUILD_INFO                </Type>
             <Flags>           BASE                     </Flags>
             <Persistent>      true                </Persistent>
         </buildDic>
+
+        <tmpTaskSkillIds>
+            <Type>              PY_DICT             </Type>
+            <Flags>             BASE                </Flags>
+            <Default>           {}                  </Default>
+            <Persistent>        true                </Persistent>
+        </tmpTaskSkillIds>
 
         <bigWorldRouteController>
             <Type>  PYTHON  </Type>
@@ -31,17 +52,10 @@
 
         <expAddRatioByTeam>
             <Type>                 UINT16               </Type>
-            <Flags>                OWN_CLIENT           </Flags>
+            <Flags>                CELL_PRIVATE         </Flags>
             <Default>              0                    </Default>
             <Persistent>           true                 </Persistent>
         </expAddRatioByTeam>
-
-        <chaseExpFactor>
-            <Type>                 FLOAT               </Type>
-            <Flags>         OWN_CLIENT        </Flags>
-            <Default>               0                  </Default>
-            <Persistent>           true                </Persistent>
-        </chaseExpFactor>
 
         <dailyChaseExpFactorUpdateTime>
             <Type>          LONGTIME            </Type>
@@ -65,6 +79,11 @@
             <Flags>         CELL_PRIVATE          </Flags>
         </statisticsHurt>
 
+        <statisticsDead>
+            <Type>          INT32               </Type>
+            <Flags>         CELL_PRIVATE          </Flags>
+        </statisticsDead>
+
         <regenTimer>
             <Type>     TIMER_ID                      </Type>
             <Flags>    CELL_PRIVATE                  </Flags>
@@ -72,12 +91,12 @@
 
         <zedPoint>
             <Type>          UINT8               </Type>
-            <Flags>         OWN_CLIENT          </Flags>
+            <Flags>         CELL_PRIVATE        </Flags>
         </zedPoint>
 
         <maxZedPoint>
             <Type>          UINT8               </Type>
-            <Flags>         OWN_CLIENT          </Flags>
+            <Flags>         CELL_PRIVATE        </Flags>
             <Default>       4                   </Default>
         </maxZedPoint>
 
@@ -112,56 +131,6 @@
             <Default>       0                    </Default>
         </totalPayFreeReliveTimes>
 
-        <mpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </mpRecovery>
-
-        <baseMpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </baseMpRecovery>
-
-        <adjMpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjMpRecovery>
-
-        <mulMpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </mulMpRecovery>
-
-        <adjMpRecoveryPercent>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjMpRecoveryPercent>
-
-        <hpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </hpRecovery>
-
-        <baseHpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
-        </baseHpRecovery>
-
-        <adjHpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjHpRecovery>
-
-        <mulHpRecovery>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </mulHpRecovery>
-
-        <adjHpRecoveryPercent>
-            <Type>          FLOATATTR          </Type>
-            <Flags>         OWN_CLIENT     </Flags>
-        </adjHpRecoveryPercent>
-
         <mp>
             <Type>          MP          </Type>
             <Flags>         ALL_CLIENTS     </Flags>
@@ -178,7 +147,7 @@
             <Type>          UINT8                       </Type>
             <Flags>         OWN_CLIENT                  </Flags>
         </ultraSkillPower>
-        
+
         <instantPotionSlots>
             <Type>          INSTANT_POTION_SLOTS_DATA_INFO  </Type>
             <Flags>         BASE_AND_CLIENT                 </Flags>
@@ -204,6 +173,52 @@
             <Flags>         BASE                            </Flags>
             <Default>       0                               </Default>
         </autoDrinkPotionTimerId>
+        <expGrow>
+            <Type>          FLOAT               </Type>
+            <Flags>         OWN_CLIENT        </Flags>
+        </expGrow>
+        <adjExpGrow>
+            <Type>          FLOAT               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </adjExpGrow>
+        <copper>
+            <Type>          FLOAT               </Type>
+            <Flags>         OWN_CLIENT        </Flags>
+        </copper>
+        <adjCopper>
+            <Type>          FLOAT               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </adjCopper>
+        <medicineRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </medicineRate>
+        <adjMedicineRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMedicineRate>
+        <miningRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </miningRate>
+        <adjMiningRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMiningRate>
+        <gatherRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </gatherRate>
+        <adjGatherRate>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjGatherRate>
+
+        <viewCrossServerSet>
+            <Type>          PYTHON              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       set()               </Default>
+        </viewCrossServerSet>
     </Properties>
 
     <CellMethods>
@@ -225,7 +240,6 @@
 
         <addExpByKill>
             <Arg>            EXP                      </Arg>
-            <Arg>            REWARD_ID                </Arg>
             <Arg>            LEVEL                    </Arg>
             <Arg>            OP_UUID                  </Arg>
             <Arg>            BONUS_SRC                </Arg>
@@ -246,6 +260,13 @@
             <Arg>            BONUS_SRC                </Arg>
             <Arg>            STRING                   </Arg>
         </addExpByMail>
+
+        <addExpByMonthCard>
+            <Arg>            EXP                      </Arg>
+            <Arg>            OP_UUID                  </Arg>
+            <Arg>            BONUS_SRC                </Arg>
+            <Arg>            STRING                   </Arg>
+        </addExpByMonthCard>
 
         <clientSetIsOnGround>
             <Exposed/>
@@ -341,6 +362,20 @@
             <Arg>       PYTHON          </Arg>
         </addAwardFightPropsCell>
 
+        <preAwardOnKillMonster>
+            <Arg> PYTHON </Arg>
+            <Arg> PYTHON </Arg>
+            <Arg> PYTHON </Arg>
+            <Arg> PYTHON </Arg>
+        </preAwardOnKillMonster>
+
+        <doKillMonsterAwards>
+            <Arg> PYTHON </Arg>
+            <Arg> EXP    </Arg>
+            <Arg> PYTHON </Arg>
+            <Arg> PYTHON </Arg>
+        </doKillMonsterAwards>
+
         <getBuffIdInfo> <Exposed/>
             <Arg>        OBJECT_ID        </Arg>
         </getBuffIdInfo>
@@ -375,13 +410,33 @@
             <Arg>       HEAL_RATIO      </Arg>
             <Arg>       BOOL            </Arg>
         </setHealRatio>
+
+        <setSummonSlotIdx>
+            <Arg>          SLOTID       </Arg>
+        </setSummonSlotIdx>
+
+        <changeMorphPreAddSkill>
+            <Arg>          MORPH_STATE  </Arg>
+        </changeMorphPreAddSkill>
+
+        <levelUpSkill> <Exposed/>
+            <Arg>        SKILLID        </Arg>
+            <Arg>        INT8           </Arg>
+        </levelUpSkill>
+
+        <setShowCompleteNum> <Exposed/>
+            <Arg>        UINT8          </Arg>
+        </setShowCompleteNum>
     </CellMethods>
 
     <BaseMethods>
-        <onReliveDirectly>
-            <Arg>       COIN        </Arg>
-            <Arg>       OBJECT_ID   </Arg>
-        </onReliveDirectly>
+        <setSummonSlotIdx> <Exposed/>
+            <Arg>          SLOTID       </Arg>
+        </setSummonSlotIdx>
+
+        <setSummonSlotIdxAck>
+            <Arg>          SLOTID       </Arg>
+        </setSummonSlotIdxAck>
 
         <onAvatarLevelUpBase>
             <Arg>           LEVEL               </Arg>
@@ -392,10 +447,10 @@
             <Arg>        ARRAY <of> SKILL_SLOT_INFO </of>        </Arg>
         </updateSkills>
 
-        <levelUpSkill> <Exposed/>
+        <baseLevelUpSkill>
             <Arg>        SKILLID        </Arg>
             <Arg>        INT8           </Arg>
-        </levelUpSkill>
+        </baseLevelUpSkill>
 
         <onCheckUpdateSkillRet>
             <Arg>          BOOL              </Arg>
@@ -470,30 +525,10 @@
             <Arg>        DOUBLETIME     </Arg>
         </onUseStageSkill>
 
-        <onRelive>
-        </onRelive>
-
-        <showCombatMsg>
-            <Arg>        UINT32    </Arg>
-            <Arg>        ARRAY <of> UNICODE </of>  </Arg>
-        </showCombatMsg>
-
         <onUpdateSkillLevel>
             <Arg>        ARRAY <of> SKILLID </of>     </Arg>
             <Arg>        ARRAY <of> LEVEL </of>     </Arg>
         </onUpdateSkillLevel>
-
-        <onUpdateSkillBuildInfo>
-            <Arg>        BUILD_INFO   </Arg>
-        </onUpdateSkillBuildInfo>
-
-        <onUpdateSkills>
-            <Arg>        BUILD_INFO   </Arg>
-        </onUpdateSkills>
-
-        <switchBuildChangeSkills>
-            <Arg>        BLOB         </Arg>
-        </switchBuildChangeSkills>
 
         <dragSkillChangeBuildSkills>
             <Arg>        BLOB           </Arg>
@@ -513,21 +548,6 @@
             <Arg>        ARRAY <of> UINT8 </of>        </Arg>
         </updateSkillsExtraLevel>
 
-        <onRecordFightProps>
-        </onRecordFightProps>
-
-        <onAvatarLevelUp>
-            <Arg>        LEVEL      </Arg>
-            <Arg>        LEVEL      </Arg>
-        </onAvatarLevelUp>
-
-        <onFightPropsChanged>
-        </onFightPropsChanged>
-
-        <onUnlockSkills>
-            <Arg>        ARRAY <of> SKILLID </of>        </Arg>
-        </onUnlockSkills>
-
         <onPlayerGetExp>
             <Arg>        BONUS_SRC      </Arg>
             <Arg>        EXP            </Arg>
@@ -539,39 +559,10 @@
             <Arg>        ARRAY <of> OBJECT_ID </of>   </Arg>
         </onRemoveCompleteWitness>
 
-        <onRemoveCompletePetWitness>
-            <Arg>        ARRAY <of> OBJECT_ID </of>   </Arg>
-        </onRemoveCompletePetWitness>
-
-        <onGetDunTimeFreezeFlag>
-            <Arg>   BOOL    </Arg>
-        </onGetDunTimeFreezeFlag>
-
-        <onLeftFreeReliveTimesChanged>
-            <Arg>   UINT8    </Arg>
-        </onLeftFreeReliveTimesChanged>
-
-        <onInteractStateChange>
-            <Arg>        UINT32         </Arg>
-        </onInteractStateChange>
-
-        <onSelfInteractStateChange>
-            <Arg>        UINT32         </Arg>
-            <Arg>        TASK_ID         </Arg>
-        </onSelfInteractStateChange>
-
-        <onGetServerLevel>
-            <Arg>        LEVEL         </Arg>
-        </onGetServerLevel>
-
         <onGetBuffIdInfo>
             <Arg>   OBJECT_ID          </Arg>
             <Arg>   ARRAY <of> CLIENT_BUFF_ID_VAL </of> </Arg>
         </onGetBuffIdInfo>
-
-        <onSendCommonFlagCellInfo>
-            <Arg>        UINT8         </Arg>
-        </onSendCommonFlagCellInfo>
 
         <onHealItemResult>
             <Arg>        UINT32        </Arg>
@@ -591,8 +582,8 @@
             <Arg>        UINT8           </Arg>
         </onRemoveInstantPotionSlots>
 
-        <onReliveByOthers>
-            <Arg>        OBJECT_ID       </Arg>
-        </onReliveByOthers>
+        <onKillAvatar>
+            <Arg>        UNICODE       </Arg>
+        </onKillAvatar>
     </ClientMethods>
 </root>

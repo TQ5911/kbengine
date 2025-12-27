@@ -437,83 +437,7 @@ class BanditCacheVal(userType.UserSoleType):
     def getBanditCacheVal(dataDict):
         return BanditCacheVal(**dataDict)
 
-# ---------------------------- 统计相关 ----------------------------
-class TeamStatisticMixin(object):
-    def __init__(self):
-        self.teamStatistic = TeamStatisticCacheVal()
-
-    def getPlayerDic(self):
-        if hasattr(self, 'teamPlayerDic'):
-            return self.teamPlayerDic
-        elif hasattr(self, 'raidTeamDic'):
-            return self.getRaidAllMembersDict()
-        return {}
-
-    def addTeamStatisticValue(self, gbId, type, val):
-        if gbId not in self.getPlayerDic():
-            return
-        
-        if type == gameconst.TeamStatisticType.DAMAGE:
-            self.teamStatistic.addStatisticDmg(gbId, val)
-        elif type == gameconst.TeamStatisticType.HEAL:
-            self.teamStatistic.addStatisticHeal(gbId, val)
-        elif type == gameconst.TeamStatisticType.HURT:
-            self.teamStatistic.addStatisticHurt(gbId, val)
-        elif type == gameconst.TeamStatisticType.DEAD:
-            self.teamStatistic.addStatisticDead(gbId, val)
-        
-        INFO_MSG('addTeamStatisticValue', gbId, type, val)
-
-    def getTeamStatisticData(self):
-        dmgList = []
-        healList = []
-        hurtList = []
-        deadList = []
-        teamPlayerDic = self.getPlayerDic()
-
-        for gbId in teamPlayerDic:
-            playerInfo = teamPlayerDic[gbId]
-            pData = {
-                'gbId': gbId,
-                'name': playerInfo.playerName,
-                'school': playerInfo.school,
-                'value': 0,
-                }
-            if gbId in self.teamStatistic.dmgDict:
-                pData['value'] = self.teamStatistic.dmgDict[gbId]
-            else:
-                pData['value'] = 0
-            dmgList.append(copy.copy(pData))
-
-            if gbId in self.teamStatistic.healDict:
-                pData['value'] = self.teamStatistic.healDict[gbId]
-            else:
-                pData['value'] = 0
-            healList.append(copy.copy(pData))
-
-            if gbId in self.teamStatistic.hurtDict:
-                pData['value'] = self.teamStatistic.hurtDict[gbId]
-            else:
-                pData['value'] = 0
-            hurtList.append(copy.copy(pData))
-
-            if gbId in self.teamStatistic.deadDict:
-                pData['value'] = self.teamStatistic.deadDict[gbId]
-            else:
-                pData['value'] = 0
-            deadList.append(copy.copy(pData))
-            
-        return {
-            'dmgList': dmgList,
-            'healList': healList,
-            'hurtList': hurtList,
-            'deadList': deadList,
-        }
-    def showStatisticData(self):
-        INFO_MSG('showStatisticData', self.teamStatistic.dmgDict, self.teamStatistic.healDict, self.teamStatistic.hurtDict, self.teamStatistic.deadDict)
-    
-
-class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
+class TeamVal(userType.UserSoleType, TeamDungeonMixin):
     def __init__(self, teamId=0, teamTarget=0, teamCaptainGbId=0, playerBox=None, playerName='', level=0, school=0,
                  sex=0, picFrameId=0, bFollow=False, bOnline=True, score=0, mountState=0, isDead=False,
                  openId='', siegeWarCamp=0, teamMicsSwitch=gameconst.TeamMicsMode.OFF, teamMicsBlocked=False):
@@ -555,12 +479,9 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
         self.password = ''
         self.autoStartTimer = 0
         self.teamMemberList = []
-        self.teamRewardDatas = {}
         self.siegeWarCamp = siegeWarCamp
         self.isInDungeon = False
         # endregion
-
-        TeamStatisticMixin.__init__(self)
 
     def _lateReload(self):
         super(TeamVal, self)._lateReload()
@@ -1441,21 +1362,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin, TeamStatisticMixin):
 
     def clearMarkRecord(self, ownerStub):
         self.teamMark.clearMarkRecord(ownerStub, self.teamId)
-    
-    def clearTeamDungeonRewardRecord(self, gbID):
-        self.teamRewardDatas.pop(gbID, None)
-
-    def addTeamDungeonRewardRecord(self, gbID, rewardList):
-        datas = self.teamRewardDatas.setdefault(gbID, {})
-        for _data in rewardList:
-            _itemId = _data['itemId']
-            _bindType = _data['bindType']
-            _itemNum = _data['itemNum']
-            a = datas.setdefault(_itemId, {})
-            b = a.setdefault(_bindType, 0)
-            a[_bindType] = b + _itemNum
-
-        self.broadcastAllMembersClient('onAddTeamDungeonRewardRecord', (self.teamId, gbID, rewardList))
 
 class PlayerTeamMemberCacheVal(userType.UserSoleType):
     def __init__(self, playerGbId, playerBox, bFollow, spaceNo=0, mountState=gameconst.TeamMountState.none, score = 0):
@@ -1828,34 +1734,3 @@ class TeamMarkMemberCacheVal(userType.UserSoleType):
         for attrName, attrVal in arrDic.items():
             if hasattr(self, attrName):
                 setattr(self, attrName, attrVal)      
-
-class TeamStatisticCacheVal(userType.UserSoleType):
-    def __init__(self):
-        super().__init__()
-        self.dmgDict = {}  # type: {int: int}
-        self.healDict = {}  # type: {int: int}
-        self.hurtDict = {}  # type: {int: int}
-        self.deadDict = {}  # type: {int: int}
-
-    def addStatisticDmg(self, gbId, dmg):
-        if gbId not in self.dmgDict:
-            self.dmgDict[gbId] = 0
-        self.dmgDict[gbId] += dmg
-
-    def addStatisticHeal(self, gbId, heal):
-        if gbId not in self.healDict:
-            self.healDict[gbId] = 0
-        self.healDict[gbId] += heal
-
-    def addStatisticHurt(self, gbId, hurt):
-        if gbId not in self.hurtDict:
-            self.hurtDict[gbId] = 0
-        self.hurtDict[gbId] += hurt
-    
-            
-    def addStatisticDead(self, gbId, dead):
-        if gbId not in self.deadDict:
-            self.deadDict[gbId] = 0
-        self.deadDict[gbId] += dead
-
-    

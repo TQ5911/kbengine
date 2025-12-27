@@ -21,7 +21,10 @@ namespace KBEngine
 
 		public UInt64 lastSelectGbId = 0;
 		public virtual void onLastSelectGbIdChanged(UInt64 oldValue) {}
+		public UInt64 phone = 0;
+		public virtual void onPhoneChanged(UInt64 oldValue) {}
 
+		public virtual void minorAccountConstraintTip(UInt64 arg1) {} 
 		public virtual void onAvatarDetailInAccount(UInt64 arg1, Int32 arg2, UInt32 arg3, string arg4, Int32 arg5) {} 
 		public virtual void onAvatarOfflineTime(UInt64 arg1, UInt32 arg2) {} 
 		public virtual void onCharInfoChange(CHARACTER_VAL arg1) {} 
@@ -125,6 +128,10 @@ namespace KBEngine
 
 			switch(method.methodUtype)
 			{
+				case 145:
+					UInt64 minorAccountConstraintTip_arg1 = stream.readUint64();
+					minorAccountConstraintTip(minorAccountConstraintTip_arg1);
+					break;
 				case 750:
 					UInt64 onAvatarDetailInAccount_arg1 = stream.readUint64();
 					Int32 onAvatarDetailInAccount_arg2 = stream.readInt32();
@@ -269,6 +276,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 32173:
+						UInt64 oldval_phone = phone;
+						phone = stream.readUint64();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onPhoneChanged(oldval_phone);
+						}
+						else
+						{
+							if(inWorld)
+								onPhoneChanged(oldval_phone);
+						}
+
+						break;
 					case 40000:
 						Vector3 oldval_position = position;
 						position = stream.readVector3();
@@ -337,6 +360,27 @@ namespace KBEngine
 					else
 					{
 						onLastSelectGbIdChanged(oldval_lastSelectGbId);
+					}
+				}
+			}
+
+			UInt64 oldval_phone = phone;
+			Property prop_phone = pdatas[4];
+			if(prop_phone.isBase())
+			{
+				if(inited && !inWorld)
+					onPhoneChanged(oldval_phone);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_phone.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onPhoneChanged(oldval_phone);
 					}
 				}
 			}

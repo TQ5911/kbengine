@@ -58,5 +58,10 @@ class IEntityRefresh(object):
             ERROR_MSG('IEntityRefresh.onEntityRefresh: space not found, spaceID=%d' % self.spaceID)
             return
 
-        _space._callback(refreshTime, 'doEntityRefresh', (self.gameEntityId, self.spaceMgrId), gametimer.TIMER_TAG_SPACE_DO_REFRESH)
-
+        pointData = {}
+        timerId = _space._callback(refreshTime, 'doEntityRefresh', (self.gameEntityId, self.spaceMgrId, pointData), gametimer.TIMER_TAG_SPACE_DO_REFRESH)
+        pointData["refreshTimerId"] = timerId
+        gid = utils.getGidFromGameEntityId(self.gameEntityId)
+        spaceMgr = self.spaceMgr
+        if spaceMgr:
+            spaceMgr.onAddEntityRefreshTimer(gid, timerId)

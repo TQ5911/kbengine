@@ -15,9 +15,12 @@ datas ={
     "PosY": 527.8172,
     "PosZ": 20.33599,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 0.0,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 0.0,
       "TelX": 39.52325,
       "TelY": 39.0038,
@@ -41,16 +44,19 @@ datas ={
     "PosZ": 54.9992,
     "Props": {
       "GroupID": "",
+      "InitLoad": 0,
       "Level": 30.0,
+      "LightPillar": "",
       "MapEntityScale": 0,
-      "MapEntityType": 0,
+      "MapEntityType": "18",
       "MonsterGroupID": "",
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 5400.0,
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 6,
       "Remark": "\u9996\u9886",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -73,6 +79,7 @@ datas ={
       "CameraId": 0,
       "GateType": 3,
       "Remark": "",
+      "ShowInSceneMap": 0,
       "TelDir": 220.1051,
       "TelX": 307.6499,
       "TelY": 526.2947,
@@ -97,7 +104,8 @@ datas ={
     "Props": {
       "AreaType": 1,
       "Radius": 35.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   }
 }

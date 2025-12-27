@@ -30,5 +30,9 @@ datas = _tools.RODict({
     "gearMakeButtonName2": _tools.RODict({
         "ID": "gearMakeButtonName2",
         "value": "置换",
+    }),
+    "gearMakeBoundMsg": _tools.RODict({
+        "ID": "gearMakeBoundMsg",
+        "value": 54000320,
     })
 })

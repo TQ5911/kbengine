@@ -1031,7 +1031,88 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None
+    }),
+    114: _tools.RODict({
+        "ID": 114,
+        "name": "BONUS_SRC_EXP_ACTION",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    115: _tools.RODict({
+        "ID": 115,
+        "name": "BONUS_SRC_TEAM_GOLD_PASS_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    116: _tools.RODict({
+        "ID": 116,
+        "name": "BONUS_SRC_RAID_GOLD_PASS_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    117: _tools.RODict({
+        "ID": 117,
+        "name": "BONUS_SRC_SHARE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001988,
+        "rewardMessage": ('<color=&color211>活动奖励</color>', '参与活动，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+    }),
+    118: _tools.RODict({
+        "ID": 118,
+        "name": "BONUS_SRC_GULID_DUNGEON_RETURN_COIN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    119: _tools.RODict({
+        "ID": 119,
+        "name": "BONUS_SRC_GULID_DUNGEON_RETURN_MONEY",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    120: _tools.RODict({
+        "ID": 120,
+        "name": "BONUS_SRC_WELFARE_LEVEL",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    121: _tools.RODict({
+        "ID": 121,
+        "name": "BONUS_SRC_CUBE_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001995,
+        "rewardMessage": ('<color=&color211>混沌回廊奖励</color>', '战利品：{0}')
+    }),
+    122: _tools.RODict({
+        "ID": 122,
+        "name": "BONUS_SRC_WONDERLAND_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001996,
+        "rewardMessage": ('<color=&color211>试炼峰奖励</color>', '战利品：{0}')
     })
 })
 minKey = 1
-maxKey = 113
+maxKey = 122

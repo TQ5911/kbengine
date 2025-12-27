@@ -6,12 +6,13 @@ import gameconst
 import dataUtils
 
 import prop_fightprop  as  PPROPERTY
+import collect_details as  PDETAIL
 
 class ICollectible(object):
     def onCollectAward(self, propIndexList):
         DEBUG_MSG('onCollectAward', propIndexList)
         for propIndex in propIndexList:
-            propList = PPROPERTY.datas.get(propIndex, {}).get('propList', {})
+            propList = PDETAIL.datas.get(propIndex, {}).get('propList', {})
             self._addAwardCollectPropsCell(propList)
 
     def _addAwardCollectPropsCell(self, syncPropDict):

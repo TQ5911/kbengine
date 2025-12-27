@@ -762,6 +762,16 @@ class DungeonFlowControllerBuilder(object):
         angle = eventData['angle']
         pos = Math.Vector3(x, y, z)
         return self.controller.buildTransferToTheDesignatedMap(eventId, lineNo, pos, angle)
+    
+    def build_notifyStartBattleCD(self, eventId, eventData):
+        cdTime = eventData['cdTime']
+        return self.controller.buildNotifyStartBattleCD(eventId, self.dungeonNo, self.spaceNo, cdTime)
+    
+    def build_createBreakAwayStuckPos(self, eventId, eventData):
+        entityIds = eventData['entityID']
+        entityNum = eventData['num']
+        return self.controller.buildCreateBreakAwayStuckPosEvent(
+            eventId, entityIds, entityNum)
 
     # -------------------------------------------------------------------
 

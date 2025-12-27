@@ -239,22 +239,24 @@
         <onGetCoinAuctionPlayerInfo>
             <Arg> BOOL </Arg>
             <Arg> UINT32 </Arg>
-            <Arg> AUCTION_ITEM_LIST </Arg>
+            <Arg> AUCTION_ITEM_CLIENT_LIST </Arg>
         </onGetCoinAuctionPlayerInfo>
 
         <onSearchCoinAuctionItemsByItemId>
             <Arg> ITEMID_LIST </Arg>
             <Arg> UINT32 </Arg>
             <Arg> UINT32 </Arg>
-            <Arg> AUCTION_ITEM_LIST </Arg>
+            <Arg> AUCTION_ITEM_CLIENT_LIST </Arg>
             <Arg> UINT64 </Arg>
             <Arg> UINT8 </Arg>
+            <Arg> ARRAY <of> UNICODE </of> </Arg>
+            <Arg> ARRAY <of> UNICODE </of> </Arg>
         </onSearchCoinAuctionItemsByItemId>
 
         <onSaleItemInCoinAuction>
             <Arg> ITEMID </Arg>
             <Arg> UINT64 </Arg>
-            <Arg> AUCTION_ITEM </Arg>
+            <Arg> AUCTION_ITEM_CLIENT </Arg>
         </onSaleItemInCoinAuction>
 
         <onBuyItemInCoinAuctionByAuctionItemUUID>
@@ -311,7 +313,7 @@
         	<Arg> ITEMID </Arg>
         	<Arg> FLOAT </Arg>
         	<Arg> FLOAT </Arg>
-        	<Arg>   ARRAY <of>  AUCTION_ITEM  </of>      </Arg>
+        	<Arg>   AUCTION_ITEM_CLIENT_LIST      </Arg>
             <Arg> UINT8 </Arg>
         </onGetCurrentSaleItemInfoResp>
 
@@ -321,7 +323,9 @@
 
         <onGetAuctionItemsByAuctionIdsResp>
             <Arg> UINT32 </Arg>
-            <Arg>   ARRAY <of>  AUCTION_ITEM  </of>      </Arg>
+            <Arg> AUCTION_ITEM_CLIENT_LIST      </Arg>
+            <Arg> ARRAY <of> UNICODE </of> </Arg>
+            <Arg> ARRAY <of> UNICODE </of> </Arg>
         </onGetAuctionItemsByAuctionIdsResp>
     </ClientMethods>
 </root>

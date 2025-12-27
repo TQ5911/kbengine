@@ -46,19 +46,19 @@ class AvatarBuildsMixin(object):
         return skillId if skillId else None
 
     # 技能升级
-    def baseLevelUpSkill(self, skillId, levelDelta):
-        INFO_MSG('baseLevelUpSkill', skillId, levelDelta)
-        _skillId = dataUtils.getSkillIdByMorphState(skillId, self.morphState)
-        self._levelUpSkill(_skillId, levelDelta)
+    def baseLevelUpSkill(self, newSkillId, oldSkillId, levelDelta):
+        INFO_MSG('baseLevelUpSkill', newSkillId, oldSkillId, levelDelta)
+        _skillId = dataUtils.getSkillIdByMorphState(newSkillId, self.morphState)
+        self._levelUpSkill(_skillId, oldSkillId, levelDelta)
         self.updateSkillScore()
 
-    def _levelUpSkill(self, skillId, levelDelta):
-        DEBUG_MSG("_levelUpSkill", skillId, levelDelta)
-        if not self.buildDic.levelUp(self, skillId, levelDelta):
-            INFO_MSG('skill can not levelUp', skillId)
+    def _levelUpSkill(self, newSkillId, oldSkillId, levelDelta):
+        DEBUG_MSG("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
+        if not self.buildDic.levelUp(self, newSkillId, oldSkillId, levelDelta):
+            INFO_MSG('skill can not levelUp', newSkillId, oldSkillId)
             return False
 
-        self.makeSkillTlog(1 if levelDelta > 0 else 2, skillId, self.buildDic.skillLevels[skillId])
+        self.makeSkillTlog(1 if levelDelta > 0 else 2, newSkillId, self.buildDic.skillLevels[newSkillId])
         self.achievementInfo.triggerAchieveByType(
             self,
             gameconst.AchieveType.LEVEL_UP_SKILL,
@@ -335,6 +335,8 @@ class ImpCombat(AvatarBuildsMixin):
         self.onTaskAvatarLvUp(oldLv, newLv)
         # self._modifyRedisAttr({'level': newLv})
         self.accountEntity.updateCharacterLevel(self.gbID, newLv, self.tLoginBase)
+        if self.subAccount:
+            self.subAccount.updateCharacterLevel(self.gbID, newLv, self.tLoginBase)
 
         self.checkUnlockBuildAndSkillByLevel(True, newLv)
 

@@ -206,13 +206,13 @@ class ShieldInfo(object):
     def createObjFromDict(self, dict):
         shields = buff.Shields()
         for sVal in dict['shields']:
-            shields[sVal['buffId']] = buff.ShieldVal(sVal['buffId'], sVal['shieldValue'])
+            shields[sVal['buffId']] = buff.ShieldVal(sVal['buffId'], sVal['shieldMaxValue'], sVal.get('shieldType', 0), sVal['shieldValue'], sVal.get('shieldEffects', {}))
         return shields
 
     def getDictFromObj(self, obj):
         shieldsDict = {'shields':[]}
         for buffId, sVal in obj.items():
-            shieldsDict['shields'].append({'buffId': sVal.buffId, 'shieldValue':sVal.shieldValue})
+            shieldsDict['shields'].append({'buffId': sVal.buffId, 'shieldMaxValue':sVal.shieldMaxValue, 'shieldType': sVal.shieldType, 'shieldValue':sVal.shieldValue, 'shieldEffects':sVal.shieldEffects})
         return shieldsDict
 
     def isSameType(self, obj):
@@ -220,22 +220,5 @@ class ShieldInfo(object):
 
 shieldsInstance = ShieldInfo()
 
-class RunesInfo(object):
-    def createObjFromDict(self, dict):
-        runesObj = combatSkill.Runes()
-        for sVal in dict['runes']:
-            runesObj.runes.append(combatSkill.RuneVal(sVal['runeIndex'], sVal['runeIdList'], sVal['position'], sVal['spaceNo']))
-        return runesObj
-
-    def getDictFromObj(self, obj):
-        runsDict = {'runes': []}
-        for sVal in obj.runes:
-            runsDict['runes'].append({'runeIndex': sVal.runeIndex, 'runeIdList':sVal.runeIdList, 'position':sVal.position, 'spaceNo':sVal.spaceNo})
-        return runsDict
-
-    def isSameType(self, obj):
-        return type(obj) is combatSkill.Runes
-
-runesInstance = RunesInfo()
 
 

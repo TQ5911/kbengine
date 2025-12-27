@@ -13,16 +13,16 @@ import raidBossChallenge_config as RBC_CFG
 class IChief(object):
     def onChiefDailyRewardNumUpdate(self, *args):
         DEBUG_MSG('onChiefDailyRewardNumUpdate::')
-        dailyRewardNum = int(RBC_CFG.datas['dailyRewardNum']['value'])
+        dailyRewardNum = self.chiefInfo.dailyRewardNum
         if self.chiefInfo.rewardNumber < dailyRewardNum:
-            self.chiefInfo.addRewardNum(dailyRewardNum - self.chiefInfo.rewardNumber)
+            self.chiefInfo.addRewardNumByDefault(dailyRewardNum - self.chiefInfo.rewardNumber)
         self.chiefInfo.rewardDailyCount = 0
-        self.chiefInfo.useCoinAddRewardNum = int(RBC_CFG.datas['rewardNumCoinDailyLimit']['value'])
+        self.chiefInfo.resetUseCoinAddRewardDailyNum()
         self.chiefInfo = self.chiefInfo
 
     def onChiefWeeklyAddRewardItemNumUpdate(self, *args):
         DEBUG_MSG('onChiefWeeklyAddRewardItemNumUpdate::')
-        self.chiefInfo.resetUseItemAddRewardNumber()
+        self.chiefInfo.resetUseItemAddRewardWeeklyNum()
         self.chiefInfo = self.chiefInfo
 
     def useItemToIncreaseChiefRewardNumber(self, exposed, useNum):
@@ -97,22 +97,10 @@ class IChief(object):
         self.chiefInfo.addRewardNumByUseCoin(useNum)
         self.chiefInfo = self.chiefInfo
 
-    def onEnterChiefDungeon(self, spaceNo, spaceMgrBox, extra):
-        DEBUG_MSG('in onEnterChiefDungeon::', spaceNo, spaceMgrBox, extra)
+    def onEnterChiefDungeon(self, spaceNo, dungeonNo, spaceMgrBox, extra):
         chiefInfo = self.chiefInfo
-        chiefInfo.addRewardNum(-1)
+        chiefInfo.deductRewardNum()
         self.chiefInfo = chiefInfo
         self.onEnterDungeon(spaceNo, spaceMgrBox, extra)
         self.activityComplete(RBC_CFG.datas['raidBossChallengeActID']['value'])
-
-
-    def setChiefDungeonAutoConfirmConfig(self, exposed, storyLevel):
-        self.setPersistentMiscProp(gameconst.AvatarProps.ChiefDunAutoConfirmConfig, storyLevel)
-        self.client.onSetChiefDungeonAutoConfirmConfig(storyLevel)
-
-    def getChiefDungeonAutoConfirmConfig(self):
-        return self.getPersistentMiscProp(gameconst.AvatarProps.ChiefDunAutoConfirmConfig, 1)
-
-    def sendChiefDungeonAutoConfirmConfig(self):
-        storyLevel = self.getChiefDungeonAutoConfirmConfig()
-        self.client.onSetChiefDungeonAutoConfirmConfig(storyLevel)
+        INFO_MSG('in onEnterChiefDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

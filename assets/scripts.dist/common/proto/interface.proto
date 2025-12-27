@@ -13,7 +13,7 @@ message ConfigVal
     string val = 2;
 }
 
-message ListVal 
+message ListVal
 {
     repeated string vals = 1;
 }
@@ -21,6 +21,25 @@ message ListVal
 message IntVal
 {
     uint32 value = 1;
+}
+
+message SetAccountCompVal
+{
+    string accountName = 1;
+    uint64 compID = 2;
+    uint32 entityID = 3;
+}
+
+message SetAccountCompResult
+{
+    uint32 result = 1;
+    uint32 entityID = 2;
+}
+
+message AntiAddictionData
+{
+    uint32 timeType = 1;
+    uint64 timestamp = 2;
 }
 
 // Interface 进程的 service
@@ -33,6 +52,8 @@ service Interface
     rpc interfaceReload(Void) returns(Void);
     rpc interfaceDataReload(ListVal) returns(Void);
     rpc syncRegisterCount(IntVal) returns(Void);
+    rpc setAccountComp(SetAccountCompVal) returns(Void);
+    rpc updateAntiAddictionData(AntiAddictionData) returns(Void);
 }
 
 // BaseApp 的 service
@@ -40,4 +61,5 @@ service BaseApp
 {
     rpc activeTickCallback(Void) returns(Void);
     rpc reqSyncCacheConfigOnBaseapp(Void) returns(Void);
+    rpc setAccountCompResult(SetAccountCompResult) returns(Void);
 }

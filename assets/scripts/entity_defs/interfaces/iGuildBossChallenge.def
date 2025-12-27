@@ -8,33 +8,37 @@
     </Properties>
 
     <BaseMethods>
+        <enterBossChallengeDungeon>
+            <Arg>   UINT16   </Arg>
+        </enterBossChallengeDungeon>
+    </BaseMethods>
+
+    <CellMethods>
         <openGuildDungeon> <Exposed/>
             <Arg>   INT64    </Arg>
             <Arg>   UINT8    </Arg>
             <Arg>   UINT16   </Arg>
         </openGuildDungeon>
 
-        <cancalGuildDungeonOrder> <Exposed/>
-        </cancalGuildDungeonOrder>
+        <cancelGuildDungeonOrder> <Exposed/>
+            <Arg>   UINT16   </Arg>
+        </cancelGuildDungeonOrder>
 
         <getChangllengeDataInfo> <Exposed/>
-
         </getChangllengeDataInfo>
 
         <enterBossChallengeDungeon> <Exposed/>
+            <Arg>   UINT16   </Arg>
         </enterBossChallengeDungeon>
 
         <leaveBossChallengeDungeon> <Exposed/>
+            <Arg>   UINT16   </Arg>
         </leaveBossChallengeDungeon>
 
-        <getSettlementRankList> <Exposed/>
-            <Arg>   UINT8   </Arg>
-            <Arg>   UINT8   </Arg>
-        </getSettlementRankList>
+        <getGuildBossHP> <Exposed/>
+            <Arg>   UINT16  </Arg>
+        </getGuildBossHP>
         
-    </BaseMethods>
-
-    <CellMethods>
         <setGuildBossDungeonID>
             <Arg> UINT32 </Arg>
         </setGuildBossDungeonID>
@@ -54,7 +58,6 @@
         <doLeaveGuildBossDungeon>
             <Arg>           PYTHON              </Arg>
         </doLeaveGuildBossDungeon>
-
     </CellMethods>
 
     <ClientMethods>
@@ -64,18 +67,23 @@
             <Arg>   UINT16  </Arg>
         </onOpenGuildDungeon>
 
-        <onCancalGuildDungeonOrder>
+        <onCancelGuildDungeonOrder>
             <Arg> UINT32 </Arg>
-        </onCancalGuildDungeonOrder>
+        </onCancelGuildDungeonOrder>
 
         <onGetChagllengeDataInfo>
             <Arg> CLI_GUILD_CHALLENGE_DATA_INFO </Arg>
         </onGetChagllengeDataInfo>
 
-        <onGetSettlementRankList> <Exposed/>
-            <Arg>   UINT8   </Arg>
-            <Arg>   UINT8   </Arg>
-            <Arg>   ARRAY       <of>        CLI_DUNGEON_SETTLEMENT_RANK_DATA      </of>  </Arg>
-        </onGetSettlementRankList>
+        <onGetGuildBossHP>
+            <Arg>   UINT16  </Arg>
+            <Arg>   INT32   </Arg>
+            <Arg>   INT32   </Arg>
+        </onGetGuildBossHP>
+
+        <onEnterGuildDungeon>
+            <Arg>   UINT32  </Arg>
+            <Arg>   INT32   </Arg>
+        </onEnterGuildDungeon>
     </ClientMethods>
 </root>

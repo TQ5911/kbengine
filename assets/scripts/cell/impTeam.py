@@ -40,134 +40,7 @@ class FollowState(object):
     FOLLOW = 2    # 跟随状态
     SUSPEND = 3   # 打断状态
 
-class AvatarTeamStatisticMixin(object):
-
-    def getRealTeamId(self):
-        if self.teamId > 0:
-            return self.teamId
-        elif self.raidUUID > 0:
-            return self.raidUUID
-        return 0
-
-    def getRealTeamStub(self):
-        if self.teamId > 0:
-            return gameengine.getTeamStub(self.teamId)
-        elif self.raidUUID > 0:
-            return gameengine.getRaidStub(self.raidUUID)
-        return None
-
-    def checkTeamStaticLimit(self):
-
-        if self.getRealTeamId() > 0 and formula.isDungeonSpace(self.spaceNo):
-            dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
-            _dunType = DDID.datas[dungeonNo]['type']
-            _dunEnterType = gameengine.getDungeonEnterTypeBySpaceNo(self.spaceNo)
-            if self.teamId > 0 and not gameconst.DungeonType.isTeamDungeon(_dunType, _dunEnterType):
-                return False
-
-            if self.raidUUID > 0 and not gameconst.DungeonType.isRaidDungeon(_dunType, _dunEnterType):
-                return False
-            return True
-
-        return False
-
-
-    def addTeamStatisticPlayerVal(self, type, val):
-        if not self.checkTeamStaticLimit():
-            return
-
-        stub = self.getRealTeamStub()
-        if stub:
-            stub.addTeamStatisticPlayerVal(self.getRealTeamId(), self.gbId, type, val)
-
-    @utils.isMyself
-    @gamedecorator.limitcall(2)
-    def reqGetTeamStatisticData(self, exposed, type):
-        if not self.checkTeamStaticLimit():
-            return
-
-        stub = self.getRealTeamStub()
-        if stub:
-            stub.getTeamStatisticData(self.base, self.getRealTeamId(), type)
-
-    @utils.isMyself
-    @gamedecorator.limitcall(2)
-    def reqClearTeamStatisticData(self, exposed):
-        if not self.checkTeamStaticLimit():
-            return
-
-        # 获取暂存数据
-        dataRecord = self.getTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord, {})
-
-        dataDict = {}
-        for val in dataRecord['dmgList']:
-            gbId = val['gbId']
-            if gbId not in dataDict:
-                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0, 'dead': 0}
-            dataDict[gbId]['dmg'] += val['value']
-
-        for val in dataRecord['healList']:
-            gbId = val['gbId']
-            if gbId not in dataDict:
-                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0, 'dead': 0}
-            dataDict[gbId]['heal'] += val['value']
-
-        for val in dataRecord['hurtList']:
-            gbId = val['gbId']
-            if gbId not in dataDict:
-                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0, 'dead': 0}
-            dataDict[gbId]['hurt'] += val['value']
-
-        for val in dataRecord['deadList']:
-            gbId = val['gbId']
-            if gbId not in dataDict:
-                dataDict[gbId] = {'dmg': 0, 'heal': 0, 'hurt': 0, 'dead': 0}
-            dataDict[gbId]['dead'] += val['value']
-
-        # 结构化之后存储
-        self.setTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict, dataDict)
-
-        # 同步一下
-        self._onGetTeamStatisticData(gameconst.TeamStatisticType.DAMAGE, dataRecord['dmgList'])
-
-    def onGetTeamStatisticData(self, type, strType, data):
-        # 先暂存
-        dataRecord = self.getTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord, {})
-        dataRecord[strType] = data
-        self.setTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord, dataRecord)
-
-        if strType == gameconst.TEAM_STATISTIC_TYPE_TO_LIST[type]:
-            self._onGetTeamStatisticData(type, data)
-
-    def _onGetTeamStatisticData(self, type, data):
-
-        self.tempStatisticData = self.getTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict, {})
-
-        strKey = gameconst.TEAM_STATISTIC_TYPE_TO_KEY[type]
-
-        data = copy.deepcopy(data)
-        for val in data:
-            if val['gbId'] in self.tempStatisticData:
-                val['value'] -= self.tempStatisticData[val['gbId']].get(strKey, 0)
-
-        self.client.sendTeamStatisticData(type, data)
-
-        # INFO_MSG('onGetTeamStatisticData::', type, self.tempStatisticData, data)
-
-    def clearStatisticDataRecord(self):
-        INFO_MSG('clearStatisticDataRecord::', self.spaceNo)
-        self.popTempMiscProp(gameconst.AvatarProps.teamStatisticDataRecord)
-        self.popTempMiscProp(gameconst.AvatarProps.teamStatisticDataDict)
-
-    def gmShowTeamStatisticData(self):
-        if not self.checkTeamStaticLimit():
-            return
-        stub = self.getRealTeamStub()
-        if stub:
-            stub.gmShowStatisticData()
-
-
-class ImpTeam(AvatarTeamStatisticMixin):
+class ImpTeam(object):
     def __init__(self):
         self.teammateEntIdInAoiList = []
         self.guildUUID = 0
@@ -394,6 +267,7 @@ class ImpTeam(AvatarTeamStatisticMixin):
     @utils.isMyself
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def applyJoinTeam(self, exposed, teamId, password):
+        DEBUG_MSG('applyJoinTeam::', teamId, password)
         if self.isInTeam():
             ERROR_MSG("applyJoinTeam player is already in raid ", self.teamId)
             return
@@ -589,9 +463,10 @@ class ImpTeam(AvatarTeamStatisticMixin):
             return
 
         teamId = KBEngine.genUUID64()
-        INFO_MSG('createAndAddTeamMember', teamId, teamTarget, cfgMinLv, cfgMinScore, "", "", False, teamPlayerInfoDic)
+        recruitInfo = TMMCD.datas['raidTeamTitleDes']['value']
+        INFO_MSG('createAndAddTeamMember', teamId, teamTarget, cfgMinLv, cfgMinScore, recruitInfo, "", False, teamPlayerInfoDic)
 
-        gameengine.getTeamStub(teamId).createTeam(self.base, teamId, teamTarget, cfgMinLv, cfgMinScore, "", "", False, self._getTeamPlayerInfoDic())
+        gameengine.getTeamStub(teamId).createTeam(self.base, teamId, teamTarget, cfgMinLv, cfgMinScore, recruitInfo, "", False, self._getTeamPlayerInfoDic())
         gameengine.getTeamStub(teamId).addTeamMember(teamId, teamPlayerInfoDic)
         self.refreshTryAddTeamCD(timeout=10)
 
@@ -649,7 +524,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
             lineNo = formula.getLineNo(self.spaceNo)
             gameengine.getLineStub(lineType).updateLinePlayerInfo(lineNo, self.base, self.gbId, {'changeTeam':(oldTeamId, 0, False)})
         self.resetTryAddTeamCD()
-        self.clearStatisticDataRecord()
 
     def isCanKickTeamMember(self, gbId):
         if not self.isInTeam(gbId):
@@ -739,7 +613,6 @@ class ImpTeam(AvatarTeamStatisticMixin):
         self.resetTryAddTeamCD()
         self.resetAllTargetTypeCache()
         self.cancelAllTeamAndRaidJoinRequest()
-        self.clearStatisticDataRecord()
 
     def _cancelAllTeamJoinRequest(self):
         for teamId in self.getTempMiscProp(gameconst.AvatarProps.teamJoinRecord, {}):

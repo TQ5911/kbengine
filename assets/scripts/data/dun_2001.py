@@ -1,6 +1,8 @@
 datas ={
   "20010001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "BornPos",
     "ClassNameType": 6,
     "CustomID": "",
@@ -8,6 +10,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 20010001,
+    "Name": "\u51fa\u751f\u70b9",
     "PosX": 373.5368,
     "PosY": 15.10601,
     "PosZ": 94.118,

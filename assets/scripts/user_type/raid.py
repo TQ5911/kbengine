@@ -69,7 +69,7 @@ class RaidDungeonCacheVal(userType.UserSTDSoleType):
 # -----------------------------------------------------------------------
 
 
-class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
+class RaidVal(userType.UserSTDSoleType):
     def __init__(self, raidUUID=0, raidCapacity=0,
                  raidLeaderGBID=0, raidLeaderTeamIDX=0,
                  raidDeputyGBID=0, raidDeputyTeamIDX=0,
@@ -123,11 +123,8 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
         self.isAutoExpedition = False
         self.password = ''
         self.autoStartTimer = 0
-        self.raidRewardDatas = {}
         self.siegeWarCamp = siegeWarCamp
         self.isInDungeon = False
-
-        team.TeamStatisticMixin.__init__(self)
 
     @property
     def memberNum(self):
@@ -457,7 +454,7 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
 
         if err == gameconst.RaidErrno.RAID_OK:
             # 新来的，应该刷一下团队信息缓存
-            raidMemberVal.playerBox and raidMemberVal.playerBox.cell.onRefreshPlayerRaidCacheVal(self._buildPlayerRaidCacheVal())
+            self.refreshRaidCacheValToAllPlayers()
             if toClient:
             # broadcast message
                 raidLeaderVal = self.getRaidLeader()
@@ -1384,21 +1381,6 @@ class RaidVal(userType.UserSTDSoleType, team.TeamStatisticMixin):
             fn = "onUpdateRaidMemberLevel"
             args = (playerGBID, playerUpdateProps['level'])
             self.broadcastAllRaidMembersClient(fn, args)
-
-    def clearRaidDungeonRewardRecord(self, gbID):
-        self.raidRewardDatas.pop(gbID, None)
-
-    def addRaidDungeonRewardRecord(self, gbID, rewardList):
-        datas = self.raidRewardDatas.setdefault(gbID, {})
-        for _data in rewardList:
-            _itemId = _data['itemId']
-            _bindType = _data['bindType']
-            _itemNum = _data['itemNum']
-            a = datas.setdefault(_itemId, {})
-            b = a.setdefault(_bindType, 0)
-            a[_bindType] = b + _itemNum
-
-        self.broadcastAllMembersClient('onAddRaidDungeonRewardRecord', (self.raidUUID, gbID, rewardList))
 
     def getRaidAllMembersDict(self):
         allMembersDict = {}

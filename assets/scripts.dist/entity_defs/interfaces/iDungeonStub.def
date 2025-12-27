@@ -23,6 +23,12 @@
             <Flags>     BASE        </Flags>
             <Default>       {}              </Default>
         </argsCache>
+
+        <rebornPosCache>
+            <Type>      PYTHON      </Type>
+            <Flags>     BASE        </Flags>
+            <Default>       {}      </Default>
+        </rebornPosCache>
     </Properties>
 
     <BaseMethods>
@@ -99,6 +105,7 @@
             <Arg>           MAILBOX         </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           REBORN_TYPE     </Arg>
+            <Arg>           UINT32          </Arg>
         </onReliveInDungeon>
 
         <onDungeonStarted>
@@ -117,5 +124,19 @@
             <Arg>           SPACE_NO        </Arg>
         </requestSpaceCell>
 
+        <onCreateNewRebornPos>
+            <Arg>       SPACE_NO        </Arg>
+            <Arg>       VECTOR3        </Arg>
+        </onCreateNewRebornPos>
+
+        <getSettlementRankList>
+            <Arg>            UINT8           </Arg>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            UUID            </Arg>
+            <Arg>            MAILBOX         </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
+            <Arg>            UINT8           </Arg>
+            <Arg>            UINT8           </Arg>
+        </getSettlementRankList>
     </BaseMethods>
 </root>

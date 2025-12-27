@@ -151,7 +151,7 @@ class Space(iBase.IBase):
         # 广播删除场景ID到场景NO的映射
         # gameengine.delGlobalAppData(gameconst.GLOBALDATA_KEY_SPACEID_TO_SPACENO+':'+str(self.spaceid))
 
-        # gameengine.getStatisticStub(self.spaceno).onSpaceGone(self.spaceno)
+        gameengine.getStatisticStub(self.spaceno).onSpaceGone(self.spaceno)
 
         return
 

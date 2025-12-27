@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     "guildChallenge": _tools.RODict({
         "ID": "guildChallenge",
-        "value": "帮会讨伐",
+        "value": "帮会伏魔",
     }),
     "guildCoinOpen": _tools.RODict({
         "ID": "guildCoinOpen",
@@ -27,6 +27,10 @@ datas = _tools.RODict({
         "ID": "guildMoneyOpen",
         "value": 1,
     }),
+    "guildChallengeOpenLimitMsg": _tools.RODict({
+        "ID": "guildChallengeOpenLimitMsg",
+        "value": 54003150,
+    }),
     "guildRewardTimes": _tools.RODict({
         "ID": "guildRewardTimes",
         "value": 2,
@@ -34,6 +38,14 @@ datas = _tools.RODict({
     "countdownOpen": _tools.RODict({
         "ID": "countdownOpen",
         "value": 300,
+    }),
+    "guildChallengeReservationCannot": _tools.RODict({
+        "ID": "guildChallengeReservationCannot",
+        "value": 54003152,
+    }),
+    "reservationCannotMsg": _tools.RODict({
+        "ID": "reservationCannotMsg",
+        "value": "距离开启时间小于{0}分钟时，不可取消预约",
     }),
     "countdownPrepare": _tools.RODict({
         "ID": "countdownPrepare",
@@ -61,11 +73,11 @@ datas = _tools.RODict({
     }),
     "guildChallenge_win": _tools.RODict({
         "ID": "guildChallenge_win",
-        "value": "帮会讨伐胜利",
+        "value": "帮会伏魔胜利",
     }),
     "guildChallenge_lose": _tools.RODict({
         "ID": "guildChallenge_lose",
-        "value": "帮会讨伐失败",
+        "value": "帮会伏魔失败",
     }),
     "guildChallenge_winTitle": _tools.RODict({
         "ID": "guildChallenge_winTitle",
@@ -125,10 +137,38 @@ datas = _tools.RODict({
     }),
     "costInfoNoticeTxt": _tools.RODict({
         "ID": "costInfoNoticeTxt",
-        "value": "消耗{0}预约开启帮会讨伐{1}，讨伐将于{2}开始",
+        "value": "消耗{0}预约开启帮会伏魔 - {1}，\n活动将于{2}开始",
     }),
     "guildOpenTimes": _tools.RODict({
         "ID": "guildOpenTimes",
         "value": 2,
+    }),
+    "guildReserveTimerStr": _tools.RODict({
+        "ID": "guildReserveTimerStr",
+        "value": "{0}后副本开启",
+    }),
+    "guildChallengeProhibitExit": _tools.RODict({
+        "ID": "guildChallengeProhibitExit",
+        "value": 54003151,
+    }),
+    "settlementTime": _tools.RODict({
+        "ID": "settlementTime",
+        "value": 120,
+    }),
+    "guildChallengeOpen": _tools.RODict({
+        "ID": "guildChallengeOpen",
+        "value": 54003153,
+    }),
+    "guildChallengeCancel": _tools.RODict({
+        "ID": "guildChallengeCancel",
+        "value": 54003155,
+    }),
+    "guildChallengeOpenNot": _tools.RODict({
+        "ID": "guildChallengeOpenNot",
+        "value": 54003156,
+    }),
+    "guildChallengeTimeNot": _tools.RODict({
+        "ID": "guildChallengeTimeNot",
+        "value": 54003157,
     })
 })

@@ -20,7 +20,7 @@ import message_Message_def as MMD
 import conflict_conflict_def as CCD
 import const_const as CONST
 import gamePlay_gamePlay as GGD
-
+import branchData_set as BDS
 import gametimer
 
 
@@ -201,6 +201,10 @@ class ImpLine(object):
             self._switchLineInternal(toLineNo, toPosition, extra=extra)
 
         else:
+            if checkCode == gameconst.EnterLineCode.FAIL_MERGE_LINE:
+                self.showMsg(BDS.datas["Branch_mergeChangeMsg"]["value"], [])
+            else:
+                self.showMsg(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
             extra = extra if extra is not None else {}
             failFunc = extra.get("failCallback", '')
             failArgs = extra.get("callbackArgs", ())
@@ -218,6 +222,10 @@ class ImpLine(object):
         else:
             self._commonNeedCast(CCD.datas.teleportCast, gameconst.State.Teleporting, gameconst.CastType.teleport,
                                 _cbfn, _cbargs)
+
+    def onMergeLine(self, toLineNo):
+        DEBUG_MSG("onMergeLine", self.spaceNo, toLineNo)
+        self._switchLineInternalAfterCast(toLineNo, None, None, {})
 
     def _switchLineInternalAfterCast(self, toLineNo, toPosition, toDir, extra):
         lineType = formula.getMapId(self.spaceNo)
@@ -378,7 +386,7 @@ class ImpLine(object):
         if not mapData:
             ERROR_MSG('onCheckMapUnlocked but mapData invalid:', mapId)
             return False
-    
+
         checkResult = True
         openTask = mapData['openTask']
         if openTask:

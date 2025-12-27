@@ -30,18 +30,20 @@ import iMonsterGrp
 import iRoute
 import iLargeEnt
 import iClient
-import gamePlay_gamePlay as GP_GP
 import sMath
-import iSiegeWarMonster
+
+import gamePlay_gamePlay as GP_GP
 import message_Message_def as M_M_D
 import creep_countRefresh as CCR
-import iMineWarMonster
 
+import iSiegeWarMonster
+import iMineWarMonster
+import iGuildBossMonster
 
 class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFubenSpace,
               iGameEntity.IGameEntity, iEntityRefresh.IEntityRefresh, iMonsterDungeon.IMonsterDungeon,
               iMonsterGrp.IMonsterGrp, iRoute.IRoute, iClient.IClient, iSiegeWarMonster.ISiegeWarMonster,
-              iLargeEnt.ILargeEnt, iMineWarMonster.IMineWarMonster):
+              iLargeEnt.ILargeEnt, iMineWarMonster.IMineWarMonster, iGuildBossMonster.IGuildBossMonster):
     IsMonster = True
 
     MOVE_METHOD_NAV = 1
@@ -64,6 +66,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         EventMgr.EventMgr.__init__(self)
         iGameEntity.IGameEntity.__init__(self)
         iMineWarMonster.IMineWarMonster.__init__(self)
+        iGuildBossMonster.IGuildBossMonster.__init__(self)
 
         monData = creep_base.datas[self.monsterId]
         if not self.name:
@@ -231,6 +234,13 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             countRefreshData = CCR.datas.get(dataKey, None)
             if not countRefreshData:
                 continue
+            
+            # 检查计数怪物配置和刷新怪物配置
+            countMonsterIDs = countRefreshData['countMonsterID']
+            refreshMonsterIDs = countRefreshData['refreshMonsterID']
+            if (not countMonsterIDs or self.monsterId not in countMonsterIDs) and (not refreshMonsterIDs or self.instanceId not in refreshMonsterIDs):
+                continue
+
             combatAreaID = countRefreshData['combatAreaID']
             if combatAreaID:
                 ret, _ = self._checkCombatAreas([combatAreaID])
@@ -238,6 +248,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                     self.needCountNum = True
                     self.refreshDataKey = dataKey
                     self.combatAreaID = combatAreaID
+                    self.combatRefreshID = '{}_{}'.format(combatAreaID, dataKey)
+                    DEBUG_MSG("Monster::_initCountRefresh: {}, {}, {}, {}, {}".format(mapID, combatAreaID, self.monsterId, self.instanceId, self.combatRefreshID))
                     break
 
     def _createMonsterGrpInDungeon(self):
@@ -386,6 +398,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         elif userData == gametimer.ENEMY_TRAP_UNVISIBLE_CHECK:
             self.checkUnVisibleTargets()
+        elif userData == gametimer.GUILD_BOSS_SYNC_HP:
+            self.onTimerSyncGuildBossHP()
         else:
             super(Monster, self).onTimer(tid, userData)
 
@@ -430,7 +444,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         if not isWitnessed:
             if self.needCountRefresh:
                 self.doMonsterDestroy()
-                self.spaceMgr.onMonsterDestroy(self.combatAreaID, self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
+                self.spaceMgr.onMonsterDestroy(self.combatRefreshID, self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
 
     def _preSafeDestory(self):
         """
@@ -552,6 +566,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         # 矿战处理逻辑，内部会判断是否在矿战场景
         self.notifyMineWarOnDead(killer)
 
+        self.notifyGuildBossOnDead(killer)
+
         if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
             self.spaceMgr.onWorldBossDead(self.refreshTime)
         elif self.isNeedRefresh():
@@ -565,7 +581,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         # 需要计数或者刷新的怪物:
         if self.needCountRefresh or self.needCountNum:
-            self.spaceMgr.onMonsterDestroy(self.combatAreaID, self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
+            self.spaceMgr.onMonsterDestroy(self.combatRefreshID, self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
 
         try:
             for teamId in self.teamMarkDict.keys():
@@ -719,6 +735,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         hpVal = super(Monster, self).modifyHP(hpVal, releaseRoleId, srcType, srcId, forceDead, context)
         self.notifySiegeWarOnModifyHP(hpVal)
         self.notifyMineWarOnModifyHP(hpVal, releaseRoleId)
+        self.notifyGuildBossOnModifyHP(hpVal)
         return hpVal
 
     def getAIParam(self):

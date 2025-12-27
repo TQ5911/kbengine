@@ -9,7 +9,7 @@
 
         <pkModelBefore>
             <Type>          UINT8                   </Type>
-            <Flags>         OWN_CLIENT              </Flags>
+            <Flags>         CELL_PRIVATE            </Flags>
             <Persistent>    true                    </Persistent>
         </pkModelBefore>
 

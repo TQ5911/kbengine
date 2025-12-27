@@ -27,6 +27,11 @@
             <Type>      PY_DICT         </Type>
             <Flags>     BASE            </Flags>
         </cubeRooms>
+
+        <randomTeleporterPool>
+            <Type>      PY_LIST         </Type>
+            <Flags>     BASE            </Flags>
+        </randomTeleporterPool>
     </Properties>
 
     <BaseMethods>

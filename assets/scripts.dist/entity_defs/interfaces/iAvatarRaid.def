@@ -23,8 +23,8 @@
         </raidUUIDBase>
 
         <raidAuth>
-            <Type>      UINT8         </Type>
-            <Flags>     ALL_CLIENTS     </Flags>
+            <Type>      UINT8           </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
         </raidAuth>
 
         <autoRaidMatchStartTime>
@@ -34,7 +34,7 @@
         </autoRaidMatchStartTime>
 
         <autoRaidMatchTarget>
-            <Type>          UINT8      </Type>
+            <Type>          TEAMTARGET      </Type>
             <Flags>         OWN_CLIENT      </Flags>
             <Default>       0               </Default>
         </autoRaidMatchTarget>
@@ -86,10 +86,13 @@
         <!--个人创建团队-->
         <createRaidLonely>
             <Exposed/>
-            <Arg>   UINT8   </Arg>
-            <Arg>  UINT32  </Arg>
-            <Arg>  BOOL  </Arg>
-            <Arg>  BOOL  </Arg>
+            <Arg>           UINT8           </Arg>
+            <Arg>           TEAMTARGET      </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           STRING          </Arg>
+            <Arg>           BOOL            </Arg>
         </createRaidLonely>
 
         <!--当前队伍创建团队-->
@@ -106,23 +109,29 @@
         <!--团长设置团队目标-->
         <setRaidTarget>
             <Exposed/>
-            <Arg>  UINT32  </Arg>
-            <Arg>  UINT32  </Arg>
-            <Arg>  UINT32  </Arg>
+            <Arg>  UINT32       </Arg>
+            <Arg>  UINT32       </Arg>
+            <Arg>  UNICODE      </Arg>
+            <Arg>  STRING       </Arg>
+            <Arg>  BOOL         </Arg>
         </setRaidTarget>
 
         <onSetRaidTargetAllMemberNotify>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   UINT32          </Arg>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   STRING          </Arg>
+            <Arg>   BOOL            </Arg>
         </onSetRaidTargetAllMemberNotify>
 
         <!--个人申请加入团队-->
         <applyJoinRaidLonely>
             <Exposed/>
             <Arg>   RAID_ID     </Arg>
+            <Arg>   STRING      </Arg>
         </applyJoinRaidLonely>
 
         <onApplyJoinRaidLonelySucc>
@@ -206,6 +215,7 @@
 
         <tryBeInvitedInRaid>
             <Arg>   MAILBOX     </Arg>
+            <Arg>   PYTHON      </Arg>
         </tryBeInvitedInRaid>
 
         <tryApplyInviteRaidOffline>
@@ -229,17 +239,18 @@
         </applyInviteRaidWithTeam>
 
         <invitedPlayerOnApplyInvitedRaid>
-            <Arg>   RAID_ID     </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   UNICODE     </Arg>
-            <Arg>   PYTHON      </Arg>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   PYTHON          </Arg>
         </invitedPlayerOnApplyInvitedRaid>
 
         <onReplyInviteRaidLonelyWithLonely>
-            <Arg>   MAILBOX     </Arg>
+            <Arg>   MAILBOX         </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   PY_DICT     </Arg>
+            <Arg>   PY_DICT         </Arg>
         </onReplyInviteRaidLonelyWithLonely>
 
         <!--玩家回应单独邀请-->
@@ -308,7 +319,7 @@
             <Arg>   RAID_ID     </Arg>
             <Arg>   PYTHON  </Arg>
         </onBeKickedOutRaidByRaidDeputy>
-        
+
         <onRaidTeamCaptainKickOutRaidMember>
             <Arg>   RAID_ID     </Arg>
             <Arg>   UINT8   </Arg>
@@ -474,21 +485,20 @@
 
         <turnOffRaidMicsByForbidVoiceChat>
         </turnOffRaidMicsByForbidVoiceChat>
-        
+
         <reqRaidPlayerAutoMatch>
             <Exposed/>
-            <Arg>           UINT8       </Arg>
+            <Arg>           TEAMTARGET       </Arg>
         </reqRaidPlayerAutoMatch>
-        
+
         <reqRaidPlayerStopAutoMatch>
             <Exposed/>
         </reqRaidPlayerStopAutoMatch>
-        
+
         <reqRaidAutoMatch>
             <Exposed/>
-            <Arg>           BOOL           </Arg>
         </reqRaidAutoMatch>
-        
+
         <reqRaidStopAutoMatch>
             <Exposed/>
         </reqRaidStopAutoMatch>
@@ -499,7 +509,7 @@
 
         <onCellRaidPlayerStartAutoMatch>
             <Arg>           LONGTIME         </Arg>
-            <Arg>           UINT8       </Arg>
+            <Arg>           TEAMTARGET       </Arg>
         </onCellRaidPlayerStartAutoMatch>
 
         <onCellRaidPlayerMatchedSucc>
@@ -507,32 +517,41 @@
 
         <onCellRaidPlayerAutoMatchTimeout>
         </onCellRaidPlayerAutoMatchTimeout>
-
-        <publishRaid>
-            <Exposed/>
-            <Arg>   BOOL     </Arg>
-            <Arg>   UNICODE     </Arg>
-        </publishRaid>
-
-        <reqSetRaidAutoInPlace>
-            <Exposed/>
-            <Arg>   BOOL     </Arg>
-        </reqSetRaidAutoInPlace>
-
-        
         <onGetRaidListFinished>
             <Arg>           UINT32          </Arg>
-            <Arg>           UINT8           </Arg>
+            <Arg>           TEAMTARGET           </Arg>
         </onGetRaidListFinished>
 
         <reqGetRaidList><Exposed/>
             <Arg>           LONGTIME           </Arg>
-            <Arg>           UINT8              </Arg>
+            <Arg>           TEAMTARGET              </Arg>
         </reqGetRaidList>
 
         <onPlayerMatchedRaid>
             <Arg>           TEAMID           </Arg>
         </onPlayerMatchedRaid>
+
+        <reqAddRaidMarkMember> <Exposed/>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           ENTITY_ID           </Arg>
+            <Arg>           POSITION_ARG    </Arg>
+        </reqAddRaidMarkMember>
+        <reqDelRaidMarkMember> <Exposed/>
+            <Arg>           UINT8           </Arg>
+            <Arg>           UINT8           </Arg>
+        </reqDelRaidMarkMember>
+        <reqChangeRaidOnlyLeader> <Exposed/>
+            <Arg>           BOOL            </Arg>
+        </reqChangeRaidOnlyLeader>
+
+        <reqJoinRaid> <Exposed/>
+            <Arg> RAID_ID </Arg>
+            <Arg> STRING  </Arg>
+        </reqJoinRaid>
+        
     </CellMethods>
 
     <ClientMethods>
@@ -651,39 +670,32 @@
 
         <!--团长邀请入团后被邀请者(玩家/队长)回调-->
         <onBeInvitedRaidByLeader>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UUID        </Arg>
-            <Arg>   TEAMID      </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UUID            </Arg>
+            <Arg>   TEAMID          </Arg>
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->
         </onBeInvitedRaidByLeader>
 
-        <!--副团长邀请入团后被邀请者(玩家/队长)回调-->
-        <onBeInvitedRaidByDeputy>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UUID        </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
-            <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
-            <Arg>   UNICODE         </Arg>      <!--团长名字-->
-        </onBeInvitedRaidByDeputy>
-
         <!--队长邀请入团后被邀请者(玩家)回调-->
         <onBeInvitedRaidByTeamCaptain>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UUID        </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UUID            </Arg>
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->
-            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8           </Arg>
         </onBeInvitedRaidByTeamCaptain>
 
         <!--团员提议邀请入团后被邀请者(玩家/队长)回调-->
         <onBeInvitedRaidByMember>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UUID        </Arg>
-            <Arg>   TEAMID      </Arg>
+            <Arg>   RAID_ID         </Arg>
+            <Arg>   TEAMTARGET      </Arg>
+            <Arg>   UUID            </Arg>
+            <Arg>   TEAMID          </Arg>
             <Arg>   PLAYER_GBID     </Arg>      <!--邀请者GBID-->
             <Arg>   UNICODE         </Arg>      <!--邀请者名字-->
             <Arg>   UNICODE         </Arg>      <!--团长名字-->
@@ -700,30 +712,13 @@
         <!--客户端设置新团队目标后回调-->
         <onSetRaidTarget>
             <Arg>   RAID_ID     </Arg>
+            <Arg>   TEAMTARGET  </Arg>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
-        </onSetRaidTarget>
-
-        <!--团长发起全团check后客户端回调-->
-        <raidStandbyCheckNotify>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   UNICODE     </Arg>  <!--json格式, {playerGBID_1: true/false/null(确认/拒绝/未反馈)}-->
-        </raidStandbyCheckNotify>
-
-        <!--进入团队副本时发起全团check后客户端回调-->
-        <raidEnterDungeonStandbyCheckNotify>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   DUNGEON_NO  </Arg>
-            <Arg>   UNICODE     </Arg>  <!--json格式, {playerGBID_1: true/false/null(确认/拒绝/未反馈)}-->
-        </raidEnterDungeonStandbyCheckNotify>
-
-        <!--使客户端更新此团员的check情况-->
-        <onUpdateStandbyCheckData>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   STRING      </Arg>
             <Arg>   BOOL        </Arg>
-        </onUpdateStandbyCheckData>
+        </onSetRaidTarget>
 
         <!--最终检查情况, 全团广播, 客户端回调-->
         <onReplyRaidStandbyChecker>
@@ -731,67 +726,11 @@
             <Arg>   BOOL    </Arg>
         </onReplyRaidStandbyChecker>
 
-        <onReplyRaidStandbyCheckerBeforeEnterDungeon>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   DUNGEON_NO  </Arg>
-            <Arg>   BOOL    </Arg>
-        </onReplyRaidStandbyCheckerBeforeEnterDungeon>
-
-        <onSwitchRaidMicsMode>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   UINT8       </Arg>
-            <Arg>   UINT8       </Arg>
-        </onSwitchRaidMicsMode>
-
-        <onSyncAllRaidMemberMiscStatus>
-            <Arg>   RAID_ID     </Arg>
-            <!-- on -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-            <!-- off -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-            <!-- block -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-        </onSyncAllRaidMemberMiscStatus>
-
-        <onTurnOnRaidMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-        </onTurnOnRaidMemberMics>
-
-        <onTurnOffRaidMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <!-- 是否因团长禁言被闭麦 -->
-            <Arg>   BOOL        </Arg>
-        </onTurnOffRaidMemberMics>
-
         <onUnblockRaidMemberMisc>
             <Arg>   RAID_ID     </Arg>
             <Arg>   TEAMID      </Arg>
             <Arg>   PLAYER_GBID     </Arg>
         </onUnblockRaidMemberMisc>
-
-        <onBlockAllRaidMemberMics>
-            <Arg>   PLAYER_GBID      </Arg>
-            <Arg>   RAID_ID     </Arg>
-        </onBlockAllRaidMemberMics>
-
-        <onUnblockAllRaidMemberMics>
-            <Arg>   PLAYER_GBID      </Arg>
-            <Arg>   RAID_ID     </Arg>
-        </onUnblockAllRaidMemberMics>
-
-        <onRaidStopAutoMatch>
-        </onRaidStopAutoMatch>
-
-        <onRaidStartAutoMatch>
-            <Arg>           LONGTIME           </Arg>
-        </onRaidStartAutoMatch>
 
         <onRaidPlayerStartAutoMatch>
         </onRaidPlayerStartAutoMatch>
@@ -799,23 +738,48 @@
         <onRaidPlayerStopAutoMatch>
         </onRaidPlayerStopAutoMatch>
 
-        <onPublishRaid>
-        	<Arg>           BOOL            </Arg>
-        	<Arg>           UNICODE         </Arg>
-        </onPublishRaid>
-
-        <onSetRaidAutoInPlace>
-        	<Arg>           BOOL            </Arg>
-        </onSetRaidAutoInPlace>
-
         <onGetRaidList>
             <Arg>           LONGTIME         </Arg>
-            <Arg>           UINT8       </Arg>
+            <Arg>           TEAMTARGET       </Arg>
             <Arg>      ARRAY <of> RAID_CLIENT_VAL  </of>      </Arg>
         </onGetRaidList>
         <onGetAllRaidList>
-            <Arg>           UINT8       </Arg>
+            <Arg>           TEAMTARGET       </Arg>
         </onGetAllRaidList>
+
+        <onChangeRaidMark>
+            <Arg>           CLIENT_TEAM_MARK_INFO           </Arg>
+        </onChangeRaidMark>
+
+        <onUpdateRaidMemberPos>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           SPACE_NO        </Arg>
+            <Arg>           POSITION_ARG    </Arg>
+        </onUpdateRaidMemberPos>
+
+        <onUpdateRaidMemberScore>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UINT32          </Arg>
+        </onUpdateRaidMemberScore>
+
+        <onUpdateRaidMemberHP>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
+        </onUpdateRaidMemberHP>
+
+        <onUpdateRaidMemberLevel>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UINT32          </Arg>
+        </onUpdateRaidMemberLevel>
+
+        <onApplyJoinRaidLonelyFailed>
+            <Arg>           UINT16       </Arg>
+            <Arg>           RAID_ID       </Arg>
+            <Arg>           UINT16       </Arg>
+            <Arg>           UINT32       </Arg>
+            <Arg>           STRING       </Arg>
+        </onApplyJoinRaidLonelyFailed>
     </ClientMethods>
 
 </root>

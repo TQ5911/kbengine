@@ -294,10 +294,18 @@ datas = _tools.RODict({
         "sort": 1,
         "antiStudio": 1,
         "auctionCategory": 0
+    }),
+    2011: _tools.RODict({
+        "ID": 2011,
+        "type": 2,
+        "subType": 11,
+        "sort": 1,
+        "antiStudio": 1,
+        "auctionCategory": 0
     })
 })
 minKey = 0
-maxKey = 2010
+maxKey = 2011
 
 ItemTypeSortDic = _tools.RODict({ 
         0:10,
@@ -335,6 +343,7 @@ ItemTypeSortDic = _tools.RODict({
         2008:1,
         2009:1,
         2010:1,
+        2011:1,
 })
 
 

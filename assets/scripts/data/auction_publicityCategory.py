@@ -83,13 +83,13 @@ datas = _tools.RODict({
     7: _tools.RODict({
         "ID": 7,
         "qualityAbove": None,
-        "itemList": (30990121, 30990122, 30990123, 30990124, 30990125, 30990126, 30990127)
+        "itemList": (30990121, 30990122, 30990123, 30990124)
     })
 })
 minKey = 1
 maxKey = 403
 
-itemDataDic = {30000220: True, 30000221: True, 30000223: True, 30000224: True, 30000225: True, 30000226: True, 30990121: True, 30990122: True, 30990123: True, 30990124: True, 30990125: True, 30990126: True, 30990127: True}
+itemDataDic = {30000220: True, 30000221: True, 30000223: True, 30000224: True, 30000225: True, 30000226: True, 30990121: True, 30990122: True, 30990123: True, 30990124: True}
 
 
 equipDataDic = {1: 2, 2: 2, 3: 2, 4: 2, 8: 2, 5: 2, 6: 2, 7: 2}

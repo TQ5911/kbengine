@@ -134,7 +134,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         DEBUG_MSG("onGetCoinAuctionPlayerInfo::", auctionItems, extra)
         auctionItemUUIDList = [auctionItem.auctionItemUUID for auctionItem in auctionItems]
         self.coinAuctionInfo.updatePlayerCache(auctionItemUUIDList, extra.get('cacheSyncT', utils.getNow()))
-        self.client.onGetCoinAuctionPlayerInfo(True, self.coinAuctionInfo.unlockedGrids, auctionItems)
+        self.client.onGetCoinAuctionPlayerInfo(True, self.coinAuctionInfo.unlockedGrids, self.transServerAuctionItemToClientAuctionItemList(auctionItems))
 
     # def selfGetAuctionPlayerInfo(self):
     #     DEBUG_MSG("selfGetAuctionPlayerInfo::")
@@ -185,7 +185,50 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
     def onSearchCoinAuctionItemsByItemId(self, itemIds, limit, offset, searchResults, totalNum, extra, isPublicity):
         INFO_MSG("onSearchAuctionItemsByItemId::", itemIds, limit, offset, totalNum, extra, isPublicity)
-        self.client.onSearchCoinAuctionItemsByItemId(itemIds, limit, offset, searchResults, totalNum, isPublicity)
+        if len(searchResults) > 0:
+            gbIds = []
+            for auctionItem in searchResults:
+                gbIds.append(auctionItem.fromPlayerGBID)
+            func = functools.partial(self.client.onSearchCoinAuctionItemsByItemId, itemIds, limit, offset, self.transServerAuctionItemToClientAuctionItemList(searchResults), totalNum, isPublicity)
+            redisUtils.RedisUtils.getUsersInfo(gbIds, functools.partial(self.asyncGetNames, searchResults, func))
+        else:
+            self.client.onSearchCoinAuctionItemsByItemId(itemIds, limit, offset, self.transServerAuctionItemToClientAuctionItemList(searchResults), totalNum, isPublicity, [], [])
+
+    def asyncGetNames(self, auctionItems, func, userInfos):
+        INFO_MSG("asyncGetNames::", auctionItems, userInfos)
+        sNameList = []
+        pNameList = []
+        userInfoCache = {}
+        for userInfo in userInfos:
+            userInfoCache[userInfo.gbId] = userInfo.name
+
+        for auctionItem in auctionItems:
+            # 构建服务器名列表
+            serverId = auctionItem.extraInfo.get('serverId', 0)
+            if not serverId:
+                sNameList.append('')
+                WARNING_MSG("asyncGetNames:: no server id ", auctionItem.fromPlayerGBID)
+            else:
+                serverData = gameglobal.mapleServerInfo.get(int(serverId), None)
+                if not serverData:
+                    WARNING_MSG("asyncGetNames:: no server data ", auctionItem.fromPlayerGBID, serverId)
+                    sNameList.append('')
+                else:
+                    sName = serverData.get('server_name', None)
+                    if not sName:
+                        WARNING_MSG("asyncGetNames:: no server name data ", auctionItem.fromPlayerGBID, serverId)
+                        sNameList.append('')
+                    else:
+                        sNameList.append(sName)
+            # 构建玩家名字列表
+            pName = userInfoCache.get(auctionItem.fromPlayerGBID, None)
+            if not pName:
+                WARNING_MSG("asyncGetNames:: no user ", auctionItem.fromPlayerGBID, serverId)
+                pNameList.append('')
+            else:
+                pNameList.append(pName)
+
+        func(sNameList, pNameList)
 
     def _preSaleItemInCoinAuction(self):
         return None, gameconst.AuctionErrno.AUCTION_OK
@@ -281,11 +324,11 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             auctionServiceFee = AUT_CONST.datas['auctionServiceFee']['value']
             deductWealthVal = dropAward.DeductWealthVal()
             deductWealthVal.addWealthByItemId(self.coinItemId, auctionServiceFee)
-            self.deductWealth(m_src, deductWealthVal, m_opUUID, m_desc)
 
             m_bagData = self.getBagByType(m_bagType)
             m_bagData.deductItemsByGrid(self, m_gridDict, m_opUUID, m_src, m_desc)
-
+            self.deductWealth(m_src, deductWealthVal, m_opUUID, m_desc)
+            
         self.stub.doSaleItem(auctionItem.auctionItemUUID, self.gbID, extra, result)
 
     @unlockCoinAuction
@@ -324,7 +367,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
         self.client.onSaleItemInCoinAuction(auctionItemData.itemId,
                                             auctionItemData.uniqueId,
-                                            auctionItemData)
+                                            self.transServerAuctionItemToClientAuctionItem(auctionItemData))
 
 
     # ---------------------------------------------------------------
@@ -747,7 +790,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
     def onGetCurrentSaleItemInfoResp(self, itemId, lastPrice, avgPrice, extra, auctionItems, isPublicity):
         INFO_MSG("onGetCurrentSaleItemInfoResp::", itemId, lastPrice, avgPrice, extra, auctionItems, isPublicity)
-        self.client.onGetCurrentSaleItemInfoResp(itemId, lastPrice, avgPrice, auctionItems, isPublicity)
+        self.client.onGetCurrentSaleItemInfoResp(itemId, lastPrice, avgPrice, self.transServerAuctionItemToClientAuctionItemList(auctionItems), isPublicity)
 
     # ---------------------------------------------------------------
 
@@ -1068,4 +1111,21 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
     def onGetAuctionItemsByAuctionIdsResp(self, categoryId, auctionItems):
         DEBUG_MSG("onGetAuctionItemsByAuctionIdsResp::", categoryId, auctionItems)
-        self.client.onGetAuctionItemsByAuctionIdsResp(categoryId, auctionItems)
+        if len(auctionItems) > 0:
+            gbIds = []
+            for auctionItem in auctionItems:
+                gbIds.append(auctionItem.fromPlayerGBID)
+            func = functools.partial(self.client.onGetAuctionItemsByAuctionIdsResp, categoryId, self.transServerAuctionItemToClientAuctionItemList(auctionItems))
+            redisUtils.RedisUtils.getUsersInfo(gbIds, functools.partial(self.asyncGetNames, auctionItems, func))
+        else:
+            self.client.onGetAuctionItemsByAuctionIdsResp(categoryId, self.transServerAuctionItemToClientAuctionItemList(auctionItems), [], [])
+
+    def transServerAuctionItemToClientAuctionItem(self, auctionItem):
+        return auctionItem.toClientData()
+
+    def transServerAuctionItemToClientAuctionItemList(self, auctionItemList):
+        auctionItemClientList = []
+        if auctionItemList:
+            for auctionItem in auctionItemList:
+                auctionItemClientList.append(self.transServerAuctionItemToClientAuctionItem(auctionItem))
+        return auctionItemClientList

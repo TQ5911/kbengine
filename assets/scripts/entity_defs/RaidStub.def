@@ -617,38 +617,10 @@
             <Arg>   STRING      </Arg>
             <Arg>   PY_DICT     </Arg>
         </reqJoinRaid>
-
-        <addRaidDungeonRewardRecord>
-            <Arg>           RAID_ID                                                 </Arg>
-            <Arg>           PLAYER_GBID                                             </Arg>
-            <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
-        </addRaidDungeonRewardRecord>
-
-        <clearRaidDungeonRewardRecord>
-            <Arg>           RAID_ID                                                 </Arg>
-            <Arg>           PLAYER_GBID                                             </Arg>
-        </clearRaidDungeonRewardRecord>
-
-        <addTeamStatisticPlayerVal>
-            <Arg>       TEAMID          </Arg>
-            <Arg>       PLAYER_GBID     </Arg>
-            <Arg>       UINT8           </Arg>
-            <Arg>       UINT32          </Arg>
-        </addTeamStatisticPlayerVal>
-
-        <getTeamStatisticData>
-            <Arg>       MAILBOX        </Arg>
-            <Arg>       TEAMID          </Arg>
-            <Arg>       UINT8           </Arg>
-        </getTeamStatisticData>
         
         <setInDungeon>
             <Arg>       RAID_ID          </Arg>
         </setInDungeon>
 
-        <getTeamStatisticFinalData>
-            <Arg>       MAILBOX        </Arg>
-            <Arg>       TEAMID          </Arg>
-        </getTeamStatisticFinalData>
     </BaseMethods>
 </root>

@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "40060002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -27,6 +28,7 @@ datas ={
       "Monster": {
         "40060003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -50,6 +52,7 @@ datas ={
         },
         "40060004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -73,6 +76,7 @@ datas ={
         },
         "40060005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -96,6 +100,7 @@ datas ={
         },
         "40060006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -119,6 +124,7 @@ datas ={
         },
         "40060007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -142,6 +148,7 @@ datas ={
         },
         "40060008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -165,6 +172,7 @@ datas ={
         },
         "40060009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -188,6 +196,7 @@ datas ={
         },
         "40060010": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -211,6 +220,7 @@ datas ={
         },
         "40060011": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -234,6 +244,7 @@ datas ={
         },
         "40060012": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -259,6 +270,7 @@ datas ={
       "AirWall": {
         "40068002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -280,6 +292,7 @@ datas ={
         },
         "40068003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -301,6 +314,7 @@ datas ={
         },
         "40068004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -322,6 +336,7 @@ datas ={
         },
         "40068005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -343,6 +358,7 @@ datas ={
         },
         "40068006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -364,6 +380,7 @@ datas ={
         },
         "40068007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -385,6 +402,7 @@ datas ={
         },
         "40068008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -406,6 +424,7 @@ datas ={
         },
         "40068009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -427,6 +446,7 @@ datas ={
         },
         "40068010": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -448,9 +468,11 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "RebornPos": {
       "40068001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",

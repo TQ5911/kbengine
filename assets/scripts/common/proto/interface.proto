@@ -36,6 +36,12 @@ message SetAccountCompResult
     uint32 entityID = 2;
 }
 
+message AntiAddictionData
+{
+    uint32 timeType = 1;
+    uint64 timestamp = 2;
+}
+
 // Interface 进程的 service
 service Interface
 {
@@ -47,6 +53,7 @@ service Interface
     rpc interfaceDataReload(ListVal) returns(Void);
     rpc syncRegisterCount(IntVal) returns(Void);
     rpc setAccountComp(SetAccountCompVal) returns(Void);
+    rpc updateAntiAddictionData(AntiAddictionData) returns(Void);
 }
 
 // BaseApp 的 service

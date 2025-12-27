@@ -128,17 +128,18 @@ public class KBEMain : MonoBehaviour
 
 #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
 		paramDic.Add("operatingSystem", SystemInfo.operatingSystem);
-		paramDic.Add("operator", "");
+		//paramDic.Add("operator", "");
 		paramDic.Add("networkState",MyUtils.NetworkState());
-		paramDic.Add("loginChannel", SDKManager.Channel);
+		//paramDic.Add("loginChannel", SDKManager.Channel);
 #else
-        paramDic.Add("loginChannel", "");
-		paramDic.Add("operatingSystem","");
-		paramDic.Add("operator", "");
-		paramDic.Add("networkState", "");
+        //paramDic.Add("loginChannel", "");
+        paramDic.Add("operatingSystem", SystemInfo.operatingSystem);
+        //paramDic.Add("operator", "");
+        paramDic.Add("networkState", "");
 #endif
+        paramDic.Add("packageSource", MainStart.Instance.m_packageSource);
 
-        string oaidStr = "";
+    string oaidStr = "";
 #if UNITY_ANDROID && !UNITY_EDITOR
 
         paramDic["imei"] = MyUtils.GetAndroidDeviceIMEI();

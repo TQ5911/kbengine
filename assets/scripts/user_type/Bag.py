@@ -136,13 +136,9 @@ class Bag(BaseBag.BaseBag):
             if item.isEquipmentItem():
                 tmpEquipList.append(item)
                 continue
-
-            if str(item.itemId) not in tmpItem:
-                tmpItem[str(item.itemId)] = 0
-            tmpItem[str(item.itemId)] = tmpItem[str(item.itemId)] + mergeNum
-
-            newCount = self.getItemCount(item.itemId, item.bindType)
-            #owner.makeItemFlowLog(self.bagType, item, mergeNum, opUUID, src, newCount, detail)
+            
+            datas = tmpItem.setdefault(item.itemId, {})
+            datas[item.bindType] = datas.get(item.bindType, 0) + mergeNum
 
         for gridId, planItems in planDict['new'].items():
             item = self.getItemObjByGridId(gridId)
@@ -154,21 +150,21 @@ class Bag(BaseBag.BaseBag):
             if item.isEquipmentItem():
                 tmpEquipList.append(item)
                 continue
-            if str(item.itemId) not in tmpItem:
-                tmpItem[str(item.itemId)] = 0
-            tmpItem[str(item.itemId)] = tmpItem[str(item.itemId)] + sumNum
 
-        extraDesp = dataUtils.getAddItemExtraDesp(src)
+            datas = tmpItem.setdefault(item.itemId, {})
+            datas[item.bindType] = datas.get(item.bindType, 0) + sumNum
 
         popRewardUUID, itemsDictList, _ = owner.getPopRewardItemsDict(opUUID, detail, notify)
 
         if notify:
-            for itemId, sumNum in tmpItem.items():
-                itemsDictList[0][int(itemId)] = itemsDictList[0].get(int(itemId), 0) + sumNum
+            for itemId, bindDatas in tmpItem.items():
+                for bindType, itemNum in bindDatas.items():
+                    datas = itemsDictList[0].setdefault(itemId, {})
+                    datas[bindType] = datas.get(bindType, 0) + itemNum
 
         if notify:
             for item in tmpEquipList:
-                itemsDictList[1].append([item.itemId, item.uniqueId])
+                itemsDictList[1].append([item.itemId, item.uniqueId, item.bindType])
 
         if src != AAC_AACDD.datas.BONUS_SRC_BAG_SORT:
             itemIdSet = set()

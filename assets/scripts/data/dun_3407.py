@@ -1,6 +1,8 @@
 datas ={
   "34070001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "BornPos",
     "ClassNameType": 6,
     "CustomID": "",
@@ -8,6 +10,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 34070001,
+    "Name": "\u51fa\u751f\u70b9",
     "PosX": 249.994,
     "PosY": 527.809,
     "PosZ": 24.112,
@@ -23,6 +26,8 @@ datas ={
   },
   "34070002": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "",
@@ -30,6 +35,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 11014014,
     "ID": 34070002,
+    "Name": "\u86c7\u6218\u9996\u98861",
     "PosX": 277.1613,
     "PosY": 524.9851,
     "PosZ": 60.49532,
@@ -46,6 +52,8 @@ datas ={
   },
   "34070003": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "",
@@ -53,6 +61,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 11014015,
     "ID": 34070003,
+    "Name": "\u86c7\u6cd5\u9996\u98861",
     "PosX": 282.3562,
     "PosY": 524.9851,
     "PosZ": 55.1451,

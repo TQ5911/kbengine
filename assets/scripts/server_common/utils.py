@@ -15,6 +15,8 @@ import hashlib
 import copy
 from decimal import Decimal
 from KBEDebug import *
+from types import ModuleType, FunctionType
+import sys
 
 import randomName_robotName as RND
 import formula_generalFormula as FGFD
@@ -38,6 +40,7 @@ import NPC_Pick as NPD
 import creep_base as CBD
 import gacha_gachaPool as GGP
 import creep_coefficient as C_CD
+import branchData_set as BDS
 
 import KBEngine
 from KBEDebug import *
@@ -60,6 +63,8 @@ import combatSkill
 import localizeConst_localizeConst as LC_LCD
 
 import mineBattle_config as MBC
+import antiAddictionSystem_config as AASC
+import gameconst
 
 tempTime = time.time
 ASCII_LIST = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
@@ -229,15 +234,6 @@ def getAvatarByGbId(gbId):
     eid = gameglobal.roleGBIDToEntId.get(gbId, 0)
     return KBEngine.entities.get(eid)
 
-
-def getEntityRealEntity(ent):
-    if ent.IsAvatarMirror or ent.IsCreation or ent.IsPet or ent.IsSummon:
-        if ent.hostId:
-            ent = ent.getHost() or ent
-
-    return ent
-
-
 def bitSet(val, bit):
     return val | (1 << bit)
 
@@ -256,7 +252,7 @@ def isJoinCombat(entity, src):
             gameconst.BornStateType.joinCombatTup:
         return False
 
-    if entity.IsAICombatUnit and entity.aiController and entity.bornState in \
+    if entity.IsAICombatUnit and entity.aiController and entity.aiController.machine.speialAICombatTup and entity.bornState in \
             gameconst.BornStateType.speialAIInvalidCombatTup\
             and hasBit(entity.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI):
         return False
@@ -1142,7 +1138,7 @@ def getHostEntity(entity):
     if not entity:
         return
     target = entity
-    if entity.IsAvatarMirror or entity.IsCreation or entity.IsPet or entity.IsSummon:
+    if entity.IsCreation or entity.IsSummon:
         if entity.hostId:
             target = entity.getHost() or entity
 
@@ -1565,18 +1561,22 @@ def getPlayerBornInfo():
 def getPlayerBornMapId():
     return CCT.datas['createConst_BornGamePlayID']['value']
 
-def getPlayerBreakAwayStuckPos(spaceNo, position):
+def getPlayerBreakAwayStuckPos(spaceNo, position, needBornPos=False):
     mapId = formula.getMapId(spaceNo)
-    data = GPGP.datas.get(mapId, {})
-    posList = data.get('breakAwayStuckPos', [])
-    if posList:
-        _telList = []
-        for pos in posList:
-            _telList.append(pos)
-
-        _telList.sort(key=lambda x: sMath.distance2DToCompareFrom3DPosition(position, x))
-        return _telList[0]
-    return None
+    data = getDunStructureModuleData(mapId)
+    posDatas = data.get('BreakAwayStuckPos', {})
+    if not posDatas or needBornPos:
+        posDatas = data.get('BornPos', {})
+    if not posDatas:
+        return None, None
+    resList = []
+    for _, posData in posDatas.items():
+        pos = (posData["PosX"], posData["PosY"], posData["PosZ"])
+        direction = posData["Dir"]
+        resList.append((pos, direction))
+    if not resList:
+        return None, None
+    return random.choice(resList)
 
 
 def getGeneratorEntItems(spaceNo, keyName, entName="", actId=0, dictLayer=3):
@@ -1750,7 +1750,7 @@ def getRankBySortedList(sortList, keyFunc):
 
 
 def getLineMaxNumber(lineType):
-    return gameconst.lineStubMap.get(lineType, {}).get('lineCount', 0)
+    return gameconst.lineStubMap().get(lineType, {}).get('lineCount', 0)
 
 
 def isInWorldLinePKSafeAreaByAreaId(areaId):
@@ -2231,15 +2231,10 @@ def getGuildUUIDPair(guildUUID1, guildUUID2):
 
 
 def isEnemyInPK(src, target):
-    if target.gbId in src.challengeAvatars:
-        return not (src.inPKSafeArea() or target.inPKSafeArea())
-
     if src.pkModel == gameconst.PKModel.PEACE:
         return False
-        # if not (CCT.datas['greenCanAttackGrey']['value']):
-        #     return False
 
-    if src.inPKSafeArea() or target.inPKSafeArea():
+    if utils.hasBit(src.cellFlags, gameconst.CELL_FLAGS_PK_SAFE) or utils.hasBit(target.cellFlags, gameconst.CELL_FLAGS_PK_SAFE):
         return False
 
     if src.inPKProtect(target):
@@ -2262,7 +2257,7 @@ _isEnemyFuncDic = {}
 
 
 def getEntityRealEntity(ent):
-    if ent.IsAvatarMirror or ent.IsCreation or ent.IsPet or ent.IsSummon:
+    if ent and (ent.IsAvatarMirror or ent.IsCreation or ent.IsPet or ent.IsSummon):
         if ent.hostId:
             ent = ent.getHost() or ent
 
@@ -2330,27 +2325,10 @@ def _isEnemy(src, target):
                     return False
             return src.siegeWarCamp != target.siegeWarCamp
 
-    if formula.isMineWarSpace(src.spaceNo):
-        if formula.isMineWarSpace(target.spaceNo):
-            if target.IsMonster:
-                if not target.mineWarCanAttack:
-                    return False
-                if src.IsAvatar:
-                    if src.guildUUID == 0:
-                        return False
-                    return src.mineWarCamp != target.mineWarCamp
-            if not src.IsMonster:
-                return src.guildUUID != target.guildUUID
-    #
-    # mapId = formula.getMapId(src.spaceNo)
-    #
-    # if mapId in _isEnemyFuncDic:
-    #     retCode = _isEnemyFuncDic[mapId](src, target)
-    #     if retCode == gameconst.IsRelationEnum.TRUE:
-    #         return True
-    #     elif retCode == gameconst.IsRelationEnum.FALSE:
-    #         return False
-    #
+    _enemy, needReturn = isMineWarEnemy(src, target)
+    if needReturn:
+        return _enemy
+
     # pk规则判断
     if src.IsAvatar and target.IsAvatar:
         # 【野外PK
@@ -2359,24 +2337,24 @@ def _isEnemy(src, target):
         if isEnemyInPK(src, target):
             return True
 
-    # if src.IsMonster and src.belongGbId and target.IsAvatar:
-    #     if src.belongGbId != target.gbId:
-    #         return False
-    # elif src.IsAvatar and target.IsMonster and target.belongGbId:
-    #     if target.belongGbId != src.gbId:
-    #         return False
-    #
-    # if src.IsAvatar and target.IsAICombatUnit and target.exclusiveGBID and target.exclusiveGBID != src.gbId:
-    #     return False
-    #
-    # if target.IsAvatar and src.IsAICombatUnit and src.exclusiveGBID and src.exclusiveGBID != target.gbId:
-    #     return False
-    #
     if getForceRelation(src, target) == gameconst.ForceRelation.Enemy:
         return True
 
     return False
 
+def isMineWarEnemy(src, target):
+    if utils.hasBit(src.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE):
+        if utils.hasBit(target.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE):
+            if target.IsMonster:
+                if not target.mineWarCanAttack:
+                    return False, True
+                if src.IsAvatar:
+                    if src.guildUUID == 0 and target.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_CORE:
+                        return False, True
+                    return src.mineWarCamp != target.mineWarCamp, True
+            if src.IsAvatar and target.IsAvatar and src.mineWarCanAttack and target.mineWarCanAttack:
+                return src.guildUUID != target.guildUUID or src.guildUUID == 0 or target.guildUUID == 0, True
+    return False, False
 
 def isPVP(src, target):
     srcHost = getHostEntity(src)
@@ -2761,9 +2739,11 @@ def getMoralLevel(moralValue):
     return 0
 
 def getExpDecayRate(level):
-    if level in PKMVE.datas:
-        DEBUG_MSG('getExpDecayRate, level:', level, 'rate:', 1-PKMVE.datas[level]['ExpGainReduced'])
-        return 1-PKMVE.datas[level]['ExpGainReduced']
+    datas = PKMVE.datas.get(level, None)
+    if datas:
+        expRate = 1 - datas['ExpGainReduced']
+        DEBUG_MSG('getExpDecayRate, level:', level, 'rate:', expRate)
+        return expRate
     else:
         WARNING_MSG('getExpDecayRate, level not found:', level)
         return 1.0
@@ -3193,8 +3173,24 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                     'position': bornPosition,
                 })
 
+            if 'LightPillar' in _pP:
+                if _pP['LightPillar']:
+                    params.update({
+                        'lightPillar': int(_pP['LightPillar']),
+                    })
+
         if className == 'Monster':
             _monsterId = int(_mPrm['EntityID'])
+            if formula.spaceInWorldLine(spaceNo):
+                lineNo = formula.getLineNo(spaceNo)
+                nameSuffixID = -1
+                if _monsterId in CBD.datas:
+                    nameSuffixID = CBD.datas[_monsterId]['nameSuffixID']
+
+                if nameSuffixID in BDS.datas["Branch_creepNotRefresh"]["value"] and lineNo != 0 and lineNo != -1:
+                    DEBUG_MSG("skip create monster", spaceNo, _monsterId, nameSuffixID, lineNo)
+                    continue
+            
             params.update({
                 'monsterId': _monsterId,
                 'name': _mPrm['DisplayName'],
@@ -3376,8 +3372,14 @@ def getMineWarEndOffsetSec():
 def getMineWarPrepareNeedSec():
     return MBC.datas['mineBattle_interfacePromptTime']['value'] * 60    # 准备时间需要提前多少时间
 
-def getNextHoursTimestamp(curTimestamp, deltaSecs, deltaHours):
-    return ((curTimestamp+deltaSecs)//3600+deltaHours)*3600
+def getNextHoursTimestamp(curTimestamp):
+    m = datetime.datetime.fromtimestamp(curTimestamp).minute
+    s = datetime.datetime.fromtimestamp(curTimestamp).second
+    if (m == 0 or m == 30) and s == 0:
+        return curTimestamp
+    if m < 30:
+        return (curTimestamp//3600+0.5)*3600
+    return (curTimestamp//3600+1)*3600
 
 
 def callLimitAdd(callType):
@@ -3396,4 +3398,196 @@ def getCallLimitNum(callType):
         return _times
     else:
         return 0
+
+def getCrtMapNeedStatisticFlag(spaceNo):
+    mapId = formula.getMapId(spaceNo)
+    mapData = GPGP.datas.get(mapId, {})
+    return mapData.get('dpsActive', 0) == 1
+
+
+def isInAttackArea(target, center, radius):
+    if target.IsMonster:
+        radius += target.getConfigData().get('attackDistanceCompensation', 0)
+
+    dis = sMath.distance2DToCompareFrom3DPosition(target.position, center)
+    return dis <= radius * radius
+
+def isMinorAccount(userAge):
+    adultAge = AASC.datas.get('userAge', {}).get('value', gameconst.LEGAL_AGE_OF_MAJORITY)
+    return userAge < adultAge
+
+def sizeof(obj, seen=None):
+    if seen is None:
+        seen = set()
+    obj_id = id(obj)
+    if obj_id in seen:
+        return 0
+    seen.add(obj_id)
+    size = sys.getsizeof(obj)
+    try:
+        if hasattr(obj, '__dict__'):
+            for k, v in obj.__dict__.items():
+                size += sizeof(k, seen)
+                size += sizeof(v, seen)
+        if hasattr(obj, '__slots__'):
+            if not isinstance(obj.__slots__, int):
+                for slot in obj.__slots__:
+                    if hasattr(obj, slot):
+                        size += sizeof(getattr(obj, slot), seen)
+        if isinstance(obj, dict):
+            for k, v in list(obj.items()):
+                size += sizeof(k, seen)
+                size += sizeof(v, seen)
+        elif isinstance(obj, (list, tuple, set)):
+            for item in list(obj):
+                size += sizeof(item, seen)
+        elif isinstance(obj, (ModuleType, FunctionType)):
+            return 0
+    except ModuleNotFoundError as e:
+        pass
+    return size
+
+
+def printMemUsage(memList, sumSet, warnLow):
+    _sumSize = 0
+    _cnt = 0
+    for i, val in enumerate(memList):
+        _size = sizeof(val, sumSet)
+        _sumSize += _size
+        if _size > warnLow:
+            WARNING_MSG('[memDebug]mem beyond warnLow', i, _size)
+        _cnt += 1
+
+        yield True
+
+    WARNING_MSG('[memDebug]sum size is ', _sumSize, _cnt)
+
+
+def _debugMemOnce(memIter, batchNum, *args):
+    for i in range(batchNum):
+        _next = next(memIter, None)
+        if _next is None:
+            return
+
+    KBEngine.addTimer(1, 0, functools.partial(_debugMemOnce, memIter, batchNum))
+
+def debugMemUsage(memList, sumSet, warnLow, batchNum):
+    WARNING_MSG('[memDebug]sum len is ', len(memList))
+    _iter = printMemUsage(memList, sumSet, warnLow)
+    _debugMemOnce(_iter, batchNum)
+
+
+def emptyFunc(*args):
+    pass
+
+
+def isInAttackLine(targetPos, vCenter, direction, length, width, fixCenter=False):
+    """
+    :param fixCenter: 是否修正中心点坐标
+    """
+    # 1. 归一化方向向量（如果能保证传入时已归一化，可省略）
+    direction.normalise()
+    
+    # 2. 获取目标相对于攻击中心的偏移向量 (2D 空间：x, z)
+    if fixCenter:
+        dx = targetPos.x - (vCenter.x + direction.x * length / 2)
+        dz = targetPos.z - (vCenter.z + direction.z * length / 2)
+    else:
+        dx = targetPos.x - vCenter.x
+        dz = targetPos.z - vCenter.z
+    
+    # 3. 计算目标在方向向量上的投影长度（点积）
+    # 假设方向向量 D = (dirX, dirZ)
+    dirX, dirZ = direction.x, direction.z
+    
+    # 目标在攻击方向上的偏移 (Forward offset)
+    # 利用点积公式：proj_L = v · dir
+    projL = dx * dirX + dz * dirZ
+    
+    # 4. 快速范围判断
+    halfLen = length / 2
+    if projL > halfLen or projL < -halfLen:
+        return False
+        
+    # 5. 计算目标在垂直方向上的偏移 (Side offset)
+    # 垂直向量为 (-dirZ, dirX)
+    projW = dx * (-dirZ) + dz * dirX
+    
+    halfWid = width / 2
+    if projW > halfWid or projW < -halfWid:
+        return False
+        
+    return True
+
+
+def isInAttackLineWithRadius(targetPos, startPos, direction, length, width, targetRadius):
+    """
+    判断目标是否在矩形攻击范围内（支持目标半径）
+    :param targetPos: 目标位置 (Math.Vector3)
+    :param startPos: 攻击起始位置 (Math.Vector3)
+    :param direction: 攻击方向 (Math.Vector3)，内部会归一化
+    :param length: 矩形长度
+    :param width: 矩形宽度
+    :param targetRadius: 目标半径（用于碰撞检测）
+    :return: bool
+    """
+    # 1. 归一化方向向量
+    dirMagnitude = math.sqrt(direction.x * direction.x + direction.z * direction.z)
+    if dirMagnitude <= 0.000001:
+        # 方向向量无效，无法确定矩形方向
+        return False
+        
+    unitDirX = direction.x / dirMagnitude
+    unitDirZ = direction.z / dirMagnitude
+
+    # 2. 计算目标相对于起始点的向量
+    dx = targetPos.x - startPos.x
+    dz = targetPos.z - startPos.z
+
+    # 3. 计算目标在攻击方向上的投影长度 (Forward offset)
+    # projL = v · dir
+    projL = dx * unitDirX + dz * unitDirZ
+
+    # 4. 计算目标在垂直方向上的投影长度 (Side offset)
+    # 垂直向量为 (-unitDirZ, unitDirX)
+    # projW = v · perpDir
+    projW = dx * (-unitDirZ) + dz * unitDirX
+
+    # 5. 核心判断逻辑
+    
+    # 矩形半宽
+    halfWidth = width / 2.0
+
+    # 情况 A: 目标半径为 0 (纯点与矩形检测)
+    if targetRadius <= 0:
+        if projL < 0 or projL > length:
+            return False
+        if projW < -halfWidth or projW > halfWidth:
+            return False
+        return True
+
+    # 情况 B: 目标有半径 (圆与矩形检测)
+    # 将问题转化为：点 (projL, projW) 到矩形 (0, -halfWidth) -> (length, halfWidth) 的距离 <= targetRadius
+
+    # Clamped Point (矩形内离目标最近的点)
+    # clamp projL to [0, length]
+    closestL = projL
+    if closestL < 0:
+        closestL = 0
+    elif closestL > length:
+        closestL = length
+
+    # clamp projW to [-halfWidth, halfWidth]
+    closestW = projW
+    if closestW < -halfWidth:
+        closestW = -halfWidth
+    elif closestW > halfWidth:
+        closestW = halfWidth
+
+    # 计算目标点到最近点的距离平方
+    diffL = projL - closestL
+    diffW = projW - closestW
+    distSq = diffL * diffL + diffW * diffW
+
+    return distSq <= (targetRadius * targetRadius)
 

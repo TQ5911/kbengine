@@ -4,6 +4,7 @@ datas ={
       "Monster": {
         "20190001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -27,9 +28,11 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "BornPos": {
       "20198001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -50,6 +53,7 @@ datas ={
     "RebornPos": {
       "20198002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",

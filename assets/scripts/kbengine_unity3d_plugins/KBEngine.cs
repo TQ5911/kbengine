@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "0F2FA0695C9F44E1E9AC96BA8FA1EDF9";
+        public string serverEntitydefMD5 = "0629547BD00C3CB6653E34B43E58C0ED";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -753,7 +753,7 @@ namespace KBEngine
 					if (VersionUtils.IsInAudit())
                     {
 						//为了应对ios审核，这里只能写死域名
-						baseappIP = "meta-ios-review.xwindlab.com";
+						baseappIP = "fengyan-shenhefu-apple.yunxingu.com";
                     }
 #endif
                     _networkInterface.connectTo(baseappIP, baseappTcpPort, onConnectTo_baseapp_callback, null);
@@ -765,7 +765,7 @@ namespace KBEngine
                     if (VersionUtils.IsInAudit())
                     {
 						//为了应对ios审核，这里只能写死域名
-						baseappIP = "meta-ios-review.xwindlab.com";
+						baseappIP = "fengyan-shenhefu-apple.yunxingu.com";
 					}
 #endif
                     _networkInterface.connectTo(baseappIP, baseappUdpPort, onConnectTo_baseapp_callback, null);

@@ -66,6 +66,3 @@ class ICrusade(object):
 				return key
 		return 0
 	
-	def addTeamDungeonRewardRecord(self, rewardList):
-		gameengine.getTeamStub(self.teamId).addTeamDungeonRewardRecord(self.teamId, self.gbId, rewardList)
-	

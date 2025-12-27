@@ -66,7 +66,8 @@ class IMeridian(object):
                 level = pointVal.getCurLevel()
                 if level <= 0:
                     continue
-                indexList.append(self.getConfigId(slotIdx, pointIdx, level))
+                for lv in range(1, level + 1):
+                    indexList.append(self.getConfigId(slotIdx, pointIdx, lv))
             
             if slotVal.hasEnhance:
                 indexList.append(slotIdx)
@@ -216,3 +217,69 @@ class IMeridian(object):
         else:
             DEBUG_MSG("IMeridian.reqEnhanceMeridianSlot: enhance failed {}".format(slotIdx))
 
+
+    def gmLevelUpMeridianPoint(self, slotIdx, pointIdx, full, show=True):
+        """GM命令：经脉穴位升级"""
+        if not self.checkMeridianLimit():
+            WARNING_MSG("IMeridian.gmLevelUpMeridianPoint: meridian system not init")
+            return
+        
+        num = 1
+        if full:
+            num = MeridianInfo.MeridianPointVal().maxLevel
+
+        for _ in range(num):
+            ret, newLevel = self.meridianData.levelUpPoint(slotIdx, pointIdx)
+            INFO_MSG("IMeridian.gmLevelUpMeridianPoint: {}, {}, {}, {}".format(slotIdx, pointIdx, ret, newLevel))
+            if ret:
+                self.cell.onMeridianAward([self.getConfigId(slotIdx, pointIdx, newLevel)])
+                self.client.onLeveUpMeridianPointTo(slotIdx, pointIdx, newLevel)
+            else:
+                DEBUG_MSG("IMeridian.gmLevelUpMeridianPoint: level up failed {}, {}, {}".format(
+                    slotIdx, pointIdx, ret))
+                
+        if show:
+            self._syncMeridianDataToClient()
+
+    def gmEnhanceMeridianSlot(self, slotIdx, show=True):
+        """GM命令：经脉槽位强化"""
+        if not self.checkMeridianLimit():
+            WARNING_MSG("IMeridian.gmLevelUpMeridianSlot: meridian system not init")
+            return
+        
+        ret, newSlot = self.meridianData.doEnhanceCurSlot(slotIdx)
+        INFO_MSG("IMeridian.gmLevelUpMeridianSlot: {}, {}, {}".format(slotIdx, ret, newSlot))
+        if ret:
+            self.cell.onMeridianAward([slotIdx])
+            self.client.onEnhanceMeridian(slotIdx)
+            
+            if show:
+                self._syncMeridianDataToClient()
+        else:
+            DEBUG_MSG("IMeridian.gmLevelUpMeridianSlot: enhance failed {}".format(slotIdx))
+
+    def gmLevelUpMeridianSlot(self, slotIdx, show=True):
+        num = MeridianInfo.MeridianSlotVal().maxPoints
+        for pointIdx in range(1, num + 1):
+            self.gmLevelUpMeridianPoint(slotIdx, pointIdx, True, show)
+
+        self.gmEnhanceMeridianSlot(slotIdx, show)
+
+    def gmUnlockAllMeridian(self):
+        """GM命令：解锁所有经脉槽位"""
+        maxSlots = MeridianInfo.MeridianVal().maxSlots
+        for slotIdx in range(1, maxSlots + 1):
+            if self.meridianData.curSlot > slotIdx:
+                continue
+            self.gmLevelUpMeridianSlot(slotIdx)
+
+    def gmResetMeridian(self):
+        """GM命令：重置经脉系统"""
+        self.meridianData = MeridianInfo.MeridianVal()
+        self._syncMeridianDataToClient()
+        
+
+    
+
+    
+    

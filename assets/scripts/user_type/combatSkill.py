@@ -54,6 +54,7 @@ class ServerSkills(userType.UserDictType):
 
     def getClientData(self, owner):
         skills = []
+        skillCDStatus = []
         for skillId, skillInstance in self.items():
             skillDict = {
                 'skillId': skillId,
@@ -62,6 +63,14 @@ class ServerSkills(userType.UserDictType):
                 'extraSkillLv': skillInstance.getExtraLv(owner),
             }
             skills.append(skillDict)
+            # 技能CD状态
+            cdStatus = skillInstance.getTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, gameconst.SkillCDStatus.DEFAULT)
+            if cdStatus != gameconst.SkillCDStatus.DEFAULT:
+                skillCDStatu = {
+                    'skillId': skillId,
+                    'cdStatus': cdStatus
+                }
+                skillCDStatus.append(skillCDStatu)
 
         skillSwitches = []
         for skillId, skillSwitch in self.skillSwitches.items():
@@ -74,6 +83,7 @@ class ServerSkills(userType.UserDictType):
         clientData = {
             'skills': skills,
             'skillSwitches': skillSwitches,
+            'skillCDStatus': skillCDStatus,
         }
         return clientData
 
@@ -133,27 +143,6 @@ class SkillDamges(userType.UserSoleType):
         super(SkillDamges, self)._lateReload()
 
         for v in self.damageInfo:
-            v.reloadScript()
-
-        return
-
-
-class RuneVal(userType.UserSoleType):
-    def __init__(self, runeIndex, runeIdList, position, spaceNo):
-        self.runeIndex = runeIndex
-        self.runeIdList = runeIdList
-        self.position = position
-        self.spaceNo = spaceNo
-
-
-class Runes(userType.UserSoleType):
-    def __init__(self):
-        self.runes = []
-
-    def _lateReload(self):
-        super(Runes, self)._lateReload()
-
-        for v in self.runes:
             v.reloadScript()
 
         return
@@ -222,6 +211,7 @@ class SkillBase(userType.UserSoleType):
         self.targetIds = targetIds or []
         self.isInSkill = False
         self.tempData = {}
+
 
     def _lateReload(self):
         super(SkillBase, self)._lateReload()
@@ -344,9 +334,11 @@ class SkillBase(userType.UserSoleType):
         realCD = sMath.limit(realCD, 0.1, 999999)
         gcd = self.getGlobalCD(owner)
         totalCD = max(realCD, gcd)
-        if owner.IsAvatar:
+        host = owner.getAvatar()
+        DEBUG_MSG("in getCD ", owner, self.skillId, owner.IsAvatar, host)
+        if host:
             addValue = 0
-            ret, datas = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.MODIFY_CD)
+            ret, datas = host.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.MODIFY_CD)
             if ret:
                 if len(datas) == 1:
                     addValue = datas[0]
@@ -355,7 +347,7 @@ class SkillBase(userType.UserSoleType):
             if totalCD < 0:
                 totalCD = 0
             if totalCD > 0:
-                ret, datas = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.REFRESH_CD)
+                ret, datas = host.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.REFRESH_CD)
                 if ret:
                     if len(datas) == 1:
                         addValue = datas[0]
@@ -369,12 +361,12 @@ class SkillBase(userType.UserSoleType):
         self.cdDelta += delta
 
         owner.IsAvatar and owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast),
-                                                        False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+                                                        False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
 
     def changeNextCast(self, owner, delta):
         self.tNextCast += delta
         owner.IsAvatar and owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast),
-                                                        False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+                                                        False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
 
     def inCDTime(self):
         if time.time() < self.tNextCast:
@@ -429,8 +421,10 @@ class SkillBase(userType.UserSoleType):
 
     def getMaxTargetNum(self, owner, skillId):
         defaultMaxTagretNum = self.getMaxTargetData(skillId)
-        if owner.IsAvatar:
-            ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE)
+        host = owner.getAvatar()
+        DEBUG_MSG("in getMaxTargetNum ", owner, skillId, owner.IsAvatar, host)
+        if host:
+            ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.ATTACK_TARGET_ADD_VALUE)
             if ret:
                 if len(datas) == 1:
                     addValue = datas[0]
@@ -461,24 +455,19 @@ class SkillBase(userType.UserSoleType):
     def getScopeParam(self, owner, skillId):
         scopeParam = self.getScopeData(skillId)
         if not scopeParam:
-            return ()
+            return None, None
         else:
             scopeParam = eval(scopeParam) if isinstance(scopeParam, (str, bytes)) else scopeParam
             if type(scopeParam) not in (list, tuple):
                 scopeParam = (scopeParam,)
-            if owner.IsAvatar:
-                ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE)
+            host = owner.getAvatar()
+            DEBUG_MSG("in getScopeParam ", owner, skillId, owner.IsAvatar, host)
+            if host:
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE)
                 if ret:
                     if len(datas) == 1:
-                        addValue = datas[0]
-                        if addValue > 0:
-                            scopeParam = list(scopeParam)
-                            for idx in range(len(scopeParam)):
-                                scopeParam[idx] *= (1+ addValue)
-                            scopeParam=tuple(scopeParam)
-                            DEBUG_MSG("in getScopeParam, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_RANGE_ADD_VALUE, datas)
-
-            return scopeParam
+                        return scopeParam, datas[0]
+            return scopeParam, None
 
     @staticmethod
     @functools.lru_cache(1024)
@@ -486,10 +475,24 @@ class SkillBase(userType.UserSoleType):
         return SkillBase.getSkillData(skillId).get('consumeMp') or 0
 
     def getCostMp(self, owner, skillId, factor):
-        originalConsumeMP = self.getCostMpData(skillId)
-        if owner.IsAvatar:
+        _mp = self.getCostMpData(skillId)
+        if isinstance(_mp, tuple) or isinstance(_mp, list):
+            _lv = self.getLevel(owner) - 1
+            if 0 <= _lv < len(_mp):
+                mp = _mp[_lv]
+            else:
+                mp = _mp[-1]
+        elif _mp is None:
+            mp = 0
+        else:
+            mp = _mp
+
+        originalConsumeMP = mp
+        host = owner.getAvatar()
+        DEBUG_MSG("in getCostMp ", owner, skillId, owner.IsAvatar, host)
+        if host:
             if originalConsumeMP > 0:
-                ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE)
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.MANA_DECREASE_VALUE)
                 if ret:
                     if len(datas) == 1:
                         addValue = datas[0]
@@ -519,8 +522,10 @@ class SkillBase(userType.UserSoleType):
     def getRange(self, owner, skillId, skillLv=1):
         rangeData = self.getRangeData(skillId)
         defaultRange = rangeData[-1] if skillLv > len(rangeData) else rangeData[skillLv - 1]
-        if owner.IsAvatar:
-            ret, datas = owner.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE)
+        host = owner.getAvatar()
+        DEBUG_MSG("in getRange ", owner, skillId, owner.IsAvatar, host)
+        if host:
+            ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_DISTANCE_ADD_VALUE)
             if ret:
                 if len(datas) == 1:
                     addValue = datas[0]
@@ -745,7 +750,7 @@ class SkillBase(userType.UserSoleType):
         self.tNextCast = 0.0
 
         if oldInCD and owner.IsAvatar:
-            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
 
     def getOneNearest(self, pos, targetsList):
         if not targetsList or len(targetsList) == 0:
@@ -806,13 +811,6 @@ class SkillBase(userType.UserSoleType):
 
         return targetsList[minIndex]
 
-    def isInAttackArea(self, target, center, radius):
-        if target.IsMonster:
-            radius += target.getConfigData().get('attackDistanceCompensation', 0)
-
-        dis = sMath.distance2DToCompareFrom3DPosition(target.position, center)
-        return dis <= radius * radius
-
     def isInAttackAnnularArea(self, target, center, minRadius, maxRadius):
         targetRadius = 0
         if target.IsMonster:
@@ -828,60 +826,13 @@ class SkillBase(userType.UserSoleType):
         if target.IsMonster:
             targetRadius = target.getConfigData().get('attackDistanceCompensation', 0)
 
-        if not targetRadius:
-            direction.normalise()
-            h = Math.Vector2(length / 2, width / 2)
-            dstPosition = vCenter + direction * (length / 2)
-            c = Math.Vector2(dstPosition.x, dstPosition.z)
-            c = sMath.getRotatePos((c.x, c.y), (direction[0], direction[2]))
-            c = Math.Vector2(c[0], c[1])
-            p = Math.Vector2(target.position.x, target.position.z)
-            p = sMath.getRotatePos((p.x, p.y), (direction[0], direction[2]))
-            p = Math.Vector2(p[0], p[1])
-            return sMath.isAabbDiskIntersect(c, h, p)
+        if targetRadius:
+            return utils.isInAttackLineWithRadius(target.position, vCenter, direction, length, width, targetRadius)
         else:
-            dirMagnitude = math.sqrt(direction.x * direction.x + direction.z * direction.z)
-            if dirMagnitude == 0:
-                dirMagnitude = 1
-
-            unitDirX = direction.x / dirMagnitude
-            unitDirZ = direction.z / dirMagnitude
-
-            targetVec = target.position - vCenter
-
-            dotProduct = targetVec.x * unitDirX + targetVec.z * unitDirZ
-
-            projPointX = vCenter.x + unitDirX * dotProduct
-            projPointZ = vCenter.z + unitDirZ * dotProduct
-
-            perpDistance = math.sqrt(max(0, (target.position.x - projPointX)**2 + (target.position.z - projPointZ)**2))
-
-            closestX = dotProduct
-            if closestX < 0:
-                closestX = 0
-            elif closestX > length:
-                closestX = length
-
-            closestZ = perpDistance
-            if closestZ > width/2:
-                closestZ = width/2
-
-            if 0 <= dotProduct <= length:
-                distance = max(0, perpDistance - width/2)
-            else:
-                endX = 0 if dotProduct < 0 else length
-                endPointX = vCenter.x + unitDirX * endX
-                endPointZ = vCenter.z + unitDirZ * endX
-
-                dx = target.position.x - endPointX
-                dz = target.position.z - endPointZ
-                distance = math.sqrt(dx*dx + dz*dz) - width/2
-                distance = max(0, distance)
-
-            return distance <= targetRadius
+            return utils.isInAttackLine(target.position, vCenter, direction, length, width, True)
 
     def isInAttackRectAngle(self, target, vCenter, direction, length, width, radius):
-        return self.isInAttackArea(target, vCenter, radius) and self.isInAttackLine(target, vCenter, direction, length,
+        return utils.isInAttackArea(target, vCenter, radius) and self.isInAttackLine(target, vCenter, direction, length,
                                                                                     width)
 
     def getAngle(self, vector_a, vector_b):
@@ -1159,10 +1110,6 @@ class SkillBase(userType.UserSoleType):
         elif scopeType == gameconst.SkillScope.MULTI_SECTOR:
             arr = list(direction)
 
-        elif scopeType == gameconst.SkillScope.COLOSSUS_CIRCLE or \
-                scopeType == gameconst.SkillScope.COLOSSUS_RECTANGLE:
-            return self.getPlunderLingzhuSkillArr(caster, target, caster.spaceNo)
-
         return arr
 
     def getSkillDesPosition(self, caster, target, skillArgs):
@@ -1228,46 +1175,6 @@ class SkillBase(userType.UserSoleType):
 
         return desPosition
 
-    def getPlunderLingzhuSkillArr(self, owner, target, spaceNo):
-        arr = []
-        pos = []
-        dire = []
-        ent = None
-
-        lingzhuPosCustonKey = SSD.datas[self.skillId]['lingzhuSkillPos_customID']
-        dunNo = formula.getMapId(spaceNo)
-        dataList = list(utils.getDunStructureModuleData(dunNo)[lingzhuPosCustonKey].values())
-        if dataList:
-            data = dataList[0]
-            pos = (data['PosX'], data['PosY'], data['PosZ'])
-            dire = sMath.getDirFromYaw(data['Dir'] / 180 * math.pi)
-
-        targetType = self.getTarget(self.skillId)
-        if targetType != 'None':
-            targetIds = owner.getTargetIdsByTargetType(targetType)
-            if targetIds:
-                targetId = random.choice(targetIds)
-                ent = KBEngine.entities.get(targetId)
-        else:
-            ent = target
-
-        scopeType = self.getScope(self.skillId)
-        if scopeType == gameconst.SkillScope.COLOSSUS_CIRCLE:
-            if ent:
-                arr.extend(ent.position)
-            else:
-                arr.extend(pos)
-
-            arr.extend(dire)
-
-        elif scopeType == gameconst.SkillScope.COLOSSUS_RECTANGLE:
-            if ent:
-                dire = sMath.vector3WithoutY(ent.position - pos)
-                arr.extend(pos)
-                arr.extend(list(dire))
-
-        return arr
-
     def getEffectTargets(self, caster, targetId, arr, forceTarget=False, positionSkillArgs=None):
         if not caster:
             return []
@@ -1304,7 +1211,9 @@ class SkillBase(userType.UserSoleType):
 
         skillPos, skillDir = self.getSkillPosAndDir(caster, target, arr)
         scopes = self.getScope(self.skillId)
-        scopeParams = self.getScopeParam(caster, self.skillId)
+        scopeParams, scopeAddRatio = self.getScopeParam(caster, self.skillId)
+
+        DEBUG_MSG("in _internalGetEffectTargets ", caster, self.skillId, scopeParams, scopeAddRatio)
 
         if not scopes or scopes == gameconst.SkillScope.TARGET_AUTO:
             if self.hasTag(gameconst.SkillTag.SingleHeal) and hasattr(caster,
@@ -1346,8 +1255,10 @@ class SkillBase(userType.UserSoleType):
         elif scopes == gameconst.SkillScope.CIRCLE_CENTER_SELF:
             center = caster.position
             radius = float(scopeParams[0])
+            if scopeAddRatio:
+                radius *= (1+scopeAddRatio)
 
-            checkScopeFun = lambda target: self.isInAttackArea(target, center, radius)
+            checkScopeFun = lambda target: utils.isInAttackArea(target, center, radius)
             return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
@@ -1356,8 +1267,10 @@ class SkillBase(userType.UserSoleType):
                 return []
 
             radius = float(scopeParams[0])
+            if scopeAddRatio:
+                radius *= (1+scopeAddRatio)
 
-            checkScopeFun = lambda target: self.isInAttackArea(target, skillPos, radius)
+            checkScopeFun = lambda target: utils.isInAttackArea(target, skillPos, radius)
             return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId),
                                             self.getEffectRange(caster, self.skillId, self.skillLv) + 0.8,
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
@@ -1365,6 +1278,9 @@ class SkillBase(userType.UserSoleType):
         elif scopes == gameconst.SkillScope.SELF_TO_TARGET_RECTANGLE:
             length = float(scopeParams[0])
             width = float(scopeParams[1])
+            if scopeAddRatio:
+                length *= (1+scopeAddRatio)
+                width *= (1+scopeAddRatio)
 
             checkScopeFun = lambda target: self.isInAttackLine(target, caster.position, skillDir, length, width)
             return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
@@ -1372,16 +1288,21 @@ class SkillBase(userType.UserSoleType):
 
         elif scopes == gameconst.SkillScope.USER_DEFINED_SECTOR:
             skillSectorAngle = float(scopeParams[0])
-
+            radius = self.getServerEffectRange(caster)
+            if scopeAddRatio:
+                radius *= (1+scopeAddRatio)
+                
             checkScopeFun = lambda target: self.isInAttackSector(target, caster.position, skillDir,
-                                                                 self.getServerEffectRange(caster), skillSectorAngle * 2)
+                                                                 radius, skillSectorAngle * 2)
             return caster.getTargetsWithNum(caster, targetId, self.getEffectTarget(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
 
         elif scopes in (gameconst.SkillScope.USER_DEFINED_RECTANGLE, gameconst.SkillScope.CURRENT_DIRECTION_RECTANGLE):
             length = self.getServerEffectRange(caster) + self.getProtectRange(self.skillId)
             width = float(scopeParams[1])
-
+            if scopeAddRatio:
+                length *= (1+scopeAddRatio)
+                width *= (1+scopeAddRatio)
             if positionSkillArgs:
                 beginSkillPosition = self.getTempData('beginSkillPosition') if self.getTempData(
                     'beginSkillPosition') else caster.position
@@ -1406,8 +1327,9 @@ class SkillBase(userType.UserSoleType):
             beginSkillPosition = self.getTempData('beginSkillPosition') if self.getTempData('beginSkillPosition') else caster.position
             center = beginSkillPosition + direction * percent * self.getEffectRange(caster, self.skillId, self.skillLv)
             radius = float(scopeParams[0])
-
-            checkScopeFun = lambda target: self.isInAttackArea(target, center, radius)
+            if scopeAddRatio:
+                radius *= (1+scopeAddRatio)
+            checkScopeFun = lambda target: utils.isInAttackArea(target, center, radius)
             return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId),
                                             self.getServerEffectRange(caster) + radius,
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
@@ -1437,7 +1359,7 @@ class SkillBase(userType.UserSoleType):
             center = skillPos
             radius = float(scopeParams[0])
 
-            checkScopeFun = lambda target: self.isInAttackArea(target, center, radius)
+            checkScopeFun = lambda target: utils.isInAttackArea(target, center, radius)
             return caster.getTargetsWithNum(target, targetId, self.getEffectTarget(self.skillId),
                                             self.getServerEffectRange(caster) + radius,
                                             self.getMaxTargetNum(caster, self.skillId), checkScopeFun)
@@ -1624,7 +1546,7 @@ class SkillBase(userType.UserSoleType):
         if not self.hasTempData('tNextCast'):
             self.setTempData('tNextCast', self.tNextCast)
         self.tNextCast = time.time() - 0.1
-        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), True, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), True, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
         tid = owner._callback(duration, '_onSkillCallback', (self, 'invalidateRefreshCD', ()),
                               gametimer.TIMER_TAG_RESTORE_CD)
         self.setTempData('restoreCDTimer', tid)
@@ -1635,7 +1557,7 @@ class SkillBase(userType.UserSoleType):
         self.popTempData('restoreCDTimer')
 
         notifyClient and owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast),
-                                                      False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+                                                      False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
         doReset and self.resetSkill(owner, gameconst.ResetSkillReason.TimeRefreshDone)
 
     def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
@@ -1689,9 +1611,11 @@ class SkillBase(userType.UserSoleType):
 
         if (not owner.IsAvatar or owner.gmModeCell != gameconst.GmMode.GM_NO_SKILLCD) and enterCD and not self.hasTag(
                 gameconst.SkillTag.Channel):
-            if owner.IsAvatar:
+            host = owner.getAvatar()
+            DEBUG_MSG("in beginUseSkill ", owner, self.skillId, owner.IsAvatar, host)
+            if host:
                 addValue = 0
-                ret, datas = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT)
+                ret, datas = host.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT)
                 if ret:
                     if len(datas) == 1:
                         addValue = datas[0]
@@ -1708,7 +1632,7 @@ class SkillBase(userType.UserSoleType):
                 if releasedCount > 0:
                     self.setTempData('releasedCount', releasedCount - 1)
             self.enterCDTime(owner)
-            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
 
         owner.IsAvatar and owner.modifyMP(-self.getCostMp(owner, self.skillId, owner.mpCostRatio))
 
@@ -1875,13 +1799,16 @@ class SkillBase(userType.UserSoleType):
             self._cancelTempTimer(owner, 'restoreCDTimer', gametimer.TIMER_TAG_RESTORE_CD)
             self.invalidateRefreshCD(owner, doReset=False, notifyClient=False)
         self.enterCDTime(owner)
-        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
 
     def setTempData(self, name, val):
         if self.tempData.get(name) and name.endswith('Timer'):
             gameengine.reportCritical('setTempData cover timer', name, val)
 
         self.tempData[name] = val
+
+    def isSkillCDStatusFrozen(self):
+        return self.getTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, gameconst.SkillCDStatus.DEFAULT) == gameconst.SkillCDStatus.DISABLED
 
     def hasTempData(self, name):
         return name in self.tempData
@@ -1891,6 +1818,12 @@ class SkillBase(userType.UserSoleType):
 
     def popTempData(self, name, default=None):
         return self.tempData.pop(name, default)
+    
+    def clearTempData(self):
+        changeSkillCDStatus = self.tempData.get(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, None)
+        self.tempData.clear()
+        if changeSkillCDStatus and changeSkillCDStatus in gameconst.SkillCDStatus.VALID:
+            self.tempData[gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS] = changeSkillCDStatus
 
     def needResetOnSkillDone(self, owner):
         # 如果是限时刷新技能先不reset，等超时没使用或刷新的技能用完了再reset
@@ -1918,8 +1851,8 @@ class SkillBase(userType.UserSoleType):
         self._cancelTempTimer(owner, 'skillDoneTimer', gametimer.TIMER_TAG_SKILL_DONE)
         self._cancelTempTimer(owner, 'mulAttackActionTimer', gametimer.TIMER_TAG_DO_SKILL_ACTION)
         changeFromSkillId = 0 if not self.hasTempData('changedFromSkill') else self.getTempData('changedFromSkill')
-        self.tempData.clear()
-
+        self.clearTempData()
+        
         self.targetIds = []
 
         if changeFromSkillId:
@@ -2064,7 +1997,7 @@ class CommonSkillVal(SkillBase):
         postSkillTime = self.getSkillTime(self.skillId)
         owner.removeState(self.getSkillState(), removeReason=gameconst.ChannelingBreak.NORMAR_END)
         self.enterCDTime(owner)
-        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+        owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
         if postSkillTime > 0:
             owner.setState(gameconst.State.UsingSkill)
             endTimer = owner._callback(postSkillTime, '_onSkillCallback', (self, 'onChannelingEnd', (True,)),
@@ -2260,7 +2193,7 @@ class CastingSkillVal(CommonSkillVal):
 
         if needCd:
             super(CastingSkillVal, self).enterCDTime(owner)
-            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+            owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
 
         owner.IsAICombatUnit and owner.aiController and owner.aiController.onCastingInterrupted(self.skillId)
 
@@ -2506,7 +2439,7 @@ class StagedSkill(ZedSkillVal):
                              self.skillId, rootSkillVal.skillId, rootSkillVal.enhanceZedSkill, rootSkillVal.stageIndex)
         rootSkillVal.enterCDTime(owner)
         owner.client.onSetAddSkillCd(rootSkillVal.skillId, float(rootSkillVal.getCD(owner)),
-                                     float(rootSkillVal.tNextCast), False, rootSkillVal.getTempData('releaseTime', 0), rootSkillVal.getTempData('totalReleaseCount', 0), rootSkillVal.getTempData('releasedCount', 0))
+                                     float(rootSkillVal.tNextCast), False, rootSkillVal.getTempData('releaseTime', 0), rootSkillVal.getTempData('totalReleaseCount', 0), rootSkillVal.getTempData('releasedCount', 0), not rootSkillVal.isSkillCDStatusFrozen())
 
         if endByTimeout:
             self.resetSkill(owner)
@@ -2537,7 +2470,7 @@ class StagedSkill(ZedSkillVal):
         if reason == gameconst.ResetSkillReason.Teleport or reason == gameconst.ResetSkillReason.Transform or reason == gameconst.ResetSkillReason.DuelComplete:
             if self.stageIndex > 0:
                 self.enterCDTime(owner)
-                owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0))
+                owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
                 rootSkillVal = self.getRootSkillVal()
                 owner.IsAvatar and owner.client.onUseStageSkill(rootSkillVal.skillId, 0, time.time())
 

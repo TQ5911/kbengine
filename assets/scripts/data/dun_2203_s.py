@@ -4,6 +4,7 @@ datas ={
       "Monster": {
         "22030001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -17,6 +18,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 45,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": "18",
             "MonsterGroupID": "",
@@ -24,12 +26,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "22030002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -43,19 +48,23 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 45,
+            "LightPillar": "",
             "MapEntityScale": 0,
-            "MapEntityType": "18",
+            "MapEntityType": "0",
             "MonsterGroupID": "",
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "22030003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -69,22 +78,27 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 45,
+            "LightPillar": "",
             "MapEntityScale": 0,
-            "MapEntityType": "18",
+            "MapEntityType": "0",
             "MonsterGroupID": "",
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         }
       }
     },
+    "TimerEntities": {},
     "BornPos": {
       "22038001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -96,15 +110,19 @@ datas ={
         "PosY": 110.1097,
         "PosZ": 211.7785,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 6.0,
-          "Remark": ""
+          "RefreshTimedID": 0,
+          "Remark": "",
+          "ShowInSceneMap": 1
         }
       }
     },
     "RebornPos": {
       "22038002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",

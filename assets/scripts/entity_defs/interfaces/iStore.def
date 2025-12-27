@@ -61,6 +61,7 @@
             <Arg>       STOREID     </Arg>
             <Arg>       ITEMID      </Arg>
             <Arg>       UINT32      </Arg>
+            <Arg>       UINT8       </Arg>
             <Arg>       INT32       </Arg>
         </onBuyStoreItems>
     </ClientMethods>

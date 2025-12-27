@@ -1801,7 +1801,7 @@ datas ={
   },
   "31200151": {
     "ActivityID": 0,
-    "AttachedGIDList": "",
+    "AttachedGIDList": [],
     "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
@@ -1889,7 +1889,7 @@ datas ={
   },
   "31200154": {
     "ActivityID": 0,
-    "AttachedGIDList": "",
+    "AttachedGIDList": [],
     "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
@@ -2093,7 +2093,7 @@ datas ={
   },
   "31200161": {
     "ActivityID": 0,
-    "AttachedGIDList": "",
+    "AttachedGIDList": [],
     "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
@@ -2315,7 +2315,8 @@ datas ={
       "CameraId": 0,
       "GateType": 3,
       "Remark": "\u4e2d",
-      "TelDir": 0.5759866,
+      "ShowInSceneMap": 0,
+      "TelDir": 0.5759867,
       "TelX": 69.35,
       "TelY": 6.659381,
       "TelZ": 135.57

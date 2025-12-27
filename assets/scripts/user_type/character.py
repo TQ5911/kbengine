@@ -44,6 +44,9 @@ class CharacterVal(userType.UserSoleType):
         self.parentID = parentID
         self._dirty = False
 
+    def setDirty(self):
+        self._dirty = True
+
     def setLevel(self, level):
         self.level = level
         self._dirty = True
@@ -132,18 +135,21 @@ class Characters(userType.UserDictType):
             gbId=gbId, dbId=dbId, school=school, name=name, sex=sex, level=level, birthInDB=birthInDB,
             tLastOnline=0, charAppearance=charAppearance, selfDbId=selfDbId, authDbId=authDbId, authExpire=authExpire, parentID=parentID)
 
+        self[gbId].setDirty()
+
     def addByCharObj(self, gbId, charObj):
         # 这里需要clone，因为很可能两个account是在同个进程，
         # 如果在同个进程，修改一个，另一个也会受影响
         self[gbId] = charObj.clone()
 
-    def genWriteToDBSql(self, ignoreDirty=False):
+    def genWriteToDBSql(self, onlyDirty=False):
         values = []
         for cVal in self.values():
-            if ignoreDirty and not cVal.dirty():
-                continue
-
-            values.append(cVal.toSqlValues())
+            if onlyDirty:
+                if cVal.dirty():
+                    values.append(cVal.toSqlValues())
+            else:
+                values.append(cVal.toSqlValues())
 
         if not values:
             return None

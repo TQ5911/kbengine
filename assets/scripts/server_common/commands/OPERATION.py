@@ -8,6 +8,7 @@ import base64
 import gmAdmin
 import gamesql
 import gmCommand
+import gameengine
 from KBEDebug import *
 
 BASE = gameconst.BASE
@@ -135,16 +136,37 @@ def doOnAccounOfflineSafeByGbId(gbId, func, args):
     KBEngine.executeRawDatabaseCommand(_sql, functools.partial(doOnAccounOfflineSafeByGbIdAfterGetParentId, ctx))
 
 
-@gm_cmd('$banAvatar', (Int('gbId'), Int('endTime')), RONE, BASE, '封禁角色', ALLSIDE, DEV_GROUPS)
-def banAvatar(su, gbId, endTime):
-    DEBUG_MSG('banAvatar', gbId, endTime)
-    doOnAccounOfflineSafeByGbId(gbId, 'banAvatar', (gbId, endTime))
+def _afterBanLogin(gbId, endTime, ret, num, insertId, err):
+    if err:
+        ERROR_MSG('_afterBanLogin', err, ret)
+        return
+
+    KBEngine.addTimer(2, 0, functools.partial(_banAvatarAgain, gbId, endTime))
+
+def _banAvatarAgain(gbId, endTime, *args):
+    # 再次封印一次，以防止出现极端情况
+    gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+        [gbId],
+        'gmBanAvatar',
+        (endTime, ),
+        None,
+        '',
+        ())
+
+@gm_cmd('$banAvatar', (Player("gbId/Id", raw=True), Int('endTime')), RONE, BASE, '封禁角色', ALLSIDE, DEV_GROUPS)
+def banAvatar(su, player, endTime):
+    INFO_MSG('banAvatar', player, endTime)
+    if gmCommand.isRawPlayer(player):
+        gbId, name, accountName, dbId = player
+        gamesql.banLogin(gbId, endTime, functools.partial(_afterBanLogin, gbId, endTime))
+    else:
+        player.gmBanAvatar(endTime)
     return True, '执行成功'
 
 
-@gm_cmd('$disbanAvatar', (Int('gbId'),), RONE, BASE, '封禁角色', ALLSIDE, DEV_GROUPS)
+@gm_cmd('$disbanAvatar', (Int('gbId'),), RONE, BASE, '解除封禁角色', ALLSIDE, DEV_GROUPS)
 def disbanAvatar(su, gbId):
-    DEBUG_MSG('disbanAvatar', gbId)
-    doOnAccounOfflineSafeByGbId(gbId, 'disbanAvatar', (gbId,))
+    INFO_MSG('disbanAvatar', gbId)
+    gamesql.disbanLogin(gbId, lambda *args: INFO_MSG('disbanAvatar success', args))
     return True, '执行成功'
 

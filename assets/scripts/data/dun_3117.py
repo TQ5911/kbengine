@@ -1,7 +1,7 @@
 datas ={
   "31170001": {
     "ActivityID": 0,
-    "AttachedGIDList": "",
+    "AttachedGIDList": [],
     "AttachedGIDListStr": "",
     "ClassName": "BornPos",
     "ClassNameType": 6,
@@ -15,10 +15,12 @@ datas ={
     "PosY": 527.8172,
     "PosZ": 20.02799,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 0.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 0.0,
       "TelX": 39.52325,
       "TelY": 39.0038,
@@ -27,7 +29,7 @@ datas ={
   },
   "31170002": {
     "ActivityID": 0,
-    "AttachedGIDList": "",
+    "AttachedGIDList": [],
     "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
@@ -49,15 +51,16 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 0,
-      "RefreshTime": 1,
+      "RefreshTime": 0.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
   "31178001": {
     "ActivityID": 0,
-    "AttachedGIDList": "",
+    "AttachedGIDList": [],
     "AttachedGIDListStr": "",
     "ClassName": "Collection",
     "ClassNameType": 3,
@@ -74,14 +77,15 @@ datas ={
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 3600.0,
+      "RefreshTime": 0.0,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "31178002": {
     "ActivityID": 0,
-    "AttachedGIDList": "",
+    "AttachedGIDList": [],
     "AttachedGIDListStr": "",
     "ClassName": "Teleporter",
     "ClassNameType": 2,
@@ -98,15 +102,16 @@ datas ={
       "CameraId": 0,
       "GateType": 3,
       "Remark": "",
-      "TelDir": 129.019,
-      "TelX": 127.4835,
+      "ShowInSceneMap": 0,
+      "TelDir": 312.6052,
+      "TelX": 207.8485,
       "TelY": 527.7394,
-      "TelZ": 91.31271
+      "TelZ": 22.75973
     }
   },
   "31178003": {
     "ActivityID": 0,
-    "AttachedGIDList": "",
+    "AttachedGIDList": [],
     "AttachedGIDListStr": "",
     "ClassName": "Teleporter",
     "ClassNameType": 2,
@@ -123,6 +128,7 @@ datas ={
       "CameraId": 0,
       "GateType": 3,
       "Remark": "",
+      "ShowInSceneMap": 0,
       "TelDir": 312.6052,
       "TelX": 207.8485,
       "TelY": 527.7394,
@@ -131,7 +137,7 @@ datas ={
   },
   "31178004": {
     "ActivityID": 0,
-    "AttachedGIDList": "",
+    "AttachedGIDList": [],
     "AttachedGIDListStr": "",
     "ClassName": "CombatArea",
     "ClassNameType": 21,
@@ -147,7 +153,8 @@ datas ={
     "Props": {
       "AreaType": 1,
       "Radius": 36.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   }
 }

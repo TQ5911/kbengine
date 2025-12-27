@@ -1,14 +1,13 @@
 #coding: utf-8
 
 from KBEDebug import *
-
+import datetime
 import gamedecorator
 import utils
 import gameconst
-import agent_agentFunction as A_AFD
 import guildChallenge_basicInfo as GCBI
 import guildChallenge_config as GCC
-import gameengine
+import gamePlay_gamePlay as GP_GP
 import complexTeleportOption
 import formula
 
@@ -57,4 +56,166 @@ class IGuildBossChallenge(object):
         spaceNo = formula.getLineSpaceNo(_m_mapId)
         self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
 
+    def checkGuildBossChallengeCond(self):
+        if not self.guildUUID:
+            WARNING_MSG('IGuildBossChallenge::checkGuildBossChallengeCond: guild uuid is none')
+            return False
+
+        if not self.guildBoxCell:
+            WARNING_MSG('IGuildBossChallenge::checkGuildBossChallengeCond: guild box is none')
+            return False
         
+        return True
+    
+    def getGuildBossChallengeDungeonId(self, openId):
+        cfg = GCBI.datas.get(openId, None)
+        if not cfg:
+            WARNING_MSG('IGuildBossChallenge::getGuildBossChallengeDungeonId: wrong opened id', openId)
+            return None
+        
+        dungeonID = cfg['dunID']
+        if not GP_GP.datas.get(dungeonID, None):
+            WARNING_MSG('IGuildBossChallenge::getGuildBossChallengeDungeonId: wrong gameplay dungeon cfg', openId)
+            return None
+        return dungeonID
+    
+    @gamedecorator.checkGameconfigEnable('guildBossChallenge')
+    @gamedecorator.limitcall(1)
+    def openGuildDungeon(self, exposed, openTime, openType, openId):
+        INFO_MSG('IGuildBossChallenge::openGuildDungeon:', exposed, openTime, openType, openId)
+        if not self.checkGuildBossChallengeCond():
+            return
+        
+        if openType not in gameconst.GuildChallengeDungeonOpenType.VALID_TYPE:
+            WARNING_MSG('IGuildBossChallenge::openGuildDungeon: wrong opened type', exposed, openType, openId)
+            return
+        
+        dungeonID = self.getGuildBossChallengeDungeonId(openId)
+        if not dungeonID:
+            return
+        
+        guildChallengeCfgID = GCBI.dungeonIdxDic.get(dungeonID, None)
+        if not guildChallengeCfgID:
+            WARNING_MSG('IGuildBossChallenge::openGuildDungeon: wrong dungeon id', exposed, openType, dungeonID)
+            return
+        
+        # 检查是否可以预约
+        now = utils.getNow()
+        frontTime, _ = utils.nextByTimeTupleList(GCC.datas['timeNotScheduledFront']['value'])
+        laterTime, _ = utils.nextByTimeTupleList(GCC.datas['timeNotScheduledLater']['value'])
+        resetTime, _ = utils.nextByTimeTupleList(GCC.datas['guildChallengeResetTime']['value'])
+        # 1.未正确配置，不可开启
+        if not frontTime or not laterTime or not resetTime:
+            WARNING_MSG('IGuildBossChallenge::openGuildDungeon: not in time range 0', exposed, openType, openId)
+            self.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NOT_VALID_TIME, openType, openId)
+            return
+        
+        frontTime += now
+        laterTime += now
+        resetTime += now
+        # 预约开启
+        if openType == gameconst.GuildChallengeDungeonOpenType.APPOINT:
+            # 3.跨周期不可预约
+            if openTime >= resetTime:
+                WARNING_MSG('IGuildBossChallenge::openGuildDungeon: not in time range 2', exposed, openType, openId)
+                self.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NOT_VALID_TIME, openType, openId)
+                return
+            # 4.每日重置点不可预约
+            if openTime >= frontTime and openTime <= laterTime:
+                WARNING_MSG('IGuildBossChallenge::openGuildDungeon: not in time range 4', exposed, openType, openId)
+                self.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NOT_VALID_TIME, openType, openId)
+                return
+            # 计算下一个预约时间点
+            # 后退时间
+            backTime = int(GCC.datas['timeScheduledAhead']['value'])
+            # 找到下一个半个整点
+            curHalfTime = utils.getNextHoursTimestamp(now)
+            openHalfTime = utils.getNextHoursTimestamp(openTime)
+            # 5.不满足后退时间不可预期
+            if openHalfTime - curHalfTime < backTime:
+                WARNING_MSG('IGuildBossChallenge::openGuildDungeon: not in time range 5', exposed, openType, openId)
+                self.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NOT_VALID_TIME, openType, openId)
+                return
+            
+            openTime = openHalfTime
+        # 直接开启
+        else:
+            # 2.每日重置区间不可以开启
+            if frontTime >= laterTime:
+                WARNING_MSG('IGuildBossChallenge::openGuildDungeon: not in time range 1', exposed, openType, openId)
+                self.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NOT_VALID_TIME, openType, openId)
+                return
+            
+            if now >= frontTime and now <= laterTime:
+                WARNING_MSG('IGuildBossChallenge::openGuildDungeon: not in time range 6', exposed, openType, openId)
+                self.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.NOT_VALID_TIME, openType, openId)
+                return
+            
+            openTime = now
+
+        self.guildBoxCell.openGuildChallenge(self.gbId, self.base, openType, openId, openTime)
+
+    @gamedecorator.checkGameconfigEnable('guildBossChallenge')
+    @gamedecorator.limitcall(1)
+    def getChangllengeDataInfo(self, exposed):
+        INFO_MSG('IGuildBossChallenge::getChangllengeDataInfo:', exposed)
+        if not self.checkGuildBossChallengeCond():
+            return
+        
+        self.guildBoxCell.getChangllengeDataInfo(self.gbId, self.base)
+
+    @gamedecorator.checkGameconfigEnable('guildBossChallenge')
+    @gamedecorator.limitcall(1)
+    def cancelGuildDungeonOrder(self, exposed, openId):
+        INFO_MSG('IGuildBossChallenge::cancelGuildDungeonOrder:', exposed, openId)
+        if not self.checkGuildBossChallengeCond():
+            return
+        
+        dungeonID = self.getGuildBossChallengeDungeonId(openId)
+        if not dungeonID:
+            return
+        
+        self.guildBoxCell.cancelGuildDungeonOrder(self.gbId, self.base, openId)
+
+    @gamedecorator.checkGameconfigEnable('guildBossChallenge')
+    @gamedecorator.limitcall(1)
+    def enterBossChallengeDungeon(self, exposed, openId):
+        INFO_MSG('IGuildBossChallenge::enterBossChallengeDungeon:', exposed, openId)
+        if not self.checkGuildBossChallengeCond():
+            return
+        
+        dungeonNo = self.getGuildBossChallengeDungeonId(openId)
+        if not dungeonNo:
+            return
+        
+        if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, dungeonNo) or not self.canDoCompleteTeleport(noErrorMsg=True):
+            return
+        
+        self.base.enterBossChallengeDungeon(openId)
+        
+    @gamedecorator.checkGameconfigEnable('guildBossChallenge')
+    @gamedecorator.limitcall(1)
+    def leaveBossChallengeDungeon(self, exposed, openId):
+        INFO_MSG('IGuildBossChallenge::leaveBossChallengeDungeon:', exposed, openId)
+        if not self.checkGuildBossChallengeCond():
+            return
+        
+        dungeonID = self.getGuildBossChallengeDungeonId(openId)
+        if not dungeonID:
+            return
+        
+        self.guildBoxCell.leaveBossChallengeDungeon(self.gbId, self.base, openId)
+
+    @gamedecorator.checkGameconfigEnable('guildBossChallenge')
+    @gamedecorator.limitcall(1)
+    def getGuildBossHP(self, exposed, openId):
+        DEBUG_MSG('IGuildBossChallenge::getGuildBossHP:', exposed, openId)
+        if not self.checkGuildBossChallengeCond():
+            return
+        
+        dungeonID = self.getGuildBossChallengeDungeonId(openId)
+        if not dungeonID:
+            return
+        
+        self.guildBoxCell.getGuildBossHP(self.gbId, self.base, openId)
+    

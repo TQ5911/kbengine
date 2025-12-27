@@ -124,8 +124,15 @@ class IGameStart(object):
                     INFO_MSG('still waiting for raid stub', stubName)
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return False
+                
+            for i in range(gameconst.STATISTICSTUB_CONFIG_NUM):
+                stubName = gameconst.GLOBAL_BASE_STUB_STATISTICSTUB + str(i)
+                if not KBEngine.globalData.get(stubName):
+                    INFO_MSG('still waiting for statistic stub', stubName)
+                    self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
+                    return False
 
-            for lineType in gameconst.lineStubMap.keys():
+            for lineType in gameconst.lineStubMap().keys():
                 globalName = gameengine.buildLineStubName(lineType)
                 if not gameengine.getGlobalBase(globalName, reportErr=False):
                     INFO_MSG('start waiting: still waiting for line stub:', globalName)
@@ -198,7 +205,7 @@ class IGameStart(object):
             gameglobal.localAuctionStub.doNext()
 
             if gameglobal.isBootstrap:
-                for lineType in gameconst.lineStubMap.keys():
+                for lineType in gameconst.lineStubMap().keys():
                     stub = gameengine.getLineStub(lineType)
                     stub.doNext()
 
@@ -215,6 +222,11 @@ class IGameStart(object):
 
                 for i in range(gameconst.RAIDSTUB_CONFIG_NUM):
                     stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(i)
+                    stub = gameengine.getGlobalBase(stubName)
+                    stub.doNext()
+
+                for i in range(gameconst.STATISTICSTUB_CONFIG_NUM):
+                    stubName = gameconst.GLOBAL_BASE_STUB_STATISTICSTUB + str(i)
                     stub = gameengine.getGlobalBase(stubName)
                     stub.doNext()
 
@@ -267,7 +279,7 @@ class IGameStart(object):
         elif userArg == gametimer.BASESTUB_TIMER_CHECK_LINE_READY:
             # check world line ready
             if gameglobal.isBootstrap:
-                for lineType, lineCfg in gameconst.lineStubMap.items():
+                for lineType, lineCfg in gameconst.lineStubMap().items():
                     stubName = lineCfg['stubName']
                     ready = self.lineReady.get(lineType, False)
                     if not ready:
@@ -364,7 +376,7 @@ class IGameStart(object):
             lineType, self.lineEntityReadyNum.get(lineType, 0), utils.getLineMaxNumber(lineType)))
 
     def isLineEntityReady(self):
-        for mapId, lineCfg in gameconst.lineStubMap.items():
+        for mapId, lineCfg in gameconst.lineStubMap().items():
             if not lineCfg.get('createAtStart', True):
                 continue
 
@@ -412,8 +424,12 @@ class IGameStart(object):
             stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(i)
             random.choice(baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_RAIDSTUB, {}, stubName)
 
+        for i in range(gameconst.STATISTICSTUB_CONFIG_NUM):
+            stubName = gameconst.GLOBAL_BASE_STUB_STATISTICSTUB + str(i)
+            random.choice(baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_STATISTICSTUB, {}, stubName)
+
         # 每个地图一个stub,对应下面会创建 n个支线space
-        for lineType, stubDic in gameconst.lineStubMap.items():
+        for lineType, stubDic in gameconst.lineStubMap().items():
             random.choice(baseApps).createUnarchiveStub(stubDic['stubName'], {'lineType':lineType}, gameengine.buildLineStubName(lineType))
 
         # 每个副本地图一个stub,下面创建多个 副本space,用到才创建

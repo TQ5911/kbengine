@@ -4,7 +4,7 @@
         <Interface> iGlobal                     </Interface>
         <Interface> iTimerBase                  </Interface>
     </Interfaces>
-    
+
     <Properties>
         <siegeWarState>
             <Type>          INT32                   </Type>
@@ -30,6 +30,20 @@
             <Persistent>	true					</Persistent>
         </defensiveGuildUUID>
 
+        <offensiveJunXuQiXieLevelData>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       {}                      </Default>
+        </offensiveJunXuQiXieLevelData>
+
+        <defensiveJunXuQiXieLevelData>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       {}                      </Default>
+        </defensiveJunXuQiXieLevelData>
+
         <offensiveName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
@@ -54,12 +68,44 @@
             <Persistent>	true					</Persistent>
         </avatarGBID>
 
+        <nameList>
+            <Type>          ARRAY   <of>    UNICODE   </of>     </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </nameList>
+
+        <guildNameList>
+            <Type>          ARRAY   <of>    UNICODE   </of>     </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </guildNameList>
+
+        <cntList>
+            <Type>        ARRAY <of> INT32   </of>       </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </cntList>
+
+        <signUpDelayTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       0                       </Default>
+        </signUpDelayTime>
+
         <cityBuffDict>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
             <Persistent>	true					</Persistent>
             <Default>       {}                      </Default>
         </cityBuffDict>
+
+        <offlineBuffCache>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+            <Default>       {}                      </Default>
+        </offlineBuffCache>
 
         <officerBuffDict>
             <Type>          PY_DICT                 </Type>
@@ -82,11 +128,29 @@
             <Default>       []                      </Default>
         </cityFundUseRecord>
 
+        <cityOwnerUUID>
+            <Type>          PLAYER_GBID             </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </cityOwnerUUID>
+
+        <cityOwnerName>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </cityOwnerName>
+
         <cityOwnerGuildName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
             <Persistent>	true					</Persistent>
         </cityOwnerGuildName>
+
+        <cityOwnerGuildUUID>
+            <Type>          GUILD_UUID              </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </cityOwnerGuildUUID>
 
         <lastSiegeWarEndTime>
             <Type>          LONGTIME                </Type>
@@ -94,6 +158,24 @@
             <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </lastSiegeWarEndTime>
+
+        <firstBiddingGuildUUID>
+            <Type>          GUILD_UUID              </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </firstBiddingGuildUUID>
+
+        <cityDefenseDeclaration>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </cityDefenseDeclaration>
+
+        <cityOffensiveDeclaration>
+            <Type>          UNICODE                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>	true					</Persistent>
+        </cityOffensiveDeclaration>
     </Properties>
 
     <BaseMethods>
@@ -107,6 +189,7 @@
         </setSiegeWarState>
 
         <doBidding>
+            <Arg>          ENTITYCALL                   </Arg>
             <Arg>          PLAYER_GBID                  </Arg>
             <Arg>          UNICODE                      </Arg>
             <Arg>          INT32                        </Arg>
@@ -118,21 +201,18 @@
             <Arg>          PLAYER_GBID                  </Arg>
             <Arg>          INT32                        </Arg>
             <Arg>          BOOL                         </Arg>
+            <Arg>          INT32                        </Arg>
         </onBiddingResult>
 
-        <onSiegeWarBiddingFailAvatarOffline>
-            <Arg>          PY_LIST                      </Arg>
-            <Arg>          INT32                        </Arg>
-        </onSiegeWarBiddingFailAvatarOffline>
-        
         <onSiegeWarBiddingDataUpdate>
             <Arg>        ARRAY <of> UNICODE </of>       </Arg>
             <Arg>        ARRAY <of> UNICODE </of>       </Arg>
             <Arg>        ARRAY <of> INT32   </of>       </Arg>
             <Arg>        LONGTIME                       </Arg>
             <Arg>        PLAYER_GBID                    </Arg>
+            <Arg>        GUILD_UUID                     </Arg>
         </onSiegeWarBiddingDataUpdate>
-        
+
         <onQuerySiegeWarBiddingWinnerData>
             <Arg>          ENTITYCALL                    </Arg>
         </onQuerySiegeWarBiddingWinnerData>
@@ -147,6 +227,7 @@
             <Arg>          GUILD_UUID                   </Arg>
             <Arg>          UNICODE                      </Arg>
             <Arg>          INT32                        </Arg>
+            <Arg>          UNICODE                      </Arg>
         </handleBiddingResult>
 
         <handleBiddingResultGetGuildBox>
@@ -159,12 +240,15 @@
             <Arg>          PLAYER_GBID                   </Arg>
             <Arg>          UNICODE                       </Arg>
             <Arg>          GUILD_UUID                    </Arg>
+            <Arg>          UNICODE                       </Arg>
+            <Arg>          UNICODE                       </Arg>
         </onSiegeWarDeclareWar>
 
         <onSiegeWarDeclareWarCrossServerResult>
             <Arg>          ENTITYCALL                    </Arg>
             <Arg>          BOOL                          </Arg>
             <Arg>          INT32                         </Arg>
+            <Arg>          PLAYER_GBID                   </Arg>
         </onSiegeWarDeclareWarCrossServerResult>
 
         <onSiegeWarDeclareWarOfficial>
@@ -175,18 +259,16 @@
             <Arg>          UNICODE                       </Arg>
             <Arg>          UNICODE                       </Arg>
             <Arg>          LONGTIME                      </Arg>
+            <Arg>          UNICODE                       </Arg>
         </onSiegeWarDeclareWarOfficial>
 
         <onQuerySiegeWarDefenderAndOffensive>
             <Arg>          ENTITYCALL                    </Arg>
         </onQuerySiegeWarDefenderAndOffensive>
 
-        <onSiegeWarDeclareWarOfficialGetGuildBox>
-            <Arg>          ENTITYCALL                    </Arg>
-        </onSiegeWarDeclareWarOfficialGetGuildBox>
-
         <onCrossSiegeWarEnd>
             <Arg>           PY_LIST                     </Arg>
+            <Arg>           GUILD_UUID                  </Arg>
             <Arg>           GUILD_UUID                  </Arg>
             <Arg>           GUILD_UUID                  </Arg>
         </onCrossSiegeWarEnd>
@@ -202,15 +284,6 @@
         <onSiegeWarGuildWinnerData>
             <Arg>           PY_LIST                     </Arg>
         </onSiegeWarGuildWinnerData>
-
-        <cityRecentActivityRequest>
-            <Arg>          ENTITYCALL                                       </Arg>
-        </cityRecentActivityRequest>
-
-        <cityRecentActivityResponse>
-            <Arg>          ENTITYCALL                                       </Arg>
-            <Arg>          ARRAY <of> CITY_RECENT_ACTIVITY_VAL </of>        </Arg>
-        </cityRecentActivityResponse>
 
         <onCityOfficerChange>
             <Arg>          PY_LIST                      </Arg>
@@ -244,7 +317,7 @@
         </onCityDataChange>
 
         <onCityDataRequest>
-            <Arg>          ENTITYCALL                    </Arg>
+            <Arg>          PLAYER_GBID                   </Arg>
         </onCityDataRequest>
 
         <onChangeCityMoneyToGuildMoneyResult>
@@ -253,11 +326,36 @@
             <Arg>          PLAYER_GBID                   </Arg>
             <Arg>          ENTITYCALL                    </Arg>
             <Arg>          INT64                         </Arg>
+            <Arg>          INT64                         </Arg>
         </onChangeCityMoneyToGuildMoneyResult>
+
+        <doChangeCityMoneyToGuildMoney>
+            <Arg>          ENTITYCALL                    </Arg>
+            <Arg>          PLAYER_GBID                   </Arg>
+            <Arg>          INT64                         </Arg>
+        </doChangeCityMoneyToGuildMoney>
 
         <querySiegeWarCityFundUseRecord>
             <Arg>          ENTITYCALL                    </Arg>
         </querySiegeWarCityFundUseRecord>
+
+        <addCityBuffOffline>
+            <Arg>          PLAYER_GBID                   </Arg>
+            <Arg>          BUFFID                        </Arg>
+            <Arg>          LONGTIME                      </Arg>
+            <Arg>          PLAYER_GBID                   </Arg>
+        </addCityBuffOffline>
+
+        <onJunXuQiXieLevelSync>
+            <Arg>          GUILD_UUID                    </Arg>
+            <Arg>          PY_DICT                       </Arg>
+        </onJunXuQiXieLevelSync>
+
+        <changeDeclaration>
+            <Arg>           BOOL                        </Arg>
+            <Arg>           PLAYER_GBID                 </Arg>
+            <Arg>           UNICODE                     </Arg>
+        </changeDeclaration>
     </BaseMethods>
 
     <CellMethods>

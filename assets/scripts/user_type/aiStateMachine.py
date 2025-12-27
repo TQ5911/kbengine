@@ -43,7 +43,7 @@ def withName(name):
 # 状态对象
 class StateImp(object):
     name = State.UNKNOWN
-    mask = 0
+    mask = 0 # 如果想屏蔽某个，就把他放进mask里面
 
     def tick(self, ctrl): pass
 
@@ -266,6 +266,7 @@ class StateAngryEx(StateImp):
 class StateBack(StateImp):
     '''通用脱战'''
     name = State.BACK
+    mask = Event.ATTACK
 
     def tick(self, ctrl):
         if ctrl.getHome():
@@ -649,16 +650,30 @@ class StateluckyMonsterAngry(StateImp):
     name = State.ANGRY
 
     def tick(self, ctrl):
-        if ctrl.farWithTargetFromHome():
-            ctrl.clearHateAndRoute()
-            ctrl.starRoutePatrol()
-            return
         if ctrl.inHate():
             ctrl.useRandomSkill()
             ctrl.stopRoutingMove()
         else:
             ctrl.clearHateAndRoute()
             ctrl.starRoutePatrol()
+
+@withName('luckyGroupAngry')
+class StateluckyGroupAngry(StateImp):
+    '''守宝团巡逻 激怒'''
+    name = State.ANGRY
+
+    def tick(self, ctrl):
+        if not ctrl.owner.checkInCombatArea(ctrl.owner.position):
+            ctrl.clearHateAndTelBackWithBroadcast()
+            ctrl.restart()
+            ctrl.changeBornState(gameconst.BornStateType.reMove)
+        if ctrl.inHate():
+            ctrl.useRandomSkill()
+            ctrl.stopRoutingMove()
+        else:
+            ctrl.clearHateAndTelBackWithBroadcast()
+            ctrl.restart()
+            ctrl.changeBornState(gameconst.BornStateType.reMove)
 
 
 @withName('routingPatrol')
@@ -815,6 +830,7 @@ class MachineImp(object):
         self.moveable = True
         self.turnable = True
         self.onBeAttack = False
+        self.speialAICombatTup = False
 
     def tick(self, ctrl):
         if not ctrl.dealForceQue():
@@ -1297,6 +1313,7 @@ class Machine3050(MachineWithChangeTime):
         })
         self.moveable = False
         self.turnable = False
+        self.speialAICombatTup = True
 
     def doLoseWitnessTask(self, ctrl):
         ctrl.backEgg()
@@ -1319,6 +1336,7 @@ class Machine3051(MachineWithChangeTime):
             State.RESET_ANIM: 'resetAnim'
         })
         self.moveable = False
+        self.speialAICombatTup = True
 
     def doLoseWitnessTask(self, ctrl):
         ctrl.backWait()
@@ -1340,6 +1358,7 @@ class Machine3052(MachineWithChangeTime):
             State.STAND: 'standAndResetAnim',
             State.BACK: 'telBackAfterResetAnim'
         })
+        self.speialAICombatTup = True
 
     def doLoseWitnessTask(self, ctrl):
         ctrl.backWait()
@@ -1358,6 +1377,18 @@ class Machine3053(MachineImp):
             State.STAND: 'standAndRestart',
         })
         self.moveable = False
+
+class Machine3054(MachineImp):
+    '''守宝团
+    1 定点走路线
+    2 脱战后群体传送回出生点
+    '''
+    def __init__(self):
+        super(Machine3054, self).__init__({
+            State.IDLE: 'routingPatrol',
+            State.ANGRY: 'luckyGroupAngry',
+            State.PATROL: 'routingRoutePatrol',
+        })
 
 _machineDic = {
     3001: Machine3001,
@@ -1398,6 +1429,7 @@ _machineDic = {
     3051: Machine3051,
     3052: Machine3052,
     3053: Machine3053,
+    3054: Machine3054,
 }
 
 

@@ -4,15 +4,14 @@
             <Type>      PY_DICT         </Type>
             <Flags>     BASE            </Flags>
         </staticSpaces>
+
+        <loadWaitSet>
+            <Type>      PYTHON          </Type>
+            <Flags>     BASE            </Flags>
+        </loadWaitSet>
     </Properties>
 
     <BaseMethods>
-        <onEntityRefresh>
-            <Arg>       SPACE_NO       </Arg>
-            <Arg>       GAME_ENTITY_ID  </Arg>
-            <Arg>       FLOAT    </Arg>
-        </onEntityRefresh>
-
         <onStaticSpaceReady>
             <Arg>       SPACE_NO        </Arg>
         </onStaticSpaceReady>
@@ -29,5 +28,13 @@
         <onRefreshGroupEntities>
             <Arg>       PY_DICT       </Arg>
         </onRefreshGroupEntities>
+
+        <onLoadEntitiesEnd>
+            <Arg>       SPACE_NO        </Arg>
+        </onLoadEntitiesEnd>
+
+        <onSpaceCellAppDeath>
+            <Arg>       SPACE_NO        </Arg>
+        </onSpaceCellAppDeath>
     </BaseMethods>
 </root>

@@ -27,6 +27,10 @@ datas = _tools.RODict({
         "ID": "revokeMsg",
         "value": 54000274,
     }),
+    "authorizationDayLimit": _tools.RODict({
+        "ID": "authorizationDayLimit",
+        "value": 1,
+    }),
     "authorizationDays": _tools.RODict({
         "ID": "authorizationDays",
         "value": 30,
@@ -97,7 +101,7 @@ datas = _tools.RODict({
     }),
     "dailyGoldLimitShow": _tools.RODict({
         "ID": "dailyGoldLimitShow",
-        "value": "<color=#c60c0c>{0}/{1}</color>",
+        "value": "<color=#c60c0c>{0}</color>/{1}",
     }),
     "copySettlement": _tools.RODict({
         "ID": "copySettlement",
@@ -118,5 +122,41 @@ datas = _tools.RODict({
     "offlineDaili": _tools.RODict({
         "ID": "offlineDaili",
         "value": 54000286,
+    }),
+    "offlineNotice": _tools.RODict({
+        "ID": "offlineNotice",
+        "value": 54000287,
+    }),
+    "onlineNotice": _tools.RODict({
+        "ID": "onlineNotice",
+        "value": 54000288,
+    }),
+    "agentOffline": _tools.RODict({
+        "ID": "agentOffline",
+        "value": 54000289,
+    }),
+    "agentCancel": _tools.RODict({
+        "ID": "agentCancel",
+        "value": 54000290,
+    }),
+    "Disassembly": _tools.RODict({
+        "ID": "Disassembly",
+        "value": 20,
+    }),
+    "SellRoot": _tools.RODict({
+        "ID": "SellRoot",
+        "value": 21,
+    }),
+    "PullRoot": _tools.RODict({
+        "ID": "PullRoot",
+        "value": 22,
+    }),
+    "deFriended": _tools.RODict({
+        "ID": "deFriended",
+        "value": 23,
+    }),
+    "deMail": _tools.RODict({
+        "ID": "deMail",
+        "value": 24,
     })
 })

@@ -75,6 +75,10 @@ datas = _tools.RODict({
         "ID": "PK_changeToHostilityMode_msgID",
         "value": 54001547,
     }),
+    "PK_changeToActivityMode_msgID": _tools.RODict({
+        "ID": "PK_changeToActivityMode_msgID",
+        "value": 54001548,
+    }),
     "modeCd": _tools.RODict({
         "ID": "modeCd",
         "value": 0.3,
@@ -125,6 +129,6 @@ datas = _tools.RODict({
     }),
     "RedScreenWarningResPath": _tools.RODict({
         "ID": "RedScreenWarningResPath",
-        "value": "Assets/Res/ui/effect/prefab/common/fx_ui_com_hongpingbaojing.prefab",
+        "value": "Assets/Res/art/effect/Prefabs/ui/fx_ui_com_hongpingbaojing.prefab",
     })
 })

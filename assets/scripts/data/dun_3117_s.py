@@ -3,8 +3,7 @@ datas ={
     "BornPos": {
       "31170001": {
         "ActivityID": 0,
-        "AttachedGIDList": "",
-        "AttachedGIDListStr": "",
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -12,15 +11,16 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 31170001,
-        "Name": "\u51fa\u751f\u70b9",
         "PosX": 134.5863,
         "PosY": 527.8172,
         "PosZ": 20.02799,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
           "RefreshTimedID": 0,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "TelDir": 0.0,
           "TelX": 39.52325,
           "TelY": 39.0038,
@@ -32,8 +32,7 @@ datas ={
       "Monster": {
         "31170002": {
           "ActivityID": 0,
-          "AttachedGIDList": "",
-          "AttachedGIDListStr": "",
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -41,7 +40,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 11011029,
           "ID": 31170002,
-          "Name": "6005-\u7b80\u914d\u7248\u5c01\u5370",
           "PosX": 173.5494,
           "PosY": 524.8943,
           "PosZ": 65.75397,
@@ -54,9 +52,10 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 0,
-            "RefreshTime": 1,
+            "RefreshTime": 0.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         }
@@ -64,8 +63,7 @@ datas ={
       "Collection": {
         "31178001": {
           "ActivityID": 0,
-          "AttachedGIDList": "",
-          "AttachedGIDListStr": "",
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -73,7 +71,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 16002004,
           "ID": 31178001,
-          "Name": "\u6df7\u6c8c\u56de\u5eca\u4e00\u5c42\u5c01\u5370\u77f3",
           "PosX": 167.7699,
           "PosY": 524.8943,
           "PosZ": 57.75644,
@@ -81,17 +78,17 @@ datas ={
             "IsOpen": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 3600.0,
+            "RefreshTime": 0.0,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       },
       "CombatArea": {
         "31178004": {
           "ActivityID": 0,
-          "AttachedGIDList": "",
-          "AttachedGIDListStr": "",
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -99,14 +96,14 @@ datas ={
           "DisplayName": "",
           "EntityID": 0,
           "ID": 31178004,
-          "Name": "\u6218\u6597\u533a",
           "PosX": 167.79,
           "PosY": 524.8943,
           "PosZ": 57.77,
           "Props": {
             "AreaType": 1,
             "Radius": 36.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       }
@@ -116,8 +113,7 @@ datas ={
       "Teleporter": {
         "31178002": {
           "ActivityID": 0,
-          "AttachedGIDList": "",
-          "AttachedGIDListStr": "",
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -125,7 +121,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 17311701,
           "ID": 31178002,
-          "Name": "\u6df7\u6c8c\u4e4b\u5883",
           "PosX": 127.4835,
           "PosY": 527.7394,
           "PosZ": 91.31271,
@@ -133,16 +128,16 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "",
-            "TelDir": 129.019,
-            "TelX": 127.4835,
+            "ShowInSceneMap": 0,
+            "TelDir": 312.6052,
+            "TelX": 207.8485,
             "TelY": 527.7394,
-            "TelZ": 91.31271
+            "TelZ": 22.75973
           }
         },
         "31178003": {
           "ActivityID": 0,
-          "AttachedGIDList": "",
-          "AttachedGIDListStr": "",
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -150,7 +145,6 @@ datas ={
           "DisplayName": "",
           "EntityID": 17311701,
           "ID": 31178003,
-          "Name": "\u6df7\u6c8c\u4e4b\u5883",
           "PosX": 207.8485,
           "PosY": 527.7394,
           "PosZ": 22.75973,
@@ -158,6 +152,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "",
+            "ShowInSceneMap": 0,
             "TelDir": 312.6052,
             "TelX": 207.8485,
             "TelY": 527.7394,

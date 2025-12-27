@@ -4,8 +4,9 @@ class CollectionCheckType(object):
 
 class CollectionCheckWonderLand(object):
     CHECK_TYPE = CollectionCheckType.WONDER_LAND
-    def __init__(self, itemId, bossId, collectionId):
+    def __init__(self, itemId, itemNum, bossId, collectionId):
         self.itemId = itemId
+        self.itemNum = itemNum
         self.bossId = bossId
         self.collectionId = collectionId
 
@@ -13,7 +14,7 @@ class CollectionCheckWonderLand(object):
         return avatarCell.checkSummonWonderLandBossCell(self.bossId)
 
     def checkBase(self, avatarBase):
-        return avatarBase.checkSummonWonderLandBossBase(self.itemId)
+        return avatarBase.checkSummonWonderLandBossBase(self.itemId, self.itemNum)
 
 class CollectionCheckSiegeWar(object):
     CHECK_TYPE = CollectionCheckType.SIEGE_WAR

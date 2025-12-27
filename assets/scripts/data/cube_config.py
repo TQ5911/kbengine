@@ -169,7 +169,7 @@ datas = _tools.RODict({
     }),
     "cubeExpansionTitle": _tools.RODict({
         "ID": "cubeExpansionTitle",
-        "value": "延长时间：{0}",
+        "value": "限定时间：{0}",
     }),
     "autoExpansionUseItemText": _tools.RODict({
         "ID": "autoExpansionUseItemText",
@@ -214,5 +214,9 @@ datas = _tools.RODict({
     "cube_hall": _tools.RODict({
         "ID": "cube_hall",
         "value": 3100,
+    }),
+    "cube_cowPassBuffID": _tools.RODict({
+        "ID": "cube_cowPassBuffID",
+        "value": 64000107,
     })
 })

@@ -405,6 +405,45 @@ def _13080069(self, target, context):
     if buffSrc:
         buffSrc.addMpByPct(target, context, *context.args.ActionParam)
 
+def _13080070(self, target, context):
+    self.addExpAction(1000)
+
+def _13080071(self, target, context):
+    self.addExpAction(1500)
+
+def _13080072(self, target, context):
+    self.addExpAction(2500)
+
+def _13080073(self, target, context):
+    self.addExpAction(3750)
+
+def _13080074(self, target, context):
+    self.addExpAction(6000)
+
+def _13080075(self, target, context):
+    self.addExpAction(9000)
+
+def _13080076(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.healByNum(target, context, *context.args.ActionParam)
+
+def _13080077(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.addMp(target, context, *context.args.ActionParam)
+
+def _13080078(self, target, context):
+    #self.healByPct(target, context, *context.args.ActionParam)
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        buffSrc.healByPct(target, context, *context.args.ActionParam)
+
+def _13080079(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc and target:        
+        buffSrc.addMpByPct(target, context, *context.args.ActionParam)
+
 datas = _tools.RODict({ 
     13080000: _tools.RODict({
         "ID": 13080000,
@@ -649,7 +688,47 @@ datas = _tools.RODict({
     13080069: _tools.RODict({
         "ID": 13080069,
         "Action": _13080069
+    }),
+    13080070: _tools.RODict({
+        "ID": 13080070,
+        "Action": _13080070
+    }),
+    13080071: _tools.RODict({
+        "ID": 13080071,
+        "Action": _13080071
+    }),
+    13080072: _tools.RODict({
+        "ID": 13080072,
+        "Action": _13080072
+    }),
+    13080073: _tools.RODict({
+        "ID": 13080073,
+        "Action": _13080073
+    }),
+    13080074: _tools.RODict({
+        "ID": 13080074,
+        "Action": _13080074
+    }),
+    13080075: _tools.RODict({
+        "ID": 13080075,
+        "Action": _13080075
+    }),
+    13080076: _tools.RODict({
+        "ID": 13080076,
+        "Action": _13080076
+    }),
+    13080077: _tools.RODict({
+        "ID": 13080077,
+        "Action": _13080077
+    }),
+    13080078: _tools.RODict({
+        "ID": 13080078,
+        "Action": _13080078
+    }),
+    13080079: _tools.RODict({
+        "ID": 13080079,
+        "Action": _13080079
     })
 })
 minKey = 13080000
-maxKey = 13080069
+maxKey = 13080079

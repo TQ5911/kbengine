@@ -24,6 +24,7 @@ import iCycleEvent
 import ApplyedGuildValInfo
 import JunXuArchitectureInfo
 import _pickle as cPickle
+import datetime
 
 import guild_guildConst as G_GCD
 import guildAuthorization_authorization as GA_AD
@@ -97,6 +98,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         # 清除帮会申请过期数据
         _dur = 59
         self.pyAddTimer(_dur, _dur, gametimer.CLEAR_GUILD_UNION_APPLY_EXPIRE)
+        
+        # 开启副本倒计时计时器
+        self.openDungeonCDTimer = 0
+        # 开启副本计时器
+        self.openDungeonTimer = 0
+        
+        # 处理帮会Boss副本异常情况
+        self.recoverGuildBossDungeonData()
 
     def onTimer(self, tid, userArg):
         if utils.isBelongTimerTag(userArg):
@@ -681,6 +690,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             WARNING_MSG('doExitGuild: gbId not in guild', gbId)
             return
 
+        # 帮会副本开启阶段，不允许帮主退出帮会
+        if _gmVal.job == GA_A_DD.datas.leader:
+            if self.guildChallengeData.openedDungeonStatus >= gameconst.GuildBossChallengeStatus.CREATING:
+                box.onMessagePre(GCC.datas['guildChallengeProhibitExit']['value'], [])
+                return
+            
         if _gmVal.job == GA_A_DD.datas.leader and len(self.members) > 1:
             box.onMessagePre(G_GCD.datas['guild_presidentLeave_msg']['value'], [])
             return
@@ -688,7 +703,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if _gmVal.job == GA_A_DD.datas.leader and (self.siegeWarSignUped or self.haveYuXi or self.siegeWarDeclared or self.isCityOwner):
             box.onMessagePre(G_CBD.datas['cityBattle_prohibitExit']['value'], [])
             return
-
+        
+        self.doExitDungeon(gbId, box)
         _reason = gameconst.ExitGuildReason.LEAVE
 
         _gmVal = self.members.get(gbId)
@@ -1012,10 +1028,11 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             None
         )
 
-    def doSendMineWarHpWarning(self, spaceNo, percent):
+    def doBroadcastGuildMemberBase(self, func, *args):
+        INFO_MSG('doBroadcastGuildMemberBase', func, args)
         self._braodcastAsync(
-            lambda box: box.onMineWarHpWarning(spaceNo, percent),
-            None
+            lambda box: getattr(box, func)(*args[0]),
+            0
         )
     def addGuildExp(self, delta, src, opUUID, detail):
         DEBUG_MSG('addGuildExp', delta, src, opUUID, detail)
@@ -1085,7 +1102,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         if _gmVal.job == job:
             oprBox.onMessagePre(G_GCD.datas['guildAuth_samePosition_msg']['value'], [])
             return
-
+            
         _oldJob = _gmVal.job
         _oldLevel = GA_AD.datas[_gmVal.job]['level']
         _newLevel = GA_AD.datas[job]['level']
@@ -1121,6 +1138,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         _cnt = self.jobCnt(job)
         _needCnt = self.jobMaxCnt(job)
         if job == GA_A_DD.datas.leader:
+            # 我传给别人帮主之位，要检查
+            # 帮会副本开启阶段，不允许帮主传位给别人
+            if _oprGmVal.job == GA_A_DD.datas.leader:
+                if self.guildChallengeData.openedDungeonStatus >= gameconst.GuildBossChallengeStatus.CREATING:
+                    oprBox.onMessagePre(GCC.datas['guildChallengeProhibitExit']['value'], [])
+                    return
             _oprGmVal.setProperty('job', GA_A_DD.datas.member)
             self.leaderGbId = gbId
 
@@ -1252,7 +1275,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         _eId = M_GL_DD.datas.guildLog_memberKicked
         _args = [_gmVal.name, _oprGmVal.name, self.guildName]
         self.addGuildEvent(_eId, _args)
-
+        
+        self.doExitDungeon(gbId, _gmVal.box)
     # ------------------------------------ iGuildTrain start ------------------------------------
     def doCheckUpgradeTrainLevel(self, needLv, ctx, box):
         if self.guildBuilding.yanWu.level < needLv:
@@ -1413,6 +1437,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.crossSiegeWarServerInfo()['crossServerId'], 'CrossSiegeWarStub')
         _stub.onGuildRename(self.guildUUID, self.guildName)
 
+        self.syncMineWarSpaceMgrForChange()
+
     def onGuildMemberPropUpdate(self, gbId, prop, val):
         _gmVal = self.members.get(gbId)
         if not _gmVal:
@@ -1501,6 +1527,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             0
         )
 
+        self.syncMineWarSpaceMgrForChange()
+
     def doGuildRecruit(self, oprGbId, oprBox):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.allowApplication):
             WARNING_MSG('doGuildRecruit: no permission', oprGbId)
@@ -1547,6 +1575,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             lambda box: box.client.onGuildDispChanged(self.dspFlag),
             0
         )
+        INFO_MSG('doModifyGuildDisp: dspFlag changed', self.guildUUID, self.dspFlag)
+        self.syncMineWarSpaceMgrForChange()
 
     def doInviteJoinGuild(self, oprGbId, oprBox, beInvitedGbId, oprName):
         # INVITE_DATA
@@ -1660,16 +1690,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         DEBUG_MSG('[lj]syncJunXuQiXieLevel', res)
         gameengine.getGlobalBase('SiegeWarStub').onJunXuQiXieLevelSync(self.guildUUID, res)
 
-    def getJunxuQiXieLevel(self, guildUUID, box, onRegister=True):
-        data = self.junXuArchitecture.toJunXuArchitectureSavedDict()
-        res = {}
-        for v in data['qixieList']:
-            qxdict = v.toJunXuQiXieSavedDict()
-            res[qxdict['qixieType']] = qxdict['level']
-
-        if hasattr(box, 'onSyncGuildMineWarResult'):
-            box.onSyncGuildMineWarResult(guildUUID, self.guildName, self.guildIcon, self.dspFlag, self.desc, res, onRegister)
-
     def onSiegeWarGetWinnerData(self, box):
         redisUtils.RedisUtils.getSingleUserInfo(
             self.leaderGbId,
@@ -1717,13 +1737,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         box.onGetSiegeWarGuildCacheData(cache)
 
-    def getMemberJob(self, gbId, box, args):
+    def getMemberJobAndGuildCache(self, gbId, box, args):
         _gmVal = self.members.get(gbId)
         if not _gmVal:
-            box.onGetMemberJob(GA_A_DD.datas.BONUS_SRC_UNKNOWN, args)
+            box.onGetMemberJobAndGuildCache((GA_A_DD.datas.BONUS_SRC_UNKNOWN, self.dspFlag, self.guildIcon), args)
             return
 
-        box.onGetMemberJob(_gmVal.job, args)
+        box.onGetMemberJobAndGuildCache((_gmVal.job, self.dspFlag, self.guildIcon), args)
 
     def reqShareBonusFromMineWar(self, mapId, srcGbId, shareList, box):
         if srcGbId != self.leaderGbId:
@@ -1731,6 +1751,31 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             # return
         
         gameengine.getGlobalBase('MineWarStub').doShareGuildMineWarBonusToMember(mapId, srcGbId, shareList, box)
+
+    def getJunxuQiXieLevel(self):
+        data = self.junXuArchitecture.toJunXuArchitectureSavedDict()
+        res = {}
+        for v in data['qixieList']:
+            qxdict = v.toJunXuQiXieSavedDict()
+            res[qxdict['qixieType']] = qxdict['level']
+
+        return res
+    
+    def getGuildMineWarForRegister(self, box, onRegister=True):
+        res = self.getJunxuQiXieLevel()
+        # 
+        self.mineWarSpaceMgrBoxs.append(box)
+        #
+        box.onSyncGuildMineWarResult(self.guildUUID, self.guildName, self.guildIcon, self.dspFlag, self.desc, res, onRegister)
+
+    # 有数据修改时，通知spacemgr
+    def syncMineWarSpaceMgrForChange(self):
+        if not self.mineWarSpaceMgrBoxs:
+            return
+        res = self.getJunxuQiXieLevel()
+        for box in self.mineWarSpaceMgrBoxs:
+            INFO_MSG('syncMineWarSpaceMgrForChange: ', self.guildUUID, self.guildName, self.guildIcon, self.dspFlag, self.desc, res)
+            box.onSyncMineWarGuildInfo(self.guildUUID, self.guildName, self.guildIcon, self.dspFlag, self.desc, res)
         
     def _toMineWarData(self):
         info = {
@@ -1742,20 +1787,10 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             'leaderName': self.members[self.leaderGbId].name if self.leaderGbId in self.members else '',
         }
         return info
-    def getMineWarGuildOwnerRank(self, mapId, box):
-        
+    
+    def playerGetGuildInfo(self, box):
         info = self._toMineWarData()
-        gameengine.getGlobalBase('MineWarStub').doGetMineWarGuildOwnerRank(mapId, box, info)
-        
-    def getMineWarGuildPlayerRank(self, mapId, box, playerGbId, playerName):
-        
-        info = self._toMineWarData()
-        gameengine.getGlobalBase('MineWarStub').doGetMineWarGuildPlayerRank(mapId, box, playerGbId, playerName, info)
-        
-    def onMineWarKillCoreForGuild(self, mapId, box):
-        info = self._toMineWarData()
-        gameengine.getGlobalBase('MineWarStub').doOnMineWarKillCoreForGuild(mapId, box, info)
-        
+        box.onPlayerGetGuildInfo(info)
         
     # ------------------------------------- cross data start -------------------------------------
     def _toCrossData(self):
@@ -2031,6 +2066,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         self.syncJunXuQiXieLevel()
 
+        self.syncMineWarSpaceMgrForChange()
+
     def onAddGuildUnionToGuild(self, otherGuildUUID, otherGuildName):
         _eId = M_GL_DD.datas.guild_unionDesc
         _args = [otherGuildName]
@@ -2255,40 +2292,42 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             WARNING_MSG('openGuildChallenge: dungeon open limit', gbID, openType, openID)
             return
         
+        self.guildChallengeData.openedId = openID
         self.guildChallengeData.openedType = openType
         self.guildChallengeData.openedDungeonId = dungeonID
         self.guildChallengeData.openedTime = openedTime
 
-        if openType == gameconst.GuildChallengeDungeonOpenType.DIRECT:
-            self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CHALLENGE_OPEN)
-        else:
-            self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.APPOINT)
-
-        box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.OPEN_DUNGEON_REPEAT, openType, openID)
-        box.client and box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo())
         # 预约成功发布邮件
         if openType == gameconst.GuildChallengeDungeonOpenType.APPOINT:
+            self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.APPOINT)
             _mailId = int(GCC.datas['emailReservation']['value'])
             _mailArgs = [time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.guildChallengeData.openedTime)), GCBI.datas[openID]['name']]
             self._sendMailToGuildMembers(_mailId, _mailArgs)
             # 开启前N分钟发通知邮件
             cdTime = openedTime - nowTime - int(GCC.datas['countdownOpen']['value'])
-            self._callback(cdTime, '_doAppointOpenCD', (openID,), gametimer.TIMER_TAG_GUILD_CHALLENGE_APPOINT_OPEN_CD)
+            self.openDungeonCDTimer = self._callback(cdTime, '_doAppointOpenCD', (openID,), gametimer.TIMER_TAG_GUILD_CHALLENGE_APPOINT_OPEN_CD)
 
             # 开启副本发通知邮件
-            cdTime = openedTime - nowTime - int(GCC.datas['countdownOpen']['value'])
-            self._callback(cdTime, '_doDungeonOpen', (openID,), gametimer.TIMER_TAG_GUILD_CHALLENGE_OPEN_DUNGEON)
+            cdTime = openedTime - nowTime
+            self.openDungeonTimer = self._callback(cdTime, '_doDungeonOpen', (openID,), gametimer.TIMER_TAG_GUILD_CHALLENGE_OPEN_DUNGEON)
         else:
             self._doDungeonOpen(openID)    
 
+        INFO_MSG('openGuildChallenge:', openedTime, openType, openID, datetime.datetime.fromtimestamp(openedTime))
+
+        box.client and box.client.onOpenGuildDungeon(gameconst.GuildChallengeOpenDungeonResult.OK, openType, openID)
+        box.client and box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo())
+
     def _doAppointOpenCD(self, openID):
+        INFO_MSG('_doAppointOpenCD', self.guildUUID, openID)
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.APPOINT_CD)
         _mailId = int(GCC.datas['emailCountdown']['value'])
         _mailArgs = [GCBI.datas[openID]['name']]
         self._sendMailToGuildMembers(_mailId, _mailArgs)
 
     def _doDungeonOpen(self, openID):
-        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CHALLENGE_OPEN)
+        INFO_MSG('_doDungeonOpen', self.guildUUID, openID)
+        self.doGuildCreateDungeon()
         _mailId = int(GCC.datas['emailStart']['value'])
         _mailArgs = [GCBI.datas[openID]['name']]
         self._sendMailToGuildMembers(_mailId, _mailArgs)
@@ -2306,22 +2345,35 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.guildChallengeData.openedDungeonStatus = status
             self._broadcastChallengeDataInfo()
 
-    def onGuildChallengeDungeonCreated(self, playerBox, playerGbId, guildUUID, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
-        INFO_MSG('onGuildChallengeDungeonCreated', guildUUID, playerGbId, dungeonNo, spaceNo, spaceUUID, extra)
+    def onGuildChallengeDungeonCreated(self, guildUUID, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
+        INFO_MSG('onGuildChallengeDungeonCreated', guildUUID, dungeonNo, spaceNo, spaceUUID, extra)
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATED)
         extra.update({'spaceUUID': spaceUUID})
+        extra.update({'guildUUID': self.guildUUID})
         self.guildChallengeData.spaceNo = spaceNo
         dungeonStub = gameengine.getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterType.GUILD)
-        for gbId, box in self.guildChallengeData.waitEnterDungeonData.items():
-            dungeonStub.doEnterDungeon(box, gbId, guildUUID, spaceNo, extra)
+        for gbId, datas in self.guildChallengeData.waitEnterDungeonData.items():
+            box = datas.get('box')
+            extraData = datas.get('extra')
+            extraData.update(extra)
+            dungeonStub.doEnterDungeon(box, gbId, guildUUID, spaceNo, extraData)
         
-    def onGuildChallengeDungeonSettlement(self):
-        INFO_MSG('onGuildChallengeDungeonSettlement', self.guildUUID)
+    def onGuildChallengeDungeonSettlement(self, settlementTimestamp):
+        INFO_MSG('onGuildChallengeDungeonSettlement', self.guildUUID, settlementTimestamp)
+        self.guildChallengeData.settleTs = settlementTimestamp
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.SETTLEMENT)
 
+    def onGuildChallengeDungeonStartBattleCD(self, startBattleTimestamp):
+        INFO_MSG('onGuildChallengeDungeonStartBattleCD', self.guildUUID, startBattleTimestamp)
+        self.guildChallengeData.settleTs = startBattleTimestamp
+        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.START_BATTLE_CD)
+        # 挂延时, 通知正式开启战斗
+        cdTime = self.guildChallengeData.settleTs - utils.getNow()
+        self._callback(cdTime, '_updateGuildChallengeDungeonStatus', (gameconst.GuildBossChallengeStatus.START_BATTLE,), gametimer.TIMER_TAG_GUILD_CHALLENGE_UPDATE_DUNGEON_STATUS)
+        
     def onGuildChallengeDungeonCompleted(self):
         INFO_MSG('onGuildChallengeDungeonCompleted', self.guildUUID)
-        self.guildChallengeData.reset()
+        self.guildChallengeData.completeDungeon()
         self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.INIT)
 
     def checkGuildChallengeDungeonStatus(self, status):
@@ -2337,107 +2389,126 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         INFO_MSG('getChangllengeDataInfo', gbID)
         _gmVal = self.members.get(gbID)
         if not _gmVal:
-            WARNING_MSG('openGuildChallenge: gbId not in guild', gbID)
+            WARNING_MSG('getChangllengeDataInfo: gbId not in guild', gbID)
             return
         box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo()) 
 
-    def cancalGuildDungeonOrder(self, gbID, box):
-        INFO_MSG('cancalGuildDungeonOrder', self.guildUUID, gbID)
+    def cancelGuildDungeonOrder(self, gbID, box, openId):
+        INFO_MSG('cancelGuildDungeonOrder', self.guildUUID, gbID)
+        dungeonID = GCBI.datas[openId]['dunID']
+        if dungeonID != self.guildChallengeData.openedDungeonId:
+            INFO_MSG('cancelGuildDungeonOrder, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId)
+            return        
         _gmVal = self.members.get(gbID)
         if not _gmVal:
-            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_IN_GUILD)
-            WARNING_MSG('cancalGuildDungeonOrder: gbId not in guild', gbID)
+            box.client and box.client.onCancelGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_IN_GUILD)
+            WARNING_MSG('cancelGuildDungeonOrder: gbId not in guild', gbID)
             return
 
         if not self._checkHasPermission(gbID, GA_AI_DD.datas.guildChallenge):
-            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_ENOUGH_PERMISSION)
-            WARNING_MSG('cancalGuildDungeonOrder: not leader or coleader', gbID)
+            box.client and box.client.onCancelGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_ENOUGH_PERMISSION)
+            WARNING_MSG('cancelGuildDungeonOrder: not leader or coleader', gbID)
             return
         
         if self.guildChallengeData.openedDungeonId == 0:
-            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
-            WARNING_MSG('cancalGuildDungeonOrder: no guild dungeon order 1', gbID)
+            box.client and box.client.onCancelGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
+            WARNING_MSG('cancelGuildDungeonOrder: no guild dungeon order 1', gbID)
             return
 
         if self.guildChallengeData.openedType != gameconst.GuildChallengeDungeonOpenType.APPOINT:
-            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
-            WARNING_MSG('cancalGuildDungeonOrder: no guild dungeon order 2', gbID)
+            box.client and box.client.onCancelGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
+            WARNING_MSG('cancelGuildDungeonOrder: no guild dungeon order 2', gbID)
             return
         
         if not self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.APPOINT):
-            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
-            WARNING_MSG('cancalGuildDungeonOrder: no guild dungeon order 3', gbID)
+            box.client and box.client.onCancelGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
+            WARNING_MSG('cancelGuildDungeonOrder: no guild dungeon order 3', gbID)
             return
         
         curTime = utils.getNow()
         dungeonID = self.guildChallengeData.openedDungeonId
-        cdTime = GCBI.datas[GCBI.dungeonIdxDic[dungeonID]]['countdownOpen']
+        guildChallengeCfg = GCBI.datas[GCBI.dungeonIdxDic[dungeonID]]
+        cdTime = int(GCC.datas['countdownOpen']['value'])
         if self.guildChallengeData.openedTime - cdTime <= curTime:
-            box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
-            WARNING_MSG('cancalGuildDungeonOrder: no guild dungeon order 4', gbID, dungeonID)
+            box.client and box.client.onCancelGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.NO_GUILD_DUNGEON_ORDER)
+            WARNING_MSG('cancelGuildDungeonOrder: no guild dungeon order 4', gbID, dungeonID)
             return
         
-        guildChallengeCfg = GCBI.datas[GCBI.dungeonIdxDic[dungeonID]]
         if self.guildChallengeData.consumedType == gameconst.GuildChallengeDungeonOpenFundType.FUND:
-            _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_CANCEL_COIN
-            _opUUID = KBEngine.genUUID64()
-            _detail = gameclass.AwardDetail()
-            self.modifyGuildFund(guildChallengeCfg['guildCoinCost'], _src, _opUUID, _detail)
+            if self.guildChallengeData.openedFundCount > 0:
+                self.guildChallengeData.openedFundCount -= 1
+                _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_CANCEL_COIN
+                _opUUID = KBEngine.genUUID64()
+                _detail = gameclass.AwardDetail()
+                self.modifyGuildFund(guildChallengeCfg['guildCoinCost'], _src, _opUUID, _detail)
         elif self.guildChallengeData.consumedType == gameconst.GuildChallengeDungeonOpenFundType.MONEY:
-            _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_CANCEL_MONEY
-            _opUUID = KBEngine.genUUID64()
-            _detail = gameclass.AwardDetail()
-            self.modifyGuildMoney(guildChallengeCfg['guildMoneyCost'], _src, _opUUID, _detail)
+            if self.guildChallengeData.openedMoneyCount > 0:
+                self.guildChallengeData.openedMoneyCount -= 1
+                _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_CANCEL_MONEY
+                _opUUID = KBEngine.genUUID64()
+                _detail = gameclass.AwardDetail()
+                self.modifyGuildMoney(guildChallengeCfg['guildMoneyCost'], _src, _opUUID, _detail)
         else:
-            WARNING_MSG('cancalGuildDungeonOrder: unknow comsumed type', gbID)
+            WARNING_MSG('cancelGuildDungeonOrder: unknow comsumed type', gbID)
             return
-        box.client and box.client.onCancalGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.OK)
-        box.client and box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo())
+        
+        if self.openDungeonCDTimer > 0:
+            self._cancelCallback(self.openDungeonCDTimer, gametimer.TIMER_TAG_GUILD_CHALLENGE_APPOINT_OPEN_CD)
+            self.openDungeonCDTimer = 0
 
-    def _addWaitEnterDungeonCache(self, gbID, box):
-        self.guildChallengeData.waitEnterDungeonData[gbID] = box
+        if self.openDungeonTimer > 0:
+            self._cancelCallback(self.openDungeonTimer, gametimer.TIMER_TAG_GUILD_CHALLENGE_OPEN_DUNGEON)
+            self.openDungeonTimer = 0
 
-    def enterBossChallengeDungeon(self, gbID, box, extra):
-        INFO_MSG('doGuildCreateDungeon', self.guildUUID, gbID, extra)
-        if self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CHALLENGE_OPEN):
-            self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATING)
+        self.guildChallengeData.completeDungeon()
+        # 取消预约之后，统一推送一下
+        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.INIT)
+        box.client and box.client.onCancelGuildDungeonOrder(gameconst.GuildChallengeOpenDungeonResult.OK)
+
+    def _addWaitEnterDungeonCache(self, gbID, box, extra):
+        self.guildChallengeData.waitEnterDungeonData[gbID] = {'box':box, 'extra':extra}
+
+    def enterBossChallengeDungeon(self, gbID, box, openId, extra):
+        INFO_MSG('enterBossChallengeDungeon', self.guildUUID, gbID, openId, extra)
+        dungeonID = GCBI.datas[openId]['dunID']
+        if dungeonID != self.guildChallengeData.openedDungeonId:
+            INFO_MSG('enterBossChallengeDungeon, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId, extra)
+            return
+        if self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATING):
             # 进入等待队列
-            self._addWaitEnterDungeonCache(gbID, box)
-            self.doGuildCreateDungeon(box, gbID, extra)
-        elif self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATING):
-            # 进入等待队列
-            self._addWaitEnterDungeonCache(gbID, box)
-        elif self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATED):
+            self._addWaitEnterDungeonCache(gbID, box, extra)
+        elif self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.START_BATTLE) \
+            or self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATED):
             # 直接进入
             self.doGuildEnterDungeon(box, gbID, extra)
 
-    def doGuildCreateDungeon(self, box, gbID, extra):
-        INFO_MSG('doGuildCreateDungeon', self.guildUUID, gbID, extra)
-        extraInfo = {}
-        extraInfo['guildUUID'] = self.guildUUID
-        extraInfo['guildBox'] = self
-        extraInfo['dungeonNo'] = self.guildChallengeData.openedDungeonId
+    def doGuildCreateDungeon(self):
+        INFO_MSG('doGuildCreateDungeon', self.guildUUID)
+        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATING)
+        extra = {}
+        extra['dungeonNo'] = self.guildChallengeData.openedDungeonId
+
         dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
-        dungeonStub.applyCreateDungeon(box, gbID, self.guildUUID, extraInfo)
+        dungeonStub.applyCreateDungeon(self, self.guildUUID, self.guildUUID, extra)
                 
     def doGuildEnterDungeon(self, box, gbID, extra):
         INFO_MSG('doGuildEnterDungeon', self.guildUUID, gbID, extra)
-        extraInfo = {}
-        extraInfo['playerName'] = extra.get('playerName', '')
-        extraInfo['guildUUID'] = self.guildUUID
-        extraInfo['guildBox'] = self
-        extraInfo['dungeonNo'] = self.guildChallengeData.openedDungeonId
-        dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
-        dungeonStub.doEnterDungeon(box, gbID, self.guildUUID, self.guildChallengeData.spaceNo, extraInfo)
+        extra.update({'guildUUID':self.guildUUID})
 
-    def leaveBossChallengeDungeon(self, gbID, box):
+        dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
+        dungeonStub.doEnterDungeon(box, gbID, self.guildUUID, self.guildChallengeData.spaceNo, extra)
+
+    def leaveBossChallengeDungeon(self, gbID, box, openId):
         INFO_MSG('leaveBossChallengeDungeon', self.guildUUID, gbID)
-        if self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.CREATED):
-            dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
-            dungeonStub.leaveGuildBossDungeon(self.guildChallengeData.spaceNo, self.guildUUID, 0, box, gbID)
+        dungeonID = GCBI.datas[openId]['dunID']
+        if dungeonID != self.guildChallengeData.openedDungeonId:
+            INFO_MSG('leaveBossChallengeDungeon, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId)
+            return
+        dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
+        dungeonStub.leaveGuildBossDungeon(self.guildChallengeData.spaceNo, self.guildUUID, 0, box, gbID)
 
     def gmModifyGuildBossChallengeStatus(self, status):
-        INFO_MSG('getSettlementRankList', self.guildUUID, status)
+        INFO_MSG('gmModifyGuildBossChallengeStatus', self.guildUUID, status)
         self._updateGuildChallengeDungeonStatus(status)
         self._broadcastChallengeDataInfo()
         
@@ -2447,8 +2518,100 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.guildChallengeData.openedMoneyCount = 0
         self._broadcastChallengeDataInfo()
 
-    def getSettlementRankList(self, gbID, box, idx, offset):
-        INFO_MSG('getSettlementRankList', self.guildUUID, gbID, idx, offset)
-        if self.checkGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.SETTLEMENT):
-            dungeonStub = gameengine.getDungeonStubByDungeonNo(self.guildChallengeData.openedDungeonId, gameconst.DungeonEnterType.GUILD)
-            dungeonStub.getSettlementRankList(self.guildChallengeData.spaceNo, self.guildUUID, box, gbID, idx, offset)
+    def gmResetGuildDungeonAllData(self):
+        INFO_MSG('gmResetGuildDungeonAllData', self.guildUUID)
+        self.guildChallengeData.reset()
+        self._broadcastChallengeDataInfo() 
+
+    def syncGuildBossHP(self, curHP, fullHP):
+        DEBUG_MSG('syncGuildBossHP', self.guildUUID, curHP, fullHP)
+        self.guildChallengeData.curHP = curHP
+        self.guildChallengeData.fullHP = fullHP
+
+    def getGuildBossHP(self, gbID, box, openId):
+        DEBUG_MSG('getGuildBossHP', self.guildUUID, gbID, self.guildChallengeData.curHP, self.guildChallengeData.fullHP)
+        dungeonID = GCBI.datas[openId]['dunID']
+        if dungeonID != self.guildChallengeData.openedDungeonId:
+            INFO_MSG('getGuildBossHP, wrong open id', self.guildUUID, gbID, openId, dungeonID, self.guildChallengeData.openedDungeonId)
+            return
+        box.client.onGetGuildBossHP(openId, self.guildChallengeData.curHP, self.guildChallengeData.fullHP)
+
+    def recoverGuildBossDungeonData(self):
+        INFO_MSG('recoverGuildBossDungeonData 1', self.guildChallengeData)
+        # 服务器重启或者异常状态
+        if self.guildChallengeData.openedDungeonStatus == gameconst.GuildBossChallengeStatus.INIT:
+            return
+        
+        # 结算阶段不处理补偿, 通过运营手段统一处理
+        if self.guildChallengeData.openedDungeonStatus == gameconst.GuildBossChallengeStatus.SETTLEMENT:
+            INFO_MSG('recoverGuildBossDungeonData 2', self.guildChallengeData)
+            # 结束副本记录
+            self.guildChallengeData.completeDungeon()
+            # 通知帮会成员
+            self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.INIT)
+            return
+        
+        INFO_MSG('recoverGuildBossDungeonData 3', self.guildChallengeData)
+        curTime = utils.getNow()
+        # 预约还没开启，不处理, 需要把cd挂回去
+        if self.guildChallengeData.openedType == gameconst.GuildChallengeDungeonOpenType.APPOINT:
+            # 还没到
+            if self.guildChallengeData.openedTime > curTime:
+                # 预约中
+                if self.guildChallengeData.openedDungeonStatus == gameconst.GuildBossChallengeStatus.APPOINT:
+                    INFO_MSG('recoverGuildBossDungeonData 4', self.guildChallengeData)
+                    # 开启前N分钟发通知邮件
+                    cdTime = self.guildChallengeData.openedTime - curTime - int(GCC.datas['countdownOpen']['value'])
+                    # 还没到CD通知时间, 挂cd
+                    if cdTime > 0:
+                        self.openDungeonCDTimer = self._callback(cdTime, '_doAppointOpenCD', (self.guildChallengeData.openedId,), gametimer.TIMER_TAG_GUILD_CHALLENGE_APPOINT_OPEN_CD)
+                    # 开启副本发通知邮件
+                    cdTime = self.guildChallengeData.openedTime - curTime
+                    # 挂副本开启cd
+                    self.openDungeonTimer = self._callback(cdTime, '_doDungeonOpen', (self.guildChallengeData.openedId,), gametimer.TIMER_TAG_GUILD_CHALLENGE_OPEN_DUNGEON)
+                    return
+                elif self.guildChallengeData.openedDungeonStatus == gameconst.GuildBossChallengeStatus.APPOINT_CD:
+                    INFO_MSG('recoverGuildBossDungeonData 5', self.guildChallengeData)
+                    # 开启副本发通知邮件
+                    cdTime = self.guildChallengeData.openedTime - curTime
+                    # 挂副本开启cd
+                    if cdTime > 0:
+                        self.openDungeonTimer = self._callback(cdTime, '_doDungeonOpen', (self.guildChallengeData.openedId,), gametimer.TIMER_TAG_GUILD_CHALLENGE_OPEN_DUNGEON)
+                        return
+        
+        INFO_MSG('recoverGuildBossDungeonData 6', self.guildChallengeData)
+
+        # 回退副本开启消耗
+        dungeonID = self.guildChallengeData.openedDungeonId
+        guildChallengeCfg = GCBI.datas[GCBI.dungeonIdxDic[dungeonID]]
+
+        if self.guildChallengeData.consumedType == gameconst.GuildChallengeDungeonOpenFundType.FUND:
+            if self.guildChallengeData.openedFundCount > 0:
+                self.guildChallengeData.openedFundCount -= 1
+                _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_CANCEL_COIN
+                _opUUID = KBEngine.genUUID64()
+                _detail = gameclass.AwardDetail()
+                self.modifyGuildFund(guildChallengeCfg['guildCoinCost'], _src, _opUUID, _detail)
+        elif self.guildChallengeData.consumedType == gameconst.GuildChallengeDungeonOpenFundType.MONEY:
+            if self.guildChallengeData.openedMoneyCount > 0:
+                self.guildChallengeData.openedMoneyCount -= 1
+                _src = AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_CANCEL_MONEY
+                _opUUID = KBEngine.genUUID64()
+                _detail = gameclass.AwardDetail()
+                self.modifyGuildMoney(guildChallengeCfg['guildMoneyCost'], _src, _opUUID, _detail)
+
+        # 结束副本记录
+        self.guildChallengeData.completeDungeon()
+        # 通知帮会成员
+        self._updateGuildChallengeDungeonStatus(gameconst.GuildBossChallengeStatus.INIT)
+        INFO_MSG('recoverGuildBossDungeonData 6', self.guildChallengeData)
+
+    def doExitDungeon(self, gbId, box):
+        self.guildChallengeData.waitEnterDungeonData.pop(gbId, None)
+        # 在副本中，需要踢出去
+        if self.guildChallengeData.openedDungeonStatus >= gameconst.GuildBossChallengeStatus.CREATED:
+            # 如果有等待，先清理
+            self.leaveBossChallengeDungeon(gbId, box, self.guildChallengeData.openedId)
+            # 把数据统计去掉
+            stub = gameengine.getStatisticStub(self.guildChallengeData.spaceNo)
+            stub.stopReportStatistics(gbId, box, self.guildChallengeData.spaceNo)

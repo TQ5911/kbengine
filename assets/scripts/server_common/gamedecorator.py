@@ -181,3 +181,24 @@ def checkGameconfigEnable(name):
         return wrapper
 
     return f
+
+
+def prevent_instance_reentry(method):
+    """
+    实例级方法防重入装饰器（无锁，轻量）
+    本函数慎用，因为会影响返回值结果
+    主要是防止一些递归调用中的重入情况
+    如果你的函数希望递归就不要用了
+    """
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        attr = f"_reentry_flag_{method.__name__}"
+        if getattr(self, attr, False):
+            DEBUG_MSG(f"[重入拦截] {method.__name__} 正在执行，跳过")
+            return None
+        setattr(self, attr, True)
+        try:
+            return method(self, *args, **kwargs)
+        finally:
+            setattr(self, attr, False)
+    return wrapper

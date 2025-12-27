@@ -262,44 +262,54 @@ class IBag(object):
 
     def processKillMonsterExp(self, dropCtx, awardResults):
         DEBUG_MSG("iBag-> processKillMonsterExp 1 ", dropCtx, awardResults)
-        exp = dataUtils.getMonsterExp(dropCtx.monsterId, dropCtx.level)
-        if exp is None or exp == 0:
+        monsterExp = dataUtils.getMonsterExp(dropCtx.monsterId, dropCtx.level)
+        if monsterExp is None or monsterExp == 0:
             return
-        DEBUG_MSG("iBag-> processKillMonsterExp 2 ", dropCtx, awardResults, exp)
         # 组队
         if self.isInTeam(self.gbId):
             teammateNum = len(self.teammateEntIdInAoiSet)
             if teammateNum >= 1:
+                # 组队加成系数列表
                 teamNumBonus = CONST.datas['killMonsterTeamExpBonus'].get("value")
-                teamLevelAll = self.level
-                for memEntId in self.teammateEntIdInAoiSet:
-                    memVal = KBEngine.entities.get(memEntId)
-                    if memVal:
-                        teamLevelAll += memVal.level
-
-                teamNumCoeff = teamNumBonus[teammateNum]
+                # 组队加成系数
+                teamNumRatio = teamNumBonus[teammateNum]
+                # 组队均分经验
+                teamExp = int(teamNumRatio * monsterExp / (teammateNum + 1))
+                # 按照个人调整
                 for memEntId in self.teammateEntIdInAoiSet:
                     memVal = KBEngine.entities.get(memEntId)
                     if not memVal:
                         continue
-                    teamMemExp = dataUtils.getExpByLevel(memVal.level, dropCtx.level,exp)
-                    realExp = round(teamMemExp * teamNumCoeff * ((memVal.level + 2) / (teamLevelAll + 2 * (teammateNum + 1))))
-
-                    self.addSettlementExp(awardResults, memEntId, realExp)
-
-                #个人等级杀怪经验修正
-                myexp = dataUtils.getExpByLevel(self.level, dropCtx.level,exp)
-                realExp = round(myexp * teamNumCoeff * ((self.level + 2) / (teamLevelAll + 2 * (teammateNum + 1))))
-
-                self.addSettlementExp(awardResults, self.id, realExp)
+                    memberExp = self._adjustKillMonsterExp(awardResults, teamExp, dropCtx.level, memVal.level)
+                    self.addSettlementExp(awardResults, memEntId, memberExp)
+                    DEBUG_MSG("iBag-> processKillMonsterExp 2 ", dropCtx, awardResults, teamExp, dropCtx.level, memVal.level)
+                # 杀怪的个人调整
+                DEBUG_MSG("iBag-> processKillMonsterExp 3 ", dropCtx, awardResults, teamExp, dropCtx.level, self.level)
+                killerExp = self._adjustKillMonsterExp(awardResults, teamExp, dropCtx.level, self.level)
+                self.addSettlementExp(awardResults, self.id, killerExp)
             else:
-                self.addSettlementExp(awardResults, self.id, exp)
+                killerExp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
+                self.addSettlementExp(awardResults, self.id, killerExp)
+                DEBUG_MSG("iBag-> processKillMonsterExp 4 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
         # 团战
         elif self.isInRaid():
-            self.addSettlementExp(awardResults, self.id, exp)
+            # 根据等级调整经验
+            killerExp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
+            self.addSettlementExp(awardResults, self.id, killerExp)
+            DEBUG_MSG("iBag-> processKillMonsterExp 5 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
         else:
-            self.addSettlementExp(awardResults, self.id, exp)
+            # 根据等级调整经验
+            killerExp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
+            self.addSettlementExp(awardResults, self.id, killerExp)
+            DEBUG_MSG("iBag-> processKillMonsterExp 6 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
         return
+
+    def _adjustKillMonsterExp(self, awardResults, monsterExp, monsterLevel, playerLevel):
+        DEBUG_MSG("iBag-> _adjustKillMonsterExp", awardResults, monsterExp, monsterLevel, playerLevel)
+        # 根据等级调整经验
+        config = formula.getKillMonsterRewardConfig(monsterLevel, playerLevel)
+        realExp = int(monsterExp * config.get('expprop'))
+        return realExp
 
     def preAwardOnKillMonster(self, dropCtx, dropRewardIds, shareRewards, displayModes):
         DEBUG_MSG("iBag->preAwardOnKillMonster ", dropCtx, dropRewardIds, shareRewards, displayModes)

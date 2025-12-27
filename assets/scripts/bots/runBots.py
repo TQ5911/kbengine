@@ -12,6 +12,7 @@ sys.path.append(cases_dir)
 ROOT_PATH = os.path.dirname(bot_dir)
 sys.path.append(os.path.join(ROOT_PATH, 'data'))
 sys.path.append(os.path.join(ROOT_PATH, 'server_common'))
+sys.path.append(os.path.join(ROOT_PATH, 'common'))
 
 # 添加loginserver参数：modName, botPrefix, numAll, numPerSec, fromIdx, avatarName, school, loginHost, loginPort
 modName, _botNamePrefix, _numAll, _numPerSec, _fromIdx, _avatarName, _school, _loginHost, _loginPort = sys.argv[1:10]

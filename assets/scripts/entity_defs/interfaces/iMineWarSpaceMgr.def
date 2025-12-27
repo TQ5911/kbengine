@@ -42,5 +42,19 @@
             <Arg>       PY_DICT        </Arg>
             <Arg>       BOOL        </Arg>
         </onSyncGuildMineWarResult>
+
+        <onSyncMineWarGuildInfo>
+            <Arg>       GUILD_UUID     </Arg>
+            <Arg>       UNICODE        </Arg>
+            <Arg>       UINT8          </Arg>
+            <Arg>       UINT8          </Arg>
+            <Arg>       UNICODE        </Arg>
+            <Arg>       PY_DICT        </Arg>
+        </onSyncMineWarGuildInfo>
+
+        <onMineWarGuildDisbanded>
+            <Arg>       GUILD_UUID     </Arg>
+            <Arg>       UINT8          </Arg>
+        </onMineWarGuildDisbanded>
     </CellMethods>
 </root>

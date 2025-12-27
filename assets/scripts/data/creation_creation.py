@@ -116,6 +116,8 @@ def _65000020(self, target, context):
 
 def _65000021(self, target, context):
     self.castSkill(target, context, 90020046)
+    if (context.loopTimes - 1) % 4 == 0:
+        self.castSkill(target, context, 90020047)
 
 def _65000022(self, target, context):
     self.castSkill(target, context, 90020047)
@@ -162,30 +164,11 @@ def _65000033(self, target, context):
 # def _65000002_leave(self, target, context):
 #     self.removeBuffBySkill(target, context, 64000207)
 
+def _65000034(self, target, context):
+    self.castSkill(target,context, 90010652)
+
 # 生成的技能代码
 def _66000001(self, target, context):
-
-
-    # 技能执行逻辑
-    for tid in context.effectedEntIds:
-        ent = KBEngine.entities.get(tid)
-        if not ent:
-            continue
-        self.attack(ent, context, 2.5)
-
-# 生成的技能代码
-def _66000002(self, target, context):
-
-
-    # 技能执行逻辑
-    for tid in context.effectedEntIds:
-        ent = KBEngine.entities.get(tid)
-        if not ent:
-            continue
-        self.attack(ent, context, 2.5)
-
-# 生成的技能代码
-def _66000003(self, target, context):
 
 
     # 技能执行逻辑
@@ -196,6 +179,28 @@ def _66000003(self, target, context):
         self.attack(ent, context, 3)
 
 # 生成的技能代码
+def _66000002(self, target, context):
+
+
+    # 技能执行逻辑
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 3)
+
+# 生成的技能代码
+def _66000003(self, target, context):
+
+
+    # 技能执行逻辑
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 6)
+
+# 生成的技能代码
 def _66000005(self, target, context):
 
 
@@ -204,7 +209,7 @@ def _66000005(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 3)
 
 # 生成的技能代码
 def _66000006(self, target, context):
@@ -215,7 +220,7 @@ def _66000006(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 3)
 
 # 生成的技能代码
 def _66000004(self, target, context):
@@ -226,7 +231,7 @@ def _66000004(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 7.2)
+        self.attack(ent, context, 1)
 
 # 生成的技能代码
 def _66000008(self, target, context):
@@ -237,7 +242,7 @@ def _66000008(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 2)
 
 def _66000009_enter(self, target, context):
     if target:
@@ -259,7 +264,7 @@ def _66000010(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2.5)
+        self.attack(ent, context, 5)
         action_FightAction.down(self, ent, context, 1, 1, 0, 0)
 
 # 生成的技能代码
@@ -271,7 +276,7 @@ def _66000011_enter(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 1)
 
 # 生成的技能代码
 def _66000012(self, target, context):
@@ -282,7 +287,7 @@ def _66000012(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 0.75)
+        self.attack(ent, context, 1)
 
 # 生成的技能代码
 def _66000013(self, target, context):
@@ -292,7 +297,7 @@ def _66000013(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2.2)
+        self.attack(ent, context, 2)
         action_FightAction.pushTarget(self, ent, context, 3, 8)
         hostEnt = self.getHost()
         import actionContext
@@ -307,7 +312,7 @@ def _66000014(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.25)
+        self.attack(ent, context, 2)
         hostEnt = self.getHost()
         import actionContext
         if hostEnt:
@@ -321,7 +326,7 @@ def _66000015(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.2)
+        self.attack(ent, context, 1)
         hostEnt = self.getHost()
         import actionContext
         if hostEnt:
@@ -357,7 +362,7 @@ def _66000019(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2.1)
+        self.attack(ent, context, 2)
 
 def _66000020(self, target, context):
     import action_FightAction
@@ -366,7 +371,7 @@ def _66000020(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.25)
+        self.attack(ent, context, 2)
 
 def _66000021(self, target, context):
     self.castSkill(target, context, 91020093)
@@ -397,7 +402,7 @@ def _66000024(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2)
+        self.attack(ent, context, 3)
 
 def _66000025(self, target, context):
     import action_FightAction
@@ -406,8 +411,9 @@ def _66000025(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
+        action_FightAction.stun(self, ent, context, 2, 1, 0, 1)
         hitResult = action_FightAction.isHit(self, ent,context)
-        self.attack(ent, context, 2.5, 0, 0, 1, 1, hitResult)
+        self.attack(ent, context, 5, 0, 0, 1, 1, hitResult)
         if hitResult:
             action_FightAction.pushTarget(self, ent, context, 9, 20)
 
@@ -419,23 +425,23 @@ def _66000026(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.25)
+        self.attack(ent, context, 1)
 
 # 生成的技能代码
 def _66000026byend(self, target, context):
     # 技能执行逻辑
-    self.createCreation(self, context, 66000027, 1, 1, 3, 16, 0, 0)
+    self.createCreation(self, context, 66000027, self.level, 1, 3, 16, 0, 0)
 
 def _66000027(self, target, context):
 
-    self.createCreation(self, context, 66000028, 1, 1, 3, 40, 0, 0, 0, 0)
-    self.createCreation(self, context, 66000028, 1, 1, 3, 40, 45, 0, 0,45)
-    self.createCreation(self, context, 66000028, 1, 1, 3, 40, 90, 0, 0, 90)
-    self.createCreation(self, context, 66000028, 1, 1, 3, 40, 135, 0, 0,135)
-    self.createCreation(self, context, 66000028, 1, 1, 3, 40, 180, 0, 0, 180)
-    self.createCreation(self, context, 66000028, 1, 1, 3, 40, 225, 0, 0,225)
-    self.createCreation(self, context, 66000028, 1, 1, 3, 40, 270, 0, 0, 270)
-    self.createCreation(self, context, 66000028, 1, 1, 3, 40, 315, 0, 0,315)
+    self.createCreation(self, context, 66000028, self.level, 1, 3, 40, 0, 0, 0, 0)
+    self.createCreation(self, context, 66000028, self.level, 1, 3, 40, 45, 0, 0,45)
+    self.createCreation(self, context, 66000028, self.level, 1, 3, 40, 90, 0, 0, 90)
+    self.createCreation(self, context, 66000028, self.level, 1, 3, 40, 135, 0, 0,135)
+    self.createCreation(self, context, 66000028, self.level, 1, 3, 40, 180, 0, 0, 180)
+    self.createCreation(self, context, 66000028, self.level, 1, 3, 40, 225, 0, 0,225)
+    self.createCreation(self, context, 66000028, self.level, 1, 3, 40, 270, 0, 0, 270)
+    self.createCreation(self, context, 66000028, self.level, 1, 3, 40, 315, 0, 0,315)
 
 # 生成的技能代码
 def _66000028(self, target, context):
@@ -446,7 +452,7 @@ def _66000028(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.25)
+        self.attack(ent, context, 1)
 
 def _66000029(self, target, context):
     import action_FightAction
@@ -455,7 +461,7 @@ def _66000029(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 2)
 
 def _64004030_enter(self, target, context):
     self.addBuffBySkill(target, context, 64004040, 1, 1.0, 5)
@@ -471,7 +477,7 @@ def _66000031(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2)
+        self.attack(ent, context, 3)
 
 def _66000032(self, target, context):
     avatarlist= []
@@ -480,12 +486,12 @@ def _66000032(self, target, context):
         if ent.IsAvatar:
             avatarlist.append(ent)
     if len(avatarlist) != 1:
-        self.createCreation(self, context, 66000033, 1, 1, 1, 12, 0, 0)
+        self.createCreation(self, context, 66000033, self.level, 1, 1, 12, 0, 0)
 
 # 生成的技能代码
 def _66000032byend(self, target, context):
     # 技能执行逻辑
-    self.createCreation(self, context, 66000034, 1, 1, 3, 16, 0, 0)
+    self.createCreation(self, context, 66000034, self.level, 1, 3, 16, 0, 0)
 
 def _66000033(self, target, context):
 
@@ -494,18 +500,18 @@ def _66000033(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2.2, 30)
+        self.attack(ent, context, 6)
 
 def _66000034(self, target, context):
 
-    self.createCreation(self, context, 66000035, 1, 1, 3, 40, 0, 0, 0, 0)
-    self.createCreation(self, context, 66000035, 1, 1, 3, 40, 45, 0, 0,45)
-    self.createCreation(self, context, 66000035, 1, 1, 3, 40, 90, 0, 0, 90)
-    self.createCreation(self, context, 66000035, 1, 1, 3, 40, 135, 0, 0,135)
-    self.createCreation(self, context, 66000035, 1, 1, 3, 40, 180, 0, 0, 180)
-    self.createCreation(self, context, 66000035, 1, 1, 3, 40, 225, 0, 0,225)
-    self.createCreation(self, context, 66000035, 1, 1, 3, 40, 270, 0, 0, 270)
-    self.createCreation(self, context, 66000035, 1, 1, 3, 40, 315, 0, 0,315)
+    self.createCreation(self, context, 66000035, self.level, 1, 3, 40, 0, 0, 0, 0)
+    self.createCreation(self, context, 66000035, self.level, 1, 3, 40, 45, 0, 0,45)
+    self.createCreation(self, context, 66000035, self.level, 1, 3, 40, 90, 0, 0, 90)
+    self.createCreation(self, context, 66000035, self.level, 1, 3, 40, 135, 0, 0,135)
+    self.createCreation(self, context, 66000035, self.level, 1, 3, 40, 180, 0, 0, 180)
+    self.createCreation(self, context, 66000035, self.level, 1, 3, 40, 225, 0, 0,225)
+    self.createCreation(self, context, 66000035, self.level, 1, 3, 40, 270, 0, 0, 270)
+    self.createCreation(self, context, 66000035, self.level, 1, 3, 40, 315, 0, 0,315)
 
 # 生成的技能代码
 def _66000035(self, target, context):
@@ -516,7 +522,7 @@ def _66000035(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.25)
+        self.attack(ent, context, 1)
 
 # 生成的技能代码
 def _66000036_enter(self, target, context):
@@ -527,7 +533,7 @@ def _66000036_enter(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 1)
 
 def _66000037(self, target, context):
     import action_FightAction
@@ -545,7 +551,7 @@ def _66000038(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 2)
 
 def _66000039(self, target, context):
     _arr = self.getDunRegionSkillArgs(91024099, 1)
@@ -557,7 +563,7 @@ def _66000040(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2)
+        self.attack(ent, context, 3)
 
 # 生成的技能代码
 def _66000041(self, target, context):
@@ -616,9 +622,9 @@ def _66000043(self, target, context):
         if ent.IsAvatar:
             avatarlist.append(ent)
     if len(avatarlist) < 1:
-        self.createCreation(self, context, 66000044, 1, 1, 1, 12, 0, 0)
+        self.createCreation(self, context, 66000044, self.level, 1, 1, 12, 0, 0)
     else:
-        self.createCreation(self, context, 66000049, 1, 1, 1, 12, 0, 0)
+        self.createCreation(self, context, 66000049, self.level, 1, 1, 12, 0, 0)
 
 def _66000044(self, target, context):
 
@@ -627,7 +633,7 @@ def _66000044(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2.5, 30)
+        self.attack(ent, context, 4)
 
 def _66000045_enter(self, target, context):
         self.addBuffBySkill(target, context, 64004055, 1, 1.0, 10)
@@ -688,7 +694,7 @@ def _66000049(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 0.5, 1)
+        self.attack(ent, context, 0.5)
 
 def _66000050(self, target, context):
     import KBEngine
@@ -703,7 +709,7 @@ def _66000050(self, target, context):
         return  # 命中目标 ≥1，不创建新创生物
     else:
         # 没有玩家命中，创建失败创生物或惩罚型创生物
-        self.createCreation(self, context, 66000059, 1, 1, 1, 12, 0, 0)
+        self.createCreation(self, context, 66000059, self.level, 1, 1, 12, 0, 0)
 
 def _66000051(self, target, context):
 
@@ -712,7 +718,7 @@ def _66000051(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
            continue
-        self.attack(ent, context, 2.5, 20, 0)
+        self.attack(ent, context, 4, 0, 0)
         action_FightAction.stun(self, ent, context, 3, 1, 0)
 
 def _66000052(self, target, context):
@@ -768,7 +774,7 @@ def _66000056(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 2.5)
+        self.attack(ent, context, 2)
         action_FightAction.pushTarget(self, ent, context, 2, 8, 0.5, 1, 0)
         #self.overleapBuff(ent, context, 64004048, 3, 20)
         #buffLv = ent.getBuffLv(64004044) if ent.hasBuff(64004044) else 0
@@ -780,7 +786,7 @@ def _66000057(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.05)
+        self.attack(ent, context, 0.4)
        # LeiBuff = ent.getBuffLv(64004044) if ent.hasBuff(64004044) else 0
        # ShuiBuff = ent.getBuffLv(64004048) if ent.hasBuff(64004048) else 0
 #        if LeiBuff >= 3 and ShuiBuff >= 3:
@@ -906,7 +912,7 @@ def _66000073(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1)
+        self.attack(ent, context, 2)
 
 def _66000074(self, target, context):
     self.castSkill(target, context, 91029013)
@@ -954,7 +960,7 @@ def _66000083(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.5)
+        self.attack(ent, context, 3)
 
 # 生成的技能代码
 def _66000084(self, target, context):
@@ -967,7 +973,7 @@ def _66000084(self, target, context):
         self.attack(ent, context, 1.5)
 
 def _66000084byend(self, target, context):
-    self.createCreation(self, context, 66000085)
+    self.createCreation(self, context, 66000085, self.level, 1, 5, 12, 0, 0)
 
 # 生成的技能代码
 def _66000085(self, target, context):
@@ -977,7 +983,7 @@ def _66000085(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 3.1)
+        self.attack(ent, context, 6)
 
 def _66000086_enter(self, target, context):
     self.spaceMgr.onAvatarGetBuffCreation(self.id, target, 64000097)
@@ -989,7 +995,7 @@ def _66000088_enter(self, target, context):
     self.spaceMgr.onAvatarGetBuffCreation(self.id, target, 64000099)
 
 def _66000092byend(self, target, context):
-    self.createCreation(self, context, 66000084)
+    self.createCreation(self, context, 66000084, self.level, 1, 7, 12, 0, 0)
 
 # 生成的技能代码
 def _66000093(self, target, context):
@@ -1017,7 +1023,7 @@ def _66000094(self, target, context):
 # 生成的技能代码
 def _66000094byend(self, target, context):
     # 技能执行逻辑
-    self.createCreation(self, context, 66000095, 1, 1, 6, 4, 0, 0)
+    self.createCreation(self, context, 66000095, self.level, 1, 6, 4, 0, 0)
 
 # 生成的技能代码
 def _66000095(self, target, context):
@@ -1047,7 +1053,7 @@ def _66000097(self, target, context):
 # 生成的技能代码
 def _66000097byend(self, target, context):
     # 技能执行逻辑
-    self.createCreation(self, context, 66000098, 1, 1, 8, 6, 0, 0,0, 270)
+    self.createCreation(self, context, 66000098, self.level, 1, 8, 6, 0, 0,0, 270)
 
 # 生成的技能代码
 def _66000098(self, target, context):
@@ -1062,7 +1068,7 @@ def _66000098(self, target, context):
 # 生成的技能代码
 def _66000098byend(self, target, context):
     # 技能执行逻辑
-    self.createCreation(self, context, 66000099, 1, 1, 8, 6, 0, 0,0, 270)
+    self.createCreation(self, context, 66000099, self.level, 1, 8, 6, 0, 0,0, 270)
 
 # 生成的技能代码
 def _66000099(self, target, context):
@@ -1077,7 +1083,7 @@ def _66000099(self, target, context):
 # 生成的技能代码
 def _66000099byend(self, target, context):
     # 技能执行逻辑
-    self.createCreation(self, context, 66000100, 1, 1, 8, 6, 0, 0,0, 270)
+    self.createCreation(self, context, 66000100, self.level, 1, 8, 6, 0, 0,0, 270)
 
 # 生成的技能代码
 def _66000100(self, target, context):
@@ -1609,7 +1615,7 @@ datas = _tools.RODict({
         "triggeredTime": 0.0,
         "loopIntervalTime": 0.5,
         "hurtNumber": 10,
-        "areaLoop": 12,
+        "areaLoop": 15,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
@@ -1637,7 +1643,7 @@ datas = _tools.RODict({
         "triggeredTime": 0.0,
         "loopIntervalTime": 0.5,
         "hurtNumber": 10,
-        "areaLoop": 10,
+        "areaLoop": 12,
         "enterAction": None,
         "enterLoop": 0,
         "leaveAction": None,
@@ -2124,6 +2130,34 @@ datas = _tools.RODict({
         "flySpeed": 0.0,
         "selectType": 1,
         "selectPar": 6,
+        "delayTime": 0.3,
+    }),
+    65000034: _tools.RODict({
+        "ID": 65000034,
+        "name": "归剑术（道士大招铭文）",
+        "type": "FixPosition",
+        "isAttackSkill": 1,
+        "classTag": 2,
+        "relyOnMaster": 0,
+        "inherit": 1,
+        "selectability": 1,
+        "target": "Enemy",
+        "areaAction": _65000034,
+        "time": 5.0,
+        "triggeredTime": 0.0,
+        "loopIntervalTime": 0.5,
+        "hurtNumber": 10,
+        "areaLoop": 12,
+        "enterAction": None,
+        "enterLoop": 0,
+        "leaveAction": None,
+        "timeIsUpAction": None,
+        "continueAction": None,
+        "continueTarget": "",
+        "targetNum": 0,
+        "flySpeed": 0.0,
+        "selectType": 1,
+        "selectPar": 7,
         "delayTime": 0.3,
     }),
     66000001: _tools.RODict({

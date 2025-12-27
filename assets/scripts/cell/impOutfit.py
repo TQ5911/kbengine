@@ -19,6 +19,7 @@ class ImpOutfit(object):
         self.checkOutfitConfigOpen(gameconst.OutfitType.clothes, self.appearance.outfitData.clothesId)
         self.checkOutfitConfigOpen(gameconst.OutfitType.picFrame, self.appearance.outfitData.picFrameId)
         self.checkOutfitConfigOpen(gameconst.OutfitType.mount, self.appearance.outfitData.mountId)
+        self.base.onGetCellAppearance(self.appearance)
 
     def checkOutfitConfigOpen(self, outfitType, outfitId):
         if not dataUtils.checkOutfitOpen(outfitType, outfitId):

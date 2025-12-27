@@ -85,7 +85,17 @@ class EquipmentItem(BaseItem.BaseItem):
                     if self.getGrade() == grade:
                         self.setBindValue(bindValue)
                         break
+        enhanceLv = kwargs.get('enhanceLv', 0)
+        if enhanceLv > 0:
+            enhanceLevelKey = self.equipAttr.getEnhanceLevelKey(enhanceLv)
+            cfgData =  GEGS.datas.get(enhanceLevelKey)
+            if not cfgData:
+                ERROR_MSG('in initNewItemAttr, unknow enhance lv enhancement cfg data:', enhanceLevelKey)
+                enhanceLv = 0
+            else:
+                INFO_MSG('in initNewItemAttr, init with enhance level', enhanceLevelKey, enhanceLv)
 
+        self.equipAttr.enhanceLv = enhanceLv
         self.equipAttr.calcBaseAttrs()
         self.equipAttr.calcScore()
         self.onEquipAffixChanged()
@@ -259,18 +269,20 @@ class EquipmentItem(BaseItem.BaseItem):
         if washCount >= bindValue:
             washCount = bindValue
         gearBaseData = dataUtils.getEquipItemData(self.itemId)
-        itemsDic = {}
+        itemsCostDic = {}
+        needUnbindItemDic = {}
         consumedCoin = gearBaseData.get('washConsumeMoney')
         if consumedCoin:
             for val in consumedCoin:
                 costItemId, itemNum = val
-                itemsDic[costItemId] = itemsDic.get(costItemId, 0) + itemNum * washCount
+                itemsCostDic[costItemId] = itemsCostDic.get(costItemId, 0) + itemNum * washCount
+
         consumedItem = gearBaseData.get('washConsumeItem')
         if consumedItem:
             for val in consumedItem:
                 costItemId, itemNum = val
-                itemsDic[costItemId] = itemsDic.get(costItemId, 0) + itemNum * washCount
-        return itemsDic
+                needUnbindItemDic[costItemId] = needUnbindItemDic.get(costItemId, 0) + itemNum * washCount
+        return itemsCostDic, needUnbindItemDic
 
     def blessNeedItems(self):
         cfgData = self.equipAttr.getBlessCfgData(1)
@@ -334,22 +346,14 @@ class EquipmentItem(BaseItem.BaseItem):
         dissassemblyReward = None
         if self.bindType == gameconst.ItemBindType.BIND:
             dissassemblyReward = gearBaseData['disassemblyReward']
-            if dissassemblyReward is None:
-                WARNING_MSG('returnWealthyByDisassemble missing dissassemle reward id config', self.itemId)
-                return
         elif self.bindType == gameconst.ItemBindType.NORMAL:
             dissassemblyReward = gearBaseData['disassemblyReward2']
-            if dissassemblyReward is None:
-                WARNING_MSG('returnWealthyByDisassemble missing dissassemle reward2 id config', self.itemId)
-                return
-
-        if not dissassemblyReward:
-            WARNING_MSG('returnWealthyByDisassemble unknow bind type', self.itemId, self.bindType)
-            return
-
-        awardCtx = owner._getAvatarAwardCtx(dissassemblyReward, None)
-        awardVal = dropAward.getAwardOne(dissassemblyReward, awardCtx)
-
+        # 是否绑定相关的掉落
+        if dissassemblyReward:
+            awardCtx = owner._getAvatarAwardCtx(dissassemblyReward, None)
+            awardVal = dropAward.getAwardOne(dissassemblyReward, awardCtx)
+        else:
+            awardVal = dropAward.AwardVal()
         # 额外产出，非必选配置
         dissassemblyExtraItem = gearBaseData['disassemblyExtraItem']
         if dissassemblyExtraItem and type(dissassemblyExtraItem) is tuple and len(dissassemblyExtraItem) > 0:
@@ -396,29 +400,30 @@ class EquipmentItem(BaseItem.BaseItem):
         if not gearBaseData:
             ERROR_MSG('canBeDisassembled missing gear base config', self.itemId)
             return False
-
+        
         dissassemblyReward = None
         if self.bindType == gameconst.ItemBindType.BIND:
             dissassemblyReward = gearBaseData['disassemblyReward']
-            if dissassemblyReward is None:
-                WARNING_MSG('canBeDisassembled missing dissassemle reward id config', self.itemId)
-                return False
         elif self.bindType == gameconst.ItemBindType.NORMAL:
             dissassemblyReward = gearBaseData['disassemblyReward2']
-            if dissassemblyReward is None:
-                WARNING_MSG('canBeDisassembled missing dissassemle reward2 id config', self.itemId)
+        
+        if dissassemblyReward:
+            awardData = RDDT.datas.get(dissassemblyReward)
+            if not awardData:
+                ERROR_MSG('canBeDisassembled invalid dissassemle drop id config 1', self.itemId, dissassemblyReward)
                 return False
 
-        if not dissassemblyReward:
-            WARNING_MSG('canBeDisassembled unknow bind type', self.itemId, self.bindType)
+        dissassemblyExtraItem = None
+        if not dissassemblyReward:  
+            dissassemblyExtraItem = gearBaseData['disassemblyExtraItem']
+            if not dissassemblyExtraItem:
+                ERROR_MSG('canBeDisassembled invalid dissassemle drop id config 2', self.itemId)
+                return False
+            
+        if not dissassemblyReward and not dissassemblyExtraItem:
+            ERROR_MSG('canBeDisassembled no dissassemle drop id config 3', self.itemId)
             return False
-
-
-        awardData = RDDT.datas.get(dissassemblyReward)
-        if not awardData:
-            ERROR_MSG('canBeDisassembled invalid dissassemle drop id config', self.itemId, dissassemblyReward)
-            return False
-
+        
         return True
 
     def getEnhanceLevel(self):
@@ -683,12 +688,20 @@ class EquipmentItem(BaseItem.BaseItem):
         return GBGBD.datas[self.itemId]["iLevel"]
 
     def checkGlyphNum(self, glyphPos):
-        return glyphPos < self.equipAttr.glyphSlotNum
+        return self.equipAttr.checkSlotNum(glyphPos)
 
+    # group:0,1, glyphPos:0,1,2,3
     def checkGlyphApplyGroupId(self, groupId):
-        if self.equipAttr.glyphSlotNum <= 0:
+        if groupId != 0 and groupId != 1:
             return False
-        return 0 <= groupId <= ((self.equipAttr.glyphSlotNum - 1) // 2)
+        
+        if len(self.equipAttr.glyphSlotNum) == 0:
+            return False
+        
+        for glyphPos in self.equipAttr.glyphSlotNum:
+            if glyphPos // 2 == groupId:
+                return True
+        return False
 
     def doApplyGlyphGroupId(self, src, groupId):
         ret = self.equipAttr.applyGlyphGroupId(groupId)
@@ -697,6 +710,9 @@ class EquipmentItem(BaseItem.BaseItem):
         return ret
 
     def checkSpiritApplyGroupId(self, groupId):
+        if groupId != 0 and groupId != 1:
+            return False
+        
         if self.equipAttr.spiritSlotNum <= 0:
             return False
         return 0 <= groupId <= (self.equipAttr.spiritSlotNum - 1)
@@ -748,10 +764,7 @@ class EquipmentItem(BaseItem.BaseItem):
         return self.equipAttr.quality
 
     def getBlessVal(self):
-        totalVal = 0
-        for blessAffix in self.equipAttr.blessAffixes:
-            totalVal += blessAffix.affixVal
-        return totalVal
+        return self.equipAttr.baseAttrsByAfxVal.get('adjAtkBless', 0)
 
 class EquipAttr(userType.UserSoleType):
 
@@ -819,13 +832,17 @@ class EquipAttr(userType.UserSoleType):
     def glyphSlotNum(self):
         if not dataUtils.checkEquipmentGlyphType(self.equipType):
             return 0
-        enhanceLevelKey = self.getEnhanceLevelKey(self.enhanceLv)
+        enhanceLevelKey = self.getEnhanceLevelKey(self.maxEnhanceLv)
         cfgData =  GEGS.datas.get(enhanceLevelKey)
         if not cfgData:
             return 0
         # 铭文槽位数量按照强化等级开启
-        return cfgData["slot"]
-
+        ret = cfgData["glyphPos"]
+        if ret:
+            return ret
+        else:
+            return []
+        
     @property
     def spiritSlotNum(self):
         if not dataUtils.checkEquipmentSpiritType(self.equipType):
@@ -905,7 +922,8 @@ class EquipAttr(userType.UserSoleType):
             'score': self.score,
             'bindValue': self.bindValue,
             'isAddBindValue': self.isAddBindValue,
-            'grade': self.grade
+            'grade': self.grade,
+            'maxEnhanceLv': self.maxEnhanceLv,
         }
 
     def toDict(self, extraAttrs=None):
@@ -1389,12 +1407,8 @@ class EquipAttr(userType.UserSoleType):
 
     def glyphWashing(self, glyphPos, glyphCraftResult, affixIds = None):
         DEBUG_MSG('in glyphWashing', glyphPos, glyphCraftResult, affixIds)
-        if self.glyphSlotNum <= 0:
-            ERROR_MSG('in glyphWashing glyphSlotNum is 0')
-            return False, None, None
-
-        if glyphPos < 0 or glyphPos >= self.glyphSlotNum:
-            ERROR_MSG('in glyphWashing invalid glyphPos', glyphPos)
+        if not self.checkSlotNum(glyphPos):
+            ERROR_MSG('in glyphWashing invalid glyphPos', glyphPos, self.glyphSlotNum)
             return False, None, None
 
         if affixIds:
@@ -1462,6 +1476,12 @@ class EquipAttr(userType.UserSoleType):
         if guaranteedCount > 0:
             if blessNum > 0:
                 self.clearBlessFailedCount(blessLv)
+            elif blessNum == 0:
+                blessLvFailedCount = self.blessLvFailedCount.get(blessLv, 0)
+                # 降级N次之后，第N+1次必定成功
+                if blessLvFailedCount + 1 > guaranteedCount:
+                    blessNum = 1
+                    self.clearBlessFailedCount(blessLv)
             elif blessNum < 0:
                 ret = self.addBlessFailedCount(blessLv, guaranteedCount)
                 if ret:
@@ -1513,11 +1533,11 @@ class EquipAttr(userType.UserSoleType):
         ret = False
         blessLvFailedCount = self.blessLvFailedCount.get(blessLv, 0)
         blessLvFailedCount += 1
-        if blessLvFailedCount >= guaranteedCount:
+        if blessLvFailedCount > guaranteedCount:
             ret = True
             self.clearBlessFailedCount(blessLv)
         else:  
-            self.blessLvFailedCount[blessLv] = blessLvFailedCount + 1
+            self.blessLvFailedCount[blessLv] = blessLvFailedCount
             self.setDirtyFlag(True)
         return ret
     
@@ -1547,6 +1567,9 @@ class EquipAttr(userType.UserSoleType):
                 costItemId, itemNum = val
                 currencyDic[costItemId] = currencyDic.get(costItemId, 0) + itemNum
         return itemsDic, currencyDic, totalNeedUnbindCount
+    
+    def checkSlotNum(self, glyphPos):
+        return glyphPos in self.glyphSlotNum
 
 class EquipItemIdGen(object):
     LV_OFFSET_MIN = -14

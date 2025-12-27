@@ -19,6 +19,10 @@ datas = _tools.RODict({
         "ID": "itemID_money",
         "value": 30000001,
     }),
+    "itemID_bind_money": _tools.RODict({
+        "ID": "itemID_bind_money",
+        "value": 30000021,
+    }),
     "itemID_coin": _tools.RODict({
         "ID": "itemID_coin",
         "value": 30000002,

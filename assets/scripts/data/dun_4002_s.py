@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "40020002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -27,6 +28,7 @@ datas ={
       "Monster": {
         "40020006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -40,6 +42,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 1,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -47,12 +50,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u517d\u62182\u4eba\u7b2c\u4e00\u6ce2"
           }
         },
         "40020007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -79,6 +85,7 @@ datas ={
         },
         "40020008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -86,12 +93,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212001,
           "ID": 40020008,
-          "PosX": 676.2952,
+          "PosX": 684.02,
           "PosY": 43.69747,
-          "PosZ": 360.5953,
+          "PosZ": 360.92,
           "Props": {
             "GroupID": "",
             "Level": 1,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -99,12 +107,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "40020009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -131,6 +142,7 @@ datas ={
         },
         "40020010": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -157,6 +169,7 @@ datas ={
         },
         "40020011": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -170,6 +183,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 1,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -177,12 +191,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "40020012": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -196,6 +213,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 2,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 3,
@@ -203,12 +221,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u76fe\u725b\u62182\u4eba\u7ec4\u7b2c\u4e09\u6ce2"
           }
         },
         "40020013": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -235,6 +256,7 @@ datas ={
         },
         "40020014": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -261,6 +283,7 @@ datas ={
         },
         "40020015": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -287,6 +310,7 @@ datas ={
         },
         "40020016": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -313,6 +337,7 @@ datas ={
         },
         "40020017": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -339,6 +364,7 @@ datas ={
         },
         "40020018": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -365,6 +391,7 @@ datas ={
         },
         "40020019": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -391,6 +418,7 @@ datas ={
         },
         "40020020": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -417,6 +445,7 @@ datas ={
         },
         "40020021": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -443,6 +472,7 @@ datas ={
         },
         "40020022": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -469,6 +499,7 @@ datas ={
         },
         "40020023": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -495,6 +526,7 @@ datas ={
         },
         "40020024": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -521,6 +553,7 @@ datas ={
         },
         "40020025": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -547,6 +580,7 @@ datas ={
         },
         "40020026": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -573,6 +607,7 @@ datas ={
         },
         "40020027": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -599,6 +634,7 @@ datas ={
         },
         "40020028": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -625,6 +661,7 @@ datas ={
         },
         "40020029": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -651,6 +688,7 @@ datas ={
         },
         "40020030": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -658,12 +696,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212010,
           "ID": 40020030,
-          "PosX": 508.9811,
-          "PosY": 80.82335,
-          "PosZ": 348.7112,
+          "PosX": 506.703674,
+          "PosY": 80.7240448,
+          "PosZ": 348.837646,
           "Props": {
             "GroupID": "",
             "Level": 2,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -671,12 +710,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "40020031": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -684,9 +726,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212013,
           "ID": 40020031,
-          "PosX": 503.5345,
-          "PosY": 80.82335,
-          "PosZ": 354.2094,
+          "PosX": 501.25705,
+          "PosY": 80.65256,
+          "PosZ": 354.335846,
           "Props": {
             "GroupID": "",
             "Level": 2,
@@ -703,6 +745,7 @@ datas ={
         },
         "40020032": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -710,9 +753,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212013,
           "ID": 40020032,
-          "PosX": 503.4349,
-          "PosY": 80.82335,
-          "PosZ": 343.7114,
+          "PosX": 501.1575,
+          "PosY": 80.65256,
+          "PosZ": 343.837769,
           "Props": {
             "GroupID": "",
             "Level": 2,
@@ -729,6 +772,7 @@ datas ={
         },
         "40020033": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -736,9 +780,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212013,
           "ID": 40020033,
-          "PosX": 512.4666,
+          "PosX": 510.1892,
           "PosY": 80.65256,
-          "PosZ": 343.0721,
+          "PosZ": 343.198547,
           "Props": {
             "GroupID": "",
             "Level": 2,
@@ -755,6 +799,7 @@ datas ={
         },
         "40020034": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -762,9 +807,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212013,
           "ID": 40020034,
-          "PosX": 511.5558,
+          "PosX": 509.278381,
           "PosY": 80.65256,
-          "PosZ": 354.8903,
+          "PosZ": 355.016724,
           "Props": {
             "GroupID": "",
             "Level": 2,
@@ -781,6 +826,7 @@ datas ={
         },
         "40020046": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -807,6 +853,7 @@ datas ={
         },
         "40020047": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -833,6 +880,7 @@ datas ={
         },
         "40020048": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -859,6 +907,7 @@ datas ={
         },
         "40020049": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -885,6 +934,7 @@ datas ={
         },
         "40020050": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -911,6 +961,7 @@ datas ={
         },
         "40020051": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -937,6 +988,7 @@ datas ={
         },
         "40020052": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -963,6 +1015,7 @@ datas ={
         },
         "40020053": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -989,6 +1042,7 @@ datas ={
         },
         "40020054": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1015,6 +1069,7 @@ datas ={
         },
         "40020055": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1041,6 +1096,7 @@ datas ={
         },
         "40020056": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1067,6 +1123,7 @@ datas ={
         },
         "40020057": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1093,6 +1150,7 @@ datas ={
         },
         "40020058": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1119,6 +1177,7 @@ datas ={
         },
         "40020059": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1145,6 +1204,7 @@ datas ={
         },
         "40020060": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1171,6 +1231,7 @@ datas ={
         },
         "40020061": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1197,6 +1258,7 @@ datas ={
         },
         "40020062": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1223,6 +1285,7 @@ datas ={
         },
         "40020063": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1249,6 +1312,7 @@ datas ={
         },
         "40020064": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1275,6 +1339,7 @@ datas ={
         },
         "40020065": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1301,6 +1366,7 @@ datas ={
         },
         "40020066": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1327,6 +1393,7 @@ datas ={
         },
         "40020067": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1353,6 +1420,7 @@ datas ={
         },
         "40020068": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1379,6 +1447,7 @@ datas ={
         },
         "40020069": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1405,6 +1474,7 @@ datas ={
         },
         "40020070": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1431,6 +1501,7 @@ datas ={
         },
         "40020071": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1457,6 +1528,7 @@ datas ={
         },
         "40020072": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1483,6 +1555,7 @@ datas ={
         },
         "40020073": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1509,6 +1582,7 @@ datas ={
         },
         "40020074": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1535,6 +1609,7 @@ datas ={
         },
         "40020075": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1561,6 +1636,7 @@ datas ={
         },
         "40020076": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1587,6 +1663,7 @@ datas ={
         },
         "40020077": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1613,6 +1690,7 @@ datas ={
         },
         "40020078": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1639,6 +1717,7 @@ datas ={
         },
         "40020079": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1646,9 +1725,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212031,
           "ID": 40020079,
-          "PosX": 447.5662,
-          "PosY": 81.91345,
-          "PosZ": 337.7675,
+          "PosX": 447.8422,
+          "PosY": 81.89803,
+          "PosZ": 338.9528,
           "Props": {
             "GroupID": "",
             "Level": 4,
@@ -1659,12 +1738,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "40020080": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1672,9 +1753,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212031,
           "ID": 40020080,
-          "PosX": 446.3698,
-          "PosY": 81.70345,
-          "PosZ": 359.2269,
+          "PosX": 446.9096,
+          "PosY": 81.89802,
+          "PosZ": 358.0977,
           "Props": {
             "GroupID": "",
             "Level": 4,
@@ -1685,22 +1766,24 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "40020081": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
-          "Dir": 0.7529801,
+          "Dir": 3.779639,
           "DisplayName": "",
           "EntityID": 11212031,
           "ID": 40020081,
-          "PosX": 418.6432,
-          "PosY": 81.91345,
-          "PosZ": 338.1076,
+          "PosX": 419.43,
+          "PosY": 81.89803,
+          "PosZ": 338.71,
           "Props": {
             "GroupID": "",
             "Level": 4,
@@ -1711,12 +1794,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "40020082": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1724,9 +1809,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212031,
           "ID": 40020082,
-          "PosX": 417.0655,
-          "PosY": 81.70345,
-          "PosZ": 359.958,
+          "PosX": 419.2091,
+          "PosY": 81.89802,
+          "PosZ": 358.0163,
           "Props": {
             "GroupID": "",
             "Level": 4,
@@ -1737,12 +1822,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "40020083": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1750,9 +1837,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212031,
           "ID": 40020083,
-          "PosX": 397.4859,
-          "PosY": 81.91345,
-          "PosZ": 337.2853,
+          "PosX": 397.3041,
+          "PosY": 81.89803,
+          "PosZ": 338.6844,
           "Props": {
             "GroupID": "",
             "Level": 4,
@@ -1763,22 +1850,24 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "40020084": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
-          "Dir": 187.3427,
+          "Dir": 183.5647,
           "DisplayName": "",
           "EntityID": 11212031,
           "ID": 40020084,
-          "PosX": 396.6493,
-          "PosY": 81.70345,
-          "PosZ": 359.0511,
+          "PosX": 396.81,
+          "PosY": 81.89803,
+          "PosZ": 358.16,
           "Props": {
             "GroupID": "",
             "Level": 4,
@@ -1789,12 +1878,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "40020085": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1823,6 +1914,7 @@ datas ={
       "Npc": {
         "40024001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1839,11 +1931,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1851,20 +1946,23 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 40024002,
-          "PosX": 728.05,
-          "PosY": 37.32,
-          "PosZ": 360.67,
+          "PosX": 703.2881,
+          "PosY": 43.27594,
+          "PosZ": 360.8987,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1881,11 +1979,13 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": ""
           }
         },
         "40024004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1893,83 +1993,47 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 40024004,
-          "PosX": 575.0477,
-          "PosY": 68.41695,
-          "PosZ": 287.8274,
+          "PosX": 575.6929,
+          "PosY": 68.98745,
+          "PosZ": 293.9652,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "\u8df3\u8dc3\u6559\u5b66\u8d77\u59cb\u70b9",
+            "ShowInSceneMap": 1
           }
         },
         "40024005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
-          "Dir": 293.5746,
+          "Dir": 329.7264,
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 40024005,
-          "PosX": 554.0,
-          "PosY": 73.0,
-          "PosZ": 321.0,
+          "PosX": 561.176,
+          "PosY": 73.13799,
+          "PosZ": 318.4594,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
-        "40024006": {
-          "ActivityID": 0,
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 132.3134,
-          "DisplayName": "",
-          "EntityID": 18000002,
-          "ID": 40024006,
-          "PosX": 539.0848,
-          "PosY": 76.0,
-          "PosZ": 329.0,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": 0,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
-        "40024007": {
-          "ActivityID": 0,
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 266.3279,
-          "DisplayName": "",
-          "EntityID": 18000002,
-          "ID": 40024007,
-          "PosX": 459.4783,
-          "PosY": 81.87803,
-          "PosZ": 348.1114,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": 0,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "\u8df3\u8dc3\u6559\u5b66\u8d77\u59cb\u70b92",
+            "ShowInSceneMap": 1
           }
         },
         "40024008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1986,11 +2050,13 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": ""
           }
         },
         "40024009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2012,6 +2078,7 @@ datas ={
         },
         "40024010": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2020,7 +2087,7 @@ datas ={
           "EntityID": 18000002,
           "ID": 40024010,
           "PosX": 153.0,
-          "PosY": 136.0,
+          "PosY": 133.89,
           "PosZ": 349.0915,
           "Props": {
             "IsOpen": 1,
@@ -2028,11 +2095,13 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": ""
           }
         },
         "40024011": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2049,11 +2118,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024012": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2070,11 +2142,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024013": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2091,74 +2166,62 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024014": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
-          "Dir": 147.9551,
+          "Dir": 326.2431,
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 40024014,
-          "PosX": 575.0,
-          "PosY": 71.0,
-          "PosZ": 298.0,
+          "PosX": 571.24,
+          "PosY": 70.10122,
+          "PosZ": 300.6,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "\u8df3\u8dc3\u6559\u5b66\u7ed3\u675f\u70b9",
+            "ShowInSceneMap": 1
           }
         },
         "40024015": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
-          "Dir": 31.8135,
+          "Dir": 307.7564,
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 40024015,
-          "PosX": 549.1248,
-          "PosY": 76.0,
-          "PosZ": 323.7586,
+          "PosX": 554.41,
+          "PosY": 75.4,
+          "PosZ": 324.21,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
-        "40024016": {
-          "ActivityID": 0,
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 298.9496,
-          "DisplayName": "",
-          "EntityID": 18000002,
-          "ID": 40024016,
-          "PosX": 535.0,
-          "PosY": 80.68373,
-          "PosZ": 331.3875,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": 0,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "\u8df3\u8dc3\u6559\u5b66\u7ed3\u675f\u70b92",
+            "ShowInSceneMap": 1
           }
         },
         "40024017": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2175,11 +2238,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024018": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2187,20 +2253,22 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000628,
           "ID": 40024018,
-          "PosX": 485.243,
-          "PosY": 81.50047,
-          "PosZ": 348.0907,
+          "PosX": 508.97,
+          "PosY": 80.72404,
+          "PosZ": 348.78,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": ""
           }
         },
         "40024019": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2222,6 +2290,7 @@ datas ={
         },
         "40024024": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2229,20 +2298,23 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 40024024,
-          "PosX": 233.6134,
+          "PosX": 227.26,
           "PosY": 90.26532,
-          "PosZ": 348.4149,
+          "PosZ": 348.95,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024025": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2264,6 +2336,7 @@ datas ={
         },
         "40024026": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2280,11 +2353,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024027": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2306,6 +2382,7 @@ datas ={
         },
         "40024028": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2327,6 +2404,7 @@ datas ={
         },
         "40024029": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2343,11 +2421,13 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": ""
           }
         },
         "40024030": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2364,11 +2444,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024031": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -2385,13 +2468,87 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        },
+        "40024032": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 90.0,
+          "DisplayName": "",
+          "EntityID": 18000038,
+          "ID": 40024032,
+          "PosX": 508.85,
+          "PosY": 83.03,
+          "PosZ": 348.0,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": ""
+          }
+        },
+        "40024033": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 267.4603,
+          "DisplayName": "",
+          "EntityID": 18000002,
+          "ID": 40024033,
+          "PosX": 194.6778,
+          "PosY": 116.7134,
+          "PosZ": 350.8025,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        },
+        "40024034": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 18000002,
+          "ID": 40024034,
+          "PosX": 578.0657,
+          "PosY": 67.07608,
+          "PosZ": 283.0653,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       },
       "Collection": {
         "40028003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -2399,19 +2556,21 @@ datas ={
           "DisplayName": "",
           "EntityID": 16000103,
           "ID": 40028003,
-          "PosX": 485.6269,
-          "PosY": 81.50047,
-          "PosZ": 348.2748,
+          "PosX": 508.9344,
+          "PosY": 80.72404,
+          "PosZ": 348.7649,
           "Props": {
             "IsOpen": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": ""
           }
         },
         "40028011": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -2434,6 +2593,7 @@ datas ={
       "AirWall": {
         "40028008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -2451,11 +2611,13 @@ datas ={
             "MPosX": 756.0,
             "MPosY": 34.26,
             "MPosZ": 293.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40028009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -2473,11 +2635,13 @@ datas ={
             "MPosX": 756.0,
             "MPosY": 34.06,
             "MPosZ": 293.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40028010": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -2495,11 +2659,13 @@ datas ={
             "MPosX": 768.0,
             "MPosY": 34.26,
             "MPosZ": 293.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40028023": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -2517,11 +2683,13 @@ datas ={
             "MPosX": 749.0,
             "MPosY": 33.81,
             "MPosZ": 321.0,
-            "Remark": "\u7834\u788e\u6865\u963b\u6321\u7a7a\u6c14\u5899"
+            "Remark": "\u7834\u788e\u6865\u963b\u6321\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "40028028": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -2539,11 +2707,13 @@ datas ={
             "MPosX": 666.0,
             "MPosY": 43.3,
             "MPosZ": 337.0,
-            "Remark": "\u7b2c\u4e00\u6ce2\u7ed3\u675f\u524d\u7a7a\u6c14\u5899"
+            "Remark": "\u7b2c\u4e00\u6ce2\u7ed3\u675f\u524d\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "40028029": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -2561,11 +2731,13 @@ datas ={
             "MPosX": 659.0,
             "MPosY": 55.17,
             "MPosZ": 263.0,
-            "Remark": "\u7b2c\u4e8c\u6ce2\u7ed3\u675f\u524d\u7a7a\u6c14\u5899"
+            "Remark": "\u7b2c\u4e8c\u6ce2\u7ed3\u675f\u524d\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "40028030": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -2583,11 +2755,13 @@ datas ={
             "MPosX": 557.0,
             "MPosY": 68.26,
             "MPosZ": 283.0,
-            "Remark": "\u7b2c\u4e09\u6ce2\u7ed3\u675f\u524d\u7a7a\u6c14\u5899"
+            "Remark": "\u7b2c\u4e09\u6ce2\u7ed3\u675f\u524d\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         },
         "40028031": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -2605,13 +2779,15 @@ datas ={
             "MPosX": 361.0,
             "MPosY": 89.75,
             "MPosZ": 307.0,
-            "Remark": "\u77f3\u67f1\u524d\u7a7a\u6c14\u5899"
+            "Remark": "\u77f3\u67f1\u524d\u7a7a\u6c14\u5899",
+            "ShowInSceneMap": 1
           }
         }
       },
       "Creation": {
         "40028024": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -2635,6 +2811,7 @@ datas ={
         },
         "40028025": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -2658,6 +2835,7 @@ datas ={
         },
         "40028026": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -2681,6 +2859,7 @@ datas ={
         },
         "40028027": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -2704,6 +2883,7 @@ datas ={
         },
         "40028032": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -2727,6 +2907,7 @@ datas ={
         },
         "40028033": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -2750,6 +2931,7 @@ datas ={
         },
         "40028034": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -2773,6 +2955,7 @@ datas ={
         },
         "40028035": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Creation",
           "ClassNameType": 4,
           "CustomID": "",
@@ -2796,9 +2979,11 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "RebornPos": {
       "40028001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",
@@ -2810,33 +2995,41 @@ datas ={
         "PosY": 67.07214,
         "PosZ": 275.9499,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
-          "Remark": ""
+          "RefreshTimedID": 0,
+          "Remark": "",
+          "ShowInSceneMap": 1
         }
       },
       "40028022": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",
-        "Dir": 169.4668,
+        "Dir": 269.2827,
         "DisplayName": "",
         "EntityID": 1,
         "ID": 40028022,
-        "PosX": 243.3533,
-        "PosY": 90.28429,
-        "PosZ": 348.7897,
+        "PosX": 248.5027,
+        "PosY": 90.28662,
+        "PosZ": 348.4185,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
-          "Remark": ""
+          "RefreshTimedID": 0,
+          "Remark": "",
+          "ShowInSceneMap": 1
         }
       }
     },
     "FastMovePoint": {
       "40028020": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "",
@@ -2867,6 +3060,7 @@ datas ={
       },
       "40028021": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "FastMovePoint",
         "ClassNameType": 19,
         "CustomID": "",
@@ -2893,6 +3087,134 @@ datas ={
               10.0
             ]
           ]
+        }
+      }
+    },
+    "BreakAwayStuckPos": {
+      "40028036": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 270.3799,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 40028036,
+        "PosX": 740.39,
+        "PosY": 35.60984,
+        "PosZ": 361.72,
+        "Props": {
+          "Remark": "\u7b2c1\u6ce2\u5c0f\u602a\u62d6\u5361\u70b9",
+          "ShowInSceneMap": 1
+        }
+      },
+      "40028037": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 179.1922,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 40028037,
+        "PosX": 679.4951,
+        "PosY": 46.411,
+        "PosZ": 327.6818,
+        "Props": {
+          "Remark": "\u7b2c2\u6ce2\u5c0f\u602a\u62d6\u5361\u70b9",
+          "ShowInSceneMap": 1
+        }
+      },
+      "40028038": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 270.3799,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 40028038,
+        "PosX": 653.1035,
+        "PosY": 56.0484,
+        "PosZ": 275.7986,
+        "Props": {
+          "Remark": "\u7b2c3\u6ce2\u5c0f\u602a\u62d6\u5361\u70b9",
+          "ShowInSceneMap": 1
+        }
+      },
+      "40028039": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 270.3799,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 40028039,
+        "PosX": 508.7,
+        "PosY": 80.72404,
+        "PosZ": 348.79,
+        "Props": {
+          "Remark": "\u7b2c4\u6ce2\u5c0f\u602a\u62d6\u5361\u70b9",
+          "ShowInSceneMap": 1
+        }
+      },
+      "40028040": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 270.3799,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 40028040,
+        "PosX": 346.4253,
+        "PosY": 90.04079,
+        "PosZ": 348.5957,
+        "Props": {
+          "Remark": "\u77f3\u5316\u602a\u62d6\u5361\u70b9",
+          "ShowInSceneMap": 1
+        }
+      },
+      "40028041": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 270.3799,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 40028041,
+        "PosX": 242.0994,
+        "PosY": 90.28344,
+        "PosZ": 348.7415,
+        "Props": {
+          "Remark": "\u8df3\u8df3\u6865\u62d6\u5361\u70b9",
+          "ShowInSceneMap": 1
+        }
+      },
+      "40028042": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 264.8004,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 40028042,
+        "PosX": 776.7803,
+        "PosY": 34.14064,
+        "PosZ": 365.1306,
+        "Props": {
+          "Remark": "\u521d\u59cb\u62d6\u5361\u70b9",
+          "ShowInSceneMap": 1
         }
       }
     }

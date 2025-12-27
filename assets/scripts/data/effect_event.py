@@ -474,16 +474,29 @@ def _13090293(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090294(self, target, context):
-    if self.getProp("hp") < (self.getProp("fullHp") * 0.5):
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+    
+    if fullHp <= 0:
+        return False
+
+    if curHp >= fullHp * 0.5:
+        if self.hasBuff(*context.args.ActionParam):
+            self.removeBuffBySkill(target, context, *context.args.ActionParam)
+        return False
+
+    if not self.hasBuff(*context.args.ActionParam):
         self.addBuffBySkill(target, context, *context.args.ActionParam)
-    elif self.hasBuff(*context.args.ActionParam) and self.getProp("hp") >= self.getProp("fullHp") * 0.5:
-        self.removeBuffBySkill(target, context,*context.args.ActionParam)
+
+    return True
 
 def _13090295(self, target, context):
-    if self.getProp("hp") >= (self.getProp("fullHp") * 0.7):
-        self.addBuffBySkill(target, context, *context.args.ActionParam)
-    #elif self.hasBuff(*context.args.ActionParam) and self.getProp("hp") < self.getProp("fullHp") * 0.7:
-    #    self.removeBuffBySkill(target, context,*context.args.ActionParam)
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+    if curHp <= fullHp * 0.7:
+        return False
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    return True
 
 def _13090296(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -492,8 +505,12 @@ def _13090297(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090298(self, target, context):
-    if self.getProp("hp") <= (self.getProp("fullHp") * 0.4):
-        self.addBuffBySkill(target, context, *context.args.ActionParam)
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+    if curHp >= fullHp * 0.4:
+        return False
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    return True
 
 def _13090299(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -541,10 +558,22 @@ def _13090310(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090311(self, target, context):
-    if self.getProp("hp") < (self.getProp("fullHp") * 0.5):
-        self.addBuffBySkill(target, context, *context.args.ActionParam)
-    # elif self.hasBuff(*context.args.ActionParam) and self.getProp("hp") >= self.getProp("fullHp") * 0.5:
-    #    self.removeBuffBySkill(target, context,*context.args.ActionParam)
+    # hpVal = context.eventContext.hpVal
+
+    # # 回血不触发
+    # if hpVal >= 0:
+    #     return False
+
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+
+    # 扣血后仍 >= 50%，不触发
+    if curHp >= fullHp * 0.5:
+        return False
+
+    # 扣血 + 当前血量 < 50%
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    return True
 
 def _13090312(self, target, context):
     if target and target.hasBuffTag(3):
@@ -614,8 +643,12 @@ def _13090325(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090326(self, target, context):
-    if self.getProp("hp") >= (self.getProp("fullHp") * 0.7):
-        self.addBuffBySkill(target, context, *context.args.ActionParam)
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+    if curHp <= fullHp * 0.7:
+        return False
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    return True
 
 def _13090327(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -639,8 +672,12 @@ def _13090330(self, target, context):
         skill.changeNextCast(self,context.args.ActionParam[0])
 
 def _13090331(self, target, context):
-    if self.getProp("hp") <= (self.getProp("fullHp") * 0.3):
-        self.addBuffBySkill(target, context, *context.args.ActionParam)
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+    if curHp >= fullHp * 0.3:
+        return False
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    return True
 
 def _13090332(self, target, context):
     skill = self._getSkillByActionContext(context)
@@ -672,6 +709,50 @@ def _13090337(self, target, context):
 
 def _13090338(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090339(self, target, context):
+
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+
+    if curHp >= fullHp * 0.7:
+        return False
+   
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    return True
+
+def _13090340(self, target, context):
+
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+
+    if curHp >= fullHp * 0.8:
+        return False
+   
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    return True
+
+def _13090341(self, target, context):
+
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+
+    if curHp >= fullHp * 0.55:
+        return False
+   
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    return True
+
+def _13090342(self, target, context):
+
+    curHp = self.getProp("hp")
+    fullHp = self.getProp("fullHp")
+
+    if curHp >= fullHp * 0.3:
+        return False
+   
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    return True
 
 datas = _tools.RODict({ 
     13090001: _tools.RODict({
@@ -1488,7 +1569,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090299,
         "Target": "self",
-        "EventCD": 20.0
+        "EventCD": 120.0
     }),
     13090300: _tools.RODict({
         "ID": 13090300,
@@ -1801,7 +1882,39 @@ datas = _tools.RODict({
         "Action": _13090338,
         "Target": "self",
         "EventCD": 60.0
+    }),
+    13090339: _tools.RODict({
+        "ID": 13090339,
+        "Event": "onHPModify",
+        "EventSourceType": 0,
+        "Action": _13090339,
+        "Target": "self",
+        "EventCD": 60.0
+    }),
+    13090340: _tools.RODict({
+        "ID": 13090340,
+        "Event": "onHPModify",
+        "EventSourceType": 0,
+        "Action": _13090340,
+        "Target": "self",
+        "EventCD": 60.0
+    }),
+    13090341: _tools.RODict({
+        "ID": 13090341,
+        "Event": "onHPModify",
+        "EventSourceType": 0,
+        "Action": _13090341,
+        "Target": "self",
+        "EventCD": 60.0
+    }),
+    13090342: _tools.RODict({
+        "ID": 13090342,
+        "Event": "onHPModify",
+        "EventSourceType": 0,
+        "Action": _13090342,
+        "Target": "self",
+        "EventCD": 60.0
     })
 })
 minKey = 13090001
-maxKey = 13090338
+maxKey = 13090342

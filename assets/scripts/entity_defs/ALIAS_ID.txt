@@ -1,3 +1,4 @@
+Account method minorAccountConstraintTip 16
 Account method onAvatarDetailInAccount 4
 Account method onAvatarOfflineTime 7
 Account method onCharInfoChange 11
@@ -14,6 +15,7 @@ Account method onReqAvatarGBID 13
 Account method onReqAvatarList 3
 Account method onSelectGameFailed 15
 Account property lastSelectGbId 5
+Account property phone 4
 Avatar property PVPDmg 124
 Avatar property PVPDmgAnti 125
 Avatar property adjCD 10
@@ -29,14 +31,17 @@ Avatar property autoMatchTarget 19
 Avatar property autoRaidMatchTarget 84
 Avatar property battleIndex 31
 Avatar property bePushedSpeed 15
+Avatar property bindMoney 9
 Avatar property blazeIds 97
 Avatar property chatChannel 58
 Avatar property chiefInfo 115
+Avatar property chiefPassRecords 12
 Avatar property coin 17
 Avatar property commonFlagCell 114
 Avatar property copper 149
 Avatar property crossServerState 156
 Avatar property crusadeInfo 39
+Avatar property crusadePassRecords 14
 Avatar property cubeUseCoinTimes 94
 Avatar property cubeUseItemTimes 95
 Avatar property curReliveCD 87
@@ -64,6 +69,8 @@ Avatar property gbId 26
 Avatar property geniusQi 159
 Avatar property gmMode 27
 Avatar property guildAssistTimes 105
+Avatar property guildBossPassRecords 16
+Avatar property guildBossRewardWeeklyCount 18
 Avatar property guildContrib 102
 Avatar property guildDonateCoin 108
 Avatar property guildDonateMoney 110
@@ -252,6 +259,7 @@ Monster method onRemoveBuff 22
 Monster method onSetAddSkillCd 25
 Monster method onShooterSkillCanUse 26
 Monster method onSkillDamage 27
+Monster method onTelBack 10
 Monster method onUpdateAureoles 29
 Monster method onUpdateAureolesFromOthers 30
 Monster method onUpdateBuff 31

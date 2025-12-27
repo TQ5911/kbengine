@@ -192,10 +192,15 @@ def attackShare(self, target, context, *args):
     dmgAvoidance = armorAvoidance(self, target, classTag, arg8)
 
     # 对象伤害倍率计算
-    realDmgRatioEx = realDmgRatio(self, target,context)
+    if self.IsCreation:
+        realDmgRatioEx = realDmgRatio(utils.getHostEntity(self), target,context)
+    else:
+        realDmgRatioEx = realDmgRatio(self, target,context)
+
     avatar = self.getAvatar()
     if avatar:
-        ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO)
+        sourceSkillId = avatar.getSourceSkillId(context)
+        ret, datas = avatar.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO)
         if ret:
             if len(datas) == 1:
                 from KBEDebug import DEBUG_MSG
@@ -214,14 +219,15 @@ def attackShare(self, target, context, *args):
         addRatio = 0
         avatar = self.getAvatar()
         if avatar:
-            ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE)
+            sourceSkillId = avatar.getSourceSkillId(context)
+            ret, datas = avatar.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE)
             if ret:
                 if len(datas) == 1:
                     addValue = datas[0]
                     from KBEDebug import DEBUG_MSG
                     DEBUG_MSG("in attackShare, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_VALUE, datas)
 
-            ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO)
+            ret, datas = avatar.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO)
             if ret:
                 if len(datas) == 1:
                     addRatio = datas[0]
@@ -466,7 +472,8 @@ def isHit(self, target, context):
     addValue = 0
     avatar = self.getAvatar()
     if avatar:
-        ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO)
+        sourceSkillId = avatar.getSourceSkillId(context)
+        ret, datas = avatar.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO)
         if ret:
             if len(datas) == 1:
                 addValue = datas[0]
@@ -499,7 +506,8 @@ def isCrit(self, target, context, *args):
     addValue = 0
     avatar = self.getAvatar()
     if avatar:
-        ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO)
+        sourceSkillId = avatar.getSourceSkillId(context)
+        ret, datas = avatar.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_HIT_INCREASE_RATIO)
         if ret:
             if len(datas) == 1:
                 addValue = datas[0]
@@ -552,7 +560,8 @@ def fatalDmg(self, target, context):
     addValue = 0
     avatar = self.getAvatar()
     if avatar:
-        ret, datas = avatar.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO)
+        sourceSkillId = avatar.getSourceSkillId(context)
+        ret, datas = avatar.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.SKILL_CRITIAL_DAMAGE_INCREASE_RATIO)
         if ret:
             if len(datas) == 1:
                 addValue = datas[0]
@@ -733,7 +742,7 @@ def controlResist(self, target, context, *args):
     srcControlPower = 796 + 12 * (skillLv-1)  # 投放中控制技能强
     if context.actionType == actionContext.ACTION_EQUIP:
         srcControlPower = 42 + context.affixLv * context.affixLevelGap * 8
-    controlPower = srcControlPower + controlEnh - controlAnti
+    controlPower = controlEnh - min(max((target.level - self.level),0), 5) - controlAnti
 
     result = combatSkill.AntiControlResult()
     result.resultCode = 0
@@ -760,11 +769,11 @@ def controlResist(self, target, context, *args):
                 result.resultCode = 2
             else:
                 if utils.isPVP(self, target):
-                    # PVP控制保底概率20%下限，95%上限
-                    controlPowerData = min(max(target.getProp("baseStateRate") + controlPower, 200), 950)
+                    # PVP控制保底概率0%下限，100%上限
+                    controlPowerData = min(max(target.getProp("baseStateRate") + controlPower + arg2 * 100, 0), 100)
                 else:
-                    controlPowerData = target.getProp("baseStateRate") + controlPower
-                if random.randint(1, 1000) <= controlPowerData:
+                    controlPowerData = target.getProp("baseStateRate") + controlPower + arg2 * 100
+                if random.randint(1, 100) <= controlPowerData:
                     # 控制衰减
                     if isDecay:
                         resistRatio = decayLv * 0.05

@@ -138,6 +138,10 @@ class IScore(object):
     def onUpdateGuildTrainScore(self, newScore):
         self._changeScore("guildtrain", math.floor(newScore))
         self._onScoreChange()
+
+    def onUpdateMeridianScore(self, newScore):
+        self._changeScore("meridian", math.floor(newScore))
+        self._onScoreChange()
     # --------------------------------------------------------------
 
     # --------------------------------------------------------------

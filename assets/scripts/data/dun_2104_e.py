@@ -28,7 +28,7 @@ datas ={
       21040027
     ],
     "num": 0,
-    "lv": "43",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -128,7 +128,7 @@ datas ={
       21040051
     ],
     "num": 0,
-    "lv": "43",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -164,7 +164,7 @@ datas ={
       21040003
     ],
     "num": 0,
-    "lv": "44",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -211,7 +211,7 @@ datas ={
     "entityID": [
       21040003
     ],
-    "dialogID": 19900195,
+    "dialogID": 19900199,
     "transition": {}
   },
   "1088": {
@@ -242,7 +242,7 @@ datas ={
       21040058
     ],
     "num": 0,
-    "lv": "44",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -276,7 +276,6 @@ datas ={
     "type": "createMonster",
     "entityID": [
       21040059,
-      21040060,
       21040061,
       21040062,
       21040063,
@@ -293,7 +292,7 @@ datas ={
       21040074
     ],
     "num": 0,
-    "lv": "44",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -338,7 +337,7 @@ datas ={
       21040084
     ],
     "num": 0,
-    "lv": "44",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -374,12 +373,12 @@ datas ={
       21040001
     ],
     "num": 0,
-    "lv": "44",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
     "maxAtk": 0,
-    "ifSetBoss": 0,
+    "ifSetBoss": 1,
     "aiName": 0,
     "hpPercent": 0.0,
     "transition": {
@@ -400,7 +399,7 @@ datas ={
       21040090
     ],
     "num": 0,
-    "lv": "45",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -441,7 +440,7 @@ datas ={
       21040096
     ],
     "num": 0,
-    "lv": "45",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -486,7 +485,7 @@ datas ={
       21040106
     ],
     "num": 0,
-    "lv": "45",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -528,7 +527,7 @@ datas ={
       21040113
     ],
     "num": 0,
-    "lv": "46",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -564,12 +563,12 @@ datas ={
       21040002
     ],
     "num": 0,
-    "lv": "46",
+    "lv": "40",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
     "maxAtk": 0,
-    "ifSetBoss": 0,
+    "ifSetBoss": 1,
     "aiName": 0,
     "hpPercent": 0.0,
     "transition": {
@@ -582,7 +581,7 @@ datas ={
   "1120": {
     "type": "monsterRestNum",
     "monsterID": [
-      -1
+      21040002
     ],
     "compare": 1,
     "restNum": 0,
@@ -620,16 +619,17 @@ datas ={
         1147,
         1148,
         1149,
-        1156
+        1156,
+        1162
       ]
     }
   },
   "1147": {
     "type": "popupdialog",
     "entityID": [
-      21040003
+      21040001
     ],
-    "dialogID": 19900195,
+    "dialogID": 19900200,
     "transition": {}
   },
   "1148": {
@@ -687,16 +687,17 @@ datas ={
         1154,
         1150,
         1155,
-        1158
+        1158,
+        1163
       ]
     }
   },
   "1154": {
     "type": "popupdialog",
     "entityID": [
-      21040003
+      21040002
     ],
-    "dialogID": 19900195,
+    "dialogID": 19900185,
     "transition": {}
   },
   "1150": {
@@ -740,6 +741,32 @@ datas ={
     "entityID": [
       21048010
     ],
+    "transition": {}
+  },
+  "1162": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      21040001
+    ],
+    "buffID": [
+      64004085
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 30.0,
+    "transition": {}
+  },
+  "1163": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      21040002
+    ],
+    "buffID": [
+      64004085
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 30.0,
     "transition": {}
   }
 }

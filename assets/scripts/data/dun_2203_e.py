@@ -89,7 +89,8 @@ datas ={
     "transition": {
       "finished": [
         1090,
-        1012
+        1012,
+        1136
       ]
     }
   },
@@ -258,7 +259,8 @@ datas ={
     "duration": 10.0,
     "transition": {
       "finished": [
-        1053
+        1053,
+        1137
       ]
     }
   },
@@ -289,7 +291,8 @@ datas ={
     "duration": 10.0,
     "transition": {
       "finished": [
-        1064
+        1064,
+        1138
       ]
     }
   },
@@ -409,7 +412,7 @@ datas ={
   "1092": {
     "type": "popupdialog",
     "entityID": [
-      22030001
+      22030002
     ],
     "dialogID": 19017003,
     "transition": {}
@@ -417,7 +420,7 @@ datas ={
   "1093": {
     "type": "popupdialog",
     "entityID": [
-      22030001
+      22030002
     ],
     "dialogID": 19017004,
     "transition": {}
@@ -470,5 +473,44 @@ datas ={
         1043
       ]
     }
+  },
+  "1136": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      22030001
+    ],
+    "buffID": [
+      64004087
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 60.0,
+    "transition": {}
+  },
+  "1137": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      22030002
+    ],
+    "buffID": [
+      64004087
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 70.0,
+    "transition": {}
+  },
+  "1138": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      22030003
+    ],
+    "buffID": [
+      64004087
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 70.0,
+    "transition": {}
   }
 }

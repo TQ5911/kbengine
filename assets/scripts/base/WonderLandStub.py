@@ -96,3 +96,7 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onRefreshGroupEntities(self, info):
         DEBUG_MSG("WonderLandStub::onRefreshGroupEntities", info)
         super(WonderLandStub, self).onRefreshGroupEntities(info)
+
+    def onDestroyGroupEntities(self, info):
+        DEBUG_MSG("WonderLandStub::onDestroyGroupEntities", info)
+        super(WonderLandStub, self).onDestroyGroupEntities(info)

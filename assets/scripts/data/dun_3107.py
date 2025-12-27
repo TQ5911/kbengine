@@ -1,6 +1,8 @@
 datas ={
   "31070001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "BornPos",
     "ClassNameType": 6,
     "CustomID": "",
@@ -8,13 +10,17 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 31070001,
+    "Name": "\u51fa\u751f\u70b9",
     "PosX": 246.2613,
     "PosY": 527.8172,
     "PosZ": 19.8107,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 0.0,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 0.0,
       "TelX": 39.52325,
       "TelY": 39.0038,
@@ -23,6 +29,8 @@ datas ={
   },
   "31070002": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "",
@@ -30,25 +38,32 @@ datas ={
     "DisplayName": "",
     "EntityID": 11011015,
     "ID": 31070002,
+    "Name": "\u72fc\u9996\u98861",
     "PosX": 279.7614,
     "PosY": 524.9851,
     "PosZ": 57.6887,
     "Props": {
       "GroupID": "",
+      "InitLoad": 0,
       "Level": 20,
+      "LightPillar": "",
       "MapEntityScale": 0,
-      "MapEntityType": 0,
+      "MapEntityType": "18",
       "MonsterGroupID": "",
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 1800.0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 4,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
   "31078001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "31218002",
@@ -56,6 +71,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 17310701,
     "ID": 31078001,
+    "Name": "\u6df7\u6c8c\u4e4b\u5883",
     "PosX": 306.8014,
     "PosY": 526.2947,
     "PosZ": 90.9215,
@@ -63,6 +79,7 @@ datas ={
       "CameraId": 0,
       "GateType": 3,
       "Remark": "",
+      "ShowInSceneMap": 0,
       "TelDir": 220.7681,
       "TelX": 306.8014,
       "TelY": 526.2947,
@@ -71,6 +88,8 @@ datas ={
   },
   "31078002": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "CombatArea",
     "ClassNameType": 21,
     "CustomID": "",
@@ -78,13 +97,15 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 31078002,
+    "Name": "\u6218\u6597\u533a",
     "PosX": 279.7998,
     "PosY": 524.8969,
     "PosZ": 57.80594,
     "Props": {
       "AreaType": 1,
       "Radius": 35.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   }
 }

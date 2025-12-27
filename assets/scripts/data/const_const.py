@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     "createConst_CharLimit": _tools.RODict({
         "ID": "createConst_CharLimit",
-        "value": 4,
+        "value": 5,
     }),
     "createConst_BornGamePlayID": _tools.RODict({
         "ID": "createConst_BornGamePlayID",
@@ -349,7 +349,7 @@ datas = _tools.RODict({
     }),
     "maxLevel": _tools.RODict({
         "ID": "maxLevel",
-        "value": 70,
+        "value": 90,
     }),
     "bankSortCooldown": _tools.RODict({
         "ID": "bankSortCooldown",
@@ -709,7 +709,7 @@ datas = _tools.RODict({
     }),
     "teleportTime": _tools.RODict({
         "ID": "teleportTime",
-        "value": 2,
+        "value": 3,
     }),
     "selectedCheckLine": _tools.RODict({
         "ID": "selectedCheckLine",
@@ -946,5 +946,145 @@ datas = _tools.RODict({
     "bossRefreshSystem": _tools.RODict({
         "ID": "bossRefreshSystem",
         "value": 2,
+    }),
+    "agreementUnchecked": _tools.RODict({
+        "ID": "agreementUnchecked",
+        "value": 54002070,
+    }),
+    "phoneEmpty": _tools.RODict({
+        "ID": "phoneEmpty",
+        "value": 54002071,
+    }),
+    "phoneInvalid": _tools.RODict({
+        "ID": "phoneInvalid",
+        "value": 54002072,
+    }),
+    "smsSentSuccess": _tools.RODict({
+        "ID": "smsSentSuccess",
+        "value": 54002073,
+    }),
+    "smsEmpty": _tools.RODict({
+        "ID": "smsEmpty",
+        "value": 54002074,
+    }),
+    "smsInvalid": _tools.RODict({
+        "ID": "smsInvalid",
+        "value": 54002075,
+    }),
+    "smsExpired": _tools.RODict({
+        "ID": "smsExpired",
+        "value": 54002076,
+    }),
+    "nameEmpty": _tools.RODict({
+        "ID": "nameEmpty",
+        "value": 54002077,
+    }),
+    "nameFormatInvalid": _tools.RODict({
+        "ID": "nameFormatInvalid",
+        "value": 54002078,
+    }),
+    "idCardEmpty": _tools.RODict({
+        "ID": "idCardEmpty",
+        "value": 54002079,
+    }),
+    "idCardFormatInvalid": _tools.RODict({
+        "ID": "idCardFormatInvalid",
+        "value": 54002080,
+    }),
+    "authProcessing": _tools.RODict({
+        "ID": "authProcessing",
+        "value": 54002081,
+    }),
+    "authSuccess": _tools.RODict({
+        "ID": "authSuccess",
+        "value": 54002082,
+    }),
+    "authFailed": _tools.RODict({
+        "ID": "authFailed",
+        "value": 54002083,
+    }),
+    "minorAuth": _tools.RODict({
+        "ID": "minorAuth",
+        "value": 54002084,
+    }),
+    "policeApiError": _tools.RODict({
+        "ID": "policeApiError",
+        "value": 54002085,
+    }),
+    "infoMismatch": _tools.RODict({
+        "ID": "infoMismatch",
+        "value": 54002086,
+    }),
+    "realNameAuth": _tools.RODict({
+        "ID": "realNameAuth",
+        "value": 54002087,
+    }),
+    "authUnfinished": _tools.RODict({
+        "ID": "authUnfinished",
+        "value": 54002088,
+    }),
+    "phoneRepeat": _tools.RODict({
+        "ID": "phoneRepeat",
+        "value": 54002089,
+    }),
+    "phoneSuccess": _tools.RODict({
+        "ID": "phoneSuccess",
+        "value": 54002090,
+    }),
+    "phoneFrequentTime": _tools.RODict({
+        "ID": "phoneFrequentTime",
+        "value": 10,
+    }),
+    "phoneFrequent": _tools.RODict({
+        "ID": "phoneFrequent",
+        "value": 54002091,
+    }),
+    "phoneFrequentLockTime": _tools.RODict({
+        "ID": "phoneFrequentLockTime",
+        "value": 25,
+    }),
+    "phoneFrequentLock": _tools.RODict({
+        "ID": "phoneFrequentLock",
+        "value": 54002092,
+    }),
+    "webRequestException": _tools.RODict({
+        "ID": "webRequestException",
+        "value": 54002093,
+    }),
+    "webFrequentRequests": _tools.RODict({
+        "ID": "webFrequentRequests",
+        "value": 54002094,
+    }),
+    "underageBlock": _tools.RODict({
+        "ID": "underageBlock",
+        "value": 54002095,
+    }),
+    "agreementContent": _tools.RODict({
+        "ID": "agreementContent",
+        "value": "我已详细阅读并同意<link url label=《用户协议》 url=http://192.168.10.123:3006/#/mobile/privacy?index=0>、<link url label=《隐私政策》 url=http://192.168.10.123:3006/#/mobile/privacy?index=1>和<link url label=《儿童隐私保护政策》 url=http://192.168.10.123:3006/#/mobile/privacy?index=2>。",
+    }),
+    "mapHelpInfo": _tools.RODict({
+        "ID": "mapHelpInfo",
+        "value": 50,
+    }),
+    "constBornPosName": _tools.RODict({
+        "ID": "constBornPosName",
+        "value": "出生点",
+    }),
+    "constRebornPosName": _tools.RODict({
+        "ID": "constRebornPosName",
+        "value": "复活点",
+    }),
+    "loginVideoFilePath": _tools.RODict({
+        "ID": "loginVideoFilePath",
+        "value": "login_video.mp4",
+    }),
+    "loginVideoFilePath_Mobile": _tools.RODict({
+        "ID": "loginVideoFilePath_Mobile",
+        "value": "login_video_mobile.mp4",
+    }),
+    "bankForbiddenList": _tools.RODict({
+        "ID": "bankForbiddenList",
+        "value": (30010022, 30010023, 30010024),
     })
 })

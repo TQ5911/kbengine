@@ -78,8 +78,10 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                     declaration = ""
                     if self.cityDefenseDeclaration != "":
                         declaration = ownerName + ': ' + self.cityDefenseDeclaration
-                    gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, [ownerName, declaration], title, content, 0, timestamp, 1,
-                                                                              utils.getPlayerMaxLevel() + 1)
+                    gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
+                        mailId, attach, [ownerName, declaration], title, content, 0, timestamp, 1,
+                        utils.getPlayerMaxLevel() + 1, 0)
+
                     content = content.replace('{0}', ownerName)
                     content = content.replace('{1}', declaration)
                     content = content.replace('\n', '  ')
@@ -178,8 +180,9 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 attach = mailAssistor.parseAttachStr(str(rewardId))
             title = MAMAD.datas[mailId]['title']
             content = MAMAD.datas[mailId]['content']
-            gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, [], title, content, 0, utils.getNow(), 1,
-                                                                        utils.getPlayerMaxLevel() + 1)
+            gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
+                mailId, attach, [], title, content, 0, utils.getNow(), 1,
+                utils.getPlayerMaxLevel() + 1, 0)
             return
 
         #todo 广播邮件
@@ -190,8 +193,9 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             attach = mailAssistor.parseAttachStr(str(rewardId))
         title = MAMAD.datas[mailId]['title']
         content = MAMAD.datas[mailId]['content']
-        gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, [firstBiddingServerName, firstBiddingGuildName, firstBiddingAvatarName, str(firstBiddingPrice)], title, content, 0, utils.getNow(), 1,
-                                                                    utils.getPlayerMaxLevel() + 1)
+        gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
+            mailId, attach, [firstBiddingServerName, firstBiddingGuildName, firstBiddingAvatarName, str(firstBiddingPrice)], title, content, 0, utils.getNow(), 1,
+            utils.getPlayerMaxLevel() + 1, 0)
 
         #玉玺
         gameengine.getGlobalBase('GuildStub').getGuildBox(
@@ -248,8 +252,9 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         title = MAMAD.datas[mailId]['title']
         content = MAMAD.datas[mailId]['content']
         DEBUG_MSG('[lj]on siege war declare war official mail id:', mailId, 'args:', args, content)
-        gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, args, title, content, 0, utils.getNow(), 1,
-                                                                    utils.getPlayerMaxLevel() + 1)
+        gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
+            mailId, attach, args, title, content, 0, utils.getNow(), 1,
+            utils.getPlayerMaxLevel() + 1, 0)
 
         for i in range(len(args)):
             content = content.replace('{' + str(i) + '}', args[i])
@@ -480,8 +485,9 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 mailId = CBC.datas['cityBattle_mailBattleEnd']['value']
                 title = MAMAD.datas[mailId]['title']
                 content = MAMAD.datas[mailId]['content']
-                gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, None, [str(dataList[-1]), str(dataList[6]), str(dataList[1])], title, content, 0, utils.getNow(), 1,
-                                                                            utils.getPlayerMaxLevel() + 1)
+                gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
+                    mailId, None, [str(dataList[-1]), str(dataList[6]), str(dataList[1])], title, content, 0, utils.getNow(), 1,
+                    utils.getPlayerMaxLevel() + 1, 0)
             lastCityOwnerGuildName = self.cityOwnerGuildName
             self.cityOwnerUUID = dataList[0]
             self.cityOwnerName = dataList[1]

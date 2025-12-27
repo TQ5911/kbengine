@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "20050001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -27,6 +28,7 @@ datas ={
     "RebornPos": {
       "20050002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",
@@ -52,6 +54,7 @@ datas ={
       "AirWall": {
         "20050004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -77,6 +80,7 @@ datas ={
         },
         "20050005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -102,6 +106,7 @@ datas ={
         },
         "20050006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -127,6 +132,7 @@ datas ={
         },
         "20050007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -152,6 +158,7 @@ datas ={
         },
         "20050008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -177,6 +184,7 @@ datas ={
         },
         "20050009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -202,6 +210,7 @@ datas ={
         },
         "20050010": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -227,6 +236,7 @@ datas ={
         },
         "20050011": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -251,6 +261,7 @@ datas ={
           }
         }
       }
-    }
+    },
+    "TimerEntities": {}
   }
 }

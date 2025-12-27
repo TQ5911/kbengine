@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "31050001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -28,6 +29,7 @@ datas ={
       "Monster": {
         "31050047": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -40,7 +42,7 @@ datas ={
           "PosZ": 57.74665,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -48,12 +50,14 @@ datas ={
             "Radius": 15.0,
             "RefreshNum": 0,
             "RefreshTime": 15.0,
+            "RefreshTimedID": 0,
             "Remark": "\u5360\u4f4d",
             "ShowMonsterGroupID": "\u4e2d1"
           }
         },
         "31050048": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -66,7 +70,7 @@ datas ={
           "PosZ": 62.94373,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -74,12 +78,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 15.0,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e2d1"
           }
         },
         "31050050": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -92,7 +98,7 @@ datas ={
           "PosZ": 58.04296,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -106,6 +112,7 @@ datas ={
         },
         "31050051": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -118,7 +125,7 @@ datas ={
           "PosZ": 53.14167,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -126,12 +133,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 15.0,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e2d1"
           }
         },
         "31050052": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -144,7 +153,7 @@ datas ={
           "PosZ": 46.04755,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 2,
@@ -158,6 +167,7 @@ datas ={
         },
         "31050053": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -170,7 +180,7 @@ datas ={
           "PosZ": 51.76453,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 2,
@@ -184,6 +194,7 @@ datas ={
         },
         "31050054": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -196,7 +207,7 @@ datas ={
           "PosZ": 48.3807,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 2,
@@ -210,6 +221,7 @@ datas ={
         },
         "31050055": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -222,7 +234,7 @@ datas ={
           "PosZ": 43.64128,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 2,
@@ -236,6 +248,7 @@ datas ={
         },
         "31050056": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -248,7 +261,7 @@ datas ={
           "PosZ": 40.58331,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 2,
@@ -262,6 +275,7 @@ datas ={
         },
         "31050057": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -274,7 +288,7 @@ datas ={
           "PosZ": 46.23098,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 2,
@@ -288,6 +302,7 @@ datas ={
         },
         "31050058": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -300,7 +315,7 @@ datas ={
           "PosZ": 34.86189,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 3,
@@ -314,6 +329,7 @@ datas ={
         },
         "31050059": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -326,7 +342,7 @@ datas ={
           "PosZ": 35.24482,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 3,
@@ -340,6 +356,7 @@ datas ={
         },
         "31050060": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -352,7 +369,7 @@ datas ={
           "PosZ": 39.4302,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 3,
@@ -366,6 +383,7 @@ datas ={
         },
         "31050061": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -378,7 +396,7 @@ datas ={
           "PosZ": 30.6216,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 3,
@@ -392,6 +410,7 @@ datas ={
         },
         "31050062": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -404,7 +423,7 @@ datas ={
           "PosZ": 38.96947,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 3,
@@ -418,6 +437,7 @@ datas ={
         },
         "31050063": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -430,7 +450,7 @@ datas ={
           "PosZ": 30.91628,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 3,
@@ -444,6 +464,7 @@ datas ={
         },
         "31050064": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -456,7 +477,7 @@ datas ={
           "PosZ": 46.79181,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 4,
@@ -470,6 +491,7 @@ datas ={
         },
         "31050065": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -482,7 +504,7 @@ datas ={
           "PosZ": 46.71587,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 4,
@@ -496,6 +518,7 @@ datas ={
         },
         "31050066": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -508,7 +531,7 @@ datas ={
           "PosZ": 45.56992,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 4,
@@ -522,6 +545,7 @@ datas ={
         },
         "31050067": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -534,7 +558,7 @@ datas ={
           "PosZ": 45.51158,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 4,
@@ -548,6 +572,7 @@ datas ={
         },
         "31050068": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -560,7 +585,7 @@ datas ={
           "PosZ": 52.55732,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 4,
@@ -574,6 +599,7 @@ datas ={
         },
         "31050069": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -586,7 +612,7 @@ datas ={
           "PosZ": 40.89503,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 4,
@@ -600,6 +626,7 @@ datas ={
         },
         "31050070": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -612,7 +639,7 @@ datas ={
           "PosZ": 69.11656,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 5,
@@ -626,6 +653,7 @@ datas ={
         },
         "31050071": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -638,7 +666,7 @@ datas ={
           "PosZ": 69.21574,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 5,
@@ -652,6 +680,7 @@ datas ={
         },
         "31050072": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -664,7 +693,7 @@ datas ={
           "PosZ": 63.3121,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 5,
@@ -678,6 +707,7 @@ datas ={
         },
         "31050073": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -690,7 +720,7 @@ datas ={
           "PosZ": 66.56183,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 5,
@@ -704,6 +734,7 @@ datas ={
         },
         "31050074": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -716,7 +747,7 @@ datas ={
           "PosZ": 75.20876,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 5,
@@ -730,6 +761,7 @@ datas ={
         },
         "31050075": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -742,7 +774,7 @@ datas ={
           "PosZ": 70.17751,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 5,
@@ -756,6 +788,7 @@ datas ={
         },
         "31050076": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -768,7 +801,7 @@ datas ={
           "PosZ": 80.42244,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 6,
@@ -782,6 +815,7 @@ datas ={
         },
         "31050077": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -794,7 +828,7 @@ datas ={
           "PosZ": 80.37666,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 6,
@@ -808,6 +842,7 @@ datas ={
         },
         "31050078": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -820,7 +855,7 @@ datas ={
           "PosZ": 84.98473,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 6,
@@ -834,6 +869,7 @@ datas ={
         },
         "31050079": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -846,7 +882,7 @@ datas ={
           "PosZ": 83.10909,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 6,
@@ -860,6 +896,7 @@ datas ={
         },
         "31050080": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -872,7 +909,7 @@ datas ={
           "PosZ": 75.91397,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 6,
@@ -886,6 +923,7 @@ datas ={
         },
         "31050081": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -898,7 +936,7 @@ datas ={
           "PosZ": 76.76013,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 6,
@@ -912,6 +950,7 @@ datas ={
         },
         "31050082": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -924,7 +963,7 @@ datas ={
           "PosZ": 69.10439,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 7,
@@ -938,6 +977,7 @@ datas ={
         },
         "31050083": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -950,7 +990,7 @@ datas ={
           "PosZ": 69.14305,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 7,
@@ -964,6 +1004,7 @@ datas ={
         },
         "31050084": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -976,7 +1017,7 @@ datas ={
           "PosZ": 75.07706,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 7,
@@ -990,6 +1031,7 @@ datas ={
         },
         "31050085": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1002,7 +1044,7 @@ datas ={
           "PosZ": 68.54692,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 7,
@@ -1016,6 +1058,7 @@ datas ={
         },
         "31050086": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1028,7 +1071,7 @@ datas ={
           "PosZ": 70.18923,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 7,
@@ -1042,6 +1085,7 @@ datas ={
         },
         "31050087": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1054,7 +1098,7 @@ datas ={
           "PosZ": 63.0789,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 7,
@@ -1068,6 +1112,7 @@ datas ={
         },
         "31050088": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1081,7 +1126,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "InitLoad": 0,
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -1095,6 +1140,7 @@ datas ={
         },
         "31050089": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1107,7 +1153,7 @@ datas ={
           "PosZ": 57.74665,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 8,
@@ -1121,6 +1167,7 @@ datas ={
         },
         "31050090": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1133,7 +1180,7 @@ datas ={
           "PosZ": 62.94373,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 8,
@@ -1147,6 +1194,7 @@ datas ={
         },
         "31050091": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1159,7 +1207,7 @@ datas ={
           "PosZ": 58.04296,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 8,
@@ -1173,6 +1221,7 @@ datas ={
         },
         "31050092": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1185,7 +1234,7 @@ datas ={
           "PosZ": 53.14167,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 8,
@@ -1199,6 +1248,7 @@ datas ={
         },
         "31050093": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1211,7 +1261,7 @@ datas ={
           "PosZ": 46.04755,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 9,
@@ -1225,6 +1275,7 @@ datas ={
         },
         "31050094": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1237,7 +1288,7 @@ datas ={
           "PosZ": 51.76453,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 9,
@@ -1251,6 +1302,7 @@ datas ={
         },
         "31050095": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1263,7 +1315,7 @@ datas ={
           "PosZ": 48.3807,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 9,
@@ -1277,6 +1329,7 @@ datas ={
         },
         "31050096": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1289,7 +1342,7 @@ datas ={
           "PosZ": 43.64128,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 9,
@@ -1303,6 +1356,7 @@ datas ={
         },
         "31050097": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1315,7 +1369,7 @@ datas ={
           "PosZ": 40.58331,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 9,
@@ -1329,6 +1383,7 @@ datas ={
         },
         "31050098": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1341,7 +1396,7 @@ datas ={
           "PosZ": 46.23098,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 9,
@@ -1355,6 +1410,7 @@ datas ={
         },
         "31050099": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1367,7 +1423,7 @@ datas ={
           "PosZ": 34.86189,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 10,
@@ -1381,6 +1437,7 @@ datas ={
         },
         "31050100": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1393,7 +1450,7 @@ datas ={
           "PosZ": 35.24482,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 10,
@@ -1407,6 +1464,7 @@ datas ={
         },
         "31050101": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1419,7 +1477,7 @@ datas ={
           "PosZ": 39.4302,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 10,
@@ -1433,6 +1491,7 @@ datas ={
         },
         "31050102": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1445,7 +1504,7 @@ datas ={
           "PosZ": 30.6216,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 10,
@@ -1459,6 +1518,7 @@ datas ={
         },
         "31050103": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1471,7 +1531,7 @@ datas ={
           "PosZ": 38.96947,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 10,
@@ -1485,6 +1545,7 @@ datas ={
         },
         "31050104": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1497,7 +1558,7 @@ datas ={
           "PosZ": 30.91628,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 10,
@@ -1511,6 +1572,7 @@ datas ={
         },
         "31050105": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1523,7 +1585,7 @@ datas ={
           "PosZ": 46.79181,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 11,
@@ -1537,6 +1599,7 @@ datas ={
         },
         "31050106": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1549,7 +1612,7 @@ datas ={
           "PosZ": 46.71587,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 11,
@@ -1563,6 +1626,7 @@ datas ={
         },
         "31050107": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1575,7 +1639,7 @@ datas ={
           "PosZ": 45.56992,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 11,
@@ -1589,6 +1653,7 @@ datas ={
         },
         "31050108": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1601,7 +1666,7 @@ datas ={
           "PosZ": 45.51158,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 11,
@@ -1615,6 +1680,7 @@ datas ={
         },
         "31050109": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1627,7 +1693,7 @@ datas ={
           "PosZ": 52.55732,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 11,
@@ -1641,6 +1707,7 @@ datas ={
         },
         "31050110": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1653,7 +1720,7 @@ datas ={
           "PosZ": 40.89503,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 11,
@@ -1667,6 +1734,7 @@ datas ={
         },
         "31050111": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1679,7 +1747,7 @@ datas ={
           "PosZ": 69.11656,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 12,
@@ -1693,6 +1761,7 @@ datas ={
         },
         "31050112": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1705,7 +1774,7 @@ datas ={
           "PosZ": 69.21574,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 12,
@@ -1719,6 +1788,7 @@ datas ={
         },
         "31050113": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1731,7 +1801,7 @@ datas ={
           "PosZ": 63.3121,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 12,
@@ -1745,6 +1815,7 @@ datas ={
         },
         "31050114": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1757,7 +1828,7 @@ datas ={
           "PosZ": 66.56183,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 12,
@@ -1771,6 +1842,7 @@ datas ={
         },
         "31050115": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1783,7 +1855,7 @@ datas ={
           "PosZ": 75.20876,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 12,
@@ -1797,6 +1869,7 @@ datas ={
         },
         "31050116": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1809,7 +1882,7 @@ datas ={
           "PosZ": 70.17751,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 12,
@@ -1823,6 +1896,7 @@ datas ={
         },
         "31050117": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1835,7 +1909,7 @@ datas ={
           "PosZ": 80.42244,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 13,
@@ -1849,6 +1923,7 @@ datas ={
         },
         "31050118": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1861,7 +1936,7 @@ datas ={
           "PosZ": 80.37666,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 13,
@@ -1875,6 +1950,7 @@ datas ={
         },
         "31050119": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1887,7 +1963,7 @@ datas ={
           "PosZ": 84.98473,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 13,
@@ -1901,6 +1977,7 @@ datas ={
         },
         "31050120": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1913,7 +1990,7 @@ datas ={
           "PosZ": 83.10909,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 13,
@@ -1927,6 +2004,7 @@ datas ={
         },
         "31050121": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1939,7 +2017,7 @@ datas ={
           "PosZ": 75.91397,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 13,
@@ -1953,6 +2031,7 @@ datas ={
         },
         "31050122": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1965,7 +2044,7 @@ datas ={
           "PosZ": 76.76013,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 13,
@@ -1979,6 +2058,7 @@ datas ={
         },
         "31050123": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -1991,7 +2071,7 @@ datas ={
           "PosZ": 69.10439,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 14,
@@ -2005,6 +2085,7 @@ datas ={
         },
         "31050124": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2017,7 +2098,7 @@ datas ={
           "PosZ": 69.14305,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 14,
@@ -2031,6 +2112,7 @@ datas ={
         },
         "31050125": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2043,7 +2125,7 @@ datas ={
           "PosZ": 75.07706,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 14,
@@ -2057,6 +2139,7 @@ datas ={
         },
         "31050126": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2069,7 +2152,7 @@ datas ={
           "PosZ": 68.54692,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 14,
@@ -2083,6 +2166,7 @@ datas ={
         },
         "31050127": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2095,7 +2179,7 @@ datas ={
           "PosZ": 70.18923,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 14,
@@ -2109,6 +2193,7 @@ datas ={
         },
         "31050128": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2121,7 +2206,7 @@ datas ={
           "PosZ": 63.0789,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 14,
@@ -2135,6 +2220,7 @@ datas ={
         },
         "31050129": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2148,7 +2234,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "InitLoad": 0,
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -2162,6 +2248,7 @@ datas ={
         },
         "31050130": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2174,7 +2261,7 @@ datas ={
           "PosZ": 57.74665,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 15,
@@ -2188,6 +2275,7 @@ datas ={
         },
         "31050131": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2200,7 +2288,7 @@ datas ={
           "PosZ": 62.94373,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 15,
@@ -2214,6 +2302,7 @@ datas ={
         },
         "31050132": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2226,7 +2315,7 @@ datas ={
           "PosZ": 58.04296,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 15,
@@ -2240,6 +2329,7 @@ datas ={
         },
         "31050133": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2252,7 +2342,7 @@ datas ={
           "PosZ": 53.14167,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 15,
@@ -2266,6 +2356,7 @@ datas ={
         },
         "31050134": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2278,7 +2369,7 @@ datas ={
           "PosZ": 46.04755,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 16,
@@ -2292,6 +2383,7 @@ datas ={
         },
         "31050135": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2304,7 +2396,7 @@ datas ={
           "PosZ": 51.76453,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 16,
@@ -2318,6 +2410,7 @@ datas ={
         },
         "31050136": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2330,7 +2423,7 @@ datas ={
           "PosZ": 48.3807,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 16,
@@ -2344,6 +2437,7 @@ datas ={
         },
         "31050137": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2356,7 +2450,7 @@ datas ={
           "PosZ": 43.64128,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 16,
@@ -2370,6 +2464,7 @@ datas ={
         },
         "31050138": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2382,7 +2477,7 @@ datas ={
           "PosZ": 40.58331,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 16,
@@ -2396,6 +2491,7 @@ datas ={
         },
         "31050139": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2408,7 +2504,7 @@ datas ={
           "PosZ": 46.23098,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 16,
@@ -2422,6 +2518,7 @@ datas ={
         },
         "31050140": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2434,7 +2531,7 @@ datas ={
           "PosZ": 34.86189,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 17,
@@ -2448,6 +2545,7 @@ datas ={
         },
         "31050141": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2460,7 +2558,7 @@ datas ={
           "PosZ": 35.24482,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 17,
@@ -2474,6 +2572,7 @@ datas ={
         },
         "31050142": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2486,7 +2585,7 @@ datas ={
           "PosZ": 39.4302,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 17,
@@ -2500,6 +2599,7 @@ datas ={
         },
         "31050143": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2512,7 +2612,7 @@ datas ={
           "PosZ": 30.6216,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 17,
@@ -2526,6 +2626,7 @@ datas ={
         },
         "31050144": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2538,7 +2639,7 @@ datas ={
           "PosZ": 38.96947,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 17,
@@ -2552,6 +2653,7 @@ datas ={
         },
         "31050145": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2564,7 +2666,7 @@ datas ={
           "PosZ": 30.91628,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 17,
@@ -2578,6 +2680,7 @@ datas ={
         },
         "31050146": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2590,7 +2693,7 @@ datas ={
           "PosZ": 46.79181,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 18,
@@ -2604,6 +2707,7 @@ datas ={
         },
         "31050147": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2616,7 +2720,7 @@ datas ={
           "PosZ": 46.71587,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 18,
@@ -2630,6 +2734,7 @@ datas ={
         },
         "31050148": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2642,7 +2747,7 @@ datas ={
           "PosZ": 45.56992,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 18,
@@ -2656,6 +2761,7 @@ datas ={
         },
         "31050149": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2668,7 +2774,7 @@ datas ={
           "PosZ": 45.51158,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 18,
@@ -2682,6 +2788,7 @@ datas ={
         },
         "31050150": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2694,7 +2801,7 @@ datas ={
           "PosZ": 52.55732,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 18,
@@ -2708,6 +2815,7 @@ datas ={
         },
         "31050151": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2720,7 +2828,7 @@ datas ={
           "PosZ": 40.89503,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 18,
@@ -2734,6 +2842,7 @@ datas ={
         },
         "31050152": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2746,7 +2855,7 @@ datas ={
           "PosZ": 69.11656,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 19,
@@ -2760,6 +2869,7 @@ datas ={
         },
         "31050153": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2772,7 +2882,7 @@ datas ={
           "PosZ": 69.21574,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 19,
@@ -2786,6 +2896,7 @@ datas ={
         },
         "31050154": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2798,7 +2909,7 @@ datas ={
           "PosZ": 63.3121,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 19,
@@ -2812,6 +2923,7 @@ datas ={
         },
         "31050155": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2824,7 +2936,7 @@ datas ={
           "PosZ": 66.56183,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 19,
@@ -2838,6 +2950,7 @@ datas ={
         },
         "31050156": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2850,7 +2963,7 @@ datas ={
           "PosZ": 75.20876,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 19,
@@ -2864,6 +2977,7 @@ datas ={
         },
         "31050157": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2876,7 +2990,7 @@ datas ={
           "PosZ": 70.17751,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 19,
@@ -2890,6 +3004,7 @@ datas ={
         },
         "31050158": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2902,7 +3017,7 @@ datas ={
           "PosZ": 80.42244,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 20,
@@ -2916,6 +3031,7 @@ datas ={
         },
         "31050159": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2928,7 +3044,7 @@ datas ={
           "PosZ": 80.37666,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 20,
@@ -2942,6 +3058,7 @@ datas ={
         },
         "31050160": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2954,7 +3071,7 @@ datas ={
           "PosZ": 84.98473,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 20,
@@ -2968,6 +3085,7 @@ datas ={
         },
         "31050161": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -2980,7 +3098,7 @@ datas ={
           "PosZ": 83.10909,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 20,
@@ -2994,6 +3112,7 @@ datas ={
         },
         "31050162": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3006,7 +3125,7 @@ datas ={
           "PosZ": 75.91397,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 20,
@@ -3020,6 +3139,7 @@ datas ={
         },
         "31050163": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3032,7 +3152,7 @@ datas ={
           "PosZ": 76.76013,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 20,
@@ -3046,6 +3166,7 @@ datas ={
         },
         "31050164": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3058,7 +3179,7 @@ datas ={
           "PosZ": 69.10439,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 21,
@@ -3072,6 +3193,7 @@ datas ={
         },
         "31050165": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3084,7 +3206,7 @@ datas ={
           "PosZ": 69.14305,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 21,
@@ -3092,12 +3214,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 60.0,
+            "RefreshTimedID": 0,
             "Remark": "\u4e3b\u52a8\u7cbe\u82f1",
             "ShowMonsterGroupID": "\u53f37"
           }
         },
         "31050166": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3110,7 +3234,7 @@ datas ={
           "PosZ": 75.07706,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 21,
@@ -3118,12 +3242,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 15.0,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u53f37"
           }
         },
         "31050167": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3136,7 +3262,7 @@ datas ={
           "PosZ": 68.54692,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 21,
@@ -3150,6 +3276,7 @@ datas ={
         },
         "31050168": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3162,7 +3289,7 @@ datas ={
           "PosZ": 70.18923,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 21,
@@ -3176,6 +3303,7 @@ datas ={
         },
         "31050169": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3188,7 +3316,7 @@ datas ={
           "PosZ": 63.0789,
           "Props": {
             "GroupID": "",
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 21,
@@ -3202,6 +3330,7 @@ datas ={
         },
         "31050170": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -3215,7 +3344,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "InitLoad": 0,
-            "Level": 25,
+            "Level": 30,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -3231,6 +3360,7 @@ datas ={
       "CombatArea": {
         "31058004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -3249,6 +3379,7 @@ datas ={
         },
         "31058005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -3267,6 +3398,7 @@ datas ={
         },
         "31058006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -3285,10 +3417,12 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "Cube": {
       "Teleporter": {
         "31058007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -3303,6 +3437,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "\u4e2d",
+            "ShowInSceneMap": 0,
             "TelDir": 0.0,
             "TelX": 167.5635,
             "TelY": 526.2747,
@@ -3311,6 +3446,7 @@ datas ={
         },
         "31058008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -3325,6 +3461,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "\u5de6",
+            "ShowInSceneMap": 0,
             "TelDir": 0.0,
             "TelX": 167.5635,
             "TelY": 526.2747,
@@ -3333,6 +3470,7 @@ datas ={
         },
         "31058009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -3347,6 +3485,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "\u53f3",
+            "ShowInSceneMap": 0,
             "TelDir": 0.0,
             "TelX": 167.5635,
             "TelY": 526.2747,

@@ -1,4 +1,4 @@
-ServerAddr: "192.168.10.167:20099"
+ServerAddr: "192.168.10.172:20099"
 Verbose: true
 UDPMode: true
 ConfigFile: "config.yaml"

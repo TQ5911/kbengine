@@ -1,13 +1,16 @@
 datas ={
   "40080001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "",
     "Dir": 182.0103,
     "DisplayName": "",
-    "EntityID": 11210003,
+    "EntityID": 11213102,
     "ID": 40080001,
+    "Name": "\u72fc8",
     "PosX": 423.02,
     "PosY": 11.99748,
     "PosZ": 434.62,
@@ -21,19 +24,23 @@ datas ={
       "Radius": 10.0,
       "RefreshNum": 5,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowMonsterGroupID": ""
     }
   },
   "40080002": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "",
     "Dir": 251.3141,
     "DisplayName": "",
-    "EntityID": 11210012,
+    "EntityID": 11213101,
     "ID": 40080002,
+    "Name": "\u767d\u72fc\u738b\uff08\u4efb\u52a1\u5934\u76ee\uff09",
     "PosX": 434.9,
     "PosY": 11.52,
     "PosZ": 419.34,
@@ -47,12 +54,15 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowMonsterGroupID": ""
     }
   },
   "40088001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "BornPos",
     "ClassNameType": 6,
     "CustomID": "",
@@ -60,17 +70,21 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 40088001,
+    "Name": "\u51fa\u751f\u70b9",
     "PosX": 407.4091,
     "PosY": 15.37405,
     "PosZ": 398.9181,
     "Props": {
       "Num": 0,
       "Radius": 0.0,
+      "RefreshTimedID": 0,
       "Remark": ""
     }
   },
   "40088002": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "RebornPos",
     "ClassNameType": 7,
     "CustomID": "",
@@ -78,6 +92,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 40088002,
+    "Name": "\u590d\u6d3b\u70b9",
     "PosX": 407.4091,
     "PosY": 15.37405,
     "PosZ": 398.9181,

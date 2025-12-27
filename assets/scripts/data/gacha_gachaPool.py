@@ -32,61 +32,7 @@ datas = _tools.RODict({
         "pityReset": (1, 0, 3),
         "pityReward": 30000330,
         "pityInfo": 29
-    }),
-    201: _tools.RODict({
-        "ID": 201,
-        "name": "传说精灵召唤",
-        "poolGroupId": 1,
-        "timeLimit": 0,
-        "startTime": "20250922000000",
-        "endTime": "20250928235959",
-        "1rollCost": ((30000320, 1),),
-        "10rollCost": ((30000320, 10),),
-        "100rollCost": ((30000320, 100),),
-        "1rollReward": 40020675,
-        "10rollReward": 40020676,
-        "dailyLimit": 500,
-        "pityPullCount": 200,
-        "pityReset": (1, 0, 4),
-        "pityReward": 30000330,
-        "pityInfo": 29
-    }),
-    202: _tools.RODict({
-        "ID": 202,
-        "name": "传说精灵召唤",
-        "poolGroupId": 1,
-        "timeLimit": 0,
-        "startTime": "20250929000000",
-        "endTime": "20251005235959",
-        "1rollCost": ((30000320, 1),),
-        "10rollCost": ((30000320, 10),),
-        "100rollCost": ((30000320, 100),),
-        "1rollReward": 40020675,
-        "10rollReward": 40020676,
-        "dailyLimit": 500,
-        "pityPullCount": 200,
-        "pityReset": (1, 0, 4),
-        "pityReward": 30000330,
-        "pityInfo": 29
-    }),
-    301: _tools.RODict({
-        "ID": 301,
-        "name": "限时精灵召唤",
-        "poolGroupId": 301,
-        "timeLimit": 1,
-        "startTime": "20250901000000",
-        "endTime": "20250930235959",
-        "1rollCost": ((30000320, 1),),
-        "10rollCost": ((30000320, 10),),
-        "100rollCost": ((30000320, 100),),
-        "1rollReward": 40020675,
-        "10rollReward": 40020676,
-        "dailyLimit": 500,
-        "pityPullCount": 200,
-        "pityReset": (1, 0, 4),
-        "pityReward": 30000330,
-        "pityInfo": 29
     })
 })
 minKey = 101
-maxKey = 301
+maxKey = 101

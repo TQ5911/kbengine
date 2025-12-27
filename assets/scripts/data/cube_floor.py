@@ -19,27 +19,20 @@ datas = _tools.RODict({
         "floor": 1,
         "ID": 3100,
         "needScore": 5700,
+        "cowPassBuffID": 64000107
     }),
     2: _tools.RODict({
         "floor": 2,
         "ID": 3200,
         "needScore": 5900,
+        "cowPassBuffID": 64000107
     }),
     3: _tools.RODict({
         "floor": 3,
         "ID": 3300,
         "needScore": 8300,
-    }),
-    4: _tools.RODict({
-        "floor": 4,
-        "ID": 3400,
-        "needScore": 13000,
-    }),
-    5: _tools.RODict({
-        "floor": 5,
-        "ID": 3500,
-        "needScore": 18000,
+        "cowPassBuffID": 64000107
     })
 })
 minKey = 1
-maxKey = 5
+maxKey = 3

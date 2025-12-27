@@ -54,7 +54,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
 
         spaceMgr = self.spaceMgr
         gid = utils.getGidFromGameEntityId(self.gameEntityId)
-        if formula.isWonderLandSpace(self.spaceNo) or formula.isSiegeWarSpace(self.spaceNo):
+        if spaceMgr:
             spaceMgr.addEntity(self.id, (str(self.collectionId), 'gid_{}'.format(gid), self.__class__.__name__,))
         elif formula.isDungeonSpace(self.spaceNo):
             if spaceMgr:
@@ -129,9 +129,9 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
     def _preSafeDestory(self):
         super()._preSafeDestory()
 
-        if formula.isWonderLandSpace(self.spaceNo) or formula.isSiegeWarSpace(self.spaceNo):
-            self.spaceMgr.removeEntityById(self.id)
-
+        spaceMgr = self.spaceMgr
+        if spaceMgr:
+            spaceMgr.removeEntityById(self.id)
         if self.dropEquipId and self.gatherAvatars.get('gatherCnt', 0) == 0:
             # 过5秒后检查状态并向玩家发送提醒邮件
             KBEngine.addTimer(5, 0, lambda *args: gameengine.getGlobalBase('DropStub').sendRepairDropMail(self.dropEquipId))

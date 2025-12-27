@@ -21,11 +21,11 @@ datas = _tools.RODict({
     }),
     "mineBattle_miningBattleArea": _tools.RODict({
         "ID": "mineBattle_miningBattleArea",
-        "value": _tools.ROList([1026, 1123]),
+        "value": _tools.ROList([1028, 1123]),
     }),
     "mineBattle_miningSafeArea": _tools.RODict({
         "ID": "mineBattle_miningSafeArea",
-        "value": "{1026:1024, 1123:1122}",
+        "value": "{1028:1024, 1123:1122}",
     }),
     "mineBattle_miningTime": _tools.RODict({
         "ID": "mineBattle_miningTime",
@@ -47,13 +47,21 @@ datas = _tools.RODict({
         "ID": "mineBattle_invincibleTime",
         "value": 1,
     }),
-    "mineBattle_recoverRange": _tools.RODict({
-        "ID": "mineBattle_recoverRange",
-        "value": 3,
-    }),
     "mineBattle_recoveryRatio": _tools.RODict({
         "ID": "mineBattle_recoveryRatio",
-        "value": _tools.ROList([0.1, 0.5]),
+        "value": _tools.ROList([0.001, 0.005]),
+    }),
+    "mineBattle_coreInvincibleBuffID": _tools.RODict({
+        "ID": "mineBattle_coreInvincibleBuffID",
+        "value": 64007002,
+    }),
+    "mineBattle_coreRecoverBuffID": _tools.RODict({
+        "ID": "mineBattle_coreRecoverBuffID",
+        "value": 64007001,
+    }),
+    "mineBattle_flagRecoverBuffID": _tools.RODict({
+        "ID": "mineBattle_flagRecoverBuffID",
+        "value": 64007005,
     }),
     "mineBattle_damageScore": _tools.RODict({
         "ID": "mineBattle_damageScore",
@@ -61,11 +69,11 @@ datas = _tools.RODict({
     }),
     "mineBattle_lastHitScore": _tools.RODict({
         "ID": "mineBattle_lastHitScore",
-        "value": 100,
+        "value": 2000,
     }),
     "mineBattle_killScore": _tools.RODict({
         "ID": "mineBattle_killScore",
-        "value": _tools.ROList([5, 15]),
+        "value": _tools.ROList([50, 150]),
     }),
     "mineBattle_takePartScore": _tools.RODict({
         "ID": "mineBattle_takePartScore",
@@ -73,15 +81,15 @@ datas = _tools.RODict({
     }),
     "mineBattle_rankScoreThreshold": _tools.RODict({
         "ID": "mineBattle_rankScoreThreshold",
-        "value": 500,
+        "value": 300,
     }),
     "mineBattle_rewardThreshold": _tools.RODict({
         "ID": "mineBattle_rewardThreshold",
-        "value": 200,
+        "value": 300,
     }),
     "mineBattle_rewardParticipation": _tools.RODict({
         "ID": "mineBattle_rewardParticipation",
-        "value": 30000502,
+        "value": 30000543,
     }),
     "mineBattle_miningPersonalDuration": _tools.RODict({
         "ID": "mineBattle_miningPersonalDuration",
@@ -119,9 +127,17 @@ datas = _tools.RODict({
         "ID": "mineBatte_rankGuildNum",
         "value": 20,
     }),
+    "mineBattle_coreTempletId": _tools.RODict({
+        "ID": "mineBattle_coreTempletId",
+        "value": 11238019,
+    }),
+    "mineBattle_flagDropCollectionId": _tools.RODict({
+        "ID": "mineBattle_flagDropCollectionId",
+        "value": _tools.ROList([16006068]),
+    }),
     "mineBatte_neutralMiningAreaCoreProp": _tools.RODict({
         "ID": "mineBatte_neutralMiningAreaCoreProp",
-        "value": _tools.ROList([51007001, 51007002]),
+        "value": _tools.ROList([52004021, 52004021]),
     }),
     "mineBattle_InterfaceButtonText": _tools.RODict({
         "ID": "mineBattle_InterfaceButtonText",
@@ -155,6 +171,10 @@ datas = _tools.RODict({
         "ID": "mineBattle_dividendText",
         "value": "再次分红",
     }),
+    "mineBattle_rewardRankDesc": _tools.RODict({
+        "ID": "mineBattle_rewardRankDesc",
+        "value": "个人积分达到{0}可入榜",
+    }),
     "mineBattle_rewardParticipationDesc": _tools.RODict({
         "ID": "mineBattle_rewardParticipationDesc",
         "value": "个人积分达到{0}可获得参与奖",
@@ -170,6 +190,18 @@ datas = _tools.RODict({
     "mineBattle_occupyMsg": _tools.RODict({
         "ID": "mineBattle_occupyMsg",
         "value": "欢迎来到[{0}]的帮会领地",
+    }),
+    "mineBattle_guildRankDesc": _tools.RODict({
+        "ID": "mineBattle_guildRankDesc",
+        "value": "每占领30秒可获得1%的额外挖矿收益，最高上限50%，获得矿区归属权的帮会直接获得50%额外收益",
+    }),
+    "mineBattle_noGuildName": _tools.RODict({
+        "ID": "mineBattle_noGuildName",
+        "value": "无",
+    }),
+    "mineBattle_flagResPath": _tools.RODict({
+        "ID": "mineBattle_flagResPath",
+        "value": "2010_00_qizhi",
     }),
     "mineBatte_chatChannelMsg1": _tools.RODict({
         "ID": "mineBatte_chatChannelMsg1",
@@ -262,5 +294,13 @@ datas = _tools.RODict({
     "mineBattle_dividendInputMsg": _tools.RODict({
         "ID": "mineBattle_dividendInputMsg",
         "value": 54003212,
+    }),
+    "mineBattle_prohibitAttacksMsg": _tools.RODict({
+        "ID": "mineBattle_prohibitAttacksMsg",
+        "value": 54003213,
+    }),
+    "mineBattle_prohibitExit": _tools.RODict({
+        "ID": "mineBattle_prohibitExit",
+        "value": 54003214,
     })
 })

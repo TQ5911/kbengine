@@ -99,7 +99,7 @@ def getServerRelPath():
     relPath = '/'+'/'.join(dirComps[fromIdx:])
     return relPath
 
-GAME_SERVER_IP = '192.168.10.167'
+GAME_SERVER_IP = '192.168.10.172'
 
 VM_USER = 'fengyan'
 VM_PASSWD = '123456'

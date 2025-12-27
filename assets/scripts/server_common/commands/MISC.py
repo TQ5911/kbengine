@@ -21,6 +21,8 @@ import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import gearBase_typeExplanation as GBE
 import gearBase_gearBase as GBG
 import gearEnhance_gearconst as GEGCD
+import gearBase_typeTab as GBTT
+import gearEnhance_gearStrengthen as GEGS
 
 import json
 import redisUtils
@@ -237,13 +239,18 @@ def setPlayerultraSkillPower(su, player, ultraSkillPower):
     player.ultraSkillPower = ultraSkillPower
     return True, '执行成功'
 
-@gm_cmd('$reliveToPos', (Player("gbId/Id"),Str("postion"),Int("hp")), RARG(0), CELL, '复活', ALLSIDE, GOD_GROUPS)
-def reliveToPos(su, player, postion,hp):
-    if postion == 'None':
-        postion = None
+@gm_cmd('$reliveToPos', (Player("gbId/Id"), Str("position"), Int("hp")), RARG(0), CELL, '复活', ALLSIDE, GOD_GROUPS)
+def reliveToPos(su, player, position_str, hp):
+    if position_str == 'None' or not position_str:
+        position = None
+    else:
+        coords = position_str.strip('()').split(',')
+        position = Math.Vector3(float(coords[0]), float(coords[1]), float(coords[2]))
+    
     direction = player.direction
-    player.reliveToPos(postion, direction, hp, None)
+    player.reliveToPos(position, direction, hp, None)
     return True, '执行成功'
+
 
 
 @gm_cmd('$showprop', (Int("entityId"),), RSU, CELL, '显示实体属性', INSIDE, GOD_GROUPS)
@@ -1026,16 +1033,17 @@ def sendMailByAvatarId(su, toId, mailId, attachStr, despArgsStr, title, cont):
     return True, '执行成功'
 
 @gm_cmd('$sendglobalmail', (Int('mailId'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont'),
-                            Int('minRoleTime'), Int('maxRoleTime'),Int('minRoleLevel'), Int('maxRoleLevel'),),
+                            Int('minRoleTime'), Int('maxRoleTime'),Int('minRoleLevel'), Int('maxRoleLevel'), Int('channel')),
         RONE, gameconst.BASE, '发送一封全服邮件', ALLSIDE, GOD_GROUPS)
-def gmSendGlobalMail(su, mailId, attachStr, despArgsStr, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel):
+def gmSendGlobalMail(su, mailId, attachStr, despArgsStr, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel, channel):
     # attachStr: 多个物品用分号';'分隔; 每个物品有itemId, itemNum，若有绑定属性配置在第三个位置，例如：[30000001,100; 30001031,1,1]
     attach = mailAssistor.parseAttachStr(attachStr)
     despArgs = mailAssistor.parseDespStr(despArgsStr)
     title = base64.b64decode(title.encode('ascii'), b'_-').decode('utf-8')
     cont = base64.b64decode(cont.encode('ascii'), b'_-').decode('utf-8')
-    gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime,
-                                                              minRoleLevel, maxRoleLevel)
+    gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
+        mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime,
+        minRoleLevel, maxRoleLevel, channel)
     return True, '执行成功'
 
 @gm_cmd('$sendMailToAccount', (Str('accountName'), Str('accountType'), Str('title'), Str('cont'), Str('attachStr')),
@@ -2798,8 +2806,8 @@ def createDuelFlag(su, player):
     return True, '执行成功'
 
 
-@gm_cmd('$getEquipment', (Player("gbId/Id"), Int('school'), Int('quality'), Int('grade')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
-def gmGetEquipment(su, player, school, quality, grade):
+@gm_cmd('$getEquipment', (Player("gbId/Id"), Int('school'), Int('quality'), Int('grade'), Int('enhanceLv')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
+def gmGetEquipment(su, player, school, quality, grade, enhanceLv):
     awardCtx = awardContext.CommonContext(0)
     awardVal = dropAward.AwardVal()
     if school == 0:
@@ -2811,7 +2819,13 @@ def gmGetEquipment(su, player, school, quality, grade):
         return False, '执行失败，无效品质'
     if not(0 < grade <= GEGCD.datas['equipmentClassLevel']['value']):
         return False, '执行失败，无效品阶'
+    for equipType in GBTT.datas.keys():
+        key = equipType * 10000 + quality * 1000 + grade * 100 + enhanceLv
+        if key not in GEGS.datas:
+            return False, '执行失败，无效强化等级'
+        
     awardCtx.addContextVar('grade', grade)
+    awardCtx.addContextVar('enhanceLv', enhanceLv)
     _items = _getItems(school, quality, awardCtx)
 
     awardVal.addWealthByObjList(_items)
@@ -2943,9 +2957,9 @@ def createCreationByFixedPosition(su, player, creationId, x,y,z):
 
 
 @gm_cmd('$sendrewardIDglobalmail', (Int('mailId'), Int('rewardID'), Str('despArgsStr'), Str('title'), Str('cont'),
-                            Int('minRoleTime'), Int('maxRoleTime'),Int('minRoleLevel'), Int('maxRoleLevel'),),
+                            Int('minRoleTime'), Int('maxRoleTime'),Int('minRoleLevel'), Int('maxRoleLevel'), Int('channel')),
         RSU, gameconst.BASE, '发送一封全服邮件', INSIDE, GOD_GROUPS)
-def sendrewardIDglobalmail(su, mailId, rewardID, despArgsStr, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel):
+def sendrewardIDglobalmail(su, mailId, rewardID, despArgsStr, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel, channel):
     # attachStr: 多个物品用分号';'分隔; 每个物品有itemId, itemNum，若有绑定属性配置在第三个位置，例如：[30000001,100; 30001031,1,1]
     import dropAward
     import awardContext
@@ -2983,7 +2997,7 @@ def sendrewardIDglobalmail(su, mailId, rewardID, despArgsStr, title, cont, minRo
     title = title.strip("[] ")
     cont = cont.strip("[] ")
     gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime,
-                                                              minRoleLevel, maxRoleLevel)
+                                                              minRoleLevel, maxRoleLevel, channel)
     return True, '执行成功'
 
 

@@ -57,7 +57,7 @@ class PlayerDelegate(botBase.BotBase):
 
                 self.cell.reqDuel(v.id)
                 return True
-            
+
         return False
 
     def _isDead(self):

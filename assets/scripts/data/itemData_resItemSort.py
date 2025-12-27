@@ -24,34 +24,41 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "ID": 2,
-        "name": "铜币",
-        "itemID": 30000002,
+        "name": "绑定金币",
+        "itemID": 30000021,
         "openID": "",
         "resRefreshMode": 0,
     }),
     3: _tools.RODict({
         "ID": 3,
-        "name": "帮贡",
-        "itemID": 30000005,
+        "name": "铜币",
+        "itemID": 30000002,
         "openID": "",
         "resRefreshMode": 0,
     }),
     4: _tools.RODict({
         "ID": 4,
-        "name": "玄铁",
-        "itemID": 30000013,
+        "name": "帮贡",
+        "itemID": 30000005,
         "openID": "",
         "resRefreshMode": 0,
     }),
     5: _tools.RODict({
         "ID": 5,
-        "name": "精灵召唤券",
-        "itemID": 30000235,
+        "name": "玄铁",
+        "itemID": 30000013,
         "openID": "",
         "resRefreshMode": 0,
     }),
     6: _tools.RODict({
         "ID": 6,
+        "name": "精灵召唤券",
+        "itemID": 30000235,
+        "openID": "",
+        "resRefreshMode": 0,
+    }),
+    7: _tools.RODict({
+        "ID": 7,
         "name": "传说精灵召唤券",
         "itemID": 30000320,
         "openID": "",
@@ -59,4 +66,4 @@ datas = _tools.RODict({
     })
 })
 minKey = 1
-maxKey = 6
+maxKey = 7

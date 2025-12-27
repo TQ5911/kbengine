@@ -8,6 +8,7 @@ import gamedecorator
 import gameglobal
 import LeaderBoardAvatarCacheInfo
 import LeaderBoardAvatarScoreInfo
+import LeaderBoardAvatarLevelRushRankInfo
 
 import rank_Rank as R_RD
 import rank_rankConfig as R_RCD
@@ -40,6 +41,15 @@ class ILeaderBoard(object):
             school,
             page)
 
+    @gamedecorator.checkGameconfigEnable('rank')
+    def getLevelRushRankList(self, exposed, leaderBoardType, leaderBoardIdx, school, page):
+        return gameengine.getLeaderStub(leaderBoardType).doGetLeaderBoardList(
+            self,
+            self.gbID,
+            leaderBoardIdx,
+            school,
+            page)
+
     def toLeaderBoardAvatarCache(self):
         roleInfo = gameglobal.roleCache.get(self.id, None)
         return LeaderBoardAvatarCacheInfo.LeaderBoardAvatarCacheVal(
@@ -65,7 +75,23 @@ class ILeaderBoard(object):
             self.guildUUIDBase,
             )
 
+    def toLeaderBoardAvatarLevelRushRank(self):
+        roleInfo = gameglobal.roleCache.get(self.id, None)
+        return LeaderBoardAvatarLevelRushRankInfo.LeaderBoardAvatarLevelRushRankVal(
+            self.gbID,
+            roleInfo['name'],
+            roleInfo['level'],
+            roleInfo['school'],
+            self.propChangedTimes.get(gameconst.LeaderBoardType.AVATAR_LEVEL, 0),
+            self.guildNameBase,
+            self.guildUUIDBase,
+            self.accountName,
+            self.accountEntity.phone,
+            )
+
     def _updateLeaderBoardAvatar(self):
+        if not gameglobal.roleCache.get(self.id, None):
+            return
         _level = self.getRoleCacheAttr('level')
         if _level >= R_RD.datas[gameconst.LeaderBoardType.AVATAR_LEVEL]['minLevel']:
             _lbacVal = self.toLeaderBoardAvatarCache()
@@ -74,6 +100,9 @@ class ILeaderBoard(object):
         if _level >= R_RD.datas[gameconst.LeaderBoardType.AVATAR_SCORE]['minLevel']:
             _lbacVal = self.toLeaderBoardAvatarScore()
             gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_SCORE).onGetLeaderBoardCache(_lbacVal)
+        
+        _lbacVal = self.toLeaderBoardAvatarLevelRushRank()
+        gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK).onGetLeaderBoardCache(_lbacVal)
 
     def onLeaderBoardRank(self, leaderBoardType, rank):
         self.achievementInfo.triggerAchieveByType(

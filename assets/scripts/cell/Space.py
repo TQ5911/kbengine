@@ -24,6 +24,7 @@ import gameglobal
 import ResMgr
 import kbeUtils
 import iEntityLoader
+import iGroupEntityLoader
 
 
 class SpaceEntityGenerateMixin(object):
@@ -41,10 +42,11 @@ class SpaceEntityGenerateMixin(object):
                 # break
 
 
-class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.IEntityLoader, iFubenSpace.IFubenSpace):
+class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.IEntityLoader, iGroupEntityLoader.IGroupEntityLoader, iFubenSpace.IFubenSpace):
     def __init__(self):
         INFO_MSG("Space#__init__", self.spaceNo, self.spaceID, self.dungeonId, KBEngine.getComponentGroupOrder())
         iEntityLoader.IEntityLoader.__init__(self)
+        iGroupEntityLoader.IGroupEntityLoader.__init__(self)
         gameglobal.localSpaceNoMap[self.spaceNo] = self
         gameglobal.localSpaceIDMap[self.spaceID] = self
         gameglobal.cellSpaceDungeonMap[self.spaceNo] = self.dungeonId
@@ -153,3 +155,5 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
 
         getattr(self.spaceMgr, func)(*args)
 
+    def callOnSpace(self, func, args):
+        getattr(self, func)(*args)

@@ -69,6 +69,10 @@
             <Arg>           PYTHON           </Arg>
             <Arg>           PYTHON           </Arg>
         </applyEnterLineInternal>
+
+        <onMergeLine>
+            <Arg>           LINE_NO           </Arg>
+        </onMergeLine>
     </CellMethods>
 
     <BaseMethods>

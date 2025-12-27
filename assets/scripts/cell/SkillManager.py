@@ -364,6 +364,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         self.isWitnessComplete = gameconst.WitnessType.WITNESS_TYPE_ALL
         self.stateList = formula.getInt64VectorOnIndexes(self.getStateBitVector())
 
+        # 缓存下是否矿战场景
+        if formula.isMineWarSpace(self.spaceNo):
+            self.cellFlags = utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE)
+
     def isAttackable(self, src):
         return utils.isJoinCombat(self, src)
 
@@ -801,6 +805,26 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             if tagList and buffTag in tagList:
                 self.removeBuff(buffId)
 
+    def removeBuffBySkillId(self, skillId):
+        INFO_MSG('removeBuffBySkillId 1 ', skillId)
+        buffIds = list(self.buffDic.keys())
+        for buffId in buffIds:
+            bufData = self.buffDic.get(buffId)
+            if not bufData:
+                continue
+            buffSrcKeys = list(bufData.keys())
+            for buffSrcKey in buffSrcKeys:
+                buffVal = bufData.get(buffSrcKey)
+                if not buffVal:
+                    continue
+                ctx = buffVal.getContext()
+                if not ctx:
+                    continue
+                ctx = ctx.getTopCtxFromActionQueue(actionContext.ACTION_USE_SKILL)
+                if ctx and ctx.skillId == skillId:
+                    INFO_MSG('removeBuffBySkillId 2 ', skillId, buffId)
+                    self.removeBuff(buffId)
+
     def removeBuffWithoutCalc(self, buffId, srcKeys):
         self.buffDic.removeWithoutCalc(self, buffId, srcKeys)
 
@@ -906,6 +930,45 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         self.allClientsOnUpdateBuff(buffId, _buff.getClientStream())
         return True
 
+    def changeBuffDuration(self, buffId, duration, releaseRoleId, rootContext=None, autoHandleBuff=True):
+        """修改buffDuration"""
+        DEBUG_MSG('changeBuffDuration::', buffId, duration, releaseRoleId, rootContext, autoHandleBuff)
+        if buffId not in buff_buff.datas:
+            ERROR_MSG('changeBuffDuration:: buffId not in configTable', buffId)
+            return False
+
+        if self.isDie():
+            return False
+
+        _buffSrcKey = self._getBuffSrcKey(buffId, releaseRoleId)
+        _buff = self.getBuffByBuffId(buffId, _buffSrcKey)
+
+        # case1: 没有buff
+        if not _buff:
+            if not autoHandleBuff:
+                ERROR_MSG('changeBuffDuration:: can\'t changeBuffDuration if buff not exist', buffId, duration)
+                return False
+
+            if duration <= 0:
+                # Nothing to do here
+                return True
+            else:
+                self.addBuff(buffId, 1, releaseRoleId, duration, rootContext)
+                return True
+
+        # case2: 新的buff duration<=0
+        if duration <= 0:
+            if not autoHandleBuff:
+                ERROR_MSG('changeBuffDuration:: can\'t changeBuffDuration if new buff level <= 0', duration)
+                return False
+            self.removeBuff(buffId, _buffSrcKey)
+            return True
+
+        # default: 更新buff duration
+        _buff.overlayBuff(self, _buff.level, duration)
+        self.allClientsOnUpdateBuff(buffId, _buff.getClientStream())
+        return True
+    
     def hasBuff(self, buffId, buffSrcKey=None):
         if buffId in self.buffDic and self.buffDic[buffId]:
             if buffSrcKey is None or buffSrcKey in self.buffDic[buffId]:
@@ -1144,8 +1207,12 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             self.mp = curMp
 
     def removeSkill(self, skillID):
-        return self.skillDic.pop(skillID, None)
-
+        skill = self.skillDic.get(skillID)
+        if skill:
+            self.removeBuffBySkillId(skill.skillId)
+            self.skillDic.pop(skillID, None)
+        return skill
+    
     def doActionOnChangeSlot(self, skillId, skillLv, bActive, bTakeSkill):
         if bTakeSkill:
             skill = self.takeSkill(skillId, skillLv)
@@ -1435,6 +1502,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if skill is None:
             ERROR_MSG("Spell::doUseSkill(%i):skillID=%i not found" % (self.id, skillID))
             return False
+        
+        if utils.hasSkillTag(skillID, gameconst.SkillTag.changeCDStatusSkill) \
+            and skill.getTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, gameconst.SkillCDStatus.DEFAULT) == gameconst.SkillCDStatus.DISABLED:
+            return False
 
         return self._useSkillBySkillObj(skill, targetID, arr, isClient, compensateTime)
 
@@ -1475,6 +1546,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 WARNING_MSG("Spell::doUseSkill(%i):skillID=%i ret=%i tNextCast=%i" % (self.id, skillId, ret, skill.tNextCast))
             if ret & gameconst.UseSkillCheck.INVALID_TARGET and isClient:
                 targetID = 0
+                if target and target.IsMonster:
+                    target.checkMineWarEnemy(self)
             else:
                 self.combatDebugMsg('_useSkillBySkillObj doUseSkill fail: targetId:%s, ret:%s, skillArgs:%s', targetID, ret, arr)
                 self.client.onUseSkill(False, skillId, targetID, [], [], [])
@@ -1704,7 +1777,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             return
 
         skillVal.enterCDTime(self)
-        self.client.onSetAddSkillCd(skillVal.skillId, float(skillVal.getCD(self)), float(skillVal.tNextCast), False, skillVal.getTempData('releaseTime', 0), skillVal.getTempData('totalReleaseCount', 0), skillVal.getTempData('releasedCount', 0))
+        self.client.onSetAddSkillCd(skillVal.skillId, float(skillVal.getCD(self)), float(skillVal.tNextCast), False, skillVal.getTempData('releaseTime', 0), skillVal.getTempData('totalReleaseCount', 0), skillVal.getTempData('releasedCount', 0), not skillVal.isSkillCDStatusFrozen())
         if reason != gameconst.ChannelingBreak.NORMAR_END:
             skillVal.onChannelingEnd(self, isFinished)
         notifyClient and self.allClients.onBreakChannelingSkill(self.id, skillVal.skillId, reason)
@@ -1781,7 +1854,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         actionFinished = True
 
         skillDamges = context.getCombatResult()
-        ignoreImmortal = skill.hasTag(gameconst.SkillTag.IgnoreImmortal)
         doActionTogether = skill.hasTag(gameconst.SkillTag.DoActionTogether)
         skillDamges.damageInfo = []
 
@@ -1793,8 +1865,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             actionFinished = self._executeSkillAction(skillId, context, calcDelay, actionFunc, None, duration)
         else:
             doActionTargets = []
-
-            host = utils.getHostEntity(self)
 
             if needUseCheck:
                 if effectedTargets:
@@ -2015,8 +2085,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             shieldAbsorbVal = dmgAfterTransfer - realDmgVal
             if realDmgVal == 0 and shieldAbsorbVal:
                 # 全被吸收
-                skillDamges.damageInfo.append(
-                    combatSkill.SkillDamageVal(target.id, shieldAbsorbVal, gameconst.HitType.Absorb))
+                skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, shieldAbsorbVal, gameconst.HitType.Absorb))
             if shieldAbsorbVal > 0:
                 target.onModifyShieldVal(shieldAbsorbVal, dmgSrcEnt.id, context.getDmgSourceType(),
                                          context.getDmgSourceId())
@@ -2372,9 +2441,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         return gameconst.DEFAULT_AOI
 
     def getTargetIdsByTargetType(self, targetString):
-        entityIds = []
         if self.isDestroyed:
-            return entityIds
+            return set()
         if not self.useTargetTypeCacheFlag:
             viewRadius = self.getTargetByViewRadius()
             for e in self.entitiesInRange(viewRadius):
@@ -2395,40 +2463,40 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                                                                 'stopCacheTargetTypeTimeId')
 
         if targetString == "None":
-            entityIds = list(self.enemyCacheSet.union(self.notEnemyCacheSet, {self.id}))
+            return self.enemyCacheSet.union(self.notEnemyCacheSet, {self.id})
 
         elif targetString == "PlayerExTarget":
             if self.IsMonster and self.aiController and self.aiController.hateDict:
-                maxHateTargetId, maxHateTargetHate = self.aiController.hateDict.getFirstVisibleHateTarget()
+                maxHateTargetId, _ = self.aiController.hateDict.getFirstVisibleHateTarget()
             if maxHateTargetId:
-                targetSet = list(self.enemyCacheSet)
-                if maxHateTargetId in targetSet:
-                    targetSet.remove(maxHateTargetId)
-                entityIds = targetSet
+                targetSet = set(self.enemyCacheSet)
+                targetSet.discard(maxHateTargetId)
+                return targetSet
             else:
-                entityIds = list(self.enemyCacheSet)
+                return set(self.enemyCacheSet)
 
         else:
             _set = None
             _value = utils.getFightTargetTypeCfgData(targetString)
             if not _value:
                 ERROR_MSG('getTargetIdsByTargetType: targetString={} not found'.format(targetString))
-                return []
+                return set()
 
             for _tp in _value[2]:
                 if _tp == gameconst.CampType.All:
                     _set = self.enemyCacheSet.union(self.notEnemyCacheSet, {self.id})
+                    break
 
                 elif _tp == gameconst.CampType.Enemy:
                     if _set is None:
-                        _set = self.enemyCacheSet
+                        _set = set(self.enemyCacheSet)
 
                     else:
                         _set = _set.union(self.enemyCacheSet)
 
                 elif _tp == gameconst.CampType.Friend:
                     if _set is None:
-                        _set = self.friendCacheSet
+                        _set = set(self.friendCacheSet)
 
                     else:
                         _set = _set.union(self.friendCacheSet)
@@ -2442,18 +2510,16 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
                 elif _tp == gameconst.CampType.EnemyExTarget:
                     if _set is None:
-                        _set = self.enemyCacheSet
+                        _set = set(self.enemyCacheSet)
 
                     else:
                         _set = _set.union(self.enemyCacheSet)
 
             if _set is None:
-                return []
+                return set()
 
             else:
-                return list(_set)
-
-        return entityIds
+                return _set
 
     def getTargets(self, centerEnt, targetId, targetString, targetRange=20, forceTarget=False, beginSkillPosition=None):
         targetsList = []
@@ -2462,7 +2528,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         target = KBEngine.entities.get(targetId)
 
         if forceTarget and target:
-            entityIds.append(targetId)
+            entityIds.add(targetId)
 
         for eId in entityIds:
             entity = KBEngine.entities.get(eId)
@@ -2524,23 +2590,26 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         if targetNum > 1:
             if targetString == "Friend" or targetString == "FriendExGB":
-                entityIds.remove(self.id)
+                entityIds.discard(self.id)
                 if self.isTarget(target, self.id, targetString, targetRange, checkScopeFun, beginSkillPosition):
                     targetIdsList.append(self.id)
                 if targetId in entityIds:
-                    entityIds.remove(targetId)
+                    entityIds.discard(targetId)
                     if self.isTarget(target, targetId, targetString, targetRange, checkScopeFun, beginSkillPosition):
                         targetIdsList.append(targetId)
             elif targetString == "Enemy" or targetString == "EnemyExTarget":
                 if targetId in entityIds:
-                    entityIds.remove(targetId)
+                    entityIds.discard(targetId)
                     if self.isTarget(target, targetId, targetString, targetRange, checkScopeFun, beginSkillPosition):
                         targetIdsList.append(targetId)
 
         if len(targetIdsList) >= targetNum:
             return targetIdsList
 
-        random.shuffle(entityIds)
+        if KBEngine.getAverageLoad() < 0.6:
+            entityIds = list(entityIds)
+            random.shuffle(entityIds)
+
         for eId in entityIds:
             entity = KBEngine.entities.get(eId)
             if self.isTarget(entity, eId, targetString, targetRange, checkScopeFun, beginSkillPosition):
@@ -2639,38 +2708,78 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         skill.changeCD(self, cdDelta)
         return True
 
-    def addShield(self, buffId, shieldVal):
-        if buffId in self.shieldDic:
-            self.shieldDic[buffId].shieldValue += shieldVal
+    def addShield(self, buffId, shieldType, shieldVal, shieldEffects = None):
+        shield = buff.ShieldVal(buffId, shieldType, shieldVal, shieldVal, shieldEffects)
+        # 减伤盾如果存在直接替换
+        if shield.getShieldType() == gameconst.ShieldType.REDUCE_DMG:
+            self.shieldDic[buffId] = shield
         else:
-            self.shieldDic[buffId] = buff.ShieldVal(buffId, shieldVal)
+            if buffId in self.shieldDic:
+                self.shieldDic[buffId].addShieldValue(shield.getShieldValue())
+            else:
+                self.shieldDic[buffId] = shield
 
     def removeShield(self, buffId):
         if buffId in self.shieldDic:
             self.shieldDic.pop(buffId)
 
     def absorbShieldWithDetails(self, nHpModify):
+        if nHpModify <= 0:
+            return
+
         remainHp = nHpModify
         rmShelds = []
         details = {}
-
-        for buffId, shieldVal in self.shieldDic.items():
-            if shieldVal.shieldValue > remainHp:
-                shieldVal.doAbsorbDmg(remainHp)
-                details[buffId] = remainHp
-                remainHp = 0
-                break
-            else:
-                absorbedVal = shieldVal.doAbsorbDmg(remainHp)
-                remainHp -= absorbedVal
-                rmShelds.append(buffId)
-                details[buffId] = absorbedVal
-
+        # 盾会自动移除
+        buffIds = list(self.shieldDic.keys())
+        # 先使用生命盾,再用减伤盾
+        remainHp = self.doAbsorbDmg(buffIds, gameconst.ShieldType.LIFE, remainHp, details, rmShelds)
+        if remainHp > 0:
+            remainHp = self.doAbsorbDmg(buffIds, gameconst.ShieldType.REDUCE_DMG, remainHp, details, rmShelds)
+        # 移除
         for buffId in rmShelds:
             self.removeBuff(buffId, isFinished=True, removeType=gameconst.RemoveType.EndByBeat)
 
         return remainHp, details
 
+    def doAbsorbDmg(self, buffIds, useShieldType, nHpModify, details, rmShelds):
+        remainHp = nHpModify
+        for buffId in buffIds:
+            shieldVal = self.shieldDic.get(buffId, None)
+            if not shieldVal:
+                continue
+            if shieldVal.getShieldType() != useShieldType:
+                continue
+            # 盾能尝试吸收的最大伤害
+            realShieldVal = remainHp
+            # 减伤盾按百分比吸收
+            if useShieldType == gameconst.ShieldType.REDUCE_DMG:
+                realShieldVal = shieldVal.getShieldReduceDmgRatio() * remainHp
+
+            absorbedVal = shieldVal.doAbsorbDmg(realShieldVal)
+            DEBUG_MSG('absorbShieldWithDetails 1', useShieldType, nHpModify, remainHp, realShieldVal, absorbedVal, shieldVal.shieldValue)
+            details[buffId] = absorbedVal
+            remainHp -= absorbedVal
+            # 盾生命值没了,需要移除
+            if shieldVal.getShieldValue() <= 0:
+                rmShelds.append(buffId)
+                DEBUG_MSG('absorbShieldWithDetails 2', useShieldType, nHpModify, remainHp, absorbedVal, shieldVal.shieldValue)
+            # 吸完了,结束
+            if remainHp <= 0:
+                DEBUG_MSG('absorbShieldWithDetails 3', useShieldType, nHpModify, remainHp, absorbedVal, shieldVal.shieldValue)
+                break
+            # 减伤盾刷新时间
+            if useShieldType == gameconst.ShieldType.REDUCE_DMG:
+                # 刷新reduce dmg shield duration
+                buffSrcKey = self._getBuffSrcKey(buffId, self.id)
+                buff = self.getBuffByBuffId(buffId, buffSrcKey)
+                if buff:
+                    remainTime = buff.getBuffRemainTime()
+                    duration = remainTime * (1 - absorbedVal/shieldVal.getShieldMaxValue())
+                    self.changeBuffDuration(buffId, duration, self.id)
+                    DEBUG_MSG('absorbShieldWithDetails 4', useShieldType, nHpModify, remainHp, absorbedVal, shieldVal.shieldValue, duration)
+        return remainHp
+    
     def removeCreation(self, cid):
         if cid in self.creationList:
             self.creationList.remove(cid)
@@ -3665,10 +3774,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 _child.useSkillDone(self, 0, [], isSucc=False, doRemoveState=True)
 
     def getAvatar(self):
-        if self.IsAvatar:
-            return self
-        if self.IsCreation or self.IsSummon:
-            entity = self.getHost()
-            if entity.IsAvatar:
-                return entity
+        _host = utils.getHostEntity(self)
+        if _host and _host.IsAvatar:
+            return _host
         return None

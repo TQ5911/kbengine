@@ -19,11 +19,13 @@
         <reqMoveItemToWarehouse><Exposed/>
             <Arg>       UINT32     </Arg>
             <Arg>       ITEMID     </Arg>
+            <Arg>       UINT32     </Arg>
         </reqMoveItemToWarehouse>
 
         <reqMoveItemToBag><Exposed/>
-            <Arg>       UINT32     </Arg>
+            <Arg>       UINT32      </Arg>
             <Arg>       ITEMID      </Arg>
+            <Arg>       UINT32      </Arg>
         </reqMoveItemToBag>
 
         <reqWarehouseSort><Exposed/>
@@ -60,6 +62,7 @@
 
         <onWarehouseOutItems>
             <Arg>     UINT8     </Arg>
+            <Arg>     UINT32    </Arg>
             <Arg>     UINT32    </Arg>
         </onWarehouseOutItems>
 

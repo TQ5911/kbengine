@@ -55,7 +55,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def _fullPrepare(self):
         self.pyAddTimer(1, 1, gametimer.LOGIN_STUB_ASYNC_TICK)
-        self.pyAddTimer(20, 30, gametimer.LOGIN_STUB_SERVERINFO_SYNC)
+        self.pyAddTimer(20, 1, gametimer.LOGIN_STUB_SERVERINFO_SYNC)
         #TODO： upload online number to line service
 
         # 注册人数同步到 interface

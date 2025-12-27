@@ -71,7 +71,18 @@ class ActionContext(userType.UserSoleType):
             return self.parentContext.getCtxFromActionQueue(actionType)
 
         return None
-
+    
+    def getTopCtxFromActionQueue(self, actionType):
+        # 如果父节点，继续往上找
+        if self.parentContext:
+            parentContext = self.parentContext.getCtxFromActionQueue(actionType)
+            if parentContext:
+                # 如果父节点满足，返回父节点
+                return parentContext
+        # 检查当前节点，如果当前节点，满足，返回当前节点
+        if self.actionType == actionType:
+            return self
+        return None
 
 ACTION_CONTEXT_DEFAULT = ActionContext()
 
@@ -125,11 +136,12 @@ class SkillCommonCtx(ActionContext):
         self.skillId = skillId                  #����id
 class CreationCtx(ActionContext):
     actionType = ACTION_CREATION_LOOP
-    def __init__(self, creationEntId, effectedEntIds, creationResult, parentCtx=None):
+    def __init__(self, creationEntId, effectedEntIds, creationResult, parentCtx=None, loopTimes=0):
         super(CreationCtx, self).__init__(parentCtx)
         self.creationEntId = creationEntId      #����entity id
         self.effectedEntIds = effectedEntIds    #��������Ŀ��
         self.creationResult = creationResult
+        self.loopTimes = loopTimes
 
         if self.creationResult:
             self.creationResult.sourceType = self.getDmgSourceType()

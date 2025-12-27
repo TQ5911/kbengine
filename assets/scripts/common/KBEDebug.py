@@ -33,18 +33,16 @@ def _getEntityLogInfo():
 
         lvars = f.f_locals
         s = lvars.get('self')
-        if s:
-            m = dir(s)
-            if 'id' in m and isinstance(s, KBEngine.Entity):
-                eid = s.__getattribute__('id')
-                ename = s.__getattribute__('__class__').__name__
-                if IS_CELL:
-                    if 'gbId' in m:
-                        gbId = s.__getattribute__('gbId')
-                elif IS_BASE:
-                    if 'gbID' in m:
-                        gbId = s.__getattribute__('gbID')
-                break
+        if s and hasattr(s, 'id') and isinstance(s, KBEngine.Entity):
+            eid = s.id
+            ename = s.__class__.__name__
+            if IS_CELL:
+                if hasattr(s, 'gbId'):
+                    gbId = s.gbId
+            elif IS_BASE:
+                if hasattr(s, 'gbID'):
+                    gbId = s.gbID
+            break
 
     if eid and ename:
         if gbId:

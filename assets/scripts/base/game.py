@@ -163,7 +163,7 @@ def onCellAppDeath(addr, cid, groupOrder):
         ERROR_MSG('cellapp dead in starting, shutdown...')
         KBEngine.shutdownServer()
     else:
-        for lineType in gameconst.lineStubMap:
+        for lineType in gameconst.lineStubMap():
             gameengine.getLineStub(lineType).handleCellappDeath(groupOrder)
 
         gameglobal.localBaseApp.handleCellappDealth(groupOrder)

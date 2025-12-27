@@ -19,6 +19,7 @@ import gameconst
 import gameconfig
 
 import formula
+import branchData_set
 
 
 class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
@@ -28,6 +29,12 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         self.addDatetimeTimerTick()
         self.allPlayers = linePlayers.AllLinePlayers(self.lineType)
 
+        interval = 60 * branchData_set.datas["Branch_mergeInterval"]["value"]
+        waitTime = 60 * branchData_set.datas["Branch_mergeWaitingTime"]["value"]
+
+        self.pyAddTimer(interval, interval, gametimer.WORLD_LINE_CHECK_LINE_MERGE)
+        self.pyAddTimer(interval + waitTime, interval, gametimer.WORLD_LINE_DO_LINE_MERGE)
+
     def doNext(self):
         DEBUG_MSG('WorldLine doNext', self.lineType)
         super().doNext()
@@ -36,6 +43,10 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onTimer(self, tid, userArg):
         if userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userArg == gametimer.WORLD_LINE_CHECK_LINE_MERGE:
+            self._checkLineMerge()
+        elif userArg == gametimer.WORLD_LINE_DO_LINE_MERGE:
+            self._doLineMerge()
 
         super().onTimer(tid, userArg)
 
@@ -199,9 +210,11 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         DEBUG_MSG("WorldLineStub::onRefreshGroupEntities", info)
         super(WorldLineStub, self).onRefreshGroupEntities(info)
 
+    def onDestroyGroupEntities(self, info):
+        DEBUG_MSG("WorldLineStub::onDestroyGroupEntities", info)
+        super(WorldLineStub, self).onDestroyGroupEntities(info)
+
     def notifyCreateWorldBoss(self, spaceNo):
         _lineNo = formula.getLineNo(spaceNo)
         spaceVal = self.getLineSpaceVal(_lineNo)
         spaceVal.lineSpaceBox.cell.callOnSpaceMgr('doCreateWorldBoss', ())
-
-

@@ -205,7 +205,7 @@ class IMonthCard(object):
             return
 
         endTime = min(self.monthCardExpireTime, utils.getNow())
-        if endTime <= self.tLastOfflineBase:
+        if endTime <= self.tLastOfflineBase + BCBCCD.datas['offlineTimeLimit']['value'] * 60:
             return
 
         totalMinutes = 0
@@ -228,12 +228,12 @@ class IMonthCard(object):
             #那天的挂机时长有浪费
             timeDelta = lastRemainHangupMinutes
             if utils.isDiffDay(self.tLastOfflineBase, self.tLastOfflineBase + lastRemainHangupMinutes * 60, gameconst.COMMON_CYCLE_TIME):
-                timeDelta = utils.getCurrentDayTS(self.tLastOfflineBase + lastRemainHangupMinutes * 60, gameconst.COMMON_CYCLE_TIME) - self.tLastOfflineBase
+                timeDelta = (utils.getCurrentDayTS(self.tLastOfflineBase + lastRemainHangupMinutes * 60, gameconst.COMMON_CYCLE_TIME) - self.tLastOfflineBase) // 60
 
             timeDelta = min(timeDelta, accumulateTime)
             totalMinutes += timeDelta
             accumulateTime -= timeDelta
-            INFO_MSG("checkOfflineHangup begin", "timeDelta", timeDelta, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
+            INFO_MSG("checkOfflineHangup begin", "timeDelta", timeDelta, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime, "tLastOfflineBase", self.tLastOfflineBase, "endTime", endTime)
 
             #中间天数
             dayDelta = utils.getCurrentDayTS(endTime, gameconst.COMMON_CYCLE_TIME) - \
@@ -245,7 +245,7 @@ class IMonthCard(object):
             INFO_MSG("checkOfflineHangup middle", "dayDelta", dayDelta, "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
 
             #今天
-            minutes = min(endTime - utils.getCurrentDayTS(endTime, gameconst.COMMON_CYCLE_TIME), self.remainHangupMinutes)
+            minutes = min((endTime - utils.getCurrentDayTS(endTime, gameconst.COMMON_CYCLE_TIME)) // 60, self.remainHangupMinutes)
             minutes = min(minutes, accumulateTime)
             totalMinutes += minutes
             INFO_MSG("checkOfflineHangup end", "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)

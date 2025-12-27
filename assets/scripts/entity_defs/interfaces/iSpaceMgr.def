@@ -80,6 +80,12 @@
             <Flags>         CELL_PRIVATE            </Flags>
             <Default>       0                       </Default>
         </spaceState>
+
+        <lightPillarDict>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+        </lightPillarDict>
     </Properties>
 
     <CellMethods>

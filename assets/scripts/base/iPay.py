@@ -91,11 +91,26 @@ class IPay(object):
             self.holidayPaySuccess(buyCreditId)
             self._addCreditConfigReward(buyCreditId, opUUID, srcType, cfgData)
         elif creditType == gameconst.BuyCreditType.monthCard:
+            if not self.checkCanAddMonthCard():
+                self.onMessagePre(BC_BCCD.datas["durationHoursLimitMsg"]["value"], [])
+                return
+            priceID = cfgData.get('priceID')
+            quantity = cfgData.get('quantity')
+            if priceID and quantity:
+                deductWealthVal = dropAward.DeductWealthVal()
+                deductWealthVal.addWealthByItemId(priceID, quantity)
+
+                if not self.canDeductWealth(deductWealthVal):
+                    WARNING_MSG('clientBuyGoods: items not enough:', deductWealthVal)
+                    return
+
+                detail = gameclass.AwardDetail(buyCreditId=buyCreditId)
+                opUUID = KBEngine.genUUID64()
+                srcType = AAC_AACDD.datas.BONUS_SRC_BUY_CURRENCY_GIFT
+                self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+
             monthCardId = cfgData.get('ID')
             seconds = BC_BCCD.datas['durationHours']['value'] * 3600
-            if not self.checkCanAddMonthCard():
-                self.onMessagePre(BCBCCD.datas["durationHoursLimitMsg"]["value"], [])
-                return
             self.doAddMonthCard(seconds, monthCardId)
         self.client.onBuyCreditSuccess(buyCreditId)
         self.midasTotalPay += price

@@ -7,6 +7,7 @@
 2.ctrl+shift+p 打开命令面板
 
 3.输入并选择 **“Extensions: Install from VSIX...”**。
+  回到hotreload目录安装 vsix插件
 
 ## 配置
 

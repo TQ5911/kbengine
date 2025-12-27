@@ -804,7 +804,17 @@ datas = _tools.RODict({
         "ifExport": 1,
         "defaultValue": "1001",
         "listValue": ""
+    }),
+    3006: _tools.RODict({
+        "ID": 3006,
+        "name": "开始CD",
+        "value": "cdTime",
+        "valueType": 1,
+        "Type": "uint",
+        "ifExport": 1,
+        "defaultValue": "0",
+        "listValue": ""
     })
 })
 minKey = 1001
-maxKey = 3005
+maxKey = 3006

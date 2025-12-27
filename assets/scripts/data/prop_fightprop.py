@@ -18,537 +18,612 @@ datas = _tools.RODict({
     52000001: _tools.RODict({
         "propID": 52000001,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":20000,"adjFullMp":10000,"adjMinPhysicalAtk":100,"adjMaxPhysicalAtk":200,"adjMinMagicAtk":100,"adjMaxMagicAtk":200,"mulFullHp":1.0})
+        "propList": _tools.RODict({"adjFullHp":20000,"adjFullMp":10000,"adjMinPhysicalAtk":100,"adjMaxPhysicalAtk":200,"adjMinMagicAtk":100,"adjMaxMagicAtk":200,"mulFullHp":1.0,"adjRealDmgDef":50})
     }),
     51000001: _tools.RODict({
         "propID": 51000001,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":100,"adjMinPhysicalAtk":6,"adjMaxPhysicalAtk":15,"adjMinMagicAtk":13,"adjMaxMagicAtk":20,"adjMinPhysicalArmor":6,"adjMaxPhysicalArmor":10,"adjMinMagicArmor":6,"adjMaxMagicArmor":10,"adjHit":1,"adjDodge":1})
+        "propList": _tools.RODict({"adjFullHp":50,"adjMinPhysicalAtk":21,"adjMaxPhysicalAtk":21,"adjMinMagicAtk":21,"adjMaxMagicAtk":21,"adjMinPhysicalArmor":15,"adjMaxPhysicalArmor":15,"adjMinMagicArmor":15,"adjMaxMagicArmor":15,"adjHit":1,"adjDodge":1,"adjRealDmg":1,"adjRealDmgDef":1,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000002: _tools.RODict({
         "propID": 51000002,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":120,"adjMinPhysicalAtk":9,"adjMaxPhysicalAtk":20,"adjMinMagicAtk":14,"adjMaxMagicAtk":30,"adjMinPhysicalArmor":10,"adjMaxPhysicalArmor":15,"adjMinMagicArmor":10,"adjMaxMagicArmor":15,"adjHit":1,"adjDodge":1})
+        "propList": _tools.RODict({"adjFullHp":52,"adjMinPhysicalAtk":24,"adjMaxPhysicalAtk":24,"adjMinMagicAtk":24,"adjMaxMagicAtk":24,"adjMinPhysicalArmor":16,"adjMaxPhysicalArmor":16,"adjMinMagicArmor":16,"adjMaxMagicArmor":16,"adjHit":1,"adjDodge":1,"adjRealDmg":2,"adjRealDmgDef":2,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000003: _tools.RODict({
         "propID": 51000003,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":140,"adjMinPhysicalAtk":13,"adjMaxPhysicalAtk":30,"adjMinMagicAtk":15,"adjMaxMagicAtk":40,"adjMinPhysicalArmor":13,"adjMaxPhysicalArmor":20,"adjMinMagicArmor":13,"adjMaxMagicArmor":20,"adjHit":2,"adjDodge":2})
+        "propList": _tools.RODict({"adjFullHp":54,"adjMinPhysicalAtk":26,"adjMaxPhysicalAtk":26,"adjMinMagicAtk":26,"adjMaxMagicAtk":26,"adjMinPhysicalArmor":17,"adjMaxPhysicalArmor":17,"adjMinMagicArmor":17,"adjMaxMagicArmor":17,"adjHit":2,"adjDodge":2,"adjRealDmg":3,"adjRealDmgDef":3,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000004: _tools.RODict({
         "propID": 51000004,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":160,"adjMinPhysicalAtk":18,"adjMaxPhysicalAtk":40,"adjMinMagicAtk":67,"adjMaxMagicAtk":50,"adjMinPhysicalArmor":16,"adjMaxPhysicalArmor":25,"adjMinMagicArmor":16,"adjMaxMagicArmor":25,"adjHit":2,"adjDodge":2})
+        "propList": _tools.RODict({"adjFullHp":56,"adjMinPhysicalAtk":28,"adjMaxPhysicalAtk":28,"adjMinMagicAtk":28,"adjMaxMagicAtk":28,"adjMinPhysicalArmor":18,"adjMaxPhysicalArmor":18,"adjMinMagicArmor":18,"adjMaxMagicArmor":18,"adjHit":2,"adjDodge":2,"adjRealDmg":4,"adjRealDmgDef":4,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000005: _tools.RODict({
         "propID": 51000005,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":180,"adjMinPhysicalAtk":22,"adjMaxPhysicalAtk":50,"adjMinMagicAtk":68,"adjMaxMagicAtk":60,"adjMinPhysicalArmor":20,"adjMaxPhysicalArmor":30,"adjMinMagicArmor":20,"adjMaxMagicArmor":30,"adjHit":3,"adjDodge":3})
+        "propList": _tools.RODict({"adjFullHp":58,"adjMinPhysicalAtk":32,"adjMaxPhysicalAtk":32,"adjMinMagicAtk":32,"adjMaxMagicAtk":32,"adjMinPhysicalArmor":19,"adjMaxPhysicalArmor":19,"adjMinMagicArmor":19,"adjMaxMagicArmor":19,"adjHit":3,"adjDodge":3,"adjRealDmg":5,"adjRealDmgDef":5,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000006: _tools.RODict({
         "propID": 51000006,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":200,"adjMinPhysicalAtk":27,"adjMaxPhysicalAtk":60,"adjMinMagicAtk":69,"adjMaxMagicAtk":70,"adjMinPhysicalArmor":23,"adjMaxPhysicalArmor":35,"adjMinMagicArmor":23,"adjMaxMagicArmor":35,"adjHit":3,"adjDodge":3})
+        "propList": _tools.RODict({"adjFullHp":60,"adjMinPhysicalAtk":65,"adjMaxPhysicalAtk":65,"adjMinMagicAtk":65,"adjMaxMagicAtk":65,"adjMinPhysicalArmor":20,"adjMaxPhysicalArmor":20,"adjMinMagicArmor":20,"adjMaxMagicArmor":20,"adjHit":3,"adjDodge":3,"adjRealDmg":6,"adjRealDmgDef":6,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000007: _tools.RODict({
         "propID": 51000007,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":220,"adjMinPhysicalAtk":31,"adjMaxPhysicalAtk":70,"adjMinMagicAtk":78,"adjMaxMagicAtk":80,"adjMinPhysicalArmor":26,"adjMaxPhysicalArmor":40,"adjMinMagicArmor":26,"adjMaxMagicArmor":40,"adjHit":4,"adjDodge":4})
+        "propList": _tools.RODict({"adjFullHp":62,"adjMinPhysicalAtk":80,"adjMaxPhysicalAtk":80,"adjMinMagicAtk":80,"adjMaxMagicAtk":80,"adjMinPhysicalArmor":21,"adjMaxPhysicalArmor":21,"adjMinMagicArmor":21,"adjMaxMagicArmor":21,"adjHit":4,"adjDodge":4,"adjRealDmg":7,"adjRealDmgDef":7,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000008: _tools.RODict({
         "propID": 51000008,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":240,"adjMinPhysicalAtk":36,"adjMaxPhysicalAtk":80,"adjMinMagicAtk":79,"adjMaxMagicAtk":90,"adjMinPhysicalArmor":30,"adjMaxPhysicalArmor":45,"adjMinMagicArmor":30,"adjMaxMagicArmor":45,"adjHit":4,"adjDodge":4})
+        "propList": _tools.RODict({"adjFullHp":64,"adjMinPhysicalAtk":98,"adjMaxPhysicalAtk":98,"adjMinMagicAtk":98,"adjMaxMagicAtk":98,"adjMinPhysicalArmor":32,"adjMaxPhysicalArmor":32,"adjMinMagicArmor":32,"adjMaxMagicArmor":32,"adjHit":4,"adjDodge":4,"adjRealDmg":8,"adjRealDmgDef":8,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000009: _tools.RODict({
         "propID": 51000009,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":260,"adjMinPhysicalAtk":40,"adjMaxPhysicalAtk":90,"adjMinMagicAtk":79,"adjMaxMagicAtk":100,"adjMinPhysicalArmor":33,"adjMaxPhysicalArmor":50,"adjMinMagicArmor":33,"adjMaxMagicArmor":50,"adjHit":5,"adjDodge":5})
+        "propList": _tools.RODict({"adjFullHp":66,"adjMinPhysicalAtk":105,"adjMaxPhysicalAtk":105,"adjMinMagicAtk":105,"adjMaxMagicAtk":105,"adjMinPhysicalArmor":122,"adjMaxPhysicalArmor":122,"adjMinMagicArmor":122,"adjMaxMagicArmor":122,"adjHit":5,"adjDodge":5,"adjRealDmg":9,"adjRealDmgDef":9,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000010: _tools.RODict({
         "propID": 51000010,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":280,"adjMinPhysicalAtk":45,"adjMaxPhysicalAtk":100,"adjMinMagicAtk":98,"adjMaxMagicAtk":110,"adjMinPhysicalArmor":36,"adjMaxPhysicalArmor":55,"adjMinMagicArmor":36,"adjMaxMagicArmor":55,"adjHit":5,"adjDodge":5})
+        "propList": _tools.RODict({"adjFullHp":68,"adjMinPhysicalAtk":112,"adjMaxPhysicalAtk":112,"adjMinMagicAtk":112,"adjMaxMagicAtk":112,"adjMinPhysicalArmor":124,"adjMaxPhysicalArmor":124,"adjMinMagicArmor":124,"adjMaxMagicArmor":124,"adjHit":5,"adjDodge":5,"adjRealDmg":10,"adjRealDmgDef":10,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000011: _tools.RODict({
         "propID": 51000011,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":300,"adjMinPhysicalAtk":50,"adjMaxPhysicalAtk":110,"adjMinMagicAtk":104,"adjMaxMagicAtk":120,"adjMinPhysicalArmor":40,"adjMaxPhysicalArmor":60,"adjMinMagicArmor":40,"adjMaxMagicArmor":60,"adjHit":6,"adjDodge":6})
+        "propList": _tools.RODict({"adjFullHp":70,"adjMinPhysicalAtk":120,"adjMaxPhysicalAtk":120,"adjMinMagicAtk":120,"adjMaxMagicAtk":120,"adjMinPhysicalArmor":132,"adjMaxPhysicalArmor":132,"adjMinMagicArmor":132,"adjMaxMagicArmor":132,"adjHit":6,"adjDodge":6,"adjRealDmg":11,"adjRealDmgDef":11,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000012: _tools.RODict({
         "propID": 51000012,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":320,"adjMinPhysicalAtk":54,"adjMaxPhysicalAtk":120,"adjMinMagicAtk":105,"adjMaxMagicAtk":130,"adjMinPhysicalArmor":43,"adjMaxPhysicalArmor":65,"adjMinMagicArmor":43,"adjMaxMagicArmor":65,"adjHit":6,"adjDodge":6})
+        "propList": _tools.RODict({"adjFullHp":75,"adjMinPhysicalAtk":127,"adjMaxPhysicalAtk":127,"adjMinMagicAtk":127,"adjMaxMagicAtk":127,"adjMinPhysicalArmor":134,"adjMaxPhysicalArmor":134,"adjMinMagicArmor":134,"adjMaxMagicArmor":134,"adjHit":6,"adjDodge":6,"adjRealDmg":12,"adjRealDmgDef":12,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000013: _tools.RODict({
         "propID": 51000013,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":340,"adjMinPhysicalAtk":59,"adjMaxPhysicalAtk":130,"adjMinMagicAtk":106,"adjMaxMagicAtk":140,"adjMinPhysicalArmor":46,"adjMaxPhysicalArmor":70,"adjMinMagicArmor":46,"adjMaxMagicArmor":70,"adjHit":7,"adjDodge":7})
+        "propList": _tools.RODict({"adjFullHp":80,"adjMinPhysicalAtk":134,"adjMaxPhysicalAtk":134,"adjMinMagicAtk":134,"adjMaxMagicAtk":134,"adjMinPhysicalArmor":135,"adjMaxPhysicalArmor":135,"adjMinMagicArmor":135,"adjMaxMagicArmor":135,"adjHit":7,"adjDodge":7,"adjRealDmg":13,"adjRealDmgDef":13,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000014: _tools.RODict({
         "propID": 51000014,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":360,"adjMinPhysicalAtk":63,"adjMaxPhysicalAtk":140,"adjMinMagicAtk":106,"adjMaxMagicAtk":150,"adjMinPhysicalArmor":50,"adjMaxPhysicalArmor":75,"adjMinMagicArmor":50,"adjMaxMagicArmor":75,"adjHit":7,"adjDodge":7})
+        "propList": _tools.RODict({"adjFullHp":90,"adjMinPhysicalAtk":141,"adjMaxPhysicalAtk":141,"adjMinMagicAtk":141,"adjMaxMagicAtk":141,"adjMinPhysicalArmor":136,"adjMaxPhysicalArmor":136,"adjMinMagicArmor":136,"adjMaxMagicArmor":136,"adjHit":7,"adjDodge":7,"adjRealDmg":14,"adjRealDmgDef":14,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000015: _tools.RODict({
         "propID": 51000015,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":380,"adjMinPhysicalAtk":68,"adjMaxPhysicalAtk":150,"adjMinMagicAtk":109,"adjMaxMagicAtk":160,"adjMinPhysicalArmor":53,"adjMaxPhysicalArmor":80,"adjMinMagicArmor":53,"adjMaxMagicArmor":80,"adjHit":8,"adjDodge":8})
+        "propList": _tools.RODict({"adjFullHp":110,"adjMinPhysicalAtk":152,"adjMaxPhysicalAtk":152,"adjMinMagicAtk":152,"adjMaxMagicAtk":152,"adjMinPhysicalArmor":138,"adjMaxPhysicalArmor":138,"adjMinMagicArmor":138,"adjMaxMagicArmor":138,"adjHit":8,"adjDodge":8,"adjRealDmg":15,"adjRealDmgDef":15,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000016: _tools.RODict({
         "propID": 51000016,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":400,"adjMinPhysicalAtk":72,"adjMaxPhysicalAtk":160,"adjMinMagicAtk":123,"adjMaxMagicAtk":170,"adjMinPhysicalArmor":60,"adjMaxPhysicalArmor":90,"adjMinMagicArmor":60,"adjMaxMagicArmor":90,"adjHit":8,"adjDodge":8})
+        "propList": _tools.RODict({"adjFullHp":120,"adjMinPhysicalAtk":163,"adjMaxPhysicalAtk":163,"adjMinMagicAtk":163,"adjMaxMagicAtk":163,"adjMinPhysicalArmor":158,"adjMaxPhysicalArmor":158,"adjMinMagicArmor":158,"adjMaxMagicArmor":158,"adjHit":8,"adjDodge":9,"adjRealDmg":16,"adjRealDmgDef":16,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000017: _tools.RODict({
         "propID": 51000017,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":420,"adjMinPhysicalAtk":77,"adjMaxPhysicalAtk":170,"adjMinMagicAtk":124,"adjMaxMagicAtk":180,"adjMinPhysicalArmor":66,"adjMaxPhysicalArmor":100,"adjMinMagicArmor":66,"adjMaxMagicArmor":100,"adjHit":9,"adjDodge":9})
+        "propList": _tools.RODict({"adjFullHp":129,"adjMinPhysicalAtk":174,"adjMaxPhysicalAtk":174,"adjMinMagicAtk":174,"adjMaxMagicAtk":174,"adjMinPhysicalArmor":159,"adjMaxPhysicalArmor":159,"adjMinMagicArmor":159,"adjMaxMagicArmor":159,"adjHit":9,"adjDodge":10,"adjRealDmg":17,"adjRealDmgDef":17,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000018: _tools.RODict({
         "propID": 51000018,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":440,"adjMinPhysicalAtk":81,"adjMaxPhysicalAtk":180,"adjMinMagicAtk":126,"adjMaxMagicAtk":190,"adjMinPhysicalArmor":73,"adjMaxPhysicalArmor":110,"adjMinMagicArmor":73,"adjMaxMagicArmor":110,"adjHit":9,"adjDodge":9})
+        "propList": _tools.RODict({"adjFullHp":131,"adjMinPhysicalAtk":196,"adjMaxPhysicalAtk":196,"adjMinMagicAtk":196,"adjMaxMagicAtk":196,"adjMinPhysicalArmor":161,"adjMaxPhysicalArmor":161,"adjMinMagicArmor":161,"adjMaxMagicArmor":161,"adjHit":9,"adjDodge":10,"adjRealDmg":18,"adjRealDmgDef":18,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000019: _tools.RODict({
         "propID": 51000019,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":460,"adjMinPhysicalAtk":90,"adjMaxPhysicalAtk":200,"adjMinMagicAtk":127,"adjMaxMagicAtk":210,"adjMinPhysicalArmor":80,"adjMaxPhysicalArmor":120,"adjMinMagicArmor":80,"adjMaxMagicArmor":120,"adjHit":10,"adjDodge":10})
+        "propList": _tools.RODict({"adjFullHp":135,"adjMinPhysicalAtk":210,"adjMaxPhysicalAtk":210,"adjMinMagicAtk":210,"adjMaxMagicAtk":210,"adjMinPhysicalArmor":169,"adjMaxPhysicalArmor":169,"adjMinMagicArmor":169,"adjMaxMagicArmor":169,"adjHit":10,"adjDodge":11,"adjRealDmg":19,"adjRealDmgDef":19,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000020: _tools.RODict({
         "propID": 51000020,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":480,"adjMinPhysicalAtk":100,"adjMaxPhysicalAtk":220,"adjMinMagicAtk":128,"adjMaxMagicAtk":230,"adjMinPhysicalArmor":86,"adjMaxPhysicalArmor":130,"adjMinMagicArmor":86,"adjMaxMagicArmor":130,"adjHit":10,"adjDodge":10})
+        "propList": _tools.RODict({"adjFullHp":165,"adjMinPhysicalAtk":254,"adjMaxPhysicalAtk":254,"adjMinMagicAtk":254,"adjMaxMagicAtk":254,"adjMinPhysicalArmor":178,"adjMaxPhysicalArmor":178,"adjMinMagicArmor":178,"adjMaxMagicArmor":178,"adjHit":10,"adjDodge":11,"adjRealDmg":20,"adjRealDmgDef":20,"adjFinalDmg":0.005,"adjFinalDmgAnti":0.005,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000021: _tools.RODict({
         "propID": 51000021,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":500,"adjMinPhysicalAtk":109,"adjMaxPhysicalAtk":240,"adjMinMagicAtk":130,"adjMaxMagicAtk":250,"adjMinPhysicalArmor":93,"adjMaxPhysicalArmor":140,"adjMinMagicArmor":93,"adjMaxMagicArmor":140,"adjHit":11,"adjDodge":11,"adjMortal":0.003,"adjAntiMortal":0.003})
+        "propList": _tools.RODict({"adjFullHp":172,"adjMinPhysicalAtk":259,"adjMaxPhysicalAtk":259,"adjMinMagicAtk":259,"adjMaxMagicAtk":259,"adjMinPhysicalArmor":180,"adjMaxPhysicalArmor":180,"adjMinMagicArmor":180,"adjMaxMagicArmor":180,"adjHit":11,"adjDodge":12,"adjRealDmg":21,"adjRealDmgDef":21,"adjFinalDmg":0.005,"adjFinalDmgAnti":0.005,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000022: _tools.RODict({
         "propID": 51000022,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":520,"adjMinPhysicalAtk":118,"adjMaxPhysicalAtk":260,"adjMinMagicAtk":131,"adjMaxMagicAtk":270,"adjMinPhysicalArmor":100,"adjMaxPhysicalArmor":150,"adjMinMagicArmor":100,"adjMaxMagicArmor":150,"adjHit":11,"adjDodge":11,"adjMortal":0.003,"adjAntiMortal":0.003})
+        "propList": _tools.RODict({"adjFullHp":174,"adjMinPhysicalAtk":264,"adjMaxPhysicalAtk":264,"adjMinMagicAtk":264,"adjMaxMagicAtk":264,"adjMinPhysicalArmor":184,"adjMaxPhysicalArmor":184,"adjMinMagicArmor":184,"adjMaxMagicArmor":184,"adjHit":11,"adjDodge":12,"adjRealDmg":22,"adjRealDmgDef":22,"adjFinalDmg":0.006,"adjFinalDmgAnti":0.006,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000023: _tools.RODict({
         "propID": 51000023,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":540,"adjMinPhysicalAtk":127,"adjMaxPhysicalAtk":280,"adjMinMagicAtk":142,"adjMaxMagicAtk":290,"adjMinPhysicalArmor":113,"adjMaxPhysicalArmor":170,"adjMinMagicArmor":113,"adjMaxMagicArmor":170,"adjHit":12,"adjDodge":12,"adjMortal":0.006,"adjAntiMortal":0.006})
+        "propList": _tools.RODict({"adjFullHp":179,"adjMinPhysicalAtk":267,"adjMaxPhysicalAtk":267,"adjMinMagicAtk":267,"adjMaxMagicAtk":267,"adjMinPhysicalArmor":185,"adjMaxPhysicalArmor":185,"adjMinMagicArmor":185,"adjMaxMagicArmor":185,"adjHit":12,"adjDodge":13,"adjRealDmg":23,"adjRealDmgDef":23,"adjFinalDmg":0.006,"adjFinalDmgAnti":0.006,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000024: _tools.RODict({
         "propID": 51000024,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":560,"adjMinPhysicalAtk":136,"adjMaxPhysicalAtk":300,"adjMinMagicAtk":144,"adjMaxMagicAtk":310,"adjMinPhysicalArmor":126,"adjMaxPhysicalArmor":190,"adjMinMagicArmor":126,"adjMaxMagicArmor":190,"adjHit":12,"adjDodge":12,"adjMortal":0.006,"adjAntiMortal":0.006})
+        "propList": _tools.RODict({"adjFullHp":187,"adjMinPhysicalAtk":274,"adjMaxPhysicalAtk":274,"adjMinMagicAtk":274,"adjMaxMagicAtk":274,"adjMinPhysicalArmor":190,"adjMaxPhysicalArmor":190,"adjMinMagicArmor":190,"adjMaxMagicArmor":190,"adjHit":12,"adjDodge":13,"adjRealDmg":24,"adjRealDmgDef":24,"adjFinalDmg":0.007,"adjFinalDmgAnti":0.007,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000025: _tools.RODict({
         "propID": 51000025,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":579,"adjMinPhysicalAtk":157,"adjMaxPhysicalAtk":345,"adjMinMagicAtk":157,"adjMaxMagicAtk":345,"adjMinPhysicalArmor":146,"adjMaxPhysicalArmor":219,"adjMinMagicArmor":146,"adjMaxMagicArmor":219,"adjHit":15,"adjDodge":15,"adjFatal":1,"adjAntiFatal":1,"adjMortal":0.009,"adjAntiMortal":0.009})
+        "propList": _tools.RODict({"adjFullHp":274,"adjMinPhysicalAtk":332,"adjMaxPhysicalAtk":332,"adjMinMagicAtk":332,"adjMaxMagicAtk":332,"adjMinPhysicalArmor":193,"adjMaxPhysicalArmor":193,"adjMinMagicArmor":193,"adjMaxMagicArmor":193,"adjHit":13,"adjDodge":15,"adjRealDmg":25,"adjRealDmgDef":25,"adjFinalDmg":0.007,"adjFinalDmgAnti":0.007,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000026: _tools.RODict({
         "propID": 51000026,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":680,"adjMinPhysicalAtk":163,"adjMaxPhysicalAtk":359,"adjMinMagicAtk":163,"adjMaxMagicAtk":359,"adjMinPhysicalArmor":150,"adjMaxPhysicalArmor":226,"adjMinMagicArmor":150,"adjMaxMagicArmor":226,"adjHit":20,"adjDodge":20,"adjFatal":7,"adjAntiFatal":7,"adjMortal":0.009,"adjAntiMortal":0.009})
+        "propList": _tools.RODict({"adjFullHp":293,"adjMinPhysicalAtk":336,"adjMaxPhysicalAtk":336,"adjMinMagicAtk":336,"adjMaxMagicAtk":336,"adjMinPhysicalArmor":198,"adjMaxPhysicalArmor":198,"adjMinMagicArmor":198,"adjMaxMagicArmor":198,"adjHit":13,"adjDodge":15,"adjFatal":3,"adjIgnoreArmor":0.021,"adjRealDmg":26,"adjRealDmgDef":26,"adjFinalDmg":0.029,"adjFinalDmgAnti":0.008,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000027: _tools.RODict({
         "propID": 51000027,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":699,"adjMinPhysicalAtk":164,"adjMaxPhysicalAtk":361,"adjMinMagicAtk":164,"adjMaxMagicAtk":361,"adjMinPhysicalArmor":151,"adjMaxPhysicalArmor":227,"adjMinMagicArmor":151,"adjMaxMagicArmor":227,"adjHit":21,"adjDodge":21,"adjFatal":7,"adjAntiFatal":7,"adjMortal":0.012,"adjAntiMortal":0.012})
+        "propList": _tools.RODict({"adjFullHp":301,"adjMinPhysicalAtk":341,"adjMaxPhysicalAtk":341,"adjMinMagicAtk":341,"adjMaxMagicAtk":341,"adjMinPhysicalArmor":200,"adjMaxPhysicalArmor":200,"adjMinMagicArmor":200,"adjMaxMagicArmor":200,"adjHit":14,"adjDodge":16,"adjFatal":3,"adjIgnoreArmor":0.021,"adjRealDmg":27,"adjRealDmgDef":27,"adjFinalDmg":0.029,"adjFinalDmgAnti":0.008,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000028: _tools.RODict({
         "propID": 51000028,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":795,"adjMinPhysicalAtk":165,"adjMaxPhysicalAtk":364,"adjMinMagicAtk":165,"adjMaxMagicAtk":364,"adjMinPhysicalArmor":152,"adjMaxPhysicalArmor":228,"adjMinMagicArmor":152,"adjMaxMagicArmor":228,"adjHit":21,"adjDodge":21,"adjFatal":7,"adjAntiFatal":7,"adjMortal":0.012,"adjAntiMortal":0.012})
+        "propList": _tools.RODict({"adjFullHp":310,"adjMinPhysicalAtk":348,"adjMaxPhysicalAtk":348,"adjMinMagicAtk":348,"adjMaxMagicAtk":348,"adjMinPhysicalArmor":202,"adjMaxPhysicalArmor":202,"adjMinMagicArmor":202,"adjMaxMagicArmor":202,"adjHit":14,"adjDodge":16,"adjFatal":3,"adjIgnoreArmor":0.021,"adjRealDmg":28,"adjRealDmgDef":28,"adjFinalDmg":0.03,"adjFinalDmgAnti":0.009,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000029: _tools.RODict({
         "propID": 51000029,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":811,"adjMinPhysicalAtk":166,"adjMaxPhysicalAtk":366,"adjMinMagicAtk":166,"adjMaxMagicAtk":366,"adjMinPhysicalArmor":152,"adjMaxPhysicalArmor":229,"adjMinMagicArmor":152,"adjMaxMagicArmor":229,"adjHit":22,"adjDodge":22,"adjFatal":7,"adjAntiFatal":7,"adjMortal":0.015,"adjAntiMortal":0.015})
+        "propList": _tools.RODict({"adjFullHp":315,"adjMinPhysicalAtk":350,"adjMaxPhysicalAtk":350,"adjMinMagicAtk":350,"adjMaxMagicAtk":350,"adjMinPhysicalArmor":203,"adjMaxPhysicalArmor":203,"adjMinMagicArmor":203,"adjMaxMagicArmor":203,"adjHit":15,"adjDodge":17,"adjFatal":3,"adjIgnoreArmor":0.021,"adjRealDmg":29,"adjRealDmgDef":29,"adjFinalDmg":0.03,"adjFinalDmgAnti":0.009,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000030: _tools.RODict({
         "propID": 51000030,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":914,"adjMinPhysicalAtk":183,"adjMaxPhysicalAtk":402,"adjMinMagicAtk":183,"adjMaxMagicAtk":402,"adjMinPhysicalArmor":168,"adjMaxPhysicalArmor":252,"adjMinMagicArmor":168,"adjMaxMagicArmor":252,"adjHit":22,"adjDodge":22,"adjFatal":7,"adjAntiFatal":7,"adjMortal":0.015,"adjAntiMortal":0.015})
+        "propList": _tools.RODict({"adjFullHp":433,"adjMinPhysicalAtk":438,"adjMaxPhysicalAtk":438,"adjMinMagicAtk":438,"adjMaxMagicAtk":438,"adjMinPhysicalArmor":233,"adjMaxPhysicalArmor":233,"adjMinMagicArmor":233,"adjMaxMagicArmor":233,"adjHit":29,"adjDodge":18,"adjFatal":3,"adjIgnoreArmor":0.041,"adjRealDmg":30,"adjRealDmgDef":30,"adjFinalDmg":0.051,"adjFinalDmgAnti":0.01,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000031: _tools.RODict({
         "propID": 51000031,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":966,"adjMinPhysicalAtk":184,"adjMaxPhysicalAtk":406,"adjMinMagicAtk":184,"adjMaxMagicAtk":406,"adjMinPhysicalArmor":169,"adjMaxPhysicalArmor":254,"adjMinMagicArmor":169,"adjMaxMagicArmor":254,"adjHit":23,"adjDodge":23,"adjFatal":10,"adjAntiFatal":7,"adjMortal":0.018,"adjAntiMortal":0.018})
+        "propList": _tools.RODict({"adjFullHp":444,"adjMinPhysicalAtk":446,"adjMaxPhysicalAtk":446,"adjMinMagicAtk":446,"adjMaxMagicAtk":446,"adjMinPhysicalArmor":242,"adjMaxPhysicalArmor":242,"adjMinMagicArmor":242,"adjMaxMagicArmor":242,"adjHit":29,"adjDodge":19,"adjFatal":4,"adjAntiFatal":1,"adjIgnoreArmor":0.0471,"adjMortal":0.01,"adjRealDmg":31,"adjRealDmgDef":31,"adjFinalDmg":0.0566,"adjFinalDmgAnti":0.0105,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000032: _tools.RODict({
         "propID": 51000032,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":972,"adjMinPhysicalAtk":185,"adjMaxPhysicalAtk":407,"adjMinMagicAtk":185,"adjMaxMagicAtk":407,"adjMinPhysicalArmor":170,"adjMaxPhysicalArmor":255,"adjMinMagicArmor":170,"adjMaxMagicArmor":255,"adjHit":23,"adjDodge":23,"adjFatal":10,"adjAntiFatal":7,"adjMortal":0.018,"adjAntiMortal":0.018})
+        "propList": _tools.RODict({"adjFullHp":458,"adjMinPhysicalAtk":455,"adjMaxPhysicalAtk":455,"adjMinMagicAtk":455,"adjMaxMagicAtk":455,"adjMinPhysicalArmor":250,"adjMaxPhysicalArmor":250,"adjMinMagicArmor":250,"adjMaxMagicArmor":250,"adjHit":30,"adjDodge":20,"adjFatal":6,"adjAntiFatal":3,"adjIgnoreArmor":0.0532,"adjMortal":0.02,"adjRealDmg":32,"adjRealDmgDef":32,"adjFinalDmg":0.0622,"adjFinalDmgAnti":0.011,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000033: _tools.RODict({
         "propID": 51000033,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1215,"adjMinPhysicalAtk":225,"adjMaxPhysicalAtk":496,"adjMinMagicAtk":225,"adjMaxMagicAtk":496,"adjMinPhysicalArmor":206,"adjMaxPhysicalArmor":310,"adjMinMagicArmor":206,"adjMaxMagicArmor":310,"adjHit":38,"adjDodge":38,"adjFatal":24,"adjAntiFatal":21,"adjMortal":0.121,"adjAntiMortal":0.021})
+        "propList": _tools.RODict({"adjFullHp":472,"adjMinPhysicalAtk":464,"adjMaxPhysicalAtk":464,"adjMinMagicAtk":464,"adjMaxMagicAtk":464,"adjMinPhysicalArmor":259,"adjMaxPhysicalArmor":259,"adjMinMagicArmor":259,"adjMaxMagicArmor":259,"adjHit":31,"adjDodge":21,"adjFatal":8,"adjAntiFatal":4,"adjIgnoreArmor":0.0593,"adjMortal":0.03,"adjRealDmg":33,"adjRealDmgDef":33,"adjFinalDmg":0.0678,"adjFinalDmgAnti":0.0115,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000034: _tools.RODict({
         "propID": 51000034,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1221,"adjMinPhysicalAtk":226,"adjMaxPhysicalAtk":498,"adjMinMagicAtk":226,"adjMaxMagicAtk":498,"adjMinPhysicalArmor":207,"adjMaxPhysicalArmor":311,"adjMinMagicArmor":207,"adjMaxMagicArmor":311,"adjHit":38,"adjDodge":38,"adjFatal":24,"adjAntiFatal":21,"adjMortal":0.121,"adjAntiMortal":0.021})
+        "propList": _tools.RODict({"adjFullHp":487,"adjMinPhysicalAtk":472,"adjMaxPhysicalAtk":472,"adjMinMagicAtk":472,"adjMaxMagicAtk":472,"adjMinPhysicalArmor":267,"adjMaxPhysicalArmor":267,"adjMinMagicArmor":267,"adjMaxMagicArmor":267,"adjHit":31,"adjDodge":23,"adjFatal":10,"adjAntiFatal":6,"adjIgnoreArmor":0.0654,"adjMortal":0.04,"adjRealDmg":34,"adjRealDmgDef":34,"adjFinalDmg":0.0734,"adjFinalDmgAnti":0.012,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000035: _tools.RODict({
         "propID": 51000035,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1361,"adjMinPhysicalAtk":235,"adjMaxPhysicalAtk":517,"adjMinMagicAtk":235,"adjMaxMagicAtk":517,"adjMinPhysicalArmor":212,"adjMaxPhysicalArmor":318,"adjMinMagicArmor":212,"adjMaxMagicArmor":318,"adjHit":41,"adjDodge":41,"adjFatal":26,"adjAntiFatal":22,"adjMortal":0.124,"adjAntiMortal":0.024})
+        "propList": _tools.RODict({"adjFullHp":500,"adjMinPhysicalAtk":481,"adjMaxPhysicalAtk":481,"adjMinMagicAtk":481,"adjMaxMagicAtk":481,"adjMinPhysicalArmor":276,"adjMaxPhysicalArmor":276,"adjMinMagicArmor":276,"adjMaxMagicArmor":276,"adjHit":32,"adjDodge":24,"adjFatal":12,"adjAntiFatal":7,"adjIgnoreArmor":0.0715,"adjMortal":0.05,"adjRealDmg":35,"adjRealDmgDef":35,"adjFinalDmg":0.079,"adjFinalDmgAnti":0.0125,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000036: _tools.RODict({
         "propID": 51000036,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1365,"adjMinPhysicalAtk":236,"adjMaxPhysicalAtk":520,"adjMinMagicAtk":236,"adjMaxMagicAtk":520,"adjMinPhysicalArmor":213,"adjMaxPhysicalArmor":320,"adjMinMagicArmor":213,"adjMaxMagicArmor":320,"adjHit":41,"adjDodge":41,"adjFatal":26,"adjAntiFatal":22,"adjMortal":0.124,"adjAntiMortal":0.024})
+        "propList": _tools.RODict({"adjFullHp":516,"adjMinPhysicalAtk":489,"adjMaxPhysicalAtk":489,"adjMinMagicAtk":489,"adjMaxMagicAtk":489,"adjMinPhysicalArmor":284,"adjMaxPhysicalArmor":284,"adjMinMagicArmor":284,"adjMaxMagicArmor":284,"adjHit":33,"adjDodge":25,"adjFatal":13,"adjAntiFatal":9,"adjIgnoreArmor":0.0776,"adjMortal":0.06,"adjRealDmg":36,"adjRealDmgDef":36,"adjFinalDmg":0.0846,"adjFinalDmgAnti":0.013,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000037: _tools.RODict({
         "propID": 51000037,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1398,"adjMinPhysicalAtk":242,"adjMaxPhysicalAtk":532,"adjMinMagicAtk":242,"adjMaxMagicAtk":532,"adjMinPhysicalArmor":218,"adjMaxPhysicalArmor":328,"adjMinMagicArmor":218,"adjMaxMagicArmor":328,"adjHit":42,"adjDodge":43,"adjFatal":26,"adjAntiFatal":23,"adjMortal":0.127,"adjAntiMortal":0.027})
+        "propList": _tools.RODict({"adjFullHp":532,"adjMinPhysicalAtk":498,"adjMaxPhysicalAtk":498,"adjMinMagicAtk":498,"adjMaxMagicAtk":498,"adjMinPhysicalArmor":293,"adjMaxPhysicalArmor":293,"adjMinMagicArmor":293,"adjMaxMagicArmor":293,"adjHit":33,"adjDodge":27,"adjFatal":15,"adjAntiFatal":10,"adjIgnoreArmor":0.0837,"adjMortal":0.07,"adjRealDmg":37,"adjRealDmgDef":37,"adjFinalDmg":0.0902,"adjFinalDmgAnti":0.0135,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000038: _tools.RODict({
         "propID": 51000038,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1405,"adjMinPhysicalAtk":243,"adjMaxPhysicalAtk":535,"adjMinMagicAtk":243,"adjMaxMagicAtk":535,"adjMinPhysicalArmor":219,"adjMaxPhysicalArmor":329,"adjMinMagicArmor":219,"adjMaxMagicArmor":329,"adjHit":42,"adjDodge":43,"adjFatal":26,"adjAntiFatal":23,"adjMortal":0.127,"adjAntiMortal":0.027})
+        "propList": _tools.RODict({"adjFullHp":549,"adjMinPhysicalAtk":507,"adjMaxPhysicalAtk":507,"adjMinMagicAtk":507,"adjMaxMagicAtk":507,"adjMinPhysicalArmor":301,"adjMaxPhysicalArmor":301,"adjMinMagicArmor":301,"adjMaxMagicArmor":301,"adjHit":34,"adjDodge":28,"adjFatal":17,"adjAntiFatal":12,"adjIgnoreArmor":0.0898,"adjMortal":0.08,"adjRealDmg":38,"adjRealDmgDef":38,"adjFinalDmg":0.0958,"adjFinalDmgAnti":0.014,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000039: _tools.RODict({
         "propID": 51000039,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1515,"adjMinPhysicalAtk":255,"adjMaxPhysicalAtk":561,"adjMinMagicAtk":255,"adjMaxMagicAtk":561,"adjMinPhysicalArmor":228,"adjMaxPhysicalArmor":342,"adjMinMagicArmor":228,"adjMaxMagicArmor":342,"adjHit":45,"adjDodge":46,"adjFatal":26,"adjAntiFatal":24,"adjMortal":0.13,"adjAntiMortal":0.03})
+        "propList": _tools.RODict({"adjFullHp":567,"adjMinPhysicalAtk":515,"adjMaxPhysicalAtk":515,"adjMinMagicAtk":515,"adjMaxMagicAtk":515,"adjMinPhysicalArmor":310,"adjMaxPhysicalArmor":310,"adjMinMagicArmor":310,"adjMaxMagicArmor":310,"adjHit":35,"adjDodge":29,"adjFatal":19,"adjAntiFatal":13,"adjIgnoreArmor":0.0959,"adjMortal":0.09,"adjRealDmg":39,"adjRealDmgDef":39,"adjFinalDmg":0.1014,"adjFinalDmgAnti":0.0145,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000040: _tools.RODict({
         "propID": 51000040,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1525,"adjMinPhysicalAtk":256,"adjMaxPhysicalAtk":563,"adjMinMagicAtk":256,"adjMaxMagicAtk":563,"adjMinPhysicalArmor":228,"adjMaxPhysicalArmor":343,"adjMinMagicArmor":228,"adjMaxMagicArmor":343,"adjHit":45,"adjDodge":46,"adjFatal":26,"adjAntiFatal":24,"adjMortal":0.13,"adjAntiMortal":0.03})
+        "propList": _tools.RODict({"adjFullHp":583,"adjMinPhysicalAtk":524,"adjMaxPhysicalAtk":524,"adjMinMagicAtk":524,"adjMaxMagicAtk":524,"adjMinPhysicalArmor":318,"adjMaxPhysicalArmor":318,"adjMinMagicArmor":318,"adjMaxMagicArmor":318,"adjHit":35,"adjDodge":31,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.102,"adjMortal":0.1,"adjRealDmg":40,"adjRealDmgDef":40,"adjFinalDmg":0.107,"adjFinalDmgAnti":0.015,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000041: _tools.RODict({
         "propID": 51000041,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1578,"adjMinPhysicalAtk":258,"adjMaxPhysicalAtk":568,"adjMinMagicAtk":258,"adjMaxMagicAtk":568,"adjMinPhysicalArmor":230,"adjMaxPhysicalArmor":345,"adjMinMagicArmor":230,"adjMaxMagicArmor":345,"adjHit":46,"adjDodge":47,"adjFatal":28,"adjAntiFatal":24,"adjMortal":0.133,"adjAntiMortal":0.033})
+        "propList": _tools.RODict({"adjFullHp":601,"adjMinPhysicalAtk":535,"adjMaxPhysicalAtk":535,"adjMinMagicAtk":535,"adjMaxMagicAtk":535,"adjMinPhysicalArmor":326,"adjMaxPhysicalArmor":326,"adjMinMagicArmor":326,"adjMaxMagicArmor":326,"adjHit":36,"adjDodge":31,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.104,"adjMortal":0.1,"adjRealDmg":41,"adjRealDmgDef":41,"adjFinalDmg":0.1095,"adjFinalDmgAnti":0.0155,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000042: _tools.RODict({
         "propID": 51000042,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1587,"adjMinPhysicalAtk":261,"adjMaxPhysicalAtk":576,"adjMinMagicAtk":261,"adjMaxMagicAtk":576,"adjMinPhysicalArmor":233,"adjMaxPhysicalArmor":350,"adjMinMagicArmor":233,"adjMaxMagicArmor":350,"adjHit":46,"adjDodge":47,"adjFatal":28,"adjAntiFatal":24,"adjMortal":0.133,"adjAntiMortal":0.033})
+        "propList": _tools.RODict({"adjFullHp":618,"adjMinPhysicalAtk":546,"adjMaxPhysicalAtk":546,"adjMinMagicAtk":546,"adjMaxMagicAtk":546,"adjMinPhysicalArmor":333,"adjMaxPhysicalArmor":333,"adjMinMagicArmor":333,"adjMaxMagicArmor":333,"adjHit":37,"adjDodge":32,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.106,"adjMortal":0.1,"adjRealDmg":42,"adjRealDmgDef":42,"adjFinalDmg":0.112,"adjFinalDmgAnti":0.016,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000043: _tools.RODict({
         "propID": 51000043,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1608,"adjMinPhysicalAtk":263,"adjMaxPhysicalAtk":579,"adjMinMagicAtk":263,"adjMaxMagicAtk":579,"adjMinPhysicalArmor":234,"adjMaxPhysicalArmor":351,"adjMinMagicArmor":234,"adjMaxMagicArmor":351,"adjHit":47,"adjDodge":48,"adjFatal":28,"adjAntiFatal":24,"adjMortal":0.136,"adjAntiMortal":0.036})
+        "propList": _tools.RODict({"adjFullHp":637,"adjMinPhysicalAtk":558,"adjMaxPhysicalAtk":558,"adjMinMagicAtk":558,"adjMaxMagicAtk":558,"adjMinPhysicalArmor":340,"adjMaxPhysicalArmor":340,"adjMinMagicArmor":340,"adjMaxMagicArmor":340,"adjHit":37,"adjDodge":33,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.108,"adjMortal":0.1,"adjRealDmg":43,"adjRealDmgDef":43,"adjFinalDmg":0.1145,"adjFinalDmgAnti":0.0165,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000044: _tools.RODict({
         "propID": 51000044,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1618,"adjMinPhysicalAtk":263,"adjMaxPhysicalAtk":580,"adjMinMagicAtk":263,"adjMaxMagicAtk":580,"adjMinPhysicalArmor":234,"adjMaxPhysicalArmor":352,"adjMinMagicArmor":234,"adjMaxMagicArmor":352,"adjHit":47,"adjDodge":48,"adjFatal":28,"adjAntiFatal":24,"adjMortal":0.136,"adjAntiMortal":0.036})
+        "propList": _tools.RODict({"adjFullHp":653,"adjMinPhysicalAtk":569,"adjMaxPhysicalAtk":569,"adjMinMagicAtk":569,"adjMaxMagicAtk":569,"adjMinPhysicalArmor":348,"adjMaxPhysicalArmor":348,"adjMinMagicArmor":348,"adjMaxMagicArmor":348,"adjHit":38,"adjDodge":34,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.11,"adjMortal":0.1,"adjRealDmg":44,"adjRealDmgDef":44,"adjFinalDmg":0.117,"adjFinalDmgAnti":0.017,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000045: _tools.RODict({
         "propID": 51000045,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1668,"adjMinPhysicalAtk":270,"adjMaxPhysicalAtk":595,"adjMinMagicAtk":270,"adjMaxMagicAtk":595,"adjMinPhysicalArmor":238,"adjMaxPhysicalArmor":358,"adjMinMagicArmor":238,"adjMaxMagicArmor":358,"adjHit":49,"adjDodge":50,"adjFatal":29,"adjAntiFatal":25,"adjMortal":0.139,"adjAntiMortal":0.039})
+        "propList": _tools.RODict({"adjFullHp":672,"adjMinPhysicalAtk":580,"adjMaxPhysicalAtk":580,"adjMinMagicAtk":580,"adjMaxMagicAtk":580,"adjMinPhysicalArmor":355,"adjMaxPhysicalArmor":355,"adjMinMagicArmor":355,"adjMaxMagicArmor":355,"adjHit":39,"adjDodge":35,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.112,"adjMortal":0.1,"adjRealDmg":45,"adjRealDmgDef":45,"adjFinalDmg":0.1195,"adjFinalDmgAnti":0.0175,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000046: _tools.RODict({
         "propID": 51000046,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1683,"adjMinPhysicalAtk":272,"adjMaxPhysicalAtk":600,"adjMinMagicAtk":272,"adjMaxMagicAtk":600,"adjMinPhysicalArmor":240,"adjMaxPhysicalArmor":360,"adjMinMagicArmor":240,"adjMaxMagicArmor":360,"adjHit":54,"adjDodge":55,"adjFatal":34,"adjAntiFatal":30,"adjMortal":0.149,"adjAntiMortal":0.049})
+        "propList": _tools.RODict({"adjFullHp":691,"adjMinPhysicalAtk":591,"adjMaxPhysicalAtk":591,"adjMinMagicAtk":591,"adjMaxMagicAtk":591,"adjMinPhysicalArmor":363,"adjMaxPhysicalArmor":363,"adjMinMagicArmor":363,"adjMaxMagicArmor":363,"adjHit":39,"adjDodge":35,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.114,"adjMortal":0.1,"adjRealDmg":46,"adjRealDmgDef":46,"adjFinalDmg":0.122,"adjFinalDmgAnti":0.018,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000047: _tools.RODict({
         "propID": 51000047,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1780,"adjMinPhysicalAtk":278,"adjMaxPhysicalAtk":612,"adjMinMagicAtk":278,"adjMaxMagicAtk":612,"adjMinPhysicalArmor":242,"adjMaxPhysicalArmor":364,"adjMinMagicArmor":242,"adjMaxMagicArmor":364,"adjHit":57,"adjDodge":57,"adjFatal":35,"adjAntiFatal":30,"adjMortal":0.152,"adjAntiMortal":0.052})
+        "propList": _tools.RODict({"adjFullHp":710,"adjMinPhysicalAtk":603,"adjMaxPhysicalAtk":603,"adjMinMagicAtk":603,"adjMaxMagicAtk":603,"adjMinPhysicalArmor":370,"adjMaxPhysicalArmor":370,"adjMinMagicArmor":370,"adjMaxMagicArmor":370,"adjHit":40,"adjDodge":36,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.116,"adjMortal":0.1,"adjRealDmg":47,"adjRealDmgDef":47,"adjFinalDmg":0.1245,"adjFinalDmgAnti":0.0185,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000048: _tools.RODict({
         "propID": 51000048,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1857,"adjMinPhysicalAtk":290,"adjMaxPhysicalAtk":638,"adjMinMagicAtk":290,"adjMaxMagicAtk":638,"adjMinPhysicalArmor":250,"adjMaxPhysicalArmor":375,"adjMinMagicArmor":250,"adjMaxMagicArmor":375,"adjHit":59,"adjDodge":59,"adjFatal":36,"adjAntiFatal":31,"adjMortal":0.152,"adjAntiMortal":0.052})
+        "propList": _tools.RODict({"adjFullHp":727,"adjMinPhysicalAtk":614,"adjMaxPhysicalAtk":614,"adjMinMagicAtk":614,"adjMaxMagicAtk":614,"adjMinPhysicalArmor":377,"adjMaxPhysicalArmor":377,"adjMinMagicArmor":377,"adjMaxMagicArmor":377,"adjHit":41,"adjDodge":37,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.118,"adjMortal":0.1,"adjRealDmg":48,"adjRealDmgDef":48,"adjFinalDmg":0.127,"adjFinalDmgAnti":0.019,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000049: _tools.RODict({
         "propID": 51000049,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1883,"adjMinPhysicalAtk":291,"adjMaxPhysicalAtk":640,"adjMinMagicAtk":291,"adjMaxMagicAtk":640,"adjMinPhysicalArmor":250,"adjMaxPhysicalArmor":376,"adjMinMagicArmor":250,"adjMaxMagicArmor":376,"adjHit":60,"adjDodge":60,"adjFatal":36,"adjAntiFatal":31,"adjMortal":0.155,"adjAntiMortal":0.055})
+        "propList": _tools.RODict({"adjFullHp":747,"adjMinPhysicalAtk":625,"adjMaxPhysicalAtk":625,"adjMinMagicAtk":625,"adjMaxMagicAtk":625,"adjMinPhysicalArmor":385,"adjMaxPhysicalArmor":385,"adjMinMagicArmor":385,"adjMaxMagicArmor":385,"adjHit":41,"adjDodge":38,"adjFatal":21,"adjAntiFatal":15,"adjIgnoreArmor":0.12,"adjMortal":0.1,"adjRealDmg":49,"adjRealDmgDef":49,"adjFinalDmg":0.1295,"adjFinalDmgAnti":0.0195,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000050: _tools.RODict({
         "propID": 51000050,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":1885,"adjMinPhysicalAtk":292,"adjMaxPhysicalAtk":643,"adjMinMagicAtk":292,"adjMaxMagicAtk":643,"adjMinPhysicalArmor":252,"adjMaxPhysicalArmor":378,"adjMinMagicArmor":252,"adjMaxMagicArmor":378,"adjHit":60,"adjDodge":60,"adjFatal":36,"adjAntiFatal":31,"adjMortal":0.155,"adjAntiMortal":0.055})
+        "propList": _tools.RODict({"adjFullHp":767,"adjMinPhysicalAtk":637,"adjMaxPhysicalAtk":637,"adjMinMagicAtk":637,"adjMaxMagicAtk":637,"adjMinPhysicalArmor":392,"adjMaxPhysicalArmor":392,"adjMinMagicArmor":392,"adjMaxMagicArmor":392,"adjHit":42,"adjDodge":39,"adjFatal":22,"adjAntiFatal":16,"adjIgnoreArmor":0.122,"adjMortal":0.1,"adjRealDmg":50,"adjRealDmgDef":50,"adjFinalDmg":0.132,"adjFinalDmgAnti":0.02,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000051: _tools.RODict({
         "propID": 51000051,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":2104,"adjMinPhysicalAtk":326,"adjMaxPhysicalAtk":718,"adjMinMagicAtk":326,"adjMaxMagicAtk":718,"adjMinPhysicalArmor":280,"adjMaxPhysicalArmor":420,"adjMinMagicArmor":280,"adjMaxMagicArmor":420,"adjHit":64,"adjDodge":64,"adjFatal":38,"adjAntiFatal":33,"adjMortal":0.158,"adjAntiMortal":0.058})
+        "propList": _tools.RODict({"adjFullHp":798,"adjMinPhysicalAtk":651,"adjMaxPhysicalAtk":651,"adjMinMagicAtk":651,"adjMaxMagicAtk":651,"adjMinPhysicalArmor":401,"adjMaxPhysicalArmor":401,"adjMinMagicArmor":401,"adjMaxMagicArmor":401,"adjHit":43,"adjDodge":39,"adjFatal":22,"adjAntiFatal":16,"adjIgnoreArmor":0.1281,"adjMortal":0.105,"adjRealDmg":51,"adjRealDmgDef":51,"adjFinalDmg":0.1346,"adjFinalDmgAnti":0.0205,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000052: _tools.RODict({
         "propID": 51000052,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":2211,"adjMinPhysicalAtk":339,"adjMaxPhysicalAtk":747,"adjMinMagicAtk":339,"adjMaxMagicAtk":747,"adjMinPhysicalArmor":287,"adjMaxPhysicalArmor":431,"adjMinMagicArmor":287,"adjMaxMagicArmor":431,"adjHit":66,"adjDodge":66,"adjFatal":39,"adjAntiFatal":34,"adjMortal":0.158,"adjAntiMortal":0.058})
+        "propList": _tools.RODict({"adjFullHp":829,"adjMinPhysicalAtk":666,"adjMaxPhysicalAtk":666,"adjMinMagicAtk":666,"adjMaxMagicAtk":666,"adjMinPhysicalArmor":411,"adjMaxPhysicalArmor":411,"adjMinMagicArmor":411,"adjMaxMagicArmor":411,"adjHit":44,"adjDodge":40,"adjFatal":23,"adjAntiFatal":16,"adjIgnoreArmor":0.1342,"adjMortal":0.11,"adjRealDmg":52,"adjRealDmgDef":52,"adjFinalDmg":0.1372,"adjFinalDmgAnti":0.021,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000053: _tools.RODict({
         "propID": 51000053,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":2356,"adjMinPhysicalAtk":363,"adjMaxPhysicalAtk":798,"adjMinMagicAtk":363,"adjMaxMagicAtk":798,"adjMinPhysicalArmor":308,"adjMaxPhysicalArmor":462,"adjMinMagicArmor":308,"adjMaxMagicArmor":462,"adjHit":69,"adjDodge":68,"adjFatal":41,"adjAntiFatal":35,"adjMortal":0.161,"adjAntiMortal":0.061})
+        "propList": _tools.RODict({"adjFullHp":859,"adjMinPhysicalAtk":681,"adjMaxPhysicalAtk":681,"adjMinMagicAtk":681,"adjMaxMagicAtk":681,"adjMinPhysicalArmor":420,"adjMaxPhysicalArmor":420,"adjMinMagicArmor":420,"adjMaxMagicArmor":420,"adjHit":44,"adjDodge":41,"adjFatal":23,"adjAntiFatal":16,"adjIgnoreArmor":0.1403,"adjMortal":0.115,"adjRealDmg":53,"adjRealDmgDef":53,"adjFinalDmg":0.1398,"adjFinalDmgAnti":0.0215,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000054: _tools.RODict({
         "propID": 51000054,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":2397,"adjMinPhysicalAtk":365,"adjMaxPhysicalAtk":804,"adjMinMagicAtk":365,"adjMaxMagicAtk":804,"adjMinPhysicalArmor":308,"adjMaxPhysicalArmor":463,"adjMinMagicArmor":308,"adjMaxMagicArmor":463,"adjHit":69,"adjDodge":68,"adjFatal":41,"adjAntiFatal":35,"adjMortal":0.161,"adjAntiMortal":0.061})
+        "propList": _tools.RODict({"adjFullHp":892,"adjMinPhysicalAtk":696,"adjMaxPhysicalAtk":696,"adjMinMagicAtk":696,"adjMaxMagicAtk":696,"adjMinPhysicalArmor":429,"adjMaxPhysicalArmor":429,"adjMinMagicArmor":429,"adjMaxMagicArmor":429,"adjHit":45,"adjDodge":42,"adjFatal":24,"adjAntiFatal":16,"adjIgnoreArmor":0.1464,"adjMortal":0.12,"adjRealDmg":54,"adjRealDmgDef":54,"adjFinalDmg":0.1424,"adjFinalDmgAnti":0.022,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000055: _tools.RODict({
         "propID": 51000055,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":2493,"adjMinPhysicalAtk":367,"adjMaxPhysicalAtk":807,"adjMinMagicAtk":367,"adjMaxMagicAtk":807,"adjMinPhysicalArmor":309,"adjMaxPhysicalArmor":464,"adjMinMagicArmor":309,"adjMaxMagicArmor":464,"adjHit":70,"adjDodge":69,"adjFatal":41,"adjAntiFatal":35,"adjMortal":0.164,"adjAntiMortal":0.064})
+        "propList": _tools.RODict({"adjFullHp":925,"adjMinPhysicalAtk":711,"adjMaxPhysicalAtk":711,"adjMinMagicAtk":711,"adjMaxMagicAtk":711,"adjMinPhysicalArmor":438,"adjMaxPhysicalArmor":438,"adjMinMagicArmor":438,"adjMaxMagicArmor":438,"adjHit":46,"adjDodge":43,"adjFatal":24,"adjAntiFatal":17,"adjIgnoreArmor":0.1525,"adjMortal":0.125,"adjRealDmg":55,"adjRealDmgDef":55,"adjFinalDmg":0.145,"adjFinalDmgAnti":0.0225,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000056: _tools.RODict({
         "propID": 51000056,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":2562,"adjMinPhysicalAtk":382,"adjMaxPhysicalAtk":842,"adjMinMagicAtk":382,"adjMaxMagicAtk":842,"adjMinPhysicalArmor":319,"adjMaxPhysicalArmor":479,"adjMinMagicArmor":319,"adjMaxMagicArmor":479,"adjHit":72,"adjDodge":72,"adjFatal":42,"adjAntiFatal":37,"adjMortal":0.164,"adjAntiMortal":0.064})
+        "propList": _tools.RODict({"adjFullHp":960,"adjMinPhysicalAtk":726,"adjMaxPhysicalAtk":726,"adjMinMagicAtk":726,"adjMaxMagicAtk":726,"adjMinPhysicalArmor":448,"adjMaxPhysicalArmor":448,"adjMinMagicArmor":448,"adjMaxMagicArmor":448,"adjHit":47,"adjDodge":43,"adjFatal":25,"adjAntiFatal":17,"adjIgnoreArmor":0.1586,"adjMortal":0.13,"adjRealDmg":56,"adjRealDmgDef":56,"adjFinalDmg":0.1476,"adjFinalDmgAnti":0.023,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000057: _tools.RODict({
         "propID": 51000057,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":2728,"adjMinPhysicalAtk":413,"adjMaxPhysicalAtk":908,"adjMinMagicAtk":413,"adjMaxMagicAtk":908,"adjMinPhysicalArmor":347,"adjMaxPhysicalArmor":521,"adjMinMagicArmor":347,"adjMaxMagicArmor":521,"adjHit":75,"adjDodge":74,"adjFatal":44,"adjAntiFatal":39,"adjMortal":0.167,"adjAntiMortal":0.067})
+        "propList": _tools.RODict({"adjFullHp":993,"adjMinPhysicalAtk":741,"adjMaxPhysicalAtk":741,"adjMinMagicAtk":741,"adjMaxMagicAtk":741,"adjMinPhysicalArmor":457,"adjMaxPhysicalArmor":457,"adjMinMagicArmor":457,"adjMaxMagicArmor":457,"adjHit":48,"adjDodge":44,"adjFatal":25,"adjAntiFatal":17,"adjIgnoreArmor":0.1647,"adjMortal":0.135,"adjRealDmg":57,"adjRealDmgDef":57,"adjFinalDmg":0.1502,"adjFinalDmgAnti":0.0235,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000058: _tools.RODict({
         "propID": 51000058,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":2760,"adjMinPhysicalAtk":414,"adjMaxPhysicalAtk":911,"adjMinMagicAtk":414,"adjMaxMagicAtk":911,"adjMinPhysicalArmor":348,"adjMaxPhysicalArmor":522,"adjMinMagicArmor":348,"adjMaxMagicArmor":522,"adjHit":75,"adjDodge":74,"adjFatal":45,"adjAntiFatal":39,"adjMortal":0.167,"adjAntiMortal":0.067})
+        "propList": _tools.RODict({"adjFullHp":1029,"adjMinPhysicalAtk":756,"adjMaxPhysicalAtk":756,"adjMinMagicAtk":756,"adjMaxMagicAtk":756,"adjMinPhysicalArmor":466,"adjMaxPhysicalArmor":466,"adjMinMagicArmor":466,"adjMaxMagicArmor":466,"adjHit":49,"adjDodge":45,"adjFatal":26,"adjAntiFatal":17,"adjIgnoreArmor":0.1708,"adjMortal":0.14,"adjRealDmg":58,"adjRealDmgDef":58,"adjFinalDmg":0.1528,"adjFinalDmgAnti":0.024,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000059: _tools.RODict({
         "propID": 51000059,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":2793,"adjMinPhysicalAtk":416,"adjMaxPhysicalAtk":916,"adjMinMagicAtk":416,"adjMaxMagicAtk":916,"adjMinPhysicalArmor":348,"adjMaxPhysicalArmor":523,"adjMinMagicArmor":348,"adjMaxMagicArmor":523,"adjHit":76,"adjDodge":75,"adjFatal":45,"adjAntiFatal":39,"adjMortal":0.17,"adjAntiMortal":0.07})
+        "propList": _tools.RODict({"adjFullHp":1066,"adjMinPhysicalAtk":771,"adjMaxPhysicalAtk":771,"adjMinMagicAtk":771,"adjMaxMagicAtk":771,"adjMinPhysicalArmor":475,"adjMaxPhysicalArmor":475,"adjMinMagicArmor":475,"adjMaxMagicArmor":475,"adjHit":50,"adjDodge":46,"adjFatal":26,"adjAntiFatal":17,"adjIgnoreArmor":0.1769,"adjMortal":0.145,"adjRealDmg":59,"adjRealDmgDef":59,"adjFinalDmg":0.1554,"adjFinalDmgAnti":0.0245,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000060: _tools.RODict({
         "propID": 51000060,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3303,"adjMinPhysicalAtk":455,"adjMaxPhysicalAtk":1001,"adjMinMagicAtk":455,"adjMaxMagicAtk":1001,"adjMinPhysicalArmor":376,"adjMaxPhysicalArmor":564,"adjMinMagicArmor":376,"adjMaxMagicArmor":564,"adjHit":79,"adjDodge":79,"adjFatal":49,"adjAntiFatal":42,"adjMortal":0.27,"adjAntiMortal":0.07})
+        "propList": _tools.RODict({"adjFullHp":1104,"adjMinPhysicalAtk":786,"adjMaxPhysicalAtk":786,"adjMinMagicAtk":786,"adjMaxMagicAtk":786,"adjMinPhysicalArmor":485,"adjMaxPhysicalArmor":485,"adjMinMagicArmor":485,"adjMaxMagicArmor":485,"adjHit":51,"adjDodge":47,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":60,"adjRealDmgDef":60,"adjFinalDmg":0.158,"adjFinalDmgAnti":0.025,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000061: _tools.RODict({
         "propID": 51000061,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3334,"adjMinPhysicalAtk":457,"adjMaxPhysicalAtk":1005,"adjMinMagicAtk":457,"adjMaxMagicAtk":1005,"adjMinPhysicalArmor":377,"adjMaxPhysicalArmor":566,"adjMinMagicArmor":377,"adjMaxMagicArmor":566,"adjHit":80,"adjDodge":80,"adjFatal":49,"adjAntiFatal":42,"adjMortal":0.273,"adjAntiMortal":0.073})
+        "propList": _tools.RODict({"adjFullHp":1123,"adjMinPhysicalAtk":797,"adjMaxPhysicalAtk":797,"adjMinMagicAtk":797,"adjMaxMagicAtk":797,"adjMinPhysicalArmor":493,"adjMaxPhysicalArmor":493,"adjMinMagicArmor":493,"adjMaxMagicArmor":493,"adjHit":51,"adjDodge":47,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":61,"adjRealDmgDef":61,"adjFinalDmg":0.1585,"adjFinalDmgAnti":0.0255,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000062: _tools.RODict({
         "propID": 51000062,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3344,"adjMinPhysicalAtk":457,"adjMaxPhysicalAtk":1007,"adjMinMagicAtk":457,"adjMaxMagicAtk":1007,"adjMinPhysicalArmor":378,"adjMaxPhysicalArmor":567,"adjMinMagicArmor":378,"adjMaxMagicArmor":567,"adjHit":80,"adjDodge":80,"adjFatal":49,"adjAntiFatal":42,"adjMortal":0.273,"adjAntiMortal":0.073})
+        "propList": _tools.RODict({"adjFullHp":1144,"adjMinPhysicalAtk":809,"adjMaxPhysicalAtk":809,"adjMinMagicAtk":809,"adjMaxMagicAtk":809,"adjMinPhysicalArmor":501,"adjMaxPhysicalArmor":501,"adjMinMagicArmor":501,"adjMaxMagicArmor":501,"adjHit":52,"adjDodge":48,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":62,"adjRealDmgDef":62,"adjFinalDmg":0.159,"adjFinalDmgAnti":0.026,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000063: _tools.RODict({
         "propID": 51000063,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3414,"adjMinPhysicalAtk":464,"adjMaxPhysicalAtk":1021,"adjMinMagicAtk":464,"adjMaxMagicAtk":1021,"adjMinPhysicalArmor":382,"adjMaxPhysicalArmor":573,"adjMinMagicArmor":382,"adjMaxMagicArmor":573,"adjHit":82,"adjDodge":82,"adjFatal":49,"adjAntiFatal":42,"adjMortal":0.276,"adjAntiMortal":0.076})
+        "propList": _tools.RODict({"adjFullHp":1166,"adjMinPhysicalAtk":820,"adjMaxPhysicalAtk":820,"adjMinMagicAtk":820,"adjMaxMagicAtk":820,"adjMinPhysicalArmor":509,"adjMaxPhysicalArmor":509,"adjMinMagicArmor":509,"adjMaxMagicArmor":509,"adjHit":52,"adjDodge":49,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":63,"adjRealDmgDef":63,"adjFinalDmg":0.1595,"adjFinalDmgAnti":0.0265,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000064: _tools.RODict({
         "propID": 51000064,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3520,"adjMinPhysicalAtk":479,"adjMaxPhysicalAtk":1054,"adjMinMagicAtk":479,"adjMaxMagicAtk":1054,"adjMinPhysicalArmor":389,"adjMaxPhysicalArmor":584,"adjMinMagicArmor":389,"adjMaxMagicArmor":584,"adjHit":84,"adjDodge":84,"adjFatal":50,"adjAntiFatal":43,"adjMortal":0.276,"adjAntiMortal":0.076})
+        "propList": _tools.RODict({"adjFullHp":1188,"adjMinPhysicalAtk":832,"adjMaxPhysicalAtk":832,"adjMinMagicAtk":832,"adjMaxMagicAtk":832,"adjMinPhysicalArmor":517,"adjMaxPhysicalArmor":517,"adjMinMagicArmor":517,"adjMaxMagicArmor":517,"adjHit":53,"adjDodge":50,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":64,"adjRealDmgDef":64,"adjFinalDmg":0.16,"adjFinalDmgAnti":0.027,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000065: _tools.RODict({
         "propID": 51000065,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3556,"adjMinPhysicalAtk":482,"adjMaxPhysicalAtk":1060,"adjMinMagicAtk":482,"adjMaxMagicAtk":1060,"adjMinPhysicalArmor":390,"adjMaxPhysicalArmor":585,"adjMinMagicArmor":390,"adjMaxMagicArmor":585,"adjHit":85,"adjDodge":85,"adjFatal":50,"adjAntiFatal":43,"adjMortal":0.279,"adjAntiMortal":0.079})
+        "propList": _tools.RODict({"adjFullHp":1210,"adjMinPhysicalAtk":843,"adjMaxPhysicalAtk":843,"adjMinMagicAtk":843,"adjMaxMagicAtk":843,"adjMinPhysicalArmor":525,"adjMaxPhysicalArmor":525,"adjMinMagicArmor":525,"adjMaxMagicArmor":525,"adjHit":53,"adjDodge":51,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":65,"adjRealDmgDef":65,"adjFinalDmg":0.1605,"adjFinalDmgAnti":0.0275,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000066: _tools.RODict({
         "propID": 51000066,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3562,"adjMinPhysicalAtk":483,"adjMaxPhysicalAtk":1064,"adjMinMagicAtk":483,"adjMaxMagicAtk":1064,"adjMinPhysicalArmor":391,"adjMaxPhysicalArmor":587,"adjMinMagicArmor":391,"adjMaxMagicArmor":587,"adjHit":85,"adjDodge":85,"adjFatal":50,"adjAntiFatal":43,"adjMortal":0.279,"adjAntiMortal":0.079})
+        "propList": _tools.RODict({"adjFullHp":1230,"adjMinPhysicalAtk":854,"adjMaxPhysicalAtk":854,"adjMinMagicAtk":854,"adjMaxMagicAtk":854,"adjMinPhysicalArmor":533,"adjMaxPhysicalArmor":533,"adjMinMagicArmor":533,"adjMaxMagicArmor":533,"adjHit":54,"adjDodge":51,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":66,"adjRealDmgDef":66,"adjFinalDmg":0.161,"adjFinalDmgAnti":0.028,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000067: _tools.RODict({
         "propID": 51000067,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3599,"adjMinPhysicalAtk":484,"adjMaxPhysicalAtk":1066,"adjMinMagicAtk":484,"adjMaxMagicAtk":1066,"adjMinPhysicalArmor":392,"adjMaxPhysicalArmor":588,"adjMinMagicArmor":392,"adjMaxMagicArmor":588,"adjHit":86,"adjDodge":86,"adjFatal":50,"adjAntiFatal":43,"adjMortal":0.282,"adjAntiMortal":0.082})
+        "propList": _tools.RODict({"adjFullHp":1252,"adjMinPhysicalAtk":866,"adjMaxPhysicalAtk":866,"adjMinMagicAtk":866,"adjMaxMagicAtk":866,"adjMinPhysicalArmor":541,"adjMaxPhysicalArmor":541,"adjMinMagicArmor":541,"adjMaxMagicArmor":541,"adjHit":54,"adjDodge":52,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":67,"adjRealDmgDef":67,"adjFinalDmg":0.1615,"adjFinalDmgAnti":0.0285,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000068: _tools.RODict({
         "propID": 51000068,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3612,"adjMinPhysicalAtk":485,"adjMaxPhysicalAtk":1069,"adjMinMagicAtk":485,"adjMaxMagicAtk":1069,"adjMinPhysicalArmor":392,"adjMaxPhysicalArmor":589,"adjMinMagicArmor":392,"adjMaxMagicArmor":589,"adjHit":86,"adjDodge":86,"adjFatal":50,"adjAntiFatal":43,"adjMortal":0.282,"adjAntiMortal":0.082})
+        "propList": _tools.RODict({"adjFullHp":1275,"adjMinPhysicalAtk":877,"adjMaxPhysicalAtk":877,"adjMinMagicAtk":877,"adjMaxMagicAtk":877,"adjMinPhysicalArmor":549,"adjMaxPhysicalArmor":549,"adjMinMagicArmor":549,"adjMaxMagicArmor":549,"adjHit":55,"adjDodge":53,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":68,"adjRealDmgDef":68,"adjFinalDmg":0.162,"adjFinalDmgAnti":0.029,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000069: _tools.RODict({
         "propID": 51000069,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3678,"adjMinPhysicalAtk":492,"adjMaxPhysicalAtk":1083,"adjMinMagicAtk":492,"adjMaxMagicAtk":1083,"adjMinPhysicalArmor":397,"adjMaxPhysicalArmor":596,"adjMinMagicArmor":397,"adjMaxMagicArmor":596,"adjHit":87,"adjDodge":87,"adjFatal":51,"adjAntiFatal":44,"adjMortal":0.285,"adjAntiMortal":0.085})
+        "propList": _tools.RODict({"adjFullHp":1298,"adjMinPhysicalAtk":889,"adjMaxPhysicalAtk":889,"adjMinMagicAtk":889,"adjMaxMagicAtk":889,"adjMinPhysicalArmor":557,"adjMaxPhysicalArmor":557,"adjMinMagicArmor":557,"adjMaxMagicArmor":557,"adjHit":56,"adjDodge":54,"adjFatal":27,"adjAntiFatal":18,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":69,"adjRealDmgDef":69,"adjFinalDmg":0.1625,"adjFinalDmgAnti":0.0295,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     51000070: _tools.RODict({
         "propID": 51000070,
         "type": 1,
-        "propList": _tools.RODict({"adjFullHp":3688,"adjMinPhysicalAtk":493,"adjMaxPhysicalAtk":1085,"adjMinMagicAtk":493,"adjMaxMagicAtk":1085,"adjMinPhysicalArmor":398,"adjMaxPhysicalArmor":597,"adjMinMagicArmor":398,"adjMaxMagicArmor":597,"adjHit":87,"adjDodge":87,"adjFatal":51,"adjAntiFatal":44,"adjMortal":0.285,"adjAntiMortal":0.085})
+        "propList": _tools.RODict({"adjFullHp":1318,"adjMinPhysicalAtk":900,"adjMaxPhysicalAtk":900,"adjMinMagicAtk":900,"adjMaxMagicAtk":900,"adjMinPhysicalArmor":565,"adjMaxPhysicalArmor":565,"adjMinMagicArmor":565,"adjMaxMagicArmor":565,"adjHit":56,"adjDodge":55,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":70,"adjRealDmgDef":70,"adjFinalDmg":0.163,"adjFinalDmgAnti":0.03,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000071: _tools.RODict({
+        "propID": 51000071,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1350,"adjMinPhysicalAtk":913,"adjMaxPhysicalAtk":913,"adjMinMagicAtk":913,"adjMaxMagicAtk":913,"adjMinPhysicalArmor":574,"adjMaxPhysicalArmor":574,"adjMinMagicArmor":574,"adjMaxMagicArmor":574,"adjHit":57,"adjDodge":55,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":71,"adjRealDmgDef":71,"adjFinalDmg":0.1655,"adjFinalDmgAnti":0.0305,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000072: _tools.RODict({
+        "propID": 51000072,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1383,"adjMinPhysicalAtk":926,"adjMaxPhysicalAtk":926,"adjMinMagicAtk":926,"adjMaxMagicAtk":926,"adjMinPhysicalArmor":583,"adjMaxPhysicalArmor":583,"adjMinMagicArmor":583,"adjMaxMagicArmor":583,"adjHit":57,"adjDodge":56,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":72,"adjRealDmgDef":72,"adjFinalDmg":0.168,"adjFinalDmgAnti":0.031,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000073: _tools.RODict({
+        "propID": 51000073,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1416,"adjMinPhysicalAtk":939,"adjMaxPhysicalAtk":939,"adjMinMagicAtk":939,"adjMaxMagicAtk":939,"adjMinPhysicalArmor":592,"adjMaxPhysicalArmor":592,"adjMinMagicArmor":592,"adjMaxMagicArmor":592,"adjHit":58,"adjDodge":57,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":73,"adjRealDmgDef":73,"adjFinalDmg":0.1705,"adjFinalDmgAnti":0.0315,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000074: _tools.RODict({
+        "propID": 51000074,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1450,"adjMinPhysicalAtk":952,"adjMaxPhysicalAtk":952,"adjMinMagicAtk":952,"adjMaxMagicAtk":952,"adjMinPhysicalArmor":602,"adjMaxPhysicalArmor":602,"adjMinMagicArmor":602,"adjMaxMagicArmor":602,"adjHit":58,"adjDodge":58,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":74,"adjRealDmgDef":74,"adjFinalDmg":0.173,"adjFinalDmgAnti":0.032,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000075: _tools.RODict({
+        "propID": 51000075,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1484,"adjMinPhysicalAtk":965,"adjMaxPhysicalAtk":965,"adjMinMagicAtk":965,"adjMaxMagicAtk":965,"adjMinPhysicalArmor":611,"adjMaxPhysicalArmor":611,"adjMinMagicArmor":611,"adjMaxMagicArmor":611,"adjHit":59,"adjDodge":59,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":75,"adjRealDmgDef":75,"adjFinalDmg":0.1755,"adjFinalDmgAnti":0.0325,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000076: _tools.RODict({
+        "propID": 51000076,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1519,"adjMinPhysicalAtk":978,"adjMaxPhysicalAtk":978,"adjMinMagicAtk":978,"adjMaxMagicAtk":978,"adjMinPhysicalArmor":620,"adjMaxPhysicalArmor":620,"adjMinMagicArmor":620,"adjMaxMagicArmor":620,"adjHit":60,"adjDodge":59,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":76,"adjRealDmgDef":76,"adjFinalDmg":0.178,"adjFinalDmgAnti":0.033,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000077: _tools.RODict({
+        "propID": 51000077,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1554,"adjMinPhysicalAtk":991,"adjMaxPhysicalAtk":991,"adjMinMagicAtk":991,"adjMaxMagicAtk":991,"adjMinPhysicalArmor":629,"adjMaxPhysicalArmor":629,"adjMinMagicArmor":629,"adjMaxMagicArmor":629,"adjHit":60,"adjDodge":60,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":77,"adjRealDmgDef":77,"adjFinalDmg":0.1805,"adjFinalDmgAnti":0.0335,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000078: _tools.RODict({
+        "propID": 51000078,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1590,"adjMinPhysicalAtk":1005,"adjMaxPhysicalAtk":1005,"adjMinMagicAtk":1005,"adjMaxMagicAtk":1005,"adjMinPhysicalArmor":638,"adjMaxPhysicalArmor":638,"adjMinMagicArmor":638,"adjMaxMagicArmor":638,"adjHit":61,"adjDodge":61,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":78,"adjRealDmgDef":78,"adjFinalDmg":0.183,"adjFinalDmgAnti":0.034,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000079: _tools.RODict({
+        "propID": 51000079,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1627,"adjMinPhysicalAtk":1018,"adjMaxPhysicalAtk":1018,"adjMinMagicAtk":1018,"adjMaxMagicAtk":1018,"adjMinPhysicalArmor":647,"adjMaxPhysicalArmor":647,"adjMinMagicArmor":647,"adjMaxMagicArmor":647,"adjHit":61,"adjDodge":62,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":79,"adjRealDmgDef":79,"adjFinalDmg":0.1855,"adjFinalDmgAnti":0.0345,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000080: _tools.RODict({
+        "propID": 51000080,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1664,"adjMinPhysicalAtk":1031,"adjMaxPhysicalAtk":1031,"adjMinMagicAtk":1031,"adjMaxMagicAtk":1031,"adjMinPhysicalArmor":657,"adjMaxPhysicalArmor":657,"adjMinMagicArmor":657,"adjMaxMagicArmor":657,"adjHit":62,"adjDodge":63,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.183,"adjMortal":0.15,"adjRealDmg":80,"adjRealDmgDef":80,"adjFinalDmg":0.188,"adjFinalDmgAnti":0.035,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000081: _tools.RODict({
+        "propID": 51000081,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1732,"adjMinPhysicalAtk":1054,"adjMaxPhysicalAtk":1054,"adjMinMagicAtk":1054,"adjMaxMagicAtk":1054,"adjMinPhysicalArmor":673,"adjMaxPhysicalArmor":673,"adjMinMagicArmor":673,"adjMaxMagicArmor":673,"adjHit":63,"adjDodge":64,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.187,"adjMortal":0.155,"adjRealDmg":81,"adjRealDmgDef":81,"adjFinalDmg":0.1965,"adjFinalDmgAnti":0.0355,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000082: _tools.RODict({
+        "propID": 51000082,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1803,"adjMinPhysicalAtk":1077,"adjMaxPhysicalAtk":1077,"adjMinMagicAtk":1077,"adjMaxMagicAtk":1077,"adjMinPhysicalArmor":690,"adjMaxPhysicalArmor":690,"adjMinMagicArmor":690,"adjMaxMagicArmor":690,"adjHit":63,"adjDodge":66,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.191,"adjMortal":0.16,"adjRealDmg":82,"adjRealDmgDef":82,"adjFinalDmg":0.205,"adjFinalDmgAnti":0.036,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000083: _tools.RODict({
+        "propID": 51000083,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1876,"adjMinPhysicalAtk":1101,"adjMaxPhysicalAtk":1101,"adjMinMagicAtk":1101,"adjMaxMagicAtk":1101,"adjMinPhysicalArmor":706,"adjMaxPhysicalArmor":706,"adjMinMagicArmor":706,"adjMaxMagicArmor":706,"adjHit":64,"adjDodge":68,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.195,"adjMortal":0.165,"adjRealDmg":83,"adjRealDmgDef":83,"adjFinalDmg":0.2135,"adjFinalDmgAnti":0.0365,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000084: _tools.RODict({
+        "propID": 51000084,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":1951,"adjMinPhysicalAtk":1124,"adjMaxPhysicalAtk":1124,"adjMinMagicAtk":1124,"adjMaxMagicAtk":1124,"adjMinPhysicalArmor":723,"adjMaxPhysicalArmor":723,"adjMinMagicArmor":723,"adjMaxMagicArmor":723,"adjHit":65,"adjDodge":70,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.199,"adjMortal":0.17,"adjRealDmg":84,"adjRealDmgDef":84,"adjFinalDmg":0.222,"adjFinalDmgAnti":0.037,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000085: _tools.RODict({
+        "propID": 51000085,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":2028,"adjMinPhysicalAtk":1148,"adjMaxPhysicalAtk":1148,"adjMinMagicAtk":1148,"adjMaxMagicAtk":1148,"adjMinPhysicalArmor":739,"adjMaxPhysicalArmor":739,"adjMinMagicArmor":739,"adjMaxMagicArmor":739,"adjHit":65,"adjDodge":72,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.203,"adjMortal":0.175,"adjRealDmg":85,"adjRealDmgDef":85,"adjFinalDmg":0.2305,"adjFinalDmgAnti":0.0375,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000086: _tools.RODict({
+        "propID": 51000086,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":2107,"adjMinPhysicalAtk":1171,"adjMaxPhysicalAtk":1171,"adjMinMagicAtk":1171,"adjMaxMagicAtk":1171,"adjMinPhysicalArmor":756,"adjMaxPhysicalArmor":756,"adjMinMagicArmor":756,"adjMaxMagicArmor":756,"adjHit":66,"adjDodge":74,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.207,"adjMortal":0.18,"adjRealDmg":86,"adjRealDmgDef":86,"adjFinalDmg":0.239,"adjFinalDmgAnti":0.038,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000087: _tools.RODict({
+        "propID": 51000087,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":2188,"adjMinPhysicalAtk":1194,"adjMaxPhysicalAtk":1194,"adjMinMagicAtk":1194,"adjMaxMagicAtk":1194,"adjMinPhysicalArmor":772,"adjMaxPhysicalArmor":772,"adjMinMagicArmor":772,"adjMaxMagicArmor":772,"adjHit":67,"adjDodge":76,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.211,"adjMortal":0.185,"adjRealDmg":87,"adjRealDmgDef":87,"adjFinalDmg":0.2475,"adjFinalDmgAnti":0.0385,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000088: _tools.RODict({
+        "propID": 51000088,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":2272,"adjMinPhysicalAtk":1218,"adjMaxPhysicalAtk":1218,"adjMinMagicAtk":1218,"adjMaxMagicAtk":1218,"adjMinPhysicalArmor":789,"adjMaxPhysicalArmor":789,"adjMinMagicArmor":789,"adjMaxMagicArmor":789,"adjHit":67,"adjDodge":78,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.215,"adjMortal":0.19,"adjRealDmg":88,"adjRealDmgDef":88,"adjFinalDmg":0.256,"adjFinalDmgAnti":0.039,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000089: _tools.RODict({
+        "propID": 51000089,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":2358,"adjMinPhysicalAtk":1241,"adjMaxPhysicalAtk":1241,"adjMinMagicAtk":1241,"adjMaxMagicAtk":1241,"adjMinPhysicalArmor":805,"adjMaxPhysicalArmor":805,"adjMinMagicArmor":805,"adjMaxMagicArmor":805,"adjHit":68,"adjDodge":80,"adjFatal":28,"adjAntiFatal":19,"adjIgnoreArmor":0.219,"adjMortal":0.195,"adjRealDmg":89,"adjRealDmgDef":89,"adjFinalDmg":0.2645,"adjFinalDmgAnti":0.0395,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
+    }),
+    51000090: _tools.RODict({
+        "propID": 51000090,
+        "type": 1,
+        "propList": _tools.RODict({"adjFullHp":2447,"adjMinPhysicalAtk":1265,"adjMaxPhysicalAtk":1265,"adjMinMagicAtk":1265,"adjMaxMagicAtk":1265,"adjMinPhysicalArmor":822,"adjMaxPhysicalArmor":822,"adjMinMagicArmor":822,"adjMaxMagicArmor":822,"adjHit":69,"adjDodge":82,"adjFatal":29,"adjAntiFatal":20,"adjIgnoreArmor":0.223,"adjMortal":0.2,"adjRealDmg":90,"adjRealDmgDef":90,"adjFinalDmg":0.273,"adjFinalDmgAnti":0.04,"adjStunEnh":15,"adjStunAnti":15,"adjSilentEnh":15,"adjSilentAnti":15,"adjKnockEnh":15,"adjKnockAnti":15,"adjFrozenEnh":15,"adjFrozenAnti":15,"adjSlowEnh":15,"adjSlowAnti":15})
     }),
     52004001: _tools.RODict({
         "propID": 52004001,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":718200})
+        "propList": _tools.RODict({"adjFullHp":2200000,"adjMinPhysicalArmor":350,"adjMaxPhysicalArmor":350,"adjMinMagicArmor":350,"adjMaxMagicArmor":350})
     }),
     52004002: _tools.RODict({
         "propID": 52004002,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":825900})
+        "propList": _tools.RODict({"adjFullHp":3000000,"adjMinPhysicalArmor":430,"adjMaxPhysicalArmor":430,"adjMinMagicArmor":430,"adjMaxMagicArmor":430})
     }),
     52004003: _tools.RODict({
         "propID": 52004003,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":949800})
+        "propList": _tools.RODict({"adjFullHp":4450000,"adjMinPhysicalArmor":550,"adjMaxPhysicalArmor":550,"adjMinMagicArmor":550,"adjMaxMagicArmor":550})
     }),
     52004004: _tools.RODict({
         "propID": 52004004,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1092300})
+        "propList": _tools.RODict({"adjFullHp":6850000,"adjMinPhysicalArmor":760,"adjMaxPhysicalArmor":760,"adjMinMagicArmor":760,"adjMaxMagicArmor":760})
     }),
     52004005: _tools.RODict({
         "propID": 52004005,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1256100})
+        "propList": _tools.RODict({"adjFullHp":8900000,"adjMinPhysicalArmor":900,"adjMaxPhysicalArmor":900,"adjMinMagicArmor":900,"adjMaxMagicArmor":900})
     }),
     52004006: _tools.RODict({
         "propID": 52004006,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1444500})
+        "propList": _tools.RODict({"adjFullHp":1100000,"adjMinPhysicalArmor":320,"adjMaxPhysicalArmor":320,"adjMinMagicArmor":320,"adjMaxMagicArmor":320})
     }),
     52004007: _tools.RODict({
         "propID": 52004007,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1661200})
+        "propList": _tools.RODict({"adjFullHp":1500000,"adjMinPhysicalArmor":390,"adjMaxPhysicalArmor":390,"adjMinMagicArmor":390,"adjMaxMagicArmor":390})
     }),
-    52005001: _tools.RODict({
-        "propID": 52005001,
+    52004008: _tools.RODict({
+        "propID": 52004008,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":247680})
+        "propList": _tools.RODict({"adjFullHp":2200000,"adjMinPhysicalArmor":500,"adjMaxPhysicalArmor":500,"adjMinMagicArmor":500,"adjMaxMagicArmor":500})
     }),
-    52005002: _tools.RODict({
-        "propID": 52005002,
+    52004009: _tools.RODict({
+        "propID": 52004009,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":288000})
+        "propList": _tools.RODict({"adjFullHp":3400000,"adjMinPhysicalArmor":690,"adjMaxPhysicalArmor":690,"adjMinMagicArmor":690,"adjMaxMagicArmor":690})
     }),
-    52005003: _tools.RODict({
-        "propID": 52005003,
+    52004010: _tools.RODict({
+        "propID": 52004010,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":328000})
+        "propList": _tools.RODict({"adjFullHp":4450000,"adjMinPhysicalArmor":820,"adjMaxPhysicalArmor":820,"adjMinMagicArmor":820,"adjMaxMagicArmor":820})
     }),
-    52005004: _tools.RODict({
-        "propID": 52005004,
+    52004011: _tools.RODict({
+        "propID": 52004011,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":368000})
+        "propList": _tools.RODict({"adjFullHp":363600,"adjMinPhysicalArmor":320,"adjMaxPhysicalArmor":320,"adjMinMagicArmor":320,"adjMaxMagicArmor":320})
     }),
-    52005005: _tools.RODict({
-        "propID": 52005005,
+    52004012: _tools.RODict({
+        "propID": 52004012,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":408000})
+        "propList": _tools.RODict({"adjFullHp":498000,"adjMinPhysicalArmor":390,"adjMaxPhysicalArmor":390,"adjMinMagicArmor":390,"adjMaxMagicArmor":390})
     }),
-    52005006: _tools.RODict({
-        "propID": 52005006,
+    52004013: _tools.RODict({
+        "propID": 52004013,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":448000})
+        "propList": _tools.RODict({"adjFullHp":741600,"adjMinPhysicalArmor":500,"adjMaxPhysicalArmor":500,"adjMinMagicArmor":500,"adjMaxMagicArmor":500})
     }),
-    52005007: _tools.RODict({
-        "propID": 52005007,
+    52004014: _tools.RODict({
+        "propID": 52004014,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":488000})
+        "propList": _tools.RODict({"adjFullHp":1138200,"adjMinPhysicalArmor":690,"adjMaxPhysicalArmor":690,"adjMinMagicArmor":690,"adjMaxMagicArmor":690})
     }),
-    52006001: _tools.RODict({
-        "propID": 52006001,
+    52004015: _tools.RODict({
+        "propID": 52004015,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":12384})
+        "propList": _tools.RODict({"adjFullHp":1485000,"adjMinPhysicalArmor":820,"adjMaxPhysicalArmor":820,"adjMinMagicArmor":820,"adjMaxMagicArmor":820})
     }),
-    52006002: _tools.RODict({
-        "propID": 52006002,
+    52004016: _tools.RODict({
+        "propID": 52004016,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":14200})
+        "propList": _tools.RODict({"adjFullHp":181800,"adjMinPhysicalAtk":1600,"adjMaxPhysicalAtk":1600,"adjMinMagicAtk":1600,"adjMaxMagicAtk":1600,"adjMinPhysicalArmor":290,"adjMaxPhysicalArmor":290,"adjMinMagicArmor":290,"adjMaxMagicArmor":290})
     }),
-    52006003: _tools.RODict({
-        "propID": 52006003,
+    52004017: _tools.RODict({
+        "propID": 52004017,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":16300})
+        "propList": _tools.RODict({"adjFullHp":249000,"adjMinPhysicalAtk":1950,"adjMaxPhysicalAtk":1950,"adjMinMagicAtk":1950,"adjMaxMagicAtk":1950,"adjMinPhysicalArmor":350,"adjMaxPhysicalArmor":350,"adjMinMagicArmor":350,"adjMaxMagicArmor":350})
     }),
-    52006004: _tools.RODict({
-        "propID": 52006004,
+    52004018: _tools.RODict({
+        "propID": 52004018,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":18700})
+        "propList": _tools.RODict({"adjFullHp":370800,"adjMinPhysicalAtk":2500,"adjMaxPhysicalAtk":2500,"adjMinMagicAtk":2500,"adjMaxMagicAtk":2500,"adjMinPhysicalArmor":450,"adjMaxPhysicalArmor":450,"adjMinMagicArmor":450,"adjMaxMagicArmor":450})
     }),
-    52006005: _tools.RODict({
-        "propID": 52006005,
+    52004019: _tools.RODict({
+        "propID": 52004019,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":21500})
+        "propList": _tools.RODict({"adjFullHp":569100,"adjMinPhysicalAtk":3300,"adjMaxPhysicalAtk":3300,"adjMinMagicAtk":3300,"adjMaxMagicAtk":3300,"adjMinPhysicalArmor":620,"adjMaxPhysicalArmor":620,"adjMinMagicArmor":620,"adjMaxMagicArmor":620})
     }),
-    52006006: _tools.RODict({
-        "propID": 52006006,
+    52004020: _tools.RODict({
+        "propID": 52004020,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":24700})
+        "propList": _tools.RODict({"adjFullHp":742500,"adjMinPhysicalAtk":3800,"adjMaxPhysicalAtk":3800,"adjMinMagicAtk":3800,"adjMaxMagicAtk":3800,"adjMinPhysicalArmor":740,"adjMaxPhysicalArmor":740,"adjMinMagicArmor":740,"adjMaxMagicArmor":740})
     }),
-    52006007: _tools.RODict({
-        "propID": 52006007,
+    52004021: _tools.RODict({
+        "propID": 52004021,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":28400})
+        "propList": _tools.RODict({"adjFullHp":1100000,"adjMinPhysicalArmor":320,"adjMaxPhysicalArmor":320,"adjMinMagicArmor":320,"adjMaxMagicArmor":320})
     }),
-    52007001: _tools.RODict({
-        "propID": 52007001,
+    52004022: _tools.RODict({
+        "propID": 52004022,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":73000})
+        "propList": _tools.RODict({"adjFullHp":1500000,"adjMinPhysicalArmor":390,"adjMaxPhysicalArmor":390,"adjMinMagicArmor":390,"adjMaxMagicArmor":390})
     }),
-    52007002: _tools.RODict({
-        "propID": 52007002,
+    52004023: _tools.RODict({
+        "propID": 52004023,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":84000})
+        "propList": _tools.RODict({"adjFullHp":2200000,"adjMinPhysicalArmor":500,"adjMaxPhysicalArmor":500,"adjMinMagicArmor":500,"adjMaxMagicArmor":500})
     }),
-    52007003: _tools.RODict({
-        "propID": 52007003,
+    52004024: _tools.RODict({
+        "propID": 52004024,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":96600})
+        "propList": _tools.RODict({"adjFullHp":3400000,"adjMinPhysicalArmor":690,"adjMaxPhysicalArmor":690,"adjMinMagicArmor":690,"adjMaxMagicArmor":690})
     }),
-    52007004: _tools.RODict({
-        "propID": 52007004,
+    52004025: _tools.RODict({
+        "propID": 52004025,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":111100})
+        "propList": _tools.RODict({"adjFullHp":4450000,"adjMinPhysicalArmor":820,"adjMaxPhysicalArmor":820,"adjMinMagicArmor":820,"adjMaxMagicArmor":820})
     }),
-    52007005: _tools.RODict({
-        "propID": 52007005,
+    52004026: _tools.RODict({
+        "propID": 52004026,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":127800})
+        "propList": _tools.RODict({"adjFullHp":1200000,"adjMinPhysicalArmor":350,"adjMaxPhysicalArmor":350,"adjMinMagicArmor":350,"adjMaxMagicArmor":350})
     }),
-    52007006: _tools.RODict({
-        "propID": 52007006,
+    52004027: _tools.RODict({
+        "propID": 52004027,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":147000})
+        "propList": _tools.RODict({"adjFullHp":1650000,"adjMinPhysicalArmor":430,"adjMaxPhysicalArmor":430,"adjMinMagicArmor":430,"adjMaxMagicArmor":430})
     }),
-    52007007: _tools.RODict({
-        "propID": 52007007,
+    52004028: _tools.RODict({
+        "propID": 52004028,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":169100})
+        "propList": _tools.RODict({"adjFullHp":2450000,"adjMinPhysicalArmor":550,"adjMaxPhysicalArmor":550,"adjMinMagicArmor":550,"adjMaxMagicArmor":550})
     }),
-    52008001: _tools.RODict({
-        "propID": 52008001,
+    52004029: _tools.RODict({
+        "propID": 52004029,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2100,"adjMinPhysicalAtk":70,"adjMaxPhysicalAtk":70,"adjMinMagicAtk":70,"adjMaxMagicAtk":70})
+        "propList": _tools.RODict({"adjFullHp":3750000,"adjMinPhysicalArmor":760,"adjMaxPhysicalArmor":760,"adjMinMagicArmor":760,"adjMaxMagicArmor":760})
     }),
-    52008002: _tools.RODict({
-        "propID": 52008002,
+    52004030: _tools.RODict({
+        "propID": 52004030,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2700,"adjMinPhysicalAtk":82,"adjMaxPhysicalAtk":82,"adjMinMagicAtk":82,"adjMaxMagicAtk":82})
-    }),
-    52008003: _tools.RODict({
-        "propID": 52008003,
-        "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3300,"adjMinPhysicalAtk":94,"adjMaxPhysicalAtk":94,"adjMinMagicAtk":94,"adjMaxMagicAtk":94})
-    }),
-    52008004: _tools.RODict({
-        "propID": 52008004,
-        "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3900,"adjMinPhysicalAtk":106,"adjMaxPhysicalAtk":106,"adjMinMagicAtk":106,"adjMaxMagicAtk":106})
-    }),
-    52008005: _tools.RODict({
-        "propID": 52008005,
-        "type": 2,
-        "propList": _tools.RODict({"adjFullHp":4500,"adjMinPhysicalAtk":118,"adjMaxPhysicalAtk":118,"adjMinMagicAtk":118,"adjMaxMagicAtk":118})
-    }),
-    52008006: _tools.RODict({
-        "propID": 52008006,
-        "type": 2,
-        "propList": _tools.RODict({"adjFullHp":5100,"adjMinPhysicalAtk":130,"adjMaxPhysicalAtk":130,"adjMinMagicAtk":130,"adjMaxMagicAtk":130})
-    }),
-    52008007: _tools.RODict({
-        "propID": 52008007,
-        "type": 2,
-        "propList": _tools.RODict({"adjFullHp":5700,"adjMinPhysicalAtk":142,"adjMaxPhysicalAtk":142,"adjMinMagicAtk":142,"adjMaxMagicAtk":142})
+        "propList": _tools.RODict({"adjFullHp":4900000,"adjMinPhysicalArmor":900,"adjMaxPhysicalArmor":900,"adjMinMagicArmor":900,"adjMaxMagicArmor":900})
     }),
     52009001: _tools.RODict({
         "propID": 52009001,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":200,"adjMinPhysicalAtk":4,"adjMaxPhysicalAtk":6,"adjMinMagicAtk":4,"adjMaxMagicAtk":6,"adjMinPhysicalArmor":2,"adjMaxPhysicalArmor":2,"adjMinMagicArmor":2,"adjMaxMagicArmor":2,"adjHit":68,"adjDodge":6,"adjRealDmgDef":2})
+        "propList": _tools.RODict({"adjFullHp":400,"adjMinPhysicalAtk":26,"adjMaxPhysicalAtk":26,"adjMinMagicAtk":26,"adjMaxMagicAtk":26,"adjHit":1,"adjDodge":1})
     }),
     52009002: _tools.RODict({
         "propID": 52009002,
@@ -1693,82 +1768,82 @@ datas = _tools.RODict({
     52014262: _tools.RODict({
         "propID": 52014262,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":872})
+        "propList": _tools.RODict({"adjFullHp":872,"adjDrugsQuantity":3})
     }),
     52014263: _tools.RODict({
         "propID": 52014263,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":959})
+        "propList": _tools.RODict({"adjFullHp":959,"adjDrugsQuantity":3})
     }),
     52014264: _tools.RODict({
         "propID": 52014264,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1046})
+        "propList": _tools.RODict({"adjFullHp":1046,"adjDrugsQuantity":3})
     }),
     52014265: _tools.RODict({
         "propID": 52014265,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1134})
+        "propList": _tools.RODict({"adjFullHp":1134,"adjDrugsQuantity":3})
     }),
     52014266: _tools.RODict({
         "propID": 52014266,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1221,"adjDrugsQuantity":1,"adjFinalDmg":0.02})
+        "propList": _tools.RODict({"adjFullHp":1221,"adjDrugsQuantity":10,"adjFinalDmg":0.02})
     }),
     52014267: _tools.RODict({
         "propID": 52014267,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1343,"adjDrugsQuantity":1,"adjFinalDmg":0.02})
+        "propList": _tools.RODict({"adjFullHp":1343,"adjDrugsQuantity":10,"adjFinalDmg":0.02})
     }),
     52014268: _tools.RODict({
         "propID": 52014268,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1465,"adjDrugsQuantity":2,"adjFinalDmg":0.02})
+        "propList": _tools.RODict({"adjFullHp":1465,"adjDrugsQuantity":10,"adjFinalDmg":0.02})
     }),
     52014269: _tools.RODict({
         "propID": 52014269,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1587,"adjDrugsQuantity":2,"adjFinalDmg":0.02})
+        "propList": _tools.RODict({"adjFullHp":1587,"adjDrugsQuantity":10,"adjFinalDmg":0.02})
     }),
     52014270: _tools.RODict({
         "propID": 52014270,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1709,"adjDrugsQuantity":3,"adjFinalDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":1709,"adjDrugsQuantity":20,"adjFinalDmg":0.04})
     }),
     52014271: _tools.RODict({
         "propID": 52014271,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":1880,"adjDrugsQuantity":3,"adjFinalDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":1880,"adjDrugsQuantity":20,"adjFinalDmg":0.04})
     }),
     52014272: _tools.RODict({
         "propID": 52014272,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2051,"adjDrugsQuantity":4,"adjFinalDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":2051,"adjDrugsQuantity":20,"adjFinalDmg":0.04})
     }),
     52014273: _tools.RODict({
         "propID": 52014273,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2222,"adjDrugsQuantity":4,"adjFinalDmg":0.04})
+        "propList": _tools.RODict({"adjFullHp":2222,"adjDrugsQuantity":20,"adjFinalDmg":0.04})
     }),
     52014274: _tools.RODict({
         "propID": 52014274,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2555,"adjDrugsQuantity":5,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
+        "propList": _tools.RODict({"adjFullHp":2555,"adjDrugsQuantity":30,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
     }),
     52014275: _tools.RODict({
         "propID": 52014275,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":2811,"adjDrugsQuantity":5,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
+        "propList": _tools.RODict({"adjFullHp":2811,"adjDrugsQuantity":30,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
     }),
     52014276: _tools.RODict({
         "propID": 52014276,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3092,"adjDrugsQuantity":6,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
+        "propList": _tools.RODict({"adjFullHp":3092,"adjDrugsQuantity":30,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
     }),
     52014277: _tools.RODict({
         "propID": 52014277,
         "type": 2,
-        "propList": _tools.RODict({"adjFullHp":3401,"adjDrugsQuantity":6,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
+        "propList": _tools.RODict({"adjFullHp":3401,"adjDrugsQuantity":30,"adjFinalDmg":0.04,"adjFinalDmgAnti":0.04})
     })
 })
 minKey = 51000001

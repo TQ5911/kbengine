@@ -125,22 +125,21 @@ class IWonderLandBase(object):
 
         self.addWealth(_src, _award, opUUID, _detail)
 
-    def checkSummonWonderLandBossBase(self, itemId):
+    def checkSummonWonderLandBossBase(self, itemId, itemNum):
         _deductAward = dropAward.DeductWealthVal()
-        _deductAward.addWealthByItemId(itemId, 1)
+        _deductAward.addWealthByItemId(itemId, itemNum)
 
         if not self.canDeductWealth(_deductAward):
-            _msgId = utils.getNeedTranslateMsgId(WL_CD.datas['wonderLand_summoningFailed']['value'])
-            _itemName = ID_IDD.datas[itemId]['name']
-            _args = [utils.getNeedTranslateArg(_itemName)]
+            _msgId = WL_CD.datas['wonderLand_summoningFailed']['value']
+            _args = [str(itemId), str(itemNum)]
             self.onMessagePre(_msgId, _args)
             return False
 
         return True
 
-    def summonWonderLandBossBase(self, gid, itemId, collectionId):
+    def summonWonderLandBossBase(self, gid, itemId, itemNum, collectionId):
         _deductAward = dropAward.DeductWealthVal()
-        _deductAward.addWealthByItemId(itemId, 1)
+        _deductAward.addWealthByItemId(itemId, itemNum)
 
         if not self.canDeductWealth(_deductAward):
             ERROR_MSG('IWonderLandBase::summonWonderLandBossBase: can not deduct wealth')

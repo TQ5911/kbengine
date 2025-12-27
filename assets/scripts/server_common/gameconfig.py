@@ -386,6 +386,29 @@ def gmHostList():
         addrList = [{'addr': '10.219.68.119', 'port': '2040', 'httpApi': '8080'}, ]
     return addrList
 
+@cache
+def giftCodeUrl():
+    try:
+        url = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/giftCodeUrl')
+    except:
+        url = ''
+    return url
+
+@cache
+def tapTapBindPhoneReqUrl():
+    try:
+        url = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/tapTapBindPhoneReqUrl')
+    except:
+        url = ''
+    return url
+
+@cache
+def tapTapBindPhoneVerifyUrl():
+    try:
+        url = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/tapTapBindPhoneVerifyUrl')
+    except:
+        url = ''
+    return url
 
 @cache
 def gmHttpAPISecret():
@@ -483,7 +506,7 @@ def redisServer():
         res = socket.getaddrinfo(url, None)
         address = res[0][4][0]
         '''
-        address = '192.168.10.167'
+        address = '192.168.10.172'
     except:
         address = '192.168.16.252'
     return address
@@ -611,7 +634,7 @@ def centralServersInfo():
             csInfo = {'centralServerId': centralServer['centralServerId'], 'ip': address, 'port': centralServer['port']}
             centralServersInfo.append(csInfo)
         '''
-        centralServersInfo = [{'centralServerId': '1', 'ip': '192.168.10.167', 'port': '2030'}]
+        centralServersInfo = [{'centralServerId': '1', 'ip': '192.168.10.172', 'port': '2030'}]
     except:
         centralServersInfo = [{'centralServerId': '1', 'ip': '10.219.68.119', 'port': '2030'}]
     return centralServersInfo
@@ -675,6 +698,15 @@ def enableCentralLogin():
 def showAvatarRemoveButton():
     try:
         ret = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/showAvatarRemoveButton'))
+    except:
+        ret = True
+    return ret
+
+
+@cache
+def enableViewMgr():
+    try:
+        ret = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/enableViewMgr'))
     except:
         ret = True
     return ret
@@ -880,16 +912,6 @@ def enableMail():
 def enableOldLogout():
     return 1
 
-
-@cache
-def enableSelectLineNew():
-    return 0
-
-
-@cache
-def enableCheckEnterLineNew():
-    return 1
-
 @cache
 def enableTeleportDict():
     # try:
@@ -987,4 +1009,5 @@ def visibleConfigEable(configName):
         return False
 
     return True
+
 

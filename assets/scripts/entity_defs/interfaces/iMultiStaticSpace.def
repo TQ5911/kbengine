@@ -29,6 +29,10 @@
             <Arg>       PY_DICT       </Arg>
         </onRefreshGroupEntities>
 
+        <onDestroyGroupEntities>
+            <Arg>       PY_DICT       </Arg>
+        </onDestroyGroupEntities>
+
         <onLoadEntitiesEnd>
             <Arg>       SPACE_NO        </Arg>
         </onLoadEntitiesEnd>

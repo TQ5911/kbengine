@@ -7,6 +7,12 @@
             <Default>       0               </Default>
         </sendWorldMsgTime>
 
+        <sendSiegeWarMsgTime>
+            <Type>          LONGTIME        </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </sendSiegeWarMsgTime>
+
         <sendGuildMsgTime>
             <Type>          LONGTIME        </Type>
             <Flags>         BASE            </Flags>
@@ -84,6 +90,10 @@
             <Arg>           UNICODE         </Arg>
         </sendWorldChatMsg>
 
+        <sendSiegeWarChatMsg> <Exposed/>
+            <Arg>           UNICODE         </Arg>
+        </sendSiegeWarChatMsg>
+
         <sendGuildChatMsg> <Exposed/>
             <Arg>           UNICODE         </Arg>
         </sendGuildChatMsg>
@@ -137,6 +147,14 @@
             <Arg>           UINT32      </Arg>
         </sendTeamMatchMessage>
 
+        <sendRaidMatchMessage> <Exposed/>
+            <Arg>           TEAMID      </Arg>
+            <Arg>           UNICODE     </Arg>
+            <Arg>           UINT32      </Arg>
+            <Arg>           UINT32      </Arg>
+            <Arg>           UINT32      </Arg>
+        </sendRaidMatchMessage>
+
         <registerItemLink> <Exposed/>
             <Arg>           ARRAY <of>  ITEM_ID </of>          </Arg>
             <Arg>           ARRAY <of>  UINT64 </of>           </Arg>
@@ -168,6 +186,7 @@
         </handleAvatarChannelMsg>
         <handleTeamChannelMatchTeamMsg>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
+            <Arg>           INT8                        </Arg>
             <Arg>           UNICODE                     </Arg>
         </handleTeamChannelMatchTeamMsg>
 
@@ -203,25 +222,5 @@
         <onQueryPlayerLink>
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
         </onQueryPlayerLink>
-
-        <onSetChatCD>
-            <Arg>           UINT8         </Arg>
-            <Arg>           LONGTIME         </Arg>
-        </onSetChatCD>
-
-        <onClearSpeak>
-            <Arg>           PLAYER_GBID         </Arg>
-        </onClearSpeak>
-
-        <onSendForbidChat>
-            <Arg>           INT32         </Arg>
-            <Arg>           UNICODE         </Arg>
-        </onSendForbidChat>
-
-        <onSendForbidVoiceChat>
-            <Arg>           INT32         </Arg>
-            <Arg>           UNICODE         </Arg>
-        </onSendForbidVoiceChat>
-
     </ClientMethods>
 </root>

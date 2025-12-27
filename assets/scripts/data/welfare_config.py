@@ -34,5 +34,53 @@ datas = _tools.RODict({
     "SevenSignInsRewardCard": _tools.RODict({
         "ID": "SevenSignInsRewardCard",
         "value": "Assets/Res/ui/texturenp/activities_image/activity_sign_bigreward_img.png",
+    }),
+    "TenSignTitle": _tools.RODict({
+        "ID": "TenSignTitle",
+        "value": "金币好礼天天领",
+    }),
+    "TenSignSubtitle": _tools.RODict({
+        "ID": "TenSignSubtitle",
+        "value": "每日登录即可领取超多金币",
+    }),
+    "TenSignRewardCard": _tools.RODict({
+        "ID": "TenSignRewardCard",
+        "value": "Assets/Res/ui/texturenp/activities_image/activity_sign_bigreward_img.png",
+    }),
+    "AttentionMethod": _tools.RODict({
+        "ID": "AttentionMethod",
+        "value": "领取方式:关注官方微信公众号发送口令【烽烟万里】即可领取专属礼包奖励",
+    }),
+    "AttentionReward": _tools.RODict({
+        "ID": "AttentionReward",
+        "value": 40000090,
+    }),
+    "AttentionAccounts": _tools.RODict({
+        "ID": "AttentionAccounts",
+        "value": "烽烟手游",
+    }),
+    "AttentionCopyMsg": _tools.RODict({
+        "ID": "AttentionCopyMsg",
+        "value": 54000381,
+    }),
+    "AttentionAccountsPic": _tools.RODict({
+        "ID": "AttentionAccountsPic",
+        "value": "Assets/Res/ui/texturenp/activities_image/attention_qr_img.png",
+    }),
+    "LevelRankDeadLine": _tools.RODict({
+        "ID": "LevelRankDeadLine",
+        "value": "202601240000",
+    }),
+    "LevelNotEnough": _tools.RODict({
+        "ID": "LevelNotEnough",
+        "value": 54000389,
+    }),
+    "LevelRankLimit": _tools.RODict({
+        "ID": "LevelRankLimit",
+        "value": _tools.ROList([100, 3000]),
+    }),
+    "PcLoginReward": _tools.RODict({
+        "ID": "PcLoginReward",
+        "value": 40000090,
     })
 })

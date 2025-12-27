@@ -45,6 +45,7 @@ import tutorConst_newbieCreate as TCNCD
 import message_Message_def as MMD
 import visible_visible as UVVD
 import experience_exp as EXPD
+import agent_agentConfig as A_ACD
 import impTask
 import iAvatarVariable
 import impCombat
@@ -95,6 +96,10 @@ import iMonthCard
 import iMineWarBase
 import iDungeonSettlement
 import iGuildBossChallenge
+import impStatistics
+import iBindPhone
+
+import cube_room
 
 class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, impLine.ImpLine, iClient.IClient,
              impTask.ImpTask, iAvatarVariable.ImpAvatarVariable, impCombat.ImpCombat, impTeam.ImpTeam, IScore.IScore,
@@ -107,7 +112,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
              iEnemy.IEnemy, iWonderLandBase.IWonderLandBase, iActivityBase.IActivityBase, iCollectible.ICollectible, iSiegeWarBase.ISiegeWarBase,
              iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop,
              iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarBase.IMineWarBase, iDungeonSettlement.IDungeonSettlement,
-             iGuildBossChallenge.IGuildBossChallenge):
+             iGuildBossChallenge.IGuildBossChallenge, impStatistics.IStatistics, iBindPhone.IBindPhone):
     """
     角色实体
 
@@ -121,6 +126,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         impMail.ImpMail.__init__(self)
         iFriendship.IFriendship.__init__(self)
         iGuild.IGuild.__init__(self)
+        iDrawCard.IDrawCard.__init__(self)
         iPay.IPay.__init__(self)
         iHolidayPay.IHolidayPay.__init__(self)
         iWarehouse.IWarehouse.__init__(self)
@@ -133,7 +139,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         iMineWarBase.IMineWarBase.__init__(self)
         iDungeonSettlement.IDungeonSettlement.__init__(self)
         iGuildBossChallenge.IGuildBossChallenge.__init__(self)
-        # INFO_MSG('Avatar::__init__:%s' % self.id)
+        iWelfareSignIn.IWelfareSignIn.__init__(self)
+        iBindPhone.IBindPhone.__init__(self)
+        iRedBag.IRedBag.__init__(self)
+        INFO_MSG('Avatar::__init__ :%s' % self.id)
 
         self.initRoleCache()
         self._initVisible()
@@ -275,8 +284,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.taskOnLogin()
         self.mailOnLogin()
         self.collectOnLogin()
+        self.meridianOnLogin()
         self.welfareSignInOnLogin()
         self.drawCardOnLogin()
+        self.bindPhoneOnLogin()
 
         self.setTempMiscProp(gameconst.AvatarProps.gameLengthMarkTime, utils.getNow())
         self.initPetProps()
@@ -290,6 +301,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         if self.isCrossServerInOtherServer:
             self.crossServerSuccess()
+
+        if not self.accountEntity.isAuthHost(self.gbID):
+            self.cell.setCellFlags(gameconst.CELL_FLAGS_IS_AUTH)
 
     def offlineBot(self):
         if self.cell:
@@ -409,7 +423,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         teamId = self.getCellData('teamId', 0)
         extra = {'isLogin': 1}
         if _logonEnterType == gameconst.LogOnEnterType.CUBE:
-            gameengine.getCubeStubBySpaceNo(spaceNo).logonEnterCube(self, self.gbID, spaceNo, extra)
+            _mapId = formula.getMapId(spaceNo)
+            _floor = cube_room.datas[_mapId]['floor']
+            _readyMapId = cube_room.floorTypeMapDic[_floor][gameconst.CubeRoomType.READY][0]
+            _spaceNo = formula.getLineSpaceNo(_readyMapId, 0)
+            cellData['spaceNo'] = _spaceNo
+            gameengine.getCubeStubBySpaceNo(spaceNo).logonEnterCube(self, self.gbID, _spaceNo, extra)
 
         elif _logonEnterType == gameconst.LogOnEnterType.WONDER_LAND:
             gameengine.getWonderLandStubBySpaceNo(spaceNo).logonEnterWonderLand(self, self.gbID)
@@ -484,7 +503,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                                                                         gameconst.AVATAR_OFFLINE_REASON_IDIP_PLAT_AUTHOR_CHANGE,
                                                                         gameconst.AVATAR_OFFLINE_REASON_SWITCH_SERVER,
                                                                         gameconst.AVATAR_OFFLINE_REASON_NEWBIE_KICKOUT,
-                                                                        gameconst.AVATAR_OFFLINE_REASON_END_CROSS_SERVER
+                                                                        gameconst.AVATAR_OFFLINE_REASON_END_CROSS_SERVER,
+                                                                        gameconst.AVATAR_OFFLINE_REASON_ANIT_ADDICTION
                                                                         ):
             ERROR_MSG('Avatar.destroySelf client exists', self.client, reason)
 
@@ -606,8 +626,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         INFO_MSG("Avatar[%i].onClientGetCell:%s" % (self.id, self.client), self.relogCnt)
 
     # 这里客户端每次连上来都会调用到，包括第一次登录和后面断线后重连
-    def onCellGetWitness(self):
-        INFO_MSG('onCellGetWitness', self.relogCnt, self.gbID, self.isDestroyed)
+    def onCellGetWitness(self, chn):
+        INFO_MSG('onCellGetWitness', self.relogCnt, self.gbID, self.isDestroyed, chn)
         if self.isDestroyed:
             return
 
@@ -617,7 +637,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.petOnLogin()
             self.mountOnLogin()
         self.cell.initClientOnCell(isRelogin)
-        self.initClientBase(isRelogin)
+        self.initClientBase(isRelogin, chn)
         self.resetLimitcall()
         if isRelogin:
             pass
@@ -627,14 +647,14 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     # 这里客户端每次连上来都会调用到，包括第一次登录和后面断线后重连
     # 所以只能做一些向客户端同步数据的事情，base进程自己的数据放到__init__或者onGetCell（如果依赖cell）中初始化
-    def initClientBase(self, isRelogin):
-        self.doInitClientBase(isRelogin)
+    def initClientBase(self, isRelogin, chn):
+        self.doInitClientBase(isRelogin, chn)
 
     def emitMiniPayload(self):
         # 下发数据量比较小的函数
         self.client.onGetDeathPenaltyExpLogin(self.deathPenaltyData.toClientDataAll())
 
-    def doInitClientBase(self, isRelogin):
+    def doInitClientBase(self, isRelogin, chn):
         try:
             # 下发数据的顺序要求：
             # 1. sendFavorInfo 必须在 sendTaskList 之前下发
@@ -644,55 +664,29 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             # 5. sendServerOpenTime 必须在 sendActInfoList 之前下发
 
             self.setTempMiscProp(gameconst.AvatarProps.disableTimerNumErrMsg, True)
-            self.cell.toClientCubeLoginData()
 
-            delay = 0.1
-            self._callback(delay, 'sendBagData', (), gametimer.TIMER_TAG_SEND_BAG_DATA)
-            self._callback(delay, 'sendVariableData', (), gametimer.TIMER_TAG_SEND_VARIABLE_DATA)
-            self._callback(delay, 'sendServerOpenTime', (), gametimer.TIMER_TAG_SEND_SERVER_OPENTIME)
-            delay += 0.1
-            self._callback(delay, 'sendTaskList', (), gametimer.TIMER_TAG_SEND_TASKLIST)
-            self._callback(delay, 'sendCliSkillBuildInfo', (), gametimer.TIMER_TAG_SEND_CLISKILLBUILDINFO)
-            self._callback(delay, 'sendCliConfigData', (), gametimer.TIMER_TAG_SEND_CLICONFIGDATA)
-            delay += 0.1
-            self._callback(delay, 'sendOutfitData', (), gametimer.TIMER_TAG_SEND_OUTFIT_DATA)
-            self._callback(delay, 'sendLingShouInfo', (), gametimer.TIMER_TAG_SEND_LING_SHOU_DATA)
-            self._callback(delay, 'sendCrusadeDungeonAutoConfirmConfig', (), gametimer.TIMER_TAG_SEND_CRUSADE_DUNGEON_AUTO_CONFIRM_CONFIG)
-            delay += 0.1
-            self._callback(delay, 'emitMiniPayload', (), gametimer.TIMER_TAG_EMIT_MINI_PAYLOAD)
-            self._callback(delay, '_sendFriendInfoToClient', (), gametimer.TIMER_TAG_SEND_CLIENT_FRIEND_INIT)
-            self._callback(delay, 'sendPlayerPayInfo', (), gametimer.TIMER_TAG_SEND_PAY_DATA)
-            delay += 0.1
-            self._callback(delay, 'sendHolidayPayInfo', (), gametimer.TIMER_TAG_SEND_HOLIDAYPAY_INFO)
-            self._callback(delay, '_sendGuildInfo', (), gametimer.TIMER_TAG_SEND_GUILD_INFO)
-            self._callback(delay, 'sendDrawCardInfo', (), gametimer.TIMER_TAG_SEND_DRAW_CARD_INFO)
-            delay += 0.1
-            self._callback(delay, 'sendGuildTrains', (), gametimer.TIMER_TAG_SEND_GUILD_TRAIN)
-            self._callback(delay, '_sendAchievementInitData', (), gametimer.TIMER_TAG_SEND_ACHIEVE_INIT_DATA)
-            self._callback(delay, 'sendEnemyRecordDatas', (), gametimer.TIMER_TAG_SEND_ENEMY_RECORD_DATA)
-            delay += 0.1
-            self._callback(delay, '_sendDropEquipInfo', (), gametimer.TIMER_TAG_SEND_EQUIP_DROP_DATA)
-            self._callback(delay, 'sendCollectInfo', (), gametimer.TIMER_TAG_SEND_COLLECT_INFO)
-            self._callback(delay, 'sendWonderLandLoginData', (), gametimer.TIMER_TAG_SEND_WONDER_LAND_LOGIN_DATA)
-            delay += 0.1
-            self._callback(delay, 'sendSiegeWarLoginData', (), gametimer.TIMER_TAG_SEND_SIEGE_WAR_LOGIN_DATA)
-            self._callback(delay, 'sendWelfareSignInInfo', (), gametimer.TIMER_TAG_SEND_WELFARE_SIGN_IN_INFO)
-            self._callback(delay, 'sendChiefDungeonAutoConfirmConfig', (), gametimer.TIMER_TAG_SEND_CHIEF_DUNGEON_AUTO_CONFIRM_CONFIG)
-            delay += 0.1
-            self._callback(delay, 'avatarLogin', (), gametimer.TIMER_TAG_AVATER_IGUILD_LOGION)
-            self._callback(delay, '_sendAllGuildRelation', (), gametimer.TIMER_TAG_AVATER_SEND_GUILD_RELATION)
-            self._callback(delay, 'redbagOnLogin', (), gametimer.TIMER_TAG_ON_RED_BAG_RELOGIN)
-            delay += 0.1
-            self._callback(delay, 'meridianOnLogin', (), gametimer.TIMER_TAG_ON_MERIDIAN_LOGIN)
-            self._callback(delay, 'checkOfflineHangup', (), gametimer.TIMER_TAG_CHECK_OFFLINE_HANGUP)
-            self._callback(delay, 'onMineWarLogin', (), gametimer.TIMER_TAG_ON_MINE_WAR_LOGIN)
+            _delay = 0.1
+            _iter = iter(gameconst.INIT_CLIENT_SEND)
+            _num = 0
+            while True:
+                _next = next(_iter, None)
+                if _next is None:
+                    break
 
-            delay += 0.1
-            self._callback(delay, 'updateRedisVIPFlag', (), gametimer.TIMER_TAG_UPDATE_REDIS_VIP_FLAG)
+                _func, _obSend = _next
+                if not _obSend and chn == gameconst.ClientCallChannel.SUB_CHANNEL:
+                    continue
+
+                self._callback(_delay, _func, (), gametimer.TIMER_TAG_SEND_CLIENT_INIT)
+                _num += 1
+                # 每三个增加0.1的delay ，每秒下发三个
+                if _num == 3:
+                    _num = 0
+                    _delay += 0.1
 
             self.sendHotfix(gameconfig.hotfixVersion())
             if isRelogin:
-                self._callback(delay, 'sendAllMailList', (), gametimer.TIMER_TAG_SEND_MAIL_LIST)
+                self._callback(_delay, 'sendAllMailList', (), gametimer.TIMER_TAG_SEND_MAIL_LIST)
                 pass
 
             gameconfig.sendClientConfig(self)
@@ -705,8 +699,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.destroySelf(gameconst.AVATAR_OFFLINE_REASON_INIT_ERR)
             return
 
-        delay += 0.1
-        self._callback(delay, 'onSendClientDataFinished', (), gametimer.TIMER_TAG_ON_SEND_CLIENTDATA_FINISHED)
+        _delay += 0.1
+        self._callback(_delay, 'onSendClientDataFinished', (), gametimer.TIMER_TAG_ON_SEND_CLIENTDATA_FINISHED)
 
     def onSendClientDataFinished(self):
         self.client.onClientDataSyncFinished()
@@ -720,7 +714,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def backSelectCharacterBase(self, isFromMain):
         INFO_MSG('backSelectCharacterBase', isFromMain)
         if self.isDestroying or not (self.accountEntity or self.subAccount):
-            ERROR_MSG('backSelectCharacterBase failed!')
+            WARNING_MSG('backSelectCharacterBase failed!')
             return
 
         if not isFromMain:
@@ -856,8 +850,15 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def _preEntireDestroy(self):
         # 这里面不能有异常，会导致实体无法销毁
         try:
+            self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL).onMessage(
+                A_ACD.datas['offlineNotice']['value'],
+                []
+            )
+
             if self.getTempMiscProp(gameconst.AvatarProps.backAccount, False):
                 self.client.onBackSelectCharacter()
+            else:
+                self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL).onBackSelectCharacter()
 
             self.tLastOfflineBase = utils.getNow()
 
@@ -913,12 +914,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                         gameconst.ClientCallChannel.MAIN_CHANNEL,
                     )
 
-                if self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL):
-                    self.giveClientTo(
-                        self.subAccount,
-                        gameconst.ClientCallChannel.SUB_CHANNEL,
-                        gameconst.ClientCallChannel.MAIN_CHANNEL,
-                    )
+            if self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL):
+                self.giveClientTo(
+                    self.subAccount,
+                    gameconst.ClientCallChannel.SUB_CHANNEL,
+                    gameconst.ClientCallChannel.MAIN_CHANNEL,
+                )
         except Exception as e:
             gameengine.reportCritical('_preEntireDestroy error:', self.id, str(e))
 
@@ -1093,6 +1094,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         dungeonNo = formula.getDungeonNoBySpaceNo(fromSpaceNo)
         self.clearSpaceVariable(dungeonNo)
         self.onTaskLeaveSpace(fromSpaceNo)
+
+        self.onLeaveStatisticSpace(fromSpaceNo)
 
     def onEnterDungeon(self, spaceNo, spaceMgrBox, extra):
         DEBUG_MSG('in onEnterDungeon::', spaceNo, spaceMgrBox, extra)
@@ -1409,6 +1412,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('onTaskDailyUpdate')
         self.registerWeekEvent('onTaskWeeklyUpdate')
         self.registerDailyEvent('onBagDailyUpdate')
+        self.registerWeekEvent('onBagWeekUpdate')
         self.registerDailyEvent('_cubeDailyRefresh')
         self.registerDailyEvent('onCrusadeDailyRewardNumUpdate')
         self.registerDailyEvent('refreshFreeRecoverDeathPenaltyTimes')
@@ -1432,6 +1436,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('_dailyUpdateVisible')
         self.registerHourlyEvent('onLimitedStoreHourlyUpdate')
         self.registerDailyEvent('checkMonthCardAward')
+        self.registerWeekEvent('dungeonSettlementWeeklyReset')
 
     def reqDeleteAvatar(self, exposed):
         if gameconfig.enableOldLogout():
@@ -1591,6 +1596,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def setSubAccount(self, eid, accountHostType):
         self.subAccountCache.eid = eid
         self.subAccountCache.actHostType = accountHostType
+
+        if eid:
+            self.subAccount.updateCharacterLevel(self.gbID, self.getRoleCacheAttr('level'), self.tLoginBase)
+            _appearance = self.accountEntity.getAppearanceClone(self.gbID)
+            _appearance and self.subAccount.setCharAppearance(self.gbID, _appearance)
 # ---------------------------- auth avatar end ----------------------------
 
 # ---------------------------- switch avatar server start ----------------------------
@@ -1676,4 +1686,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             if not val:
                 self.forceAuthOffline()
 
+    def gmBanAvatar(self, endTime):
+        self.banLogin = endTime
+        self.cell.offline(gameconst.AVATAR_OFFLINE_REASON_GMKICK)
+
+    def onGetCellAppearance(self, appearance):
+        self.accountEntity.setCharAppearance(self.gbID, appearance)
 

@@ -136,13 +136,13 @@ class IWonderLandCell(object):
 
         self.clearWonderLandRewardRecord()
 
-    def summonWonderLandBoss(self, itemId, gid, collectionId):
+    def summonWonderLandBoss(self, itemId, itemNum, gid, collectionId):
         _bossId = self.getMonsterIdFromGID(gid)
         if self.spaceMgr.checkHasBoss(_bossId):
             self.showMsg(WL_CD.datas['wonderLand_bossAlive']['value'], [])
             return
 
-        self.base.summonWonderLandBossBase(gid, itemId, collectionId)
+        self.base.summonWonderLandBossBase(gid, itemId, itemNum, collectionId)
 
     def summonWonderLandBossFromBase(self, gid, itemId, collectionId, opUUID):
         _mapId = formula.getMapId(self.spaceNo)
@@ -196,9 +196,9 @@ class IWonderLandCell(object):
 
         return _monData.get('EntityID')
 
-    def checkSummonWonderLandBoss(self, itemId, gid, collectionId):
+    def checkSummonWonderLandBoss(self, itemId, itemNum, gid, collectionId):
         _bossId = self.getMonsterIdFromGID(gid)
-        return CollectionCheckContext.CollectionCheckWonderLand(itemId, _bossId, collectionId)
+        return CollectionCheckContext.CollectionCheckWonderLand(itemId, itemNum, _bossId, collectionId)
 
     def checkSummonWonderLandBossCell(self, bossId):
         _hasBoss = self.spaceMgr.checkHasBoss(bossId)

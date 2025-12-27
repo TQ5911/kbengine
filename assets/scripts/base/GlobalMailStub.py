@@ -140,8 +140,9 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         # su.sendIDIPResponse(0, '', respClass(0, ''))
         return
 
-    def sendGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, despArgs, title, cont, minRoleTime, maxRoleTime,
-                       minRoleLevel, maxRoleLevel):
+    def sendGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, 
+                       despArgs, title, cont, minRoleTime, maxRoleTime,
+                       minRoleLevel, maxRoleLevel, channel):
         DEBUG_MSG('in sendGlobalMail:', mailId)
         if maxRoleTime <= 0 or maxRoleLevel <=0 :
             WARNING_MSG('sendGlobalMail, maxRoleTime or maxRoleLevel failed:', maxRoleTime, maxRoleLevel)
@@ -175,7 +176,19 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         title = title or ''
         cont = cont or ''
         globalMail = Mail.GlobalMail()
-        globalMail.initNewGlobalMail(mailId, extraAttach, despArgs, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel)
+        globalMail.initNewGlobalMail(
+            mailId, 
+            extraAttach, 
+            despArgs, 
+            title, 
+            cont, 
+            minRoleTime, 
+            maxRoleTime, 
+            minRoleLevel, 
+            maxRoleLevel,
+            channel
+        )
+
         if globalMail.isExpired():
             WARNING_MSG('   in sendGlobalMail, mail expired')
             return False

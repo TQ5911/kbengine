@@ -43,6 +43,25 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.pyAddTimer(5, 5, gametimer.CLEAR_MULTI_ENTER_TIME_OUT)
 
         self._startRefreshCowRefreshTimer()
+        self.randomTeleporterPool = self._initRandomTeleporterPool()
+
+    def _initRandomTeleporterPool(self):
+        _list = []
+        for _mapId in cube_room.floor2Rooms[self.cubeNo]:
+            _dunData = utils.getDunStructureModuleData(_mapId)
+            if not _dunData:
+                WARNING_MSG('CubeStub::_initRandomTeleporterPool: dunData not found: {}'.format(_mapId))
+                continue
+
+            _cubeData = _dunData.get('Cube')
+            if not _cubeData:
+                WARNING_MSG('CubeStub::_initRandomTeleporterPool: cubeData not found: {}'.format(_mapId))
+                continue
+
+            for _ in _cubeData.get('Teleporter', {}).keys():
+                _list.append(_mapId)
+
+        return _list
 
     def _startRefreshCowRefreshTimer(self):
         _delay = random.randint(*cube_config.datas['cube_cowRoomEntranceIntervalTime']['value'])
@@ -51,13 +70,21 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self._callback(_delay, '_doRandomTeleporter', (), gametimer.TIMER_TAG_CUBE_TELEPORTER_REFRESH)
 
     def _doRandomTeleporter(self):
+        if not self.randomTeleporterPool:
+            ERROR_MSG('CubeStub::_doRandomTeleporter: randomTeleporterPool is empty')
+            return
+
         _num = random.randint(*cube_config.datas['cube_cowRoomEntranceNum']['value'])
-        _mapIds = random.sample(cube_room.floor2Rooms[self.cubeNo], _num)
-        DEBUG_MSG('_doRandomTeleporter:', _mapIds)
+        _mapIds = random.sample(self.randomTeleporterPool, min(_num, len(self.randomTeleporterPool)))
+        _dic = {}
         for _mapId in _mapIds:
+            _dic[_mapId] = _dic.get(_mapId, 0) + 1
+
+        DEBUG_MSG('_doRandomTeleporter:', _dic)
+        for _mapId, num in _dic.items():
             _spaceNo = formula.getLineSpaceNo(_mapId, 0)
             _spaceVal = self.staticSpaces[_spaceNo]
-            _spaceVal.spaceMgrBoxCell.createTeleporterToCow()
+            _spaceVal.spaceMgrBoxCell.createTeleporterToCow(num)
 
         self._startRefreshCowRefreshTimer()
 
@@ -257,3 +284,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def onRefreshGroupEntities(self, info):
         DEBUG_MSG("CubeStub::onRefreshGroupEntities", info)
         super(CubeStub, self).onRefreshGroupEntities(info)
+
+    def onDestroyGroupEntities(self, info):
+        DEBUG_MSG("CubeStub::onDestroyGroupEntities", info)
+        super(CubeStub, self).onDestroyGroupEntities(info)

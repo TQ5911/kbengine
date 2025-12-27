@@ -4,6 +4,7 @@
 import KBEngine
 
 class AccountBase(KBEngine.Entity):
+    def minorAccountConstraintTip(self, arg0): pass
     def onAvatarDetailInAccount(self, arg0, arg1, arg2, arg3, arg4): pass
     def onAvatarOfflineTime(self, arg0, arg1): pass
     def onCharInfoChange(self, arg0): pass

@@ -31,6 +31,13 @@
             <Type>          PYTHON                  </Type>
             <Flags>         CELL_PRIVATE            </Flags>
         </lingShouBattleList>
+
+        <lingShouEffectEventInfo>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+            <Persistent>    true                    </Persistent>
+        </lingShouEffectEventInfo>
     </Properties>
 
     <BaseMethods>
@@ -95,11 +102,6 @@
         <onUpdateLingShouData>
             <Arg>   ARRAY <of> CLIENT_LINGSHOU_ITEM_VAL </of>    </Arg>
         </onUpdateLingShouData>
-
-        <onUpdateLingShouScore>
-            <Arg>   PETID    </Arg>
-            <Arg>   SCORE       </Arg>
-        </onUpdateLingShouScore>
 
         <onUpdateLingShouBattleList>
             <Arg>   UINT8       </Arg>

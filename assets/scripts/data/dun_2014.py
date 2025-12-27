@@ -1,6 +1,8 @@
 datas ={
   "20140001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "BornPos",
     "ClassNameType": 6,
     "CustomID": "",
@@ -8,6 +10,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 20140001,
+    "Name": "\u51fa\u751f\u70b9",
     "PosX": 247.47,
     "PosY": 527.7234,
     "PosZ": 20.84,
@@ -23,6 +26,8 @@ datas ={
   },
   "20140002": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "RebornPos",
     "ClassNameType": 7,
     "CustomID": "",
@@ -30,6 +35,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 20140002,
+    "Name": "\u590d\u6d3b\u70b9",
     "PosX": 247.47,
     "PosY": 527.7234,
     "PosZ": 20.84,
@@ -45,6 +51,8 @@ datas ={
   },
   "20140003": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "",
@@ -52,6 +60,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 11191011,
     "ID": 20140003,
+    "Name": "6001\u6b63\u5f0f",
     "PosX": 279.05,
     "PosY": 524.98,
     "PosZ": 57.58,

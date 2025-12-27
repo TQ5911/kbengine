@@ -62,7 +62,13 @@ datas = _tools.RODict({
         "Func": "addMagicFind",
         "ParameterType": "Hash{{key=\"Status\",value=\"Float()\"}}",
         "Example": "[{\"EffectId\": 13010009, \"AddMagicFindVal\": 4}]"
+    }),
+    13010010: _tools.RODict({
+        "ID": 13010010,
+        "Func": "addDefensiveShield",
+        "ParameterType": "Hash{{key=\"hpValue\",value=\"Int()\"},{key=\"reduceDmgRatio\",value=\"Float()\"}}",
+        "Example": "[{\"EffectId\": 13010010, \"hpValue\": 10000, \"reduceDmg\": 0.5}]"
     })
 })
 minKey = 13010001
-maxKey = 13010009
+maxKey = 13010010

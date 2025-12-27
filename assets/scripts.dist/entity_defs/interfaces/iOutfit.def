@@ -78,8 +78,5 @@
         <onUpdateOutfitData>
             <Arg>      ARRAY <of> CLIENT_OUTFIT_VAL    </of>    </Arg>
         </onUpdateOutfitData>
-        <onOutfitExpired>
-            <Arg>      ARRAY <of> CLIENT_OUTFIT_EXPIRED    </of>    </Arg>
-        </onOutfitExpired>
     </ClientMethods>
 </root>

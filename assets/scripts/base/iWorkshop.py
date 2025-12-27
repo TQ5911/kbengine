@@ -2,6 +2,7 @@ import KBEngine
 from KBEDebug import *
 
 import random
+import itertools
 
 import gameconfig
 import gameconst
@@ -21,47 +22,50 @@ class IWorkshop(object):
     @gamedecorator.limitcall(1)
     def reqWorkshopMF(self, exposed, itemID, batchCount, isAutoMF):    
         DEBUG_MSG("reqWorkshopMF ", exposed, itemID, batchCount, isAutoMF)
+        normalDatas = []
+        luckyDatas = []
         if not gameconfig.enableWorkshop():
             WARNING_MSG("reqWorkshopSetAutoMF ~ workshop is not open")
-            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_FUNC_NOT_OPEN, itemID, batchCount, isAutoMF)
+            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_FUNC_NOT_OPEN, isAutoMF, normalDatas, luckyDatas)
             return
         
         if self.bagData.isFull():
             ERROR_MSG("reqWorkshopMF ~ bag is full", itemID, batchCount)
-            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_BAG_SPACE, itemID, batchCount, isAutoMF)
+            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_BAG_SPACE, isAutoMF, normalDatas, luckyDatas)
             return
         
         if self.bagData.isLocked():
             ERROR_MSG("reqWorkshopMF ~ bag is locked", itemID, batchCount)
-            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_BAG_LOCK, itemID, batchCount, isAutoMF)
+            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_BAG_LOCK, isAutoMF, normalDatas, luckyDatas)
             return
         
         if not dataUtils.isValidItemId(itemID):
             ERROR_MSG("reqWorkshopMF ~ unknow item id", itemID, batchCount)
-            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_UNKNOW, itemID, batchCount, isAutoMF)
+            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_UNKNOW, isAutoMF, normalDatas, luckyDatas)
             return
         
         produceCfgData = WSP.datas.get(itemID)
         if not produceCfgData:
             ERROR_MSG("reqWorkshopMF ~ unknow produce id", itemID, batchCount)
-            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_UNKNOW, itemID, batchCount, isAutoMF)
+            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_UNKNOW, isAutoMF, normalDatas, luckyDatas)
             return
         
         batchLimit = WSC.datas['workShop_maxNum'].get("value", 0)
         if batchLimit <= 0:
             ERROR_MSG("reqWorkshopMF ~ workShop_config error", itemID, batchCount, batchLimit)
-            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_ILLEGAL_CONFIG, itemID, batchCount, isAutoMF)
+            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_ILLEGAL_CONFIG, isAutoMF, normalDatas, luckyDatas)
             return
         
         if batchCount > batchLimit:
             ERROR_MSG("reqWorkshopMF ~ workShop_config error", itemID, batchCount, batchLimit)
-            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_BATCH_COUNT, itemID, batchCount, isAutoMF)
+            self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_BATCH_COUNT, isAutoMF, normalDatas, luckyDatas)
             return
         
-        ret = self.doWorkshopManufactoring(itemID, batchCount, isAutoMF)
-
-        self.client.onWorkshopMF(ret, itemID, batchCount, isAutoMF)
-
+        ret, normalDatas, luckyDatas = self.doWorkshopManufactoring(itemID, batchCount, isAutoMF)
+        if ret != gameconst.WorkshopResult.WORKSHOP_SUCCESS:
+            normalDatas = []
+            luckyDatas = []
+        self.client.onWorkshopMF(ret, isAutoMF, normalDatas, luckyDatas)
     #------------------------------------------------client api------------------------------------------------------------------
 
     #------------------------------------------------workshop biz----------------------------------------------------------------
@@ -72,20 +76,28 @@ class IWorkshop(object):
         # 消耗的货币
         costCurrency = {}
         # 产出的道具
-        outItems = {}
+        normalItems = {}
+        # 幸运的道具
+        luckyItems = {}
         # 中间产出的需扣除道具
         costExtraItems = {}
-        ret = self.calculateWorkshopMaterials(itemID, batchCount, costCurrency, costItems, outItems, costExtraItems, isAutoMF)
+        ret = self.calculateWorkshopMaterials(itemID, batchCount, costCurrency, costItems, normalItems, luckyItems, costExtraItems, isAutoMF)
         if ret == gameconst.WorkshopResult.WORKSHOP_SUCCESS:
             opUUID = KBEngine.genUUID64()
             srcType = AAC_AACD.datas.BONUS_SRC_WORKSHOP_COST
             addWealthVal = dropAward.AwardVal()
-            for outItemKey, outItemCount in outItems.items():
+            # 常规物品
+            for outItemKey, outItemCount in normalItems.items():
                 mID, mBindType = self.splitWorkshopItemKey(outItemKey)
                 addWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
+            # 幸运物品
+            for outItemKey, outItemCount in luckyItems.items():
+                mID, mBindType = self.splitWorkshopItemKey(outItemKey)
+                addWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
+
             if not self.canAddWealthVal(srcType, addWealthVal):
                 WARNING_MSG("doWorkshopManufactoring ~ bag space is not enough")
-                return gameconst.WorkshopResult.WORKSHOP_LIMIT_BAG_SPACE
+                return gameconst.WorkshopResult.WORKSHOP_LIMIT_BAG_SPACE, None, None
             
             # 扣减货币和道具
             deductWealthVal = dropAward.DeductWealthVal()
@@ -96,10 +108,10 @@ class IWorkshop(object):
 
             if not self.canDeductWealth(deductWealthVal):
                 WARNING_MSG("doWorkshopManufactoring ~ item is not enough")
-                return gameconst.WorkshopResult.WORKSHOP_LIMIT_CURRENCY_IS_NOT_ENOUGH
-              
+                return gameconst.WorkshopResult.WORKSHOP_LIMIT_CURRENCY_IS_NOT_ENOUGH, None, None
+            
             costDetail = gameclass.AwardDetail(costItems=costItems)
-            gotDetail = gameclass.AwardDetail(gotItems=outItems)
+            gotDetail = gameclass.AwardDetail(normalItems=normalItems, luckyItems = luckyItems)
             # 扣除消耗道具
             self.deductWealth(srcType, deductWealthVal, opUUID, costDetail)
             # 增加获得道具
@@ -109,10 +121,46 @@ class IWorkshop(object):
             for mID, mCount in costExtraItems.items():
                 deductWealthVal.addWealthByItemId(mID, mCount)
             self.deductWealth(srcType, deductWealthVal, opUUID, costDetail)
-        return ret
 
-    def calculateWorkshopMaterials(self, itemID, batchCount, costCurrency, costItems, outItems, costExtraItems, isAutoMF):
-        DEBUG_MSG("calculateWorkshopMaterials ", itemID, batchCount, costCurrency, outItems, costItems, costExtraItems, isAutoMF)
+            # 需要计算最终的产出，去掉过程展示
+            for itemID, itemNum in costExtraItems.items():
+                remain = itemNum
+                # 先用绑定的
+                key = self.getWorkshopOutItemKey(itemID, gameconst.ItemBindType.BIND)
+                num = normalItems.get(key, None)
+                if num is not None:
+                    if num > itemNum:
+                        remain = 0
+                        normalItems[key] = num - itemNum
+                    else:
+                        remain = itemNum - num
+                        normalItems.pop(key)
+                #  再处理非绑定
+                if remain > 0:
+                    key = self.getWorkshopOutItemKey(itemID, gameconst.ItemBindType.NORMAL)
+                    num = normalItems.get(key, None)
+                    if num is not None:
+                        if num > itemNum:
+                            remain = 0
+                            normalItems[key] = num - itemNum
+                        else:
+                            remain = itemNum - num
+                            normalItems.pop(key)
+            # 最终道具
+            normalWealthVal = dropAward.AwardVal()
+            for outItemKey, outItemCount in normalItems.items():
+                mID, mBindType = self.splitWorkshopItemKey(outItemKey)
+                normalWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
+            # 幸运道具
+            luckyWealthVal = dropAward.AwardVal()
+            for outItemKey, outItemCount in luckyItems.items():
+                mID, mBindType = self.splitWorkshopItemKey(outItemKey)
+                luckyWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
+            return ret, normalWealthVal.toBriefList(), luckyWealthVal.toBriefList()
+        return ret, None, None
+
+    def calculateWorkshopMaterials(self, itemID, batchCount, costCurrency, costItems, normalItems, luckyItems, costExtraItems, isAutoMF):
+        DEBUG_MSG("calculateWorkshopMaterials ", itemID, batchCount, costCurrency, costItems, normalItems, luckyItems, costExtraItems, isAutoMF)
         produceCfgData = WSP.datas.get(itemID)
         if not produceCfgData:
             WARNING_MSG("calculateWorkshopMaterials ~ this item has no configuration", produceCfgData, itemID, batchCount)
@@ -137,11 +185,11 @@ class IWorkshop(object):
             ERROR_MSG("calculateWorkshopMaterials ~ unboundProb config error", produceCfgData, itemID, batchCount)
             return gameconst.WorkshopResult.WORKSHOP_LIMIT_ILLEGAL_CONFIG
         
-        ret = self.doWorkshopCalculation(produceCfgData, itemID, batchCount, costCurrency, costItems, outItems, costExtraItems, isAutoMF)
+        ret = self.doWorkshopCalculation(produceCfgData, itemID, batchCount, costCurrency, costItems, normalItems, luckyItems, costExtraItems, isAutoMF)
         
         return ret
     
-    def doWorkshopCalculation(self, produceCfgData, itemID, batchCount, costCurrency, costItems, outItems, costExtraItems, isAutoMF):
+    def doWorkshopCalculation(self, produceCfgData, itemID, batchCount, costCurrency, costItems, normalItems, luckyItems, costExtraItems, isAutoMF):
         costs = produceCfgData['cost']
         materials = produceCfgData['materials']
         unboundProb = produceCfgData['unboundProb']
@@ -170,7 +218,7 @@ class IWorkshop(object):
                 if remainCount > 0:
                     costItems[mID] = costItems.get(mID, 0) + remainCount
                 mCount -= remainCount
-                ret = self.calculateWorkshopMaterials(mID, mCount, costCurrency, costItems, outItems, costExtraItems, isAutoMF)
+                ret = self.calculateWorkshopMaterials(mID, mCount, costCurrency, costItems, normalItems, luckyItems, costExtraItems, isAutoMF)
                 if ret != gameconst.WorkshopResult.WORKSHOP_SUCCESS:
                     WARNING_MSG("calculateWorkshopMaterials ~ materials is not enough", produceCfgData, itemID, batchCount)
                     return ret
@@ -190,21 +238,22 @@ class IWorkshop(object):
         for i in range(0, batchCount):
             bindType = gameconst.ItemBindType.NORMAL if random.uniform(0, 1) <= unboundProb else gameconst.ItemBindType.BIND
             outKey = self.getWorkshopOutItemKey(itemID, bindType)
-            outItems[outKey] = outItems.get(outKey, 0) + 1
-            ret = self.calculateWorkshopLuckyItem(outItems, produceCfgData)
+            normalItems[outKey] = normalItems.get(outKey, 0) + 1
+            ret = self.calculateWorkshopLuckyItem(luckyItems, produceCfgData)
             if ret != gameconst.WorkshopResult.WORKSHOP_SUCCESS:
                 break
         return ret
 
-    def calculateWorkshopLuckyItem(self, outItems, produceCfgData):
+    def calculateWorkshopLuckyItem(self, luckyItems, produceCfgData):
         luckyRule = produceCfgData['lucky']
         # 支持空的配置
         if luckyRule is None:
             return gameconst.WorkshopResult.WORKSHOP_SUCCESS
+        
         # 如果已配置，检查配置规则
         if len(luckyRule) != 4:
             ERROR_MSG("calculateWorkshopLuckyItem ~ lucky config error", produceCfgData)
-            return gameconst.WorkshopResult.WORKSHOP_LIMIT_ILLEGAL_CONFIG
+            return gameconst.WorkshopResult.WORKSHOP_SUCCESS
         
         luckyProb = luckyRule[2]
         if random.uniform(0, 1) <= luckyProb:
@@ -212,7 +261,7 @@ class IWorkshop(object):
             itemCount = luckyRule[1]
             bindType = gameconst.ItemBindType.NORMAL if random.uniform(0, 1) <= luckyRule[3] else gameconst.ItemBindType.BIND
             outKey = self.getWorkshopOutItemKey(itemID, bindType)
-            outItems[outKey] = outItems.get(outKey, 0) + itemCount
+            luckyItems[outKey] = luckyItems.get(outKey, 0) + itemCount
         return gameconst.WorkshopResult.WORKSHOP_SUCCESS
     
     def getWorkshopOutItemKey(self, itemID, itemBindType):

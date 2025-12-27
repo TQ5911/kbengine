@@ -6,6 +6,24 @@
             <Default>       0               </Default>
             <WitnessName>   true            </WitnessName>
         </siegeWarCamp>
+
+        <siegeWarCanAttack>
+            <Type>          INT32           </Type>
+            <Flags>         CELL            </Flags>
+            <Default>       1               </Default>
+        </siegeWarCanAttack>
+
+        <siegeWarUnionGuildUUID>
+            <Type>          GUILD_UUID      </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </siegeWarUnionGuildUUID>
+
+        <siegeWarGuildCache>
+            <Type>          PYTHON          </Type>
+            <Flags>         CELL            </Flags>
+            <Default>       0               </Default>
+        </siegeWarGuildCache>
     </Properties>
 
     <BaseMethods>
@@ -31,6 +49,7 @@
 
         <onSiegeWarDeclareWar> <Exposed/>
             <Arg>          BOOL                         </Arg>
+            <Arg>          UNICODE                      </Arg>
         </onSiegeWarDeclareWar>
 
         <querySiegeWarDefenderAndOffensive> <Exposed/>
@@ -38,12 +57,27 @@
 
         <querySiegeWarBiddingWinnerData> <Exposed/>
         </querySiegeWarBiddingWinnerData>
-        
-        <cityRecentActivityRequest> <Exposed/>
-        </cityRecentActivityRequest>
+
+        <cityDataRequest> <Exposed/>
+        </cityDataRequest>
 
         <onSiegeWarSpaceEnter> <Exposed/>
         </onSiegeWarSpaceEnter>
+
+        <enterCrossServerSiegeWarSpace> <Exposed/>
+        </enterCrossServerSiegeWarSpace>
+
+        <leaveCrossServerSiegeWarSpace> <Exposed/>
+        </leaveCrossServerSiegeWarSpace>
+
+        <siegeWarDefenseDeclaration> <Exposed/>
+            <Arg>          UNICODE                      </Arg>
+        </siegeWarDefenseDeclaration>
+
+        <onEnterCrossSiegeWarSpaceRemotely>
+            <Arg>          SERVER_ID                    </Arg>
+            <Arg>          PYTHON                       </Arg>
+        </onEnterCrossSiegeWarSpaceRemotely>
 
         <useCityOfficerPrivilege> <Exposed/>
             <Arg>          INT32                        </Arg>
@@ -53,6 +87,21 @@
         <changeCityMoneyToGuildMoney> <Exposed/>
             <Arg>          INT64                        </Arg>
         </changeCityMoneyToGuildMoney>
+
+        <appointCityOfficer> <Exposed/>
+            <Arg>          INT32                        </Arg>
+            <Arg>          PLAYER_GBID                  </Arg>
+        </appointCityOfficer>
+
+        <querySiegeWarCityFundUseRecord> <Exposed/>
+        </querySiegeWarCityFundUseRecord>
+
+        <onSiegeWarSearchTarget> <Exposed/>
+            <Arg>          UNICODE                      </Arg>
+        </onSiegeWarSearchTarget>
+
+        <biddingFailRedPointCheck> <Exposed/>
+        </biddingFailRedPointCheck>
 
         <onCanChangeCityMoneyToGuildMoneyResult>
             <Arg>          BOOL                         </Arg>
@@ -79,14 +128,17 @@
             <Arg>          GUILD_UUID                   </Arg>
         </onQuerySiegeWarSignUped>
 
+        <onCityBattleTokenDeducted>
+            <Arg>          BOOL                         </Arg>
+            <Arg>          INT32                        </Arg>
+            <Arg>          UNICODE                      </Arg>
+            <Arg>          GUILD_UUID                   </Arg>
+        </onCityBattleTokenDeducted>
+
         <onSiegeWarSignUpBiddingResult>
             <Arg>          BOOL                         </Arg>
             <Arg>          INT32                        </Arg>
         </onSiegeWarSignUpBiddingResult>
-
-        <onSiegeWarBiddingFail>
-            <Arg>          INT32                        </Arg>
-        </onSiegeWarBiddingFail>
 
         <onSiegeWarBiddingDataUpdate>
             <Arg>        ARRAY <of> UNICODE </of>       </Arg>
@@ -115,19 +167,36 @@
             <Arg>          INT32                        </Arg>
         </onQuerySiegeWarBiddingWinnerDataResult>
 
-        <appointCityOfficer>
-            <Arg>          INT32                        </Arg>
-            <Arg>          PLAYER_GBID                  </Arg>
-        </appointCityOfficer>
-
         <onCityDataResponse>
             <Arg>           PY_LIST              </Arg>
         </onCityDataResponse>
 
         <syncCitySimpleData>
             <Arg>          UNICODE                      </Arg>
+            <Arg>          UNICODE                      </Arg>
+            <Arg>          GUILD_UUID                   </Arg>
             <Arg>          LONGTIME                     </Arg>
         </syncCitySimpleData>
+
+        <onCheckCanEnterSiegeWarSpace>
+            <Arg>          INT32                        </Arg>
+            <Arg>          INT32                        </Arg>
+            <Arg>           INT32                   </Arg>
+        </onCheckCanEnterSiegeWarSpace>
+
+        <onGetWarGuildUUIDBeforeEnter>
+            <Arg>          GUILD_UUID                   </Arg>
+            <Arg>          GUILD_UUID                   </Arg>
+        </onGetWarGuildUUIDBeforeEnter>
+
+        <onGetSiegeWarGuildCacheData>
+            <Arg>      PY_DICT       </Arg>
+        </onGetSiegeWarGuildCacheData>
+
+        <onPrivilegeResponse>
+            <Arg>          INT32                  </Arg>
+            <Arg>          INT32                  </Arg>
+        </onPrivilegeResponse>
     </BaseMethods>
 
     <CellMethods>
@@ -147,11 +216,12 @@
 
         <gmEnterSiegeWarSpace>
         </gmEnterSiegeWarSpace>
-        
+
         <beginEnterSiegeWarSpace>
             <Arg>           ENTITYCALL              </Arg>
             <Arg>           OBJECT_ID               </Arg>
-            <Arg>           SPACE_NO                </Arg> 
+            <Arg>           SPACE_NO                </Arg>
+            <Arg>           BOOL                    </Arg>
         </beginEnterSiegeWarSpace>
 
         <setSiegeWarCamp>
@@ -166,6 +236,25 @@
         <onPlayerLoginGetCityBuff>
             <Arg>      PY_DICT       </Arg>
         </onPlayerLoginGetCityBuff>
+
+        <onAddCityBuff>
+            <Arg>          BUFFID                        </Arg>
+            <Arg>          LONGTIME                      </Arg>
+        </onAddCityBuff>
+
+        <setSiegeWrGuildCache>
+            <Arg>          PYTHON                       </Arg>
+        </setSiegeWrGuildCache>
+
+        <crossServerSiegeWarLeave>
+        </crossServerSiegeWarLeave>
+
+        <onSiegeWarChatMsg>
+            <Arg>           CHAT_CHANNEL                </Arg>
+            <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
+            <Arg>           UNICODE                     </Arg>
+            <Arg>           ENTITYCALL                  </Arg>
+        </onSiegeWarChatMsg>
     </CellMethods>
 
     <ClientMethods>
@@ -177,7 +266,7 @@
             <Arg>          UINT8                        </Arg>
             <Arg>          LONGTIME                     </Arg>
         </onSiegeWarLoginDataChanged>
-        
+
         <onQuerySiegeWarSignUped>
             <Arg>          BOOL                         </Arg>
         </onQuerySiegeWarSignUped>
@@ -240,11 +329,6 @@
             <Arg>          SEX                                              </Arg>
         </onSiegeWarBattleEnd>
 
-        <cityRecentActivityResponse>
-            <Arg>          ENTITYCALL                                       </Arg>
-            <Arg>          ARRAY <of> CITY_RECENT_ACTIVITY_VAL </of>        </Arg>
-        </cityRecentActivityResponse>
-
         <onCityDataResponse>
             <Arg>          PLAYER_GBID                                      </Arg>
             <Arg>          UNICODE                                          </Arg>
@@ -262,10 +346,12 @@
             <Arg>          ARRAY <of> CITY_OFFICER_LIST        </of>        </Arg>
             <Arg>          LONGTIME                                         </Arg>
             <Arg>          LONGTIME                                         </Arg>
+            <Arg>          ARRAY <of> CITY_ORDER_REMAIN_TIMES_VAL </of>     </Arg>
         </onCityDataResponse>
 
         <onChangeCityMoneyToGuildMoneyResult>
-            <Arg>          BOOL                         </Arg>
+            <Arg>          BOOL                                             </Arg>
+            <Arg>          INT64                                            </Arg>
         </onChangeCityMoneyToGuildMoneyResult>
 
         <onQuerySiegeWarCityFundUseRecordResult>
@@ -279,11 +365,17 @@
 
         <onSyncCitySimpleData>
             <Arg>          UNICODE                      </Arg>
+            <Arg>          UNICODE                      </Arg>
+            <Arg>          GUILD_UUID                   </Arg>
             <Arg>          LONGTIME                     </Arg>
         </onSyncCitySimpleData>
 
         <onYuxiFlagChange>
             <Arg>          BOOL                         </Arg>
         </onYuxiFlagChange>
+
+        <biddingFailRedPointSync>
+            <Arg>          BOOL                         </Arg>
+        </biddingFailRedPointSync>
     </ClientMethods>
 </root>

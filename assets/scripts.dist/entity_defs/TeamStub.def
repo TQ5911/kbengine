@@ -19,14 +19,19 @@
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
             <Arg>           TEAMTARGET      </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
+            <Arg>           UNICODE         </Arg>
+            <Arg>           STRING          </Arg>
+            <Arg>           BOOL            </Arg>
             <Arg>           PY_DICT         </Arg>
-            <Arg>           BOOL            </Arg>
-            <Arg>           BOOL            </Arg>
         </createTeam>
 
         <applyJoinTeam>
             <Arg>           TEAMID          </Arg>
+            <Arg>           STRING          </Arg>
             <Arg>           PY_DICT         </Arg>
+            <Arg>           BOOL            </Arg>
         </applyJoinTeam>
 
         <addTeamMember>
@@ -51,6 +56,7 @@
         </replyInviteTeam>
 
         <leaveTeam>
+            <Arg>           UINT32          </Arg>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
@@ -265,22 +271,6 @@
             <Arg>   PYTHON      </Arg>
         </enterTeamCrusadeDungeon>
 
-        <enterTeamSoulCardDungeon>
-            <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   DUNGEON_NO  </Arg>
-            <Arg>   PYTHON      </Arg>
-        </enterTeamSoulCardDungeon>
-
-        <enterTeamQimoCaveDungeon>
-            <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   DUNGEON_NO  </Arg>
-            <Arg>   PYTHON      </Arg>
-        </enterTeamQimoCaveDungeon>
-
         <enterTeamDungeonDirectly>
             <Arg>   MAILBOX     </Arg>
             <Arg>   PLAYER_GBID </Arg>
@@ -320,7 +310,14 @@
             <Arg>   STRING      </Arg>
             <Arg>   PYTHON      </Arg>
         </destroyTeamDungeonDelay>
-
+        
+        <TeamDungeonCompletedAfter>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   BOOL        </Arg>
+        </TeamDungeonCompletedAfter>
+        
         <onDestroyTeamDungeon>
             <Arg>   TEAMID      </Arg>
             <Arg>   DUNGEON_NO  </Arg>
@@ -434,13 +431,7 @@
         <teamPrepareAutoMatch>
             <Arg>           TEAMID       </Arg>
             <Arg>           GUILD_UUID   </Arg>
-            <Arg>           BOOL        </Arg>
         </teamPrepareAutoMatch>
-
-        <setTeamMatchAllowRobot>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           BOOL        </Arg>
-        </setTeamMatchAllowRobot>
 
         <teamPrepareStopAutoMatch>
             <Arg>           TEAMID       </Arg>
@@ -456,12 +447,15 @@
         </onTeamAutoMatchTimeout>
 
         <setTeamTarget>
+            <Arg>           PLAYER_GBID  </Arg>
             <Arg>           TEAMID       </Arg>
             <Arg>           TEAMTARGET   </Arg>
             <Arg>           UINT32       </Arg>
             <Arg>           UINT32       </Arg>
-            <Arg>           GUILD_UUID   </Arg>
+            <Arg>           UNICODE      </Arg>
+            <Arg>           STRING       </Arg>
             <Arg>           BOOL         </Arg>
+            <Arg>           GUILD_UUID   </Arg>
         </setTeamTarget>
 
         <getTeamInfo>
@@ -493,14 +487,6 @@
             <Arg>           PLAYER_GBID  </Arg>
        </killMonster>
 
-       <teamRobotKillMonster>
-            <Arg>           TEAMID       </Arg>
-            <Arg>           SPACE_NO     </Arg>
-            <Arg>           MONSTER_ID   </Arg>
-            <Arg>           UINT32       </Arg>
-            <Arg>           PLAYER_GBID  </Arg>
-       </teamRobotKillMonster>
-
         <!--raid mixin start-->
         <createRaidWithTeam>
             <Arg>   MAILBOX     </Arg>
@@ -530,16 +516,17 @@
         </replyJoinRaidWithTeam>
 
         <raidApplyInvitedRaid>
+            <Arg>   TEAMTARGET  </Arg>
             <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
             <Arg>   RAID_ID     </Arg>
             <Arg>   UNICODE     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
             <Arg>   UNICODE     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   PLAYER_GBID </Arg>
             <Arg>   UNICODE     </Arg>
-            <Arg>   TEAMID </Arg>
-            <Arg>   PYTHON  </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   PYTHON      </Arg>
         </raidApplyInvitedRaid>
 
         <onReplyInviteRaidWithTeamFail>
@@ -576,21 +563,6 @@
             <Arg>   INT32           </Arg>
             <Arg>   PY_LIST           </Arg>
         </sendTeamMemberMessage_localCross>
-
-        <teamAddRobot>
-            <Arg>   TEAMID     </Arg>
-            <Arg>   ARRAY   <of> PLAYER_GBID </of>    </Arg>
-        </teamAddRobot>
-
-        <teamRemoveRobot>
-            <Arg>   TEAMID     </Arg>
-            <Arg>   ARRAY   <of> PLAYER_GBID </of>    </Arg>
-        </teamRemoveRobot>
-
-        <teamCreateTeamRobotSucc>
-            <Arg>   TEAMID     </Arg>
-            <Arg>   PY_DICT    </Arg>
-        </teamCreateTeamRobotSucc>
 
         <switchTeamMicsMode>
             <Arg>   MAILBOX     </Arg>
@@ -655,10 +627,6 @@
             <Arg>   ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
         </challengeDunNotifyMsg>
 
-        <notifyCaptainForceMatchRobot>
-            <Arg>   TEAMID      </Arg>
-        </notifyCaptainForceMatchRobot>
-
         <reCreateOrJoinTeam>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
@@ -672,15 +640,44 @@
             <Arg>       ENTITY_ID       </Arg>
         </getCaptainName>
 
-        <reqPublishTeam>
+        <reqAddMarkMember>
             <Arg>       TEAMID      </Arg>
-            <Arg>       BOOL        </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UINT8       </Arg>
             <Arg>       UNICODE     </Arg>
-        </reqPublishTeam>
-
-        <setAutoInPlace>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       ENTITY_ID           </Arg>
+            <Arg>       POSITION_ARG    </Arg>
+            <Arg>       MAILBOX     </Arg>
+        </reqAddMarkMember>
+        <reqDelMarkMember>
             <Arg>       TEAMID      </Arg>
-            <Arg>       BOOL        </Arg>
-        </setAutoInPlace>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UINT8       </Arg>
+        </reqDelMarkMember>
+        <reqChangeOnlyCaptain>
+            <Arg>       TEAMID      </Arg>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       UINT8       </Arg>
+        </reqChangeOnlyCaptain>
+        <onMarkMonsterDead>
+            <Arg>       OBJECT_ID       </Arg>
+        </onMarkMonsterDead>
+        <reqJoinTeam>
+            <Arg>   MAILBOX     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   STRING      </Arg>
+            <Arg>   PY_DICT     </Arg>
+        </reqJoinTeam>
+
+        <teamDungeonFinished>
+            <Arg>           TEAMID          </Arg>
+        </teamDungeonFinished>
+
+        <setInDungeon>
+            <Arg>       TEAMID          </Arg>
+        </setInDungeon>
     </BaseMethods>
 </root>

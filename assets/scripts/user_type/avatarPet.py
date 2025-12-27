@@ -10,6 +10,7 @@ import petData_set as PDSD
 import gametimer
 import petData_unlock as PDUD
 import petData_petGear as PDPGD
+import itemData_itemData_set as IDIDS
 import dataUtils
 
 
@@ -228,7 +229,7 @@ class LingShouInfo(userType.UserSoleType):
 
         owner.cell.onInitPetProps([pet.petId])
         pet.updateLingShouScore(owner)
-        owner.onMessagePre(PDSD.datas['petUnlockTips']['value'], [PDPD.datas[pet.petId]['name']])
+        owner.onMessagePre(PDSD.datas['petUnlockTips']['value'], [str(IDIDS.petIndexDatas[pet.petId])])
 
 
         # owner.checkAchievementTrigger(gameconst.AchieveTargetType.GET_PET, pet.rank)

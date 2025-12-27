@@ -16,6 +16,7 @@ class IMeridian(object):
     def onMeridianAward(self, propIndexList):
         DEBUG_MSG('onMeridianAward', propIndexList)
 
+        propDict = {}
         for index in propIndexList:
             config = MMD.datas.get(index, None)
             if config is None:
@@ -23,16 +24,16 @@ class IMeridian(object):
             if config is None:
                 continue
 
-            propDict = {}
             needList = [0, self.school]
             for val in needList:
                 propKey = 'prop{}'.format(val)
                 propList = config.get(propKey, None)
                 if propList:
                     for prop in propList:
-                        propDict[prop[0]] = prop[1]
+                        propDict.setdefault(prop[0], 0)
+                        propDict[prop[0]] += prop[1]
 
-            self._addAwardMeridianPropsCell(propDict)
+        self._addAwardMeridianPropsCell(propDict)
 
     def _addAwardMeridianPropsCell(self, syncPropDict):
         addScore = 0
@@ -41,7 +42,6 @@ class IMeridian(object):
             addScore += int(round(dataUtils.filterFightPropScore(self.school, propName) * val))
             # DEBUG_MSG('add prop by meridian', propName, ', val', val)
 
-        if addScore:
-            newScore = self.scoresInfo.rewardFightProp + addScore
-            # DEBUG_MSG('add score by meridian', self.scoresInfo.rewardFightProp, ', val', addScore)
-            self.onUpdateRewardFightProp(newScore)
+        newScore = self.scoresInfo.meridian + addScore
+        DEBUG_MSG('add score by meridian', self.scoresInfo.meridian, ', val', addScore)
+        self.onUpdateMeridianScore(newScore)

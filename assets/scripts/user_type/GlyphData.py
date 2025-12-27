@@ -9,6 +9,7 @@ class GlyphData(userType.UserSoleType):
         self.inscriptionEffects = {}
         self.inscriptionRecords = {}
         self.replacedSkillIdx = {}
+        self.sourceSkillIdx = {}
 
     def _lateReload(self):
         super(GlyphData, self)._lateReload()
@@ -24,6 +25,8 @@ class GlyphData(userType.UserSoleType):
         replacedSkillIdx = dataDict.get('replacedSkillIdx')
         if replacedSkillIdx:
             self.replacedSkillIdx = replacedSkillIdx
+        for replacedSkillId, sourceSkillId in self.replacedSkillIdx.items():
+            self.sourceSkillIdx[sourceSkillId] = replacedSkillId
     
     def toSavedDict(self):
         data = {
@@ -81,7 +84,9 @@ class GlyphData(userType.UserSoleType):
                 # 旧的技能反向替换
                 owner.changeSkill(None, None, oldEffectValue[1], skillID)
                 # 移除替换技能索引
-                self.replacedSkillIdx.pop(oldEffectValue[1], None)
+                srcSkillId = self.replacedSkillIdx.pop(oldEffectValue[1], None)
+                if srcSkillId:
+                    self.sourceSkillIdx.pop(srcSkillId, None)
             # 旧增加技能等级清理
             elif inscriptionType == gameconst.InscriptionEffectType.SKILL_LEVEL_INCREASE_VALUE:
                 # 移除旧的技能等级值
@@ -101,6 +106,7 @@ class GlyphData(userType.UserSoleType):
                 owner.changeSkill(None, None, skillID, effectValue[1])
                 # 加入技能替换索引
                 self.replacedSkillIdx[effectValue[1]] = skillID
+                self.sourceSkillIdx[skillID] = effectValue[1]
                 DEBUG_MSG("in applyInscriptionEffects, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillID, gameconst.InscriptionEffectType.REPLACE_SKILL, effectValue)
                 self.inscriptionRecords[dataKey] = effectValue
                 appliedEffectDataKeys.append(dataKey)
@@ -142,4 +148,11 @@ class GlyphData(userType.UserSoleType):
         return True, effectDatas[1:]
     
     def getInscriptionSrcSkillId(self, skillId):
-        return self.replacedSkillIdx.get(skillId, skillId)
+        DEBUG_MSG("GlyphData-->getInscriptionSrcSkillId~", skillId, self.sourceSkillIdx, self.replacedSkillIdx)
+        newSkillId = self.replacedSkillIdx.get(skillId, None)
+        if newSkillId:
+            return skillId, newSkillId
+        newSkillId = self.sourceSkillIdx.get(skillId, None)
+        if newSkillId:
+            return newSkillId, skillId
+        return skillId, skillId

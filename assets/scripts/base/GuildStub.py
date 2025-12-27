@@ -308,18 +308,5 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             box.onSyncGuildMineWarResult(guildUUID, '', 0, 0, '', {}, onRegister)
             return
 
-        _gcVal.guildBox.getJunxuQiXieLevel(guildUUID, box, onRegister)
-        
-    def addMineWarScoreFromGuild(self, mapId, guildUUID, playerGbId, playerName, score, scoreType):
-        _gcVal = self.guildDic.get(guildUUID)
-        if not _gcVal:
-            return
+        _gcVal.guildBox.getGuildMineWarForRegister(box, onRegister)
 
-        gameengine.getGlobalBase('MineWarStub').addMineWarScore(mapId, playerGbId, playerName, _gcVal.guildName, _gcVal.icon, _gcVal.dspFlag, score, scoreType)
-
-    def onMineWarFlagBeKillFromGuild(self, mapId, guildUUID, killerName):
-        _gcVal = self.guildDic.get(guildUUID)
-        if not _gcVal:
-            return
-
-        gameengine.getGlobalBase('MineWarStub').onMineWarFlagBeKill(mapId, _gcVal.guildName, killerName)

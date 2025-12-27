@@ -22,9 +22,10 @@ class MonsterBase(KBEngine.Entity):
     def onRemoveAureole(self, arg0): pass
     def onRemoveAureoleFromOthers(self, arg0): pass
     def onRemoveBuff(self, arg0, arg1): pass
-    def onSetAddSkillCd(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
+    def onSetAddSkillCd(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7): pass
     def onShooterSkillCanUse(self, arg0, arg1, arg2): pass
     def onSkillDamage(self, arg0): pass
+    def onTelBack(self, arg0): pass
     def onUpdateAureoles(self, arg0): pass
     def onUpdateAureolesFromOthers(self, arg0): pass
     def onUpdateBuff(self, arg0): pass

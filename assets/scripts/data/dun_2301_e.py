@@ -21,7 +21,7 @@ datas ={
   },
   "1004": {
     "type": "delayLoop",
-    "firstDelay": 3600.0,
+    "firstDelay": 3490.0,
     "loopDelay": 0.0,
     "loopNum": 1,
     "transition": {
@@ -34,9 +34,8 @@ datas ={
     "type": "dunStart",
     "transition": {
       "finished": [
-        1003,
-        1004,
-        1013
+        1036,
+        1039
       ]
     }
   },
@@ -59,21 +58,9 @@ datas ={
       ]
     }
   },
-  "1013": {
-    "type": "playerRestNum",
-    "compare": 1,
-    "num": 0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1008
-      ]
-    }
-  },
   "1005": {
     "type": "dunEnd",
-    "exitTime": 15.0,
+    "exitTime": 125.0,
     "isDungeonDone": 1,
     "transition": {}
   },
@@ -111,6 +98,51 @@ datas ={
       23010001
     ],
     "dialogID": 19031001,
+    "transition": {}
+  },
+  "1036": {
+    "type": "delayLoop",
+    "firstDelay": 110.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1004,
+        1042,
+        1043,
+        1003
+      ]
+    }
+  },
+  "1039": {
+    "type": "createAirWall",
+    "entityID": [
+      23018005
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1041": {
+    "type": "removeAirWall",
+    "entityID": [
+      23018005
+    ],
+    "transition": {}
+  },
+  "1042": {
+    "type": "delayLoop",
+    "firstDelay": 10.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1041
+      ]
+    }
+  },
+  "1043": {
+    "type": "notifyStartBattleCD",
+    "cdTime": 10,
     "transition": {}
   }
 }

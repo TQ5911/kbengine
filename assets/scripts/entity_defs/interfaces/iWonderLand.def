@@ -63,6 +63,7 @@
         <summonWonderLandBossBase>
             <Arg>          OBJECT_ID                    </Arg>
             <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT32                       </Arg>
             <Arg>          OBJECT_ID                    </Arg>
         </summonWonderLandBossBase>
 
@@ -77,6 +78,7 @@
 
         <checkSummonWonderLandBossBase>
             <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT32                       </Arg>
         </checkSummonWonderLandBossBase>
 
         <addWonderLandDurationFailedRewindTimes>

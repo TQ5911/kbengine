@@ -13,9 +13,46 @@
             <WitnessName>   true            </WitnessName>
         </mineWarCamp>
 
+        <myGuildInfo>
+            <Type>      PYTHON         </Type>
+            <Flags>     CELL_PRIVATE           </Flags>
+        </myGuildInfo>
+        <myGuildInfoBase>
+            <Type>      PYTHON         </Type>
+            <Flags>     BASE           </Flags>
+        </myGuildInfoBase>
+        
+        <myMineList>
+            <Type>      PYTHON         </Type>
+            <Flags>     CELL_PRIVATE           </Flags>
+        </myMineList>
+        <myMineListBase>
+            <Type>      PYTHON         </Type>
+            <Flags>     BASE           </Flags>
+        </myMineListBase>
+        <MineRevenueDict>
+            <Type>      PYTHON         </Type>
+            <Flags>     BASE           </Flags>
+        </MineRevenueDict>
+        <mineWarState>
+            <Type>      UINT8         </Type>
+            <Flags>     CELL_PRIVATE           </Flags>
+        </mineWarState>
+        <mineWarStateBase>
+            <Type>      UINT8         </Type>
+            <Flags>     BASE           </Flags>
+        </mineWarStateBase>
+
     </Properties>
 
     <BaseMethods>
+        <reqSyncGuildData>
+        </reqSyncGuildData>
+        
+        <onPlayerGetGuildInfo>
+            <Arg>          MINE_WAR_GUILD_INFO         </Arg>
+        </onPlayerGetGuildInfo>
+
         <onMineWarStateSync>
             <Arg>          UINT8         </Arg>
             <Arg>          TIMESTAMP         </Arg>
@@ -43,13 +80,19 @@
         </reqMineWarShareBonus>
         <reqMineWarGuildOwnerRank> <Exposed/>
             <Arg>          LINE_NO         </Arg>
+            <Arg>          UINT8         </Arg>
         </reqMineWarGuildOwnerRank>
         <reqMineWarGuildPlayerRank> <Exposed/>
             <Arg>          LINE_NO         </Arg>
+            <Arg>          UINT8         </Arg>
         </reqMineWarGuildPlayerRank>
 
         <reqMineWarCollectInfo> <Exposed/>
         </reqMineWarCollectInfo>
+
+        <reqMineWarGuildMemberScore> <Exposed/>
+            <Arg>          LINE_NO         </Arg>
+        </reqMineWarGuildMemberScore>
 
         <getMineWarInfo>
         </getMineWarInfo>
@@ -58,12 +101,46 @@
             <Arg>          LINE_NO         </Arg>
         </onMineWarKillCore>
         <onMineWarHpWarning>
-            <Arg>          LINE_NO         </Arg>
+            <Arg>          SPACE_NO         </Arg>
             <Arg>          UINT8         </Arg>
         </onMineWarHpWarning>
 
+        <onMineWarFlagBeDestroyed>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          GUILD_UUID         </Arg>
+            <Arg>          UINT8         </Arg>
+        </onMineWarFlagBeDestroyed>
+        <onMineWarFlagAllDestroyed>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          UNICODE         </Arg>
+            <Arg>          GUILD_UUID         </Arg>
+        </onMineWarFlagAllDestroyed>
+        <onMineWarFlagHpChangeWarning>
+            <Arg>          LINE_NO         </Arg>
+        </onMineWarFlagHpChangeWarning>
+        <onMineWarFlagHpLowWarning>
+            <Arg>          LINE_NO         </Arg>
+        </onMineWarFlagHpLowWarning>
+
+        <onMineWarLeaveGuild>
+        </onMineWarLeaveGuild>
+
+        <onMineWarGuildOwnerRankBase>
+            <Arg>   MINE_WAR_GUILD_RANK_INFO   </Arg>
+            <Arg>   ARRAY   <of>    MINE_WAR_GUILD_RANK_INFO     </of>   </Arg>
+        </onMineWarGuildOwnerRankBase>
+
+        <onMineWarGuildPlayerRankBase>
+            <Arg>   MINE_WAR_GUILD_PLAYER_RANK_INFO   </Arg>
+            <Arg>   ARRAY   <of>    MINE_WAR_GUILD_PLAYER_RANK_INFO     </of>   </Arg>
+        </onMineWarGuildPlayerRankBase>
+
     </BaseMethods>
     <CellMethods>
+        <onCellPlayerGetGuildInfo>
+            <Arg>          MINE_WAR_GUILD_INFO         </Arg>
+        </onCellPlayerGetGuildInfo>
+        
         <syncMineWarInfo>
             <Arg>          UINT8         </Arg>
             <Arg>   ARRAY   <of>  LINE_NO   </of>   </Arg>
@@ -121,6 +198,9 @@
             <Arg>   UINT8      </Arg>
         </onGetMineWarCollectInfo>
         
-        
+        <onGetMineWarGuildMemberScore>
+            <Arg>   LINE_NO         </Arg>
+            <Arg>   ARRAY   <of>    MINE_WAR_GUILD_MEMBER_SCORE_INFO     </of>   </Arg>
+        </onGetMineWarGuildMemberScore>
     </ClientMethods>
 </root>

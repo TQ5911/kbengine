@@ -102,6 +102,9 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         ent = self.getEntityById(palyerEntId)
         if ent:
             self.spaceVars and ent.base.syncSpaceVariable(self.spaceNo, self.spaceVars)
+            # 开启数据统计
+            ent.startReportStatistics()
+            ent.client.onLightPillarUpdate([value for value in self.lightPillarDict.values()], [True] * len(self.lightPillarDict))
 
     def onPlayerLeave(self, gbId, playerId, box):
         self.players.pop(playerId, None)
@@ -124,6 +127,12 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         if formula.isMineWarSpace(self.spaceNo) and not ent.IsMonster:
             self.addMineWarEntity(ent)
 
+        if ent.IsMonster:
+            if ent.lightPillar != 0:
+                DEBUG_MSG('zt: lightPillar', ent.lightPillar)
+                if entId not in self.lightPillarDict:
+                    self.lightPillarDict[entId] = ent.lightPillar
+                    self.syncPlayer(lambda box: box.client.onLightPillarUpdate([ent.lightPillar], [True]))
         # if ent.IsMonster:
         #     attrId = CBD.datas[ent.monsterId]['attribute']
             # self._doActionByAttrKey(ent, utils.getMonsterAttrKey(attrId))
@@ -187,6 +196,9 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             tagList.remove(entId)
 
         self.spaceEntities.pop(entId)
+        if entId in self.lightPillarDict:
+            pillar = self.lightPillarDict.pop(entId)
+            self.syncPlayer(lambda box: box.client.onLightPillarUpdate([pillar], [False]))
 
     def removeEntitiesByTag(self, tag):
         if tag not in self.taggedEntities:
@@ -297,7 +309,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         self.setAvatarNearNotifyState(playerId, False)
 
     def onPlayerRelogin(self, box, playerGbId):
-        pass
+        box.client.onLightPillarUpdate([value for value in self.lightPillarDict.values()], [True] * len(self.lightPillarDict))
 
     def onPlayerDead(self, box, playerGbId):
         if box.id not in self.players:
@@ -462,3 +474,21 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         DEBUG_MSG("cinemaPlay::", cinemaPlayID)
         self.syncPlayer(lambda box: box.prepareStartPlayCinema(cinemaPlayID))
     # ----------------------------------------------------------------------
+
+    def createDunEntity(self, gid):
+        if KBEngine.isShuttingDown():
+            return
+
+        _entityProps = []
+        utils.loadLineReadyEntities(self.spaceNo, [gid], _entityProps, True)
+        for _, _, _className, _, _pos, _dir, _params, _ in _entityProps:
+            _params['spaceMgrId'] = self.id
+            self.getCurrentSpace().createCellLocally(_className, _pos, _dir, _params)
+
+    def doDungeonStartBattleCD(self, spaceNo, dungeonNo, cdTime):
+        ts = utils.getNow() + cdTime
+        if formula.isGuildBossDungeonSpace(spaceNo):
+            self.getGuildBox().onGuildChallengeDungeonStartBattleCD(ts)
+        self.syncPlayer(lambda box: box.client.onNotifyStartBattleCD(dungeonNo, ts))
+        
+

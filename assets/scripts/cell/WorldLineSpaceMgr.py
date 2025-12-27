@@ -18,9 +18,10 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         INFO_MSG('WorldLineSpaceMgr init', self.spaceNo, self.spaceID)
 
         iMineWarSpaceMgr.IMineWarSpaceMgr.__init__(self)
+        iSpaceMgr.ISpaceMgr.__init__(self)
         if formula.isWolrdBossSpace(self.spaceNo):
             # 初始化世界boss 由 ITimerEntityRefresh 处理
-            if CONST.datas['bossRefreshSystem']['value'] != gameconst.WorldBossRefreshType.INTERVAL_TIMER:
+            if CONST.datas['bossRefreshSystem']['value'] != gameconst.WorldBossRefreshType.TIMED_INTERVALS_TIMER:
                 self._initCreateBoss(0)
 
             self._initWorldBossGid()
@@ -130,12 +131,12 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         return (self.worldLineSceneState & (1 << st)) > 0
 
     def onWorldBossDead(self, refreshTime):
-        DEBUG_MSG('onWorldBossDead', self.spaceNo, refreshTime)
+        DEBUG_MSG('onWorldBossDead', self.spaceNo, refreshTime, CONST.datas['bossRefreshSystem']['value'])
         _delay = CONST.datas['messageDelayAfterDeath']['value']
         self._callback(_delay, 'setSceneStates', ([gameconst.WorldLineSceneState.LEI_JI],), gametimer.TIMER_TAG_BOSS_DEAD_SET_SCENE_STATE)
 
         # 不通知刷新了,由 ITimerEntityRefresh 控制下次刷新
-        if CONST.datas['bossRefreshSystem']['value'] == gameconst.WorldBossRefreshType.INTERVAL_TIMER:
+        if CONST.datas['bossRefreshSystem']['value'] == gameconst.WorldBossRefreshType.TIMED_INTERVALS_TIMER:
             DEBUG_MSG('onWorldBossDead2', self.spaceNo, refreshTime)
             return
 

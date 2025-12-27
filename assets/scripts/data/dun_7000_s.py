@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "70000001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",

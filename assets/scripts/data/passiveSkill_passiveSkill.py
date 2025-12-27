@@ -44,40 +44,40 @@ def _87010004_remove(self, target, context):
     self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.01]])
 
 def _87010005(self, target, context):
-    self.addPropByPassiveSkill([["adjStunEnh",6]])
+    self.addPropByPassiveSkill([["adjStunEnh",2]])
 
 def _87010005_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunEnh",6]])
+    self.removePropByPassiveSkill([["adjStunEnh",2]])
 
 def _87010006(self, target, context):
-    self.addPropByPassiveSkill([["adjStunAnti",6]])
+    self.addPropByPassiveSkill([["adjStunAnti",2]])
 
 def _87010006_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunAnti",6]])
+    self.removePropByPassiveSkill([["adjStunAnti",2]])
 
 def _87010007(self, target, context):
-    self.addPropByPassiveSkill([["adjKnockEnh",6]])
+    self.addPropByPassiveSkill([["adjKnockEnh",2]])
 
 def _87010007_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjKnockEnh",6]])
+    self.removePropByPassiveSkill([["adjKnockEnh",2]])
 
 def _87010008(self, target, context):
-    self.addPropByPassiveSkill([["adjKnockAnti",6]])
+    self.addPropByPassiveSkill([["adjKnockAnti",2]])
 
 def _87010008_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjKnockAnti",6]])
+    self.removePropByPassiveSkill([["adjKnockAnti",2]])
 
 def _87010009(self, target, context):
-    self.addPropByPassiveSkill([["adjPushEnh",6]])
+    self.addPropByPassiveSkill([["adjPushEnh",2]])
 
 def _87010009_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPushEnh",6]])
+    self.removePropByPassiveSkill([["adjPushEnh",2]])
 
 def _87010010(self, target, context):
-    self.addPropByPassiveSkill([["adjPushAnti",6]])
+    self.addPropByPassiveSkill([["adjPushAnti",2]])
 
 def _87010010_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPushAnti",6]])
+    self.removePropByPassiveSkill([["adjPushAnti",2]])
 
 def _87010011(self, target, context):
     self.addPropByPassiveSkill([["adjCopper",0.02]])
@@ -122,64 +122,64 @@ def _87010017_remove(self, target, context):
     self.removePropByPassiveSkill([["adjAntiMortal",0.02]])
 
 def _87010018(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmg",0.015]])
+    self.addPropByPassiveSkill([["adjFinalDmg",0.01]])
 
 def _87010018_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmg",0.015]])
+    self.removePropByPassiveSkill([["adjFinalDmg",0.01]])
 
 def _87010019(self, target, context):
-    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.015]])
+    self.addPropByPassiveSkill([["adjFinalDmgAnti",0.01]])
 
 def _87010019_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.015]])
+    self.removePropByPassiveSkill([["adjFinalDmgAnti",0.01]])
 
 def _87010020(self, target, context):
-    self.addPropByPassiveSkill([["adjPVPDmg",0.015]])
+    self.addPropByPassiveSkill([["adjMonsterDmg",0.015]])
 
 def _87010020_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPVPDmg",0.015]])
+    self.removePropByPassiveSkill([["adjMonsterDmg",0.015]])
 
 def _87010021(self, target, context):
-    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.015]])
+    self.addPropByPassiveSkill([["adjMonsterDmgAnti",0.015]])
 
 def _87010021_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.015]])
+    self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.015]])
 
 def _87010022(self, target, context):
-    self.addPropByPassiveSkill([["adjStunEnh",12]])
+    self.addPropByPassiveSkill([["adjStunEnh",4]])
 
 def _87010022_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunEnh",12]])
+    self.removePropByPassiveSkill([["adjStunEnh",4]])
 
 def _87010023(self, target, context):
-    self.addPropByPassiveSkill([["adjStunAnti",12]])
+    self.addPropByPassiveSkill([["adjStunAnti",4]])
 
 def _87010023_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjStunAnti",12]])
+    self.removePropByPassiveSkill([["adjStunAnti",4]])
 
 def _87010024(self, target, context):
-    self.addPropByPassiveSkill([["adjKnockEnh",12]])
+    self.addPropByPassiveSkill([["adjKnockEnh",4]])
 
 def _87010024_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjKnockEnh",12]])
+    self.removePropByPassiveSkill([["adjKnockEnh",4]])
 
 def _87010025(self, target, context):
-    self.addPropByPassiveSkill([["adjKnockAnti",12]])
+    self.addPropByPassiveSkill([["adjKnockAnti",4]])
 
 def _87010025_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjKnockAnti",12]])
+    self.removePropByPassiveSkill([["adjKnockAnti",4]])
 
 def _87010026(self, target, context):
-    self.addPropByPassiveSkill([["adjPushEnh",12]])
+    self.addPropByPassiveSkill([["adjPushEnh",4]])
 
 def _87010026_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPushEnh",12]])
+    self.removePropByPassiveSkill([["adjPushEnh",4]])
 
 def _87010027(self, target, context):
-    self.addPropByPassiveSkill([["adjPushAnti",12]])
+    self.addPropByPassiveSkill([["adjPushAnti",4]])
 
 def _87010027_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPushAnti",12]])
+    self.removePropByPassiveSkill([["adjPushAnti",4]])
 
 def _87010028(self, target, context):
     self.addPropByPassiveSkill([["adjCopper",0.04]])
@@ -224,16 +224,16 @@ def _87010034_remove(self, target, context):
     self.removePropByPassiveSkill([["adjAntiMortal",0.04]])
 
 def _87010035(self, target, context):
-    self.addPropByPassiveSkill([["adjIgnoreArmor",0.04]])
+    self.addPropByPassiveSkill([["adjFinalDmg",0.02]])
 
 def _87010035_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjIgnoreArmor",0.04]])
+    self.removePropByPassiveSkill([["adjFinalDmg",0.02]])
 
 def _87010036(self, target, context):
-    self.addPropByPassiveSkill([["adjDmgArmor",0.04]])
+    self.addPropByPassiveSkill([["adjFinalDmgAnti",0.02]])
 
 def _87010036_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjDmgArmor",0.04]])
+    self.removePropByPassiveSkill([["adjFinalDmgAnti",0.02]])
 
 def _87010037(self, target, context):
     self.addPropByPassiveSkill([["adjMonsterDmg",0.03]])
@@ -290,34 +290,34 @@ def _87010045_remove(self, target, context):
     self.removePropByPassiveSkill([["adjAntiMortal",0.08]])
 
 def _87010046(self, target, context):
-    self.addPropByPassiveSkill([["adjIgnoreArmor",0.08]])
+    self.addPropByPassiveSkill([["adjFinalDmg",0.04]])
 
 def _87010046_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjIgnoreArmor",0.08]])
+    self.removePropByPassiveSkill([["adjFinalDmg",0.04]])
 
 def _87010047(self, target, context):
-    self.addPropByPassiveSkill([["adjDmgArmor",0.08]])
+    self.addPropByPassiveSkill([["adjFinalDmgAnti",0.04]])
 
 def _87010047_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjDmgArmor",0.08]])
+    self.removePropByPassiveSkill([["adjFinalDmgAnti",0.04]])
 
 def _87010048(self, target, context):
-    self.addPropByPassiveSkill([["adjPVPDmg",0.05]])
+    self.addPropByPassiveSkill([["adjPVPDmg",0.06]])
 
 def _87010048_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPVPDmg",0.05]])
+    self.removePropByPassiveSkill([["adjPVPDmg",0.06]])
 
 def _87010049(self, target, context):
-    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.05]])
+    self.addPropByPassiveSkill([["adjPVPDmgAnti",0.06]])
 
 def _87010049_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.05]])
+    self.removePropByPassiveSkill([["adjPVPDmgAnti",0.06]])
 
 def _87010050(self, target, context):
-    self.addPropByPassiveSkill([["adjExpGrow",0.08]])
+    self.addPropByPassiveSkill([["adjExpGrow",0.1]])
 
 def _87010050_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjExpGrow",0.08]])
+    self.removePropByPassiveSkill([["adjExpGrow",0.1]])
 
 def _87020001(self, target, context):
     self.addBuffBySkill(target, context, 64002005, 1)
@@ -350,10 +350,10 @@ def _87020005_remove(self, target, context):
     self.removePropByPassiveSkill([["adjMonsterDmgAnti",0.01]])
 
 def _87020006(self, target, context):
-    self.addPropByPassiveSkill([["adjCopper",0.025]])
+    self.addPropByPassiveSkill([["adjExpGrow",0.01]])
 
 def _87020006_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjCopper",0.025]])
+    self.removePropByPassiveSkill([["adjExpGrow",0.01]])
 
 def _87020007(self, target, context):
     self.addPropByPassiveSkill([["adjPVPDmg",0.01]])
@@ -392,10 +392,10 @@ def _87020012_remove(self, target, context):
     self.removePropByPassiveSkill([["adjMedicineRate",0.04]])
 
 def _87020013(self, target, context):
-    self.addBuffBySkill(target, context, 64002015, 1)
+    self.addPropByPassiveSkill([["adjExpGrow",0.02]])
 
 def _87020013_remove(self, target, context):
-    self.removeBuffBySkill(target, context, 64002015)
+    self.removePropByPassiveSkill([["adjExpGrow",0.02]])
 
 def _87020014(self, target, context):
     self.addBuffBySkill(target, context, 64002017, 1)
@@ -446,10 +446,10 @@ def _87020021_remove(self, target, context):
     self.removeBuffBySkill(target, context, 64002025)
 
 def _87020022(self, target, context):
-    self.addPropByPassiveSkill([["adjMortal",0.05]])
+    self.addPropByPassiveSkill([["adjExpGrow",0.05]])
 
 def _87020022_remove(self, target, context):
-    self.removePropByPassiveSkill([["adjMortal",0.05]])
+    self.removePropByPassiveSkill([["adjExpGrow",0.05]])
 
 def _87020023(self, target, context):
     self.addBuffBySkill(target, context, 64002045, 1)
@@ -828,7 +828,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010005,
         "removeAction": _87010005_remove,
-        "propList": _tools.ROList([['adjStunEnh', 6]]),
+        "propList": _tools.ROList([['adjStunEnh', 2]]),
         "desBuff": None,
         "score": 0
     }),
@@ -838,7 +838,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010006,
         "removeAction": _87010006_remove,
-        "propList": _tools.ROList([['adjStunAnti', 6]]),
+        "propList": _tools.ROList([['adjStunAnti', 2]]),
         "desBuff": None,
         "score": 0
     }),
@@ -848,7 +848,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010007,
         "removeAction": _87010007_remove,
-        "propList": _tools.ROList([['adjKnockEnh', 6]]),
+        "propList": _tools.ROList([['adjKnockEnh', 2]]),
         "desBuff": None,
         "score": 0
     }),
@@ -858,7 +858,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010008,
         "removeAction": _87010008_remove,
-        "propList": _tools.ROList([['adjKnockAnti', 6]]),
+        "propList": _tools.ROList([['adjKnockAnti', 2]]),
         "desBuff": None,
         "score": 0
     }),
@@ -868,7 +868,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010009,
         "removeAction": _87010009_remove,
-        "propList": _tools.ROList([['adjPushEnh', 6]]),
+        "propList": _tools.ROList([['adjPushEnh', 2]]),
         "desBuff": None,
         "score": 0
     }),
@@ -878,7 +878,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010010,
         "removeAction": _87010010_remove,
-        "propList": _tools.ROList([['adjPushAnti', 6]]),
+        "propList": _tools.ROList([['adjPushAnti', 2]]),
         "desBuff": None,
         "score": 0
     }),
@@ -958,7 +958,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010018,
         "removeAction": _87010018_remove,
-        "propList": _tools.ROList([['adjMonsterDmg', 0.015]]),
+        "propList": _tools.ROList([['adjFinalDmg', 0.01]]),
         "desBuff": None,
         "score": 0
     }),
@@ -968,7 +968,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010019,
         "removeAction": _87010019_remove,
-        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.015]]),
+        "propList": _tools.ROList([['adjFinalDmgAnti', 0.01]]),
         "desBuff": None,
         "score": 0
     }),
@@ -978,7 +978,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010020,
         "removeAction": _87010020_remove,
-        "propList": _tools.ROList([['adjPVPDmg', 0.015]]),
+        "propList": _tools.ROList([['adjMonsterDmg', 0.015]]),
         "desBuff": None,
         "score": 0
     }),
@@ -988,7 +988,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010021,
         "removeAction": _87010021_remove,
-        "propList": _tools.ROList([['adjPVPDmgAnti', 0.015]]),
+        "propList": _tools.ROList([['adjMonsterDmgAnti', 0.015]]),
         "desBuff": None,
         "score": 0
     }),
@@ -998,7 +998,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010022,
         "removeAction": _87010022_remove,
-        "propList": _tools.ROList([['adjStunEnh', 12]]),
+        "propList": _tools.ROList([['adjStunEnh', 4]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1008,7 +1008,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010023,
         "removeAction": _87010023_remove,
-        "propList": _tools.ROList([['adjStunAnti', 12]]),
+        "propList": _tools.ROList([['adjStunAnti', 4]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1018,7 +1018,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010024,
         "removeAction": _87010024_remove,
-        "propList": _tools.ROList([['adjKnockEnh', 12]]),
+        "propList": _tools.ROList([['adjKnockEnh', 4]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1028,7 +1028,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010025,
         "removeAction": _87010025_remove,
-        "propList": _tools.ROList([['adjKnockAnti', 12]]),
+        "propList": _tools.ROList([['adjKnockAnti', 4]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1038,7 +1038,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010026,
         "removeAction": _87010026_remove,
-        "propList": _tools.ROList([['adjPushEnh', 12]]),
+        "propList": _tools.ROList([['adjPushEnh', 4]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1048,7 +1048,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010027,
         "removeAction": _87010027_remove,
-        "propList": _tools.ROList([['adjPushAnti', 12]]),
+        "propList": _tools.ROList([['adjPushAnti', 4]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1128,7 +1128,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010035,
         "removeAction": _87010035_remove,
-        "propList": _tools.ROList([['adjIgnoreArmor', 0.04]]),
+        "propList": _tools.ROList([['adjFinalDmg', 0.02]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1138,7 +1138,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010036,
         "removeAction": _87010036_remove,
-        "propList": _tools.ROList([['adjDmgArmor', 0.04]]),
+        "propList": _tools.ROList([['adjFinalDmgAnti', 0.02]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1238,7 +1238,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010046,
         "removeAction": _87010046_remove,
-        "propList": _tools.ROList([['adjIgnoreArmor', 0.08]]),
+        "propList": _tools.ROList([['adjFinalDmg', 0.04]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1248,7 +1248,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010047,
         "removeAction": _87010047_remove,
-        "propList": _tools.ROList([['adjDmgArmor', 0.08]]),
+        "propList": _tools.ROList([['adjFinalDmgAnti', 0.04]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1258,7 +1258,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010048,
         "removeAction": _87010048_remove,
-        "propList": _tools.ROList([['adjPVPDmg', 0.05]]),
+        "propList": _tools.ROList([['adjPVPDmg', 0.06]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1268,7 +1268,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010049,
         "removeAction": _87010049_remove,
-        "propList": _tools.ROList([['adjPVPDmgAnti', 0.05]]),
+        "propList": _tools.ROList([['adjPVPDmgAnti', 0.06]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1278,7 +1278,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87010050,
         "removeAction": _87010050_remove,
-        "propList": _tools.ROList([['adjExpGrow', 0.08]]),
+        "propList": _tools.ROList([['adjExpGrow', 0.1]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1338,7 +1338,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020006,
         "removeAction": _87020006_remove,
-        "propList": _tools.ROList([['adjCopper', 0.025]]),
+        "propList": _tools.ROList([['adjExpGrow', 0.01]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1408,9 +1408,9 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020013,
         "removeAction": _87020013_remove,
-        "propList": None,
-        "desBuff": 64002015,
-        "score": 100
+        "propList": _tools.ROList([['adjExpGrow', 0.02]]),
+        "desBuff": None,
+        "score": 0
     }),
     87020014: _tools.RODict({
         "ID": 87020014,
@@ -1498,7 +1498,7 @@ datas = _tools.RODict({
         "level": 0,
         "action": _87020022,
         "removeAction": _87020022_remove,
-        "propList": _tools.ROList([['adjMortal', 0.05]]),
+        "propList": _tools.ROList([['adjExpGrow', 0.05]]),
         "desBuff": None,
         "score": 0
     }),
@@ -1690,7 +1690,7 @@ datas = _tools.RODict({
         "removeAction": _87020041_remove,
         "propList": _tools.ROList([['adjMaxPhysicalArmor', 15], ['adjMinPhysicalArmor', 15], ['adjMaxMagicArmor', 15], ['adjMinMagicArmor', 15]]),
         "desBuff": None,
-        "score": 100
+        "score": 0
     }),
     87020042: _tools.RODict({
         "ID": 87020042,
@@ -1770,7 +1770,7 @@ datas = _tools.RODict({
         "removeAction": _87020049_remove,
         "propList": None,
         "desBuff": 64002053,
-        "score": 0
+        "score": 100
     }),
     87020050: _tools.RODict({
         "ID": 87020050,

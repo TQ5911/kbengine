@@ -31,5 +31,12 @@
             <Arg>            BOOL            </Arg>
             <Arg>            UINT32          </Arg>
         </completeRaidDungeon>
+
+        <leaveRaidDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            RAID_ID         </Arg>
+            <Arg>            PYTHON          </Arg>
+            <Arg>            MAILBOX         </Arg>
+        </leaveRaidDungeon>
     </BaseMethods>
 </root>

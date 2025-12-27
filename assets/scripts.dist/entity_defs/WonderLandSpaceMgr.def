@@ -1,15 +1,10 @@
 <root>
     <Interfaces>
         <Interface>     iStaticSpaceMgr         </Interface>
+        <Interface>     iCollectionBossForMgr   </Interface>
     </Interfaces>
 
     <Properties>
-        <collToBoss>
-            <Type>          PYTHON                  </Type>
-            <Flags>         CELL_PRIVATE            </Flags>
-            <Default>       {}                      </Default>
-        </collToBoss>
-
         <randomBossId>
             <Type>          OBJECT_ID               </Type>
             <Flags>         CELL_PRIVATE            </Flags>

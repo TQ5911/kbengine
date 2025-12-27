@@ -1,21 +1,21 @@
 <root>
     <Volatile>
-		<position/>
-		<!--<position> 0 </position> Don't update-->
-		<yaw/>
-		<!--<pitch> 20 </pitch>-->
-		<optimized> false </optimized>
-	</Volatile>
+        <position/>
+        <!--<position> 0 </position> Don't update-->
+        <yaw/>
+        <!--<pitch> 20 </pitch>-->
+        <optimized> false </optimized>
+    </Volatile>
 
-	<Interfaces>
-		<Interface>	   iCell    </Interface>
+    <Interfaces>
+        <Interface>    iCell    </Interface>
         <Interface>    iBaseWithCell    </Interface>
         <Interface>    iTimerBase       </Interface>
-		<Interface>	   iTimerCell    </Interface>
-		<Interface>	   iEventMgr     </Interface>
-        <Interface>    iSpawnSpan   </Interface>
+        <Interface>    iTimerCell    </Interface>
+        <Interface>    iEventMgr     </Interface>
         <Interface>    iGameEntity  </Interface>
-	</Interfaces>
+        <Interface>    iFubenSpace  </Interface>
+    </Interfaces>
 
     <Properties>
         <groupId>
@@ -24,43 +24,20 @@
             <Default>            0               </Default>
         </groupId>
 
-        <groupName>
-            <Type>            UNICODE            </Type>
-            <Flags>           CELL_PRIVATE      </Flags>
-        </groupName>
-
         <monsterIDs>
             <Type>             PYTHON            </Type>
             <Flags>            CELL_PRIVATE      </Flags>
             <Default>             []             </Default>
         </monsterIDs>
 
-        <monsterTypeMap>
-            <Type>             PYTHON            </Type>
-            <Flags>            CELL_PRIVATE      </Flags>
-            <Default>             {}             </Default>
-        </monsterTypeMap>
-
-        <bornRadius>
-            <Type> FLOAT    </Type>
-            <Flags>   CELL_PRIVATE  </Flags>
-            <Default>   0.0  </Default>
-        </bornRadius>
-
-        <args>
-            <Type>            PYTHON             </Type>
-            <Flags>           CELL_PRIVATE       </Flags>
-            <Default>             []             </Default>
-        </args>
-
+        <hasMonsterNeedRefresh>
+            <Type>             BOOL             </Type>
+            <Flags>            CELL_PRIVATE     </Flags>
+            <Default>          0                </Default>
+        </hasMonsterNeedRefresh>
     </Properties>
 
     <BaseMethods>
-
-        <createMonstersFromGrp>
-            <Arg>       PYTHON          </Arg>
-        </createMonstersFromGrp>
-
     </BaseMethods>
 
     <CellMethods>
@@ -71,12 +48,7 @@
             <Arg>           PYTHON             </Arg>
         </sync>
 
-        <initFromBase>
-            <Arg>           PYTHON          </Arg>
-        </initFromBase>
-
         <canBeDestroy>
         </canBeDestroy>
-
     </CellMethods>
 </root>

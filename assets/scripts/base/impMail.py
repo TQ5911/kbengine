@@ -63,6 +63,9 @@ class ImpMail(object):
         if myLevel < globalMail.minRoleLevel or myLevel > globalMail.maxRoleLevel:
             return False
 
+        if globalMail.channel and globalMail.channel != self.accountEntity.accountType:
+            return False
+
         return True
 
     def sendOneGlobalMail(self, globalMail):

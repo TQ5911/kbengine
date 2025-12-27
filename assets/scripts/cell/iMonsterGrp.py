@@ -36,22 +36,10 @@ class IMonsterGrp(object):
         if self.monsterGroup:
             return self.monsterGroup.sync(self.id, funcName, args, kwargs)
 
-    # -----------------------
-    # callback
-    # -----------------------
-    #
-    # MGR Method and callback example:
-    #
-    # def sayHello(self, synced=False):
-    #     WARNING_MSG('Hello my friend!')
-    #
-    #     if synced:
-    #         self.selfSync('sayHelloCB', (self.id, ))
-    #
-    # def sayHelloCB(self, fromId):
-    #     INFO_MSG('Hello my friend, I synced this msg from: {}'.format(
-    #             fromId))
-
     def syncIncreaseHateInGroupCB(self, *args, **kwargs):
         if self.aiController:
             self.aiController.syncIncreaseHateInGroupCB(*args, **kwargs)
+
+    def syncTelBackCB(self, *args, **kwargs):
+        if self.aiController:
+            self.aiController.syncTelBackCB(*args, **kwargs)

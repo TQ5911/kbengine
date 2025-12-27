@@ -27,14 +27,16 @@ class GlobalMail(userType.UserSoleType):
         self.extraAttach = dropAward.MailWealthVal()
         self.title = ''
         self.cont = ''
+        self.channel = 0
 
     def _lateReload(self):
         super(GlobalMail, self)._lateReload()
         self.extraAttach.reloadScript()
         return
 
-    def initNewGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, despArgs, title, cont, minRoleTime,
-                          maxRoleTime, minRoleLevel, maxRoleLevel):
+    def initNewGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, 
+                          despArgs, title, cont, minRoleTime,
+                          maxRoleTime, minRoleLevel, maxRoleLevel, channel):
         self.globalMailGBID = KBEngine.genUUID64()
         self.mailId = mailId
         self.despArgs = despArgs if despArgs else []
@@ -47,7 +49,7 @@ class GlobalMail(userType.UserSoleType):
         self.extraAttach = extraAttach if extraAttach else dropAward.MailWealthVal()
         self.title = title
         self.cont = cont
-        return
+        self.channel = channel
 
     def fromGlobalMailDict(self, dataDic):
         self.globalMailGBID = dataDic['globalMailGBID']
@@ -64,6 +66,7 @@ class GlobalMail(userType.UserSoleType):
             self.extraAttach = dropAward.MailWealthVal()
         self.title = dataDic.get('title', '')
         self.cont = dataDic.get('cont', '')
+        self.channel = dataDic.get('channel', 0)
         return
 
     def toGlobalMailDict(self):
@@ -80,6 +83,7 @@ class GlobalMail(userType.UserSoleType):
             'extraAttach':self.extraAttach,
             'title':self.title,
             'cont':self.cont,
+            'channel': self.channel,
         }
 
     def isExpired(self):

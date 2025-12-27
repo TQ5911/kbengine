@@ -47,7 +47,7 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         self.name = CBD.datas[self.summonId].get('name', '无名怪')
         hostEnt = self.getHost()
         if hostEnt and hostEnt.IsAvatar:
-            utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR)
+            self.cellFlags = utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR)
 
         if not self.hostId or (hostEnt and not hostEnt.IsAvatar and not hostEnt.isBot()):
             self.isWitnessComplete = gameconst.WitnessType.WITNESS_TYPE_IGNORE

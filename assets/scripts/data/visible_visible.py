@@ -58,7 +58,7 @@ datas = _tools.RODict({
     "AutoCombat": _tools.RODict({
         "function": "AutoCombat",
         "type": "autoCombat",
-        "level": 0,
+        "level": 4,
         "task": 0,
         "day": 0,
         "switch": 0
@@ -98,7 +98,7 @@ datas = _tools.RODict({
     "CityBattle": _tools.RODict({
         "function": "CityBattle",
         "type": "cityBattle",
-        "level": 43,
+        "level": 999,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -106,7 +106,7 @@ datas = _tools.RODict({
     "UICityBattlePanel": _tools.RODict({
         "function": "UICityBattlePanel",
         "type": "cityBattle",
-        "level": 43,
+        "level": 999,
         "task": 0,
         "day": 0,
         "switch": 1
@@ -298,7 +298,7 @@ datas = _tools.RODict({
     "UIRedPacketPanel": _tools.RODict({
         "function": "UIRedPacketPanel",
         "type": "redPacket",
-        "level": 0,
+        "level": 9,
         "task": 86060115,
         "day": 0,
         "switch": 0
@@ -343,11 +343,19 @@ datas = _tools.RODict({
         "day": 0,
         "switch": 1
     }),
+    "Fly": _tools.RODict({
+        "function": "Fly",
+        "type": "skill",
+        "level": 0,
+        "task": 86060115,
+        "day": 0,
+        "switch": 1
+    }),
     "MageSkill01": _tools.RODict({
         "function": "MageSkill01",
         "type": "skillMage",
         "level": 0,
-        "task": 86060056,
+        "task": 86060055,
         "day": 0,
         "switch": 1
     }),
@@ -451,7 +459,7 @@ datas = _tools.RODict({
         "function": "TaoistSkill01",
         "type": "skillTaoist",
         "level": 0,
-        "task": 86060056,
+        "task": 86060055,
         "day": 0,
         "switch": 1
     }),
@@ -555,7 +563,7 @@ datas = _tools.RODict({
         "function": "WarriorSkill01",
         "type": "skillWarrior",
         "level": 0,
-        "task": 86060056,
+        "task": 86060055,
         "day": 0,
         "switch": 1
     }),
@@ -679,6 +687,14 @@ datas = _tools.RODict({
         "day": 0,
         "switch": 0
     }),
+    "UIPropMakePanel": _tools.RODict({
+        "function": "UIPropMakePanel",
+        "type": "workshop",
+        "level": 19,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
     "UITaskInfoPanel": _tools.RODict({
         "function": "UITaskInfoPanel",
         "type": "task",
@@ -778,16 +794,8 @@ datas = _tools.RODict({
     "UIRoleAuthorizationPanel": _tools.RODict({
         "function": "UIRoleAuthorizationPanel",
         "type": "roleAuthorization",
-        "level": 0,
+        "level": 90,
         "task": 86060115,
-        "day": 0,
-        "switch": 0
-    }),
-    "xinyuanchengopentask": _tools.RODict({
-        "function": "xinyuanchengopentask",
-        "type": "mapTask",
-        "level": 0,
-        "task": 86010024,
         "day": 0,
         "switch": 0
     }),
@@ -811,6 +819,238 @@ datas = _tools.RODict({
         "function": "QuickSettings",
         "type": "quickSettings",
         "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "TenSign": _tools.RODict({
+        "function": "TenSign",
+        "type": "welfare",
+        "level": 0,
+        "task": 86010003,
+        "day": 0,
+        "switch": 0
+    }),
+    "Meridian": _tools.RODict({
+        "function": "Meridian",
+        "type": "UIPracticePanel",
+        "level": 0,
+        "task": 86010005,
+        "day": 0,
+        "switch": 1
+    }),
+    "Attention": _tools.RODict({
+        "function": "Attention",
+        "type": "welfare",
+        "level": 0,
+        "task": 86010003,
+        "day": 0,
+        "switch": 0
+    }),
+    "phoneBind": _tools.RODict({
+        "function": "phoneBind",
+        "type": "welfare",
+        "level": 0,
+        "task": 86010003,
+        "day": 0,
+        "switch": 0
+    }),
+    "LevelReward": _tools.RODict({
+        "function": "LevelReward",
+        "type": "welfare",
+        "level": 0,
+        "task": 86010003,
+        "day": 0,
+        "switch": 0
+    }),
+    "MonthCard": _tools.RODict({
+        "function": "MonthCard",
+        "type": "monthCard",
+        "level": 9,
+        "task": 86060115,
+        "day": 0,
+        "switch": 0
+    }),
+    "Enemy": _tools.RODict({
+        "function": "Enemy",
+        "type": "enemy",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "Duel": _tools.RODict({
+        "function": "Duel",
+        "type": "duel",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "Questionnaire": _tools.RODict({
+        "function": "Questionnaire",
+        "type": "questionnaire",
+        "level": 0,
+        "task": 86010003,
+        "day": 0,
+        "switch": 0
+    }),
+    "PcLoginReward": _tools.RODict({
+        "function": "PcLoginReward",
+        "type": "welfare",
+        "level": 0,
+        "task": 86010003,
+        "day": 0,
+        "switch": 0
+    }),
+    "xinyuanchengopentask": _tools.RODict({
+        "function": "xinyuanchengopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "tongxingguopentask": _tools.RODict({
+        "function": "tongxingguopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "feishayaosaiopentask": _tools.RODict({
+        "function": "feishayaosaiopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "jinglingcunopentask": _tools.RODict({
+        "function": "jinglingcunopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "jinglingbaodianopentask": _tools.RODict({
+        "function": "jinglingbaodianopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "shikuzoulangopentask": _tools.RODict({
+        "function": "shikuzoulangopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "xinyuanchenjiaoopentask": _tools.RODict({
+        "function": "xinyuanchenjiaoopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "zuke1Fopentask": _tools.RODict({
+        "function": "zuke1Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "zuke2Fopentask": _tools.RODict({
+        "function": "zuke2Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "zuke3Fopentask": _tools.RODict({
+        "function": "zuke3Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "zuke4Fopentask": _tools.RODict({
+        "function": "zuke4Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "zuke5Fopentask": _tools.RODict({
+        "function": "zuke5Fopentask",
+        "type": "mapTask",
+        "level": 30,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "zuke6Fopentask": _tools.RODict({
+        "function": "zuke6Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "yueguang1Fopentask": _tools.RODict({
+        "function": "yueguang1Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "yueguang2Fopentask": _tools.RODict({
+        "function": "yueguang2Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "yueguang3Fopentask": _tools.RODict({
+        "function": "yueguang3Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "yueguang4Fopentask": _tools.RODict({
+        "function": "yueguang4Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "yueguang5Fopentask": _tools.RODict({
+        "function": "yueguang5Fopentask",
+        "type": "mapTask",
+        "level": 0,
+        "task": 0,
+        "day": 0,
+        "switch": 0
+    }),
+    "GuildBossChallenge": _tools.RODict({
+        "function": "GuildBossChallenge",
+        "type": "guildBossChallenge",
+        "level": 19,
         "task": 0,
         "day": 0,
         "switch": 0
@@ -857,65 +1097,95 @@ GeneralAttack = 35
 Dodge = 36
 Sprint = 37
 Jump = 38
-MageSkill01 = 39
-MageSkill02 = 40
-MageSkill03 = 41
-MageSkill04 = 42
-MageSkill05 = 43
-MageSkill06 = 44
-MageSkill07 = 45
-MageSkill08 = 46
-MageSkill09 = 47
-MageSkill10 = 48
-MageSkill11 = 49
-MageSkill12 = 50
-MageSkillUlt = 51
-TaoistSkill01 = 52
-TaoistSkill02 = 53
-TaoistSkill03 = 54
-TaoistSkill04 = 55
-TaoistSkill05 = 56
-TaoistSkill06 = 57
-TaoistSkill07 = 58
-TaoistSkill08 = 59
-TaoistSkill09 = 60
-TaoistSkill10 = 61
-TaoistSkill11 = 62
-TaoistSkill12 = 63
-TaoistSkillUlt = 64
-WarriorSkill01 = 65
-WarriorSkill02 = 66
-WarriorSkill03 = 67
-WarriorSkill04 = 68
-WarriorSkill05 = 69
-WarriorSkill06 = 70
-WarriorSkill07 = 71
-WarriorSkill08 = 72
-WarriorSkill09 = 73
-WarriorSkill10 = 74
-WarriorSkill11 = 75
-WarriorSkill12 = 76
-WarriorSkillUlt = 77
-UISkillSystemPanel = 78
-UISquarePanel = 79
-UISynthesisSystemPanel = 80
-UITaskInfoPanel = 81
-Team = 82
-UITeamDunPanel = 83
-UI_camera = 84
-UI_cards = 85
-UI_hp = 86
-UI_level = 87
-UI_score = 88
-UIWarehousePanel = 89
-UIActivitiesPanel = 90
-SevenSign = 91
-UIWonderLandPanel = 92
-UIRoleAuthorizationPanel = 93
-xinyuanchengopentask = 94
-UIPracticePanel = 95
-DeathDrop = 96
-QuickSettings = 97
+Fly = 39
+MageSkill01 = 40
+MageSkill02 = 41
+MageSkill03 = 42
+MageSkill04 = 43
+MageSkill05 = 44
+MageSkill06 = 45
+MageSkill07 = 46
+MageSkill08 = 47
+MageSkill09 = 48
+MageSkill10 = 49
+MageSkill11 = 50
+MageSkill12 = 51
+MageSkillUlt = 52
+TaoistSkill01 = 53
+TaoistSkill02 = 54
+TaoistSkill03 = 55
+TaoistSkill04 = 56
+TaoistSkill05 = 57
+TaoistSkill06 = 58
+TaoistSkill07 = 59
+TaoistSkill08 = 60
+TaoistSkill09 = 61
+TaoistSkill10 = 62
+TaoistSkill11 = 63
+TaoistSkill12 = 64
+TaoistSkillUlt = 65
+WarriorSkill01 = 66
+WarriorSkill02 = 67
+WarriorSkill03 = 68
+WarriorSkill04 = 69
+WarriorSkill05 = 70
+WarriorSkill06 = 71
+WarriorSkill07 = 72
+WarriorSkill08 = 73
+WarriorSkill09 = 74
+WarriorSkill10 = 75
+WarriorSkill11 = 76
+WarriorSkill12 = 77
+WarriorSkillUlt = 78
+UISkillSystemPanel = 79
+UISquarePanel = 80
+UISynthesisSystemPanel = 81
+UIPropMakePanel = 82
+UITaskInfoPanel = 83
+Team = 84
+UITeamDunPanel = 85
+UI_camera = 86
+UI_cards = 87
+UI_hp = 88
+UI_level = 89
+UI_score = 90
+UIWarehousePanel = 91
+UIActivitiesPanel = 92
+SevenSign = 93
+UIWonderLandPanel = 94
+UIRoleAuthorizationPanel = 95
+UIPracticePanel = 96
+DeathDrop = 97
+QuickSettings = 98
+TenSign = 99
+Meridian = 100
+Attention = 101
+phoneBind = 102
+LevelReward = 103
+MonthCard = 104
+Enemy = 105
+Duel = 106
+Questionnaire = 107
+PcLoginReward = 108
+xinyuanchengopentask = 109
+tongxingguopentask = 110
+feishayaosaiopentask = 111
+jinglingcunopentask = 112
+jinglingbaodianopentask = 113
+shikuzoulangopentask = 114
+xinyuanchenjiaoopentask = 115
+zuke1Fopentask = 116
+zuke2Fopentask = 117
+zuke3Fopentask = 118
+zuke4Fopentask = 119
+zuke5Fopentask = 120
+zuke6Fopentask = 121
+yueguang1Fopentask = 122
+yueguang2Fopentask = 123
+yueguang3Fopentask = 124
+yueguang4Fopentask = 125
+yueguang5Fopentask = 126
+GuildBossChallenge = 127
 
 
 
@@ -959,65 +1229,95 @@ funcDic = _tools.RODict({
     "Dodge" : 36,
     "Sprint" : 37,
     "Jump" : 38,
-    "MageSkill01" : 39,
-    "MageSkill02" : 40,
-    "MageSkill03" : 41,
-    "MageSkill04" : 42,
-    "MageSkill05" : 43,
-    "MageSkill06" : 44,
-    "MageSkill07" : 45,
-    "MageSkill08" : 46,
-    "MageSkill09" : 47,
-    "MageSkill10" : 48,
-    "MageSkill11" : 49,
-    "MageSkill12" : 50,
-    "MageSkillUlt" : 51,
-    "TaoistSkill01" : 52,
-    "TaoistSkill02" : 53,
-    "TaoistSkill03" : 54,
-    "TaoistSkill04" : 55,
-    "TaoistSkill05" : 56,
-    "TaoistSkill06" : 57,
-    "TaoistSkill07" : 58,
-    "TaoistSkill08" : 59,
-    "TaoistSkill09" : 60,
-    "TaoistSkill10" : 61,
-    "TaoistSkill11" : 62,
-    "TaoistSkill12" : 63,
-    "TaoistSkillUlt" : 64,
-    "WarriorSkill01" : 65,
-    "WarriorSkill02" : 66,
-    "WarriorSkill03" : 67,
-    "WarriorSkill04" : 68,
-    "WarriorSkill05" : 69,
-    "WarriorSkill06" : 70,
-    "WarriorSkill07" : 71,
-    "WarriorSkill08" : 72,
-    "WarriorSkill09" : 73,
-    "WarriorSkill10" : 74,
-    "WarriorSkill11" : 75,
-    "WarriorSkill12" : 76,
-    "WarriorSkillUlt" : 77,
-    "UISkillSystemPanel" : 78,
-    "UISquarePanel" : 79,
-    "UISynthesisSystemPanel" : 80,
-    "UITaskInfoPanel" : 81,
-    "Team" : 82,
-    "UITeamDunPanel" : 83,
-    "UI_camera" : 84,
-    "UI_cards" : 85,
-    "UI_hp" : 86,
-    "UI_level" : 87,
-    "UI_score" : 88,
-    "UIWarehousePanel" : 89,
-    "UIActivitiesPanel" : 90,
-    "SevenSign" : 91,
-    "UIWonderLandPanel" : 92,
-    "UIRoleAuthorizationPanel" : 93,
-    "xinyuanchengopentask" : 94,
-    "UIPracticePanel" : 95,
-    "DeathDrop" : 96,
-    "QuickSettings" : 97,
+    "Fly" : 39,
+    "MageSkill01" : 40,
+    "MageSkill02" : 41,
+    "MageSkill03" : 42,
+    "MageSkill04" : 43,
+    "MageSkill05" : 44,
+    "MageSkill06" : 45,
+    "MageSkill07" : 46,
+    "MageSkill08" : 47,
+    "MageSkill09" : 48,
+    "MageSkill10" : 49,
+    "MageSkill11" : 50,
+    "MageSkill12" : 51,
+    "MageSkillUlt" : 52,
+    "TaoistSkill01" : 53,
+    "TaoistSkill02" : 54,
+    "TaoistSkill03" : 55,
+    "TaoistSkill04" : 56,
+    "TaoistSkill05" : 57,
+    "TaoistSkill06" : 58,
+    "TaoistSkill07" : 59,
+    "TaoistSkill08" : 60,
+    "TaoistSkill09" : 61,
+    "TaoistSkill10" : 62,
+    "TaoistSkill11" : 63,
+    "TaoistSkill12" : 64,
+    "TaoistSkillUlt" : 65,
+    "WarriorSkill01" : 66,
+    "WarriorSkill02" : 67,
+    "WarriorSkill03" : 68,
+    "WarriorSkill04" : 69,
+    "WarriorSkill05" : 70,
+    "WarriorSkill06" : 71,
+    "WarriorSkill07" : 72,
+    "WarriorSkill08" : 73,
+    "WarriorSkill09" : 74,
+    "WarriorSkill10" : 75,
+    "WarriorSkill11" : 76,
+    "WarriorSkill12" : 77,
+    "WarriorSkillUlt" : 78,
+    "UISkillSystemPanel" : 79,
+    "UISquarePanel" : 80,
+    "UISynthesisSystemPanel" : 81,
+    "UIPropMakePanel" : 82,
+    "UITaskInfoPanel" : 83,
+    "Team" : 84,
+    "UITeamDunPanel" : 85,
+    "UI_camera" : 86,
+    "UI_cards" : 87,
+    "UI_hp" : 88,
+    "UI_level" : 89,
+    "UI_score" : 90,
+    "UIWarehousePanel" : 91,
+    "UIActivitiesPanel" : 92,
+    "SevenSign" : 93,
+    "UIWonderLandPanel" : 94,
+    "UIRoleAuthorizationPanel" : 95,
+    "UIPracticePanel" : 96,
+    "DeathDrop" : 97,
+    "QuickSettings" : 98,
+    "TenSign" : 99,
+    "Meridian" : 100,
+    "Attention" : 101,
+    "phoneBind" : 102,
+    "LevelReward" : 103,
+    "MonthCard" : 104,
+    "Enemy" : 105,
+    "Duel" : 106,
+    "Questionnaire" : 107,
+    "PcLoginReward" : 108,
+    "xinyuanchengopentask" : 109,
+    "tongxingguopentask" : 110,
+    "feishayaosaiopentask" : 111,
+    "jinglingcunopentask" : 112,
+    "jinglingbaodianopentask" : 113,
+    "shikuzoulangopentask" : 114,
+    "xinyuanchenjiaoopentask" : 115,
+    "zuke1Fopentask" : 116,
+    "zuke2Fopentask" : 117,
+    "zuke3Fopentask" : 118,
+    "zuke4Fopentask" : 119,
+    "zuke5Fopentask" : 120,
+    "zuke6Fopentask" : 121,
+    "yueguang1Fopentask" : 122,
+    "yueguang2Fopentask" : 123,
+    "yueguang3Fopentask" : 124,
+    "yueguang4Fopentask" : 125,
+    "yueguang5Fopentask" : 126,
+    "GuildBossChallenge" : 127,
 })
 reverseFuncDic = _tools.RODict({
     0 : "UIAchievementPanel",
@@ -1059,83 +1359,117 @@ reverseFuncDic = _tools.RODict({
     36 : "Dodge",
     37 : "Sprint",
     38 : "Jump",
-    39 : "MageSkill01",
-    40 : "MageSkill02",
-    41 : "MageSkill03",
-    42 : "MageSkill04",
-    43 : "MageSkill05",
-    44 : "MageSkill06",
-    45 : "MageSkill07",
-    46 : "MageSkill08",
-    47 : "MageSkill09",
-    48 : "MageSkill10",
-    49 : "MageSkill11",
-    50 : "MageSkill12",
-    51 : "MageSkillUlt",
-    52 : "TaoistSkill01",
-    53 : "TaoistSkill02",
-    54 : "TaoistSkill03",
-    55 : "TaoistSkill04",
-    56 : "TaoistSkill05",
-    57 : "TaoistSkill06",
-    58 : "TaoistSkill07",
-    59 : "TaoistSkill08",
-    60 : "TaoistSkill09",
-    61 : "TaoistSkill10",
-    62 : "TaoistSkill11",
-    63 : "TaoistSkill12",
-    64 : "TaoistSkillUlt",
-    65 : "WarriorSkill01",
-    66 : "WarriorSkill02",
-    67 : "WarriorSkill03",
-    68 : "WarriorSkill04",
-    69 : "WarriorSkill05",
-    70 : "WarriorSkill06",
-    71 : "WarriorSkill07",
-    72 : "WarriorSkill08",
-    73 : "WarriorSkill09",
-    74 : "WarriorSkill10",
-    75 : "WarriorSkill11",
-    76 : "WarriorSkill12",
-    77 : "WarriorSkillUlt",
-    78 : "UISkillSystemPanel",
-    79 : "UISquarePanel",
-    80 : "UISynthesisSystemPanel",
-    81 : "UITaskInfoPanel",
-    82 : "Team",
-    83 : "UITeamDunPanel",
-    84 : "UI_camera",
-    85 : "UI_cards",
-    86 : "UI_hp",
-    87 : "UI_level",
-    88 : "UI_score",
-    89 : "UIWarehousePanel",
-    90 : "UIActivitiesPanel",
-    91 : "SevenSign",
-    92 : "UIWonderLandPanel",
-    93 : "UIRoleAuthorizationPanel",
-    94 : "xinyuanchengopentask",
-    95 : "UIPracticePanel",
-    96 : "DeathDrop",
-    97 : "QuickSettings",
+    39 : "Fly",
+    40 : "MageSkill01",
+    41 : "MageSkill02",
+    42 : "MageSkill03",
+    43 : "MageSkill04",
+    44 : "MageSkill05",
+    45 : "MageSkill06",
+    46 : "MageSkill07",
+    47 : "MageSkill08",
+    48 : "MageSkill09",
+    49 : "MageSkill10",
+    50 : "MageSkill11",
+    51 : "MageSkill12",
+    52 : "MageSkillUlt",
+    53 : "TaoistSkill01",
+    54 : "TaoistSkill02",
+    55 : "TaoistSkill03",
+    56 : "TaoistSkill04",
+    57 : "TaoistSkill05",
+    58 : "TaoistSkill06",
+    59 : "TaoistSkill07",
+    60 : "TaoistSkill08",
+    61 : "TaoistSkill09",
+    62 : "TaoistSkill10",
+    63 : "TaoistSkill11",
+    64 : "TaoistSkill12",
+    65 : "TaoistSkillUlt",
+    66 : "WarriorSkill01",
+    67 : "WarriorSkill02",
+    68 : "WarriorSkill03",
+    69 : "WarriorSkill04",
+    70 : "WarriorSkill05",
+    71 : "WarriorSkill06",
+    72 : "WarriorSkill07",
+    73 : "WarriorSkill08",
+    74 : "WarriorSkill09",
+    75 : "WarriorSkill10",
+    76 : "WarriorSkill11",
+    77 : "WarriorSkill12",
+    78 : "WarriorSkillUlt",
+    79 : "UISkillSystemPanel",
+    80 : "UISquarePanel",
+    81 : "UISynthesisSystemPanel",
+    82 : "UIPropMakePanel",
+    83 : "UITaskInfoPanel",
+    84 : "Team",
+    85 : "UITeamDunPanel",
+    86 : "UI_camera",
+    87 : "UI_cards",
+    88 : "UI_hp",
+    89 : "UI_level",
+    90 : "UI_score",
+    91 : "UIWarehousePanel",
+    92 : "UIActivitiesPanel",
+    93 : "SevenSign",
+    94 : "UIWonderLandPanel",
+    95 : "UIRoleAuthorizationPanel",
+    96 : "UIPracticePanel",
+    97 : "DeathDrop",
+    98 : "QuickSettings",
+    99 : "TenSign",
+    100 : "Meridian",
+    101 : "Attention",
+    102 : "phoneBind",
+    103 : "LevelReward",
+    104 : "MonthCard",
+    105 : "Enemy",
+    106 : "Duel",
+    107 : "Questionnaire",
+    108 : "PcLoginReward",
+    109 : "xinyuanchengopentask",
+    110 : "tongxingguopentask",
+    111 : "feishayaosaiopentask",
+    112 : "jinglingcunopentask",
+    113 : "jinglingbaodianopentask",
+    114 : "shikuzoulangopentask",
+    115 : "xinyuanchenjiaoopentask",
+    116 : "zuke1Fopentask",
+    117 : "zuke2Fopentask",
+    118 : "zuke3Fopentask",
+    119 : "zuke4Fopentask",
+    120 : "zuke5Fopentask",
+    121 : "zuke6Fopentask",
+    122 : "yueguang1Fopentask",
+    123 : "yueguang2Fopentask",
+    124 : "yueguang3Fopentask",
+    125 : "yueguang4Fopentask",
+    126 : "yueguang5Fopentask",
+    127 : "GuildBossChallenge",
 })
 levelDic = _tools.RODict({
-    43 : _tools.ROList([
+    4 : _tools.ROList([
+        3,
+    ]),
+    999 : _tools.ROList([
         8,
         9,
     ]),
     30 : _tools.ROList([
         10,
         11,
+        120,
     ]),
     18 : _tools.ROList([
         12,
     ]),
     26 : _tools.ROList([
         13,
-        47,
-        60,
-        73,
+        48,
+        61,
+        74,
     ]),
     28 : _tools.ROList([
         17,
@@ -1144,53 +1478,60 @@ levelDic = _tools.RODict({
         21,
         22,
         23,
-        80,
-    ]),
-    6 : _tools.ROList([
-        42,
-        55,
-        68,
+        81,
+        82,
+        127,
     ]),
     9 : _tools.ROList([
+        33,
+        44,
+        57,
+        70,
+        104,
+    ]),
+    6 : _tools.ROList([
         43,
         56,
         69,
     ]),
     12 : _tools.ROList([
-        44,
-        57,
-        70,
-    ]),
-    15 : _tools.ROList([
         45,
         58,
         71,
     ]),
-    20 : _tools.ROList([
+    15 : _tools.ROList([
         46,
         59,
         72,
     ]),
-    32 : _tools.ROList([
-        48,
-        61,
-        74,
+    20 : _tools.ROList([
+        47,
+        60,
+        73,
     ]),
-    40 : _tools.ROList([
+    32 : _tools.ROList([
         49,
         62,
         75,
     ]),
-    48 : _tools.ROList([
+    40 : _tools.ROList([
         50,
         63,
         76,
     ]),
+    48 : _tools.ROList([
+        51,
+        64,
+        77,
+    ]),
     27 : _tools.ROList([
-        92,
+        94,
+    ]),
+    90 : _tools.ROList([
+        95,
     ]),
     10 : _tools.ROList([
-        95,
+        96,
     ]),
 })
 taskDic = _tools.RODict({
@@ -1209,10 +1550,12 @@ taskDic = _tools.RODict({
         31,
         32,
         33,
-        82,
-        89,
-        93,
-        96,
+        39,
+        84,
+        91,
+        95,
+        97,
+        104,
     ]),
     86010027 : _tools.ROList([
         1,
@@ -1231,49 +1574,53 @@ taskDic = _tools.RODict({
     86010018 : _tools.ROList([
         34,
     ]),
-    86060056 : _tools.ROList([
-        39,
-        52,
-        65,
-    ]),
-    86060061 : _tools.ROList([
+    86060055 : _tools.ROList([
         40,
         53,
         66,
     ]),
-    86060089 : _tools.ROList([
+    86060061 : _tools.ROList([
         41,
         54,
         67,
     ]),
-    86060090 : _tools.ROList([
-        51,
-        64,
-        77,
+    86060089 : _tools.ROList([
+        42,
+        55,
+        68,
     ]),
-    86010016 : _tools.ROList([
+    86060090 : _tools.ROList([
+        52,
+        65,
         78,
     ]),
-    86010070 : _tools.ROList([
+    86010016 : _tools.ROList([
         79,
     ]),
-    86060104 : _tools.ROList([
-        81,
+    86010070 : _tools.ROList([
+        80,
     ]),
-    86010068 : _tools.ROList([
+    86060104 : _tools.ROList([
         83,
     ]),
-    86010003 : _tools.ROList([
-        90,
-        91,
+    86010068 : _tools.ROList([
+        85,
     ]),
-    86010024 : _tools.ROList([
-        94,
+    86010003 : _tools.ROList([
+        92,
+        93,
+        99,
+        101,
+        102,
+        103,
+        107,
+        108,
     ]),
     86010005 : _tools.ROList([
-        95,
+        96,
+        100,
     ]),
 })
 dayDic = _tools.RODict({
 })
-maxBit = 97
+maxBit = 127

@@ -21,7 +21,7 @@ class MonsterRefreshAction(object):
         self.lastRecordTime = 0
     
     def doRefreshCalculation(self, spaceNo, spaceId, combatAreaId, spaceMgrId, monsterMgrId, monsterId, monsterInstId, refreshDataKey):
-        DEBUG_MSG("doRefreshCalculation ", spaceNo, spaceId, combatAreaId, spaceMgrId, monsterMgrId, monsterId, monsterInstId, refreshDataKey)
+        DEBUG_MSG("doRefreshCalculation 1", spaceNo, spaceId, combatAreaId, spaceMgrId, monsterMgrId, monsterId, monsterInstId, refreshDataKey, self.killOrDestroyMonsterIDs, self.refreshCount, self.waitForNextRefresh, self.lastRecordTime)
         if self.lastRecordTime == 0:
             self.lastRecordTime = utils.getNow()
         else:
@@ -35,6 +35,7 @@ class MonsterRefreshAction(object):
         if not self.waitForNextRefresh:
             countMonsterIDs = IMapMonsterRefresh.countMonsterIDs(refreshDataKey)
             if countMonsterIDs is None:
+                DEBUG_MSG("doRefreshCalculation 2", spaceNo, spaceId, combatAreaId, spaceMgrId, monsterMgrId, monsterId, monsterInstId, refreshDataKey, self.killOrDestroyMonsterIDs, self.refreshCount, self.waitForNextRefresh, self.lastRecordTime)
                 return
             if monsterId in countMonsterIDs:
                 self.refreshCount += 1
@@ -42,10 +43,15 @@ class MonsterRefreshAction(object):
                     self.refreshCount = 0
                     self.waitForNextRefresh = True
                     self.doMapMonsterRefresh(combatAreaId, spaceNo, spaceId, spaceMgrId, monsterMgrId, refreshDataKey)
+                DEBUG_MSG("doRefreshCalculation 3", spaceNo, spaceId, combatAreaId, spaceMgrId, monsterMgrId, monsterId, monsterInstId, refreshDataKey, self.killOrDestroyMonsterIDs, self.refreshCount, self.waitForNextRefresh, self.lastRecordTime)
             return
+        
+        self.doCalcualteRefreshData(spaceNo, refreshDataKey, monsterInstId)
 
+    def doCalcualteRefreshData(self, spaceNo, refreshDataKey, monsterInstId):
         refreshMonsterIDs = IMapMonsterRefresh.refreshMonsterIDs(spaceNo, refreshDataKey)
         if refreshMonsterIDs is None:
+            DEBUG_MSG("doRefreshCalculation 4", spaceNo, monsterInstId, refreshDataKey, self.killOrDestroyMonsterIDs, self.refreshCount, self.waitForNextRefresh, self.lastRecordTime)
             return
 
         if monsterInstId in refreshMonsterIDs.keys():
@@ -55,14 +61,15 @@ class MonsterRefreshAction(object):
                 self.refreshCount = 0
                 self.waitForNextRefresh = False
                 self.lastRecordTime = 0
-    
+            DEBUG_MSG("doRefreshCalculation 5", spaceNo, monsterInstId, refreshDataKey, self.killOrDestroyMonsterIDs, self.refreshCount, self.waitForNextRefresh, self.lastRecordTime)
+
     def doMapMonsterRefresh(self, combatAreaId, spaceNo, spaceId, spaceMgrId, monsterMgrId, refreshDataKey):
-        DEBUG_MSG("doMapMonsterRefresh ", combatAreaId, spaceNo, spaceId, spaceMgrId, monsterMgrId, refreshDataKey)
+        DEBUG_MSG("doMapMonsterRefresh 1", combatAreaId, spaceNo, spaceId, spaceMgrId, monsterMgrId, refreshDataKey)
         refreshMonsterIDs = IMapMonsterRefresh.refreshMonsterIDs(spaceNo, refreshDataKey)
         if refreshMonsterIDs is None:
             ERROR_MSG("doMapMonsterRefresh 1, missing refreshMonsterIDs ", spaceNo, spaceId)
             return
-
+        DEBUG_MSG("doMapMonsterRefresh 2", combatAreaId, spaceNo, spaceId, spaceMgrId, monsterMgrId, refreshDataKey, refreshMonsterIDs)
         mapID = formula.getMapId(spaceNo)
         dunData = utils.getDunModuleData(mapID)
         instanceIDs = []
@@ -82,6 +89,8 @@ class MonsterRefreshAction(object):
 class IMapMonsterRefresh(object):
     @classmethod
     def clearAllCache(cls):
+        cls.getRefreshDataKey.cache_clear()
+        cls.getRefreshDataKeys.cache_clear()
         cls.countLimit.cache_clear()
         cls.refreshMonsterIDs.cache_clear()
         cls.countMonsterIDs.cache_clear()
@@ -136,15 +145,49 @@ class IMapMonsterRefresh(object):
         if countRefreshData:
             return countRefreshData['countResetTime']
         return None
-
+    
+    @staticmethod
+    @functools.lru_cache(64)
+    def refreshMonsterCombatAreas(dataKey):
+        return CCR.combatAreaIdxDic.get(dataKey, None)
+    
     def __init__(self):
         # 刷新数据记录
         self.refreshRecords = {}
 
     def onMonsterDestroy(self, combatAreaId, monsterId, monsterInstId, spaceMgrId, monsterMgrId, refreshDataKey):
-        DEBUG_MSG("onMonsterDestroy ", combatAreaId, monsterId, monsterInstId, self.spaceNo, self.spaceID, refreshDataKey)
-        monsterRefreshAction = self.refreshRecords.get(combatAreaId)
+        DEBUG_MSG("onMonsterDestroy current combatAreaId", combatAreaId, monsterId, monsterInstId, self.spaceNo, self.spaceID, refreshDataKey)
+        monsterRefreshAction = self.refreshRecords.get(combatAreaId, None)
         if not monsterRefreshAction:
             monsterRefreshAction = MonsterRefreshAction()
             self.refreshRecords[combatAreaId] = monsterRefreshAction
+        # 作为实例怪消失后
         monsterRefreshAction.doRefreshCalculation(self.spaceNo, self.spaceID, combatAreaId, spaceMgrId, monsterMgrId, monsterId, monsterInstId, refreshDataKey)
+
+        # 作为刷新怪在同个战斗区的不同部分消失后
+        combatDatas = combatAreaId.split('_')
+        combatId = int(combatDatas[0])
+        combatIdx = int(combatDatas[1])
+        combatAreaOtherIdxes = IMapMonsterRefresh.refreshMonsterCombatAreas(combatId)
+        if combatAreaOtherIdxes:
+            for combatAreaOtherIdx in combatAreaOtherIdxes:
+                # 检查是否在同个战斗区的不同部分
+                if combatAreaOtherIdx == combatIdx:
+                    continue
+
+                # 检查是否要处理
+                countMonsterIDs = IMapMonsterRefresh.countMonsterIDs(combatAreaOtherIdx)
+                if not countMonsterIDs or monsterId not in countMonsterIDs:
+                    continue
+
+                combatAreaOtherID = '{}_{}'.format(combatId, combatAreaOtherIdx)
+                monsterRefreshAction = self.refreshRecords.get(combatAreaOtherID, None)
+                if monsterRefreshAction:
+                    DEBUG_MSG("onMonsterDestroy other combatAreaOtherID 1", combatAreaOtherID, monsterId, monsterInstId, self.spaceNo, self.spaceID, combatAreaOtherIdx)
+                    monsterRefreshAction.doRefreshCalculation(self.spaceNo, self.spaceID, combatAreaOtherID, spaceMgrId, monsterMgrId, monsterId, monsterInstId, combatAreaOtherIdx)
+                else:
+                    if not monsterRefreshAction:
+                        monsterRefreshAction = MonsterRefreshAction()
+                        self.refreshRecords[combatAreaOtherID] = monsterRefreshAction
+                    DEBUG_MSG("onMonsterDestroy other combatAreaOtherID 2", combatAreaOtherID, monsterId, monsterInstId, self.spaceNo, self.spaceID, combatAreaOtherIdx)
+                    monsterRefreshAction.doRefreshCalculation(self.spaceNo, self.spaceID, combatAreaOtherID, spaceMgrId, monsterMgrId, monsterId, monsterInstId, combatAreaOtherIdx)

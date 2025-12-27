@@ -64,7 +64,7 @@ class BotAIState_Combat(AIState):
             return
         if owner.hasState(gameconst.State.Fighting):
             return
-        
+
     def exit(self, owner):
         owner.debug("退出战斗状态")
         owner.cell.stopAutoCombat()
@@ -73,7 +73,7 @@ class BotAIState_GoBattleArea(AIState):
     def enter(self, owner):
         owner.debug("进入前往战斗区域状态 当前状态:%s" % owner.state)
         self.stateTime = time.time()
-        
+
 
     def execute(self, owner):
         random_wait = owner.getRandomTimeDelay(1, 5)
@@ -83,12 +83,12 @@ class BotAIState_GoBattleArea(AIState):
         self.stateTime = now
         owner.debug("执行前往战斗区域状态逻辑 %s %s" % (owner.state, str(owner.position)))
         if owner.hasState(gameconst.State.Death):
-            owner.relive(2)
+            owner.runGmCommand("$reliveToPos 0 393,7,154 10000")
             return
         if owner.goBattleArea():
             owner.changeAIState(AISTATE_COMBAT)
             return
-        
+
     def exit(self, owner):
         owner.debug("退出前往战斗区域状态")
 
@@ -110,7 +110,7 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
     def initBot(self):
         if self.getSelfMapId() == 4002 or self.player.level < 20:
             self.runGmCommand('$unlockallfunc 0')
-            
+
         self.runGmCommand('$getitems 0 0 9999 0 30010005 30010006')
         if self.player.totalScore < 150000:
             self.runGmCommand("$getequipment 0 0 3 4")

@@ -105,6 +105,9 @@ spaceGeometryTaskData = None
 
 globalActData = {}
 
+antiAddictionData = [0, 0]
+localMinorAccountCache = {}
+
 globalSiegeWarData = {
     'isBidding': False
 }

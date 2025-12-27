@@ -13,6 +13,8 @@ import userType
 import dungeon
 import dungeonSrc
 
+import DungeonSettlement
+
 import formula
 import utils
 
@@ -389,6 +391,13 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         else:
             founderVal.playerName = extra.pop('playerName', '')
 
+            dungeonVal = self.spaces[spaceNo]
+
+            # 把数据带过去
+            data = DungeonSettlement.DungeonExtraData()
+            data.loadDatas(extra)
+            dungeonVal.spaceMgr.cell.notifyDungeonExtarData(playerGbId, data)
+
     def _enterDungeonSpaceSucc(self, spaceNo, playerBox, playerGBID, raidUUID, src):
         if spaceNo not in self.spaces:
             return None, gameconst.RaidDungeonErrno.RAIDDUN_DUNGEON_VAL_NOT_FOUND
@@ -403,6 +412,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             founderVal = dungeonVal.founders.getFounderVal(playerGBID)
         founderVal.onAvatarEnter(playerGBID)
         founderVal.playerBox = playerBox
+
         return founderVal, gameconst.RaidDungeonErrno.RAIDDUN_OK
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, raidUUID, extra):

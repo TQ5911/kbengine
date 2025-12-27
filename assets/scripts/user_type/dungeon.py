@@ -463,7 +463,8 @@ class BaseDungeonStatisticFoundersMixin(userType.UserSoleType):
         self.statisticFounders.reloadScript()
     
 class GuildBossDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin, BaseDungeonFoundersMixin, BaseDungeonStatisticFoundersMixin):
-    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, guildUUID, spaceLevel=1,extraDic={}):
+    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, guildUUID, guildBox=None, spaceLevel=1,extraDic={},
+                school = 0, avatarLv = 0, avatarSex = 0, avatarGbId = 0, avatarId = 0):
         DungeonSpaceVal.__init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel, extraDic, dungeonSpaceValType=gameconst.DungeonSpaceValType.GUILD_BOSS)
         DungeonSpaceTimeLineMixin.__init__(self)
         DungeonEntityGeneratorQueueMixin.__init__(self)
@@ -472,7 +473,15 @@ class GuildBossDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, Dunge
         self.guildUUID = guildUUID
         self.markCreate = True
         self.markDestroy = 0
-        self.homeEnts = [] 
+        self.homeEnts = []
+        self.firstPass = False
+        self.canReward = False
+        self.guildBox = guildBox
+        self.school = school
+        self.avatarLv = avatarLv
+        self.avatarSex = avatarSex
+        self.avatarGbId = avatarGbId
+        self.avatarId = avatarId
 
 class DungeonStatisticMixin(userType.UserSoleType):
     def __init__(self, gbID = 0, name = "", rank = 0, dmg = 0, hurt = 0, heal = 0, dead = 0):

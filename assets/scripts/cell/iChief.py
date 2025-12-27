@@ -67,6 +67,3 @@ class IChief(object):
 			if dungenNo == value['dunID']:
 				return key
 		return 0
-
-	def addRaidDungeonRewardRecord(self, rewardList):
-		gameengine.getRaidStub(self.raidId).addRaidDungeonRewardRecord(self.raidId, self.gbId, rewardList)

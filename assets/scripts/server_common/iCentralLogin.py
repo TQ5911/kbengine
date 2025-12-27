@@ -18,6 +18,7 @@ import time
 import urllib.parse
 import login_set as LSD
 import message_Message as MMD
+import antiAddictionSystem_config as AASC
 import random
 import SwitchServer
 
@@ -47,8 +48,10 @@ class LoginService(GameServer):
         banPostReason = reply.banPostReason
         res = reply.result
         accountId = reply.accountId
+        otherJsonData = reply.otherJsonData
+        otherData = json.loads(otherJsonData)
         self.loginMgr.onVerifyPlayerLogin(accountType, accountId, accountName, res, channelId, banAccountTime, banPostTime,
-                                          banAccountReason, banPostReason)
+                                          banAccountReason, banPostReason, otherData)
 
     def onKickAccount(self, rpc_controller, reply, done):
         INFO_MSG("onKickAccount", reply.accountName)
@@ -136,13 +139,13 @@ class ICentralLogin(object):
 
     # 将在interfaces进程上执行账号验证相关逻辑
     def onVerifyPlayerLogin(self, accountType, accountId, accountName, resCode, channelId=0, banAccountTime=0, banPostTime=0,
-                            banAccountReason="", banPostReason=""):
+                            banAccountReason="", banPostReason="", otherData={}):
         realAccountName = utils.getRealAccountName(accountType, accountName)
         userInfo = self.accountCache.pop(realAccountName, None)
         if not userInfo:
             return
 
-        INFO_MSG('onVerifyLogin:', accountType, accountId, accountName, resCode, userInfo)
+        INFO_MSG('onVerifyLogin:', accountType, accountId, accountName, resCode, userInfo, otherData)
 
         tid, token, dataBytes = userInfo
 
@@ -151,7 +154,7 @@ class ICentralLogin(object):
         clientData = utils.decodeClientData(dataBytes)
         clientData.pop("banPostTime", None)
         clientData.pop("banPostReason", None)
-        clientData.update({"channelId": channelId, "banAccountTime": banAccountTime, "accountId": accountId})
+        clientData.update({"channelId": channelId, "banAccountTime": banAccountTime, "accountId": accountId, "otherData": otherData})
         if banPostTime != 0:
             clientData.update({"banPostTime": banPostTime, "banPostReason": banPostReason})
         dataBytes = utils.encodeClientData(clientData)
@@ -172,6 +175,17 @@ class ICentralLogin(object):
                                       time.strftime("%Y年%m月%d日%H时%M分%S秒", time.localtime(banAccountTime))),
                     encoding='utf-8'), _forceCompId, KBEngine.SERVER_ERR_USER3)
             return
+
+        curAge = otherData.get('age', gameconst.LEGAL_AGE_OF_MAJORITY)
+        INFO_MSG('onVerifyLogin: antiAddictionData', gameglobal.antiAddictionData, curAge)
+        if utils.isMinorAccount(curAge):#一测 and gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT:
+            #fmtMessage = MMD.datas[AASC.datas['antiAddictForbiddenTime']['value']]['Message']
+            fmtMessage = ""
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'),
+                                              _forceCompId,
+                                              KBEngine.SERVER_ERR_USER8)
+            return
+
         if resCode == VerifyAccountReply.VERIFY_ACCOUNT_OK:
 
             if accountType == centralLogin.ACCOUNT_PASSWD:
@@ -222,7 +236,7 @@ class ICentralLogin(object):
             ERROR_MSG("_checkPlayerLoginOnCentralServer:: invalid centralServerId", accountName, centralServerId,
                       clientData)
             self.accountCache[cacheKeyName] = (0, token, data)
-            self.onVerifyPlayerLogin(accountType, accountName, VerifyAccountReply.VERIFY_ACCOUNT_FAIL)
+            self.onVerifyPlayerLogin(accountType, "", accountName, VerifyAccountReply.VERIFY_ACCOUNT_FAIL)
             return
 
         loginClient.centralServerStub.verifyLogin(None, verifyRequest, None)

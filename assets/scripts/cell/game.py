@@ -168,7 +168,7 @@ def onInited():
     gameengine.setGlobalData('%s:%s' % (gameconst.GLOBALDATA_KEY_CELLAPP_INITED, gorder), gorder)
 
     if KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
-        for lineType in gameconst.lineStubMap.keys():
+        for lineType in gameconst.lineStubMap().keys():
             gameengine.getLineStub(lineType).onCellappRelive(gorder)
 
         # cell 重新拉起,广播给所有可用的base

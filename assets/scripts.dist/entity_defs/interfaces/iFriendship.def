@@ -17,6 +17,25 @@
             <Type>          PY_LIST                 </Type>
             <Flags>         BASE                    </Flags>
         </packetSendList>
+
+        <authPermission>
+            <Type>          AUTH_PERMISSION_DATA_INFO   </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+            <CrossServer>   false                       </CrossServer>
+        </authPermission>
+
+        <authStatistics>
+            <Type>          AUTH_STATISTICS_DATA_INFO   </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+            <CrossServer>   false                       </CrossServer>
+        </authStatistics>
+
+        <authExpireTimerId>
+            <Type>          TIMER_ID                    </Type>
+            <Flags>         BASE                        </Flags>
+        </authExpireTimerId>
     </Properties>
 
     <BaseMethods>
@@ -132,6 +151,56 @@
         <onGetAvatarInterInfoBase>
             <Arg>           ENTITYCALL              </Arg>
         </onGetAvatarInterInfoBase>
+
+        <onRecvAuthRole>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onRecvAuthRole>
+
+        <onAgreeAuthRole>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           DBID                    </Arg>
+        </onAgreeAuthRole>
+
+        <onAgreeAuthRoleSuccess>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           CHARACTER_VAL           </Arg>
+        </onAgreeAuthRoleSuccess>
+
+        <authorizeRole> <Exposed/>
+            <Arg>           PLAYER_GBID                     </Arg>
+            <Arg>           UINT8                           </Arg>
+            <Arg>           AUTH_PERMISSION_DATA_INFO       </Arg>
+        </authorizeRole>
+
+        <dealAuthRole> <Exposed/>
+            <Arg>           BOOL                    </Arg>
+        </dealAuthRole>
+
+        <stopAuthInAvatar> <Exposed/>
+        </stopAuthInAvatar>
+
+        <cancelAuthRole> <Exposed/>
+        </cancelAuthRole>
+
+        <modifyAuthPermission> <Exposed/>
+            <Arg>           AUTH_PERMISSION_DATA_INFO       </Arg>
+            <Arg>           UINT8                           </Arg>
+        </modifyAuthPermission>
+
+        <onUpdateExpRate>
+            <Arg>           FLOAT                           </Arg>
+        </onUpdateExpRate>
+
+        <onAuthExpire>
+        </onAuthExpire>
+
+        <forceAuthOffline>
+        </forceAuthOffline>
+
+        <onAuthExpireChanged>
+            <Arg>           LONGTIME                        </Arg>
+        </onAuthExpireChanged>
     </BaseMethods>
 
     <CellMethods>
@@ -198,9 +267,31 @@
             <Arg>           MSG_CNT                 </Arg>
             <Arg>           MSG_TS                  </Arg>
         </onFriendMsgChanged>
-        
+
         <onGetInterInfoClient>
             <Arg>           AVATAR_INTER_VAL      </Arg>
         </onGetInterInfoClient>
+
+        <onRecvAuthRoleClient>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onRecvAuthRoleClient>
+
+        <onDealAuthResult>
+            <Arg>           BOOL                    </Arg>
+        </onDealAuthResult>
+
+        <onClientAuthState>
+            <Arg>           UINT8                   </Arg>
+        </onClientAuthState>
+
+        <onCancelAuthRole>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onCancelAuthRole>
+
+        <onDailyUseMoneyChanged>
+            <Arg>           MONEY                   </Arg>
+        </onDailyUseMoneyChanged>
     </ClientMethods>
 </root>

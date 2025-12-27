@@ -59,6 +59,12 @@
             <Persistent>    true            </Persistent>
             <WitnessName>   true                </WitnessName>
         </force>
+
+        <cellFlags>
+            <Type>          UINT64              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </cellFlags>
     </Properties>
     <CellMethods>
         <safeDestroy/>
@@ -66,10 +72,10 @@
         <delaySafeDestroy>
             <Arg>       FLOAT           </Arg>
         </delaySafeDestroy>
-        
-        <renewalCell>       
+
+        <renewalCell>
             <Arg>           PYTHON      </Arg>
-        </renewalCell> 
+        </renewalCell>
         <callMethod>
             <Arg>           METHOD_NAME </Arg>
             <Arg>           METHOD_ARGS </Arg>

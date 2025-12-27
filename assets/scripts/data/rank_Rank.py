@@ -23,6 +23,7 @@ datas = _tools.RODict({
         "topListMgrClassType": 1,
         "minLevel": 10,
         "displayNum": 100,
+        "maxNum": 3000
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -32,6 +33,7 @@ datas = _tools.RODict({
         "topListMgrClassType": 1,
         "minLevel": 10,
         "displayNum": 100,
+        "maxNum": 3000
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -41,6 +43,7 @@ datas = _tools.RODict({
         "topListMgrClassType": 2,
         "minLevel": 0,
         "displayNum": 50,
+        "maxNum": 100
     })
 })
 minKey = 1

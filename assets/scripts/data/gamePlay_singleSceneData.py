@@ -84,7 +84,7 @@ datas = _tools.RODict({
         "sceneName": "祖珂地堡四层",
         "defaultMapID": 1027,
         "returnPos": None,
-        "tmxRes": "zuKeTingJiao_05",
+        "tmxRes": "zuKeDiBao_06",
         "weatherType": 0,
     }),
     "field_zukedibao_07": _tools.RODict({
@@ -92,7 +92,7 @@ datas = _tools.RODict({
         "sceneName": "祖珂地堡五层",
         "defaultMapID": 1028,
         "returnPos": None,
-        "tmxRes": "zuKeTingJiao_05",
+        "tmxRes": "zuKeDiBao_07",
         "weatherType": 0,
     }),
     "field_yueguanghaigang_01": _tools.RODict({
@@ -109,6 +109,14 @@ datas = _tools.RODict({
         "defaultMapID": 1031,
         "returnPos": None,
         "tmxRes": "yuRenDong_02",
+        "weatherType": 0,
+    }),
+    "field_yueguanghaigang_08": _tools.RODict({
+        "sceneRes": "field_yueguanghaigang_08",
+        "sceneName": "月光海港三层",
+        "defaultMapID": 1032,
+        "returnPos": None,
+        "tmxRes": "yueGuangHaiGang_08",
         "weatherType": 0,
     }),
     "field_yueguanghaigang_06": _tools.RODict({
@@ -188,7 +196,7 @@ datas = _tools.RODict({
         "sceneName": "帮会讨伐1",
         "defaultMapID": 2301,
         "returnPos": None,
-        "tmxRes": "shouLing_02",
+        "tmxRes": "bangPai_01",
         "weatherType": 0,
     }),
     "field_bangpai_02": _tools.RODict({

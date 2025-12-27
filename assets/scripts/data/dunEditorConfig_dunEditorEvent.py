@@ -643,14 +643,14 @@ datas = _tools.RODict({
         "name": "放出单位/放出复活点",
         "value": "createRebornPos",
         "param": "1011,1012",
-        "description": "参数为地图编辑器中对应出生点的实例ID，即放出对应ID的出生点，支持填写多个实例ID，表示同时放出所有对应出生点，用逗号间隔。"
+        "description": "参数为地图编辑器中对应复活点的实例ID，即放出对应ID的复活点，支持填写多个实例ID，表示同时放出所有对应复活点，用逗号间隔。"
     }),
     91: _tools.RODict({
         "ID": 91,
         "name": "回收单位/回收复活点",
         "value": "removeRebornPos",
         "param": "1011",
-        "description": "参数为地图编辑器中对应出生点的实例ID，即回收（销毁）对应ID的出生点，支持填写多个实例ID，表示同时回收所有对应出生点，用逗号间隔。"
+        "description": "参数为地图编辑器中对应复活点的实例ID，即回收（销毁）对应ID的复活点，支持填写多个实例ID，表示同时回收所有对应复活点，用逗号间隔。"
     }),
     92: _tools.RODict({
         "ID": 92,
@@ -658,7 +658,21 @@ datas = _tools.RODict({
         "value": "transferToTheDesignatedMap",
         "param": "3005,1085,1086,1087,1088",
         "description": "传送玩家到指定地图指定坐标"
+    }),
+    93: _tools.RODict({
+        "ID": 93,
+        "name": "通知开始战斗CD",
+        "value": "notifyStartBattleCD",
+        "param": "3006",
+        "description": "副本阶段内，开始战斗倒计时"
+    }),
+    94: _tools.RODict({
+        "ID": 94,
+        "name": "放出单位/放出脱卡点",
+        "value": "createBreakAwayStuckPos",
+        "param": "1011,1012",
+        "description": "参数为地图编辑器中对应脱卡点的实例ID，即放出对应ID的出生点，支持填写多个实例ID，表示同时放出所有对应脱卡点，用逗号间隔。"
     })
 })
 minKey = 1
-maxKey = 92
+maxKey = 94

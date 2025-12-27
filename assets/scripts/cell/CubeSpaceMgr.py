@@ -4,6 +4,7 @@ import KBEngine
 from KBEDebug import *
 
 import gameengine
+import random
 import formula
 import utils
 import gameglobal
@@ -26,7 +27,7 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
     def onPlayerRelogin(self, box, playerGbId):
         super().onPlayerRelogin(box, playerGbId)
 
-    def createTeleporterToCow(self, pos=None):
+    def createTeleporterToCow(self, num, pos=None):
         _mapId = formula.getMapId(self.spaceNo)
         _dunData = utils.getDunStructureModuleData(_mapId)
         if not _dunData:
@@ -44,7 +45,9 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
             return
 
         _gids = []
-        for _gid in _cubeData.get('Teleporter', {}).keys():
+        _pools = list(_cubeData.get('Teleporter', {}).keys())
+        _pools = random.sample(_pools, min(num, len(_pools)))
+        for _gid in _pools:
             for i in utils.generateGameEntityId(int(_gid), 1):
                 _gids.append(int(i))
 

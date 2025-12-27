@@ -1,6 +1,8 @@
 datas ={
   "35080001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "BornPos",
     "ClassNameType": 6,
     "CustomID": "",
@@ -8,6 +10,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 35080001,
+    "Name": "\u51fa\u751f\u70b9",
     "PosX": 250.1708,
     "PosY": 527.809,
     "PosZ": 24.2318,
@@ -23,6 +26,8 @@ datas ={
   },
   "35080002": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "",
@@ -30,6 +35,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 11015016,
     "ID": 35080002,
+    "Name": "5006\u9996\u98862",
     "PosX": 279.666,
     "PosY": 524.9851,
     "PosZ": 57.49099,

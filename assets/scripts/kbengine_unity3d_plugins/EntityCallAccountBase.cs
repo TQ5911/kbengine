@@ -21,6 +21,15 @@ namespace KBEngine
 			type = ENTITYCALL_TYPE.ENTITYCALL_TYPE_BASE;
 		}
 
+		public void accountOffline()
+		{
+			Bundle pBundle = newCall("accountOffline", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void getAvatarDetailForAccount(UInt64 arg1)
 		{
 			Bundle pBundle = newCall("getAvatarDetailForAccount", 0);

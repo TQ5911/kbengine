@@ -18,21 +18,21 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "dunID": 2201,
-        "firstReward": 40020249,
-        "clearReward": 0,
+        "firstReward": 40000080,
+        "clearReward": 40020543,
         "goldReward": 40000080,
     }),
     2: _tools.RODict({
         "ID": 2,
         "dunID": 2202,
-        "firstReward": 40020249,
-        "clearReward": 0,
+        "firstReward": 40000080,
+        "clearReward": 40020543,
         "goldReward": 40000080,
     }),
     3: _tools.RODict({
         "ID": 3,
         "dunID": 2203,
-        "firstReward": 40020249,
+        "firstReward": 40000080,
         "clearReward": 40020543,
         "goldReward": 40000080,
     })
@@ -40,7 +40,13 @@ datas = _tools.RODict({
 minKey = 1
 maxKey = 3
 
-fistPassRewardDic = {2201: 40020249, 2202: 40020249, 2203: 40020249}
+fistPassRewardDic = {2201: 40000080, 2202: 40000080, 2203: 40000080}
 
 
-clearPassRewardDic = {2203: 40020543}
+clearPassRewardDic = {2201: 40020543, 2202: 40020543, 2203: 40020543}
+
+
+goldPassRewardDic = {2201: 40000080, 2202: 40000080, 2203: 40000080}
+
+
+dungeonIdxDic = {2201: 1, 2202: 2, 2203: 3}

@@ -23,6 +23,7 @@ import cityBattle_config as CBC
 import agent_agentFunction as A_AFD
 import guildChallenge_basicInfo as GCBI
 import guildChallenge_config as GCC
+import mineBattle_config as MBC
 
 
 class IGuild(object):
@@ -233,6 +234,8 @@ class IGuild(object):
             if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
                 self.otherServerAvatarBox.onSetGuildInfoCross(guildUUID, self.guildNameBase, False)
 
+            self.onMineWarGuildChange()
+
     def onGuildNameChange(self, guildName, dspFlag):
         self.guildNameBase = guildName
         self.cell.syncModifyGuildInfo({
@@ -275,11 +278,17 @@ class IGuild(object):
     def exitGuild(self, exposed):
         INFO_MSG("IGuild::exitGuild", self.guildBox, self.guildInitStatus)
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'exitGuild', ())
+            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'exitGuild', (exposed,))
             return
 
         if not self.guildBox:
             WARNING_MSG("IGuild::exitGuild: guildBox is None.")
+            return
+        
+        INFO_MSG('exit Guild: ', self.mineWarStateBase, self.myGuildInfoBase)
+        # 矿战检查
+        if self.mineWarStateBase == gameconst.MINE_WAR_STATE.RUNNING and self.myGuildInfoBase.get('leaderGbId') == self.gbID:
+            self.onMessagePre(MBC.datas['mineBattle_prohibitExit']['value'], [])
             return
 
         self.guildBox.doExitGuild(self.gbID, self)
@@ -319,6 +328,8 @@ class IGuild(object):
 
         if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
             self.otherServerAvatarBox.onSetGuildInfoCross(0, '', False)
+
+        self.onMineWarGuildChange()
 
     def _sendAllGuildRelation(self):
         if not self.guildInitStatus:
@@ -380,6 +391,17 @@ class IGuild(object):
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def applyJoinGuild(self, exposed, guildUUID):
         INFO_MSG("IGuild::applyJoinGuild:", guildUUID)
+        if not self.guildInitStatus:
+            self.registerTempEvent(
+                gameconst.AvatarProps.guildInitEvent, 
+                'applyJoinGuild', 
+                (exposed, guildUUID))
+            return
+
+        if self.guildUUIDBase:
+            WARNING_MSG("IGuild::applyJoinGuild: already in guild.")
+            return
+
         if not self._checkJoinGuild():
             return
 
@@ -409,6 +431,17 @@ class IGuild(object):
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def oneKeyGuildApply(self, exposed, guildUUIDs):
         INFO_MSG("IGuild::oneKeyGuildApply")
+        if not self.guildInitStatus:
+            self.registerTempEvent(
+                gameconst.AvatarProps.guildInitEvent, 
+                'oneKeyGuildApply', 
+                (exposed, guildUUIDs))
+            return
+
+        if self.guildUUIDBase:
+            WARNING_MSG("IGuild::oneKeyGuildApply: already in guild.")
+            return
+
         if not self._checkJoinGuild():
             return
 
@@ -519,7 +552,10 @@ class IGuild(object):
     def modifyJoinCond(self, exposed, joinCond):
         INFO_MSG("IGuild::modifyJoinCond:", joinCond)
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'modifyJoinCond', (joinCond,))
+            self.registerTempEvent(
+                gameconst.AvatarProps.guildInitEvent, 
+                'modifyJoinCond', 
+                (exposed, joinCond,))
             return
 
         if not self.guildUUIDBase:
@@ -534,7 +570,10 @@ class IGuild(object):
     def dealGuildApply(self, exposed, gbId, isAgree):
         INFO_MSG("IGuild::dealGuildApply:", gbId)
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'dealGuildApply', (gbId,))
+            self.registerTempEvent(
+                gameconst.AvatarProps.guildInitEvent, 
+                'dealGuildApply', 
+                (exposed, gbId, isAgree))
             return
 
         if not self.guildUUIDBase:
@@ -575,7 +614,10 @@ class IGuild(object):
     def modifyGuildDesc(self, exposed, desc):
         INFO_MSG("IGuild::modifyGuildDesc:", desc)
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'modifyGuildDesc', (desc,))
+            self.registerTempEvent(
+                gameconst.AvatarProps.guildInitEvent, 
+                'modifyGuildDesc', 
+                (exposed, desc,))
             return
 
         if not self.guildUUIDBase:
@@ -590,7 +632,10 @@ class IGuild(object):
     def modifyMemberJob(self, exposed, gbId, job):
         INFO_MSG("IGuild::modifyMemberJob:", gbId, job)
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'modifyMemberJob', (gbId, job))
+            self.registerTempEvent(
+                gameconst.AvatarProps.guildInitEvent, 
+                'modifyMemberJob', 
+                (exposed, gbId, job))
             return
 
         if not self.guildUUIDBase:
@@ -605,7 +650,10 @@ class IGuild(object):
     def resign(self, exposed):
         INFO_MSG("IGuild::resign")
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'resign', ())
+            self.registerTempEvent(
+                gameconst.AvatarProps.guildInitEvent, 
+                'resign', 
+                (exposed, ))
             return
 
         if not self.guildUUIDBase:
@@ -620,7 +668,10 @@ class IGuild(object):
     def kickMember(self, exposed, gbId):
         INFO_MSG("IGuild::kickMember:", gbId)
         if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.AvatarProps.guildInitEvent, 'kickMember', (gbId,))
+            self.registerTempEvent(
+                gameconst.AvatarProps.guildInitEvent, 
+                'kickMember', 
+                (exposed, gbId,))
             return
 
         if not self.guildUUIDBase:

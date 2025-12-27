@@ -5554,6 +5554,43 @@ namespace KBEngine
 		}
 	}
 
+	public struct CHANNEL
+	{
+		Byte value;
+
+		CHANNEL(Byte value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator Byte(CHANNEL value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator CHANNEL(Byte value)
+		{
+			Byte tvalue = (Byte)value;
+			return new CHANNEL(tvalue);
+		}
+
+		public static Byte MaxValue
+		{
+			get
+			{
+				return Byte.MaxValue;
+			}
+		}
+
+		public static Byte MinValue
+		{
+			get
+			{
+				return Byte.MinValue;
+			}
+		}
+	}
+
 	public class FACE_DATA
 	{
 		public UInt16 suitId = 0;
@@ -5630,10 +5667,18 @@ namespace KBEngine
 
 	}
 
+	public class CLIENT_SKILL_CD_STATUS
+	{
+		public UInt32 skillId = 0;
+		public SByte cdStatus = 0;
+
+	}
+
 	public class CLIENT_SKILLS
 	{
 		public List<CLIENT_SKILL_VAL> skills = new List<CLIENT_SKILL_VAL>();
 		public List<CLIENT_SKILL_SWITCH_VAL> skillSwitches = new List<CLIENT_SKILL_SWITCH_VAL>();
+		public List<CLIENT_SKILL_CD_STATUS> skillCDStatus = new List<CLIENT_SKILL_CD_STATUS>();
 
 	}
 
@@ -5700,6 +5745,7 @@ namespace KBEngine
 		public UInt16 bindValue = 0;
 		public Byte isAddBindValue = 0;
 		public Byte grade = 0;
+		public Byte maxEnhanceLv = 0;
 
 	}
 
@@ -6167,6 +6213,9 @@ namespace KBEngine
 		public UInt32 rewardDailyCount = 0;
 		public UInt32 useItemAddRewardNumber = 0;
 		public UInt32 useCoinAddRewardNum = 0;
+		public UInt32 rewardItemNumber = 0;
+		public UInt32 rewardCoinNumber = 0;
+		public Byte ticketType = 0;
 
 	}
 
@@ -6176,6 +6225,9 @@ namespace KBEngine
 		public UInt32 rewardDailyCount = 0;
 		public UInt32 useItemAddRewardNumber = 0;
 		public UInt32 useCoinAddRewardNum = 0;
+		public UInt32 rewardItemNumber = 0;
+		public UInt32 rewardCoinNumber = 0;
+		public Byte ticketType = 0;
 
 	}
 
@@ -6440,6 +6492,7 @@ namespace KBEngine
 		public UInt32 openedDungeonId = 0;
 		public Byte consumedType = 0;
 		public Byte openedDungeonStatus = 0;
+		public Int64 settleTs = 0;
 
 	}
 
@@ -6542,6 +6595,20 @@ namespace KBEngine
 
 	}
 
+	public class LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO
+	{
+		public UInt64 gbId = 0;
+		public string name = "";
+		public UInt32 level = 0;
+		public UInt16 school = 0;
+		public UInt32 ts = 0;
+		public string guildName = "";
+		public UInt64 guildUUID = 0;
+		public string accountName = "";
+		public UInt64 phone = 0;
+
+	}
+
 	public class LEADER_BOARD_AVATAR_SCORE_DATA_INFO
 	{
 		public UInt64 gbId = 0;
@@ -6580,24 +6647,18 @@ namespace KBEngine
 
 	}
 
-	public class AUCTION_ITEM
+	public class AUCTION_ITEM_CLIENT
 	{
-		public Byte auctionType = 0;
 		public UInt64 auctionItemUUID = 0;
 		public UInt32 addTime = 0;
-		public ITEM_VAL itemData = new ITEM_VAL();
 		public UInt64 price = 0;
 		public UInt32 number = 0;
-		public Byte bagType = 0;
-		public Byte source = 0;
 		public Byte status = 0;
-		public UInt32 locked = 0;
-		public string extraInfo = "";
-		public UInt32 tCreate = 0;
+		public ITEM_VAL itemData = new ITEM_VAL();
 
 	}
 
-	public class AUCTION_ITEM_LIST : List<AUCTION_ITEM>
+	public class AUCTION_ITEM_CLIENT_LIST : List<AUCTION_ITEM_CLIENT>
 	{
 
 	}
@@ -6788,6 +6849,7 @@ namespace KBEngine
 	{
 		public UInt32 itemId = 0;
 		public UInt32 itemNum = 0;
+		public Byte bindType = 0;
 
 	}
 
@@ -6885,24 +6947,6 @@ namespace KBEngine
 
 	}
 
-	public class TEAM_STATISTIC_PLAYER_VAL
-	{
-		public UInt64 gbId = 0;
-		public string name = "";
-		public UInt16 school = 0;
-		public Int32 value = 0;
-
-	}
-
-	public class TEAM_STATISTIC_CLIENT_VAL1
-	{
-		public List<TEAM_STATISTIC_PLAYER_VAL> dmgList = new List<TEAM_STATISTIC_PLAYER_VAL>();
-		public List<TEAM_STATISTIC_PLAYER_VAL> healList = new List<TEAM_STATISTIC_PLAYER_VAL>();
-		public List<TEAM_STATISTIC_PLAYER_VAL> hurtList = new List<TEAM_STATISTIC_PLAYER_VAL>();
-		public List<TEAM_STATISTIC_PLAYER_VAL> deadList = new List<TEAM_STATISTIC_PLAYER_VAL>();
-
-	}
-
 	public class MERIDIAN_POINT_INFO
 	{
 		public Byte pointIdx = 0;
@@ -6938,6 +6982,7 @@ namespace KBEngine
 		public string guildOwnerName = "";
 		public Byte guildDspFlag = 0;
 		public UInt32 ownerTimeStamp = 0;
+		public SByte ownerDay = 0;
 		public Byte guildRevenueRate = 0;
 		public UInt32 revenue = 0;
 		public UInt32 allNum = 0;
@@ -6977,14 +7022,38 @@ namespace KBEngine
 
 	}
 
-	public class CLI_DUNGEON_SETTLEMENT_DATA
+	public class MINE_WAR_GUILD_MEMBER_SCORE_INFO
 	{
+		public UInt64 playerGbId = 0;
+		public UInt32 score = 0;
+		public Byte rankId = 0;
+
+	}
+
+	public class CLI_DUNGEON_DATA
+	{
+		public Byte win = 0;
 		public Int32 elapsedTime = 0;
 		public Int64 endTime = 0;
+		public UInt32 dungeonNo = 0;
+		public Byte playMode = 0;
+		public UInt32 rewardCount = 0;
+		public UInt32 rankCount = 0;
+
+	}
+
+	public class CLI_DUNGEON_SETTLEMENT_DATA
+	{
+		public UInt64 gbId = 0;
+		public string name = "";
+		public UInt16 school = 0;
+		public UInt32 level = 0;
+		public Byte sex = 0;
 		public UInt16 rank = 0;
-		public Int32 dmg = 0;
+		public Int32 score = 0;
 		public List<BAG_ITEM_BRIEF_VAL> dungeonRewards = new List<BAG_ITEM_BRIEF_VAL>();
 		public List<BAG_ITEM_BRIEF_VAL> firstPassRewards = new List<BAG_ITEM_BRIEF_VAL>();
+		public List<BAG_ITEM_BRIEF_VAL> goldPassRewards = new List<BAG_ITEM_BRIEF_VAL>();
 
 	}
 
@@ -6993,6 +7062,23 @@ namespace KBEngine
 		public string name = "";
 		public UInt16 rank = 0;
 		public Int32 dmg = 0;
+
+	}
+
+	public class STATISTIC_PLAYER_VAL
+	{
+		public UInt16 rank = 0;
+		public UInt64 gbId = 0;
+		public string name = "";
+		public UInt16 school = 0;
+		public Int64 statisticsNum = 0;
+
+	}
+
+	public class DUNGEON_PASS_RECRODS
+	{
+		public List<Byte> entryIds = new List<Byte>();
+		public List<Byte> entryStatus = new List<Byte>();
 
 	}
 

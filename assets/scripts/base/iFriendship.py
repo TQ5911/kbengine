@@ -16,6 +16,7 @@ import gamedecorator
 
 import relationConfig_relationConfig as RC_RCD
 import agent_agentFunction as A_AFD
+import agent_agentConfig as A_ACD
 
 
 class IFriendship(object):
@@ -959,11 +960,11 @@ class IFriendship(object):
 
         _fVal = self.friendship.getFriend(gbId)
         if not _fVal:
-            ERROR_MSG("IFriends::authorizeRole gbId={} not your friend".format(gbId))
+            self.onMessagePre(A_ACD.datas['agentOffline']['value'], [])
             return
 
         if utils.isBoxOffline(_fVal.box):
-            ERROR_MSG("IFriends::authorizeRole gbId={} is offline".format(gbId))
+            self.onMessagePre(A_ACD.datas['agentOffline']['value'], [])
             return
 
         if authPermission is not None:
@@ -995,6 +996,15 @@ class IFriendship(object):
             return
 
         self.popTempMiscProp(gameconst.AvatarProps.authRoleInfo)
+        _fVal = self.friendship.getFriend(_authCache['gbId'])
+        if not _fVal:
+            INFO_MSG("IFriends::cancelAuthRole gbId={} not your friend".format(_authCache['gbId']))
+            return
+
+        if utils.isBoxOffline(_fVal.box):
+            return
+
+        _fVal.box.client.onCancelAuthRole(self.gbID, self.getRoleCacheAttr('name'))
 
     def onRecvAuthRole(self, gbId, name):
         _fVal = self.friendship.getFriend(gbId)
@@ -1161,7 +1171,7 @@ class IFriendship(object):
         if self.accountEntity.isAuthHost(self.gbID):
             return
 
-        self.authStatistics.addUseMoney(money)
+        self.authStatistics.addUseMoney(self, money)
 
     def onUpdateExpRate(self, expRate):
         if not self.accountEntity.isAuthHost(self.gbID):
@@ -1206,6 +1216,8 @@ class IFriendship(object):
         self.authExpireTimerId = self._datetimeCallback(_fireTime, 'onAuthExpire', (), gametimer.TIMER_TAG_OFFLINE_BY_AUTH_EXPIRE, 'authExpireTimerId')
 
     def onAuthExpire(self):
+        DEBUG_MSG('onAuthExpire')
+        self.onMessagePre(A_ACD.datas['expirationNotice']['value'], [])
         self.authStatistics.reset()
         self.authStatistics = self.authStatistics
 

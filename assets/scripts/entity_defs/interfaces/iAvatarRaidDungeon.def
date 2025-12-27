@@ -88,6 +88,16 @@
     </CellMethods>
 
     <BaseMethods>
+        <doEnterRaidDungeonSelfCheck>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+            <Arg>   MAILBOX     </Arg>  <!--spaceBox-->
+            <Arg>   MAILBOX     </Arg>  <!--spaceMgrBox-->
+            <Arg>   DUNGEON_SRC     </Arg>
+            <Arg>   PYTHON  </Arg>
+        </doEnterRaidDungeonSelfCheck>
+        
         <createAndEnterRaidDungeonMemberPreCheck>
             <Arg>   MAILBOX     </Arg>
             <Arg>   RAID_ID     </Arg>

@@ -27,7 +27,7 @@ namespace KBEngine
 		public virtual void onRemoveAureole(Int32 arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onRemoveAureoleFromOthers(Int32 arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onRemoveBuff(Int32 arg1, List<UInt64> arg2) {} //Avatar Monster Summon Npc Creation 
-		public virtual void onSetAddSkillCd(UInt32 arg1, float arg2, double arg3, Byte arg4, double arg5, SByte arg6, SByte arg7) {} //Avatar Monster Summon Npc Creation 
+		public virtual void onSetAddSkillCd(UInt32 arg1, float arg2, double arg3, Byte arg4, double arg5, SByte arg6, SByte arg7, Byte arg8) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onShooterSkillCanUse(UInt32 arg1, double arg2, Byte arg3) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onSkillDamage(SKILL_DAMAGE_INFO arg1) {} //Avatar Monster Summon Npc Creation 
 		public virtual void onUpdateAureoles(CLIENT_AUREOLES arg1) {} //Avatar Monster Summon Npc Creation 

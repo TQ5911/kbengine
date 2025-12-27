@@ -4,6 +4,7 @@ datas ={
       "Monster": {
         "20200001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -30,6 +31,7 @@ datas ={
         },
         "20200002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -56,6 +58,7 @@ datas ={
         },
         "20200003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -82,9 +85,11 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "BornPos": {
       "20208001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -105,6 +110,7 @@ datas ={
     "RebornPos": {
       "20208002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",

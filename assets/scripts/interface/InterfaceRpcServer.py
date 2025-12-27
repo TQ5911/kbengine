@@ -79,6 +79,11 @@ class Baseapp2InterfaceRpcService(Interface):
         _resp.entityID = request.entityID
         self.baseappStub.setAccountCompResult(None, _resp, None)
 
+    def updateAntiAddictionData(self, rpc_controller, request, done):
+        timeType = request.timeType
+        timestamp = request.timestamp
+        INFO_MSG('updateAntiAddictionData:', timeType, timestamp)
+        gameglobal.antiAddictionData = [timeType, timestamp]
 
 class BaseappClientMgr(object):
     def __init__(self):

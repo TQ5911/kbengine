@@ -65,10 +65,10 @@ datas = _tools.RODict({
     }),
     "petResource": _tools.RODict({
         "ID": "petResource",
-        "value": "Assets/Res/art/char/monster/Summon_1001_tiger_show.prefab",
+        "value": "Assets/Res/art/char/summon/Summon_1001_tiger_show.prefab",
     }),
     "petPostion": _tools.RODict({
         "ID": "petPostion",
-        "value": (4.129717, -3.78, -35.56131, -9.979),
+        "value": (3.58, -3.78, -35.58, -9.979),
     })
 })

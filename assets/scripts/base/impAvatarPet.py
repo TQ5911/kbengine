@@ -173,7 +173,11 @@ class ImpAvatarPet(object):
         if not self.lingShouInfo.isBattleIndexValid(battleIndex):
             ERROR_MSG("modifyPetBattleListName battleIndex invalid", battleIndex)
             return
-
+        
+        if len(name) == 0:
+            ERROR_MSG("modifyPetBattleListName name can't be empty", name)
+            return
+        
         if len(name) > PDSD.datas['petTeamNameLength']['value']:
             ERROR_MSG("modifyPetBattleListName name too long", name)
             return

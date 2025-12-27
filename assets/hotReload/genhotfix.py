@@ -41,7 +41,7 @@ def getImportInfo(methodInfo:MI.MethodInfo):
             for mod in modules:
                 mod = mod.strip()
                 if mod in funcGlobals:
-                    importLines.append(strLine.replace('\r\n', '\n'))
+                    importLines.append(strLine.replace('\r\n', '\n').lstrip())
                     importedMods.append(mod)
 
             continue
@@ -147,6 +147,7 @@ def generateCode(scriptPath, component, moduleName, clsName, methodName):
     #assign method finally
     if info.checkClassValid():
         resultLines.append('{}.{}.{} = {}\n'.format(moduleName, clsName, methodName, methodName))
+        #resultLines.append("hotpatch_method({}.{}, '{}', {})\n".format(moduleName, clsName, methodName, methodName))
     else:
         resultLines.append('{}.{} = {}\n'.format(moduleName, methodName, methodName))
 

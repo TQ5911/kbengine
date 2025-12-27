@@ -1,0 +1,29 @@
+<root>
+    <Properties>
+    </Properties>
+
+    <BaseMethods>
+        <reqBindPhone> <Exposed/>
+            <Arg>   UINT64            </Arg>
+        </reqBindPhone>
+
+        <reqVerifyCode> <Exposed/>
+            <Arg>   STRING           </Arg>
+        </reqVerifyCode>
+
+        <reqClaimPcLoginReward> <Exposed/>
+        </reqClaimPcLoginReward>
+    </BaseMethods>
+
+    <ClientMethods>
+        <bindPhoneReplay>
+            <Arg>   BOOL                </Arg>
+            <Arg>   UINT64              </Arg>
+        </bindPhoneReplay>
+
+        <claimPcLoginRewardInfo>
+            <Arg>   UINT64              </Arg>
+            <Arg>   UINT64              </Arg>
+        </claimPcLoginRewardInfo>
+    </ClientMethods>
+</root>

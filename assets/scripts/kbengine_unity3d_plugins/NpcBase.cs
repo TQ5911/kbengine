@@ -233,7 +233,8 @@ namespace KBEngine
 					double onSetAddSkillCd_arg5 = stream.readDouble();
 					SByte onSetAddSkillCd_arg6 = stream.readInt8();
 					SByte onSetAddSkillCd_arg7 = stream.readInt8();
-					onSetAddSkillCd(onSetAddSkillCd_arg1, onSetAddSkillCd_arg2, onSetAddSkillCd_arg3, onSetAddSkillCd_arg4, onSetAddSkillCd_arg5, onSetAddSkillCd_arg6, onSetAddSkillCd_arg7);
+					Byte onSetAddSkillCd_arg8 = stream.readUint8();
+					onSetAddSkillCd(onSetAddSkillCd_arg1, onSetAddSkillCd_arg2, onSetAddSkillCd_arg3, onSetAddSkillCd_arg4, onSetAddSkillCd_arg5, onSetAddSkillCd_arg6, onSetAddSkillCd_arg7, onSetAddSkillCd_arg8);
 					break;
 				case 264:
 					UInt32 onShooterSkillCanUse_arg1 = stream.readUint32();
@@ -265,28 +266,28 @@ namespace KBEngine
 					Int32 onUseCasting_arg1 = stream.readInt32();
 					UInt32 onUseCasting_arg2 = stream.readUint32();
 					Int32 onUseCasting_arg3 = stream.readInt32();
-					List<float> onUseCasting_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
+					List<float> onUseCasting_arg4 = ((DATATYPE_AnonymousArray_10009)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onUseCasting_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
-					List<float> onUseCasting_arg6 = ((DATATYPE_AnonymousArray_10008)method.args[5]).createFromStreamEx(stream);
+					List<float> onUseCasting_arg6 = ((DATATYPE_AnonymousArray_10009)method.args[5]).createFromStreamEx(stream);
 					onUseCasting(onUseCasting_arg1, onUseCasting_arg2, onUseCasting_arg3, onUseCasting_arg4, onUseCasting_arg5, onUseCasting_arg6);
 					break;
 				case 88:
 					Int32 onUseChanneling_arg1 = stream.readInt32();
 					UInt32 onUseChanneling_arg2 = stream.readUint32();
 					Int32 onUseChanneling_arg3 = stream.readInt32();
-					List<float> onUseChanneling_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
+					List<float> onUseChanneling_arg4 = ((DATATYPE_AnonymousArray_10009)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onUseChanneling_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
 					Int32 onUseChanneling_arg6 = stream.readInt32();
-					List<float> onUseChanneling_arg7 = ((DATATYPE_AnonymousArray_10008)method.args[6]).createFromStreamEx(stream);
+					List<float> onUseChanneling_arg7 = ((DATATYPE_AnonymousArray_10009)method.args[6]).createFromStreamEx(stream);
 					onUseChanneling(onUseChanneling_arg1, onUseChanneling_arg2, onUseChanneling_arg3, onUseChanneling_arg4, onUseChanneling_arg5, onUseChanneling_arg6, onUseChanneling_arg7);
 					break;
 				case 70:
 					Byte onUseSkill_arg1 = stream.readUint8();
 					UInt32 onUseSkill_arg2 = stream.readUint32();
 					Int32 onUseSkill_arg3 = stream.readInt32();
-					List<float> onUseSkill_arg4 = ((DATATYPE_AnonymousArray_10008)method.args[3]).createFromStreamEx(stream);
+					List<float> onUseSkill_arg4 = ((DATATYPE_AnonymousArray_10009)method.args[3]).createFromStreamEx(stream);
 					List<Int32> onUseSkill_arg5 = ((DATATYPE_AnonymousArray_10004)method.args[4]).createFromStreamEx(stream);
-					List<float> onUseSkill_arg6 = ((DATATYPE_AnonymousArray_10008)method.args[5]).createFromStreamEx(stream);
+					List<float> onUseSkill_arg6 = ((DATATYPE_AnonymousArray_10009)method.args[5]).createFromStreamEx(stream);
 					onUseSkill(onUseSkill_arg1, onUseSkill_arg2, onUseSkill_arg3, onUseSkill_arg4, onUseSkill_arg5, onUseSkill_arg6);
 					break;
 				case 159:

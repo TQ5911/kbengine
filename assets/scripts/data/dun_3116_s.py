@@ -11,14 +11,16 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 31160001,
-        "PosX": 69.59108,
-        "PosY": 4.044484,
-        "PosZ": 92.3022,
+        "PosX": 69.58,
+        "PosY": 3.726476,
+        "PosZ": 99.0,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
           "RefreshTimedID": 0,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "TelDir": 0.0,
           "TelX": 39.52325,
           "TelY": 39.0038,
@@ -44,6 +46,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 25,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -53,6 +56,7 @@ datas ={
             "RefreshTime": 2.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -109,6 +113,7 @@ datas ={
             "RefreshTime": 2.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -137,6 +142,7 @@ datas ={
             "RefreshTime": 2.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -165,6 +171,7 @@ datas ={
             "RefreshTime": 2.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -193,6 +200,7 @@ datas ={
             "RefreshTime": 2.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         }
@@ -217,7 +225,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 600.0,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "31168002": {
@@ -239,7 +248,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 600.0,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       },
@@ -260,7 +270,8 @@ datas ={
           "Props": {
             "AreaType": 1,
             "Radius": 22.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "31168004": {
@@ -279,7 +290,8 @@ datas ={
           "Props": {
             "AreaType": 1,
             "Radius": 22.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       }
@@ -304,6 +316,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "",
+            "ShowInSceneMap": 0,
             "TelDir": 0.0,
             "TelX": 69.50124,
             "TelY": 3.717127,

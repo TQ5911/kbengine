@@ -4,6 +4,7 @@ datas ={
       "Monster": {
         "60000002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "siegeBoss",
@@ -34,6 +35,7 @@ datas ={
         },
         "60000004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "reinforce",
@@ -63,6 +65,7 @@ datas ={
         },
         "60000005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "mainGate",
@@ -92,6 +95,7 @@ datas ={
         },
         "60000007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "bow",
@@ -122,6 +126,7 @@ datas ={
         },
         "60000008": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "bow",
@@ -152,6 +157,7 @@ datas ={
         },
         "60000029": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "catapult1",
@@ -178,6 +184,7 @@ datas ={
         },
         "60000031": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "catapult2",
@@ -204,6 +211,7 @@ datas ={
         },
         "60000032": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "catapult3",
@@ -232,6 +240,7 @@ datas ={
       "CityBattleTeleporter": {
         "60000016": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CityBattleTeleporter",
           "ClassNameType": 17,
           "CustomID": "",
@@ -320,6 +329,7 @@ datas ={
         },
         "60000017": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CityBattleTeleporter",
           "ClassNameType": 17,
           "CustomID": "",
@@ -388,6 +398,7 @@ datas ={
         },
         "60000018": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CityBattleTeleporter",
           "ClassNameType": 17,
           "CustomID": "",
@@ -422,6 +433,7 @@ datas ={
       "AirWall": {
         "60000023": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "attackAirwall",
@@ -444,6 +456,7 @@ datas ={
         },
         "60000026": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "gateAirwall",
@@ -468,6 +481,7 @@ datas ={
         },
         "60008001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "",
@@ -490,6 +504,7 @@ datas ={
         },
         "60008002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "AirWall",
           "ClassNameType": 5,
           "CustomID": "defendAirwall",
@@ -515,6 +530,7 @@ datas ={
       "Collection": {
         "60000030": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "siegeCollection",
@@ -535,9 +551,11 @@ datas ={
         }
       }
     },
+    "TimerEntities": {},
     "gateRevive": {
       "60000014": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "gateRevive",
@@ -561,6 +579,7 @@ datas ={
     "attackRevive": {
       "60000020": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "attackRevive",
@@ -581,6 +600,7 @@ datas ={
     "defendRevive": {
       "60000021": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "defendRevive",
@@ -601,6 +621,7 @@ datas ={
     "BornPos": {
       "60000022": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",

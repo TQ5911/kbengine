@@ -18,7 +18,7 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "type": 1,
-        "num": 30,
+        "num": 10,
         "para": 1,
         "reward": 40020226
     }),
@@ -32,7 +32,7 @@ datas = _tools.RODict({
     3: _tools.RODict({
         "ID": 3,
         "type": 2,
-        "num": 1000,
+        "num": 10000,
         "para": 30000002,
         "reward": 40020229
     }),

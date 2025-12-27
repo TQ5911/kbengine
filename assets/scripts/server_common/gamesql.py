@@ -861,7 +861,26 @@ def getAuthExpire(gbId, callback):
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 
-def getAvatarMoralValue(gbId, callback):
-    _sql = f'SELECT sm_moralValue FROM tbl_Avatar WHERE sm_gbID={gbId}'
+def resetExpireAuth(dbid, now, callback):
+    _sql = f'UPDATE game_account_characters SET authDbId=0, authExpire=0 WHERE parentID={dbid} and authDbId>0 and authExpire<={now}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def getAvatarMoraAndBanLoginlValue(gbId, callback):
+    _sql = f'SELECT sm_moralValue, sm_banLogin FROM tbl_Avatar WHERE sm_gbID={gbId}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+def getBanLogin(gbId, callback):
+    _sql = f'SELECT sm_banLogin FROM tbl_Avatar WHERE sm_gbID={gbId}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def banLogin(gbId, endTime, callback):
+    _sql = f'UPDATE tbl_Avatar SET sm_banLogin={endTime} WHERE sm_gbID={gbId}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def disbanLogin(gbId, callback):
+    _sql = f'UPDATE tbl_Avatar SET sm_banLogin=0 WHERE sm_gbID={gbId}'
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 # --------------------------- auth avatar end --------------------------------

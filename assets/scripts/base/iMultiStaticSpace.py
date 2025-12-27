@@ -10,12 +10,10 @@ import StaticSpaceVal
 import formula
 import gameconst
 import gameconfig
-import iEntityLoaderInBase
 
 
-class IMultiStaticSpace(iEntityLoaderInBase.IEntityLoaderInBase, iGlobal.IGlobal):
+class IMultiStaticSpace(iGlobal.IGlobal):
     def __init__(self):
-        iEntityLoaderInBase.IEntityLoaderInBase.__init__(self)
         self.staticSpaces = {} # type: dict[int, StaticSpaceVal.StaticSpaceVal]
         self.loadWaitSet = set()
 
@@ -95,7 +93,8 @@ class IMultiStaticSpace(iEntityLoaderInBase.IEntityLoaderInBase, iGlobal.IGlobal
                 return
 
         DEBUG_MSG("IMultiStaticSpace::onLoadGroupEntities spaceNo", info['spaceNo'])
-        super(IMultiStaticSpace, self).onLoadGroupEntities(info)
+        _spaceVal = self.staticSpaces[info['spaceNo']]
+        _spaceVal.lineSpaceBox.cell.callOnSpace('onLoadGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
 
     def onRefreshGroupEntities(self, info):
         spaceNoList = list(self.staticSpaces.keys())
@@ -115,7 +114,19 @@ class IMultiStaticSpace(iEntityLoaderInBase.IEntityLoaderInBase, iGlobal.IGlobal
                 return
 
         DEBUG_MSG("IMultiStaticSpace::onRefreshGroupEntities spaceNo", info['spaceNo'])
-        super(IMultiStaticSpace, self).onRefreshGroupEntities(info)
+        _spaceVal = self.staticSpaces[info['spaceNo']]
+        _spaceVal.lineSpaceBox.cell.callOnSpace('onRefreshGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
+
+    def onDestroyGroupEntities(self, info):
+        spaceNoList = list(self.staticSpaces.keys())
+        DEBUG_MSG("IMultiStaticSpace::onDestroyGroupEntities", info, spaceNoList)
+
+        if not info.get('spaceNo', None):
+            WARNING_MSG('IMultiStaticSpace::onDestroyGroupEntities: spaceNo not found', info, spaceNoList)
+            return
+
+        _spaceVal = self.staticSpaces[info['spaceNo']]
+        _spaceVal.lineSpaceBox.cell.callOnSpace('onDestroyGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
 
     def onLoadEntitiesEnd(self, spaceNo):
         INFO_MSG('onLoadEntitiesEnd:', spaceNo)

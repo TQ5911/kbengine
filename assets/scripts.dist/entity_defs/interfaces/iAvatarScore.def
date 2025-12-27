@@ -2,7 +2,7 @@
     <Properties>
         <scoresInfo>
             <Type>  AVATAR_SCORES_VAL   </Type>
-            <Flags>  OWN_CLIENT    </Flags>
+            <Flags>  CELL_PRIVATE       </Flags>
         </scoresInfo>
 
         <baseScoreInfo>
@@ -72,6 +72,5 @@
     <ClientMethods>
         <onAvatarTotalScoreInitCompleted>
         </onAvatarTotalScoreInitCompleted>
-
     </ClientMethods>
 </root>

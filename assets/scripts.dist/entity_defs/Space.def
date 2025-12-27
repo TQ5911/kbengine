@@ -120,6 +120,15 @@
         <updateSpaceWeight>
             <Arg>       UINT32          </Arg>
         </updateSpaceWeight>
+
+        <doLoadEntities>
+            <Arg>       OBJECT_ID       </Arg>
+        </doLoadEntities>
+
+        <callOnSpaceMgr>
+            <Arg>       STRING          </Arg>
+            <Arg>       PYTHON          </Arg>
+        </callOnSpaceMgr>
     </CellMethods>
 
 </root>

@@ -147,6 +147,7 @@
     <LEADER_BOARD_PAGE>     UINT8       </LEADER_BOARD_PAGE>
     <RANK>              UINT16          </RANK>
     <AUTH_PERMISSION>   UINT64          </AUTH_PERMISSION>
+    <CHANNEL>           UINT8           </CHANNEL>
 
     <FACE_DATA> FIXED_DICT
         <implementedBy>     appearanceInfo.faceDataIns     </implementedBy>
@@ -332,6 +333,17 @@
         </Properties>
     </CLIENT_SKILL_SWITCH_VAL>
 
+    <CLIENT_SKILL_CD_STATUS> FIXED_DICT
+        <Properties>
+            <skillId>
+                <Type>  SKILLID   </Type>
+            </skillId>
+            <cdStatus>
+                <Type>  INT8   </Type>
+            </cdStatus>
+        </Properties>
+    </CLIENT_SKILL_CD_STATUS>
+
     <CLIENT_SKILLS> FIXED_DICT
         <Properties>
             <skills>
@@ -340,6 +352,9 @@
             <skillSwitches>
                 <Type>  ARRAY   <of>    CLIENT_SKILL_SWITCH_VAL    </of>   </Type>
             </skillSwitches>
+            <skillCDStatus>
+                <Type>  ARRAY   <of>    CLIENT_SKILL_CD_STATUS    </of>   </Type>
+            </skillCDStatus>
         </Properties>
     </CLIENT_SKILLS>
 
@@ -490,6 +505,9 @@
             <grade>
                 <Type> UINT8 </Type>
             </grade>
+            <maxEnhanceLv>
+                <Type> UINT8 </Type>
+            </maxEnhanceLv>
         </Properties>
     </CLI_EQUIP_ITEM_VAL>
 
@@ -1093,11 +1111,20 @@
     <SHIELD_VAL> FIXED_DICT
         <Properties>
             <buffId>
-                <Type>  BUFFID   </Type>
+                <Type>  BUFFID  </Type>
             </buffId>
             <shieldValue>
                 <Type>  INT32   </Type>
             </shieldValue>
+            <shieldEffects>
+                <Type>  PY_DICT </Type>
+            </shieldEffects>
+            <shieldMaxValue>
+                <Type>  INT32   </Type>
+            </shieldMaxValue>
+            <shieldType>
+                <Type>  UINT8   </Type>
+            </shieldType>
         </Properties>
     </SHIELD_VAL>
 
@@ -2311,6 +2338,9 @@
             <pet>
                 <Type>  SCORE   </Type>
             </pet>
+            <meridian>
+                <Type>  SCORE   </Type>
+            </meridian>
         </Properties>
     </AVATAR_SCORES_VAL>
 
@@ -2647,6 +2677,15 @@
             <useCoinAddRewardNum>
                 <Type>  UINT32  </Type>
             </useCoinAddRewardNum>
+            <rewardItemNumber>
+                <Type>  UINT32  </Type>
+            </rewardItemNumber>
+            <rewardCoinNumber>
+                <Type>  UINT32  </Type>
+            </rewardCoinNumber>
+            <ticketType>
+                <Type>  UINT8  </Type>
+            </ticketType>
         </Properties>
     </CRUSADE_DUNGEON_PLAY_MODE_PLAYER_OBJ>
 
@@ -2665,6 +2704,15 @@
             <useCoinAddRewardNum>
                 <Type>  UINT32  </Type>
             </useCoinAddRewardNum>
+            <rewardItemNumber>
+                <Type>  UINT32  </Type>
+            </rewardItemNumber>
+            <rewardCoinNumber>
+                <Type>  UINT32  </Type>
+            </rewardCoinNumber>
+            <ticketType>
+                <Type>  UINT8  </Type>
+            </ticketType>
         </Properties>
     </CHIEF_DUNGEON_PLAY_MODE_PLAYER_OBJ>
 
@@ -2782,6 +2830,9 @@
                 <Type> UNICODE </Type>
                 <DatabaseLength> 1024 </DatabaseLength>
             </cont>
+            <channel>
+                <Type> CHANNEL  </Type>
+            </channel>
         </Properties>
     </GLOBAL_MAIL_VAL>
 
@@ -3358,12 +3409,24 @@
             <openedTime>
                 <Type>  INT64  </Type>
             </openedTime>
+            <openedDungeonId>
+                <Type>  UINT32 </Type>
+            </openedDungeonId>
+            <openedId>
+                <Type>  UINT32 </Type>
+            </openedId>
             <openedType>
                 <Type>  UINT8  </Type>
             </openedType>
             <consumedType>
                 <Type> UINT8  </Type>
             </consumedType>
+            <openedDungeonStatus>
+                <Type> UINT8  </Type>
+            </openedDungeonStatus>
+            <settleTs>
+                <Type>  INT64  </Type>
+            </settleTs>
         </Properties>
     </GUILD_CHALLENGE_DATA_INFO>
 
@@ -3390,6 +3453,9 @@
             <openedDungeonStatus>
                 <Type> UINT8  </Type>
             </openedDungeonStatus>
+            <settleTs>
+                <Type>  INT64  </Type>
+            </settleTs>
         </Properties>
     </CLI_GUILD_CHALLENGE_DATA_INFO>
 
@@ -3669,6 +3735,39 @@
         </Properties>
     </LEADER_BOARD_AVATAR_CACHE_DATA_INFO>
 
+    <LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO> FIXED_DICT
+        <implementedBy>     LeaderBoardAvatarLevelRushRankInfo.LeaderBoardAvatarLevelRushRankInstance    </implementedBy>
+        <Properties>
+            <gbId>
+                <Type>  PLAYER_GBID         </Type>
+            </gbId>
+            <name>
+                <Type>  UNICODE             </Type>
+            </name>
+            <level>
+                <Type>  LEVEL               </Type>
+            </level>
+            <school>
+                <Type>  SCHOOL              </Type>
+            </school>
+            <ts>
+                <Type>  LONGTIME            </Type>
+            </ts>
+            <guildName>
+                <Type>  UNICODE             </Type>
+            </guildName>
+            <guildUUID>
+                <Type>  GUILD_UUID          </Type>
+            </guildUUID>
+            <accountName>
+                <Type>  UNICODE             </Type>
+            </accountName>
+            <phone>
+                <Type>  UINT64             </Type>
+            </phone>
+        </Properties>
+    </LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO>
+
     <LEADER_BOARD_SCHOOL_LIST_DATA_INFO> FIXED_DICT
         <Properties>
             <school>
@@ -3782,23 +3881,14 @@
 
     <AUCTION_ITEM_CLIENT> FIXED_DICT
         <Properties>
-            <auctionType>
-                <Type>  AUCTION_TYPE </Type>
-            </auctionType>
             <auctionItemUUID>
                 <Type>  UUID  </Type>
             </auctionItemUUID>
             <addTime>
                 <Type>  LONGTIME    </Type>
             </addTime>
-            <itemId>
-                <Type>  ITEM_ID     </Type>
-            </itemId>
-            <uniqueId>
-                <Type>  UUID        </Type>
-            </uniqueId>
             <price>
-                <Type> UINT64 </Type>
+                <Type>  UINT64 </Type>
             </price>
             <number>
                 <Type>  UINT32  </Type>
@@ -3806,12 +3896,9 @@
             <status>
                 <Type>  AUCTIONED_STATUS </Type>
             </status>
-            <createTime>
-                <Type>  LONGTIME </Type>
-            </createTime>
-            <extra>
-                <Type>  UNICODE </Type>
-            </extra>
+            <itemData>
+                <Type>  ITEM_VAL     </Type>
+            </itemData>   
         </Properties>
     </AUCTION_ITEM_CLIENT>
 
@@ -4393,11 +4480,14 @@
     <POP_REWARD_ITEM_VAL> FIXED_DICT
         <Properties>
             <itemId>
-                <Type>    ITEMID  </Type>
+                <Type>  ITEMID  </Type>
             </itemId>
             <itemNum>
-                <Type>  UINT32   </Type>
+                <Type>  UINT32  </Type>
             </itemNum>
+            <bindType>
+                <Type>  UINT8   </Type>
+            </bindType>
         </Properties>
     </POP_REWARD_ITEM_VAL>
 
@@ -4848,6 +4938,9 @@
             <name>
                 <Type>  UNICODE             </Type>
             </name>
+            <guildGbId>
+                <Type>  GUILD_UUID            </Type>
+            </guildGbId>
             <guildName>
                 <Type>  UNICODE             </Type>
             </guildName>
@@ -4953,6 +5046,9 @@
             <ownerTimeStamp>
                 <Type>  LONGTIME               </Type>
             </ownerTimeStamp>
+            <ownerDay>
+                <Type>      INT8              </Type>
+            </ownerDay>
             <guildRevenueRate>
                 <Type>  UINT8                  </Type>
             </guildRevenueRate>
@@ -5059,6 +5155,9 @@
             <leaderName>
                 <Type>  UNICODE             </Type>
             </leaderName>
+            <leaderGbId>
+                <Type>  PLAYER_GBID            </Type>
+            </leaderGbId>
         </Properties>
     </MINE_WAR_GUILD_INFO>
     <MINE_WAR_GUILD_SHARE_INFO> FIXED_DICT
@@ -5071,6 +5170,19 @@
             </bonusNum>
         </Properties>
     </MINE_WAR_GUILD_SHARE_INFO>
+    <MINE_WAR_GUILD_MEMBER_SCORE_INFO> FIXED_DICT
+        <Properties>
+            <playerGbId>
+                <Type>  PLAYER_GBID            </Type>
+            </playerGbId>
+            <score>
+                <Type>  UINT32                 </Type>
+            </score>
+            <rankId>
+                <Type>  UINT8                 </Type>
+            </rankId>
+        </Properties>
+    </MINE_WAR_GUILD_MEMBER_SCORE_INFO>
 
     <DUNGEON_STATISTIC_DATA> FIXED_DICT
         <Properties>
@@ -5080,21 +5192,15 @@
             <name>
                 <Type>  UNICODE             </Type>
             </name>
+            <school>
+                <Type>  UINT8               </Type>
+            </school>
             <gbId>
                 <Type>  PLAYER_GBID         </Type>
             </gbId>
-            <dmg>
+            <statisticsNum>
                 <Type>  INT32               </Type>
-            </dmg>
-            <heal>
-                <Type>  INT32               </Type>
-            </heal>
-            <hurt>
-                <Type>  INT32               </Type>
-            </hurt>
-            <dead>
-                <Type>  INT32               </Type>
-            </dead>
+            </statisticsNum>
         </Properties>
     </DUNGEON_STATISTIC_DATA>
 
@@ -5106,53 +5212,85 @@
             <rank>
                 <Type>  UINT16              </Type>
             </rank>
-            <dmg>
-                <Type>  INT32               </Type>
-            </dmg>
-            <heal>
-                <Type>  INT32               </Type>
-            </heal>
-            <hurt>
-                <Type>  INT32               </Type>
-            </hurt>
-            <dead>
-                <Type>  INT32               </Type>
-            </dead>
             <dungeonRewardsID>
                 <Type>  UINT32              </Type>
             </dungeonRewardsID>
             <firstPassRewardsID>
                 <Type>  UINT32              </Type>
             </firstPassRewardsID>
+            <goldPassRewardsID>
+                <Type>  UINT32              </Type>
+            </goldPassRewardsID>
             <dungeonRewards>
                 <Type>   ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>  </Type>
             </dungeonRewards>
             <firstPassRewards>
                 <Type>   ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>  </Type>
             </firstPassRewards>
+            <goldPassRewards>
+                <Type>   ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>  </Type>
+            </goldPassRewards>
         </Properties>
     </DUNGEON_SETTLEMENT_DATA>
 
-    <CLI_DUNGEON_SETTLEMENT_DATA> FIXED_DICT
+    <CLI_DUNGEON_DATA> FIXED_DICT
         <Properties>
+            <win>
+                <Type>  BOOL                </Type>
+            </win>
             <elapsedTime>
                 <Type>  INT32               </Type>
             </elapsedTime>
             <endTime>
                 <Type>  INT64               </Type>
             </endTime>
+            <dungeonNo>
+                <Type>  UINT32              </Type>
+            </dungeonNo>
+            <playMode>
+                <Type>  UINT8               </Type>
+            </playMode>
+            <rewardCount>
+                <Type>  UINT32              </Type>
+            </rewardCount>
+            <rankCount>
+                <Type>  UINT32              </Type>
+            </rankCount>
+        </Properties>
+    </CLI_DUNGEON_DATA>
+
+    <CLI_DUNGEON_SETTLEMENT_DATA> FIXED_DICT
+        <Properties>
+            <gbId>
+                <Type>  PLAYER_GBID         </Type>
+            </gbId>
+            <name>
+                <Type>  UNICODE             </Type>
+            </name>
+            <school>
+                <Type>  SCHOOL              </Type>
+            </school>
+            <level>
+                <Type>  LEVEL              </Type>
+            </level>
+            <sex>
+                <Type>  SEX              </Type>
+            </sex>
             <rank>
                 <Type>  UINT16              </Type>
             </rank>
-            <dmg>
+            <score>
                 <Type>  INT32               </Type>
-            </dmg>
+            </score>
             <dungeonRewards>
                 <Type>   ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>  </Type>
             </dungeonRewards>
             <firstPassRewards>
                 <Type>   ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>  </Type>
             </firstPassRewards>
+            <goldPassRewards>
+                <Type>   ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>  </Type>
+            </goldPassRewards>
         </Properties>
     </CLI_DUNGEON_SETTLEMENT_DATA>
 
@@ -5169,4 +5307,60 @@
             </dmg>
         </Properties>
     </CLI_DUNGEON_SETTLEMENT_RANK_DATA>
+
+    <STATISTIC_PLAYER_VAL> FIXED_DICT
+        <Properties>
+            <rank>
+                <Type>  UINT16              </Type>
+            </rank>
+            <gbId>
+                <Type>  PLAYER_GBID         </Type>
+            </gbId>
+            <name>
+                <Type>  UNICODE             </Type>
+            </name>
+            <school>
+                <Type>  SCHOOL              </Type>
+            </school>
+            <statisticsNum>
+                <Type>  INT64               </Type>
+            </statisticsNum>
+        </Properties>
+    </STATISTIC_PLAYER_VAL>
+
+    <DUNGEON_EXTRA_DATA> FIXED_DICT
+        <implementedBy>  DungeonSettlement.DungeonExtraDataInstance  </implementedBy>
+        <Properties>
+            <gbId>
+                <Type>  PLAYER_GBID   </Type>
+            </gbId>
+            <name>
+                <Type>  UNICODE       </Type>
+            </name>
+            <school>
+                <Type>  SCHOOL        </Type>
+            </school>
+            <level>
+                <Type>  LEVEL         </Type>
+            </level>
+            <sex>
+                <Type>  SEX           </Type>
+            </sex>
+            <eId>
+                <Type>  ENTITY_ID     </Type>
+            </eId>
+        </Properties>
+    </DUNGEON_EXTRA_DATA>
+
+    <DUNGEON_PASS_RECRODS> FIXED_DICT
+        <implementedBy> dungeonPlayModeInfo.dungeonPassRecordsInstance </implementedBy>
+        <Properties>
+            <entryIds>
+                <Type>  ARRAY <of> UINT8 </of>  </Type>
+            </entryIds>
+            <entryStatus>
+                <Type>  ARRAY <of> UINT8 </of>  </Type>
+            </entryStatus>
+        </Properties>
+    </DUNGEON_PASS_RECRODS>
 </root>

@@ -43,7 +43,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
         hostEnt = self.getHost()
         if hostEnt and hostEnt.IsAvatar:
-            utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR)
+            self.cellFlags = utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_HOST_AVATAR)
 
         if not self.hostId or (hostEnt and not hostEnt.IsAvatar and not hostEnt.isBot()):
             self.isWitnessComplete = gameconst.WitnessType.WITNESS_TYPE_IGNORE
@@ -52,7 +52,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         self.speed = self.flySpeed
         self.cancleLockTarget = False
 
-        self.areaLoop = self.getAreaLoop()
+        self.areaLoop = self.getAreaLoopCount()
         self.loopIntervalTime = self.getLoopIntervalTime()
         self.creationLiveTime = self.getCreationLiveTime()
 
@@ -150,50 +150,64 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
     def getLoopIntervalTime(self):
         defaultValue = creation_creation.datas[self.creationId].get('loopIntervalTime') or 0
+        # 默认最小间隔0.1秒一次
+        if defaultValue < 0.1:
+            defaultValue = 0.1
+
         skillId = self.tmpProps.get('skillId', 0)
         if skillId > 0:
-            hostEntity = self.getHost()
-            if hostEntity and hostEntity.IsAvatar:
-                ret, datas = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
+            host = self.getAvatar()
+            DEBUG_MSG("in getLoopIntervalTime ", self, skillId, host)
+            if host:
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
                 if ret:
-                    DEBUG_MSG("in loopIntervalTime, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, datas)
-                    creationLiveTime = self.getCreationLiveTime()
-                    if creationLiveTime > 0:
-                        defaultValue = self.getAreaLoop()/creationLiveTime
-        return defaultValue
+                    DEBUG_MSG("in loopIntervalTime, inscription effect is triggered ", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, datas)
+                    totalTime = self.getAreaLoop() * defaultValue
+                    if totalTime == 0:
+                        return defaultValue
+                    
+                    totolCount = self.getAreaLoopCount()
+                    if totolCount > 0:
+                        defaultValue = totalTime / totolCount 
+                    if defaultValue < 0.1:
+                        defaultValue = 0.1
+        return round(defaultValue, 2)
 
     def getCreationLiveTime(self):
         defaultTime = float(creation_creation.datas[self.creationId].get('time') or 0)
         skillId = self.tmpProps.get('skillId', 0)
         if skillId > 0:
-            hostEntity = self.getHost()
-            if hostEntity and hostEntity.IsAvatar:
-                ret, datas = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
+            host = self.getAvatar()
+            DEBUG_MSG("in getCreationLiveTime ", self, skillId, host)
+            if host:
+                # 如果有改变创生物结算频次的，使用改变频次
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
+                if ret:
+                    return defaultTime
+                
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
                 if ret:
                     if len(datas) == 1:
-                        addValue = datas[0]
-                        defaultTime += (addValue * self.getLoopIntervalTime())
-                        DEBUG_MSG("in creationLiveTime, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, datas)
+                        defaultTime += datas[0]
+                        DEBUG_MSG("in creationLiveTime, inscription effect is triggered ", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, datas)
 
         return defaultTime
 
     def getAreaLoop(self):
-        defaultValue = int(creation_creation.datas[self.creationId].get('areaLoop') or 0)
+        return int(creation_creation.datas[self.creationId].get('areaLoop') or 0)
+    
+    def getAreaLoopCount(self):
+        defaultValue = self.getAreaLoop()
         skillId = self.tmpProps.get('skillId', 0)
         if skillId > 0:
-            hostEntity = self.getHost()
-            if hostEntity and hostEntity.IsAvatar:
-                ret, datas = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
+            host = self.getAvatar()
+            DEBUG_MSG("in getAreaLoop ", self, skillId, host)
+            if host:
+                ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
                 if ret:
                     if len(datas) == 1:
                         defaultValue += datas[0]
                         DEBUG_MSG("in areaLoop, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, datas)
-                else:
-                    ret, datas = hostEntity.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME)
-                    if ret:
-                        if len(datas) == 1:
-                            defaultValue += datas[0]
-                            DEBUG_MSG("in areaLoop, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_LAST_TIME, datas)
         return defaultValue
 
     @property
@@ -304,7 +318,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
     def getTargetByViewRadius(self):
         if not self.viewRadius:
             return gameconst.DEFAULT_AOI
-        return self.viewRadius
+        return max(self.viewRadius, gameconst.DEFAULT_AOI)
 
     def getHost(self):
         return KBEngine.entities.get(self.hostId, None)
@@ -417,7 +431,13 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 if not self.spaceMgr.hasSceneState(gameconst.WorldLineSceneState.THUNDER):
                     return
 
-        self.doCombatActions(self.areaAction, self, self, self.hostId, lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r))
+        self.loopTimes += 1
+        self.doCombatActions(
+            self.areaAction,
+            self,
+            self,
+            self.hostId,
+            lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r, loopTimes=self.loopTimes))
 
     def customId(self):
         _customId, _ = utils.getCustomIdAndGid(self.spaceNo, self.gameEntityId)
@@ -567,6 +587,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
     def getTargetEntityIds(self):
         if self.selectActionType==self.CREATION_AREA_CIRCLE:
             entIds = []
+            _radius = self.viewRadius if self.viewRadius else gameconst.DEFAULT_AOI
             for eid in self.getTargetIdsByTargetType(self.target):
                 e = KBEngine.entities.get(eid)
                 if not e:
@@ -577,6 +598,9 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                     continue
 
                 if not self.checkCombatRangeY(e):
+                    continue
+
+                if not utils.isInAttackArea(e, self.position, _radius):
                     continue
 
                 if utils.checkTargetType(self.target, self, e):
@@ -601,7 +625,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 if e.isDestroyed:
                     continue
 
-                if self.isInAttackLine(e, rectCenter, faceDir, height, width):
+                if utils.isInAttackLine(e.position, rectCenter, faceDir, height, width):
                     if utils.checkTargetType(self.target, self, e):
                         entIds.append(eid)
                         if len(entIds) >= self.hurtNumber:
@@ -681,7 +705,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 if eid in effectEntIds:
                     continue
 
-                if self.isInAttackLine(e, rectCenter, faceDir, height, width):
+                if utils.isInAttackLine(e.position, rectCenter, faceDir, height, width):
                     if self.isVisible(e) and utils.checkTargetType(self.continueTarget, self, e):
                         effectEntIds.add(eid)
                         self.setTempMiscProp(gameconst.AvatarProps.creationEffectEntIds, effectEntIds)
@@ -690,17 +714,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                         break
             return entIds
 
-    def isInAttackLine(self, target, vCenter, direction, length, width):
-        direction.normalise()
-        h = Math.Vector2(length / 2, width / 2)
-        dstPosition = vCenter
-        c = Math.Vector2(dstPosition.x, dstPosition.z)
-        c = sMath.getRotatePos((c.x, c.y), (direction[0], direction[2]))
-        c = Math.Vector2(c[0], c[1])
-        p = Math.Vector2(target.position.x, target.position.z)
-        p = sMath.getRotatePos((p.x, p.y), (direction[0], direction[2]))
-        p = Math.Vector2(p[0], p[1])
-        return sMath.isAabbDiskIntersect(c, h, p)
+
 
     def doLeaveAction(self, entity):
         if not self.leaveAction or not entity:

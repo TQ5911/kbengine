@@ -694,5 +694,13 @@ datas = _tools.RODict({
     "accountsDinghao": _tools.RODict({
         "ID": "accountsDinghao",
         "value": 54001589,
+    }),
+    "login_greenPasswordError": _tools.RODict({
+        "ID": "login_greenPasswordError",
+        "value": 54001591,
+    }),
+    "login_areaPlayerFull": _tools.RODict({
+        "ID": "login_areaPlayerFull",
+        "value": 54001592,
     })
 })

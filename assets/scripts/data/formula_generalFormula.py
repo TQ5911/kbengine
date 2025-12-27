@@ -95,13 +95,13 @@ def _34000016(lv):
 def _34000017(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*2
+        a = i*3
         sum = a
     return sum
 def _34000018(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*225
+        a = i*150
         sum = a
     return sum
 def _34000019(lv):
@@ -113,7 +113,7 @@ def _34000019(lv):
 def _34000020(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*0.003
+        a = i*0.005
         sum = a
     return sum
 def _34010001(e):

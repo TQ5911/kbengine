@@ -9,7 +9,7 @@ import redisUtils
 import gameglobal
 import gameengine
 import gameconst
-import json
+import copy
 import random
 import GuildEventLogInfo
 import mineBattle_config as MBC
@@ -23,6 +23,7 @@ class MineWarGuildVal():
         self.revenue = 0  # 帮派在矿战中的总收益
         self.ownerTime = 0
         self.ownerTimeStamp = 0
+        self.leaderName = ''
         
     def toSaveDict(self):
         return {
@@ -49,9 +50,10 @@ class MineWarGuildVal():
         return self
     
 class MineWarScore:
-    def __init__(self, gbId=0, name='', guildName='', guildIcon='', guildDspFlag=''):
+    def __init__(self, gbId=0, name='', guildGbId=0, guildName='', guildIcon=0, guildDspFlag=0):
         self.gbId = gbId
         self.name = name
+        self.guildGbId = guildGbId
         self.guildName = guildName
         self.guildIcon = guildIcon
         self.guildDspFlag = guildDspFlag
@@ -73,6 +75,7 @@ class MineWarScore:
         return {
             'gbId': self.gbId,
             'name': self.name,
+            'guildGbId': self.guildGbId,
             'guildName': self.guildName,
             'guildIcon': self.guildIcon,
             'guildDspFlag': self.guildDspFlag,
@@ -84,6 +87,7 @@ class MineWarScore:
     def initFromDict(self, dataDic):
         self.gbId = dataDic.get('gbId', 0)
         self.name = dataDic.get('name', '')
+        self.guildGbId = dataDic.get('guildGbId', 0)
         self.guildName = dataDic.get('guildName', '')
         self.guildIcon = dataDic.get('guildIcon', 0)
         self.guildDspFlag = dataDic.get('guildDspFlag', 0)
@@ -96,12 +100,18 @@ class MineWarScore:
         return {
             'gbId': self.gbId,
             'playerName': self.name,
+            'guildGbId': self.guildGbId,
             'guildName': self.guildName,
             'guildIcon': self.guildIcon,
             'guildDspFlag': self.guildDspFlag,
             'killScore': self._killScore,
             'destroyScore': self.destroyScore,
             'totalScore': self.totalScore
+        }
+    def getScoreData(self):
+        return {
+            'playerGbId': self.gbId,
+            'score': self.totalScore
         }
         
     def addScore(self, v, tp, reset=False):
@@ -125,6 +135,7 @@ class MineWarMapVal():
         self.coreDestroyedTime = 0  # 核心被摧毁时间
         self.playerScoreDict = {}  # 帮派玩家得分统计
         self.scoreRankList = []  # 最终保存的矿战排名列表
+        self.scoreRankListTemp = []  # 临时排名列表
         self.mineWarEvents = []  # 矿战事件列表
         self.currGuildInfo = MineWarGuildVal().initFromDict({})
 
@@ -133,7 +144,10 @@ class MineWarMapVal():
         
         # 暂存
         self.ownerRankList = []
+        self.ownerRankListLast = []
         self.flagHp = 0
+
+        self.lastScoreRankTime = 0
         # INFO_MSG('MineWarMapVal.__init__: mapId={}'.format(self.mapId))
         
     def initFromDict(self, dataDic):
@@ -163,6 +177,7 @@ class MineWarMapVal():
         for scoreInfo in dataDic.get('scoreRankList', []):
             scoreVal = MineWarScore().initFromDict(scoreInfo)
             self.scoreRankList.append(scoreVal)
+        self.scoreRankListTemp = []
 
 
         currGuildInfoList = dataDic.get('currGuildInfo', [])
@@ -197,20 +212,24 @@ class MineWarMapVal():
         }
     
     def onStartReset(self):
-        self.flagDestroyedNum = 0
-        self.flagDestroyedTime = 0
         self.coreDestroyedTime = utils.getNow()
-        self.tempGuildGbId = 0
-        self.mineEvents = []
-        
+        self.tempGuildGbId = self.guildGbId
+
+        # 上期占领时间排行 暂存
+        ownerList = list(self.guildOwnerDict.values())
+        ownerList.sort(key=lambda x: x.ownerTime, reverse=True)
+        ownerList = ownerList[:MBC.datas['mineBatte_rankGuildNum']['value']]
+        self.ownerRankListLast = ownerList    # 暂存        
+
         self.guildOwnerDict = {}
+        self.playerScoreDict = {}
         self.playerScoreList = {}
-        self.scoreRankList = []
+        # self.scoreRankList = []
 
         # 初始化归属帮派
         if self.currGuildInfo and self.currGuildInfo.guildGbId > 0:
             self.currGuildInfo.ownerTime = 0
-            self.guildOwnerDict[self.currGuildInfo.guildGbId] = self.currGuildInfo
+            self.guildOwnerDict[self.currGuildInfo.guildGbId] = copy.deepcopy(self.currGuildInfo)
     
     # 主要的帮派ID
     def setGuildGbId(self, guildGbId):
@@ -234,24 +253,28 @@ class MineWarMapVal():
         #
         self.flagDestroyedNum = 0
         self.flagDestroyedTime = 0
-
+        
+        # 矿产清除
+        self.allCollectNum = 0
         self.calcOwnerTime()    # 先结算，再置0
-
-        # 重置归属帮派收益
-        self.currGuildInfo.revenue = int((MBC.datas['mineBattle_incomeCoefficient']['value'] - 1.0) * 100)
 
         # 暂存帮派排名清除
         self.ownerRankList = []
-        # 矿产清除
-        self.allCollectNum = 0
-
         #
-        if self.tempGuildGbId > 0 and self.guildGbId != self.tempGuildGbId:
-            self.guildGbId = self.tempGuildGbId
-            # 归属帮派不需要该记录了 == todo=
-            # if self.guildGbId in self.guildOwnerDict:
-            #     del self.guildOwnerDict[self.guildGbId]
-            return True
+        if self.tempGuildGbId > 0:
+            if self.guildGbId != self.tempGuildGbId:
+                self.guildGbId = self.tempGuildGbId
+                # 归属帮派不需要该记录了 == todo=
+                # if self.guildGbId in self.guildOwnerDict:
+                #     del self.guildOwnerDict[self.guildGbId]
+                INFO_MSG('MineWarMapVal.onMineWarEnd: ', self.currGuildInfo.toSaveDict(), self.guildOwnerDict[self.tempGuildGbId].toSaveDict())
+                # 更新占领帮派
+                self.currGuildInfo = self.guildOwnerDict.get(self.tempGuildGbId, MineWarGuildVal().initFromDict({}))
+                self.mineWarEvents = []
+
+                # 重置归属帮派收益
+                self.currGuildInfo.revenue = int((MBC.datas['mineBattle_incomeCoefficient']['value'] - 1.0) * 100)
+                return True
         
         return False
     
@@ -277,6 +300,10 @@ class MineWarMapVal():
     def addMineWarEvent(self, eventType, args):
         e = GuildEventLogInfo.GuildEventLogVal(eventType, args, utils.getTimestamp64())
         self.mineWarEvents.append(e)
+        # 限制最大事件数量
+        maxEvent = 20
+        if len(self.mineWarEvents) > maxEvent:
+            self.mineWarEvents = self.mineWarEvents[-maxEvent:]
 
     def onFlagBeDestroyed(self):
         self.flagDestroyedNum += 1
@@ -289,18 +316,27 @@ class MineWarMapVal():
         self.coreDestroyedTime = utils.getNow() # 这里必须设置被摧毁时间
         self.tempGuildGbId = killGuildId
         if killGuildId not in self.guildOwnerDict:
-            guildOwnerVal = MineWarGuildVal().initFromDict(guildInfo)
-            guildOwnerVal.ownerTimeStamp = utils.getNow()
-            self.guildOwnerDict[killGuildId] = guildOwnerVal
-
+            self.guildOwnerDict[killGuildId] = MineWarGuildVal().initFromDict(guildInfo)
+        # 更新占领时间
+        self.guildOwnerDict[killGuildId].ownerTimeStamp = utils.getNow()
         # 保存当前帮派信息
-        self.currGuildInfo = self.guildOwnerDict[killGuildId]
+        # self.currGuildInfo = self.guildOwnerDict[killGuildId]
 
-    def addMineWarScoreVal(self, playerGbId, playerName, guildName, guildIcon, guildDspFlag, score, scoreType):
+    def addMineWarScoreVal(self, playerGbId, playerName, guildGbId, guildName, guildIcon, guildDspFlag, score, scoreType):
         if playerGbId not in self.playerScoreDict:
-            self.playerScoreDict[playerGbId] = MineWarScore(playerGbId, playerName, guildName, guildIcon, guildDspFlag)
+            self.playerScoreDict[playerGbId] = MineWarScore(playerGbId, playerName, guildGbId, guildName, guildIcon, guildDspFlag)
 
         scoreVal = self.playerScoreDict[playerGbId]
+        # 修正
+        if scoreVal.name != playerName:
+            scoreVal.name = playerName
+        if scoreVal.guildName != guildName:
+            scoreVal.guildName = guildName
+        if scoreVal.guildIcon != guildIcon:
+            scoreVal.guildIcon = guildIcon
+        if scoreVal.guildDspFlag != guildDspFlag:
+            scoreVal.guildDspFlag = guildDspFlag
+
         scoreVal.addScore(score, scoreType)
         self.playerScoreDict[playerGbId] = scoreVal
 

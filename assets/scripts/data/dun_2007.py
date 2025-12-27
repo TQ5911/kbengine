@@ -1,6 +1,8 @@
 datas ={
   "20070001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "BornPos",
     "ClassNameType": 6,
     "CustomID": "",
@@ -8,6 +10,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 20070001,
+    "Name": "\u51fa\u751f\u70b9",
     "PosX": 108.1231,
     "PosY": 3.225485,
     "PosZ": -130.3777,
@@ -23,6 +26,8 @@ datas ={
   },
   "20070002": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "RebornPos",
     "ClassNameType": 7,
     "CustomID": "",
@@ -30,6 +35,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 0,
     "ID": 20070002,
+    "Name": "\u590d\u6d3b\u70b9",
     "PosX": 108.1231,
     "PosY": 3.225485,
     "PosZ": -130.3777,

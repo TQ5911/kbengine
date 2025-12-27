@@ -172,7 +172,7 @@ datas = _tools.RODict({
     1028: _tools.RODict({
         "ID": 1028,
         "name": "祖珂地堡五层",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
@@ -194,6 +194,17 @@ datas = _tools.RODict({
     1031: _tools.RODict({
         "ID": 1031,
         "name": "月光海港二层",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 350,
+        "MergeRequired": 200
+    }),
+    1032: _tools.RODict({
+        "ID": 1032,
+        "name": "月光海港三层",
         "subType": 1,
         "num": 1,
         "N1": 400,

@@ -18,7 +18,27 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "unlockID": "SevenSign",
+    }),
+    2: _tools.RODict({
+        "ID": 2,
+        "unlockID": "TenSign",
+    }),
+    3: _tools.RODict({
+        "ID": 3,
+        "unlockID": "Attention",
+    }),
+    4: _tools.RODict({
+        "ID": 4,
+        "unlockID": "LevelReward",
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "unlockID": "phoneBind",
+    }),
+    6: _tools.RODict({
+        "ID": 6,
+        "unlockID": "PcLoginReward",
     })
 })
 minKey = 1
-maxKey = 1
+maxKey = 6

@@ -150,5 +150,13 @@ datas = _tools.RODict({
     "teshuAIpeizhi": _tools.RODict({
         "ID": "teshuAIpeizhi",
         "value": None,
+    }),
+    "patrolFx": _tools.RODict({
+        "ID": "patrolFx",
+        "value": 31950001,
+    }),
+    "patrolStayDelay": _tools.RODict({
+        "ID": "patrolStayDelay",
+        "value": 0.5,
     })
 })

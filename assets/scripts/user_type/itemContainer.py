@@ -151,7 +151,14 @@ class ItemContainer(userType.UserSoleType):
         grids = self.getGridIdsByItemId(itemId)
         for gridId in grids:
             gridObj = self.getItemObjByGridId(gridId)
+            # 过期
             if gridObj.isExpired():
+                continue
+            # 上锁
+            if gridObj.isLocked():
+                continue
+            # 如果是装备，检查是否损坏了
+            if gridObj.isEquipmentItem() and not gridObj.isGood():
                 continue
             if bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED or bindType == gridObj.bindType:
                 itemCount += gridObj.itemNum
@@ -480,55 +487,55 @@ class ItemContainer(userType.UserSoleType):
             if isGot:
                 if bindType == gameconst.ItemBindType.BIND:
                     if item.itemNum >= count:
-                        bindGridIDs[gridID] = count
+                        bindGridIDs[gridID] = bindGridIDs.get(gridID, 0) + count
                         return True, bindGridIDs
                     else:
                         count -= item.itemNum
-                        bindGridIDs[gridID] = item.itemNum
+                        bindGridIDs[gridID] = bindGridIDs.get(gridID, 0) + item.itemNum
                         if count == 0:
                             return True, bindGridIDs
 
                     bindCount += item.itemNum
                 elif bindType == gameconst.ItemBindType.NORMAL:
                     if item.itemNum >= count:
-                        normalGridIDs[gridID] = count
+                        normalGridIDs[gridID] = normalGridIDs.get(gridID, 0) + count
                         return True, normalGridIDs
                     else:
                         count -= item.itemNum
-                        normalGridIDs[gridID] = item.itemNum
+                        normalGridIDs[gridID] = normalGridIDs.get(gridID, 0) + item.itemNum
                         if count == 0:
                             return True, normalGridIDs
                         
                     normalCount += item.itemNum
                 elif bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
                     if item.bindType == gameconst.ItemBindType.BIND:
-                        bindGridIDs[gridID] = item.itemNum
+                        bindGridIDs[gridID] = bindGridIDs.get(gridID, 0) + item.itemNum
                         bindCount += item.itemNum
                     elif item.bindType == gameconst.ItemBindType.NORMAL:
-                        normalGridIDs[gridID] = item.itemNum
+                        normalGridIDs[gridID] = normalGridIDs.get(gridID, 0) + item.itemNum
                         normalCount += item.itemNum
         # 同时满足的, 优先使用绑定的, 再使用未绑定的, 需要计算一遍
         if bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
             results = {}
             for gridID, itemNum in bindGridIDs.items():
                 if itemNum > count:
-                    results[gridID] = count
+                    results[gridID] = results.get(gridID, 0) + count
                     return True, results
                 else:
                     count -= itemNum
-                    results[gridID] = itemNum
+                    results[gridID] = results.get(gridID, 0) + itemNum
                     if count == 0:
                         return True, normalGridIDs
                     
             for gridID, itemNum in normalGridIDs.items():
                 if itemNum > count:
-                    results[gridID] = count
+                    results[gridID] = results.get(gridID, 0) + count
                     return True, results
                 else:
                     count -= itemNum
-                    results[gridID] = itemNum
+                    results[gridID] = results.get(gridID, 0) + itemNum
                     if count == 0:
                         return True, normalGridIDs
 
         return False, None
-        
+    

@@ -27,12 +27,18 @@ import dropAward
 import dungeonPlayMode
 import dataUtils
 
+import DungeonSettlement
+
 import gamePlay_gamePlay as DDI
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import activityControl_config as ACCD
 import teamMatch_matchConfig as TMMCD
 import guildChallenge_rankReward as GC_RR
 import guildChallenge_basicInfo as GC_BI
+import guildChallenge_config as GC_C
+import raidBossChallenge_basicInfo as RBC_BI
+import teamDunChallenge_basicInfo as TDC_BI
+import teamMatch_pointsRanking as TM_PR
 
 class DungeonPlayerReliveRecordMixin(object):
     def __init__(self):
@@ -207,6 +213,11 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
 
     def _flowStart(self):
         WARNING_MSG('_flowStart:: NOW')
+        # 帮会副本直接开始流程
+        if formula.isGuildBossDungeonSpace(self.spaceNo):
+            self.flowController.trigger_now()
+            return
+        
         # 【【任务】团队副本的创建和进入接口独立】
         if not self.players and not formula.isRaidDungeonSpace(self.spaceNo):
             # 对于一下情况, 直接开始副本流程逻辑(不等待玩家)
@@ -332,111 +343,330 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
 
     def onTeamDungeonCompleted(self, spaceNo, teamUUID, win, delay, elapsedTime, playerGbId):
         DEBUG_MSG('onTeamDungeonCompleted::', spaceNo, teamUUID, win, delay, elapsedTime, playerGbId)
-        gameengine.getTeamStub(teamUUID).getTeamStatisticFinalData(self, teamUUID)
-        self._doDungeonFinished(win, gameconst.DungeonPlayModeEnum.CRUSADE, spaceNo, 0)
-        self._onDungeonCompleted(spaceNo, win, delay, elapsedTime, playerGbId)
+
+        self._doDungeonPreSettlement(teamUUID, spaceNo, win, delay, elapsedTime, gameconst.DungeonPlayModeEnum.CRUSADE)
 
     def onRaidDungeonCompleted(self, spaceNo, raidUUID, win, delay, creepBaseKillDic, playerGbidAndNameList, elapsedTime, playerGbId):
         DEBUG_MSG('onRaidDungeonCompleted::', spaceNo, raidUUID, win, delay, creepBaseKillDic, len(playerGbidAndNameList), elapsedTime, playerGbId)
-        gameengine.getRaidStub(raidUUID).getTeamStatisticFinalData(self, raidUUID)
-        self._doDungeonFinished(win, gameconst.DungeonPlayModeEnum.CHIEF, spaceNo, 0)
-        self._onDungeonCompleted(spaceNo, win, delay, elapsedTime, playerGbId)
+
+        self._doDungeonPreSettlement(raidUUID, spaceNo, win, delay, elapsedTime, gameconst.DungeonPlayModeEnum.CHIEF)
 
     def onGuildBossDungeonCompleted(self, spaceNo, guildUUID, win, delay, elapsedTime):
         DEBUG_MSG('onGuildBossDungeonCompleted::', spaceNo, guildUUID, win, delay, elapsedTime)
-        # self._doDungeonFinished(win, gameconst.DungeonPlayModeEnum.GUILD_BOSS, spaceNo, 0)
-        # self._onDungeonCompleted(spaceNo, win, delay, elapsedTime, playerGbId)
-        self._doStartDungeonSettlement(spaceNo, guildUUID, win, delay, elapsedTime, 0)
+        # 标记结算阶段
+        self.guildBox.onGuildChallengeDungeonSettlement(utils.getNow())
 
-    def _doStartDungeonSettlement(self, spaceNo, guildUUID, win, delay, elapsedTime, playerGbId):
-        self.isDungeonWin = win
+        self._doDungeonPreSettlement(guildUUID, spaceNo, win, delay, elapsedTime, gameconst.DungeonPlayModeEnum.GUILD_BOSS)
+    # 副本预结算
+    def _doDungeonPreSettlement(self, uniqueID, spaceNo, win, delay, elapsedTime, playMode):
+        opUUID = KBEngine.genUUID64()
+        INFO_MSG('_doDungeonPreSettlement:: start settlement 1', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode)
+        if playMode not in gameconst.DungeonPlayModeEnum.COLL_ALL:
+            DEBUG_MSG('_doDungeonPreSettlement::unknow play mode ', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode)
+            return
+        
         _now = utils.getNow()
         _endT = int(_now + delay)
-        removeGBIDs = []
         players = {}
+        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        # 置副本输赢状态
+        self.isDungeonWin = win
+        # 筛选有效的玩家
         for pid in list(self.players):
             pEnt = KBEngine.entities.get(pid)
             if pEnt and pEnt.isReal():
                 players[pEnt.gbId] = pEnt
             else:
                 self.players.pop(pid, None)
-                removeGBIDs.append(pid)
-        # TODO：通知统计数据stub清理数据
+        if len(players) == 0:
+            WARNING_MSG('_doDungeonPreSettlement::no player is left in dungeon ', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode)
+            return
         
+        # 记录异步操作需要的缓存数据
         self.dungeonSettlementDataCache = {}
-        self.dungeonSettlementDataCache['guildUUID'] = guildUUID
+        self.dungeonSettlementDataCache['opUUID'] = opUUID
+        self.dungeonSettlementDataCache['uniqueID'] = uniqueID
         self.dungeonSettlementDataCache['players'] = players
         self.dungeonSettlementDataCache['batchCount'] = 0
         self.dungeonSettlementDataCache['spaceNo'] = spaceNo
         self.dungeonSettlementDataCache['elapsedTime'] = elapsedTime
         self.dungeonSettlementDataCache['endTime'] = _endT
         self.dungeonSettlementDataCache['win'] = win
+        self.dungeonSettlementDataCache['delay'] = delay
+        self.dungeonSettlementDataCache['dungeonNo'] = dungeonNo
+        self.dungeonSettlementDataCache['playMode'] = playMode
+        # 记录需要获取的排名数据类型
+        if playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
+            self.dungeonSettlementDataCache['statisticTypes'] = [gameconst.StatisticType.STA_TYPE_DAMAGE]
+        elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            self.dungeonSettlementDataCache['statisticTypes'] = [
+                gameconst.StatisticType.STA_TYPE_DAMAGE,
+                gameconst.StatisticType.STA_TYPE_HEAL,
+                gameconst.StatisticType.STA_TYPE_HURT,
+                gameconst.StatisticType.STA_TYPE_DEAD,
+            ]
 
-        # 开启请求数据
-        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
-        stub = gameengine.getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterType.GUILD)
-        stub.getDungeonStatisticData(spaceNo, guildUUID)
+        # 计算发送批次
+        batchSize = 20
+        validEntities = list(players.values())
+        allCount = len(validEntities)
+        if allCount > batchSize:
+            batchCount = allCount // batchSize
+            if allCount > batchCount * batchSize:
+                batchCount += 1
+            totalBatchCount = batchCount
+        else:
+            batchSize = allCount
+            totalBatchCount = 1
+        INFO_MSG('_doDungeonPreSettlement:: start settlement 2', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode, totalBatchCount, batchSize, allCount, players.keys(), self.dungeonSettlementDataCache)
+        # 发送玩家副本结束消息
+        def _notifyDungeonCompleted(allCount, batchSize):
+            for idx in range(0, allCount, batchSize):
+                entities = validEntities[idx:idx+batchSize]
+                for entity in entities:
+                    entity.client and entity.client.onDungeonCompleted(dungeonNo, win, elapsedTime, _endT)
+                INFO_MSG('_doDungeonPreSettlement:: do settlement', opUUID, uniqueID, spaceNo, allCount, totalBatchCount, batchSize, idx, len(entities))
+                yield lambda *args:None
+            # 通知完成之后开始请求排名数据    
+            self._doDungeonStartSettlement(opUUID, uniqueID, spaceNo, win, delay, elapsedTime, 0, playMode)
+        # 间隔0.1秒处理一次
+        self.batchlyCall(_notifyDungeonCompleted(allCount, batchSize), 1, 0.1)
+                                  
+    def _doDungeonStartSettlement(self, opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playerGbId, playMode):
+        INFO_MSG("_doDungeonStartSettlement::", opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playerGbId, playMode)
+        # 通知统计数据stub获取数据
+        self._callback(0.1, '_getDungeonRankData', (opUUID, uniqueID, spaceNo), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
 
-    def _doEndDungeonSettlement(self):
-        self.guildBox.onGuildChallengeDungeonSettlement()
-        guildUUID = self.dungeonSettlementDataCache['guildUUID']
+    def _getDungeonRankData(self, opUUID, uniqueID, spaceNo):
+        INFO_MSG("_getDungeonRankData::", opUUID, uniqueID, spaceNo)
+        if len(self.dungeonSettlementDataCache['statisticTypes']) == 0:
+            self._doDungeonEndSettlement(opUUID, uniqueID, spaceNo)
+            return
+        
+        statisticDataType = self.dungeonSettlementDataCache['statisticTypes'].pop(0) 
+        stub = gameengine.getStatisticStub(self.spaceNo)
+        stub.getDungeonStatisticData(spaceNo, opUUID, self, statisticDataType)
+
+    def _doDungeonEndSettlement(self, opUUID, uniqueID, spaceNo):
+        INFO_MSG("_doDungeonEndSettlement::", opUUID, uniqueID, spaceNo, len(self.dungeonSettlementDataCache))
+        uniqueID = self.dungeonSettlementDataCache['uniqueID']
         players = self.dungeonSettlementDataCache['players']
         spaceNo = self.dungeonSettlementDataCache['spaceNo']
         elapsedTime = self.dungeonSettlementDataCache['elapsedTime']
         endTime = self.dungeonSettlementDataCache['endTime']
         win = self.dungeonSettlementDataCache['win']
+        opUUID = self.dungeonSettlementDataCache['opUUID']
+        dungeonNo = self.dungeonSettlementDataCache['dungeonNo']
+        playMode = self.dungeonSettlementDataCache['playMode']
+        # 获取所有的统计数据类型
+        statisticTypes = list(self.dungeonStatisticRecords.keys())
+        for statisticType in statisticTypes:
+            statisticDatas = self.dungeonStatisticRecords[statisticType]
+            # 获取参与玩家的统计数据
+            statisticDataRecords = []
+            for gbId in players.keys():
+                statisticDataRecord = statisticDatas.get(gbId, None)
+                if not statisticDataRecord:
+                    continue
+                # 排除没有贡献的
+                if statisticDataRecord['statisticsNum'] <= 0:
+                    continue
+                statisticDataRecords.append(statisticDataRecord)
+            # 按照统计数据排序
+            sortedStatisticDataRecords = sorted(statisticDataRecords, key=lambda v: v['statisticsNum'], reverse=True)
+            # 重新给排名
+            newStatisticDatas = {}
+            rank = 0
+            for sortedStatisticDataRecord in sortedStatisticDataRecords:
+                rank += 1
+                sortedStatisticDataRecord['rank'] = rank
+                newStatisticDatas[sortedStatisticDataRecord['gbId']] = sortedStatisticDataRecord
+            # 刷新统计数据
+            self.dungeonStatisticRecords[statisticType] = newStatisticDatas
+            rankCountList = self.dungeonSettlementDataCache.get('rankCountList')
+            rankCountList[statisticType] = len(newStatisticDatas)
+            INFO_MSG("_doDungeonEndSettlement:: 1", opUUID, uniqueID, statisticType, rankCountList[statisticType])
+        # 公会副本需要支持拉取伤害排名
+        if playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
+            records = list(self.dungeonStatisticRecords.get(gameconst.StatisticType.STA_TYPE_DAMAGE, {}).values())
+            self.dungeonStatisticSortedRecords[gameconst.StatisticType.STA_TYPE_DAMAGE] = sorted(records, key=lambda v: v['rank'])
+        
         # 根据排名计算奖励
-        ctx = awardContext.CommonContext(0)
-        opUUID = KBEngine.genUUID64()
-        for dungeonStatisticRecord in self.dungeonStatisticRecords.values():
-            pEnt = players.get(dungeonStatisticRecord['gbId'], None)
-            if not pEnt:
-                WARNING_MSG("_doEndDungeonSettlement:: player is missing", dungeonStatisticRecord, self.spaceNo)
-                continue
+        self._callback(0.1, '_doDungeonCalcReward', (opUUID, uniqueID, players, dungeonNo, spaceNo, elapsedTime, endTime, win, True), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
 
-            dungeonRewards = []
-            firstPassRewards = []
-            dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
-            dataKey = dataUtils.getGuildBossRankRewardKey(dungeonNo, dungeonStatisticRecord['rank'])
-            dungeonRewardId = GC_RR.rankRewardDic.get(dataKey, 0)
-            if dungeonRewardId > 0:
-                dungeonRewards = dropAward.getAwardOne(dungeonRewardId, ctx).toBriefList()
-            firstRewardId = GC_BI.fistPassRewardDic.get(dungeonNo, 0)
-            if firstRewardId > 0:
-                firstPassRewards = dropAward.getAwardOne(firstRewardId, ctx).toBriefList()
+    def _doDungeonCalcReward(self, opUUID, uniqueID, players, dungeonNo, spaceNo, elapsedTime, endTime, win, needDungeonData):
+        INFO_MSG("_doDungeonCalcReward::", opUUID, uniqueID, players, dungeonNo, spaceNo, elapsedTime, endTime, win, needDungeonData)
+        # 开始计算有多少人能获得奖励
+        players = self.dungeonSettlementDataCache['players']
+        playMode = self.dungeonSettlementDataCache['playMode']
+        if playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            self._calcStatisticPoints(playMode)
+        batchSize = 20
+        validEntities = list(players.values())
+        allCount = len(validEntities)
+        if allCount > batchSize:
+            batchCount = allCount // batchSize
+            if allCount > batchCount * batchSize:
+                batchCount += 1
+            totalBatchCount = batchCount
+        else:
+            batchSize = allCount
+            totalBatchCount = 1
+        # 计算玩家副本结束奖励
+        def _calcReward(allCount, batchSize):
+            for idx in range(0, allCount, batchSize):
+                entities = validEntities[idx:idx+batchSize]
+                for entity in entities:
+                    if not entity:
+                        continue
 
-            baseSettlementData = {}
-            baseSettlementData['win'] = win
-            baseSettlementData['rank'] = dungeonStatisticRecord['rank']
-            baseSettlementData['dmg'] = dungeonStatisticRecord['dmg']
-            baseSettlementData['heal'] = dungeonStatisticRecord['heal']
-            baseSettlementData['hurt'] = dungeonStatisticRecord['hurt']
-            baseSettlementData['dead'] = dungeonStatisticRecord['dead']
-            baseSettlementData['dungeonRewardsID'] = dungeonRewardId
-            baseSettlementData['firstPassRewardsID'] = firstRewardId
-            baseSettlementData['dungeonRewards'] = dungeonRewards
-            baseSettlementData['firstPassRewards'] = firstPassRewards
+                    dungeonExtraDatas = self.dungeonExtraDatas.get(entity.gbId, None)
+                    if not dungeonExtraDatas:
+                        WARNING_MSG("_calcReward::  player extra data is missing", opUUID, uniqueID, entity.gbId, self.spaceNo)
+                        continue
+                    
+                    if playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
+                        settlement = DungeonSettlement.DungeonSettlementData()
+                        settlement._calcGuildBossSettlement(self.base, self.dungeonRewardDatas, opUUID, uniqueID, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, self.dungeonStatisticRecords)
+                    elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+                        settlement = DungeonSettlement.DungeonSettlementData()
+                        score = self._calcPlayerStatisticScore(dungeonExtraDatas.gbId)
+                        settlement._calcCrusadeSettlement(self.base, self.dungeonRewardDatas, opUUID, uniqueID, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score)
+                    elif playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+                        settlement = DungeonSettlement.DungeonSettlementData()
+                        score = self._calcPlayerStatisticScore(dungeonExtraDatas.gbId)
+                        settlement._calcChiefSettlement(self.base, self.dungeonRewardDatas, opUUID, uniqueID, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score)
+                INFO_MSG('_calcReward', opUUID, uniqueID, allCount, totalBatchCount, batchSize, self.spaceNo)
+                yield lambda *args:None
+            # 通知完成之后开始请求排名数据    
+            self._doCheckSettlementData(opUUID, uniqueID)
+        # 间隔0.1秒处理一次
+        self.batchlyCall(_calcReward(allCount, batchSize), 1, 0.1)
 
-            pEnt.base.onDungeonSettlement(gameconst.DungeonPlayModeEnum.GUILD_BOSS, dungeonNo, opUUID, guildUUID, baseSettlementData)
-            
-            pEnt.client.changeDungeonRemainTime(spaceNo, endTime)
-            cliSettlementData = {}
-            cliSettlementData['elapsedTime'] = elapsedTime
-            cliSettlementData['endTime'] = endTime
-            cliSettlementData['rank'] = dungeonStatisticRecord['rank']
-            cliSettlementData['dmg'] = dungeonStatisticRecord['dmg']
-            cliSettlementData['dungeonRewards'] = dungeonRewards
-            cliSettlementData['firstPassRewards'] = firstPassRewards
-            pEnt.client.onDungeonSettlement(gameconst.DungeonPlayModeEnum.GUILD_BOSS, cliSettlementData)
+    def _doCheckSettlementData(self, opUUID, uniqueID):
+        INFO_MSG("_doCheckSettlementData::", opUUID, uniqueID)
+        def _check():
+            while True:
+                hasWait = False
+                for key, data in self.dungeonRewardDatas.items():
+                    if data['wait']:
+                        hasWait = True
+                        break
+                if not hasWait:
+                    break
+                else:
+                    yield lambda *args:None
+            self._doDungeonRewards(opUUID, uniqueID)
+        # 间隔0.1秒处理一次
+        self.batchlyCall(_check(), 1, 0.1)
 
-    def _doDungeonFinished(self, win, dungeonType, spaceNo, rank):
-        dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
-        for pid in list(self.players):
-            pEnt = KBEngine.entities.get(pid)
-            if pEnt and pEnt.isReal():
-                pEnt.base.onDungeonFinished(win, dungeonType, dungeonNo, 0)
+    def _doDungeonRewards(self, opUUID, uniqueID):
+        INFO_MSG("_doDungeonRewards::", opUUID, uniqueID)
+        uniqueID = self.dungeonSettlementDataCache['uniqueID']
+        players = self.dungeonSettlementDataCache['players']
+        spaceNo = self.dungeonSettlementDataCache['spaceNo']
+        elapsedTime = self.dungeonSettlementDataCache['elapsedTime']
+        endTime = self.dungeonSettlementDataCache['endTime']
+        win = self.dungeonSettlementDataCache['win']
+        opUUID = self.dungeonSettlementDataCache['opUUID']
+        dungeonNo = self.dungeonSettlementDataCache['dungeonNo']
+        playMode = self.dungeonSettlementDataCache['playMode']
+
+        cliDungeonData = {}
+        cliDungeonData['win'] = win
+        cliDungeonData['elapsedTime'] = elapsedTime
+        cliDungeonData['endTime'] = endTime
+        cliDungeonData['dungeonNo'] = dungeonNo
+        cliDungeonData['playMode'] = playMode
+        cliDungeonData['playMode'] = playMode
+        cliDungeonData['rankCount'] = 0
+        if playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
+            # 公会副本只需要展示自己的奖励
+            cliDungeonData['rewardCount'] = 1
+            # 通知客户端伤害排行榜数量
+            rankCountList = self.dungeonSettlementDataCache.get('rankCountList')
+            cliDungeonData['rankCount'] = rankCountList.get(gameconst.StatisticType.STA_TYPE_DAMAGE)
+        elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            rankCountList = self.dungeonSettlementDataCache.get('rankCountList')
+            rewardCount = 0
+            for count in rankCountList.values():
+                if count > rewardCount:
+                    rewardCount = count
+            cliDungeonData['rewardCount'] = rewardCount
+
+        if playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
+            # 计算发送批次
+            batchSize = 10
+            gbIds = list(self.dungeonRewardDatas.keys())
+            allCount = len(gbIds)
+            if allCount > batchSize:
+                batchCount = allCount // batchSize
+                if allCount > batchCount * batchSize:
+                    batchCount += 1
+                totalBatchCount = batchCount
+            else:
+                batchSize = allCount
+                totalBatchCount = 1
+            INFO_MSG("_doDungeonRewards::", opUUID, uniqueID, allCount, totalBatchCount, batchSize)
+            # 发送玩家副本结束消息
+            def _notifyDungeonSettlement(allCount, batchSize):
+                for idx in range(0, allCount, batchSize):
+                    datas = gbIds[idx:idx+batchSize]
+                    for gbId in datas:
+                        settlementData = self.dungeonRewardDatas.get(gbId)
+                        entity = settlementData['entity']
+                        clientData = settlementData['client']
+                        entity.client.onDungeonCompleteDungeonData(opUUID, cliDungeonData)
+                        entity.client.changeDungeonRemainTime(spaceNo, endTime)
+                        entity.client.onDungeonCompleteSettlementData(opUUID, [clientData])
+                    INFO_MSG('_doDungeonRewards', allCount, totalBatchCount, batchSize, self.spaceNo)
+                    yield lambda *args:None
+            # 间隔0.1秒处理一次
+            self.batchlyCall(_notifyDungeonSettlement(allCount, batchSize), 1, 0.1)
+        elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            gbIds = list(self.dungeonRewardDatas.keys())
+            # 计算发送批次
+            batchSize = 10
+            allCount = len(gbIds)
+            if allCount > batchSize:
+                batchCount = allCount // batchSize
+                if allCount > batchCount * batchSize:
+                    batchCount += 1
+                totalBatchCount = batchCount
+            else:
+                batchSize = allCount
+                totalBatchCount = 1
+            INFO_MSG("_doDungeonRewards::", opUUID, uniqueID, allCount, totalBatchCount, batchSize)
+            def _doDungeonFinalReward():
+                for gbId in gbIds:
+                    playerData = self.dungeonRewardDatas.get(gbId)
+                    entity = playerData['entity']
+                    entity.client.onDungeonCompleteDungeonData(opUUID, cliDungeonData)
+                    entity.client.changeDungeonRemainTime(spaceNo, endTime)
+                    # 发送玩家副本结束消息
+                    def _notifyDungeonSettlement(allCount, batchSize):
+                        sendCount = 0
+                        for idx in range(0, allCount, batchSize):
+                            datas = gbIds[idx:idx+batchSize]
+                            clientDatas = []
+                            for gbId in datas:
+                                settlementData = self.dungeonRewardDatas.get(gbId)
+                                clientData = settlementData['client']
+                                clientDatas.append(clientData)
+                            entity.client.onDungeonCompleteSettlementData(opUUID, clientDatas)
+                            INFO_MSG('_doDungeonRewards', allCount, totalBatchCount, batchSize, self.spaceNo)
+                            sendCount += 1
+                            # 这里如果大于batchSize
+                            if sendCount > batchSize:
+                                sendCount = 0
+                                INFO_MSG('_doDungeonRewards 1', allCount, totalBatchCount, batchSize, self.spaceNo)
+                                yield lambda *args:None
+                    yield from _notifyDungeonSettlement(allCount, batchSize)
+            # 间隔0.01秒处理一次
+            self.batchlyCall(_doDungeonFinalReward(), 1, 0.1)
 
     def _onDungeonCompleted(self, spaceNo, win, delay, elapsedTime, playerGbId):
+        INFO_MSG("_onDungeonCompleted::", spaceNo, win, delay, elapsedTime, playerGbId)
         self.isDungeonWin = win
         _now = utils.getNow()
         _endT = int(_now + delay)
@@ -473,13 +703,14 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 
     def _onDungenCompleteDelayNotifyCallback(self, pids, dungeonNo, win, elapsedTime, _endT, playerGbId):
         self.clearCompleteDelayNotifyTimer()
+        temp = {'dmgList':[], 'healList': [], 'hurtList': [], 'deadList': []}
         for pid in pids:
             pEnt = KBEngine.entities.get(pid)
             if pEnt and pEnt.isReal():
                 if playerGbId and pEnt.gbId != playerGbId:
                     continue
-                DEBUG_MSG("_onDungenCompleteDelayNotifyCallback:: ", pid, dungeonNo, win, elapsedTime, _endT, playerGbId, self.dungeonStatisticData)
-                pEnt.client and pEnt.client.onDungeonCompleted(dungeonNo, win, elapsedTime, _endT, self.dungeonStatisticData)
+                DEBUG_MSG("_onDungenCompleteDelayNotifyCallback:: ", pid, dungeonNo, win, elapsedTime, _endT, playerGbId)
+                pEnt.client and pEnt.client.onDungeonCompleted(dungeonNo, win, elapsedTime, _endT)
 
     def onUpdateChallengeInfo(self, hpPercent):
         isChallengeDun = bool(self.dungeonPlayMode and self.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHALLENGE_DUNGEON)
@@ -504,6 +735,11 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 if pEnt.hasState(gameconst.State.Fighting):
                     WARNING_MSG("doEnterTeamDungeon:: failed, player is in fighting state", self.spaceNo)
                     return
+        # 记录组队副本结算需要的相关数据
+        data = DungeonSettlement.DungeonExtraData()
+        data.loadDatas(extra)
+        self.notifyDungeonExtarData(playerGBID, data)
+
         playerBox.cell.doEnterTeamDungeon(self.spaceNo, spaceUUID, spaceBox, self.base, extra)
 
     def enterRaidDungeonDirectly(self, playerBox, playerGBID, spaceUUID, spaceBox, src, extraProps):
@@ -545,6 +781,23 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
     def triggerGuideId(self, newVal):
         self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.triggerGuideId, newVal)
 
+    @property
+    def breakStuckPos(self):
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.breakStuckPos, None)
+    
+    @breakStuckPos.setter
+    def breakStuckPos(self, newVal):
+        INFO_MSG('set breakStuckPos:', newVal)
+        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.breakStuckPos, newVal)
+
+    @property
+    def breakStuckDir(self):
+        return self.getTempMiscProp(gameconst.DungeonSpaceMgrProps.breakStuckDir, 0)
+    
+    @breakStuckDir.setter
+    def breakStuckDir(self, newVal):
+        self.setTempMiscProp(gameconst.DungeonSpaceMgrProps.breakStuckDir, newVal)
+
     def startTimeFreeze(self):
         self.dungeonTimeFreezeFlag = True
         # NOTE(): 客户端要求先推送其他Entity的Flag, 最后推送玩家client的协议
@@ -571,10 +824,6 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             if pent and pent.isReal():
                 pent.stopDunTimeFreeze()
 
-    def onGetTeamStatisticData(self, data):
-        DEBUG_MSG('onGetTeamStatisticData::', data)
-        self.dungeonStatisticData = data
-
     def doEnterGuildBossDungeon(self, playerBox, playerGBID, spaceUUID, spaceBox, extra):
         INFO_MSG("doEnterGuildBossDungeon::", playerBox, playerGBID, spaceUUID, spaceBox, extra)
         dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
@@ -588,24 +837,191 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                     return
         playerBox.cell.doEnterGuildBossDungeon(self.spaceNo, spaceUUID, spaceBox, self.base, extra)
 
-    def notifyDungeonStatisticRecords(self, batchCount, dungeonStatisticRecords):
-        INFO_MSG("notifyDungeonStatisticRecords::", self.spaceNo, batchCount, dungeonStatisticRecords)
-        if batchCount == 0:
-            self._doEndDungeonSettlement()
-        else:
-            for dungeonStatisticRecord in dungeonStatisticRecords:
-                self.dungeonStatisticRecords[dungeonStatisticRecord['gbId']] = dungeonStatisticRecord
-            dungeonStatisticBatchCount = self.dungeonSettlementDataCache.get('batchCount', 0)
-            dungeonStatisticBatchCount += 1
-            self.dungeonSettlementDataCache['batchCount']
-            if dungeonStatisticBatchCount == batchCount:
-                self._doEndDungeonSettlement()
+    def onDungeonStatisticData(self, totalBatchCount, currentBatchID, spaceNo, uniqueID, statisticType, dungeonStatisticRecords):
+        INFO_MSG("onDungeonStatisticData::",self.dungeonSettlementDataCache['opUUID'], uniqueID, totalBatchCount, currentBatchID, self.spaceNo, spaceNo, statisticType, dungeonStatisticRecords)
+        if totalBatchCount == 0:
+            rankCountList = self.dungeonSettlementDataCache.setdefault('rankCountList', {})
+            rankCountList[statisticType] = 0
+            self._callback(0.1, '_getDungeonRankData', (self.dungeonSettlementDataCache['opUUID'], uniqueID, spaceNo), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
+            return
+        
+        dataRecords = self.dungeonStatisticRecords.setdefault(statisticType, {})
+        for dungeonStatisticRecord in dungeonStatisticRecords:
+            dataRecords[dungeonStatisticRecord['gbId']] = dungeonStatisticRecord
+        
+        self.dungeonStatisticBatchCount += 1
+        if totalBatchCount == self.dungeonStatisticBatchCount:
+            rankCountList = self.dungeonSettlementDataCache.setdefault('rankCountList', {})
+            rankCountList[statisticType] = len(dataRecords)
+            self.dungeonStatisticBatchCount = 0
+            self._callback(0.1, '_getDungeonRankData', (self.dungeonSettlementDataCache['opUUID'], uniqueID, spaceNo), gametimer.TIMER_TAG_DUNGEON_SETTLEMENT_TIMER)
+            return
 
     def setGuildBox(self, box):
         INFO_MSG("setGuildBox::", self.spaceNo)
         self.guildBox = box
-         
+    
+    def getGuildBox(self):
+        return self.guildBox
+    
     def dungeonCompleted(self):
-        INFO_MSG("setGuildBox::", self.spaceNo)
+        INFO_MSG("dungeonCompleted::", self.spaceNo)
         self.guildBox.onGuildChallengeDungeonCompleted()
+
+    def notifyDungeonExtarData(self, gbId, datas):
+        self.dungeonExtraDatas[gbId] = datas
         
+    def onGetSettlementRankList(self, rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset):
+        INFO_MSG("onGetSettlementRankList:: 1", self.dungeonSettlementDataCache['opUUID'], uniqueID, rankType, spaceNo, playerBox, gbID, idx, offset)
+        results = []
+        rankDatas = self.dungeonStatisticSortedRecords.get(rankType)
+        if not rankDatas:
+            WARNING_MSG("onGetSettlementRankList:: 2 no rank data, ", self.dungeonSettlementDataCache['opUUID'], uniqueID, rankType, spaceNo, playerBox, gbID, idx, offset)
+            playerBox.client.onGetSettlementRankList(rankType, dungeonNo, idx, offset, results)
+            return
+        # 限制单次拉取的最大数量
+        if offset > 10:
+            offset = 10
+
+        datas = rankDatas[idx:idx+offset]
+
+        INFO_MSG("onGetSettlementRankList:: 3", self.dungeonSettlementDataCache['opUUID'], uniqueID, rankType, spaceNo, playerBox, gbID, idx, offset, len(datas), len(rankDatas))
+
+        for data in datas:
+            result = {
+                'name':data['name'],
+                'rank':data['rank'],
+                'dmg':data['statisticsNum']
+            }
+            results.append(result)
+
+        dungeonNo = dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
+        playerBox.client.onGetSettlementRankList(rankType, dungeonNo, idx, offset, results)
+    
+    def _calcPointsRanking(self, playMode, statisticType):
+        DEBUG_MSG('_calcPointsRanking: 1', playMode, statisticType)
+        results = {}
+        statisticRecords = self.dungeonStatisticRecords.setdefault(statisticType, {})
+        if len(statisticRecords) == 0:
+            DEBUG_MSG('_calcPointsRanking: 2', playMode, statisticType)
+            return results
+        
+        playerDiedScore = int(TM_PR.datas['playerDiedScore']['value'])
+        if statisticType == gameconst.StatisticType.STA_TYPE_DEAD:
+            for data in statisticRecords.values():
+                results[data['gbId']] = data['statisticsNum'] * playerDiedScore
+            return results
+        datas = statisticRecords.values()
+        datas = sorted(datas, key=lambda v: v['rank'])
+
+        lastMinScore = None
+        rankCfgData = None
+        rankDiffRatio = float(TM_PR.datas['upLevelValuePercent']['value'])
+        for data in datas:
+            curRank = data['rank']
+            DEBUG_MSG('_calcPointsRanking: 3', curRank, data, playMode, statisticType)
+            # 首次找
+            if rankCfgData is None:
+                DEBUG_MSG('_calcPointsRanking: 4', curRank, playMode, statisticType)
+                rankCfgData = self._doGetValidPointRankCfg(curRank, playMode, statisticType)
+                if not rankCfgData:
+                    return results
+            DEBUG_MSG('_calcPointsRanking: 5', curRank, rankCfgData, data, playMode, statisticType)
+            # 不在范围，重新找
+            if not (curRank >= rankCfgData[0] and curRank <= rankCfgData[1]):
+                DEBUG_MSG('_calcPointsRanking: 6', curRank, rankCfgData, data, playMode, statisticType)
+                rankCfgData = self._doGetValidPointRankCfg(curRank, playMode, statisticType)
+                if not rankCfgData:
+                    return results
+            DEBUG_MSG('_calcPointsRanking: 7', curRank, rankCfgData, data, playMode, statisticType)
+            # 首个区间计算
+            if lastMinScore is None:
+                DEBUG_MSG('_calcPointsRanking: 8', curRank, rankCfgData, data, playMode, statisticType)
+                results[data['gbId']] = rankCfgData[2]
+            else:
+                if data['statisticsNum'] >= rankDiffRatio * lastMinScore:
+                    DEBUG_MSG('_calcPointsRanking: 9', curRank, rankCfgData, data, playMode, statisticType)
+                    results[data['gbId']] = rankCfgData[2]
+                else:
+                    DEBUG_MSG('_calcPointsRanking: 10', curRank, rankCfgData, data, playMode, statisticType)
+                    results[data['gbId']] = rankCfgData[3]
+                
+            # 当前范围的最后一名，更新一下上个区间的最小值                
+            if curRank == rankCfgData[1]:
+                DEBUG_MSG('_calcPointsRanking: 11', curRank, rankCfgData, data, playMode, statisticType)
+                lastMinScore = data['statisticsNum']
+
+        return results
+    
+    def _doGetValidPointRankCfg(self, rank, playMode, statisticType):
+        rankCfgDatas = self.getStatisticRankCfg(playMode, statisticType)
+        if not rankCfgDatas:
+            ERROR_MSG("_doGetValidPointRankCfg:: no rank cfg data, ", rank, playMode, statisticType)
+            return None
+        
+        for rankCfgData in rankCfgDatas:
+            if len(rankCfgData) != 4:
+                ERROR_MSG("_doGetValidPointRankCfg:: wrong rank cfg data, ", rank, playMode, statisticType, rankCfgDatas, rankCfgData)
+                return None
+            if rank >= rankCfgData[0] and rank <= rankCfgData[1]:
+                return rankCfgData
+        WARNING_MSG("_doGetValidPointRankCfg:: no rank cfg data, ", rank, playMode, statisticType, rankCfgDatas)
+        return None
+        
+    def getStatisticRankCfg(self, playMode, statisticType):
+        if statisticType == gameconst.StatisticType.STA_TYPE_DAMAGE:
+            if playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+                return self._doGetStatisticRankCfg('dmg_level2Score15')
+            elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+                return self._doGetStatisticRankCfg('dmg_level2Score5')
+        elif statisticType == gameconst.StatisticType.STA_TYPE_HEAL:
+            if playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+                return self._doGetStatisticRankCfg('addHp_level2Score_15')
+            elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+                return self._doGetStatisticRankCfg('addHp_level2Score_5')
+        elif statisticType == gameconst.StatisticType.STA_TYPE_HURT:
+            if playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+                return self._doGetStatisticRankCfg('hurt_level2Score_15')
+            elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+                return self._doGetStatisticRankCfg('hurt_level2Score_5')
+        return None
+    
+    def _doGetStatisticRankCfg(self, dataKey):
+        datas = TM_PR.datas.get(dataKey, None)
+        if datas:
+            return datas['value']
+        return None
+        
+    def _calcStatisticPoints(self, playMode):
+        self.dungeonSettlementDataCache['dmgPoints'] = self._calcPointsRanking(playMode, gameconst.StatisticType.STA_TYPE_DAMAGE)
+        self.dungeonSettlementDataCache['healPoints'] = self._calcPointsRanking(playMode, gameconst.StatisticType.STA_TYPE_HEAL)
+        self.dungeonSettlementDataCache['hurtPoints'] = self._calcPointsRanking(playMode, gameconst.StatisticType.STA_TYPE_HURT)
+        self.dungeonSettlementDataCache['deadPoints'] = self._calcPointsRanking(playMode, gameconst.StatisticType.STA_TYPE_DEAD)
+    
+    def _calcPlayerStatisticScore(self, gbId):
+        return self.dungeonSettlementDataCache['dmgPoints'].get(gbId, 0) \
+                + self.dungeonSettlementDataCache['healPoints'].get(gbId, 0) \
+                + self.dungeonSettlementDataCache['hurtPoints'].get(gbId, 0) \
+                + self.dungeonSettlementDataCache['deadPoints'].get(gbId, 0)
+    
+    def onNotifySettlementResult(self, box, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards, goldPassRewards, dungeonRewards):
+        INFO_MSG("onNotifySettlementResult::", opUUId, uniqueId, playMode, spaceNo, dungeonNo, win, extra, firstPassRewards, goldPassRewards, dungeonRewards)
+        dungeonRewardData = self.dungeonRewardDatas.get(extra['gbId'])
+        if not dungeonRewardData:
+            return
+
+        data = DungeonSettlement.DungeonSettlementData()
+        data.gbId = extra['gbId']
+        data.name = extra['name']
+        data.rank = extra['rank']
+        data.score = extra['score']
+        data.level = extra['level']
+        data.school = extra['school']
+        data.sex = extra['sex']
+        data.dungeonRewards = dungeonRewards
+        data.firstPassRewards = firstPassRewards
+        data.goldPassRewards = goldPassRewards
+
+        dungeonRewardData['wait'] = False
+        dungeonRewardData['client'] = data.toClientData()
+        dungeonRewardData['entity'] = box

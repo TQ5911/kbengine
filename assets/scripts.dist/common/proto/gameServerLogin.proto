@@ -33,6 +33,8 @@ message VerifyAccountReply
     int64 banPostTime = 6;
     string banAccountReason = 7;
     string banPostReason = 8;
+    string accountId = 9;
+    string otherJsonData = 10;
 }
 
 message AccountVal

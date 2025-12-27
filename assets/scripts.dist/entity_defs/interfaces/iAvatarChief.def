@@ -13,8 +13,10 @@
     <CellMethods>
         <enterChiefDungeon>
             <Exposed/>
-            <Arg>   LEVEL   </Arg>
         </enterChiefDungeon>
+
+        <autoStartChiefDungeon>
+        </autoStartChiefDungeon>
     </CellMethods>
 
     <BaseMethods>
@@ -36,20 +38,13 @@
 
         <onEnterChiefDungeon>
             <Arg>           SPACE_NO          </Arg>
+            <Arg>           DUNGEON_NO        </Arg>
             <Arg>           MAILBOX           </Arg>
             <Arg>           PYTHON            </Arg>
         </onEnterChiefDungeon>
-
-        <setChiefDungeonAutoConfirmConfig>
-		    <Exposed/>
-            <Arg>   UINT8   </Arg>
-        </setChiefDungeonAutoConfirmConfig>
     </BaseMethods>
 
     <ClientMethods>
-        <onSetChiefDungeonAutoConfirmConfig>
-            <Arg>   LEVEL   </Arg>
-        </onSetChiefDungeonAutoConfirmConfig>
     </ClientMethods>
 
 </root>

@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "10040004": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -27,6 +28,7 @@ datas ={
     "RebornPos": {
       "10040005": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",
@@ -52,6 +54,7 @@ datas ={
       "Npc": {
         "10054001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -73,6 +76,7 @@ datas ={
         },
         "10054004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -94,6 +98,7 @@ datas ={
         },
         "10054015": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -115,6 +120,7 @@ datas ={
         },
         "10054016": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -136,6 +142,7 @@ datas ={
         },
         "10054017": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -157,6 +164,7 @@ datas ={
         },
         "10054021": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -178,6 +186,7 @@ datas ={
         },
         "10054022": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -199,6 +208,7 @@ datas ={
         },
         "10054023": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -220,6 +230,7 @@ datas ={
         },
         "10054024": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -241,6 +252,7 @@ datas ={
         },
         "10054025": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -262,6 +274,7 @@ datas ={
         },
         "10054026": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -283,6 +296,7 @@ datas ={
         },
         "10054027": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -304,6 +318,7 @@ datas ={
         },
         "10054028": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -325,6 +340,7 @@ datas ={
         },
         "10054029": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -346,6 +362,7 @@ datas ={
         },
         "10054030": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -367,6 +384,7 @@ datas ={
         },
         "10054031": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -388,6 +406,7 @@ datas ={
         },
         "10054033": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -409,6 +428,7 @@ datas ={
         },
         "10054034": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -430,6 +450,7 @@ datas ={
         },
         "10054035": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -448,11 +469,35 @@ datas ={
             "RefreshTime": 1,
             "Remark": ""
           }
+        },
+        "10054036": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 196.744,
+          "DisplayName": "",
+          "EntityID": 18000720,
+          "ID": 10054036,
+          "PosX": 183.0529,
+          "PosY": 150.8549,
+          "PosZ": 311.215,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": ""
+          }
         }
       },
       "Teleporter": {
         "10058001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10028073",
@@ -467,14 +512,15 @@ datas ={
             "CameraId": 0,
             "GateType": 0,
             "Remark": "",
-            "TelDir": 29.94634,
-            "TelX": 45.10838,
+            "TelDir": 72.73184,
+            "TelX": 47.90308,
             "TelY": 142.3228,
-            "TelZ": 154.5555
+            "TelZ": 155.0617
           }
         },
         "10058002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10068003",
@@ -489,16 +535,17 @@ datas ={
             "CameraId": 0,
             "GateType": 0,
             "Remark": "",
-            "TelDir": 164.4909,
-            "TelX": 237.2565,
+            "TelDir": 216.8647,
+            "TelX": 235.2051,
             "TelY": 168.1863,
-            "TelZ": 193.8405
+            "TelZ": 192.1153
           }
         }
       },
       "Collection": {
         "10058004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -516,12 +563,80 @@ datas ={
             "RefreshTime": 1,
             "Remark": ""
           }
+        },
+        "10058005": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 5.190735,
+          "DisplayName": "",
+          "EntityID": 16005124,
+          "ID": 10058005,
+          "PosX": 30.68837,
+          "PosY": 141.6366,
+          "PosZ": 130.2921,
+          "Props": {
+            "IsOpen": 1,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": ""
+          }
+        },
+        "10058006": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 203.0801,
+          "DisplayName": "",
+          "EntityID": 16005125,
+          "ID": 10058006,
+          "PosX": 271.91,
+          "PosY": 171.591,
+          "PosZ": 142.08,
+          "Props": {
+            "IsOpen": 1,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": ""
+          }
+        },
+        "10058007": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 302.6076,
+          "DisplayName": "",
+          "EntityID": 16005126,
+          "ID": 10058007,
+          "PosX": 207.7888,
+          "PosY": 171.9927,
+          "PosZ": 257.9973,
+          "Props": {
+            "IsOpen": 1,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": ""
+          }
         }
       }
     },
+    "TimerEntities": {},
     "Anchor": {
       "10058003": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "Anchor",
         "ClassNameType": 20,
         "CustomID": "",

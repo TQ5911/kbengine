@@ -1,11 +1,15 @@
 <root>
     <Interfaces>
         <Interface>     iStaticSpaceMgr         </Interface>
+        <Interface>     iCollectionBossForMgr   </Interface>
     </Interfaces>
 
     <Properties>
     </Properties>
 
     <CellMethods>
+        <createTeleporterToCow>
+            <Arg>       UINT8               </Arg>
+        </createTeleporterToCow>
     </CellMethods>
 </root>

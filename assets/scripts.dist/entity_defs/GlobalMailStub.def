@@ -39,6 +39,7 @@
             <Arg>   LONGTIME    </Arg>
             <Arg>   LEVEL       </Arg>
             <Arg>   LEVEL       </Arg>
+            <Arg>   CHANNEL     </Arg>
         </sendGlobalMail>
 
         <sendIDIPGlobalMail>

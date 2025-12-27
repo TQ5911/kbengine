@@ -46,5 +46,13 @@ datas = _tools.RODict({
     "CDK_used": _tools.RODict({
         "ID": "CDK_used",
         "value": 54000352,
+    }),
+    "CDK_occupied": _tools.RODict({
+        "ID": "CDK_occupied",
+        "value": 54000353,
+    }),
+    "CDK_anomaly": _tools.RODict({
+        "ID": "CDK_anomaly",
+        "value": 54000354,
     })
 })

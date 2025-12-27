@@ -563,16 +563,7 @@ namespace KBEngine
 
         private void CheckBuffInfo()
         {
-            if (isWitnessComplete != (byte)ViewEntity.WitnessType.Name)
-            {
-                if (!isPlayer() && ViewEntityManager.Instance.PlayerEntity != null)
-                {
-                    if (buffs == null)
-                    {
-                        ViewEntityManager.Instance.PlayerEntity.getBuffIdInfo(id);
-                    }
-                }
-            }
+            ViewEntityManager.Instance.CheckBuffInfo(this);
         }
         #endregion
 

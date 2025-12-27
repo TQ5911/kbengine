@@ -284,5 +284,14 @@
         <onClientAuthState>
             <Arg>           UINT8                   </Arg>
         </onClientAuthState>
+
+        <onCancelAuthRole>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onCancelAuthRole>
+
+        <onDailyUseMoneyChanged>
+            <Arg>           MONEY                   </Arg>
+        </onDailyUseMoneyChanged>
     </ClientMethods>
 </root>

@@ -24,19 +24,43 @@
             <Default>       0                           </Default>
         </cubeRoomTimerId>
 
-        <cubeRoomLeftTime>
-            <Type>          LONGTIME                    </Type>
+        <cubeEnterFloor>
+            <Type>          UINT8                       </Type>
             <Flags>         CELL_PRIVATE                </Flags>
             <Default>       0                           </Default>
             <Persistent>    true                        </Persistent>
-        </cubeRoomLeftTime>
+        </cubeEnterFloor>
+
+        <fromCubeMapId>
+            <Type>          MAP_ID                      </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+            <Persistent>    true                        </Persistent>
+        </fromCubeMapId>
+
+        <todayCubeCowDur>
+            <Type>          UINT32                      </Type>
+            <Flags>         OWN_CLIENT                  </Flags>
+            <Default>       0                           </Default>
+            <Persistent>    true                        </Persistent>
+        </todayCubeCowDur>
+
+        <cubeCowTimerId>
+            <Type>          TIMER_ID                    </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </cubeCowTimerId>
+
+        <cubeQuota>
+            <Type>          CUBE_QUOTA_DATA_INFO        </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Persistent>    true                        </Persistent>
+        </cubeQuota>
     </Properties>
 
     <BaseMethods>
         <beforeEnterCubeDecrementCnt>
-            <Arg>           BOOL                    </Arg>
             <Arg>           SPACE_NO                </Arg>
-            <Arg>           UINT8                   </Arg>
             <Arg>           PYTHON                  </Arg>
         </beforeEnterCubeDecrementCnt>
 
@@ -51,7 +75,7 @@
             <Arg>           UINT8                   </Arg>
             <Arg>           BOOL                    </Arg>
             <Arg>           BOOL                    </Arg>
-            <Arg>           UINT8                   </Arg>   
+            <Arg>           UINT8                   </Arg>
         </useItemAddCubeTimes>
 
         <addRoomDurationFailed>
@@ -65,6 +89,7 @@
 
         <autoRenewCubeRoom>
             <Arg>           CUBE_SWITCH             </Arg>
+            <Arg>           BOOL                    </Arg>
         </autoRenewCubeRoom>
 
         <afterEnterCubeDeductTimes>
@@ -81,11 +106,11 @@
             <Arg>           ENTITYCALL              </Arg>
             <Arg>           OBJECT_ID               </Arg>
             <Arg>           SPACE_NO                </Arg>
-            <Arg>           PYTHON                  </Arg>       
+            <Arg>           PYTHON                  </Arg>
         </beginEnterCubeRoom>
 
         <enterCube> <Exposed/>
-            <Arg>           UINT8                   </Arg>   
+            <Arg>           UINT8                   </Arg>
         </enterCube>
 
         <leaveCube> <Exposed/>
@@ -111,14 +136,35 @@
         <directlyAddCubeRoomDuration>
             <Arg>           STRING                  </Arg>
             <Arg>           PYTHON                  </Arg>
+            <Arg>           PYTHON                  </Arg>
         </directlyAddCubeRoomDuration>
+
+        <setEnterCubeFloor> <Exposed/>
+            <Arg>           UINT8                   </Arg>
+        </setEnterCubeFloor>
+
+        <followCaptainInCube> <Exposed/>
+        </followCaptainInCube>
+
+        <resetCubeCowDur>
+        </resetCubeCowDur>
+
+        <leaveCubeInternal>
+            <Arg>           UINT8                   </Arg>
+        </leaveCubeInternal>
+
+        <getCubeRoomLeftTime> <Exposed/>
+        </getCubeRoomLeftTime>
+
+        <randomCubeRoom> <Exposed/>
+        </randomCubeRoom>
     </CellMethods>
 
     <ClientMethods>
         <onCubeRoomEndTime>
             <Arg>           LONGTIME                </Arg>
         </onCubeRoomEndTime>
-        
+
         <onCubeAutoRenewSwitch>
             <Arg>           BOOL                    </Arg>
             <Arg>           CUBE_SWITCH             </Arg>
@@ -134,5 +180,9 @@
             <Arg>           CUBE_SWITCH             </Arg>
             <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
         </onCubeLoginData>
+
+        <onCubeRoomLeftTime>
+            <Arg>           LONGTIME                </Arg>
+        </onCubeRoomLeftTime>
     </ClientMethods>
 </root>

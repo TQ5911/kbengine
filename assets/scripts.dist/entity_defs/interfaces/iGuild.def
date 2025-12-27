@@ -12,7 +12,7 @@
 
         <guildName>
             <Type>          UNICODE                     </Type>
-            <Flags>         OWN_CLIENT                  </Flags>
+            <Flags>         ALL_CLIENTS                 </Flags>
         </guildName>
 
         <guildNameBase>
@@ -122,13 +122,12 @@
             <Persistent>    true                        </Persistent>
             <Default>       0                           </Default>
         </guildDonateToken>
-        
+
         <guildTask>
             <Type>          PY_DICT                      </Type>
             <Flags>         BASE                         </Flags>
-            <Persistent>    true                        </Persistent>
+            <Persistent>    true                         </Persistent>
         </guildTask>
-        
     </Properties>
 
     <BaseMethods>
@@ -382,10 +381,27 @@
             <Arg>       ARRAY   <of>    GUILD_CROSS_DATA_INFO          </of>   </Arg>
             <Arg>       UINT8                       </Arg>
         </onGetGuildInfosByRelationType>
-        
+
         <getGuildTaskReward><Exposed/>
-                     <Arg>      ARRAY   <of>    UINT8       </of>   </Arg>
+             <Arg>      ARRAY   <of> UINT8  </of>     </Arg>
         </getGuildTaskReward>
+
+        <completeGuildTask>
+            <Arg>      UINT32    </Arg>
+            <Arg>      UINT32    </Arg>
+            <Arg>      UINT32    </Arg>
+        </completeGuildTask>
+
+        <onSetGuildInfoCross>
+            <Arg>      GUILD_UUID           </Arg>
+            <Arg>      UNICODE              </Arg>
+            <Arg>      BOOL                 </Arg>
+        </onSetGuildInfoCross>
+
+        <onGuildNameChange>
+            <Arg>      UNICODE              </Arg>
+            <Arg>      UINT8                </Arg>
+        </onGuildNameChange>
     </BaseMethods>
 
     <CellMethods>
@@ -446,10 +462,10 @@
         <onExitGuildClient>
         </onExitGuildClient>
 
-        <onGuildNameChanged>
+        <selfGuildNameChanged>
             <Arg>       UNICODE                 </Arg>
             <Arg>       UINT8                   </Arg>
-        </onGuildNameChanged>
+        </selfGuildNameChanged>
 
         <onGuildDescChanged>
             <Arg>       UNICODE                 </Arg>
@@ -508,10 +524,6 @@
             <Arg>       CITY_BATTLE_TOKEN       </Arg>
         </onCityBattleTokenChanged>
 
-        <onJunXuArchitectureChanged>
-            <Arg>       JUN_XU_ARCHITECTURE_DATA_INFO       </Arg>
-        </onJunXuArchitectureChanged>
-
         <onQixieChanged>
             <Arg>       JUN_XU_QI_XIE_DATA_INFO             </Arg>
         </onQixieChanged>
@@ -548,10 +560,9 @@
         <onNewGuildUnionApplySender>
             <Arg>       GUILD_APPLY_UNION_SENDER_DATA_INFO          </Arg>
         </onNewGuildUnionApplySender>
-        
+
         <syncGuildTaskInfo>
-            <Arg>      ARRAY   <of> GUILD_ONETASK_INFO       </Arg>
+            <Arg>      ARRAY   <of> GUILD_ONETASK_INFO      </of>  </Arg>
         </syncGuildTaskInfo>
-        
     </ClientMethods>
 </root>

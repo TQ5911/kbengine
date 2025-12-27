@@ -21,6 +21,13 @@
             <Arg>       SCHOOL                              </Arg>
             <Arg>       LEADER_BOARD_PAGE                              </Arg>
         </getLeaderBoardList>
+        
+        <getLevelRushRankList> <Exposed/>
+            <Arg>       UINT8                               </Arg>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+            <Arg>       SCHOOL                              </Arg>
+            <Arg>       LEADER_BOARD_PAGE                              </Arg>
+        </getLevelRushRankList>
 
         <onLeaderBoardRank>
             <Arg>       UINT8                               </Arg>
@@ -64,5 +71,14 @@
             <Arg>       BOOL                                </Arg>
             <Arg>       RANK                                </Arg>
         </onLeaderBoardGuild>
+
+        <onLeaderBoardAvatarLevelRushRank>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+            <Arg>       ARRAY   <of>        LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO            </of>   </Arg>
+            <Arg>       SCHOOL                              </Arg>
+            <Arg>       LEADER_BOARD_PAGE                              </Arg>
+            <Arg>       BOOL                                </Arg>
+            <Arg>       RANK                                </Arg>
+        </onLeaderBoardAvatarLevelRushRank>
     </ClientMethods>
 </root>

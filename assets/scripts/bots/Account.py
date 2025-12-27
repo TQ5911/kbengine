@@ -13,7 +13,7 @@ import randomName_robotName as RNRN
 class Account(AccountBase):
     def __init__(self):
         KBEngine.Entity.__init__(self)
-        DEBUG_MSG("Account::__init__:  ", GD.account_username, self.accountName)
+        DEBUG_MSG("Account::__init__:  ", GD.account_username, getattr(self, 'accountName', None))
         self.userName = ""
         # self.base.reqAvatarList()
 

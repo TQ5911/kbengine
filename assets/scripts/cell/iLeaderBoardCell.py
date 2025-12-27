@@ -7,6 +7,7 @@ import gameengine
 import gameglobal
 import LeaderBoardAvatarCacheInfo
 import LeaderBoardAvatarScoreInfo
+import LeaderBoardAvatarLevelRushRankInfo
 
 import rank_rankConfig as R_RCD
 import rank_Rank as R_RD

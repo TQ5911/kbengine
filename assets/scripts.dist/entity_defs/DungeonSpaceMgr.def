@@ -1,9 +1,9 @@
 <root>
     <Interfaces>
-        <Interface>     iBaseWithCell   </Interface>
-        <Interface>     iCell           </Interface>
-        <Interface>     iSpaceMgr       </Interface>
-        <Interface>     iTimerCell       </Interface>
+        <Interface>     iBaseWithCell           </Interface>
+        <Interface>     iCell                   </Interface>
+        <Interface>     iSpaceMgr               </Interface>
+        <Interface>     iTimerCell              </Interface>
     </Interfaces>
 
     <Properties>
@@ -41,6 +41,53 @@
             <Flags>     CELL_PRIVATE       </Flags>
             <Default>   0                  </Default>
         </dungeonGoodManActId>
+
+        <dungeonCompleteDelayNotifyTimer>
+            <Type> UINT64 </Type>
+            <Flags> CELL_PRIVATE </Flags>
+            <Default> 0 </Default>
+        </dungeonCompleteDelayNotifyTimer>
+
+        <dungeonStatisticRecords>
+            <Type>      PYTHON              </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   {}                  </Default>
+        </dungeonStatisticRecords>
+        
+        <dungeonStatisticSortedRecords>
+            <Type>      PYTHON              </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   {}                  </Default>
+        </dungeonStatisticSortedRecords>
+
+        <dungeonStatisticBatchCount>
+            <Type>      UINT32              </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   0                   </Default>
+        </dungeonStatisticBatchCount>
+
+        <dungeonSettlementDataCache>
+            <Type>      PYTHON              </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   {}                  </Default>
+        </dungeonSettlementDataCache>
+
+        <guildBox>
+            <Type>      MAILBOX             </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+        </guildBox>
+
+        <dungeonExtraDatas>
+            <Type>      PYTHON          </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>   {}              </Default>
+        </dungeonExtraDatas>
+
+        <dungeonRewardDatas>
+            <Type>      PYTHON          </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>   {}              </Default>
+        </dungeonRewardDatas>
     </Properties>
 
     <BaseMethods>
@@ -56,6 +103,7 @@
             <Arg>            PLAYER_GBID     </Arg>
             <Arg>            BOOL            </Arg>
             <Arg>            FLOAT           </Arg>
+            <Arg>            INT32           </Arg>
         </onSingleDungeonCompleted>
 
         <onTeamDungeonCompleted>
@@ -63,6 +111,8 @@
             <Arg>            TEAMID          </Arg>
             <Arg>            BOOL            </Arg>
             <Arg>            FLOAT           </Arg>
+            <Arg>            INT32           </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
         </onTeamDungeonCompleted>
 
         <onRaidDungeonCompleted>
@@ -72,7 +122,17 @@
             <Arg>            FLOAT           </Arg>
             <Arg>            PY_DICT         </Arg>
             <Arg>            PY_LIST         </Arg>
+            <Arg>            INT32           </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
         </onRaidDungeonCompleted>
+
+        <onGuildBossDungeonCompleted>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            GUILD_UUID      </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            INT32           </Arg>
+            <Arg>            INT64           </Arg>
+        </onGuildBossDungeonCompleted>
 
         <doEnterTeamDungeon>
             <Arg>   MAILBOX                 </Arg>
@@ -91,5 +151,62 @@
             <Arg>   PYTHON                  </Arg>
         </enterRaidDungeonDirectly>
 
+        <cancelCompleteDelayNotifyTimer>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   UINT16                  </Arg>
+        </cancelCompleteDelayNotifyTimer>
+
+        <doEnterGuildBossDungeon>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   PLAYER_GBID             </Arg>
+            <Arg>   UUID                    </Arg>
+            <Arg>   MAILBOX                 </Arg>
+            <Arg>   PYTHON                  </Arg>
+        </doEnterGuildBossDungeon>
+
+        <onDungeonStatisticData>
+            <Arg>      UINT16                                       </Arg>
+            <Arg>      UINT16                                       </Arg>
+            <Arg>      SPACE_NO                                     </Arg>
+            <Arg>      GUILD_UUID                                   </Arg>
+            <Arg>      UINT32                                       </Arg>
+            <Arg>      ARRAY <of> DUNGEON_STATISTIC_DATA </of>      </Arg>
+        </onDungeonStatisticData>
+
+        <setGuildBox>
+            <Arg>   MAILBOX                 </Arg>
+        </setGuildBox>
+
+        <dungeonCompleted>
+        </dungeonCompleted>
+
+        <notifyDungeonExtarData>
+            <Arg>   PLAYER_GBID                         </Arg>
+            <Arg>   DUNGEON_EXTRA_DATA                  </Arg>
+        </notifyDungeonExtarData>
+
+        <onGetSettlementRankList>
+            <Arg>            UINT8           </Arg>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            UUID            </Arg>
+            <Arg>            MAILBOX         </Arg>
+            <Arg>            PLAYER_GBID     </Arg>
+            <Arg>            UINT8           </Arg>
+            <Arg>            UINT8           </Arg>
+        </onGetSettlementRankList>
+
+        <onNotifySettlementResult>
+            <Arg>   MAILBOX                                                </Arg>
+            <Arg>   UINT8                                                  </Arg>
+            <Arg>   SPACE_NO                                               </Arg>
+            <Arg>   DUNGEON_NO                                             </Arg>
+            <Arg>   UUID                                                   </Arg>
+            <Arg>   UUID                                                   </Arg>
+            <Arg>   UINT8                                                  </Arg>
+            <Arg>   PYTHON                                                 </Arg>
+            <Arg>   ARRAY <of>  BAG_ITEM_BRIEF_VAL </of>                   </Arg>
+            <Arg>   ARRAY <of>  BAG_ITEM_BRIEF_VAL </of>                   </Arg>
+            <Arg>   ARRAY <of>  BAG_ITEM_BRIEF_VAL </of>                   </Arg>
+        </onNotifySettlementResult>
     </CellMethods>
 </root>

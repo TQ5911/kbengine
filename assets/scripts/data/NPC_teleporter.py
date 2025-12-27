@@ -369,7 +369,7 @@ datas = _tools.RODict({
     }),
     17103102: _tools.RODict({
         "ID": 17103102,
-        "name": "月光海港四层",
+        "name": "月光海港三层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -378,8 +378,8 @@ datas = _tools.RODict({
         "activateParam": 1,
         "showMsg": 0
     }),
-    17103501: _tools.RODict({
-        "ID": 17103501,
+    17103201: _tools.RODict({
+        "ID": 17103201,
         "name": "月光海港二层",
         "isOpen": 1,
         "teleportOffset": 6,
@@ -389,9 +389,31 @@ datas = _tools.RODict({
         "activateParam": 1,
         "showMsg": 0
     }),
-    17103502: _tools.RODict({
-        "ID": 17103502,
-        "name": "月光五层北入口",
+    17103202: _tools.RODict({
+        "ID": 17103202,
+        "name": "月光海港四层",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17103301: _tools.RODict({
+        "ID": 17103301,
+        "name": "月光海港三层",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17103302: _tools.RODict({
+        "ID": 17103302,
+        "name": "月光海港五层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -402,7 +424,7 @@ datas = _tools.RODict({
     }),
     17103503: _tools.RODict({
         "ID": 17103503,
-        "name": "月光五层东入口",
+        "name": "月光海港四层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -413,7 +435,7 @@ datas = _tools.RODict({
     }),
     17103601: _tools.RODict({
         "ID": 17103601,
-        "name": "月光海港四层",
+        "name": "月光海港六层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -424,7 +446,7 @@ datas = _tools.RODict({
     }),
     17103602: _tools.RODict({
         "ID": 17103602,
-        "name": "月光海港四层",
+        "name": "月光海港五层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -513,17 +535,6 @@ datas = _tools.RODict({
     17112302: _tools.RODict({
         "ID": 17112302,
         "name": "五毒石窟五层",
-        "isOpen": 1,
-        "teleportOffset": 6,
-        "Area": 2,
-        "wayPointID": 2,
-        "activateType": 1,
-        "activateParam": 1,
-        "showMsg": 0
-    }),
-    17300001: _tools.RODict({
-        "ID": 17300001,
-        "name": "回廊一层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -763,6 +774,501 @@ datas = _tools.RODict({
         "activateParam": 1,
         "showMsg": 0
     }),
+    17312201: _tools.RODict({
+        "ID": 17312201,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17320101: _tools.RODict({
+        "ID": 17320101,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17320201: _tools.RODict({
+        "ID": 17320201,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17320301: _tools.RODict({
+        "ID": 17320301,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17320401: _tools.RODict({
+        "ID": 17320401,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17320501: _tools.RODict({
+        "ID": 17320501,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17320601: _tools.RODict({
+        "ID": 17320601,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17320701: _tools.RODict({
+        "ID": 17320701,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17320801: _tools.RODict({
+        "ID": 17320801,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17320901: _tools.RODict({
+        "ID": 17320901,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321001: _tools.RODict({
+        "ID": 17321001,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321101: _tools.RODict({
+        "ID": 17321101,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321201: _tools.RODict({
+        "ID": 17321201,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321301: _tools.RODict({
+        "ID": 17321301,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321401: _tools.RODict({
+        "ID": 17321401,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321501: _tools.RODict({
+        "ID": 17321501,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321601: _tools.RODict({
+        "ID": 17321601,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321701: _tools.RODict({
+        "ID": 17321701,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321801: _tools.RODict({
+        "ID": 17321801,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17321901: _tools.RODict({
+        "ID": 17321901,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17322001: _tools.RODict({
+        "ID": 17322001,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17322101: _tools.RODict({
+        "ID": 17322101,
+        "name": "",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17322201: _tools.RODict({
+        "ID": 17322201,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17330101: _tools.RODict({
+        "ID": 17330101,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17330201: _tools.RODict({
+        "ID": 17330201,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17330301: _tools.RODict({
+        "ID": 17330301,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17330401: _tools.RODict({
+        "ID": 17330401,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17330501: _tools.RODict({
+        "ID": 17330501,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17330601: _tools.RODict({
+        "ID": 17330601,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17330701: _tools.RODict({
+        "ID": 17330701,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17330801: _tools.RODict({
+        "ID": 17330801,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17330901: _tools.RODict({
+        "ID": 17330901,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331001: _tools.RODict({
+        "ID": 17331001,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331101: _tools.RODict({
+        "ID": 17331101,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331201: _tools.RODict({
+        "ID": 17331201,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331301: _tools.RODict({
+        "ID": 17331301,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331401: _tools.RODict({
+        "ID": 17331401,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331501: _tools.RODict({
+        "ID": 17331501,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331601: _tools.RODict({
+        "ID": 17331601,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331701: _tools.RODict({
+        "ID": 17331701,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331801: _tools.RODict({
+        "ID": 17331801,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17331901: _tools.RODict({
+        "ID": 17331901,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17332001: _tools.RODict({
+        "ID": 17332001,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17332101: _tools.RODict({
+        "ID": 17332101,
+        "name": "",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
+    17332201: _tools.RODict({
+        "ID": 17332201,
+        "name": "混沌之境",
+        "isOpen": 1,
+        "teleportOffset": 6,
+        "Area": 2,
+        "wayPointID": 2,
+        "activateType": 1,
+        "activateParam": 1,
+        "showMsg": 0
+    }),
     17600001: _tools.RODict({
         "ID": 17600001,
         "name": "城战（临时）",
@@ -816,5 +1322,5 @@ taskId2teleporterId = _tools.RODict({
 
 
 unlockTeleporterId = _tools.RODict({ 
-        1:[17100002, 17100101, 17100102, 17100201, 17100202, 17100203, 17100401, 17100402, 17100501, 17100502, 17100601, 17101001, 17101002, 17101101, 17101102, 17101103, 17102001, 17102002, 17102101, 17102102, 17102201, 17102202, 17102301, 17102302, 17102401, 17102402, 17102501, 17102502, 17102601, 17103001, 17103002, 17103101, 17103102, 17103501, 17103502, 17103503, 17103601, 17103602, 17112001, 17112002, 17112101, 17112102, 17112201, 17112202, 17112301, 17112302, 17300001, 17310101, 17310201, 17310301, 17310401, 17310501, 17310601, 17310701, 17310801, 17310901, 17311001, 17311101, 17311201, 17311301, 17311401, 17311501, 17311601, 17311701, 17311801, 17311901, 17312001, 17312101, 17600001, 17600002, 17600003, 17600004, ],
+        1:[17100002, 17100101, 17100102, 17100201, 17100202, 17100203, 17100401, 17100402, 17100501, 17100502, 17100601, 17101001, 17101002, 17101101, 17101102, 17101103, 17102001, 17102002, 17102101, 17102102, 17102201, 17102202, 17102301, 17102302, 17102401, 17102402, 17102501, 17102502, 17102601, 17103001, 17103002, 17103101, 17103102, 17103201, 17103202, 17103301, 17103302, 17103503, 17103601, 17103602, 17112001, 17112002, 17112101, 17112102, 17112201, 17112202, 17112301, 17112302, 17310101, 17310201, 17310301, 17310401, 17310501, 17310601, 17310701, 17310801, 17310901, 17311001, 17311101, 17311201, 17311301, 17311401, 17311501, 17311601, 17311701, 17311801, 17311901, 17312001, 17312101, 17312201, 17320101, 17320201, 17320301, 17320401, 17320501, 17320601, 17320701, 17320801, 17320901, 17321001, 17321101, 17321201, 17321301, 17321401, 17321501, 17321601, 17321701, 17321801, 17321901, 17322001, 17322101, 17322201, 17330101, 17330201, 17330301, 17330401, 17330501, 17330601, 17330701, 17330801, 17330901, 17331001, 17331101, 17331201, 17331301, 17331401, 17331501, 17331601, 17331701, 17331801, 17331901, 17332001, 17332101, 17332201, 17600001, 17600002, 17600003, 17600004, ],
 })

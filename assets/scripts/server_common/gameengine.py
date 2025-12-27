@@ -387,7 +387,7 @@ def getLoginStubsByAccountName(accountType_Name):
 
 
 def buildLineStubName(lineType):
-    stubName = gameconst.lineStubMap[lineType]['stubName']
+    stubName = gameconst.lineStubMap()[lineType]['stubName']
     return '%s%s' % (stubName, lineType)
 
 
@@ -420,16 +420,34 @@ def getLeaderStub(leaderBoardType, reportErr=True):
     _leaderStubName = 'LeaderBoardStub' + str(leaderBoardType)
     return getGlobalBase(_leaderStubName, reportErr)
 
+def getStatisticStub(spaceNo):
+    id = spaceNo % gameconst.STATISTICSTUB_CONFIG_NUM
+    statisticStubName = 'StatisticStub' + str(id)
+    return getGlobalBase(statisticStubName)
 
 def resetGlobalActData(globalActData):
     gameglobal.globalActData = globalActData
-
 
 def modifyGlobalActData(actId, endTime):
     if endTime:
         gameglobal.globalActData[actId] = endTime
     else:
         gameglobal.globalActData.pop(actId, None)
+
+def updateAntiAddictionData(timeType, nextStartTime):
+    gameglobal.antiAddictionData = [timeType, nextStartTime]
+    if isBase():
+        doBaseAntiAddiction()
+    elif isCell():
+        doCellAntiAddiction()
+
+def doBaseAntiAddiction():
+    #DEBUG_MSG("doBaseAntiAddiction", gameglobal.antiAddictionData)
+    gameglobal.localBaseApp.doAntiAddiction()
+
+def doCellAntiAddiction():
+    #DEBUG_MSG("doCellAntiAddiction", gameglobal.antiAddictionData)
+    pass
 
 def resetGuildRelation(relationDic, version):
     gameglobal.guildRelationDic = relationDic

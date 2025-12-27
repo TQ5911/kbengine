@@ -14,6 +14,8 @@
         <onEnterSiegeWarSpace>
             <Arg>           ENTITYCALL              </Arg>
             <Arg>           GUILD_UUID              </Arg>
+            <Arg>           GUILD_UUID              </Arg>
+            <Arg>           PYTHON                  </Arg>
         </onEnterSiegeWarSpace>
         
         <gmEnterSiegeWarSpace>
@@ -32,5 +34,43 @@
         <onGetWinnerDataFromCityOwnerMgr>
             <Arg>       PY_LIST     </Arg>
         </onGetWinnerDataFromCityOwnerMgr>
+
+        <checkCanEnterSiegeWarSpace>
+            <Arg>           INT32                   </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           GUILD_UUID              </Arg>
+            <Arg>           GUILD_UUID              </Arg>
+        </checkCanEnterSiegeWarSpace>
+
+        <onCheckCanEnterSiegeWarSpace>
+            <Arg>           INT32                   </Arg>
+            <Arg>           INT32                   </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           INT32                   </Arg>
+        </onCheckCanEnterSiegeWarSpace>
+
+        <onGmAddTime>
+            <Arg>           INT32                   </Arg>
+        </onGmAddTime>
+
+        <onGmTestScores>
+        </onGmTestScores>
+
+        <getWarGuildUUIDBeforeEnter>
+            <Arg>           INT32                   </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+        </getWarGuildUUIDBeforeEnter>
+
+        <onGetWarGuildUUIDBeforeEnter>
+            <Arg>           GUILD_UUID              </Arg>
+            <Arg>           GUILD_UUID              </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onGetWarGuildUUIDBeforeEnter>
+
+        <onCheckCanEnterCell>
+            <Arg>           BOOL                   </Arg>
+            <Arg>           INT32                  </Arg>
+            <Arg>           PYTHON                 </Arg>
+        </onCheckCanEnterCell>
     </BaseMethods>
 </root>

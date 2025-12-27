@@ -20,12 +20,15 @@
         <permitLogin> 1 </permitLogin>
         <branchLineCnt>
             <subType1> 2 </subType1>
-            <subType2> $LINETYPE </subType2>
+            <subType2> 1 </subType2>
         </branchLineCnt>
 
-        <serverOpenTime> 1624608806 </serverOpenTime>
+        <serverOpenTime> 1764709200 </serverOpenTime>
         <enableAdminServer> 0 </enableAdminServer>
         <enableRouterServer> 1 </enableRouterServer>
+        <giftCodeUrl> http://192.168.10.16:8084/api/v1/redeem-code/use </giftCodeUrl>
+        <tapTapBindPhoneReqUrl> http://192.168.10.16:8084/api/v1/user-info/taptap/send-code </tapTapBindPhoneReqUrl>
+        <tapTapBindPhoneVerifyUrl> http://192.168.10.16:8084/api/v1/user-info/taptap/verify-code </tapTapBindPhoneVerifyUrl>
         <gm>
             <item ip='192.168.10.13' port='2040' httpApi='8080'/>
         </gm>
@@ -51,7 +54,7 @@
         <mapleAllServerUrl> http://192.168.10.13:9527/getAllServer </mapleAllServerUrl>
         
         <crossServerInfo>
-                <item crossServerId='20228'></item>
+            <item crossServerId='20228'></item>
         </crossServerInfo>
 
         <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
@@ -102,7 +105,7 @@
     <debug>
         <waitEntityLoading> 0 </waitEntityLoading>
         <loadEntity> 1 </loadEntity>
-        <entityLoadSpeed> 5 </entityLoadSpeed>
+        <entityLoadSpeed> 10 </entityLoadSpeed>
         <enableBotLogin> 1 </enableBotLogin>
         <callbackNumThreshold> 100 </callbackNumThreshold>
         <enableCentralLogin> 1 </enableCentralLogin>

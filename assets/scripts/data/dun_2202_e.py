@@ -153,7 +153,7 @@ datas ={
       22020001
     ],
     "skillID": 91023020,
-    "lv": "-1",
+    "lv": "1",
     "forceToUse": -1,
     "transition": {
       "finished": [
@@ -167,7 +167,7 @@ datas ={
       22020002
     ],
     "skillID": 91024014,
-    "lv": "-1",
+    "lv": "1",
     "forceToUse": -1,
     "transition": {
       "finished": [

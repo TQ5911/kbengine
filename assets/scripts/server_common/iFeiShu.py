@@ -37,7 +37,7 @@ class IFeiShu():
     def sendMsg(self):
         self.timerId = None
         msgs = []
-        msgs.append("serverId: %d, 服务器: %s" % (gameconfig.serverId(), gameglobal.curServerName))
+        msgs.append("serverId: %d, 服务器: %s  " % (gameconfig.serverId(), gameglobal.curServerName))
         while len(msgs) < LIMIT:
             if len(self.msgList) > 0:
                 msgs.append(self.msgList.pop(0))

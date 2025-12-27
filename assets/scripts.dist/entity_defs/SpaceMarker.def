@@ -8,21 +8,21 @@
         <spaceno>
             <Type>          SPACE_NO        </Type>
             <Flags>         BASE            </Flags>
-        </spaceno> 
+        </spaceno>
     </Properties>
-    
-    <BaseMethods> 
-        <spaceCellInfo> 
+
+    <BaseMethods>
+        <spaceCellInfo>
             <Arg>       MAILBOX     </Arg>
          </spaceCellInfo>
     </BaseMethods>
 
-    <CellMethods> 
+    <CellMethods>
         <createCellLocally>
-            <Arg>           ENT_TYPE        </Arg>          
-            <Arg>           POSITION_ARG    </Arg>         
-            <Arg>           DIRECTION_ARG   </Arg>        
-            <Arg>           PYTHON          </Arg>       
+            <Arg>           ENT_TYPE        </Arg>
+            <Arg>           POSITION_ARG    </Arg>
+            <Arg>           DIRECTION_ARG   </Arg>
+            <Arg>           PYTHON          </Arg>
         </createCellLocally>
     </CellMethods>
 </root>

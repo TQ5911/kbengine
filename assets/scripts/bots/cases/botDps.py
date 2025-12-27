@@ -30,7 +30,9 @@ STATUS_DURATION = 180
 # 过滤的类型，比如药品
 IGNORE_SOURCETYPES = [gameconst.SourceType.Item]
 
+IGNORE_HITTYPES = [gameconst.HitType.Absorb,]
 HEAL_HITTYPES = [gameconst.HitType.Heal, gameconst.HitType.HealCrit, gameconst.HitType.HPRecover, ]
+
 
 class BotAIState_Init(AIState):
     def enter(self, owner):
@@ -197,8 +199,9 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
     def onBecomePlayer(self):
         self.debug('check_login:%s'%self.botClient.accountName)
         if not self.isAIinit:
-            self.regBotAI(AISTATE_INIT)
             self.isAIinit = True
+            self.regBotAI(AISTATE_INIT)
+            
 
     def onTeleportDone(self, *args):
         self.debug(f'onTeleportDone{args}')
@@ -316,7 +319,9 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
         def _statsTotal(mainKey, hitType, hurt, statsDict):
             if mainKey not in statsDict:
                 statsDict[mainKey] = {"dmg": {"total": 0, "details": {}}, "heal": {"total": 0, "details": {}}}
-            if hitType in HEAL_HITTYPES:
+            if hitType in IGNORE_HITTYPES:
+                return  
+            elif hitType in HEAL_HITTYPES:
                 tmpDict = statsDict[mainKey]["heal"]
             else:
                 tmpDict = statsDict[mainKey]["dmg"]

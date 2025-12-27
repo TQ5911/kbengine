@@ -230,7 +230,7 @@ class ImpRaid(object):
             self.raidId = newRaidUUID
             self.resetAllTargetTypeCache()
             #
-            self.clearStatisticDataRecord()
+
         if not oldRaidId and newRaidUUID:
             self._unlockRaidProcess()
             self._onEnterNewRaid()
@@ -656,8 +656,6 @@ class ImpRaid(object):
         if err != gameconst.RaidErrno.RAID_OK:
             err = err.initkvbody(source=self._applyJoinRaidLonelyCheck.__name__)
             WARNING_MSG('applyJoinRaidLonely:: check failed, {}'.format(err))
-            if err == gameconst.RaidErrno.RAID_ALREADY_APPLY_JOIN:
-                self.showMsg(RAID_CONST.datas["raid_applySent_msg"]["value"], [])
             return
 
         joinProps, extraProps = self._getAvatarPropsForRaid().toSavedDict(), {}
@@ -666,18 +664,22 @@ class ImpRaid(object):
     def _applyJoinRaidLonelyCheck(self, raidUUID):
         _errno = gameconst.RaidErrno
         if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
+            self.client and self.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.RAID_APPLY_RAID_UI_IS_NOT_VISIBLE, 0, 0, 0, '')
             return None, _errno.RAID_UI_DENIED.initkvbody(level=self.level)
 
         if not raidUUID:
             return None, _errno.RAID_PARAM_ERR.initkvbody(raidUUID=raidUUID)
 
         if self.isInRaid():
+            self.client and self.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.RAID_APPLY_IS_IN_RAID, 0, 0, 0, '')
             return None, _errno.RAID_ALREADY_IN_RAID.initkvbody(raidUUID=raidUUID)
 
         if self.isInTeam():
+            self.client and self.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.RAID_APPLY_IS_IN_TEAM, 0, 0, 0, '')
             return None, _errno.RAID_ALREADY_IN_TEAM.initkvbody(teamId=self.teamId)
         
         if raidUUID in self.raidJoinRecord and self.raidJoinRecord[raidUUID] == gameconst.RaidJoinType.SINGLE:
+            self.client and self.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.RAID_APPLY_IS_APPLIED, 0, 0, 0, '')
             return None, _errno.RAID_ALREADY_APPLY_JOIN.initkvbody(raidUUID=raidUUID)
 
         return None, _errno.RAID_OK
@@ -1377,7 +1379,9 @@ class ImpRaid(object):
         # reset raidInfo && refresh self to clear
         self.raidInfo.reset()
         self.onRefreshPlayerRaidCacheVal(self.raidInfo)
-
+        src = dungeonSrc.KickoutFromDungeon(kickReason=gameconst.DungeonSrcKickReason.FORCE)
+        self.selfLeaveRaidDungeon(src)
+        
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
     def kickOutRaidMember(self, exposed, raidTeamIDX, playerGBID):

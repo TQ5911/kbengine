@@ -141,4 +141,4 @@ class ImpStore(object):
             buyNum = storeDic[itemId].buyNum
 
         self.addWealth(srcType, wealthVal, opUUID, detail, awardCtx=awardCtx)
-        self.client.onBuyStoreItems(storeId, itemId, itemNum, buyNum)
+        self.client.onBuyStoreItems(storeId, itemId, itemNum, bindType, buyNum)

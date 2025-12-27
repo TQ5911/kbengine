@@ -105,6 +105,18 @@ datas = _tools.RODict({
     }),
     "dailyBaseTime": _tools.RODict({
         "ID": "dailyBaseTime",
-        "value": 720,
+        "value": 480,
+    }),
+    "offlineTimeLimit": _tools.RODict({
+        "ID": "offlineTimeLimit",
+        "value": 5,
+    }),
+    "coinActivate": _tools.RODict({
+        "ID": "coinActivate",
+        "value": 54001704,
+    }),
+    "monthCard": _tools.RODict({
+        "ID": "monthCard",
+        "value": "MonthCard",
     })
 })

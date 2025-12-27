@@ -8,19 +8,25 @@ import gameengine
 import gametimer
 import gamesql
 import utils
-
+import time
 import iTimer
 import iGlobal
 import iBaseNoCell
 import rank_rankConfig as R_RCD
 import rank_Rank as R_RD
 import character_charData as C_CDD
-
+from datetime import datetime
+import welfare_config as W_CDD
+import iCycleEvent
+import redisUtils
+import json
+import gameconfig
 
 class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
                             iTimer.ITimer):
     def __init__(self):
         DEBUG_MSG('LeaderBoardAvatarStub init')
+
         self.leaderBoardList.leaderBoardType = self.leaderBoardType
         self.leaderBoardCache = {}
         _dur = R_RCD.datas['refreshCD']['value']
@@ -29,6 +35,11 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         _globalName = '{}{}'.format(self.__class__.__name__, self.leaderBoardType)
         gameengine.setGlobalData(_globalName, self)
         self.leaderBoardIdx = 1
+
+        if self.leaderBoardType == gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK:
+            delta = utils.getNow() % 3600
+            self.pyAddTimer(3600 - delta, 3600, gametimer.GEN_RUSH_RANK_DATA)
+            self._genRushRankData()
 
     def doNext(self):
         DEBUG_MSG('LeaderBoardAvatarStub doNext')
@@ -56,6 +67,8 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             self._onDatetimeTimerTick()
         elif userArg == gametimer.LEADER_BOARD_REFRESH:
             self._onLeaderBoardRefresh()
+        elif userArg == gametimer.GEN_RUSH_RANK_DATA:
+            self._genRushRankData()
         else:
             self._onTimer(tid, userArg)
 
@@ -72,16 +85,51 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
 
         return _cacheDic
 
+    def _needRefresh(self):
+        if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK:
+            return True
+        
+        dateStr = W_CDD.datas['LevelRankDeadLine']['value']
+        date = datetime.strptime(dateStr, "%Y%m%d%H%M")
+        date = int(date.timestamp())
+        DEBUG_MSG("rush rank need refresh: ", utils.getNow(), date)
+        EPS = 2 * 60
+        if utils.getNow() <= date or abs(utils.getNow() - date) <= EPS:
+            return True
+
+        DEBUG_MSG("rush rank out of time", utils.getNow(), date)
+        return False
+    
+    def _genRushRankData(self):
+        key = gameconst.RedisKey.LEVEL_RUSH_RANK_DATA_KEY + str(gameconfig.serverId()) + time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime(utils.getNow()))
+        DEBUG_MSG("gen rush rank data key: ", key)
+
+        redisUtils.RedisUtils.set(key, json.dumps(self.leaderBoardList.toLeaderBoardListSavedDict(), separators=(',', ':'), indent=None), self._onGenRushRankDataCB)
+
+    def _onGenRushRankDataCB(self, ok, data):
+        if not ok:
+            ERROR_MSG("gen rush rank data failed")
+        else:
+            DEBUG_MSG("gen rush rank data success", data)
+
     def _onLeaderBoardRefresh(self):
         DEBUG_MSG('LeaderBoardAvatarStub _onLeaderBoardRefresh')
+
+        if not self._needRefresh():
+            return
 
         _cacheDic = self.toCacheDic()
         lbList = list(_cacheDic.values())
 
         _cls = self.leaderBoardList.instaniateCls()
+
+        if not _cls:
+            WARNING_MSG("LeaderBoardAvatarStub _onLeaderBoardRefresh _cls is None", self.leaderBoardType)
+            return
         sortedList = sorted(lbList, key=_cls.sortKeyFunc())
         self.leaderBoardList.clear()
-        _maxNum = R_RD.datas[self.leaderBoardType]['displayNum']
+
+        _maxNum = R_RD.datas[self.leaderBoardType]['maxNum'] if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK else 3000
         self.leaderBoardList.extend(sortedList[:_maxNum])
 
         # 玩家数据需要考虑根据不同职业的分榜，其他如帮会数据就不需要
@@ -154,7 +202,9 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         _func = self.leaderBoardList.instaniateCls().funcName()
         _start = page * gameconst.LEADER_BOARD_PAGE_SIZE
         _end = _start + gameconst.LEADER_BOARD_PAGE_SIZE
-        _isEnd = _end >= len(_list)
+        displayNum = R_RD.datas[self.leaderBoardType]['displayNum'] if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK else 100
+        maxEnd = min(len(_list), displayNum)
+        _isEnd = _end >= maxEnd
         _list = _list[_start : _end]
 
         if _lbcVal is not None:
@@ -184,7 +234,9 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         _func = self.leaderBoardList.instaniateCls().funcName()
         _start = page * gameconst.LEADER_BOARD_PAGE_SIZE
         _end = _start + gameconst.LEADER_BOARD_PAGE_SIZE
-        _isEnd = _end >= len(_list)
+        displayNum = R_RD.datas[self.leaderBoardType]['displayNum'] if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK else 100
+        maxEnd = min(len(_list), displayNum)
+        _isEnd = _end >= maxEnd
         _list = _list[_start : _end]
 
         if _lbcVal is not None:

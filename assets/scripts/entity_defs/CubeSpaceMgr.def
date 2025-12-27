@@ -9,6 +9,7 @@
 
     <CellMethods>
         <createTeleporterToCow>
+            <Arg>       UINT8               </Arg>
         </createTeleporterToCow>
     </CellMethods>
 </root>

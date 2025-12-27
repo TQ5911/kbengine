@@ -308,50 +308,15 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onDungeonSpaceGone(self, spaceNo, reason):
         pass
     
-    def getDungeonStatisticData(self, spaceNo, uniqueID):
-        INFO_MSG("getDungeonStatisticData::", spaceNo, uniqueID)
-        spaceVal = self.spaces[spaceNo]
-        if spaceVal.founders.getTotalFounderCount() <= 0:
-            ERROR_MSG("getDungeonStatisticData:: no players", spaceNo, uniqueID)
-            return False
-        # TODO：通往数据统计stub上发起请求
-        # getDungeonStatisticData(spaceNo, uniqueID)
-        # 构造假数据
-        idx = 0
-        for gbID in spaceVal.founders.getFounderGBIDs():
-            idx += 1
-            dataRecords = [{
-                'gbId':gbID, 
-                'name':'我是一个小测试 '+str(idx), 
-                'rank': idx,
-                'dmg': idx,
-                'hurt':idx,
-                'heal':idx, 
-                'dead':idx
-            }]
-        self.onGetDungeonStatisticData(spaceNo, uniqueID, 1, 1, dataRecords)
-        return True
-    
-    def onGetDungeonStatisticData(self, spaceNo, uniqueID, batchCount, batchID, dataRecords):
-        INFO_MSG("onGetDungeonStatisticData::", spaceNo, uniqueID, batchCount, batchID, dataRecords)
-        spaceVal = self.spaces[spaceNo]
-        spaceVal.statisticBatchCount += 1
-        # 开始塞数据
-        for dataRecord in dataRecords:
-            founder = spaceVal.statisticFounders.getFounderVal(dataRecord['gbId'])
-            if not founder:
-                spaceVal.statisticFounders.addFounder(dataRecord['gbId'], dataRecord['name'], dataRecord['rank'], dataRecord['dmg'], dataRecord['hurt'], dataRecord['heal'], dataRecord['dead'])
-        if spaceVal.statisticBatchCount == batchCount:
-            spaceVal.refreshFoundersSortRankCache()
-        spaceVal.spaceMgr.cell.notifyDungeonStatisticRecords(batchCount, dataRecords)
-        
-    def clearAllDungeonStatisticData(self, spaceNo, uniqueID):
-        INFO_MSG("clearAllDungeonStatisticData::", spaceNo, uniqueID)
-        # TODO：通往数据统计stub上发起清理请求
-        # clearAllDungeonStatisticData(spaceNo, uniqueID)
+    def getExtraData(self, spaceNo, gbId):
+        return None
 
-    def clearDungeonStatisticDataByPlayerGbIds(self, spaceNo, uniqueID, playerGbIds):
-        INFO_MSG("clearDungeonStatisticDataByPlayerGbIds::", spaceNo, uniqueID, playerGbIds)
-        # TODO：通往数据统计stub上发起清理请求
-        # clearDungeonStatisticDataByPlayerGbIds(spaceNo, uniqueID)
+    def getSettlementRankList(self, rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset):
+        DEBUG_MSG("getSettlementRankList~ ", rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset)
+        if spaceNo not in self.spaces:
+            WARNING_MSG('getSettlementRankList:: failed, missing space data', spaceNo)
+            return
+
+        spaceVal = self.spaces[spaceNo]
+        spaceVal.spaceMgr.cell.onGetSettlementRankList(rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset)
  

@@ -6,9 +6,11 @@ import KBEngine
 class AvatarBase(KBEngine.Entity):
     def beNotifiedApplyJoinRaid(self, arg0, arg1, arg2): pass
     def biddingFailRedPointSync(self, arg0): pass
+    def bindPhoneReplay(self, arg0, arg1): pass
     def changeDungeonRemainTime(self, arg0, arg1): pass
     def changeSelfCameraLookPos(self, arg0): pass
     def changeSelfCameraStatus(self, arg0): pass
+    def claimPcLoginRewardInfo(self, arg0, arg1): pass
     def dragSkillChangeBuildSkills(self, arg0): pass
     def duelFlagIn(self): pass
     def duelFlagOut(self): pass
@@ -26,10 +28,8 @@ class AvatarBase(KBEngine.Entity):
     def onAddNewEquipDrop(self, arg0): pass
     def onAddNewRaidMember(self, arg0, arg1, arg2, arg3): pass
     def onAddPassiveSkill(self, arg0, arg1): pass
-    def onAddRaidDungeonRewardRecord(self, arg0, arg1, arg2): pass
     def onAddSkill(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onAddTeam(self, arg0): pass
-    def onAddTeamDungeonRewardRecord(self, arg0, arg1, arg2): pass
     def onAddTeamMember(self, arg0): pass
     def onAddWonderLandRewardRecord(self, arg0): pass
     def onAllAliasIds(self, arg0): pass
@@ -55,9 +55,10 @@ class AvatarBase(KBEngine.Entity):
     def onBuyCreditSuccess(self, arg0): pass
     def onBuyItemInCoinAuctionByAuctionItemUUID(self, arg0, arg1, arg2, arg3, arg4): pass
     def onBuyItemInCoinAuctionByAuctionItemUUIDFailed(self, arg0, arg1): pass
-    def onBuyStoreItems(self, arg0, arg1, arg2, arg3): pass
-    def onCancalGuildDungeonOrder(self, arg0): pass
+    def onBuyStoreItems(self, arg0, arg1, arg2, arg3, arg4): pass
+    def onCancelAuthRole(self, arg0, arg1): pass
     def onCancelGather(self): pass
+    def onCancelGuildDungeonOrder(self, arg0): pass
     def onCancelSaleCanStackedItemInCoinAuction(self, arg0, arg1, arg2, arg3): pass
     def onCancelSaleItemInCoinAuction(self, arg0, arg1, arg2): pass
     def onCancelSaleItemInCoinAuctionFail(self, arg0): pass
@@ -80,6 +81,7 @@ class AvatarBase(KBEngine.Entity):
     def onCubeLoginData(self, arg0, arg1, arg2, arg3): pass
     def onCubeRoomEndTime(self, arg0): pass
     def onCubeRoomLeftTime(self, arg0): pass
+    def onDailyUseMoneyChanged(self, arg0): pass
     def onDead(self, arg0): pass
     def onDealAuthResult(self, arg0): pass
     def onDeathPenaltyExpChange(self, arg0): pass
@@ -94,10 +96,12 @@ class AvatarBase(KBEngine.Entity):
     def onDuelResult(self, arg0, arg1, arg2): pass
     def onDungenFinishRewards(self, arg0, arg1, arg2, arg3, arg4): pass
     def onDungeonChallengeSettlement(self, arg0): pass
-    def onDungeonCompleted(self, arg0, arg1, arg2, arg3, arg4): pass
-    def onDungeonSettlement(self, arg0, arg1): pass
+    def onDungeonCompleteDungeonData(self, arg0, arg1): pass
+    def onDungeonCompleteSettlementData(self, arg0, arg1): pass
+    def onDungeonCompleted(self, arg0, arg1, arg2, arg3): pass
     def onEnemyDatas(self, arg0): pass
     def onEnhanceMeridian(self, arg0): pass
+    def onEnterGuildDungeon(self, arg0, arg1): pass
     def onEquipBackBlessSucc(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onEquipBindValueWashingFailed(self, arg0, arg1): pass
     def onEquipBindValueWashingSucc(self, arg0, arg1, arg2, arg3, arg4): pass
@@ -124,7 +128,7 @@ class AvatarBase(KBEngine.Entity):
     def onGatherSucc(self, arg0): pass
     def onGetAllRaidList(self, arg0): pass
     def onGetAllTeamList(self, arg0): pass
-    def onGetAuctionItemsByAuctionIdsResp(self, arg0, arg1): pass
+    def onGetAuctionItemsByAuctionIdsResp(self, arg0, arg1, arg2, arg3): pass
     def onGetAureoleInfo(self, arg0, arg1): pass
     def onGetBuffIdInfo(self, arg0, arg1): pass
     def onGetBuffInfo(self, arg0, arg1): pass
@@ -138,18 +142,21 @@ class AvatarBase(KBEngine.Entity):
     def onGetEnemyGuildInfosClient(self, arg0): pass
     def onGetFriendMsgs(self, arg0, arg1, arg2): pass
     def onGetGuaranteedPetEgg(self, arg0, arg1, arg2): pass
+    def onGetGuildBossHP(self, arg0, arg1, arg2): pass
     def onGetGuildData(self, arg0): pass
     def onGetGuildListData(self, arg0): pass
     def onGetGuildUnionApplySender(self, arg0): pass
     def onGetInterInfoClient(self, arg0): pass
     def onGetItemLastAndAvgPrice(self, arg0, arg1, arg2): pass
     def onGetItemNumByCategoryIdResp(self, arg0, arg1, arg2, arg3, arg4): pass
+    def onGetLevelWelfareInfo(self, arg0, arg1): pass
     def onGetLineInfo(self, arg0): pass
     def onGetLingShouBattleList(self, arg0): pass
     def onGetMailAttach(self, arg0): pass
     def onGetMailList(self, arg0): pass
     def onGetMeridianData(self, arg0, arg1, arg2): pass
     def onGetMineWarCollectInfo(self, arg0, arg1): pass
+    def onGetMineWarGuildMemberScore(self, arg0, arg1): pass
     def onGetNewMail(self, arg0): pass
     def onGetPlayerPayInfo(self, arg0, arg1, arg2): pass
     def onGetRaidAllMembersAttrs(self, arg0, arg1): pass
@@ -159,13 +166,15 @@ class AvatarBase(KBEngine.Entity):
     def onGetRedBagMyList(self, arg0): pass
     def onGetRedBagRankList(self, arg0): pass
     def onGetServerOpenTime(self, arg0): pass
-    def onGetSettlementRankList(self, arg0, arg1, arg2): pass
+    def onGetSettlementRankList(self, arg0, arg1, arg2, arg3, arg4): pass
+    def onGetStatisticsClient(self, arg0, arg1): pass
+    def onGetStatisticsDetailClient(self, arg0, arg1, arg2, arg3): pass
     def onGetStoreLimitedItemList(self, arg0, arg1): pass
     def onGetStoreList(self, arg0): pass
     def onGetSynthesisUpgradeNum(self, arg0): pass
     def onGetTeamList(self, arg0, arg1, arg2): pass
     def onGetVariableData(self, arg0, arg1): pass
-    def onGetWelfareSignInInfo(self, arg0): pass
+    def onGetWelfareSignInInfo(self, arg0, arg1): pass
     def onGlyphReplacedSkillIdx(self, arg0, arg1): pass
     def onGobackServer(self, arg0): pass
     def onGuildApplyJoinList(self, arg0): pass
@@ -196,10 +205,12 @@ class AvatarBase(KBEngine.Entity):
     def onInitEquipDropData(self, arg0): pass
     def onKillAvatar(self, arg0): pass
     def onLeaderBoardAvatarLevel(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
+    def onLeaderBoardAvatarLevelRushRank(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onLeaderBoardAvatarScore(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onLeaderBoardGuild(self, arg0, arg1, arg2, arg3, arg4): pass
     def onLeaveTeam(self): pass
     def onLeveUpMeridianPointTo(self, arg0, arg1, arg2): pass
+    def onLightPillarUpdate(self, arg0, arg1): pass
     def onLockItemSucc(self, arg0, arg1, arg2, arg3): pass
     def onMapUnlockMessagePre(self, arg0): pass
     def onMessage(self, arg0, arg1): pass
@@ -214,6 +225,7 @@ class AvatarBase(KBEngine.Entity):
     def onNewGuildUnionApplySender(self, arg0): pass
     def onNewbieGuideId(self, arg0): pass
     def onNotifyApplyJoinInfo(self, arg0): pass
+    def onNotifyStartBattleCD(self, arg0, arg1): pass
     def onNotiyNewAuctionItemCollection(self, arg0): pass
     def onOfficialMessage(self, arg0, arg1, arg2, arg3, arg4): pass
     def onOfflineHangupData(self, arg0, arg1): pass
@@ -224,7 +236,6 @@ class AvatarBase(KBEngine.Entity):
     def onPlayerGetExp(self, arg0, arg1, arg2, arg3): pass
     def onPopRaidTeamMember(self, arg0, arg1, arg2): pass
     def onQixieChanged(self, arg0): pass
-    def onQueryFirstPassRewardStatus(self, arg0, arg1, arg2): pass
     def onQueryItemLink(self, arg0, arg1): pass
     def onQueryPlayerLink(self, arg0): pass
     def onQuerySiegeWarBiddingWinnerDataResult(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
@@ -267,13 +278,11 @@ class AvatarBase(KBEngine.Entity):
     def onReplyRaidStandbyChecker(self, arg0, arg1): pass
     def onSaleItemInCoinAuction(self, arg0, arg1, arg2): pass
     def onSceneState(self, arg0): pass
-    def onSearchCoinAuctionItemsByItemId(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
+    def onSearchCoinAuctionItemsByItemId(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7): pass
     def onSearchFriends(self, arg0, arg1): pass
     def onSellItemSucc(self, arg0, arg1, arg2, arg3): pass
     def onSendHolidayPayInfo(self, arg0): pass
-    def onSetAddSkillCd(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass
-    def onSetChiefDungeonAutoConfirmConfig(self, arg0): pass
-    def onSetCrusadeDungeonAutoConfirmConfig(self, arg0): pass
+    def onSetAddSkillCd(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7): pass
     def onSetInstantPotionSlots(self, arg0): pass
     def onSetRaidDeputy(self, arg0, arg1): pass
     def onSetRaidDungeonInfo(self, arg0, arg1): pass
@@ -311,6 +320,7 @@ class AvatarBase(KBEngine.Entity):
     def onTeammateConfirmCrusade(self, arg0, arg1): pass
     def onTeleportCasting(self, arg0, arg1): pass
     def onTeleportDone(self, arg0, arg1): pass
+    def onTriggerGuide(self, arg0): pass
     def onTryBeInvitedInRaid(self, arg0, arg1, arg2, arg3): pass
     def onUnblockRaidMemberMisc(self, arg0, arg1, arg2): pass
     def onUnblockTeamMemberMisc(self, arg0, arg1): pass
@@ -362,7 +372,7 @@ class AvatarBase(KBEngine.Entity):
     def onVariableChanged(self, arg0, arg1): pass
     def onWarehouseInItems(self, arg0, arg1): pass
     def onWarehouseLockItemSucc(self, arg0, arg1, arg2): pass
-    def onWarehouseOutItems(self, arg0, arg1): pass
+    def onWarehouseOutItems(self, arg0, arg1, arg2): pass
     def onWonderLandBossInfo(self, arg0): pass
     def onWonderLandLeftTime(self, arg0): pass
     def onWonderLandLoginData(self, arg0, arg1, arg2, arg3): pass
@@ -376,7 +386,6 @@ class AvatarBase(KBEngine.Entity):
     def sendAllSkills(self, arg0): pass
     def sendEnemyPosInfoToClient(self, arg0, arg1, arg2): pass
     def sendSkillBuilds(self, arg0): pass
-    def sendTeamStatisticData(self, arg0, arg1): pass
     def showMineWarEnd(self): pass
     def showMineWarPrepare(self, arg0, arg1): pass
     def showMineWarStart(self, arg0, arg1): pass

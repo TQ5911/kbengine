@@ -18,6 +18,8 @@ import chatConfig_chatConfig as CC_CCD
 import chatConfig_redPacket as CC_RPD
 import message_Message_def as MMD
 import agent_agentFunction as A_AFD
+import gamedecorator
+import visible_visible as UVVD
 
 
 class IRedBag(object):
@@ -62,7 +64,8 @@ class IRedBag(object):
 
     def checkPlayerLimit(self, notity=True):
         level = self.getAvatarLevel()
-        levelLimit = CC_CCD.datas['usePacketLvLimit']['value']
+        levelLimitTag = CC_CCD.datas.get('redPacket', {}).get('value', 'UIRedPacketPanel')
+        levelLimit = UVVD.datas[levelLimitTag]['level']
         if level < levelLimit:
             # 等级不足
             if notity:
@@ -73,6 +76,7 @@ class IRedBag(object):
         return True
 
     # 获取最新红包信息
+    @gamedecorator.checkGameconfigEnable('redPacket')
     def getRedBagRankList(self, exposed):
         self._getRedBagRankList()
 
@@ -86,7 +90,8 @@ class IRedBag(object):
         self.rbVersion = sVersion
         self.client.onGetRedBagRankList(rankList)
 
-    # 获取我发的红包信息
+    # 获取我发的红包信息\
+    @gamedecorator.checkGameconfigEnable('redPacket')
     def getRedBagMyList(self, exposed):
         self._getRedBagMyList()
 
@@ -164,6 +169,7 @@ class IRedBag(object):
 
 
     # 发布红包
+    @gamedecorator.checkGameconfigEnable('redPacket')
     @AuthClsWraper.authWithPermission(A_AFD.UIRedPacketPanel)
     def reqReleaseRedBag(self, exposed, redbagType, channel, money, num, desc):
         self._reqReleaseRedBag(redbagType, channel, money, num, desc)
@@ -223,6 +229,7 @@ class IRedBag(object):
         return self.fetchRedBagDict.get(redbagId, 0)
 
     # 请求领取红包
+    @gamedecorator.checkGameconfigEnable('redPacket')
     @AuthClsWraper.authWithPermission(A_AFD.UIRedPacketPanel)
     def reqFetchRedBag(self, exposed, redbagId):
         self._reqFetchRedBag(redbagId)
@@ -269,6 +276,7 @@ class IRedBag(object):
         self.fetchRedBagDict[redbagId] = releastTime
 
     # 查看红包信息
+    @gamedecorator.checkGameconfigEnable('redPacket')
     def reqRedBagFetchInfo(self, exposed, redbagId):
         self._reqRedBagFetchInfo(redbagId)
 
@@ -279,6 +287,7 @@ class IRedBag(object):
         gameengine.getGlobalBase('RedBagStub').doFetchRedBag(self, redbagId, self.gbID, self.guildUUIDBase, self.characterName, True)
 
     # 被动删除红包缓存
+    @gamedecorator.checkGameconfigEnable('redPacket')
     def onDelRedBagCache(self, delList):
         for redbagId in delList:
             if redbagId in self.releaseRedBagDict:

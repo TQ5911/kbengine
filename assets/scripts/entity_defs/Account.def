@@ -178,17 +178,38 @@
             <Flags>         BASE                    </Flags>
         </userInfoId>
 
-        <banDict>
-            <Type>          PY_DICT                 </Type>
-            <Flags>         BASE                    </Flags>
-        </banDict>
-
         <loginObOnClient>
             <Type>          PYTHON                  </Type>
             <Flags>         BASE                    </Flags>
             <Default>       None                    </Default>
             <Persistent>    true                    </Persistent>
         </loginObOnClient>
+
+        <otherData>
+            <Type>          PY_DICT                  </Type>
+            <Flags>         BASE                     </Flags>
+        </otherData>
+
+        <phone>
+            <Type>          UINT64                  </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </phone>
+
+        <tempMiscPropsBase>
+            <Type>     PY_DICT                      </Type>
+            <Flags>    BASE                         </Flags>
+            <Default>   {}                          </Default>
+        </tempMiscPropsBase>
+
+        <miscPropsBase>
+            <Type>     PY_DICT                      </Type>
+            <Flags>    BASE                         </Flags>
+            <Default>   {}                          </Default>
+            <DatabaseLength>  512000                </DatabaseLength>
+            <Persistent>    true                    </Persistent>
+        </miscPropsBase>
     </Properties>
 
     <ClientMethods>
@@ -259,6 +280,10 @@
         <onHotfixVersion>
             <Arg>   STRING              </Arg>
         </onHotfixVersion>
+
+        <minorAccountConstraintTip>
+            <Arg>   UINT64              </Arg>
+        </minorAccountConstraintTip>
     </ClientMethods>
 
     <BaseMethods>
@@ -340,14 +365,8 @@
             <Arg>    PLAYER_GBID    </Arg>
         </getAvatarOfflineTime>
 
-        <banAvatar>
-            <Arg>    PLAYER_GBID    </Arg>
-            <Arg>    LONGTIME       </Arg>
-        </banAvatar>
-
-        <disbanAvatar>
-            <Arg>    PLAYER_GBID    </Arg>
-        </disbanAvatar>
+        <accountOffline> <Exposed/>
+        </accountOffline>
     </BaseMethods>
 
     <CellMethods>

@@ -50,5 +50,17 @@ datas = _tools.RODict({
     "usePlayerForSummon": _tools.RODict({
         "ID": "usePlayerForSummon",
         "valueCN": 1001,
+    }),
+    "awakeLevel": _tools.RODict({
+        "ID": "awakeLevel",
+        "valueCN": (1, 5, 8, 11),
+    }),
+    "skillUpgradeTaskLimitText": _tools.RODict({
+        "ID": "skillUpgradeTaskLimitText",
+        "valueCN": "<color=#c60c0c>完成任务：{0}</color>",
+    }),
+    "skillMaxLevel": _tools.RODict({
+        "ID": "skillMaxLevel",
+        "valueCN": "技能已到最大等级",
     })
 })

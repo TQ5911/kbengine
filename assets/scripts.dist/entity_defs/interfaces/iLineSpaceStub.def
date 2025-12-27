@@ -67,13 +67,6 @@
             <Arg>       SPACE_NO       </Arg>
         </createCellEntityInLine>
 
-        <createRefreshTimerInLineSpace>
-            <Arg>       SPACE_NO    </Arg>
-            <Arg>   FLOAT   </Arg>
-            <Arg>   PYTHON  </Arg>
-            <Arg>   STRING  </Arg>
-        </createRefreshTimerInLineSpace>
-
         <onCollectionBeCollectAndDestroyed>
             <Arg>       SPACE_NO    </Arg>
             <Arg>       OBJECT_ID   </Arg>
@@ -88,12 +81,6 @@
             <Arg>       PY_DICT       </Arg>
         </createCellEntityInSpace>
 
-        <onEntityRefresh>
-            <Arg>       SPACE_NO       </Arg>
-            <Arg>       GAME_ENTITY_ID  </Arg>
-            <Arg>       FLOAT    </Arg>
-        </onEntityRefresh>
-
         <onLoadGroupEntities>
             <Arg>       PY_DICT       </Arg>
         </onLoadGroupEntities>
@@ -101,5 +88,9 @@
         <onRefreshGroupEntities>
             <Arg>       PY_DICT       </Arg>
         </onRefreshGroupEntities>
+
+        <onLoadEntitiesEnd>
+            <Arg>       SPACE_NO        </Arg>
+        </onLoadEntitiesEnd>
     </BaseMethods>
 </root>

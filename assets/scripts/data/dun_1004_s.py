@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "10040004": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -27,6 +28,7 @@ datas ={
     "RebornPos": {
       "10040005": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",
@@ -52,6 +54,7 @@ datas ={
       "Teleporter": {
         "10040006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10118003",
@@ -67,13 +70,14 @@ datas ={
             "GateType": 0,
             "Remark": "",
             "TelDir": 0.0,
-            "TelX": 93.62155,
+            "TelX": 93.74155,
             "TelY": 0.3145871,
-            "TelZ": -94.85
+            "TelZ": -84.92
           }
         },
         "10048016": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10108004",
@@ -88,16 +92,17 @@ datas ={
             "CameraId": 0,
             "GateType": 0,
             "Remark": "",
-            "TelDir": 0.0,
-            "TelX": 5.915082,
+            "TelDir": 106.6212,
+            "TelX": 12.98104,
             "TelY": 1.151614,
-            "TelZ": 172.203
+            "TelZ": 169.0994
           }
         }
       },
       "Npc": {
         "10044001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -119,6 +124,7 @@ datas ={
         },
         "10044002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -140,6 +146,7 @@ datas ={
         },
         "10044003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -161,6 +168,7 @@ datas ={
         },
         "10044004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -182,6 +190,7 @@ datas ={
         },
         "10044006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -203,6 +212,7 @@ datas ={
         },
         "10044007": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -224,6 +234,7 @@ datas ={
         },
         "10044009": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -245,6 +256,7 @@ datas ={
         },
         "10044010": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -266,6 +278,7 @@ datas ={
         },
         "10044011": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -287,6 +300,7 @@ datas ={
         },
         "10044012": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -308,6 +322,7 @@ datas ={
         },
         "10044013": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -329,6 +344,7 @@ datas ={
         },
         "10044014": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -350,6 +366,7 @@ datas ={
         },
         "10044015": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -371,6 +388,7 @@ datas ={
         },
         "10044016": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -392,6 +410,7 @@ datas ={
         },
         "10044018": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -413,6 +432,7 @@ datas ={
         },
         "10044019": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -434,6 +454,7 @@ datas ={
         },
         "10044020": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -455,6 +476,7 @@ datas ={
         },
         "10044021": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -476,6 +498,7 @@ datas ={
         },
         "10044022": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -497,6 +520,7 @@ datas ={
         },
         "10044023": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -518,6 +542,7 @@ datas ={
         },
         "10044024": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -539,6 +564,7 @@ datas ={
         },
         "10044025": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -560,6 +586,7 @@ datas ={
         },
         "10044026": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -581,6 +608,7 @@ datas ={
         },
         "10044027": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -597,11 +625,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10044028": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -623,6 +654,7 @@ datas ={
         },
         "10044029": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -644,6 +676,7 @@ datas ={
         },
         "10044030": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -665,6 +698,7 @@ datas ={
         },
         "10044031": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -686,6 +720,7 @@ datas ={
         },
         "10044032": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -707,6 +742,7 @@ datas ={
         },
         "10044033": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -728,6 +764,7 @@ datas ={
         },
         "10044034": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -744,11 +781,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10044035": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -770,6 +810,7 @@ datas ={
         },
         "10044036": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -791,6 +832,7 @@ datas ={
         },
         "10044037": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -812,6 +854,7 @@ datas ={
         },
         "10044038": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -833,6 +876,7 @@ datas ={
         },
         "10044039": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -854,6 +898,7 @@ datas ={
         },
         "10044040": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -875,6 +920,7 @@ datas ={
         },
         "10044041": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -896,6 +942,7 @@ datas ={
         },
         "10044042": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -917,6 +964,7 @@ datas ={
         },
         "10044043": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -938,6 +986,7 @@ datas ={
         },
         "10044044": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -959,6 +1008,7 @@ datas ={
         },
         "10044045": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -980,6 +1030,7 @@ datas ={
         },
         "10044046": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1001,6 +1052,7 @@ datas ={
         },
         "10044047": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1022,6 +1074,7 @@ datas ={
         },
         "10044048": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1043,6 +1096,7 @@ datas ={
         },
         "10044049": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1064,6 +1118,7 @@ datas ={
         },
         "10044050": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1085,6 +1140,7 @@ datas ={
         },
         "10044051": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1106,6 +1162,7 @@ datas ={
         },
         "10044052": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1127,6 +1184,7 @@ datas ={
         },
         "10044053": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1148,6 +1206,7 @@ datas ={
         },
         "10044054": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
@@ -1166,11 +1225,36 @@ datas ={
             "RefreshTime": 1,
             "Remark": ""
           }
+        },
+        "10044055": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 64.64078,
+          "DisplayName": "",
+          "EntityID": 0,
+          "ID": 10044055,
+          "PosX": 96.09608,
+          "PosY": 0.5415036,
+          "PosZ": 113.2139,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
         }
       },
       "Collection": {
         "10048021": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -1191,6 +1275,7 @@ datas ={
         },
         "10048022": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -1206,71 +1291,14 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
-        "10048023": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 359.8992,
-          "DisplayName": "",
-          "EntityID": 16006016,
-          "ID": 10048023,
-          "PosX": 93.81589,
-          "PosY": 0.5616441,
-          "PosZ": 112.6738,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
-        "10048024": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 191.0581,
-          "DisplayName": "",
-          "EntityID": 16006017,
-          "ID": 10048024,
-          "PosX": 16.14086,
-          "PosY": 5.260644,
-          "PosZ": 188.98,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
-        "10048025": {
-          "ActivityID": 0,
-          "ClassName": "Collection",
-          "ClassNameType": 3,
-          "CustomID": "",
-          "Dir": 335.8748,
-          "DisplayName": "",
-          "EntityID": 16006018,
-          "ID": 10048025,
-          "PosX": 170.0398,
-          "PosY": 9.545807,
-          "PosZ": 23.25019,
-          "Props": {
-            "IsOpen": 1,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10048026": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -1291,6 +1319,7 @@ datas ={
         },
         "10048027": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -1311,6 +1340,7 @@ datas ={
         },
         "10048028": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -1331,6 +1361,7 @@ datas ={
         },
         "10048029": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -1351,6 +1382,7 @@ datas ={
         },
         "10048030": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -1368,12 +1400,37 @@ datas ={
             "RefreshTime": 1,
             "Remark": ""
           }
+        },
+        "10048031": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 64.64078,
+          "DisplayName": "",
+          "EntityID": 16000118,
+          "ID": 10048031,
+          "PosX": 188.6313,
+          "PosY": 15.77668,
+          "PosZ": 189.3058,
+          "Props": {
+            "IsOpen": 1,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
         }
       }
     },
+    "TimerEntities": {},
     "Anchor": {
       "10048017": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "Anchor",
         "ClassNameType": 20,
         "CustomID": "",
@@ -1392,6 +1449,7 @@ datas ={
       },
       "10048018": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "Anchor",
         "ClassNameType": 20,
         "CustomID": "",
@@ -1410,6 +1468,7 @@ datas ={
       },
       "10048019": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "Anchor",
         "ClassNameType": 20,
         "CustomID": "",
@@ -1428,6 +1487,7 @@ datas ={
       },
       "10048020": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "Anchor",
         "ClassNameType": 20,
         "CustomID": "",

@@ -63,6 +63,7 @@
         <summonWonderLandBossBase>
             <Arg>          OBJECT_ID                    </Arg>
             <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT32                       </Arg>
             <Arg>          OBJECT_ID                    </Arg>
         </summonWonderLandBossBase>
 
@@ -77,6 +78,7 @@
 
         <checkSummonWonderLandBossBase>
             <Arg>          ITEM_ID                      </Arg>
+            <Arg>          UINT32                       </Arg>
         </checkSummonWonderLandBossBase>
 
         <addWonderLandDurationFailedRewindTimes>
@@ -134,6 +136,10 @@
         <addWonderLandRewardRecord>
             <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
         </addWonderLandRewardRecord>
+
+        <leaveWonderLandInternal>
+            <Arg>           UINT8                       </Arg>
+        </leaveWonderLandInternal>
     </CellMethods>
 
     <ClientMethods>
@@ -160,5 +166,9 @@
         <onWonderLandBossInfo>
             <Arg>           ARRAY       <of>        OBJECT_ID       </of>   </Arg>
         </onWonderLandBossInfo>
+
+        <onChangeWonderLandRenewTimes>
+            <Arg>          UINT8                        </Arg>
+        </onChangeWonderLandRenewTimes>
     </ClientMethods>
 </root>

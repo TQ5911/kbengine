@@ -144,7 +144,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
 
         sVal = self.spaces[spaceNo]
         fVal = self.founders.getFounderVal(sVal.ownerGbId, sVal.spaceUUID)
-        if fVal and sVal.spaceUUID == fVal.spaceUUID and fVal.hasAvatar() and fVal.playerBox:
+        if fVal and sVal.spaceUUID == fVal.spaceUUID and fVal.hasAvatar() and fVal.playerBox and not utils.isBoxOffline(fVal.playerBox):
             fVal.playerBox.cell.destroyFromNewbieDungeon(self.dungeonNo)
         elif not sVal.isToDestory():
             self.destoryDungeonSpace(spaceNo, sVal.spaceUUID, 'force destroy')

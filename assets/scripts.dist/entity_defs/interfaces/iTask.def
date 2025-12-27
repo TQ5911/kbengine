@@ -14,7 +14,7 @@
 
     <BaseMethods>
         <reqSubmitTask><Exposed/>
-            <Arg>       TASK_ID     </Arg>
+            <Arg>   ARRAY    <of>    TASK_ID                  </of>   </Arg>
         </reqSubmitTask>
         <reqDeductTaskTargetItems><Exposed/>
             <Arg>       TASK_ID     </Arg>
@@ -22,6 +22,7 @@
         <onCheckCellSubmitCondSucc>
             <Arg>           TASK_ID         </Arg>
             <Arg>           BOOL            </Arg>
+            <Arg>           UUID            </Arg>
         </onCheckCellSubmitCondSucc>
         <reqQuitTask><Exposed/>
             <Arg>       TASK_ID     </Arg>
@@ -116,6 +117,15 @@
             <Arg>       TASK_ID         </Arg>
             <Arg>       METHOD_ARGS     </Arg>
         </onTaskStepUpdate>
+
+        <reqTaskEnterSpace><Exposed/>
+            <Arg>       TASK_ID         </Arg>
+        </reqTaskEnterSpace>
+
+        <onCheckSameMap>
+            <Arg>      TASK_ID         </Arg>
+            <Arg>      BOOL            </Arg>
+        </onCheckSameMap>
     </BaseMethods>
 
     <CellMethods>
@@ -180,11 +190,17 @@
         <prepareStartPlayCinema>
             <Arg>       UINT32       </Arg>
         </prepareStartPlayCinema>
+
+        <afterPlayCinema>
+            <Arg>       UINT32       </Arg>
+        </afterPlayCinema>
+
         <reqStartPlayCinema><Exposed/>
             <Arg>      REWARD_ID    </Arg>
         </reqStartPlayCinema>
         <cellCheckTaskSubmitCond>
             <Arg>      TASK_ID      </Arg>
+            <Arg>       UUID        </Arg>
         </cellCheckTaskSubmitCond>
 
         <talkToNpc><Exposed/>
@@ -222,7 +238,9 @@
             <Arg>      UINT32           </Arg>
             <Arg>      UINT32           </Arg>
         </checkTaskCompleteActionTarget>
-
+        <checkSameMap>
+            <Arg>      TASK_ID         </Arg>
+        </checkSameMap>
     </CellMethods>
 
     <ClientMethods>
@@ -246,10 +264,5 @@
         <onStartPlayCinema>
             <Arg>  UINT32  </Arg>
         </onStartPlayCinema>
-
-        <onGetTaskReward>
-            <Arg>  TASK_ID  </Arg>
-            <Arg>  ARRAY <of>  AWARD_DISPLAY_SINGLE_VAL </of> </Arg>
-        </onGetTaskReward>
     </ClientMethods>
 </root>

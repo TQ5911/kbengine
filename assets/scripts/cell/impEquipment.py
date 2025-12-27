@@ -615,7 +615,7 @@ class ImpEquipment(object):
         box.onMessagePre(MMD.datas.channel_noItem, [])
 
     ################################## Gm cmd ###################################
-    def gmDressEquips(self):
+    def gmDressEquips(self, quality):
         dressSlotIds = []
         for slotId in range(1, 11):
             it = self.bodyEquipData.getEquipItem(slotId)
@@ -625,7 +625,7 @@ class ImpEquipment(object):
 
         if len(dressSlotIds) == 0:
             return False
-        self.base.gmBaseDressEquips(dressSlotIds)
+        self.base.gmBaseDressEquips(dressSlotIds, quality)
         return True
 
     def gmModifyEquipEnhanceLevel(self, slotID, enhanceLevel):
@@ -802,15 +802,17 @@ class ImpEquipment(object):
             if not self.bodyEquipData.tryLockBodyEquips(desp='reqEquipBindValueWashing'):
                 WARNING_MSG('   in reqEquipBindValueWashing, locked')
                 return
-            costItemDic = equipItem.bindValueWashingNeedItems(washCount)
-            if not costItemDic:
+            
+            costItemDic, needUnbindItemDic = equipItem.bindValueWashingNeedItems(washCount)
+            if not costItemDic or not needUnbindItemDic:
                 ERROR_MSG('     in reqEquipBindValueWashing, cost is empty')
                 return
+            
             opUUID = KBEngine.genUUID64()
             src = AAC_AACDD.datas.BONUS_SRC_BINDVALUE_WASHING_BODY_EQUIP
             detail = gameclass.AwardDetail(itemId=equipItem.uniqueId)
             self.base.baseEquipDeductItems(costItemDic, None, None, None, opUUID, src, detail, self,
-                                  'cellEquipBindValueWashing', (opUUID, equipPos, washCount), False, True)
+                                  'cellEquipBindValueWashing', [needUnbindItemDic, opUUID, equipPos, washCount], False, True)
         return
 
     def cellEquipBindValueWashing(self, opStat, opUUID, slotId, washCount):

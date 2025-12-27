@@ -319,11 +319,11 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         gbId = fcVal.gbId
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             guildUUID,
-            'getMemberJob',
+            'getMemberJobAndGuildCache',
             (gbId, self, (ret, guildUUID, guildName, gbId, srcBase)),
             self,
-            'onGetMemberJob',
-            (GA_A_DD.datas.BONUS_SRC_UNKNOWN, (ret, guildUUID, guildName, gbId, srcBase)),
+            'onGetMemberJobAndGuildCache',
+            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0), (ret, guildUUID, guildName, gbId, srcBase)),
         )
 
     def concatAppearanceJson(self, ret):
@@ -342,7 +342,7 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         appearance['faceData']['hairColorIdSkinColorId'] = ret[0][16].decode()
         return json.dumps(appearance)
 
-    def onGetMemberJob(self, job, args):
+    def onGetMemberJobAndGuildCache(self, guildData, args):
         ret, guildUUID, guildName, tarGbId, srcBase = args
         data = {}
         #个人信息
@@ -354,7 +354,9 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         data['sex'] = ret[0][6].decode()
         data['guildName'] = guildName
         data['guildUUID'] = guildUUID
-        data['guildJob'] = job
+        data['guildJob'] = guildData[0]
+        data['guildDspFlag'] = guildData[1]
+        data['guildIcon'] = guildData[2]
         data['appearance'] = self.concatAppearanceJson(ret)
         data['bodyEquipList'] = []
         for d in ret:

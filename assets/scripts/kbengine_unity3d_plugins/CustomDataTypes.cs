@@ -361,6 +361,25 @@ namespace KBEngine
 
 
 
+	public class DATATYPE_CLIENT_SKILL_CD_STATUS : DATATYPE_BASE
+	{
+		public CLIENT_SKILL_CD_STATUS createFromStreamEx(MemoryStream stream)
+		{
+			CLIENT_SKILL_CD_STATUS datas = new CLIENT_SKILL_CD_STATUS();
+			datas.skillId = stream.readUint32();
+			datas.cdStatus = stream.readInt8();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, CLIENT_SKILL_CD_STATUS v)
+		{
+			stream.writeUint32(v.skillId);
+			stream.writeInt8(v.cdStatus);
+		}
+	}
+
+
+
 	public class DATATYPE_CLIENT_SKILLS : DATATYPE_BASE
 	{
 		private DATATYPE__CLIENT_SKILLS_skills_ArrayType_ChildArray skills_DataType = new DATATYPE__CLIENT_SKILLS_skills_ArrayType_ChildArray();
@@ -423,11 +442,42 @@ namespace KBEngine
 			}
 		}
 
+		private DATATYPE__CLIENT_SKILLS_skillCDStatus_ArrayType_ChildArray skillCDStatus_DataType = new DATATYPE__CLIENT_SKILLS_skillCDStatus_ArrayType_ChildArray();
+
+		public class DATATYPE__CLIENT_SKILLS_skillCDStatus_ArrayType_ChildArray : DATATYPE_BASE
+		{
+			private DATATYPE_CLIENT_SKILL_CD_STATUS itemType = new DATATYPE_CLIENT_SKILL_CD_STATUS();
+
+			public List<CLIENT_SKILL_CD_STATUS> createFromStreamEx(MemoryStream stream)
+			{
+				UInt32 size = stream.readUint32();
+				List<CLIENT_SKILL_CD_STATUS> datas = new List<CLIENT_SKILL_CD_STATUS>();
+
+				while(size > 0)
+				{
+					--size;
+					datas.Add(itemType.createFromStreamEx(stream));
+				};
+
+				return datas;
+			}
+
+			public void addToStreamEx(Bundle stream, List<CLIENT_SKILL_CD_STATUS> v)
+			{
+				stream.writeUint32((UInt32)v.Count);
+				for(int i=0; i<v.Count; ++i)
+				{
+					itemType.addToStreamEx(stream, v[i]);
+				};
+			}
+		}
+
 		public CLIENT_SKILLS createFromStreamEx(MemoryStream stream)
 		{
 			CLIENT_SKILLS datas = new CLIENT_SKILLS();
 			datas.skills = skills_DataType.createFromStreamEx(stream);
 			datas.skillSwitches = skillSwitches_DataType.createFromStreamEx(stream);
+			datas.skillCDStatus = skillCDStatus_DataType.createFromStreamEx(stream);
 			return datas;
 		}
 
@@ -435,6 +485,7 @@ namespace KBEngine
 		{
 			skills_DataType.addToStreamEx(stream, v.skills);
 			skillSwitches_DataType.addToStreamEx(stream, v.skillSwitches);
+			skillCDStatus_DataType.addToStreamEx(stream, v.skillCDStatus);
 		}
 	}
 
@@ -779,6 +830,7 @@ namespace KBEngine
 			datas.bindValue = stream.readUint16();
 			datas.isAddBindValue = stream.readUint8();
 			datas.grade = stream.readUint8();
+			datas.maxEnhanceLv = stream.readUint8();
 			return datas;
 		}
 
@@ -803,6 +855,7 @@ namespace KBEngine
 			stream.writeUint16(v.bindValue);
 			stream.writeUint8(v.isAddBindValue);
 			stream.writeUint8(v.grade);
+			stream.writeUint8(v.maxEnhanceLv);
 		}
 	}
 
@@ -2465,6 +2518,9 @@ namespace KBEngine
 			datas.rewardDailyCount = stream.readUint32();
 			datas.useItemAddRewardNumber = stream.readUint32();
 			datas.useCoinAddRewardNum = stream.readUint32();
+			datas.rewardItemNumber = stream.readUint32();
+			datas.rewardCoinNumber = stream.readUint32();
+			datas.ticketType = stream.readUint8();
 			return datas;
 		}
 
@@ -2474,6 +2530,9 @@ namespace KBEngine
 			stream.writeUint32(v.rewardDailyCount);
 			stream.writeUint32(v.useItemAddRewardNumber);
 			stream.writeUint32(v.useCoinAddRewardNum);
+			stream.writeUint32(v.rewardItemNumber);
+			stream.writeUint32(v.rewardCoinNumber);
+			stream.writeUint8(v.ticketType);
 		}
 	}
 
@@ -2488,6 +2547,9 @@ namespace KBEngine
 			datas.rewardDailyCount = stream.readUint32();
 			datas.useItemAddRewardNumber = stream.readUint32();
 			datas.useCoinAddRewardNum = stream.readUint32();
+			datas.rewardItemNumber = stream.readUint32();
+			datas.rewardCoinNumber = stream.readUint32();
+			datas.ticketType = stream.readUint8();
 			return datas;
 		}
 
@@ -2497,6 +2559,9 @@ namespace KBEngine
 			stream.writeUint32(v.rewardDailyCount);
 			stream.writeUint32(v.useItemAddRewardNumber);
 			stream.writeUint32(v.useCoinAddRewardNum);
+			stream.writeUint32(v.rewardItemNumber);
+			stream.writeUint32(v.rewardCoinNumber);
+			stream.writeUint8(v.ticketType);
 		}
 	}
 
@@ -3490,6 +3555,7 @@ namespace KBEngine
 			datas.openedDungeonId = stream.readUint32();
 			datas.consumedType = stream.readUint8();
 			datas.openedDungeonStatus = stream.readUint8();
+			datas.settleTs = stream.readInt64();
 			return datas;
 		}
 
@@ -3502,6 +3568,7 @@ namespace KBEngine
 			stream.writeUint32(v.openedDungeonId);
 			stream.writeUint8(v.consumedType);
 			stream.writeUint8(v.openedDungeonStatus);
+			stream.writeInt64(v.settleTs);
 		}
 	}
 
@@ -3801,6 +3868,39 @@ namespace KBEngine
 
 
 
+	public class DATATYPE_LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO : DATATYPE_BASE
+	{
+		public LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO createFromStreamEx(MemoryStream stream)
+		{
+			LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO datas = new LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO();
+			datas.gbId = stream.readUint64();
+			datas.name = stream.readUnicode();
+			datas.level = stream.readUint32();
+			datas.school = stream.readUint16();
+			datas.ts = stream.readUint32();
+			datas.guildName = stream.readUnicode();
+			datas.guildUUID = stream.readUint64();
+			datas.accountName = stream.readUnicode();
+			datas.phone = stream.readUint64();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO v)
+		{
+			stream.writeUint64(v.gbId);
+			stream.writeUnicode(v.name);
+			stream.writeUint32(v.level);
+			stream.writeUint16(v.school);
+			stream.writeUint32(v.ts);
+			stream.writeUnicode(v.guildName);
+			stream.writeUint64(v.guildUUID);
+			stream.writeUnicode(v.accountName);
+			stream.writeUint64(v.phone);
+		}
+	}
+
+
+
 	public class DATATYPE_LEADER_BOARD_AVATAR_SCORE_DATA_INFO : DATATYPE_BASE
 	{
 		public LEADER_BOARD_AVATAR_SCORE_DATA_INFO createFromStreamEx(MemoryStream stream)
@@ -3897,54 +3997,42 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AUCTION_ITEM : DATATYPE_BASE
+	public class DATATYPE_AUCTION_ITEM_CLIENT : DATATYPE_BASE
 	{
 		private DATATYPE_ITEM_VAL itemData_DataType = new DATATYPE_ITEM_VAL();
-		public AUCTION_ITEM createFromStreamEx(MemoryStream stream)
+		public AUCTION_ITEM_CLIENT createFromStreamEx(MemoryStream stream)
 		{
-			AUCTION_ITEM datas = new AUCTION_ITEM();
-			datas.auctionType = stream.readUint8();
+			AUCTION_ITEM_CLIENT datas = new AUCTION_ITEM_CLIENT();
 			datas.auctionItemUUID = stream.readUint64();
 			datas.addTime = stream.readUint32();
-			datas.itemData = itemData_DataType.createFromStreamEx(stream);
 			datas.price = stream.readUint64();
 			datas.number = stream.readUint32();
-			datas.bagType = stream.readUint8();
-			datas.source = stream.readUint8();
 			datas.status = stream.readUint8();
-			datas.locked = stream.readUint32();
-			datas.extraInfo = stream.readUnicode();
-			datas.tCreate = stream.readUint32();
+			datas.itemData = itemData_DataType.createFromStreamEx(stream);
 			return datas;
 		}
 
-		public void addToStreamEx(Bundle stream, AUCTION_ITEM v)
+		public void addToStreamEx(Bundle stream, AUCTION_ITEM_CLIENT v)
 		{
-			stream.writeUint8(v.auctionType);
 			stream.writeUint64(v.auctionItemUUID);
 			stream.writeUint32(v.addTime);
-			itemData_DataType.addToStreamEx(stream, v.itemData);
 			stream.writeUint64(v.price);
 			stream.writeUint32(v.number);
-			stream.writeUint8(v.bagType);
-			stream.writeUint8(v.source);
 			stream.writeUint8(v.status);
-			stream.writeUint32(v.locked);
-			stream.writeUnicode(v.extraInfo);
-			stream.writeUint32(v.tCreate);
+			itemData_DataType.addToStreamEx(stream, v.itemData);
 		}
 	}
 
 
 
-	public class DATATYPE_AUCTION_ITEM_LIST : DATATYPE_BASE
+	public class DATATYPE_AUCTION_ITEM_CLIENT_LIST : DATATYPE_BASE
 	{
-		private DATATYPE_AUCTION_ITEM itemType = new DATATYPE_AUCTION_ITEM();
+		private DATATYPE_AUCTION_ITEM_CLIENT itemType = new DATATYPE_AUCTION_ITEM_CLIENT();
 
-		public AUCTION_ITEM_LIST createFromStreamEx(MemoryStream stream)
+		public AUCTION_ITEM_CLIENT_LIST createFromStreamEx(MemoryStream stream)
 		{
 			UInt32 size = stream.readUint32();
-			AUCTION_ITEM_LIST datas = new AUCTION_ITEM_LIST();
+			AUCTION_ITEM_CLIENT_LIST datas = new AUCTION_ITEM_CLIENT_LIST();
 
 			while(size > 0)
 			{
@@ -3955,7 +4043,7 @@ namespace KBEngine
 			return datas;
 		}
 
-		public void addToStreamEx(Bundle stream, AUCTION_ITEM_LIST v)
+		public void addToStreamEx(Bundle stream, AUCTION_ITEM_CLIENT_LIST v)
 		{
 			stream.writeUint32((UInt32)v.Count);
 			for(int i=0; i<v.Count; ++i)
@@ -4673,6 +4761,7 @@ namespace KBEngine
 			POP_REWARD_ITEM_VAL datas = new POP_REWARD_ITEM_VAL();
 			datas.itemId = stream.readUint32();
 			datas.itemNum = stream.readUint32();
+			datas.bindType = stream.readUint8();
 			return datas;
 		}
 
@@ -4680,6 +4769,7 @@ namespace KBEngine
 		{
 			stream.writeUint32(v.itemId);
 			stream.writeUint32(v.itemNum);
+			stream.writeUint8(v.bindType);
 		}
 	}
 
@@ -5031,172 +5121,6 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_TEAM_STATISTIC_PLAYER_VAL : DATATYPE_BASE
-	{
-		public TEAM_STATISTIC_PLAYER_VAL createFromStreamEx(MemoryStream stream)
-		{
-			TEAM_STATISTIC_PLAYER_VAL datas = new TEAM_STATISTIC_PLAYER_VAL();
-			datas.gbId = stream.readUint64();
-			datas.name = stream.readUnicode();
-			datas.school = stream.readUint16();
-			datas.value = stream.readInt32();
-			return datas;
-		}
-
-		public void addToStreamEx(Bundle stream, TEAM_STATISTIC_PLAYER_VAL v)
-		{
-			stream.writeUint64(v.gbId);
-			stream.writeUnicode(v.name);
-			stream.writeUint16(v.school);
-			stream.writeInt32(v.value);
-		}
-	}
-
-
-
-	public class DATATYPE_TEAM_STATISTIC_CLIENT_VAL1 : DATATYPE_BASE
-	{
-		private DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_dmgList_ArrayType_ChildArray dmgList_DataType = new DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_dmgList_ArrayType_ChildArray();
-
-		public class DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_dmgList_ArrayType_ChildArray : DATATYPE_BASE
-		{
-			private DATATYPE_TEAM_STATISTIC_PLAYER_VAL itemType = new DATATYPE_TEAM_STATISTIC_PLAYER_VAL();
-
-			public List<TEAM_STATISTIC_PLAYER_VAL> createFromStreamEx(MemoryStream stream)
-			{
-				UInt32 size = stream.readUint32();
-				List<TEAM_STATISTIC_PLAYER_VAL> datas = new List<TEAM_STATISTIC_PLAYER_VAL>();
-
-				while(size > 0)
-				{
-					--size;
-					datas.Add(itemType.createFromStreamEx(stream));
-				};
-
-				return datas;
-			}
-
-			public void addToStreamEx(Bundle stream, List<TEAM_STATISTIC_PLAYER_VAL> v)
-			{
-				stream.writeUint32((UInt32)v.Count);
-				for(int i=0; i<v.Count; ++i)
-				{
-					itemType.addToStreamEx(stream, v[i]);
-				};
-			}
-		}
-
-		private DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_healList_ArrayType_ChildArray healList_DataType = new DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_healList_ArrayType_ChildArray();
-
-		public class DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_healList_ArrayType_ChildArray : DATATYPE_BASE
-		{
-			private DATATYPE_TEAM_STATISTIC_PLAYER_VAL itemType = new DATATYPE_TEAM_STATISTIC_PLAYER_VAL();
-
-			public List<TEAM_STATISTIC_PLAYER_VAL> createFromStreamEx(MemoryStream stream)
-			{
-				UInt32 size = stream.readUint32();
-				List<TEAM_STATISTIC_PLAYER_VAL> datas = new List<TEAM_STATISTIC_PLAYER_VAL>();
-
-				while(size > 0)
-				{
-					--size;
-					datas.Add(itemType.createFromStreamEx(stream));
-				};
-
-				return datas;
-			}
-
-			public void addToStreamEx(Bundle stream, List<TEAM_STATISTIC_PLAYER_VAL> v)
-			{
-				stream.writeUint32((UInt32)v.Count);
-				for(int i=0; i<v.Count; ++i)
-				{
-					itemType.addToStreamEx(stream, v[i]);
-				};
-			}
-		}
-
-		private DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_hurtList_ArrayType_ChildArray hurtList_DataType = new DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_hurtList_ArrayType_ChildArray();
-
-		public class DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_hurtList_ArrayType_ChildArray : DATATYPE_BASE
-		{
-			private DATATYPE_TEAM_STATISTIC_PLAYER_VAL itemType = new DATATYPE_TEAM_STATISTIC_PLAYER_VAL();
-
-			public List<TEAM_STATISTIC_PLAYER_VAL> createFromStreamEx(MemoryStream stream)
-			{
-				UInt32 size = stream.readUint32();
-				List<TEAM_STATISTIC_PLAYER_VAL> datas = new List<TEAM_STATISTIC_PLAYER_VAL>();
-
-				while(size > 0)
-				{
-					--size;
-					datas.Add(itemType.createFromStreamEx(stream));
-				};
-
-				return datas;
-			}
-
-			public void addToStreamEx(Bundle stream, List<TEAM_STATISTIC_PLAYER_VAL> v)
-			{
-				stream.writeUint32((UInt32)v.Count);
-				for(int i=0; i<v.Count; ++i)
-				{
-					itemType.addToStreamEx(stream, v[i]);
-				};
-			}
-		}
-
-		private DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_deadList_ArrayType_ChildArray deadList_DataType = new DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_deadList_ArrayType_ChildArray();
-
-		public class DATATYPE__TEAM_STATISTIC_CLIENT_VAL1_deadList_ArrayType_ChildArray : DATATYPE_BASE
-		{
-			private DATATYPE_TEAM_STATISTIC_PLAYER_VAL itemType = new DATATYPE_TEAM_STATISTIC_PLAYER_VAL();
-
-			public List<TEAM_STATISTIC_PLAYER_VAL> createFromStreamEx(MemoryStream stream)
-			{
-				UInt32 size = stream.readUint32();
-				List<TEAM_STATISTIC_PLAYER_VAL> datas = new List<TEAM_STATISTIC_PLAYER_VAL>();
-
-				while(size > 0)
-				{
-					--size;
-					datas.Add(itemType.createFromStreamEx(stream));
-				};
-
-				return datas;
-			}
-
-			public void addToStreamEx(Bundle stream, List<TEAM_STATISTIC_PLAYER_VAL> v)
-			{
-				stream.writeUint32((UInt32)v.Count);
-				for(int i=0; i<v.Count; ++i)
-				{
-					itemType.addToStreamEx(stream, v[i]);
-				};
-			}
-		}
-
-		public TEAM_STATISTIC_CLIENT_VAL1 createFromStreamEx(MemoryStream stream)
-		{
-			TEAM_STATISTIC_CLIENT_VAL1 datas = new TEAM_STATISTIC_CLIENT_VAL1();
-			datas.dmgList = dmgList_DataType.createFromStreamEx(stream);
-			datas.healList = healList_DataType.createFromStreamEx(stream);
-			datas.hurtList = hurtList_DataType.createFromStreamEx(stream);
-			datas.deadList = deadList_DataType.createFromStreamEx(stream);
-			return datas;
-		}
-
-		public void addToStreamEx(Bundle stream, TEAM_STATISTIC_CLIENT_VAL1 v)
-		{
-			dmgList_DataType.addToStreamEx(stream, v.dmgList);
-			healList_DataType.addToStreamEx(stream, v.healList);
-			hurtList_DataType.addToStreamEx(stream, v.hurtList);
-			deadList_DataType.addToStreamEx(stream, v.deadList);
-		}
-	}
-
-
-
 	public class DATATYPE_MERIDIAN_POINT_INFO : DATATYPE_BASE
 	{
 		public MERIDIAN_POINT_INFO createFromStreamEx(MemoryStream stream)
@@ -5332,6 +5256,7 @@ namespace KBEngine
 			datas.guildOwnerName = stream.readUnicode();
 			datas.guildDspFlag = stream.readUint8();
 			datas.ownerTimeStamp = stream.readUint32();
+			datas.ownerDay = stream.readInt8();
 			datas.guildRevenueRate = stream.readUint8();
 			datas.revenue = stream.readUint32();
 			datas.allNum = stream.readUint32();
@@ -5353,6 +5278,7 @@ namespace KBEngine
 			stream.writeUnicode(v.guildOwnerName);
 			stream.writeUint8(v.guildDspFlag);
 			stream.writeUint32(v.ownerTimeStamp);
+			stream.writeInt8(v.ownerDay);
 			stream.writeUint8(v.guildRevenueRate);
 			stream.writeUint32(v.revenue);
 			stream.writeUint32(v.allNum);
@@ -5440,6 +5366,56 @@ namespace KBEngine
 
 
 
+	public class DATATYPE_MINE_WAR_GUILD_MEMBER_SCORE_INFO : DATATYPE_BASE
+	{
+		public MINE_WAR_GUILD_MEMBER_SCORE_INFO createFromStreamEx(MemoryStream stream)
+		{
+			MINE_WAR_GUILD_MEMBER_SCORE_INFO datas = new MINE_WAR_GUILD_MEMBER_SCORE_INFO();
+			datas.playerGbId = stream.readUint64();
+			datas.score = stream.readUint32();
+			datas.rankId = stream.readUint8();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, MINE_WAR_GUILD_MEMBER_SCORE_INFO v)
+		{
+			stream.writeUint64(v.playerGbId);
+			stream.writeUint32(v.score);
+			stream.writeUint8(v.rankId);
+		}
+	}
+
+
+
+	public class DATATYPE_CLI_DUNGEON_DATA : DATATYPE_BASE
+	{
+		public CLI_DUNGEON_DATA createFromStreamEx(MemoryStream stream)
+		{
+			CLI_DUNGEON_DATA datas = new CLI_DUNGEON_DATA();
+			datas.win = stream.readUint8();
+			datas.elapsedTime = stream.readInt32();
+			datas.endTime = stream.readInt64();
+			datas.dungeonNo = stream.readUint32();
+			datas.playMode = stream.readUint8();
+			datas.rewardCount = stream.readUint32();
+			datas.rankCount = stream.readUint32();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, CLI_DUNGEON_DATA v)
+		{
+			stream.writeUint8(v.win);
+			stream.writeInt32(v.elapsedTime);
+			stream.writeInt64(v.endTime);
+			stream.writeUint32(v.dungeonNo);
+			stream.writeUint8(v.playMode);
+			stream.writeUint32(v.rewardCount);
+			stream.writeUint32(v.rankCount);
+		}
+	}
+
+
+
 	public class DATATYPE_CLI_DUNGEON_SETTLEMENT_DATA : DATATYPE_BASE
 	{
 		private DATATYPE__CLI_DUNGEON_SETTLEMENT_DATA_dungeonRewards_ArrayType_ChildArray dungeonRewards_DataType = new DATATYPE__CLI_DUNGEON_SETTLEMENT_DATA_dungeonRewards_ArrayType_ChildArray();
@@ -5502,26 +5478,64 @@ namespace KBEngine
 			}
 		}
 
+		private DATATYPE__CLI_DUNGEON_SETTLEMENT_DATA_goldPassRewards_ArrayType_ChildArray goldPassRewards_DataType = new DATATYPE__CLI_DUNGEON_SETTLEMENT_DATA_goldPassRewards_ArrayType_ChildArray();
+
+		public class DATATYPE__CLI_DUNGEON_SETTLEMENT_DATA_goldPassRewards_ArrayType_ChildArray : DATATYPE_BASE
+		{
+			private DATATYPE_BAG_ITEM_BRIEF_VAL itemType = new DATATYPE_BAG_ITEM_BRIEF_VAL();
+
+			public List<BAG_ITEM_BRIEF_VAL> createFromStreamEx(MemoryStream stream)
+			{
+				UInt32 size = stream.readUint32();
+				List<BAG_ITEM_BRIEF_VAL> datas = new List<BAG_ITEM_BRIEF_VAL>();
+
+				while(size > 0)
+				{
+					--size;
+					datas.Add(itemType.createFromStreamEx(stream));
+				};
+
+				return datas;
+			}
+
+			public void addToStreamEx(Bundle stream, List<BAG_ITEM_BRIEF_VAL> v)
+			{
+				stream.writeUint32((UInt32)v.Count);
+				for(int i=0; i<v.Count; ++i)
+				{
+					itemType.addToStreamEx(stream, v[i]);
+				};
+			}
+		}
+
 		public CLI_DUNGEON_SETTLEMENT_DATA createFromStreamEx(MemoryStream stream)
 		{
 			CLI_DUNGEON_SETTLEMENT_DATA datas = new CLI_DUNGEON_SETTLEMENT_DATA();
-			datas.elapsedTime = stream.readInt32();
-			datas.endTime = stream.readInt64();
+			datas.gbId = stream.readUint64();
+			datas.name = stream.readUnicode();
+			datas.school = stream.readUint16();
+			datas.level = stream.readUint32();
+			datas.sex = stream.readUint8();
 			datas.rank = stream.readUint16();
-			datas.dmg = stream.readInt32();
+			datas.score = stream.readInt32();
 			datas.dungeonRewards = dungeonRewards_DataType.createFromStreamEx(stream);
 			datas.firstPassRewards = firstPassRewards_DataType.createFromStreamEx(stream);
+			datas.goldPassRewards = goldPassRewards_DataType.createFromStreamEx(stream);
 			return datas;
 		}
 
 		public void addToStreamEx(Bundle stream, CLI_DUNGEON_SETTLEMENT_DATA v)
 		{
-			stream.writeInt32(v.elapsedTime);
-			stream.writeInt64(v.endTime);
+			stream.writeUint64(v.gbId);
+			stream.writeUnicode(v.name);
+			stream.writeUint16(v.school);
+			stream.writeUint32(v.level);
+			stream.writeUint8(v.sex);
 			stream.writeUint16(v.rank);
-			stream.writeInt32(v.dmg);
+			stream.writeInt32(v.score);
 			dungeonRewards_DataType.addToStreamEx(stream, v.dungeonRewards);
 			firstPassRewards_DataType.addToStreamEx(stream, v.firstPassRewards);
+			goldPassRewards_DataType.addToStreamEx(stream, v.goldPassRewards);
 		}
 	}
 
@@ -5543,6 +5557,106 @@ namespace KBEngine
 			stream.writeUnicode(v.name);
 			stream.writeUint16(v.rank);
 			stream.writeInt32(v.dmg);
+		}
+	}
+
+
+
+	public class DATATYPE_STATISTIC_PLAYER_VAL : DATATYPE_BASE
+	{
+		public STATISTIC_PLAYER_VAL createFromStreamEx(MemoryStream stream)
+		{
+			STATISTIC_PLAYER_VAL datas = new STATISTIC_PLAYER_VAL();
+			datas.rank = stream.readUint16();
+			datas.gbId = stream.readUint64();
+			datas.name = stream.readUnicode();
+			datas.school = stream.readUint16();
+			datas.statisticsNum = stream.readInt64();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, STATISTIC_PLAYER_VAL v)
+		{
+			stream.writeUint16(v.rank);
+			stream.writeUint64(v.gbId);
+			stream.writeUnicode(v.name);
+			stream.writeUint16(v.school);
+			stream.writeInt64(v.statisticsNum);
+		}
+	}
+
+
+
+	public class DATATYPE_DUNGEON_PASS_RECRODS : DATATYPE_BASE
+	{
+		private DATATYPE__DUNGEON_PASS_RECRODS_entryIds_ArrayType_ChildArray entryIds_DataType = new DATATYPE__DUNGEON_PASS_RECRODS_entryIds_ArrayType_ChildArray();
+
+		public class DATATYPE__DUNGEON_PASS_RECRODS_entryIds_ArrayType_ChildArray : DATATYPE_BASE
+		{
+			public List<Byte> createFromStreamEx(MemoryStream stream)
+			{
+				UInt32 size = stream.readUint32();
+				List<Byte> datas = new List<Byte>();
+
+				while(size > 0)
+				{
+					--size;
+					datas.Add(stream.readUint8());
+				};
+
+				return datas;
+			}
+
+			public void addToStreamEx(Bundle stream, List<Byte> v)
+			{
+				stream.writeUint32((UInt32)v.Count);
+				for(int i=0; i<v.Count; ++i)
+				{
+					stream.writeUint8(v[i]);
+				};
+			}
+		}
+
+		private DATATYPE__DUNGEON_PASS_RECRODS_entryStatus_ArrayType_ChildArray entryStatus_DataType = new DATATYPE__DUNGEON_PASS_RECRODS_entryStatus_ArrayType_ChildArray();
+
+		public class DATATYPE__DUNGEON_PASS_RECRODS_entryStatus_ArrayType_ChildArray : DATATYPE_BASE
+		{
+			public List<Byte> createFromStreamEx(MemoryStream stream)
+			{
+				UInt32 size = stream.readUint32();
+				List<Byte> datas = new List<Byte>();
+
+				while(size > 0)
+				{
+					--size;
+					datas.Add(stream.readUint8());
+				};
+
+				return datas;
+			}
+
+			public void addToStreamEx(Bundle stream, List<Byte> v)
+			{
+				stream.writeUint32((UInt32)v.Count);
+				for(int i=0; i<v.Count; ++i)
+				{
+					stream.writeUint8(v[i]);
+				};
+			}
+		}
+
+		public DUNGEON_PASS_RECRODS createFromStreamEx(MemoryStream stream)
+		{
+			DUNGEON_PASS_RECRODS datas = new DUNGEON_PASS_RECRODS();
+			datas.entryIds = entryIds_DataType.createFromStreamEx(stream);
+			datas.entryStatus = entryStatus_DataType.createFromStreamEx(stream);
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, DUNGEON_PASS_RECRODS v)
+		{
+			entryIds_DataType.addToStreamEx(stream, v.entryIds);
+			entryStatus_DataType.addToStreamEx(stream, v.entryStatus);
 		}
 	}
 
@@ -5826,6 +5940,47 @@ namespace KBEngine
 
 	public class DATATYPE_AnonymousArray_10008 : DATATYPE_BASE
 	{
+		public List<Int32> updateFromStream(MemoryStream stream, List<Int32> oldList)
+		{
+			int rpos = stream.rpos;
+			UInt32 size = stream.readUint32();
+			if ((size & 0xFF000000) > 0)
+			{
+				int idx = (int)size & 0xFFFFFF;
+				oldList[idx] = stream.readInt32();
+				return oldList;
+			}
+			stream.rpos = rpos;
+			return createFromStreamEx(stream);
+		}
+		public List<Int32> createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			List<Int32> datas = new List<Int32>();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(stream.readInt32());
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, List<Int32> v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				stream.writeInt32(v[i]);
+			};
+		}
+	}
+
+
+
+	public class DATATYPE_AnonymousArray_10009 : DATATYPE_BASE
+	{
 		public List<float> updateFromStream(MemoryStream stream, List<float> oldList)
 		{
 			int rpos = stream.rpos;
@@ -5865,7 +6020,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10009 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10010 : DATATYPE_BASE
 	{
 		private DATATYPE_SKILL_SLOT_INFO itemType = new DATATYPE_SKILL_SLOT_INFO();
 
@@ -5889,47 +6044,6 @@ namespace KBEngine
 			for(int i=0; i<v.Count; ++i)
 			{
 				itemType.addToStreamEx(stream, v[i]);
-			};
-		}
-	}
-
-
-
-	public class DATATYPE_AnonymousArray_10010 : DATATYPE_BASE
-	{
-		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
-		{
-			int rpos = stream.rpos;
-			UInt32 size = stream.readUint32();
-			if ((size & 0xFF000000) > 0)
-			{
-				int idx = (int)size & 0xFFFFFF;
-				oldList[idx] = stream.readUint32();
-				return oldList;
-			}
-			stream.rpos = rpos;
-			return createFromStreamEx(stream);
-		}
-		public List<UInt32> createFromStreamEx(MemoryStream stream)
-		{
-			UInt32 size = stream.readUint32();
-			List<UInt32> datas = new List<UInt32>();
-
-			while(size > 0)
-			{
-				--size;
-				datas.Add(stream.readUint32());
-			};
-
-			return datas;
-		}
-
-		public void addToStreamEx(Bundle stream, List<UInt32> v)
-		{
-			stream.writeUint32((UInt32)v.Count);
-			for(int i=0; i<v.Count; ++i)
-			{
-				stream.writeUint32(v[i]);
 			};
 		}
 	}
@@ -5979,6 +6093,47 @@ namespace KBEngine
 
 	public class DATATYPE_AnonymousArray_10012 : DATATYPE_BASE
 	{
+		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
+		{
+			int rpos = stream.rpos;
+			UInt32 size = stream.readUint32();
+			if ((size & 0xFF000000) > 0)
+			{
+				int idx = (int)size & 0xFFFFFF;
+				oldList[idx] = stream.readUint32();
+				return oldList;
+			}
+			stream.rpos = rpos;
+			return createFromStreamEx(stream);
+		}
+		public List<UInt32> createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			List<UInt32> datas = new List<UInt32>();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(stream.readUint32());
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, List<UInt32> v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				stream.writeUint32(v[i]);
+			};
+		}
+	}
+
+
+
+	public class DATATYPE_AnonymousArray_10013 : DATATYPE_BASE
+	{
 		public List<Byte> updateFromStream(MemoryStream stream, List<Byte> oldList)
 		{
 			int rpos = stream.rpos;
@@ -6018,7 +6173,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10013 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10014 : DATATYPE_BASE
 	{
 		private DATATYPE_CLIENT_BUFF_ID_VAL itemType = new DATATYPE_CLIENT_BUFF_ID_VAL();
 
@@ -6048,7 +6203,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10014 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10015 : DATATYPE_BASE
 	{
 		public List<UInt64> updateFromStream(MemoryStream stream, List<UInt64> oldList)
 		{
@@ -6089,7 +6244,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10015 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10016 : DATATYPE_BASE
 	{
 		private DATATYPE_CLIENT_MAIL_VAL itemType = new DATATYPE_CLIENT_MAIL_VAL();
 
@@ -6119,7 +6274,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10016 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10017 : DATATYPE_BASE
 	{
 		public List<UInt16> updateFromStream(MemoryStream stream, List<UInt16> oldList)
 		{
@@ -6160,7 +6315,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10017 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10018 : DATATYPE_BASE
 	{
 		private DATATYPE_RANDOM_SYNTHESIS_ITEM_INFO itemType = new DATATYPE_RANDOM_SYNTHESIS_ITEM_INFO();
 
@@ -6190,7 +6345,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10018 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10019 : DATATYPE_BASE
 	{
 		public List<UInt64> updateFromStream(MemoryStream stream, List<UInt64> oldList)
 		{
@@ -6231,7 +6386,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10019 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10020 : DATATYPE_BASE
 	{
 		private DATATYPE_ITEM_VAL itemType = new DATATYPE_ITEM_VAL();
 
@@ -6261,7 +6416,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10020 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10021 : DATATYPE_BASE
 	{
 		private DATATYPE_CLI_EQUIP_ITEM_VAL itemType = new DATATYPE_CLI_EQUIP_ITEM_VAL();
 
@@ -6291,7 +6446,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10021 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10022 : DATATYPE_BASE
 	{
 		private DATATYPE_BAG_GRID_INFO itemType = new DATATYPE_BAG_GRID_INFO();
 
@@ -6321,7 +6476,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10022 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10023 : DATATYPE_BASE
 	{
 		private DATATYPE_BAG_GRID_TIME_INFO itemType = new DATATYPE_BAG_GRID_TIME_INFO();
 
@@ -6351,7 +6506,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10023 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10024 : DATATYPE_BASE
 	{
 		private DATATYPE_AWARD_ITEM_VAL itemType = new DATATYPE_AWARD_ITEM_VAL();
 
@@ -6381,7 +6536,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10024 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10025 : DATATYPE_BASE
 	{
 		private DATATYPE_BAG_ITEM_BRIEF_VAL itemType = new DATATYPE_BAG_ITEM_BRIEF_VAL();
 
@@ -6411,7 +6566,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10025 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10026 : DATATYPE_BASE
 	{
 		private DATATYPE_CLIENT_RANDOM_SYNTHESIS_NUM_VAL itemType = new DATATYPE_CLIENT_RANDOM_SYNTHESIS_NUM_VAL();
 
@@ -6441,7 +6596,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10026 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10027 : DATATYPE_BASE
 	{
 		public List<UInt64> updateFromStream(MemoryStream stream, List<UInt64> oldList)
 		{
@@ -6482,7 +6637,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10027 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10028 : DATATYPE_BASE
 	{
 		private DATATYPE_AFFIX_VAL itemType = new DATATYPE_AFFIX_VAL();
 
@@ -6506,47 +6661,6 @@ namespace KBEngine
 			for(int i=0; i<v.Count; ++i)
 			{
 				itemType.addToStreamEx(stream, v[i]);
-			};
-		}
-	}
-
-
-
-	public class DATATYPE_AnonymousArray_10028 : DATATYPE_BASE
-	{
-		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
-		{
-			int rpos = stream.rpos;
-			UInt32 size = stream.readUint32();
-			if ((size & 0xFF000000) > 0)
-			{
-				int idx = (int)size & 0xFFFFFF;
-				oldList[idx] = stream.readUint32();
-				return oldList;
-			}
-			stream.rpos = rpos;
-			return createFromStreamEx(stream);
-		}
-		public List<UInt32> createFromStreamEx(MemoryStream stream)
-		{
-			UInt32 size = stream.readUint32();
-			List<UInt32> datas = new List<UInt32>();
-
-			while(size > 0)
-			{
-				--size;
-				datas.Add(stream.readUint32());
-			};
-
-			return datas;
-		}
-
-		public void addToStreamEx(Bundle stream, List<UInt32> v)
-		{
-			stream.writeUint32((UInt32)v.Count);
-			for(int i=0; i<v.Count; ++i)
-			{
-				stream.writeUint32(v[i]);
 			};
 		}
 	}
@@ -6596,39 +6710,39 @@ namespace KBEngine
 
 	public class DATATYPE_AnonymousArray_10030 : DATATYPE_BASE
 	{
-		public List<Int32> updateFromStream(MemoryStream stream, List<Int32> oldList)
+		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
 		{
 			int rpos = stream.rpos;
 			UInt32 size = stream.readUint32();
 			if ((size & 0xFF000000) > 0)
 			{
 				int idx = (int)size & 0xFFFFFF;
-				oldList[idx] = stream.readInt32();
+				oldList[idx] = stream.readUint32();
 				return oldList;
 			}
 			stream.rpos = rpos;
 			return createFromStreamEx(stream);
 		}
-		public List<Int32> createFromStreamEx(MemoryStream stream)
+		public List<UInt32> createFromStreamEx(MemoryStream stream)
 		{
 			UInt32 size = stream.readUint32();
-			List<Int32> datas = new List<Int32>();
+			List<UInt32> datas = new List<UInt32>();
 
 			while(size > 0)
 			{
 				--size;
-				datas.Add(stream.readInt32());
+				datas.Add(stream.readUint32());
 			};
 
 			return datas;
 		}
 
-		public void addToStreamEx(Bundle stream, List<Int32> v)
+		public void addToStreamEx(Bundle stream, List<UInt32> v)
 		{
 			stream.writeUint32((UInt32)v.Count);
 			for(int i=0; i<v.Count; ++i)
 			{
-				stream.writeInt32(v[i]);
+				stream.writeUint32(v[i]);
 			};
 		}
 	}
@@ -6697,36 +6811,6 @@ namespace KBEngine
 
 	public class DATATYPE_AnonymousArray_10033 : DATATYPE_BASE
 	{
-		private DATATYPE_TEAM_STATISTIC_PLAYER_VAL itemType = new DATATYPE_TEAM_STATISTIC_PLAYER_VAL();
-
-		public List<TEAM_STATISTIC_PLAYER_VAL> createFromStreamEx(MemoryStream stream)
-		{
-			UInt32 size = stream.readUint32();
-			List<TEAM_STATISTIC_PLAYER_VAL> datas = new List<TEAM_STATISTIC_PLAYER_VAL>();
-
-			while(size > 0)
-			{
-				--size;
-				datas.Add(itemType.createFromStreamEx(stream));
-			};
-
-			return datas;
-		}
-
-		public void addToStreamEx(Bundle stream, List<TEAM_STATISTIC_PLAYER_VAL> v)
-		{
-			stream.writeUint32((UInt32)v.Count);
-			for(int i=0; i<v.Count; ++i)
-			{
-				itemType.addToStreamEx(stream, v[i]);
-			};
-		}
-	}
-
-
-
-	public class DATATYPE_AnonymousArray_10034 : DATATYPE_BASE
-	{
 		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
 		{
 			int rpos = stream.rpos;
@@ -6766,7 +6850,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10035 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10034 : DATATYPE_BASE
 	{
 		private DATATYPE_TASK_CLIENT_VAL itemType = new DATATYPE_TASK_CLIENT_VAL();
 
@@ -6796,7 +6880,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10036 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10035 : DATATYPE_BASE
 	{
 		private DATATYPE_CLIENT_LINGSHOU_ITEM_VAL itemType = new DATATYPE_CLIENT_LINGSHOU_ITEM_VAL();
 
@@ -6826,7 +6910,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10037 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10036 : DATATYPE_BASE
 	{
 		private DATATYPE_LINGSHOU_BATTLE_LIST_VAL itemType = new DATATYPE_LINGSHOU_BATTLE_LIST_VAL();
 
@@ -6856,7 +6940,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10038 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10037 : DATATYPE_BASE
 	{
 		private DATATYPE_FRIEND_VAL itemType = new DATATYPE_FRIEND_VAL();
 
@@ -6886,7 +6970,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10039 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10038 : DATATYPE_BASE
 	{
 		private DATATYPE_FRIEND_CLIENT_DIFF itemType = new DATATYPE_FRIEND_CLIENT_DIFF();
 
@@ -6916,7 +7000,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10040 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10039 : DATATYPE_BASE
 	{
 		private DATATYPE_FRIEND_REQUEST_VAL itemType = new DATATYPE_FRIEND_REQUEST_VAL();
 
@@ -6946,7 +7030,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10041 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10040 : DATATYPE_BASE
 	{
 		public List<UInt64> updateFromStream(MemoryStream stream, List<UInt64> oldList)
 		{
@@ -6987,7 +7071,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10042 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10041 : DATATYPE_BASE
 	{
 		private DATATYPE_FRIEND_SEARCH_VAL itemType = new DATATYPE_FRIEND_SEARCH_VAL();
 
@@ -7017,7 +7101,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10043 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10042 : DATATYPE_BASE
 	{
 		private DATATYPE_FRIEND_BLOCK_VAL itemType = new DATATYPE_FRIEND_BLOCK_VAL();
 
@@ -7047,7 +7131,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10044 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10043 : DATATYPE_BASE
 	{
 		private DATATYPE_STRANGER_FRIEND_VAL itemType = new DATATYPE_STRANGER_FRIEND_VAL();
 
@@ -7077,7 +7161,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10045 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10044 : DATATYPE_BASE
 	{
 		private DATATYPE_FRIEND_RECENT_VAL itemType = new DATATYPE_FRIEND_RECENT_VAL();
 
@@ -7107,7 +7191,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10046 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10045 : DATATYPE_BASE
 	{
 		private DATATYPE_FRIEND_CLIENT_MSG itemType = new DATATYPE_FRIEND_CLIENT_MSG();
 
@@ -7137,7 +7221,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10047 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10046 : DATATYPE_BASE
 	{
 		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
 		{
@@ -7178,7 +7262,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10048 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10047 : DATATYPE_BASE
 	{
 		private DATATYPE_RAID_APPLY_JOIN_CLIENT_VAL itemType = new DATATYPE_RAID_APPLY_JOIN_CLIENT_VAL();
 
@@ -7208,7 +7292,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10049 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10048 : DATATYPE_BASE
 	{
 		private DATATYPE_CLIENT_TEAM_MEMBER_VAL itemType = new DATATYPE_CLIENT_TEAM_MEMBER_VAL();
 
@@ -7238,7 +7322,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10050 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10049 : DATATYPE_BASE
 	{
 		private DATATYPE_RAID_CLIENT_VAL itemType = new DATATYPE_RAID_CLIENT_VAL();
 
@@ -7268,7 +7352,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10051 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10050 : DATATYPE_BASE
 	{
 		private DATATYPE_CLIENT_OUTFIT_VAL itemType = new DATATYPE_CLIENT_OUTFIT_VAL();
 
@@ -7298,7 +7382,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10052 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10051 : DATATYPE_BASE
 	{
 		private DATATYPE_DEATH_PENALTY_EXP_VAL itemType = new DATATYPE_DEATH_PENALTY_EXP_VAL();
 
@@ -7328,7 +7412,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10053 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10052 : DATATYPE_BASE
 	{
 		private DATATYPE_REWARD_VAL itemType = new DATATYPE_REWARD_VAL();
 
@@ -7358,7 +7442,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10054 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10053 : DATATYPE_BASE
 	{
 		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
 		{
@@ -7399,7 +7483,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10055 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10054 : DATATYPE_BASE
 	{
 		private DATATYPE_CLIENT_STORE_VAL itemType = new DATATYPE_CLIENT_STORE_VAL();
 
@@ -7429,7 +7513,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10056 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10055 : DATATYPE_BASE
 	{
 		public List<UInt64> updateFromStream(MemoryStream stream, List<UInt64> oldList)
 		{
@@ -7470,7 +7554,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10057 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10056 : DATATYPE_BASE
 	{
 		private DATATYPE_GUILD_LIST_VAL itemType = new DATATYPE_GUILD_LIST_VAL();
 
@@ -7500,7 +7584,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10058 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10057 : DATATYPE_BASE
 	{
 		private DATATYPE_GUILD_JOIN_APPLY_DATA_INFO itemType = new DATATYPE_GUILD_JOIN_APPLY_DATA_INFO();
 
@@ -7530,7 +7614,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10059 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10058 : DATATYPE_BASE
 	{
 		private DATATYPE_GUILD_MEMBER_DATA_INFO itemType = new DATATYPE_GUILD_MEMBER_DATA_INFO();
 
@@ -7560,7 +7644,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10060 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10059 : DATATYPE_BASE
 	{
 		private DATATYPE_GUILD_EVENT_LOG_DATA_INFO itemType = new DATATYPE_GUILD_EVENT_LOG_DATA_INFO();
 
@@ -7590,7 +7674,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10061 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10060 : DATATYPE_BASE
 	{
 		private DATATYPE_APPLYED_GUILD_VAL_DATA_INFO itemType = new DATATYPE_APPLYED_GUILD_VAL_DATA_INFO();
 
@@ -7620,7 +7704,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10062 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10061 : DATATYPE_BASE
 	{
 		private DATATYPE_GUILD_CROSS_DATA_INFO itemType = new DATATYPE_GUILD_CROSS_DATA_INFO();
 
@@ -7650,7 +7734,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10063 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10062 : DATATYPE_BASE
 	{
 		private DATATYPE_ENEMY_GUILD_CROSS_DATA_INFO itemType = new DATATYPE_ENEMY_GUILD_CROSS_DATA_INFO();
 
@@ -7680,7 +7764,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10064 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10063 : DATATYPE_BASE
 	{
 		private DATATYPE_GUILD_AND_RELATION itemType = new DATATYPE_GUILD_AND_RELATION();
 
@@ -7710,7 +7794,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10065 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10064 : DATATYPE_BASE
 	{
 		private DATATYPE_GUILD_APPLY_UNION_DATA_INFO itemType = new DATATYPE_GUILD_APPLY_UNION_DATA_INFO();
 
@@ -7740,7 +7824,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10066 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10065 : DATATYPE_BASE
 	{
 		private DATATYPE_GUILD_APPLY_UNION_SENDER_DATA_INFO itemType = new DATATYPE_GUILD_APPLY_UNION_SENDER_DATA_INFO();
 
@@ -7770,7 +7854,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10067 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10066 : DATATYPE_BASE
 	{
 		private DATATYPE_GUILD_ONETASK_INFO itemType = new DATATYPE_GUILD_ONETASK_INFO();
 
@@ -7800,7 +7884,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10068 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10067 : DATATYPE_BASE
 	{
 		private DATATYPE_CLI_BUY_CREDIT_NUM_DATA itemType = new DATATYPE_CLI_BUY_CREDIT_NUM_DATA();
 
@@ -7830,7 +7914,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10069 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10068 : DATATYPE_BASE
 	{
 		private DATATYPE_CLI_DRAW_CARD_INFO itemType = new DATATYPE_CLI_DRAW_CARD_INFO();
 
@@ -7860,7 +7944,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10070 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10069 : DATATYPE_BASE
 	{
 		private DATATYPE_COLLECTIBLE_ITEM_VAL itemType = new DATATYPE_COLLECTIBLE_ITEM_VAL();
 
@@ -7890,7 +7974,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10071 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10070 : DATATYPE_BASE
 	{
 		private DATATYPE_TRAIN_DATA itemType = new DATATYPE_TRAIN_DATA();
 
@@ -7920,7 +8004,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10072 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10071 : DATATYPE_BASE
 	{
 		private DATATYPE_BAG_ITEM_VAL itemType = new DATATYPE_BAG_ITEM_VAL();
 
@@ -7950,7 +8034,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10073 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10072 : DATATYPE_BASE
 	{
 		private DATATYPE_LEADER_BOARD_AVATAR_CACHE_DATA_INFO itemType = new DATATYPE_LEADER_BOARD_AVATAR_CACHE_DATA_INFO();
 
@@ -7980,7 +8064,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10074 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10073 : DATATYPE_BASE
 	{
 		private DATATYPE_LEADER_BOARD_AVATAR_SCORE_DATA_INFO itemType = new DATATYPE_LEADER_BOARD_AVATAR_SCORE_DATA_INFO();
 
@@ -8010,7 +8094,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10075 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10074 : DATATYPE_BASE
 	{
 		private DATATYPE_LEADER_BOARD_GUILD_DATA_INFO itemType = new DATATYPE_LEADER_BOARD_GUILD_DATA_INFO();
 
@@ -8040,14 +8124,14 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10076 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10075 : DATATYPE_BASE
 	{
-		private DATATYPE_AUCTION_ITEM itemType = new DATATYPE_AUCTION_ITEM();
+		private DATATYPE_LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO itemType = new DATATYPE_LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO();
 
-		public List<AUCTION_ITEM> createFromStreamEx(MemoryStream stream)
+		public List<LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO> createFromStreamEx(MemoryStream stream)
 		{
 			UInt32 size = stream.readUint32();
-			List<AUCTION_ITEM> datas = new List<AUCTION_ITEM>();
+			List<LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO> datas = new List<LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO>();
 
 			while(size > 0)
 			{
@@ -8058,7 +8142,7 @@ namespace KBEngine
 			return datas;
 		}
 
-		public void addToStreamEx(Bundle stream, List<AUCTION_ITEM> v)
+		public void addToStreamEx(Bundle stream, List<LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO> v)
 		{
 			stream.writeUint32((UInt32)v.Count);
 			for(int i=0; i<v.Count; ++i)
@@ -8070,7 +8154,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10077 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10076 : DATATYPE_BASE
 	{
 		public List<UInt64> updateFromStream(MemoryStream stream, List<UInt64> oldList)
 		{
@@ -8111,7 +8195,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10078 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10077 : DATATYPE_BASE
 	{
 		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
 		{
@@ -8152,7 +8236,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10079 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10078 : DATATYPE_BASE
 	{
 		private DATATYPE_ACHIEVEMENT_VAL_DATA_INFO itemType = new DATATYPE_ACHIEVEMENT_VAL_DATA_INFO();
 
@@ -8182,7 +8266,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10080 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10079 : DATATYPE_BASE
 	{
 		private DATATYPE_ENEMY_FRESH_INFO itemType = new DATATYPE_ENEMY_FRESH_INFO();
 
@@ -8212,7 +8296,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10081 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10080 : DATATYPE_BASE
 	{
 		private DATATYPE_RELATION_ENEMY_DATA_INFO itemType = new DATATYPE_RELATION_ENEMY_DATA_INFO();
 
@@ -8242,7 +8326,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10082 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10081 : DATATYPE_BASE
 	{
 		private DATATYPE_ENEMY_RECORD_DATA_LIST itemType = new DATATYPE_ENEMY_RECORD_DATA_LIST();
 
@@ -8272,7 +8356,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10083 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10082 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL itemType = new DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL();
 
@@ -8302,7 +8386,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10084 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10083 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_GUILD_VAL itemType = new DATATYPE_SIEGEWAR_GUILD_VAL();
 
@@ -8332,7 +8416,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10085 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10084 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_SCORE_VAL itemType = new DATATYPE_SIEGEWAR_SCORE_VAL();
 
@@ -8362,7 +8446,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10086 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10085 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_BATTLE_END_DATA_VAL itemType = new DATATYPE_SIEGEWAR_BATTLE_END_DATA_VAL();
 
@@ -8392,7 +8476,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10087 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10086 : DATATYPE_BASE
 	{
 		private DATATYPE_CITY_RECENT_ACTIVITY_VAL itemType = new DATATYPE_CITY_RECENT_ACTIVITY_VAL();
 
@@ -8422,7 +8506,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10088 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10087 : DATATYPE_BASE
 	{
 		private DATATYPE_CITY_OFFICER_LIST itemType = new DATATYPE_CITY_OFFICER_LIST();
 
@@ -8452,7 +8536,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10089 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10088 : DATATYPE_BASE
 	{
 		private DATATYPE_CITY_ORDER_REMAIN_TIMES_VAL itemType = new DATATYPE_CITY_ORDER_REMAIN_TIMES_VAL();
 
@@ -8482,7 +8566,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10090 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10089 : DATATYPE_BASE
 	{
 		private DATATYPE_CITY_FUND_RECORD_VAL itemType = new DATATYPE_CITY_FUND_RECORD_VAL();
 
@@ -8512,7 +8596,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10091 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10090 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_SEARCH_VAL itemType = new DATATYPE_SIEGEWAR_SEARCH_VAL();
 
@@ -8542,7 +8626,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10092 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10091 : DATATYPE_BASE
 	{
 		private DATATYPE_RED_BAG_CLIENT_VAL itemType = new DATATYPE_RED_BAG_CLIENT_VAL();
 
@@ -8572,7 +8656,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10093 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10092 : DATATYPE_BASE
 	{
 		private DATATYPE_MERIDIAN_ENHANCE_ITEM_INFO itemType = new DATATYPE_MERIDIAN_ENHANCE_ITEM_INFO();
 
@@ -8602,7 +8686,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10094 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10093 : DATATYPE_BASE
 	{
 		private DATATYPE_MERIDIAN_SLOT_INFO itemType = new DATATYPE_MERIDIAN_SLOT_INFO();
 
@@ -8632,7 +8716,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10095 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10094 : DATATYPE_BASE
 	{
 		private DATATYPE_MINE_WAR_GUILD_SHARE_INFO itemType = new DATATYPE_MINE_WAR_GUILD_SHARE_INFO();
 
@@ -8662,7 +8746,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10096 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10095 : DATATYPE_BASE
 	{
 		private DATATYPE_MINE_WAR_SINGLE_INFO itemType = new DATATYPE_MINE_WAR_SINGLE_INFO();
 
@@ -8692,7 +8776,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10097 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10096 : DATATYPE_BASE
 	{
 		private DATATYPE_MINE_WAR_GUILD_RANK_INFO itemType = new DATATYPE_MINE_WAR_GUILD_RANK_INFO();
 
@@ -8722,7 +8806,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10098 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10097 : DATATYPE_BASE
 	{
 		private DATATYPE_MINE_WAR_GUILD_PLAYER_RANK_INFO itemType = new DATATYPE_MINE_WAR_GUILD_PLAYER_RANK_INFO();
 
@@ -8752,7 +8836,67 @@ namespace KBEngine
 
 
 
+	public class DATATYPE_AnonymousArray_10098 : DATATYPE_BASE
+	{
+		private DATATYPE_MINE_WAR_GUILD_MEMBER_SCORE_INFO itemType = new DATATYPE_MINE_WAR_GUILD_MEMBER_SCORE_INFO();
+
+		public List<MINE_WAR_GUILD_MEMBER_SCORE_INFO> createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			List<MINE_WAR_GUILD_MEMBER_SCORE_INFO> datas = new List<MINE_WAR_GUILD_MEMBER_SCORE_INFO>();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(itemType.createFromStreamEx(stream));
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, List<MINE_WAR_GUILD_MEMBER_SCORE_INFO> v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				itemType.addToStreamEx(stream, v[i]);
+			};
+		}
+	}
+
+
+
 	public class DATATYPE_AnonymousArray_10099 : DATATYPE_BASE
+	{
+		private DATATYPE_CLI_DUNGEON_SETTLEMENT_DATA itemType = new DATATYPE_CLI_DUNGEON_SETTLEMENT_DATA();
+
+		public List<CLI_DUNGEON_SETTLEMENT_DATA> createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			List<CLI_DUNGEON_SETTLEMENT_DATA> datas = new List<CLI_DUNGEON_SETTLEMENT_DATA>();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(itemType.createFromStreamEx(stream));
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, List<CLI_DUNGEON_SETTLEMENT_DATA> v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				itemType.addToStreamEx(stream, v[i]);
+			};
+		}
+	}
+
+
+
+	public class DATATYPE_AnonymousArray_10100 : DATATYPE_BASE
 	{
 		private DATATYPE_CLI_DUNGEON_SETTLEMENT_RANK_DATA itemType = new DATATYPE_CLI_DUNGEON_SETTLEMENT_RANK_DATA();
 
@@ -8771,6 +8915,36 @@ namespace KBEngine
 		}
 
 		public void addToStreamEx(Bundle stream, List<CLI_DUNGEON_SETTLEMENT_RANK_DATA> v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				itemType.addToStreamEx(stream, v[i]);
+			};
+		}
+	}
+
+
+
+	public class DATATYPE_AnonymousArray_10101 : DATATYPE_BASE
+	{
+		private DATATYPE_STATISTIC_PLAYER_VAL itemType = new DATATYPE_STATISTIC_PLAYER_VAL();
+
+		public List<STATISTIC_PLAYER_VAL> createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			List<STATISTIC_PLAYER_VAL> datas = new List<STATISTIC_PLAYER_VAL>();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(itemType.createFromStreamEx(stream));
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, List<STATISTIC_PLAYER_VAL> v)
 		{
 			stream.writeUint32((UInt32)v.Count);
 			for(int i=0; i<v.Count; ++i)

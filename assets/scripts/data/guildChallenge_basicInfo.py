@@ -18,35 +18,35 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "yanWuGeLvReq": 1,
-        "name": "普通",
+        "name": "难度一",
         "dunID": 2301,
-        "bossID": 11226001,
-        "minScore": 5900,
-        "guildCoinCost": 2000,
-        "guildMoneyCost": 1000,
-        "firstReward": 40020541,
+        "bossID": 11051001,
+        "minScore": 20000,
+        "guildCoinCost": 30000,
+        "guildMoneyCost": 2000,
+        "firstReward": 40015001,
     }),
     2: _tools.RODict({
         "ID": 2,
         "yanWuGeLvReq": 2,
-        "name": "精英",
+        "name": "难度二",
         "dunID": 2302,
-        "bossID": 11226001,
-        "minScore": 8300,
-        "guildCoinCost": 4000,
-        "guildMoneyCost": 2000,
-        "firstReward": 40020542,
+        "bossID": 11051001,
+        "minScore": 32000,
+        "guildCoinCost": 45000,
+        "guildMoneyCost": 3000,
+        "firstReward": 40015001,
     }),
     3: _tools.RODict({
         "ID": 3,
         "yanWuGeLvReq": 3,
-        "name": "困难",
+        "name": "难度三",
         "dunID": 2303,
-        "bossID": 11226001,
-        "minScore": 12000,
-        "guildCoinCost": 8000,
+        "bossID": 11051001,
+        "minScore": 45000,
+        "guildCoinCost": 60000,
         "guildMoneyCost": 4000,
-        "firstReward": 40020543,
+        "firstReward": 40015001,
     })
 })
 minKey = 1
@@ -55,4 +55,4 @@ maxKey = 3
 dungeonIdxDic = {2301: 1, 2302: 2, 2303: 3}
 
 
-fistPassRewardDic = {2301: 40020541, 2302: 40020542, 2303: 40020543}
+fistPassRewardDic = {2301: 40015001, 2302: 40015001, 2303: 40015001}

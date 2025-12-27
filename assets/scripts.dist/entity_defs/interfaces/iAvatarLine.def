@@ -69,6 +69,10 @@
             <Arg>           PYTHON           </Arg>
             <Arg>           PYTHON           </Arg>
         </applyEnterLineInternal>
+
+        <onMergeLine>
+            <Arg>           LINE_NO           </Arg>
+        </onMergeLine>
     </CellMethods>
 
     <BaseMethods>
@@ -76,17 +80,13 @@
     </BaseMethods>
 
     <ClientMethods>
+        <onMapUnlockMessagePre>
+            <Arg>        MAP_ID     </Arg>
+        </onMapUnlockMessagePre>
+
         <onGetLineInfo>
             <Arg>        UNICODE    </Arg>
         </onGetLineInfo>
-
-        <onSendtoRandomLineAndArea>
-            <Arg>        LINE_TYPE        </Arg>
-            <Arg>        LINE_NO          </Arg>
-            <Arg>        AREA_ID          </Arg>
-            <Arg>        LINE_NO          </Arg>
-            <Arg>        AREA_ID          </Arg>
-        </onSendtoRandomLineAndArea>
     </ClientMethods>
 
 </root>

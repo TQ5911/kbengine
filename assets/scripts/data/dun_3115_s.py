@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "31150001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -14,9 +15,12 @@ datas ={
         "PosY": 4.074037,
         "PosZ": 86.92152,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "TelDir": 0.0,
           "TelX": 39.52325,
           "TelY": 39.0038,
@@ -28,6 +32,7 @@ datas ={
       "Monster": {
         "31150002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -48,12 +53,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "31150003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -74,12 +82,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "31150004": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -100,12 +111,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "31150005": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -126,12 +140,15 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
         "31150006": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
@@ -152,7 +169,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         }
@@ -160,6 +179,7 @@ datas ={
       "Collection": {
         "31158001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
@@ -175,13 +195,16 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       },
       "CombatArea": {
         "31158002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "CombatArea",
           "ClassNameType": 21,
           "CustomID": "",
@@ -195,15 +218,18 @@ datas ={
           "Props": {
             "AreaType": 1,
             "Radius": 43.0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       }
     },
+    "TimerEntities": {},
     "Cube": {
       "Teleporter": {
         "31158003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "31218002",
@@ -218,6 +244,7 @@ datas ={
             "CameraId": 0,
             "GateType": 3,
             "Remark": "",
+            "ShowInSceneMap": 0,
             "TelDir": 237.3424,
             "TelX": 93.55521,
             "TelY": 3.650003,

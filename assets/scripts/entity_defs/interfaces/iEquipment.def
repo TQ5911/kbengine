@@ -200,6 +200,7 @@
 
         <gmBaseDressEquips>
             <Arg>      PY_LIST  </Arg>
+            <Arg>      UINT8    </Arg>
         </gmBaseDressEquips>
 
         <updateAccountCharacterAppearance>

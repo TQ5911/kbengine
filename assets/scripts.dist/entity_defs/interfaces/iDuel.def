@@ -26,6 +26,7 @@
         </dealDuelReq>
 
         <onDuelFinished>
+            <Arg>      UINT8       </Arg>
         </onDuelFinished>
     </CellMethods>
 
@@ -44,5 +45,11 @@
             <Arg>      UNICODE          </Arg>
             <Arg>      UINT8            </Arg>
         </onDuelResult>
+
+        <duelFlagOut>
+        </duelFlagOut>
+
+        <duelFlagIn>
+        </duelFlagIn>
     </ClientMethods>
 </root>

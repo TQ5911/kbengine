@@ -157,7 +157,17 @@
             <Default>   0                </Default>
         </combatAreaID>
 
+        <combatRefreshID>
+            <Type>      STRING           </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>   0                </Default>
+        </combatRefreshID>
 
+        <lightPillar>
+            <Type>          INT32                 </Type>
+            <Flags>         CELL_PRIVATE          </Flags>
+            <Default>       0                     </Default>
+        </lightPillar>
     </Properties>
 
     <BaseMethods>
@@ -189,6 +199,10 @@
 
         <onBornAction>
         </onBornAction>
+
+        <onTelBack>
+            <Arg>	VECTOR3				</Arg>
+        </onTelBack>
     </ClientMethods>
 </root>
 

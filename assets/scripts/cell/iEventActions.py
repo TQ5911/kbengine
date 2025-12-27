@@ -22,6 +22,7 @@ import creep_base as CBD
 import skill_skill as SSD
 import const_const as CONST
 import character_charData as CHD
+import antiAddictCategory_antiAddictCategory_def as AA_AA_DD
 
 class IEventActions(object):
     def doCombatActions(self, actionFunc, actionOwner, target, dmgSrcEntId, buildCtxFunc):
@@ -280,7 +281,7 @@ class IEventActions(object):
             buff.overlayBuff(target, toLevel, endTime)
             target.allClientsOnUpdateBuff(buffId, buff.getClientStream())
         else:
-            target.addBuff(buffId, 1, self.id, endTime, context.parentContext or context)
+            target.addBuff(buffId, 1, self.id, endTime, context)
 
         buff = target.getBuffByBuffId(buffId, target._getBuffSrcKey(buffId))
         #目标死亡等情况加不上buff或者buff第一跳打死目标了会把buff移除
@@ -303,15 +304,18 @@ class IEventActions(object):
             prob = float(args[2])
         if len(args) >= 4:
             endTime = float(args[3])
-            if self.IsAvatar and hasattr(context, 'skillId'):
-                ret, datas = self.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE)
-                if ret:
-                    if len(datas) == 2:
-                        checkBuffID = datas[0]
-                        addValue = datas[1]
-                        if checkBuffID > 0 and checkBuffID == buffId:
-                            endTime += addValue
-                            DEBUG_MSG("in addBuffBySkill, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE, datas)
+            
+            if context and hasattr(context, 'skillId'):
+                host = self.getAvatar()
+                if host:
+                    ret, datas = host.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE)
+                    if ret:
+                        if len(datas) == 2:
+                            checkBuffID = datas[0]
+                            addValue = datas[1]
+                            if checkBuffID > 0 and checkBuffID == buffId:
+                                endTime += addValue
+                                DEBUG_MSG("in addBuffBySkill, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE, datas)
 
         if random.uniform(0, 1) > prob:
             return
@@ -332,7 +336,7 @@ class IEventActions(object):
                 if not targetRole.isDestroyed:
                     targetRole.allClientsOnUpdateBuff(buffId, buff.getClientStream())
         else:
-            targetRole.addBuff(buffId, level, self.id, endTime, context.parentContext or context,kwargs)
+            targetRole.addBuff(buffId, level, self.id, endTime, context,kwargs)
 
         return True
 
@@ -743,7 +747,7 @@ class IEventActions(object):
 
             doSetState = (not self.IsAvatar and category == gameconst.SkillCategory.CAST_SKILL_WITH_ACTION)
 
-            skill.beginUseSkill(self, targetId, skillArgs, 0, doSetState=doSetState, parentCtx=context.parentContext)
+            skill.beginUseSkill(self, targetId, skillArgs, 0, doSetState=doSetState, parentCtx=context)
 
     def useCastingSkill(self, target, context, skillId, skillLv=1):
         pass
@@ -804,17 +808,6 @@ class IEventActions(object):
                     target.client.onHealItemResult(_delta, False)
 
         return True
-
-    def getShieldAbsorbDmg(self, target, context, *args):
-        if len(args)<=0:
-            return 0
-
-        buffId = args[0]
-        shieldVal = self.shieldDic.get(buffId)
-        if not shieldVal:
-            return 0
-
-        return shieldVal.absorbedVal
 
     def getSkillLevel(self, target, context, *args):
         skillId = 0
@@ -921,7 +914,7 @@ class IEventActions(object):
         rawGameEntityId = 0
         if context.actionType == actionContext.ACTION_USE_SKILL:
             props.setdefault('tmpProps', {}).update(
-                {'skillId': context.skillId})
+                {'skillId': context.skillId, 'skillLv': skillLv})
         elif context.actionType == actionContext.ACTION_FLOW_CONTROLLER_CALLED:
             createRadius = context.radius or 0
             createCount = context.number or 1
@@ -1051,7 +1044,7 @@ class IEventActions(object):
                 fixedPos = sMath.posByOffset(fixedPos, fixedDir*posOffsetNoTarget)
 
             props.setdefault('tmpProps', {}).update(
-                {'skillId': context.skillId})
+                {'skillId': context.skillId, 'skillLv': skillLv})
 
         elif context.actionType == actionContext.ACTION_FLOW_CONTROLLER_CALLED:
             fixedPos = context.position
@@ -1153,7 +1146,7 @@ class IEventActions(object):
                     toSkill.onChangedFromSkill(fromSkill)
 
             self.base.onChangeSkill(fromSkillId, toSkillId)
-            
+
         else:
             self.removeSkill(fromSkillId)
             self.addSkill(toSkillId, fromSkill.skillLv)
@@ -1589,3 +1582,20 @@ class IEventActions(object):
         WARNING_MSG('deprecated action: setVisibility')
 
     #--------------------------------只有玩家\机器人有的action-------------------------------------------------------
+
+    def createDunEntity(self, gid, delay):
+        gid = next(utils.generateGameEntityId(gid, 1))
+        _spaceMgr = self.spaceMgr
+        if not delay:
+            _spaceMgr.createDunEntity(gid)
+        else:
+            KBEngine.addTimer(delay, 0, lambda *args: _spaceMgr.createDunEntity(gid))
+
+    def addExpAction(self, expVal):
+        _opUUID = KBEngine.genUUID64()
+        _src = AA_AA_DD.datas.BONUS_SRC_EXP_ACTION
+        _detail = gameclass.AwardDetail()
+        self._addExp(expVal, _opUUID, _src, _detail)
+
+
+

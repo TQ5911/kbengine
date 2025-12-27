@@ -22,12 +22,11 @@ import branchData_branchData as BBD
 
 import lineSpace
 import iMapRefresher
-import iEntityLoaderInBase
 
 
-class ILineSpaceStub(iEntityLoaderInBase.IEntityLoaderInBase):
+class ILineSpaceStub(object):
     def __init__(self):
-        iEntityLoaderInBase.IEntityLoaderInBase.__init__(self)
+        pass
 
     def doNext(self):
         if hasattr(super(), 'doNext'):
@@ -52,6 +51,7 @@ class ILineSpaceStub(iEntityLoaderInBase.IEntityLoaderInBase):
     def createCellEntityInSpace(self, spaceNo, className, bornPosition, bornDirection, params):
         lineNo = formula.getLineNo(spaceNo)
         spaceVal = self.getLineSpaceVal(lineNo)
+        params['spaceMgrId'] = spaceVal.spaceMgrBoxCell.id
 
         spaceVal.lineSpaceBox.cell.createCellLocally(className, bornPosition, bornDirection, params)
 
@@ -227,7 +227,8 @@ class ILineSpaceStub(iEntityLoaderInBase.IEntityLoaderInBase):
         for lineNo in lineNoList:
             info['spaceNo'] = formula.getLineSpaceNo(self.lineType, lineNo)
             DEBUG_MSG("ILineSpaceStub::onLoadGroupEntities lineNo, spaceNo", lineNo, info['spaceNo'])
-            super(ILineSpaceStub, self).onLoadGroupEntities(info)
+            spaceVal = self.getLineSpaceVal(lineNo)
+            spaceVal.lineSpaceBox.cell.callOnSpace('onLoadGroupEntities', (info, spaceVal.spaceMgrBoxCell.id))
 
     def onRefreshGroupEntities(self, info):
         lineNoList = list(self.lineSpaces.keys())
@@ -242,4 +243,16 @@ class ILineSpaceStub(iEntityLoaderInBase.IEntityLoaderInBase):
 
         info['spaceNo'] = formula.getLineSpaceNo(self.lineType, lineNo)
         DEBUG_MSG("ILineSpaceStub::onRefreshGroupEntities lineNo, spaceNo", lineNo, info['spaceNo'])
-        super(ILineSpaceStub, self).onRefreshGroupEntities(info)
+        spaceVal = self.getLineSpaceVal(lineNo)
+        spaceVal.lineSpaceBox.cell.callOnSpace('onRefreshGroupEntities', (info, spaceVal.spaceMgrBoxCell.id))
+
+    def onDestroyGroupEntities(self, info):
+        lineNoList = list(self.lineSpaces.keys())
+        DEBUG_MSG("ILineSpaceStub::onDestroyGroupEntities", info, lineNoList)
+
+        if not info.get('spaceNo', None):
+            WARNING_MSG('ILineSpaceStub::onDestroyGroupEntities: spaceNo not found', info, lineNoList)
+            return
+
+        spaceVal = self.getLineSpaceVal(formula.getLineNo(info['spaceNo']))
+        spaceVal.lineSpaceBox.cell.callOnSpace('onDestroyGroupEntities', (info, spaceVal.spaceMgrBoxCell.id))

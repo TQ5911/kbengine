@@ -109,8 +109,6 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             AISTATE_GO_BATTLE_AREA: BotAIState_GoBattleArea(),
         }
         
-        
-
     def initBot(self):
         if self.getSelfMapId() == 4002 or self.player.level < 20:
             self.runGmCommand('$unlockallfunc 0')
@@ -129,6 +127,9 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
     def inDstMap(self):
         return self.getSelfMapId() == self.dstMapId
 
+    def changeDstMap(self, dstMapId):
+        self.dstMapId = dstMapId
+        self.getDstPos()
 
     def onBecomePlayer(self):
         self.debug('check_login:%s'%self.botClient.accountName)

@@ -86,6 +86,8 @@ import iMeridian
 import iMonthCard
 import iMineWarCell
 import iGuildBossChallenge
+import impStatistics
+import iDungeonSettlement
 
 class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace, impTask.ImpTask, impCombat.ImpCombat,
              EventMgr.EventMgr, iComplexTeleport.IComplexTeleport, impTeam.ImpTeam, impRaid.ImpRaid,
@@ -97,7 +99,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              iLeaderBoardCell.ILeaderBoardCell, iWonderLandCell.IWonderLandCell,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief,
              iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarCell.IMineWarCell,
-             iGuildBossChallenge.IGuildBossChallenge):
+             iGuildBossChallenge.IGuildBossChallenge, impStatistics.IStatistics, iDungeonSettlement.IDungeonSettlement):
 
     IsAvatar = True
     IsCombatUnit = True
@@ -118,6 +120,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         iMonthCard.IMonthCard.__init__(self)
         iMineWarCell.IMineWarCell.__init__(self)
         iGuildBossChallenge.IGuildBossChallenge.__init__(self)
+        impStatistics.IStatistics.__init__(self)
+        iDungeonSettlement.IDungeonSettlement.__init__(self)
         self.addDatetimeTimerTick()
 
         # 设置每秒允许的最快速度, 超速会被拉回去
@@ -142,7 +146,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.showCompleteNum = utils.getShowCompleteModelNum()
         self.checkPickedCollections()
         INFO_MSG('on create', self.spaceNo, self.position)
-        INFO_MSG('test review')
+        # INFO_MSG('test review')
+        self._updateExpRateToBase()
+        self.viewMgr = KBEngine.getNewViewManager()
+        # 上线重算下是否可战斗区域
+        self.calcPkSafeArea()
 
     @property
     def group(self):
@@ -338,6 +346,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 self.checkCollectionGatherFlag(m.id)
 
         self.handleCrossServerWaitingClientInitReason()
+        self.toClientCubeLoginData()
 
         #self._callback(10, 'getAliasIDs', (), gametimer.TIMER_TAG_SEND_ALL_ALIAS_IDS)
 
@@ -357,7 +366,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         # 如果不希望客户端显示实体e，可以执行：
         # self.setNeedWitness(e.id, 0),实体已经在客户端加载时也可以调用这个方法把实体隐藏掉
         if e.IsAvatar and e.isCrossServerInLocalServer:
-            self.viewCrossServerSet.add(e.id)
+            if gameconfig.enableViewMgr():
+                self.viewMgr.addCross(e.id)
+            else:
+                self.viewCrossServerSet.add(e.id)
             return
 
         if self.spaceNo != e.spaceNo:
@@ -377,15 +389,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     # onGetWitness时，客户端已经enterWorld了，这里通知base
     # 调用initClientBase及initClientOnCell根据是否重登初始化客户端需要的数据
-    def onGetWitness(self):
-        INFO_MSG('zt: onGetWitness', self.novice)
-        self.base.onCellGetWitness()
+    def onGetWitness(self, chn):
+        INFO_MSG('zt: onGetWitness', self.novice, chn)
+        self.base.onCellGetWitness(chn)
 
     def clientDeath(self):
         #raidId = self.raidUUID
         #if raidId > 0:
         #    gameengine.getRaidStub(raidId).onAvatarClientDeath(raidId, 0, self.gbId)
-
         # move状态由客户端控制，如果客户端crash，就不会主动移除，重连回来会原地播move动作
         if not self.hasMovementController():
             self.removeState(gameconst.State.Moving)
@@ -528,6 +539,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 curAreaId = utils.getAreaId(formula.getMapId(self.spaceNo), self.position)
                 if curAreaId != self.areaId:
                     WARNING_MSG("reachNewArea areaId != self.areaId", curAreaId, self.areaId, self.position)
+
+            self.calcPkSafeArea()
 
     @utils.isMyself
     def reqTransmitWithMapPoint(self, exposed, mapId, exampleId):
@@ -750,24 +763,100 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             if allCacheSetLen == 0 and self.checkTargetTypeTimeId > 0:
                 self.pyDelTimer(self.checkTargetTypeTimeId, gametimer.CHECK_TARGET_TYPE_TIMER)
                 self.checkTargetTypeTimeId = 0
-        self.removeViewRelation(e.id)
-        self.viewCrossServerSet.discard(e.id)
+
+        if gameconfig.enableViewMgr():
+            self.viewMgr.removeViewRelation(e.id)
+            self.viewMgr.removeCross(e.id)
+        else:
+            self.removeViewRelation(e.id)
+            self.viewCrossServerSet.discard(e.id)
+
+    def reCheckRelationType(self, target):
+        if gameconfig.enableViewMgr():
+            self.viewMgr.removeViewRelation(target.id)
+        else:
+            self.removeViewRelation(target.id)
+
+        self.checkRelationType(target, False)
+        self.checkAttachmentEntityRelationType(target)
 
     def onUpdateBegin(self):
-        self.reSortRelationList()
+        if gameconfig.enableViewMgr():
+            _nameNum = utils.getShowNameNum()
+            _ret = self.viewMgr.reSortRelation(
+                self.showCompleteNum,
+                _nameNum,
+            )
+            if _ret is None:
+                return
 
-    @utils.isMyself
-    def telToTeleporter(self, exposed, telId, lineNo, lineType):
-        INFO_MSG("telToTeleporter::~", telId, lineNo, lineType)
-        src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
-        telEnt, reason = self._telToTeleporterCheck(telId, lineNo, lineType)
-        if not telEnt:
-            WARNING_MSG("telToTeleporter::failed", reason, telId, lineNo, self.spaceNo,
-                        len(gameglobal.teleporterGIDToEntIdMap.get(self.spaceNo) or ()),
-                        gameglobal.teleporterGIDToEntIdMap.get(self.spaceNo, {}).get(telId))
+            _complete, _names, _hides, _removes = _ret
+            for i in _complete:
+                entity = KBEngine.entities.get(i)
+                entity and entity.pySetWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_ALL)
+
+            for i in _names:
+                entity = KBEngine.entities.get(i)
+                entity and entity.pySetWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_NAME)
+
+            for i in _hides:
+                entity = KBEngine.entities.get(i)
+                entity and entity.pySetWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_HIDE)
+
+            if _removes:
+                self.client.onRemoveCompleteWitness(_removes)
+
             return
 
-        self.teleportByTeleporter(telId, 0, telEnt, lineNo, lineType, src)
+        self.reSortRelationList()
+
+    def checkRelationType(self, target, bEnterView=True):
+        if target.IsAvatar:
+            if gameconfig.enableViewMgr():
+                self.viewMgr.addViewRelation(target.id)
+            else:
+                self.addViewRelation(target.id)
+            return
+
+        if target.IsSummon or target.IsCreation:
+            _host = utils.getHostEntity(target)
+            if _host and _host.IsAvatar:
+                if _host.id == self.id:
+                    target.setWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_ALL)
+
+                elif self.viewMgr.isInComplete(_host.id):
+                    target.setWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_ALL)
+
+                elif self.viewMgr.isInName(_host.id):
+                    target.setWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_NAME)
+
+                else:
+                    target.setWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_HIDE)
+
+                return
+
+        target.setWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_ALL)
+
+    @gamedecorator.crossServer
+    def onCrossServerStart(self, e):
+        if gameconfig.enableViewMgr():
+            if self.viewMgr.checkInView(e.id):
+                self.viewMgr.removeViewRelation(e.id)
+                self.viewMgr.addCross(e.id)
+        else:
+            if e.id in self.enterViewList:
+                self.removeViewRelation(e.id)
+                self.viewCrossServerSet.add(e.id)
+
+    def onCrossServerEnd(self, e):
+        if gameconfig.enableViewMgr():
+            if self.viewMgr.isInCross(e.id):
+                self.viewMgr.removeCross(e.id)
+                self.checkRelationType(e)
+        else:
+            if e.id in self.viewCrossServerSet:
+                self.viewCrossServerSet.remove(e.id)
+                self.checkRelationType(e)
 
     def getRandomTeleporterDstPos(self, telEntId, dstPos, count=5):
         _dstPosOffset = NPC_T.datas.get(telEntId, {}).get("teleportOffset", 0)
@@ -913,16 +1002,23 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             return
 
         # TODO x: get valid pos
-        pos = utils.getPlayerBreakAwayStuckPos(self.spaceNo, self.position)
+        pos, direction = utils.getPlayerBreakAwayStuckPos(self.spaceNo, self.position, True)
+        if self.spaceMgr and hasattr(self.spaceMgr, 'breakStuckPos'):
+            dunPos = self.spaceMgr.breakStuckPos
+            if dunPos:
+                pos = dunPos
+                direction = self.spaceMgr.breakStuckDir
+                # INFO_MSG('breakAwayStuck:: use dun breakStuckPos', pos, direction)
+
         if not pos:
-            pos, _ = utils.getPlayerBornInfo()
+            pos, direction = utils.getPlayerBornInfo()
 
         if not pos:
             ERROR_MSG('breakAwayStuck:', self.spaceNo, self.position)
             return
 
         self.beforeTeleport(self.spaceNo)
-        self.telToPos(pos)
+        self.telToPos(pos, (0.0, 0.0, direction * math.pi / 180))
         self.showMsg(CONST.datas['resetPositionSuccessMsg']['value'], [])
         self.setTempMiscProp(gameconst.AvatarProps.lastBreakAwayTime, now)
 
@@ -934,6 +1030,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 self.spaceMgrId = 0
 
             self.resetSpaceEnterT()
+            self.calcPkSafeArea()
+            if formula.isMineWarSpace(self.spaceNo):
+                self.cellFlags = utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE)
+            else:
+                self.cellFlags = utils.bitReset(self.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE)
 
     def onTeleportSuccess(self, nearbyEntity):
         gameglobal.roleGBIDToEntId[self.gbId] = self.id
@@ -1118,40 +1219,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self._cancelAllRaidJoinRequest()
         self._cancelAllTeamJoinRequest()
 
-    def randomAvaliablePoints(self, center, radius, num, layer):
-        if radius > 30:
-            ERROR_MSG('randomAvaliablePoints but radius too large:', center, radius, num, layer)
-            radius = min(30, radius)
-
-        posList = self.getRandomPosition(center, radius)
-        # radius_2 = radius * radius
-        # posList = []
-        # for i in range(-radius, radius + 1):
-        #     for j in range(0, radius + 1):
-        #         if i * i + j * j > radius_2:
-        #             break
-        #
-        #         _i = center[0] + i
-        #         _j = center[2] + j
-        #         if KBEngine.getMapTileNavCost(self.spaceID, int(_i), int(_j), layer) == gameconst.NavCost.costPass:
-        #             posList.append((_i, 0, _j))
-        #
-        #         if j == 0:
-        #             continue
-        #
-        #         _j = center[2] - j
-        #         if KBEngine.getMapTileNavCost(self.spaceID, int(_i), int(_j), layer) == gameconst.NavCost.costPass:
-        #             posList.append((_i, 0, _j))
-        #
-        # if not posList:
-        #     return posList
-        #
-        # if len(posList) <= num:
-        #     return posList
-        #
-        # return random.sample(posList, num)
-        return posList
-
     def pyWriteToDB(self):
         if self.isCrossServerInOtherServer:
             INFO_MSG("pyWriteToDB isCrossServerInOtherServer")
@@ -1173,16 +1240,16 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.isNeedResortView = True
 
     def checkInView(self, targetID):
+        if gameconfig.enableViewMgr():
+            return self.viewMgr.checkInView(targetID)
+
         return targetID in self.enterViewList
 
     def pySetWitnessType(self, eId, witnessType):
         self.setWitnessType(eId, witnessType)
-
-    def checkRelationType(self, target, bEnterView=True):
-        if target.IsAvatar:
-            self.addViewRelation(target.id)
-        else:
-            target.setWitnessType(self.id, gameconst.WitnessType.WITNESS_TYPE_ALL)
+        for _summonId in self.petList:
+            _summon = KBEngine.entities.get(_summonId)
+            _summon and _summon.setWitnessType(eId, witnessType)
 
     def reSortRelationList(self):
         if not self.isNeedResortView:
@@ -1242,7 +1309,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.isNeedResortView = False
         self.viewEnterViewSet.clear()
         self.viewLeaveViewSet.clear()
-
 
     def batchlyCall(self, iterableCall, batchNum, interval=0.5, callback=None):
         'callable obj cannot store in _callback data'
@@ -1406,7 +1472,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             'onGetTargetPlayerInfoOffline',
             None)
 
-    def _concatPlayerInfo(self, guildJob):
+    def _concatPlayerInfo(self, guildData):
         data = {}
         #个人信息
         data['gbId'] = self.gbId
@@ -1417,7 +1483,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         data['totalScore'] = self.totalScore
         data['guildName'] = self.guildName
         data['guildUUID'] = self.guildUUID
-        data['guildJob'] = guildJob
+        data['guildJob'] = guildData[0]
+        data['guildDspFlag'] = guildData[1]
+        data['guildIcon'] = guildData[2]
         data['appearance'] = self.appearance.toJsonString()
         #装备
         dic = self.bodyEquipData.toBodyEquipsClientDict()
@@ -1431,15 +1499,15 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def onGetTargetPlayerInfo(self, src):
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             self.guildUUID,
-            'getMemberJob',
+            'getMemberJobAndGuildCache',
             (self.gbId, self, src),
             self,
-            'onGetMemberJob',
-            (GA_A_DD.datas.BONUS_SRC_UNKNOWN, src),
+            'onGetMemberJobAndGuildCache',
+            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0), src),
         )
 
-    def onGetMemberJob(self, job, src):
-        zStr = self._concatPlayerInfo(job)
+    def onGetMemberJobAndGuildCache(self, guildData, src):
+        zStr = self._concatPlayerInfo(guildData)
         src.base.streamStringProxy(zStr, '', gameconst.StreamStringID.PLAYER_INFO_DATA)
 
     def onGetTargetPlayerInfoOffline(self, targetGbId):
@@ -1568,4 +1636,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         _bit = V_VD.funcDic[bitStr]
         return self._isUIVisibleCell(_bit)
 
+    def setCellFlags(self, flags):
+        self.cellFlags = utils.bitSet(self.cellFlags, flags)
 

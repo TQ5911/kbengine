@@ -27,44 +27,60 @@
             <Type>      PY_DICT         </Type>
             <Flags>     BASE            </Flags>
         </cubeRooms>
+
+        <randomTeleporterPool>
+            <Type>      PY_LIST         </Type>
+            <Flags>     BASE            </Flags>
+        </randomTeleporterPool>
     </Properties>
 
     <BaseMethods>
         <doEnterCube>
             <Arg>       ENTITYCALL          </Arg>
-            <Arg>       BOOL                </Arg>   
-            <Arg>       PLAYER_GBID         </Arg>   
-            <Arg>       SPACE_NO            </Arg>   
+            <Arg>       MAP_ID              </Arg>
+            <Arg>       PLAYER_GBID         </Arg>
             <Arg>       PYTHON              </Arg>
         </doEnterCube>
 
         <reliveToCubeRoom>
             <Arg>       ENTITYCALL          </Arg>
             <Arg>       MAP_ID              </Arg>
-            <Arg>       PLAYER_GBID         </Arg>   
+            <Arg>       PLAYER_GBID         </Arg>
             <Arg>       PYTHON              </Arg>
         </reliveToCubeRoom>
 
         <onEnterCubeSuccess>
-            <Arg>       PLAYER_GBID         </Arg>   
-            <Arg>       SPACE_NO            </Arg>   
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       SPACE_NO            </Arg>
         </onEnterCubeSuccess>
 
         <onLeaveCube>
-            <Arg>       PLAYER_GBID         </Arg>   
-            <Arg>       SPACE_NO            </Arg>   
-            <Arg>       SPACE_NO            </Arg>   
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       SPACE_NO            </Arg>
+            <Arg>       SPACE_NO            </Arg>
         </onLeaveCube>
 
         <logonEnterCube>
             <Arg>       ENTITYCALL          </Arg>
-            <Arg>       PLAYER_GBID         </Arg>   
-            <Arg>       SPACE_NO            </Arg>   
+            <Arg>       PLAYER_GBID         </Arg>
+            <Arg>       SPACE_NO            </Arg>
             <Arg>       PYTHON              </Arg>
         </logonEnterCube>
 
         <onAvatarOffline>
-            <Arg>       PLAYER_GBID         </Arg>   
+            <Arg>       PLAYER_GBID         </Arg>
         </onAvatarOffline>
+
+        <gmEnterTargetRoom>
+             <Arg>       ENTITYCALL          </Arg>
+             <Arg>       PLAYER_GBID         </Arg>
+             <Arg>       SPACE_NO            </Arg>
+        </gmEnterTargetRoom>
+
+        <enterRandomRoom>
+             <Arg>       ENTITYCALL             </Arg>
+             <Arg>       PLAYER_GBID            </Arg>
+             <Arg>       PYTHON                 </Arg>
+        </enterRandomRoom>
     </BaseMethods>
 </root>

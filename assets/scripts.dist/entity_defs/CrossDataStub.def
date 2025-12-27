@@ -11,6 +11,12 @@
             <Type>          PY_DICT         </Type>
             <Flags>         BASE                </Flags>
         </remoteCallCache>
+
+        <connectSuccessTimes>
+            <Type>          UINT32              </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </connectSuccessTimes>
     </Properties>
 
     <BaseMethods>

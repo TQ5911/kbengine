@@ -165,9 +165,9 @@
             <Arg>           PLAYER_GBID     </Arg>
         </getPlayerInfoOffline>
 
-        <onGetMemberJob>
-            <Arg>   UINT8          </Arg>
+        <onGetMemberJobAndGuildCache>
+            <Arg>   PY_TUPLE       </Arg>
             <Arg>   PYTHON         </Arg>
-        </onGetMemberJob>
+        </onGetMemberJobAndGuildCache>
     </BaseMethods>
 </root>

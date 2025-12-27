@@ -192,22 +192,6 @@ class BehaveCtrl(object):
             return True
         return False
 
-    def farWithTargetFromHome(self):
-        owner = self.owner
-        wner = self.owner
-        if not owner or owner.isDie(): return False
-
-        if not self.targetId:
-            target = self.selectTarget()
-        else:
-            target = KBEngine.entities.get(self.targetId)
-        if not target or target.isDie(): return False
-
-        if sMath.distance2D(target.position, owner.position) >= math.pow(
-                owner.getEscapeDistance(), 2):
-            return True
-        return False
-
     def farFromHome(self):
         owner = self.owner
         if sMath.distance2DToCompareFrom3DPosition(owner.position, owner.bornPosition) >= math.pow(
@@ -274,6 +258,10 @@ class BehaveCtrl(object):
         self.machine.transform(self, State.PATROL)
 
         self.clearNavigationTimes()
+        # 被雷劈之后会一直进战，因为巡逻中没有退出战斗状态的机制
+        # 所以这里改成检测到进战就退出战斗
+        if owner.hasState(CSDD.datas.Fighting):
+            owner.removeState(CSDD.datas.Fighting)
 
     def destroyAllVassal(self):
         owner = self.owner
@@ -305,7 +293,18 @@ class BehaveCtrl(object):
 
     def clearHateAndTelBack(self):
         self.clearHateAndResetSkill()
-        self.owner.telToPos(self.owner.bornPosition)
+        self.owner.telToPos(self.owner.bornPosition, self.owner.bornDirection)
+
+    def clearHateAndTelBackWithBroadcast(self, needSync=True):
+        import traceback
+        DEBUG_MSG("-------", traceback.format_stack())
+        self.owner.cancelController('Movement')
+        self.owner.removeState(gameconst.State.Moving)
+        self.clearHateAndResetSkill()
+        self.owner.allClients.onTelBack(tuple(self.owner.position))
+        self.owner.telToPos(self.owner.bornPosition, self.owner.bornDirection)
+        if needSync:
+            self.owner.selfSync("syncTelBackCB", (self.owner.id, ))
 
     def clearHateAndRestart(self):
         self.clearHateAndResetSkill()
@@ -1310,7 +1309,7 @@ class HateCtrl(object):
                     self.hateDict.addToHateListByAttack(targetId, damage)
 
 
-        if self.isGroupMonster() and not fromSync:
+        if self.isGroupMonster() and not fromSync and isFirstHate:
             kwargs['fromSync'] = True
             self.syncIncreaseHateInGroup(targetId, damage=damage,
                                          isVisionTrigger=isVisionTrigger,
@@ -1360,6 +1359,12 @@ class HateCtrl(object):
     def syncIncreaseHateInGroupCB(self, *args, **kwargs):
         if self.hateDict.isEmpty(False):
             self.syncHateTo(*args, **kwargs)
+
+    def syncTelBackCB(self, *args, **kwargs):
+        DEBUG_MSG("syncTelBackCB", self.owner.bornPosition, self.owner.bornDirection)
+        self.clearHateAndTelBackWithBroadcast(False)
+        self.restart()
+        self.changeBornState(gameconst.BornStateType.reMove)
 
     def synMonsterHateInRange(self, rng):
         owner = self.owner
@@ -1540,7 +1545,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             return
 
         if owner.isDie():
-            if self.isGroupMonster():
+            if self.isGroupMonster() and not self.hateDict:
                 self.syncIncreaseHateInGroup(targetId, damage=damage)
             return
 

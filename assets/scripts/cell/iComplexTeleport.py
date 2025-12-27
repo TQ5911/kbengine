@@ -21,6 +21,8 @@ import complexTeleportOption
 import gameconfig
 
 import cube_config
+import cube_floor
+import cube_room
 import gamePlay_gamePlay as GP_GP
 import conflict_conflict_def as CCD
 import gamePlay_singleSceneData as GPSSDD
@@ -254,7 +256,7 @@ class IComplexTeleport(object):
             return gameclass.BoolResult(True, gameconst.CompleteTeleportLeaveFailedReason.ARGS_DEFINED)
 
         elif leaveFnName == 'guildBossDungeon':
-            leaveContext.update({'spaceMgrCell': self.spaceMgr})
+            leaveContext.update({'guildUUID': self.guildUUID, 'spaceMgrBox': self.spaceMgr.base, 'spaceMgrCell': self.spaceMgr})
             return gameclass.BoolResult(True, gameconst.CompleteTeleportLeaveFailedReason.ARGS_DEFINED)
         else:
             not noErrorMsg and ERROR_MSG('packageComplexTeleportLeaveData:: leave from current space unknown', self.spaceNo, leaveFnName)
@@ -715,7 +717,7 @@ class IComplexTeleport(object):
         # callback base
         extra['raidId'] = self.raidId
         if self.spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF:
-            self.base.onEnterChiefDungeon(self.spaceNo, spaceMgrBox, extra)
+            self.base.onEnterChiefDungeon(self.spaceNo, dungeonNo, spaceMgrBox, extra)
         else:
             self.base.onEnterDungeon(self.spaceNo, spaceMgrBox, extra)
         self._createRaidDungeonTrap(dungeonNo)
@@ -1062,7 +1064,7 @@ class IComplexTeleport(object):
             )
             extra['tlogProps'] = _kwargs
             extra['actId'] = gameconst.ACT_ID_CONST.ACTIVITY_CRUSADE_ID
-            self.base.onEnterCrusadeDungeon(toSpaceNo, spaceMgrBox, extra)
+            self.base.onEnterCrusadeDungeon(toSpaceNo, dungeonNo, spaceMgrBox, extra)
         else:
             self.base.onEnterDungeon(toSpaceNo, spaceMgrBox, extra)
 
@@ -1255,6 +1257,11 @@ class IComplexTeleport(object):
             _fromMapId = formula.getMapId(fromSpaceNo)
             self.fromCubeMapId = _fromMapId
             self.startCubeCowTimer()
+
+            _floor = cube_room.datas[_toMapId]['floor']
+            _buffId = cube_floor.datas[_floor]['cowPassBuffID']
+            # 这个buffID会在切换场景时候自动删除
+            self.addBuff(_buffId, 1, self.id)
 
         return True
 

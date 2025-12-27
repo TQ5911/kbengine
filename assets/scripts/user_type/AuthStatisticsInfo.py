@@ -40,7 +40,7 @@ class AuthStatisticsVal(userType.UserSoleType):
             if not _itemData:
                 continue
 
-            if _itemData['quality'] < gameconst.ItemQuality.ORANGE:
+            if _itemData['quality'] < gameconst.ItemQuality.PURPLE:
                 continue
 
             self.itemsDic[itemId] = self.itemsDic.get(itemId, 0) + num
@@ -50,7 +50,7 @@ class AuthStatisticsVal(userType.UserSoleType):
             if not _itemData:
                 continue
 
-            if _itemData['quality'] < gameconst.ItemQuality.ORANGE:
+            if _itemData['quality'] < gameconst.ItemQuality.PURPLE:
                 continue
 
             if it.uniqueId not in self.itemUniqueIds:
@@ -81,8 +81,9 @@ class AuthStatisticsVal(userType.UserSoleType):
         self.actTimesDic = {}
         self.hostOffline = utils.getNow()
 
-    def addUseMoney(self, delta):
+    def addUseMoney(self, owner, delta):
         self.dailyUseMoney += delta
+        owner.client.onDailyUseMoneyChanged(self.dailyUseMoney)
 
     def addActTimes(self, actId):
         if actId not in self.actTimesDic:

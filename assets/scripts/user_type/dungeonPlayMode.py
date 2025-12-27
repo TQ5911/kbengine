@@ -53,12 +53,100 @@ class CrusadeDungeonPlayMode(_DungeonPlayMode):
         self.mulFinalDmg = mulFinalDmg
         self.mulHurt = mulHurt
 
-class CrusadeDungeonPlayModePlayerObj(userType.UserSoleType):
-    def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0):
+class DungeonPlayModePlayerMiXin(userType.UserSoleType):
+    def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
         self.rewardNumber = rewardNumber
+        self.rewardCoinNumber = rewardCoinNumber
+        self.rewardItemNumber = rewardItemNumber
         self.rewardDailyCount = rewardDailyCount
         self.useItemAddRewardNumber = useItemAddRewardNumber
         self.useCoinAddRewardNum = useCoinAddRewardNum
+        self.ticketType = ticketType
+    
+    def isCanTakeReward(self):
+        return self.rewardNumber > 0
+
+    def isCanAddRewardByItem(self, useNum):
+        return self.useItemAddRewardNumber >= useNum
+
+    def isCanAddRewardByCoin(self, useNum):
+        return self.useCoinAddRewardNum >= useNum
+
+    def resetUseItemAddRewardWeeklyNum(self):
+        self.useItemAddRewardNumber = self.rewardNumItemWeeklyLimit
+
+    def resetUseCoinAddRewardDailyNum(self):
+        self.useCoinAddRewardNum = self.rewardNumCoinDailyLimit
+
+    def addRewardNumByDefault(self, num):
+        self.addRewardNum(gameconst.DungeonAddRewardNumCountType.DEFAULT_COUNT, num, overLimit=False)
+
+    def addRewardNumByUseSpecialItem(self, num):
+        self.addRewardNum(gameconst.DungeonAddRewardNumCountType.ITEM_COUNT, num, overLimit=True)
+        nn = self.useItemAddRewardNumber - num
+        self.useItemAddRewardNumber = nn if nn >= 0 else 0
+
+    def addRewardNumByUseCoin(self, num):
+        self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COIN_COUNT, num, overLimit=True)
+        nn = self.useCoinAddRewardNum - num
+        self.useCoinAddRewardNum = nn if nn >= 0 else 0
+
+    def addRewardNum(self, countType, num, overLimit=False):
+        if countType not in gameconst.DungeonAddRewardNumCountType.VALID_TYPE:
+            return
+        newNum = self.rewardNumber + num
+        if newNum < 0:
+            WARNING_MSG('Crusade _addRewardWithLimit 1:: newNum smaller than zero', newNum, countType)
+            newNum = 0
+        self.rewardNumber = newNum
+
+        if countType == gameconst.DungeonAddRewardNumCountType.ITEM_COUNT:
+            newNum = self.rewardItemNumber + num
+            if newNum < 0:
+                WARNING_MSG('Crusade _addRewardWithLimit 2:: newNum smaller than zero', newNum, countType)
+                newNum = 0
+            self.rewardItemNumber = newNum
+
+        if countType == gameconst.DungeonAddRewardNumCountType.COIN_COUNT:
+            newNum = self.rewardCoinNumber + num
+            if newNum < 0:
+                WARNING_MSG('Crusade _addRewardWithLimit 3:: newNum smaller than zero', newNum, countType)
+                newNum = 0
+            self.rewardCoinNumber = newNum
+
+    def deductRewardNum(self):
+        INFO_MSG('deductRewardNum begin: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
+        if self.rewardNumber > 0:
+            # 优先使用金币购买的次数
+            if self.rewardCoinNumber > 0:
+                self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COIN_COUNT, -1)
+                self.ticketType = gameconst.DungeonTicketType.GOLD
+            else:
+                # 看看默认次数是否还有，优先使用默认次数，后面再使用道具购买的，避免后续有其他业务导致玩家损失
+                if self.rewardNumber - self.rewardItemNumber > 0:
+                    self.addRewardNum(gameconst.DungeonAddRewardNumCountType.DEFAULT_COUNT, -1)
+                    self.ticketType = gameconst.DungeonTicketType.NORMAL
+                elif self.rewardItemNumber > 0:
+                    self.addRewardNum(gameconst.DungeonAddRewardNumCountType.ITEM_COUNT, -1)
+                    self.ticketType = gameconst.DungeonTicketType.ITEM
+        else:
+            gameengine.reportCritical(f"{self.__class__.__name__}::deductRewardNum:: remain count is zero !!!", self)
+        INFO_MSG('deductRewardNum end: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber)
+
+    def hasCoinCount(self):
+        return self.rewardCoinNumber > 0
+    
+    def clear(self):
+        self.rewardNumber = 0
+        self.rewardCoinNumber = 0
+        self.rewardItemNumber = 0
+
+    def checkUsedTicketType(self, ticketType):
+        return self.ticketType == ticketType
+
+class CrusadeDungeonPlayModePlayerObj(DungeonPlayModePlayerMiXin):
+    def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
+        DungeonPlayModePlayerMiXin.__init__(self, rewardNumber, useItemAddRewardNumber, rewardDailyCount, useCoinAddRewardNum, rewardCoinNumber, rewardItemNumber, ticketType)
 
     @property
     def dailyRewardNum(self):
@@ -72,51 +160,6 @@ class CrusadeDungeonPlayModePlayerObj(userType.UserSoleType):
     def rewardNumCoinDailyLimit(self):
         return int(TDC_CFG.datas['rewardNumCoinDailyLimit']['value'])
 
-    def isCanTakeReward(self):
-        return self.rewardNumber > 0
-
-    def isCanAddRewardByItem(self, useNum):
-        return self.useItemAddRewardNumber >= useNum
-
-    def isCanAddRewardByCoin(self, useNum):
-        return self.useCoinAddRewardNum >= useNum
-
-    def resetUseItemAddRewardNumber(self):
-        self.useItemAddRewardNumber = self.rewardNumItemWeeklyLimit
-
-    def resetUseCoinAddRewardNum(self):
-        self.useCoinAddRewardNum = self.rewardNumCoinDailyLimit
-
-    def addRewardNumByUseSpecialItem(self, num):
-        self.addRewardNum(num, overLimit=True)
-        nn = self.useItemAddRewardNumber - num
-        self.useItemAddRewardNumber = nn if nn >= 0 else 0
-
-    def addRewardNumByUseCoin(self, num):
-        self.addRewardNum(num, overLimit=True)
-        nn = self.useCoinAddRewardNum - num
-        self.useCoinAddRewardNum = nn if nn >= 0 else 0
-
-    def addRewardNum(self, num, overLimit=False):
-        if overLimit or num < 0:
-            self._addRewardNoLimit(num)
-        else:
-            self._addRewardWithLimit(num)
-
-    def _addRewardWithLimit(self, num):
-        newNum = self.rewardNumber + num
-        if newNum < 0:
-            WARNING_MSG('Crusade _addRewardWithLimit:: newNum smaller than zero', newNum)
-            newNum = 0
-        self.rewardNumber = newNum
-
-    def _addRewardNoLimit(self, num):
-        newNum = self.rewardNumber + num
-        if newNum < 0:
-            WARNING_MSG('Crusade _addRewardNoLimit:: newNum smaller than zero', newNum)
-            newNum = 0
-        self.rewardNumber = newNum
-
 class ChiefDungeonPlayMode(_DungeonPlayMode):
 
     def __init__(self, dunLevel=0, mulFinalDmg=0, mulHurt=0):
@@ -127,12 +170,9 @@ class ChiefDungeonPlayMode(_DungeonPlayMode):
         self.mulFinalDmg = mulFinalDmg
         self.mulHurt = mulHurt
 
-class ChiefDungeonPlayModePlayerObj(userType.UserSoleType):
-    def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0):
-        self.rewardNumber = rewardNumber
-        self.rewardDailyCount = rewardDailyCount
-        self.useItemAddRewardNumber = useItemAddRewardNumber
-        self.useCoinAddRewardNum = useCoinAddRewardNum
+class ChiefDungeonPlayModePlayerObj(DungeonPlayModePlayerMiXin):
+    def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
+        DungeonPlayModePlayerMiXin.__init__(self, rewardNumber, useItemAddRewardNumber, rewardDailyCount, useCoinAddRewardNum, rewardCoinNumber, rewardItemNumber, ticketType)
 
     @property
     def dailyRewardNum(self):
@@ -145,49 +185,18 @@ class ChiefDungeonPlayModePlayerObj(userType.UserSoleType):
     @property
     def rewardNumCoinDailyLimit(self):
         return int(RBC_CFG.datas['rewardNumCoinDailyLimit']['value'])
+    
+class DungeonPassRecords(userType.UserSoleType):
+    def __init__(self, entryIds=[], entryStatus=[]):
+        self.passEntryRecords = {}
+        for idx in range(0, len(entryIds)):
+            self.passEntryRecords[entryIds[idx]] = entryStatus[idx]
 
-    def isCanTakeReward(self):
-        return self.rewardNumber > 0
+    def finishEntryStatus(self, entryId):
+        self.passEntryRecords[entryId] = True
 
-    def isCanAddRewardByItem(self, useNum):
-        return self.useItemAddRewardNumber >= useNum
-
-    def isCanAddRewardByCoin(self, useNum):
-        return self.useCoinAddRewardNum >= useNum
-
-    def resetUseItemAddRewardNumber(self):
-        self.useItemAddRewardNumber = self.rewardNumItemWeeklyLimit
-
-    def resetUseCoinAddRewardNum(self):
-        self.useCoinAddRewardNum = self.rewardNumCoinDailyLimit
-
-    def addRewardNumByUseSpecialItem(self, num):
-        self.addRewardNum(num, overLimit=True)
-        nn = self.useItemAddRewardNumber - num
-        self.useItemAddRewardNumber = nn if nn >= 0 else 0
-
-    def addRewardNumByUseCoin(self, num):
-        self.addRewardNum(num, overLimit=True)
-        nn = self.useCoinAddRewardNum - num
-        self.useCoinAddRewardNum = nn if nn >= 0 else 0
-
-    def addRewardNum(self, num, overLimit=False):
-        if overLimit or num < 0:
-            self._addRewardNoLimit(num)
-        else:
-            self._addRewardWithLimit(num)
-
-    def _addRewardWithLimit(self, num):
-        newNum = self.rewardNumber + num
-        if newNum < 0:
-            WARNING_MSG('Chief _addRewardWithLimit:: newNum smaller than zero', newNum)
-            newNum = 0
-        self.rewardNumber = newNum
-
-    def _addRewardNoLimit(self, num):
-        newNum = self.rewardNumber + num
-        if newNum < 0:
-            WARNING_MSG('Chief _addRewardNoLimit:: newNum smaller than zero', newNum)
-            newNum = 0
-        self.rewardNumber = newNum
+    def checkEntryStatus(self, entryId):
+        if entryId and entryId > 0:
+            return entryId not in self.passEntryRecords
+        return False
 

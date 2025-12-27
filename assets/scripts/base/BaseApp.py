@@ -28,7 +28,7 @@ import mailAssistor
 import elasticUtils
 
 from proto.interface_pb2 import BaseApp as BaseAppService
-from proto.interface_pb2 import Void, Interface_Stub, ConfigVal, ListVal, IntVal, SetAccountCompVal
+from proto.interface_pb2 import Void, Interface_Stub, ConfigVal, ListVal, IntVal, SetAccountCompVal, AntiAddictionData
 
 from rpc import RpcChannel
 
@@ -436,60 +436,6 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
     def addCallQueue(self, callableObj):
         self.callObjQueue.append(callableObj)
 
-    # def _checkGlobalStubsHalfPrepared(self):
-    #     for lineType, stubName in gameconst.lineStubMap.items():
-    #         if not KBEngine.globalData.get(gameengine.makeLineStubKey(lineType)):
-    #             INFO_MSG('still waiting for archived stub', stubName)
-    #             return False
-    #     for stubName in gameconst.GLOBAL_BASE_STUB_ARCHIVE:
-    #         if not KBEngine.globalData.get(stubName):
-    #             INFO_MSG('still waiting for archived stub', stubName)
-    #             return False
-    #
-    #     for stubName in gameconst.GLOBAL_BASE_STUB_UNARCHIVE:
-    #         if not KBEngine.globalData.get(stubName):
-    #             INFO_MSG('still waiting for stub', stubName)
-    #             return False
-    #     for i in range(gameconst.TEAMSTUB_CONFIG_NUM):
-    #         stubName = gameconst.GLOBAL_BASE_STUB_TEAMSTUB + str(i)
-    #         if not KBEngine.globalData.get(stubName):
-    #             INFO_MSG('still waiting for stub', stubName)
-    #             return False
-    #
-    #     for dungeonNo, dVal in DDL.datas.items():
-    #         if not dVal.get('type', 0):
-    #             WARNING_MSG('skip dungeon stub in none dungeonType', dungeonNo)
-    #             continue
-    #
-    #         if hasattr(self, '_skipInitDungeonStubs') and dungeonNo in self._skipInitDungeonStubs:
-    #             WARNING_MSG('skip dungeon stub in err found', dungeonNo)
-    #             continue
-    #
-    #         dungeonType = dVal['type']
-    #         if dungeonType not in gameconst.DungeonSpaceType.COLL_DUNGEON:
-    #             continue
-    #
-    #         enterType = dVal['enterType']
-    #         if enterType in gameconst.DungeonEnterType.COLL_ALL:
-    #             stubName = formula.getDungeonStubGlobalName(dungeonNo, enterType)
-    #             if not KBEngine.globalData.get(stubName):
-    #                 INFO_MSG('still waiting for dungeon stub', stubName)
-    #                 return False
-    #             continue
-    #
-    #         if enterType == gameconst.DungeonEnterType.BOTH:
-    #             for enterType in gameconst.DungeonEnterType.COLL_BOTH:
-    #                 stubName = formula.getDungeonStubGlobalName(dungeonNo, enterType)
-    #                 if not KBEngine.globalData.get(stubName):
-    #                     INFO_MSG('still waiting for dungeon stub', stubName)
-    #                     return False
-    #                 continue
-    #
-    #     else:
-    #         if hasattr(self, '_skipInitDungeonStubs'):
-    #             del self._skipInitDungeonStubs
-    #     return self.localStubCreated
-
     def sendOfficialMessageForTest(self, gbId, content, registerChannel, seqId):
         channelList = registerChannel.split(',')
         playerStub = gameengine.getGlobalBase('PlayerStub')
@@ -671,3 +617,36 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
                 INFO_MSG('still waiting for all stub full prepare in lock')
                 self.pyAddTimer(0.5, 0, gametimer.BASESTUB_TIMER_GLOBAL_STUBS_FULL_PREPARE)
 
+    def doAntiAddiction(self):
+        antiAddictionData = gameglobal.antiAddictionData
+        INFO_MSG("baseapp doAntiAddiction", antiAddictionData)
+        if antiAddictionData[0] == gameconst.AntiAddictionTimeType.PERMIT:
+            DEBUG_MSG("baseapp doAntiAddiction PERMIT", antiAddictionData[1])
+        elif antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT:
+            DEBUG_MSG("baseapp doAntiAddiction PROHIBIT", antiAddictionData[1])
+            minorAccountCacheList = list(gameglobal.localMinorAccountCache.keys())
+            self.kickAllMinorAccountBatchly(iter(minorAccountCacheList), 10, 0.1)
+
+    def kickAllMinorAccountBatchly(self, accountIter, batchNum, interval):
+        INFO_MSG("kickAllMinorAccountBatchly-----------", batchNum, interval)
+        for i in range(batchNum):
+            (minorAccountName) = next(accountIter, (""))
+            if not minorAccountName:
+                INFO_MSG("kickAllMinorAccountBatchly finish kick all minor account")
+                return
+            minorAccount = gameglobal.localMinorAccountCache.get(minorAccountName, None)
+            if not minorAccount:
+                INFO_MSG("kickAllMinorAccountBatchly minor account alerady logout")
+                return
+            INFO_MSG("kickAllMinorAccountBatchly account=%s" % (minorAccount.__ACCOUNT_NAME__))
+            minorAccount.destroyAccount(gameconst.AVATAR_OFFLINE_REASON_ANIT_ADDICTION)
+        self._callback(interval, 'kickAllMinorAccountBatchly', (accountIter, batchNum, interval), gametimer.TIMER_TAG_KICK_ALL_MINOR_ACCOUNT_TIMER)
+
+    def updateAntiAddictionData(self, timeType, nextStartTime):
+        _req = AntiAddictionData()
+        _req.timeType = timeType
+        _req.timestamp = nextStartTime
+
+        for client in self.interfaceClient.values():
+            if client and client.channel.dispatcher:
+                client.interfaceStub.updateAntiAddictionData(None, _req, None)

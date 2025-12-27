@@ -3,6 +3,7 @@ import KBEngine
 from KBEDebug import *
 
 
+import math
 import dataUtils
 import random
 import formula
@@ -387,6 +388,9 @@ class ICubeCell(object):
 
     def onLogonEnterCubeCB(self, spaceMgrId):
         INFO_MSG('ICubeCell::onLogonEnterCubeCB: {}'.format(spaceMgrId))
+        _dir = self._getEntranceDirByDungeonNo(formula.getMapId(self.spaceNo))
+        self.position = self._getEntranceByDungeonNo(formula.getMapId(self.spaceNo))
+        self.direction = (0, 0, _dir * math.pi / 180) if _dir is not None else self.direction
         self.spaceMgrId = spaceMgrId
         self.spaceMgr.onPlayerEnter(self.id)
         gameengine.getCubeStubBySpaceNo(self.spaceNo).onEnterCubeSuccess(self.gbId, self.spaceNo)

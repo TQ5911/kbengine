@@ -20,8 +20,13 @@ import utils
 import gamedecorator
 import dataUtils
 import mailAssistor
+import copy
+from avatarPetDrawCardInfo import drawCardRecord
 
 class IDrawCard(object):
+	def __init__(self):
+		self.curDrawCardRecord = drawCardRecord()
+
 	def drawCardOnLogin(self):
 		curTimestamp = utils.getNow()
 
@@ -111,7 +116,7 @@ class IDrawCard(object):
 
 		if curPoolInfo.dailyNum + summonNum > poolData.get('dailyLimit', 0):
 			self.onMessagePre(GGS.datas['rollLimitNotEnough']['value'], [])
-			ERROR_MSG('call reqRandomSummonPet over daily limit', curPoolInfo.dailyNum, summonNum, poolData.get('dailyLimit', 0))
+			WARNING_MSG('call reqRandomSummonPet over daily limit', curPoolInfo.dailyNum, summonNum, poolData.get('dailyLimit', 0))
 			return
 
 		petRollTicket = rollCost
@@ -169,23 +174,6 @@ class IDrawCard(object):
 			curPoolInfo.num -= pityPullCount
 
 		self.updateDrawCardInfo(curPoolInfo)
-		# 广播
-		avatarName = gameglobal.roleCache[self.id]['name']
-		for info in briefList:
-			itemId = info['itemId']
-			if not dataUtils.isLingShouItem(itemId):
-				continue
-			itemData = dataUtils.getCommItemData(itemId)
-			quality = itemData['quality']
-			petName = itemData['name']
-			if quality == gameconst.ItemQuality.PURPLE:
-				msgId = GGS.datas['quality3Broadcast']['value']
-				gameengine.broadcastBaseapp('onBroadcastToAllClients',
-				                            ('onMessage', (msgId, [avatarName, str(self.gbID), petName])))
-			elif quality == gameconst.ItemQuality.ORANGE:
-				msgId = GGS.datas['quality4Broadcast']['value']
-				gameengine.broadcastBaseapp('onBroadcastToAllClients',
-				                            ('onMessage', (msgId, [avatarName, str(self.gbID), petName])))
 
 		itemIdList = []
 		for info in briefList:
@@ -194,15 +182,17 @@ class IDrawCard(object):
 		INFO_MSG('call onRandomSummonPetResult itemIdList, realRollNum', itemIdList, realRollNum)
 		self.client.onRandomSummonPet(itemIdList[:realRollNum])
 
-		self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetPetDraw'], (realRollNum,))
+		self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetPetDraw'], (summonNum,))
 		self.achievementInfo.triggerAchieveByType(
             self, 
             gameconst.AchieveType.DRAW_CARD, 
-            actionContext.AchievementCtx(realRollNum))
+            actionContext.AchievementCtx(summonNum))
 		
 		#items = [(itemId, 1) for itemId in itemIdList]
 		items = [itemId for itemId in itemIdList]
-		self.drawCardRecord.appendRecord(poolData.get('poolGroupId', pool), items)
+		curDrawCardRecord = self.drawCardRecord.appendRecord(poolData.get('poolGroupId', pool), items)
+		self.curDrawCardRecord = copy.deepcopy(curDrawCardRecord)
+		self.curDrawCardRecord.allBitSet()
 
 	@gamedecorator.checkGameconfigEnable('drawPet')
 	def reqGetGuaranteedPetEgg(self, exposed, pool):
@@ -263,3 +253,45 @@ class IDrawCard(object):
 			mailWealth = dropAward.MailWealthVal()
 			mailWealth.addWealthByItemId(pityReward, guaranteed)
 			mailAssistor.sendMailToPlayers([self.gbID], GGS.datas['PoolEndMailID']['value'], extraAttach=mailWealth, despArgs=())
+
+	@gamedecorator.checkGameconfigEnable('drawPet')
+	def reqOpenPetCard(self, exposed, idx):
+		INFO_MSG('call reqOpenPetCard', idx)
+		if not self.curDrawCardRecord.checkBitSet(idx):
+			WARNING_MSG('call reqOpenPetCard idx out of range')
+			return
+		if not self.curDrawCardRecord.hasBitSet():
+			WARNING_MSG('call reqOpenPetCard all open')
+			return
+
+		if idx == 0:
+			idxList = self.curDrawCardRecord.getAllBitSet()
+			self.openPetCard(idxList)
+		else:
+			if not self.curDrawCardRecord.hasBitSet(idx):
+				ERROR_MSG('call reqOpenPetCard alerady open')
+				return
+			self.openPetCard([idx])
+
+	def openPetCard(self, idxList):
+		avatarName = gameglobal.roleCache[self.id]['name']
+		for idx in idxList:
+			itemId = self.curDrawCardRecord.items[idx - 1]
+			self.curDrawCardRecord.resetBitSet(idx)
+			self.broadcastPetQuality(avatarName, itemId)
+
+	def broadcastPetQuality(self, avatarName, itemId):
+		# 广播
+		if not dataUtils.isLingShouItem(itemId):
+			return
+		itemData = dataUtils.getCommItemData(itemId)
+		quality = itemData['quality']
+		petName = itemData['name']
+		if quality == gameconst.ItemQuality.PURPLE:
+			msgId = GGS.datas['quality3Broadcast']['value']
+			gameengine.broadcastBaseapp('onBroadcastToAllClients',
+										('onMessage', (msgId, [avatarName, str(self.gbID), petName])))
+		elif quality == gameconst.ItemQuality.ORANGE:
+			msgId = GGS.datas['quality4Broadcast']['value']
+			gameengine.broadcastBaseapp('onBroadcastToAllClients',
+										('onMessage', (msgId, [avatarName, str(self.gbID), petName])))

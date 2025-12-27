@@ -1341,7 +1341,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "realDmg",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 100.0
     }),
     "adjRealDmg": _tools.RODict({
         "ID": "adjRealDmg",
@@ -1356,7 +1356,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "realDmg",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 100.0
     }),
     "realDmgDef": _tools.RODict({
         "ID": "realDmgDef",
@@ -1386,7 +1386,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "realDmgDef",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 100.0
     }),
     "adjRealDmgDef": _tools.RODict({
         "ID": "adjRealDmgDef",
@@ -1401,7 +1401,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "realDmgDef",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 100.0
     }),
     "stunEnh": _tools.RODict({
         "ID": "stunEnh",

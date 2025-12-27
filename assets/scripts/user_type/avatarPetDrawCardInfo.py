@@ -77,6 +77,7 @@ class drawCardRecord(userType.UserSoleType):
         self.id = id
         self.ts = ts
         self.items = items
+        self.itemsBit = 0
 
     def initFromDict(self, dataDict):
         self.id = dataDict['id']
@@ -98,6 +99,28 @@ class drawCardRecord(userType.UserSoleType):
             'items': self.items,
         }
         return data
+
+    def allBitSet(self):
+        for idx in range(len(self.items)):
+            self.itemsBit = utils.bitSet(self.itemsBit, idx + 1)
+
+    def hasBitSet(self, idx=0):
+        if idx == 0:
+            return self.itemsBit != 0
+        return utils.hasBit(self.itemsBit, idx)
+
+    def resetBitSet(self, idx):
+        self.itemsBit = utils.bitReset(self.itemsBit, idx)
+
+    def getAllBitSet(self):
+        idxList = []
+        for idx in range(len(self.items)):
+            if self.hasBitSet(idx + 1):
+                idxList.append(idx + 1)
+        return idxList
+
+    def checkBitSet(self, idx):
+        return idx <= len(self.items)
 
 class petDrawCardRecord(userType.UserSTDSoleType):
     def __init__(self):
@@ -211,6 +234,7 @@ class petDrawCardRecord(userType.UserSTDSoleType):
         clientData["beUpdate"] = True
         self.checkCntLimit(pool)
         self.checkExpiredLimit(pool, ts)
+        return record
 
     def checkCntLimit(self, pool):
         poolData = self.drawCardRecordDic.get(pool, None)

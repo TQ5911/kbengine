@@ -46,5 +46,9 @@ datas = _tools.RODict({
     "Branch_fullCapacityMsg": _tools.RODict({
         "ID": "Branch_fullCapacityMsg",
         "value": 54001086,
+    }),
+    "Branch_creepNotRefresh": _tools.RODict({
+        "ID": "Branch_creepNotRefresh",
+        "value": _tools.ROList([2, 9]),
     })
 })

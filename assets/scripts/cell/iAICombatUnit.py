@@ -14,13 +14,10 @@ import dataUtils
 import actionContext
 import SkillManager
 
-import aiControllerPool as aiCtrlPool
 
 import creep_base as CBD
 import creep_group as CRG
-import petData_petData as PDPDD
 import skill_skill as SSD
-import conflict_status_def as CSDD
 import const_const as CCD
 import cityBattle_config as CBC
 import rewardData_rewardData as RDRDD
@@ -46,7 +43,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         self.checkUnVisibleTimerId = 0
         self.unVisibleList = []
         if hasattr(self, 'getAIParam') and self.getAIParam():
-            utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI)
+            self.cellFlags = utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI)
 
     def _initBornState(self):
         if not self.bornState:
@@ -693,40 +690,11 @@ class IAICombatUnit(SkillManager.SkillManager):
 
     def _trapInViews(self, rng_=20):
         for c in self.entitiesInRange(rng_):
-            if ((c.IsMonster or c.IsPet or c.IsSummon or c.IsAvatarMirror) and
+            if ((c.IsMonster or c.IsSummon) and
                     sMath.distance2D(
                         self.position, c.position) <= c.getAlertDistance()):
                 c.onEnterTrap(self, 0, 0, 0, gameconst.HATE_TRAP)
 
-    def _getAIControllerFromPool(self, aiName):
-        DEBUG_MSG('AIPool::popAIController: {}'.format(aiName))
-
-        aiName = "{}-{}".format(self.__class__.__name__, aiName)
-        controller = aiCtrlPool.pool.popAIController(aiName, 'reset')
-
-        if controller:
-            controller.ownerId = self.id
-
-        return controller
-
-    def getAIControllerFromPool(self, aiName):
-        try:
-            return self._getAIControllerFromPool(aiName)
-        except Exception:
-            return None
-
-    def _putAIControllerInPool(self, controller, aiName=None):
-        DEBUG_MSG('AIPool::pushAIController: {}-{}'.format(aiName, controller))
-
-        aiName = "{}-{}".format(self.__class__.__name__,
-                                aiName or controller.aiName)
-        aiCtrlPool.pool.pushAIController(aiName, controller, 'reset')
-
-    def putAIControllerInPool(self, controller, aiName=None):
-        try:
-            return self._putAIControllerInPool(controller, aiName=aiName)
-        except Exception:
-            return None
 
     def onDead(self, killer, *args, **kwargs):
         if self.aiController:

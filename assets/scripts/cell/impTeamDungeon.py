@@ -71,10 +71,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
 
     """
     def _resetTDungeonCheckDic(self):
-        try:
-            self.tDungeonCheckDic.clear()
-        except AttributeError:
-            self.tDungeonCheckDic = {}
+        self.tDungeonCheckDic = {}
 
     def getDungeonTeamRange(self, dungeonNo):
         minPlayerNum = self._getPrmBydungeonNo(dungeonNo, 'minNum') or 0
@@ -88,10 +85,6 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
 
     # ===========================================
     # CHECK METHODS
-
-    def selfCheckAndEnterTeamDungeon(self, dungeonNo, extra):
-        teamStub = gameengine.getTeamStub(self.teamId)
-        teamStub.enterTeamDungeonDirectly(self.base, self.gbId, self.teamId, dungeonNo, extra)
 
     def doCheckTeamDungeonConditions(self, box, gbId, dungeonNo, teamUUID, extra):
         if not self.isCaptain():

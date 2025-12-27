@@ -12,7 +12,7 @@ datas ={
       21020010
     ],
     "num": 0,
-    "lv": "23",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -98,7 +98,7 @@ datas ={
       21020019
     ],
     "num": 0,
-    "lv": "20",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -141,7 +141,7 @@ datas ={
       21020027
     ],
     "num": 0,
-    "lv": "23",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -185,7 +185,7 @@ datas ={
       21020036
     ],
     "num": 0,
-    "lv": "24",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -285,7 +285,7 @@ datas ={
       21020044
     ],
     "num": 0,
-    "lv": "24",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -329,7 +329,7 @@ datas ={
       21020053
     ],
     "num": 0,
-    "lv": "25",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -370,7 +370,7 @@ datas ={
       21020059
     ],
     "num": 0,
-    "lv": "25",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -412,7 +412,7 @@ datas ={
       21020066
     ],
     "num": 0,
-    "lv": "25",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -454,7 +454,7 @@ datas ={
       21020073
     ],
     "num": 0,
-    "lv": "25",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -488,7 +488,7 @@ datas ={
   "1110": {
     "type": "createAirWall",
     "entityID": [
-      20128019
+      21028019
     ],
     "num": 0,
     "transition": {}
@@ -496,7 +496,7 @@ datas ={
   "1111": {
     "type": "removeAirWall",
     "entityID": [
-      20128019
+      21028019
     ],
     "transition": {
       "finished": [
@@ -507,7 +507,7 @@ datas ={
   "1112": {
     "type": "createAirWall",
     "entityID": [
-      20128020
+      21028020
     ],
     "num": 0,
     "transition": {}
@@ -525,7 +525,7 @@ datas ={
       21020081
     ],
     "num": 0,
-    "lv": "26",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -569,7 +569,7 @@ datas ={
       21020090
     ],
     "num": 0,
-    "lv": "26",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -600,9 +600,9 @@ datas ={
   "1117": {
     "type": "popupdialog",
     "entityID": [
-      21020036
+      21020002
     ],
-    "dialogID": 19900184,
+    "dialogID": 19900191,
     "transition": {}
   },
   "1118": {
@@ -625,7 +625,7 @@ datas ={
   "1119": {
     "type": "removeAirWall",
     "entityID": [
-      20128021
+      21028021
     ],
     "transition": {}
   },
@@ -635,7 +635,7 @@ datas ={
       21020002
     ],
     "num": 1,
-    "lv": "26",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -655,7 +655,7 @@ datas ={
       21020001
     ],
     "num": 1,
-    "lv": "25",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -691,14 +691,14 @@ datas ={
   "1200": {
     "type": "removeAirWall",
     "entityID": [
-      20128020
+      21028020
     ],
     "transition": {}
   },
   "1201": {
     "type": "createAirWall",
     "entityID": [
-      20128021
+      21028021
     ],
     "num": 1,
     "transition": {}
@@ -733,7 +733,8 @@ datas ={
         1143,
         1144,
         1145,
-        1146
+        1146,
+        1152
       ]
     }
   },
@@ -742,7 +743,7 @@ datas ={
     "entityID": [
       21020001
     ],
-    "dialogID": 19013003,
+    "dialogID": 19900190,
     "transition": {}
   },
   "1182": {
@@ -814,7 +815,8 @@ datas ={
         1147,
         1148,
         1149,
-        1150
+        1150,
+        1153
       ]
     }
   },
@@ -823,7 +825,7 @@ datas ={
     "entityID": [
       21020002
     ],
-    "dialogID": 19014004,
+    "dialogID": 19900202,
     "transition": {
       "finished": [
         1193
@@ -915,7 +917,7 @@ datas ={
     "entityID": [
       21020001
     ],
-    "dialogID": 19013001,
+    "dialogID": 19900187,
     "transition": {}
   },
   "1187": {
@@ -923,7 +925,7 @@ datas ={
     "entityID": [
       21020001
     ],
-    "dialogID": 19013002,
+    "dialogID": 19900188,
     "transition": {}
   },
   "1188": {
@@ -931,7 +933,7 @@ datas ={
     "entityID": [
       21020002
     ],
-    "dialogID": 19014001,
+    "dialogID": 19900195,
     "transition": {}
   },
   "1189": {
@@ -939,7 +941,7 @@ datas ={
     "entityID": [
       21020002
     ],
-    "dialogID": 19014002,
+    "dialogID": 19900191,
     "transition": {}
   },
   "1179": {
@@ -947,7 +949,7 @@ datas ={
     "entityID": [
       21020002
     ],
-    "dialogID": 19014003,
+    "dialogID": 19900193,
     "transition": {}
   },
   "1141": {
@@ -985,10 +987,11 @@ datas ={
     "type": "createNPC",
     "entityID": [
       21024005,
-      21020006,
+      21024006,
       21024007,
       21024008,
-      21024009
+      21024009,
+      21024010
     ],
     "num": 0,
     "lv": "20",
@@ -1054,6 +1057,32 @@ datas ={
       21028002
     ],
     "num": 1,
+    "transition": {}
+  },
+  "1152": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      21020001
+    ],
+    "buffID": [
+      64004085
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 30.0,
+    "transition": {}
+  },
+  "1153": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      21020002
+    ],
+    "buffID": [
+      64004085
+    ],
+    "lv": "1",
+    "lvlmt": -1,
+    "duration": 30.0,
     "transition": {}
   }
 }

@@ -9,6 +9,9 @@ import utils
 import gameengine
 import gameconfig
 import BalancedObjectGenerator
+import creep_base as CBD
+import branchData_set as BDS
+
 
 
 class IEntityLoader(object):
@@ -35,25 +38,37 @@ class IEntityLoader(object):
 
     def loadEntitiesBatchly(self, spaceNo, entIter, batchNum, interval, isInit=False, spaceMgrId=0, attachedHostId=0):
         DEBUG_MSG("loadEntitiesBatchly-----------", batchNum, interval)
-        for i in range(batchNum):
-            (entId, _, clsName, needCreateBase, pos, direction, props, rGid) = next(entIter, (
-            0, None, None, None, None, None, None, None))
-            if not entId:
-                INFO_MSG('finish loading all entities', spaceNo)
-                if isInit:
-                    self.doLoadEntitiesEnd()
-                return
+        _iter = self.loadEntitiesAsync(entIter, isInit, spaceMgrId, attachedHostId)
+        self.batchlyCall(_iter, batchNum, interval)
+
+    def loadEntitiesAsync(self, entIter, isInit, spaceMgrId=0, attachedHostId=0):
+        while True:
+            _ret = next(entIter, None)
+            if _ret is None:
+                break
+
+            (_, _, clsName, _, pos, direction, props, _) = _ret
 
             if spaceMgrId:
                 props['spaceMgrId'] = spaceMgrId
+
             if attachedHostId:
                 tempMiscProps = props.setdefault('tempMiscProps', {})
                 tempMiscProps[gameconst.AvatarProps.beAttachedHostID] = attachedHostId
 
-            self.createCellLocally(clsName, pos, direction, props)
+            while True:
+                try:
+                    self.createCellLocally(clsName, pos, direction, props)
+                    yield utils.emptyFunc
+                    break
+                except SystemError as e:
+                    WARNING_MSG('loadEntitiesAsync::SystemError', e)
+                    yield utils.emptyFunc
 
-        self._callback(interval, 'loadEntitiesBatchly', (spaceNo, entIter, batchNum, interval, isInit, spaceMgrId, attachedHostId),
-                       gametimer.TIMER_TAG_LOAD_ENTITIES_CALL_BACK)
+        if isInit:
+            self.doLoadEntitiesEnd()
+
+        yield utils.emptyFunc
 
     def loadMonsterGroups(self, spaceNo, spaceMgrId):
         _mapId = formula.getMapId(spaceNo)
@@ -75,8 +90,15 @@ class IEntityLoader(object):
             _pos = (0.0, 0.0, 0.0)
             _dir = (0.0, 0.0, 0.0)
 
-            self.createCellLocally('MonsterGrp', _pos, _dir, _props)
-            yield lambda *args: args
+            while True:
+                try:
+                    self.createCellLocally('MonsterGrp', _pos, _dir, _props)
+                    yield utils.emptyFunc
+                    break
+                except SystemError as e:
+                    WARNING_MSG('loadMonsterGroups::SystemError', e)
+                    yield utils.emptyFunc
+
 
     def doLoadEntities(self, spaceMgrId):
         if not gameconfig.needLoadEntity():
@@ -147,7 +169,7 @@ class IEntityLoader(object):
         else:
             INFO_MSG('iEntityLoader::doLoadEntitiesEnd::unknown space type', self.spaceNo)
 
-    def doEntityRefresh(self, gameEntityId, spaceMgrId):
+    def doEntityRefresh(self, gameEntityId, spaceMgrId, pointData):
         _entityProps = []
         utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps, True)
         for _, _, _className, _, _pos, _dir, _params, _ in _entityProps:
@@ -155,6 +177,18 @@ class IEntityLoader(object):
                 _params['spaceMgrId'] = spaceMgrId
 
             self.createCellLocally(_className, _pos, _dir, _params)
+
+        self.removeEntityRefreshTimer(gameEntityId, spaceMgrId, pointData)
+
+    def removeEntityRefreshTimer(self, gameEntityId, spaceMgrId, pointData):
+        DEBUG_MSG("removeEntityRefreshTimer", gameEntityId, spaceMgrId, pointData)
+        if not spaceMgrId:
+            return
+        spaceMgr = KBEngine.entities.get(spaceMgrId)
+        if not spaceMgr:
+            return
+        gid = utils.getGidFromGameEntityId(gameEntityId)
+        spaceMgr.onCancelEntityRefreshTimer(gid, pointData["refreshTimerId"])
 
     def _initSpecifiedEntities(self, spaceNo, gidList):
         _mapId = formula.getMapId(spaceNo)
@@ -169,7 +203,7 @@ class IEntityLoader(object):
                         continue
 
                     className = data.get('ClassName', '')
-                    if className not in ('AirWall', 'Monster',):
+                    if className not in ('AirWall', 'Monster', 'Collection'):
                         continue
 
                     id_ = int(gid)
@@ -223,9 +257,19 @@ class IEntityLoader(object):
         for id_, data in datas.items():
             className = data.get('ClassName', '')
             entityID = data.get('EntityID', 0)
-            if className not in ('Monster',):
+            if className not in ('Monster', 'Collection'):
                 WARNING_MSG('loadTimerEntities::className error, ', className)
                 continue
+            
+            if formula.spaceInWorldLine(spaceNo):
+                lineNo = formula.getLineNo(spaceNo)
+                nameSuffixID = -1
+                if entityID in CBD.datas:
+                    nameSuffixID = CBD.datas[entityID]['nameSuffixID']
+
+                if nameSuffixID in BDS.datas["Branch_creepNotRefresh"]["value"] and lineNo != 0 and lineNo != -1:
+                    DEBUG_MSG("skip create monster", spaceNo, entityID, nameSuffixID, lineNo)
+                    continue
 
             id_ = int(id_)
             _d = data.get('Props', {})
@@ -247,6 +291,6 @@ class IEntityLoader(object):
                 WARNING_MSG('loadTimerEntities::RefreshNum too large', count_)
                 count_ = 999
 
-            refreshData = (id_, gameconst.EntityType.MONSTER, entityID, count_)
+            refreshData = (id_, gameconst.className2EntityType[className], {"EntityID":entityID, "RefreshNum":count_})
             readyTimerEntitiesMap.setdefault(refreshTimedID, []).append(refreshData)
             DEBUG_MSG("loadTimerEntities", spaceNo, id_, refreshTimedID, refreshData)

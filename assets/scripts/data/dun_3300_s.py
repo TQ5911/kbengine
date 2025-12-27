@@ -3,6 +3,7 @@ datas ={
     "BornPos": {
       "33000001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -10,13 +11,16 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 33000001,
-        "PosX": 69.63322,
-        "PosY": 3.708378,
-        "PosZ": 40.19272,
+        "PosX": 69.63996,
+        "PosY": 5.020769,
+        "PosZ": 34.72166,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "TelDir": 0.0,
           "TelX": 39.52325,
           "TelY": 39.0038,
@@ -27,6 +31,7 @@ datas ={
     "RebornPos": {
       "33000002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",
@@ -34,13 +39,16 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 33000002,
-        "PosX": 69.62855,
-        "PosY": 3.708378,
-        "PosZ": 39.9083,
+        "PosX": 69.60061,
+        "PosY": 5.020769,
+        "PosZ": 34.70744,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "TelDir": 0.0,
           "TelX": 39.52325,
           "TelY": 39.0038,
@@ -52,39 +60,43 @@ datas ={
       "Npc": {
         "33004001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
           "Dir": 180.0,
           "DisplayName": "",
-          "EntityID": 18000004,
+          "EntityID": 18000662,
           "ID": 33004001,
-          "PosX": 66.73,
-          "PosY": 3.742384,
-          "PosZ": 76.85,
+          "PosX": 69.89393,
+          "PosY": 3.694533,
+          "PosZ": 72.45557,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       },
       "Collection": {
         "33008001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
-          "Dir": 180.0,
+          "Dir": 89.46345,
           "DisplayName": "",
           "EntityID": 16002201,
           "ID": 33008001,
-          "PosX": 43.32,
-          "PosY": 3.804241,
-          "PosZ": 86.41,
+          "PosX": 37.96773,
+          "PosY": 5.589845,
+          "PosZ": 86.33687,
           "Props": {
             "IsOpen": 1,
             "Radius": 0.0,
@@ -93,21 +105,24 @@ datas ={
               600.0,
               900.0
             ],
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "33008002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
-          "Dir": 0.0,
+          "Dir": 272.2092,
           "DisplayName": "",
           "EntityID": 16002201,
           "ID": 33008002,
-          "PosX": 96.01,
-          "PosY": 3.804241,
-          "PosZ": 86.34454,
+          "PosX": 100.93,
+          "PosY": 5.607867,
+          "PosZ": 86.54,
           "Props": {
             "IsOpen": 1,
             "Radius": 0.0,
@@ -116,21 +131,24 @@ datas ={
               600.0,
               900.0
             ],
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "33008003": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Collection",
           "ClassNameType": 3,
           "CustomID": "",
-          "Dir": 270.0,
+          "Dir": 180.4728,
           "DisplayName": "",
           "EntityID": 16002201,
           "ID": 33008003,
-          "PosX": 68.99,
-          "PosY": 3.837457,
-          "PosZ": 136.7,
+          "PosX": 69.61,
+          "PosY": 7.189837,
+          "PosZ": 132.65,
           "Props": {
             "IsOpen": 1,
             "Radius": 0.0,
@@ -139,10 +157,13 @@ datas ={
               600.0,
               900.0
             ],
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       }
-    }
+    },
+    "TimerEntities": {}
   }
 }

@@ -17,22 +17,22 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "dunID": 2102,
-        "firstReward": 40020249,
-        "clearReward": 0,
+        "dunID": 2101,
+        "firstReward": 40000080,
+        "clearReward": 40020255,
         "goldReward": 40000080,
     }),
     2: _tools.RODict({
         "ID": 2,
-        "dunID": 2101,
-        "firstReward": 40020249,
-        "clearReward": 0,
+        "dunID": 2102,
+        "firstReward": 40000080,
+        "clearReward": 40020255,
         "goldReward": 40000080,
     }),
     3: _tools.RODict({
         "ID": 3,
-        "dunID": 2103,
-        "firstReward": 40020249,
+        "dunID": 2104,
+        "firstReward": 40000080,
         "clearReward": 40020255,
         "goldReward": 40000080,
     })
@@ -40,7 +40,13 @@ datas = _tools.RODict({
 minKey = 1
 maxKey = 3
 
-fistPassRewardDic = {2102: 40020249, 2101: 40020249, 2103: 40020249}
+fistPassRewardDic = {2101: 40000080, 2102: 40000080, 2104: 40000080}
 
 
-clearPassRewardDic = {2103: 40020255}
+clearPassRewardDic = {2101: 40020255, 2102: 40020255, 2104: 40020255}
+
+
+goldPassRewardDic = {2101: 40000080, 2102: 40000080, 2104: 40000080}
+
+
+dungeonIdxDic = {2101: 1, 2102: 2, 2104: 3}

@@ -3164,7 +3164,763 @@ datas = _tools.RODict({
         "dropPackage": 9217,
         "dropType": 2,
         "dropCount": 1
+    }),
+    50100626: _tools.RODict({
+        "dropID": 50100626,
+        "dropPackage": 9218,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100627: _tools.RODict({
+        "dropID": 50100627,
+        "dropPackage": 9219,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100628: _tools.RODict({
+        "dropID": 50100628,
+        "dropPackage": 9220,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100629: _tools.RODict({
+        "dropID": 50100629,
+        "dropPackage": 9221,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100630: _tools.RODict({
+        "dropID": 50100630,
+        "dropPackage": 9222,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100631: _tools.RODict({
+        "dropID": 50100631,
+        "dropPackage": 9223,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100632: _tools.RODict({
+        "dropID": 50100632,
+        "dropPackage": 9224,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100633: _tools.RODict({
+        "dropID": 50100633,
+        "dropPackage": 9225,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100634: _tools.RODict({
+        "dropID": 50100634,
+        "dropPackage": 9226,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100635: _tools.RODict({
+        "dropID": 50100635,
+        "dropPackage": 9227,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100636: _tools.RODict({
+        "dropID": 50100636,
+        "dropPackage": 9228,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100637: _tools.RODict({
+        "dropID": 50100637,
+        "dropPackage": 9229,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50100638: _tools.RODict({
+        "dropID": 50100638,
+        "dropPackage": 9230,
+        "dropType": 2,
+        "dropCount": 1
+    }),
+    50027001: _tools.RODict({
+        "dropID": 50027001,
+        "dropPackage": 50027001,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027002: _tools.RODict({
+        "dropID": 50027002,
+        "dropPackage": 50027002,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027003: _tools.RODict({
+        "dropID": 50027003,
+        "dropPackage": 50027003,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027004: _tools.RODict({
+        "dropID": 50027004,
+        "dropPackage": 50027004,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027005: _tools.RODict({
+        "dropID": 50027005,
+        "dropPackage": 50027005,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027006: _tools.RODict({
+        "dropID": 50027006,
+        "dropPackage": 50027006,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027007: _tools.RODict({
+        "dropID": 50027007,
+        "dropPackage": 50027007,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027008: _tools.RODict({
+        "dropID": 50027008,
+        "dropPackage": 50027008,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027009: _tools.RODict({
+        "dropID": 50027009,
+        "dropPackage": 50027009,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027010: _tools.RODict({
+        "dropID": 50027010,
+        "dropPackage": 50027010,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027011: _tools.RODict({
+        "dropID": 50027011,
+        "dropPackage": 50027011,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027012: _tools.RODict({
+        "dropID": 50027012,
+        "dropPackage": 50027012,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027013: _tools.RODict({
+        "dropID": 50027013,
+        "dropPackage": 50027013,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027014: _tools.RODict({
+        "dropID": 50027014,
+        "dropPackage": 50027014,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027015: _tools.RODict({
+        "dropID": 50027015,
+        "dropPackage": 50027015,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027016: _tools.RODict({
+        "dropID": 50027016,
+        "dropPackage": 50027016,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027017: _tools.RODict({
+        "dropID": 50027017,
+        "dropPackage": 50027017,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027018: _tools.RODict({
+        "dropID": 50027018,
+        "dropPackage": 50027018,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027019: _tools.RODict({
+        "dropID": 50027019,
+        "dropPackage": 50027019,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027020: _tools.RODict({
+        "dropID": 50027020,
+        "dropPackage": 50027020,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027021: _tools.RODict({
+        "dropID": 50027021,
+        "dropPackage": 50027021,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027022: _tools.RODict({
+        "dropID": 50027022,
+        "dropPackage": 50027022,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50027023: _tools.RODict({
+        "dropID": 50027023,
+        "dropPackage": 50027023,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030101: _tools.RODict({
+        "dropID": 50030101,
+        "dropPackage": 50030101,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030102: _tools.RODict({
+        "dropID": 50030102,
+        "dropPackage": 50030102,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030103: _tools.RODict({
+        "dropID": 50030103,
+        "dropPackage": 50030103,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030104: _tools.RODict({
+        "dropID": 50030104,
+        "dropPackage": 50030104,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030105: _tools.RODict({
+        "dropID": 50030105,
+        "dropPackage": 50030105,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030106: _tools.RODict({
+        "dropID": 50030106,
+        "dropPackage": 50030106,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030107: _tools.RODict({
+        "dropID": 50030107,
+        "dropPackage": 50030107,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030108: _tools.RODict({
+        "dropID": 50030108,
+        "dropPackage": 50030108,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030109: _tools.RODict({
+        "dropID": 50030109,
+        "dropPackage": 50030109,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030110: _tools.RODict({
+        "dropID": 50030110,
+        "dropPackage": 50030110,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030111: _tools.RODict({
+        "dropID": 50030111,
+        "dropPackage": 50030111,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030112: _tools.RODict({
+        "dropID": 50030112,
+        "dropPackage": 50030112,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030113: _tools.RODict({
+        "dropID": 50030113,
+        "dropPackage": 50030113,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030114: _tools.RODict({
+        "dropID": 50030114,
+        "dropPackage": 50030114,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030115: _tools.RODict({
+        "dropID": 50030115,
+        "dropPackage": 50030115,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030116: _tools.RODict({
+        "dropID": 50030116,
+        "dropPackage": 50030116,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030117: _tools.RODict({
+        "dropID": 50030117,
+        "dropPackage": 50030117,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030118: _tools.RODict({
+        "dropID": 50030118,
+        "dropPackage": 50030118,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030119: _tools.RODict({
+        "dropID": 50030119,
+        "dropPackage": 50030119,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030120: _tools.RODict({
+        "dropID": 50030120,
+        "dropPackage": 50030120,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030121: _tools.RODict({
+        "dropID": 50030121,
+        "dropPackage": 50030121,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030122: _tools.RODict({
+        "dropID": 50030122,
+        "dropPackage": 50030122,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030123: _tools.RODict({
+        "dropID": 50030123,
+        "dropPackage": 50030123,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030124: _tools.RODict({
+        "dropID": 50030124,
+        "dropPackage": 50030124,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030125: _tools.RODict({
+        "dropID": 50030125,
+        "dropPackage": 50030125,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030126: _tools.RODict({
+        "dropID": 50030126,
+        "dropPackage": 50030126,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030127: _tools.RODict({
+        "dropID": 50030127,
+        "dropPackage": 50030127,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030128: _tools.RODict({
+        "dropID": 50030128,
+        "dropPackage": 50030128,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030129: _tools.RODict({
+        "dropID": 50030129,
+        "dropPackage": 50030129,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030130: _tools.RODict({
+        "dropID": 50030130,
+        "dropPackage": 50030130,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030131: _tools.RODict({
+        "dropID": 50030131,
+        "dropPackage": 50030131,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030132: _tools.RODict({
+        "dropID": 50030132,
+        "dropPackage": 50030132,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030133: _tools.RODict({
+        "dropID": 50030133,
+        "dropPackage": 50030133,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030134: _tools.RODict({
+        "dropID": 50030134,
+        "dropPackage": 50030134,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030135: _tools.RODict({
+        "dropID": 50030135,
+        "dropPackage": 50030135,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030136: _tools.RODict({
+        "dropID": 50030136,
+        "dropPackage": 50030136,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030137: _tools.RODict({
+        "dropID": 50030137,
+        "dropPackage": 50030137,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030138: _tools.RODict({
+        "dropID": 50030138,
+        "dropPackage": 50030138,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030139: _tools.RODict({
+        "dropID": 50030139,
+        "dropPackage": 50030139,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030140: _tools.RODict({
+        "dropID": 50030140,
+        "dropPackage": 50030140,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030141: _tools.RODict({
+        "dropID": 50030141,
+        "dropPackage": 50030141,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030142: _tools.RODict({
+        "dropID": 50030142,
+        "dropPackage": 50030142,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030143: _tools.RODict({
+        "dropID": 50030143,
+        "dropPackage": 50030143,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030144: _tools.RODict({
+        "dropID": 50030144,
+        "dropPackage": 50030144,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030145: _tools.RODict({
+        "dropID": 50030145,
+        "dropPackage": 50030145,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030146: _tools.RODict({
+        "dropID": 50030146,
+        "dropPackage": 50030146,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030147: _tools.RODict({
+        "dropID": 50030147,
+        "dropPackage": 50030147,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030148: _tools.RODict({
+        "dropID": 50030148,
+        "dropPackage": 50030148,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030149: _tools.RODict({
+        "dropID": 50030149,
+        "dropPackage": 50030149,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030150: _tools.RODict({
+        "dropID": 50030150,
+        "dropPackage": 50030150,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030151: _tools.RODict({
+        "dropID": 50030151,
+        "dropPackage": 50030151,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030152: _tools.RODict({
+        "dropID": 50030152,
+        "dropPackage": 50030152,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030153: _tools.RODict({
+        "dropID": 50030153,
+        "dropPackage": 50030153,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030154: _tools.RODict({
+        "dropID": 50030154,
+        "dropPackage": 50030154,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030155: _tools.RODict({
+        "dropID": 50030155,
+        "dropPackage": 50030155,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030156: _tools.RODict({
+        "dropID": 50030156,
+        "dropPackage": 50030156,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030157: _tools.RODict({
+        "dropID": 50030157,
+        "dropPackage": 50030157,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030158: _tools.RODict({
+        "dropID": 50030158,
+        "dropPackage": 50030158,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030159: _tools.RODict({
+        "dropID": 50030159,
+        "dropPackage": 50030159,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030160: _tools.RODict({
+        "dropID": 50030160,
+        "dropPackage": 50030160,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030161: _tools.RODict({
+        "dropID": 50030161,
+        "dropPackage": 50030161,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030162: _tools.RODict({
+        "dropID": 50030162,
+        "dropPackage": 50030162,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030163: _tools.RODict({
+        "dropID": 50030163,
+        "dropPackage": 50030163,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030164: _tools.RODict({
+        "dropID": 50030164,
+        "dropPackage": 50030164,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030165: _tools.RODict({
+        "dropID": 50030165,
+        "dropPackage": 50030165,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030166: _tools.RODict({
+        "dropID": 50030166,
+        "dropPackage": 50030166,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030167: _tools.RODict({
+        "dropID": 50030167,
+        "dropPackage": 50030167,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030168: _tools.RODict({
+        "dropID": 50030168,
+        "dropPackage": 50030168,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030169: _tools.RODict({
+        "dropID": 50030169,
+        "dropPackage": 50030169,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030170: _tools.RODict({
+        "dropID": 50030170,
+        "dropPackage": 50030170,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030171: _tools.RODict({
+        "dropID": 50030171,
+        "dropPackage": 50030171,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030172: _tools.RODict({
+        "dropID": 50030172,
+        "dropPackage": 50030172,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030173: _tools.RODict({
+        "dropID": 50030173,
+        "dropPackage": 50030173,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030174: _tools.RODict({
+        "dropID": 50030174,
+        "dropPackage": 50030174,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030175: _tools.RODict({
+        "dropID": 50030175,
+        "dropPackage": 50030175,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030176: _tools.RODict({
+        "dropID": 50030176,
+        "dropPackage": 50030176,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030177: _tools.RODict({
+        "dropID": 50030177,
+        "dropPackage": 50030177,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030178: _tools.RODict({
+        "dropID": 50030178,
+        "dropPackage": 50030178,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030179: _tools.RODict({
+        "dropID": 50030179,
+        "dropPackage": 50030179,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030180: _tools.RODict({
+        "dropID": 50030180,
+        "dropPackage": 50030180,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030181: _tools.RODict({
+        "dropID": 50030181,
+        "dropPackage": 50030181,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030182: _tools.RODict({
+        "dropID": 50030182,
+        "dropPackage": 50030182,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030183: _tools.RODict({
+        "dropID": 50030183,
+        "dropPackage": 50030183,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030184: _tools.RODict({
+        "dropID": 50030184,
+        "dropPackage": 50030184,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030185: _tools.RODict({
+        "dropID": 50030185,
+        "dropPackage": 50030185,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030186: _tools.RODict({
+        "dropID": 50030186,
+        "dropPackage": 50030186,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030187: _tools.RODict({
+        "dropID": 50030187,
+        "dropPackage": 50030187,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030188: _tools.RODict({
+        "dropID": 50030188,
+        "dropPackage": 50030188,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030189: _tools.RODict({
+        "dropID": 50030189,
+        "dropPackage": 50030189,
+        "dropType": 4,
+        "dropCount": 1
+    }),
+    50030190: _tools.RODict({
+        "dropID": 50030190,
+        "dropPackage": 50030190,
+        "dropType": 4,
+        "dropCount": 1
     })
 })
-minKey = 50100001
-maxKey = 50100625
+minKey = 50027001
+maxKey = 50100638

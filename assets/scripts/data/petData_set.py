@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "petTeamNameLength": _tools.RODict({
         "ID": "petTeamNameLength",
-        "value": 2,
+        "value": 6,
     }),
     "petTeamNum": _tools.RODict({
         "ID": "petTeamNum",
@@ -57,7 +57,7 @@ datas = _tools.RODict({
     }),
     "petTeamSwitchCD": _tools.RODict({
         "ID": "petTeamSwitchCD",
-        "value": 1,
+        "value": 2,
     }),
     "petTeamSwitchCD_msgID": _tools.RODict({
         "ID": "petTeamSwitchCD_msgID",
@@ -134,6 +134,30 @@ datas = _tools.RODict({
     "petCancelFollow": _tools.RODict({
         "ID": "petCancelFollow",
         "value": "取消跟随",
+    }),
+    "petTeamName": _tools.RODict({
+        "ID": "petTeamName",
+        "value": ('编队一', '编队二', '编队三', '编队四', '编队五'),
+    }),
+    "petTeamNameLimit": _tools.RODict({
+        "ID": "petTeamNameLimit",
+        "value": 54000954,
+    }),
+    "petTeamNameForbidden": _tools.RODict({
+        "ID": "petTeamNameForbidden",
+        "value": 54000814,
+    }),
+    "petTeamNameSave": _tools.RODict({
+        "ID": "petTeamNameSave",
+        "value": 54000960,
+    }),
+    "petTeamSwitchMsg": _tools.RODict({
+        "ID": "petTeamSwitchMsg",
+        "value": 54000961,
+    }),
+    "petTeamNameEmpty": _tools.RODict({
+        "ID": "petTeamNameEmpty",
+        "value": 54000962,
     })
 })
 

@@ -21,11 +21,11 @@ datas = _tools.RODict({
     }),
     "defaultLevel_PC": _tools.RODict({
         "ID": "defaultLevel_PC",
-        "value": 103,
+        "value": 202,
     }),
     "minLevelToPlay": _tools.RODict({
         "ID": "minLevelToPlay",
-        "value": 102,
+        "value": 101,
     }),
     "adjustLevelLimit": _tools.RODict({
         "ID": "adjustLevelLimit",
@@ -57,7 +57,7 @@ datas = _tools.RODict({
     }),
     "showNameNum": _tools.RODict({
         "ID": "showNameNum",
-        "value": 0,
+        "value": 100,
     }),
     "showCompletePetModelNum": _tools.RODict({
         "ID": "showCompletePetModelNum",
@@ -110,5 +110,9 @@ datas = _tools.RODict({
     "savePowerModeScreenBrightness": _tools.RODict({
         "ID": "savePowerModeScreenBrightness",
         "value": 0.2,
+    }),
+    "recommendedQuality": _tools.RODict({
+        "ID": "recommendedQuality",
+        "value": "当前推荐画质：{0}\n当前画质不可调整参数，如需调整请选择：自定义",
     })
 })

@@ -4,12 +4,13 @@ datas ={
       "Monster": {
         "40080001": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
           "Dir": 182.0103,
           "DisplayName": "",
-          "EntityID": 11210003,
+          "EntityID": 11213102,
           "ID": 40080001,
           "PosX": 423.02,
           "PosY": 11.99748,
@@ -24,18 +25,20 @@ datas ={
             "Radius": 10.0,
             "RefreshNum": 5,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         },
         "40080002": {
           "ActivityID": 0,
+          "AttachedGIDList": [],
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
           "Dir": 251.3141,
           "DisplayName": "",
-          "EntityID": 11210012,
+          "EntityID": 11213101,
           "ID": 40080002,
           "PosX": 434.9,
           "PosY": 11.52,
@@ -50,15 +53,18 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": ""
           }
         }
       }
     },
+    "TimerEntities": {},
     "BornPos": {
       "40088001": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
@@ -72,6 +78,7 @@ datas ={
         "Props": {
           "Num": 0,
           "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": ""
         }
       }
@@ -79,6 +86,7 @@ datas ={
     "RebornPos": {
       "40088002": {
         "ActivityID": 0,
+        "AttachedGIDList": [],
         "ClassName": "RebornPos",
         "ClassNameType": 7,
         "CustomID": "",

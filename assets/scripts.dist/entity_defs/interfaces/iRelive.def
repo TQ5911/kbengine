@@ -55,6 +55,7 @@
             <Arg>       PLAYER_GBID     </Arg>
             <Arg>       UNICODE         </Arg>
             <Arg>       OP_UUID         </Arg>
+            <Arg>       KILLER_DATA     </Arg>
         </addDeathPenaltyVal>
     </BaseMethods>
 
@@ -78,6 +79,7 @@
             <Arg>   PLAYER_GBID             </Arg>
             <Arg>   UNICODE                 </Arg>
             <Arg>   ARRAY   <of>    REWARD_VAL  </of>   </Arg>
+            <Arg>   KILLER_DATA             </Arg>
         </onDeathPenaltyReward>
     </ClientMethods>
 </root>

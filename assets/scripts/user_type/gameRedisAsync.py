@@ -784,6 +784,8 @@ def _set_max_number_():
         return 0
     '''
 
+import login_set as LS
+SVIP_CNT = LS.datas['queuingWhiteList']['value']
 #一测临时需求，最早登录的5000人设置为svip
 @load_lua_script(gameconst.LuaScriptID.CHECK_AND_SET_SVIP)
 def _check_and_set_svip_():
@@ -796,7 +798,7 @@ def _check_and_set_svip_():
         current = redis.call('GET', "g:svip_cnt")
         if current then
             current = tonumber(current)
-            if current < 5000 then
+            if current < ''' + str(SVIP_CNT) + ''' then
                 redis.call('SET', "g:svip_cnt", current + 1)
                 redis.call('SET', KEYS[1], 1)
                 return 1

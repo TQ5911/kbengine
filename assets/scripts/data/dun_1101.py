@@ -1,6 +1,8 @@
 datas ={
   "11010001": {
     "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "",
@@ -8,6 +10,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 11212001,
     "ID": 11010001,
+    "Name": "\u534a\u517d\u4eba\u6218\u58eb",
     "PosX": 100.0,
     "PosY": 100.0,
     "PosZ": 100.0,

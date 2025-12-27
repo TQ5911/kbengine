@@ -88,6 +88,11 @@
 			<Flags>	CELL_PRIVATE 			</Flags>
 		</moveController>
 
+        <loopTimes>
+			<Type>			INT32						</Type>
+			<Flags>			CELL_PRIVATE				</Flags>
+			<Default>		0							</Default>
+		</loopTimes>
 	</Properties>
 
 	<BaseMethods>
