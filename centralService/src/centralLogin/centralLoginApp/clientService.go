@@ -686,7 +686,7 @@ func (self *LoginClientService) _hmacSha1(valStr, keyStr string) (string) {
 }
 
 func (self *LoginClientService) _attemptTapTapRequest(reqURL, authorization string, loginResult *clientService.LoginReply_LoginResult) bool {
-	client := http.Client{}
+	client := http.Client{Timeout: 5 * time.Second}
 	req, err := http.NewRequest(http.MethodGet, reqURL, nil)
 	if err != nil {
 		appLog.Warn(fmt.Sprintf("_attemptTapTapRequest NewRequest: %s", err.Error()))
@@ -786,7 +786,7 @@ func (self *LoginClientService) _loginByTapTap(channelInfo *ChannelInfo, tapTapA
 }
 
 func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, loginResult *clientService.LoginReply_LoginResult) bool {
-	client := http.Client{}
+	client := http.Client{Timeout: 5 * time.Second}
 	req, err := http.NewRequest(http.MethodPost, reqURL, nil)
 	if err != nil {
 		appLog.Warn(fmt.Sprintf("_attemptOfficialRequest NewRequest: %s", err.Error()))
@@ -827,22 +827,24 @@ func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, lo
 		officialAccessTokenResponse.Data.IsCertified, officialAccessTokenResponse.Data.Birthday, officialAccessTokenResponse.Data.Age))
 
 		tokenTimeout, err1 := strconv.ParseUint(officialAccessTokenResponse.Data.TokenTimeout, 10, 32)
-		birthday, err2 := strconv.ParseUint(officialAccessTokenResponse.Data.Birthday, 10, 32)
+		phone, err2 := strconv.ParseUint(officialAccessTokenResponse.Data.Phone, 10, 64)
+		//birthday, err2 := strconv.ParseUint(officialAccessTokenResponse.Data.Birthday, 10, 32)
+		//isCertified := officialAccessTokenResponse.Data.IsCertified
 		age := officialAccessTokenResponse.Data.Age
-		isCertified := officialAccessTokenResponse.Data.IsCertified
 		if err1 != nil {
 			appLog.Warn("_attemptOfficialRequest respBody tokenTimeout error", err1)
 			*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
 			officialAccessTokenResponse.Success = false
 		} else if err2 != nil{
-			appLog.Warn("_attemptOfficialRequest respBody birthday error", err2)
+			appLog.Warn("_attemptOfficialRequest respBody phone error", err2)
 			*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
 			officialAccessTokenResponse.Success = false
 		} else {
 			data := map[string]interface{} {
 				"age":      	uint32(age),
-				"birthday": 	uint32(birthday),
-				"isCertified": 	bool(isCertified),
+				"phone":		uint64(phone),
+				//"birthday": 	uint32(birthday),
+				//"isCertified": 	bool(isCertified),
 			}
 			otherJsonData, _err := json.Marshal(data)
 			if _err != nil {

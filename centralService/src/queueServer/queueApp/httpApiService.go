@@ -39,9 +39,29 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 	conn := self.app.redisPool.Get()
 	defer conn.Close()
 
+	isSVIP, err := redis.String(conn.Do("get", "g:vip:sv:"+accountNameStr))
+	if err == nil && isSVIP == "1" {
+		appLog.Info("account is svip, no need queue", accountNameStr, serverId)
+		serverHost := ServerListCfg.GetString(fmt.Sprintf("serverList.%s", serverIdStr))
+		response := QueueReply{}
+		response.QueueId = 0
+		response.State = uint8(clientService.QueueReply_QUEUE_SUCCESS)
+		response.ServerId = serverId
+		response.ServerHost = serverHost
+		response.WaitTime = 0
+		data, err := json.Marshal(response)
+		if err != nil {
+			appLog.Error("handleStartQueue json response failed", err.Error())
+			w.WriteHeader(405)
+			return
+		}
+		fmt.Fprintf(w, string(data))
+		return
+	}
+
 	onlineNum, err := redis.Int(conn.Do("get", "ServerOnlineNum_"+serverIdStr))
 	if err != nil {
-		appLog.Warn("handleStartQueue request invalid serverId: %d %+v\n", serverId, self.app.gameServers)
+		appLog.Warn("handleStartQueue request invalid serverId:\n", serverId, self.app.gameServers, err.Error())
 		response := QueueReply{}
 		response.QueueId = 0
 		response.State = uint8(clientService.QueueReply_QUEUE_FAILED)
@@ -60,7 +80,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 
 	gameServer := self.app.getGameServer(serverId)
 	if gameServer == nil {
-		appLog.Info("handleStartQueue new game server", serverId)
+		appLog.Info("handleStartQueue new game server:", serverId)
 		gameServer = self.app.NewHttpServerService(serverId)
 	}
 
@@ -68,7 +88,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 
 	lastServerId, err := redis.Int(conn.Do("get", "AccountLogin_"+accountKey))
 	if err != nil {
-		appLog.Info("handleStartQueue get failed", accountKey, err.Error())
+		appLog.Info("handleStartQueue account is not online:", accountNameStr, "  err:", err.Error())
 	} else {
 		if lastServerId == int(serverId) {
 			appLog.Info("handleStartQueue account is still online, no need queue", accountNameStr, serverId)
@@ -154,10 +174,17 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		}
 		fmt.Fprintf(w, string(data))
 	} else {
+		VIPFlag := false
+		isVIP, err := redis.String(conn.Do("get", "g:vip:v:"+accountNameStr))
+		if err == nil && isVIP == "1" {
+			VIPFlag = true
+		}
+		appLog.Info("isVIP: ", VIPFlag, " err:", err)
+
 		var client = self.app.NewHttpClientService(accountNameStr, serverIdStr)
 		self.app.addClient(client)
 
-		client.SetQueueId(self.app.enQueue(serverId, accountName))
+		client.SetQueueId(self.app.enQueue(serverId, accountName, VIPFlag))
 		response := QueueReply{}
 		response.QueueId = uint32(client.GetQueueId())
 		response.State = uint8(clientService.QueueReply_QUEUE_IN_PROCESS)
@@ -191,7 +218,7 @@ func (self *HttpService) handleGetQueueInfo(w http.ResponseWriter, r *http.Reque
 	} else {
 		client.OnRecv()
 		if client.IsQueueSuc() {
-			appLog.Info("handleStartQueue queue success ", accountName, serverId)
+			appLog.Info("handleStartQueue queue success ", accountName, " ", serverId)
 			response := QueueReply{}
 			response.QueueId = uint32(client.GetQueueId())
 			response.State = uint8(clientService.QueueReply_QUEUE_SUCCESS)

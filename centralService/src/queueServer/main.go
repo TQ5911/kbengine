@@ -48,6 +48,7 @@ func main() {
 		Queue.ServerListCfg.ReadInConfig()
 		Queue.MaxOnlineNum = Queue.ServerListCfg.GetInt("maxOnlineNum")
 		Queue.LimitPerSecond = Queue.ServerListCfg.GetInt("limitPerSecond")
+		log.Print("maxOnlineNum: ", Queue.MaxOnlineNum, " limitPerSecond: ", Queue.LimitPerSecond)
 	})
 
 	base.Init("queueConf.json", &Queue.QueueConfig, func() common.IApp {

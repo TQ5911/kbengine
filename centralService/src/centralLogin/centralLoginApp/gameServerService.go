@@ -128,7 +128,8 @@ func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRe
 		BanPostTime:      banPostTime,
 		BanAccountReason: banAccountReason,
 		BanPostReason:    banPostReason,
-		AccountId:        accountId}
+		AccountId:        accountId,
+		OtherJsonData:    otherJsonData}
 	self.Client.(*gameServerService.GameServerClient).OnVerifyLogin(&result)
 
 	return nil, nil

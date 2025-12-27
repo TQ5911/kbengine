@@ -1,7 +1,7 @@
 {
   "maxAccountPerDevice": 2,
-  "maxOnlineNum": 1000,
-  "limitPerSecond": 11,
+  "maxOnlineNum": 3000,
+  "limitPerSecond": 10,
   "auditServerId": 20001,
   "gameServerList": {
     "20001": "192.168.11.118:20013"

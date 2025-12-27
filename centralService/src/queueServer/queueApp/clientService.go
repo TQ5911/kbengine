@@ -54,7 +54,7 @@ func (self *QueueClientService) startCheckLastRecvTimer() {
 	for range ticker.C {
 		log.Println("checkLastRecv", self.tLastRecv)
 		var curTime = time.Now().Unix()
-		if curTime-self.tLastRecv > 60 {
+		if curTime-self.tLastRecv > 10 {
 			appLog.Warn("checkLastRecv longtime not receive, remove it", self.tLastRecv, curTime)
 			self.app.removeClient(self)
 			return
@@ -74,7 +74,7 @@ func (self *QueueClientService) ActiveTick(in *clientService.Void) (*clientServi
 }
 
 func (self *QueueClientService) _replyQueueSuccess(serverId uint32, accountName string) error {
-	appLog.Info("queue success ", self.accountName, self.serverId)
+	appLog.Info("queue success ", self.accountName, " ", self.serverId)
 
 	//reply := clientService.QueueReply{State: clientService.QueueReply_QUEUE_SUCCESS, QueueId: uint32(self.queueId), ServerId: self.serverId, ServerHost: self.serverHost}
 	//_, err := self.GetClientEndPoint().(clientService.IGameClientInterface).OnQueueReply(&reply)

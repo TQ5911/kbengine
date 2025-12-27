@@ -4,9 +4,7 @@ import (
 	"centralService/src/appLog"
 	gameServerService "centralService/src/queueServer/queueApp/gameServerService"
 	"centralService/src/trpc"
-	"errors"
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 
@@ -21,43 +19,43 @@ type GameServerService struct {
 	hostId      uint32
 	limiter     *rate.Limiter
 	queueTicker *time.Ticker
+	clearTicker *time.Ticker
 }
 
 func (self *GameServerService) OnLoseConnection() {
 	self.app.removeGameServer(self)
 }
 
-func (self *GameServerService) RegisterServer(in *gameServerService.GameServerInfo) (*gameServerService.Void, error) {
-	log.Println("register server:", in.HostId)
-
-	server := self.app.getGameServer(in.HostId)
-	if server != nil {
-		return nil, errors.New(fmt.Sprint("server is already registered: ", in.HostId))
+// 每5秒清除队列中等待时间超过10秒的账号
+func (self *GameServerService) clearQueue() {
+	for {
+		<-self.clearTicker.C
+		self.app.clearQueue(self.hostId)
 	}
-
-	if in.HostId == 0 {
-		return nil, errors.New(fmt.Sprint("invalid hostId: ", in.HostId))
-	}
-
-	self.hostId = in.HostId
-	self.limiter = rate.NewLimiter(rate.Limit(LimitPerSecond), LimitPerSecond)
-	self.queueTicker = time.NewTicker(time.Second * 1)
-
-	self.app.addGameServer(self)
-	go self.tickQueue()
-	return nil, nil
 }
 
 func (self *GameServerService) tickQueue() {
 	conn := self.app.redisPool.Get()
 	defer conn.Close()
-	onlineNum, err := redis.Int(conn.Do("get", "ServerOnlineNum_"+strconv.Itoa(int(self.hostId))))
-	if err != nil {
-		appLog.Error("tickQueue get ServerOnlineNum_"+strconv.Itoa(int(self.hostId))+" failed", err.Error())
-		return
-	}
 	for {
 		<-self.queueTicker.C
+		onlineNum, err := redis.Int(conn.Do("get", "ServerOnlineNum_"+strconv.Itoa(int(self.hostId))))
+		if err != nil {
+			appLog.Error("tickQueue get ServerOnlineNum_"+strconv.Itoa(int(self.hostId))+" failed", err.Error())
+			continue
+		}
+		appLog.Info("tickQueue: ", onlineNum, " ", "ServerOnlineNum_"+strconv.Itoa(int(self.hostId)), " ", MaxOnlineNum)
+		var items []string
+		for k, v := range self.app.serverVIPQueues {
+			items = append(items, fmt.Sprintf("(%d: %v), ", k, v.Items))
+		}
+		appLog.Info("vip queue: ", items)
+
+		var items2 []string
+		for k, v := range self.app.serverQueues {
+			items2 = append(items2, fmt.Sprintf("(%d: %v), ", k, v.Items))
+		}
+		appLog.Info("queue: ", items2)
 		if onlineNum < MaxOnlineNum {
 			for {
 				if self.limiter.Tokens() < 1 {

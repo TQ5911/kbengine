@@ -1,6 +1,7 @@
 package Queue
 
 import (
+	"centralService/src/appLog"
 	"centralService/src/common"
 	clientService "centralService/src/queueServer/queueApp/clientService"
 	gameServerService "centralService/src/queueServer/queueApp/gameServerService"
@@ -42,6 +43,7 @@ type QueueApp struct {
 	clientsLock     *sync.RWMutex
 	actions         chan LoginAction
 	serverQueues    map[uint32]*Queue
+	serverVIPQueues map[uint32]*Queue
 	queuesLock      *sync.RWMutex
 	httpServer      *HttpService
 	redisPool       *redis.Pool
@@ -54,6 +56,7 @@ func NewQueueApp() *QueueApp {
 	channelToClient := make(map[uuid.UUID]*QueueClientService)
 	actions := make(chan LoginAction, 10)
 	serverQueues := make(map[uint32]*Queue)
+	serverVIPQueues := make(map[uint32]*Queue)
 
 	redisPool := &redis.Pool{
 		MaxIdle:     16,  //最大空闲连接数
@@ -84,7 +87,7 @@ func NewQueueApp() *QueueApp {
 	}
 
 	app := QueueApp{common.App{AppName: "QueueApp"},
-		gameServers, channelToHost, new(sync.RWMutex), gameClients, channelToClient, new(sync.RWMutex), actions, serverQueues, new(sync.RWMutex), nil, redisPool}
+		gameServers, channelToHost, new(sync.RWMutex), gameClients, channelToClient, new(sync.RWMutex), actions, serverQueues, serverVIPQueues, new(sync.RWMutex), nil, redisPool}
 
 	return &app
 }
@@ -168,9 +171,11 @@ func (self *QueueApp) NewHttpServerService(serverId uint32) *GameServerService {
 		hostId:         serverId,
 		limiter:        rate.NewLimiter(rate.Limit(LimitPerSecond), LimitPerSecond),
 		queueTicker:    time.NewTicker(time.Second * 1),
+		clearTicker:    time.NewTicker(time.Second * 5),
 	}
 	self.addGameServer(service)
 	go service.tickQueue()
+	go service.clearQueue()
 	return service
 }
 
@@ -261,48 +266,83 @@ func (self *QueueApp) getGameServer(hostId uint32) *GameServerService {
 	return nil
 }
 
-func (self *QueueApp) enQueue(serverId uint32, accountName string) int {
+func (self *QueueApp) enQueue(serverId uint32, accountName string, isVIP bool) int {
 	self.queuesLock.Lock()
 	defer self.queuesLock.Unlock()
 	queueId := -1
 
-	if queue, ok := self.serverQueues[serverId]; ok {
+	var tarQueueMap *map[uint32]*Queue
+	if isVIP {
+		tarQueueMap = &self.serverVIPQueues
+	} else {
+		tarQueueMap = &self.serverQueues
+	}
+
+	if queue, ok := (*tarQueueMap)[serverId]; ok {
 		queueId = queue.Enqueue(Item(accountName))
 	} else {
 		queue := NewQueue()
 		queueId = queue.Enqueue(Item(accountName))
-		self.serverQueues[serverId] = queue
+		(*tarQueueMap)[serverId] = queue
 	}
 	return queueId
+}
+
+func (self *QueueApp) clearQueue(serverId uint32) {
+	self.queuesLock.Lock()
+	defer self.queuesLock.Unlock()
+
+	appLog.Info("clearQueue: ", serverId)
+	if queue, ok := self.serverVIPQueues[serverId]; ok {
+		queue.mut.Lock()
+		defer queue.mut.Unlock()
+		tempQueue := NewQueue()
+		tempMap := make(map[string]bool)
+		for i := range queue.Items {
+			client := self.getClient(string(queue.Items[i]))
+			if client != nil {
+				if _, ok := tempMap[string(queue.Items[i])]; !ok {
+					tempMap[string(queue.Items[i])] = true
+					tempQueue.Enqueue(queue.Items[i])
+				}
+			}
+		}
+		self.serverVIPQueues[serverId].Items = tempQueue.Items
+	}
+
+	if queue, ok := self.serverQueues[serverId]; ok {
+		queue.mut.Lock()
+		defer queue.mut.Unlock()
+		tempQueue := NewQueue()
+		tempMap := make(map[string]bool)
+		for i := range queue.Items {
+			client := self.getClient(string(queue.Items[i]))
+			if client != nil {
+				if _, ok := tempMap[string(queue.Items[i])]; !ok {
+					tempMap[string(queue.Items[i])] = true
+					tempQueue.Enqueue(queue.Items[i])
+				}
+			}
+		}
+		self.serverQueues[serverId].Items = tempQueue.Items
+	}
 }
 
 func (self *QueueApp) deQueue(serverId uint32) *Item {
 	self.queuesLock.Lock()
 	defer self.queuesLock.Unlock()
 
+	if queue, ok := self.serverVIPQueues[serverId]; ok {
+		res := queue.Dequeue()
+		if res != nil {
+			return res
+		}
+	}
+
 	if queue, ok := self.serverQueues[serverId]; ok {
 		return queue.Dequeue()
 	}
 	return nil
-}
-
-func (self *QueueApp) getQueue(serverId uint32) *Queue {
-	self.queuesLock.Lock()
-	defer self.queuesLock.Unlock()
-
-	if queue, ok := self.serverQueues[serverId]; ok {
-		return queue
-	}
-	return nil
-}
-
-func (self *QueueApp) removeFromQueue(serverId uint32, accountName string) {
-	self.queuesLock.Lock()
-	defer self.queuesLock.Unlock()
-
-	if queue, ok := self.serverQueues[serverId]; ok {
-		queue.Remove(Item(accountName))
-	}
 }
 
 func (self *QueueApp) buildAccountKey(accountType string, accountName string) string {
@@ -318,6 +358,17 @@ func (self *QueueApp) QueueTick(serverId uint32) *Queue {
 		defer queue.mut.Unlock()
 		for i := range queue.Items {
 			client := self.getClient(string(queue.Items[i]))
+			if client != nil {
+				client.SetQueueId(i + 1)
+			}
+		}
+	}
+
+	if vipQueue, ok := self.serverVIPQueues[serverId]; ok {
+		vipQueue.mut.Lock()
+		defer vipQueue.mut.Unlock()
+		for i := range vipQueue.Items {
+			client := self.getClient(string(vipQueue.Items[i]))
 			if client != nil {
 				client.SetQueueId(i + 1)
 			}
