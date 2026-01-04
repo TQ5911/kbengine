@@ -30,5 +30,9 @@ datas = _tools.RODict({
     "offlineExpFluctuate": _tools.RODict({
         "ID": "offlineExpFluctuate",
         "value": (0.95, 1.02),
+    }),
+    "nameSuffixNoRevenue": _tools.RODict({
+        "ID": "nameSuffixNoRevenue",
+        "value": (4, 5, 6),
     })
 })

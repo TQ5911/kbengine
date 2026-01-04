@@ -62,6 +62,9 @@ datas ={
   "86010071": {
     "TaskType": 1
   },
+  "86010075": {
+    "TaskType": 1
+  },
   "86010077": {
     "TaskType": 5
   },
@@ -159,7 +162,7 @@ datas ={
     "TaskType": 0
   },
   "86050035": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86050053": {
     "TaskType": 2
@@ -267,7 +270,7 @@ datas ={
     "TaskType": 6
   },
   "86080013": {
-    "TaskType": 0
+    "TaskType": 6
   },
   "86080014": {
     "TaskType": 6

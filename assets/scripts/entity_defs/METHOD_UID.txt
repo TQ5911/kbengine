@@ -331,7 +331,7 @@ Avatar enterChiefDungeon CELL 915
 Avatar enterCrossServerSiegeWarSpace BASE 398
 Avatar enterCrusadeDungeon CELL 655
 Avatar enterCube CELL 684
-Avatar enterGuildChallengeDungeon CELL 506
+Avatar enterRaidChallengeDungeon CELL 201
 Avatar enterRaidDungeon CELL 31677
 Avatar enterRiding CELL 563
 Avatar enterRidingByAction CELL 31067
@@ -340,6 +340,7 @@ Avatar enterTeamCaptainTrap CELL 30028
 Avatar enterWonderLand CELL 868
 Avatar enterWorldLine CELL 306
 Avatar entireDestroy BASE 30278
+Avatar exchangeCurrency BASE 220
 Avatar exchangeGiftKeyReward BASE 1077
 Avatar exchangeItem BASE 99
 Avatar exitGuild BASE 744
@@ -915,6 +916,7 @@ Avatar onPrivilegeResponse BASE 31841
 Avatar onQixieAssistFetchCostCoinResult BASE 31685
 Avatar onQixieAssistResult BASE 31686
 Avatar onQixieChanged CLIENT 960
+Avatar onQueryCurrencyExchangeData CLIENT 221
 Avatar onQueryItemLink CLIENT 493
 Avatar onQueryPlayerLink CLIENT 495
 Avatar onQuerySiegeWarBiddingWinnerDataResult BASE 31709
@@ -1147,6 +1149,7 @@ Avatar procDirectJoinMsg CELL 30421
 Avatar procInviteTeamMsg CELL 30418
 Avatar procJoinTeamMsg CELL 30417
 Avatar qixieAssist BASE 929
+Avatar queryCurrencyExchangeData BASE 219
 Avatar queryItemLink BASE 486
 Avatar queryLineInfo CELL 153
 Avatar queryPlayerLink BASE 487
@@ -2100,6 +2103,7 @@ LeaderBoardStub renewalBase BASE 31307
 LoginStub callMethod BASE 30189
 LoginStub createCellNearHere BASE 30191
 LoginStub createCellNearSelf BASE 30190
+LoginStub deleteCharacter BASE 32171
 LoginStub doLast BASE 30193
 LoginStub doNext BASE 30192
 LoginStub doOnOthersBaseByAccountName BASE 30185

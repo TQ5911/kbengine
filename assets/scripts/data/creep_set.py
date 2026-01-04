@@ -153,7 +153,7 @@ datas = _tools.RODict({
     }),
     "patrolFx": _tools.RODict({
         "ID": "patrolFx",
-        "value": 31950001,
+        "value": 31609001,
     }),
     "patrolStayDelay": _tools.RODict({
         "ID": "patrolStayDelay",

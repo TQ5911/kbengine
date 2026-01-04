@@ -27,7 +27,7 @@ datas = _tools.RODict({
         "100rollCost": ((30000235, 100),),
         "1rollReward": 40020672,
         "10rollReward": 40020673,
-        "dailyLimit": 300,
+        "dailyLimit": ((0, 29, 300), (30, 39, 500), (40, 49, 1000), (50, 59, 1500), (60, 999, 2000)),
         "pityPullCount": 1000,
         "pityReset": (1, 0, 3),
         "pityReward": 30000330,

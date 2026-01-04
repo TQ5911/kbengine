@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "petTeamNameLength": _tools.RODict({
         "ID": "petTeamNameLength",
-        "value": 6,
+        "value": 3,
     }),
     "petTeamNum": _tools.RODict({
         "ID": "petTeamNum",

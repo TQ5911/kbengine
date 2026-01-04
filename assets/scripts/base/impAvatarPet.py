@@ -59,6 +59,7 @@ class ImpAvatarPet(object):
     def _sendBattleListData(self):
         self.lingShouInfo.sendBattleListData(self)
 
+    @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def setFollowPet(self, exposed, bFollow, petId):
         pet = self.lingShouInfo.getLingShouByPetId(petId)
@@ -68,6 +69,7 @@ class ImpAvatarPet(object):
 
         self.cell.setFollowPet(bFollow, petId)
 
+    @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def updateLingShouBattleList(self, exposed, battleIndex, petId, slotId):
         DEBUG_MSG('updateLingShouBattleList', battleIndex, petId, slotId)
@@ -168,12 +170,14 @@ class ImpAvatarPet(object):
 
         return _dic.get(quality, 0)
 
+    @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def modifyPetBattleListName(self, exposed, battleIndex, name):
         if not self.lingShouInfo.isBattleIndexValid(battleIndex):
             ERROR_MSG("modifyPetBattleListName battleIndex invalid", battleIndex)
             return
         
+        name = ''.join([c for c in name if c !=' '])
         if len(name) == 0:
             ERROR_MSG("modifyPetBattleListName name can't be empty", name)
             return
@@ -188,6 +192,7 @@ class ImpAvatarPet(object):
     def getTotalPetScore(self):
         return self.lingShouInfo.getTotalPetScore(self)
 
+    @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     @gamedecorator.limitcall(PDSD.datas['petTeamSwitchCD']['value'])
     def setBattleIndex(self, exposed, battleIndex):
@@ -237,6 +242,7 @@ class ImpAvatarPet(object):
         # self.onMessagePre(MMD.datas.petEggHatchTip, [])
         self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
 
+    @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def useLingShouEquip(self, exposed, gridId, petId, slotId):
         DEBUG_MSG("useLingShouEquip ", gridId, petId, slotId)

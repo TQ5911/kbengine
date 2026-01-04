@@ -18,7 +18,7 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "yanWuGeLvReq": 1,
-        "name": "难度一",
+        "name": "普通",
         "dunID": 2301,
         "bossID": 11051001,
         "minScore": 20000,
@@ -29,7 +29,7 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "yanWuGeLvReq": 2,
-        "name": "难度二",
+        "name": "困难",
         "dunID": 2302,
         "bossID": 11051001,
         "minScore": 32000,
@@ -40,7 +40,7 @@ datas = _tools.RODict({
     3: _tools.RODict({
         "ID": 3,
         "yanWuGeLvReq": 3,
-        "name": "难度三",
+        "name": "噩梦",
         "dunID": 2303,
         "bossID": 11051001,
         "minScore": 45000,

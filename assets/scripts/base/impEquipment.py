@@ -75,6 +75,11 @@ class ImpEquipment(object):
             self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_ARG_ERR, 0, 0)
             ERROR_MSG('   in baseEquipDeductItems, bagEquipUpgradeDeductItemsCB, invalid comsume grid item grade', consumeGridId, consumeBagEquipItem.getGrade(), grade)
             return False, None
+        
+        if consumeBagEquipItem.isLocked():
+            self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_ARG_ERR, 0, 0)
+            ERROR_MSG('   in baseEquipDeductItems, bagEquipUpgradeDeductItemsCB, invalid comsume grid item lock status', consumeGridId, consumeBagEquipItem.getGrade(), grade, consumeBagEquipItem.isLocked())
+            return False, None
 
         return True, consumeBagEquipItem.getOriginalBindValue()
 
@@ -127,8 +132,7 @@ class ImpEquipment(object):
             WARNING_MSG('   in baseEquipDeductItems, bagData locked!')
             self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_BAG_LOCKED, 0, 0)
             return
-
-        args = tuple(args)
+        
         # 额外的格子消耗
         needGridIdList = gridNeedItems
         # 有特殊自选需求的额外格子消耗
@@ -147,12 +151,24 @@ class ImpEquipment(object):
         if self.canDeductWealth(deductWealthVal, not autoBuy):
             # 额外的格子消耗
             if needGridIdList:
+                # 二次校验格子是否上锁了
+                for needGridId in needGridIdList:
+                    needGridItem = self.bagData.getItemObjByGridId(needGridId)
+                    if not needGridItem:
+                        self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_ARG_ERR, 0, 0)
+                        ERROR_MSG('   in baseEquipDeductItems, invalid grid id', needGridId)
+                        return
+                    if needGridItem.isLocked():
+                        self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_ARG_ERR, 0, 0)
+                        ERROR_MSG('   in baseEquipDeductItems, grid is locked', opUUID)
+                        return
                 self.bagData.deductItemsByGrid(self, needGridIdList, opUUID, srcType, detail)
             self.deductWealth(srcType, deductWealthVal, opUUID, detail)
             DEBUG_MSG('in baseEquipDeductItems ', methodName, args)
             self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_STAT_OK, bindValue, unbindValue)
             return
         else:
+            self.equipMethodCallback(box, methodName, args, gameconst.BagOPStat.BAG_OP_ARG_ERR, 0, 0)
             ERROR_MSG('   in baseEquipDeductItems, canDeductWealth fail:', opUUID)
 
         if not autoBuy:
@@ -162,9 +178,9 @@ class ImpEquipment(object):
 
     def equipMethodCallback(self, box, methodName, args, opStat, bindValue, unbindValue):
         if methodName in ImpEquipment.NEED_BIND_VALUE_METHOD:
-            args=(bindValue,)+args
+            args=(bindValue,)+tuple(args)
         elif methodName in ImpEquipment.NEED_BIND_AND_UNBIND_VALUE_METHOD:
-            args=(bindValue, unbindValue)+args
+            args=(bindValue, unbindValue)+tuple(args)
         box and methodName and getattr(box, methodName)(opStat, *args)
 
     def addAutoDressEquipItem(self, equipList, opUUID, srcType, taskId, awardCtx):
@@ -191,6 +207,7 @@ class ImpEquipment(object):
             self.dressEquipment(gridId, gameconst.EQUIP_DRESS_TYPE.OP_AUTO_DRESS, False, 0)
         return
 
+    @gamedecorator.checkGameconfigEnable('equip')
     @gamedecorator.crossServer
     def dressEquipment(self, exposed, gridId, dressType, dstSlotId):
         INFO_MSG('in dressEquipment:', gridId, dressType, dstSlotId, self.baseSpaceNo)
@@ -210,6 +227,7 @@ class ImpEquipment(object):
         INFO_MSG('in replaceEquipment:', uniqId, result, self.baseSpaceNo, oldBodyEquipDic)
         self.bagData.doDressEquipCB(self, uniqId, result, oldBodyEquipDic)
 
+    @gamedecorator.checkGameconfigEnable('equip')
     @gamedecorator.crossServer
     def undressEquipment(self, exposed, slotId):
         INFO_MSG("in undressEquipment:", slotId, self.baseSpaceNo)
@@ -618,6 +636,7 @@ class ImpEquipment(object):
         self.client.onEquipBindValueWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, bagEquipItem.getBindValue(), bagEquipItem.getAddBindValueStatus(), bagEquipItem.bindType)
         return
 
+    @gamedecorator.checkGameconfigEnable('equip')
     @gamedecorator.limitcall(1)
     def reqMultiEquipDisassemble(self, exposed, gridIdList, uniqueIdList):
         DEBUG_MSG('reqMultiEquipDisassemble:', gridIdList, uniqueIdList)
@@ -656,7 +675,7 @@ class ImpEquipment(object):
                 return False
         return True
 
-    @AuthClsWraper.authWithPermission(A_AFD.UIEquipMakePanel)
+    @gamedecorator.checkGameconfigEnable('equip_make')
     @gamedecorator.limitcall(1)
     def reqMakeEquipment(self, exposed, itemId, gridIdList, gridCountList, makeType):
         DEBUG_MSG('reqMakeEquipment:', itemId, gridIdList, gridCountList, makeType)
@@ -1068,6 +1087,7 @@ class ImpEquipment(object):
             GBGCD.datas['pickOthersDropEquip_msgID']['value'],
             [str(equipItem.itemId)])
 
+    @gamedecorator.checkGameconfigEnable('equip')
     def giveUpDropEquip(self, exposed, uniqueId):
         INFO_MSG('giveUpDropEquip:', uniqueId)
         if not self.equipDropData.hasTakeDrop(uniqueId):
@@ -1076,6 +1096,7 @@ class ImpEquipment(object):
 
         gameengine.getGlobalBase('DropStub').giveUpDropEquip(self.gbID, uniqueId, self)
 
+    @gamedecorator.checkGameconfigEnable('equip')
     def redeemEquipDrop(self, exposed, uniqueId):
         INFO_MSG('redeemEquipDrop:', uniqueId)
         _dropVal = self.equipDropData.getDropVal(uniqueId)
@@ -1152,6 +1173,7 @@ class ImpEquipment(object):
         self.equipDropData.addTakerWait(uniqueId, _takerVal.equip, _takerVal.endTime, _takerVal.price)
         self.client.onEquipDropStateChange(uniqueId, gameconst.DropType.TYPE_REDEEM)
 
+    @gamedecorator.checkGameconfigEnable('equip')
     def getTakerWaitReward(self, exposed, uniqueId):
         _takerVal = self.equipDropData.removeTakerWait(self, uniqueId)
         if not _takerVal:
@@ -1462,8 +1484,8 @@ class ImpEquipment(object):
             gridId = gridIdList[i]
             gridCount = gridCountList[i]
             bagEquipItem = self.bagData.getItemObjByGridId(gridId)
-            if not bagEquipItem or bagEquipItem.itemNum < gridCount:
-                ERROR_MSG('in calculateConsumePlan wrong args 2:', bagEquipItem.itemId, gridCount, bagEquipItem.itemNum)
+            if not bagEquipItem or bagEquipItem.itemNum < gridCount or bagEquipItem.isLocked():
+                ERROR_MSG('in calculateConsumePlan wrong args 2:', bagEquipItem, gridCount)
                 return False, None, 0, 0
             bagItemNum = bagEquipItem.itemNum
             # 检查指定格子材料是否足够

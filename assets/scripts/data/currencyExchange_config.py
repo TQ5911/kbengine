@@ -5,7 +5,7 @@
 # ------------------------------------------------------------------
 # Copyright QianHui.INC 2023-2023
 # ------------------------------------------------------------------
-# SHEET NAME: petData/unlock
+# SHEET NAME: currencyExchange/config
 import gamedatatools as _tools
 # useful import
 import collections
@@ -15,26 +15,8 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    1: _tools.RODict({
-        "ID": 1,
-        "unlockRank": 1
-    }),
-    2: _tools.RODict({
-        "ID": 2,
-        "unlockRank": 10
-    }),
-    3: _tools.RODict({
-        "ID": 3,
-        "unlockRank": 20
-    }),
-    4: _tools.RODict({
-        "ID": 4,
-        "unlockRank": 40
-    }),
-    5: _tools.RODict({
-        "ID": 5,
-        "unlockRank": 50
+    "feeNotEnoughMsg": _tools.RODict({
+        "ID": "feeNotEnoughMsg",
+        "value": 54001192,
     })
 })
-minKey = 1
-maxKey = 5

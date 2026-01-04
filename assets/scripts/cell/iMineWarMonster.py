@@ -12,7 +12,7 @@ import mineBattle_config as MBC
 class IMineWarMonster(object):
     def __init__(self):
         self.mineWarNearPlayers = {}
-        
+        self.junxuPropId = None
         if formula.isMineWarSpace(self.spaceNo):
             if self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_NONE:
                 customId, gid = utils.getCustomIdAndGid(self.spaceNo, self.gameEntityId)
@@ -24,6 +24,7 @@ class IMineWarMonster(object):
     # 根据帮会信息初始化旗帜属性
     def initGuildProp(self):
         self.mineWarGuildId = self.spaceMgr.mineWarGuildId
+        self.junxuPropId = self.spaceMgr.getMineWarMonsterPropId(self)
 
         self.mineWarCanAttack = True
         if self.isMineWarCore() or self.isMineWarFlagBroken():
@@ -100,7 +101,7 @@ class IMineWarMonster(object):
             return
 
         attacker = utils.getEntityRealEntity(attacker)
-        if attacker:
+        if attacker and attacker.guildUUID > 0:
             _enemy, needReturn = utils.isMineWarEnemy(attacker, self)
             if needReturn and not _enemy:
                 attacker.base.onMessagePre(MBC.datas['mineBattle_prohibitAttacksMsg']['value'], ())

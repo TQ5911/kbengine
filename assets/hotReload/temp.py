@@ -6,37 +6,72 @@ def refreshCell():
     pass
 def refreshBase():
     import KBEngine
-    import gameconst
+    import dropAward
     import gameclass
-    import utils
-    import welfare_config as W_CDD
     import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-    import AuthClsWraper
+    import gacha_gachaSet as GGS
+    import gacha_gachaPool as GGP
     import gamedecorator
-    import iBindPhone
-    @AuthClsWraper.onlyHost
-    @gamedecorator.checkGameconfigEnable(UVVD.datas.get('PcLoginReward', {}).get('type', 'welfare'))
-    def reqClaimPcLoginReward(self, exposed):
-        INFO_MSG('IBindPhone reqClaimPcLoginReward', self.gbID, self.accountName)
-        claimTimestamp = self.accountEntity.getPersistentMiscProp(gameconst.AvatarProps.claimPcLoginRewardTimestamp, 0)
-        if claimTimestamp != 0:
-            WARNING_MSG('IBindPhone reqClaimPcLoginReward alerady claim', claimTimestamp)
+    import iDrawCard
+    @gamedecorator.checkGameconfigEnable('drawPet')
+    def reqRandomSummonPet(self, exposed, pool, summonNum):
+        INFO_MSG('call reqRandomSummonPet', pool, summonNum)
+        if not self.checkGachaPoolVaild(pool):
             return
-        if not self.isUnlocked('PcLoginReward'):
+        poolData = GGP.datas[pool]
+        curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
+        if curPoolInfo.guaranteed >= GGS.datas['maxStack']['value']:
+            self.onMessagePre(GGS.datas['guaranteeMaxFull']['value'], [])
+            WARNING_MSG('call reqRandomSummonPet: guaranteed limit', curPoolInfo.guaranteed, GGS.datas['maxStack']['value'])
             return
-        if not self.checkDevicePlatId(self.accountEntity.devicePlatId):
+        rollCostKey = str(summonNum) + str('rollCost')
+        rollCost = poolData.get(rollCostKey, None)
+        rollRewardKey = str(summonNum) + str('rollReward')
+        rollReward = poolData.get(rollRewardKey, 0)
+        gatchaTypeReward = GGS.datas['gatchaTypeReward']['value']
+        realRollNum = 0
+        if not rollCost:
+            ERROR_MSG('call reqRandomSummonPet rollCost not found in config')
             return
-        self.accountEntity.setPersistentMiscProp(gameconst.AvatarProps.claimPcLoginRewardTimestamp, utils.getNow())
-        rewardId = W_CDD.datas.get('PcLoginReward', {}).get('value', 0)
-        if not rewardId:
-            WARNING_MSG('IBindPhone reqClaimPcLoginReward: no reward')
-            return False
-        awardCtx = self._getAvatarAwardCtx(rewardId, None)
-        detail = gameclass.AwardDetail(claimTimestamp=claimTimestamp)
+        if not rollReward:
+            ERROR_MSG('call reqRandomSummonPet rollReward not found in config')
+            return
+        for itemNum, rollNum in gatchaTypeReward:
+            if itemNum == summonNum:
+                realRollNum = rollNum
+                break
+        if not realRollNum:
+            ERROR_MSG('call reqRandomSummonPet summonNum not found in config')
+            return
+        level = self.getAvatarLevel()
+        curDailyNum = 0
+        dailyLimit = poolData.get('dailyLimit', ())
+        for limitInfo in dailyLimit:
+            minLevel, maxLevel, limitNum = limitInfo
+            if level < minLevel or maxLevel < level:
+                continue
+            curDailyNum = limitNum
+            break
+        if curPoolInfo.dailyNum + summonNum > curDailyNum:
+            self.onMessagePre(GGS.datas['rollLimitNotEnough']['value'], [])
+            WARNING_MSG('call reqRandomSummonPet over daily limit', curPoolInfo.dailyNum, summonNum, level, curDailyNum)
+            return
+        petRollTicket = rollCost
+        deductWealthVal = dropAward.DeductWealthVal()
+        for itemId, costNum in petRollTicket:
+            deductWealthVal.addWealthByItemId(itemId, costNum)
+        if not self.canDeductWealth(deductWealthVal):
+            ERROR_MSG('reqRandomSummonPet items not enough:', deductWealthVal)
+            return
+        detail = gameclass.AwardDetail(summonNum=summonNum)
         opUUID = KBEngine.genUUID64()
-        self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_SIGN_IN, rewardId, 1, opUUID, detail, awardCtx)
-        self.sendClaimPcLoginRewardInfo()
-    iBindPhone.IBindPhone.reqClaimPcLoginReward = reqClaimPcLoginReward
+        self.deductWealth(AAC_AACDD.datas.BONUS_SRC_PETROLL_COST, deductWealthVal, opUUID, detail)
+        rewardId = rollReward
+        awardCtx = self._getAvatarAwardCtx(rewardId, None)
+        awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum})
+        detail = gameclass.AwardDetail(rewardId=rewardId)
+        self.addAwards(AAC_AACDD.datas.BONUS_SRC_PETROLL_REWARD, rewardId, 1, opUUID, detail, awardCtx, False)
+    iDrawCard.IDrawCard.reqRandomSummonPet = reqRandomSummonPet
     # --auto genterate mark--
     pass
 def refreshInterface():

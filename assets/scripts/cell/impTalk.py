@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 import KBEngine
 from KBEDebug import *
+import sMath
+
 import dataUtils
+import gamedecorator
 import utils
-import Dialog_Dialog as DIALOG_DATA
-import gamePlay_gamePlay as GAMEPLAY_DATA
 import gameconst
 import CommEventAction
-import message_Message_def as MMD
 import actionContext
 import gameconfig
-import NPC_NPC as NPC_CONFIG_DATA
-import sMath
-import eventAction_Event as EA_ED
 
+import Dialog_Dialog as DIALOG_DATA
+import gamePlay_gamePlay as GAMEPLAY_DATA
+import message_Message_def as MMD
+import NPC_NPC as NPC_CONFIG_DATA
+import eventAction_Event as EA_ED
 
 class ImpTalk(object):
     def _getTaskCommitCacheKey(self, securityCheckKey):
@@ -34,6 +36,7 @@ class ImpTalk(object):
         _commonDialog = NPC_CONFIG_DATA.datas[npcId]['commonDialog']
         return dialogId in DIALOG_DATA.dialogIdMap[_commonDialog]
 
+    @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def talkToNpc(self, exposed, npcEntityId, taskId, dialogId, idx):
         DEBUG_MSG('in talkToNpc:', taskId, npcEntityId, dialogId, idx)
@@ -62,6 +65,7 @@ class ImpTalk(object):
 
         self.makeTalkToNPC(npcEntityId, npcId, taskId, dialogId, idx)
 
+    @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def talkToClientNpc(self, exposed, npcId, taskId, dialogId, idx):
         DEBUG_MSG('in talkToClientNpc:', taskId, npcId, dialogId, idx)

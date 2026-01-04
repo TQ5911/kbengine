@@ -11,6 +11,7 @@ import dungeonPlayMode
 import dropAward
 import gameclass
 import gametlog
+import gamedecorator
 
 import message_Message_def as MMD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
@@ -32,6 +33,7 @@ class ICrusade(object):
         self.crusadeInfo.resetUseItemAddRewardWeeklyNum()
         self.crusadeInfo = self.crusadeInfo
 
+    @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useItemToIncreaseCrusadeRewardNumber(self, exposed, useNum):
         DEBUG_MSG('useItemToIncreaseCrusadeRewardNumber::', useNum)
         if useNum <= 0:
@@ -45,6 +47,7 @@ class ICrusade(object):
 
         self._useItemToIncreaseCrusadeRewardNumber(itemId, useNum, {})
 
+    @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useCoinToIncreaseCrusadeRewardNumber(self, exposed, useNum):
         DEBUG_MSG('useCoinToIncreaseCrusadeRewardNumber::', useNum)
         if useNum <= 0:
@@ -94,7 +97,7 @@ class ICrusade(object):
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_TEAMDUN_ADD_REWARD
-        detail = gameclass.AwardDetail
+        detail = gameclass.AwardDetail()
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
         self.onUseCoinToIncreaseCrusadeRewardNumber(useNum, extra)

@@ -296,8 +296,6 @@ class BehaveCtrl(object):
         self.owner.telToPos(self.owner.bornPosition, self.owner.bornDirection)
 
     def clearHateAndTelBackWithBroadcast(self, needSync=True):
-        import traceback
-        DEBUG_MSG("-------", traceback.format_stack())
         self.owner.cancelController('Movement')
         self.owner.removeState(gameconst.State.Moving)
         self.clearHateAndResetSkill()
@@ -1360,8 +1358,27 @@ class HateCtrl(object):
         if self.hateDict.isEmpty(False):
             self.syncHateTo(*args, **kwargs)
 
+    def luckyGroupTick(self):
+        if not self.luckyGroupLastTickTime:
+            self.luckyGroupLastTickTime = utils.getNow()
+        
+        patrolStayDelay = CSD.datas["patrolStayDelay"]["value"]
+        if utils.getNow() - self.luckyGroupLastTickTime > patrolStayDelay:
+            self.luckyGroupLastTickTime = 0
+            self.clearHateAndTelBackWithBroadcast()
+            self.restart()
+            self.changeBornState(gameconst.BornStateType.reMove)
+
+    def luckyGroupStand(self):
+        self.stand(False)
+        self.owner.selfSync("luckyGroupStandCB", (self.owner.id, ))
+    
+    def luckyGroupStandCB(self, *args, **kwargs):
+        self.stand(False)
+
     def syncTelBackCB(self, *args, **kwargs):
         DEBUG_MSG("syncTelBackCB", self.owner.bornPosition, self.owner.bornDirection)
+        self.luckyGroupLastTickTime = 0
         self.clearHateAndTelBackWithBroadcast(False)
         self.restart()
         self.changeBornState(gameconst.BornStateType.reMove)
@@ -1440,6 +1457,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         self.tempForceTargetId = 0
         self.tauntTimerId = 0
         self.hostTargetId = 0
+        self.luckyGroupLastTickTime = 0
 
     @property
     def owner(self):
@@ -1489,9 +1507,10 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             self.iTimerDict.pop(targetId, None)
         if (self.isActive and (owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt))) and not self.hateDict.isInHateList(targetId):
             isFirstHate = True if self.hateDict.length == 0 else False
-            self.increaseHate(targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
-            owner.setState(gameconst.State.Fighting, False)
-            self.doForceTask(Task(Event.ATTACK, False, False, None))
+            if self.machine.testEvent(Event.ATTACK):
+                self.increaseHate(targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
+                owner.setState(gameconst.State.Fighting, False)
+                self.doForceTask(Task(Event.ATTACK, False, False, None))
 
         if hasattr(owner, 'aiTriggerEvent'):
             owner.aiTriggerEvent(self.ownerId, gameconst.AI_EVENT_ENENY_ENTER_TRAP, (targetId,))

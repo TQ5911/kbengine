@@ -68,6 +68,7 @@ datas ={
       "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 0.0,
       "TelX": 176.3057,
       "TelY": 1.491098,
@@ -81,7 +82,7 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "10118001",
-    "Dir": 78.5143,
+    "Dir": 90.6693,
     "DisplayName": "\u65b0\u5143\u57ce\u90ca",
     "EntityID": 17100102,
     "ID": 10010056,
@@ -93,10 +94,11 @@ datas ={
       "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
-      "TelDir": 78.5143,
-      "TelX": 56.93086,
+      "ShowInSceneMap": 1,
+      "TelDir": 90.6693,
+      "TelX": 57.3785,
       "TelY": 0.56777,
-      "TelZ": 249.3463
+      "TelZ": 244.6179
     }
   },
   "10014001": {

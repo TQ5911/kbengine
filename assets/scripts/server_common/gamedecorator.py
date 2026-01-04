@@ -9,6 +9,8 @@ import time
 import utils
 import gameconfig
 
+import visible_visible as UVVD
+
 SERVER_LOAD_LV_NORMAL = 0
 
 
@@ -166,16 +168,27 @@ def checkGameconfigEnable(name):
         def wrapper(*args):
             info = gameconfig.CONFIG.get(name)
             if not info:
-                ERROR_MSG('gameconfig not found:', name)
+                ERROR_MSG('gameconfig not found: 1', name)
                 return
-
             configName, convFunc, default, defaultV, desc, cid, flags = info
-
             v = KBEngine.globalData['CONFIG'][configName]
             if not v:
-                WARNING_MSG('gameconfig not enable:', name)
+                WARNING_MSG('gameconfig not enable: 2', name)
                 return
-
+            
+            # 检查是否存在主从系统开关
+            mainSwitch = UVVD.typeToMain.get(name)
+            if mainSwitch:
+                if name != mainSwitch:
+                    info = gameconfig.CONFIG.get(mainSwitch)
+                    if not info:
+                        ERROR_MSG('gameconfig not found: 3', mainSwitch)
+                        return
+                    configName, convFunc, default, defaultV, desc, cid, flags = info
+                    v = KBEngine.globalData['CONFIG'][configName]
+                    if not v:
+                        WARNING_MSG('gameconfig not enable: 4', name)
+                        return 
             return func(*args)
 
         return wrapper

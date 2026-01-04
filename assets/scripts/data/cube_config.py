@@ -17,15 +17,15 @@ import crontab
 datas = _tools.RODict({ 
     "dailyCubeNum": _tools.RODict({
         "ID": "dailyCubeNum",
-        "value": 3,
+        "value": 2,
     }),
     "cubeNumCoin": _tools.RODict({
         "ID": "cubeNumCoin",
-        "value": 120,
+        "value": 100,
     }),
     "cubeNumCoinDailyLimit": _tools.RODict({
         "ID": "cubeNumCoinDailyLimit",
-        "value": 2,
+        "value": 1,
     }),
     "cubeNumItem": _tools.RODict({
         "ID": "cubeNumItem",
@@ -33,7 +33,7 @@ datas = _tools.RODict({
     }),
     "cubeNumItemWeeklyLimit": _tools.RODict({
         "ID": "cubeNumItemWeeklyLimit",
-        "value": 10,
+        "value": 7,
     }),
     "cubeActID": _tools.RODict({
         "ID": "cubeActID",

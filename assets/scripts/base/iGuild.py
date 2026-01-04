@@ -12,6 +12,7 @@ import gameclass
 import utils
 import dropAward
 import gameconst
+import LogTrackingMgr
 import AuthClsWraper
 import guild_guildConst as G_GCD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
@@ -1271,24 +1272,30 @@ class IGuild(object):
                     self.guildTask[taskID]['num'] = 0
                     self.guildTask[taskID]['isCompleted'] = False
         self.syncGuildTaskInfoToClinet()
-    def updateGuilTaskInfo(self,taskID,num):
+
+    def updateGuilTaskInfo(self, taskID, num):
         if len(self.guildTask) == 0:
             self.initGuildTask()
-        if self.guildTask[taskID]:
-            if self.guildTask[taskID]['num'] >= G_GT.datas[taskID]['num']:
-                return False
-            elif self.guildTask[taskID]['num'] + num > G_GT.datas[taskID]['num']:
-                self.guildTask[taskID]['num'] = G_GT.datas[taskID]['num']
-                return True
-            else:
-                self.guildTask[taskID]['num'] += num
-                return True
-        return False
 
-    def getGuildTaskReward(self, exposed,taskIDs):
+        if not self.guildTask[taskID]:
+            return False
+
+        if self.guildTask[taskID]['num'] >= G_GT.datas[taskID]['num']:
+            return False
+
+        elif self.guildTask[taskID]['num'] + num > G_GT.datas[taskID]['num']:
+            self.guildTask[taskID]['num'] = G_GT.datas[taskID]['num']
+            return True
+
+        else:
+            self.guildTask[taskID]['num'] += num
+            return True
+
+    def getGuildTaskReward(self, exposed, taskIDs):
         for taskID in taskIDs:
             self._getGuildTaskReward(taskID)
-    def _getGuildTaskReward(self,taskID):
+
+    def _getGuildTaskReward(self, taskID):
         if self.hasGuild() == False:
             return
         if len(self.guildTask) == 0:
@@ -1310,17 +1317,39 @@ class IGuild(object):
         self.guildTask[taskID]['isCompleted'] = True
         self.syncGuildTaskInfoToClinet()
 
-    def completeGuildTask(self,type,para,num=1):
+        LogTrackingMgr.LogTrackingMgr.Guild_Task(
+            self.gbID,
+            taskID,
+            self.guildTask[taskID].get('num', 0),
+            self.guildTask[taskID].get('isCompleted', False),
+        )
+
+    def completeGuildTask(self, taskType, para, num=1):
         if self.hasGuild() == False:
             return
         #完成任务
         needSyncClient = False
-        for taskID,taskInfo in G_GT.datas.items():
-            if taskInfo['type'] == type and taskInfo['para'] == para:
-                needSyncClient = self.updateGuilTaskInfo(taskID,num) or needSyncClient
+        for taskID, taskInfo in G_GT.datas.items():
+            if taskInfo['type'] != taskType:
+                continue
+
+            if taskInfo['para'] != para:
+                continue
+
+            if not self.updateGuilTaskInfo(taskID, num):
+                continue
+
+            needSyncClient = True
+
+            LogTrackingMgr.LogTrackingMgr.Guild_Task(
+                self.gbID,
+                taskID,
+                self.guildTask[taskID].get('num', 0),
+                self.guildTask[taskID].get('isCompleted', False),
+            )
+
         if needSyncClient:
             self.syncGuildTaskInfoToClinet()
-
 
     def syncGuildTaskInfoToClinet(self):
         TaskInfoList = []

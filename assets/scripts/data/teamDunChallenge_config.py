@@ -17,11 +17,11 @@ import crontab
 datas = _tools.RODict({ 
     "dailyRewardNum": _tools.RODict({
         "ID": "dailyRewardNum",
-        "value": 3,
+        "value": 2,
     }),
     "rewardNumCoin": _tools.RODict({
         "ID": "rewardNumCoin",
-        "value": 60,
+        "value": 50,
     }),
     "rewardNumCoinDailyLimit": _tools.RODict({
         "ID": "rewardNumCoinDailyLimit",
@@ -33,7 +33,7 @@ datas = _tools.RODict({
     }),
     "rewardNumItemWeeklyLimit": _tools.RODict({
         "ID": "rewardNumItemWeeklyLimit",
-        "value": 10,
+        "value": 15,
     }),
     "teamDunChallengeActID": _tools.RODict({
         "ID": "teamDunChallengeActID",

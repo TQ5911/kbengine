@@ -1052,7 +1052,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 box = teamVal.getPlayerBox(ranCaptainId)
                 if box and not utils.isBoxOffline(box) and box.client:
                     box.onMessagePre(TMMCD.datas['beCaptainMsg']['value'], [])
-            elif len(teamVal.teamPlayerDic) >= 1:
+            elif len(teamVal.teamPlayerDic) < 1:
                 self._disbandTeam(teamId)
 
         teamVal.resetTeamFollowQueue(gbId, False)

@@ -547,7 +547,7 @@ class IGameStart(object):
         _datas = json.loads(data)
         INFO_MSG('all server data', _datas)
         _dic = {}
-        for _data in _datas:
+        for _data in _datas['servers']:
             _dic[_data['id']] = _data
 
         _curServerInfo = _dic.get(gameconfig.serverId(), {})

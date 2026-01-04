@@ -5,6 +5,7 @@ import KBEngine
 import utils
 import gameconst
 import gameengine
+import gamedecorator
 
 import dungeonSrc
 import dungeonPlayMode
@@ -12,6 +13,7 @@ import teamMatch_activity as TMACTD
 import teamDunChallenge_basicInfo as TDC_BI
 
 class ICrusade(object):
+	@gamedecorator.checkGameconfigEnable('teamDungeon')
 	@utils.isMyself
 	def enterCrusadeDungeon(self, exposed):
 		DEBUG_MSG('enterCrusadeDungeon::')

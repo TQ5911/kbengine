@@ -139,7 +139,11 @@ class AchievementsVal(userType.UserSoleType):
                     _updateList.append(_achieveVal)
 
             else:
-                _achieveVal = AchievementValInfo.AchievementValVal.fromAchieveData(avatar, A_DD.datas[_achieveId], ctx)
+                _achieveVal = AchievementValInfo.AchievementValVal.fromAchieveData(
+                    avatar, 
+                    A_DD.datas[_achieveId], 
+                    ctx)
+
                 self.addAchieveVal(_achieveVal)
                 _updateList.append(_achieveVal)
 

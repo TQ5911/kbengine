@@ -180,7 +180,8 @@ class ImpTeam(object):
             'openId': "openId",
             'siegeWarCamp': self.siegeWarCamp
         }
-
+    
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     @gamedecorator.limitcall(3)
@@ -264,6 +265,7 @@ class ImpTeam(object):
             return False
         return True
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def applyJoinTeam(self, exposed, teamId, password):
@@ -295,6 +297,7 @@ class ImpTeam(object):
         #     [captainGbId, ], 'makeTargetSecSNSGetFlowLog',
         #     (self.gbId, self.base, gametlog.SecSNSGetMode.joinTeam, ""), None, '', ())
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def replyJoinTeam(self, exposed, gbId, bAgree):
@@ -338,6 +341,7 @@ class ImpTeam(object):
     def isCanInviteTeam(self, gbId):
         return self.isReachTeamMemMinLevel()
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def applyInviteTeam(self, exposed, gbId, name):
@@ -386,6 +390,7 @@ class ImpTeam(object):
         teamInviteRecord[(srcTeamId, gbId)] = 0
         self.selfReplyInviteTeam(srcTeamId, gbId, False)
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def replyInviteTeam(self, exposed, srcTeamId, gbId, bInvite):
         INFO_MSG('replyInviteTeam::~', srcTeamId, gbId, bInvite)
@@ -475,6 +480,7 @@ class ImpTeam(object):
             return False
         return True
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def applyLeaveTeam(self, exposed):
@@ -533,6 +539,7 @@ class ImpTeam(object):
             return False
         return True
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def applyKickTeamMember(self, exposed, gbId):
         if not self.isCanKickTeamMember(gbId):
@@ -545,6 +552,7 @@ class ImpTeam(object):
             return False
         return True
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def applyTransferCaptain(self, exposed, gbId):
         DEBUG_MSG("applyTransferCaptain::", exposed, gbId)
@@ -565,6 +573,7 @@ class ImpTeam(object):
             return False
         return True
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def applyBecomeCaptain(self, exposed, gbId):
         if not self.isCanBecomeCaptain():
@@ -572,6 +581,7 @@ class ImpTeam(object):
 
         gameengine.getTeamStub(self.teamId).applyBecomeCaptain(self.base, self.teamId, self.gbId, gbId, self.name)
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def replyBecomeCaptain(self, exposed, gbId, bAgree):
         DEBUG_MSG('replyBecomeCaptain:', exposed, gbId, bAgree)
@@ -623,6 +633,7 @@ class ImpTeam(object):
             return False
         return True
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def applyDisbandTeam(self, exposed):
         INFO_MSG('applyDisbandTeam')
@@ -644,6 +655,7 @@ class ImpTeam(object):
             return False
         return True
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def clearApplyJoinDic(self, exposed):
         INFO_MSG('clearApplyJoinDic')
@@ -825,6 +837,7 @@ class ImpTeam(object):
             self.showMsg(BDS.datas['Branch_targetAreaFull']['value'], [WCAD.datas.get(areaId, {}).get('Areaname', '')])
             self._onTeleportCallBack()
 
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     def applyFollowTeamCaptain(self, exposed):
@@ -976,6 +989,7 @@ class ImpTeam(object):
             gameengine.getGlobalBase('GuildStub').playerFollowCaptainToGuildSpaceFailed(box, self.spaceMgr.guildUUID)
         return
 
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     def cancelFollowTeamCaptain(self, exposed):
@@ -1633,6 +1647,7 @@ class ImpTeam(object):
 
         return True
 
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     def confirmFollowTeamCaptain(self, exposed, confirm):
@@ -1746,6 +1761,7 @@ class ImpTeam(object):
         else:
             self.showTeamFollowFailMsg()
 
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     @gamedecorator.limitcall(int(TMMCD.datas['assembleTeammatesCD']['value']))
@@ -1770,7 +1786,8 @@ class ImpTeam(object):
         elif self.teamId > 0:
             gameengine.getTeamStub(self.teamId).askAllMemberFollow(self.base, self.teamId, self.gbId, self.spaceNo,
                                                                    self.position)
-
+    
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(int(TMMCD.datas['goToTheCaptainCD']['value']))
     def reqCaptainFollowInfo(self, exposed):
@@ -1790,6 +1807,7 @@ class ImpTeam(object):
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
                 (leaderGBID, ), 'requestCaptainFollowProps', (self.base, ), None, "", ())
 
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     def sendOneMemberFollowAsk(self, exposed, gbId):
@@ -1838,6 +1856,7 @@ class ImpTeam(object):
         if _box and _box.client:
             _box.client.onReplyFollowTeamCaptain(self.gbId, bAgree)
 
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     def cancelAllMemberFollow(self, exposed):
@@ -1857,6 +1876,7 @@ class ImpTeam(object):
             self.replyFollowCaptainTimer = 0
         self.setFollowCaptain(False)
 
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     def replyFollowTeamCaptain(self, exposed, bAgree):
@@ -2030,7 +2050,7 @@ class ImpTeam(object):
         box.getInterInfoOnline(_props)
 
     #----------------------------------------------- 自动匹配 start ----------------------------------------------------
-
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def reqTeamAutoMatch(self, exposed):
@@ -2045,6 +2065,7 @@ class ImpTeam(object):
         gameengine.getTeamStub(self.teamId).teamPrepareAutoMatch(self.teamId, self.guildUUID)
         return
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def reqTeamStopAutoMatch(self, exposed):
         DEBUG_MSG('in reqTeamStopAutoMatch')
@@ -2057,6 +2078,7 @@ class ImpTeam(object):
         gameengine.getTeamStub(self.teamId).teamPrepareStopAutoMatch(self.teamId)
         return
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def reqPlayerAutoMatch(self, exposed, target):
@@ -2126,6 +2148,7 @@ class ImpTeam(object):
         gameengine.getTeamStub(teamId).newPlayerMatched(teamId, self._getTeamPlayerInfoDic())
         return
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def reqPlayerStopAutoMatch(self, exposed):
         INFO_MSG('reqPlayerStopAutoMatch::~')
@@ -2163,6 +2186,7 @@ class ImpTeam(object):
         self.showMsg(TMMCD.datas['leaveMatch_timeOverMsg']['value'], [])
         return
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def reqSetTeamTarget(self, exposed, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         DEBUG_MSG("reqSetTeamTarget:", minLevel, minScore, recruitInfo, isAutoExpedition)
@@ -2192,10 +2216,12 @@ class ImpTeam(object):
         gameengine.getTeamStub(self.teamId).setTeamTarget(self.gbId, self.teamId, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, self.guildUUID)
         return
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def reqGetTeamInfo(self, exposed, checkTeamId):
         gameengine.getTeamStub(checkTeamId).getTeamInfo(self.base, checkTeamId)
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def reqGetTeamList(self, exposed, lastTime, teamTarget):
         teamTargetInfo = TMACTD.datas.get(teamTarget)
@@ -2250,6 +2276,7 @@ class ImpTeam(object):
             return
         return
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def reqUpdateTeamSilentAttr(self, exposed, isSilent):
         #队长在客户端2分钟没有任何操作，认为是静默队伍
@@ -2289,6 +2316,7 @@ class ImpTeam(object):
             _filterTelIds.append(_telId)
         return _filterTelIds
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def clientSetAutoAskTeam(self, exposed, autoAskTeam):
         DEBUG_MSG('clientSetAutoAskTeam autoAskTeam ', autoAskTeam)
@@ -2342,6 +2370,7 @@ class ImpTeam(object):
 
     # --------------------------------------------------------------------
     # TEAM MICS
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     def switchTeamMicsMode(self, exposed, mode):
@@ -2365,6 +2394,7 @@ class ImpTeam(object):
             return None, "TEAM_MICS_MODE_ERR"
         return None, ""
 
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     def turnOnTeamMics(self, exposed):
@@ -2391,6 +2421,7 @@ class ImpTeam(object):
         extraProps = {}
         gameengine.getTeamStub(self.teamId).turnOffTeamMics(self.base, self.gbId, self.teamId, self.gbId, extraProps)
 
+    @gamedecorator.checkGameconfigEnable('team')
     @gamedecorator.crossServer
     @utils.isMyself
     def turnOffTeamMics(self, exposed):
@@ -2412,6 +2443,7 @@ class ImpTeam(object):
         #     return None, "TEAM_CAPTAIN_NOT_VALID"
         return None, ""
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def turnOnTeamMemberMics(self, exposed, playerGBID):
         """API: 打开特定成员麦克风"""
@@ -2430,6 +2462,7 @@ class ImpTeam(object):
             return None, "TEAM_NOT_IN_TEAM"
         return None, ""
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def turnOffTeamMemberMics(self, exposed, playerGBID):
         """API: 关闭特定成员麦克风"""
@@ -2448,6 +2481,7 @@ class ImpTeam(object):
             return None, "TEAM_NOT_IN_TEAM"
         return None, ""
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def blockTeamMemberMics(self, exposed, playerGBID):
         """API: 团长禁言团员"""
@@ -2468,6 +2502,7 @@ class ImpTeam(object):
             return None, "TEAM_NOT_CAPTAIN"
         return None, ""
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def unblockTeamMemberMics(self, exposed, playerGBID):
         """API: 团长解除团员禁言"""
@@ -2488,6 +2523,7 @@ class ImpTeam(object):
             return None, "TEAM_NOT_CAPTAIN"
         return None, ""
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def blockAllTeamMemberMics(self, exposed):
@@ -2509,6 +2545,7 @@ class ImpTeam(object):
             return None, "TEAM_NOT_CAPTAIN"
         return None, ""
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def unblockAllTeamMemberMics(self, exposed):
@@ -2540,6 +2577,7 @@ class ImpTeam(object):
     # --------------------------------------------------------------------
 
     #------------------------------------------- 队伍标记  start -----------------------------------------------
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def reqAddMarkMember(self, exposed, type, index, name, gbId, entId, pos):
         """API: 请求增加标记"""
@@ -2552,6 +2590,7 @@ class ImpTeam(object):
         ent = KBEngine.entities.get(entId)
         gameengine.getTeamStub(self.teamId).reqAddMarkMember(self.teamId, self.base, type, index, name, gbId, entId, pos, ent)
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     def reqDelMarkMember(self, exposed, type, index):
         """API: 请求删除标记"""
@@ -2563,6 +2602,7 @@ class ImpTeam(object):
 
         gameengine.getTeamStub(self.teamId).reqDelMarkMember(self.teamId, self.base, type, index)
 
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(2)
     def reqChangeOnlyCaptain(self, exposed, state):
@@ -2575,10 +2615,11 @@ class ImpTeam(object):
         gameengine.getTeamStub(self.teamId).reqChangeOnlyCaptain(self.teamId, self.base, state)
 
     #------------------------------------------- 队伍标记  end -----------------------------------------------
+    @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.limitcall(3)
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
-    def reqJoinTeam(self, teamID, password):
+    def reqJoinTeam(self, exposed, teamID, password):
         INFO_MSG('reqJoinTeam::', teamID, password)
         _, err = self._onJoinRaidCheck(teamID)
         if err != gameconst.RaidErrno.RAID_OK:

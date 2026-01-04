@@ -8665,7 +8665,7 @@ datas = _tools.RODict({
         "name": "防御提高",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001,"Prop": ("mulMinPhysicalArmor","mulMaxPhysicalArmor","mulMinMagicArmor","mulMaxMagicArmor"),  "Value": lambda d: ((utils.getSkillLvParam(90010030)[d['Layer']-1] * 0.01), (utils.getSkillLvParam(90010030)[d['Layer']-1] * 0.01), (utils.getSkillLvParam(90010030)[d['Layer']-1] * 0.01), (utils.getSkillLvParam(90010030)[d['Layer']-1] * 0.01))}]),
+        "effectList": _tools.ROList([{"EffectId": 13010001,"Prop": ("mulMinPhysicalArmor","mulMaxPhysicalArmor","mulMinMagicArmor","mulMaxMagicArmor"),  "Value": lambda d: ((utils.getSkillLvParam(90010030)[d['Layer']-1] * 0.0001), (utils.getSkillLvParam(90010030)[d['Layer']-1] * 0.0001), (utils.getSkillLvParam(90010030)[d['Layer']-1] * 0.0001), (utils.getSkillLvParam(90010030)[d['Layer']-1] * 0.0001))}]),
         "endByTime": 10.0,
         "endByAtt": 0,
         "endByBeat": 0,

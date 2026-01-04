@@ -795,6 +795,7 @@ def controlResist(self, target, context, *args):
 
 def stun(self, target, context, *args):
     # 通用眩晕
+
     arg1 = args[0] if len(args) >= 1 else 0.0
     # 持续时间
     arg2 = args[1] if len(args) >= 2 else 0.0
@@ -1124,4 +1125,25 @@ def regenByValueShare(self, target, context, *args):
     result.doSkillRegenCorrection = arg3
 
     return result
+
+def doControlState(self, target, context, stateType, *args):
+
+    if stateType == 6:
+        return stun(self, target, context, *args)
+    elif stateType == 8:
+        return silent(self, target, context, *args)
+    elif stateType == 9:
+        return snare(self, target, context, *args)
+    elif stateType == 10:
+        return frozen(self, target, context, *args)
+
+    return False
+
+
+
+
+
+
+
+
 

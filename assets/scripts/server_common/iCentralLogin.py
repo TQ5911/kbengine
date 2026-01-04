@@ -2,7 +2,9 @@ from rpc import RpcChannel, TcpClient
 
 import gameglobal
 from proto.gameServerLogin_pb2 import GameServerInfo, VerifyAccountRequest, GameServer, CentralServer_Stub, \
-    VerifyAccountReply, UpdateCharacterInfo, NewCharacterInfo, Void, AccountVal, AccountOfflineVal, LockLoginSwitchServerVal, UnlockLoginSwitchServerVal
+    VerifyAccountReply, UpdateCharacterInfo, NewCharacterInfo, Void, AccountVal, AccountOfflineVal, LockLoginSwitchServerVal, UnlockLoginSwitchServerVal,\
+    DeleteCharacterRequest
+
 import proto.centralLogin_pb2 as centralLogin
 from KBEDebug import *
 
@@ -47,10 +49,10 @@ class LoginService(GameServer):
         banAccountReason = reply.banAccountReason
         banPostReason = reply.banPostReason
         res = reply.result
-        accountId = reply.accountId
+        userId = reply.userId
         otherJsonData = reply.otherJsonData
         otherData = json.loads(otherJsonData)
-        self.loginMgr.onVerifyPlayerLogin(accountType, accountId, accountName, res, channelId, banAccountTime, banPostTime,
+        self.loginMgr.onVerifyPlayerLogin(accountType, userId, accountName, res, channelId, banAccountTime, banPostTime,
                                           banAccountReason, banPostReason, otherData)
 
     def onKickAccount(self, rpc_controller, reply, done):
@@ -138,14 +140,14 @@ class ICentralLogin(object):
         pass
 
     # 将在interfaces进程上执行账号验证相关逻辑
-    def onVerifyPlayerLogin(self, accountType, accountId, accountName, resCode, channelId=0, banAccountTime=0, banPostTime=0,
+    def onVerifyPlayerLogin(self, accountType, userId, accountName, resCode, channelId=0, banAccountTime=0, banPostTime=0,
                             banAccountReason="", banPostReason="", otherData={}):
         realAccountName = utils.getRealAccountName(accountType, accountName)
         userInfo = self.accountCache.pop(realAccountName, None)
         if not userInfo:
             return
 
-        INFO_MSG('onVerifyLogin:', accountType, accountId, accountName, resCode, userInfo, otherData)
+        INFO_MSG('onVerifyLogin:', accountType, userId, accountName, resCode, userInfo, otherData)
 
         tid, token, dataBytes = userInfo
 
@@ -154,7 +156,7 @@ class ICentralLogin(object):
         clientData = utils.decodeClientData(dataBytes)
         clientData.pop("banPostTime", None)
         clientData.pop("banPostReason", None)
-        clientData.update({"channelId": channelId, "banAccountTime": banAccountTime, "accountId": accountId, "otherData": otherData})
+        clientData.update({"channelId": channelId, "banAccountTime": banAccountTime, "userId": userId, "otherData": otherData})
         if banPostTime != 0:
             clientData.update({"banPostTime": banPostTime, "banPostReason": banPostReason})
         dataBytes = utils.encodeClientData(clientData)
@@ -178,7 +180,8 @@ class ICentralLogin(object):
 
         curAge = otherData.get('age', gameconst.LEGAL_AGE_OF_MAJORITY)
         INFO_MSG('onVerifyLogin: antiAddictionData', gameglobal.antiAddictionData, curAge)
-        if utils.isMinorAccount(curAge):#一测 and gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT:
+        antiAddictionSwitch = AASC.datas.get('antiAddictSwitchAge18', {}).get('value', 0)
+        if utils.isMinorAccount(curAge) and (antiAddictionSwitch or gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT):
             #fmtMessage = MMD.datas[AASC.datas['antiAddictForbiddenTime']['value']]['Message']
             fmtMessage = ""
             KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'),
@@ -366,6 +369,20 @@ class ICentralLogin(object):
             return
 
         loginClient.centralServerStub.onAccountOffline(None, account, None)
+
+    def deleteCharacter(self, gbId, centralServerId):
+        """
+        通知中心服务器删除角色
+        """
+        _req = DeleteCharacterRequest()
+        _req.gbId = gbId
+
+        _loginClient = self.loginClientDic.get(centralServerId)
+        if not _loginClient:
+            ERROR_MSG("deleteCharacter:: invalid centralServerId", gbId, centralServerId)
+            return
+
+        _loginClient.centralServerStub.deleteCharacter(None, _req, None)
 
     def checkCentralServerActive(self, centralServerId):
         if gameconfig.enableCentralLogin():

@@ -153,6 +153,6 @@ datas = _tools.RODict({
     }),
     "bankForbiddenList": _tools.RODict({
         "ID": "bankForbiddenList",
-        "value": (30010007,),
+        "value": (30010022,),
     })
 })

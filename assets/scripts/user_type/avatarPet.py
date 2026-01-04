@@ -71,6 +71,16 @@ class LingShou(userType.UserSoleType):
         self.petId = dataDict['petId']
         self.equipList = dataDict['equipList']
         # 这里兼容处理
+        gearNum = dataUtils.getPetGearNum(self.petId)
+        expandCount = gearNum - len(self.equipList)
+        if expandCount > 0:
+            DEBUG_MSG('avatarPet--->initFromDict expand begin', dataDict, self.equipList, expandCount)
+            # 扩容处理
+            petEquipStatus = dataUtils.getPetEquipDefaultStatus()
+            for _ in range(0, expandCount):
+                self.equipList.append(petEquipStatus)
+            DEBUG_MSG('avatarPet--->initFromDict expand end', dataDict, self.equipList, expandCount)
+
         self.school = dataDict.get('school', 0)
         self.baseScore = self._getBaseLingShouScore()
         self._score = self._getLingShouScore()

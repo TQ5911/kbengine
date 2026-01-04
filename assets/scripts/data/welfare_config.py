@@ -81,6 +81,6 @@ datas = _tools.RODict({
     }),
     "PcLoginReward": _tools.RODict({
         "ID": "PcLoginReward",
-        "value": 40000090,
+        "value": 40000153,
     })
 })

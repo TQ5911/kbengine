@@ -426,8 +426,8 @@ class IMineWarBase(object):
         客户端请求矿战帮派占领排名
         """
         INFO_MSG('iMineWarBase.reqMineWarGuildOwnerRank called for player:', self.id, 'mapId:', mapId, last)
-        if not formula.isMineWarSpace(self.baseSpaceNo):
-            return
+        # if not formula.isMineWarSpace(self.baseSpaceNo):
+        #     return
         gameengine.getGlobalBase('MineWarStub').doGetMineWarGuildOwnerRank(mapId, self, self.myGuildInfoBase, last)
                 
     @gamedecorator.checkGameconfigEnable('mineBattle')
@@ -437,8 +437,8 @@ class IMineWarBase(object):
         客户端请求矿战个人贡献排名
         """
         INFO_MSG('iMineWarBase.reqMineWarGuildPlayerRank called for player:', self.id, 'mapId:', mapId, lastRank)
-        if not formula.isMineWarSpace(self.baseSpaceNo):
-            return
+        # if not formula.isMineWarSpace(self.baseSpaceNo):
+        #     return
 
         gameengine.getGlobalBase('MineWarStub').doGetMineWarGuildPlayerRank(mapId, self, self.gbID, self.getRoleCacheAttr('name'), self.myGuildInfoBase, lastRank)
         

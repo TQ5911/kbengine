@@ -350,6 +350,7 @@ INIT_CLIENT_SEND = (
         ('checkOfflineHangup', True),
         ('onMineWarLogin', True),
         ('updateRedisVIPFlag', True),
+        ('sendClaimPcLoginRewardInfo', True),
 )
 
 class ItemType(object):
@@ -835,6 +836,11 @@ class TaskCycleType(object):
     TASK_CYCLE_ONCE = 2
 
 
+TASK_EVENT_CLAIM = 1
+TASK_EVENT_SUBMIT = 2
+TASK_EVENT_QUIT = 3
+
+
 class TaskStat(object):
     TASK_STAT_DEFAULT = TASK_STAT_UNKNOWN = 0
     TASK_STAT_OPEN = 1
@@ -970,9 +976,10 @@ class CollectionType(object):
     PERSONAL_BOX = 3
     VIEWPOINT = 4
     SUMMON_OBJECT = 5 # 召唤物件
+    DECAY_BOX = 7 # 衰减宝箱
 
     VALID_RANGE_ACHIEVEMENT = (MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT)
-    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT, SUMMON_OBJECT)
+    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT, SUMMON_OBJECT, DECAY_BOX)
 
 
 class CollectionPickType(object):
@@ -2840,6 +2847,10 @@ CUBE_ENTER_TIME_OUT_DUR = 60
 
 MONSTER_BE_ATTACK_CLEAR_DUR = 5 * 60
 
+CUBE_EVENT_ENTER = 1
+CUBE_EVENT_EXIT = 2
+CUBE_EVENT_ADD_TIME = 3
+
 class RenewDurStatus(object):
     NONE = 0
     # 等待自动续费, 自动续费通常是提前一分钟执行
@@ -3168,6 +3179,10 @@ class WonderAddTicketReason(object):
     RENEW_USE_COIN = 3
     RENEW_USE_ITEM = 4
 # WONDERLAND end
+
+WONDER_LAND_EVENT_ENTER = 1
+WONDER_LAND_EVENT_EXIT = 2
+WONDER_LAND_EVENT_DEATH = 3
 
 # 城战阶段
 class SiegeWarState(object):
@@ -3853,3 +3868,14 @@ class DevicePlatId(object):
     PS_CLIENT = 7       # PS client
     XBOX_CLIENT = 8     # XBOX client
     UNKNOWN = 9
+
+class CollectibleDetailStatus(object):
+    COLLECTING = 1
+    COLLECTED = 2
+
+class DrawCardGuaranteedType(object):
+    NONE = 0
+    GUARANTEED_RESET = 1
+    PITY_RESET = 2
+    GET_RESET = 3
+    TIME_LIMIT_RESET = 4

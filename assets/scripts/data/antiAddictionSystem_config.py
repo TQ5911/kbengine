@@ -58,5 +58,9 @@ datas = _tools.RODict({
     "antiAddictAgeUnder18": _tools.RODict({
         "ID": "antiAddictAgeUnder18",
         "value": 54002014,
+    }),
+    "antiAddictSwitchAge18": _tools.RODict({
+        "ID": "antiAddictSwitchAge18",
+        "value": 0,
     })
 })

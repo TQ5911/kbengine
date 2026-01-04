@@ -5,6 +5,7 @@ import KBEngine
 import utils
 import gameconst
 import gameengine
+import gamedecorator
 
 import dungeonSrc
 import dungeonPlayMode
@@ -13,6 +14,7 @@ import teamMatch_activity as TMACTD
 import raidBossChallenge_basicInfo as RBC_BI
 
 class IChief(object):
+	@gamedecorator.checkGameconfigEnable('raidDungeon')
 	@utils.isMyself
 	def enterChiefDungeon(self, exposed):
 		DEBUG_MSG('enterChiefDungeon::')

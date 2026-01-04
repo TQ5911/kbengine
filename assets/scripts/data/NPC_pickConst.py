@@ -66,5 +66,9 @@ datas = _tools.RODict({
     "autoCollectEnterTime": _tools.RODict({
         "ID": "autoCollectEnterTime",
         "value": 2,
+    }),
+    "pickTimeLessen": _tools.RODict({
+        "ID": "pickTimeLessen",
+        "value": ((0, 1), (300, 0.5), (480, 0.2)),
     })
 })

@@ -174,6 +174,22 @@ class WealthItem(WealthUnit):
 
     def popRemainBagLimitItems(self, canAddNum):
         bagLimitItemsDic = {}
+
+        # 将物品列表中的背包限制物品数量累加到data中
+        newItemsObjs = []
+        for item in self.itemsObjs:
+            itemId = item.itemId
+            if itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
+                totalNum = item.itemNum
+                bindType = item.bindType
+                if itemId not in self.data:
+                    self.data[itemId] = {bindType: totalNum}
+                else:
+                    self.data[itemId][bindType] += totalNum
+            else:
+                newItemsObjs.append(item)
+        self.itemsObjs = newItemsObjs
+        
         for itemId in list(self.data.keys()):
             if itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
                 totalNum = sum(self.data[itemId].values())
@@ -193,6 +209,7 @@ class WealthItem(WealthUnit):
                     bagLimitItemsDic[itemId] = popLeft
                 else:
                     bagLimitItemsDic[itemId] = self.data.pop(itemId)
+
         if bagLimitItemsDic:
             DEBUG_MSG('popRemainBagLimitItems:', bagLimitItemsDic, canAddNum)
         return bagLimitItemsDic
@@ -398,7 +415,7 @@ class BaseAwardVal(WealthVal, AwardMixin):
         self.guildMoney = WealthNumeric('guildMoney', gameconst.ItemId.GUILD_MONEY, guildMoney)
         self.guildFund = WealthNumeric('guildFund', gameconst.ItemId.GUILD_FUND, guildFund)
         self.guildExp = WealthNumeric('guildExp', gameconst.ItemId.GUILD_EXP, guildExp)
-        self.bindMoney = WealthNumeric('bindMoney', gameconst.ItemId.BIND_MONEY, bindMoney)
+        self.bindMoney = WealthNumeric('boundMoney', gameconst.ItemId.BIND_MONEY, bindMoney)
 
         self.petItemWealth = WealthItem()
         self.itemWealth = WealthItem()
@@ -461,6 +478,9 @@ class BaseAwardVal(WealthVal, AwardMixin):
 
     def getNumericWealth(self):
         return (self.exp, self.coin, self.money, self.guildContrib, self.guildFund, self.guildExp, self.darkIron, self.guildMoney, self.geniusQi, self.bindMoney)
+
+    def getBaseNumeric(self):
+        return (self.coin, self.money, self.guildContrib, self.darkIron, self.geniusQi, self.bindMoney)
 
     def getAllWealth(self):
         return self.getNumericWealth() + (self.itemWealth, self.petItemWealth)
@@ -1114,14 +1134,17 @@ def _getSinAward(singleAward, context, itemType):
             _addItemToAward(awardVal, itemId, num, bindType, quality, context)
     return awardVal
 
-def _getBindWeightRank(avatar):
+def _getBindWeightRank(extra):
     bindWeightRank = 0
+    rank = extra['avatarScoreRank']
+    isMonthCardExpired = extra['isMonthCardExpired']
+    isCrossServer = extra['isCrossServer']
     for _, v in R_RD.datas.items():
         l, r = v['rankRange'][0], v['rankRange'][1]
-        if avatar.avatarScoreRank >= l and avatar.avatarScoreRank <= r:
-            if v["isMonthCard"] and avatar.isMonthCardExpired():
+        if rank >= l and rank <= r:
+            if v["isMonthCard"] and isMonthCardExpired:
                 continue
-            if v["isCrossServer"] == 0 and avatar.isCrossServer:
+            if v["isCrossServer"] == 0 and isCrossServer:
                 continue
             bindWeightRank = v['bindWeightRank']
             break
@@ -1140,13 +1163,8 @@ def _calSubPackDrop(dropTarget, times, context):
         ERROR_MSG("drop times is too large:", times, "dropTarget:", dropTarget, "context:", context)
         return [], [], [], [], []
 
-    avatarId = context.extra['avatarId']
-    avatar = KBEngine.entities.get(avatarId)
-    if not avatar:
-        ERROR_MSG("avatar is None, avatarId:", avatarId, "context:", context)
-        return [], [], [], [], []
-    monthCard = 0 if avatar.isMonthCardExpired() else 1
-    bindWeightRank = _getBindWeightRank(avatar)
+    monthCard = 0 if context.extra['isMonthCardExpired'] else 1
+    bindWeightRank = _getBindWeightRank(context.extra)
 
     dropSubPackageData = DDS.dropPackageData.get(dropTarget)
     if dropSubPackageData:
@@ -1169,13 +1187,8 @@ def _calSubPackDrop(dropTarget, times, context):
 
 #处理掉落子包还是掉落物品
 def _getRealDropTarget(dropTargetData, context):
-    avatarId = context.extra['avatarId']
-    avatar = KBEngine.entities.get(avatarId)
-    if not avatar:
-        ERROR_MSG("avatar is None, avatarId:", avatarId, "context:", context)
-        return [], [], [], [], []
-    monthCard = 0 if avatar.isMonthCardExpired() else 1
-    bindWeightRank = _getBindWeightRank(avatar)
+    monthCard = 0 if context.extra['isMonthCardExpired'] else 1
+    bindWeightRank = _getBindWeightRank(context.extra)
 
     dropTargetList = [dropTargetData['dropTarget']]
     numMinList = [dropTargetData['dropNumMin']]
@@ -1218,17 +1231,6 @@ def _checkDropCondition(dropDataList, context):
                         break
                 elif tp == gameconst.DropConditionType.DROP_CONDITION_TYPE_2:
                     if school != condition[1]:
-                        checkFail = True
-                        break
-                elif tp == gameconst.DropConditionType.DROP_CONDITION_TYPE_3:
-                    taskId = condition[1]
-                    avatarId = context.extra['avatarId']
-                    avatar = KBEngine.entities.get(avatarId)
-                    if not avatar:
-                        checkFail = True
-                        break
-                    DEBUG_MSG('checkDropCondition', avatar.taskInfo.tasks)
-                    if not avatar.getTask(taskId) or avatar.isTaskComplete(taskId):
                         checkFail = True
                         break
                 elif tp == gameconst.DropConditionType.DROP_CONDITION_TYPE_4:

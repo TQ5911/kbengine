@@ -80,7 +80,7 @@ datas = _tools.RODict({
     }),
     151: _tools.RODict({
         "ID": 151,
-        "value": "小鬼钟馗",
+        "value": "阴阳鬼判",
         "pareActivity": 32000001,
         "minScore": 5900,
         "minLevel": 20,

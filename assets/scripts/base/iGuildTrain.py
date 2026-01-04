@@ -7,6 +7,7 @@ import gameclass
 import dropAward
 import utils
 import dataUtils
+import LogTrackingMgr
 
 import guildTrain_guildTrainUpgrade as GT_GTUD
 import guildTrain_guildTrain as GT_GTD
@@ -46,8 +47,6 @@ class IGuildTrain(object):
         sumCont = 0
         sumCoin = 0
 
-        guildMoneyOffset = 0
-
         for trainId, level in trainInfo:
             if level == 0:
                 continue
@@ -59,7 +58,6 @@ class IGuildTrain(object):
                 data = GT_GTUD.datas[curLevel]
                 sumCont += data['upgradeContributionCost']
                 sumCoin += data['upgradeCoinCost']
-                # guildMoneyOffset += self._calcGuildTrainGuildMoney(data['upgradeCoinCost'])
 
         award = dropAward.AwardVal(coin=sumCoin, guildContrib=sumCont)
         if 'uuid' in context:
@@ -71,12 +69,12 @@ class IGuildTrain(object):
         oldTrain = self.trainDic.copy()
         self.trainDic = {}
 
-        # oldOffset = self.getPersistentMiscProp(gameconst.AvatarProps.guildTrainGuildMoneyOffset, 0)
-        # INFO_MSG('resetGuildTrainAndGetBackMoney:', oldOffset, guildMoneyOffset, sumCoin, sumCont)
-        #
-        # self.setPersistentMiscProp(gameconst.AvatarProps.guildTrainGuildMoneyOffset, guildMoneyOffset + oldOffset)
         if isSyncCell:
             self.cell.onResetGuildTrain(oldTrain)
+
+        LogTrackingMgr.LogTrackingMgr.Guild_Train_Reset(
+            self.gbID,
+        )
 
     def _checkCanUpgradeTrainLevel(self, trainId, targetLevel, gtuData):
         curLevel = self.trainDic.get(trainId, 0)
@@ -144,10 +142,6 @@ class IGuildTrain(object):
         src = AAC_AAC_DD.datas.BONUS_SRC_GUILD_TRAIN_UPGRADE
         self.deductWealth(src, _dwVal, opUUID, None)
 
-        # delta = self._calcGuildTrainGuildMoney(gtuData['upgradeCoinCost'])
-        # if delta:
-        #     self._addGuildMoneyFromGuildTrain(delta)
-
         self.trainDic[_trainId] = _targetLevel
 
         score = self._calcGuildTrainScore()
@@ -157,10 +151,12 @@ class IGuildTrain(object):
             'level': _targetLevel
         }])
 
-        # gtData = GT_GTD.datas[_trainId]
-        # self.onMessagePre(utils.getNeedTranslateMsgId(M_MD.datas.guildTrain_levelUp), [utils.getNeedTranslateArg(gtData['name']), str(_targetLevel)])
-        # self.baseCheckAchievement(gameconst.AchieveTargetType.GUILD_TRAIN, ())
-        # self.logGuildTrain(trainId, targetLevel, score)
+        LogTrackingMgr.LogTrackingMgr.Guild_Train(
+            self.gbID,
+            _trainId,
+            _targetLevel,
+            GT_GTD.datas[_trainId]['fightProp'],
+        )
 
     def _addGuildMoneyFromGuildTrain(self, delta):
         curOffset = self.getPersistentMiscProp(gameconst.AvatarProps.guildTrainGuildMoneyOffset, 0)

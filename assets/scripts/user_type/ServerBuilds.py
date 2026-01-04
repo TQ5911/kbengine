@@ -160,7 +160,7 @@ class Build(userType.UserSoleType):
         owner.removeSkillSetSummonSlotIdx([skillId])
         return True
 
-    def changeSkillSlot(self, owner, skillId, fromSlotId, toSlotId):
+    def changeSkillSlot(self, owner, skillId, fromSlotId, toSlotId, isFromDeleteTempSkill = False):
         if fromSlotId is None and toSlotId is None:
             return
 
@@ -174,7 +174,7 @@ class Build(userType.UserSoleType):
 
         if toSlotId is None:
             owner.cell.doActionOnChangeSlot(skillId, self.skillLevels[skillId], False, False)
-            owner.cell.removeSkill(skillId)
+            owner.cell.removeSkill(skillId, isFromDeleteTempSkill)
         else:
             self.activeSkills[toSlotId] = skillId
 

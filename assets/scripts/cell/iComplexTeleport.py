@@ -19,6 +19,7 @@ import dungeonSrc
 import outsideRecord
 import complexTeleportOption
 import gameconfig
+import LogTrackingMgr
 
 import cube_config
 import cube_floor
@@ -26,6 +27,7 @@ import cube_room
 import gamePlay_gamePlay as GP_GP
 import conflict_conflict_def as CCD
 import gamePlay_singleSceneData as GPSSDD
+import wonderLand_floor as WL_FD
 
 class IComplexTeleport(object):
     """处理所有诸如从 场景A --传送--> 场景B 的问题,
@@ -1263,6 +1265,15 @@ class IComplexTeleport(object):
             # 这个buffID会在切换场景时候自动删除
             self.addBuff(_buffId, 1, self.id)
 
+        _floor = cube_room.datas[_toMapId]['floor']
+        LogTrackingMgr.LogTrackingMgr.Cube_Info(
+            self.gbId,
+            gameconfig.gameId(),
+            _floor,
+            _toMapId,
+            gameconst.CUBE_EVENT_ENTER,
+        )
+
         return True
 
     def _beforeLeave_cube(self, fromSpaceNo, toSpaceNo, options, context):
@@ -1295,6 +1306,15 @@ class IComplexTeleport(object):
         if not formula.isCubeSpace(toSpaceNo):
             self._dealWithCubeTimer(fromSpaceNo, toSpaceNo)
 
+        _fromMapId = formula.getMapId(fromSpaceNo)
+        _floor = cube_room.datas[_fromMapId]['floor']
+        LogTrackingMgr.LogTrackingMgr.Cube_Info(
+            self.gbId,
+            gameconfig.gameId(),
+            _floor,
+            _fromMapId,
+            gameconst.CUBE_EVENT_EXIT,
+        )
         return True
     # ----------------------------------------------------------------------
 
@@ -1321,6 +1341,14 @@ class IComplexTeleport(object):
         _bossList = list(self.spaceMgr.collToBoss.values())
         self.client.onWonderLandBossInfo(_bossList)
         self.base.afterEnterWonderLandDeductTimes()
+
+        _mapId = formula.getMapId(toSpaceNo)
+        LogTrackingMgr.LogTrackingMgr.Wonderland_Info(
+            self.gbId,
+            gameconfig.gameId(),
+            WL_FD.id2floor[_mapId],
+            gameconst.WONDER_LAND_EVENT_ENTER,
+        )
         return True
 
     def _beforeLeave_wonderLand(self, fromSpaceNo, toSpaceNo, options, context):
@@ -1347,6 +1375,15 @@ class IComplexTeleport(object):
         self.spaceMgrId = 0
         gameengine.getWonderLandStubBySpaceNo(fromSpaceNo).onLeaveWonderLand(self.gbId)
         self.afterLeaveWonderLand()
+
+        _mapId = formula.getMapId(fromSpaceNo)
+
+        LogTrackingMgr.LogTrackingMgr.Wonderland_Info(
+            self.gbId,
+            gameconfig.gameId(),
+            WL_FD.id2floor[_mapId],
+            gameconst.WONDER_LAND_EVENT_EXIT,
+        )
         return True
     # ----------------------------------------------------------------------
 

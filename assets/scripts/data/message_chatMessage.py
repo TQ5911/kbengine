@@ -24,19 +24,19 @@ datas = _tools.RODict({
     58000002: _tools.RODict({
         "ID": 58000002,
         "name": "killPlayer",
-        "Message": "你击败了 <link player name={0} gbid={1}>",
+        "Message": "你击败了<color=#28b4a5><link player name={0} gbid={1}></color>",
         "channelID": (6,)
     }),
     58000003: _tools.RODict({
         "ID": 58000003,
         "name": "beKilledByPlayer",
-        "Message": "你被<link player name={0} gbid={1}>击败了",
+        "Message": "你被<color=#28b4a5><link player name={0} gbid={1}></color>击败了",
         "channelID": (6,)
     }),
     58000004: _tools.RODict({
         "ID": 58000004,
         "name": "beKilledByOtherUnit",
-        "Message": "你被<color=#c60c0c> {0} </color>击败了",
+        "Message": "你被<color=#28b4a5> {0} </color>击败了",
         "channelID": (6,)
     }),
     58000005: _tools.RODict({
@@ -102,31 +102,31 @@ datas = _tools.RODict({
     58000018: _tools.RODict({
         "ID": 58000018,
         "name": "teamChannel_enterTeamMsg",
-        "Message": "{0}加入了队伍",
+        "Message": "<color=#28b4a5>{0}</color>加入了队伍",
         "channelID": (4,)
     }),
     58000019: _tools.RODict({
         "ID": 58000019,
         "name": "teamChannel_initiativeLeaveTeamMsg",
-        "Message": "{0}主动离开了队伍",
+        "Message": "<color=#28b4a5>{0}</color>主动离开了队伍",
         "channelID": (4,)
     }),
     58000020: _tools.RODict({
         "ID": 58000020,
         "name": "teamChannel_kickedMsg",
-        "Message": "{0}离开了队伍",
+        "Message": "<color=#28b4a5>{0}</color>离开了队伍",
         "channelID": (4,)
     }),
     58000021: _tools.RODict({
         "ID": 58000021,
         "name": "teamChannel_applyCaptainMsg",
-        "Message": "{0}申请成为队长，正在等待{1}选择…",
+        "Message": "<color=#28b4a5>{0}</color>申请成为队长，正在等待<color=#28b4a5>{1}</color>选择…",
         "channelID": (4,)
     }),
     58000022: _tools.RODict({
         "ID": 58000022,
         "name": "teamChannel_becomeCaptainMsg",
-        "Message": "{0}成为了队长",
+        "Message": "<color=#28b4a5>{0}</color>成为了队长",
         "channelID": (4,)
     }),
     58000023: _tools.RODict({
@@ -144,7 +144,7 @@ datas = _tools.RODict({
     58000025: _tools.RODict({
         "ID": 58000025,
         "name": "achFinishMessage2",
-        "Message": "恭喜<link player name={1} gbid={2}>达成了成就<color=#ffe671><link achievement id={0}></color>！",
+        "Message": "恭喜<color=#28b4a5><link player name={1} gbid={2}></color>达成了成就<color=#ffe671><link achievement id={0}></color>！",
         "channelID": (2, 99)
     }),
     58000026: _tools.RODict({
@@ -234,7 +234,7 @@ datas = _tools.RODict({
     58000108: _tools.RODict({
         "ID": 58000108,
         "name": "petQuality4Broadcast",
-        "Message": "<link player name={0} gbid={1}>获得<color=#a53131>神话</color>精灵<color=#a53131>{2}</color>！",
+        "Message": "<color=#28b4a5><link player name={0} gbid={1}></color>获得<color=#a53131>神话</color>精灵<color=#a53131>{2}</color>！",
         "channelID": (2, 99)
     }),
     58000201: _tools.RODict({

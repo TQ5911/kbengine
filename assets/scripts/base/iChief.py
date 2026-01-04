@@ -6,6 +6,7 @@ import gameconst
 import dataUtils
 import dropAward
 import gameclass
+import gamedecorator
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import raidBossChallenge_config as RBC_CFG
@@ -25,6 +26,7 @@ class IChief(object):
         self.chiefInfo.resetUseItemAddRewardWeeklyNum()
         self.chiefInfo = self.chiefInfo
 
+    @gamedecorator.checkGameconfigEnable('raidDungeon')
     def useItemToIncreaseChiefRewardNumber(self, exposed, useNum):
         DEBUG_MSG('useItemToIncreaseChiefRewardNumber::', useNum)
         if useNum <= 0:
@@ -38,6 +40,7 @@ class IChief(object):
 
         self._useItemToIncreaseChiefRewardNumber(itemId, useNum, {})
 
+    @gamedecorator.checkGameconfigEnable('raidDungeon')
     def useCoinToIncreaseChiefRewardNumber(self, exposed, useNum):
         DEBUG_MSG('useCoinToIncreaseChiefRewardNumber::', useNum)
         if useNum <= 0:
@@ -87,7 +90,7 @@ class IChief(object):
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_CRUSADE_ADD_REWARD
-        detail = gameclass.AwardDetail
+        detail = gameclass.AwardDetail()
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
         self.onUseCoinToIncreaseChiefRewardNumber(useNum, extra)

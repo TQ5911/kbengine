@@ -631,7 +631,8 @@ class TaskInfo(userType.UserSoleType):
         for addTaskId in addTaskIds:
             tmpTask = self.getTask(addTaskId)
             client.append(tmpTask.toTaskClientDict())
-            #owner.taskFlowLog(addTaskId, "TaskClaim", opUUID, claimSrc=taskCtx.claimSrc)
+            owner.taskFlowLog(addTaskId, "TaskClaim", opUUID, claimSrc=taskCtx.claimSrc)
+
         owner.client.onClaimTask(taskId, client)
         # 先处理最下层子任务，最后处理根任务
         for addTaskId in reversed(addTaskIds):
@@ -1642,9 +1643,6 @@ class TaskInfo(userType.UserSoleType):
     def _afterTaskQuit(self, owner, quitTaskIds, reason):
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_ABANDON_TASK
-        actId = None
-        relateActTaskTask = 0
-        actUseTime = 0
         self._afterTaskUpdateRemoved(owner, quitTaskIds)
         for taskId in quitTaskIds:
             # 任务放弃也可能有奖励
@@ -1667,7 +1665,7 @@ class TaskInfo(userType.UserSoleType):
 
             self.onTaskEnd(owner, taskId, opUUID, srcType)
 
-            #owner.taskFlowLog(taskId, "TaskQuit", opUUID, reason=reason)
+            owner.taskFlowLog(taskId, "TaskQuit", opUUID, reason=reason)
         return
 
     def onTaskEnd(self, owner, taskId, opUUID, srcType):

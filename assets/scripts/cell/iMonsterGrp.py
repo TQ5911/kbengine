@@ -43,3 +43,8 @@ class IMonsterGrp(object):
     def syncTelBackCB(self, *args, **kwargs):
         if self.aiController:
             self.aiController.syncTelBackCB(*args, **kwargs)
+
+    def luckyGroupStandCB(self, *args, **kwargs):
+        if self.aiController:
+            self.aiController.luckyGroupStandCB(*args, **kwargs)
+

@@ -348,6 +348,7 @@ class ImpMail(object):
             WARNING_MSG('   deleteOldMailsCallback failed:', err, oldMailTime)
         return
 
+    @gamedecorator.checkGameconfigEnable('mail')
     def reqReadOneMail(self, exposed, mailGBID):
         DEBUG_MSG('in reqReadOneMail:', mailGBID)
         gamesql.setMailHasRead(self.gbID, mailGBID, lambda ret, num, insertId, err, mailGBID=mailGBID:
@@ -361,6 +362,7 @@ class ImpMail(object):
         self.mailCacheData.readMail(mailGBID)
         self.client.onReadOneMail(mailGBID)
 
+    @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqGetOneMailAttach(self, exposed, mailGBID):
         DEBUG_MSG('in reqGetOneMailAttach:', mailGBID)
@@ -369,6 +371,7 @@ class ImpMail(object):
             return
         self.getMailAttachByMailList([mail])
 
+    @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     @gamedecorator.limitcall(2)
     def reqGetAllMailsAttach(self, exposed):
@@ -457,7 +460,7 @@ class ImpMail(object):
             mail.setReadState(gameconst.MailReadState.HasRead)
             wealthVal.scrubWealthItemObjs(createTime=now)
             srcType = mail.srcType if mail.srcType else AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH
-            detail = gameclass.AwardDetail(mailGBID=[mailGBID], desc=mail.desc, popRewardUUID=popRewardUUID)
+            detail = gameclass.AwardDetail(mailId=mail.mailId, mailGBID=[mailGBID], desc=mail.desc, popRewardUUID=popRewardUUID)
             self.addWealth(srcType, wealthVal, opUUID, detail=detail, srcSubType=mail.srcSubType, idipSource=mail.source, directly=False)
 
             attachStr = mail.attach.getItemsTLogStr()
@@ -490,6 +493,7 @@ class ImpMail(object):
         INFO_MSG('resetMailAttachStateCallback, reset mail attach state succ:', mailGBIDList)
         return
 
+    @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqDelMails(self, exposed, mailGBIDList):
         # 删除选中的邮件
@@ -519,6 +523,7 @@ class ImpMail(object):
         self.onMailsDeleted({mailGBID:self.mailCacheData.getMailByGBID(mailGBID)}, srcType=AAC_AACDD.datas.BONUS_SRC_CLIENT_DELETE_MAIL, desc='from client')
         return
 
+    @gamedecorator.checkGameconfigEnable('mail')
     @AuthClsWraper.authWithPermission(A_AFD.UIMailPanel)
     def reqDelAllMails(self, exposed):
         DEBUG_MSG('in reqDelAllMails')

@@ -102,6 +102,9 @@ class AvatarBaseEntityCall(object):
     def enterCrossServerSiegeWarSpace(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'enterCrossServerSiegeWarSpace', ()))
 
+    def exchangeCurrency(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'exchangeCurrency', (arg1, arg2, )))
+
     def exchangeGiftKeyReward(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'exchangeGiftKeyReward', (arg1, )))
 
@@ -251,6 +254,9 @@ class AvatarBaseEntityCall(object):
 
     def qixieAssist(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'qixieAssist', (arg1, )))
+
+    def queryCurrencyExchangeData(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'queryCurrencyExchangeData', ()))
 
     def queryItemLink(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'queryItemLink', (arg1, arg2, arg3, )))
@@ -845,8 +851,8 @@ class AvatarCellEntityCall(object):
     def enterCube(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'enterCube', (arg1, )))
 
-    def enterGuildChallengeDungeon(self, arg1, arg2, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'enterGuildChallengeDungeon', (arg1, arg2, )))
+    def enterRaidChallengeDungeon(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'enterRaidChallengeDungeon', (arg1, arg2, )))
 
     def enterRiding(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'enterRiding', (arg1, )))

@@ -2,9 +2,13 @@
 # coding: utf-8
 from KBEDebug import *
 import userType
+import formula
+import gameconfig
 import gameconst
 import utils
+import LogTrackingMgr
 
+import cube_room
 
 class CubeQuotaVal(userType.UserSoleType):
     '''CUBE_QUOTA_DATA_INFO'''
@@ -42,6 +46,16 @@ class CubeQuotaVal(userType.UserSoleType):
     def addLeftTime(self, avatar, delta):
         self.leftTime += delta
         avatar.client.onCubeRoomEndTime(self.calcLeftTime() + utils.getNow())
+
+        _mapId = formula.getMapId(avatar.spaceNo)
+        _floor = cube_room.datas.get(_mapId, {}).get('floor', -1)
+        LogTrackingMgr.LogTrackingMgr.Cube_Info(
+            avatar.gbId,
+            gameconfig.gameId(),
+            _floor,
+            _mapId,
+            gameconst.CUBE_EVENT_ADD_TIME,
+        )
 
     def checkout(self):
         if self.cubeDurState != gameconst.CubeDurStatus.ENTER:

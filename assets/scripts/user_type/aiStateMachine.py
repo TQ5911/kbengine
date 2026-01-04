@@ -663,17 +663,11 @@ class StateluckyGroupAngry(StateImp):
     name = State.ANGRY
 
     def tick(self, ctrl):
-        if not ctrl.owner.checkInCombatArea(ctrl.owner.position):
-            ctrl.clearHateAndTelBackWithBroadcast()
-            ctrl.restart()
-            ctrl.changeBornState(gameconst.BornStateType.reMove)
-        if ctrl.inHate():
+        if not ctrl.owner.checkInCombatArea(ctrl.owner.position) or not ctrl.inHate():
+            ctrl.luckyGroupStand()
+        else:
             ctrl.useRandomSkill()
             ctrl.stopRoutingMove()
-        else:
-            ctrl.clearHateAndTelBackWithBroadcast()
-            ctrl.restart()
-            ctrl.changeBornState(gameconst.BornStateType.reMove)
 
 
 @withName('routingPatrol')
@@ -816,6 +810,13 @@ class SiegeWarStoneThrower(StateImp):
     def tick(self, ctrl):
         ctrl.useRandomSkill()
 
+@withName('luckyGroupStand')
+class StateLuckyGroupStand(StateImp):
+    '''守宝团stand'''
+    name = State.STAND
+
+    def tick(self, ctrl):
+        ctrl.luckyGroupTick()
 
 
 # 状态机对象
@@ -1388,6 +1389,7 @@ class Machine3054(MachineImp):
             State.IDLE: 'routingPatrol',
             State.ANGRY: 'luckyGroupAngry',
             State.PATROL: 'routingRoutePatrol',
+            State.STAND: 'luckyGroupStand',
         })
 
 _machineDic = {

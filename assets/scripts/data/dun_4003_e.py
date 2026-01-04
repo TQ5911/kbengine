@@ -8,9 +8,6 @@ datas ={
         1033,
         1011,
         1034,
-        1035,
-        1036,
-        1037,
         1013,
         1025,
         1026,
@@ -26,9 +23,20 @@ datas ={
   "1011": {
     "type": "createMonster",
     "entityID": [
-      40030004
+      40030004,
+      40030005,
+      40030006,
+      40030015,
+      40030016,
+      40030017,
+      40030018,
+      40030019,
+      40030020,
+      40030021,
+      40030022,
+      40030023
     ],
-    "num": 5,
+    "num": 1,
     "lv": "10",
     "initState": 0,
     "hp": 0,
@@ -53,9 +61,20 @@ datas ={
   "1014": {
     "type": "createMonster",
     "entityID": [
-      40030007
+      40030024,
+      40030025,
+      40030026,
+      40030027,
+      40030028,
+      40030029,
+      40030030,
+      40030031,
+      40030032,
+      40030033,
+      40030034,
+      40030035
     ],
-    "num": 5,
+    "num": 1,
     "lv": "10",
     "initState": 0,
     "hp": 0,
@@ -196,54 +215,6 @@ datas ={
     "lv": "1",
     "initState": 0,
     "hp": 220,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {}
-  },
-  "1035": {
-    "type": "createMonster",
-    "entityID": [
-      40030005
-    ],
-    "num": 5,
-    "lv": "10",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {}
-  },
-  "1036": {
-    "type": "createMonster",
-    "entityID": [
-      40030013
-    ],
-    "num": 3,
-    "lv": "10",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {}
-  },
-  "1037": {
-    "type": "createMonster",
-    "entityID": [
-      40030014
-    ],
-    "num": 2,
-    "lv": "10",
-    "initState": 0,
-    "hp": 0,
     "minAtk": 0,
     "maxAtk": 0,
     "ifSetBoss": 0,

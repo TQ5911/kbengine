@@ -1002,13 +1002,15 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             return
 
         # TODO x: get valid pos
-        pos, direction = utils.getPlayerBreakAwayStuckPos(self.spaceNo, self.position, True)
+        pos, direction = utils.getPlayerBreakAwayStuckPos(self.spaceNo, self.position)
         if self.spaceMgr and hasattr(self.spaceMgr, 'breakStuckPos'):
             dunPos = self.spaceMgr.breakStuckPos
             if dunPos:
                 pos = dunPos
                 direction = self.spaceMgr.breakStuckDir
                 # INFO_MSG('breakAwayStuck:: use dun breakStuckPos', pos, direction)
+            else:
+                pos, direction = utils.getPlayerBreakAwayStuckPos(self.spaceNo, self.position, True)
 
         if not pos:
             pos, direction = utils.getPlayerBornInfo()

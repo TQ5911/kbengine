@@ -33,7 +33,7 @@ message VerifyAccountReply
     int64 banPostTime = 6;
     string banAccountReason = 7;
     string banPostReason = 8;
-    string accountId = 9;
+    string userId = 9;
     string otherJsonData = 10;
 }
 
@@ -107,6 +107,11 @@ message UnlockLoginSwitchServerVal
     string accountName = 1;
 }
 
+message DeleteCharacterRequest
+{
+    uint64 gbId = 1;
+}
+
 //中心服务器向游戏服提供的rpc
 service CentralServer
 {
@@ -120,6 +125,7 @@ service CentralServer
     rpc onAccountOffline(AccountOfflineVal) returns(Void);
     rpc lockLoginSwitchServer(LockLoginSwitchServerVal) returns(Void);
     rpc unlockLoginSwitchServer(UnlockLoginSwitchServerVal) returns(Void);
+    rpc deleteCharacter(DeleteCharacterRequest) returns(Void);
 }
 
 //游戏服向中心服的rpc

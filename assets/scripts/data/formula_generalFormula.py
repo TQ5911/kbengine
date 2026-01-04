@@ -117,17 +117,17 @@ def _34000020(lv):
         sum = a
     return sum
 def _34010001(e):
-    return int(e.level*40+360)
+    return int(e.level*60+340)
 def _34010002(e):
-    return int(e.level*40+360)
+    return int(e.level*60+340)
 def _34010003(e):
-    return int(e.level*40+360)
+    return int(e.level*60+340)
 def _34010004(e):
-    return int(e.level*4+30)
+    return int(e.level*6+28)
 def _34010005(e):
-    return int(e.level*4+30)
+    return int(e.level*6+28)
 def _34010006(e):
-    return int(e.level*4+30)
+    return int(e.level*6+28)
 def _34010007(e):
     return 7
 def _34010008(e):
@@ -165,17 +165,17 @@ def _34010023(e):
 def _34010024(e):
      return int(e.level*0.6 + 8)
 def _34010025(e):
-    return int(e.level*1)
+    return int(e.level/2*1+1)
 def _34010026(e):
-    return int(e.level*1)
+    return int(e.level/2*1+1)
 def _34010027(e):
-     return int(e.level*1)
+     return int(e.level/2*1+1)
 def _34010028(e):
-     return int(e.level*1)
+     return int(e.level/2*1+1)
 def _34010029(e):
-     return int(e.level*1)
+     return int(e.level/2*1+1)
 def _34010030(e):
-    return int(e.level*1)
+    return int(e.level/2*1+1)
 def _34010031(e):
     return int(e.level*1.2 + 23)
 def _34010032(e):

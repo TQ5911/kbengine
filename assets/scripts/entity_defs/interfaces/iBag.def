@@ -109,6 +109,13 @@
             <Default>       {}          </Default>
             <Persistent>    true        </Persistent>
         </giftKeyRecordDic>
+
+        <currencyRecordDic>
+            <Type>    PY_DICT            </Type>
+            <Flags>   BASE              </Flags>
+            <Default>       {}          </Default>
+            <Persistent>    true        </Persistent>
+        </currencyRecordDic>
     </Properties>
 
     <BaseMethods>
@@ -411,6 +418,14 @@
         <exchangeGiftKeyReward> <Exposed/>
             <Arg>           UNICODE         </Arg>
         </exchangeGiftKeyReward>
+
+        <queryCurrencyExchangeData> <Exposed/>
+        </queryCurrencyExchangeData>
+
+        <exchangeCurrency> <Exposed/>
+            <Arg>       UINT32      </Arg>
+            <Arg>       INT64      </Arg>
+        </exchangeCurrency>
     </BaseMethods>
 
     <CellMethods>
@@ -617,5 +632,9 @@
             <Arg>       UINT32      </Arg>
         </onSellItemSucc>
 
+        <onQueryCurrencyExchangeData>
+            <Arg>       ARRAY    <of>   UINT32    </of>     </Arg>
+            <Arg>       ARRAY    <of>   INT64    </of>     </Arg>
+        </onQueryCurrencyExchangeData>
     </ClientMethods>
 </root>

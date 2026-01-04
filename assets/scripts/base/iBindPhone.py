@@ -216,6 +216,7 @@ class IBindPhone(object):
         code = data['code']
         if code == 200:
             self.accountEntity.phone = self.getTempPhone()
+            self.accountEntity.pyWriteToDB()
             self.client.bindPhoneReplay(True, self.accountEntity.phone)
             self.popTempPhone()
             self.onMessagePre(MMD.datas.login_phoneSuccess, [])

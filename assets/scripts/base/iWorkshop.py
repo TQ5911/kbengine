@@ -19,6 +19,7 @@ class IWorkshop(object):
     def __init__(self):
         pass
     #------------------------------------------------client api------------------------------------------------------------------
+    @gamedecorator.checkGameconfigEnable('workshop')
     @gamedecorator.limitcall(1)
     def reqWorkshopMF(self, exposed, itemID, batchCount, isAutoMF):    
         DEBUG_MSG("reqWorkshopMF ", exposed, itemID, batchCount, isAutoMF)

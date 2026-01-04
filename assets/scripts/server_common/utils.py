@@ -2659,6 +2659,9 @@ def initBaseProperties(entity, propCurveID=0):
             if formula.isSiegeWarSpace(entity.spaceNo):
                 if entity.siegeWarMonsterPropId:
                     propId = entity.siegeWarMonsterPropId
+            if formula.isMineWarSpace(entity.spaceNo):
+                if entity.junxuPropId:
+                    propId = entity.junxuPropId
 
         propData = PFPD.datas.get(propId)
         cfgPropType = propData.get('type')

@@ -365,6 +365,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         if _rewardNumNotEnoughList:
             self.sendTeamMessage(MMD.datas.raid_memberNoRewardNum, ['、'.join(_rewardNumNotEnoughList), ])
 
+    @gamedecorator.checkGameconfigEnable('teamDungeon')
     def onTeammateBeConfirmed(self, exposed, dungeonNo, confirmed):
         DEBUG_MSG('onTeammateBeConfirmed::', dungeonNo, confirmed)
         if not self.isInTeam(self.gbId):
@@ -566,6 +567,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         extra = {'src': src}
         teamStub.enterTeamDungeon(self.base, self.gbId, self.teamId, dungeonNo, extra)
 
+    @gamedecorator.checkGameconfigEnable('teamDungeon')
     @utils.isMyself
     @gamedecorator.limitcall(5)
     def leaveTeamDungeon(self, exposed):

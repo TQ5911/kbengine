@@ -1290,7 +1290,7 @@ datas = _tools.RODict({
         "removeAction": _87020001_remove,
         "propList": None,
         "desBuff": 64002005,
-        "score": 50
+        "score": 340
     }),
     87020002: _tools.RODict({
         "ID": 87020002,
@@ -1300,7 +1300,7 @@ datas = _tools.RODict({
         "removeAction": _87020002_remove,
         "propList": None,
         "desBuff": 64002007,
-        "score": 50
+        "score": 340
     }),
     87020003: _tools.RODict({
         "ID": 87020003,
@@ -1310,7 +1310,7 @@ datas = _tools.RODict({
         "removeAction": _87020003_remove,
         "propList": None,
         "desBuff": 64002009,
-        "score": 50
+        "score": 340
     }),
     87020004: _tools.RODict({
         "ID": 87020004,
@@ -1320,7 +1320,7 @@ datas = _tools.RODict({
         "removeAction": _87020004_remove,
         "propList": _tools.ROList([['adjMonsterDmg', 0.01]]),
         "desBuff": None,
-        "score": 0
+        "score": 340
     }),
     87020005: _tools.RODict({
         "ID": 87020005,
@@ -1330,7 +1330,7 @@ datas = _tools.RODict({
         "removeAction": _87020005_remove,
         "propList": _tools.ROList([['adjMonsterDmgAnti', 0.01]]),
         "desBuff": None,
-        "score": 0
+        "score": 340
     }),
     87020006: _tools.RODict({
         "ID": 87020006,
@@ -1340,7 +1340,7 @@ datas = _tools.RODict({
         "removeAction": _87020006_remove,
         "propList": _tools.ROList([['adjExpGrow', 0.01]]),
         "desBuff": None,
-        "score": 0
+        "score": 340
     }),
     87020007: _tools.RODict({
         "ID": 87020007,
@@ -1350,7 +1350,7 @@ datas = _tools.RODict({
         "removeAction": _87020007_remove,
         "propList": _tools.ROList([['adjPVPDmg', 0.01]]),
         "desBuff": None,
-        "score": 0
+        "score": 340
     }),
     87020008: _tools.RODict({
         "ID": 87020008,
@@ -1360,7 +1360,7 @@ datas = _tools.RODict({
         "removeAction": _87020008_remove,
         "propList": None,
         "desBuff": 64002011,
-        "score": 50
+        "score": 340
     }),
     87020009: _tools.RODict({
         "ID": 87020009,
@@ -1370,7 +1370,7 @@ datas = _tools.RODict({
         "removeAction": _87020009_remove,
         "propList": None,
         "desBuff": 64002013,
-        "score": 50
+        "score": 340
     }),
     87020010: _tools.RODict({
         "ID": 87020010,
@@ -1380,7 +1380,7 @@ datas = _tools.RODict({
         "removeAction": _87020010_remove,
         "propList": _tools.ROList([['adjExpGrow', 0.01]]),
         "desBuff": None,
-        "score": 0
+        "score": 340
     }),
     87020011: _tools.RODict({
         "ID": 87020011,
@@ -1390,7 +1390,7 @@ datas = _tools.RODict({
         "removeAction": _87020011_remove,
         "propList": _tools.ROList([['adjFatal', 2]]),
         "desBuff": None,
-        "score": 0
+        "score": 620
     }),
     87020012: _tools.RODict({
         "ID": 87020012,
@@ -1400,7 +1400,7 @@ datas = _tools.RODict({
         "removeAction": _87020012_remove,
         "propList": _tools.ROList([['adjMedicineRate', 0.04]]),
         "desBuff": None,
-        "score": 0
+        "score": 620
     }),
     87020013: _tools.RODict({
         "ID": 87020013,
@@ -1410,7 +1410,7 @@ datas = _tools.RODict({
         "removeAction": _87020013_remove,
         "propList": _tools.ROList([['adjExpGrow', 0.02]]),
         "desBuff": None,
-        "score": 0
+        "score": 620
     }),
     87020014: _tools.RODict({
         "ID": 87020014,
@@ -1420,7 +1420,7 @@ datas = _tools.RODict({
         "removeAction": _87020014_remove,
         "propList": None,
         "desBuff": 64002017,
-        "score": 100
+        "score": 620
     }),
     87020015: _tools.RODict({
         "ID": 87020015,
@@ -1430,7 +1430,7 @@ datas = _tools.RODict({
         "removeAction": _87020015_remove,
         "propList": _tools.ROList([['adjMonsterDmg', 0.02]]),
         "desBuff": None,
-        "score": 0
+        "score": 620
     }),
     87020016: _tools.RODict({
         "ID": 87020016,
@@ -1440,7 +1440,7 @@ datas = _tools.RODict({
         "removeAction": _87020016_remove,
         "propList": None,
         "desBuff": 64002019,
-        "score": 100
+        "score": 620
     }),
     87020017: _tools.RODict({
         "ID": 87020017,
@@ -1450,7 +1450,7 @@ datas = _tools.RODict({
         "removeAction": _87020017_remove,
         "propList": _tools.ROList([['adjPVPDmg', 0.02]]),
         "desBuff": None,
-        "score": 0
+        "score": 620
     }),
     87020018: _tools.RODict({
         "ID": 87020018,
@@ -1460,7 +1460,7 @@ datas = _tools.RODict({
         "removeAction": _87020018_remove,
         "propList": None,
         "desBuff": 64002021,
-        "score": 100
+        "score": 620
     }),
     87020019: _tools.RODict({
         "ID": 87020019,
@@ -1470,7 +1470,7 @@ datas = _tools.RODict({
         "removeAction": _87020019_remove,
         "propList": None,
         "desBuff": 64002023,
-        "score": 100
+        "score": 620
     }),
     87020020: _tools.RODict({
         "ID": 87020020,
@@ -1480,7 +1480,7 @@ datas = _tools.RODict({
         "removeAction": _87020020_remove,
         "propList": _tools.ROList([['adjExpGrow', 0.02]]),
         "desBuff": None,
-        "score": 0
+        "score": 620
     }),
     87020021: _tools.RODict({
         "ID": 87020021,
@@ -1490,7 +1490,7 @@ datas = _tools.RODict({
         "removeAction": _87020021_remove,
         "propList": None,
         "desBuff": 64002025,
-        "score": 100
+        "score": 906
     }),
     87020022: _tools.RODict({
         "ID": 87020022,
@@ -1510,7 +1510,7 @@ datas = _tools.RODict({
         "removeAction": _87020023_remove,
         "propList": None,
         "desBuff": 64002045,
-        "score": 100
+        "score": 906
     }),
     87020024: _tools.RODict({
         "ID": 87020024,
@@ -1530,7 +1530,7 @@ datas = _tools.RODict({
         "removeAction": _87020025_remove,
         "propList": None,
         "desBuff": 64002047,
-        "score": 100
+        "score": 906
     }),
     87020026: _tools.RODict({
         "ID": 87020026,
@@ -1550,7 +1550,7 @@ datas = _tools.RODict({
         "removeAction": _87020027_remove,
         "propList": None,
         "desBuff": 64002027,
-        "score": 100
+        "score": 906
     }),
     87020028: _tools.RODict({
         "ID": 87020028,
@@ -1570,7 +1570,7 @@ datas = _tools.RODict({
         "removeAction": _87020029_remove,
         "propList": None,
         "desBuff": 64002029,
-        "score": 100
+        "score": 906
     }),
     87020030: _tools.RODict({
         "ID": 87020030,
@@ -1590,7 +1590,7 @@ datas = _tools.RODict({
         "removeAction": _87020031_remove,
         "propList": None,
         "desBuff": 64002031,
-        "score": 100
+        "score": 906
     }),
     87020032: _tools.RODict({
         "ID": 87020032,
@@ -1610,7 +1610,7 @@ datas = _tools.RODict({
         "removeAction": _87020033_remove,
         "propList": None,
         "desBuff": 64002033,
-        "score": 100
+        "score": 906
     }),
     87020034: _tools.RODict({
         "ID": 87020034,
@@ -1630,7 +1630,7 @@ datas = _tools.RODict({
         "removeAction": _87020035_remove,
         "propList": None,
         "desBuff": 64002035,
-        "score": 100
+        "score": 906
     }),
     87020036: _tools.RODict({
         "ID": 87020036,
@@ -1650,7 +1650,7 @@ datas = _tools.RODict({
         "removeAction": _87020037_remove,
         "propList": None,
         "desBuff": 64002037,
-        "score": 100
+        "score": 3400
     }),
     87020038: _tools.RODict({
         "ID": 87020038,
@@ -1670,7 +1670,7 @@ datas = _tools.RODict({
         "removeAction": _87020039_remove,
         "propList": None,
         "desBuff": 64002039,
-        "score": 100
+        "score": 3400
     }),
     87020040: _tools.RODict({
         "ID": 87020040,
@@ -1690,7 +1690,7 @@ datas = _tools.RODict({
         "removeAction": _87020041_remove,
         "propList": _tools.ROList([['adjMaxPhysicalArmor', 15], ['adjMinPhysicalArmor', 15], ['adjMaxMagicArmor', 15], ['adjMinMagicArmor', 15]]),
         "desBuff": None,
-        "score": 0
+        "score": 3400
     }),
     87020042: _tools.RODict({
         "ID": 87020042,
@@ -1710,7 +1710,7 @@ datas = _tools.RODict({
         "removeAction": _87020043_remove,
         "propList": None,
         "desBuff": 64002041,
-        "score": 100
+        "score": 3400
     }),
     87020044: _tools.RODict({
         "ID": 87020044,

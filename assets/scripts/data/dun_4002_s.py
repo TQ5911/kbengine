@@ -1980,7 +1980,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024004": {
@@ -2051,7 +2052,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024009": {
@@ -2073,7 +2075,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024010": {
@@ -2086,9 +2090,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 40024010,
-          "PosX": 153.0,
+          "PosX": 153.39,
           "PosY": 133.89,
-          "PosZ": 349.0915,
+          "PosZ": 350.65,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
@@ -2096,7 +2100,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024011": {
@@ -2109,9 +2114,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 40024011,
-          "PosX": 769.0,
+          "PosX": 767.28,
           "PosY": 34.41484,
-          "PosZ": 366.0,
+          "PosZ": 370.77,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
@@ -2157,9 +2162,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 40024013,
-          "PosX": 602.8234,
+          "PosX": 602.82,
           "PosY": 66.7433,
-          "PosZ": 276.6822,
+          "PosZ": 275.85,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
@@ -2263,7 +2268,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024019": {
@@ -2285,7 +2291,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40024024": {
@@ -2769,14 +2777,14 @@ datas ={
           "DisplayName": "",
           "EntityID": 1,
           "ID": 40028031,
-          "PosX": 364.48,
+          "PosX": 366.35,
           "PosY": 89.75131,
-          "PosZ": 349.26,
+          "PosZ": 349.14,
           "Props": {
             "AreaType": 2,
             "Height": 2.0,
             "Length": 40.0,
-            "MPosX": 361.0,
+            "MPosX": 363.0,
             "MPosY": 89.75,
             "MPosZ": 307.0,
             "Remark": "\u77f3\u67f1\u524d\u7a7a\u6c14\u5899",

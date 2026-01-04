@@ -5158,14 +5158,14 @@ datas = _tools.RODict({
         "unavailableClass": None,
         "propList": _tools.RODict({"adjCopper":0.05}),
         "equipment": None,
-        "props": _tools.ROList([30001013, 30001017, 30001011, 30001014, 30001015])
+        "props": _tools.ROList([30001013, 30001017, 30001011, 30001014, 30001020])
     }),
     100736: _tools.RODict({
         "ID": 100736,
         "unavailableClass": None,
         "propList": _tools.RODict({"adjCopper":0.05}),
         "equipment": None,
-        "props": _tools.ROList([30001004, 30001018, 30001019, 30001011, 30001017])
+        "props": _tools.ROList([30001014, 30001018, 30001019, 30001011, 30001017])
     }),
     100737: _tools.RODict({
         "ID": 100737,
@@ -5326,7 +5326,7 @@ datas = _tools.RODict({
         "unavailableClass": None,
         "propList": _tools.RODict({"adjSilentAnti":4}),
         "equipment": None,
-        "props": _tools.ROList([30003015, 30003019, 30003023, 30003027, 30003018])
+        "props": _tools.ROList([30003015, 30003019, 30003023, 30003027, 30003016])
     }),
     100760: _tools.RODict({
         "ID": 100760,
@@ -5340,7 +5340,7 @@ datas = _tools.RODict({
         "unavailableClass": None,
         "propList": _tools.RODict({"adjSlowAnti":4}),
         "equipment": None,
-        "props": _tools.ROList([30003017, 30003021, 30003019, 30003029, 30003022])
+        "props": _tools.ROList([30003017, 30003021, 30003025, 30003029, 30003022])
     }),
     100762: _tools.RODict({
         "ID": 100762,

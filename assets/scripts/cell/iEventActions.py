@@ -304,18 +304,18 @@ class IEventActions(object):
             prob = float(args[2])
         if len(args) >= 4:
             endTime = float(args[3])
-            
-            if context and hasattr(context, 'skillId'):
-                host = self.getAvatar()
-                if host:
-                    ret, datas = host.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE)
-                    if ret:
-                        if len(datas) == 2:
-                            checkBuffID = datas[0]
-                            addValue = datas[1]
-                            if checkBuffID > 0 and checkBuffID == buffId:
-                                endTime += addValue
-                                DEBUG_MSG("in addBuffBySkill, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE, datas)
+
+            host = self.getAvatar()
+            if host:
+                sourceSkillId = host.getSourceSkillId(context)
+                ret, datas = host.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE)
+                if ret:
+                    if len(datas) == 2:
+                        checkBuffID = datas[0]
+                        addValue = datas[1]
+                        if checkBuffID > 0 and checkBuffID == buffId:
+                            endTime += addValue
+                            DEBUG_MSG("in addBuffBySkill, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.EFFECT_TIME_ADD_VALUE, datas)
 
         if random.uniform(0, 1) > prob:
             return

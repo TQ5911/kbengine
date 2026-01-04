@@ -12,6 +12,7 @@ import gametimer
 import utils
 import redisUtils
 import copy
+import LogTrackingMgr
 import gameengine
 import math
 import mailAssistor
@@ -47,7 +48,7 @@ import gamePlay_gamePlay as GP_GP
 import iRouter
 import gameconfig
 import LeaderBoardGuildInfo
-
+import LogTrackingMgr
 
 class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
     # type hint
@@ -187,6 +188,17 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.guildFund = self.maxGuildFundNum()
             DEBUG_MSG('Guild::modifyGuildFund: guildFund > max:', delta, src, opUUID, detail)
 
+        LogTrackingMgr.LogTrackingMgr.Guild_Info(
+            self.guildUUID,
+            self.guildLevel,
+            self.guildFund,
+            self.guildMoney,
+            self.cityBattleToken,
+            src,
+            opUUID,
+            str(detail),
+        )
+
     def modifyGuildMoney(self, delta, src, opUUID, detail):
         DEBUG_MSG('modifyGuildMoney', delta, src, opUUID, detail)
         self.guildMoney += delta
@@ -197,6 +209,17 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         elif self.guildMoney > self.maxGuildMoneyNum():
             self.guildMoney = self.maxGuildMoneyNum()
             ERROR_MSG('Guild::modifyGuildMoney: guildMoney > max:', delta, src, opUUID, detail)
+
+        LogTrackingMgr.LogTrackingMgr.Guild_Info(
+            self.guildUUID,
+            self.guildLevel,
+            self.guildFund,
+            self.guildMoney,
+            self.cityBattleToken,
+            src,
+            opUUID,
+            str(detail),
+        )
 
     def doTransformGuildMoneyToFund(self, gbId, box, num):
         if not self._checkHasPermission(gbId, GA_AI_DD.datas.guildMoneyToCoin):
@@ -1041,9 +1064,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             return
 
         self.guildExp += delta
-        self._autoUpgradeGuildLevel()
+        self._autoUpgradeGuildLevel(src, opUUID, detail)
 
-    def _autoUpgradeGuildLevel(self):
+    def _autoUpgradeGuildLevel(self, src, opUUID, detail):
         _oldLevel = self.guildLevel
         while self.guildExp >= G_GUD.datas[self.guildLevel]['upgradeExp']:
             _nextLevel = self.guildLevel + 1
@@ -1064,6 +1087,17 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 lambda box: box.client.onGuildLevelChanged(self.guildLevel),
                 0
             )
+
+        LogTrackingMgr.LogTrackingMgr.Guild_Info(
+            self.guildUUID,
+            self.guildLevel,
+            self.guildFund,
+            self.guildMoney,
+            self.cityBattleToken,
+            src,
+            opUUID,
+            str(detail),
+        )
 
     def doModifyGuildDesc(self, gbId, box, desc):
         if not self._checkHasPermission(gbId, GA_AI_DD.datas.modifySlogan):
@@ -1379,6 +1413,15 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             lambda box: box.onMessagePre(_msgId, _args),
             0
         )
+
+        LogTrackingMgr.LogTrackingMgr.Guild_Assist(
+            buildingId,
+            gbId,
+            self.guildUUID,
+            _building.level,
+            _building.exp
+        )
+
     # ------------------------------------ guild building end ------------------------------------
 
     def doGuildAssist(self, buildingId, gbId, box, opUUID):
@@ -1393,6 +1436,16 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.modifyBuildingExp(buildingId, G_GCD.datas['buildExpPerAssist']['value'], _src, opUUID, _detail)
         box.onGuildAssistResult(True, opUUID)
         box.client.onGuildBuildingChanged(self.guildBuilding)
+
+        
+        _building = self._getBuilding(buildingId)
+        LogTrackingMgr.LogTrackingMgr.Guild_Assist(
+            buildingId,
+            gbId,
+            self.guildUUID,
+            _building.level,
+            _building.exp
+        )
 
     def doModifyGuildName(self, gbId, box, ctx):
         if not self._checkHasPermission(gbId, GA_AI_DD.datas.renameGuild):
@@ -1638,10 +1691,11 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
     #清空帮会攻城令
     def onResetSiegeWarCityBattleToken(self):
         DEBUG_MSG('[lj]onResetSiegeWarCityBattleToken', self.guildName, self.guildUUID)
-        _eId = M_GL_DD.datas.guild_siegeOrderExpire
-        _args = [str(self.cityBattleToken)]
-        self.addGuildEvent(_eId, _args)
-        self.cityBattleToken = 0
+        if self.cityBattleToken != 0:
+            _eId = M_GL_DD.datas.guild_siegeOrderExpire
+            _args = [str(self.cityBattleToken)]
+            self.addGuildEvent(_eId, _args)
+            self.cityBattleToken = 0
 
     def onSiegeWarBiddingWin(self):
         DEBUG_MSG('[lj]onSiegeWarBiddingWin', self.guildName, self.guildUUID)
@@ -2035,6 +2089,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         box.onQixieAssistResult(True, opUUID, cost)
         box.client.onQixieChanged(_qixie)
 
+        LogTrackingMgr.LogTrackingMgr.Guild_QiXieAssist(
+            qixieType,
+            oprGbId,
+            self.guildUUID,
+            _qixie.level,
+            _qixie.exp
+        )
+
     def doUpgradeQixie(self, oprGbId, box, qixieType):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildBuildingUpgrade):
             box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
@@ -2067,6 +2129,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.syncJunXuQiXieLevel()
 
         self.syncMineWarSpaceMgrForChange()
+
+        LogTrackingMgr.LogTrackingMgr.Guild_QiXieAssist(
+            qixieType,
+            oprGbId,
+            self.guildUUID,
+            _qixie.level,
+            _qixie.exp
+        )
 
     def onAddGuildUnionToGuild(self, otherGuildUUID, otherGuildName):
         _eId = M_GL_DD.datas.guild_unionDesc
@@ -2114,26 +2184,47 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             WARNING_MSG('Guild::doDonateCityBattleToken: gbId not in guild', oprGbId)
             return
 
-        self.modifyCityBattleToken(num, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_TOKEN, opUUID)
+        self.modifyCityBattleToken(
+            num, 
+            AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_TOKEN, 
+            opUUID,
+            gameclass.AwardDetail(),
+        )
 
-    def modifyCityBattleToken(self, num, src, opUUID):
+    def modifyCityBattleToken(self, num, src, opUUID, detail):
         self.cityBattleToken += num
 
         if self.cityBattleToken < 0:
             ERROR_MSG('Guild::modifyCityBattleToken: cityBattleToken < 0', self.cityBattleToken)
             self.cityBattleToken = 0
 
+        LogTrackingMgr.LogTrackingMgr.Guild_Info(
+            self.guildUUID,
+            self.guildLevel,
+            self.guildFund,
+            self.guildMoney,
+            self.cityBattleToken,
+            src,
+            opUUID,
+            str(detail),
+        )
+
     def tryDeductCityBattleToken(self, src, cnt, guildName, guildUUID):
         if self.cityBattleToken < cnt:
             src.onCityBattleTokenDeducted(False, cnt, guildName, guildUUID)
             return
 
-        self.cityBattleToken -= cnt
+        self.modifyCityBattleToken(-cnt, src, KBEngine.genUUID64(), gameclass.AwardDetail())
         src.onCityBattleTokenDeducted(True, cnt, guildName, guildUUID)
 
     def onBiddingFailed(self, cnt, ec):
         DEBUG_MSG('[lj]on bidding failed, cnt:', cnt, ec, self.guildUUID)
-        self.cityBattleToken += cnt
+        self.modifyCityBattleToken(
+            cnt,
+            AAC_AACDD.datas.BONUS_SRC_GUILD_TOKEN_BID_FAILED, 
+            KBEngine.genUUID64(),
+            gameclass.AwardDetail(),
+        )
         self.biddingFailRedPointUnchecked = True
         if ec == gameconst.SiegeWarBiddingResult.OUTBID:
             self.biddingFailRedPointSync()

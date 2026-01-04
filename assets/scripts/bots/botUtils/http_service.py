@@ -405,25 +405,57 @@ def start_http_server(host='127.0.0.1', port=0):
 
     Returns (server, thread). Call server.shutdown() then thread.join() to stop.
     """
+    print(f'[HTTP服务] start_http_server 被调用: host={host}, port={port}')
     httpd = None
     attempt_port = port
-    while True:
+    max_attempts = 100  # 防止无限循环
+    attempt_count = 0
+    
+    while attempt_count < max_attempts:
         try:
+            print(f'[HTTP服务] 尝试绑定端口 {attempt_port} (尝试次数: {attempt_count + 1})')
             httpd = _ThreadingHTTPServer((host, attempt_port), _BotHTTPHandler)
+            print(f'[HTTP服务] 成功绑定端口 {attempt_port}')
             break
-        except OSError:
+        except OSError as e:
+            error_msg = str(e)
+            print(f'[HTTP服务] 端口 {attempt_port} 绑定失败: {type(e).__name__}: {error_msg}')
             # If ephemeral failed, fall back to 8000 then increment
             if attempt_port == 0:
                 attempt_port = 8000
+                print(f'[HTTP服务] 临时端口绑定失败，回退到端口 8000')
             else:
+                old_port = attempt_port
                 attempt_port += 1
+                print(f'[HTTP服务] 端口 {old_port} 被占用，尝试下一个端口: {attempt_port}')
             # wrap around if exceeding max port
             if attempt_port > 65535:
                 attempt_port = 1024
+                print(f'[HTTP服务] 端口号超出范围，回绕到端口 1024')
+            attempt_count += 1
             continue
-
-    t = threading.Thread(target=httpd.serve_forever, name='BotHTTPServer')
-    t.start()
+        except Exception as e:
+            print(f'[HTTP服务] 启动HTTP服务器时发生未知异常: {type(e).__name__}: {e}')
+            import traceback
+            traceback.print_exc()
+            raise
+    
+    if httpd is None:
+        error_msg = f'无法启动HTTP服务器，已尝试 {attempt_count} 次'
+        print(f'[HTTP服务] {error_msg}')
+        raise RuntimeError(error_msg)
+    
+    print(f'[HTTP服务] 正在创建HTTP服务线程...')
+    try:
+        t = threading.Thread(target=httpd.serve_forever, name='BotHTTPServer')
+        t.start()
+        print(f'[HTTP服务] HTTP服务线程已启动: name={t.name}, ident={t.ident}, is_alive={t.is_alive()}')
+    except Exception as e:
+        print(f'[HTTP服务] 创建HTTP服务线程时发生异常: {type(e).__name__}: {e}')
+        import traceback
+        traceback.print_exc()
+        raise
+    
     return httpd, t
 
 

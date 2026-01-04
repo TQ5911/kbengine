@@ -843,6 +843,7 @@
 
         <removeSkill>
             <Arg>           SKILLID        </Arg>
+            <Arg>           BOOL           </Arg>
         </removeSkill>
 
         <addPassiveSkill>

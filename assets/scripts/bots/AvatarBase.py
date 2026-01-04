@@ -236,6 +236,7 @@ class AvatarBase(KBEngine.Entity):
     def onPlayerGetExp(self, arg0, arg1, arg2, arg3): pass
     def onPopRaidTeamMember(self, arg0, arg1, arg2): pass
     def onQixieChanged(self, arg0): pass
+    def onQueryCurrencyExchangeData(self, arg0, arg1): pass
     def onQueryItemLink(self, arg0, arg1): pass
     def onQueryPlayerLink(self, arg0): pass
     def onQuerySiegeWarBiddingWinnerDataResult(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6): pass

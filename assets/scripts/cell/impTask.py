@@ -24,6 +24,8 @@ import gameconfig
 
 
 class ImpTask(impTalk.ImpTalk):
+
+    @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def reqUpdateTaskByTalkToNpc(self, exposed, opType, npcEntityId, taskId, dialogId):
@@ -59,6 +61,7 @@ class ImpTask(impTalk.ImpTalk):
         elif opType == gameconst.TaskOpTypeByTalkToPNC.NPC_TALK_TARGET:
             self.base.onTaskStepUpdate(gameconst.TaskTargetType.TASK_TARGET_TALK_NPC, taskId, (npcId, dialogId))
 
+    @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def reqClaimTask(self, exposed, claimSrcType, taskId, paramStr):
         DEBUG_MSG('in reqClaimTask:', taskId)
@@ -231,6 +234,7 @@ class ImpTask(impTalk.ImpTalk):
         getattr(self, callbackInfo[0])(result, *callbackInfo[1])
         return
 
+    @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def taskFailedLeaveArea(self, srcEntityID, taskId):
         DEBUG_MSG('in taskFailedLeaveArea:', srcEntityID, taskId)
@@ -242,6 +246,7 @@ class ImpTask(impTalk.ImpTalk):
             if deltaX > area['Width'] / 2 or deltaZ > area['Length']:
                 self.base.startTaskFailed(taskId, gameconst.TaskNotSuccReason.LEAVE_AREA)
 
+    @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def taskFailedEnterArea(self, srcEntityID, taskId):
         DEBUG_MSG('in taskFailedEnterArea:', srcEntityID, taskId)
@@ -382,6 +387,7 @@ class ImpTask(impTalk.ImpTalk):
         self.base.onCheckTeamTaskAllCondSucc(taskId, taskCtx, condFailedGBIDs)
         return
 
+    @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def reqStartPlayCinema(self, srcEntityID, cinemaId):
         DEBUG_MSG('in startPlayCinema:', cinemaId)
@@ -396,6 +402,7 @@ class ImpTask(impTalk.ImpTalk):
         DEBUG_MSG('in afterPlayCinema:', cinemaId)
         self.resetAllTargetTypeCache()
 
+    @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def cinemaPlayEnd(self, srcEntityID, cinemaId):
         DEBUG_MSG('in cinemaPlayingEnd:', cinemaId)
@@ -602,12 +609,20 @@ class ImpTask(impTalk.ImpTalk):
             self._enterSingleDungeon(dungeonNo, src, extra=extra)
         return
 
-
+    @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def taskReachArea(self, srcEntityID, taskId):
         DEBUG_MSG('in taskReachArea:', taskId)
         # 到达指定区域任务目标由服务端检验
-        # self._taskReachArea(taskId)
+        dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
+        areaTaskInCurDun = self.getTempMiscProp(gameconst.AvatarProps.taskAreaTarget, {}).get(dungeonNo, {})
+        _target = areaTaskInCurDun.get(taskId)
+        if not _target:
+            ERROR_MSG('   taskReachArea, target not found:', taskId, dungeonNo)
+            return
+
+        if _target.isInArea(self.position[0], self.position[2]):
+            self._taskReachArea(taskId)
 
     def _taskReachArea(self, taskId):
         self.base.onTaskStepUpdate(gameconst.TaskTargetType.TASK_TARGET_REACH_AREA, taskId, (self.position[0],

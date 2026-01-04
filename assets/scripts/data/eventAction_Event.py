@@ -183,6 +183,12 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "OpenNpcExchange": _tools.RODict({
+        "ID": "OpenNpcExchange",
+        "EventID": 10029,
+        "sendType": 0,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,

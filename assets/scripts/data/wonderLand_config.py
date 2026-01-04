@@ -17,15 +17,15 @@ import crontab
 datas = _tools.RODict({ 
     "dailyWonderLandNum": _tools.RODict({
         "ID": "dailyWonderLandNum",
-        "value": 3,
+        "value": 2,
     }),
     "wonderLandNumCoin": _tools.RODict({
         "ID": "wonderLandNumCoin",
-        "value": 120,
+        "value": 100,
     }),
     "wonderLandNumCoinDailyLimit": _tools.RODict({
         "ID": "wonderLandNumCoinDailyLimit",
-        "value": 2,
+        "value": 1,
     }),
     "wonderLandNumItem": _tools.RODict({
         "ID": "wonderLandNumItem",

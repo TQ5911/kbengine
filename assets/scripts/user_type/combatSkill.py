@@ -1213,7 +1213,7 @@ class SkillBase(userType.UserSoleType):
         scopes = self.getScope(self.skillId)
         scopeParams, scopeAddRatio = self.getScopeParam(caster, self.skillId)
 
-        DEBUG_MSG("in _internalGetEffectTargets ", caster, self.skillId, scopeParams, scopeAddRatio)
+        DEBUG_MSG("in _internalGetEffectTargets ", scopes, self.skillId, scopeParams, scopeAddRatio)
 
         if not scopes or scopes == gameconst.SkillScope.TARGET_AUTO:
             if self.hasTag(gameconst.SkillTag.SingleHeal) and hasattr(caster,

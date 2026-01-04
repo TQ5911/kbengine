@@ -19,73 +19,73 @@ datas = _tools.RODict({
         "ID": 21,
         "glyphCraftGoldCost": ((30000013, 1000),),
         "glyphCraftItem": ((30000231, 1),),
-        "glyphCraftResult": (93, 7)
+        "glyphCraftResult": (80, 20)
     }),
     22: _tools.RODict({
         "ID": 22,
         "glyphCraftGoldCost": ((30000013, 1000),),
         "glyphCraftItem": ((30000231, 1),),
-        "glyphCraftResult": (93, 7)
+        "glyphCraftResult": (80, 20)
     }),
     23: _tools.RODict({
         "ID": 23,
         "glyphCraftGoldCost": ((30000013, 1000),),
         "glyphCraftItem": ((30000231, 1),),
-        "glyphCraftResult": (93, 7)
+        "glyphCraftResult": (80, 20)
     }),
     24: _tools.RODict({
         "ID": 24,
         "glyphCraftGoldCost": ((30000013, 1000),),
         "glyphCraftItem": ((30000231, 1),),
-        "glyphCraftResult": (93, 7)
+        "glyphCraftResult": (80, 20)
     }),
     31: _tools.RODict({
         "ID": 31,
         "glyphCraftGoldCost": ((30000013, 2000),),
         "glyphCraftItem": ((30000231, 2),),
-        "glyphCraftResult": (94, 6)
+        "glyphCraftResult": (80, 20)
     }),
     32: _tools.RODict({
         "ID": 32,
         "glyphCraftGoldCost": ((30000013, 2000),),
         "glyphCraftItem": ((30000231, 2),),
-        "glyphCraftResult": (94, 6)
+        "glyphCraftResult": (80, 20)
     }),
     33: _tools.RODict({
         "ID": 33,
         "glyphCraftGoldCost": ((30000013, 2000),),
         "glyphCraftItem": ((30000231, 2),),
-        "glyphCraftResult": (94, 6)
+        "glyphCraftResult": (80, 20)
     }),
     34: _tools.RODict({
         "ID": 34,
         "glyphCraftGoldCost": ((30000013, 2000),),
         "glyphCraftItem": ((30000231, 2),),
-        "glyphCraftResult": (94, 6)
+        "glyphCraftResult": (80, 20)
     }),
     41: _tools.RODict({
         "ID": 41,
         "glyphCraftGoldCost": ((30000013, 3000),),
         "glyphCraftItem": ((30000231, 4),),
-        "glyphCraftResult": (95, 5)
+        "glyphCraftResult": (80, 20)
     }),
     42: _tools.RODict({
         "ID": 42,
         "glyphCraftGoldCost": ((30000013, 3000),),
         "glyphCraftItem": ((30000231, 4),),
-        "glyphCraftResult": (95, 5)
+        "glyphCraftResult": (80, 20)
     }),
     43: _tools.RODict({
         "ID": 43,
         "glyphCraftGoldCost": ((30000013, 3000),),
         "glyphCraftItem": ((30000231, 4),),
-        "glyphCraftResult": (95, 5)
+        "glyphCraftResult": (80, 20)
     }),
     44: _tools.RODict({
         "ID": 44,
         "glyphCraftGoldCost": ((30000013, 3000),),
         "glyphCraftItem": ((30000231, 4),),
-        "glyphCraftResult": (95, 5)
+        "glyphCraftResult": (80, 20)
     })
 })
 minKey = 21

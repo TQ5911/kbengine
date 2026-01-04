@@ -35,6 +35,12 @@
             <Flags>     CELL_PRIVATE     </Flags>
             <Default>   0                </Default>
         </disappearTimer>
+
+        <createTime>
+            <Type>      UINT32           </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+            <Default>   0                </Default>
+        </createTime>
     </Properties>
 
 </root>

@@ -9,6 +9,7 @@ import gamedecorator
 import collect_details as  PDETAIL
 from avatarCollectInfo import collectItem
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import LogTrackingMgr
 
 class ICollectible(object):
     def collectOnLogin(self):
@@ -31,7 +32,7 @@ class ICollectible(object):
             propIndex = collectId
             propIndexList.append(propIndex)
 
-        self.cell.onCollectAward(propIndexList)
+        self.cell.onCollectAward(propIndexList, False)
         DEBUG_MSG('call _refreshProperty done')
 
     def sendCollectInfo(self):
@@ -103,6 +104,12 @@ class ICollectible(object):
         if not self.collectibleData.collectibleDict[collectID].isCompleteAll(equipment_len + prop_len):
             DEBUG_MSG('reqCollect not Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
             self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toSavedDict()])
+            LogTrackingMgr.LogTrackingMgr.Collectible_Detail(
+                self.gbID,
+                collectID,
+                gameconst.CollectibleDetailStatus.COLLECTING,
+                "",
+            )
             return
         # 获得本次收集项对应的奖励
         collectProp = collectID
@@ -181,7 +188,7 @@ class ICollectible(object):
     def _onScore(self, collectProp):
         propIndexList = [collectProp] if collectProp else []
 
-        self.cell.onCollectAward(propIndexList)
+        self.cell.onCollectAward(propIndexList, True)
         DEBUG_MSG('_onScore propList ', propIndexList)
 
 

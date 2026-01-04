@@ -1,22 +1,10 @@
 # coding: utf-8
 from KBEDebug import *
-import KBEngine
 
 import gameconst
-import dataUtils
-import dropAward
-import gameclass
-import mailAssistor
-import gamedecorator
 import gameengine
 import formula
-
-import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import raidBossChallenge_config as RBC_CFG
-import raidBossChallenge_basicInfo as RBC_BI
-import teamDunChallenge_basicInfo as TDC_BI
-import guildChallenge_basicInfo as GC_BI
-import guildChallenge_config as GC_C
+import gameconfig
 
 class IDungeonSettlement(object):
     def __init__(self):
@@ -36,6 +24,8 @@ class IDungeonSettlement(object):
         return None, None
 
     def getSettlementRankList(self, exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset):
+        if not self.checkDungeonVisibleConfigEnabled(dungeonPlayMode):
+            return
         INFO_MSG('IDungeonSettlement::getSettlementRankList:', exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset)
         if rankType not in gameconst.StatisticType.DUNGEON_VALID_TYPES:
             ERROR_MSG('IDungeonSettlement::getSettlementRankList, wrong args 0:', exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset)
@@ -45,4 +35,20 @@ class IDungeonSettlement(object):
             dungeonStub = gameengine.getDungeonStubByDungeonNo(dungeonNo, dungeonEnterType)
             dungeonStub.getSettlementRankList(rankType, self.spaceNo, self.guildUUID, self.base, self.gbId, idx, offset)
         else:
-            ERROR_MSG('IDungeonSettlement::getSettlementRankList, wrong args 1:', exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset)  
+            ERROR_MSG('IDungeonSettlement::getSettlementRankList, wrong args 1:', exposed, rankType, dungeonNo, dungeonPlayMode, idx, offset)
+
+    def checkDungeonVisibleConfigEnabled(self, dungeonPlayMode):
+        INFO_MSG('IDungeonSettlement::checkDungeonVisibleConfigEnabled: begin ', dungeonPlayMode)
+        ret = True
+        if dungeonPlayMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+            if not gameconfig.visibleConfigEable('teamDungeon'):
+                ret = False
+        elif dungeonPlayMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            if not gameconfig.visibleConfigEable('raidDungeon'):
+                ret = False
+        elif dungeonPlayMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
+            if not gameconfig.visibleConfigEable('guildBossChallenge'):
+                ret = False
+
+        INFO_MSG('IDungeonSettlement::checkDungeonVisibleConfigEnabled: end ', dungeonPlayMode, ret)
+        return ret

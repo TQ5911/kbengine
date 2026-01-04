@@ -18,12 +18,13 @@ class IGameEntity(object):
     """
 
     def __init__(self):
-        DEBUG_MSG("iGameEntity.IGameEntity.__init__", self.disappearTime, utils.getNow(), self.gameEntityId)
-        if self.disappearTime > utils.getNow():
+        self.createTime = utils.getNow()
+        DEBUG_MSG("iGameEntity.IGameEntity.__init__", self.disappearTime, self.createTime, self.gameEntityId)
+        if self.disappearTime > self.createTime:
             delayTime = utils.randomDelayTime(self.disappearTime,
                                               self.getDatetimeTimerRandomTickRange(2))
 
-            self._callback(delayTime - utils.getNow(), 'onDisappearTimerEnded', (),
+            self._callback(delayTime - self.createTime, 'onDisappearTimerEnded', (),
                            gametimer.TIMER_TAG_ON_ENTITY_DISAPPER)
         else:
             if self.disappearTime < 0:

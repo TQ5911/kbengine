@@ -388,8 +388,6 @@ class IDungeonStubMonster(object):
         if extraVal and 'CollectionType' in extraVal:
             props['type'] = extraVal['CollectionType']
 
-        _type = props.get('type', gameconst.CollectionType.NORMAL)
-
         props.setdefault('tmpProps', {})
         if extraVal and 'tmpProps' in extraVal:
             props['tmpProps'].update(extraVal.get('tmpProps', {}))

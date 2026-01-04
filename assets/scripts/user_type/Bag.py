@@ -113,6 +113,19 @@ class Bag(BaseBag.BaseBag):
                           srcSubType=0, idipSource=0):
         opStat, gridId = super(Bag, self).addItemsToNewGrid(owner, itemObj, opUUID, src, detail, gridId, notify,
                                                             syncToClient, srcSubType, idipSource)
+        if src != AAC_AACDD.datas.BONUS_SRC_BAG_SORT:
+            newCount = self.getItemCount(itemObj.itemId, itemObj.bindType)
+            owner.makeItemFlowLog(
+                self.bagType,
+                itemObj.itemId,
+                itemObj.uniqueId,
+                itemObj.itemNum,
+                opUUID,
+                src,
+                newCount,
+                detail
+            )
+
         return opStat, gridId
 
     def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True,
@@ -139,6 +152,18 @@ class Bag(BaseBag.BaseBag):
             
             datas = tmpItem.setdefault(item.itemId, {})
             datas[item.bindType] = datas.get(item.bindType, 0) + mergeNum
+
+            newCount = self.getItemCount(item.itemId, item.bindType)
+            owner.makeItemFlowLog(
+                self.bagType,
+                item.itemId,
+                item.uniqueId,
+                item.itemNum,
+                opUUID,
+                src,
+                newCount,
+                detail,
+            )
 
         for gridId, planItems in planDict['new'].items():
             item = self.getItemObjByGridId(gridId)
@@ -193,7 +218,15 @@ class Bag(BaseBag.BaseBag):
 
         for item, num in deducteItems:
             newCount = self.getItemCount(item.itemId, item.bindType)
-            #owner.makeItemFlowLog(self.bagType, item, -num, opUUID, srcType, newCount, detail)
+            owner.makeItemFlowLog(
+                self.bagType, 
+                item.itemId,
+                item.uniqueId,
+                -num, 
+                opUUID, 
+                srcType, 
+                newCount, 
+                detail)
 
         owner.onItemCountChanged(itemIdList)
         return
@@ -208,7 +241,16 @@ class Bag(BaseBag.BaseBag):
                                                                                                         self.bagType))
         owner.onItemCountChanged([itemId])
         newCount = self.getItemCount(cleanItem.itemId, cleanItem.bindType)
-        #owner.makeItemFlowLog(self.bagType, cleanItem, -cleanItem.itemNum, opUUID, srcType, newCount, detail)
+        owner.makeItemFlowLog(
+            self.bagType, 
+            cleanItem.itemId,
+            cleanItem.uniqueId,
+            -cleanItem.itemNum, 
+            opUUID, 
+            srcType, 
+            newCount, 
+            detail)
+
         if oldObj.uniqueId in self.item2timer:
             tid = self.item2timer.pop(oldObj.uniqueId)
             owner._cancelDatetimeCallback(tid, gametimer.REPLACE_EXPIRED_ITEM)

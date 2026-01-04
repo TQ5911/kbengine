@@ -40,6 +40,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         iGameEntity.IGameEntity.__init__(self)
         iEntityRefresh.IEntityRefresh.__init__(self)
         self.force = gameconst.ForceType.NPC
+        self.type = NPD.datas.get(self.collectionId, {}).get('type', gameconst.CollectionType.NORMAL)
         DEBUG_MSG("--------create collection", self.id, self.refreshTime, self.gameEntityId, self.collectionId, self.type)
 
         if not self.name:

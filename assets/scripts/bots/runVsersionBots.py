@@ -8,6 +8,17 @@ from datetime import datetime
 import random
 from botUtils.faceData_CtoDict import FACE_DATA
 import botUtils.http_service as http_service
+
+# 初始化环境变量
+cur_path = os.path.realpath(__file__)
+bot_dir = os.path.dirname(cur_path)
+cases_dir = os.path.join(bot_dir, 'cases')
+sys.path.append(cases_dir)
+ROOT_PATH = os.path.dirname(bot_dir)
+sys.path.append(os.path.join(ROOT_PATH, 'data'))
+sys.path.append(os.path.join(ROOT_PATH, 'server_common'))
+sys.path.append(os.path.join(ROOT_PATH, 'common'))
+
 # 添加目标服务器参数：modName, school, loginHost, loginPort
 modName, _school, _loginHost, _loginPort = sys.argv[1:5]
 const_workspace_id_h1 = "59721401"

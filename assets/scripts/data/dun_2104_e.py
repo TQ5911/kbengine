@@ -590,7 +590,7 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1151
+        1169
       ]
     }
   },
@@ -620,7 +620,8 @@ datas ={
         1148,
         1149,
         1156,
-        1162
+        1162,
+        1164
       ]
     }
   },
@@ -629,7 +630,7 @@ datas ={
     "entityID": [
       21040001
     ],
-    "dialogID": 19900200,
+    "dialogID": 19104001,
     "transition": {}
   },
   "1148": {
@@ -656,7 +657,7 @@ datas ={
   "1181": {
     "type": "monsterRestNum",
     "monsterID": [
-      -1
+      21040001
     ],
     "compare": 1,
     "restNum": 0,
@@ -665,7 +666,8 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1911
+        1911,
+        1166
       ]
     }
   },
@@ -688,7 +690,8 @@ datas ={
         1150,
         1155,
         1158,
-        1163
+        1163,
+        1168
       ]
     }
   },
@@ -697,7 +700,7 @@ datas ={
     "entityID": [
       21040002
     ],
-    "dialogID": 19900185,
+    "dialogID": 19104004,
     "transition": {}
   },
   "1150": {
@@ -768,5 +771,71 @@ datas ={
     "lvlmt": -1,
     "duration": 30.0,
     "transition": {}
+  },
+  "1164": {
+    "type": "monsterHp",
+    "monsterID": [
+      21040001
+    ],
+    "compare": 5,
+    "hpPercent": 50.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1165
+      ]
+    }
+  },
+  "1165": {
+    "type": "popupdialog",
+    "entityID": [
+      21040001
+    ],
+    "dialogID": 19104002,
+    "transition": {}
+  },
+  "1166": {
+    "type": "popupdialog",
+    "entityID": [
+      21040001
+    ],
+    "dialogID": 19104003,
+    "transition": {}
+  },
+  "1167": {
+    "type": "popupdialog",
+    "entityID": [
+      21040002
+    ],
+    "dialogID": 19104005,
+    "transition": {}
+  },
+  "1168": {
+    "type": "monsterHp",
+    "monsterID": [
+      21040002
+    ],
+    "compare": 5,
+    "hpPercent": 50.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1167
+      ]
+    }
+  },
+  "1169": {
+    "type": "popupdialog",
+    "entityID": [
+      21040002
+    ],
+    "dialogID": 19104006,
+    "transition": {
+      "finished": [
+        1151
+      ]
+    }
   }
 }

@@ -13,6 +13,7 @@ import welfare_serverLogin as WSLCONFIG
 import welfare_levelReward as WLRD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 from user_type.avatarWelfareSignInInfo import welfareSignInInfo
+import LogTrackingMgr
 
 signInIDS = {
     "SevenSign": 1,
@@ -70,6 +71,19 @@ class IWelfareSignIn(object):
         if not self.addSignInAward(signInDayNo, welfareType):
             ERROR_MSG('call reqWelfareSignIn: add award err', signInDayNo)
             return
+        
+        if welfareType == "SevenSign":
+            LogTrackingMgr.LogTrackingMgr.Welfare_SignInSevenDay(
+                self.gbID,
+                WSLCONFIG.kvData.get(welfareType, {}).get(signInDayNo, 0),
+                self.getAvatarLevel()
+            )
+        elif welfareType == "TenSign":
+            LogTrackingMgr.LogTrackingMgr.Welfare_SignInTenDay(
+                self.gbID,
+                WSLCONFIG.kvData.get(welfareType, {}).get(signInDayNo, 0),
+                self.getAvatarLevel()
+            )
     
     @gamedecorator.checkGameconfigEnable('welfare')
     def reqLevelWelfare(self, exposed, slotNo, welfareType):
@@ -110,6 +124,14 @@ class IWelfareSignIn(object):
         self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_SIGN_IN, rewardId, 1, opUUID, detail, awardCtx)
 
         self.sendLevelWelfareInfo(welfareType)
+
+        LogTrackingMgr.LogTrackingMgr.Level_Reward(
+            self.gbID,
+            self.getAvatarLevel(),
+            rid,
+            condition,
+            self.getAvatarSchool()
+        )
 
         return True
         

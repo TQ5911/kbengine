@@ -19,7 +19,7 @@ datas = _tools.RODict({
         "ID": 0,
         "type": 0,
         "subType": 0,
-        "sort": 10,
+        "sort": 12,
         "antiStudio": 1,
         "auctionCategory": 802
     }),
@@ -27,7 +27,7 @@ datas = _tools.RODict({
         "ID": 1,
         "type": 0,
         "subType": 1,
-        "sort": 9,
+        "sort": 11,
         "antiStudio": 1,
         "auctionCategory": 801
     }),
@@ -35,7 +35,7 @@ datas = _tools.RODict({
         "ID": 2,
         "type": 0,
         "subType": 2,
-        "sort": 9,
+        "sort": 11,
         "antiStudio": 1,
         "auctionCategory": 801
     }),
@@ -131,7 +131,7 @@ datas = _tools.RODict({
         "ID": 14,
         "type": 0,
         "subType": 14,
-        "sort": 9,
+        "sort": 10,
         "antiStudio": 1,
         "auctionCategory": 801
     }),
@@ -147,7 +147,7 @@ datas = _tools.RODict({
         "ID": 16,
         "type": 0,
         "subType": 16,
-        "sort": 10,
+        "sort": 12,
         "antiStudio": 1,
         "auctionCategory": 0
     }),
@@ -155,7 +155,7 @@ datas = _tools.RODict({
         "ID": 17,
         "type": 0,
         "subType": 17,
-        "sort": 10,
+        "sort": 12,
         "antiStudio": 1,
         "auctionCategory": 0
     }),
@@ -308,9 +308,9 @@ minKey = 0
 maxKey = 2011
 
 ItemTypeSortDic = _tools.RODict({ 
-        0:10,
-        1:9,
-        2:9,
+        0:12,
+        1:11,
+        2:11,
         3:8,
         4:5,
         5:3,
@@ -322,10 +322,10 @@ ItemTypeSortDic = _tools.RODict({
         11:7,
         12:6,
         13:6,
-        14:9,
+        14:10,
         15:1,
-        16:10,
-        17:10,
+        16:12,
+        17:12,
         18:4,
         19:9,
         20:6,

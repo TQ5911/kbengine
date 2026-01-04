@@ -592,7 +592,7 @@ def _30990154(self, gridId, itemId, useNum, opUUID, context):
 datas = _tools.RODict({ 
     30000001: _tools.RODict({
         "ID": 30000001,
-        "name": "金币",
+        "name": "元宝",
         "type": 2,
         "subType": 0,
         "class": 0,
@@ -842,7 +842,7 @@ datas = _tools.RODict({
     }),
     30000006: _tools.RODict({
         "ID": 30000006,
-        "name": "帮会金币",
+        "name": "帮会元宝",
         "type": 2,
         "subType": 4,
         "class": 0,
@@ -1592,7 +1592,7 @@ datas = _tools.RODict({
     }),
     30000021: _tools.RODict({
         "ID": 30000021,
-        "name": "绑定金币",
+        "name": "绑定元宝",
         "type": 2,
         "subType": 11,
         "class": 0,
@@ -7792,7 +7792,7 @@ datas = _tools.RODict({
     }),
     30000223: _tools.RODict({
         "ID": 30000223,
-        "name": "强化萤石",
+        "name": "优秀强化石",
         "type": 0,
         "subType": 7,
         "class": 0,
@@ -7842,7 +7842,7 @@ datas = _tools.RODict({
     }),
     30000224: _tools.RODict({
         "ID": 30000224,
-        "name": "强化玉石",
+        "name": "精良强化石",
         "type": 0,
         "subType": 7,
         "class": 0,
@@ -7892,7 +7892,7 @@ datas = _tools.RODict({
     }),
     30000225: _tools.RODict({
         "ID": 30000225,
-        "name": "强化晶石",
+        "name": "史诗强化石",
         "type": 0,
         "subType": 7,
         "class": 0,
@@ -7942,7 +7942,7 @@ datas = _tools.RODict({
     }),
     30000226: _tools.RODict({
         "ID": 30000226,
-        "name": "强化宝石",
+        "name": "传说强化石",
         "type": 0,
         "subType": 7,
         "class": 0,
@@ -9792,7 +9792,7 @@ datas = _tools.RODict({
     }),
     30000263: _tools.RODict({
         "ID": 30000263,
-        "name": "血髓石",
+        "name": "优秀地灵珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -9842,7 +9842,7 @@ datas = _tools.RODict({
     }),
     30000264: _tools.RODict({
         "ID": 30000264,
-        "name": "月魂晶",
+        "name": "优秀真水珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -9892,7 +9892,7 @@ datas = _tools.RODict({
     }),
     30000265: _tools.RODict({
         "ID": 30000265,
-        "name": "生灵木",
+        "name": "优秀离火珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -9942,7 +9942,7 @@ datas = _tools.RODict({
     }),
     30000266: _tools.RODict({
         "ID": 30000266,
-        "name": "破障玉",
+        "name": "优秀天风珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -9992,7 +9992,7 @@ datas = _tools.RODict({
     }),
     30000267: _tools.RODict({
         "ID": 30000267,
-        "name": "血髓石",
+        "name": "精良地灵珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10042,7 +10042,7 @@ datas = _tools.RODict({
     }),
     30000268: _tools.RODict({
         "ID": 30000268,
-        "name": "月魂晶",
+        "name": "精良真水珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10092,7 +10092,7 @@ datas = _tools.RODict({
     }),
     30000269: _tools.RODict({
         "ID": 30000269,
-        "name": "生灵木",
+        "name": "精良离火珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10142,7 +10142,7 @@ datas = _tools.RODict({
     }),
     30000270: _tools.RODict({
         "ID": 30000270,
-        "name": "破障玉",
+        "name": "精良天风珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10192,7 +10192,7 @@ datas = _tools.RODict({
     }),
     30000271: _tools.RODict({
         "ID": 30000271,
-        "name": "血髓石",
+        "name": "史诗地灵珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10242,7 +10242,7 @@ datas = _tools.RODict({
     }),
     30000272: _tools.RODict({
         "ID": 30000272,
-        "name": "月魂晶",
+        "name": "史诗真水珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10292,7 +10292,7 @@ datas = _tools.RODict({
     }),
     30000273: _tools.RODict({
         "ID": 30000273,
-        "name": "生灵木",
+        "name": "史诗离火珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10342,7 +10342,7 @@ datas = _tools.RODict({
     }),
     30000274: _tools.RODict({
         "ID": 30000274,
-        "name": "破障玉",
+        "name": "史诗天风珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10392,7 +10392,7 @@ datas = _tools.RODict({
     }),
     30000275: _tools.RODict({
         "ID": 30000275,
-        "name": "血髓石",
+        "name": "传说地灵珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10442,7 +10442,7 @@ datas = _tools.RODict({
     }),
     30000276: _tools.RODict({
         "ID": 30000276,
-        "name": "月魂晶",
+        "name": "传说真水珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10492,7 +10492,7 @@ datas = _tools.RODict({
     }),
     30000277: _tools.RODict({
         "ID": 30000277,
-        "name": "生灵木",
+        "name": "传说离火珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10542,7 +10542,7 @@ datas = _tools.RODict({
     }),
     30000278: _tools.RODict({
         "ID": 30000278,
-        "name": "破障玉",
+        "name": "传说天风珠",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10592,7 +10592,7 @@ datas = _tools.RODict({
     }),
     30000279: _tools.RODict({
         "ID": 30000279,
-        "name": "通络丹",
+        "name": "优秀通络丹",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10642,7 +10642,7 @@ datas = _tools.RODict({
     }),
     30000280: _tools.RODict({
         "ID": 30000280,
-        "name": "通络丹",
+        "name": "精良通络丹",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10692,7 +10692,7 @@ datas = _tools.RODict({
     }),
     30000281: _tools.RODict({
         "ID": 30000281,
-        "name": "通络丹",
+        "name": "史诗通络丹",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10742,7 +10742,7 @@ datas = _tools.RODict({
     }),
     30000282: _tools.RODict({
         "ID": 30000282,
-        "name": "通络丹",
+        "name": "传说通络丹",
         "type": 0,
         "subType": 20,
         "class": 0,
@@ -10792,7 +10792,7 @@ datas = _tools.RODict({
     }),
     30000283: _tools.RODict({
         "ID": 30000283,
-        "name": "萤辉星砂",
+        "name": "优秀龙血铁尘",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -10842,7 +10842,7 @@ datas = _tools.RODict({
     }),
     30000284: _tools.RODict({
         "ID": 30000284,
-        "name": "觉音梦络",
+        "name": "优秀战旌帛烬",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -10892,7 +10892,7 @@ datas = _tools.RODict({
     }),
     30000285: _tools.RODict({
         "ID": 30000285,
-        "name": "微泽晶魄",
+        "name": "优秀玄蜕革尘",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -10942,7 +10942,7 @@ datas = _tools.RODict({
     }),
     30000286: _tools.RODict({
         "ID": 30000286,
-        "name": "微泽晶魄",
+        "name": "优秀涅槃玉烬",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -10992,7 +10992,7 @@ datas = _tools.RODict({
     }),
     30000287: _tools.RODict({
         "ID": 30000287,
-        "name": "清辉星砂",
+        "name": "精良龙血铁尘",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11042,7 +11042,7 @@ datas = _tools.RODict({
     }),
     30000288: _tools.RODict({
         "ID": 30000288,
-        "name": "明音梦络",
+        "name": "精良战旌帛烬",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11092,7 +11092,7 @@ datas = _tools.RODict({
     }),
     30000289: _tools.RODict({
         "ID": 30000289,
-        "name": "幽泽晶魄",
+        "name": "精良玄蜕革尘",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11142,7 +11142,7 @@ datas = _tools.RODict({
     }),
     30000290: _tools.RODict({
         "ID": 30000290,
-        "name": "幽泽晶魄",
+        "name": "精良涅槃玉烬",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11192,7 +11192,7 @@ datas = _tools.RODict({
     }),
     30000291: _tools.RODict({
         "ID": 30000291,
-        "name": "光辉星砂",
+        "name": "史诗龙血铁尘",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11242,7 +11242,7 @@ datas = _tools.RODict({
     }),
     30000292: _tools.RODict({
         "ID": 30000292,
-        "name": "空音梦络",
+        "name": "史诗战旌帛烬",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11292,7 +11292,7 @@ datas = _tools.RODict({
     }),
     30000293: _tools.RODict({
         "ID": 30000293,
-        "name": "化泽晶魄",
+        "name": "史诗玄蜕革尘",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11342,7 +11342,7 @@ datas = _tools.RODict({
     }),
     30000294: _tools.RODict({
         "ID": 30000294,
-        "name": "化泽晶魄",
+        "name": "史诗涅槃玉烬",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11392,7 +11392,7 @@ datas = _tools.RODict({
     }),
     30000295: _tools.RODict({
         "ID": 30000295,
-        "name": "圣辉星砂",
+        "name": "传说龙血铁尘",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11442,7 +11442,7 @@ datas = _tools.RODict({
     }),
     30000296: _tools.RODict({
         "ID": 30000296,
-        "name": "玄音梦络",
+        "name": "传说战旌帛烬",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11492,7 +11492,7 @@ datas = _tools.RODict({
     }),
     30000297: _tools.RODict({
         "ID": 30000297,
-        "name": "极泽晶魄",
+        "name": "传说玄蜕革尘",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -11542,7 +11542,7 @@ datas = _tools.RODict({
     }),
     30000298: _tools.RODict({
         "ID": 30000298,
-        "name": "极泽晶魄",
+        "name": "传说涅槃玉烬",
         "type": 0,
         "subType": 12,
         "class": 0,
@@ -13742,7 +13742,7 @@ datas = _tools.RODict({
     }),
     30000522: _tools.RODict({
         "ID": 30000522,
-        "name": "金币*1000",
+        "name": "元宝*1000",
         "type": 0,
         "subType": 3,
         "class": 0,
@@ -13792,7 +13792,7 @@ datas = _tools.RODict({
     }),
     30000523: _tools.RODict({
         "ID": 30000523,
-        "name": "金币*500",
+        "name": "元宝*500",
         "type": 0,
         "subType": 3,
         "class": 0,
@@ -13842,7 +13842,7 @@ datas = _tools.RODict({
     }),
     30000524: _tools.RODict({
         "ID": 30000524,
-        "name": "金币*100",
+        "name": "元宝*100",
         "type": 0,
         "subType": 3,
         "class": 0,
@@ -13892,7 +13892,7 @@ datas = _tools.RODict({
     }),
     30000525: _tools.RODict({
         "ID": 30000525,
-        "name": "金币*50",
+        "name": "元宝*50",
         "type": 0,
         "subType": 3,
         "class": 0,
@@ -13942,7 +13942,7 @@ datas = _tools.RODict({
     }),
     30000526: _tools.RODict({
         "ID": 30000526,
-        "name": "金币*10",
+        "name": "元宝*10",
         "type": 0,
         "subType": 3,
         "class": 0,
@@ -13992,7 +13992,7 @@ datas = _tools.RODict({
     }),
     30000527: _tools.RODict({
         "ID": 30000527,
-        "name": "金币*1",
+        "name": "元宝*1",
         "type": 0,
         "subType": 3,
         "class": 0,
@@ -14042,7 +14042,7 @@ datas = _tools.RODict({
     }),
     30000528: _tools.RODict({
         "ID": 30000528,
-        "name": "绿色经脉材料随机宝箱",
+        "name": "优秀经脉宝箱",
         "type": 0,
         "subType": 3,
         "class": 0,
@@ -14092,7 +14092,7 @@ datas = _tools.RODict({
     }),
     30000529: _tools.RODict({
         "ID": 30000529,
-        "name": "蓝色经脉材料随机宝箱",
+        "name": "精良经脉宝箱",
         "type": 0,
         "subType": 3,
         "class": 0,
@@ -14142,7 +14142,7 @@ datas = _tools.RODict({
     }),
     30000530: _tools.RODict({
         "ID": 30000530,
-        "name": "紫色经脉材料随机宝箱",
+        "name": "史诗经脉宝箱",
         "type": 0,
         "subType": 3,
         "class": 0,
@@ -22792,7 +22792,7 @@ datas = _tools.RODict({
     }),
     30990121: _tools.RODict({
         "ID": 30990121,
-        "name": "藏金玄铁",
+        "name": "优秀青龙晶核",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -22842,7 +22842,7 @@ datas = _tools.RODict({
     }),
     30990122: _tools.RODict({
         "ID": 30990122,
-        "name": "手织布匹",
+        "name": "优秀白虎甲魄",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -22892,7 +22892,7 @@ datas = _tools.RODict({
     }),
     30990123: _tools.RODict({
         "ID": 30990123,
-        "name": "鬼工精石",
+        "name": "优秀玄武符盾",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -22942,7 +22942,7 @@ datas = _tools.RODict({
     }),
     30990124: _tools.RODict({
         "ID": 30990124,
-        "name": "空鸣翎羽",
+        "name": "优秀朱雀宝珠",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -22992,7 +22992,7 @@ datas = _tools.RODict({
     }),
     30990128: _tools.RODict({
         "ID": 30990128,
-        "name": "炽焰玄铁",
+        "name": "精良青龙晶核",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23042,7 +23042,7 @@ datas = _tools.RODict({
     }),
     30990129: _tools.RODict({
         "ID": 30990129,
-        "name": "云纺布匹",
+        "name": "精良白虎甲魄",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23092,7 +23092,7 @@ datas = _tools.RODict({
     }),
     30990130: _tools.RODict({
         "ID": 30990130,
-        "name": "琉光精石",
+        "name": "精良玄武符盾",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23142,7 +23142,7 @@ datas = _tools.RODict({
     }),
     30990131: _tools.RODict({
         "ID": 30990131,
-        "name": "青岚翎羽",
+        "name": "精良朱雀宝珠",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23192,7 +23192,7 @@ datas = _tools.RODict({
     }),
     30990135: _tools.RODict({
         "ID": 30990135,
-        "name": "霜纹玄铁",
+        "name": "史诗青龙晶核",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23242,7 +23242,7 @@ datas = _tools.RODict({
     }),
     30990136: _tools.RODict({
         "ID": 30990136,
-        "name": "鲛绡布匹",
+        "name": "史诗白虎甲魄",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23292,7 +23292,7 @@ datas = _tools.RODict({
     }),
     30990137: _tools.RODict({
         "ID": 30990137,
-        "name": "风雷精石",
+        "name": "史诗玄武符盾",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23342,7 +23342,7 @@ datas = _tools.RODict({
     }),
     30990138: _tools.RODict({
         "ID": 30990138,
-        "name": "千劫翎羽",
+        "name": "史诗朱雀宝珠",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23392,7 +23392,7 @@ datas = _tools.RODict({
     }),
     30990142: _tools.RODict({
         "ID": 30990142,
-        "name": "星陨玄铁",
+        "name": "传说青龙晶核",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23442,7 +23442,7 @@ datas = _tools.RODict({
     }),
     30990143: _tools.RODict({
         "ID": 30990143,
-        "name": "天丝布匹",
+        "name": "传说白虎甲魄",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23492,7 +23492,7 @@ datas = _tools.RODict({
     }),
     30990144: _tools.RODict({
         "ID": 30990144,
-        "name": "归墟精石",
+        "name": "传说玄武符盾",
         "type": 0,
         "subType": 6,
         "class": 0,
@@ -23542,7 +23542,7 @@ datas = _tools.RODict({
     }),
     30990145: _tools.RODict({
         "ID": 30990145,
-        "name": "涅槃翎羽",
+        "name": "传说朱雀宝珠",
         "type": 0,
         "subType": 6,
         "class": 0,

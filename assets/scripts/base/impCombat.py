@@ -153,9 +153,9 @@ class AvatarBuildsMixin(object):
         slotId = self.buildDic.getSlotId(_stateSkillId)
         if slotId is None:
             slotId = self.buildDic.getSlotId(_buildSkillId)
-        self.buildDic.changeSkillSlot(self, _stateSkillId, slotId, None)
+        self.buildDic.changeSkillSlot(self, _stateSkillId, slotId, None, True)
         if _buildSkillId != _stateSkillId:
-            self.buildDic.changeSkillSlot(self, _buildSkillId, slotId, None)
+            self.buildDic.changeSkillSlot(self, _buildSkillId, slotId, None, True)
 
         relatedSkills = SSD.datas.get(_buildSkillId, {}).get('conflictSkill') or ()
         skillIdList = [_buildSkillId] + list(relatedSkills)

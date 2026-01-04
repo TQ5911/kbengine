@@ -16,6 +16,7 @@ import gameclass
 import gametlog
 import dataUtils
 import itemFactory
+import gamedecorator
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import bagData_set as BGDSD
@@ -59,9 +60,11 @@ class IWarehouse(object):
         self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
         self.client.onUnlockWarehouseGrids(gameconst.BagOPStat.BAG_OP_STAT_OK, newCapacity)
 
+    @gamedecorator.checkGameconfigEnable('warehouse')
     def reqGetWarehouse(self, exposed):
         self.sendWarehouseData()
 
+    @gamedecorator.checkGameconfigEnable('warehouse')
     def reqUnlockWarehouse(self, exposed, gridNum):
         DEBUG_MSG('in reqUnlockWarehouse', gridNum)
         if gridNum <= 0:
@@ -73,6 +76,7 @@ class IWarehouse(object):
             self.client.onUnlockWarehouseGrids(gameconst.BagOPStat.BAG_OP_STAT_OK, newCapacity)
         return
 
+    @gamedecorator.checkGameconfigEnable('warehouse')
     def reqMoveItemToWarehouse(self, exposed, gridId, itemId, itemNum):
         DEBUG_MSG('in reqMoveItemToWarehouse:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
@@ -135,6 +139,7 @@ class IWarehouse(object):
         self.client.onWarehouseInItems(opStat, self.warehouse._getClientDataFromPlanDic(planDic))
         # self.makeWarehouseFlow(bagItem.itemId, bagItem.itemNum, bagItem.uniqueId, bagItem.bindType, 0, '')
 
+    @gamedecorator.checkGameconfigEnable('warehouse')
     def reqMoveItemToBag(self, exposed, gridId, itemId, itemNum):
         DEBUG_MSG('in reqMoveItemToBag:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
@@ -194,6 +199,7 @@ class IWarehouse(object):
         self.client.onWarehouseOutItems(opStat, gridId, itemNum)
         # self.makeWarehouseFlow(roomItem.itemId, roomItem.itemNum, roomItem.uniqueId, roomItem.bindType, 1, '')
 
+    @gamedecorator.checkGameconfigEnable('warehouse')
     def reqWarehouseSort(self, exposed):
         DEBUG_MSG('in reqWarehouseSort:')
         if self.warehouse.doBagSort(self):
@@ -226,6 +232,7 @@ class IWarehouse(object):
         tlogParams.update(self.getTLogCommonParams())
         gametlog.build(gameconst.GameLog.LOG_WAREHOUSE_FLOW, **tlogParams).init().commit()
 
+    @gamedecorator.checkGameconfigEnable('warehouse')
     def reqWarehouseLockItem(self, exposed, gridId, itemId, uniqueId, lockStatus):
         INFO_MSG('in reqWarehouseLockItem::', gridId, itemId, uniqueId, lockStatus)
         if not dataUtils.checkLockAvailableStatus(itemId):

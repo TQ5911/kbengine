@@ -1,13 +1,14 @@
 # -*- encoding:utf-8 -*-
 from KBEDebug import *
 import KBEngine
-
+import math
 import sMath
 import utils
 import gameconst
 import gameengine
 import gamedecorator
 from collections.abc import Iterable
+
 import itemData_itemData as IDID
 import message_Message_def as MMD
 import conflict_conflict_def as CCD
@@ -34,6 +35,8 @@ import random
 
 
 class IBag(object):
+
+    @gamedecorator.checkGameconfigEnable('bag')
     @gamedecorator.crossServer
     @utils.isMyself
     def reqUseItems(self, exposed, bagType, gridId, itemId, targetId, useNum, argsList):
@@ -393,7 +396,6 @@ class IBag(object):
             gameengine.getTeamStub(self.teamId).sendTeamMemberMessage(self.teamId,messageId,messageArgs)
 
 ################################## 采集 相关 ######################################
-
     @gamedecorator.crossServer
     @utils.isMyself
     @gamedecorator.limitcall(1)
@@ -406,6 +408,8 @@ class IBag(object):
         target = KBEngine.entities.get(targetId, None)
         if not (target and target.IsCollection):
             return False
+        
+        DEBUG_MSG('applyGather, createTime:', target.createTime)
         pickData = NPD.datas.get(target.collectionId, None)
         if not pickData:
             return False
@@ -444,7 +448,23 @@ class IBag(object):
             pickTime = pickTime * (1 - self.getProp('miningRate'))
         elif target.type == gameconst.CollectionType.ZHEN_QI:
             pickTime = pickTime * (1 - self.getProp('gatherRate'))
+        elif target.type == gameconst.CollectionType.DECAY_BOX:
+            # 计算衰减时间
+            elapsedTime = utils.getNow() - target.createTime
+            pickTimeDecay = NPCST.datas.get("pickTimeLessen", {}).get('value')
+            if pickTimeDecay:
+                lastDecayTime = 0
+                lastDecayRate = 0
+                for decayData in pickTimeDecay:
+                    decayTime, decayRate = decayData
+                    if elapsedTime > decayTime:
+                        if decayTime >= lastDecayTime:
+                            lastDecayTime = decayTime
+                            lastDecayRate = decayRate
+                if lastDecayRate > 0:
+                    pickTime = math.ceil(pickTime * lastDecayRate)
         pickTime = pickTime if pickTime > 0 else 0
+        DEBUG_MSG('_calPickTime', pickTime)
         return pickTime
 
     def _prepareApplyGather(self, targetId):
@@ -506,13 +526,14 @@ class IBag(object):
     @gamedecorator.crossServer
     @utils.isMyself
     def cancelGather(self, exposed):
+        INFO_MSG('cancelGather:')
         self.endApplyGather(gameconst.CancelGatherReason.Client)
 
     @gamedecorator.crossServer
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def applyFinishGather(self, exposed, targetId):
-        DEBUG_MSG('applyFinishGather:', targetId)
+        INFO_MSG('applyFinishGather:', targetId)
         target = KBEngine.entities.get(targetId)
         if not target:
             WARNING_MSG('applyFinishGather, no target:', targetId)

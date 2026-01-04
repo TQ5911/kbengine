@@ -1219,13 +1219,13 @@ datas = _tools.RODict({
         "TaskId": 86010068,
         "TaskGroup": 0,
         "TaskName": "5人讨伐",
-        "TaskDetailDesc": "17级 通过装备强化，让玩家有一些战力提升，可以去打讨伐\n引导玩家进行一次裂隙副本\n通过副本首通获得一些装备，让玩家战力进一步提升，可以完成之前比较难做的悬赏任务",
+        "TaskDetailDesc": "16级 引导玩家进行一次裂隙副本\n通过副本首通获得一些装备，让玩家战力进一步提升，可以完成之前比较难做的悬赏任务",
     }),
     86010070: _tools.RODict({
         "TaskId": 86010070,
         "TaskGroup": 0,
         "TaskName": "混沌回廊",
-        "TaskDetailDesc": "18级 引导玩家进行一次混沌回廊",
+        "TaskDetailDesc": "17级 引导玩家进行一次混沌回廊",
     }),
     86050035: _tools.RODict({
         "TaskId": 86050035,
@@ -1243,7 +1243,13 @@ datas = _tools.RODict({
         "TaskId": 86010069,
         "TaskGroup": 0,
         "TaskName": "交易所",
-        "TaskDetailDesc": "20级交易所",
+        "TaskDetailDesc": "21级交易所",
+    }),
+    86010075: _tools.RODict({
+        "TaskId": 86010075,
+        "TaskGroup": 0,
+        "TaskName": "成长的证明贰",
+        "TaskDetailDesc": "提升等级到25级",
     }),
     86010071: _tools.RODict({
         "TaskId": 86010071,
@@ -1314,7 +1320,7 @@ datas = _tools.RODict({
     86010054: _tools.RODict({
         "TaskId": 86010054,
         "TaskGroup": 0,
-        "TaskName": "成长的证明贰",
+        "TaskName": "成长的证明叁",
         "TaskDetailDesc": "提升等级到35级",
     }),
     86010057: _tools.RODict({

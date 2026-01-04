@@ -380,15 +380,23 @@ def getCommItemBagType(itemId):
         return gameconst.BagType.BAG_TYPE_LINGSHOU_PEN
     return
 
+def getPetEquipDefaultStatus():
+    return 0
+
 def createPetInfo(petId):
+    petEquipStatus = getPetEquipDefaultStatus()
+    gearNum = getPetGearNum(petId)
+    lingShouDict = {
+        'petId': petId,
+        'equipList': [petEquipStatus] * gearNum,
+    }
+    return lingShouDict
+
+def getPetGearNum(petId):
     cfgData = PDPD.datas.get(petId)
     grade = cfgData.get('petRank', 0)
     gearNum = PDRK.datas.get(grade, {}).get('gearNum', 0)
-    lingShouDict = {
-        'petId': petId,
-        'equipList': [0] * gearNum,
-    }
-    return lingShouDict
+    return gearNum
 
 def isRing(mType, sType):
     return mType == gameconst.EquipTypes.MAIN_TYPE_RING and sType in gameconst.EquipTypes.SUBTYPE_ORNAMENTS_RING

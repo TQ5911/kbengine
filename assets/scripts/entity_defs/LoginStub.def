@@ -76,6 +76,11 @@
             <Arg>      UINT32     </Arg>
         </updateCharacterInfo>
 
+        <deleteCharacter>
+            <Arg>      PLAYER_GBID      </Arg>
+            <Arg>      UINT32           </Arg>
+        </deleteCharacter>
+
         <notifyCentralServerCreateAvatar>
             <Arg>      PYTHON     </Arg>
             <Arg>      UINT32     </Arg>

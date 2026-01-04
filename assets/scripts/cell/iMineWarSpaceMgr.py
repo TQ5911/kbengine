@@ -21,6 +21,7 @@ import mailAssistor
 import gameclass
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import gamedecorator
+import guildWarEquipment_warEquipmentUpgrate as GWED
 
 mineWarQiXieLevel = {
     gameconst.MineWarMonsterCustomId.MINE_CORE: 6,
@@ -175,28 +176,27 @@ class IMineWarSpaceMgr(object):
         self.resetHpByLevel(coreEnt)
         coreEnt.hp = coreEnt.fullHp // 2
         INFO_MSG('resetCoreHp set core hp', self.spaceNo, self.junXuQiXieLevel, coreEnt.level, coreEnt.hp, coreEnt.fullHp)
-
-
-    def getMineWarMonsterLevel(self, ent):
-        lv = 1
-        customId, gid = utils.getCustomIdAndGid(self.spaceNo, ent.gameEntityId)    
-        if customId is None or customId == '':
-            return lv
-        
-        tp = mineWarQiXieLevel[customId]
-        return self.junXuQiXieLevel.get(tp, 1)
     
+    def getMineWarMonsterPropId(self, ent):
+        customId, gid = utils.getCustomIdAndGid(self.spaceNo, ent.gameEntityId)
+        if customId:    
+            tp = mineWarQiXieLevel[customId]
+            newLevel = self.junXuQiXieLevel.get(tp, 1)
+            dataId = GWED.typeLevelDic[tp].get(newLevel)
+            if dataId:
+                return GWED.datas[dataId].get('prop', None)
+        return None
+
     def resetHpByLevel(self, ent):
-        newLevel = self.getMineWarMonsterLevel(ent)
-        INFO_MSG('resetHpByLevel get monster level', self.spaceNo, ent.id, ent.gameEntityId, ent.level, newLevel)
-        if ent.level == newLevel:
-            return
-        ent.level = newLevel
+        propId = self.getMineWarMonsterPropId(ent)
+        INFO_MSG('resetHpByLevel get monster prop', self.spaceNo, ent.id, ent.gameEntityId, propId)
+
+        ent.junxuPropId = propId
         hpPercent = ent.hp / ent.fullHp if ent.fullHp else 1
         mpPercent = ent.mp / ent.fullMp if ent.fullMp else 1
         ent.initBaseProperties()
         ent.initCombatProps(hpPercent, mpPercent)
-        INFO_MSG('resetHpByLevel set monster level', self.spaceNo, ent.id, ent.gameEntityId, ent.level, ent.hp, ent.fullHp)
+        INFO_MSG('resetHpByLevel set monster prop', self.spaceNo, ent.id, ent.gameEntityId, ent.hp, ent.fullHp)
     
     def onSyncMineWarGuildInfo(self, guildId, guildName, guildIcon, guildDspFlag, guildDesc, res):
         if self.mineWarGuildId != guildId:
@@ -260,6 +260,10 @@ class IMineWarSpaceMgr(object):
         
         # 矿战期间不用创建旗帜
         if self.mineWarState != gameconst.MINE_WAR_STATE.END:
+            return
+        # 无归属时不用创建旗帜
+        if self.mineWarGuildId <= 0:
+            # INFO_MSG('rebuildFlag: not guild, cannot rebuild flag')
             return
         
         # 新建旗帜
@@ -495,15 +499,23 @@ class IMineWarSpaceMgr(object):
             self.flagGameEntityId = monsterBox.gameEntityId
             INFO_MSG('addMineWarMonsterOnInit set flag pos', self.spaceNo, self.flagMonsterId, self.flagPos, self.flagDir, self.flagGameEntityId, monsterBox.id)
             
-            # 无归属时，旗帜加无敌buff
+            # 无归属时，删除旗帜，延迟一点
             if self.mineWarGuildId == 0:
-                monsterBox.addBuff(gameconst.INVINCIBLE_BUFF_ID, 1, monsterBox.id)
+                self._callback(1, 'flagBoxDestroy', (), gametimer.TIMER_TAG_ON_MINE_WAR_LOGIN)
+                return
             
             # 同步旗帜血量
-            self.syncMineWarFlagHpToStub()
+            # self.syncMineWarFlagHpToStub()
+            self._callback(1, 'syncMineWarFlagHpToStub', (), gametimer.TIMER_TAG_ON_MINE_WAR_LOGIN)
         
         # 怪物一直都是守方
         monsterBox.mineWarCamp = gameconst.MINE_WAR_CAMP.CAMP_DEFEND
+
+    def flagBoxDestroy(self):
+        """旗帜实体销毁回调"""
+        INFO_MSG('flagBoxDestroy', self.spaceNo)
+        flagBox = self.mineWarMonsters.pop(gameconst.MineWarMonsterType.MINE_FLAG, None)
+        flagBox and flagBox.safeDestroy()
         
     def removeMineWarMonsterWhenDie(self, monsterType):
         """移除矿战怪物"""

@@ -329,7 +329,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "petRank": 4,
         "prop": _tools.ROList([['adjFatal', 3]]),
-        "skill": (87020037, 87020038, 87020047),
+        "skill": (87020037, 87020038, 87020047, 87020047),
         "score": 150,
         "beRolled": 1,
         "randomWeight": 10,

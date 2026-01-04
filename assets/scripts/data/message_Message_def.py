@@ -745,6 +745,7 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     monthCardDaily = 54001994
     rewardCube = 54001995
     rewardWonderland = 54001996
+    rewardClaimResolve = 54001997
     antiAddictAgeReminder = 54002000
     antiAddictPermittedTime = 54002001
     antiAddictForbiddenTime = 54002002

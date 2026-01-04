@@ -19,6 +19,7 @@ import dataUtils
 import effectEventCtx
 import dataUtils
 import gamedecorator
+import LogTrackingMgr
 
 import character_charData as CHD
 import const_const as CONST
@@ -40,6 +41,7 @@ import PKData_PKData as PKD
 import skill_skill as SSD
 import creep_base as CBD
 import guild_guildConst as G_GCD
+import wonderLand_floor as WL_FD
 
 
 class AvatarBuildsMixin(object):
@@ -328,6 +330,17 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         self.base.triggerAchievement(gameconst.AchieveType.DEAD_TIMES)
 
+        if formula.isWonderLandSpace(self.spaceNo):
+            _mapId = formula.getMapId(self.spaceNo)
+            _killerGbId = host.gbId if _hostIsAvatar else 0
+            LogTrackingMgr.LogTrackingMgr.Common_Death(
+                self.gbId,
+                gameconfig.gameId(),
+                _mapId,
+                _killerGbId,
+                killer.__class__.__name__ if killer else '',
+            )
+
     def onKillAvatar(self, deadAvatar):
         if self.IsAvatar:
             self.client.onKillAvatar(deadAvatar.name)
@@ -376,12 +389,18 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
     def clientSetState(self, exposed, state):
+        DEBUG_MSG('clientSetState 1', state)
         if state < 0:
             return
 
         if state not in (gameconst.State.Idle, gameconst.State.Moving, gameconst.State.Fall, gameconst.State.Sprinting):
             return
-
+        
+        # 疾跑开关
+        if state == gameconst.State.Sprinting:
+            if not gameconfig.visibleConfigEable('skill'):
+                return
+        
         if self.hasState(CSDD.datas.serverControl):
             if state != gameconst.State.Sprinting:
                 ERROR_MSG('clientSetState but in server control')
@@ -390,20 +409,21 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if state == gameconst.State.Idle and not self.hasState(gameconst.State.Moving):
             return
 
-        DEBUG_MSG('clientSetState', state)
+        DEBUG_MSG('clientSetState 2', state)
         self.setState(state, reportErr=False)
         self.setTempMiscProp(gameconst.AvatarProps.AvatarActiveTimestamp, utils.getNow())
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
     def clientRemoveState(self, exposed, state):
+        DEBUG_MSG('clientRemoveState 1', state)
         if not self.hasState(state):
             return
 
         if state not in (gameconst.State.Moving, gameconst.State.Fall, gameconst.State.speedFall, gameconst.State.Sprinting):
             return
 
-        DEBUG_MSG('clientRemoveState', state)
+        DEBUG_MSG('clientRemoveState 2', state)
         self.removeState(state)
 
     @utils.isMyself
@@ -857,6 +877,30 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     @utils.isMyself
     def useTargetSkill(self, exposed, skillID, targetID, arr, compensateTime):
+        characterData = CHD.datas[self.school]
+        # 翻滚开关
+        if characterData['dodgeSkillID'] == skillID:
+            if not gameconfig.visibleConfigEable('skill'):
+                return
+
+        buildSkills = characterData['build']
+        #普攻开关
+        if buildSkills[0] == skillID:
+            if not gameconfig.visibleConfigEable('skill'):
+                return
+            
+        # 大招或者基础技能
+        if skillID == characterData['ult'] or skillID in buildSkills[1:]:
+            if self.school == gameconst.CharacterType.Taoist:
+                if not gameconfig.visibleConfigEable('skillTaoist'):
+                    return
+            elif self.school == gameconst.CharacterType.Mage:
+                if not gameconfig.visibleConfigEable('skillMage'):
+                    return
+            elif self.school == gameconst.CharacterType.Warrior:
+                if not gameconfig.visibleConfigEable('skillWarrior'):
+                    return
+                
         INFO_MSG("skill useTargetSkill", skillID, targetID, arr, compensateTime)
         self.setTempMiscProp(gameconst.AvatarProps.AvatarActiveTimestamp, utils.getNow())
         self.doUseTargetSkill(skillID, targetID, arr, compensateTime, True)
@@ -1199,17 +1243,27 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
     def jump(self, exposed, jumpType):
+        DEBUG_MSG('jump', jumpType)
         if jumpType == gameconst.JumpType.FIRST_JUMP:
+            # 一跳开关
+            if not gameconfig.visibleConfigEable('skill'):
+                return
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Jump)):
                 self.setState(gameconst.State.Jump)
             else:
                 ERROR_MSG('jumpType error:', jumpType)
         elif jumpType == gameconst.JumpType.DOUBLE_JUMP:
+            # 二跳开关
+            if not gameconfig.visibleConfigEable('skill'):
+                return
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.doubleJump)):
                 self.setState(gameconst.State.doubleJump)
             else:
                 ERROR_MSG('jumpType error:', jumpType)
         elif jumpType == gameconst.JumpType.FLYING:
+            # 飞行开关
+            if not gameconfig.visibleConfigEable('skill'):
+                return
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Flying)):
                 self.topSpeed = gameconst.TopSpeedType.FlyingTopSpeed
                 self.setState(gameconst.State.Flying)
@@ -1285,15 +1339,15 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         ultimatePowerMax = CONST.datas['ultimatePowerMax'].get('value')
         # 技能那边调过来的，带着上下文数据
-        if context and hasattr(context, 'skillId'):
-            host = self.getAvatar()
-            if host:
-                ret, datas = host.getInscriptionEffects(context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE)
-                if ret:
-                    if len(datas) == 1:
-                        extraAddValue = datas[0]
-                        addVal += extraAddValue
-                        DEBUG_MSG("in addUltraSkillPower, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE, datas)
+        host = self.getAvatar()
+        if host:
+            sourceSkillId = host.getSourceSkillId(context)
+            ret, datas = host.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE)
+            if ret:
+                if len(datas) == 1:
+                    extraAddValue = datas[0]
+                    addVal += extraAddValue
+                    DEBUG_MSG("in addUltraSkillPower, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_CHARGE_INCREASE_VALUE, datas)
         self.ultraSkillPower = min(ultimatePowerMax, self.ultraSkillPower + addVal)
 
     def isUltraSkillPowerMax(self):
@@ -1324,7 +1378,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def setSummonSlotIdx(self, slotIdx):
         INFO_MSG('cell setSummonSlotIdx set', slotIdx, self.summonSlotIdx)
-        if self.hasState(gameconst.State.Fighting):
+        if slotIdx and self.hasState(gameconst.State.Fighting):
             WARNING_MSG('cell setSummonSlotIdx in Fighting')
             self.showMsg(CONST.datas['SummonChangeTips']['value'], [])
             return
@@ -1345,6 +1399,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             slotIdx = self.summonSlotIdx
         return SRSU.datas[slotIdx].get('summonId', 0)
 
+    @gamedecorator.checkGameconfigEnable('skillUpgrade')
     def levelUpSkill(self, exposed, skillId, levelDelta):
         INFO_MSG('levelUpSkill 1', skillId, levelDelta)
         newSkillId, oldSkillId = self.glyphEquipData.getInscriptionSrcSkillId(skillId)

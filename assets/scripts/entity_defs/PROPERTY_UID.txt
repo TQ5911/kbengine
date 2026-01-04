@@ -300,6 +300,7 @@ Avatar cubeUseCoinTimes 423
 Avatar cubeUseItemTimes 424
 Avatar curReliveCD 419
 Avatar currStatisticSpaceNo 32189
+Avatar currencyRecordDic 32233
 Avatar cycleEventCheckTimerId 30398
 Avatar dailyAwardDic 30387
 Avatar dailyChaseExpFactorUpdateTime 30032
@@ -668,6 +669,7 @@ Barrier birthInDB 31456
 Barrier birthInMem 31438
 Barrier bodySize 31467
 Barrier cellFlags 31576
+Barrier createTime 32237
 Barrier datetimeTimerDataCell 31449
 Barrier datetimeTimerDataNextTCell 31451
 Barrier datetimeTimerDataTimeCacheCell 31450
@@ -731,6 +733,7 @@ CityBattleTeleporter CBTimes 230
 CityBattleTeleporter baseGlobalIdx 31765
 CityBattleTeleporter birthInMem 31760
 CityBattleTeleporter cellFlags 31578
+CityBattleTeleporter createTime 32239
 CityBattleTeleporter datetimeTimerDataCell 31781
 CityBattleTeleporter datetimeTimerDataNextTCell 31783
 CityBattleTeleporter datetimeTimerDataTimeCacheCell 31782
@@ -762,6 +765,7 @@ Collection bornState 442
 Collection canGather 47
 Collection cellFlags 31619
 Collection collectionId 46
+Collection createTime 32242
 Collection datetimeTimerDataCell 30216
 Collection datetimeTimerDataNextTCell 30218
 Collection datetimeTimerDataTimeCacheCell 30217
@@ -804,6 +808,7 @@ Collection type 45
 CoreAreaFlag baseGlobalIdx 31736
 CoreAreaFlag birthInMem 31731
 CoreAreaFlag cellFlags 31579
+CoreAreaFlag createTime 32240
 CoreAreaFlag datetimeTimerDataCell 31913
 CoreAreaFlag datetimeTimerDataNextTCell 31915
 CoreAreaFlag datetimeTimerDataTimeCacheCell 31914
@@ -953,6 +958,7 @@ Creation cellFlags 31620
 Creation checkTargetTypeTimeId 31181
 Creation cloneList 31162
 Creation controlledStates 31175
+Creation createTime 32243
 Creation creationId 277
 Creation creationList 31163
 Creation curAreaLoopNum 31134
@@ -1609,6 +1615,7 @@ Monster cloneList 30672
 Monster combatAreaID 31712
 Monster combatRefreshID 30349
 Monster controlledStates 30696
+Monster createTime 32235
 Monster creationList 30673
 Monster datetimeTimerDataCell 30580
 Monster datetimeTimerDataNextTCell 30582
@@ -1761,6 +1768,7 @@ MonsterGrp baseGlobalIdx 30424
 MonsterGrp birthInDB 30533
 MonsterGrp birthInMem 30419
 MonsterGrp cellFlags 31568
+MonsterGrp createTime 32234
 MonsterGrp datetimeTimerDataBase 30612
 MonsterGrp datetimeTimerDataCell 30680
 MonsterGrp datetimeTimerDataNextTBase 30676
@@ -1933,6 +1941,7 @@ Npc cellFlags 31618
 Npc checkTargetTypeTimeId 30557
 Npc cloneList 30527
 Npc controlledStates 30551
+Npc createTime 32241
 Npc creationList 30528
 Npc danceTime 38
 Npc datetimeTimerDataCell 30183
@@ -2129,6 +2138,7 @@ RebornPos baseGlobalIdx 32017
 RebornPos birthInDB 32030
 RebornPos birthInMem 31928
 RebornPos cellFlags 31626
+RebornPos createTime 32244
 RebornPos datetimeTimerDataCell 32023
 RebornPos datetimeTimerDataNextTCell 32025
 RebornPos datetimeTimerDataTimeCacheCell 32024
@@ -2459,6 +2469,7 @@ Summon cellFlags 31571
 Summon checkTargetTypeTimeId 31025
 Summon cloneList 30789
 Summon controlledStates 31019
+Summon createTime 32236
 Summon creationList 30790
 Summon datetimeTimerDataCell 31093
 Summon datetimeTimerDataNextTCell 31095
@@ -2629,6 +2640,7 @@ Teleporter baseGlobalIdx 30487
 Teleporter birthInDB 30495
 Teleporter birthInMem 30482
 Teleporter cellFlags 31577
+Teleporter createTime 32238
 Teleporter datetimeTimerDataCell 30507
 Teleporter datetimeTimerDataNextTCell 30517
 Teleporter datetimeTimerDataTimeCacheCell 30516

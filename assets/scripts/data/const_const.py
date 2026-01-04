@@ -891,6 +891,10 @@ datas = _tools.RODict({
         "ID": "dpsUpdateCD",
         "value": 3,
     }),
+    "dpsMyRank": _tools.RODict({
+        "ID": "dpsMyRank",
+        "value": "第{0}名 {1}",
+    }),
     "dialogbuttonleave": _tools.RODict({
         "ID": "dialogbuttonleave",
         "value": 15.0,
@@ -1061,7 +1065,7 @@ datas = _tools.RODict({
     }),
     "agreementContent": _tools.RODict({
         "ID": "agreementContent",
-        "value": "我已详细阅读并同意<link url label=《用户协议》 url=http://192.168.10.123:3006/#/mobile/privacy?index=0>、<link url label=《隐私政策》 url=http://192.168.10.123:3006/#/mobile/privacy?index=1>和<link url label=《儿童隐私保护政策》 url=http://192.168.10.123:3006/#/mobile/privacy?index=2>。",
+        "value": "我已详细阅读并同意<link url label=《用户协议》 url=https://api.yunxingu.com/mobile/index.html/#/privacy?index=0>、<link url label=《隐私政策》 url=https://api.yunxingu.com/mobile/index.html/#/privacy?index=1>和<link url label=《儿童隐私保护政策》 url=https://api.yunxingu.com/mobile/index.html/#/privacy?index=2>。",
     }),
     "mapHelpInfo": _tools.RODict({
         "ID": "mapHelpInfo",
@@ -1082,9 +1086,5 @@ datas = _tools.RODict({
     "loginVideoFilePath_Mobile": _tools.RODict({
         "ID": "loginVideoFilePath_Mobile",
         "value": "login_video_mobile.mp4",
-    }),
-    "bankForbiddenList": _tools.RODict({
-        "ID": "bankForbiddenList",
-        "value": (30010022, 30010023, 30010024),
     })
 })

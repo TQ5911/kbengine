@@ -138,7 +138,7 @@ class ICubeBase(object):
 
         _src = AAC_AACDD.datas.BONUS_SRC_CUBE_ROOM_ADD_TIMES
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail
+        _detail = gameclass.AwardDetail(cubeTimes=num)
         self.deductWealth(_src, _award, _opUUID, _detail)
         if itemId == gameconst.CUBE_COIN_ITEM_ID:
             self.cubeUseCoinTimes += num

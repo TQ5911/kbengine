@@ -3,8 +3,10 @@
 
 import userType
 import utils
+import gameconfig
 import achievement_details as A_DD
 import gameconst
+import LogTrackingMgr
 
 
 # 等级成就
@@ -128,6 +130,17 @@ class AchievementValVal(userType.UserSoleType):
         _oldStep = self.step
         if self.checkCouldChangeFinishedState(avatar, achieveData, ctx):
             self.flag = utils.bitSet(self.flag, gameconst.AchievementFlag.FINISHED)
+
+        if _oldStep != self.step or self.isFinished():
+            LogTrackingMgr.LogTrackingMgr.Achievement_Update(
+                avatar.accountEntity.accountName,
+                avatar.gbID,
+                gameconfig.gameId(),
+                self.achieveId,
+                avatar.achievementInfo.maxVersion,
+                self.isFinished(),
+                self.step,
+            )
 
         return self.step > _oldStep
 

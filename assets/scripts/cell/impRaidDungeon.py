@@ -134,14 +134,15 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
         del self.raidInfo.raidDungeonRecords[dungeonNo]
 
+    @gamedecorator.checkGameconfigEnable('raidDungeon')
     @utils.isMyself
     @gamedecorator.limitcall(3, msgId=MMD.datas.dungeonRefused)
-    def enterGuildChallengeDungeon(self, exposed, dungeonNo, isHero):
-        INFO_MSG("enterGuildChallengeDungeon::~", dungeonNo, isHero)
+    def enterRaidChallengeDungeon(self, exposed, dungeonNo, isHero):
+        INFO_MSG("enterRaidChallengeDungeon::~", dungeonNo, isHero)
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
-        self._enterGuildChallengeDungeon(dungeonNo, isHero, src=src)
+        self._enterRaidChallengeDungeon(dungeonNo, isHero, src=src)
 
-    def _enterGuildChallengeDungeon(self, dungeonNo, isHero, src=None):
+    def _enterRaidChallengeDungeon(self, dungeonNo, isHero, src=None):
         src = src or dungeonSrc.BasicDungeonSrc()
         dunPlayMode = dungeonPlayMode.GuildChallengePlayMode(isHero)
         self._enterRaidDungeon(dungeonNo, src, {
@@ -476,6 +477,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         # gamelog.raidDungeonLogger.enterDungeonSucc(
         #     extra.get('dungeonPlayMode'), self.gbId, src.srcId, dungeonNo=dungeonNo)
 
+    @gamedecorator.checkGameconfigEnable('raidDungeon')
     @utils.isMyself
     @gamedecorator.limitcall(3)
     def leaveRaidDungeon(self, exposed):

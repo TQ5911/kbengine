@@ -7,10 +7,14 @@ import dataUtils
 import gameglobal
 import CommEventAction
 import gameconst
+import gameconfig
 import gameengine
 import gametimer
 import actionContext
 import formula
+import gamedecorator
+import LogTrackingMgr
+
 import taskGetItems as TID
 import taskCollect as TCD
 import taskLeaveDungeon as TLDD
@@ -231,6 +235,7 @@ class ImpTask(TaskProgress, TaskEvent):
                 tgt.srcRatio = int(100 * srcRatio)
                 tgt.state = 0
 
+    @gamedecorator.checkGameconfigEnable('task')
     def reqSubmitTask(self, exposed, taskIds):
         # 提交任务
         popRewardUUID = KBEngine.genUUID64()
@@ -245,6 +250,7 @@ class ImpTask(TaskProgress, TaskEvent):
             DEBUG_MSG('in reqSubmitTask2:', popRewardUUID, taskIdsInfo)
         return
 
+    @gamedecorator.checkGameconfigEnable('task')
     def reqDeductTaskTargetItems(self, exposed, taskId):
         DEBUG_MSG('in reqDeductTaskTargetItems:', taskId)
         if self.taskInfo.deductTaskTgtItems(self, taskId):
@@ -253,6 +259,7 @@ class ImpTask(TaskProgress, TaskEvent):
     def initNoviceHookRewardTask(self):
         self.taskInfo.initNoviceHookRewardTask()
 
+    @gamedecorator.checkGameconfigEnable('task')
     def reqQuitTask(self, exposed, taskId):
         DEBUG_MSG('in reqQuitTask:', taskId)
         if not self.taskInfo.canQuitTaskManual(taskId):
@@ -385,6 +392,7 @@ class ImpTask(TaskProgress, TaskEvent):
         if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
             WARNING_MSG('rem task items err:', rmTaskItemDic)
 
+    @gamedecorator.checkGameconfigEnable('task')
     def reqDropTaskItem(self, exposed, gridId, itemId):
         gridObj = self.taskBagData.getItemObjByGridId(gridId)
         if not gridObj or gridObj.itemId != itemId:
@@ -406,9 +414,6 @@ class ImpTask(TaskProgress, TaskEvent):
         if not task:
             return
 
-        roleInfo = gameglobal.roleCache.get(self.id)
-        if not roleInfo:
-            return
         taskType = "unkown"
         if task.taskType == gameconst.TaskType.TASK_TYPE_MAINLINE:
             taskType = "mainline"
@@ -417,32 +422,24 @@ class ImpTask(TaskProgress, TaskEvent):
         else:
             taskType = "subline"
 
-        logDataDic = {}
+        _state = 0
         if logName == "TaskClaim":
-            logDataDic = {
-                "role_id": self.gbID,
-                "role_name": self.getRoleCacheAttr('name', ''),
-                "op_nuid": opUUID if opUUID else 0,
-                "taskIds": taskId,
-                "claim_source": claimSrc if claimSrc else taskType,
-            }
+            _state = gameconst.TASK_EVENT_CLAIM
         elif logName == "TaskSubmit":
-            logDataDic = {
-                "role_id": self.gbID,
-                "role_name": self.getRoleCacheAttr('name', ''),
-                "op_nuid": opUUID if opUUID else 0,
-                "taskIds": taskId,
-                "claim_source": taskType,
-            }
+            _state = gameconst.TASK_EVENT_SUBMIT
         elif logName == "TaskQuit":
-            logDataDic = {
-                "role_id": self.gbID,
-                "role_name": self.getRoleCacheAttr('name', ''),
-                "op_nuid": opUUID if opUUID else 0,
-                "taskIds": taskId,
-                "reason": reason
-            }
-        gamelog.makeWLog(logName, logDataDic)
+            _state = gameconst.TASK_EVENT_QUIT
+
+        LogTrackingMgr.LogTrackingMgr.Task_Event(
+            self.gbID,
+            gameconfig.gameId(),
+            opUUID if opUUID else 0,
+            taskId,
+            _state,
+            taskType,
+            claimSrc if claimSrc else taskType,
+            reason,
+        )
 
     # 自动领取任务
     def triggerAutoClaimTask(self, taskList):
@@ -483,6 +480,7 @@ class ImpTask(TaskProgress, TaskEvent):
             self.taskInfo.doTaskLeaveDungeon(self, taskId)
         self.sendUpdateTasksToClient()
     # ------------------- 其他更新任务进度或状态的接口 -------------------------------------------------
+    @gamedecorator.checkGameconfigEnable('task')
     def reqCompleteTaskNoTarget(self, exposed, taskId):
         DEBUG_MSG('in reqCompleteTaskNoTarget:', taskId)
         self.doCompleteTaskNoTarget(taskId)
@@ -491,6 +489,7 @@ class ImpTask(TaskProgress, TaskEvent):
         self.taskInfo.completeTaskNoTarget(self, taskId)
         return
 
+    @gamedecorator.checkGameconfigEnable('task')
     def reqTaskCompleteTarget(self, exposed, taskId, tgtType, tgtId):
         # 客户端检测的任务目标完成接口；目前有两种任务目标：完成一个行为(目前只有使用技能行为)目标 和 完成播放剧情任务目标
         # 完成播放剧情任务目标 已经废弃
@@ -651,6 +650,7 @@ class ImpTask(TaskProgress, TaskEvent):
         if taskCtx.claimSrc == gameconst.ClaimTaskSrc.REWARD_TASK:
             self.taskInfo.removeRewardTaskCache(taskId)
 
+    @gamedecorator.checkGameconfigEnable('task')
     def reqEnterTaskTargetDungeon(self, exposed, taskId, dungeonNo):
         DEBUG_MSG('reqEnterTaskTargetDungeon:', taskId, dungeonNo)
         if self.taskInfo.isTaskTryingEnterDungeon(dungeonNo):
@@ -764,9 +764,10 @@ class ImpTask(TaskProgress, TaskEvent):
         return True, [(taskId, 1)]
 
     def afterTaskSubmitted(self, opUUID, taskId):
-        #self.taskFlowLog(taskId, "TaskSubmit", opUUID=opUUID)
+        self.taskFlowLog(taskId, "TaskSubmit", opUUID=opUUID)
         return True, [(taskId, 1)]
 
+    @gamedecorator.checkGameconfigEnable('task')
     def reqTaskEnterSpace(self, exposed, taskId):
         DEBUG_MSG('reqTaskEnterSpace:', taskId)
         task = self.taskInfo.getTask(taskId)

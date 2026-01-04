@@ -18,14 +18,14 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "channelDefaultSet": 1,
-        "channelCD": 1,
+        "channelCD": 0,
         "channelMinLevel": 1,
     }),
     2: _tools.RODict({
         "ID": 2,
         "channelDefaultSet": 1,
-        "channelCD": 1,
-        "channelMinLevel": 1,
+        "channelCD": 30,
+        "channelMinLevel": 20,
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -37,36 +37,36 @@ datas = _tools.RODict({
         "ID": 4,
         "channelDefaultSet": 1,
         "channelCD": 1,
-        "channelMinLevel": 1,
+        "channelMinLevel": 15,
     }),
     5: _tools.RODict({
         "ID": 5,
         "channelDefaultSet": 1,
-        "channelCD": 1,
+        "channelCD": 5,
         "channelMinLevel": 1,
     }),
     6: _tools.RODict({
         "ID": 6,
         "channelDefaultSet": 0,
-        "channelCD": 1,
-        "channelMinLevel": 1,
+        "channelCD": 3,
+        "channelMinLevel": 10,
     }),
     7: _tools.RODict({
         "ID": 7,
         "channelDefaultSet": 1,
         "channelCD": 1,
-        "channelMinLevel": 1,
+        "channelMinLevel": 15,
     }),
     8: _tools.RODict({
         "ID": 8,
         "channelDefaultSet": 1,
-        "channelCD": 1,
-        "channelMinLevel": 1,
+        "channelCD": 15,
+        "channelMinLevel": 15,
     }),
     9: _tools.RODict({
         "ID": 9,
         "channelDefaultSet": 1,
-        "channelCD": 1,
+        "channelCD": 5,
         "channelMinLevel": 1,
     })
 })

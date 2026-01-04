@@ -89,7 +89,7 @@ datas = _tools.RODict({
     }),
     "mineBattle_rewardParticipation": _tools.RODict({
         "ID": "mineBattle_rewardParticipation",
-        "value": 30000543,
+        "value": 30000542,
     }),
     "mineBattle_miningPersonalDuration": _tools.RODict({
         "ID": "mineBattle_miningPersonalDuration",

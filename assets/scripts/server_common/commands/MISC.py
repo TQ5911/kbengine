@@ -197,6 +197,8 @@ def AllsetskillLV(su, player, level):
         skill_id_list = []
         skill_lv_list = []
         for skill_id, skill_lv in skill_dict.items():
+            if skill_id not in self.buildDic.activeSkills:
+                continue
             skill_id_list.append(skill_id)
             skill_lv_list.append(skill_lv)
             self.cell.onChangeSkillLv(skill_id, skill_lv)
@@ -1961,7 +1963,6 @@ def getServertime(su,player):
     dateObject = datetime.datetime.fromtimestamp(timestamp)
     format = "%Y.%m.%d-%H.%M.%S"
     timeStr = dateObject.strftime(format)
-    player.sendWorldChatMsg(timeStr)
     su.onCommandResult(0, timeStr, {})
     return True, '%s' % timeStr
 

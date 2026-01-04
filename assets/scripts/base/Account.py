@@ -71,7 +71,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         devicePlatId = clientData.get('devicePlatId', 0)
         channelId = clientData.get('channelId', 0)
-        self.userInfoId = clientData.get('accountId', '')
+        self.userInfoId = clientData.get('userId', '')
         self.otherData = clientData.get('otherData', {})
         self.udid = clientData.get('deviceUniqueIdentifier', '')
         self.devicePlatId = devicePlatId
@@ -505,6 +505,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         _cVal = self.characters.removeCharacter(gbId)
         if _cVal:
             gamesql.removeCharaterFromDB(_cVal.selfDbId, None)
+            # 通知中心服务器删除角色
+            if gameconfig.enableCentralLogin():
+                stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
+                gameclass.DuplicatedCallList(stubs).deleteCharacter(gbId, self.centralServerId)
         self.client.onRemoveAvatar(gbId)
 
     @gamedecorator.limitcall(1)
@@ -786,7 +790,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.devicePlatId,
             self.clientIP,
             self.operatingSystem,
-            self.accountType
+            self.accountType,
+            self.channelId,
         )
 
     def cancelDeleteFlag(self):
@@ -1340,7 +1345,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             avatar.getRoleCacheAttr('level'),
             gameconfig.gameId(),
             self.userInfoId,
-            avatar.birthInDB
+            avatar.birthInDB,
+            self.accountType,
+            self.channelId,
         )
 
 # ---------------------------- switch avatar server start ----------------------------

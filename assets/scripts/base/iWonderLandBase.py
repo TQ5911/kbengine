@@ -103,7 +103,7 @@ class IWonderLandBase(object):
 
         _src = AAC_AACDD.datas.BONUS_SRC_ADD_WONDER_LAND_TIMES
         _opUUID = KBEngine.genUUID64()
-        _detail = gameclass.AwardDetail
+        _detail = gameclass.AwardDetail()
         self.deductWealth(_src, _award, _opUUID, _detail)
 
         if isAddDuration:

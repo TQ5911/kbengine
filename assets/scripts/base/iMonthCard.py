@@ -21,6 +21,7 @@ import const_const as CC
 import mailAssistor
 import itemData_set as IDSD
 import redisUtils
+import LogTrackingMgr
 
 class IMonthCard(object):
     def __init__(self):
@@ -71,6 +72,12 @@ class IMonthCard(object):
         self.checkMonthCardAward()
         self.updateRedisVIPFlag()
 
+        LogTrackingMgr.LogTrackingMgr.MonthCard_Invoke(
+            self.gbID,
+            self.getAvatarLevel(),
+            utils.getNow(),
+            self.monthCardExpireTime
+        )
         return True
     
 
@@ -167,8 +174,16 @@ class IMonthCard(object):
     def _doAddIdleIncome(self, minutes):
         INFO_MSG("_doAddIdleIncome", "minutes", minutes)
         income = self._calcIdleIncome(minutes)
+        
+        _opUUID = KBEngine.genUUID64()
+        _detail = gameclass.AwardDetail()
         _src = AAC_AACDD.datas.BONUS_SRC_HANG_UP_INCOME
-        self.cell.addExpByMonthCard(income, KBEngine.genUUID64(), _src, "")
+        _awardVal = dropAward.AwardVal()
+
+        _awardVal.addWealthByItemId(gameconst.ItemId.EXP, income)
+
+        awardCtx = self._getAvatarAwardCtx(0, None)
+        self.addWealth(_src, _awardVal, _opUUID, _detail, awardCtx)
 
     #主城、等级到达、有月卡 = 有挂机收益
     def _onMonthCardTimer(self):
@@ -259,7 +274,8 @@ class IMonthCard(object):
         return True
 
     def reqOfflineHangupData(self, exposed):
-        self.client.onOfflineHangupData(self.totalOfflineMinute, self.totalOfflineExp)
+        if self.totalOfflineExp != 0:
+            self.client.onOfflineHangupData(self.totalOfflineMinute, self.totalOfflineExp)
     
     def reqGetOfflineExp(self, exposed):
         INFO_MSG("reqGetOfflineExp", self.totalOfflineExp)

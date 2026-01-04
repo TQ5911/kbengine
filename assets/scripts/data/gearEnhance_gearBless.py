@@ -15,70 +15,6 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    110: _tools.RODict({
-        "ID": 110,
-        "gearBlessGoldCost": ((30000013, 10000),),
-        "gearBlessItem": ((30000220, 1),),
-        "result": _tools.ROList([[-2, -1, 0, 1], [0, 0, 50, 50]]),
-        "backtrack": 5,
-        "guaranteedCount": 0
-    }),
-    111: _tools.RODict({
-        "ID": 111,
-        "gearBlessGoldCost": ((30000013, 10000),),
-        "gearBlessItem": ((30000220, 1),),
-        "result": _tools.ROList([[-2, -1, 0, 1], [0, 20, 45, 35]]),
-        "backtrack": 5,
-        "guaranteedCount": 0
-    }),
-    112: _tools.RODict({
-        "ID": 112,
-        "gearBlessGoldCost": ((30000013, 10000),),
-        "gearBlessItem": ((30000220, 1),),
-        "result": _tools.ROList([[-2, -1, 0, 1], [0, 20, 60, 20]]),
-        "backtrack": 5,
-        "guaranteedCount": 0
-    }),
-    113: _tools.RODict({
-        "ID": 113,
-        "gearBlessGoldCost": ((30000013, 10000),),
-        "gearBlessItem": ((30000220, 1),),
-        "result": _tools.ROList([[-2, -1, 0, 1], [0, 15, 75, 10]]),
-        "backtrack": 15,
-        "guaranteedCount": 0
-    }),
-    114: _tools.RODict({
-        "ID": 114,
-        "gearBlessGoldCost": ((30000013, 10000),),
-        "gearBlessItem": ((30000220, 1),),
-        "result": _tools.ROList([[-2, -1, 0, 1], [0, 10, 85, 5]]),
-        "backtrack": 30,
-        "guaranteedCount": 0
-    }),
-    115: _tools.RODict({
-        "ID": 115,
-        "gearBlessGoldCost": ((30000013, 10000),),
-        "gearBlessItem": ((30000220, 1),),
-        "result": _tools.ROList([[-2, -1, 0, 1], [0, 10, 85, 5]]),
-        "backtrack": 100,
-        "guaranteedCount": 0
-    }),
-    116: _tools.RODict({
-        "ID": 116,
-        "gearBlessGoldCost": ((30000013, 10000),),
-        "gearBlessItem": ((30000220, 1),),
-        "result": _tools.ROList([[-2, -1, 0, 1], [0, 20, 79, 1]]),
-        "backtrack": 200,
-        "guaranteedCount": 5
-    }),
-    117: _tools.RODict({
-        "ID": 117,
-        "gearBlessGoldCost": 0,
-        "gearBlessItem": 0,
-        "result": 0,
-        "backtrack": 300,
-        "guaranteedCount": 0
-    }),
     120: _tools.RODict({
         "ID": 120,
         "gearBlessGoldCost": ((30000013, 10000),),
@@ -272,5 +208,5 @@ datas = _tools.RODict({
         "guaranteedCount": 0
     })
 })
-minKey = 110
+minKey = 120
 maxKey = 147

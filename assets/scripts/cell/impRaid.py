@@ -353,6 +353,7 @@ class ImpRaid(object):
             bFollow=False, bOnline=True, spaceNo=self.spaceNo, position=self.position,
             hp=self.hp, fullHp=self.fullHp, score=self.getTotalScore(), openId="openId", siegeWarCamp=self.siegeWarCamp)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @gamedecorator.crossServer
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
@@ -374,6 +375,7 @@ class ImpRaid(object):
         gameengine.getRaidStub(raidUUID).getRaidAllMembersAttrs(
             self.base, self.gbId, raidUUID, memberList, extraProps)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
     def getRaidApplyJoinDic(self, exposed):
@@ -394,6 +396,7 @@ class ImpRaid(object):
         raidUUID = self.raidUUID
         gameengine.getRaidStub(raidUUID).getRaidApplyJoinDic(self.base, self.gbId, raidUUID)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
     def clearRaidApplyJoinDic(self, exposed):
@@ -449,6 +452,7 @@ class ImpRaid(object):
             if joinType == raidJoinRecord.get(raidUUID):
                 raidJoinRecord.pop(raidUUID, None)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @lockRaid(timeout=3)
     def createRaidWithTeam(self, exposed, capacity):
@@ -562,6 +566,7 @@ class ImpRaid(object):
         gameengine.getTeamStub(self.teamId).createRaidWithTeam(
             self.base, self.gbId, self.teamId, needCreatedRaidUUID, capacity, extraProps)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     @lockRaid(timeout=3)
@@ -622,6 +627,7 @@ class ImpRaid(object):
 
         return None, errno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
     def disbandRaid(self, exposed):
@@ -645,6 +651,7 @@ class ImpRaid(object):
 
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     def applyJoinRaidLonely(self, exposed, raidUUID, password):
         """API: 申请加入一个团队"""
@@ -697,6 +704,7 @@ class ImpRaid(object):
         self.raidJoinRecord[raidUUID] = gameconst.RaidJoinType.SINGLE
         self.showMsg(RAID_CONST.datas["raid_applySent_msg"]["value"], [])
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     def applyJoinRaidWithTeam(self, exposed, raidUUID):
         """API: 申请加入一个团队(小队加入)"""
@@ -748,6 +756,7 @@ class ImpRaid(object):
         self.raidJoinRecord[raidUUID] = gameconst.RaidJoinType.TEAM
         self.showMsg(RAID_CONST.datas["raid_applySent_msg"]["value"], [])
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
     def replyJoinRaid(self, exposed, playerGBID, beAgreed):
@@ -859,6 +868,7 @@ class ImpRaid(object):
         INFO_MSG("onCancelRaidJoinRequestSucc::", raidUUID, raidJoinType, extra)
         self.raidJoinRecord.pop(raidUUID, None)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN)
     def tryApplyInviteRaid(self, exposed, playerGBID, playerName):
@@ -912,6 +922,7 @@ class ImpRaid(object):
         WARNING_MSG("tryApplyInviteRaidOffline::", playerGBID, playerName)
         self.showMsg(MMD.datas.raid_applicantOffline, [playerName])
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN)
     def applyInviteRaidLonely(self, exposed, playerGBID, playerName):
@@ -1093,6 +1104,7 @@ class ImpRaid(object):
 
         return recordId, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def replyInviteRaidLonely(self, exposed, raidUUID, recordID, srcPlayerGBID, beInvited):
@@ -1174,6 +1186,7 @@ class ImpRaid(object):
                 invitedPlayerBox, invitedPlayerGBID, invitedPlayerProps, self.gbId,
                 0, raidUUID, {})
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER, exclude=())
     def applyInviteRaidWithTeam(self, exposed, playerGBID, teamUUID, playerName):
@@ -1237,6 +1250,7 @@ class ImpRaid(object):
         gameengine.getRaidStub(raidUUID).raidMemberApplyInvitedRaid(
             self.base, self.gbId, raidUUID, playerGBID, playerName, extraProps)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def replyInviteRaidWithTeam(self, exposed, raidUUID, recordID, srcPlayerGBID, beInvited):
@@ -1349,6 +1363,7 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.RAID_TEAM_ID_CHANGED
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
     def leaveRaid(self, exposed):
@@ -1381,7 +1396,8 @@ class ImpRaid(object):
         self.onRefreshPlayerRaidCacheVal(self.raidInfo)
         src = dungeonSrc.KickoutFromDungeon(kickReason=gameconst.DungeonSrcKickReason.FORCE)
         self.selfLeaveRaidDungeon(src)
-        
+
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
     def kickOutRaidMember(self, exposed, raidTeamIDX, playerGBID):
@@ -1464,6 +1480,7 @@ class ImpRaid(object):
             return
         self._onLeaveRaid()
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
     def transferRaidLeader(self, exposed, toPlayerGBID):
@@ -1490,6 +1507,7 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.RAID_IS_SAME_PLAYER.initkvbody(toPlayerGBID=toPlayerGBID)
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
     def transferRaidDeputy(self, exposed, toPlayerGBID):
@@ -1515,7 +1533,8 @@ class ImpRaid(object):
         if toPlayerGBID == self.raidInfo.raidLeaderGBID:
             return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER.initkvbody(toPlayerGBID=toPlayerGBID)
         return None, gameconst.RaidErrno.RAID_OK
-    #
+    
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.CAPTAIN, onlyMode=True)
     def transferRaidTeamCaptain(self, exposed, toPlayerGBID):
@@ -1631,6 +1650,7 @@ class ImpRaid(object):
 
         return None, gameconst.RaidErrno.RAID_OK
     #
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
     def awardRaidTeamCaptain(self, expsoed, awardRaidTeamIDX, toPlayerGBID):
@@ -1689,7 +1709,8 @@ class ImpRaid(object):
         self.raidAuth = self.raidPermission
 
         return None, gameconst.RaidErrno.RAID_OK
-
+    
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
     def moveRaidTeamMember(self, exposed, fromPlayerTeamIDX, fromPlayerGBID, toPlayerTeamIDX, toPlayerGBID):
@@ -1747,6 +1768,7 @@ class ImpRaid(object):
         else:
             DEBUG_MSG('onMoveRaidTeamMemberSucc:: only refresh data~')
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
     def setRaidTarget(self, exposed, minLevel, minScore, recuitInfo, password, isAutoExpedition):
@@ -1802,6 +1824,7 @@ class ImpRaid(object):
         self.raidInfo.password = password
         self.raidInfo.isAutoExpedition = isAutoExpedition
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.DEPUTY)
     def startRaidStandbyChecker(self, exposed):
@@ -1826,6 +1849,7 @@ class ImpRaid(object):
         # gameengine.getRaidStub(raidUUID).startRaidStandbyChecker(
         #     self.base, self.gbId, raidUUID, extraProps)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
     def replyRaidStandbyChecker(self, exposed, raidUUID, beAgreed):
@@ -1851,6 +1875,7 @@ class ImpRaid(object):
 
     # --------------------------------------------------------------------
     # RAID MICS
+    @gamedecorator.checkGameconfigEnable('raid')
     @gamedecorator.crossServer
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
@@ -1873,6 +1898,7 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.RAID_MICS_MODE_ERR
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @gamedecorator.crossServer
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
@@ -1900,6 +1926,7 @@ class ImpRaid(object):
         extraProps = {}
         gameengine.getRaidStub(raidUUID).turnOffRaidMics(self.base, self.gbId, raidUUID, self.gbId, extraProps)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @gamedecorator.crossServer
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.MEMBER)
@@ -1921,6 +1948,7 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.RAID_NOT_IN_RAID
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
     def turnOnRaidMemberMics(self, exposed, playerGBID):
@@ -1941,6 +1969,7 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.RAID_NOT_IN_RAID
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
     def turnOffRaidMemberMics(self, exposed, playerGBID):
@@ -1961,6 +1990,7 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.RAID_NOT_IN_RAID
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
     def blockRaidMemberMics(self, exposed, teamIDX, playerGBID):
@@ -1983,6 +2013,7 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
     def unblockRaidMemberMics(self, exposed, teamIDX, playerGBID):
@@ -2005,6 +2036,7 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @gamedecorator.limitcall(1)
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
@@ -2028,6 +2060,7 @@ class ImpRaid(object):
             return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER
         return None, gameconst.RaidErrno.RAID_OK
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @gamedecorator.limitcall(1)
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER)
@@ -2106,7 +2139,7 @@ class ImpRaid(object):
                 self.base, self.gbId, raidId, capacity, [leaderProps, ])
 
     # --------------------------------------------------------------------
-
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def reqRaidPlayerAutoMatch(self, exposed, target):
@@ -2165,6 +2198,7 @@ class ImpRaid(object):
         gameengine.getGlobalBase('RaidMatchStub').raidPlayerAutoMatch(playerMatchDic)
         return
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     def reqRaidPlayerStopAutoMatch(self, exposed):
         INFO_MSG('reqRaidPlayerStopAutoMatch::~')
@@ -2172,6 +2206,7 @@ class ImpRaid(object):
         self.autoRaidMatchTarget = 0
         gameengine.getGlobalBase('RaidMatchStub').raidPlayerStopAutoMatch(self.gbId)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
     def reqRaidAutoMatch(self, exposed):
@@ -2185,6 +2220,7 @@ class ImpRaid(object):
 
         gameengine.getRaidStub(self.raidUUID).raidPrepareAutoMatch(self.raidUUID)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.LEADER, onlyMode=True)
     def reqRaidStopAutoMatch(self, exposed):
@@ -2219,6 +2255,7 @@ class ImpRaid(object):
         self.showMsg(TMMCD.datas['leaveMatch_timeOverMsg']['value'], [])
         return
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     def reqGetRaidList(self, exposed, lastTime, raidTarget):
         teamTargetInfo = TMACTD.datas.get(raidTarget)
@@ -2286,6 +2323,7 @@ class ImpRaid(object):
             gameengine.getRaidStub(raidUUID).leaveRaid(self.base, self.gbId, raidUUID, extraProps)
 
     # 标记 begin
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     def reqAddRaidMarkMember(self, exposed, type, index, name, gbId, entId, pos):
         """ API: 加入raid标记 """
@@ -2298,6 +2336,7 @@ class ImpRaid(object):
         ent = KBEngine.entities.get(entId)
         gameengine.getRaidStub(self.raidUUID).reqAddRaidMarkMember(self.raidUUID, self.base, type, index, name, gbId, entId, pos, ent)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     def reqDelRaidMarkMember(self, exposed, type, index):
         """ API: 移除raid标记 """
@@ -2309,6 +2348,7 @@ class ImpRaid(object):
 
         gameengine.getRaidStub(self.raidUUID).reqDelRaidMarkMember(self.raidUUID, self.base, type, index)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @gamedecorator.limitcall(2)
     def reqChangeRaidOnlyLeader(self, exposed, state):
@@ -2322,6 +2362,7 @@ class ImpRaid(object):
 
         gameengine.getRaidStub(self.raidUUID).reqChangeRaidOnlyLeader(self.raidUUID, self.base, state)
 
+    @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
     @gamedecorator.limitcall(2)
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)

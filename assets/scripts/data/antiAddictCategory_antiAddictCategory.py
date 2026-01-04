@@ -264,8 +264,8 @@ datas = _tools.RODict({
         "isAntiAddicted": 0,
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
-        "messageId": 0,
-        "rewardMessage": None
+        "messageId": 54001997,
+        "rewardMessage": ('<color=&color211>分解获得</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     29: _tools.RODict({
         "ID": 29,
@@ -1112,7 +1112,34 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 54001996,
         "rewardMessage": ('<color=&color211>试炼峰奖励</color>', '战利品：{0}')
+    }),
+    123: _tools.RODict({
+        "ID": 123,
+        "name": "BONUS_SRC_CURRENCY_EXCHANGE_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    124: _tools.RODict({
+        "ID": 124,
+        "name": "BONUS_SRC_CURRENCY_EXCHANGE_GET",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    125: _tools.RODict({
+        "ID": 125,
+        "name": "BONUS_SRC_GUILD_TOKEN_BID_FAILED",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
     })
 })
 minKey = 1
-maxKey = 122
+maxKey = 125

@@ -56,16 +56,12 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         elif self.level > utils.getPlayerMaxLevel():
             self.level = utils.getPlayerMaxLevel()
 
-        if formula.isMineWarSpace(self.spaceNo):
-            if self.spaceMgr:
-                self.level = self.spaceMgr.getMineWarMonsterLevel(self)
-
         self.preOverwriteProps()
         iSiegeWarMonster.ISiegeWarMonster.__init__(self)
+        iMineWarMonster.IMineWarMonster.__init__(self)
         iAICombatUnit.IAICombatUnit.__init__(self)
         EventMgr.EventMgr.__init__(self)
         iGameEntity.IGameEntity.__init__(self)
-        iMineWarMonster.IMineWarMonster.__init__(self)
         iGuildBossMonster.IGuildBossMonster.__init__(self)
 
         monData = creep_base.datas[self.monsterId]
@@ -542,7 +538,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
             opUUID = KBEngine.genUUID64()
             srcType = AAC_AACDD.datas.BONUS_SRC_KILL_MONSTER
-            detail = gameclass.AwardDetail(monsterId=self.monsterId)
+            detail = gameclass.AwardDetail(monsterId=self.monsterId, spaceNo=self.spaceNo)
             rewardIDList, shareRewardIDList, displayModeList = self.getDeathDrop()
             dropCtx = awardContext.DropAwardCtx(self.id,
                                                 self.level,

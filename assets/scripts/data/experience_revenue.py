@@ -19,76 +19,76 @@ datas = _tools.RODict({
         "ID": 1,
         "levelgap": 15,
         "boundprop": 1,
-        "expprop": 0.1,
-        "rewardprop": 0.1
+        "expprop": 0.0,
+        "rewardprop": 0.0
     }),
     2: _tools.RODict({
         "ID": 2,
         "levelgap": 14,
         "boundprop": 1,
-        "expprop": 0.2,
-        "rewardprop": 0.2
+        "expprop": 0.1,
+        "rewardprop": 0.1
     }),
     3: _tools.RODict({
         "ID": 3,
         "levelgap": 13,
         "boundprop": 1,
-        "expprop": 0.3,
-        "rewardprop": 0.3
+        "expprop": 0.2,
+        "rewardprop": 0.2
     }),
     4: _tools.RODict({
         "ID": 4,
         "levelgap": 12,
         "boundprop": 1,
-        "expprop": 0.4,
-        "rewardprop": 0.4
+        "expprop": 0.3,
+        "rewardprop": 0.3
     }),
     5: _tools.RODict({
         "ID": 5,
         "levelgap": 11,
         "boundprop": 1,
-        "expprop": 0.5,
-        "rewardprop": 0.5
+        "expprop": 0.4,
+        "rewardprop": 0.4
     }),
     6: _tools.RODict({
         "ID": 6,
         "levelgap": 10,
         "boundprop": 1,
-        "expprop": 0.6,
-        "rewardprop": 0.6
+        "expprop": 0.5,
+        "rewardprop": 0.5
     }),
     7: _tools.RODict({
         "ID": 7,
         "levelgap": 9,
         "boundprop": 1,
-        "expprop": 0.7,
-        "rewardprop": 0.7
+        "expprop": 0.6,
+        "rewardprop": 0.6
     }),
     8: _tools.RODict({
         "ID": 8,
         "levelgap": 8,
         "boundprop": 1,
-        "expprop": 0.8,
-        "rewardprop": 0.8
+        "expprop": 0.7,
+        "rewardprop": 0.7
     }),
     9: _tools.RODict({
         "ID": 9,
         "levelgap": 7,
         "boundprop": 1,
-        "expprop": 0.9,
-        "rewardprop": 0.9
+        "expprop": 0.8,
+        "rewardprop": 0.8
     }),
     10: _tools.RODict({
         "ID": 10,
         "levelgap": 6,
         "boundprop": 1,
-        "expprop": 1.0,
-        "rewardprop": 1.0
+        "expprop": 0.9,
+        "rewardprop": 0.9
     }),
     11: _tools.RODict({
         "ID": 11,
         "levelgap": 5,
-        "boundprop": 1,
+        "boundprop": 0,
         "expprop": 1.0,
         "rewardprop": 1.0
     }),
@@ -158,7 +158,7 @@ datas = _tools.RODict({
     21: _tools.RODict({
         "ID": 21,
         "levelgap": -5,
-        "boundprop": 1,
+        "boundprop": 0,
         "expprop": 1.0,
         "rewardprop": 1.0
     }),
@@ -194,8 +194,8 @@ datas = _tools.RODict({
         "ID": 26,
         "levelgap": -10,
         "boundprop": 1,
-        "expprop": 0.9,
-        "rewardprop": 0.9
+        "expprop": 1.0,
+        "rewardprop": 1.0
     }),
     27: _tools.RODict({
         "ID": 27,
@@ -208,15 +208,15 @@ datas = _tools.RODict({
         "ID": 28,
         "levelgap": -12,
         "boundprop": 1,
-        "expprop": 0.5,
-        "rewardprop": 0.5
+        "expprop": 0.4,
+        "rewardprop": 0.4
     }),
     29: _tools.RODict({
         "ID": 29,
         "levelgap": -13,
         "boundprop": 1,
-        "expprop": 0.3,
-        "rewardprop": 0.3
+        "expprop": 0.1,
+        "rewardprop": 0.1
     }),
     30: _tools.RODict({
         "ID": 30,
@@ -236,4 +236,4 @@ datas = _tools.RODict({
 minKey = 1
 maxKey = 31
 
-revenueLevelGapDic = {15: {'ID': 1, 'levelgap': 15, 'boundprop': 1, 'expprop': 0.1, 'rewardprop': 0.1}, 14: {'ID': 2, 'levelgap': 14, 'boundprop': 1, 'expprop': 0.2, 'rewardprop': 0.2}, 13: {'ID': 3, 'levelgap': 13, 'boundprop': 1, 'expprop': 0.3, 'rewardprop': 0.3}, 12: {'ID': 4, 'levelgap': 12, 'boundprop': 1, 'expprop': 0.4, 'rewardprop': 0.4}, 11: {'ID': 5, 'levelgap': 11, 'boundprop': 1, 'expprop': 0.5, 'rewardprop': 0.5}, 10: {'ID': 6, 'levelgap': 10, 'boundprop': 1, 'expprop': 0.6, 'rewardprop': 0.6}, 9: {'ID': 7, 'levelgap': 9, 'boundprop': 1, 'expprop': 0.7, 'rewardprop': 0.7}, 8: {'ID': 8, 'levelgap': 8, 'boundprop': 1, 'expprop': 0.8, 'rewardprop': 0.8}, 7: {'ID': 9, 'levelgap': 7, 'boundprop': 1, 'expprop': 0.9, 'rewardprop': 0.9}, 6: {'ID': 10, 'levelgap': 6, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, 5: {'ID': 11, 'levelgap': 5, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, 4: {'ID': 12, 'levelgap': 4, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, 3: {'ID': 13, 'levelgap': 3, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, 2: {'ID': 14, 'levelgap': 2, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, 1: {'ID': 15, 'levelgap': 1, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, 0: {'ID': 16, 'levelgap': 0, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -1: {'ID': 17, 'levelgap': -1, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -2: {'ID': 18, 'levelgap': -2, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -3: {'ID': 19, 'levelgap': -3, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -4: {'ID': 20, 'levelgap': -4, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -5: {'ID': 21, 'levelgap': -5, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -6: {'ID': 22, 'levelgap': -6, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -7: {'ID': 23, 'levelgap': -7, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -8: {'ID': 24, 'levelgap': -8, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -9: {'ID': 25, 'levelgap': -9, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -10: {'ID': 26, 'levelgap': -10, 'boundprop': 1, 'expprop': 0.9, 'rewardprop': 0.9}, -11: {'ID': 27, 'levelgap': -11, 'boundprop': 1, 'expprop': 0.7, 'rewardprop': 0.7}, -12: {'ID': 28, 'levelgap': -12, 'boundprop': 1, 'expprop': 0.5, 'rewardprop': 0.5}, -13: {'ID': 29, 'levelgap': -13, 'boundprop': 1, 'expprop': 0.3, 'rewardprop': 0.3}, -14: {'ID': 30, 'levelgap': -14, 'boundprop': 1, 'expprop': 0.1, 'rewardprop': 0.1}, -15: {'ID': 31, 'levelgap': -15, 'boundprop': 1, 'expprop': 0.0, 'rewardprop': 0.0}}
+revenueLevelGapDic = {15: {'ID': 1, 'levelgap': 15, 'boundprop': 1, 'expprop': 0.0, 'rewardprop': 0.0}, 14: {'ID': 2, 'levelgap': 14, 'boundprop': 1, 'expprop': 0.1, 'rewardprop': 0.1}, 13: {'ID': 3, 'levelgap': 13, 'boundprop': 1, 'expprop': 0.2, 'rewardprop': 0.2}, 12: {'ID': 4, 'levelgap': 12, 'boundprop': 1, 'expprop': 0.3, 'rewardprop': 0.3}, 11: {'ID': 5, 'levelgap': 11, 'boundprop': 1, 'expprop': 0.4, 'rewardprop': 0.4}, 10: {'ID': 6, 'levelgap': 10, 'boundprop': 1, 'expprop': 0.5, 'rewardprop': 0.5}, 9: {'ID': 7, 'levelgap': 9, 'boundprop': 1, 'expprop': 0.6, 'rewardprop': 0.6}, 8: {'ID': 8, 'levelgap': 8, 'boundprop': 1, 'expprop': 0.7, 'rewardprop': 0.7}, 7: {'ID': 9, 'levelgap': 7, 'boundprop': 1, 'expprop': 0.8, 'rewardprop': 0.8}, 6: {'ID': 10, 'levelgap': 6, 'boundprop': 1, 'expprop': 0.9, 'rewardprop': 0.9}, 5: {'ID': 11, 'levelgap': 5, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, 4: {'ID': 12, 'levelgap': 4, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, 3: {'ID': 13, 'levelgap': 3, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, 2: {'ID': 14, 'levelgap': 2, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, 1: {'ID': 15, 'levelgap': 1, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, 0: {'ID': 16, 'levelgap': 0, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -1: {'ID': 17, 'levelgap': -1, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -2: {'ID': 18, 'levelgap': -2, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -3: {'ID': 19, 'levelgap': -3, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -4: {'ID': 20, 'levelgap': -4, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -5: {'ID': 21, 'levelgap': -5, 'boundprop': 0, 'expprop': 1.0, 'rewardprop': 1.0}, -6: {'ID': 22, 'levelgap': -6, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -7: {'ID': 23, 'levelgap': -7, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -8: {'ID': 24, 'levelgap': -8, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -9: {'ID': 25, 'levelgap': -9, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -10: {'ID': 26, 'levelgap': -10, 'boundprop': 1, 'expprop': 1.0, 'rewardprop': 1.0}, -11: {'ID': 27, 'levelgap': -11, 'boundprop': 1, 'expprop': 0.7, 'rewardprop': 0.7}, -12: {'ID': 28, 'levelgap': -12, 'boundprop': 1, 'expprop': 0.4, 'rewardprop': 0.4}, -13: {'ID': 29, 'levelgap': -13, 'boundprop': 1, 'expprop': 0.1, 'rewardprop': 0.1}, -14: {'ID': 30, 'levelgap': -14, 'boundprop': 1, 'expprop': 0.1, 'rewardprop': 0.1}, -15: {'ID': 31, 'levelgap': -15, 'boundprop': 1, 'expprop': 0.0, 'rewardprop': 0.0}}

@@ -402,13 +402,13 @@ datas = _tools.RODict({
     }),
     19000400002: _tools.RODict({
         "ID": 19000400002,
-        "event": "OpenStore",
-        "parm": "12",
+        "event": "OpenNpcExchange",
+        "parm": "1",
     }),
     19000400003: _tools.RODict({
         "ID": 19000400003,
-        "event": "OpenStore",
-        "parm": "13",
+        "event": "OpenNpcExchange",
+        "parm": "2",
     }),
     19000008004: _tools.RODict({
         "ID": 19000008004,

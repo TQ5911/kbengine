@@ -33,6 +33,7 @@ class ImpEquipment(object):
     def __init__(self):
         super(ImpEquipment, self).__init__()
 
+    @gamedecorator.checkGameconfigEnable('equip')
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def reqSetEquipSuitHide(self, exposed, needHide):
@@ -111,6 +112,7 @@ class ImpEquipment(object):
 
         self.base.cellUndressEquipmentSucc(bodyEquip.toItemSavedDict())
 
+    @gamedecorator.checkGameconfigEnable('equip_strengthen')
     @utils.isMyself
     def reqEquipEnhance(self, exposed, equipIn, equipPos, uniqueId, gridIdList, gridCountList, autoBuy):
         DEBUG_MSG('in reqEquipEnhance:', equipIn, equipPos, gridIdList, gridCountList, autoBuy)
@@ -183,6 +185,7 @@ class ImpEquipment(object):
             return True
         return False
 
+    @gamedecorator.checkGameconfigEnable('equip_class')
     @utils.isMyself
     def reqEquipUpgrade(self, exposed, equipIn, equipPos, uniqueId, consumeGridId, autoBuy):
         DEBUG_MSG('in reqEquipUpgrade:', equipIn, equipPos, uniqueId, consumeGridId, autoBuy)
@@ -246,6 +249,7 @@ class ImpEquipment(object):
     def isBodyEquipsLocked(self):
         return self.bodyEquipData.isBodyEquipsBeLocked()
 
+    @gamedecorator.checkGameconfigEnable('equip_FuLing')
     @utils.isMyself
     def reqEquipSpiritWashing(self, exposed, equipIn, equipPos, spiritPos, uniqueId, gridIdList, gridCountList):
         DEBUG_MSG('in reqEquipSpiritWashing:', equipIn, equipPos, uniqueId, spiritPos)
@@ -309,6 +313,7 @@ class ImpEquipment(object):
                                                  equipItem.getEquipScore(), equipItem.getAddBindValueStatus(), equipItem.bindType)
         return
 
+    @gamedecorator.checkGameconfigEnable('equip_weaponGlyph')
     @utils.isMyself
     def reqEquipGlyphApply(self, exposed, equipIn, equipPos, groupId, uniqueId):
         DEBUG_MSG('in reqEquipGlyphApply:', equipIn, equipPos, groupId, uniqueId)
@@ -350,6 +355,7 @@ class ImpEquipment(object):
             self.client.onEquipGlyphApplySucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, groupId, equipItem.getEquipScore())
         return
 
+    @gamedecorator.checkGameconfigEnable('equip_FuLing')
     @utils.isMyself
     def reqEquipSpiritApply(self, exposed, equipIn, equipPos, groupId, uniqueId):
         DEBUG_MSG('in reqEquipSpiritApply:', equipIn, equipPos, groupId, uniqueId)
@@ -388,6 +394,7 @@ class ImpEquipment(object):
             self.client.onEquipSpiritApplySucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, groupId, equipItem.getEquipScore())
         return
 
+    @gamedecorator.checkGameconfigEnable('equip_weaponGlyph')
     @utils.isMyself
     def reqEquipGlyphWashing(self, exposed, equipIn, equipPos, glyphPos, uniqueId, gridIdList, gridCountList):
         DEBUG_MSG('in reqEquipGlyphWashing:', equipIn, equipPos, glyphPos, uniqueId, gridIdList, gridCountList)
@@ -451,6 +458,7 @@ class ImpEquipment(object):
                                                 equipItem.getEquipScore(), equipItem.getAddBindValueStatus(), equipItem.bindType)
         return
 
+    @gamedecorator.checkGameconfigEnable('equip_Bless')
     @utils.isMyself
     def reqEquipBless(self, exposed, equipIn, equipPos, uniqueId, gridIdList, gridCountList):
         DEBUG_MSG('in reqEquipBless:', equipIn, equipPos, uniqueId)
@@ -514,6 +522,7 @@ class ImpEquipment(object):
                                         equipItem.getEquipScore(), equipItem.getAddBindValueStatus(), equipItem.bindType)
         return
 
+    @gamedecorator.checkGameconfigEnable('equip_Bless')
     @utils.isMyself
     def reqEquipBackBless(self, exposed, equipIn, equipPos, uniqueId):
         DEBUG_MSG('in reqEquipBackBless:', equipIn, equipPos, uniqueId)
@@ -777,7 +786,7 @@ class ImpEquipment(object):
     def getInscriptionEffects(self, skillID, effectType):
         return self.glyphEquipData.getInscriptionEffects(skillID, effectType)
 
-
+    @gamedecorator.checkGameconfigEnable('equip_Unbundle')
     @utils.isMyself
     def reqEquipBindValueWashing(self, exposed, equipIn, equipPos, uniqueId, washCount):
         DEBUG_MSG('in reqEquipBindValueWashing:', equipIn, equipPos, uniqueId, washCount)

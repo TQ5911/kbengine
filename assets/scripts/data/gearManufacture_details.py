@@ -20,7 +20,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990121, 1), (30000283, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80112001: _tools.RODict({
         "ID": 80112001,
@@ -39,7 +39,7 @@ datas = _tools.RODict({
     80114001: _tools.RODict({
         "ID": 80114001,
         "isOpen": 1,
-        "consumeItem": ((30990142, 1), (30000295, 240)),
+        "consumeItem": ((30990142, 1), (30000295, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -48,7 +48,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990121, 1), (30000283, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80122001: _tools.RODict({
         "ID": 80122001,
@@ -67,7 +67,7 @@ datas = _tools.RODict({
     80124001: _tools.RODict({
         "ID": 80124001,
         "isOpen": 1,
-        "consumeItem": ((30990142, 1), (30000295, 240)),
+        "consumeItem": ((30990142, 1), (30000295, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -76,7 +76,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990121, 1), (30000283, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80132001: _tools.RODict({
         "ID": 80132001,
@@ -95,7 +95,7 @@ datas = _tools.RODict({
     80134001: _tools.RODict({
         "ID": 80134001,
         "isOpen": 1,
-        "consumeItem": ((30990142, 1), (30000295, 240)),
+        "consumeItem": ((30990142, 1), (30000295, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -104,7 +104,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990122, 1), (30000284, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80212001: _tools.RODict({
         "ID": 80212001,
@@ -123,7 +123,7 @@ datas = _tools.RODict({
     80214001: _tools.RODict({
         "ID": 80214001,
         "isOpen": 1,
-        "consumeItem": ((30990143, 1), (30000296, 240)),
+        "consumeItem": ((30990143, 1), (30000296, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -132,7 +132,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990122, 1), (30000284, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80222001: _tools.RODict({
         "ID": 80222001,
@@ -151,7 +151,7 @@ datas = _tools.RODict({
     80224001: _tools.RODict({
         "ID": 80224001,
         "isOpen": 1,
-        "consumeItem": ((30990143, 1), (30000296, 240)),
+        "consumeItem": ((30990143, 1), (30000296, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -160,7 +160,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990122, 1), (30000284, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80232001: _tools.RODict({
         "ID": 80232001,
@@ -179,7 +179,7 @@ datas = _tools.RODict({
     80234001: _tools.RODict({
         "ID": 80234001,
         "isOpen": 1,
-        "consumeItem": ((30990143, 1), (30000296, 240)),
+        "consumeItem": ((30990143, 1), (30000296, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -188,7 +188,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80312001: _tools.RODict({
         "ID": 80312001,
@@ -207,7 +207,7 @@ datas = _tools.RODict({
     80314001: _tools.RODict({
         "ID": 80314001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -216,7 +216,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80322001: _tools.RODict({
         "ID": 80322001,
@@ -235,7 +235,7 @@ datas = _tools.RODict({
     80324001: _tools.RODict({
         "ID": 80324001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -244,7 +244,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80332001: _tools.RODict({
         "ID": 80332001,
@@ -263,7 +263,7 @@ datas = _tools.RODict({
     80334001: _tools.RODict({
         "ID": 80334001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -272,7 +272,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80412001: _tools.RODict({
         "ID": 80412001,
@@ -291,7 +291,7 @@ datas = _tools.RODict({
     80414001: _tools.RODict({
         "ID": 80414001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -300,7 +300,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80422001: _tools.RODict({
         "ID": 80422001,
@@ -319,7 +319,7 @@ datas = _tools.RODict({
     80424001: _tools.RODict({
         "ID": 80424001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -328,7 +328,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80432001: _tools.RODict({
         "ID": 80432001,
@@ -347,7 +347,7 @@ datas = _tools.RODict({
     80434001: _tools.RODict({
         "ID": 80434001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -356,7 +356,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990124, 1), (30000286, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80582001: _tools.RODict({
         "ID": 80582001,
@@ -375,7 +375,7 @@ datas = _tools.RODict({
     80584001: _tools.RODict({
         "ID": 80584001,
         "isOpen": 1,
-        "consumeItem": ((30990145, 1), (30000298, 240)),
+        "consumeItem": ((30990145, 1), (30000298, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -384,7 +384,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990124, 1), (30000286, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80592001: _tools.RODict({
         "ID": 80592001,
@@ -403,7 +403,7 @@ datas = _tools.RODict({
     80594001: _tools.RODict({
         "ID": 80594001,
         "isOpen": 1,
-        "consumeItem": ((30990145, 1), (30000298, 240)),
+        "consumeItem": ((30990145, 1), (30000298, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -412,7 +412,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990124, 1), (30000286, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80682001: _tools.RODict({
         "ID": 80682001,
@@ -431,7 +431,7 @@ datas = _tools.RODict({
     80684001: _tools.RODict({
         "ID": 80684001,
         "isOpen": 1,
-        "consumeItem": ((30990145, 1), (30000298, 240)),
+        "consumeItem": ((30990145, 1), (30000298, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -440,7 +440,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990124, 1), (30000286, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80692001: _tools.RODict({
         "ID": 80692001,
@@ -459,7 +459,7 @@ datas = _tools.RODict({
     80694001: _tools.RODict({
         "ID": 80694001,
         "isOpen": 1,
-        "consumeItem": ((30990145, 1), (30000298, 240)),
+        "consumeItem": ((30990145, 1), (30000298, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -468,7 +468,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80782001: _tools.RODict({
         "ID": 80782001,
@@ -487,7 +487,7 @@ datas = _tools.RODict({
     80784001: _tools.RODict({
         "ID": 80784001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -496,7 +496,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80792001: _tools.RODict({
         "ID": 80792001,
@@ -515,7 +515,7 @@ datas = _tools.RODict({
     80794001: _tools.RODict({
         "ID": 80794001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -524,7 +524,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80812001: _tools.RODict({
         "ID": 80812001,
@@ -543,7 +543,7 @@ datas = _tools.RODict({
     80814001: _tools.RODict({
         "ID": 80814001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -552,7 +552,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80822001: _tools.RODict({
         "ID": 80822001,
@@ -571,7 +571,7 @@ datas = _tools.RODict({
     80824001: _tools.RODict({
         "ID": 80824001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     }),
@@ -580,7 +580,7 @@ datas = _tools.RODict({
         "isOpen": 1,
         "consumeItem": ((30990123, 1), (30000285, 20)),
         "consumeItem2": None,
-        "consumeMoney": ((30000013, 300),)
+        "consumeMoney": ((30000013, 600),)
     }),
     80832001: _tools.RODict({
         "ID": 80832001,
@@ -599,7 +599,7 @@ datas = _tools.RODict({
     80834001: _tools.RODict({
         "ID": 80834001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 240)),
+        "consumeItem": ((30990144, 1), (30000297, 200)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 4000000),)
     })

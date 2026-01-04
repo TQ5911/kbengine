@@ -7,6 +7,7 @@ import dataUtils
 import dropAward
 import gameclass
 import mailAssistor
+import gameconfig
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import raidBossChallenge_config as RBC_CFG
@@ -45,8 +46,28 @@ class IDungeonSettlement(object):
         if firstPassBriefReward or clearPassBriefReward:
             self.client.onDungenFinishRewards(dungeonType, dungeonNo, firstPassBriefReward, clearPassBriefReward, rank)
 
+    def checkDungeonPlayModeOpen(self, playMode):
+        ret = True
+        if playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+            if not gameconfig.visibleConfigEable('teamDungeon'):
+                ret = False
+        elif playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            if not gameconfig.visibleConfigEable('raidDungeon'):
+                ret = False
+        elif playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
+            if not gameconfig.visibleConfigEable('guildBossChallenge'):
+                ret = False
+        else:
+            ret = False
+        return ret
+
     def onDungeonSettlement(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra):
-        INFO_MSG('onDungeonSettlement:: ', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
+        INFO_MSG('onDungeonSettlement:: 1', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
+        if not self.checkDungeonPlayModeOpen(playMode):
+            box.cell.onNotifySettlementResult(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, [], [], [])
+            INFO_MSG('onDungeonSettlement:: 2, play mode id closed, no reward ', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
+            return
+        
         if playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
             self._doCrusadeSettlement(spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra) 
         elif playMode == gameconst.DungeonPlayModeEnum.CHIEF:
@@ -60,7 +81,7 @@ class IDungeonSettlement(object):
         firstPassRewards = None
         goldPassRewards = None
         dungeonRewards = None
-        if win and extra['score'] > 0:
+        if win:
             dungeonRewardId = RBC_BI.clearPassRewardDic.get(dungeonNo, 0)
             if dungeonRewardId > 0:
                 ctx = self._getAvatarAwardCtx(dungeonRewardId, None)
@@ -91,7 +112,7 @@ class IDungeonSettlement(object):
         firstPassRewards = None
         goldPassRewards = None
         dungeonRewards = None
-        if win and extra['score'] > 0:
+        if win:
             dungeonRewardId = TDC_BI.clearPassRewardDic.get(dungeonNo, 0)
             if dungeonRewardId > 0:
                 ctx = self._getAvatarAwardCtx(dungeonRewardId, None)

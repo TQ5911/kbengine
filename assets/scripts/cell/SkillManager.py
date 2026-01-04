@@ -1206,10 +1206,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         else:
             self.mp = curMp
 
-    def removeSkill(self, skillID):
+    def removeSkill(self, skillID, isFromDeleteTempSkill = False):
         skill = self.skillDic.get(skillID)
         if skill:
-            self.removeBuffBySkillId(skill.skillId)
+            if isFromDeleteTempSkill:
+                self.removeBuffBySkillId(skill.skillId)
             self.skillDic.pop(skillID, None)
         return skill
     

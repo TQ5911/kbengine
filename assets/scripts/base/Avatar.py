@@ -1412,6 +1412,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('onTaskDailyUpdate')
         self.registerWeekEvent('onTaskWeeklyUpdate')
         self.registerDailyEvent('onBagDailyUpdate')
+        self.registerDailyEvent('onCurrencyDailyUpdate')
         self.registerWeekEvent('onBagWeekUpdate')
         self.registerDailyEvent('_cubeDailyRefresh')
         self.registerDailyEvent('onCrusadeDailyRewardNumUpdate')

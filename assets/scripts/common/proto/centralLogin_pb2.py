@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='CentralLoginClient',
   syntax='proto3',
   serialized_options=_b('Z\020../clientService\220\001\001'),
-  serialized_pb=_b('\n\x12\x63\x65ntralLogin.proto\x12\x12\x43\x65ntralLoginClient\"\x06\n\x04Void\" \n\x11\x43heckCDKeyRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"\xaa\x01\n\x0f\x43heckCDKeyReply\x12?\n\x06result\x18\x01 \x01(\x0e\x32/.CentralLoginClient.CheckCDKeyReply.CDKeyResult\"V\n\x0b\x43\x44KeyResult\x12\x16\n\x12\x43\x44KEY_PLACE_HOLDER\x10\x00\x12\x0c\n\x08\x43\x44KEY_OK\x10\x01\x12\x0e\n\nCDKEY_USED\x10\x02\x12\x11\n\rCDKEY_INVALID\x10\x03\"\x1f\n\x0fLoginKeyRequest\x12\x0c\n\x04rStr\x18\x01 \x01(\t\".\n\x10LoginKeyResponse\x12\x0c\n\x04rStr\x18\x01 \x01(\t\x12\x0c\n\x04sStr\x18\x02 \x01(\t\"6\n\rPasswordLogin\x12\x13\n\x0b\x61\x63\x63ountName\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"<\n\nTokenLogin\x12\r\n\x05phone\x18\x01 \x01(\t\x12\x10\n\x08userInfo\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\"6\n\nThirdLogin\x12\x13\n\x0b\x63hannelInfo\x18\x01 \x01(\t\x12\x13\n\x0b\x61\x63\x63\x65ssToken\x18\x02 \x01(\t\"\xde\x04\n\nLoginReply\x12:\n\x06result\x18\x01 \x01(\x0e\x32*.CentralLoginClient.LoginReply.LoginResult\x12\r\n\x05token\x18\x02 \x01(\t\x12\x17\n\x0f\x63\x65ntralServerId\x18\x03 \x01(\r\x12\x10\n\x08serverId\x18\x04 \x01(\t\x12\x16\n\x0egameServerHost\x18\x05 \x01(\t\x12\x17\n\x0fqueueServerHost\x18\x06 \x01(\t\x12\x14\n\x0ctokenTimeout\x18\x07 \x01(\r\x12\x10\n\x08reserved\x18\x08 \x01(\t\"\x80\x03\n\x0bLoginResult\x12\x11\n\rLOGIN_SUCCESS\x10\x00\x12\x16\n\x12LOGIN_PASSWD_ERROR\x10\x01\x12\x15\n\x11LOGIN_TOKEN_ERROR\x10\x02\x12\x13\n\x0fLOGIN_NOT_LOGIN\x10\x03\x12\x14\n\x10LOGIN_NEED_CDKEY\x10\x04\x12\x16\n\x12LOGIN_DEVICE_LIMIT\x10\x05\x12\x16\n\x12LOGIN_THIRD_FAILED\x10\x06\x12%\n LOGIN_THIRD_TAPTAP_ACCESS_DENIED\x10\x91\x03\x12!\n\x1cLOGIN_THIRD_TAPTAP_FORBIDDEN\x10\x92\x03\x12$\n\x1fLOGIN_THIRD_TAPTAP_SERVER_ERROR\x10\x93\x03\x12*\n%LOGIN_THIRD_TAPTAP_INSUFFICIENT_SCOPE\x10\x94\x03\x12\x1b\n\x16LOGIN_THIRD_OFFICIAL_1\x10\xf5\x03\x12\x1b\n\x16LOGIN_THIRD_OFFICIAL_2\x10\xf6\x03\"\xc9\x01\n\rCharacterInfo\x12<\n\x04info\x18\x01 \x03(\x0b\x32..CentralLoginClient.CharacterInfo.CharacterVal\x1az\n\x0c\x43haracterVal\x12\x0e\n\x06hostId\x18\x01 \x01(\r\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0e\n\x06school\x18\x03 \x01(\r\x12\r\n\x05level\x18\x04 \x01(\r\x12\x0b\n\x03sex\x18\x05 \x01(\r\x12\x12\n\ntLastLogin\x18\x06 \x01(\r\x12\x0c\n\x04gbId\x18\x07 \x01(\x04\"\xb9\x01\n\rServerInfoVal\x12\x0e\n\x06hostId\x18\x01 \x01(\r\x12>\n\x06status\x18\x02 \x01(\x0e\x32..CentralLoginClient.ServerInfoVal.ServerStatus\"X\n\x0cServerStatus\x12\x0b\n\x07ST_NULL\x10\x00\x12\r\n\tST_BAOMAN\x10\x01\x12\r\n\tST_YONGJI\x10\x02\x12\x0f\n\x0bST_LIUCHANG\x10\x03\x12\x0c\n\x08ST_WEIHU\x10\x04\"@\n\nServerInfo\x12\x32\n\x07servers\x18\x01 \x03(\x0b\x32!.CentralLoginClient.ServerInfoVal\"O\n\x11ServerListRequest\x12\x12\n\nclientType\x18\x01 \x01(\t\x12\x15\n\rclientVersion\x18\x02 \x01(\t\x12\x0f\n\x07isMaple\x18\x03 \x01(\x08\":\n\x0fServerListReply\x12\x0f\n\x07isMaple\x18\x01 \x01(\x08\x12\x16\n\x0eserverListInfo\x18\x02 \x01(\t\"y\n\x12\x43heckCaptchaNotify\x12\x34\n\x0b\x63\x61ptchaType\x18\x01 \x01(\x0e\x32\x1f.CentralLoginClient.CaptchaType\x12\x13\n\x0bneedCaptcha\x18\x02 \x01(\x08\x12\x18\n\x10\x66orbidExpireTime\x18\x03 \x01(\x03\"c\n\x16\x43\x61ptchaValidateRequest\x12\x34\n\x0b\x63\x61ptchaType\x18\x01 \x01(\x0e\x32\x1f.CentralLoginClient.CaptchaType\x12\x13\n\x0b\x63\x61ptchaData\x18\x02 \x01(\t\"`\n\x17\x43\x61ptchaValidateResponse\x12\x34\n\x0b\x63\x61ptchaType\x18\x01 \x01(\x0e\x32\x1f.CentralLoginClient.CaptchaType\x12\x0f\n\x07success\x18\x02 \x01(\x08*\x8c\x01\n\x0b\x41\x63\x63ountType\x12\x12\n\x0e\x41\x43\x43OUNT_UNKNOW\x10\x00\x12\x12\n\x0e\x41\x43\x43OUNT_PASSWD\x10\x01\x12\x11\n\rACCOUNT_TOKEN\x10\x02\x12\x18\n\x14\x41\x43\x43OUNT_CROSS_SERVER\x10\x03\x12\x12\n\x0e\x41\x43\x43OUNT_TAPTAP\x10\x04\x12\x14\n\x10\x41\x43\x43OUNT_OFFICIAL\x10\x05*Z\n\x0eThirdLoginType\x12\x16\n\x12THIRD_LOGIN_UNKNOW\x10\x00\x12\x16\n\x12THIRD_LOGIN_TAPTAP\x10\x04\x12\x18\n\x14THIRD_LOGIN_OFFICIAL\x10\x05*S\n\x0b\x43\x61ptchaType\x12\x0b\n\x07\x43T_NULL\x10\x00\x12\x0c\n\x08\x43T_Login\x10\x01\x12\x0c\n\x08\x43T_Press\x10\x02\x12\x0c\n\x08\x43T_Award\x10\x03\x12\r\n\tCT_Market\x10\x04\x32\x8a\x06\n\rCentralServer\x12L\n\x0bgetLoginKey\x12#.CentralLoginClient.LoginKeyRequest\x1a\x18.CentralLoginClient.Void\x12N\n\x0floginByPassword\x12!.CentralLoginClient.PasswordLogin\x1a\x18.CentralLoginClient.Void\x12H\n\x0cloginByToken\x12\x1e.CentralLoginClient.TokenLogin\x1a\x18.CentralLoginClient.Void\x12\x45\n\x0fgetCharaterInfo\x12\x18.CentralLoginClient.Void\x1a\x18.CentralLoginClient.Void\x12\x41\n\x0blistServers\x12\x18.CentralLoginClient.Void\x1a\x18.CentralLoginClient.Void\x12@\n\nactiveTick\x12\x18.CentralLoginClient.Void\x1a\x18.CentralLoginClient.Void\x12M\n\ncheckCDkey\x12%.CentralLoginClient.CheckCDKeyRequest\x1a\x18.CentralLoginClient.Void\x12S\n\x10getServerListDir\x12%.CentralLoginClient.ServerListRequest\x1a\x18.CentralLoginClient.Void\x12W\n\x0f\x63\x61ptchaValidate\x12*.CentralLoginClient.CaptchaValidateRequest\x1a\x18.CentralLoginClient.Void\x12H\n\x0cloginByThird\x12\x1e.CentralLoginClient.ThirdLogin\x1a\x18.CentralLoginClient.Void2\xe3\x05\n\nGameClient\x12O\n\ronGetLoginKey\x12$.CentralLoginClient.LoginKeyResponse\x1a\x18.CentralLoginClient.Void\x12H\n\x0conLoginReply\x12\x1e.CentralLoginClient.LoginReply\x1a\x18.CentralLoginClient.Void\x12Q\n\x12onGetCharacterInfo\x12!.CentralLoginClient.CharacterInfo\x1a\x18.CentralLoginClient.Void\x12I\n\ronListServers\x12\x1e.CentralLoginClient.ServerInfo\x1a\x18.CentralLoginClient.Void\x12H\n\x12\x61\x63tiveTickCallback\x12\x18.CentralLoginClient.Void\x1a\x18.CentralLoginClient.Void\x12M\n\x0conCheckCDKey\x12#.CentralLoginClient.CheckCDKeyReply\x1a\x18.CentralLoginClient.Void\x12S\n\x12onGetServerListDir\x12#.CentralLoginClient.ServerListReply\x1a\x18.CentralLoginClient.Void\x12Z\n\x11onCaptchaValidate\x12+.CentralLoginClient.CaptchaValidateResponse\x1a\x18.CentralLoginClient.Void\x12R\n\x0eonCheckCaptcha\x12&.CentralLoginClient.CheckCaptchaNotify\x1a\x18.CentralLoginClient.VoidB\x15Z\x10../clientService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x12\x63\x65ntralLogin.proto\x12\x12\x43\x65ntralLoginClient\"\x06\n\x04Void\" \n\x11\x43heckCDKeyRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"\xaa\x01\n\x0f\x43heckCDKeyReply\x12?\n\x06result\x18\x01 \x01(\x0e\x32/.CentralLoginClient.CheckCDKeyReply.CDKeyResult\"V\n\x0b\x43\x44KeyResult\x12\x16\n\x12\x43\x44KEY_PLACE_HOLDER\x10\x00\x12\x0c\n\x08\x43\x44KEY_OK\x10\x01\x12\x0e\n\nCDKEY_USED\x10\x02\x12\x11\n\rCDKEY_INVALID\x10\x03\"\x1f\n\x0fLoginKeyRequest\x12\x0c\n\x04rStr\x18\x01 \x01(\t\".\n\x10LoginKeyResponse\x12\x0c\n\x04rStr\x18\x01 \x01(\t\x12\x0c\n\x04sStr\x18\x02 \x01(\t\"6\n\rPasswordLogin\x12\x13\n\x0b\x61\x63\x63ountName\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"<\n\nTokenLogin\x12\r\n\x05phone\x18\x01 \x01(\t\x12\x10\n\x08userInfo\x18\x02 \x01(\t\x12\r\n\x05token\x18\x03 \x01(\t\"6\n\nThirdLogin\x12\x13\n\x0b\x63hannelInfo\x18\x01 \x01(\t\x12\x13\n\x0b\x61\x63\x63\x65ssToken\x18\x02 \x01(\t\"\x82\x05\n\nLoginReply\x12:\n\x06result\x18\x01 \x01(\x0e\x32*.CentralLoginClient.LoginReply.LoginResult\x12\r\n\x05token\x18\x02 \x01(\t\x12\x17\n\x0f\x63\x65ntralServerId\x18\x03 \x01(\r\x12\x10\n\x08serverId\x18\x04 \x01(\t\x12\x16\n\x0egameServerHost\x18\x05 \x01(\t\x12\x17\n\x0fqueueServerHost\x18\x06 \x01(\t\x12\x14\n\x0ctokenTimeout\x18\x07 \x01(\r\x12\x10\n\x08reserved\x18\x08 \x01(\t\"\xa4\x03\n\x0bLoginResult\x12\x11\n\rLOGIN_SUCCESS\x10\x00\x12\x16\n\x12LOGIN_PASSWD_ERROR\x10\x01\x12\x15\n\x11LOGIN_TOKEN_ERROR\x10\x02\x12\x13\n\x0fLOGIN_NOT_LOGIN\x10\x03\x12\x14\n\x10LOGIN_NEED_CDKEY\x10\x04\x12\x16\n\x12LOGIN_DEVICE_LIMIT\x10\x05\x12\x16\n\x12LOGIN_THIRD_FAILED\x10\x06\x12%\n LOGIN_THIRD_TAPTAP_ACCESS_DENIED\x10\x91\x03\x12!\n\x1cLOGIN_THIRD_TAPTAP_FORBIDDEN\x10\x92\x03\x12$\n\x1fLOGIN_THIRD_TAPTAP_SERVER_ERROR\x10\x93\x03\x12*\n%LOGIN_THIRD_TAPTAP_INSUFFICIENT_SCOPE\x10\x94\x03\x12\x1d\n\x18LOGIN_THIRD_OFFICIAL_401\x10\xf5\x03\x12\x1d\n\x18LOGIN_THIRD_OFFICIAL_500\x10\xf6\x03\x12\x1e\n\x19LOGIN_THIRD_OFFICIAL_1001\x10\xf7\x03\"\xc9\x01\n\rCharacterInfo\x12<\n\x04info\x18\x01 \x03(\x0b\x32..CentralLoginClient.CharacterInfo.CharacterVal\x1az\n\x0c\x43haracterVal\x12\x0e\n\x06hostId\x18\x01 \x01(\r\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0e\n\x06school\x18\x03 \x01(\r\x12\r\n\x05level\x18\x04 \x01(\r\x12\x0b\n\x03sex\x18\x05 \x01(\r\x12\x12\n\ntLastLogin\x18\x06 \x01(\r\x12\x0c\n\x04gbId\x18\x07 \x01(\x04\"\xb9\x01\n\rServerInfoVal\x12\x0e\n\x06hostId\x18\x01 \x01(\r\x12>\n\x06status\x18\x02 \x01(\x0e\x32..CentralLoginClient.ServerInfoVal.ServerStatus\"X\n\x0cServerStatus\x12\x0b\n\x07ST_NULL\x10\x00\x12\r\n\tST_BAOMAN\x10\x01\x12\r\n\tST_YONGJI\x10\x02\x12\x0f\n\x0bST_LIUCHANG\x10\x03\x12\x0c\n\x08ST_WEIHU\x10\x04\"@\n\nServerInfo\x12\x32\n\x07servers\x18\x01 \x03(\x0b\x32!.CentralLoginClient.ServerInfoVal\"O\n\x11ServerListRequest\x12\x12\n\nclientType\x18\x01 \x01(\t\x12\x15\n\rclientVersion\x18\x02 \x01(\t\x12\x0f\n\x07isMaple\x18\x03 \x01(\x08\":\n\x0fServerListReply\x12\x0f\n\x07isMaple\x18\x01 \x01(\x08\x12\x16\n\x0eserverListInfo\x18\x02 \x01(\t\"y\n\x12\x43heckCaptchaNotify\x12\x34\n\x0b\x63\x61ptchaType\x18\x01 \x01(\x0e\x32\x1f.CentralLoginClient.CaptchaType\x12\x13\n\x0bneedCaptcha\x18\x02 \x01(\x08\x12\x18\n\x10\x66orbidExpireTime\x18\x03 \x01(\x03\"c\n\x16\x43\x61ptchaValidateRequest\x12\x34\n\x0b\x63\x61ptchaType\x18\x01 \x01(\x0e\x32\x1f.CentralLoginClient.CaptchaType\x12\x13\n\x0b\x63\x61ptchaData\x18\x02 \x01(\t\"`\n\x17\x43\x61ptchaValidateResponse\x12\x34\n\x0b\x63\x61ptchaType\x18\x01 \x01(\x0e\x32\x1f.CentralLoginClient.CaptchaType\x12\x0f\n\x07success\x18\x02 \x01(\x08*\x8c\x01\n\x0b\x41\x63\x63ountType\x12\x12\n\x0e\x41\x43\x43OUNT_UNKNOW\x10\x00\x12\x12\n\x0e\x41\x43\x43OUNT_PASSWD\x10\x01\x12\x11\n\rACCOUNT_TOKEN\x10\x02\x12\x18\n\x14\x41\x43\x43OUNT_CROSS_SERVER\x10\x03\x12\x12\n\x0e\x41\x43\x43OUNT_TAPTAP\x10\x04\x12\x14\n\x10\x41\x43\x43OUNT_OFFICIAL\x10\x05*Z\n\x0eThirdLoginType\x12\x16\n\x12THIRD_LOGIN_UNKNOW\x10\x00\x12\x16\n\x12THIRD_LOGIN_TAPTAP\x10\x04\x12\x18\n\x14THIRD_LOGIN_OFFICIAL\x10\x05*S\n\x0b\x43\x61ptchaType\x12\x0b\n\x07\x43T_NULL\x10\x00\x12\x0c\n\x08\x43T_Login\x10\x01\x12\x0c\n\x08\x43T_Press\x10\x02\x12\x0c\n\x08\x43T_Award\x10\x03\x12\r\n\tCT_Market\x10\x04\x32\x8a\x06\n\rCentralServer\x12L\n\x0bgetLoginKey\x12#.CentralLoginClient.LoginKeyRequest\x1a\x18.CentralLoginClient.Void\x12N\n\x0floginByPassword\x12!.CentralLoginClient.PasswordLogin\x1a\x18.CentralLoginClient.Void\x12H\n\x0cloginByToken\x12\x1e.CentralLoginClient.TokenLogin\x1a\x18.CentralLoginClient.Void\x12\x45\n\x0fgetCharaterInfo\x12\x18.CentralLoginClient.Void\x1a\x18.CentralLoginClient.Void\x12\x41\n\x0blistServers\x12\x18.CentralLoginClient.Void\x1a\x18.CentralLoginClient.Void\x12@\n\nactiveTick\x12\x18.CentralLoginClient.Void\x1a\x18.CentralLoginClient.Void\x12M\n\ncheckCDkey\x12%.CentralLoginClient.CheckCDKeyRequest\x1a\x18.CentralLoginClient.Void\x12S\n\x10getServerListDir\x12%.CentralLoginClient.ServerListRequest\x1a\x18.CentralLoginClient.Void\x12W\n\x0f\x63\x61ptchaValidate\x12*.CentralLoginClient.CaptchaValidateRequest\x1a\x18.CentralLoginClient.Void\x12H\n\x0cloginByThird\x12\x1e.CentralLoginClient.ThirdLogin\x1a\x18.CentralLoginClient.Void2\xe3\x05\n\nGameClient\x12O\n\ronGetLoginKey\x12$.CentralLoginClient.LoginKeyResponse\x1a\x18.CentralLoginClient.Void\x12H\n\x0conLoginReply\x12\x1e.CentralLoginClient.LoginReply\x1a\x18.CentralLoginClient.Void\x12Q\n\x12onGetCharacterInfo\x12!.CentralLoginClient.CharacterInfo\x1a\x18.CentralLoginClient.Void\x12I\n\ronListServers\x12\x1e.CentralLoginClient.ServerInfo\x1a\x18.CentralLoginClient.Void\x12H\n\x12\x61\x63tiveTickCallback\x12\x18.CentralLoginClient.Void\x1a\x18.CentralLoginClient.Void\x12M\n\x0conCheckCDKey\x12#.CentralLoginClient.CheckCDKeyReply\x1a\x18.CentralLoginClient.Void\x12S\n\x12onGetServerListDir\x12#.CentralLoginClient.ServerListReply\x1a\x18.CentralLoginClient.Void\x12Z\n\x11onCaptchaValidate\x12+.CentralLoginClient.CaptchaValidateResponse\x1a\x18.CentralLoginClient.Void\x12R\n\x0eonCheckCaptcha\x12&.CentralLoginClient.CheckCaptchaNotify\x1a\x18.CentralLoginClient.VoidB\x15Z\x10../clientService\x90\x01\x01\x62\x06proto3')
 )
 
 _ACCOUNTTYPE = _descriptor.EnumDescriptor(
@@ -58,8 +58,8 @@ _ACCOUNTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=2043,
-  serialized_end=2183,
+  serialized_start=2079,
+  serialized_end=2219,
 )
 _sym_db.RegisterEnumDescriptor(_ACCOUNTTYPE)
 
@@ -85,8 +85,8 @@ _THIRDLOGINTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=2185,
-  serialized_end=2275,
+  serialized_start=2221,
+  serialized_end=2311,
 )
 _sym_db.RegisterEnumDescriptor(_THIRDLOGINTYPE)
 
@@ -120,8 +120,8 @@ _CAPTCHATYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=2277,
-  serialized_end=2360,
+  serialized_start=2313,
+  serialized_end=2396,
 )
 _sym_db.RegisterEnumDescriptor(_CAPTCHATYPE)
 
@@ -223,18 +223,22 @@ _LOGINREPLY_LOGINRESULT = _descriptor.EnumDescriptor(
       serialized_options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='LOGIN_THIRD_OFFICIAL_1', index=11, number=501,
+      name='LOGIN_THIRD_OFFICIAL_401', index=11, number=501,
       serialized_options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='LOGIN_THIRD_OFFICIAL_2', index=12, number=502,
+      name='LOGIN_THIRD_OFFICIAL_500', index=12, number=502,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='LOGIN_THIRD_OFFICIAL_1001', index=13, number=503,
       serialized_options=None,
       type=None),
   ],
   containing_type=None,
   serialized_options=None,
   serialized_start=735,
-  serialized_end=1119,
+  serialized_end=1155,
 )
 _sym_db.RegisterEnumDescriptor(_LOGINREPLY_LOGINRESULT)
 
@@ -267,8 +271,8 @@ _SERVERINFOVAL_SERVERSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1423,
-  serialized_end=1511,
+  serialized_start=1459,
+  serialized_end=1547,
 )
 _sym_db.RegisterEnumDescriptor(_SERVERINFOVAL_SERVERSTATUS)
 
@@ -627,7 +631,7 @@ _LOGINREPLY = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=513,
-  serialized_end=1119,
+  serialized_end=1155,
 )
 
 
@@ -699,8 +703,8 @@ _CHARACTERINFO_CHARACTERVAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1201,
-  serialized_end=1323,
+  serialized_start=1237,
+  serialized_end=1359,
 )
 
 _CHARACTERINFO = _descriptor.Descriptor(
@@ -729,8 +733,8 @@ _CHARACTERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1122,
-  serialized_end=1323,
+  serialized_start=1158,
+  serialized_end=1359,
 )
 
 
@@ -768,8 +772,8 @@ _SERVERINFOVAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1326,
-  serialized_end=1511,
+  serialized_start=1362,
+  serialized_end=1547,
 )
 
 
@@ -799,8 +803,8 @@ _SERVERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1513,
-  serialized_end=1577,
+  serialized_start=1549,
+  serialized_end=1613,
 )
 
 
@@ -844,8 +848,8 @@ _SERVERLISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1579,
-  serialized_end=1658,
+  serialized_start=1615,
+  serialized_end=1694,
 )
 
 
@@ -882,8 +886,8 @@ _SERVERLISTREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1660,
-  serialized_end=1718,
+  serialized_start=1696,
+  serialized_end=1754,
 )
 
 
@@ -927,8 +931,8 @@ _CHECKCAPTCHANOTIFY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1720,
-  serialized_end=1841,
+  serialized_start=1756,
+  serialized_end=1877,
 )
 
 
@@ -965,8 +969,8 @@ _CAPTCHAVALIDATEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1843,
-  serialized_end=1942,
+  serialized_start=1879,
+  serialized_end=1978,
 )
 
 
@@ -1003,8 +1007,8 @@ _CAPTCHAVALIDATERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1944,
-  serialized_end=2040,
+  serialized_start=1980,
+  serialized_end=2076,
 )
 
 _CHECKCDKEYREPLY.fields_by_name['result'].enum_type = _CHECKCDKEYREPLY_CDKEYRESULT
@@ -1177,8 +1181,8 @@ _CENTRALSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=2363,
-  serialized_end=3141,
+  serialized_start=2399,
+  serialized_end=3177,
   methods=[
   _descriptor.MethodDescriptor(
     name='getLoginKey',
@@ -1282,8 +1286,8 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=3144,
-  serialized_end=3883,
+  serialized_start=3180,
+  serialized_end=3919,
   methods=[
   _descriptor.MethodDescriptor(
     name='onGetLoginKey',
