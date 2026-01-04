@@ -28,5 +28,8 @@ cd ../crossDataServer
 ./game_cross_data_server.sh stop
 ./game_cross_data_server.sh start
 
+cd ../queueServer
+./game_queue_server.sh stop
+./game_queue_server.sh start
 
 ps -ef |grep -v grep | grep -E 'centralLogin|admin|auction|router|maple|dropServer|crossDataServer'

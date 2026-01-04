@@ -65,7 +65,7 @@ type LoginClientService struct {
 	isCaptchaValid   bool
 	captchaBeginTime int64
 	tokenTimeout	 uint32
-	accountId      	 string
+	userId      	 string
 	otherJsonData	 string
 }
 
@@ -116,6 +116,13 @@ type TapTapAccessTokenResponse  struct {
 	Success 		bool                  `json:"success"`
 }
 
+var tapTapErrorMap = map[string]clientService.LoginReply_LoginResult {
+	"access_denied":        clientService.LoginReply_LOGIN_THIRD_TAPTAP_ACCESS_DENIED,
+    "forbidden":            clientService.LoginReply_LOGIN_THIRD_TAPTAP_FORBIDDEN,
+    "server_error":         clientService.LoginReply_LOGIN_THIRD_TAPTAP_SERVER_ERROR,
+    "insufficient_scope":   clientService.LoginReply_LOGIN_THIRD_TAPTAP_INSUFFICIENT_SCOPE,
+}
+
 type OfficialAccessToken struct {
 	Token 			string `json:"token"`
 }
@@ -140,6 +147,12 @@ type OfficialAccessTokenResponse  struct {
 	Message 		string                	`json:"message"`
 	Data    		OfficialResponseData  	`json:"data"`
 	Timestamp     	string                 	`json:"timestamp"`
+}
+
+var officialErrorMap = map[int32]clientService.LoginReply_LoginResult {
+	401:        			clientService.LoginReply_LOGIN_THIRD_OFFICIAL_401,
+    500:            		clientService.LoginReply_LOGIN_THIRD_OFFICIAL_500,
+    1001:         			clientService.LoginReply_LOGIN_THIRD_OFFICIAL_1001,
 }
 
 func (self *LoginClientService) startCheckValidTimer() {
@@ -293,13 +306,13 @@ func (self *LoginClientService) LoginByPassword(r *clientService.PasswordLogin) 
 
 	self.accountName = r.AccountName
 	self.accountType = clientService.AccountType_ACCOUNT_PASSWD
-	self.accountId = fmt.Sprintf("PWD:%d:%s", self.accountType, self.accountName)
+	self.userId = fmt.Sprintf("PWD:%d:%s", self.accountType, self.accountName)
 	self.loginToken = common.RandString(LOGIN_TOKEN_LEN)
 	self.app.addClient(self)
 
 	self.onLoginSucess(self.accountType, self.accountName)
 
-	appLog.Info("LoginByPassword: ", self.accountType, self.accountId, self.accountName, self.loginToken, isValidCDKey)
+	appLog.Info("LoginByPassword: ", self.accountType, self.userId, self.accountName, self.loginToken, isValidCDKey)
 
 	if !isValidCDKey {
 		self.loginResult = clientService.LoginReply_LOGIN_NEED_CDKEY
@@ -670,7 +683,7 @@ func (self *LoginClientService) LoginByToken(r *clientService.TokenLogin) (*clie
 
 func (self *LoginClientService) resetThirdData() {
 	self.accountType = clientService.AccountType_ACCOUNT_UNKNOW
-	self.accountId = ""
+	self.userId = ""
 	self.accountName = ""
 	self.loginToken = ""
 	self.tokenTimeout = 0
@@ -683,6 +696,13 @@ func (self *LoginClientService) _hmacSha1(valStr, keyStr string) (string) {
 	mac.Write([]byte(valStr))
 
 	return base64.StdEncoding.EncodeToString(mac.Sum(nil))
+}
+
+func (self *LoginClientService) _getTapTapLoginResultByErrorMsg(errorMsg string) (clientService.LoginReply_LoginResult) {
+    if result, exists := tapTapErrorMap[errorMsg]; exists {
+        return result
+    }
+    return clientService.LoginReply_LOGIN_THIRD_FAILED
 }
 
 func (self *LoginClientService) _attemptTapTapRequest(reqURL, authorization string, loginResult *clientService.LoginReply_LoginResult) bool {
@@ -719,12 +739,12 @@ func (self *LoginClientService) _attemptTapTapRequest(reqURL, authorization stri
 	if !tapTapAccessTokenResponse.Success {
 		appLog.Warn(fmt.Sprintf("_attemptTapTapRequest respBody false: %d, %s, %s, %s", tapTapAccessTokenResponse.Data.Code, tapTapAccessTokenResponse.Data.Msg,
 		tapTapAccessTokenResponse.Data.Error, tapTapAccessTokenResponse.Data.ErrorDescription))
-		*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
+		*loginResult = self._getTapTapLoginResultByErrorMsg(tapTapAccessTokenResponse.Data.Error)
 	} else {
 		appLog.Info(fmt.Sprintf("_attemptTapTapRequest respBody true: %s, %s, %s, %s, %s", tapTapAccessTokenResponse.Data.Avatar, tapTapAccessTokenResponse.Data.Gender,
 		tapTapAccessTokenResponse.Data.Name, tapTapAccessTokenResponse.Data.OpenId, tapTapAccessTokenResponse.Data.UnionId))
 		self.accountType = clientService.AccountType_ACCOUNT_TAPTAP
-		self.accountId = tapTapAccessTokenResponse.Data.UnionId
+		self.userId = tapTapAccessTokenResponse.Data.UnionId
 		self.accountName = tapTapAccessTokenResponse.Data.OpenId
 		self.loginToken = common.RandString(LOGIN_TOKEN_LEN)
 	}
@@ -785,6 +805,13 @@ func (self *LoginClientService) _loginByTapTap(channelInfo *ChannelInfo, tapTapA
 	return self._attemptTapTapRequest(reqURL, authorization, loginResult)
 }
 
+func (self *LoginClientService) _getOfficialLoginResultByErrorMsg(errorCode int32) (clientService.LoginReply_LoginResult) {
+    if result, exists := officialErrorMap[errorCode]; exists {
+        return result
+    }
+    return clientService.LoginReply_LOGIN_THIRD_FAILED
+}
+
 func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, loginResult *clientService.LoginReply_LoginResult) bool {
 	client := http.Client{Timeout: 5 * time.Second}
 	req, err := http.NewRequest(http.MethodPost, reqURL, nil)
@@ -818,7 +845,7 @@ func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, lo
 	self.resetThirdData()
 	if officialAccessTokenResponse.Code != 200 {
 		appLog.Warn(fmt.Sprintf("_attemptOfficialRequest respBody false: %d, %s", officialAccessTokenResponse.Code, officialAccessTokenResponse.Message))
-		*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
+		*loginResult = self._getOfficialLoginResultByErrorMsg(officialAccessTokenResponse.Code)
 		officialAccessTokenResponse.Success = false
 	} else {
 		appLog.Info(fmt.Sprintf("_attemptOfficialRequest respBody true: %s, %t, %s, %s, %t, %s, %s, %s, %t, %s, %d", officialAccessTokenResponse.Data.GameId, officialAccessTokenResponse.Data.TokenRefreshed,
@@ -853,7 +880,7 @@ func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, lo
 				officialAccessTokenResponse.Success = false
 			} else {
 				self.accountType = clientService.AccountType_ACCOUNT_OFFICIAL
-				self.accountId = officialAccessTokenResponse.Data.UserInfoId
+				self.userId = officialAccessTokenResponse.Data.UserInfoId
 				self.accountName = officialAccessTokenResponse.Data.UserGameId
 				self.loginToken = officialAccessTokenResponse.Data.NewToken
 				self.tokenTimeout = uint32(tokenTimeout)
@@ -934,7 +961,7 @@ func (self *LoginClientService) LoginByThird(r *clientService.ThirdLogin) (*clie
 		appLog.Warn(fmt.Sprintf("loginByThird verify failed res : %d", loginResult))
 		return nil, errors.New(fmt.Sprintf("loginByThird verify failed res : %d", loginResult))
 	}
-	appLog.Info(fmt.Sprintf("LoginByThird: verify success, accountType: %d, accountId: %s, accountName: %s", self.accountType, self.accountId, self.accountName))
+	appLog.Info(fmt.Sprintf("LoginByThird: verify success, accountType: %d, userId: %s, accountName: %s", self.accountType, self.userId, self.accountName))
 
 	self.loginResult = clientService.LoginReply_LOGIN_SUCCESS
 	self.channelId = channelInfo.Id

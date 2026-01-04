@@ -254,11 +254,69 @@ func (self *HttpService) handleGetQueueInfo(w http.ResponseWriter, r *http.Reque
 	}
 }
 
+type GreenCodeReply struct {
+	IsSuccess bool `json:"isSuccess"`
+}
+
+func (self *HttpService) handleExchangeGreenCode(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	var accountNameStr = strings.Join(r.Form["accountName"], "")
+	var serverIdStr = strings.Join(r.Form["serverId"], "")
+	var greenCodeStr = strings.Join(r.Form["greenCode"], "")
+
+	log.Println("handleExchangeGreenCode: ", accountNameStr, serverIdStr, "g:green_code:"+greenCodeStr)
+
+	conn := self.app.redisPool.Get()
+	defer conn.Close()
+
+	owner, err := redis.String(conn.Do("get", "g:green_code:"+greenCodeStr))
+	if err != nil {
+		response := GreenCodeReply{}
+		response.IsSuccess = false
+		data, err := json.Marshal(response)
+		if err != nil {
+			appLog.Error("handleExchangeGreenCode json response failed", err.Error())
+			w.WriteHeader(405)
+			return
+		}
+		fmt.Fprintf(w, string(data))
+		return
+	}
+
+	if owner == "0" {
+		redis.String(conn.Do("set", "g:green_code:"+greenCodeStr, accountNameStr))
+		redis.String(conn.Do("set", "g:vip:sv:"+accountNameStr, "1"))
+
+		response := GreenCodeReply{}
+		response.IsSuccess = true
+		data, err := json.Marshal(response)
+		if err != nil {
+			appLog.Error("handleExchangeGreenCode json response failed", err.Error())
+			w.WriteHeader(405)
+			return
+		}
+		fmt.Fprintf(w, string(data))
+		return
+	} else {
+		log.Println("handleExchangeGreenCode: ", accountNameStr, serverIdStr, greenCodeStr, owner)
+		response := GreenCodeReply{}
+		response.IsSuccess = false
+		data, err := json.Marshal(response)
+		if err != nil {
+			appLog.Error("handleExchangeGreenCode json response failed", err.Error())
+			w.WriteHeader(405)
+			return
+		}
+		fmt.Fprintf(w, string(data))
+	}
+}
+
 func (self *HttpService) startHttpServer(listenAddr string) {
 	appLog.Info("startHttpServer", listenAddr)
 
 	http.HandleFunc("/startQueue", self.handleStartQueue)
 	http.HandleFunc("/getQueueInfo", self.handleGetQueueInfo)
+	http.HandleFunc("/exchangeGreenCode", self.handleExchangeGreenCode)
 
 	listener, err := greuse.Listen("tcp", listenAddr)
 	if err != nil {

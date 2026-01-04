@@ -95,7 +95,7 @@ func (self *GameServerService) DoVerifyLogin(in *gameServerService.VerifyAccount
 
 func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRequest) (*gameServerService.Void, error) {
 	res := gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_UNKNOWN
-	isLogin, channelId, accountId, otherJsonData := self.app.checkClientLogin(self, in.AccountType, in.AccountName, in.Token)
+	isLogin, channelId, userId, otherJsonData := self.app.checkClientLogin(self, in.AccountType, in.AccountName, in.Token)
 	if !isLogin {
 		res = gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_FAIL
 		appLog.Error("verifyLogin failed: ", in.AccountType, in.AccountName, in.Token)
@@ -119,7 +119,7 @@ func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRe
 		}
 	}
 
-	appLog.Info(fmt.Sprintf("verifyLogin: res=%d, AccountType=%d, AccountId=%s, AccountName=%s, OtherJsonData=%s, Token=%s, channelId=%d", res, in.AccountType, accountId, in.AccountName, otherJsonData, in.Token, channelId))
+	appLog.Info(fmt.Sprintf("verifyLogin: res=%d, AccountType=%d, UserId=%s, AccountName=%s, OtherJsonData=%s, Token=%s, channelId=%d", res, in.AccountType, userId, in.AccountName, otherJsonData, in.Token, channelId))
 	result := gameServerService.VerifyAccountReply{
 		Result: res, AccountName: in.AccountName,
 		AccountType:      in.AccountType,
@@ -128,7 +128,7 @@ func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRe
 		BanPostTime:      banPostTime,
 		BanAccountReason: banAccountReason,
 		BanPostReason:    banPostReason,
-		AccountId:        accountId,
+		UserId:			  userId,
 		OtherJsonData:    otherJsonData}
 	self.Client.(*gameServerService.GameServerClient).OnVerifyLogin(&result)
 
@@ -215,6 +215,16 @@ func (self *GameServerService) UpdateCharacter(in *gameServerService.UpdateChara
 		}
 	}
 
+	return nil, nil
+}
+
+func (self *GameServerService) DeleteCharacter(in *gameServerService.DeleteCharacterRequest) (*gameServerService.Void, error) {
+	appLog.Info("DeleteCharacter gbId:", in.GbId)
+	sql := "delete from account_characters where gbId=?"
+	_, err := self.app.db.Exec(sql, in.GbId)
+	if err != nil {
+		appLog.Error("DeleteCharacter err: ", in.GbId, err.Error())
+	}
 	return nil, nil
 }
 

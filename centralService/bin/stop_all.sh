@@ -21,4 +21,8 @@ cd ../auction
 cd ../crossDataServer
 ./game_cross_data_server.sh stop
 
+cd ../queueServer
+./game_queue_server.sh stop
+
+
 ps -ef |grep -v grep | grep -E 'centralLogin|admin|auction|router|maple|dropServer|crossDataServer'

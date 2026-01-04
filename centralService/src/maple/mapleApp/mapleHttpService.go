@@ -88,13 +88,34 @@ func (mhs *MapleHttpService) getAllZone() map[uint32]string {
 	return zoneMap
 }
 
+func (mhs *MapleHttpService) getAllKV() map[string]string {
+	sql := "SELECT `key`, `value` FROM `maple_kv`"
+	rows, err := mhs.app.db.Query(sql)
+	if err != nil {
+		appLog.Error("exec sql error: ", err.Error())
+	}
+
+	kvMap := make(map[string]string)
+	for rows.Next() {
+		var key string
+		var value string
+		err = rows.Scan(&key, &value)
+		if err != nil {
+			appLog.Error("scan row error: ", err.Error())
+		}
+		kvMap[key] = value
+	}
+
+	return kvMap
+}
+
 func (mhs *MapleHttpService) getAllServer(w http.ResponseWriter, r *http.Request) {
 	appLog.Info("getAllServer")
 	enableCors(&w)
 
 	zoneMap := mhs.getAllZone()
 
-	sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_state, server_flag_state, alias, start_time FROM `maple`"
+	sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_state, server_flag_state, alias, start_time, central_login FROM `maple`"
 	rows, err := mhs.app.db.Query(sql)
 	if err != nil {
 		appLog.Error("exec sql error: ", err.Error())
@@ -103,7 +124,7 @@ func (mhs *MapleHttpService) getAllServer(w http.ResponseWriter, r *http.Request
 	var serverList []model.Server
 	for rows.Next() {
 		var server model.Server
-		err = rows.Scan(&server.Id, &server.ServerName, &server.ZoneId, &server.GameServer, &server.QueueServer, &server.ServerGroup, &server.ServerState, &server.ServerFlagState, &server.Alias, &server.StartTime)
+		err = rows.Scan(&server.Id, &server.ServerName, &server.ZoneId, &server.GameServer, &server.QueueServer, &server.ServerGroup, &server.ServerState, &server.ServerFlagState, &server.Alias, &server.StartTime, &server.CentralLogin)
 		if err != nil {
 			appLog.Error("scan row error: ", err.Error())
 		}
@@ -117,7 +138,14 @@ func (mhs *MapleHttpService) getAllServer(w http.ResponseWriter, r *http.Request
 		serverList = append(serverList, server)
 	}
 
-	jsonData, err := json.Marshal(serverList)
+	kvMap := mhs.getAllKV()
+
+	response := model.GetAllServerResponse{
+		Servers: serverList,
+		KV:      kvMap,
+	}
+
+	jsonData, err := json.Marshal(response)
 	if err != nil {
 		appLog.Error("marshal json error:", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
@@ -193,8 +221,8 @@ func (mhs *MapleHttpService) handleImport(w http.ResponseWriter, r *http.Request
             return
         }
 
-        sql = "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        if _, err = tx.Exec(sql, server.Id, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime); err != nil {
+        sql = "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`, `central_login`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        if _, err = tx.Exec(sql, server.Id, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.CentralLogin); err != nil {
             appLog.Error("exec server sql error: ", err.Error())
             tx.Rollback()
             w.WriteHeader(http.StatusInternalServerError)
@@ -227,7 +255,7 @@ func (mhs *MapleHttpService) handleExport(w http.ResponseWriter, r *http.Request
 
     zoneMap := mhs.getAllZone()
 
-    sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_state, server_flag_state, alias, start_time FROM `maple`"
+    sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_state, server_flag_state, alias, start_time, central_login FROM `maple`"
     rows, err := mhs.app.db.Query(sql)
     if err != nil {
         appLog.Error("exec sql error: ", err.Error())
@@ -239,7 +267,7 @@ func (mhs *MapleHttpService) handleExport(w http.ResponseWriter, r *http.Request
     var list model.ServerList
     for rows.Next() {
         var s model.Server
-        if err = rows.Scan(&s.Id, &s.ServerName, &s.ZoneId, &s.GameServer, &s.QueueServer, &s.ServerGroup, &s.ServerState, &s.ServerFlagState, &s.Alias, &s.StartTime); err != nil {
+        if err = rows.Scan(&s.Id, &s.ServerName, &s.ZoneId, &s.GameServer, &s.QueueServer, &s.ServerGroup, &s.ServerState, &s.ServerFlagState, &s.Alias, &s.StartTime, &s.CentralLogin); err != nil {
             appLog.Error("scan row error: ", err.Error())
             w.WriteHeader(http.StatusInternalServerError)
             w.Write([]byte("scan row error"))
@@ -346,8 +374,8 @@ func (mhs *MapleHttpService) updateServer(w http.ResponseWriter, r *http.Request
 	}
 
 	if count == 0 {
-		sql = "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-		_, err = mhs.app.db.Exec(sql, server.Id, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime)
+		sql = "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`, `central_login`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+		_, err = mhs.app.db.Exec(sql, server.Id, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.CentralLogin)
 		if err != nil {
 			appLog.Error("exec sql error: ", err.Error())
 		}
@@ -358,11 +386,70 @@ func (mhs *MapleHttpService) updateServer(w http.ResponseWriter, r *http.Request
 			appLog.Error("exec sql error: ", err.Error())
 		}
 	} else {
-		sql = "UPDATE `maple` SET `server_name` = ?, `zone_id` = ?, `game_server` = ?, `queue_server` = ?, `server_group` = ?, `server_state` = ?, `server_flag_state` = ?, `alias` = ?, `start_time` = ? WHERE `server_id` = ?"
-		_, err = mhs.app.db.Exec(sql, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.Id)
+		sql = "UPDATE `maple` SET `server_name` = ?, `zone_id` = ?, `game_server` = ?, `queue_server` = ?, `server_group` = ?, `server_state` = ?, `server_flag_state` = ?, `alias` = ?, `start_time` = ?, `central_login` = ? WHERE `server_id` = ?"
+		_, err = mhs.app.db.Exec(sql, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.CentralLogin, server.Id)
 		if err != nil {
 			appLog.Error("exec sql error: ", err.Error())
 		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("success"))
+}
+
+func (mhs *MapleHttpService) handleUpdateKV(w http.ResponseWriter, r *http.Request) {
+	appLog.Info("handleUpdateKV")
+	enableCors(&w)
+
+	if !mhs.handleAuth(w, r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("unauthorized"))
+		return
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		appLog.Error("read body error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("internal server error"))
+		return
+	}
+
+	appLog.Info("body: ", string(body))
+
+	var kvMap map[string]string
+	err = json.Unmarshal(body, &kvMap)
+	if err != nil {
+		appLog.Error("unmarshal body error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("unmarshal body error"))
+		return
+	}
+
+	tx, err := mhs.app.db.Begin()
+	if err != nil {
+		appLog.Error("begin tx error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("begin tx error"))
+		return
+	}
+
+	for key, value := range kvMap {
+		sql := "INSERT INTO `maple_kv` (`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value`=VALUES(`value`)"
+		if _, err = tx.Exec(sql, key, value); err != nil {
+			appLog.Error("exec kv sql error: ", err.Error())
+			tx.Rollback()
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("insert kv error"))
+			return
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		appLog.Error("commit tx error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("commit tx error"))
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -425,6 +512,7 @@ func (mhs *MapleHttpService) start(listenAddr string) {
     http.Handle("/addZone", corsMiddleware(http.HandlerFunc(mhs.addZone)))
     http.Handle("/updateServer", corsMiddleware(http.HandlerFunc(mhs.updateServer)))
     http.Handle("/removeServer", corsMiddleware(http.HandlerFunc(mhs.removeServer)))
+    http.Handle("/updateKV", corsMiddleware(http.HandlerFunc(mhs.handleUpdateKV)))
 
 	err := http.ListenAndServe(listenAddr, nil)
 	if err != nil {

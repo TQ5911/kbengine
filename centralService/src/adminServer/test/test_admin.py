@@ -23,7 +23,7 @@ def send_mail():
     _mail_id = 37001003
     _itemId_num = '30000236,1'
     _deps = ''
-    _title = base64.b64encode('Test Title'.encode('utf-8')).decode('utf-8')
+    _title = base64.b64encode('Test Title2'.encode('utf-8')).decode('utf-8')
     _content = base64.b64encode('Test Content'.encode('utf-8')).decode('utf-8')
     _start_time = '2022-01-01 00:00:00'
     # _start_time is int
@@ -36,7 +36,9 @@ def send_mail():
     _min_level = 1
     _max_level = 99
 
-    _args = f"{_mail_id} {_itemId_num} {_deps} {_title} {_content} {_start_time} {_end_time} {_min_level} {_max_level}"                             # Command arguments
+    _channel = 1
+
+    _args = f"{_mail_id} {_itemId_num} {_deps} {_title} {_content} {_start_time} {_end_time} {_min_level} {_max_level} {_channel}"                             # Command arguments
 
     return _cmd, _args
 
@@ -54,20 +56,22 @@ def official_msg():
 
 def ban_avatar():
     _cmd = '$banAvatar'
-    _gbId = '5692323558839235377'
-    _endTime = '0'
+    #_gbId = '5692323899933458433'
+    _gbId = '5692323864546954445'
+    #_gbId = '5692323558839235377'
+    _endTime = '1766284329'
     _args = f"{_gbId} {_endTime}"                             # Command arguments
     return _cmd, _args
 
 def disban_avatar():
     _cmd = '$disbanAvatar'
-    _gbId = '5692323558839235377'
+    _gbId = '5692323864546954445'
     _args = f"{_gbId}"                             # Command arguments
     return _cmd, _args
 
 def ban_chat():
     _cmd = '$setChatForbidden'
-    _gbId = '5692323558839235377'
+    _gbId = '5692323694627310797'
     _endTime = '180'
     _args = f"{_gbId} {_endTime}"                             # Command arguments
     return _cmd, _args
@@ -76,14 +80,14 @@ def test_docmd():
     # -------------------------- CONFIGURATION --------------------------
     # Edit these parameters directly in the file:
 
-    _cmd, _args = ban_chat()
+    _cmd, _args = send_mail()
     print(f'{_cmd} {_args}')
     URL = "http://192.168.10.13:8080/docmd"           # Admin server docmd URL
     PARTITION = 20223                                  # Partition ID (0 for broadcast to all servers)
     COMMAND = _cmd
     ARGS = _args
     SEQID = int(time.time())                       # Sequence ID (current timestamp by default)
-    SERIALNO = "23"                                  # Serial number (optional)
+    SERIALNO = ""                                  # Serial number (optional)
     SIGN_KEY = "3Pi0ZsIoRha8h0MG6jfHdxG1WLcE7XplB0kzhFitVIZzUNIbKc871DMEZnHGygno"                                  # Signature key (if server requires signatures)
     TIMEOUT = 15                                   # Request timeout in seconds
     # -------------------------------------------------------------------

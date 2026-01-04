@@ -76,6 +76,13 @@ func CentralServer_UnlockLoginSwitchServer_Handler(endPoint prpc.IEndPoint, dec 
     }
     return endPoint.(ICentralServerInterface).UnlockLoginSwitchServer(in)
 }
+func CentralServer_DeleteCharacter_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(DeleteCharacterRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(ICentralServerInterface).DeleteCharacter(in)
+}
 var CentralServerServiceDesc = prpc.ServiceDesc{
     ServiceName: "CentralLoginGameServer.CentralServer",
     Methods: []prpc.MethodDesc{
@@ -128,6 +135,11 @@ var CentralServerServiceDesc = prpc.ServiceDesc{
             MethodName:  "UnlockLoginSwitchServer",
             MethodIndex: 9,
             Handler:     CentralServer_UnlockLoginSwitchServer_Handler,
+        },
+        {
+            MethodName:  "DeleteCharacter",
+            MethodIndex: 10,
+            Handler:     CentralServer_DeleteCharacter_Handler,
         },
     },
 }
@@ -183,6 +195,10 @@ func (self *CentralServerClient) UnlockLoginSwitchServer(in *UnlockLoginSwitchSe
     err := self.Channel.CallMethod(&CentralServerServiceDesc.Methods[9], in)
     return &Void{}, err
 }
+func (self *CentralServerClient) DeleteCharacter(in *DeleteCharacterRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&CentralServerServiceDesc.Methods[10], in)
+    return &Void{}, err
+}
 type ICentralServerInterface interface {
     VerifyLogin(*VerifyAccountRequest) (*Void, error)
     RegisterServer(*GameServerInfo) (*Void, error)
@@ -194,6 +210,7 @@ type ICentralServerInterface interface {
     OnAccountOffline(*AccountOfflineVal) (*Void, error)
     LockLoginSwitchServer(*LockLoginSwitchServerVal) (*Void, error)
     UnlockLoginSwitchServer(*UnlockLoginSwitchServerVal) (*Void, error)
+    DeleteCharacter(*DeleteCharacterRequest) (*Void, error)
 }
 
 func GameServer_OnVerifyLogin_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {

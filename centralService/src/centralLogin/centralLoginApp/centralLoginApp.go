@@ -222,7 +222,7 @@ func (self *CentralLoginApp) checkClientLogin(gs *GameServerService, accountType
 	}
 
 	if cs.loginResult == clientService.LoginReply_LOGIN_SUCCESS && token == cs.loginToken {
-		return true, cs.channelId, cs.accountId, cs.otherJsonData
+		return true, cs.channelId, cs.userId, cs.otherJsonData
 	} else {
 		appLog.Error("checkClientLogin failed: ", cs.loginResult, cs.loginToken, token)
 	}
