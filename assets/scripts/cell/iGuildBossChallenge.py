@@ -52,8 +52,8 @@ class IGuildBossChallenge(object):
         context = {'e': eContext, 'l': lContext, 'src': 0}
         INFO_MSG('doLeaveGuildBossDungeon::', context)
         spaceType = self._getPrmBydungeonNo(formula.getDungeonNoBySpaceNo(self.spaceNo), 'type')
-        _m_mapId, _m_outsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
-        spaceNo = formula.getLineSpaceNo(_m_mapId)
+        _, _m_outsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
+        spaceNo = _m_outsideRecord.spaceNo if _m_outsideRecord else formula.getLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
         self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
 
     def checkGuildBossChallengeCond(self):

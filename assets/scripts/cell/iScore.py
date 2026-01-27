@@ -19,7 +19,7 @@ class IScore(object):
         self.initAvatarScores()
 
     def initAvatarScores(self):
-        DEBUG_MSG('initAvatarScores')
+        INFO_MSG('initAvatarScores')
         self.scoreInitFinished = False
         self.totalScore = 0
         m_dict = {i: False for i in AvatarScores.AvatarScores.__attrs__}
@@ -35,7 +35,7 @@ class IScore(object):
         self.updateGuildScoreFromInit()
 
     def onInitAvatarBaseScores(self, data):
-        DEBUG_MSG('onInitAvatarBaseScores::', data)
+        INFO_MSG('onInitAvatarBaseScores::', data)
         data = data or {}
         for k, v in data.items():
             self._changeScore(k, v)
@@ -63,7 +63,7 @@ class IScore(object):
         if key not in m_avatarScoresInitChecklist:
             ERROR_MSG("markAvatarScoreBeInited:: un-known key", key)
             return
-        DEBUG_MSG('markAvatarScoreBeInited, score has init:', key)
+        INFO_MSG('markAvatarScoreBeInited, score has init:', key)
         m_avatarScoresInitChecklist[key] = True
         if not all(m_avatarScoresInitChecklist.values()):
             return
@@ -81,7 +81,7 @@ class IScore(object):
         for propName in changeAffactProp.split(';'):
             propValue = getattr(self, propName)
             if propValue > 0:
-                score += int(propValue * dataUtils.filterFightPropScore(self.school, propName))
+                score += dataUtils.calcFightPropScore(self.school, propName, propValue)
         return score
 
     def getTotalEquipmentsScore(self):
@@ -90,7 +90,7 @@ class IScore(object):
             totalScore += equipObj.getEquipScore()
         
         for attrName, attrValue in self.bodyEquipData.blessAttrs.items():
-            totalScore += int(dataUtils.filterFightPropScore(self.school, attrName) * attrValue)
+            totalScore += dataUtils.calcFightPropScore(self.school, attrName, attrValue)
         return totalScore
 
     # --------------------------------------------------------------
@@ -101,6 +101,12 @@ class IScore(object):
     def _changeScore(self, key, val):
         oldTotalScore = self.totalScore
         setattr(self.scoresInfo, key, val)
+        # 每次重新计算祝福评分
+        oldBlessVal = self.scoresInfo.bless
+        blessVal = math.floor(dataUtils.calcAvatarBlessScore(self))
+        if blessVal >= 0 and blessVal != oldBlessVal:
+            setattr(self.scoresInfo, 'bless', blessVal)
+            self.base.baseScoreChanged(self.scoreInitFinished, 'bless', blessVal)
         self.scoresInfo = self.scoresInfo
         self.totalScore = self.getTotalScore()
         if oldTotalScore != self.totalScore:

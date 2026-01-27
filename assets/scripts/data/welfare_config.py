@@ -37,11 +37,11 @@ datas = _tools.RODict({
     }),
     "TenSignTitle": _tools.RODict({
         "ID": "TenSignTitle",
-        "value": "金币好礼天天领",
+        "value": "超多元宝天天领",
     }),
     "TenSignSubtitle": _tools.RODict({
         "ID": "TenSignSubtitle",
-        "value": "每日登录即可领取超多金币",
+        "value": "每日登录即可领取绑定元宝",
     }),
     "TenSignRewardCard": _tools.RODict({
         "ID": "TenSignRewardCard",
@@ -49,11 +49,11 @@ datas = _tools.RODict({
     }),
     "AttentionMethod": _tools.RODict({
         "ID": "AttentionMethod",
-        "value": "领取方式:关注官方微信公众号发送口令【烽烟万里】即可领取专属礼包奖励",
+        "value": "领取方式:关注官方微信公众号发送口令【烽烟NBCC限定】即可领取专属礼包奖励",
     }),
     "AttentionReward": _tools.RODict({
         "ID": "AttentionReward",
-        "value": 40000090,
+        "value": 40000154,
     }),
     "AttentionAccounts": _tools.RODict({
         "ID": "AttentionAccounts",
@@ -82,5 +82,9 @@ datas = _tools.RODict({
     "PcLoginReward": _tools.RODict({
         "ID": "PcLoginReward",
         "value": 40000153,
+    }),
+    "wechatFailedJump": _tools.RODict({
+        "ID": "wechatFailedJump",
+        "value": 54000390,
     })
 })

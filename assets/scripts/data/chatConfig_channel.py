@@ -24,8 +24,8 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "channelDefaultSet": 1,
-        "channelCD": 30,
-        "channelMinLevel": 20,
+        "channelCD": 15,
+        "channelMinLevel": 17,
     }),
     3: _tools.RODict({
         "ID": 3,

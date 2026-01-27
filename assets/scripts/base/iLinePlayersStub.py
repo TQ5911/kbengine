@@ -51,10 +51,37 @@ class EnterLineExtra(object):
 class ILinePlayersStub(object):
     def __init__(self):
         self.mergeRes = []
+        self.fightingPlayersCntBase = {}
 
     def onLineSpaceReady(self, spaceNo):
         lineNo = formula.getLineNo(spaceNo)
         self.allPlayers[lineNo] = linePlayers.LinePlayers(lineNo)
+
+    def genClearTimeOutIter(self):
+        for lineNo in list(self.allPlayers.keys()):
+            yield lineNo
+
+    def onClearEnterTimeOut(self, timeOutDuration):
+        if self.clearTimeOutIter is None:
+            self.clearTimeOutIter = self.genClearTimeOutIter()
+
+        lineNo = next(self.clearTimeOutIter, None)
+        if lineNo is None:
+            self.clearTimeOutIter = self.genClearTimeOutIter()
+            return
+
+        _linePlayers = self.allPlayers.get(lineNo)
+
+        _timeoutTime = utils.getNow() - timeOutDuration
+        if not _linePlayers:
+            WARNING_MSG('onClearEnterTimeOut:spaceNo={}, _linePlayers is None'.format(lineNo))
+            return
+
+        _clearList = _linePlayers.clearTimeOutInfo(_timeoutTime)
+        if _clearList:
+            ERROR_MSG('onClearEnterTimeOut:spaceNo={}, clearList={}'.format(lineNo, _clearList))
+            for _gbId in _clearList:
+                self.allPlayers.pop(_gbId, None)
 
     def onLineSpaceGone(self, spaceNo, groupOrder):
         lineNo = formula.getLineNo(spaceNo)
@@ -83,7 +110,32 @@ class ILinePlayersStub(object):
             return
 
         if formula.isWorldLineType(self.lineType) and isAutoSelectedLine and lineNo < 0:
-            lineNo = random.choice(self.getLineNoReadyForEnter())
+            if 'telToMainCityWhenFull' in extra:
+                isTel = extra['telToMainCityWhenFull']
+                if not isTel:
+                    box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
+                    mpFailCb = extra.get('mpFailCb', None)
+                    if mpFailCb:
+                        box.callMethod(mpFailCb, (1,))
+                else:
+                    #目标场景满人了，回到主城
+                    returnMapID = GGD.datas[self.lineType]["returnMapID"]
+                    extra['isForceEnter'] = True
+                    extra.pop('telToMainCityWhenFull')
+                    position, direction = formula.whatSpaceBornPosAndDir(returnMapID)
+                    DEBUG_MSG('enterLine: telToMainCityWhenFull')
+                    gameengine.getLineStub(returnMapID).enterLine(-1, box, gbId, position, direction, extra)
+                return
+            
+            #突破上限强行进入，主城满人的时候再进入才会发生
+            if extra.get('isLogin') or extra.get('isForceEnter'):
+                ERROR_MSG('enterLine: reach max member', box.id, gbId, extra)
+                lineNo = random.choice(self.getLineNoReadyForEnter())
+            else:
+                #没处理到的enterline
+                box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
+                gameengine.reportCritical('enterLine: unexpected error', box.id, gbId, extra)
+                return
 
         if lineNo < 0:
             ERROR_MSG('enterLine _autoSelectLine failed:', box.id, gbId, extra)
@@ -201,7 +253,7 @@ class ILinePlayersStub(object):
             return gameconst.EnterLineCode.FAIL_ONLY_TEAM_MEMBER
         
         # 人数 > N3 且 是自动就不能进了
-        if playerNum > N3Cnt and extraInfo.isAuto:
+        if playerNum > N3Cnt and extraInfo.isAuto and not hasMember:
             return gameconst.EnterLineCode.FAIL_CANNOT_AUTO_ENTER
         
         for i, res in self.mergeRes:
@@ -222,9 +274,6 @@ class ILinePlayersStub(object):
 
         n5list = []
         lineNoList = sorted(self.allPlayers.keys())
-        if extraInfo.fromLineNo in lineNoList:
-            lineNoList.remove(extraInfo.fromLineNo)
-            lineNoList.insert(0, extraInfo.fromLineNo)
 
         for lineNo in lineNoList:
             checkCode = self._checkSelectLine(lineNo, box, gbId, extraInfo, exlude, isSwitchLine)
@@ -277,14 +326,38 @@ class ILinePlayersStub(object):
         toLineNo = self._autoSelectLine(box, gbId, ext, exlude=None, isSwitchLine=True)
 
         if formula.isWorldLineType(self.lineType) and toLineNo < 0:
-            toLineNo = random.choice(self.getLineNoReadyForEnter())
-            # TODO X: valid world position config
+            toLineNo = -1
+            
             pos, dir = formula.whatSpaceBornPosAndDir(self.lineType)
             extra['position'] = pos
+            spaceVal = self.getLineSpaceVal(0)
+
+        if fromLineNo != toLineNo and toLineNo != -1:
+            lineMembers = self.allPlayers.getLinePlayers(toLineNo)
+            if not lineMembers:
+                ERROR_MSG("autoSwitchLine: toLineNo is not in line", toLineNo)
+                return
+            lineMembers.addPendingEnterPlayer(self, gbId)
+
+        spaceVal = self.getLineSpaceVal(toLineNo) if toLineNo != -1 else self.getLineSpaceVal(0)
+        box.callMethod(cbName, (toLineNo, spaceVal.lineSpaceBox, extra.get('position', None)) + cbArgs)
+
+    #目标线全满了回主城
+    def autoSwitchLineToMainCity(self, box, gbId, fromSpaceNo, extra, cbName, cbArgs):
+        DEBUG_MSG("autoSwitchLineToMainCity", box, gbId, fromSpaceNo, extra, cbName, cbArgs)
+        ext = EnterLineExtra.new(extra, -1)
+        fromLineNo = formula.getLineNo(fromSpaceNo)
+        toLineNo = self._autoSelectLine(box, gbId, ext, exlude=None, isSwitchLine=True)
+        pos, dir = formula.whatSpaceBornPosAndDir(self.lineType)
+        extra['position'] = pos
+
+        if formula.isWorldLineType(self.lineType) and toLineNo < 0:
+            toLineNo = random.choice(self.getLineNoReadyForEnter())
 
         if fromLineNo != toLineNo:
             lineMembers = self.allPlayers.getLinePlayers(toLineNo)
             if not lineMembers:
+                ERROR_MSG("autoSwitchLineToMainCity: toLineNo is not in line", toLineNo)
                 return
             lineMembers.addPendingEnterPlayer(self, gbId)
 
@@ -429,8 +502,9 @@ class ILinePlayersStub(object):
         ext = EnterLineExtra.new(extra, lineNo)
         ret = self._checkCanEnterLine(lineNo, box, gbId, ext)
         if ret == gameconst.EnterLineCode.CAN_ENTER:
-            lineMembers = self.allPlayers.getLinePlayers(lineNo)
-            lineMembers.addPendingEnterPlayer(self, gbId)
+            if extra["needPending"]:
+                lineMembers = self.allPlayers.getLinePlayers(lineNo)
+                lineMembers.addPendingEnterPlayer(self, gbId)
         DEBUG_MSG('check enter line', lineNo, box, gbId, extra, method, ret)
         callback = getattr(box.cell, method)
         callback(ret, *args)
@@ -488,14 +562,18 @@ class ILinePlayersStub(object):
 
             if lineNo < baseLineNum or len(lineMembers) > 0:
                 res['info'][lineNo] = len(lineMembers)
-                if len(lineMembers) < addRequired:
+
+                ifSafeArea = GGD.datas[self.lineType]['ifSafeArea']
+                activeCnt = len(lineMembers) if ifSafeArea else self.fightingPlayersCntBase.get(lineNo, 0)
+                if activeCnt < addRequired:
                     needNewLine = False
                 continue
 
         if needNewLine:
             for i in range(1, maxLineNum):
                 if i not in res['info']:
-                    res['info'][i] = len(self.allPlayers.getLinePlayers(i))
+                    linePlayers = self.allPlayers.getLinePlayers(i)
+                    res['info'][i] = 0 if not linePlayers else len(linePlayers)
                     break
 
         DEBUG_MSG('doQueryLineInfo', res)
@@ -533,6 +611,7 @@ class ILinePlayersStub(object):
         self.mergeRes = []
         idx = 0
 
+        #将下标j的线合到下标i的线
         for i in range(len(self.allPlayers)):
             sumCnt = len(self.allPlayers.getLinePlayers(i))
             res = []
@@ -576,8 +655,11 @@ class ILinePlayersStub(object):
 
     def mergeLine(self, i, res):
         DEBUG_MSG('mergeLine', i, res)
+        mergeRequired = BBD.datas[self.lineType]['MergeRequired']
         for fromLineNo in res:
             lineMembers = self.allPlayers.getLinePlayers(fromLineNo)
+            if len(lineMembers) > mergeRequired:
+                continue
             for gbId in list(lineMembers.keys()):
                 pVal = lineMembers.get(gbId)
                 if not pVal:
@@ -585,3 +667,7 @@ class ILinePlayersStub(object):
                 if not pVal.playerBox:
                     continue
                 pVal.playerBox.cell.onMergeLine(i)
+
+    def onFightingPlayersCntSync(self, lineNo, cnt):
+        self.fightingPlayersCntBase[lineNo] = cnt
+        DEBUG_MSG("onFightingPlayersCntSync", lineNo, cnt)

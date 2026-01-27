@@ -4,13 +4,20 @@ import KBEngine
 from KBEDebug import *
 
 import gameengine
+import math
+import gameconst
+import cube_room
 import random
+import gametimer
 import formula
 import utils
 import gameglobal
 import cube_config
 import iStaticSpaceMgr
 import iCollectionBossForMgr
+import cube_floor
+import NPC_NPC as N_ND
+
 
 class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.IStaticSpaceMgr):
     def __init__(self):
@@ -62,3 +69,112 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
 
             _space.createCellLocally(_className, _pos, _dir, _params)
 
+    # ------------------ 擂台房玩法 start --------------------------------
+
+    def onPlayerOffline(self, playerId, playerGbId):
+        super(CubeSpaceMgr, self).onPlayerOffline(playerId, playerGbId)
+        if not self._isArenaSpace():
+            return
+
+        self.cubeArena.onPlayerLeaveArena(playerId, self)
+
+    def onPlayerLeave(self, gbId, playerId, box):
+        super(CubeSpaceMgr, self).onPlayerLeave(gbId, playerId, box)
+        if not self._isArenaSpace():
+            return
+
+        self.cubeArena.onPlayerLeaveArena(playerId, self)
+
+    def onPlayerEnter(self, playerEntId):
+        super(CubeSpaceMgr, self).onPlayerEnter(playerEntId)
+        if not self._isArenaSpace():
+            return
+
+        _player = KBEngine.entities.get(playerEntId)
+        if not _player:
+            ERROR_MSG('can not find player entity', playerEntId)
+            return
+
+        _buffId = self.cubeArena.getChallengerBuff(self.spaceNo)
+        DEBUG_MSG('enter arena cube', _buffId)
+        _player.addBuff(_buffId, 1, _player.id)
+
+    def _isArenaSpace(self):
+        _mapId = formula.getMapId(self.spaceNo)
+        return cube_room.datas[_mapId]['sign'] == gameconst.CUBE_SIGN_ARENA
+
+    def interactArenaKing(self, player):
+        if not self._isArenaSpace():
+            return
+
+        self.cubeArena.setArenaKing(player, self)
+
+    def dealWithArenaTimer(self):
+        if self.cubeArenaTimerId:
+            self._cancelDatetimeCallback(self.cubeArenaTimerId, gametimer.TIMER_TAG_CUBE_ARENA)
+            self.cubeArenaTimerId = 0
+
+        _nextCBTime = self.cubeArena.getNextCBTime(self.spaceNo)
+        if not _nextCBTime:
+            return
+
+        INFO_MSG('next arena cb time:', _nextCBTime)
+        self.cubeArenaTimerId = self._datetimeCallback(
+            _nextCBTime, 
+            '_onArenaCB', 
+            (self.cubeArena.arenaStage,),
+            gametimer.TIMER_TAG_CUBE_ARENA,
+            'cubeArenaTimerId'
+        )
+
+    def _onArenaCB(self, curStage):
+        self.cubeArena.doAddStage(curStage, self)
+
+    def onPlayerKillAnother(self, deathPlayer, killerPlayer):
+        if not self._isArenaSpace():
+            return
+
+        self.cubeArena.onArenaPlayerKillAnother(deathPlayer, killerPlayer, self)
+    # ------------------ 擂台房玩法 end --------------------------------
+
+    # ------------------ 神秘商人 start -----------------------------------
+    def destroyChanMap(self):
+        _mapId = formula.getMapId(self.spaceNo)
+        _floor = cube_room.datas[_mapId]['floor']
+        _npcId = cube_floor.datas[_floor]['chapmanID']
+        _waitDestroyes = []
+        for _eid in self.taggedEntities.get('Npc', []):
+            _ent = KBEngine.entities.get(_eid)
+            if not _ent:
+                continue
+
+            if _ent.npcId == _npcId:
+                _waitDestroyes.append(_ent)
+
+        for _ent in _waitDestroyes:
+            _ent.safeDestroy()
+
+    def createChapMan(self, position, direction):
+        _mapId = formula.getMapId(self.spaceNo)
+        _floor = cube_room.datas[_mapId]['floor']
+        _npcId = cube_floor.datas[_floor]['chapmanID']
+
+        _dir = (0.0, 0.0, direction * math.pi / 180)
+        _params = {
+            'spaceNo': self.spaceNo,
+            'spaceno': self.spaceNo,
+            'spaceMgrId': self.id,
+            'direction': _dir,
+            'position': position,
+            'npcId': _npcId,
+            'name': N_ND.datas[_npcId]['name'],
+        }
+
+        _space = gameglobal.localSpaceIDMap.get(self.spaceID)
+        if not _space:
+            ERROR_MSG("can't find localSpace for spaceID:%d" % self.spaceID)
+            return
+
+        _space.createCellLocally('Npc', position, _dir, _params)
+        
+    # ------------------ 神秘商人 end -----------------------------------

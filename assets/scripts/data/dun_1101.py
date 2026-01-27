@@ -1,28 +1,26 @@
 datas ={
-  "11010001": {
+  "11018001": {
     "ActivityID": 0,
     "AttachedGIDList": [],
     "AttachedGIDListStr": "",
-    "ClassName": "Monster",
-    "ClassNameType": 0,
+    "ClassName": "BornPos",
+    "ClassNameType": 6,
     "CustomID": "",
-    "Dir": 0.0,
+    "Dir": 207.5486,
     "DisplayName": "",
-    "EntityID": 11212001,
-    "ID": 11010001,
-    "Name": "\u534a\u517d\u4eba\u6218\u58eb",
-    "PosX": 100.0,
-    "PosY": 100.0,
-    "PosZ": 100.0,
+    "EntityID": 0,
+    "ID": 11018001,
+    "Name": "\u51fa\u751f\u70b9",
+    "PosX": 482.4462,
+    "PosY": 117.9632,
+    "PosZ": 258.2892,
     "Props": {
-      "GroupID": "",
-      "Level": 1,
-      "MapEntityScale": 0,
       "MapEntityType": 0,
-      "Radius": 1.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "Remark": ""
+      "Num": 0,
+      "Radius": 0.0,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   }
 }

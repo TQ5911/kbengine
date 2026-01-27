@@ -2,7 +2,7 @@ datas ={
   "1003": {
     "type": "createMonster",
     "entityID": [
-      11213701
+      40110001
     ],
     "num": 0,
     "lv": "1",
@@ -21,7 +21,8 @@ datas ={
       "finished": [
         1003,
         1021,
-        1020
+        1020,
+        1025
       ]
     }
   },
@@ -45,21 +46,21 @@ datas ={
     }
   },
   "1022": {
-    "type": "showPopoverMsg",
+    "type": "popupdialog",
     "entityID": [
       40110001
     ],
-    "messageID": 19900230,
-    "transition": {
-      "finished": [
-        1024
-      ]
-    }
+    "dialogID": 19900230,
+    "transition": {}
   },
-  "1024": {
-    "type": "dunEnd",
-    "exitTime": 8.0,
-    "isDungeonDone": 1,
+  "1025": {
+    "type": "createNPC",
+    "entityID": [
+      40114001
+    ],
+    "num": 0,
+    "lv": "1",
+    "ifSetBoss": 0,
     "transition": {}
   }
 }

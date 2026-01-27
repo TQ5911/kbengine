@@ -426,8 +426,8 @@ datas = _tools.RODict({
         "isAntiAddicted": 0,
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
-        "messageId": 0,
-        "rewardMessage": None
+        "messageId": 54001990,
+        "rewardMessage": ('<color=&color211>购买成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     47: _tools.RODict({
         "ID": 47,
@@ -1139,7 +1139,169 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None
+    }),
+    126: _tools.RODict({
+        "ID": 126,
+        "name": "BONUS_SRC_WELFARE_PCDRAINAGE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    127: _tools.RODict({
+        "ID": 127,
+        "name": "BONUS_SRC_WELFARE_TEN_SIGN_IN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001988,
+        "rewardMessage": ('<color=&color211>活动奖励</color>', '参与活动，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+    }),
+    128: _tools.RODict({
+        "ID": 128,
+        "name": "BONUS_SRC_CUBE_PRAY_COST_ITEM",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    129: _tools.RODict({
+        "ID": 129,
+        "name": "BONUS_SRC_SIEGEWAR_SIGNUP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    130: _tools.RODict({
+        "ID": 130,
+        "name": "BONUS_SRC_SIEGEWAR_BIDDING_FAILED",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    131: _tools.RODict({
+        "ID": 131,
+        "name": "BONUS_SRC_SIEGEWAR_BIDDING_SUCCESS",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    132: _tools.RODict({
+        "ID": 132,
+        "name": "BONUS_SRC_SIEGEWAR_NOTICE_BATTLE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    133: _tools.RODict({
+        "ID": 133,
+        "name": "BONUS_SRC_SIEGEWAR_BROATCAST_LEADER",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    134: _tools.RODict({
+        "ID": 134,
+        "name": "BONUS_SRC_EQUIPMENT_DROP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    135: _tools.RODict({
+        "ID": 135,
+        "name": "BONUS_SRC_SIEGEWAR_REWARD_LEADER",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    136: _tools.RODict({
+        "ID": 136,
+        "name": "BONUS_SRC_SIEGEWAR_REWARD_MVP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    137: _tools.RODict({
+        "ID": 137,
+        "name": "BONUS_SRC_SIEGEWAR_REWARD_RANK",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    138: _tools.RODict({
+        "ID": 138,
+        "name": "BONUS_SRC_REDPACKAGE_RETURN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    139: _tools.RODict({
+        "ID": 139,
+        "name": "BONUS_SRC_EQUIPMENT_TAKE_EXPIRE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    140: _tools.RODict({
+        "ID": 140,
+        "name": "BONUS_SRC_EQUIPMENT_TAKE_OK",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    141: _tools.RODict({
+        "ID": 141,
+        "name": "BONUS_SRC_EQUIPMENT_DROP_REMOVE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    142: _tools.RODict({
+        "ID": 142,
+        "name": "BONUS_SRC_MONTHCARD_OFFLINE_BONUS",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    143: _tools.RODict({
+        "ID": 143,
+        "name": "BONUS_SRC_DRAWCARD_GUARANTEED_BONUS",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
     })
 })
 minKey = 1
-maxKey = 125
+maxKey = 143

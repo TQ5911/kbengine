@@ -27,6 +27,10 @@ datas = _tools.RODict({
         "ID": "msgId_syntheticMatsBinding",
         "value": 54000055,
     }),
+    "msgId_syntheticNoAddMaterials": _tools.RODict({
+        "ID": "msgId_syntheticNoAddMaterials",
+        "value": 54000321,
+    }),
     "upgradeItemText": _tools.RODict({
         "ID": "upgradeItemText",
         "value": "{0}·盈能法阵",

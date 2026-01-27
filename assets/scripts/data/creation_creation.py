@@ -154,6 +154,8 @@ def _65000032(self, target, context):
 
 def _65000033(self, target, context): 
     self.castSkill(target, context, 90020111)
+    if (context.loopTimes - 1) % 15 == 0:
+        self.castSkill(target, context, 90020112)
 
 # def _65000002_enter(self, target, context): 
 #     if self.hasBuff(64000208):
@@ -2059,9 +2061,9 @@ datas = _tools.RODict({
         "selectability": 0,
         "target": "Enemy",
         "areaAction": _65000031,
-        "time": 2.0,
+        "time": 1.2,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 0.4,
+        "loopIntervalTime": 1.0,
         "hurtNumber": 10,
         "areaLoop": 1,
         "enterAction": None,
@@ -2074,7 +2076,7 @@ datas = _tools.RODict({
         "flySpeed": 0.0,
         "selectType": 1,
         "selectPar": 2,
-        "delayTime": 1.5,
+        "delayTime": 0.2,
     }),
     65000032: _tools.RODict({
         "ID": 65000032,
@@ -5477,7 +5479,7 @@ datas = _tools.RODict({
         "areaAction": None,
         "time": 0.0,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 0.0,
+        "loopIntervalTime": 20.0,
         "hurtNumber": 99,
         "areaLoop": 0,
         "enterAction": None,
@@ -5505,7 +5507,7 @@ datas = _tools.RODict({
         "areaAction": None,
         "time": 0.0,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 0.0,
+        "loopIntervalTime": 20.0,
         "hurtNumber": 99,
         "areaLoop": 0,
         "enterAction": None,

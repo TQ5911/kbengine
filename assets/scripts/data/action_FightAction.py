@@ -480,7 +480,7 @@ def isHit(self, target, context):
                 from KBEDebug import DEBUG_MSG
                 DEBUG_MSG("in isHit, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO, datas)
 
-    hitRatio = min(max(0.9 + addValue + (self.getProp("hit") - target.getProp("dodge") - min(max((target.level - self.level), 0), 10) * 3) / 100, minHitRate), maxHitRate)
+    hitRatio = min(max(0.95 + addValue + (self.getProp("hit") - target.getProp("dodge") - min(max((target.level - self.level), 0), 10)) / 100, minHitRate), maxHitRate)
     if random.randint(1, 100) <= hitRatio * 100:
         return True
     else:
@@ -524,29 +524,41 @@ def randomAtk(self,classTag):
     # 攻击在大小攻范围内浮动，受幸运值影响
     # 随机区间取小数点后2位
     atkBlessToplimit = const_const.datas.get('atkBlessToplimit', {}).get('value')
-    atkBless = self.getProp("atkBless")
+    blessing_value = self.getProp("atkBless")
+    import action_RandomAtk as ARD
+    import utils
+    
+    probabilityList = ARD.datas[blessing_value]['probability']
+    randNode = utils.randomByWeight(probabilityList)
  
     if classTag == 1:
         #物理攻击
         min_damage = self.getProp("minPhysicalAtk")
         max_damage = self.getProp("maxPhysicalAtk")
+
     if classTag == 2:
         #法术攻击
         min_damage = self.getProp("minMagicAtk")
         max_damage = self.getProp("maxMagicAtk")
 
-    if atkBless >= atkBlessToplimit:
+    if blessing_value >= atkBlessToplimit:
         # 当祝福值超过9时，必然得到最大值
         return max_damage
     elif min_damage >= max_damage:
         return max_damage
-
-    atkBless = min(atkBless, 9)
-    maxDamagePct = 1/(10-atkBless) - 0.1 + atkBless * 0.0125
-    if random.uniform(0, 1) <= maxDamagePct:
-        return max_damage
-    else:
-        damage = random.randint(min_damage, max_damage)
+    
+    if randNode == 0:
+        damage = min_damage
+    elif randNode == 1:
+        damage = (max_damage-min_damage)*0.2 + min_damage
+    elif randNode == 2:
+        damage = (max_damage-min_damage)*0.4 + min_damage
+    elif randNode == 3:
+        damage = (max_damage-min_damage)*0.6 + min_damage 
+    elif randNode == 4:
+        damage = (max_damage-min_damage)*0.8 + min_damage
+    elif randNode == 5:
+        damage = max_damage
 
     return damage
 
@@ -610,11 +622,11 @@ def realDmgRatio(self, target, context):
             DefDmgRatio = target.getProp("PVPDmgAnti")
         elif target.IsMonster:
             AtkDmgRatio = self.getProp("monsterDmg")
-            DefDmgRatio = target.getProp("monsterDmgAnti")
+            DefDmgRatio = target.getProp("PVPDmgAnti")
     elif self.IsMonster:
         if target.IsAvatar:
             AtkDmgRatio = self.getProp("PVPDmg")
-            DefDmgRatio = target.getProp("PVPDmgAnti")
+            DefDmgRatio = target.getProp("monsterDmgAnti")
         elif target.IsMonster:
             AtkDmgRatio = self.getProp("monsterDmg")
             DefDmgRatio = target.getProp("monsterDmgAnti")
@@ -795,7 +807,6 @@ def controlResist(self, target, context, *args):
 
 def stun(self, target, context, *args):
     # 通用眩晕
-
     arg1 = args[0] if len(args) >= 1 else 0.0
     # 持续时间
     arg2 = args[1] if len(args) >= 2 else 0.0
@@ -1138,12 +1149,4 @@ def doControlState(self, target, context, stateType, *args):
         return frozen(self, target, context, *args)
 
     return False
-
-
-
-
-
-
-
-
 

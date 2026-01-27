@@ -2,6 +2,7 @@
 
 import KBEngine
 from KBEDebug import *
+import functools
 import gameengine
 import gametimer
 import iBaseNoCell
@@ -17,9 +18,7 @@ import dropAward
 import gameconst
 import mailAssistor
 import collections
-import gametlog
 import gameglobal
-
 
 class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def __init__(self):
@@ -77,7 +76,7 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def sendIDIPGlobalMail(self, su, cmdId, attachStr, title, cont, beginTime, endTime, serial, idipSource, mailId,
                            minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel, idipMailType):
-        DEBUG_MSG('sendIDIPGlobalMail:', cmdId, attachStr, title, cont, beginTime, endTime, serial, idipSource)
+        INFO_MSG('sendIDIPGlobalMail:', cmdId, attachStr, title, cont, beginTime, endTime, serial, idipSource)
         # if idipMailType == gameconst.IDIPMailType.IDIP_SERVER_ITEM_MAIL:
         #     respClass = idipDef.IDIP_DO_SEND_SERVER_ITEM_MAIL_RSP
         # elif idipMailType == gameconst.IDIPMailType.IDIP_LINK_MAIL:
@@ -142,8 +141,9 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def sendGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, 
                        despArgs, title, cont, minRoleTime, maxRoleTime,
-                       minRoleLevel, maxRoleLevel, channel):
-        DEBUG_MSG('in sendGlobalMail:', mailId)
+                       minRoleLevel, maxRoleLevel, channel, srcType):
+        INFO_MSG('in sendGlobalMail:', mailId, extraAttach, despArgs, title, cont, minRoleTime, maxRoleTime, minRoleLevel, maxRoleLevel, channel, srcType)
+        
         if maxRoleTime <= 0 or maxRoleLevel <=0 :
             WARNING_MSG('sendGlobalMail, maxRoleTime or maxRoleLevel failed:', maxRoleTime, maxRoleLevel)
             return
@@ -186,7 +186,8 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             maxRoleTime, 
             minRoleLevel, 
             maxRoleLevel,
-            channel
+            channel,
+            srcType
         )
 
         if globalMail.isExpired():
@@ -230,7 +231,7 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.writeToDB(functools.partial(self._onGlobalMailWriteToDB, globalMailGBID))
 
     def _onGlobalMailWriteToDB(self, globalMailGBID, isSuccess, baseRef):
-        DEBUG_MSG('_onGlobalMailWriteToDB:', globalMailGBID, isSuccess, baseRef)
+        INFO_MSG('_onGlobalMailWriteToDB:', globalMailGBID, isSuccess, baseRef)
         if isinstance(isSuccess, int) and isSuccess == gameconst.WriteToDBResult.ARCHIVING:
             self._callback(1, 'delayWriteToDBGlobalMail', (globalMailGBID, ), gametimer.TIMER_TAG_GLOBAL_MAIL_WRITE_TO_DB)
             return
@@ -261,18 +262,6 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             showAttachStr += itemName + ':' + itemNum + ';'
         if showAttachStr:
             showAttachStr = showAttachStr.strip(';')
-        # tlogParams = {
-        #     'GameSvrId':None,
-        #     'dtEventTime':None,
-        #     'vGameAppid': None,
-        #     'MailGBID': globalMail.globalMailGBID,
-        #     'MailId': globalMail.mailId,
-        #     'Title': globalMail.title,
-        #     "Body": globalMail.cont,
-        #     "Attach": attachStr,
-        #     "ShowAttach": showAttachStr,
-        # }
-        # gametlog.build(gameconst.GameLog.LOG_GLOBAL_MAIL_FLOW, **tlogParams).init().commit()
 
     def findGlobalMailByMailGBID(self, globalMailGBID):
         for mail in reversed(self.mailList):
@@ -320,7 +309,7 @@ class GlobalMailStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         mailList = [{'maiGBID':mail.globalMailGBID, 'mailId':mail.mailId,
                      'createTime':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(mail.createTime))}
                      for mail in list(self.mailList)[:-(mailNum+1):-1]]
-        DEBUG_MSG('gmGetGlobalMailList:', str(mailList))
+        INFO_MSG('gmGetGlobalMailList:', str(mailList))
         box.client.onRecvAvatarChannelMsg(gameconst.ChatChannel.WORLD, channelAvatarInfo, str(mailList))
 
     def gmDeleteOneGlobalMail(self, mailGBID):

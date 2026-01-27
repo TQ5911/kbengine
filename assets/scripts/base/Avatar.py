@@ -98,6 +98,7 @@ import iDungeonSettlement
 import iGuildBossChallenge
 import impStatistics
 import iBindPhone
+import gamePlay_gamePlay as GP_GPD
 
 import cube_room
 
@@ -162,7 +163,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         gameglobal.roleGBIDToEntId[self.gbID] = self.id
         self.serverId = gameconfig.serverId()
 
-        self.initExpiryItemList()
+        self._callback(0.1, 'initExpiryItemList', (), gametimer.TIMER_TAG_EXPIRE_ITEM_LIST)
 
         self.bindEvents()
 
@@ -423,12 +424,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         teamId = self.getCellData('teamId', 0)
         extra = {'isLogin': 1}
         if _logonEnterType == gameconst.LogOnEnterType.CUBE:
-            _mapId = formula.getMapId(spaceNo)
-            _floor = cube_room.datas[_mapId]['floor']
-            _readyMapId = cube_room.floorTypeMapDic[_floor][gameconst.CubeRoomType.READY][0]
-            _spaceNo = formula.getLineSpaceNo(_readyMapId, 0)
-            cellData['spaceNo'] = _spaceNo
-            gameengine.getCubeStubBySpaceNo(spaceNo).logonEnterCube(self, self.gbID, _spaceNo, extra)
+            gameengine.getCubeStub(1).logonEnterCube(self, self.gbID, extra)
 
         elif _logonEnterType == gameconst.LogOnEnterType.WONDER_LAND:
             gameengine.getWonderLandStubBySpaceNo(spaceNo).logonEnterWonderLand(self, self.gbID)
@@ -438,7 +434,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             gameengine.getTeamStub(teamId).logonEnterLine(lineType, self, self.gbID, teamId, extra)
         else:
             extra['position'] = cellData['position']
-            gameengine.getLineStub(lineType).autoSwitchLine(self, self.gbID, 0, extra, 'onLogonGetLineNo', (lineType,))
+            gameengine.getLineStub(lineType).autoSwitchLine(self, self.gbID, 0, extra, 'onLogonGetLineNo', (lineType, extra))
 
         self._doAfterCreateCell(cellData, spaceNo)
 
@@ -479,8 +475,22 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             else:
                 ERROR_MSG('_updateCentraInfoOnLogon: cannot get account entity')
 
-    def onLogonGetLineNo(self, lineNo, lineSpaceBox, position, lineType):
+    def onLogonGetLineNo(self, lineNo, lineSpaceBox, position, lineType, extra):
         INFO_MSG('createCell in line', lineType, lineNo, lineSpaceBox.id)
+
+        #目标线全满了回主城
+        if lineNo == -1:
+            returnMapID = GP_GPD.datas[lineType]["returnMapID"]
+            gameengine.getLineStub(returnMapID).autoSwitchLineToMainCity(self, self.gbID, 0, extra, 'onLogonGetMainCityLineNo', (returnMapID, extra))
+            DEBUG_MSG('onLogonGetLineNo: returnMapID', returnMapID)
+            return
+        cellData = self.cellData
+        cellData['spaceNo'] = formula.getLineSpaceNo(lineType, lineNo)
+        cellData['position'] = position or cellData['position']
+        lineSpaceBox.createCellNearSelf(self)
+
+    def onLogonGetMainCityLineNo(self, lineNo, lineSpaceBox, position, lineType, extra):
+        INFO_MSG('createCell in main city', lineType, lineNo, lineSpaceBox.id)
         cellData = self.cellData
         cellData['spaceNo'] = formula.getLineSpaceNo(lineType, lineNo)
         cellData['position'] = position or cellData['position']
@@ -636,7 +646,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         if not isRelogin:
             self.petOnLogin()
             self.mountOnLogin()
-        self.cell.initClientOnCell(isRelogin)
         self.initClientBase(isRelogin, chn)
         self.resetLimitcall()
         if isRelogin:
@@ -654,6 +663,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         # 下发数据量比较小的函数
         self.client.onGetDeathPenaltyExpLogin(self.deathPenaltyData.toClientDataAll())
 
+    def afterInitClientBase(self, isRelogin):
+        self.cell.initClientOnCell(isRelogin)
+    
     def doInitClientBase(self, isRelogin, chn):
         try:
             # 下发数据的顺序要求：
@@ -671,6 +683,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             while True:
                 _next = next(_iter, None)
                 if _next is None:
+                    self.afterInitClientBase(isRelogin)
                     break
 
                 _func, _obSend = _next
@@ -835,7 +848,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                 INFO_MSG('Avatar.entireDestroy, cannot destroy now')
                 self._callback(0.5, 'entireDestroy', (deleteFromDB, writeToDB), gametimer.TIMER_TAG_DESTROY_LATER)
                 return
-
+            
             self._preEntireDestroy()
             self.destroy(deleteFromDB=deleteFromDB, writeToDB=writeToDB)
             self._postEntireDestroy()
@@ -885,8 +898,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                 gameengine.getTeamStub(teamId).updateOnlineState(None, teamId, self.gbID, False)
 
             if formula.isTeamDungeonSpace(spaceNo) and teamId:
-                _teamStub = gameengine.getTeamStub(teamId)
-                _teamStub.onAvatarOffline(self.gbID, teamId, formula.getDungeonNoBySpaceNo(spaceNo))
+                gameengine.getTeamStub(teamId).onAvatarOffline(self.gbID, teamId, formula.getDungeonNoBySpaceNo(spaceNo))
+                gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
+
+            elif formula.isRaidDungeonSpace(spaceNo) and raidId:
+                gameengine.getRaidStub(raidId).onAvatarOffline(raidId, 0, self.gbID)
+                gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
 
             elif formula.isDungeonSpace(spaceNo):
                 gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
@@ -903,8 +920,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             elif formula.isCubeSpace(spaceNo):
                 gameengine.getCubeStubBySpaceNo(spaceNo).onAvatarOffline(self.gbID)
 
-            if raidId > 0:
-                gameengine.getRaidStub(raidId).onAvatarOffline(raidId, 0, self.gbID)
+            elif formula.isGuildBossDungeonSpace(spaceNo):
+                gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
 
             if self.getTempMiscProp(gameconst.AvatarProps.backAccount, False):
                 if self.getClient(gameconst.ClientCallChannel.MAIN_CHANNEL):
@@ -1388,7 +1405,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.gbID,
             self.getRoleCacheAttr('school'),
             self.getRoleCacheAttr('name'),
-            self.getRoleCacheAttr('level')
+            self.getRoleCacheAttr('level'),
+            self.accountEntity.packageSource if self.accountEntity else '',
         )
         return
         emulatorInfo = self.scriptClientData.get(gameconst.ClientUploadDataType.EMULATOR_INFO, {})
@@ -1438,6 +1456,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerHourlyEvent('onLimitedStoreHourlyUpdate')
         self.registerDailyEvent('checkMonthCardAward')
         self.registerWeekEvent('dungeonSettlementWeeklyReset')
+        self.registerDailyEvent('_onBuyCreditDailyUpdate')
+        self.registerWeekEvent('_onBuyCreditWeeklyUpdate')
+        self.registerMonthEvent('_onBuyCreditMonthlyUpdate')
 
     def reqDeleteAvatar(self, exposed):
         if gameconfig.enableOldLogout():

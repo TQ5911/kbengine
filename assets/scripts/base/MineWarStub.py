@@ -28,6 +28,7 @@ import itemData_itemData as IDID
 import mineBattle_firstTime as MBFT
 import time
 import datetime
+import LogTrackingMgr
 
 MINE_WAR_RANK_CD = 5  # 排名刷新间隔时间秒
 
@@ -98,7 +99,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                 self.mineMapData[mapId] = MineWarInfo.MineWarMapVal(mapId)
 
             self.mineMapData[mapId].setSpaceMgrbox(spaceMgrbox)
-            spaceMgrbox.onRegisterMineWarSpaceMgr(self.mineMapData[mapId].getGuildGbId(), self.state)
+            spaceMgrbox.onRegisterMineWarSpaceMgr(self.mineMapData[mapId].getGuildGbId(), self.state, self.mineMapData[mapId].getflagDestroyedTime())
 
     def canServerStartMineWar(self):
         serverId = gameconfig.serverId()
@@ -188,7 +189,8 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
         # 广播玩家
         gameengine.broadcastBaseapp('broadcastToAllAvatar', (gameconst.BASE, 'onMineWarStartPlayer', (self.state, self.endTime), ()))
-
+        #
+        LogTrackingMgr.LogTrackingMgr.MineBattle_Start(self.startTime, {mapId: val.getGuildGbId() for mapId, val in self.mineMapData.items()})
 
     # 矿战结束阶段
     def _onMineWarEnd(self):
@@ -210,6 +212,8 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                 currGuildInfo = mineWarVal.currGuildInfo
                 mineWarVal.addMineWarEvent(2, [currGuildInfo.leaderName, mapName])
 
+            # 计算归属帮派排名
+            mineWarVal.calcOwnerTime()
             guildRevenue = {}
             for guildId, guildVal in mineWarVal.guildOwnerDict.items():
                 if guildId == mineWarVal.currGuildInfo.guildGbId:
@@ -219,15 +223,23 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                 guildRevenue[guildId] = guildVal.revenue
         
             changeDict['leaderName'] = mineWarVal.currGuildInfo.leaderName
+            changeDict['guildName'] = mineWarVal.currGuildInfo.guildName
             changeDict['guildRevenueRate'] = guildRevenue
             changeInfo.append(changeDict)
+
+            ownerList = list(mineWarVal.guildOwnerDict.values())
+            ownerList.sort(key=lambda x: x.ownerTime, reverse=True)
+            ownerList = ownerList[:MBC.datas['mineBatte_rankGuildNum']['value']]
+            mineWarVal.ownerRankList = ownerList    # 暂存
+            ownerRankDict = {guildVal.guildGbId: guildVal.ownerTime for guildVal in ownerList}
+            #
+            LogTrackingMgr.LogTrackingMgr.MineBattle_End(self.endTime, mapId, tempguildGbId, ownerRankDict)
 
         # 结算
         self.onEndRewardByScore()
 
         # 广播玩家
-        gameengine.broadcastBaseapp('broadcastToAllAvatar', (gameconst.BASE, 'onMineWarEndPlayer', (changeInfo,), ()))
-        
+        gameengine.broadcastBaseapp('broadcastToAllAvatar', (gameconst.BASE, 'onMineWarEndPlayer', (changeInfo,), ()))        
 
     def callAllMineWarSpaceMgr(self, funcName, args=[], kwargs={}):
         INFO_MSG('callAllMineWarSpaceMgr with:', funcName, 'args:', args, 'kwargs:', kwargs)
@@ -266,7 +278,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         if spaceMgrbox:
             spaceMgrbox.rewardMineWarGuildMembers(oldGuildId, newGuildId)
 
-    def onMineWarFlagBeKill(self, mapId, guildName, killerName):
+    def onMineWarFlagBeKill(self, mapId, guildGbId, guildName, killerGbId, killerName):
         # 旗帜被毁
         mineWarVal = self.mineMapData.get(mapId, None)
         if mineWarVal is None:
@@ -274,6 +286,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         # 暂存
         mineWarVal.onFlagBeDestroyed()
         mineWarVal.addMineWarEvent(3, [guildName, killerName])
+        LogTrackingMgr.LogTrackingMgr.MineBattle_KillFlag(mapId, guildGbId, killerGbId, mineWarVal.flagDestroyedNum)
 
         guildName = mineWarVal.currGuildInfo.guildName
         damageCfg = MBC.datas['mineBattle_flagDamageEffect']['value']
@@ -288,7 +301,6 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             mineWarVal.onFlagAllDestroyed()
             # 广播
             gameengine.broadcastBaseapp('broadcastToAllAvatar', (gameconst.BASE, 'onMineWarFlagAllDestroyed', (mapId, guildName, mineWarVal.currGuildInfo.guildGbId), ()))
-
 
     def doOnMineWarKillCoreForGuild(self, mapId, box, guildInfo):
         INFO_MSG('doOnMineWarKillCoreForGuild mapId:', mapId, 'box:', box.id, 'guildInfo:', guildInfo)
@@ -378,6 +390,14 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
         INFO_MSG('MineWarStub.playerGetMineWarInfo response:', mineWarInfo)
 
+    def doGetMineWarFlagHp(self, mapId, playerBox):
+        mapVal = self.mineMapData.get(mapId, None)
+        if mapVal is None:
+            return
+        # INFO_MSG('MineWarStub.doGetMineWarFlagHp called for player:', playerBox.id, 'mapId:', mapId, 'flagHp:', mapVal.flagHp)
+        flagHp = mapVal.flagHp if self.state != gameconst.MINE_WAR_STATE.RUNNING else 0
+        playerBox.client.onGetMineWarFlagHp(mapId, mapVal.flagHp)
+
     def doShareGuildMineWarBonusToMember(self, mapId, srcGbId, shareList, box):
         INFO_MSG('doShareGuildMineWarBonusToMember mapId:', mapId, 'srcGbId:', srcGbId, 'shareList:', shareList)
         mapVal = self.mineMapData.get(mapId, None)
@@ -389,10 +409,12 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             sum += val['bonusNum']
         if sum > mapVal.allCollectNum:
             DEBUG_MSG('doShareGuildMineWarBonusToMember sum > allCollectNum:', sum, '>', mapVal.allCollectNum)
-            box.base.onMessagePre(MBC.datas['mineBattle_notEnoughStock']['value'], [])
+            box.onMessagePre(MBC.datas['mineBattle_notEnoughStock']['value'], [])
             box.client.onMineWarShareBonusResult(False)
             return
         
+        playerList = []
+        bonusNumList = []
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_MINE_WAR_GUILD_SHARE
         itemId = MBC.datas['mineBattle_MoneyID']['value']
@@ -401,6 +423,8 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             num = val['bonusNum']
             mapVal.allCollectNum -= num
             playerGbId = val['playerGbId']
+            playerList.append(playerGbId)
+            bonusNumList.append(num)
             awardVal = dropAward.MailWealthVal()
             awardVal.addWealthByItemId(itemId, num)
             mailAssistor.sendMailToPlayers([playerGbId],
@@ -412,6 +436,8 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         box.client.onMineWarShareBonusResult(True)
         # 重新拉下数据
         self.playerGetMineWarInfo(box, srcGbId)
+
+        LogTrackingMgr.LogTrackingMgr.MineBattle_Shared(mapVal.getGuildGbId(), mapVal.currCollectNum, playerList, bonusNumList, opUUID)
 
     def doGetMineWarGuildMemberScore(self, mapId, playerBox, guildGbId):
         mapVal = self.mineMapData.get(mapId, None)
@@ -465,7 +491,10 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         for idx, ownerVal in enumerate(ownerList):
             val = ownerVal.toSaveDict()
             val['rankId'] = idx + 1
-            val['revenue'] = int(min((val['ownerTime'] // timeCfg[0]) * timeCfg[1], timeCfg[2]))
+            if self.state == gameconst.MINE_WAR_STATE.RUNNING and not last:
+                val['revenue'] = int(min((val['ownerTime'] // timeCfg[0]) * timeCfg[1], timeCfg[2]))
+            else:
+                val['revenue'] = ownerVal.revenue
             rankList.append(val)
 
             if guildInfo.get('guildGbId', 0) == ownerVal.guildGbId:
@@ -554,7 +583,6 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
     def onEndRewardByScore(self):
         if self.state != gameconst.MINE_WAR_STATE.END:
             return
-        
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_MINE_WAR_SCORE
@@ -610,5 +638,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             def _sendOthersDone():
                 INFO_MSG('MineWarStub.onEndRewardByScore _sendOthersDone mapId:', mapId)
             self.batchlyCall(_sendOthers(), 30, 0.2, _sendOthersDone)
+            #
+            LogTrackingMgr.LogTrackingMgr.MineBattle_End_Reward(self.endTime, mapId, {obj.gbId: obj.totalScore for obj in mineWarVal.scoreRankList})
                 
         INFO_MSG('MineWarStub.onEndRewardByScore done')

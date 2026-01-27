@@ -23,6 +23,7 @@
             <Arg>            TEAMID          </Arg>
             <Arg>            BOOL            </Arg>
             <Arg>            UINT32          </Arg>
+            <Arg>            INT8            </Arg>
         </completeTeamDungeon>
 
         <leaveTeamDungeon>

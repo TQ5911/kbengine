@@ -17,11 +17,11 @@ import crontab
 datas = _tools.RODict({ 
     "initCommonBagCapacity": _tools.RODict({
         "ID": "initCommonBagCapacity",
-        "value": 200,
+        "value": 100,
     }),
     "commonBagCapacity": _tools.RODict({
         "ID": "commonBagCapacity",
-        "value": 250,
+        "value": 150,
     }),
     "currencyBagCapacity": _tools.RODict({
         "ID": "currencyBagCapacity",

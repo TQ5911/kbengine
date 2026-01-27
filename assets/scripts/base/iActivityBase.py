@@ -1,5 +1,6 @@
 # coding: utf-8
 import gameconst
+import cube_config
 import actionContext
 
 
@@ -11,5 +12,9 @@ class IActivityBase(object):
             actionContext.AchievementCtx(activityId=activityId))
 
         self.authStatistics.addActTimes(activityId)
+
+        if activityId == cube_config.datas['cubeActID']['value']:
+            self.completeGuildTask(gameconst.GuildTaskType.ENTERMAP, cube_config.datas['cubeActID']['value'])
+
 
 

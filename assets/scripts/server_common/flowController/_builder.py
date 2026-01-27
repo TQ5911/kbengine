@@ -703,11 +703,6 @@ class DungeonFlowControllerBuilder(object):
         transPetId = eventData['transPetID']
         return self.controller.buildNewTransPetEnd(eventId, transPetId)
 
-    def build_changeWeather(self, eventId, eventData):
-        weatherType = eventData['weatherType']
-        strongerTime = eventData['strongerTime']
-        return self.controller.buildChangeDungeonWeather(eventId, weatherType, strongerTime)
-
     def build_changeAllPlayerCameraStatus(self, eventId, eventData):
         cameraId = eventData['cameraId']
         return self.controller.buildChangeAllPlayerCameraStatus(eventId, cameraId)

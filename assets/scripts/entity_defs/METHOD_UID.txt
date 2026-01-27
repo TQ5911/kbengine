@@ -81,7 +81,6 @@ Avatar addInMonsterGroup CELL 30998
 Avatar addMallWealth BASE 30325
 Avatar addMonthCardByItem BASE 32030
 Avatar addNewbieGuideId BASE 990
-Avatar addPassiveSkill CELL 30295
 Avatar addPressGameAwards BASE 30631
 Avatar addRoomDurationFailed BASE 31239
 Avatar addRoomDurationFailedRewindTimes BASE 31246
@@ -167,6 +166,7 @@ Avatar beginEnterSiegeWarSpace CELL 31589
 Avatar beginEnterWonderLand CELL 31468
 Avatar beginGoBackLine CELL 30349
 Avatar beginLeaveLine CELL 30350
+Avatar beginMergeLine CLIENT 235
 Avatar beginSwitchLine CELL 30348
 Avatar biddingFailRedPointCheck BASE 995
 Avatar biddingFailRedPointSync CLIENT 996
@@ -210,7 +210,6 @@ Avatar cellEquipEnhance CELL 31128
 Avatar cellEquipGlyphWashing CELL 31145
 Avatar cellEquipSpiritWashing CELL 31133
 Avatar cellEquipUpgrade CELL 32005
-Avatar cellPlayerFollowToGuildSpaceFailed CELL 30424
 Avatar cellUndressEquipment CELL 31127
 Avatar cellUndressEquipmentFail BASE 31141
 Avatar cellUndressEquipmentSucc BASE 31142
@@ -375,7 +374,6 @@ Avatar flowCtrlOnTaskInProgress BASE 30865
 Avatar flowCtrlOnTaskInProgress CELL 30880
 Avatar flowCtrrlDungeonEntityReleaseCompleteByEventId CELL 30895
 Avatar followCaptainInCube CELL 1015
-Avatar followCaptainToGuildSpaceFailed CELL 30423
 Avatar forceAuthOffline BASE 32017
 Avatar forceCompleteTaskNoCond BASE 30219
 Avatar getAuctionItemNumByCategoryId BASE 816
@@ -463,9 +461,11 @@ Avatar leaveCube CELL 685
 Avatar leaveCubeInternal CELL 32008
 Avatar leaveRaid CELL 414
 Avatar leaveRaidDungeon CELL 507
+Avatar leaveRaidDungeonCell CELL 32178
 Avatar leaveSiegeWarSpace CELL 963
 Avatar leaveSingleDungeon CELL 503
 Avatar leaveTeamDungeon CELL 491
+Avatar leaveTeamDungeonCell CELL 31245
 Avatar leaveTutorialIsComplete CELL 30858
 Avatar leaveWonderLand CELL 869
 Avatar leaveWonderLandInternal CELL 32064
@@ -473,9 +473,6 @@ Avatar levelUpSkill CELL 1080
 Avatar loadGuildButNotMember BASE 30968
 Avatar loadSceneFinish CELL 28
 Avatar loginLogInfo BASE 30301
-Avatar makeEquipmentAffixWashingLog BASE 31160
-Avatar makeEquipmentEnhanceLog BASE 31159
-Avatar makeEquipmentLostLog BASE 31158
 Avatar makeItemFlowLog BASE 30343
 Avatar makeMallFlowLog BASE 31247
 Avatar markFetchRedBag BASE 31969
@@ -536,7 +533,6 @@ Avatar onApplyJoinTeam CELL 30410
 Avatar onApplyJoinTeamFailed CLIENT 383
 Avatar onApplyJoinTeamMsg CLIENT 348
 Avatar onAreaTargetTaskAdd CELL 30201
-Avatar onAskedFollowCaptain CELL 30453
 Avatar onAuthExpire BASE 32016
 Avatar onAuthExpireChanged BASE 32018
 Avatar onAvatarLevelUpBase BASE 30207
@@ -595,6 +591,7 @@ Avatar onCheckCaptainTeamDungeonConditionsFailed CELL 30842
 Avatar onCheckCaptainTeamDungeonConditionsSucceed CELL 30841
 Avatar onCheckCellSubmitCondSucc BASE 30211
 Avatar onCheckCrossServerTokenResp BASE 31806
+Avatar onCheckGatherCondFailed CLIENT 239
 Avatar onCheckMemberTeamDungeonConditionsFailed CELL 30844
 Avatar onCheckMemberTeamDungeonConditionsSucceed CELL 30843
 Avatar onCheckResultFromMember CELL 30439
@@ -758,6 +755,7 @@ Avatar onGetMailList CLIENT 678
 Avatar onGetMemberJobAndGuildCache CELL 32155
 Avatar onGetMeridianData CLIENT 1066
 Avatar onGetMineWarCollectInfo CLIENT 76
+Avatar onGetMineWarFlagHp CLIENT 234
 Avatar onGetMineWarGuildMemberScore CLIENT 189
 Avatar onGetNewMail CLIENT 679
 Avatar onGetPlayerPayInfo CLIENT 735
@@ -916,6 +914,7 @@ Avatar onPrivilegeResponse BASE 31841
 Avatar onQixieAssistFetchCostCoinResult BASE 31685
 Avatar onQixieAssistResult BASE 31686
 Avatar onQixieChanged CLIENT 960
+Avatar onQueryCanShareReward CLIENT 231
 Avatar onQueryCurrencyExchangeData CLIENT 221
 Avatar onQueryItemLink CLIENT 493
 Avatar onQueryPlayerLink CLIENT 495
@@ -927,6 +926,7 @@ Avatar onQuerySiegeWarDefenderAndOffensiveResult CLIENT 904
 Avatar onQuerySiegeWarDefenderAndOffensiveResultFromGuildStub BASE 31767
 Avatar onQuerySiegeWarSignUped BASE 31536
 Avatar onQuerySiegeWarSignUped CLIENT 890
+Avatar onRaidAddNewMember CELL 31778
 Avatar onRaidAvatarLogin CLIENT 437
 Avatar onRaidAvatarOffline CLIENT 436
 Avatar onRaidChanged BASE 30500
@@ -934,6 +934,7 @@ Avatar onRaidDeputyKickOutRaidMember CELL 31526
 Avatar onRaidLeaderKickOutRaidMember CELL 30487
 Avatar onRaidPlayerStartAutoMatch CLIENT 913
 Avatar onRaidPlayerStopAutoMatch CLIENT 914
+Avatar onRaidRemoveMember CELL 32176
 Avatar onRaidTeamCaptainKickOutRaidMember CELL 30489
 Avatar onRandomSummonPet CLIENT 760
 Avatar onRandomSynthesis CLIENT 652
@@ -1158,12 +1159,12 @@ Avatar querySiegeWarCityFundUseRecord BASE 966
 Avatar querySiegeWarDefenderAndOffensive BASE 902
 Avatar querySiegeWarSignUpState BASE 892
 Avatar randomCubeRoom CELL 982
-Avatar rateInDungeon CELL 30255
 Avatar reachNewArea CELL 29
 Avatar readyUseItemAndEnterSingleDungeon CELL 30857
 Avatar readyUseItemAndEnterTeamDungeon CELL 30849
 Avatar realDoGmCommandProxy BASE 30282
 Avatar realDoGmCommandProxy CELL 30268
+Avatar recalculateAllInscriptionEffects CELL 32181
 Avatar receiveFriendRequest BASE 30011
 Avatar recoverDeathPenaltyExp BASE 669
 Avatar recvGetGuildDetailInfo CLIENT 753
@@ -1210,6 +1211,7 @@ Avatar reqBindPhone BASE 192
 Avatar reqBuyItemsInStore BASE 695
 Avatar reqBuyItemsInStoreWithSelection BASE 1032
 Avatar reqBuyOutfit BASE 573
+Avatar reqCanShareReward BASE 212
 Avatar reqCaptainFollowInfo CELL 561
 Avatar reqChangeCubeAutoRenewSwitch CELL 686
 Avatar reqChangeOnlyCaptain CELL 1016
@@ -1266,6 +1268,7 @@ Avatar reqLockItem BASE 1003
 Avatar reqMakeEquipment BASE 650
 Avatar reqMark BASE 878
 Avatar reqMineWarCollectInfo BASE 77
+Avatar reqMineWarFlagHp BASE 232
 Avatar reqMineWarGuildMemberScore BASE 121
 Avatar reqMineWarGuildOwnerRank BASE 1086
 Avatar reqMineWarGuildPlayerRank BASE 1087
@@ -1457,6 +1460,7 @@ Avatar transferRaidLeader CELL 416
 Avatar transferRaidTeamCaptain CELL 417
 Avatar transformGuildMoneyToFund BASE 773
 Avatar transmitWithMapPointCallback CELL 31847
+Avatar transmitWithMapPointEnterFail BASE 30671
 Avatar triggerAchievement BASE 31474
 Avatar triggerTimeLimitGuaranteedReward BASE 31986
 Avatar tryApplyInviteRaid CELL 409
@@ -1603,7 +1607,6 @@ CoreAreaFlag safeDestroy CELL 31834
 CoreAreaFlag safeTeleport CELL 31838
 CoreAreaFlag setBaseGlobalIdx CELL 31840
 Creation addBuff CELL 31081
-Creation addPassiveSkill CELL 31098
 Creation addShield CELL 31087
 Creation callMethod BASE 30576
 Creation callMethod CELL 31102
@@ -1668,7 +1671,6 @@ Creation onUpdateBuffs CLIENT 610
 Creation onUseCasting CLIENT 593
 Creation onUseChanneling CLIENT 594
 Creation onUseSkill CLIENT 592
-Creation rateInDungeon CELL 31092
 Creation reliveToPos CELL 31095
 Creation removeBuff CELL 31082
 Creation removeCreation CELL 31089
@@ -1747,9 +1749,11 @@ CrossSiegeWarStub useCityOfficerPrivilege BASE 31764
 CubeSpaceMgr addEntity CELL 31201
 CubeSpaceMgr beNotifiedSpaceEvent CELL 31200
 CubeSpaceMgr callMethod CELL 31187
+CubeSpaceMgr createChapMan CELL 32180
 CubeSpaceMgr createTeleporterToCow CELL 31861
 CubeSpaceMgr delaySafeDestroy CELL 31185
 CubeSpaceMgr destroyAllEntities CELL 31191
+CubeSpaceMgr destroyChanMap CELL 32179
 CubeSpaceMgr destroyEntityById CELL 31192
 CubeSpaceMgr flowCtrlDunAnyPlayerHpMonitorTrigger CELL 31221
 CubeSpaceMgr flowCtrlDungeonAirWallReleaseComplete CELL 31212
@@ -1796,6 +1800,7 @@ CubeStub callMethod BASE 31178
 CubeStub createCellNearHere BASE 31180
 CubeStub createCellNearSelf BASE 31179
 CubeStub doEnterCube BASE 31231
+CubeStub doEnterCubeReady BASE 32177
 CubeStub doLast BASE 31182
 CubeStub doNext BASE 31181
 CubeStub enterRandomRoom BASE 31155
@@ -1812,7 +1817,6 @@ CubeStub onRefreshGroupEntities BASE 31721
 CubeStub onSpaceCellAppDeath BASE 30162
 CubeStub onSpaceMgrReady BASE 31229
 CubeStub onStaticSpaceReady BASE 31183
-CubeStub reliveToCubeRoom BASE 31245
 CubeStub renewalBase BASE 31177
 DropStub callMethod BASE 31377
 DropStub createCellNearHere BASE 31379
@@ -1856,6 +1860,7 @@ DungeonSpaceMgr doEnterTeamDungeon CELL 30773
 DungeonSpaceMgr dungeonCompleted CELL 32147
 DungeonSpaceMgr enterRaidDungeonDirectly CELL 30774
 DungeonSpaceMgr entireDestroy BASE 30781
+DungeonSpaceMgr finishGuildDungeonTask CELL 32174
 DungeonSpaceMgr flowCtrlDunAnyPlayerHpMonitorTrigger CELL 30823
 DungeonSpaceMgr flowCtrlDungeonAirWallReleaseComplete CELL 30814
 DungeonSpaceMgr flowCtrlDungeonBuffPointReleaseComplete CELL 30813
@@ -1902,6 +1907,7 @@ DungeonSpaceMgr onRequestSpaceCell BASE 30778
 DungeonSpaceMgr onSingleDungeonCompleted CELL 30770
 DungeonSpaceMgr onTeamDungeonCompleted CELL 30771
 DungeonSpaceMgr onTeleportNear CELL 30791
+DungeonSpaceMgr recordAutoFightTimes CELL 32175
 DungeonSpaceMgr renewalBase BASE 30782
 DungeonSpaceMgr renewalCell CELL 30788
 DungeonSpaceMgr safeDestroy CELL 30786
@@ -2123,6 +2129,7 @@ MineWarStub addMineWarScore BASE 32080
 MineWarStub callMethod BASE 32056
 MineWarStub createCellNearHere BASE 32058
 MineWarStub createCellNearSelf BASE 32057
+MineWarStub doGetMineWarFlagHp BASE 32173
 MineWarStub doGetMineWarGuildMemberScore BASE 32087
 MineWarStub doGetMineWarGuildOwnerRank BASE 32083
 MineWarStub doGetMineWarGuildPlayerRank BASE 32084
@@ -2141,7 +2148,6 @@ MineWarStub renewalBase BASE 32055
 Monster addBuff CELL 30359
 Monster addDungeonKillCount CELL 31831
 Monster addInMonsterGroup CELL 31002
-Monster addPassiveSkill CELL 30376
 Monster addShield CELL 30365
 Monster aiChatToPlayer CLIENT 267
 Monster boardMessageToAvatarsInRange CELL 30358
@@ -2216,7 +2222,6 @@ Monster onUseCasting CLIENT 274
 Monster onUseChanneling CLIENT 275
 Monster onUseSkill CLIENT 273
 Monster popDialog CLIENT 835
-Monster rateInDungeon CELL 30370
 Monster reliveToPos CELL 30373
 Monster removeBuff CELL 30360
 Monster removeCreation CELL 30367
@@ -2257,7 +2262,6 @@ MonsterGrp setBaseGlobalIdx CELL 30986
 MonsterGrp sync CELL 30976
 Npc addBuff CELL 30007
 Npc addDungeonKillCount CELL 30878
-Npc addPassiveSkill CELL 30303
 Npc addShield CELL 30208
 Npc aiChatToPlayer CLIENT 108
 Npc boardMessageToAvatarsInRange CELL 30340
@@ -2328,7 +2332,6 @@ Npc onUseCasting CLIENT 72
 Npc onUseChanneling CLIENT 88
 Npc onUseSkill CLIENT 70
 Npc popDialog CLIENT 159
-Npc rateInDungeon CELL 30241
 Npc reliveToPos CELL 30263
 Npc removeBuff CELL 30104
 Npc removeCreation CELL 30236
@@ -2473,7 +2476,6 @@ RaidStub raidMemberApplyInvitedRaid BASE 30632
 RaidStub raidPrepareAutoMatch BASE 31574
 RaidStub raidPrepareStopAutoMatch BASE 31575
 RaidStub raidTeamCaptainKickOutRaidMember BASE 30637
-RaidStub reCreateOrJoinRaid BASE 30671
 RaidStub refreshRaidCache BASE 30614
 RaidStub renewalBase BASE 30674
 RaidStub replyInviteRaidLonely BASE 30633
@@ -2713,7 +2715,6 @@ StatisticStub stopReportStatistics BASE 32037
 Summon addBuff CELL 31008
 Summon addDungeonKillCount CELL 31066
 Summon addInMonsterGroup CELL 31062
-Summon addPassiveSkill CELL 31025
 Summon addShield CELL 31014
 Summon aiChatToPlayer CLIENT 520
 Summon boardMessageToAvatarsInRange CELL 31007
@@ -2783,7 +2784,6 @@ Summon onUseCasting CLIENT 527
 Summon onUseChanneling CLIENT 528
 Summon onUseSkill CLIENT 526
 Summon popDialog CLIENT 557
-Summon rateInDungeon CELL 31019
 Summon reliveToPos CELL 31022
 Summon removeBuff CELL 31009
 Summon removeCreation CELL 31016
@@ -2846,7 +2846,6 @@ TeamMatchStub playerStopAutoMatch BASE 30603
 TeamMatchStub renewalBase BASE 30608
 TeamMatchStub teamAutoMatch BASE 30598
 TeamMatchStub teamStopAutoMatch BASE 30601
-TeamStub TeamDungeonCompletedAfter BASE 31778
 TeamStub addTeamBanditKiller BASE 30548
 TeamStub addTeamGuildBandit BASE 30549
 TeamStub addTeamMember BASE 30409
@@ -2914,7 +2913,6 @@ TeamStub onTeamDuelCompelted BASE 30545
 TeamStub onTeamDuelSpaceReady BASE 30543
 TeamStub onTeammateBeConfirmedTimeout BASE 30539
 TeamStub raidApplyInvitedRaid BASE 30567
-TeamStub reCreateOrJoinTeam BASE 30589
 TeamStub renewalBase BASE 30592
 TeamStub replyBecomeCaptain BASE 30504
 TeamStub replyInviteTeam BASE 30465
@@ -3095,6 +3093,7 @@ WorldLineSpaceMgr setSpaceVar CELL 31883
 WorldLineSpaceMgr teleportEntityById CELL 31874
 WorldLineSpaceMgr transferAllAvatarInSpace CELL 32039
 WorldLineStub autoSwitchLine BASE 30120
+WorldLineStub autoSwitchLineToMainCity BASE 30589
 WorldLineStub callMethod BASE 30112
 WorldLineStub checkAllLineSpaceReady BASE 30133
 WorldLineStub checkAutoSwitchLine BASE 30109
@@ -3120,6 +3119,7 @@ WorldLineStub notifyPlayerOffline BASE 30126
 WorldLineStub onCellappRelive BASE 30137
 WorldLineStub onCollectionBeCollectAndDestroyed BASE 30140
 WorldLineStub onDestroyGroupEntities BASE 32167
+WorldLineStub onFightingPlayersCntSync BASE 32172
 WorldLineStub onLineSpaceGone BASE 30135
 WorldLineStub onLineSpaceReady BASE 30134
 WorldLineStub onLoadEntitiesEnd BASE 31543

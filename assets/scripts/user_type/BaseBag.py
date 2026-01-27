@@ -28,7 +28,7 @@ class BaseBag(itemContainer.ItemContainer):
         try:
             super(BaseBag, self)._lateReload()
         except TypeError as e:
-            DEBUG_MSG('BaseBag', id(BaseBag), id(self.__class__), self.__class__.__name__)
+            ERROR_MSG('BaseBag', id(BaseBag), id(self.__class__), self.__class__.__name__)
             raise e
         return
 

@@ -17,7 +17,7 @@ class IChief(object):
 	@gamedecorator.checkGameconfigEnable('raidDungeon')
 	@utils.isMyself
 	def enterChiefDungeon(self, exposed):
-		DEBUG_MSG('enterChiefDungeon::')
+		INFO_MSG('enterChiefDungeon::')
 
 		if not self.isInRaid():
 			ERROR_MSG('enterChiefDungeon:: not in raid', self.gbId)
@@ -57,11 +57,11 @@ class IChief(object):
 
 		# for team, check level in dungeon checking logic
 
-		heroicStoryPlayMode = dungeonPlayMode.ChiefDungeonPlayMode(dunLevel=dunLevel)
+		heroicStoryPlayMode = dungeonPlayMode.ChiefDungeonPlayMode(dunLevel=dunLevel, raidUUID = self.raidId)
 		extra = {'dungeonPlayMode': heroicStoryPlayMode, 'src': src}
 
-		raidStub = gameengine.getRaidStub(self.raidId)
-		raidStub.enterRaidChiefDungeon(self, self.gbId, self.raidId, dungeonNo, extra)
+		gameengine.getGlobalBase('RaidMatchStub').raidStopAutoMatch(self.raidId)
+		gameengine.getRaidStub(self.raidId).enterRaidChiefDungeon(self, self.gbId, self.raidId, dungeonNo, extra)
 		# self.resetStatisticsData()
 	
 	def getRaidDunLevel(self, dungenNo):

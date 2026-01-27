@@ -13,10 +13,10 @@ import gzip
 
 import gameengine
 import gameclass
-import gametlog
 import dataUtils
 import itemFactory
 import gamedecorator
+import LogTrackingMgr
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import bagData_set as BGDSD
@@ -46,18 +46,32 @@ class IWarehouse(object):
         return
 
     def warehouseExpansion(self, pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context):
-        DEBUG_MSG("warehouseExpansion ", pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
+        INFO_MSG("warehouseExpansion ", pendingUseId, gridNum, gridId, itemId, useNum, opUUID, context)
         bankCapacity = BGDSD.datas['bankCapacity']['value']
         if self.warehouse.capacity >= bankCapacity:
             WARNING_MSG('   in warehouseExpansion, reach limit 1:', self.warehouse.capacity)
             self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
             return
+        
+        oldCapacity = self.warehouse.capacity
         newCapacity = self.warehouse.capacity + gridNum
         if newCapacity > bankCapacity:
             WARNING_MSG('   in warehouseExpansion, reach limit 2:', newCapacity)
             newCapacity = bankCapacity
         self.warehouse.capacity = newCapacity
         self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.TRUE)
+        
+        LogTrackingMgr.LogTrackingMgr.Capacity_Expansion(
+            opUUID,
+            self.gbID,
+            gameconst.CapacityExpansionType.WAREHOUSE_GOLD,
+            oldCapacity,
+            gridNum,
+            self.warehouse.capacity,
+            self.getRoleCacheAttr('level'),
+            {itemId:useNum}
+        )
+
         self.client.onUnlockWarehouseGrids(gameconst.BagOPStat.BAG_OP_STAT_OK, newCapacity)
 
     @gamedecorator.checkGameconfigEnable('warehouse')
@@ -66,7 +80,7 @@ class IWarehouse(object):
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqUnlockWarehouse(self, exposed, gridNum):
-        DEBUG_MSG('in reqUnlockWarehouse', gridNum)
+        INFO_MSG('in reqUnlockWarehouse', gridNum)
         if gridNum <= 0:
             ERROR_MSG('reqUnlockWarehouse error:', gridNum)
             return
@@ -78,7 +92,7 @@ class IWarehouse(object):
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqMoveItemToWarehouse(self, exposed, gridId, itemId, itemNum):
-        DEBUG_MSG('in reqMoveItemToWarehouse:', gridId, itemId, itemNum)
+        INFO_MSG('in reqMoveItemToWarehouse:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
             WARNING_MSG('     in reqMoveItemToWarehouse, bag locked')
             return
@@ -137,11 +151,10 @@ class IWarehouse(object):
                 gameengine.reportCritical('reqMoveItemToWarehouse, op error:', opStat, gridId, itemId, itemNum)
 
         self.client.onWarehouseInItems(opStat, self.warehouse._getClientDataFromPlanDic(planDic))
-        # self.makeWarehouseFlow(bagItem.itemId, bagItem.itemNum, bagItem.uniqueId, bagItem.bindType, 0, '')
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqMoveItemToBag(self, exposed, gridId, itemId, itemNum):
-        DEBUG_MSG('in reqMoveItemToBag:', gridId, itemId, itemNum)
+        INFO_MSG('in reqMoveItemToBag:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
             WARNING_MSG('     in reqMoveItemToBag, bag locked')
             return
@@ -197,40 +210,16 @@ class IWarehouse(object):
             if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
                 gameengine.reportCritical('reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
         self.client.onWarehouseOutItems(opStat, gridId, itemNum)
-        # self.makeWarehouseFlow(roomItem.itemId, roomItem.itemNum, roomItem.uniqueId, roomItem.bindType, 1, '')
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqWarehouseSort(self, exposed):
-        DEBUG_MSG('in reqWarehouseSort:')
+        INFO_MSG('in reqWarehouseSort:')
         if self.warehouse.doBagSort(self):
             dic = self.warehouse.toBagSavedDict()
             jsonStr = json.dumps(dic).encode('ascii')
             zStr = gzip.compress(jsonStr)
             self.streamStringProxy(zStr, '', gameconst.StreamStringID.WAREHOUSE_SORT_INFO)
         return
-
-    def makeWarehouseFlow(self, itemId, itemNum, itemUniqueId, bindType, opType, detail):
-        tlogParams = {
-            'GameSvrId': None,
-            'dtEventTime': None,
-            'vGameAppid': None,
-            'PlatID': None,
-            'iZoneAreaID': None,
-            'vOpenID': None,
-            'vRoleID': None,
-            'vRoleName': None,
-            'iLevel': None,
-            'iVipLevel': 0,
-            'iRoleCE': None,
-            'itemId': itemId,
-            'itemNum': itemNum,
-            'itemUniqueId': itemUniqueId,
-            'bindType': bindType,
-            'opType': opType,
-            'detail': detail,
-        }
-        tlogParams.update(self.getTLogCommonParams())
-        gametlog.build(gameconst.GameLog.LOG_WAREHOUSE_FLOW, **tlogParams).init().commit()
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqWarehouseLockItem(self, exposed, gridId, itemId, uniqueId, lockStatus):

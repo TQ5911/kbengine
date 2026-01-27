@@ -5,7 +5,7 @@ datas ={
       40080001
     ],
     "num": 0,
-    "lv": "1",
+    "lv": "7",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -50,7 +50,7 @@ datas ={
       40080002
     ],
     "num": 0,
-    "lv": "1",
+    "lv": "7",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

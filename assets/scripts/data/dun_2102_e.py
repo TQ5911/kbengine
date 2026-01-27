@@ -67,8 +67,7 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1014,
-        1142
+        1014
       ]
     }
   },
@@ -917,7 +916,7 @@ datas ={
     "entityID": [
       21020001
     ],
-    "dialogID": 19900187,
+    "dialogID": 19900315,
     "transition": {}
   },
   "1187": {
@@ -933,7 +932,7 @@ datas ={
     "entityID": [
       21020002
     ],
-    "dialogID": 19900195,
+    "dialogID": 19900316,
     "transition": {}
   },
   "1189": {
@@ -941,7 +940,7 @@ datas ={
     "entityID": [
       21020002
     ],
-    "dialogID": 19900191,
+    "dialogID": 19014002,
     "transition": {}
   },
   "1179": {
@@ -963,14 +962,6 @@ datas ={
     "num": 1,
     "lv": "25",
     "ifSetBoss": 0,
-    "transition": {}
-  },
-  "1142": {
-    "type": "popupdialog",
-    "entityID": [
-      21024002
-    ],
-    "dialogID": 19900211,
     "transition": {}
   },
   "1143": {

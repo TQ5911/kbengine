@@ -55,11 +55,11 @@ class ICrusade(object):
 
 		# for team, check level in dungeon checking logic
 
-		heroicStoryPlayMode = dungeonPlayMode.CrusadeDungeonPlayMode(dunLevel=dunLevel)
+		heroicStoryPlayMode = dungeonPlayMode.CrusadeDungeonPlayMode(dunLevel=dunLevel, teamUUID = self.teamId)
 		extra = {'dungeonPlayMode': heroicStoryPlayMode, 'src': src, 'score': targetInfo['minScore']}
 
-		teamStub = gameengine.getTeamStub(self.teamId)
-		teamStub.enterTeamCrusadeDungeon(self.base, self.gbId, self.teamId, dungeonNo, extra)
+		gameengine.getTeamStub(self.teamId).teamPrepareStopAutoMatch(self.teamId)
+		gameengine.getTeamStub(self.teamId).enterTeamCrusadeDungeon(self.base, self.gbId, self.teamId, dungeonNo, extra)
 		# self.resetStatisticsData()
 
 	def getTeamDunLevel(self, dungenNo):

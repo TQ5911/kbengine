@@ -33,7 +33,7 @@ public class KBEMain : MonoBehaviour
 	public int TCP_RECV_BUFFER_MAX = (int)KBEngine.NetworkInterfaceBase.TCP_PACKET_MAX;
 	public int UDP_SEND_BUFFER_MAX = (int)KBEngine.NetworkInterfaceBase.UDP_PACKET_MAX;
 	public int UDP_RECV_BUFFER_MAX = (int)KBEngine.NetworkInterfaceBase.UDP_PACKET_MAX;
-	public bool useAliasEntityID = true;
+	public bool useAliasEntityID = false;
 	public bool isOnInitCallPropertysSetMethods = true;
 	public bool forceDisableUDP = false;
 
@@ -41,6 +41,7 @@ public class KBEMain : MonoBehaviour
 
 	protected virtual void Awake() 
 	 {
+        useAliasEntityID = false;
 		DontDestroyOnLoad(transform.gameObject);
 	 }
  
@@ -83,7 +84,7 @@ public class KBEMain : MonoBehaviour
         if (gameapp == null)
         {
             initKBEngine();
-            DebugL8.Log("-------------------------InitKBEngine End!!!!!!!!!!!!!!!!!!!!!");
+            GLog.Log("-------------------------InitKBEngine End!!!!!!!!!!!!!!!!!!!!!");
         }
 
     //-----------上行设备信息------------------------------------------
@@ -158,7 +159,7 @@ public class KBEMain : MonoBehaviour
         //     }
         //     else
         //     {
-        //         DebugL8.Log("[TDM] get IOS CAID:{0}", iosCaid);
+        //         GLog.Log("[TDM] get IOS CAID:{0}", iosCaid);
         //     }
         // }
         // paramDic["vClientIPv6"] = MyUtils.GetFirstIpv6Address();
@@ -178,7 +179,7 @@ public class KBEMain : MonoBehaviour
 
         string json = MiniJSON.Json.Serialize(paramDic);
       //string param = string.Format("{\"token\":{0}, \"loginServerId\":{1}}", token, serverId);
-      DebugL8.Log("@KBEMain  OnLoginBtnClick accountType={0}  username={1}, password={2}, json={3}", accountType, userName, password, json);
+      GLog.Log("@KBEMain  OnLoginBtnClick accountType={0}  username={1}, password={2}, json={3}", accountType, userName, password, json);
       KBEngine.Event.fireIn("login", accountType, userName, password, System.Text.Encoding.UTF8.GetBytes(json));
    }
 

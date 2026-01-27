@@ -207,18 +207,18 @@ datas = _tools.RODict({
     }),
     19000007002: _tools.RODict({
         "ID": 19000007002,
-        "event": "Openinterface",
-        "parm": "UIEquipUnbundlePanel",
+        "event": "OpenStore",
+        "parm": "5",
     }),
     19000007003: _tools.RODict({
         "ID": 19000007003,
         "event": "Openinterface",
-        "parm": "UIEquipTrainingPanel,1",
+        "parm": "UIEquipUnbundlePanel",
     }),
     19000007004: _tools.RODict({
         "ID": 19000007004,
-        "event": "OpenStore",
-        "parm": "9",
+        "event": "Openinterface",
+        "parm": "UIEquipTrainingPanel,1",
     }),
     19000008000: _tools.RODict({
         "ID": 19000008000,
@@ -254,11 +254,6 @@ datas = _tools.RODict({
         "ID": 19000044002,
         "event": "OpenWarehouse",
         "parm": "",
-    }),
-    19000044003: _tools.RODict({
-        "ID": 19000044003,
-        "event": "OpenStore",
-        "parm": "6",
     }),
     19000045000: _tools.RODict({
         "ID": 19000045000,
@@ -403,12 +398,12 @@ datas = _tools.RODict({
     19000400002: _tools.RODict({
         "ID": 19000400002,
         "event": "OpenNpcExchange",
-        "parm": "1",
+        "parm": "3",
     }),
     19000400003: _tools.RODict({
         "ID": 19000400003,
         "event": "OpenNpcExchange",
-        "parm": "2",
+        "parm": "5",
     }),
     19000008004: _tools.RODict({
         "ID": 19000008004,
@@ -1674,16 +1669,6 @@ datas = _tools.RODict({
         "ID": 19000146001,
         "event": "",
         "parm": "",
-    }),
-    19000146002: _tools.RODict({
-        "ID": 19000146002,
-        "event": "OpenStore",
-        "parm": "10",
-    }),
-    19000146003: _tools.RODict({
-        "ID": 19000146003,
-        "event": "OpenStore",
-        "parm": "11",
     }),
     19000147000: _tools.RODict({
         "ID": 19000147000,
@@ -3695,8 +3680,8 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
-    19100036008: _tools.RODict({
-        "ID": 19100036008,
+    19100036007: _tools.RODict({
+        "ID": 19100036007,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -4007,7 +3992,7 @@ datas = _tools.RODict({
     }),
     19100021000: _tools.RODict({
         "ID": 19100021000,
-        "event": "SubmitItem",
+        "event": "Fnstalk",
         "parm": "",
     }),
     19100017000: _tools.RODict({
@@ -5840,8 +5825,8 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
-    19900057003: _tools.RODict({
-        "ID": 19900057003,
+    19300057003: _tools.RODict({
+        "ID": 19300057003,
         "event": "Gettask",
         "parm": "",
     }),
@@ -6162,7 +6147,7 @@ datas = _tools.RODict({
     }),
     19300088001: _tools.RODict({
         "ID": 19300088001,
-        "event": "Gettask",
+        "event": "",
         "parm": "",
     }),
     19300088002: _tools.RODict({
@@ -6260,13 +6245,13 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
-    19300093004: _tools.RODict({
-        "ID": 19300093004,
+    19300093003: _tools.RODict({
+        "ID": 19300093003,
         "event": "",
         "parm": "",
     }),
-    19300093005: _tools.RODict({
-        "ID": 19300093005,
+    19300093004: _tools.RODict({
+        "ID": 19300093004,
         "event": "Gettask",
         "parm": "",
     }),
@@ -6587,7 +6572,7 @@ datas = _tools.RODict({
     }),
     19300118004: _tools.RODict({
         "ID": 19300118004,
-        "event": "Fnstask",
+        "event": "Fnstalk",
         "parm": "",
     }),
     19300119000: _tools.RODict({
@@ -6632,7 +6617,7 @@ datas = _tools.RODict({
     }),
     19300120003: _tools.RODict({
         "ID": 19300120003,
-        "event": "Fnstask",
+        "event": "Gettask",
         "parm": "",
     }),
     19300121000: _tools.RODict({
@@ -6667,7 +6652,7 @@ datas = _tools.RODict({
     }),
     19300121006: _tools.RODict({
         "ID": 19300121006,
-        "event": "Fnstask",
+        "event": "Gettask",
         "parm": "",
     }),
     19300122000: _tools.RODict({
@@ -6692,7 +6677,7 @@ datas = _tools.RODict({
     }),
     19300122004: _tools.RODict({
         "ID": 19300122004,
-        "event": "",
+        "event": "Gettask",
         "parm": "",
     }),
     19300123000: _tools.RODict({
@@ -7020,6 +7005,11 @@ datas = _tools.RODict({
         "event": "Fnstalk",
         "parm": "",
     }),
+    19300140000: _tools.RODict({
+        "ID": 19300140000,
+        "event": "",
+        "parm": "",
+    }),
     19300140001: _tools.RODict({
         "ID": 19300140001,
         "event": "",
@@ -7042,11 +7032,6 @@ datas = _tools.RODict({
     }),
     19300140005: _tools.RODict({
         "ID": 19300140005,
-        "event": "",
-        "parm": "",
-    }),
-    19300140006: _tools.RODict({
-        "ID": 19300140006,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -7059,10 +7044,140 @@ datas = _tools.RODict({
         "ID": 19300144000,
         "event": "Fnstalk",
         "parm": "",
+    }),
+    19300146000: _tools.RODict({
+        "ID": 19300146000,
+        "event": "",
+        "parm": "",
+    }),
+    19300146001: _tools.RODict({
+        "ID": 19300146001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940001000: _tools.RODict({
+        "ID": 1940001000,
+        "event": "",
+        "parm": "",
+    }),
+    19400010001: _tools.RODict({
+        "ID": 19400010001,
+        "event": "",
+        "parm": "",
+    }),
+    1940001002: _tools.RODict({
+        "ID": 1940001002,
+        "event": "",
+        "parm": "",
+    }),
+    1940001003: _tools.RODict({
+        "ID": 1940001003,
+        "event": "",
+        "parm": "",
+    }),
+    1940001004: _tools.RODict({
+        "ID": 1940001004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940002000: _tools.RODict({
+        "ID": 1940002000,
+        "event": "",
+        "parm": "",
+    }),
+    1940002001: _tools.RODict({
+        "ID": 1940002001,
+        "event": "",
+        "parm": "",
+    }),
+    1940002002: _tools.RODict({
+        "ID": 1940002002,
+        "event": "",
+        "parm": "",
+    }),
+    1940002003: _tools.RODict({
+        "ID": 1940002003,
+        "event": "",
+        "parm": "",
+    }),
+    1940002004: _tools.RODict({
+        "ID": 1940002004,
+        "event": "",
+        "parm": "",
+    }),
+    1940002005: _tools.RODict({
+        "ID": 1940002005,
+        "event": "",
+        "parm": "",
+    }),
+    1940002006: _tools.RODict({
+        "ID": 1940002006,
+        "event": "",
+        "parm": "",
+    }),
+    1940002007: _tools.RODict({
+        "ID": 1940002007,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940003000: _tools.RODict({
+        "ID": 1940003000,
+        "event": "",
+        "parm": "",
+    }),
+    1940003001: _tools.RODict({
+        "ID": 1940003001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940004000: _tools.RODict({
+        "ID": 1940004000,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940004001: _tools.RODict({
+        "ID": 1940004001,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940004002: _tools.RODict({
+        "ID": 1940004002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940004003: _tools.RODict({
+        "ID": 1940004003,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940004004: _tools.RODict({
+        "ID": 1940004004,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940004005: _tools.RODict({
+        "ID": 1940004005,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940004006: _tools.RODict({
+        "ID": 1940004006,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940004007: _tools.RODict({
+        "ID": 1940004007,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    1940004008: _tools.RODict({
+        "ID": 1940004008,
+        "event": "Fnstalk",
+        "parm": "",
     })
 })
-minKey = 19000001000
-maxKey = 19900057003
+minKey = 1940001000
+maxKey = 19400010001
 
 dialogIdMap = _tools.RODict({ 
     19000001: (
@@ -7139,7 +7254,6 @@ dialogIdMap = _tools.RODict({
         19000044000,
         19000044001,
         19000044002,
-        19000044003,
     ),
     19000045: (
         19000045000,
@@ -7696,8 +7810,6 @@ dialogIdMap = _tools.RODict({
     19000146: (
         19000146000,
         19000146001,
-        19000146002,
-        19000146003,
     ),
     19000147: (
         19000147000,
@@ -8434,7 +8546,7 @@ dialogIdMap = _tools.RODict({
         19100036004,
         19100036005,
         19100036006,
-        19100036008,
+        19100036007,
     ),
     19100037: (
         19100037000,
@@ -9131,9 +9243,7 @@ dialogIdMap = _tools.RODict({
         19300057000,
         19300057001,
         19300057002,
-    ),
-    19900057: (
-        19900057003,
+        19300057003,
     ),
     19300058: (
         19300058000,
@@ -9269,8 +9379,8 @@ dialogIdMap = _tools.RODict({
         19300093000,
         19300093001,
         19300093002,
+        19300093003,
         19300093004,
-        19300093005,
     ),
     19300094: (
         19300094000,
@@ -9499,17 +9609,55 @@ dialogIdMap = _tools.RODict({
         19300139007,
     ),
     19300140: (
+        19300140000,
         19300140001,
         19300140002,
         19300140003,
         19300140004,
         19300140005,
-        19300140006,
     ),
     19300143: (
         19300143000,
     ),
     19300144: (
         19300144000,
+    ),
+    19300146: (
+        19300146000,
+        19300146001,
+    ),
+    1940001: (
+        1940001000,
+        1940001002,
+        1940001003,
+        1940001004,
+    ),
+    19400010: (
+        19400010001,
+    ),
+    1940002: (
+        1940002000,
+        1940002001,
+        1940002002,
+        1940002003,
+        1940002004,
+        1940002005,
+        1940002006,
+        1940002007,
+    ),
+    1940003: (
+        1940003000,
+        1940003001,
+    ),
+    1940004: (
+        1940004000,
+        1940004001,
+        1940004002,
+        1940004003,
+        1940004004,
+        1940004005,
+        1940004006,
+        1940004007,
+        1940004008,
     ),
 })

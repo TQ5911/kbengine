@@ -52,7 +52,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def doEnterDungeon(self, box, gbId, dungeonUUID, spaceNo, extra):
         raise Exception('not implemented')
-
+    
     def getDungeonSpaceNoRange(self):
         return gameconst.SpaceType.getCopiedSpaceNoRange(self.dungeonNo)
 
@@ -156,7 +156,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if tempMiscProps:
             props.setdefault("tempMiscProps", {}).update(tempMiscProps)
 
-        DEBUG_MSG('create DungeonSpaceMgr', props)
+        INFO_MSG('create DungeonSpaceMgr', props)
         mgr = KBEngine.createEntityLocally('DungeonSpaceMgr', props)
         spaceVal.spaceMgr = mgr
 
@@ -282,7 +282,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return self.spaces[spaceNo].spaceBox.cell
 
     def sendBigWorldDungeonProps(self, box, gbId, spaceNo):
-        DEBUG_MSG('sendBigWorldDungeonProps::')
+        INFO_MSG('sendBigWorldDungeonProps::')
         if spaceNo not in self.spaces:
             ERROR_MSG('spaceNo "{}" not found in spaces'.format(spaceNo))
             return
@@ -293,13 +293,13 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         endTime = int(spaceVal.tCreate + DDI.datas[self.dungeonNo]['timeOut'] * 60 + 1)
         if spaceVal.isCompleted():
             if spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.RAID:
-                spaceVal.spaceMgr.cell.onRaidDungeonCompleted(spaceNo, spaceVal.raidUUID, not spaceVal.isFailed(), 0, spaceVal.dungeonCreepBaseKillDic, spaceVal.getAllPlayerGbidAndNamePair(), spaceVal.getElapsedTime(), gbId)
+                spaceVal.spaceMgr.cell.onRaidDungeonCompleted(spaceNo, spaceVal.raidUUID, not spaceVal.isFailed(), 0, spaceVal.dungeonCreepBaseKillDic, spaceVal.getAllPlayerGbidAndNamePair(), spaceVal.getElapsedTime(), gbId, spaceVal.completedReasonType)
             elif spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.TEAM:
-                spaceVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, spaceVal.teamUUID, not spaceVal.isFailed(), 0,  spaceVal.getElapsedTime(), gbId)
+                spaceVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, spaceVal.teamUUID, not spaceVal.isFailed(), 0,  spaceVal.getElapsedTime(), gbId, spaceVal.completedReasonType)
             elif spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.SINGLE:
                 spaceVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, gbId, not spaceVal.isFailed(), 0, spaceVal.getElapsedTime())
             elif spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.SINGLE:
-                spaceVal.spaceMgr.cell.onGuildBossDungeonCompleted(spaceNo, spaceVal.guildUUID, not spaceVal.isFailed(), 0, spaceVal.getElapsedTime(), gbId)
+                spaceVal.spaceMgr.cell.onGuildBossDungeonCompleted(spaceNo, spaceVal.guildUUID, not spaceVal.isFailed(), 0, spaceVal.getElapsedTime(), gbId, spaceVal.completedReasonType)
         box.client.changeDungeonRemainTime(spaceNo, endTime)
 
     def requestSpaceCell(self, requestBox, spaceNo):
@@ -312,7 +312,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return None
 
     def getSettlementRankList(self, rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset):
-        DEBUG_MSG("getSettlementRankList~ ", rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset)
+        INFO_MSG("getSettlementRankList~ ", rankType, spaceNo, uniqueID, playerBox, gbID, idx, offset)
         if spaceNo not in self.spaces:
             WARNING_MSG('getSettlementRankList:: failed, missing space data', spaceNo)
             return

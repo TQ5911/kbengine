@@ -53,29 +53,16 @@ class AvatarBuildsMixin(object):
         self.updateSkillScore()
 
     def _levelUpSkill(self, newSkillId, oldSkillId, levelDelta):
-        DEBUG_MSG("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
+        INFO_MSG("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
         if not self.buildDic.levelUp(self, newSkillId, oldSkillId, levelDelta):
             INFO_MSG('skill can not levelUp', newSkillId, oldSkillId)
             return False
 
-        self.makeSkillTlog(1 if levelDelta > 0 else 2, newSkillId, self.buildDic.skillLevels[newSkillId])
         self.achievementInfo.triggerAchieveByType(
             self,
             gameconst.AchieveType.LEVEL_UP_SKILL,
             actionContext.AchievementCtx())
         return True
-
-    def makeSkillTlog(self, skillChangeType, skillId, skillLevel):
-        tlogProps = {
-            'GameSvrId': None,
-            'dtEventTime': None,
-            'vGameAppid': None,
-            'skillChangeType': skillChangeType,
-            'skillId': skillId,
-            'skillLevel': skillLevel,
-        }
-        # tlogProps.update(self.getTLogCommonParams())
-        # gametlog.build(gameconst.GameLog.LOG_AVATAR_SKILL, **tlogProps).init().commit()
 
     def onChangeSkillLv(self, skillId, toLv):
         self.cell.onChangeSkillLv(skillId, toLv)
@@ -108,7 +95,7 @@ class AvatarBuildsMixin(object):
                        self.cannelTemporarySkill(taskId, _buildSkillId)
                     else:
                         if self.unlockActiveSkill(_buildSkillId, skillId, isNotify, lv, mid):
-                            DEBUG_MSG('unlock skill', skillId)
+                            INFO_MSG('unlock skill', skillId)
                             unlockedSkills.append(skillId)
 
         if unlockedSkills:
@@ -167,7 +154,7 @@ class AvatarBuildsMixin(object):
     def initNoviceBuild(self):
         pass
 
-    def onChangeSkill(self, fromSkillId, toSkillId):
+    def onChangeSkill(self, fromSkillId, toSkillId, fromSkillNextCastTime):
         skillIds = self.buildDic.getSkillIds()
         if toSkillId in skillIds:
             WARNING_MSG("onChangeSkill toSkillId was in buildDic", fromSkillId, toSkillId, skillIds)
@@ -179,7 +166,7 @@ class AvatarBuildsMixin(object):
         buildVal = self.buildDic
 
         buildVal.changeSkillSlot(self, fromSkillId, slotId, None)
-        buildVal.changeSkillSlot(self, toSkillId, None, slotId)
+        buildVal.changeSkillSlot(self, toSkillId, None, slotId, fromSkillNextCastTime = fromSkillNextCastTime)
 
         self.client.onChangeSkill(fromSkillId, toSkillId)
 
@@ -197,10 +184,11 @@ class AvatarBuildsMixin(object):
         self._updateSkills(skillSlotInfos, True, True)
 
     def _updateSkills(self, skillSlotInfos, bNotifyClient=False, isMessage=False):
-
         skillCheckList = []
         for skillSlotInfo in skillSlotInfos:
             skillId = skillSlotInfo['skillId']
+            # 需要处理下冲突技能
+            skillId = dataUtils.getSkillIdByMorphState(skillId, self.morphState)
             toSlotId = skillSlotInfo['slotId']
             if toSlotId < 0:
                 toSlotId = None
@@ -352,13 +340,9 @@ class ImpCombat(AvatarBuildsMixin):
 
     def playerDeadTlog(self, tlogProps):
         pass
-        # tlogProps.update(self.getTLogCommonParams())
-        # gametlog.build(gameconst.GameLog.LOG_AVATAR_DEAD, **tlogProps).init().commit()
 
     def playerReliveTlog(self, tlogProps):
         pass
-        # tlogProps.update(self.getTLogCommonParams())
-        # gametlog.build(gameconst.GameLog.LOG_AVATAR_RELIVE, **tlogProps).init().commit()
 
     def addAwardFightProps(self, fightProps, srcType, awardId, opUUID, detail):
         syncPropList = []
@@ -534,6 +518,7 @@ class ImpCombat(AvatarBuildsMixin):
         self.pyDelTimer(self.autoDrinkPotionTimerId, gametimer.AUTO_DRINK_POTION_TIMER)
         self.autoDrinkPotionTimerId = 0
 
+    @gamedecorator.checkGameconfigEnable('quickSettings')
     def unsetInstantPotionSlots(self, exposed, slotId):
         INFO_MSG('unsetInstantPotionSlots', slotId)
         self.instantPotionSlots.unsetSlot(slotId)

@@ -2,76 +2,77 @@
 from KBEDebug import *
 import KBEngine
 def refreshCell():
+    import KBEngine
+    import random
+    import gameconst
+    import time
+    import actionContext
+    import effectEventCtx
+    import gamedecorator
+    import effect
+    @gamedecorator.prevent_instance_reentry
+    def onActionEvent(self, owner, callerInfo, event):
+        DEBUG_MSG('onActionEvent: the event context -', event)
+        if not self.isValid:
+            return
+        effectData = self.getEffectData()
+        effectDict = self.getEffectDict(owner, callerInfo)
+        if not effectData or not effectDict:
+            return
+        if owner.isDie() and 'onDeadLater' != event.name:
+            return
+        if self.tNextTime and time.time() < self.tNextTime:
+            return
+        prob = effectDict.get('Probability')
+        caller = callerInfo.getCaller(owner)
+        if prob:
+            env = {'value': getattr(caller, 'randomValue', 0)}
+            probVal = prob(env) if callable(prob) else prob
+            if random.uniform(0, 1) > probVal:
+                return
+        if event.name == 'onSpecSkill' and effectDict.get('skillId') != event.eventContext.skillId:
+            return
+        elif event.name == 'onSelfBuff' and effectDict.get('BuffId') != event.eventContext.buffId:
+            DEBUG_MSG('onActionEvent - "onSelfBuff" not trigger', effectDict, event.eventContext.buffId)
+            return
+        target = None
+        targetType = effectData.get('Target')
+        if targetType == 'self':
+            target = owner
+        elif targetType == 'other':
+            otherId = event.targetRoleId if event.triggerRoleId == owner.id else event.triggerRoleId
+            target = KBEngine.entities.get(otherId)
+        elif targetType == 'buffReleaser':
+            releaseRole = KBEngine.entities.get(event.triggerRoleId)
+            if not (releaseRole and releaseRole.IsCombatUnit):
+                return
+            target = releaseRole
+        _ret = None
+        if target and target.IsCombatUnit or targetType == 'None':
+            argsDict = self.getActionArgs(owner, callerInfo)
+            if event.eventContext is not effectEventCtx.EE_DEFAULT_CONTEXT:
+                argsDict.update(vars(event.eventContext))
+            action = effectData.get('Action')
+            if action:
+                if callerInfo.callerType in (effect.EffectCaller.BUFF,):
+                    bufVal = callerInfo.getCaller(owner)
+                    ctxBuilder = lambda r: actionContext.EventEffectCtx(callerInfo.getFromEntId(owner), owner.id, callerInfo.buffId, bufVal.level, bufVal.srcKey, self.effectId, argsDict, event.eventContext, r, bufVal.rootContext)
+                else:
+                    ERROR_MSG('unsupported effect caller', callerInfo, self)
+                    return
+                _ret = owner.doCombatActions(action, owner, target, callerInfo.getFromEntId(owner), ctxBuilder)
+        if _ret is None:
+            self.tNextTime = time.time() + effectData.get('EventCD', 0)
+        elif _ret:
+            self.tNextTime = time.time() + effectData.get('EventCD', 0)
+        if effectData.get('EventSourceType') == gameconst.EffetEventSourceType.LINGSHOU_SKILL_BUFF:
+            bufVal = callerInfo.getCaller(owner)
+            if bufVal and bufVal.rootContext and bufVal.rootContext.actionType == actionContext.ACTION_PASSIVE_SKILL:
+                owner.updateLingShouEffectEventInfo(bufVal.rootContext.objId, bufVal.rootContext.skillId, bufVal.buffId, self.effectId, self.tNextTime)
+    effect.EventEffect.onActionEvent = onActionEvent
     # --auto genterate mark--
     pass
 def refreshBase():
-    import KBEngine
-    import dropAward
-    import gameclass
-    import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-    import gacha_gachaSet as GGS
-    import gacha_gachaPool as GGP
-    import gamedecorator
-    import iDrawCard
-    @gamedecorator.checkGameconfigEnable('drawPet')
-    def reqRandomSummonPet(self, exposed, pool, summonNum):
-        INFO_MSG('call reqRandomSummonPet', pool, summonNum)
-        if not self.checkGachaPoolVaild(pool):
-            return
-        poolData = GGP.datas[pool]
-        curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
-        if curPoolInfo.guaranteed >= GGS.datas['maxStack']['value']:
-            self.onMessagePre(GGS.datas['guaranteeMaxFull']['value'], [])
-            WARNING_MSG('call reqRandomSummonPet: guaranteed limit', curPoolInfo.guaranteed, GGS.datas['maxStack']['value'])
-            return
-        rollCostKey = str(summonNum) + str('rollCost')
-        rollCost = poolData.get(rollCostKey, None)
-        rollRewardKey = str(summonNum) + str('rollReward')
-        rollReward = poolData.get(rollRewardKey, 0)
-        gatchaTypeReward = GGS.datas['gatchaTypeReward']['value']
-        realRollNum = 0
-        if not rollCost:
-            ERROR_MSG('call reqRandomSummonPet rollCost not found in config')
-            return
-        if not rollReward:
-            ERROR_MSG('call reqRandomSummonPet rollReward not found in config')
-            return
-        for itemNum, rollNum in gatchaTypeReward:
-            if itemNum == summonNum:
-                realRollNum = rollNum
-                break
-        if not realRollNum:
-            ERROR_MSG('call reqRandomSummonPet summonNum not found in config')
-            return
-        level = self.getAvatarLevel()
-        curDailyNum = 0
-        dailyLimit = poolData.get('dailyLimit', ())
-        for limitInfo in dailyLimit:
-            minLevel, maxLevel, limitNum = limitInfo
-            if level < minLevel or maxLevel < level:
-                continue
-            curDailyNum = limitNum
-            break
-        if curPoolInfo.dailyNum + summonNum > curDailyNum:
-            self.onMessagePre(GGS.datas['rollLimitNotEnough']['value'], [])
-            WARNING_MSG('call reqRandomSummonPet over daily limit', curPoolInfo.dailyNum, summonNum, level, curDailyNum)
-            return
-        petRollTicket = rollCost
-        deductWealthVal = dropAward.DeductWealthVal()
-        for itemId, costNum in petRollTicket:
-            deductWealthVal.addWealthByItemId(itemId, costNum)
-        if not self.canDeductWealth(deductWealthVal):
-            ERROR_MSG('reqRandomSummonPet items not enough:', deductWealthVal)
-            return
-        detail = gameclass.AwardDetail(summonNum=summonNum)
-        opUUID = KBEngine.genUUID64()
-        self.deductWealth(AAC_AACDD.datas.BONUS_SRC_PETROLL_COST, deductWealthVal, opUUID, detail)
-        rewardId = rollReward
-        awardCtx = self._getAvatarAwardCtx(rewardId, None)
-        awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum})
-        detail = gameclass.AwardDetail(rewardId=rewardId)
-        self.addAwards(AAC_AACDD.datas.BONUS_SRC_PETROLL_REWARD, rewardId, 1, opUUID, detail, awardCtx, False)
-    iDrawCard.IDrawCard.reqRandomSummonPet = reqRandomSummonPet
     # --auto genterate mark--
     pass
 def refreshInterface():

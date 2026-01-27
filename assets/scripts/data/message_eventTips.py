@@ -21,7 +21,7 @@ datas = _tools.RODict({
             "templateId": 16000005,
             "content": "吉星高照！<link player name={0} gbid={1}>从半兽人之王的财宝里发现了<link item id={2} gbid={3}>*{4}！",
             "crossServer": 1,
-            "itemIdNoLimit": _tools.ROList([30010005]),
+            "itemIdNoLimit": _tools.ROList([30000101]),
             "itemIdLimit": None
         }),
     }),
@@ -31,7 +31,7 @@ datas = _tools.RODict({
             "templateId": 11001000,
             "content": "吉星高照！<link player name={0} gbid={1}>击败半兽人统领，获得了<link item id={4} gbid={5}>*{6}！",
             "crossServer": 0,
-            "itemIdNoLimit": _tools.ROList([30990006]),
+            "itemIdNoLimit": _tools.ROList([30000101]),
             "itemIdLimit": None
         }),
     }),
@@ -41,7 +41,7 @@ datas = _tools.RODict({
             "templateId": 30990009,
             "content": "<link player name={0} gbid={1}>打开了<link item id={2} gbid={3}>，获得了<link item id={4} gbid={5}> {6}个！",
             "crossServer": 0,
-            "itemIdNoLimit": _tools.ROList([30990006]),
+            "itemIdNoLimit": _tools.ROList([30000101]),
             "itemIdLimit": None
         }),
     }),

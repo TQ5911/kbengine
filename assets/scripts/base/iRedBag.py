@@ -223,7 +223,7 @@ class IRedBag(object):
         _realMoney = self.popTempMiscProp(redbagId)
         addWealthVal.addWealthByItemId(self.moneyItemId, _realMoney)
         m_desc = "on-release-redbag-fail-{}-{}-{}".format(redbagId, money, _realMoney)
-        self.addWealth(src, addWealthVal, KBEngine.genUUID64(), m_desc)
+        self.addWealth(src, addWealthVal, redbagId, m_desc)
 
     def getFetchRedBagTime(self, redbagId):
         return self.fetchRedBagDict.get(redbagId, 0)
@@ -262,7 +262,7 @@ class IRedBag(object):
             addWealthVal = dropAward.AwardVal()
             addWealthVal.addWealthByItemId(self.moneyItemId, money)
             m_desc = "on-fetch-redbag-{}-{}".format(redbagId, money)
-            self.addWealth(src, addWealthVal, KBEngine.genUUID64(), m_desc)
+            self.addWealth(src, addWealthVal, redbagId, m_desc)
 
             # fetchDict['hasFetch'] = 1
 

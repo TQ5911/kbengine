@@ -64,12 +64,12 @@ class ImpTask(impTalk.ImpTalk):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def reqClaimTask(self, exposed, claimSrcType, taskId, paramStr):
-        DEBUG_MSG('in reqClaimTask:', taskId)
+        INFO_MSG('in reqClaimTask:', taskId)
         self.startClaimTask(taskId)
         return
 
     def startClaimTask(self, taskId, itemMethodName='', itemArgs=(), taskCtx=None):
-        DEBUG_MSG('startClaimTask:', taskId)
+        INFO_MSG('startClaimTask:', taskId)
         if not taskCtx:
             taskCtx = actionContext.ClaimTaskCtx()
 
@@ -237,7 +237,7 @@ class ImpTask(impTalk.ImpTalk):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def taskFailedLeaveArea(self, srcEntityID, taskId):
-        DEBUG_MSG('in taskFailedLeaveArea:', srcEntityID, taskId)
+        INFO_MSG('in taskFailedLeaveArea:', srcEntityID, taskId)
         taskData = dataUtils.getTaskData(taskId)
         if dataUtils.taskFieldVal(taskData, 'FailCondIsLeaveArea'):
             area = dataUtils.taskFieldVal(taskData, 'FailCondLeaveArea')
@@ -249,7 +249,7 @@ class ImpTask(impTalk.ImpTalk):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def taskFailedEnterArea(self, srcEntityID, taskId):
-        DEBUG_MSG('in taskFailedEnterArea:', srcEntityID, taskId)
+        INFO_MSG('in taskFailedEnterArea:', srcEntityID, taskId)
         taskData = dataUtils.getTaskData(taskId)
         if dataUtils.taskFieldVal(taskData, 'FailCondIsEnterArea'):
             area = dataUtils.taskFieldVal(taskData, 'FailCondEnterArea')
@@ -390,22 +390,22 @@ class ImpTask(impTalk.ImpTalk):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def reqStartPlayCinema(self, srcEntityID, cinemaId):
-        DEBUG_MSG('in startPlayCinema:', cinemaId)
+        INFO_MSG('in startPlayCinema:', cinemaId)
         self.prepareStartPlayCinema(cinemaId)
 
     def prepareStartPlayCinema(self, cinemaId):
-        DEBUG_MSG('in prepareStartPlayCinema:', cinemaId)
+        INFO_MSG('in prepareStartPlayCinema:', cinemaId)
         self.client.onStartPlayCinema(cinemaId)
         self.afterPlayCinema(cinemaId)
 
     def afterPlayCinema(self, cinemaId):
-        DEBUG_MSG('in afterPlayCinema:', cinemaId)
+        INFO_MSG('in afterPlayCinema:', cinemaId)
         self.resetAllTargetTypeCache()
 
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def cinemaPlayEnd(self, srcEntityID, cinemaId):
-        DEBUG_MSG('in cinemaPlayingEnd:', cinemaId)
+        INFO_MSG('in cinemaPlayingEnd:', cinemaId)
         self.onCinemaPlayingEnd(cinemaId)
 
     def onCinemaPlayingEnd(self, cinemaId):
@@ -423,7 +423,7 @@ class ImpTask(impTalk.ImpTalk):
         self.teamInfo.getCaptainBox().cell.captainSyncTasksToNewMem(self.teamId, self.gbId, self.base)
 
     def captainSyncTasksToNewMem(self, teamId, newMemGbId, newMemBox):
-        DEBUG_MSG("captainSyncTasksToNewMem::", teamId, newMemGbId, newMemBox)
+        INFO_MSG("captainSyncTasksToNewMem::", teamId, newMemGbId, newMemBox)
         captainInfoDic = {"captainSpaceNo": self.spaceNo,
                           "captainPosition": self.position}
         self.base.captainSyncTasksToNewMem(teamId, newMemGbId, newMemBox, captainInfoDic)
@@ -441,7 +441,7 @@ class ImpTask(impTalk.ImpTalk):
         return
 
     def cellTaskCondCheckOnAddTeam(self, teamTaskList, captainInfoDic):
-        DEBUG_MSG('in onCellTaskNewMemAddTeam:', [t.taskId for t in teamTaskList], captainInfoDic)
+        INFO_MSG('in onCellTaskNewMemAddTeam:', [t.taskId for t in teamTaskList], captainInfoDic)
         rmIdxList = []
         for idx, task in enumerate(teamTaskList):
             taskData = dataUtils.getTaskData(task.taskId)
@@ -457,7 +457,7 @@ class ImpTask(impTalk.ImpTalk):
 
     ######################### 组任务相关 end ###################################
     def taskPreEnterSpace(self, taskId, dungeonNo, dstPos, dstDir):
-        DEBUG_MSG("taskPreEnterSpace 1", taskId, dungeonNo, dstPos, dstDir)
+        INFO_MSG("taskPreEnterSpace 1", taskId, dungeonNo, dstPos, dstDir)
         if not dstPos:
             #如果使用原位置传送，当前场景和目标场景只能是大世界或大世界副本
             if not formula.spaceInWorldLine(self.spaceNo) and not formula.isBigWorldNaviCostLikedSpace(self.spaceNo):
@@ -471,11 +471,11 @@ class ImpTask(impTalk.ImpTalk):
             dstDir = self.direction
 
         if formula.isWorldLineType(dungeonNo):
-            DEBUG_MSG("taskPreEnterSpace 2", taskId, dungeonNo, dstPos, dstDir)
+            INFO_MSG("taskPreEnterSpace 2", taskId, dungeonNo, dstPos, dstDir)
             self.taskEnterWorldLine(taskId, dungeonNo, dstPos, dstDir)
             return
         if dungeonNo not in gamePlay_gamePlay.datas:
-            DEBUG_MSG("taskPreEnterSpace 3", taskId, dungeonNo, dstPos, dstDir)
+            INFO_MSG("taskPreEnterSpace 3", taskId, dungeonNo, dstPos, dstDir)
             return
         dungeonSpaceType = gamePlay_gamePlay.datas[dungeonNo]['type']
         dungeonEnterType = gamePlay_gamePlay.datas[dungeonNo]['enterType']
@@ -503,16 +503,6 @@ class ImpTask(impTalk.ImpTalk):
         INFO_MSG('in taskEnterWorldLine:', taskId, dstPos, dstDir, self.spaceNo, dungeonNo)
         if formula.spaceInWorldLine(self.spaceNo):
             self.onTelToMainCityWithCast(None, dungeonNo, dstPos, dstDir, None, None, None, None)
-            '''
-            #当前在大世界
-            DEBUG_MSG('in taskEnterWorldLine, from space world')
-            if dungeonNo == formula.getMapId(self.spaceNo):
-                self.client.startTeleport(self.spaceNo, dstPos)
-                self.telToPos(dstPos, dstDir)
-                self.client.onTeleportDone(self.spaceNo, self.spaceNo)
-            else:
-                self.applyEnterLineInternal(dungeonNo, formula.getLineNo(self.spaceNo), dstPos, dstDir, False)'
-            '''
         else:
             self.doLeaveSingleDungeonWithDstPos(dungeonNo, dstPos, dstDir)
 
@@ -524,13 +514,13 @@ class ImpTask(impTalk.ImpTalk):
             ERROR_MSG('_onCheckLineAreaByTaskTeltoPos failed, ', checkCode, dstPos)
 
     def taskSelfEnterSingleDungeon(self, dungeonNo, dstPos, dstDir):
-        DEBUG_MSG('in taskSelfEnterSingleDungeon:', self.spaceNo, dungeonNo, dstPos, dstDir)
+        INFO_MSG('in taskSelfEnterSingleDungeon:', self.spaceNo, dungeonNo, dstPos, dstDir)
         # TODO(DUNGEON_SRC): use task src
         src = dungeonSrc.BasicDungeonSrc(srcId=gameconst.DungeonSrcEnum.FROM_TASK)
         myDungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
         if dungeonNo == myDungeonNo:
             # 相同單人副本之間的傳送到指定位置
-            DEBUG_MSG('in taskSelfEnterSingleDungeon: do same dungeonNo telport, ', self.spaceNo, dungeonNo, dstPos, dstDir)
+            INFO_MSG('in taskSelfEnterSingleDungeon: do same dungeonNo telport, ', self.spaceNo, dungeonNo, dstPos, dstDir)
             self._resetTeleportCache(self.spaceNo, None, None)
             self.client.startTeleport(self.spaceNo, dstPos)
             self._stopCommonCast()
@@ -555,7 +545,7 @@ class ImpTask(impTalk.ImpTalk):
         return
 
     def taskSelfEnterTeamDungeon(self, taskId, dungeonNo):
-        DEBUG_MSG('in taskSelfEnterTeamDungeon:', taskId, dungeonNo)
+        INFO_MSG('in taskSelfEnterTeamDungeon:', taskId, dungeonNo)
         if not self.isInTeam(self.gbId) or not self.isCaptain():
             return
 
@@ -569,7 +559,7 @@ class ImpTask(impTalk.ImpTalk):
         return
 
     def onTaskRwdLeaveDungeon(self, taskId, dungeonNo, claimSrc):
-        DEBUG_MSG('in onTaskRwdLeaveDungeon:', taskId, self.spaceNo, dungeonNo)
+        INFO_MSG('in onTaskRwdLeaveDungeon:', taskId, self.spaceNo, dungeonNo)
         if claimSrc==gameconst.ClaimTaskSrc.GM_FINISH_NEWBIE and dungeonNo and not formula.isDungeonSpace(self.spaceNo):
             return
 
@@ -587,9 +577,9 @@ class ImpTask(impTalk.ImpTalk):
             if formula.isSingleDungeonSpace(self.spaceNo):
                 box.completeSingleDungeon(self.spaceNo, self.gbId, True, leaveDelay)
             elif formula.isTeamDungeonSpace(self.spaceNo):
-                box.completeTeamDungeon(self.spaceNo, self.teamId, True, leaveDelay)
+                box.completeTeamDungeon(self.spaceNo, self.teamId, True, leaveDelay, gameconst.DunegonCompleteReasonType.FINISHED)
             elif formula.isRaidDungeonSpace(self.spaceNo):
-                box.completeRaidDungeon(self.spaceNo, self.raidUUID, True, leaveDelay)
+                box.completeRaidDungeon(self.spaceNo, self.raidUUID, True, leaveDelay, gameconst.DunegonCompleteReasonType.FINISHED)
         return
 
     def cellEnterTaskTargetDungeon(self, taskId, dungeonNo, extra):
@@ -612,13 +602,13 @@ class ImpTask(impTalk.ImpTalk):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def taskReachArea(self, srcEntityID, taskId):
-        DEBUG_MSG('in taskReachArea:', taskId)
+        INFO_MSG('in taskReachArea:', taskId)
         # 到达指定区域任务目标由服务端检验
         dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
         areaTaskInCurDun = self.getTempMiscProp(gameconst.AvatarProps.taskAreaTarget, {}).get(dungeonNo, {})
         _target = areaTaskInCurDun.get(taskId)
         if not _target:
-            ERROR_MSG('   taskReachArea, target not found:', taskId, dungeonNo)
+            WARNING_MSG('   taskReachArea, target not found:', taskId, dungeonNo)
             return
 
         if _target.isInArea(self.position[0], self.position[2]):
@@ -664,7 +654,7 @@ class ImpTask(impTalk.ImpTalk):
         return
 
     def removeAreaTargetTask(self, taskId, dungeonNo):
-        DEBUG_MSG('removeAreaTargetTask:', taskId, dungeonNo)
+        INFO_MSG('removeAreaTargetTask:', taskId, dungeonNo)
         areaTaskDic = self.getTempMiscProp(gameconst.AvatarProps.taskAreaTarget, None)
         if areaTaskDic is None:
             WARNING_MSG('removeAreaTargetTask, areaTaskDic is None')
@@ -687,13 +677,13 @@ class ImpTask(impTalk.ImpTalk):
             self.base.onTaskStepUpdate(gameconst.TaskTargetType.TASK_TARGET_MONSTERS, 0, (self.spaceNo, monsterId, monsterUID))
 
     def checkSameMap(self, taskID):
-        DEBUG_MSG("checkSameMap ", taskID)
+        INFO_MSG("checkSameMap ", taskID)
         taskData = dataUtils.getTaskData(taskID)
         if not taskData:
             ERROR_MSG("checkSameMap, missing task cfg ", taskID)
             return
         if not dataUtils.taskFieldVal(taskData, 'ClaimCanTransIns'):
-            DEBUG_MSG("checkSameMap, no ClaimCanTransIns ", taskID)
+            INFO_MSG("checkSameMap, no ClaimCanTransIns ", taskID)
             return
         claimTransData = dataUtils.taskFieldVal(taskData, 'ClaimTransInstance')
         dungeonNo = claimTransData.get('MapId')

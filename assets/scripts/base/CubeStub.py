@@ -39,6 +39,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.cubeNo = self.cubeNo # type: int
         self.cubeRooms = {}
         self.randomRooms = []
+        self.maxReadyLineNo = 0
         self.randomWeights = []
         self.pyAddTimer(5, 5, gametimer.CLEAR_MULTI_ENTER_TIME_OUT)
 
@@ -80,7 +81,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         for _mapId in _mapIds:
             _dic[_mapId] = _dic.get(_mapId, 0) + 1
 
-        DEBUG_MSG('_doRandomTeleporter:', _dic)
+        INFO_MSG('_doRandomTeleporter:', _dic)
         for _mapId, num in _dic.items():
             _spaceNo = formula.getLineSpaceNo(_mapId, 0)
             _spaceVal = self.staticSpaces[_spaceNo]
@@ -132,11 +133,20 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         # 先创建大厅，只有大厅是多分线的
         for _floors in cube_room.floorTypeMapDic[self.cubeNo].values():
             for _mapId in _floors:
+                _cubeData = cube_room.datas[_mapId]
+                if _cubeData['type'] == gameconst.CubeRoomType.READY:
+                    continue
+
                 if _mapId not in GP_GPD.datas:
                     ERROR_MSG('CubeStub::_initAllRoom: mapId not found: {}'.format(_mapId))
                     continue
 
                 self._createStaticSpace(_mapId)
+
+        # 只有第一层创建大厅,并且动态创建
+        if self.cubeNo == 1:
+            _mapId = cube_room.floorTypeMapDic[self.cubeNo][gameconst.CubeRoomType.READY][0]
+            self._createStaticSpace(_mapId)
 
     def _getSpaceMgrEntityType(self):
         return 'CubeSpaceMgr'
@@ -187,9 +197,39 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         _playerVal = self.allPlayers.get(gbId)
         self._doAvatarEnterCubeRoom(spaceNo, box, gbId, {})
 
-    def reliveToCubeRoom(self, box, mapId, gbId, extra):
-        _spaceNo = formula.getLineSpaceNo(mapId, 0)
-        self._doAvatarEnterCubeRoom(_spaceNo, box, gbId, extra)
+    def _getAvailableReadyRoom(self):
+        _mapId = cube_room.floorTypeMapDic[self.cubeNo][gameconst.CubeRoomType.READY][0]
+        _enterSpaceNo = None
+        # 100 是随便取的值，正常肯定达不到
+        for _lineNo in range(100):
+            _spaceNo = formula.getLineSpaceNo(_mapId, _lineNo)
+            if not self.isSpaceReady(_spaceNo):
+                break
+
+            if self.canSpaceEnter(_spaceNo):
+                _enterSpaceNo = _spaceNo
+                break
+
+        if _enterSpaceNo is None:
+            return formula.getLineSpaceNo(_mapId, 0)
+        else:
+            return _enterSpaceNo
+
+    def _checkCreateReadyThresholdLine(self):
+        _mapId = cube_room.floorTypeMapDic[self.cubeNo][gameconst.CubeRoomType.READY][0]
+        _checkSpaceNo = formula.getLineSpaceNo(_mapId, self.maxReadyLineNo)
+        _playerNum = self.getSpaceAvatarNo(_checkSpaceNo)
+        if _playerNum <= gameconst.CUBE_NEW_LINE_THRESHOLD:
+            return
+
+        self.maxReadyLineNo += 1
+        INFO_MSG('meet threshold need create new space', _playerNum, gameconst.CUBE_NEW_LINE_THRESHOLD, self.maxReadyLineNo)
+        self._createStaticSpace(_mapId, lineNo=self.maxReadyLineNo)
+
+    def doEnterCubeReady(self, box, gbId, extra):
+        _enterSpaceNo = self._getAvailableReadyRoom()
+        self._doAvatarEnterCubeRoom(_enterSpaceNo, box, gbId, extra)
+        self._checkCreateReadyThresholdLine()
 
     def onAvatarOffline(self, gbId):
         INFO_MSG('CubeStub::onAvatarOffline: {}'.format(gbId))
@@ -204,22 +244,17 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if _oldCanEnter != self.canSpaceEnter(_playerVal.curSpaceNo):
             self._addRandomInfos(formula.getMapId(_playerVal.curSpaceNo))
 
-    def logonEnterCube(self, box, gbId, spaceNo, extra):
-        self.addEnterPlayer(box, gbId, 0, 0, linePlayers.LinePlayerVal.ENTERING, spaceNo, {})
+    def logonEnterCube(self, box, gbId, extra):
+        _enterSpaceNo = self._getAvailableReadyRoom()
+        self.addEnterPlayer(box, gbId, 0, 0, linePlayers.LinePlayerVal.ENTERING, _enterSpaceNo, extra)
 
-        if not self.canSpaceEnter(spaceNo):
-            self._removeRandomInfos(formula.getMapId(spaceNo))
+        _spaceVal = self.staticSpaces[_enterSpaceNo]
+        box.onLogonEnterCubeGetSpaceBox(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, _enterSpaceNo)
 
-        _spaceVal = self.staticSpaces[spaceNo]
-        box.onLogonEnterCubeGetSpaceBox(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id)
+        self._checkCreateReadyThresholdLine()
 
-    def enterRandomRoom(self, box, gbId, extra):
-        _playerVal = self.allPlayers.get(gbId)
-        if not _playerVal:
-            ERROR_MSG('enterRandomRoom: player not found: {}'.format(gbId))
-            return
-
-        _spaceNo = self._getRandomSpaceNo(_playerVal.curSpaceNo)
+    def enterRandomRoom(self, box, gbId, extra, curSpaceNo):
+        _spaceNo = self._getRandomSpaceNo(curSpaceNo)
         if _spaceNo is None:
             ERROR_MSG('enterRandomRoom: no space available')
             return
@@ -274,7 +309,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if _playerVal.curSpaceNo != fromSpaceNo:
             ERROR_MSG('onLeaveCube: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, fromSpaceNo))
 
-        if not formula.isCubeSpace(curSpaceNo):
+        if curSpaceNo not in self.staticSpaces:
             self.removePlayer(gbId)
 
     def onLoadGroupEntities(self, info):
@@ -288,3 +323,47 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def onDestroyGroupEntities(self, info):
         DEBUG_MSG("CubeStub::onDestroyGroupEntities", info)
         super(CubeStub, self).onDestroyGroupEntities(info)
+
+    # ------------------ 神秘商人 start -----------------------------------
+    def onLoadEntitiesEnd(self, spaceNo):
+        super(CubeStub, self).onLoadEntitiesEnd(spaceNo)
+        if not self.loadWaitSet and not self.curChapManMapId:
+            self._createAndDestroyChapMan()
+            _delay = cube_config.datas['cube_chapmanRefreshInterval']['value'] * 60
+            self._callback(_delay, '_doCreateChapMan', (), gametimer.TIMER_TAG_CREATE_CHAP_MAN)
+
+    def _doCreateChapMan(self):
+        self._createAndDestroyChapMan()
+
+        _delay = cube_config.datas['cube_chapmanRefreshInterval']['value'] * 60
+        self._callback(_delay, '_doCreateChapMan', (), gametimer.TIMER_TAG_CREATE_CHAP_MAN)
+
+    def _createAndDestroyChapMan(self):
+        _newManInfo = self._getNewChapManMapInfo()
+
+        if self.curChapManMapId:
+            _spaceNo = formula.getLineSpaceNo(self.curChapManMapId, 0)
+            _spaceVal = self.staticSpaces[_spaceNo]
+            INFO_MSG('_createAndDestroyChapMan: destroy old chapman', _spaceNo)
+            _spaceVal.spaceMgrBoxCell.destroyChanMap()
+
+        _mapId, _pos, _dir = _newManInfo
+        self.curChapManMapId = _mapId
+        _spaceNo = formula.getLineSpaceNo(_mapId, 0)
+        _spaceVal = self.staticSpaces[_spaceNo]
+        INFO_MSG('_createAndDestroyChapMan: create new chapman', _spaceNo)
+        _spaceVal.spaceMgrBoxCell.createChapMan(_pos, _dir)
+
+    def _getNewChapManMapInfo(self):
+        _infos = []
+        for _data in cube_floor.datas[self.cubeNo]['position']:
+            _mapId, _x, _y, _z, _dir = _data
+            if _mapId == self.curChapManMapId:
+                continue
+
+            _infos.append((_mapId, (_x, _y, _z), _dir))
+
+        return random.choice(_infos)
+
+    # ------------------ 神秘商人 end -----------------------------------
+    

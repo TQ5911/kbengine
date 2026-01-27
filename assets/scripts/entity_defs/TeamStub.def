@@ -32,6 +32,7 @@
             <Arg>           STRING          </Arg>
             <Arg>           PY_DICT         </Arg>
             <Arg>           BOOL            </Arg>
+            <Arg>           INT8            </Arg>
         </applyJoinTeam>
 
         <addTeamMember>
@@ -310,13 +311,6 @@
             <Arg>   STRING      </Arg>
             <Arg>   PYTHON      </Arg>
         </destroyTeamDungeonDelay>
-        
-        <TeamDungeonCompletedAfter>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   DUNGEON_NO  </Arg>
-            <Arg>   SPACE_NO    </Arg>
-            <Arg>   BOOL        </Arg>
-        </TeamDungeonCompletedAfter>
         
         <onDestroyTeamDungeon>
             <Arg>   TEAMID      </Arg>
@@ -626,12 +620,6 @@
             <Arg>   OBJECT_ID   </Arg>
             <Arg>   ARRAY   <of>    PLAYER_GBID     </of>   </Arg>
         </challengeDunNotifyMsg>
-
-        <reCreateOrJoinTeam>
-            <Arg>           ENTITYCALL      </Arg>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           PY_DICT         </Arg>
-        </reCreateOrJoinTeam>
 
         <getCaptainName>
             <Arg>       TEAMID          </Arg>

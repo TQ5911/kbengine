@@ -8,16 +8,14 @@ import dropAward
 import gameclass
 import mailAssistor
 import gameconfig
+import LogTrackingMgr
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import raidBossChallenge_config as RBC_CFG
 import raidBossChallenge_basicInfo as RBC_BI
 import teamDunChallenge_basicInfo as TDC_BI
 import guildChallenge_basicInfo as GC_BI
 import guildChallenge_config as GC_C
-import teamMatch_matchConfig as TMMCD
 import guildChallenge_rankReward as GC_RR
-import teamMatch_pointsRanking as TM_PR
 
 class IDungeonSettlement(object):
     def __init__(self):
@@ -107,7 +105,12 @@ class IDungeonSettlement(object):
                     INFO_MSG('in _doChiefSettlement:: record first reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                     self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.CHIEF, dungeonNo, win, 0, uniqueId, AAC_AACDD.datas.BONUS_SRC_RAID_FIRST_PASS_REWARD, firstRewardId, firstPassRewards, 0)
         box.cell.onNotifySettlementResult(self, gameconst.DungeonPlayModeEnum.CHIEF, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards if firstPassRewards else [], goldPassRewards if goldPassRewards else [], dungeonRewards if dungeonRewards else [])
-
+        
+        LogTrackingMgr.LogTrackingMgr.Dungeon_Settlement(extra['uniqueID'], gameconst.DungeonPlayModeEnum.CHIEF, dungeonNo, extra['spaceUUID'], spaceNo, self.gbID, \
+                                                        True if dungeonRewards else False, True if firstPassRewards else False, extra['elaspedTime'], win, extra['completedReasonType'], extra['playerCount'], 
+                                                        extra['deadCount'], firstPassRewards if firstPassRewards else {}, dungeonRewards if dungeonRewards else {}, \
+                                                        goldPassRewards if goldPassRewards else {}, extra['autoCombatTimes'], self.getTotalScore(), self.getRoleCacheAttr('level'))
+        
     def _doCrusadeSettlement(self, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra):
         firstPassRewards = None
         goldPassRewards = None
@@ -138,6 +141,11 @@ class IDungeonSettlement(object):
                     INFO_MSG('in _doCrusadeSettlement:: record first reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                     self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.CRUSADE, dungeonNo, win, 0, uniqueId, AAC_AACDD.datas.BONUS_SRC_TEAM_GOLD_PASS_REWARD, firstRewardId, firstPassRewards, 0)
         box.cell.onNotifySettlementResult(self, gameconst.DungeonPlayModeEnum.CRUSADE, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards if firstPassRewards else [], goldPassRewards if goldPassRewards else [], dungeonRewards if dungeonRewards else [])
+        
+        LogTrackingMgr.LogTrackingMgr.Dungeon_Settlement(extra['uniqueID'], gameconst.DungeonPlayModeEnum.CRUSADE, dungeonNo, extra['spaceUUID'], spaceNo, self.gbID, \
+                                                         True if dungeonRewards else False, True if firstPassRewards else False, extra['elaspedTime'], win, extra['completedReasonType'], extra['playerCount'], 
+                                                         extra['deadCount'], firstPassRewards if firstPassRewards else {}, dungeonRewards if dungeonRewards else {}, \
+                                                         goldPassRewards if goldPassRewards else {}, extra['autoCombatTimes'], self.getTotalScore(), self.getRoleCacheAttr('level'))
 
     def _doGuildBossChallengeSettlement(self, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra):
         # 没次数或者没有造成伤害，不给奖励
@@ -150,8 +158,10 @@ class IDungeonSettlement(object):
         
         dungeonRewards = None
         firstPassRewards = None
-        if win and extra['score'] > 0:
-            rank = extra['rank']
+        isFirstPass = False
+        rank = extra['rank']
+        score = extra['score']
+        if win and score > 0:
             settlementMailID = int(GC_C.datas['emailSettle']['value'])
             dataKey = dataUtils.getGuildBossRankRewardKey(dungeonNo, rank)
             dungeonRewardId = GC_RR.rankRewardDic.get(dataKey, 0)
@@ -166,12 +176,16 @@ class IDungeonSettlement(object):
             if self.guildBossPassRecords.checkEntryStatus(entryId):
                 firstRewardId = GC_BI.fistPassRewardDic.get(dungeonNo, 0)
                 if firstRewardId > 0:
+                    isFirstPass = True
                     self.guildBossPassRecords.finishEntryStatus(entryId)
                     self.guildBossPassRecords = self.guildBossPassRecords
                     ctx = self._getAvatarAwardCtx(firstRewardId, None)
                     firstPassRewards = dropAward.getAwardOne(firstRewardId, ctx).toBriefList()
                     INFO_MSG('in _doGuildBossChallengeSettlement:: record first pass reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
                     self._doAddWealthVal(opUUId, gameconst.DungeonPlayModeEnum.GUILD_BOSS, dungeonNo, win, rank, uniqueId, AAC_AACDD.datas.BONUS_SRC_GULID_DUNGEON_FIRST_REWARD, firstRewardId, firstPassRewards, settlementMailID)
+        
+        LogTrackingMgr.LogTrackingMgr.Guild_BossChallenge_Settlement(opUUId, self.gbID, win, score, rank, isFirstPass, firstPassRewards if firstPassRewards else [], dungeonRewards if dungeonRewards else [])
+        
         box.cell.onNotifySettlementResult(self, gameconst.DungeonPlayModeEnum.GUILD_BOSS, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards if firstPassRewards else [], [], dungeonRewards if dungeonRewards else [])
 
     def _doAddWealthVal(self, opUUID, playMode, dungeonNo, win, rank, uniqueId, src, rewardId, rewards, rewardMailId):

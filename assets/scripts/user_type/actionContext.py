@@ -75,7 +75,7 @@ class ActionContext(userType.UserSoleType):
     def getTopCtxFromActionQueue(self, actionType):
         # 如果父节点，继续往上找
         if self.parentContext:
-            parentContext = self.parentContext.getCtxFromActionQueue(actionType)
+            parentContext = self.parentContext.getTopCtxFromActionQueue(actionType)
             if parentContext:
                 # 如果父节点满足，返回父节点
                 return parentContext
@@ -136,12 +136,13 @@ class SkillCommonCtx(ActionContext):
         self.skillId = skillId                  #����id
 class CreationCtx(ActionContext):
     actionType = ACTION_CREATION_LOOP
-    def __init__(self, creationEntId, effectedEntIds, creationResult, parentCtx=None, loopTimes=0):
+    def __init__(self, creationEntId, effectedEntIds, creationResult, parentCtx=None, loopTimes=0, context=None):
         super(CreationCtx, self).__init__(parentCtx)
         self.creationEntId = creationEntId      #����entity id
         self.effectedEntIds = effectedEntIds    #��������Ŀ��
         self.creationResult = creationResult
         self.loopTimes = loopTimes
+        self.parentContext = context
 
         if self.creationResult:
             self.creationResult.sourceType = self.getDmgSourceType()
@@ -445,6 +446,7 @@ class ClaimTaskCtx(object):
         self.seed = seed
         self.callbackUUID = callbackUUID
         self.extra = {} if not extra else extra
+
 class CastCommonCtx(object):
     def __init__(self, castState, startTime, castTime, failedFunc='', failedArgs=None):
         self.castState = castState
@@ -474,7 +476,7 @@ class CastCommonCtx(object):
         elif castType == gameconst.CastType.teleportClientDelay:
             pass
         else:
-            box.client.onTeleportCasting(castType, self.getCastTime(castType))
+            box.client.onTeleportCasting(castType, self.getCastTime(castType), self.startTime + self.getCastTime(castType))
 
     def clearTimerId(self):
         self.timer = 0

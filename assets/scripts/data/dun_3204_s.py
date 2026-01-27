@@ -3458,7 +3458,7 @@ datas ={
           "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
-          "CustomID": "31218002",
+          "CustomID": "32218002",
           "Dir": 0.0,
           "DisplayName": "",
           "EntityID": 17320401,
@@ -3482,7 +3482,7 @@ datas ={
           "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
-          "CustomID": "31218002",
+          "CustomID": "32218002",
           "Dir": 150.3255,
           "DisplayName": "",
           "EntityID": 17320401,
@@ -3498,7 +3498,7 @@ datas ={
             "TelDir": 0.0,
             "TelX": 167.5635,
             "TelY": 526.2747,
-            "TelZ": 12.07694
+            "TelZ": 12.07692
           }
         },
         "32048009": {
@@ -3506,7 +3506,7 @@ datas ={
           "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
-          "CustomID": "31218002",
+          "CustomID": "32218002",
           "Dir": 26.8039,
           "DisplayName": "",
           "EntityID": 17320401,

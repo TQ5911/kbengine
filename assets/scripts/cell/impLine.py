@@ -30,8 +30,11 @@ class ImpLine(object):
         extra = dataDic or {}
 
         extra['position'] = pos
+        #teamId和raidId最多只会有一个存在
         if self.teamId:
             extra['teamUUID'] = self.teamId
+        if self.raidId:
+            extra['teamUUID'] = self.raidId
 
         return extra
 
@@ -45,7 +48,7 @@ class ImpLine(object):
         if not self.onCheckMapUnlocked(lineType):
             return
 
-        self.applyEnterLineInternal(lineType, lineNo, enterPos, self.direction, False)
+        self.applyEnterLineInternal(lineType, lineNo, enterPos, self.direction, {"telToMainCityWhenFull": False})
 
     def enterLineByNpc(self, lineType, *args, **kwargs):
         lineNo = formula.getLineNo(self.spaceNo)
@@ -63,7 +66,7 @@ class ImpLine(object):
             _options = complexTeleportOption.ComplexTeleportOptions(teleportType=gameconst.ComplexTeleportType.ENTER)
             self.tryRegiTeleportOutsideRecord(self.spaceNo, _options)
 
-        self.applyEnterLineInternal(lineType, lineNo, enterPos, direction)
+        self.applyEnterLineInternal(lineType, lineNo, enterPos, direction, {"telToMainCityWhenFull": False})
 
     def applyEnterLineInternal(self, lineType, lineNo, position, direction, extra=None):
         INFO_MSG('zt: applyEnterLineInternal', lineType, lineNo, position, direction, extra)
@@ -106,7 +109,7 @@ class ImpLine(object):
         INFO_MSG('_onEnterLine', fromSpaceNo, lineType, lineNo, extra)
 
         succInfo = {}
-        succInfo['teamUUID'] = self.teamId
+        succInfo['teamUUID'] = self.teamId if self.teamId else self.raidId
 
         if extra.get('callback'):
             func = getattr(self, extra['callback'])
@@ -153,15 +156,15 @@ class ImpLine(object):
     @utils.isMyself
     def applySwitchLine(self, exposed, toLineNo):
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
-        self.switchLineAndPosition(toLineNo, None, src=src)
+        self.switchLineAndPosition(toLineNo, None, src=src, needPending=False)
 
-    def switchLineAndPosition(self, toLineNo, toPosition, src=None, extra=None):
+    def switchLineAndPosition(self, toLineNo, toPosition, src=None, extra=None, needPending=True):
         canSwitch = self._checkSwitchLine(toLineNo)
         INFO_MSG('applySwitchLine', self.spaceNo, toLineNo, canSwitch, src, extra)
         if not canSwitch:
             return
 
-        self.checkEnterLine(formula.getMapId(self.spaceNo), toLineNo, toPosition,
+        self.checkEnterLine(formula.getMapId(self.spaceNo), toLineNo, toPosition, needPending,
                             'onCheckSwitchLine', (self.spaceNo, toLineNo, toPosition, src, extra))
 
     def _onCheckSwitchLineReCheckCond(self, checkCode, checksumSpaceNo, toLineNo):
@@ -225,6 +228,7 @@ class ImpLine(object):
 
     def onMergeLine(self, toLineNo):
         DEBUG_MSG("onMergeLine", self.spaceNo, toLineNo)
+        self.client.beginMergeLine()
         self._switchLineInternalAfterCast(toLineNo, None, None, {})
 
     def _switchLineInternalAfterCast(self, toLineNo, toPosition, toDir, extra):
@@ -287,7 +291,8 @@ class ImpLine(object):
                     mapId,
                     formula.getLineNo(outRecord.spaceNo),
                     outRecord.position,
-                    outRecord.direction)
+                    outRecord.direction,
+                    {"telToMainCityWhenFull": True})
 
     # 有的时候已经离开分线了，调用这个接口清除分线状态，需要传fromSpaceNo，因为self.spaceNo已经是离开后场景了
     # toSpaceNo==0时是传到了其他场景后清除源分线的状态
@@ -319,7 +324,7 @@ class ImpLine(object):
         elif formula.isLineSpace(toSpaceNo):
             toLineType = formula.getMapId(toSpaceNo)
             toLineNo = formula.getLineNo(toSpaceNo)
-            extra = {'callback': '_onLeaveLine', 'callbackArgs': (fromSpaceNo, toSpaceNo)}
+            extra = {'callback': '_onLeaveLine', 'callbackArgs': (fromSpaceNo, toSpaceNo), 'telToMainCityWhenFull': True}
             self.applyEnterLineInternal(toLineType, toLineNo, toPosition, toDirection, extra)
         else:
             ERROR_MSG('teleport to %s is not supported' % toSpaceNo)
@@ -339,8 +344,9 @@ class ImpLine(object):
         func = getattr(self, callback)
         func and func(*callbackArgs)
 
-    def checkEnterLine(self, lineType, lineNo, dstPos, cbName, cbArgs):
+    def checkEnterLine(self, lineType, lineNo, dstPos, needPending, cbName, cbArgs):
         extra = self._buildEnterLineExtra(dstPos)
+        extra["needPending"] = needPending
 
         gameengine.getLineStub(lineType).checkCanEnterLine(lineNo, self.base, self.gbId, extra, cbName, cbArgs)
 
@@ -357,15 +363,15 @@ class ImpLine(object):
         if toLineNo >= 0 and toLineNo != formula.getLineNo(self.spaceNo):
             self._switchLineInternal(toLineNo, dstPos, dstDir, extra={'src': src})
         else:
-            self.teleportToCellWithCast(
-                teleporter, dstSpaceNo, dstPos, dstDir, src,
-                'teleportCallBack',
-                (desTelId, fromTelId, teleporter, dstSpaceNo, dstPos, dstDir, tuple(self.position))
-            )
+            self.showMsg(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
 
     @gamedecorator.crossServer
     @utils.isMyself
     def queryLineInfo(self, exposed, lineType):
+        if lineType not in gameconst.lineStubMap():
+            ERROR_MSG('queryLineInfo invalid lineType:', lineType)
+            return
+
         gameengine.getLineStub(lineType).doQueryLineInfo(self.spaceNo, self.base, self.gbId)
 
     def updateAreaIdInWorldLine(self):

@@ -207,27 +207,6 @@
             <Arg>      PY_DICT  </Arg>
         </updateAccountCharacterAppearance>
 
-        <makeEquipmentLostLog>
-            <Arg>      UINT32       </Arg>
-            <Arg>      ITEM_VAL     </Arg>
-        </makeEquipmentLostLog>
-
-        <makeEquipmentEnhanceLog>
-            <Arg>      ITEM_ID      </Arg>
-            <Arg>      UUID         </Arg>
-            <Arg>      UINT8        </Arg>
-            <Arg>      UINT8        </Arg>
-            <Arg>      UINT8        </Arg>
-            <Arg>      FLOAT        </Arg>
-            <Arg>      BOOL         </Arg>
-        </makeEquipmentEnhanceLog>
-
-        <makeEquipmentAffixWashingLog>
-            <Arg>      ITEM_ID       </Arg>
-            <Arg>      UUID          </Arg>
-            <Arg>      PY_DICT       </Arg>
-        </makeEquipmentAffixWashingLog>
-
         <updateBodyEquipDressData>
             <Arg>      PY_DICT       </Arg>
         </updateBodyEquipDressData>
@@ -505,6 +484,10 @@
             <Arg>   UINT32     </Arg>
             <Arg>   UINT32     </Arg>
         </gmGlyphWashingEquips>
+
+        <recalculateAllInscriptionEffects>
+            <Arg>   BOOL    </Arg>
+        </recalculateAllInscriptionEffects>
     </CellMethods>
 
     <ClientMethods>
@@ -522,6 +505,7 @@
             <Arg>      GRIDID               </Arg>
             <Arg>      UINT8                </Arg>
             <Arg>      UINT32               </Arg>
+            <Arg>      UINT8                </Arg>
             <Arg>      UINT8                </Arg>
             <Arg>      UINT8                </Arg>
         </onEquipEnhanceSucc>
@@ -635,6 +619,7 @@
             <Arg>      GRIDID               </Arg>
             <Arg>      UINT8                </Arg>
             <Arg>      UINT32               </Arg>
+            <Arg>      UINT8                </Arg>
             <Arg>      UINT8                </Arg>
             <Arg>      UINT8                </Arg>
         </onEquipUpgradeSucc>

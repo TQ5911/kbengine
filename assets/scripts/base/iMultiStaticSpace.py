@@ -18,6 +18,7 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         self.loadWaitSet = set()
 
     def _createStaticSpace(self, mapId, spaceWeight=10, lineNo=0):
+        INFO_MSG('_createStaticSpace:', mapId, lineNo)
         _spaceNo = formula.getLineSpaceNo(mapId, lineNo)
         _spaceVal = StaticSpaceVal.StaticSpaceVal(
             mapId,
@@ -38,13 +39,22 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         self.loadWaitSet.add(_spaceNo)
 
     def _onCraeteLineSpace(self, spaceBox, spaceNo):
+        INFO_MSG('_onCraeteLineSpace', spaceNo)
         _spaceVal = self.staticSpaces[spaceNo]
         _spaceVal.lineSpaceBox = spaceBox
 
     def _getSpaceMgrEntityType(self):
         raise NotImplementedError()
 
+    def isSpaceReady(self, spaceNo):
+        _spaceVal = self.staticSpaces.get(spaceNo)
+        if not _spaceVal:
+            return False
+
+        return _spaceVal.spaceMgrBoxCell is not None
+
     def onStaticSpaceReady(self, spaceNo):
+        INFO_MSG('onStaticSpaceReady', spaceNo)
         self.staticSpaces[spaceNo].lineSpaceReady()
 
         _pos = gameconst.SPACE_FIX_POS

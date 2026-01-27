@@ -103,6 +103,10 @@ datas = _tools.RODict({
         "ID": "resWaitResetTime",
         "value": 600,
     }),
+    "resWaitResetTime2": _tools.RODict({
+        "ID": "resWaitResetTime2",
+        "value": 24,
+    }),
     "resurrectCD": _tools.RODict({
         "ID": "resurrectCD",
         "value": 34000007,
@@ -230,5 +234,9 @@ datas = _tools.RODict({
     "usageJumpBanMsg": _tools.RODict({
         "ID": "usageJumpBanMsg",
         "value": 54000931,
+    }),
+    "deathOperationMsg": _tools.RODict({
+        "ID": "deathOperationMsg",
+        "value": 54000003,
     })
 })

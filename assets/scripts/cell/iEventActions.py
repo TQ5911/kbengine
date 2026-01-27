@@ -154,7 +154,7 @@ class IEventActions(object):
 
         dmgResult = action_FightAction.attackByNum(self, target, context, *args)
 
-        self.applyDmgActionResult(target, context, dmgResult)
+        return self.applyDmgActionResult(target, context, dmgResult)
 
     def attackByPct(self, target, context, *args, **checkArgs):
         if not self._attackActionBefore(target, context, **checkArgs):
@@ -934,7 +934,7 @@ class IEventActions(object):
                 props['gameEntityId'] = next(gameEntityIdGen, 0)
             props.setdefault('tmpProps', {}).update(
                 {'createRadius': createRadius, 'createCount': createCount,
-                 'createIndex': i+1})
+                 'createIndex': i+1, 'context':context})
             creation = KBEngine.createEntity('Creation', self.spaceID, position, tuple(position), props)
             creation.inheritProps(combatProps)
             DEBUG_MSG('create creation', creation.creationId, position, creation.direction)
@@ -1080,7 +1080,7 @@ class IEventActions(object):
                 props['gameEntityId'] = next(gameEntityIdGen, 0)
             props.setdefault('tmpProps', {}).update(
                 {'createRadius': createRadius, 'createCount': createCount,
-                 'createIndex': i+1})
+                 'createIndex': i+1, 'context':context})
             creation = KBEngine.createEntity('Creation', self.spaceID, position, tuple(creationDir), props)
             creation.inheritProps(combatProps)
 
@@ -1136,7 +1136,7 @@ class IEventActions(object):
             return
 
         if self.IsAvatar:
-            DEBUG_MSG('change skill for build', fromSkillId, toSkillId)
+            DEBUG_MSG('change skill for build 1', fromSkillId, toSkillId)
 
             #TODO: undo add after changing back
             toSkill = self.getSkill(toSkillId, False)
@@ -1145,9 +1145,10 @@ class IEventActions(object):
                 if toSkill:
                     toSkill.onChangedFromSkill(fromSkill)
 
-            self.base.onChangeSkill(fromSkillId, toSkillId)
+            self.base.onChangeSkill(fromSkillId, toSkillId, fromSkill.tNextCast)
 
         else:
+            DEBUG_MSG('change skill for build 2', fromSkillId, toSkillId)
             self.removeSkill(fromSkillId)
             self.addSkill(toSkillId, fromSkill.skillLv)
 
@@ -1542,6 +1543,8 @@ class IEventActions(object):
         target.reliveToPos(pos, None, hp, context)
 
     def changeMorphState(self, target, context, morphState):
+        # TODO: 实现变身效果
+        # 3: 这个状态放技能召唤宝宝 
         self.changeMorphPreAddSkill(morphState)
 
     def getDunRegionSkillArgs(self, skillId, level):

@@ -51,13 +51,9 @@ datas = _tools.RODict({
         "ID": "itemID_guildExp",
         "value": 30000008,
     }),
-    "itemID_energy": _tools.RODict({
-        "ID": "itemID_energy",
-        "value": 30000100,
-    }),
     "itemID_equipSpirit": _tools.RODict({
         "ID": "itemID_equipSpirit",
-        "value": 30000016,
+        "value": 30000002,
     }),
     "bagCapacityNotEnough_msgID": _tools.RODict({
         "ID": "bagCapacityNotEnough_msgID",

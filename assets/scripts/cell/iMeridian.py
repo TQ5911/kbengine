@@ -39,7 +39,7 @@ class IMeridian(object):
         addScore = 0
         for propName, val in syncPropDict.items():
             self.addProp(propName, val, gameconst.SourceType.MeridianProp)
-            addScore += int(round(dataUtils.filterFightPropScore(self.school, propName) * val))
+            addScore += dataUtils.calcFightPropScore(self.school, propName, val)
             # DEBUG_MSG('add prop by meridian', propName, ', val', val)
 
         newScore = self.scoresInfo.meridian + addScore

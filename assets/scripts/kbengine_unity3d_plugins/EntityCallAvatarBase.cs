@@ -1166,6 +1166,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void reqCanShareReward(UInt32 arg1)
+		{
+			Bundle pBundle = newCall("reqCanShareReward", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint32(arg1);
+			sendCall(null);
+		}
+
 		public void reqClaimPcLoginReward()
 		{
 			Bundle pBundle = newCall("reqClaimPcLoginReward", 0);
@@ -1279,7 +1289,7 @@ namespace KBEngine
 
 			bundle.writeUint8(arg1);
 			bundle.writeUint8(arg2);
-			((DATATYPE_AnonymousArray_10093)EntityDef.id2datatypes[10093]).addToStreamEx(bundle, arg3);
+			((DATATYPE_AnonymousArray_10094)EntityDef.id2datatypes[10094]).addToStreamEx(bundle, arg3);
 			sendCall(null);
 		}
 
@@ -1423,7 +1433,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint8(arg2);
 			bundle.writeUint8(arg3);
-			((DATATYPE_AnonymousArray_10093)EntityDef.id2datatypes[10093]).addToStreamEx(bundle, arg4);
+			((DATATYPE_AnonymousArray_10094)EntityDef.id2datatypes[10094]).addToStreamEx(bundle, arg4);
 			sendCall(null);
 		}
 
@@ -1485,6 +1495,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void reqMineWarFlagHp(UInt16 arg1)
+		{
+			Bundle pBundle = newCall("reqMineWarFlagHp", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint16(arg1);
+			sendCall(null);
+		}
+
 		public void reqMineWarGuildMemberScore(UInt16 arg1)
 		{
 			Bundle pBundle = newCall("reqMineWarGuildMemberScore", 0);
@@ -1533,7 +1553,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint16(arg1);
-			((DATATYPE_AnonymousArray_10095)EntityDef.id2datatypes[10095]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10096)EntityDef.id2datatypes[10096]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -2143,7 +2163,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10078)EntityDef.id2datatypes[10078]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10079)EntityDef.id2datatypes[10079]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2460,7 +2480,7 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void applyJoinRaidLonely(UInt64 arg1, string arg2)
+		public void applyJoinRaidLonely(UInt64 arg1, string arg2, SByte arg3)
 		{
 			Bundle pBundle = newCall("applyJoinRaidLonely", 0);
 			if(pBundle == null)
@@ -2468,6 +2488,7 @@ namespace KBEngine
 
 			bundle.writeUint64(arg1);
 			bundle.writeString(arg2);
+			bundle.writeInt8(arg3);
 			sendCall(null);
 		}
 
@@ -2481,7 +2502,7 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void applyJoinTeam(UInt64 arg1, string arg2)
+		public void applyJoinTeam(UInt64 arg1, string arg2, SByte arg3)
 		{
 			Bundle pBundle = newCall("applyJoinTeam", 0);
 			if(pBundle == null)
@@ -2489,6 +2510,7 @@ namespace KBEngine
 
 			bundle.writeUint64(arg1);
 			bundle.writeString(arg2);
+			bundle.writeInt8(arg3);
 			sendCall(null);
 		}
 

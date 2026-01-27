@@ -336,6 +336,9 @@ class AvatarBaseEntityCall(object):
     def reqBuyOutfit(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqBuyOutfit', (arg1, arg2, )))
 
+    def reqCanShareReward(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqCanShareReward', (arg1, )))
+
     def reqClaimPcLoginReward(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqClaimPcLoginReward', ()))
 
@@ -425,6 +428,9 @@ class AvatarBaseEntityCall(object):
 
     def reqMineWarCollectInfo(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMineWarCollectInfo', ()))
+
+    def reqMineWarFlagHp(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMineWarFlagHp', (arg1, )))
 
     def reqMineWarGuildMemberScore(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqMineWarGuildMemberScore', (arg1, )))
@@ -704,14 +710,14 @@ class AvatarCellEntityCall(object):
     def applyInviteTeam(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyInviteTeam', (arg1, arg2, )))
 
-    def applyJoinRaidLonely(self, arg1, arg2, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinRaidLonely', (arg1, arg2, )))
+    def applyJoinRaidLonely(self, arg1, arg2, arg3, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinRaidLonely', (arg1, arg2, arg3, )))
 
     def applyJoinRaidWithTeam(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinRaidWithTeam', (arg1, )))
 
-    def applyJoinTeam(self, arg1, arg2, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinTeam', (arg1, arg2, )))
+    def applyJoinTeam(self, arg1, arg2, arg3, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyJoinTeam', (arg1, arg2, arg3, )))
 
     def applyKickTeamMember(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'applyKickTeamMember', (arg1, )))

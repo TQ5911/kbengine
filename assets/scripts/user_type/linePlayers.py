@@ -188,9 +188,6 @@ class LinePlayers(userType.UserDictType):
             return self.pendingSecNum
         return 0
 
-    def isLinePlayerEmpty(self):
-        return not bool(len(self) + self.getPendingEnterNum())
-
 
 class AllLinePlayers(userType.UserDictType):
     def __init__(self, lineType):

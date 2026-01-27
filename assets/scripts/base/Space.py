@@ -44,7 +44,7 @@ class Space(iBase.IBase):
         return
 
     def onGetCell(self):
-        DEBUG_MSG('Space.onGetCell', self.spaceno, self.spacetype)
+        INFO_MSG('Space.onGetCell', self.spaceno, self.spacetype)
         if formula.isStaticSpace(self.spaceno):
             gameengine.setBaseAppData(gameconst.BASEAPP_DATA_KEY_SPACE_TO_BASE + ':' + str(self.spaceno),
                                       utils.getPythonServer())

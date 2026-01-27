@@ -42,14 +42,16 @@ class PlayerDelegate(botBase.BotBase):
                     for idx, itemId in enumerate([30010006,30010005]):
                         slotInfo = {"slotId": idx, "itemId": itemId, "potionState": 1}
                         self.base.setInstantPotionSlots(slotInfo)
-
+                    if self.player.totalScore < 150000:
+                        self.base.runGmCommand("$enhanceRole 0 0")
                     self._state = State.GO_TO_PVP_POS
 
             elif self._state == State.RELIVE:
                 if not self._isDead():
                     self._state = State.GO_TO_PVP_POS
                 else:
-                    self.base.runGmCommand('$reliveToPos 0 None 100')
+                    #self.base.runGmCommand('$reliveToPos 0 None 100')
+                    self.base.runGmCommand("$reliveToPos 0 393,7,154 10000")
 
             elif self._state == State.GO_TO_PVP_POS:
                 if sMath.distance2D(self.player.position, TARGET_POS) < 1:

@@ -195,7 +195,7 @@ class IGuildTrain(object):
             func = F_GFD.datas[gtData['valueFormula']]['serverFormula']
             if callable(func):
                 val = func(level)
-                score += int(val * dataUtils.filterFightPropScore(self.getAvatarSchool(), gtData['fightProp']))
+                score += dataUtils.calcFightPropScore(self.getAvatarSchool(), gtData['fightProp'], val)
 
         return score
 

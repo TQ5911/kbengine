@@ -12,10 +12,9 @@ import userType
 import dropAward
 import json
 import gameglobal
+import LogTrackingMgr
 
-
-# import taskClass_taskTarget as TCTTD
-
+import rewardTask_taskInfo as RRTID
 
 class TaskExtraAttr(userType.UserSoleType):
 
@@ -524,8 +523,16 @@ class Task(userType.UserSoleType):
     def setStat(self, owner, stat):
         if self.stat != stat:
             INFO_MSG('Task::setStat, taskId {}, {} ==> {}'.format(self.taskId, self.stat, stat))
+
             self.stat = stat
             owner.onTaskStateChanged(self.taskId, stat)
+
+            mapId = 0
+            data = RRTID.datas.get(self.taskId, None)
+            if data:
+                mapId = data['mapID']
+            
+            LogTrackingMgr.LogTrackingMgr.Task_State_Change(owner.gbID, self.taskId, self.stat, self.taskType, mapId, owner.getRoleCacheAttr('level'))
         return
 
     def isStat(self, stat):
@@ -541,7 +548,7 @@ class Task(userType.UserSoleType):
     def canAddRewardId(self, taskId, rewardId, rewardMaxNum=1):
         hasRewardTimes = self.taskRewardLimitDic.get(taskId, {}).get(rewardId, 0)
         if hasRewardTimes >= rewardMaxNum:
-            DEBUG_MSG('in canAddRewardId, hasRewardTimes > rewardMaxNum:', taskId, rewardId, hasRewardTimes,
+            INFO_MSG('in canAddRewardId, hasRewardTimes > rewardMaxNum:', taskId, rewardId, hasRewardTimes,
                       rewardMaxNum)
             return False
         else:
@@ -621,7 +628,7 @@ class Task(userType.UserSoleType):
         return updated, tgtArrived
 
     def setAllTargetsReached(self, owner):
-        DEBUG_MSG('in Task::setAllTargetsReached:', self.taskId)
+        INFO_MSG('in Task::setAllTargetsReached:', self.taskId)
         for tgt in self.getAllTargets():
             tgt.setTargetCompleted()
 

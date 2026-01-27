@@ -40,6 +40,8 @@ import iSiegeWarMonster
 import iMineWarMonster
 import iGuildBossMonster
 
+import LogTrackingMgr
+
 class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFubenSpace,
               iGameEntity.IGameEntity, iEntityRefresh.IEntityRefresh, iMonsterDungeon.IMonsterDungeon,
               iMonsterGrp.IMonsterGrp, iRoute.IRoute, iClient.IClient, iSiegeWarMonster.ISiegeWarMonster,
@@ -154,6 +156,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.teamMarkDict = {}
         self.raidMarkDict = {}
 
+        if formula.isTeamDungeonSpace(self.spaceNo) or formula.isRaidDungeonSpace(self.spaceNo):
+            self.spaceMgr.doDungeonMonsterBorn(self.monsterId, self.createTime)
+
     def _checkCombatArea(self, combatAreaData):
         posX = combatAreaData["PosX"]
         posY = combatAreaData["PosY"]
@@ -245,7 +250,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                     self.refreshDataKey = dataKey
                     self.combatAreaID = combatAreaID
                     self.combatRefreshID = '{}_{}'.format(combatAreaID, dataKey)
-                    DEBUG_MSG("Monster::_initCountRefresh: {}, {}, {}, {}, {}".format(mapID, combatAreaID, self.monsterId, self.instanceId, self.combatRefreshID))
+                    INFO_MSG("Monster::_initCountRefresh: {}, {}, {}, {}, {}".format(mapID, combatAreaID, self.monsterId, self.instanceId, self.combatRefreshID))
                     break
 
     def _createMonsterGrpInDungeon(self):
@@ -525,8 +530,10 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
     def onDead(self, killer, *args, **kwargs):
         DEBUG_MSG("Monster-->onDead 1 ", killer, args, kwargs)
         super(Monster, self).onDead(killer)
+        if formula.isTeamDungeonSpace(self.spaceNo) or formula.isRaidDungeonSpace(self.spaceNo):
+            self.spaceMgr.doDungeonMonsterDead(self.monsterId, self.createTime)
         self.doMonsterDestroy()
-
+    
         if killer:
 
             self.allClients.onDead(killer.id)
@@ -572,7 +579,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                 self.onEntityRefresh()
 
         host = utils.getHostEntity(killer)
-        if host.IsAvatar:
+        if host and host.IsAvatar:
             host.base.triggerAchievement(gameconst.AchieveType.KILL_MONSTER)
 
         # 需要计数或者刷新的怪物:
@@ -589,7 +596,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             ERROR_MSG("Error in onDead for clear team record: ", e)
 
     def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx):
-        DEBUG_MSG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
+        INFO_MSG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
         if killer:
             if killer.IsAvatar:
                 killer.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes)
@@ -737,9 +744,25 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
     def getAIParam(self):
         return dataUtils.getAIParameters(self.monsterId)
 
+    def calculateRefreshTimeMonster(self):
+        _refreshTime = self.calculateRefreshTime()
+        if formula.isMineWarSpace(self.spaceNo) and self.spaceMgr:
+            startOffsetSec = utils.getMineWarStartOffsetSec()
+            startTime = utils.getCurrentWeekTS(offsetSec=startOffsetSec)
+            endOffsetSec = utils.getMineWarEndOffsetSec()
+            entTime = utils.getCurrentWeekTS(offsetSec=endOffsetSec)
+            if entTime > utils.getNow():
+                if self.spaceMgr.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+                    _refreshTime = max(0, entTime - utils.getNow())
+                elif utils.getNow() + _refreshTime >= startTime and utils.getNow() + _refreshTime < entTime:
+                    _refreshTime = max(0, entTime - utils.getNow())
+                DEBUG_MSG('IEntityRefresh.calculateRefreshTime: mine war refresh time calculated, refreshTime=%d' % _refreshTime)
+
+        return _refreshTime
+
     def onEntityRefresh(self):
         # 解耦，spaceNo在iCell， posIndex 在iGameEntity
-        _refreshTime = self.calculateRefreshTime()
+        _refreshTime = self.calculateRefreshTimeMonster()
         if self.monsterGroupId:
             self.monsterGroup._callback(_refreshTime, 'doEntityRefreshGrp', (self.gameEntityId,), gametimer.TIMER_TAG_MONSTER_GRP_DO_REFRESH)
             return

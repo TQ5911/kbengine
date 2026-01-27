@@ -83,7 +83,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
             if exitCount == self.DEFAULT_EXIT_COUNT:
                 self.showMsg(MMD.datas.leavingDungeonArea, [str(exitCount)])
 
-            DEBUG_MSG('_raidDungeonTrapCallback::outside team dungeon range, '
+            INFO_MSG('_raidDungeonTrapCallback::outside team dungeon range, '
                       'exit in {}s'.format(exitCount * 1))
             exitCount -= 1
         elif self.DEFAULT_EXIT_COUNT != exitCount:
@@ -150,11 +150,11 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         })
 
     def selfEnterRaidDungeon(self, dungeonNo, src):
-        DEBUG_MSG("selfEnterRaidDungeon::", dungeonNo, src)
+        INFO_MSG("selfEnterRaidDungeon::", dungeonNo, src)
         self._enterRaidDungeon(dungeonNo, src, {})
 
     def createRaidDungeonAndNotEnter(self, dungeonNo, src, extraProps):
-        DEBUG_MSG('createRaidDungeonAndNotEnter::', dungeonNo, src, extraProps)
+        INFO_MSG('createRaidDungeonAndNotEnter::', dungeonNo, src, extraProps)
         if extraProps is None:
             extraProps = {}
         extraProps['noEnterDungeon'] = True
@@ -286,7 +286,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         return None, gameconst.RaidDungeonErrno.RAIDDUN_OK
 
     def createAndEnterRaidDungeonAllMemberPreCheck(self, srcPlayerBox, raidUUID, dungeonNo, src, extra):
-        DEBUG_MSG("createAndEnterRaidDungeonAllMemberPreCheck::", raidUUID, dungeonNo, src, extra)
+        INFO_MSG("createAndEnterRaidDungeonAllMemberPreCheck::", raidUUID, dungeonNo, src, extra)
         dungeonPlayMode = extra.get("dungeonPlayMode")
         extra['_avatarProps'] = {'level': self.level, 'guildUUID': self.guildUUID, 'name': self.name, 'gbId': self.gbId}
         _, errno = self._createAndEnterRaidDungeonAllMemberPreCheck(dungeonNo, src, dungeonPlayMode)
@@ -308,7 +308,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
     def onCreateAndEnterRaidDungeonAllMemberPreCheck(self, errno, raidUUID, dungeonNo, src, playerGBID, playerName, extra):
         errno = gameconst.RaidDungeonErrno._errno(errno)
-        DEBUG_MSG("onCreateAndEnterRaidDungeonAllMemberPreCheck::", errno, raidUUID, dungeonNo, src, extra)
+        INFO_MSG("onCreateAndEnterRaidDungeonAllMemberPreCheck::", errno, raidUUID, dungeonNo, src, extra)
 
         createRaidDungeonCheckRecord = self.createRaidDungeonCheckRecord
         if extra.get("checkUUID", -1) != createRaidDungeonCheckRecord['checkUUID']:
@@ -426,6 +426,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
             dungeonNo, gameconst.DungeonEnterType.RAID).applyCreateDungeon(
                 self.base, self.gbId, raidUUID, extraProps)
 
+    @gamedecorator.teleportInQueue
     def doEnterRaidDungeonAfterCheck(self, dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps):
         """每个团员检查完毕后直接进入团队副本"""
         def _enterCheck():
@@ -453,7 +454,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
             pass
 
     def _doEnterRaidDungeon(self, dungeonNo, spaceNo, spaceUUID, spaceBox, src, spaceMgrBox, extra):
-        DEBUG_MSG('_doEnterRaidDungeon:', dungeonNo, spaceNo, spaceUUID, spaceBox, src, spaceMgrBox, extra)
+        INFO_MSG('_doEnterRaidDungeon:', dungeonNo, spaceNo, spaceUUID, spaceBox, src, spaceMgrBox, extra)
         eContext = {'spaceUUID': spaceUUID,
                     'spaceBox': spaceBox,
                     'spaceMgrBox': spaceMgrBox,
@@ -483,6 +484,9 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
     def leaveRaidDungeon(self, exposed):
         """API: 离开团队副本"""
         INFO_MSG('leaveRaidDungeon::~')
+        self.leaveRaidDungeonCell()
+
+    def leaveRaidDungeonCell(self):
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
         self._leaveRaidDungeon(src)
 

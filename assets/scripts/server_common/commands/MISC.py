@@ -18,7 +18,6 @@ import creep_base as MD
 import buff_buff as BBD
 import itemData_itemData as ITEM_DATA
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import gearBase_typeExplanation as GBE
 import gearBase_gearBase as GBG
 import gearEnhance_gearconst as GEGCD
 import gearBase_typeTab as GBTT
@@ -156,83 +155,6 @@ def setPlayerFullHp(su, player, addfullhp):
     player.addBuff(64000069,1,player.id)
     return True, '执行成功'
 
-@gm_cmd('$Alladdbuff', (Player("gbId/Id"), Int("buffid"),), RARG(0), gameconst.CELL, '所有人添加buff', ALLSIDE, GOD_GROUPS)
-def Alladdbuff(su, player, buffid):
-    if buffid:
-        for e in KBEngine.entities.values():
-            if e.className == 'Avatar':
-                e.addBuff(buffid,1,e.id)
-    return True, '执行成功'
-
-@gm_cmd('$AllsetskillLV', (Player("gbId/Id"), Int("level")), RALL, gameconst.BASE, '所有人技能升级', ALLSIDE, GOD_GROUPS)
-def AllsetskillLV(su, player, level):
-    import skillRelevant_skillUpgrade as SRSUD
-    skill_dicts = {
-    1001: {},
-    1002: {},
-    1003: {}  }
-
-    #根据角色等级和技能levelLimit确定技能最多能升多少级
-    def assign_skill_level(skill_id, level_limit, player_level):
-        if not level_limit:
-            return 1
-
-        # 找到角色等级能达到的最高技能等级
-        max_skill_level = 1
-        for skill_level_index, required_player_level in enumerate(level_limit):
-            if player_level >= required_player_level:
-                max_skill_level = skill_level_index + 1
-            else:
-                break
-
-        return max_skill_level
-
-    for skill_id, skill_info in SRSUD.datas.items():
-        school_id = 1000 + int(str(skill_info.get('ID'))[3])  # 提取学校 ID
-        if  school_id in skill_dicts:
-            skill_dicts[school_id][skill_id] = assign_skill_level(skill_id, skill_info.get('levelLimit', []), level)
-
-    import skill_skill as SSD
-    def update_skill_levels(self, skill_dict):
-        skill_id_list = []
-        skill_lv_list = []
-        for skill_id, skill_lv in skill_dict.items():
-            if skill_id not in self.buildDic.activeSkills:
-                continue
-            skill_id_list.append(skill_id)
-            skill_lv_list.append(skill_lv)
-            self.cell.onChangeSkillLv(skill_id, skill_lv)
-            newLevel = skill_lv
-            self.buildDic.skillLevels[skill_id] = newLevel
-            self.updateSkillLevelSetSummonSlotIdx(skill_id, newLevel)
-
-            recommendSlot = self.buildDic.getSkillRecommendSlot(self, skill_id)
-            if recommendSlot is not None:
-                self.buildDic.changeSkillSlot(self, skill_id, None, recommendSlot)
-
-            # 被动技能替换的技能一并要升级
-            relatedSkills = SSD.datas.get(skill_id, {}).get('conflictSkill') or ()
-            skillIdList = [skill_id] + list(relatedSkills)
-            for sid in relatedSkills:
-                if sid in self.buildDic.skillLevels:
-                    self.buildDic.skillLevels[sid] = newLevel
-                    self.updateSkillLevelSetSummonSlotIdx(sid, newLevel)
-
-                    recommendSlot = self.buildDic.getSkillRecommendSlot(self, sid)
-                    if recommendSlot is not None:
-                        self.buildDic.changeSkillSlot(self, sid, None, recommendSlot)
-
-        self.client.onUpdateSkillLevel(skill_id_list, skill_lv_list)
-
-    def update_skills_by_school(self):
-        school = self.getAvatarSchool()
-        if school in skill_dicts:
-            update_skill_levels(self, skill_dicts[school])
-
-    for e in KBEngine.entities.values():
-        if e.className == 'Avatar':
-            update_skills_by_school(e)
-    return True, '执行成功'
 
 
 
@@ -580,7 +502,7 @@ def createCollection(su, player, collectionId):
 
     props = {
         'name': NPC_Pick.datas[collectionId]['name'],
-        'type': gameconst.CollectionType.NORMAL,
+        'type': NPC_Pick.datas[collectionId]['type'],
         'collectionId': collectionId,
         'spaceNo': player.spaceNo,
         'position': player.position,
@@ -984,7 +906,7 @@ def sendMail(su, toGBID, mailId, attachStr, despArgsStr, title, cont):
     despArgs = mailAssistor.parseDespStr(despArgsStr)
     title = title.strip("[] ")
     cont = cont.strip("[] ")
-    mailAssistor.sendMailToPlayers([toGBID], mailId, extraAttach=attach, despArgs=despArgs, title=title, cont=cont)
+    mailAssistor.sendMailToPlayers([toGBID], mailId, extraAttach=attach, despArgs=despArgs, title=title, cont=cont, srcType=AAC_AACDD.datas.BONUS_SRC_GM)
     return True, '执行成功'
 
 @gm_cmd('$sendMailByGBIDNoMailId', (Player("gbId/Id", raw=True), Str('attachStr'), Str('title'), Str('cont')), RARG(0), BASE,
@@ -1000,7 +922,7 @@ def sendMailByGBIDNoMailId(su, player, attachStr, title, cont):
     attach = mailAssistor.parseAttachStr(attachStr)
     title = title.strip("[] ")
     cont = cont.strip("[] ")
-    mailAssistor.sendIDIPMailByGBID(su, toGBID, attach, title, cont, 0, 0, ())
+    mailAssistor.sendIDIPMailByGBID(su, toGBID, attach, title, cont, AAC_AACDD.datas.BONUS_SRC_GM, 0, ())
     return True, '执行成功'
 
 @gm_cmd('$sendB64MailByGBIDNoMailId', (Player("gbId/Id", raw=True), Str('attachStr'), Str('title'), Str('cont')), RARG(0), BASE,
@@ -1018,7 +940,7 @@ def sendB64MailByGBIDNoMailId(su, player, attachStr, b64title, b64cont):
     attach = mailAssistor.parseAttachStr(attachStr)
     title = title.strip("[] ")
     cont = cont.strip("[] ")
-    mailAssistor.sendIDIPMailByGBID(su, toGBID, attach, title, cont, 0, 0, ())
+    mailAssistor.sendIDIPMailByGBID(su, toGBID, attach, title, cont, AAC_AACDD.datas.BONUS_SRC_GM, 0, ())
     return True, '执行成功'
 
 @gm_cmd('$sendmailByAvatarId', (Str("toId"), Int('mailId'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont')),
@@ -1031,7 +953,7 @@ def sendMailByAvatarId(su, toId, mailId, attachStr, despArgsStr, title, cont):
         toId = su.id
     title = title.strip("[] ")
     cont = cont.strip("[] ")
-    gameengine.broadcastBaseapp('gmSendMailByEntityId', (toId, mailId, attach, despArgs, title, cont))
+    gameengine.broadcastBaseapp('gmSendMailByEntityId', (toId, mailId, attach, despArgs, title, cont, AAC_AACDD.datas.BONUS_SRC_GM))
     return True, '执行成功'
 
 @gm_cmd('$sendglobalmail', (Int('mailId'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont'),
@@ -1043,19 +965,8 @@ def gmSendGlobalMail(su, mailId, attachStr, despArgsStr, title, cont, minRoleTim
     despArgs = mailAssistor.parseDespStr(despArgsStr)
     title = base64.b64decode(title.encode('ascii'), b'_-').decode('utf-8')
     cont = base64.b64decode(cont.encode('ascii'), b'_-').decode('utf-8')
-    gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
-        mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime,
-        minRoleLevel, maxRoleLevel, channel)
-    return True, '执行成功'
-
-@gm_cmd('$sendMailToAccount', (Str('accountName'), Str('accountType'), Str('title'), Str('cont'), Str('attachStr')),
-        RONE, gameconst.BASE, '向账号发送一封邮件', ALLSIDE, GOD_GROUPS)
-def gmSendMailToAccount(su, accountName, accountType, title, cont, attachStr):
-    # attachStr: 多个物品用分号';'分隔; 每个物品有itemId, itemNum，若有绑定属性配置在第三个位置，例如：[30000001,100; 30001031,1,1]
-    title = title.strip("[] ")
-    cont = cont.strip("[] ")
-    mailAssistor.sendIDIPMailByAccount(su, accountName, accountType, attachStr, title, cont, AAC_AACDD.datas.BONUS_SRC_GM,
-                                       0, 0, 0)
+    gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime, 
+                                                              minRoleLevel, maxRoleLevel, channel, AAC_AACDD.datas.BONUS_SRC_GM)
     return True, '执行成功'
 
 @gm_cmd('$getGlobalMailList', (Player("gbId/Id"), Int("mailNum")), RSU, gameconst.BASE, '查看最近mailNum封全服邮件列表', INSIDE, GOD_GROUPS)
@@ -1142,6 +1053,9 @@ def stopOfficialMessage(su):
 def enterLine(su, player, lineType):
     lineNo = formula.getLineNo(player.spaceNo)
     pos, _ = utils.getPlayerBornInfo()
+    if formula.getMapId(player.spaceNo) == lineType:
+        return False, '执行失败'
+
     player.applyEnterLineInternal(lineType, lineNo, pos, player.direction, False)
     return True, '执行成功'
 
@@ -1154,6 +1068,9 @@ def leaveLine(su, player):
     lineType = formula.getLineType(player.spaceNo)
     lineNo = random.randint(0, utils.getLineMaxNumber(lineType) - 1)
     pos = formula.whatSpaceBornPoint(formula.getLineSpaceNo(lineType, lineNo))
+    if formula.getMapId(player.spaceNo) == lineType:
+        return False, '执行失败'
+
     player.applyEnterLineInternal(lineType, lineNo, pos, player.direction, False)
     return True, '执行成功'
 
@@ -2612,7 +2529,7 @@ def clearCD(su, player ):
     if not player.skillDic:
         return False, '执行失败，没有装备任何技能'
 
-    for skill in player.getSkillDic().values():
+    for skill in player.skillDic.values():
         skill.clearCD(player)
     return True, '执行成功'
 
@@ -2621,9 +2538,9 @@ def getAllSkills(su, player ):
     if not player.skillDic:
         return False, '执行失败，没有装备任何技能'
 
-    for skillID, skillData in player.getSkillDic().items():
+    for skillID, skillData in player.skillDic.items():
         INFO_MSG('getAllSkills:', skillID, skillData)
-    INFO_MSG('getAllSkills:', player.getSkillDic().skillSwitches)
+    INFO_MSG('getAllSkills:', player.skillDic.skillSwitches)
     return True, '执行成功'
 
 @gm_cmd('$destroyEntity', (Entity('entity id'), ), RARG(0), CELL, '销毁实体', INSIDE, GOD_GROUPS)
@@ -2751,49 +2668,6 @@ def ALLfinishNewbie(su,player, step):
     return True, '执行成功'
 
 
-def _getItems(school, quality, awardCtx):
-    _targetList = []
-    for k, v in GBE.auctionDic.items():
-        # k : (1, 1001), v: [(1, 11), (2, 21), (3, 31), (4, 41)]
-        if k[1] != school:
-            continue
-
-        _targetList.extend(v)
-
-    print('_targetList', _targetList)
-
-    _itemIds = []
-    for k, v in GBG.auctionDic.items():
-        if (k[0], k[1]) not in _targetList:
-            continue
-
-        if k[2] != quality:
-            continue
-        for i in v:
-            _itemIds.append(i)
-            if k[0] == 6 or k[0] == 7:
-                _itemIds.append(i)
-
-    _items = []
-    for _itemId in _itemIds:
-        _items.extend(dropAward._genEquipItemList(_itemId, 1, 0, quality, awardCtx))
-
-    return _items
-
-@gm_cmd('$dropEquip', (Player("gbId/Id"), Int("slotId")), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
-def dropEquip(su, player, slotId):
-    player.dropEquip(slotId, player.gbId, player.name)
-    return True, '执行成功'
-
-@gm_cmd('$dropWithoutDress', (Player("gbId/Id"), Int('count')), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
-def dropWithoutDress(su, player, count):
-    _items = _getItems(player.school, 3, 3, awardContext.CommonContext(0))
-    for _item in _items[:count]:
-        player.dropEquipByItem(_item, player.name)
-
-    return True, '执行成功'
-
-
 @gm_cmd('$createDuelFlag', (Player("gbId/Id"),), RARG(0), CELL, '创建决斗旗子', ALLSIDE, GOD_GROUPS)
 def createDuelFlag(su, player):
     params = {
@@ -2807,37 +2681,6 @@ def createDuelFlag(su, player):
     return True, '执行成功'
 
 
-@gm_cmd('$getEquipment', (Player("gbId/Id"), Int('school'), Int('quality'), Int('grade'), Int('enhanceLv')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
-def gmGetEquipment(su, player, school, quality, grade, enhanceLv):
-    awardCtx = awardContext.CommonContext(0)
-    awardVal = dropAward.AwardVal()
-    if school == 0:
-        school = player.getRoleCacheAttr('school', 0)
-        if school == 0:
-            DEBUG_MSG('gmGetEquipment: failed to fetch school from role cache, school=0')
-            return False, '执行失败，玩家门派未知'
-    if quality not in gameconst.ItemQuality.COLL_QUALITY:
-        return False, '执行失败，无效品质'
-    if not(0 < grade <= GEGCD.datas['equipmentClassLevel']['value']):
-        return False, '执行失败，无效品阶'
-    for equipType in GBTT.datas.keys():
-        key = equipType * 10000 + quality * 1000 + grade * 100 + enhanceLv
-        if key not in GEGS.datas:
-            return False, '执行失败，无效强化等级'
-        
-    awardCtx.addContextVar('grade', grade)
-    awardCtx.addContextVar('enhanceLv', enhanceLv)
-    _items = _getItems(school, quality, awardCtx)
-
-    awardVal.addWealthByObjList(_items)
-    player.addWealth(
-        AAC_AACDD.datas.BONUS_SRC_GM,
-        awardVal,
-        KBEngine.genUUID64(),
-        detail=None,
-        awardCtx=awardCtx,
-        )
-    return True, '执行成功'
 
 @gm_cmd('$finishAchievement', (Player("gbId/Id"), Int('AchievementID')), RARG(0), BASE, '完成指定成就', ALLSIDE, GOD_GROUPS)
 def finishAchievement(su,player, AchievementID):
@@ -2876,10 +2719,10 @@ def modifybuildingexp(su, player,building,exp):
     player._sendGuildInfo()
     return True, '执行成功'
 
-@gm_cmd('$welfareSignInDay', (Player("gbId/Id"), Int("flag")), RARG(0), gameconst.BASE, '福利签到天数累计', ALLSIDE, GOD_GROUPS)
-def welfareSignInDay(su, player, flag):
+@gm_cmd('$welfareSignInDay', (Player("gbId/Id"), Int("flag"), Str('welfareType')), RARG(0), gameconst.BASE, '福利签到天数累计', ALLSIDE, GOD_GROUPS)
+def welfareSignInDay(su, player, flag, welfareType):
     flag %= 2
-    return player.gmUpdateWelfareSignIn(flag)
+    return player.gmUpdateWelfareSignIn(flag, welfareType)
 
 @gm_cmd('$enterCityBattle', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '进城战场景', ALLSIDE, GOD_GROUPS)
 def enterCityBattle(su, player):
@@ -2998,7 +2841,7 @@ def sendrewardIDglobalmail(su, mailId, rewardID, despArgsStr, title, cont, minRo
     title = title.strip("[] ")
     cont = cont.strip("[] ")
     gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, attach, despArgs, title, cont, minRoleTime, maxRoleTime,
-                                                              minRoleLevel, maxRoleLevel, channel)
+                                                              minRoleLevel, maxRoleLevel, channel, AAC_AACDD.datas.BONUS_SRC_GM)
     return True, '执行成功'
 
 
@@ -3090,6 +2933,9 @@ def gotoLinePos(su, player, spaceNo=0, x=0, y=0, z=0):
     try:
         lineNo = formula.getLineNo(spaceNo)
         lineType = formula.getLineType(spaceNo)
+        if formula.getMapId(player.spaceNo) == lineType:
+            return False, '执行失败'
+
         player.applyEnterLineInternal(lineType, lineNo, pos, player.direction, False)
     except:
         gameengine.reportCritical('gm gotoLinePos error')

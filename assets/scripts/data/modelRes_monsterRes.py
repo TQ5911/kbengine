@@ -3202,8 +3202,8 @@ datas = _tools.RODict({
         "bePushedDistance": 0.0,
         "bePushedSpeed": 0.0,
         "bePushedExTime": 0.0,
-        "baseSpeed": 2.8,
-        "adjSpeed": 7.0,
+        "baseSpeed": 2.2,
+        "adjSpeed": 6.0,
     }),
     "8001_01_wolf": _tools.RODict({
         "resource": "8001_01_wolf",
@@ -4503,16 +4503,16 @@ datas = _tools.RODict({
         "baseSpeed": 1.5,
         "adjSpeed": 3.3,
     }),
-    "8014_01_sheep": _tools.RODict({
-        "resource": "8014_01_sheep",
+    "8014_05_sheep": _tools.RODict({
+        "resource": "8014_05_sheep",
         "name": "羊1",
-        "resourcePath": "Assets/Res/art/char/monster/8014_01_sheep.prefab",
+        "resourcePath": "Assets/Res/art/char/monster/8014_05_sheep.prefab",
         "battleType": 0,
         "bePushedDistance": 0.0,
         "bePushedSpeed": 0.0,
         "bePushedExTime": 0.0,
-        "baseSpeed": 0.0,
-        "adjSpeed": 0.0,
+        "baseSpeed": 1.5,
+        "adjSpeed": 3.3,
     }),
     "8015_00_deer": _tools.RODict({
         "resource": "8015_00_deer",
@@ -5210,7 +5210,7 @@ datas = _tools.RODict({
     "4501_meimo": _tools.RODict({
         "resource": "4501_meimo",
         "name": "魅魔",
-        "resourcePath": "Assets/Res/art/char/pet/4501_meimo.prefab",
+        "resourcePath": "Assets/Res/art/char/pet/4501_meimo_lod1.prefab",
         "battleType": 0,
         "bePushedDistance": 0.0,
         "bePushedSpeed": 0.0,
@@ -6475,7 +6475,7 @@ datas = _tools.RODict({
     "51060_petzhangyu": _tools.RODict({
         "resource": "51060_petzhangyu",
         "name": "章鱼NPC",
-        "resourcePath": "Assets/Res/art/char/npc/62002_taotaobeibang",
+        "resourcePath": "Assets/Res/art/char/npc/51060_petzhangyu.prefab",
         "battleType": 0,
         "bePushedDistance": 0.0,
         "bePushedSpeed": 0.0,
@@ -6483,8 +6483,8 @@ datas = _tools.RODict({
         "baseSpeed": 1.0,
         "adjSpeed": 1.0,
     }),
-    "62002_taotaobeibang": _tools.RODict({
-        "resource": "62002_taotaobeibang",
+    "62002_beibangtaotao": _tools.RODict({
+        "resource": "62002_beibangtaotao",
         "name": "被绑淘淘",
         "resourcePath": "Assets/Res/art/char/npc/62002_taotaobeibang.prefab",
         "battleType": 0,
@@ -6494,8 +6494,8 @@ datas = _tools.RODict({
         "baseSpeed": 1.0,
         "adjSpeed": 1.0,
     }),
-    "51005_shibingbeibang": _tools.RODict({
-        "resource": "51005_shibingbeibang",
+    "51005_beibangshibing": _tools.RODict({
+        "resource": "51005_beibangshibing",
         "name": "被绑士兵",
         "resourcePath": "Assets/Res/art/char/npc/51005_shibingbeibang.prefab",
         "battleType": 0,

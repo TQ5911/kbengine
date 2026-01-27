@@ -702,5 +702,165 @@ datas = _tools.RODict({
     "login_areaPlayerFull": _tools.RODict({
         "ID": "login_areaPlayerFull",
         "value": 54001592,
+    }),
+    "agreementUnchecked": _tools.RODict({
+        "ID": "agreementUnchecked",
+        "value": 54002070,
+    }),
+    "phoneEmpty": _tools.RODict({
+        "ID": "phoneEmpty",
+        "value": 54002071,
+    }),
+    "phoneInvalid": _tools.RODict({
+        "ID": "phoneInvalid",
+        "value": 54002072,
+    }),
+    "smsSentSuccess": _tools.RODict({
+        "ID": "smsSentSuccess",
+        "value": 54002073,
+    }),
+    "smsEmpty": _tools.RODict({
+        "ID": "smsEmpty",
+        "value": 54002074,
+    }),
+    "smsInvalid": _tools.RODict({
+        "ID": "smsInvalid",
+        "value": 54002075,
+    }),
+    "smsExpired": _tools.RODict({
+        "ID": "smsExpired",
+        "value": 54002076,
+    }),
+    "nameEmpty": _tools.RODict({
+        "ID": "nameEmpty",
+        "value": 54002077,
+    }),
+    "nameFormatInvalid": _tools.RODict({
+        "ID": "nameFormatInvalid",
+        "value": 54002078,
+    }),
+    "idCardEmpty": _tools.RODict({
+        "ID": "idCardEmpty",
+        "value": 54002079,
+    }),
+    "idCardFormatInvalid": _tools.RODict({
+        "ID": "idCardFormatInvalid",
+        "value": 54002080,
+    }),
+    "authProcessing": _tools.RODict({
+        "ID": "authProcessing",
+        "value": 54002081,
+    }),
+    "authSuccess": _tools.RODict({
+        "ID": "authSuccess",
+        "value": 54002082,
+    }),
+    "authFailed": _tools.RODict({
+        "ID": "authFailed",
+        "value": 54002083,
+    }),
+    "minorAuth": _tools.RODict({
+        "ID": "minorAuth",
+        "value": 54002084,
+    }),
+    "policeApiError": _tools.RODict({
+        "ID": "policeApiError",
+        "value": 54002085,
+    }),
+    "infoMismatch": _tools.RODict({
+        "ID": "infoMismatch",
+        "value": 54002086,
+    }),
+    "realNameAuth": _tools.RODict({
+        "ID": "realNameAuth",
+        "value": 54002087,
+    }),
+    "authUnfinished": _tools.RODict({
+        "ID": "authUnfinished",
+        "value": 54002088,
+    }),
+    "phoneRepeat": _tools.RODict({
+        "ID": "phoneRepeat",
+        "value": 54002089,
+    }),
+    "phoneSuccess": _tools.RODict({
+        "ID": "phoneSuccess",
+        "value": 54002090,
+    }),
+    "phoneFrequentTime": _tools.RODict({
+        "ID": "phoneFrequentTime",
+        "value": 10,
+    }),
+    "phoneFrequent": _tools.RODict({
+        "ID": "phoneFrequent",
+        "value": 54002091,
+    }),
+    "phoneFrequentLockTime": _tools.RODict({
+        "ID": "phoneFrequentLockTime",
+        "value": 25,
+    }),
+    "phoneFrequentLock": _tools.RODict({
+        "ID": "phoneFrequentLock",
+        "value": 54002092,
+    }),
+    "webRequestException": _tools.RODict({
+        "ID": "webRequestException",
+        "value": 54002093,
+    }),
+    "webFrequentRequests": _tools.RODict({
+        "ID": "webFrequentRequests",
+        "value": 54002094,
+    }),
+    "underageBlock": _tools.RODict({
+        "ID": "underageBlock",
+        "value": 54002095,
+    }),
+    "agreementContent": _tools.RODict({
+        "ID": "agreementContent",
+        "value": "我已详细阅读并同意<link url label=《用户协议》 url=https://api.yunxingu.com/mobile/index.html/#/privacy?index=0>、<link url label=《隐私政策》 url=https://api.yunxingu.com/mobile/index.html/#/privacy?index=1>和<link url label=《儿童隐私保护政策》 url=https://api.yunxingu.com/mobile/index.html/#/privacy?index=2>。",
+    }),
+    "loginFailed_msgLogin": _tools.RODict({
+        "ID": "loginFailed_msgLogin",
+        "value": 54002101,
+    }),
+    "loginFailed_checkSim": _tools.RODict({
+        "ID": "loginFailed_checkSim",
+        "value": 54002102,
+    }),
+    "loginFailed_checkNet": _tools.RODict({
+        "ID": "loginFailed_checkNet",
+        "value": 54002103,
+    }),
+    "loginFailed_wrongOperator": _tools.RODict({
+        "ID": "loginFailed_wrongOperator",
+        "value": 54002104,
+    }),
+    "inMaintenance_msgLogin": _tools.RODict({
+        "ID": "inMaintenance_msgLogin",
+        "value": 54002105,
+    }),
+    "frequentRequests_tryLater": _tools.RODict({
+        "ID": "frequentRequests_tryLater",
+        "value": 54002106,
+    }),
+    "codeFailed_checkNet": _tools.RODict({
+        "ID": "codeFailed_checkNet",
+        "value": 54002107,
+    }),
+    "loginExpired_relogin": _tools.RODict({
+        "ID": "loginExpired_relogin",
+        "value": 54002108,
+    }),
+    "authFailed_checkInfo": _tools.RODict({
+        "ID": "authFailed_checkInfo",
+        "value": 54002109,
+    }),
+    "authFailed_checkNet": _tools.RODict({
+        "ID": "authFailed_checkNet",
+        "value": 54002110,
+    }),
+    "codeFailed_isLimited": _tools.RODict({
+        "ID": "codeFailed_isLimited",
+        "value": 54002111,
     })
 })

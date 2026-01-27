@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `maple` (
     `zone_id` int(11) NOT NULL,
     `game_server` varchar(255) NOT NULL,
     `queue_server` varchar(255) NOT NULL,
+    `central_login` varchar(255) NOT NULL,
     `server_group` int(11) NOT NULL,
     `server_state` int(11) NOT NULL,
     `server_flag_state` int(11) NOT NULL,
@@ -24,3 +25,9 @@ CREATE TABLE IF NOT EXISTS `maple_zone` (
     UNIQUE KEY `zone_id` (`zone_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE IF NOT EXISTS `maple_kv` (
+    `key` VARCHAR(255) NOT NULL,
+    `value` TEXT NOT NULL,
+    PRIMARY KEY (`key`)
+);

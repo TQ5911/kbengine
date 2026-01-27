@@ -13,7 +13,6 @@ import const_const as CONST
 import formula_generalFormula as FML_G
 import skillRelevant_skillScore as SKILL_PP
 import character_charData as CHAR_CD
-import gametlog
 import actionContext
 
 
@@ -33,12 +32,14 @@ class IScore(object):
         skillScore = 0
         school = self.getAvatarSchool()
         for skillId, skillLv in self.buildDic.skillLevels.items():
+            DEBUG_MSG('getTotalSkillScore', skillId, skillLv)
             if skillId in CHAR_CD.datas[school]['build']:
                 skillScore += SKILL_PP.datas[skillLv]['score']
 
             elif utils.hasSkillTag(skillId, gameconst.SkillTag.UltraSkill):
                 skillScore += SKILL_PP.datas[skillLv]['score2']
-
+                
+        DEBUG_MSG('getTotalSkillScore ', skillScore)
         return skillScore
     # --------------------------------------------------------------
 
@@ -119,5 +120,6 @@ class IScore(object):
 
     def updateSkillScore(self):
         newScore = math.floor(self.getTotalSkillScore())
+        DEBUG_MSG('updateSkillScore ', newScore)
         self.cell.onUpdateSkillScore(newScore)
     # --------------------------------------------------------------

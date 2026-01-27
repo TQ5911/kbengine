@@ -94,6 +94,10 @@
             <Arg>          LINE_NO         </Arg>
         </reqMineWarGuildMemberScore>
 
+        <reqMineWarFlagHp> <Exposed/>
+            <Arg>          LINE_NO         </Arg>
+        </reqMineWarFlagHp>
+
         <getMineWarInfo>
         </getMineWarInfo>
 
@@ -202,5 +206,10 @@
             <Arg>   LINE_NO         </Arg>
             <Arg>   ARRAY   <of>    MINE_WAR_GUILD_MEMBER_SCORE_INFO     </of>   </Arg>
         </onGetMineWarGuildMemberScore>
+
+        <onGetMineWarFlagHp>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          UINT8         </Arg>
+        </onGetMineWarFlagHp>
     </ClientMethods>
 </root>

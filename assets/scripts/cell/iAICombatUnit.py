@@ -217,7 +217,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         self.skillPropInfo = None
         skillList = []
         skillPropList = []
-        for skillId in list(self.getSkillDic()):
+        for skillId in list(self.skillDic):
             _skill = self.removeSkill(skillId)
             if _skill and _skill.isInSkill:
                 _skill.resetSkill(self)
@@ -258,7 +258,7 @@ class IAICombatUnit(SkillManager.SkillManager):
             if skillList:
                 return utils.weightChoice(skillList, propList)[0][0]
 
-        for skillId, skillVal in self.getSkillDic().items():
+        for skillId, skillVal in self.skillDic.items():
             if targetType and skillVal.getTarget(skillId) != targetType:
                 continue
             if not skillVal.inCDTime():
@@ -272,7 +272,7 @@ class IAICombatUnit(SkillManager.SkillManager):
     def getMinCdTime(self):
         minCdTime = 0
         if not self.skillPropInfo:
-            for skillId, skillVal in self.getSkillDic().items():
+            for skillId, skillVal in self.skillDic.items():
                 tempCd = skillVal.getLastCDTime()
                 if minCdTime == 0 or tempCd < minCdTime:
                     minCdTime = tempCd
@@ -604,7 +604,7 @@ class IAICombatUnit(SkillManager.SkillManager):
 
     def resetAllSkillByDelayCD(self):
         # 把身上所有技能的冷却时间重置为delayCD
-        for skillId, skillVal in self.getSkillDic().items():
+        for skillId, skillVal in self.skillDic.items():
             delayCd = SSD.datas[skillId].get('delayCD')
             if delayCd:
                 skillVal.enterCDTime(self, delayCd)

@@ -44,7 +44,20 @@ class IMineWarCell(object):
 
         # 同步怪物信息
         if formula.isMineWarSpace(self.spaceNo):
-            self.spaceMgr.sendMineWarMonsterInfo(self)
+            self._callback(1, 'syncMineWarMonsterInfo', (), gametimer.TIMER_TAG_MINE_WAR_SYNC_MONSTER)
+            if state == gameconst.MINE_WAR_STATE.RUNNING:
+                self.spaceMgr.checkAndChangeCamp(self)
+
+        self.mineWarCanAttack = state == gameconst.MINE_WAR_STATE.RUNNING
+
+    def syncMineWarMonsterInfo(self):
+        """
+        同步矿战怪物信息
+        """
+        if not formula.isMineWarSpace(self.spaceNo):
+            DEBUG_MSG('iMineWarCell.syncMineWarMonsterInfo called for player:', self.id, self.spaceNo)
+            return
+        self.spaceMgr.sendMineWarMonsterInfo(self)
         
     def onMineWarTeleportCheck(self, lineType):
         
@@ -91,9 +104,7 @@ class IMineWarCell(object):
         """
         
         INFO_MSG('iMineWarCell.onEnterMineWarSpace called for player:', self.id)
-        self.mineWarCanAttack = True
         # self.base.onMessagePre(MBC.datas['mineBattle_teleportSafeZoneMsg']['value'], [])
-
         takePartScore = MBC.datas['mineBattle_takePartScore']['value']
         self.scoreTimer = self.pyAddTimer(0, takePartScore[0], gametimer.MINE_WAR_PLAYER_GET_SCORE)
 
@@ -103,7 +114,6 @@ class IMineWarCell(object):
         """
         
         INFO_MSG('iMineWarCell.onLeaveMineWarSpace called for player:', self.id, self.spaceNo)
-        self.mineWarCanAttack = False
         self.cancelMineWarScoreTimer()
 
     def mineWarPlayerGetScoreTick(self):
@@ -129,8 +139,6 @@ class IMineWarCell(object):
             if self.scoreTimer:
                 self.pyDelTimer(self.scoreTimer, gametimer.MINE_WAR_PLAYER_GET_SCORE)
                 self.scoreTimer = 0
-        else:
-            ERROR_MSG('iMineWarCell.cancelMineWarScoreTimer no scoreTimer for player:', self.id, self.spaceNo)
 
     def getMineWarRebornPos(self, mapId, posType):
         """

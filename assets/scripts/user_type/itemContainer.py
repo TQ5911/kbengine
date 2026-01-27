@@ -139,7 +139,7 @@ class ItemContainer(userType.UserSoleType):
         return -1, None
 
     def _recycleGrid(self, gridId, itemId):
-        DEBUG_MSG('_recycleGrid:', gridId, itemId)
+        INFO_MSG('_recycleGrid:', gridId, itemId)
         if itemId in self.itemId2gridIds and gridId in self.itemId2gridIds[itemId]:
             self.itemId2gridIds[itemId].remove(gridId)
             if 0 == len(self.itemId2gridIds[itemId]):
@@ -275,7 +275,7 @@ class ItemContainer(userType.UserSoleType):
 
     def addItemsWithPlan(self, owner, itemList, opUUID, src, detail, planDict=None, notify=True, syncToClient=True,
                          srcSubType=0, idipSource=0):
-        DEBUG_MSG('addItemsWithPlan', self.isLocked(), [(i.itemId, i.itemNum) for i in itemList], opUUID, src)
+        INFO_MSG('addItemsWithPlan', self.isLocked(), [(i.itemId, i.itemNum) for i in itemList], opUUID, src)
         if self.isLocked():
             return gameconst.BagOPStat.BAG_OP_BAG_LOCKED, {}
 
@@ -284,7 +284,7 @@ class ItemContainer(userType.UserSoleType):
         else:
             addPlanCode, planDict, leftList = self.calcAddItemsPlan(itemList)
 
-        DEBUG_MSG('addItemsWithPlan', addPlanCode, planDict)
+        INFO_MSG('addItemsWithPlan', addPlanCode, planDict)
 
         if addPlanCode != gameconst.BagOpPlan.BAG_OP_OK:
             return gameconst.BagOPStat.BAG_OP_NO_SPACE, None
@@ -394,7 +394,7 @@ class ItemContainer(userType.UserSoleType):
     def cleanGridByGridId(self, owner, gridId, itemId, opUUID, srcType, detail, sendClient=True, srcSubType=0,
                           idipSource=0):
         # 清除grid，并返回清除前的对象
-        DEBUG_MSG('in cleanGridByGridId:', gridId, itemId)
+        INFO_MSG('in cleanGridByGridId:', gridId, itemId)
         cleanItem = self.getItemObjByGridId(gridId)
         if not cleanItem or cleanItem.itemId != itemId:
             WARNING_MSG('   in cleanGridByGridId, data error:', cleanItem)
@@ -417,7 +417,7 @@ class ItemContainer(userType.UserSoleType):
         return
 
     def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDict=None, isCheckLock=True):
-        DEBUG_MSG('in Bag::deductItemsWithPlan:', owner.id, itemsDict, opUUID, srcType)
+        INFO_MSG('in Bag::deductItemsWithPlan:', owner.id, itemsDict, opUUID, srcType)
         if self.isLocked():
             if isCheckLock:
                 return gameconst.BagOPStat.BAG_OP_BAG_LOCKED, None

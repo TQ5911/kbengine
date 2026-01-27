@@ -49,7 +49,7 @@ class IGameEntity(object):
         cellSpace = self.getCurrentSpace()
         cellAvatarMgrId = getattr(self, 'spaceMgrId', 0)
         cellSpace.doLoadSpecifiedEntities(attachedGIDStrList, cellAvatarMgrId, self.id)
-        DEBUG_MSG("iGameEntity.IGameEntity attachedGIDList", self.id, self.gameEntityId, attachedGIDList, cellAvatarMgrId)
+        INFO_MSG("iGameEntity.IGameEntity attachedGIDList", self.id, self.gameEntityId, attachedGIDList, cellAvatarMgrId)
 
     def beAttachedToHost(self):
         attachedHostId = self.getTempMiscProp(gameconst.AvatarProps.beAttachedHostID, 0)
@@ -59,7 +59,7 @@ class IGameEntity(object):
         if not attachedHost:
             return
 
-        DEBUG_MSG("iGameEntity.IGameEntity attachedHostId", self.id, self.gameEntityId, attachedHostId)
+        INFO_MSG("iGameEntity.IGameEntity attachedHostId", self.id, self.gameEntityId, attachedHostId)
         attachedIDList = attachedHost.getTempMiscProp(gameconst.AvatarProps.attachedIDList, [])
         attachedIDList.append(self.id)
         attachedHost.setTempMiscProp(gameconst.AvatarProps.attachedIDList, attachedIDList)
@@ -74,6 +74,7 @@ class IGameEntity(object):
             self.telToPos(newPosition)
         self.bornPosition = tuple(self.position)
         self.bornDirection = tuple(self.direction)
+        self.context = self.tmpProps.pop('context', None)
 
     def _initPosition(self):
         radius = self.tmpProps.pop('createRadius', None)
@@ -88,7 +89,7 @@ class IGameEntity(object):
             return True, Math.Vector3(_l[0])
 
         ERROR_MSG("engine can't find navigate point, use origin:",
-                  self.gameEntityId, self.creepBaseId, self.spaceNo, self.position)
+                  self.gameEntityId, self.creepBaseId, self.spaceNo, self.position, radius)
         return False, self.position
 
     @property

@@ -8,6 +8,7 @@ import gameconst
 import utils
 import dataUtils
 import dropAward
+import LogTrackingMgr
 
 import bagData_set as BagDataSet
 import bagData_bankUnlock as BGBUD
@@ -28,18 +29,22 @@ class WarehouseBag(BaseBag.BaseBag):
 
     @utils.checkBagLocked
     def doUnlockWarehouseGrids(self, owner, gridNum):
-        DEBUG_MSG('in doUnlockWarehouseGrids', gridNum)
+        INFO_MSG('in doUnlockWarehouseGrids', gridNum)
         bankCapacity = BagDataSet.datas['bankCapacity']['value']
         if self.capacity >= bankCapacity:
             WARNING_MSG('   in doUnlockWarehouseGrids, reach limit:', self.capacity)
             return
+        
+        oldCapacity = self.capacity
         newCapacity = self.capacity + gridNum
         initGridNum = BagDataSet.datas['initBankCapacity']['value']
         if newCapacity > bankCapacity:
             WARNING_MSG('   in doUnlockWarehouseGrids, reach limit:', newCapacity)
             return
-
+        
         startGrid = self.capacity - initGridNum + 1
+        needItemId = 0
+        itemNum = 0
         deductWealthVal = dropAward.DeductWealthVal()
         for gridId in range(startGrid, startGrid + gridNum):
             needItemId = BGBUD.datas[gridId]['itemNeeded']
@@ -55,4 +60,15 @@ class WarehouseBag(BaseBag.BaseBag):
         detail = gameclass.AwardDetail(capacity=self.capacity, newCapacity=newCapacity)
         owner.deductWealth(srcType, deductWealthVal, opUUID, detail)
         self.capacity = newCapacity
+
+        LogTrackingMgr.LogTrackingMgr.Capacity_Expansion(
+            opUUID,
+            owner.gbID,
+            gameconst.CapacityExpansionType.WAREHOUSE_ITEM,
+            oldCapacity,
+            gridNum,
+            self.capacity,
+            owner.getRoleCacheAttr('level'),
+            {needItemId:itemNum}
+        )
         return self.capacity

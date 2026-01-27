@@ -25,7 +25,7 @@ import gameconfig
 class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
                             iTimer.ITimer):
     def __init__(self):
-        DEBUG_MSG('LeaderBoardAvatarStub init')
+        INFO_MSG('LeaderBoardAvatarStub init')
 
         self.leaderBoardList.leaderBoardType = self.leaderBoardType
         self.leaderBoardCache = {}
@@ -42,16 +42,16 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             self._genRushRankData()
 
     def doNext(self):
-        DEBUG_MSG('LeaderBoardAvatarStub doNext')
+        INFO_MSG('LeaderBoardAvatarStub doNext')
         # gameglobal.localBaseApp.fullPrepare(self.classname())
         super().doNext()
 
     def onFirstCreate(self):
-        DEBUG_MSG('LeaderBoardAvatarStub onFirstCreate')
+        INFO_MSG('LeaderBoardAvatarStub onFirstCreate')
         self.writeToDB(self._onWriteToDB)
 
     def _onWriteToDB(self, ok, entity):
-        DEBUG_MSG('LeaderBoardAvatarStub _onWriteToDB')
+        INFO_MSG('LeaderBoardAvatarStub _onWriteToDB')
         if not ok:
             ERROR_MSG('LeaderBoardAvatarStub _onWriteToDB failed')
         else:
@@ -92,28 +92,30 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         dateStr = W_CDD.datas['LevelRankDeadLine']['value']
         date = datetime.strptime(dateStr, "%Y%m%d%H%M")
         date = int(date.timestamp())
-        DEBUG_MSG("rush rank need refresh: ", utils.getNow(), date)
+        INFO_MSG("rush rank need refresh: ", utils.getNow(), date)
         EPS = 2 * 60
         if utils.getNow() <= date or abs(utils.getNow() - date) <= EPS:
             return True
 
-        DEBUG_MSG("rush rank out of time", utils.getNow(), date)
+        INFO_MSG("rush rank out of time", utils.getNow(), date)
         return False
     
     def _genRushRankData(self):
         key = gameconst.RedisKey.LEVEL_RUSH_RANK_DATA_KEY + str(gameconfig.serverId()) + time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime(utils.getNow()))
-        DEBUG_MSG("gen rush rank data key: ", key)
-
+        INFO_MSG("gen rush rank data key: ", key)
+        
+        td = time.time()
         redisUtils.RedisUtils.set(key, json.dumps(self.leaderBoardList.toLeaderBoardListSavedDict(), separators=(',', ':'), indent=None), self._onGenRushRankDataCB)
+        INFO_MSG("gen rush rank data time: ", time.time() - td)
 
     def _onGenRushRankDataCB(self, ok, data):
         if not ok:
-            ERROR_MSG("gen rush rank data failed")
+            INFO_MSG("gen rush rank data failed")
         else:
-            DEBUG_MSG("gen rush rank data success", data)
+            INFO_MSG("gen rush rank data success", data)
 
     def _onLeaderBoardRefresh(self):
-        DEBUG_MSG('LeaderBoardAvatarStub _onLeaderBoardRefresh')
+        INFO_MSG('LeaderBoardAvatarStub _onLeaderBoardRefresh')
 
         if not self._needRefresh():
             return

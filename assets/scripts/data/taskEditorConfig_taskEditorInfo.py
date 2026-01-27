@@ -366,6 +366,9 @@ datas = _tools.RODict({
     "FinNeedSetClue": _tools.RODict({
         "value": False
     }),
+    "FinBlockPopReward": _tools.RODict({
+        "value": False
+    }),
     "FinClueID": _tools.RODict({
         "value": 0
     }),

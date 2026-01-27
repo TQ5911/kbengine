@@ -36,10 +36,14 @@ class BotAIState_Init(AIState):
         if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
             return
         if int(curMapId) == owner.dstMapId:
+            if owner.hasState(gameconst.State.Death):
+                owner.runGmCommand("$reliveToPos 0 393,7,154 10000")
+                return
             for idx, itemId in enumerate(owner.itemIds):
                 slotInfo = {"slotId": idx, "itemId": itemId, "potionState": 1}
                 owner.setInstantPotionSlots(slotInfo)
-            owner.runGmCommand('$dressallequipments 0')
+            if owner.player.totalScore < 150000:
+                owner.runGmCommand("$enhanceRole 0 0")
             owner.runGmCommand('$goto 0 %s %s %s' % (owner.dstPos.x, owner.dstPos.y, owner.dstPos.z))
             owner.changeAIState(AISTATE_GO_BATTLE_AREA)
             return
@@ -108,12 +112,12 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
         }
 
     def initBot(self):
+        self.runGmCommand('$getitems 0 0 9999 0 30010005 30010006')
         if self.getSelfMapId() == 4002 or self.player.level < 20:
             self.runGmCommand('$unlockallfunc 0')
 
-        self.runGmCommand('$getitems 0 0 9999 0 30010005 30010006')
-        if self.player.totalScore < 150000:
-            self.runGmCommand("$getequipment 0 0 3 4")
+        
+        
 
     def changeRandomTimeDelay(self, useRandom=None):
         if useRandom is None:

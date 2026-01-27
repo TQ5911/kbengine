@@ -62,5 +62,9 @@ datas = _tools.RODict({
     "skillMaxLevel": _tools.RODict({
         "ID": "skillMaxLevel",
         "valueCN": "技能已到最大等级",
+    }),
+    "skillUpgradeLvLimit": _tools.RODict({
+        "ID": "skillUpgradeLvLimit",
+        "valueCN": "<color=#c60c0c>{0}级升级</color>",
     })
 })

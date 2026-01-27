@@ -57,11 +57,9 @@ def getAvatarAoiMonster(su, player, range=30):
         monsterdata.append({'entityId': ent.id, 'MonsterName': ent.name})
     return su.onCommandResult(0, 'ok' , {"data": monsterdata})
 
-@gm_cmd('$getEntprop', (Player("gbId/Id"),Int('entid'),), RARG(0), CELL, '获取实体属性', ALLSIDE, GOD_GROUPS)
-def getEntprop(su,player,entid):
-
+@gm_cmd('$getEntprop', (Entity('entid'),), RARG(0), CELL, '获取实体属性', ALLSIDE, GOD_GROUPS)
+def getEntprop(su, ent):
     entprops = {}
-    ent = KBEngine.entities.get(entid)
     for propName, propData in FDD.datas.items():
         if not hasattr(ent, propName):
             continue
@@ -78,9 +76,8 @@ def getEntprop(su,player,entid):
     
     return su.onCommandResult(0, 'ok', {"data": entprops})
 
-@gm_cmd('$setEntProp', (Player("gbId/Id"),Int('entid'),Str("propName"), Float("value"),), RARG(0), gameconst.CELL, '修改属性', ALLSIDE, GOD_GROUPS)
-def setEntProp(su, player,entid,propName,value):
-    ent = KBEngine.entities.get(entid)
+@gm_cmd('$setEntProp', (Entity('entid'),Str("propName"), Float("value"),), RARG(0), gameconst.CELL, '修改属性', ALLSIDE, GOD_GROUPS)
+def setEntProp(su, ent, propName, value):
     if not hasattr(ent, propName):
         return su.onCommandResult(0, f'Faild,{ent.name} 没有 {propName} 属性', {})
     else:
@@ -92,16 +89,15 @@ def setEntProp(su, player,entid,propName,value):
         ent.setProp(f'{propName}', newvalue, gameconst.SourceType.Default)
         return su.onCommandResult(0, f'ok,{ent.name} 的 {propName} 属性从 {curVal} 修改为 {value}',{} )
 
-@gm_cmd('$getEntSkillDic', (Player("gbId/Id"),Int('entid')), RARG(0), gameconst.CELL, '获取实体技能信息', ALLSIDE, GOD_GROUPS)
-def getEntSkillDic(su, player, entid):
+@gm_cmd('$getEntSkillDic', (Entity('entid'),), RARG(0), gameconst.CELL, '获取实体技能信息', ALLSIDE, GOD_GROUPS)
+def getEntSkillDic(su, ent):
     
     mod = importlib.import_module('skill_skill')
-    ent = KBEngine.entities.get(entid)
     datas = getattr(mod, 'datas', None)
     if not hasattr(ent, 'skillDic'):
-        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 没有 skillDic 方法', {})
+        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 skillDic 方法', {})
     weight_map = {}
-    if hasattr(ent, 'IsMonster') and hasattr(ent, 'skillPropInfo'):
+    if hasattr(ent, 'IsMonster') and getattr(ent, 'skillPropInfo', None):
         skill_ids, weights = ent.skillPropInfo
         weight_map = {sid: w for sid, w in zip(skill_ids, weights)}
     entskilldic = {}
@@ -126,19 +122,291 @@ def getEntSkillDic(su, player, entid):
     return su.onCommandResult(0, 'ok', entskilldic)
 
 
+def update_skills_by_playerLevel(ent, playerLevel, skillLevel=0):
+    import skill_skill as SSD
+    import skillRelevant_skillUpgrade as SRSUD
+    skill_dicts = {
+    1001: {},
+    1002: {},
+    1003: {}  }
+    level = playerLevel or getattr(ent, 'level', None) or gameglobal.roleCache.get(ent.id, {}).get('level', 0)
+    #根据角色等级和技能levelLimit确定技能最多能升多少级
+    def assign_skill_level(level_limit, player_level):
+        if not level_limit:
+            return 1
+
+        # 找到角色等级能达到的最高技能等级
+        max_skill_level = 1
+        for skill_level_index, required_player_level in enumerate(level_limit):
+            if player_level >= required_player_level:
+                max_skill_level = skill_level_index + 1
+            else:
+                break
+
+        return max_skill_level
+
+    for skill_id, skill_info in SRSUD.datas.items():
+        school_id = 1000 + int(str(skill_info.get('ID'))[3])  # 提取学校 ID
+        if  school_id in skill_dicts:
+            skill_dicts[school_id][skill_id] = skillLevel or assign_skill_level(skill_info.get('levelLimit', []), level)
+
+    
+    def update_skill_levels(self, skill_dict):
+        skill_id_list = []
+        skill_lv_list = []
+        for skill_id, skill_lv in skill_dict.items():
+            if skill_id not in self.buildDic.activeSkills:
+                continue
+            skill_id_list.append(skill_id)
+            skill_lv_list.append(skill_lv)
+            self.cell.onChangeSkillLv(skill_id, skill_lv)
+            newLevel = skill_lv
+            self.buildDic.skillLevels[skill_id] = newLevel
+            self.updateSkillLevelSetSummonSlotIdx(skill_id, newLevel)
+
+            recommendSlot = self.buildDic.getSkillRecommendSlot(self, skill_id)
+            if recommendSlot is not None:
+                self.buildDic.changeSkillSlot(self, skill_id, None, recommendSlot)
+
+            # 被动技能替换的技能一并要升级
+            relatedSkills = SSD.datas.get(skill_id, {}).get('conflictSkill') or ()
+            skillIdList = [skill_id] + list(relatedSkills)
+            for sid in relatedSkills:
+                if sid in self.buildDic.skillLevels:
+                    self.buildDic.skillLevels[sid] = newLevel
+                    self.updateSkillLevelSetSummonSlotIdx(sid, newLevel)
+
+                    recommendSlot = self.buildDic.getSkillRecommendSlot(self, sid)
+                    if recommendSlot is not None:
+                        self.buildDic.changeSkillSlot(self, sid, None, recommendSlot)
+
+        self.client.onUpdateSkillLevel(skill_id_list, skill_lv_list)
+
+    school = ent.getAvatarSchool()
+    if school in skill_dicts:
+        update_skill_levels(ent, skill_dicts[school])
+
+def getPetItemList():
+    import itemData_itemData as ID
+    import petData_petData as PD
+    petItemListValid = []
+    for itemId, itemData in ID.datas.items():
+        itemType = itemData.get('type', None)
+        subType = itemData.get('subType', None)
+        if itemType == gameconst.ItemType.LingShou and subType == gameconst.ItemSubType.LingShouEgg and (itemData.get('indexID', None) in PD.datas):
+            petItemListValid.append(itemId)
+    return petItemListValid
 
 
-@gm_cmd('$replaceMonsterSkill', (Player("gbId/Id"),Int('entid'),Str('skillList')), RARG(0), gameconst.CELL, '替换怪物技能', ALLSIDE, GOD_GROUPS)
-def replaceMonsterSkill(su, player,entid,skillList):
+def _getItems(school, quality, awardCtx):
+    import gearBase_typeExplanation as GBE
+    import gearBase_gearBase as GBG
+    _targetList = []
+    for k, v in GBE.auctionDic.items():
+        # k : (1, 1001), v: [(1, 11), (2, 21), (3, 31), (4, 41)]
+        if k[1] != school:
+            continue
 
-    ent = KBEngine.entities.get(entid)
+        _targetList.extend(v)
+
+    print('_targetList', _targetList)
+
+    _itemIds = []
+    for k, v in GBG.auctionDic.items():
+        if (k[0], k[1]) not in _targetList:
+            continue
+
+        if k[2] != quality:
+            continue
+        for i in v:
+            _itemIds.append(i)
+            if k[0] == 6 or k[0] == 7:
+                _itemIds.append(i)
+
+    _items = []
+    for _itemId in _itemIds:
+        _items.extend(dropAward._genEquipItemList(_itemId, 1, 0, quality, awardCtx))
+
+    return _items
+
+@gm_cmd('$dropEquip', (Player("gbId/Id"), Int("slotId")), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
+def dropEquip(su, player, slotId):
+    player.dropEquip(slotId, player.gbId, player.name)
+    return True, '执行成功'
+
+@gm_cmd('$dropWithoutDress', (Player("gbId/Id"), Int('count')), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
+def dropWithoutDress(su, player, count):
+    _items = _getItems(player.school, 3, 3, awardContext.CommonContext(0))
+    for _item in _items[:count]:
+        player.dropEquipByItem(_item, player.name)
+
+    return True, '执行成功'
+
+def _gmGetEquipment(player, school, quality, grade, enhanceLv):
+    import gearEnhance_gearconst as GEGCD
+    import gearBase_typeTab as GBTT
+    import gearEnhance_gearStrengthen as GEGS
+    awardCtx = awardContext.CommonContext(0)
+    awardVal = dropAward.AwardVal()
+    if school == 0:
+        school = player.getRoleCacheAttr('school', 0)
+        if school == 0:
+            DEBUG_MSG('gmGetEquipment: failed to fetch school from role cache, school=0')
+            return False, '执行失败，玩家门派未知', []
+    if quality not in gameconst.ItemQuality.COLL_QUALITY:
+        return False, '执行失败，无效品质', []
+    if not(0 < grade <= GEGCD.datas['equipmentClassLevel']['value']):
+        return False, '执行失败，无效品阶', []
+    for equipType in GBTT.datas.keys():
+        key = equipType * 10000 + quality * 1000 + grade * 100 + enhanceLv
+        if key not in GEGS.datas:
+            return False, '执行失败，无效强化等级', []
+        
+    awardCtx.addContextVar('grade', grade)
+    awardCtx.addContextVar('enhanceLv', enhanceLv)
+    _items = _getItems(school, quality, awardCtx)
+
+    awardVal.addWealthByObjList(_items)
+    player.addWealth(
+        AAC_AACDD.datas.BONUS_SRC_GM,
+        awardVal,
+        KBEngine.genUUID64(),
+        detail="_gmGetEquipment",
+        awardCtx=awardCtx,
+        )
+    return True, '执行成功', _items
+
+@gm_cmd('$getEquipment', (Player("gbId/Id"), Int('school'), Int('quality'), Int('grade'), Int('enhanceLv')), RARG(0), BASE, '获得套装', ALLSIDE, GOD_GROUPS)
+def gmGetEquipment(su, player, school, quality, grade, enhanceLv):
+    ret, msg, _ = _gmGetEquipment(player, school, quality, grade, enhanceLv)
+    return ret, msg
+    
+
+@gm_cmd('$enhanceRole', (Player("gbId/Id"),Int('enhanceLevel')), RARG(0), gameconst.BASE, '根据配置强化角色', ALLSIDE, GOD_GROUPS, minArgs=1)
+def enhanceRole(su, player, enhanceLevel=0):
+    # from test.roleStrengthConfig import data as roleStrengthData
+    import random
+    import gearEnhance_gearconst as GEGCD
+    # 等级设置
+    maxRoleLevel = utils.getPlayerMaxLevel()
+    forwardCommand(su,"$setlv", player.id, maxRoleLevel)
+    # 装备获取
+    maxQuality = 4
+    maxClassLevel = GEGCD.datas['equipmentClassLevel']['value']
+    maxEnhanceLevel = len(GEGCD.datas['strengthenPercent']['value'])
+    _, _, items = _gmGetEquipment(player, 0, maxQuality, maxClassLevel, maxEnhanceLevel)
+
+    
+    
+    # 装备改造
+    # 1.铭文 因为gm穿戴有延迟，所以先在包里处理铭文
+    for equipItem in items:
+        if equipItem.equipAttr.glyphSlotNum:
+            affixList = equipItem.equipAttr._genGlyphAffix(2 * len(equipItem.equipAttr.glyphSlotNum))
+            affixIds = [affix.getAffixId() for affix in affixList]
+            for glyphPos in equipItem.equipAttr.glyphSlotNum:
+                affixId1 = affixIds.pop(0) if affixIds else 0
+                affixId2 = affixIds.pop(0) if affixIds else 0
+                player.gmGlyphWashingEquips(equipItem.itemId, glyphPos, affixId1, affixId2)
+            
+    # forwardCommand(su, "$glyphWashingEquipmentsInEquip", player.id)
+    # 2.祝福
+    # 3.穿戴
+    dressSlotIds = list(range(gameconst.BodyEquipSlot.EQUIP_WEAPON_SLOT, gameconst.BodyEquipSlot.EQUIP_BELT_SLOT + 1))
+    player.gmBaseDressEquips(dressSlotIds, maxQuality)
+    # 技能改造 
+    # 1.技能升级
+    update_skills_by_playerLevel(player, maxRoleLevel)
+    # 精灵穿戴
+    #  1.获得道具
+    itemList = getPetItemList()
+    bindType = 0
+    for itemId in itemList:
+        player.gmAddItems(0, itemId, 1, 'gm_cmd:$enhanceRole', bindType)
+    #  2.使用道具
+    import actionContext
+    for itemId in itemList:
+        gridId, it = player.petBag.getItemObjByItemID(itemId, bindType)
+        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'item': it, 'school':player.getAvatarSchool()})
+        player.addLingShouBase(abCtx)
+    #  3.设置出战
+    battleIndex = player.battleIndex
+    allPetIds = list(player.lingShouInfo.pets.keys())
+    slotNum = len(player.lingShouInfo.getBattleListByIndex(battleIndex))
+    slotNum = min(slotNum, len(allPetIds))
+    petIds = random.sample(allPetIds, slotNum)
+    for slotId, petId in enumerate(petIds):
+        player.updateLingShouBattleList(player.id, battleIndex, petId, slotId)
+    #  4.穿戴装备
+    #  5.设置跟随
+    player.cell.setFollowPet(True, petIds[0])
+
+    # 收集系统
+    # 经脉系统
+    player.gmUnlockAllMeridian()
+    return su.onCommandResult(0, 'ok', {})
+
+@gm_cmd('$modifyAttrByLevel', (Player("gbId/Id"),Int('level')), RARG(0), gameconst.CELL, '根据等级设置角色属性', ALLSIDE, GOD_GROUPS)
+def modifyAttrByLevel(su, player, level):
+    from test import roleLevelAttribute
+    
+    roleAttrData = roleLevelAttribute.data.get(str(level), None)
+    if not roleAttrData:
+        return False, '执行失败，等级属性配置不存在'
+    
+    opUUID = KBEngine.genUUID64()
+    src = AAC_AACDD.datas.BONUS_SRC_GM
+    detail = gameclass.AwardDetail(gm_cmd='$setlv', level=level)
+    player.levelUp(min(utils.getPlayerMaxLevel(), level), opUUID, src, detail)
+
+    attrList = []
+    for attrName, attrVal in roleAttrData.items():
+        if attrName not in FDD.datas:
+            continue
+        if player.getProp(attrName) is None:
+            continue
+        delta = attrVal - player.getProp(attrName)  # 根据当前属性差值补足
+        attrList.append(("adj" + attrName[0].upper() + attrName[1:], delta))
+    forwardCommand(su, '$addAwardFightProps', player.id, str(attrList))
+
+@gm_cmd('$setskillLv', (Player("gbId/Id"), Int("skillLevel"),), RARG(0), gameconst.BASE, '设置技能等级', ALLSIDE, GOD_GROUPS, minArgs=0)
+def setskillLv(su, player, skillLevel=0):
+    update_skills_by_playerLevel(player, 0, skillLevel)
+    return True, '执行成功'
+
+@gm_cmd('$addAwardFightProps', (Player("gbId/Id"),Str('attrList')), RARG(0), gameconst.BASE, '增加奖励战斗属性', ALLSIDE, GOD_GROUPS)
+def addAwardFightProps(su, player, attrList):
+    try:
+        attrList = eval(attrList)
+    except Exception as e:
+        return False, f'执行失败，attrList格式错误: {str(e)}'
+    player.addAwardFightProps(attrList, gameconst.SourceType.Item, 0, 0, "_gmAddAwardFightProps")
+    return True, '执行成功'
+
+@gm_cmd('$Alladdbuff', (Int("buffid"),), RALL, gameconst.CELL, '所有人添加buff', ALLSIDE, GOD_GROUPS)
+def Alladdbuff(su, buffid):
+    if buffid:
+        for e in KBEngine.entities.values():
+            if e.className == 'Avatar':
+                e.addBuff(buffid,1,e.id)
+    return True, '执行成功'
+
+@gm_cmd('$AllsetskillLV', (Int("playerLevel"),), RALL, gameconst.BASE, '所有人技能升级', ALLSIDE, GOD_GROUPS, minArgs=0)
+def AllsetskillLV(su, playerLevel=0):
+    for e in KBEngine.entities.values():
+        if e.className == 'Avatar':
+            update_skills_by_playerLevel(e, playerLevel)
+    return True, '执行成功'
+
+@gm_cmd('$replaceMonsterSkill', (Entity('entid'),Str('skillList')), RARG(0), gameconst.CELL, '替换怪物技能', ALLSIDE, GOD_GROUPS)
+def replaceMonsterSkill(su, ent, skillList):
     if not hasattr(ent, 'skillDic'):
-        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 没有 skillDic 方法', {})
+        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 skillDic 方法', {})
     if not hasattr(ent, 'IsMonster'):
-        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 不是怪物', {})
+        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 不是怪物', {})
     newSkillList = ast.literal_eval(skillList)
     ent.changeAllSkill(newSkillList)
-    return su.onCommandResult(0, 'ok,替换成功', ent.skillDic)
+    return su.onCommandResult(0, 'ok,替换成功', {})
 
 @gm_cmd('$getEntBuffinfo', (Player("gbId/Id"),Int('entid')), RARG(0), gameconst.CELL, '获取实体buff信息', ALLSIDE, GOD_GROUPS)
 def getEntBuffinfo(su, player,entid):
@@ -182,16 +450,15 @@ def GMtoolsaddEntBuff(su, entityid, buffId, buffLv,time=-1):
     else:
         return False, '执行失败'
     
-@gm_cmd('$delEntBuff', (Player("gbId/Id"),Int('entid'),Int('buffid')), RARG(0), gameconst.CELL, '删除实体buff', ALLSIDE, GOD_GROUPS)
-def delEntBuff(su, player,entid,buffid):
-    ent = KBEngine.entities.get(entid)
+@gm_cmd('$delEntBuff', (Entity('entid'),Int('buffid')), RARG(0), gameconst.CELL, '删除实体buff', ALLSIDE, GOD_GROUPS)
+def delEntBuff(su, ent,buffid):
     if not hasattr(ent, 'buffDic'):
-        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 没有 buffDic 方法', {})
+        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 buffDic 方法', {})
     ent.removeBuff(buffid)
     return su.onCommandResult(0, 'ok,获取实体buff信息成功', {})
     
-@gm_cmd('$getEntScoreinfo', (Player("gbId/Id"),Str('entlist')), RALL, gameconst.CELL, '获取实体战力信息', ALLSIDE, GOD_GROUPS)
-def getEntScoreinfo(su, player,entlist):
+@gm_cmd('$getEntScoreinfo', (Str('entlist'),), RALL, gameconst.CELL, '获取实体战力信息', ALLSIDE, GOD_GROUPS)
+def getEntScoreinfo(su, entlist):
     entscoredic = {}
     entlist_parsed = ast.literal_eval(entlist)
     for entid in entlist_parsed:
@@ -221,12 +488,11 @@ def getEntScoreinfo(su, player,entlist):
             continue
     return su.onCommandResult(0, 'ok', entscoredic)
 
-@gm_cmd('$getEntBodyEquipmentInfo', (Player("gbId/Id"),Int('entid')), RARG(0), gameconst.CELL, '获取实体装备信息', ALLSIDE, GOD_GROUPS)
-def getEntBodyEquipmentInfo(su, player,entid):
+@gm_cmd('$getEntBodyEquipmentInfo', (Entity('entid'),), RARG(0), gameconst.CELL, '获取实体装备信息', ALLSIDE, GOD_GROUPS)
+def getEntBodyEquipmentInfo(su, ent):
     bodyequipinfo = {}
-    ent = KBEngine.entities.get(entid)
     if not hasattr(ent, 'bodyEquipData'):
-        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", entid)} 没有 bodyEquipData 方法', {})
+        return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 bodyEquipData 方法', {})
     for equipType,equipdata in ent.bodyEquipData.equips_map.items():
         bodyrandomAffixesInfo = {}
         bodyblessInfo = {}
@@ -282,26 +548,26 @@ def getEntBodyEquipmentInfo(su, player,entid):
 
     
 
-@gm_cmd('$unlockAllFunc', (Player("gbId/Id"),), RARG(0), BASE, '解锁所有功能', ALLSIDE, GOD_GROUPS)
-def unlockAllFunc(su, player):
+@gm_cmd('$unlockAllFunc', (Player("gbId/Id"), Int("onlyTask")), RARG(0), BASE, '解锁所有功能', ALLSIDE, GOD_GROUPS, minArgs=1)
+def unlockAllFunc(su, player, onlyTask=0):
     import actionContext
     import tutorConst_newbieStep as TCNSD
     import visible_visible as V_VD
     import tutorConst_triggerGuide as TTGD
     maxLv = 0
+    roleMaxLv = utils.getPlayerMaxLevel()
     needCompleteTasks = set()
     for _, data in V_VD.datas.items():
         lvLimit = data.get('level', 0)
         taskId = data.get('task', 0)
         if taskId > 0 and dataUtils.getTaskData(taskId):
             needCompleteTasks.add(taskId)
-        if lvLimit > maxLv:
+        if lvLimit > maxLv and lvLimit <= roleMaxLv:
             maxLv = lvLimit
-    if maxLv > 0:
+    if maxLv > 0 and onlyTask == 0:
         forwardCommand(su,"$setlv", player.id, maxLv)
     # 整理出根任务及其子任务即可，否则会因为根任务后完成清掉子任务的状态
     finishedRootTasks = []
-    finishedTaskList = []
     for taskId in needCompleteTasks:
         rootTaskId = dataUtils.getRootTaskId(taskId)
         if rootTaskId in finishedRootTasks:
@@ -316,7 +582,6 @@ def unlockAllFunc(su, player):
             if subTaskId in V_VD.taskDic:
                 player.updateVisibleByList(V_VD.taskDic[subTaskId])
         player.taskInfo.tasks.pop(rootTaskId, None)
-        
         player.taskInfo.taskRecordDic[rootTaskId] = gameconst.TaskStat.TASK_STAT_SUBMITTED
         if taskId in V_VD.taskDic:
             player.updateVisibleByList(V_VD.taskDic[taskId])
@@ -330,14 +595,22 @@ def unlockAllFunc(su, player):
 
 
 # 统计掉落 路由那边需要随便选一个stub来固定所在base，不然第二次来取cache的话可能会串
-@gm_cmd('$statDropByDropId', (Int("dropId"), Int("count"), Int("Level"), Int("school"), Int("sex")), RSTUB('PlayerStub'), BASE, 
+@gm_cmd('$statDropByDropId', (Int("rewardId"), Int("count"), Int("Level"), Int("school"), Int("sex"), Int("isMonthCardExpired"), Int("avatarScoreRank"), Int("isCrossServer")), RSTUB('PlayerStub'), BASE, 
     '根据掉落id统计掉落', ALLSIDE, GOD_GROUPS, minArgs=2)
-def statDropByDropId(su, playerStub, dropId, count, level=0, school=0, sex=0):
+def statDropByDropId(su, playerStub, rewardId, count, level=0, school=0, sex=0, isMonthCardExpired=0, avatarScoreRank=0, isCrossServer=0):
     from test import dropTest
     dropUnit = dropTest.DropUnit(su, count)
-    ret, data, process_info = dropUnit.batchGenAward(dropId, level, school, sex)
+    contextVar = {
+        'playerLevel': level,
+        'school': school,
+        'sex': sex,
+        'isMonthCardExpired': isMonthCardExpired,
+        'avatarScoreRank': avatarScoreRank,
+        'isCrossServer': isCrossServer
+    }
+    ret, data, process_info = dropUnit.batchGenAward(rewardId, contextVar)
     if ret:
-        su.onCommandResult(0, 'ok', {'data': {f"{dropId}_{count}_{level}_{school}_{sex}": data}})
+        su.onCommandResult(0, 'ok', {'data': {f"{rewardId}_{count}_{level}_{school}_{sex}_{isMonthCardExpired}_{avatarScoreRank}_{isCrossServer}": data}})
     else:
         su.onCommandResult(0, 'wait', {'msg': data, 'process_info': process_info})
 
@@ -893,6 +1166,28 @@ def glyphWashingEquipments(su, player, equipPos, slotId, itemId, affixId1, affix
         return False, '执行失败'
     return True, '执行成功'
 
+@gm_cmd('$glyphWashingEquipmentsInEquip', (Player("gbId/Id"), Int("equipPos"), Str("affixIds")), RARG(0), gameconst.CELL, '给穿戴的装备洗铭文', ALLSIDE, GOD_GROUPS, minArgs=1)
+def glyphWashingEquipmentsInEquip(su, player, equipPos=0, affixIds=''):
+    equipPos = equipPos or gameconst.BodyEquipSlot.EQUIP_WEAPON_SLOT
+    equipItem = player.bodyEquipData.getEquipItem(equipPos)
+    if not equipItem:
+        return False, '执行失败，指定位置没有装备'
+    # 直接获得的强化装备没有刷新祝福孔位,重新触发一下
+    # enhanceLevel = equipItem.getEnhanceLevel()
+    # player.gmModifyEquipEnhanceLevel(equipPos, enhanceLevel)
+    itemId = equipItem.itemId
+    affixIds = [int(item) for item in affixIds.split(',') if item.isdigit()]
+    if not affixIds:
+        affixList = equipItem.equipAttr._genGlyphAffix(2 * len(equipItem.equipAttr.glyphSlotNum))
+        affixIds = [affix.getAffixId() for affix in affixList]
+    for slotId in equipItem.equipAttr.glyphSlotNum:
+        affixId1 = affixIds.pop(0) if affixIds else 0
+        affixId2 = affixIds.pop(0) if affixIds else 0
+        ret = player.gmGlyphWashingEquips(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, itemId, affixId1, affixId2)
+        if not ret:
+            return False, '执行失败'
+    return True, '执行成功'
+
 @gm_cmd('$openGuildDungeon', (Player("gbId/Id"), Int("openTime"), Int("openType"), Int("openID")), RARG(0), gameconst.CELL, '测试公会boss开启', ALLSIDE, GOD_GROUPS)
 def openGuildDungeon(su, player, openTime, openType, openID):
     ret = player.openGuildDungeon(player.id, openTime, openType, openID)
@@ -1033,17 +1328,11 @@ def MoveWarehouseOrBag(su, player, gridID, itemID, itemNum, moveType):
 def showPetDraw(su, player, petItemList):
     if player is None:
         return False, '执行失败'
-    import itemData_itemData as ID
     import random
     petItemList = [int(item) for item in petItemList.split(',') if item.isdigit()]
     if len(petItemList) == 0:
         return False, '执行失败，精灵石列表不能为空'
-    petItemListValid = []
-    for itemId, itemData in ID.datas.items():
-        itemType = itemData.get('type', None)
-        subType = itemData.get('subType', None)
-        if itemType == gameconst.ItemType.LingShou and subType == gameconst.ItemSubType.LingShouEgg:
-            petItemListValid.append(itemId)
+    petItemListValid = getPetItemList()
     for itemID in petItemList:
         if itemID not in petItemListValid:
             return False, f'执行失败，物品ID {itemID} 不是精灵石'

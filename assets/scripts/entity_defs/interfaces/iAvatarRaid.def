@@ -38,6 +38,12 @@
             <Flags>         OWN_CLIENT      </Flags>
             <Default>       0               </Default>
         </autoRaidMatchTarget>
+
+        <raidmateEntIdInAoiSet>
+            <Type>          PY_SET          </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+            <Default>       set()           </Default>
+        </raidmateEntIdInAoiSet>
     </Properties>
 
     <BaseMethods>
@@ -132,6 +138,7 @@
             <Exposed/>
             <Arg>   RAID_ID     </Arg>
             <Arg>   STRING      </Arg>
+            <Arg>   INT8        </Arg>
         </applyJoinRaidLonely>
 
         <onApplyJoinRaidLonelySucc>
@@ -183,6 +190,7 @@
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   PY_DICT     </Arg>
             <Arg>   PYTHON  </Arg>
+            <Arg>   INT8    </Arg>
         </onJoinPlayerReplyJoinRaidLonely>
 
         <onJoinPlayerReplyJoinRaidWithTeam>
@@ -551,6 +559,13 @@
             <Arg> RAID_ID </Arg>
             <Arg> STRING  </Arg>
         </reqJoinRaid>
+
+        <onRaidAddNewMember>
+            <Arg>   ENTITY_ID    </Arg>
+        </onRaidAddNewMember>
+        <onRaidRemoveMember>
+            <Arg>   ENTITY_ID    </Arg>
+        </onRaidRemoveMember>
         
     </CellMethods>
 
@@ -775,10 +790,11 @@
 
         <onApplyJoinRaidLonelyFailed>
             <Arg>           UINT16       </Arg>
-            <Arg>           RAID_ID       </Arg>
+            <Arg>           RAID_ID      </Arg>
             <Arg>           UINT16       </Arg>
             <Arg>           UINT32       </Arg>
             <Arg>           STRING       </Arg>
+            <Arg>           INT8         </Arg>
         </onApplyJoinRaidLonelyFailed>
     </ClientMethods>
 

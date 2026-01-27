@@ -261,7 +261,7 @@ datas = _tools.RODict({
     }),
     16000095: _tools.RODict({
         "ID": 16000095,
-        "pickTimes": 10
+        "pickTimes": 1
     }),
     16000096: _tools.RODict({
         "ID": 16000096,
@@ -978,7 +978,19 @@ datas = _tools.RODict({
     16006103: _tools.RODict({
         "ID": 16006103,
         "pickTimes": 1
+    }),
+    16006104: _tools.RODict({
+        "ID": 16006104,
+        "pickTimes": 1
+    }),
+    16006105: _tools.RODict({
+        "ID": 16006105,
+        "pickTimes": 1
+    }),
+    16006106: _tools.RODict({
+        "ID": 16006106,
+        "pickTimes": 1
     })
 })
 minKey = 16000002
-maxKey = 16006103
+maxKey = 16006106

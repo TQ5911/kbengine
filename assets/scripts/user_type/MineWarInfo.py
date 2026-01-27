@@ -262,6 +262,9 @@ class MineWarMapVal():
         self.ownerRankList = []
         #
         if self.tempGuildGbId > 0:
+            # 重置归属帮派收益
+            self.currGuildInfo.revenue = int((MBC.datas['mineBattle_incomeCoefficient']['value'] - 1.0) * 100)
+
             if self.guildGbId != self.tempGuildGbId:
                 self.guildGbId = self.tempGuildGbId
                 # 归属帮派不需要该记录了 == todo=

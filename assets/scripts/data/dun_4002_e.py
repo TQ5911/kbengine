@@ -223,7 +223,7 @@ datas ={
       40020074
     ],
     "num": 1,
-    "lv": "1",
+    "lv": "5",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -358,7 +358,6 @@ datas ={
         1043,
         1042,
         1044,
-        1055,
         1054
       ]
     }
@@ -431,26 +430,6 @@ datas ={
       ]
     }
   },
-  "1050": {
-    "type": "createMonster",
-    "entityID": [
-      40020085
-    ],
-    "num": 1,
-    "lv": "1",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1163
-      ]
-    }
-  },
   "1052": {
     "type": "removeMonster",
     "entityID": [
@@ -458,30 +437,14 @@ datas ={
     ],
     "transition": {}
   },
-  "1055": {
-    "type": "delayLoop",
-    "firstDelay": 20.0,
-    "loopDelay": 0.0,
-    "loopNum": 1,
-    "transition": {
-      "finished": [
-        1056
-      ]
-    }
-  },
-  "1056": {
-    "type": "transferToTheDesignatedMap",
-    "mapId": 4001,
-    "posX": 167.0,
-    "posY": 63.0,
-    "posZ": 116.0,
-    "angle": 110,
-    "transition": {}
-  },
   "1054": {
     "type": "castCinemaPlay",
     "cinemaPlayID": 98010018,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1186
+      ]
+    }
   },
   "1064": {
     "type": "createRebornPos",
@@ -1083,7 +1046,6 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1050,
         1109,
         1110,
         1111
@@ -1097,8 +1059,12 @@ datas ={
   },
   "1110": {
     "type": "castCinemaPlay",
-    "cinemaPlayID": 98000001,
-    "transition": {}
+    "cinemaPlayID": 98010021,
+    "transition": {
+      "finished": [
+        1184
+      ]
+    }
   },
   "1111": {
     "type": "taskUndertake",
@@ -1485,6 +1451,55 @@ datas ={
     "buffID": [
       64000071
     ],
+    "transition": {}
+  },
+  "1184": {
+    "type": "jumpCinemaPlay",
+    "cinemaPlayID": 98010021,
+    "exitTime": 26.0,
+    "transition": {
+      "finished": [
+        1185
+      ]
+    }
+  },
+  "1185": {
+    "type": "createMonster",
+    "entityID": [
+      40020085
+    ],
+    "num": 1,
+    "lv": "5",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1163
+      ]
+    }
+  },
+  "1186": {
+    "type": "jumpCinemaPlay",
+    "cinemaPlayID": 98010018,
+    "exitTime": 19.0,
+    "transition": {
+      "finished": [
+        1187
+      ]
+    }
+  },
+  "1187": {
+    "type": "transferToTheDesignatedMap",
+    "mapId": 4001,
+    "posX": 167.0,
+    "posY": 63.0,
+    "posZ": 116.0,
+    "angle": 160,
     "transition": {}
   }
 }

@@ -27,6 +27,7 @@ import iCentralLogin
 import iTimer
 import globalDataCounter
 from Crypto.Cipher import AES
+import LogTrackingMgr
 
 
 class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
@@ -60,6 +61,8 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         # 注册人数同步到 interface
         self.pyAddTimer(60, 60, gametimer.LOGIN_STUB_SYNC_INTERFACE_REGNUM)
+        if gameglobal.isBootstrap:  
+            self.pyAddTimer(1, 30, gametimer.LOGIN_STUB_LOG_TRACKING_PCU)
 
         gameglobal.localBaseApp.initAysncore()
 
@@ -89,6 +92,11 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         elif userData == gametimer.LOGIN_STUB_REG_NUM_CNT:
             self.regNumLog()
+        
+        elif userData == gametimer.LOGIN_STUB_LOG_TRACKING_PCU:
+            LogTrackingMgr.LogTrackingMgr.Server_Pcu(
+                self.getGlobalAccountNum(),
+            )
 
         return
 

@@ -106,9 +106,9 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 22038001,
-        "PosX": 247.4292,
-        "PosY": 110.1097,
-        "PosZ": 211.7785,
+        "PosX": 246.0647,
+        "PosY": 110.0823,
+        "PosZ": 220.8243,
         "Props": {
           "MapEntityType": 0,
           "Num": 0,
@@ -130,13 +130,16 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 22038002,
-        "PosX": 247.3751,
-        "PosY": 110.1097,
-        "PosZ": 211.6716,
+        "PosX": 246.0563,
+        "PosY": 110.0823,
+        "PosZ": 220.82,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 6.0,
-          "Remark": ""
+          "RefreshTimedID": 0,
+          "Remark": "",
+          "ShowInSceneMap": 1
         }
       }
     }

@@ -91,6 +91,16 @@ class ICubeCell(object):
             ERROR_MSG('ICubeCell::setEnterCubeFloor: floor not found: {}'.format(floor))
             return
 
+        _mapId = formula.getMapId(self.spaceNo)
+        _mapData = cube_room.datas.get(_mapId)
+        if not _mapData:
+            ERROR_MSG('ICubeCell::setEnterCubeFloor: map not found: {}'.format(_mapId))
+            return
+
+        if _mapData['type'] != gameconst.CubeRoomType.READY:
+            ERROR_MSG('ICubeCell::setEnterCubeFloor: not ready room: {}'.format(_mapId))
+            return
+
         self.cubeEnterFloor = floor
 
     def _needTimerOn(self, spaceNo):
@@ -132,9 +142,10 @@ class ICubeCell(object):
     @gamedecorator.limitcall(1)
     def enterCube(self, exposed, floor):
         INFO_MSG('ICubeCell::enterCube', floor)
-        self.enterCubeInternal(floor)
+        self.enterCubeInternal()
 
-    def enterCubeInternal(self, floor):
+    def enterCubeInternal(self):
+        _floor = 1
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']):
             self.showMsg(AC_CD.datas['activity_notOpen']['value'], [])
             return
@@ -144,7 +155,7 @@ class ICubeCell(object):
             return
 
         # 这里直接选取大厅作为check能否进入的参考层
-        _mapId = cube_room.floorTypeMapDic[floor][gameconst.CubeRoomType.READY][0]
+        _mapId = cube_room.floorTypeMapDic[_floor][gameconst.CubeRoomType.READY][0]
         _targetSpaceNo = formula.getLineSpaceNo(_mapId, 0)
         if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, _targetSpaceNo):
             return
@@ -154,21 +165,27 @@ class ICubeCell(object):
             return
 
         if self.cubeQuota.leftTime <= 0:
-            self.base.beforeEnterCubeDecrementCnt(_targetSpaceNo, {})
+            self.base.beforeEnterCubeDecrementCnt({})
             return
 
         extra = {'enterCubeType': gameconst.ENTER_CUBE_HAS_LEFT_TIME}
-        gameengine.getCubeStubBySpaceNo(_targetSpaceNo).doEnterCube(
-            self.base, _mapId, self.gbId, extra)
+        gameengine.getCubeStub(_floor).doEnterCubeReady(
+            self.base, self.gbId, extra)
 
     @gamedecorator.checkGameconfigEnable('square')
     @utils.isMyself
     def randomCubeRoom(self, exposed):
+        self.doRandomCubeRoom()
+
+    def doRandomCubeRoom(self):
         if not formula.isCubeSpace(self.spaceNo):
             ERROR_MSG('randomCubeRoom but not in cube', self.spaceNo)
             return
 
-        gameengine.getCubeStubBySpaceNo(self.spaceNo).enterRandomRoom(self.base, self.gbId, {})
+        if not self.cubeEnterFloor:
+            self.cubeEnterFloor = 1
+
+        gameengine.getCubeStub(self.cubeEnterFloor).enterRandomRoom(self.base, self.gbId, {}, self.spaceNo)
 
     def enterCubeByFloorConfig(self):
         INFO_MSG('ICubeCell::enterCubeByFloorConfig: {}'.format(self.cubeEnterFloor))
@@ -440,3 +457,7 @@ class ICubeCell(object):
         self.client.onCubeRoomLeftTime(self.cubeQuota.leftTime)
 
     # ------------------------ props end ------------------------
+
+    # ----------------------- 祈福之间 start ---------------------
+
+    # ----------------------- 祈福之间 end ---------------------

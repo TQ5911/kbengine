@@ -63,7 +63,8 @@ class ApplyJoinInfo(object):
                                           dataDict['level'],
                                           dataDict['school'],
                                           dataDict['sex'],
-                                          dataDict['score'])
+                                          dataDict['score'],
+                                          dataDict['applySource'])
         return teamObj
 
     def getDictFromObj(self, obj):

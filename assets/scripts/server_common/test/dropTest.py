@@ -91,17 +91,22 @@ class DropUnit():
             cb(data)
         QA_DROP_GLOBAL_CACHE[cacheKey]['callbacks'] = []
     
+    def _genCacheKey(self, awardId, contextVar, totalTimes):
+        context_str = "_".join([str(v) for v in sorted(contextVar.values())])
+        cacheKey = "%s_%s_%s" % (awardId, context_str, totalTimes)
+        return cacheKey
+
     # 相同的请求进来会被cache机制拦掉，先做一个callback列表，不过还是会导致时间变长，尽量外部维护
-    def batchGenAward(self, awardId, playerLevel, school, sex, totalTimes=None, clearCache=True, callback=None):
+    def batchGenAward(self, awardId, contextVar, totalTimes=None, clearCache=True, callback=None):
         totalTimes = totalTimes or self.totalTimes
         leftTimes = totalTimes
-        cacheKey = "%s_%s_%s_%s_%s" % (awardId, playerLevel, school, sex, leftTimes)
+        cacheKey = self._genCacheKey(awardId, contextVar, totalTimes)
         ret, cacheStatus, content, process_info = self._getCacheResult(cacheKey, clearCache, callback)
         if cacheStatus != CACHE_STATUS_NOT_FOUND:
             return ret, content, process_info
         # 初始化合并结果列表
         allAward = dropAward.AwardVal()
-        awardCtx = self._genAwardContenxt(awardId, playerLevel, school, sex)
+        awardCtx = self._genAwardContext(contextVar)
         # 定义回调函数，用于分批调用 getAward
         def batch_callback(tid):
             nonlocal allAward, leftTimes
@@ -112,11 +117,10 @@ class DropUnit():
             else:
                 genNum = leftTimes
                 leftTimes = 0
-            INFO_MSG("DropUnit: batchGenAward dropId:%s totalTimes:%s leftTimes:%s genNum:%s" % (awardId, self.totalTimes, leftTimes, genNum))  
+            INFO_MSG("DropUnit: batchGenAward rewardId:%s totalTimes:%s leftTimes:%s genNum:%s" % (awardId, self.totalTimes, leftTimes, genNum))  
             self._update_process_info(cacheKey, genNum)
             if genNum > 0:
                 # 调用 getAward 并将结果添加到合并列表中
-                # 这里假设 awardId=1, num=1, playerLevel=1, school=1 作为示例参数，实际应根据需求修改
                 allAward += dropAward.getAward(awardId, genNum, awardCtx, False)
                 KBEngine.addTimer(1, 0, batch_callback)
             else:
@@ -131,13 +135,17 @@ class DropUnit():
         batch_callback(0)
         return ret, content, process_info
 
-    
-    def _genAwardContenxt(self, awardId, playerLevel, school, sex=0):
-        awardCtx = awardContext.CommonContext(0, {'lv': playerLevel})
-        awardCtx.addContextVar('awardId', awardId)
-        awardCtx.addContextVar('school', school)
-        awardCtx.args.addArg('avatarLv', playerLevel)
-        awardCtx.args.addArg('avatarSex', sex)
+
+    def _genAwardContext(self, contextVar):
+        awardCtx = awardContext.CommonContext(0, {'lv': contextVar.get('playerLevel', 0)})
+        awardCtx.addContextVar('awardId', contextVar.get('awardId', 0))
+        awardCtx.addContextVar('school', contextVar.get('school', 0))
+        awardCtx.args.addArg('avatarLv', contextVar.get('playerLevel', 0))
+        awardCtx.args.addArg('avatarSex', contextVar.get('sex', 0))
+        awardCtx.addContextVar('isMonthCardExpired', contextVar.get('isMonthCardExpired', False))
+        awardCtx.addContextVar('avatarScoreRank', contextVar.get('avatarScoreRank', 0))
+        awardCtx.addContextVar('isCrossServer', contextVar.get('isCrossServer', False))
+
         return awardCtx
 
     # toBriefList 里每个实例会占用一行，还是得统计一下
@@ -185,18 +193,21 @@ class DropUnit():
             EntityID = spawnData.get('EntityID', 0)
             Name = spawnData.get('DisplayName', '')
             props = spawnData.get('Props', {})
-            entityName = f"{Name}({EntityID})"
+            
             goCount = False
             rewardIDs = []
             Level = 0
             if ClassName == 'Monster':
                 Level = props.get('Level', 0)
                 rewardIDs = CBD.datas.get(EntityID, {}).get('rewardID', ())
+                Name = Name or CBD.datas.get(EntityID, {}).get('name', '')
                 goCount = True
             elif ClassName == 'Collection':
                 rewardID = NPD.datas.get(EntityID, {}).get('rewardID', 0)
+                Name = Name or NPD.datas.get(EntityID, {}).get('name', '')
                 rewardIDs = [rewardID]
                 goCount = True
+            entityName = f"{Name}({EntityID})"
             if goCount:
                 outputByDun[dunStr].append({
                     'className': ClassName,
@@ -290,7 +301,8 @@ class DropUnit():
                         process_data['callback'](process_data['output'])
 
             # 直接调用 batchGenAward, 不清理缓存
-            self.batchGenAward(rewardId, Level, school, 0, process_data['num'], clearCache=False, callback=inner_callback)
+
+            self.batchGenAward(rewardId, {"awardId": rewardId, "level": Level, "school": school, "sex": 0}, process_data['num'], clearCache=False, callback=inner_callback)
 
         process_data['current_index'] = end_index
         if end_index < len(count_data_list):
@@ -305,6 +317,7 @@ class DropUnit():
         file_path = '/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/output.json'
         INFO_MSG(f"DropUnit: writeToJsonFile {file_path}")
         # 先判断一下目录是否存在，不存在就不写入了
+        import os
         if not os.path.exists(os.path.dirname(file_path)):
             return
         with open(file_path, 'w', encoding='utf-8') as file:
@@ -313,7 +326,7 @@ class DropUnit():
 
 def doTest():
     dropUnit = DropUnit(None, 10000)
-    dropUnit.batchGenAward(40020261, 1, 1003, 0)
+    dropUnit.batchGenAward(40020261, {'awardId': 40020261, 'playerLevel': 1, 'school': 1003, 'sex': 0})
     INFO_MSG("DropUnit: doTest")
 
 

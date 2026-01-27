@@ -5,13 +5,13 @@ import gameconst
 
 class ImpRaidDungeon(object):
     def createAndEnterRaidDungeonMemberPreCheck(self, srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData):
-        DEBUG_MSG("createAndEnterRaidDungeonMemberPreCheck 1 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
+        INFO_MSG("createAndEnterRaidDungeonMemberPreCheck 1 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
         dungeonPlayMode = extraData['dungeonPlayMode']
         errno = gameconst.RaidDungeonErrno.RAIDDUN_REWARD_NUM_CHECK_FAIL
         if dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF:
-            DEBUG_MSG("createAndEnterRaidDungeonMemberPreCheck 2 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
+            INFO_MSG("createAndEnterRaidDungeonMemberPreCheck 2 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
             if self.chiefInfo.isCanTakeReward():
-                DEBUG_MSG("createAndEnterRaidDungeonMemberPreCheck 3 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
+                INFO_MSG("createAndEnterRaidDungeonMemberPreCheck 3 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
                 errno = gameconst.RaidDungeonErrno.RAIDDUN_OK
         extraData.pop('dungeonPlayMode', None)
         srcPlayerBox.cell.onCreateAndEnterRaidDungeonAllMemberPreCheck(

@@ -57,7 +57,7 @@ class DungeonStubMixin(object):
         _team = self.teamDic[teamUUID]
 
         def _filter(fVal):
-            if not fVal.isEmptyDungeonSpace():
+            if fVal.hasAvatar():
                 return fVal
 
         _foundersNum = len(list(filter(_filter, _team.teamDungeonDic[dungeonNo].founders.values())))
@@ -131,7 +131,7 @@ class DungeonStubMixin(object):
     def onCreateTeamDungeon(self, teamUUID, dungeonNo, spaceNo, spaceUUID, playerBox, extra):
         self.addTeamDungeonSpace(teamUUID, dungeonNo, spaceNo, spaceUUID)
         if 'createAndEnter' in extra and extra['createAndEnter']:
-            DEBUG_MSG('onCreateTeamDungeon::auto enter space', dungeonNo, spaceNo)
+            INFO_MSG('onCreateTeamDungeon::auto enter space', dungeonNo, spaceNo)
             playerGBID = extra['createAndEnter']
             self._enterTeamDungeon(playerBox, playerGBID, teamUUID, dungeonNo, extra)
 
@@ -148,12 +148,12 @@ class DungeonStubMixin(object):
                 self._enterTeamDungeon(_tVal.playerBox, _tGbId, teamUUID, dungeonNo, extra)
 
     def enterTeamDungeon(self, box, gbId, teamUUID, dungeonNo, extra):
-        DEBUG_MSG('teamStub:enterTeamDungeon::', teamUUID, dungeonNo, extra)
+        INFO_MSG('teamStub:enterTeamDungeon::', teamUUID, dungeonNo, extra)
         extra = extra or {}
         self._enterTeamDungeon(box, gbId, teamUUID, dungeonNo, extra)
 
     def enterTeamCrusadeDungeon(self, box, gbId, teamUUID, dungeonNo, extra):
-        DEBUG_MSG('teamStub:enterTeamCrusadeDungeon::', gbId, dungeonNo, extra)
+        INFO_MSG('teamStub:enterTeamCrusadeDungeon::', gbId, dungeonNo, extra)
         self._enterTeamDungeon(box, gbId, teamUUID, dungeonNo, extra)
 
     def enterTeamDungeonDirectly(self, box, gbId, teamUUID, dungeonNo, extra):
@@ -170,7 +170,7 @@ class DungeonStubMixin(object):
         self._enterTeamDungeonDirectly(box, gbId, teamUUID, dungeonNo, extra)
 
     def _enterTeamDungeonDirectly(self, box, gbId, teamUUID, dungeonNo, extra):
-        DEBUG_MSG("_enterTeamDungeonDirectly  ", gbId, teamUUID, dungeonNo, extra)
+        INFO_MSG("_enterTeamDungeonDirectly  ", gbId, teamUUID, dungeonNo, extra)
         if teamUUID not in self.teamDic:
             return
 
@@ -208,12 +208,12 @@ class DungeonStubMixin(object):
         self.enterTeamDungeon(box, gbId, teamUUID, dungeonNo, extra)
 
     def _enterTeamDungeon(self, box, gbId, teamUUID, dungeonNo, extraInfo):
-        DEBUG_MSG("_enterTeamDungeon ", box, gbId, teamUUID, dungeonNo, extraInfo)
+        INFO_MSG("_enterTeamDungeon ", box, gbId, teamUUID, dungeonNo, extraInfo)
         src = extraInfo.get('src')
         _gmEnter = True if src and src.srcId == gameconst.DungeonSrcEnum.FROM_CLIENT_GM else False
 
         if teamUUID not in self.teamDic:
-            DEBUG_MSG("_enterTeamDungeon ... teamUUID is existed !!!")
+            INFO_MSG("_enterTeamDungeon ... teamUUID is existed !!!")
             return
 
         _team = self.teamDic[teamUUID]
@@ -225,7 +225,7 @@ class DungeonStubMixin(object):
             if _gmEnter:
                 extraInfo.update({'createAndEnter': gbId})
                 self.createTeamDungeon(box, gbId, dungeonNo, teamUUID, extraInfo)
-                DEBUG_MSG('gm create and enter team dungeon: {}'.format(dungeonNo))
+                INFO_MSG('gm create and enter team dungeon: {}'.format(dungeonNo))
                 return
 
             if _team.teamCaptainGbId != gbId:
@@ -330,7 +330,7 @@ class DungeonStubMixin(object):
             return
 
         for gbId, founderVal in teamDungeonSpaceVal.founders.items():
-            if not founderVal.isEmptyDungeonSpace():
+            if founderVal.hasAvatar():
                 break
         else:
             dungeonStub = gameengine.getDungeonStubByDungeonNo(
@@ -338,27 +338,6 @@ class DungeonStubMixin(object):
             self._kickoutPlayer(teamUUID, dungeonNo)
             dungeonStub.destoryDungeonSpace(
                 teamDungeonSpaceVal.spaceNo, teamDungeonSpaceVal.spaceUUID, 'noPlayer')
-
-    def TeamDungeonCompletedAfter(self, teamUUID, dungeonNo, spaceNo,win):
-
-        if teamUUID not in self.teamDic:
-            return
-        _team = self.teamDic[teamUUID]
-        if dungeonNo not in _team.teamDungeonDic:
-            return
-        if win == False:
-            return
-        teamDungeonSpaceVal = _team.teamDungeonDic[dungeonNo]
-
-        if teamDungeonSpaceVal.spaceNo != spaceNo:
-            ERROR_MSG('TeamDungeonCompleted::spaceNo not match, this: {}, got: {}'.format(
-                teamDungeonSpaceVal.spaceNo, spaceNo))
-            return
-
-        for _tGbId in _team.onlineMembers():
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [_tGbId], "completeGuildTask", (gameconst.GuildTaskType.COMPLETEMAP, TDC_CFG.datas['teamDunChallengeActID']['value'],1),
-                None, '', ())
 
     def destroyTeamDungeonDelay(self, teamUUID, dungeonNo, spaceNo, reason, extra):
         if teamUUID not in self.teamDic:
@@ -407,7 +386,7 @@ class DungeonStubMixin(object):
         src = dungeonSrc.KickoutFromDungeon(kickReason=gameconst.DungeonSrcKickReason.TIMEOUT)
         for gbId, fVal in founders.items():
             base = fVal.playerBox
-            if not fVal.isEmptyDungeonSpace() and base and not utils.isBoxOffline(base) and fVal.hasAvatar() and base.cell:
+            if fVal.hasAvatar() and base and not utils.isBoxOffline(base) and base.cell:
                 base.cell.selfLeaveTeamDungeon(src)
             else:
                 _needDestoryGBIDs.append(gbId)
@@ -416,7 +395,7 @@ class DungeonStubMixin(object):
             founders.destoryFounder(i)
 
     def onDestroyTeamDungeon(self, teamUUID, dungeonNo, spaceNo, spaceUUID):
-        DEBUG_MSG('onDestroyTeamDungeon:: {} {}'.format(teamUUID, dungeonNo), spaceNo, spaceUUID)
+        INFO_MSG('onDestroyTeamDungeon:: {} {}'.format(teamUUID, dungeonNo), spaceNo, spaceUUID)
         _team = self.teamDic[teamUUID]
         _team.removeDungeonSpaceCache(dungeonNo, spaceNo, spaceUUID)
         self.teamDungeonFinished(teamUUID)
@@ -432,7 +411,7 @@ class DungeonStubMixin(object):
         _team.addDungeonSpaceCache(dungeonNo, spaceNo, spaceUUID)
 
     def onTeammateBeConfirmedTimeout(self, box, gbId, teamUUID, dungeonNo, extra):
-        DEBUG_MSG("onTeammateBeConfirmedTimeout::", box, gbId, teamUUID, dungeonNo, extra)
+        INFO_MSG("onTeammateBeConfirmedTimeout::", box, gbId, teamUUID, dungeonNo, extra)
         if teamUUID not in self.teamDic:
             WARNING_MSG("onTeammateBeConfirmedTimeout:: teamUUID not found", teamUUID, dungeonNo)
             return
@@ -459,7 +438,7 @@ class DungeonStubMixin(object):
 class RaidMixin(object):
 
     def createRaidWithTeam(self, srcPlayerBox, srcPlayerGBID, teamUUID, raidUUID, capacity, extraProps):
-        DEBUG_MSG('createRaidWithTeam::', srcPlayerBox, srcPlayerGBID, teamUUID, raidUUID, capacity, extraProps)
+        INFO_MSG('createRaidWithTeam::', srcPlayerBox, srcPlayerGBID, teamUUID, raidUUID, capacity, extraProps)
         if extraProps is None:
             extraProps = {}
 
@@ -511,7 +490,7 @@ class RaidMixin(object):
                             continue
                         gameengine.getRaidStub(raidUUID).reqAddRaidMarkMember(raidUUID, None, pDic['type'], pDic['index'], pDic['name'], pDic['gbId'], pDic['entId'], pDic.get('pos'), ent)
             except Exception as e:
-                DEBUG_MSG("addTeamMarkDataFromTeam::error", e)
+                INFO_MSG("addTeamMarkDataFromTeam::error", e)
 
             return None, gameconst.RaidErrno.RAID_OK
 
@@ -523,7 +502,7 @@ class RaidMixin(object):
         self._disbandTeam(teamUUID)
 
     def applyJoinRaidWithTeam(self, srcPlayerBox, srcPlayerGBID, teamUUID, raidUUID, extraProps):
-        DEBUG_MSG('applyJoinRaidWithTeam::', srcPlayerBox, srcPlayerGBID, teamUUID, raidUUID, extraProps)
+        INFO_MSG('applyJoinRaidWithTeam::', srcPlayerBox, srcPlayerGBID, teamUUID, raidUUID, extraProps)
         if extraProps is None:
             extraProps = {}
 
@@ -563,7 +542,7 @@ class RaidMixin(object):
 
     def replyJoinRaidWithTeam(self, srcPlayerBox, srcPlayerGBID, raidUUID,
                               joinedPlayerGBID, teamUUID, joinMemberList, extraProps):
-        DEBUG_MSG('replyJoinRaidWithTeam::', srcPlayerBox, srcPlayerGBID, raidUUID, joinedPlayerGBID,
+        INFO_MSG('replyJoinRaidWithTeam::', srcPlayerBox, srcPlayerGBID, raidUUID, joinedPlayerGBID,
                   teamUUID, joinMemberList, extraProps)
         if extraProps is None:
             extraProps = {}
@@ -597,7 +576,7 @@ class RaidMixin(object):
     def raidApplyInvitedRaid(self, raidTarget, srcPlayerBox, srcPlayerGBID, raidUUID, srcPlayerName,
                              raidLeaderGBID, raidLeaderName, invitedPlayerGBID, invitedPlayerName,
                              invitedTeamUUID, extraProps):
-        DEBUG_MSG("raidApplyInvitedRaid::", raidTarget, srcPlayerBox, srcPlayerGBID, raidUUID, srcPlayerName,
+        INFO_MSG("raidApplyInvitedRaid::", raidTarget, srcPlayerBox, srcPlayerGBID, raidUUID, srcPlayerName,
                    raidLeaderGBID, raidLeaderName, invitedPlayerGBID, invitedPlayerName,
                    invitedTeamUUID, extraProps)
 
@@ -633,7 +612,7 @@ class RaidMixin(object):
             self, 'onPlayerIsOffline', (srcPlayerGBID, invitedPlayerName))
 
     def onReplyInviteRaidWithTeamFail(self, playerBox, playerGBID, raidId, srcPlayerGBID, teamId, errno, extra):
-        DEBUG_MSG("onReplyInviteRaidWithTeamFail::", playerBox, playerGBID, raidId, srcPlayerGBID, teamId, errno, extra)
+        INFO_MSG("onReplyInviteRaidWithTeamFail::", playerBox, playerGBID, raidId, srcPlayerGBID, teamId, errno, extra)
         if teamId not in self.teamDic:
             WARNING_MSG('onReplyInviteRaidWithTeamFail:: teamId error', teamId)
             return
@@ -711,9 +690,10 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         picFrameId = teamPlayerInfoDic['picFrameId']
         score = teamPlayerInfoDic['score']
         openId = teamPlayerInfoDic['openId']
+        joinType = teamPlayerInfoDic['joinType']
 
         return self.teamDic[teamId].addMember(
-            gbId, box, playerName, level, school, sex, picFrameId, score=score, openId=openId)
+            gbId, box, playerName, level, school, sex, picFrameId, score=score, openId=openId, joinType=joinType)
 
     def isCanCreateTeam(self, teamId):
         if teamId in self.teamDic:
@@ -743,9 +723,8 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         teamVal.recruitInfo = recruitInfo
         teamVal.password = password
         teamVal.isAutoExpedition = isAutoExpedition
-
         teamVal.addMember(gbId, box, playerName, level, school, sex, picFrameId, False, True, score=score,
-                          mountState=0, isDead=False, openId=openId)
+                          mountState=0, isDead=False, openId=openId, joinType = gameconst.TeamJoinType.CREATE)
 
         self.teamDic[teamId] = teamVal
 
@@ -785,13 +764,13 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                     return
             teamVal.autoStartTimer = self._callback(5, 'checkAutoStart', (teamID,), gametimer.TIMER_TAG_TEAM_AUTO_START)
 
-    def isCanApplyJoinTeam(self, box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp):
+    def isCanApplyJoinTeam(self, box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp, applySource):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
-            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_IS_NOT_EXIST, 0, 0, 0, '')
+            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_IS_NOT_EXIST, 0, 0, 0, '', applySource)
             return False
         if self.checkInDungeon(teamId):
-            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_IS_IN_DUNGEON, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_IS_IN_DUNGEON, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
             return False
         if teamVal.isTeamFull():
             if box.client:
@@ -802,28 +781,28 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 box.onMessagePre(TMMCD.datas['applyFullMsg']['value'], [])
             return False
         if level < teamVal.teamMinLv:
-            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_LEVEL_IS_NOT_ENOUGH, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_LEVEL_IS_NOT_ENOUGH, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
             return False
         if score < teamVal.teamMinScore:
-            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_SCORE_IS_NOT_ENOUGH, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+            box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_SCORE_IS_NOT_ENOUGH, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
             return False
 
         if not ignorePassword:
             if len(teamVal.password) > 0:
                 if len(password) == 0:
-                    box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_NEED_PASSWORD, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+                    box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_NEED_PASSWORD, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
                     return False
                 if password != teamVal.password:
-                    box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_WRONG_PASSWORD, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+                    box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_WRONG_PASSWORD, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
                     return False
 
         if gameconfig.isCrossServer():
             if siegeWarCamp != teamVal.siegeWarCamp and siegeWarCamp != 0 and teamVal.siegeWarCamp != 0:
                 if box.client:
                     box.onMessagePre(MMD.datas.teamMatch_differentFactions, [])
-                box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_FAIL, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+                box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_FAIL, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
                 return False
-        box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_OK, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password)
+        box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_OK, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
         return True
 
     def isCanJoinTeam(self, box, teamId, gbId):
@@ -842,8 +821,8 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return False
         return True
 
-    def _applyJoinTeam(self, teamId, teamPlayerInfoDic):
-        INFO_MSG('_applyJoinTeam', teamId, teamPlayerInfoDic)
+    def _applyJoinTeam(self, teamId, teamPlayerInfoDic, applySource):
+        INFO_MSG('_applyJoinTeam', teamId, teamPlayerInfoDic, applySource)
         teamVal = self.getTeamByTeamId(teamId)
         captainGbId = teamVal.getCaptainGbId()
 
@@ -856,18 +835,13 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         level = teamPlayerInfoDic['level']
         score = teamPlayerInfoDic['score']
-        # if teamVal.isTeamInAutoMatch() and teamVal.teamMinLv <= level and score >= teamVal.teamMinScore:
-        #     #自动匹配中的队伍，如果满足匹配等级，直接入队
-        #     if self.addTeamMember(teamId, teamPlayerInfoDic):
-        #         teamVal.getCaptainBox().cell.onMemJoinTeamByAutoMatch(teamPlayerInfoDic['gbId'])
-        #     return
 
         playerName = teamPlayerInfoDic['playerName']
         school = teamPlayerInfoDic['school']
         sex = teamPlayerInfoDic['sex']
         score = teamPlayerInfoDic['score']
 
-        teamVal.addApplyJoinPlayer(gbId, playerName, level, school, sex, score=score)
+        teamVal.addApplyJoinPlayer(gbId, playerName, level, school, sex, applySource, score=score)
 
         box.cell.onApplyJoinTeam(teamId, teamVal.teamCaptainGbId)
 
@@ -877,15 +851,15 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         self._callback(60, 'notifyRemoveApplyInfo', (teamId, gbId), gametimer.TIMER_TAG_NOTIFY_REMOVE_APPLY_INFO)
 
-    def applyJoinTeam(self, teamId, password, teamPlayerInfoDic, ignorePassword):
+    def applyJoinTeam(self, teamId, password, teamPlayerInfoDic, ignorePassword, applySource):
         gbId = teamPlayerInfoDic['gbId']
         box = teamPlayerInfoDic['box']
         level = teamPlayerInfoDic['level']
         score = teamPlayerInfoDic['score']
         siegeWarCamp = teamPlayerInfoDic['siegeWarCamp']
 
-        if self.isCanApplyJoinTeam(box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp):
-            self._applyJoinTeam(teamId, teamPlayerInfoDic)
+        if self.isCanApplyJoinTeam(box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp, applySource):
+            self._applyJoinTeam(teamId, teamPlayerInfoDic, applySource)
 
 
     def replyJoinTeam(self, box, captainGbId, teamId, gbId, bAgree):
@@ -905,7 +879,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             jVal = team.getApplyJoinPlayerInfo(gbId)
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell([gbId], 'onReplyJoinTeam',
                                                                   (captainGbId, teamId, gbId, jVal.playerName,
-                                                                   jVal.level, jVal.school), self, 'onPlayerIsOffline',
+                                                                   jVal.level, jVal.school, jVal.applySource), self, 'onPlayerIsOffline',
                                                                   (captainGbId, jVal.playerName))
         self.removeApplyJoinPlayer(teamId, gbId)
 
@@ -935,7 +909,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def _disbandTeam(self, teamId):
         teamVal = self.getTeamByTeamId(teamId)
-        DEBUG_MSG('_disbandTeam:', teamId, teamVal.teamPlayerDic.keys())
+        INFO_MSG('_disbandTeam:', teamId, teamVal.teamPlayerDic.keys())
         for gbId, teamPlayerVal in teamVal.teamPlayerDic.items():
             box = teamPlayerVal.playerBox
             if box and box.cell:
@@ -961,6 +935,10 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if teamVal.guildBanditId:
             gameengine.getGlobalBase('GuildStub').guildBanditReset(teamVal.guildBanditGuild, teamVal.guildBanditId)
 
+        for dungeonNo, dunVal in teamVal.teamDungeonDic.items():
+            stub = gameengine.getDungeonStubBySpaceNo(dunVal.spaceNo)
+            stub.completeTeamDungeon(dunVal.spaceNo, teamId, False, 0, gameconst.DunegonCompleteReasonType.LEAVE)
+            WARNING_MSG('doDisbandRaid:: _disbandTeam and complete dungeon in force ', dungeonNo, dunVal)
         return True
 
     def disbandTeam(self, box, gbId, teamId):
@@ -1018,7 +996,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if srcPlayerGbId == teamVal.getCaptainGbId():
                 self.addTeamMember(srcTeamId, teamPlayerInfoDic)
             else:
-                self.applyJoinTeam(srcTeamId, '', teamPlayerInfoDic, True)
+                self.applyJoinTeam(srcTeamId, '', teamPlayerInfoDic, True, gameconst.ApplySource.RECRUIT)
 
     def isCanLeaveTeam(self, teamId, gbId):
         if not teamId:
@@ -1064,10 +1042,9 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if not self.isCanLeaveTeam(teamId, gbId):
             ret = False
         else:
-            if self.checkInDungeon(teamId):
-                box.cell.leaveTeamDungeon()
-            else:
-                self._leaveTeam(box, teamId, gbId, notifySelf)
+            self._leaveTeam(box, teamId, gbId, notifySelf)
+            # if self.checkInDungeon(teamId):
+            #     box.cell.leaveTeamDungeonCell()
 
     def isCanKickTeamMember(self, teamId, gbId, kickGbId):
         teamVal = self.getTeamByTeamId(teamId)
@@ -1221,7 +1198,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             extra['teamUUID'] = teamId
             extra['isLeader'] = teamVal.getCaptainGbId() == gbId
 
-        gameengine.getLineStub(lineType).autoSwitchLine(box, gbId, 0, extra, 'onLogonGetLineNo', (lineType,))
+        gameengine.getLineStub(lineType).autoSwitchLine(box, gbId, 0, extra, 'onLogonGetLineNo', (lineType, extra))
 
     def logonEnterMyHome(self, box, gbId, teamId, extra):
         self.notifyPlayerLogon(box, gbId, teamId, False)
@@ -1278,8 +1255,6 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             WARNING_MSG("askOneMemberFollow:: player not have client", teamId, gbId, askGbId)
             return
 
-        memberVal.playerBox.cell.onAskedFollowCaptain()
-
     def cancelAllMemberFollow(self, box, teamId, gbId):
         teamVal = self.getTeamByTeamId(teamId)
         if gbId != teamVal.getCaptainGbId():
@@ -1291,7 +1266,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def followTeamCaptain(self, box, teamId, gbId):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
-            DEBUG_MSG('followTeamCaptain, team already destroyed', teamId, gbId)
+            INFO_MSG('followTeamCaptain, team already destroyed', teamId, gbId)
             return
         if gbId == teamVal.getCaptainGbId():
             ERROR_MSG('followTeamCaptain is captain', teamId, gbId)
@@ -1306,14 +1281,14 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def cancelFollowTeamCaptain(self, box, teamId, gbId):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
-            DEBUG_MSG('cancelFollowTeamCaptain, team already destroyed', teamId, gbId)
+            INFO_MSG('cancelFollowTeamCaptain, team already destroyed', teamId, gbId)
             return
         if gbId == teamVal.getCaptainGbId():
-            DEBUG_MSG('cancelFollowTeamCaptain is captain', teamId, gbId)
+            INFO_MSG('cancelFollowTeamCaptain is captain', teamId, gbId)
             return
 
         if not teamVal.isInTeam(gbId):
-            DEBUG_MSG('cancelFollowTeamCaptain not in team', gbId)
+            INFO_MSG('cancelFollowTeamCaptain not in team', gbId)
             return
 
         teamVal.onMemberFollowChanged(gbId, False)
@@ -1333,7 +1308,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         teamVal.updateMemberVolatileAttr(gbId, attrDic)
 
     def _onCaptainOffline(self, teamId, gbId):
-            DEBUG_MSG('_onCaptainOffline::', teamId, gbId)
+            INFO_MSG('_onCaptainOffline::', teamId, gbId)
             teamVal = self.getTeamByTeamId(teamId)
             if not teamVal or not teamVal.isInTeam(gbId):
                 WARNING_MSG('_onCaptainOffline not in team', gbId)
@@ -1387,11 +1362,11 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.getTeamByTeamId(teamId).teamFollowersCellDo(func, args)
 
     def isAllMembersFollowDo(self, teamId, box, func, args):
-        DEBUG_MSG('in isAllMembersFollowDo:', teamId, box, func, args)
+        INFO_MSG('in isAllMembersFollowDo:', teamId, box, func, args)
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal.isAllMembersFollw():
             return
-        DEBUG_MSG('     in isAllMembersFollowDo:', teamVal)
+        INFO_MSG('     in isAllMembersFollowDo:', teamVal)
         if hasattr(box, func):
             getattr(box, func)(*args)
 
@@ -1402,12 +1377,12 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         if teamVal.getCaptainGbId()!=playerGbId:
             playerBox.client and playerBox.onMessagePre(MMD.datas.PK_notCaptain, [])
-            DEBUG_MSG('zt: requestStartTeamDuel: not camptain', teamUUID, playerBox.id, playerGbId, targetTeamUUID, targetPlayerBox.id, targetGbId, isConfirmed)
+            INFO_MSG('zt: requestStartTeamDuel: not camptain', teamUUID, playerBox.id, playerGbId, targetTeamUUID, targetPlayerBox.id, targetGbId, isConfirmed)
             return
 
         if teamVal.teamDuelData.hasTeamDuel():
             playerBox.client and playerBox.onMessagePre(MMD.datas.PK_teamPVPNotOver, [])
-            DEBUG_MSG('zt: requestStartTeamDuel: has duel', teamUUID, playerBox.id, playerGbId, targetTeamUUID, targetPlayerBox.id, targetGbId, isConfirmed)
+            INFO_MSG('zt: requestStartTeamDuel: has duel', teamUUID, playerBox.id, playerGbId, targetTeamUUID, targetPlayerBox.id, targetGbId, isConfirmed)
             return
 
         teamName = ''
@@ -1419,12 +1394,12 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return
 
         if teamVal.getCaptainGbId()!=playerGbId:
-            DEBUG_MSG('zt: beRequestedStartTeamDuel: not camptain', fromTeamUUID, fromPlayerBox.id, fromPlayerGbId, teamUUID, playerBox.id, playerGbId, isConfirmed)
+            INFO_MSG('zt: beRequestedStartTeamDuel: not camptain', fromTeamUUID, fromPlayerBox.id, fromPlayerGbId, teamUUID, playerBox.id, playerGbId, isConfirmed)
             fromPlayerBox.client and fromPlayerBox.onMessagePre(MMD.datas.PK_targetNotCaptain, ['对方'])
             return
 
         if teamVal.teamDuelData.hasTeamDuel():
-            DEBUG_MSG('zt: beRequestedStartTeamDuel: has duel', fromTeamUUID, fromPlayerBox.id, fromPlayerGbId, teamUUID, playerBox.id, playerGbId, isConfirmed)
+            INFO_MSG('zt: beRequestedStartTeamDuel: has duel', fromTeamUUID, fromPlayerBox.id, fromPlayerGbId, teamUUID, playerBox.id, playerGbId, isConfirmed)
             fromPlayerBox.client and fromPlayerBox.onMessagePre(MMD.datas.PK_targetTeamPVPNotOver, ['对方'])
             return
 
@@ -1558,7 +1533,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         teamVal.setGuildBandit(0, 0)
 
     def teamPrepareAutoMatch(self, teamId, guildUUID):
-        DEBUG_MSG('in teamPrepareAutoMatch:', teamId, guildUUID)
+        INFO_MSG('in teamPrepareAutoMatch:', teamId, guildUUID)
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
             return
@@ -1571,7 +1546,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         teamVal.startAutoMatch(guildUUID)
 
     def teamPrepareStopAutoMatch(self, teamId):
-        DEBUG_MSG('in teamPrepareStopAutoMatch:', teamId)
+        INFO_MSG('in teamPrepareStopAutoMatch:', teamId)
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
             return
@@ -1579,16 +1554,16 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def newPlayerMatched(self, teamId, newPlayerDic):
         teamVal = self.getTeamByTeamId(teamId)
-        DEBUG_MSG('in newPlayerMatched:', teamId, newPlayerDic, teamVal)
+        INFO_MSG('in newPlayerMatched:', teamId, newPlayerDic, teamVal)
         if not teamVal:
             return
-
+        newPlayerDic['joinType'] = gameconst.TeamJoinType.MATCH
         if self.addTeamMember(teamId, newPlayerDic):
             teamVal.getCaptainBox().cell.onMemJoinTeamByAutoMatch(newPlayerDic['gbId'])
         return
 
     def onTeamAutoMatchTimeout(self, teamId):
-        DEBUG_MSG('in onTeamAutoMatchTimeout:', teamId)
+        INFO_MSG('in onTeamAutoMatchTimeout:', teamId)
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
             return
@@ -1627,7 +1602,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         pass
 
     def getTeamList(self, box, teamTarget, checkTime, checkTeamstubNum, sendTeamNum, startTeamStubIndex):
-        DEBUG_MSG('in getTeamList:', teamTarget, checkTime, checkTeamstubNum, sendTeamNum, startTeamStubIndex)
+        INFO_MSG('in getTeamList:', teamTarget, checkTime, checkTeamstubNum, sendTeamNum, startTeamStubIndex)
         teamList = []
         # 根据队伍的创建时间排序，最晚创建的队伍在最前面
         releaseNum = gameconst.TEAM_LIST_MAX_NUM - sendTeamNum
@@ -1658,7 +1633,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return
 
     def killMonster(self, teamId, spaceNo, monsterId, monsterUID, killerGBID):
-        DEBUG_MSG('huyf: killMonster', teamId, spaceNo, monsterId, monsterUID, killerGBID)
+        INFO_MSG('huyf: killMonster', teamId, spaceNo, monsterId, monsterUID, killerGBID)
         # teamVal = self.getTeamByTeamId(teamId)
         # if not teamVal:
         #     WARNING_MSG('not find teamVal', teamId)
@@ -1677,7 +1652,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return
 
     def updateTeamSilentFlag(self, teamId, isSilent):
-        DEBUG_MSG('updateTeamSilentFlag:', teamId, isSilent)
+        INFO_MSG('updateTeamSilentFlag:', teamId, isSilent)
         teamVal = self.getTeamByTeamId(teamId)
         if not teamId:
             WARNING_MSG('not found teamVal:', teamId)
@@ -1702,7 +1677,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     # --------------------------------------------------------------------
     # TEAM MICS
     def switchTeamMicsMode(self, srcPlayerBox, srcPlayerGBID, teamId, mode, extraProps):
-        DEBUG_MSG("switchTeamMicsMode::", srcPlayerBox, srcPlayerGBID, teamId, mode, extraProps)
+        INFO_MSG("switchTeamMicsMode::", srcPlayerBox, srcPlayerGBID, teamId, mode, extraProps)
         teamVal, err = self._switchTeamMicsMode(srcPlayerBox, srcPlayerGBID, teamId, mode, extraProps)
         if err:
             WARNING_MSG('switchTeamMicsMode:: failed, {}'.format(err))
@@ -1718,7 +1693,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return teamVal.switchTeamMiscMode(srcPlayerGBID, mode, extraProps, toClient=True)
 
     def turnOnTeamMics(self, srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps):
-        DEBUG_MSG("turnOnTeamMics::", srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps)
+        INFO_MSG("turnOnTeamMics::", srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps)
         _, err = self._turnOnTeamMics(srcPlayerBox, srcPlayerGBID, teamId, playerGBID)
         if err:
             WARNING_MSG('turnOnTeamMics:: failed, {}'.format(err))
@@ -1731,7 +1706,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return teamVal.turnOnTeamMemberMics(srcPlayerGBID, playerGBID, toClient=True)
 
     def turnOffTeamMics(self, srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps):
-        DEBUG_MSG("turnOffTeamMics::", srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps)
+        INFO_MSG("turnOffTeamMics::", srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps)
         _, err = self._turnOffTeamMics(srcPlayerBox, srcPlayerGBID, teamId, playerGBID)
         if err:
             WARNING_MSG('turnOffTeamMics:: failed, {}'.format(err))
@@ -1744,7 +1719,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return teamVal.turnOffTeamMemberMics(srcPlayerGBID, playerGBID, blockMics=False, toClient=True)
 
     def blockTeamMemberMics(self, srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps):
-        DEBUG_MSG("blockTeamMemberMics::", srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps)
+        INFO_MSG("blockTeamMemberMics::", srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps)
         _, err = self._blockTeamMemberMics(srcPlayerBox, srcPlayerGBID, teamId, playerGBID)
         if err:
             WARNING_MSG('blockTeamMemberMics:: failed, {}'.format(err))
@@ -1757,7 +1732,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return teamVal.turnOffTeamMemberMics(srcPlayerGBID, playerGBID, blockMics=True, toClient=True)
 
     def unblockTeamMemberMics(self, srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps):
-        DEBUG_MSG("unblockTeamMemberMics::", srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps)
+        INFO_MSG("unblockTeamMemberMics::", srcPlayerBox, srcPlayerGBID, teamId, playerGBID, extraProps)
         _, err = self._unblockTeamMemberMics(srcPlayerBox, srcPlayerGBID, teamId, playerGBID)
         if err:
             WARNING_MSG('unblockTeamMemberMics:: failed, {}'.format(err))
@@ -1772,7 +1747,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return teamVal.unblockTeamMemberMisc(playerGBID, toClient=True)
 
     def blockAllTeamMemberMics(self, srcPlayerBox, srcPlayerGBID, teamId, extraProps):
-        DEBUG_MSG("blockAllTeamMemberMics::", srcPlayerBox, srcPlayerGBID, teamId, extraProps)
+        INFO_MSG("blockAllTeamMemberMics::", srcPlayerBox, srcPlayerGBID, teamId, extraProps)
         teamVal, err = self._blockAllTeamMemberMics(srcPlayerBox, srcPlayerGBID, teamId)
         if err:
             WARNING_MSG('blockAllTeamMemberMics:: failed, {}'.format(err))
@@ -1801,7 +1776,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return teamVal, ""
 
     def unblockAllTeamMemberMics(self, srcPlayerBox, srcPlayerGBID, teamId, extraProps):
-        DEBUG_MSG("unblockAllTeamMemberMics::", srcPlayerBox, srcPlayerGBID, teamId, extraProps)
+        INFO_MSG("unblockAllTeamMemberMics::", srcPlayerBox, srcPlayerGBID, teamId, extraProps)
         teamVal, err = self._unblockAllTeamMemberMics(srcPlayerBox, srcPlayerGBID, teamId)
         if err:
             WARNING_MSG('unblockAllTeamMemberMics:: failed, {}'.format(err))
@@ -1826,24 +1801,15 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     # --------------------------------------------------------------------
 
     def debugAllTeamInfo(self):
-        DEBUG_MSG('!!!!!!!========== debug all team info start ==========')
+        INFO_MSG('!!!!!!!========== debug all team info start ==========')
         for teamid, info in self.teamDic.items():
-            DEBUG_MSG('!!!!!!!teamid:', teamid)
-            DEBUG_MSG('!!!!!!!        组队目标:{}, 等级区间{}~{}'.format(TMACTD.datas[info.teamTarget]['value'], info.teamMinLv, info.teamMinScore))
-            DEBUG_MSG('!!!!!!!        组队人数:{}}'.format(len(info.teamPlayerDic)))
-        DEBUG_MSG('!!!!!!!========== debug all team info end ==========')
+            INFO_MSG('!!!!!!!teamid:', teamid)
+            INFO_MSG('!!!!!!!        组队目标:{}, 等级区间{}~{}'.format(TMACTD.datas[info.teamTarget]['value'], info.teamMinLv, info.teamMinScore))
+            INFO_MSG('!!!!!!!        组队人数:{}}'.format(len(info.teamPlayerDic)))
+        INFO_MSG('!!!!!!!========== debug all team info end ==========')
 
     # --------------------------------------------------------------------
     # TEAM CROSS SERVER
-
-    def reCreateOrJoinTeam(self, box, teamId, teamPlayerInfoDic):
-        INFO_MSG('', teamId, teamPlayerInfoDic)
-        if teamId in self.teamDic:
-            DEBUG_MSG('reJoinTeam', teamId, teamPlayerInfoDic)
-            self.addTeamMember(teamId, teamPlayerInfoDic)
-        else:
-            DEBUG_MSG('reCreateTeam', teamId, teamPlayerInfoDic)
-            self._createTeam(teamId, 0, teamPlayerInfoDic, False)
 
     # --------------------------------------------------------------------
 
@@ -1875,13 +1841,13 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def addTeamMarkMonsterRec(self, teamId, entId, index, box):
         # 满了说明处理逻辑有问题，功能暂停
         if len(self.teamMarkMonsterRec) >= 20000:
-            DEBUG_MSG('addTeamMarkMonsterRec, mark monster rec full ', len(self.teamMarkMonsterRec))
+            INFO_MSG('addTeamMarkMonsterRec, mark monster rec full ', len(self.teamMarkMonsterRec))
             return
         if not self.teamMarkMonsterRec.get(entId, None):
             self.teamMarkMonsterRec[entId] = {0: box}
 
         if len(self.teamMarkMonsterRec[entId]) >= 10000:
-            DEBUG_MSG('addTeamMarkMonsterRec, mark monster rec full for entId: ', entId, len(self.teamMarkMonsterRec[entId]))
+            INFO_MSG('addTeamMarkMonsterRec, mark monster rec full for entId: ', entId, len(self.teamMarkMonsterRec[entId]))
             return
         self.teamMarkMonsterRec[entId][teamId] = index
         INFO_MSG('addTeamMarkMonsterRec, mark monster rec:', entId, teamId, index)
@@ -1936,7 +1902,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def _reqJoinTeamCheck(self, teamID, password, playerProps):
         teamVal = self.getTeamByTeamId(teamID)
-        DEBUG_MSG('in _reqJoinTeamCheck:', teamID, playerProps, teamVal)
+        INFO_MSG('in _reqJoinTeamCheck:', teamID, playerProps, teamVal)
         if not teamVal:
             return None, gameconst.RaidErrno.RAID_TEAM_NOT_FOUND
 
@@ -1958,7 +1924,6 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return None, gameconst.RaidErrno.RAID_LEVEL_IS_LIMITED
         if score < cfgMinScore:
             return None, gameconst.RaidErrno.RAID_SCORE_LIMITED
-
         _, err = self.addTeamMember(teamID, playerProps)
         return err
 

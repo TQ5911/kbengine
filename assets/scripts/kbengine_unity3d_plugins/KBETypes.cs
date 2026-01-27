@@ -5369,43 +5369,6 @@ namespace KBEngine
 		}
 	}
 
-	public struct GENIUS_QI
-	{
-		Int64 value;
-
-		GENIUS_QI(Int64 value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator Int64(GENIUS_QI value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator GENIUS_QI(Int64 value)
-		{
-			Int64 tvalue = (Int64)value;
-			return new GENIUS_QI(tvalue);
-		}
-
-		public static Int64 MaxValue
-		{
-			get
-			{
-				return Int64.MaxValue;
-			}
-		}
-
-		public static Int64 MinValue
-		{
-			get
-			{
-				return Int64.MinValue;
-			}
-		}
-	}
-
 	public struct SCENE_STATE
 	{
 		UInt16 value;
@@ -5980,6 +5943,7 @@ namespace KBEngine
 		public UInt32 level = 0;
 		public UInt16 school = 0;
 		public Byte sex = 0;
+		public SByte applySource = 0;
 
 	}
 
@@ -6935,7 +6899,6 @@ namespace KBEngine
 		public UInt64 oldMoney = 0;
 		public UInt64 oldCoin = 0;
 		public Int64 oldDarkIron = 0;
-		public Int64 oldGeniusQi = 0;
 		public UInt64 otherGbId = 0;
 		public UInt32 authExpire = 0;
 		public List<UInt64> itemUniqueIds = new List<UInt64>();

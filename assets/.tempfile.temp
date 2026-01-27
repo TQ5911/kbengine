@@ -26,9 +26,9 @@
         <serverOpenTime> 1764709200 </serverOpenTime>
         <enableAdminServer> 0 </enableAdminServer>
         <enableRouterServer> 1 </enableRouterServer>
-        <giftCodeUrl> http://192.168.10.16:8084/api/v1/redeem-code/use </giftCodeUrl>
-        <tapTapBindPhoneReqUrl> http://192.168.10.16:8084/api/v1/user-info/taptap/send-code </tapTapBindPhoneReqUrl>
-        <tapTapBindPhoneVerifyUrl> http://192.168.10.16:8084/api/v1/user-info/taptap/verify-code </tapTapBindPhoneVerifyUrl>
+        <giftCodeUrl> http://192.168.10.16:8080/user/api/v1/redeem-code/use </giftCodeUrl>
+        <tapTapBindPhoneReqUrl> http://192.168.10.16:8080/user/api/v1/user-info/taptap/send-code </tapTapBindPhoneReqUrl>
+        <tapTapBindPhoneVerifyUrl> http://192.168.10.16:8080/user/api/v1/user-info/taptap/verify-code </tapTapBindPhoneVerifyUrl>
         <gm>
             <item ip='192.168.10.13' port='2040' httpApi='8080'/>
         </gm>
@@ -67,7 +67,7 @@
         <elasticPort> 9200 </elasticPort>
 
         <gmVerifyByGroup> 0 </gmVerifyByGroup>
-        <debugLevel> $DEBUGLEVEL </debugLevel>
+        <debugLevel> 1 </debugLevel>
         <wxErrNumPerSecond> 5 </wxErrNumPerSecond>
         <wxErrFlag> 1 </wxErrFlag>
         <tlogFlag> 0 </tlogFlag>
@@ -216,6 +216,7 @@
     </dbmgr>
 
     <cellapp>
+        <aliasEntityID> false </aliasEntityID>
     </cellapp>
 
     <baseapp>
@@ -228,7 +229,7 @@
             （Automatic backup time period(secs)）
         -->
         <backupPeriod> 300 </backupPeriod>                            <!-- Type: Float -->
-        <externalAddress>  </externalAddress>
+        <externalAddress>    </externalAddress>
         <!-- 暴露给客户端的端口范围
             （Exposed to the client port range）
         -->

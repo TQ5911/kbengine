@@ -781,6 +781,210 @@ def _87020077(self, target, context):
 def _87020077_remove(self, target, context):
     self.removePropByPassiveSkill([["adjHit",10]])
 
+def _87020078(self, target, context):
+    self.addBuffBySkill(target, context, 64002091, 1)
+
+def _87020078_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002091)
+
+def _87020079(self, target, context):
+    self.addBuffBySkill(target, context, 64002093, 1)
+
+def _87020079_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002093)
+
+def _87020080(self, target, context):
+    self.addBuffBySkill(target, context, 64002095, 1)
+
+def _87020080_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002095)
+
+def _87020081(self, target, context):
+    self.addPropByPassiveSkill([["adjFullHp",30],["adjFullMp",10]])
+
+def _87020081_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFullHp",30],["adjFullMp",10]])
+
+def _87020082(self, target, context):
+    self.addBuffBySkill(target, context, 64002097, 1)
+
+def _87020082_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002097)
+
+def _87020083(self, target, context):
+    self.addPropByPassiveSkill([["adjStunEnh",5]])
+
+def _87020083_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjStunEnh",5]])
+
+def _87020084(self, target, context):
+    self.addBuffBySkill(target, context, 64002099, 1)
+
+def _87020084_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002099)
+
+def _87020085(self, target, context):
+    self.addPropByPassiveSkill([["adjPushEnh",5]])
+
+def _87020085_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPushEnh",5]])
+
+def _87020086(self, target, context):
+    self.addPropByPassiveSkill([["adjPushAnti",5]])
+
+def _87020086_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjPushAnti",5]])
+
+def _87020087(self, target, context):
+    self.addBuffBySkill(target, context, 64002101, 1)
+
+def _87020087_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002101)
+
+def _87020088(self, target, context):
+    self.addBuffBySkill(target, context, 64002103, 1)
+
+def _87020088_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002103)
+
+def _87020089(self, target, context):
+    self.addPropByPassiveSkill([["adjFullHp",60]])
+
+def _87020089_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjFullHp",60]])
+
+def _87020090(self, target, context):
+    self.addBuffBySkill(target, context, 64002105, 1)
+
+def _87020090_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002105)
+
+def _87020091(self, target, context):
+    self.addPropByPassiveSkill([["adjDmgArmor",0.05]])
+
+def _87020091_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjDmgArmor",0.05]])
+
+def _87020092(self, target, context):
+    self.addPropByPassiveSkill([["adjHit",6]])
+
+def _87020092_remove(self, target, context):
+    self.removePropByPassiveSkill([["adjHit",6]])
+
+def _87020093(self, target, context):
+    self.addBuffBySkill(target, context, 64002107, 1)
+
+def _87020093_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002107)
+
+def _87020094(self, target, context):
+    self.addBuffBySkill(target, context, 64002109, 1)
+
+def _87020094_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002109)
+
+def _87020095(self, target, context):
+    self.addBuffBySkill(target, context, 64002111, 1)
+
+def _87020095_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002111)
+
+def _87020096(self, target, context):
+    self.addBuffBySkill(target, context, 64002113, 1)
+
+def _87020096_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002113)
+
+def _87020097(self, target, context):
+    self.addBuffBySkill(target, context, 64002115, 1)
+
+def _87020097_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002115)
+
+def _87020098(self, target, context):
+    self.addBuffBySkill(target, context, 64002117, 1)
+
+def _87020098_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002117)
+
+def _87020099(self, target, context):
+    self.addBuffBySkill(target, context, 64002119, 1)
+
+def _87020099_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002119)
+
+def _87020100(self, target, context):
+    self.addBuffBySkill(target, context, 64002121, 1)
+
+def _87020100_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002121)
+
+def _87020101(self, target, context):
+    self.addBuffBySkill(target, context, 64002123, 1)
+
+def _87020101_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002123)
+
+def _87020102(self, target, context):
+    self.addBuffBySkill(target, context, 64002125, 1)
+
+def _87020102_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002125)
+
+def _87020103(self, target, context):
+    self.addBuffBySkill(target, context, 64002127, 1)
+
+def _87020103_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002127)
+
+def _87020104(self, target, context):
+    self.addBuffBySkill(target, context, 64002129, 1)
+
+def _87020104_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002129)
+
+def _87020105(self, target, context):
+    self.addBuffBySkill(target, context, 64002131, 1)
+
+def _87020105_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002131)
+
+def _87020106(self, target, context):
+    self.addBuffBySkill(target, context, 64002133, 1)
+
+def _87020106_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002133)
+
+def _87020107(self, target, context):
+    self.addBuffBySkill(target, context, 64002135, 1)
+
+def _87020107_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002135)
+
+def _87020108(self, target, context):
+    self.addBuffBySkill(target, context, 64002137, 1)
+
+def _87020108_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002137)
+
+def _87020109(self, target, context):
+    self.addBuffBySkill(target, context, 64002139, 1)
+
+def _87020109_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002139)
+
+def _87020110(self, target, context):
+    self.addBuffBySkill(target, context, 64002141, 1)
+
+def _87020110_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002141)
+
+def _87020111(self, target, context):
+    self.addBuffBySkill(target, context, 64002143, 1)
+
+def _87020111_remove(self, target, context):
+    self.removeBuffBySkill(target, context, 64002143)
+
 datas = _tools.RODict({ 
     87010001: _tools.RODict({
         "ID": 87010001,
@@ -1290,7 +1494,7 @@ datas = _tools.RODict({
         "removeAction": _87020001_remove,
         "propList": None,
         "desBuff": 64002005,
-        "score": 340
+        "score": 120
     }),
     87020002: _tools.RODict({
         "ID": 87020002,
@@ -1300,7 +1504,7 @@ datas = _tools.RODict({
         "removeAction": _87020002_remove,
         "propList": None,
         "desBuff": 64002007,
-        "score": 340
+        "score": 120
     }),
     87020003: _tools.RODict({
         "ID": 87020003,
@@ -1310,7 +1514,7 @@ datas = _tools.RODict({
         "removeAction": _87020003_remove,
         "propList": None,
         "desBuff": 64002009,
-        "score": 340
+        "score": 120
     }),
     87020004: _tools.RODict({
         "ID": 87020004,
@@ -1320,7 +1524,7 @@ datas = _tools.RODict({
         "removeAction": _87020004_remove,
         "propList": _tools.ROList([['adjMonsterDmg', 0.01]]),
         "desBuff": None,
-        "score": 340
+        "score": 120
     }),
     87020005: _tools.RODict({
         "ID": 87020005,
@@ -1330,7 +1534,7 @@ datas = _tools.RODict({
         "removeAction": _87020005_remove,
         "propList": _tools.ROList([['adjMonsterDmgAnti', 0.01]]),
         "desBuff": None,
-        "score": 340
+        "score": 120
     }),
     87020006: _tools.RODict({
         "ID": 87020006,
@@ -1340,7 +1544,7 @@ datas = _tools.RODict({
         "removeAction": _87020006_remove,
         "propList": _tools.ROList([['adjExpGrow', 0.01]]),
         "desBuff": None,
-        "score": 340
+        "score": 120
     }),
     87020007: _tools.RODict({
         "ID": 87020007,
@@ -1350,7 +1554,7 @@ datas = _tools.RODict({
         "removeAction": _87020007_remove,
         "propList": _tools.ROList([['adjPVPDmg', 0.01]]),
         "desBuff": None,
-        "score": 340
+        "score": 120
     }),
     87020008: _tools.RODict({
         "ID": 87020008,
@@ -1360,7 +1564,7 @@ datas = _tools.RODict({
         "removeAction": _87020008_remove,
         "propList": None,
         "desBuff": 64002011,
-        "score": 340
+        "score": 120
     }),
     87020009: _tools.RODict({
         "ID": 87020009,
@@ -1370,7 +1574,7 @@ datas = _tools.RODict({
         "removeAction": _87020009_remove,
         "propList": None,
         "desBuff": 64002013,
-        "score": 340
+        "score": 120
     }),
     87020010: _tools.RODict({
         "ID": 87020010,
@@ -1380,7 +1584,7 @@ datas = _tools.RODict({
         "removeAction": _87020010_remove,
         "propList": _tools.ROList([['adjExpGrow', 0.01]]),
         "desBuff": None,
-        "score": 340
+        "score": 0
     }),
     87020011: _tools.RODict({
         "ID": 87020011,
@@ -1490,7 +1694,7 @@ datas = _tools.RODict({
         "removeAction": _87020021_remove,
         "propList": None,
         "desBuff": 64002025,
-        "score": 906
+        "score": 400
     }),
     87020022: _tools.RODict({
         "ID": 87020022,
@@ -1510,7 +1714,7 @@ datas = _tools.RODict({
         "removeAction": _87020023_remove,
         "propList": None,
         "desBuff": 64002045,
-        "score": 906
+        "score": 400
     }),
     87020024: _tools.RODict({
         "ID": 87020024,
@@ -1530,7 +1734,7 @@ datas = _tools.RODict({
         "removeAction": _87020025_remove,
         "propList": None,
         "desBuff": 64002047,
-        "score": 906
+        "score": 400
     }),
     87020026: _tools.RODict({
         "ID": 87020026,
@@ -1550,7 +1754,7 @@ datas = _tools.RODict({
         "removeAction": _87020027_remove,
         "propList": None,
         "desBuff": 64002027,
-        "score": 906
+        "score": 400
     }),
     87020028: _tools.RODict({
         "ID": 87020028,
@@ -1570,7 +1774,7 @@ datas = _tools.RODict({
         "removeAction": _87020029_remove,
         "propList": None,
         "desBuff": 64002029,
-        "score": 906
+        "score": 400
     }),
     87020030: _tools.RODict({
         "ID": 87020030,
@@ -1590,7 +1794,7 @@ datas = _tools.RODict({
         "removeAction": _87020031_remove,
         "propList": None,
         "desBuff": 64002031,
-        "score": 906
+        "score": 400
     }),
     87020032: _tools.RODict({
         "ID": 87020032,
@@ -1610,7 +1814,7 @@ datas = _tools.RODict({
         "removeAction": _87020033_remove,
         "propList": None,
         "desBuff": 64002033,
-        "score": 906
+        "score": 400
     }),
     87020034: _tools.RODict({
         "ID": 87020034,
@@ -1630,7 +1834,7 @@ datas = _tools.RODict({
         "removeAction": _87020035_remove,
         "propList": None,
         "desBuff": 64002035,
-        "score": 906
+        "score": 400
     }),
     87020036: _tools.RODict({
         "ID": 87020036,
@@ -1650,7 +1854,7 @@ datas = _tools.RODict({
         "removeAction": _87020037_remove,
         "propList": None,
         "desBuff": 64002037,
-        "score": 3400
+        "score": 1900
     }),
     87020038: _tools.RODict({
         "ID": 87020038,
@@ -1670,7 +1874,7 @@ datas = _tools.RODict({
         "removeAction": _87020039_remove,
         "propList": None,
         "desBuff": 64002039,
-        "score": 3400
+        "score": 1900
     }),
     87020040: _tools.RODict({
         "ID": 87020040,
@@ -1690,7 +1894,7 @@ datas = _tools.RODict({
         "removeAction": _87020041_remove,
         "propList": _tools.ROList([['adjMaxPhysicalArmor', 15], ['adjMinPhysicalArmor', 15], ['adjMaxMagicArmor', 15], ['adjMinMagicArmor', 15]]),
         "desBuff": None,
-        "score": 3400
+        "score": 1900
     }),
     87020042: _tools.RODict({
         "ID": 87020042,
@@ -1710,7 +1914,7 @@ datas = _tools.RODict({
         "removeAction": _87020043_remove,
         "propList": None,
         "desBuff": 64002041,
-        "score": 3400
+        "score": 1900
     }),
     87020044: _tools.RODict({
         "ID": 87020044,
@@ -1770,7 +1974,7 @@ datas = _tools.RODict({
         "removeAction": _87020049_remove,
         "propList": None,
         "desBuff": 64002053,
-        "score": 100
+        "score": 120
     }),
     87020050: _tools.RODict({
         "ID": 87020050,
@@ -1800,7 +2004,7 @@ datas = _tools.RODict({
         "removeAction": _87020052_remove,
         "propList": None,
         "desBuff": 64002057,
-        "score": 0
+        "score": 120
     }),
     87020053: _tools.RODict({
         "ID": 87020053,
@@ -1810,7 +2014,7 @@ datas = _tools.RODict({
         "removeAction": _87020053_remove,
         "propList": None,
         "desBuff": 64002087,
-        "score": 0
+        "score": 120
     }),
     87020054: _tools.RODict({
         "ID": 87020054,
@@ -1820,7 +2024,7 @@ datas = _tools.RODict({
         "removeAction": _87020054_remove,
         "propList": None,
         "desBuff": 64002059,
-        "score": 0
+        "score": 120
     }),
     87020055: _tools.RODict({
         "ID": 87020055,
@@ -1850,7 +2054,7 @@ datas = _tools.RODict({
         "removeAction": _87020057_remove,
         "propList": None,
         "desBuff": 64002065,
-        "score": 0
+        "score": 120
     }),
     87020058: _tools.RODict({
         "ID": 87020058,
@@ -1860,7 +2064,7 @@ datas = _tools.RODict({
         "removeAction": _87020058_remove,
         "propList": _tools.ROList([['adjMonsterDmgAnti', 0.02]]),
         "desBuff": None,
-        "score": 0
+        "score": 120
     }),
     87020059: _tools.RODict({
         "ID": 87020059,
@@ -1870,7 +2074,7 @@ datas = _tools.RODict({
         "removeAction": _87020059_remove,
         "propList": None,
         "desBuff": 64002089,
-        "score": 0
+        "score": 120
     }),
     87020060: _tools.RODict({
         "ID": 87020060,
@@ -1890,7 +2094,7 @@ datas = _tools.RODict({
         "removeAction": _87020061_remove,
         "propList": None,
         "desBuff": 64002067,
-        "score": 0
+        "score": 120
     }),
     87020062: _tools.RODict({
         "ID": 87020062,
@@ -1910,7 +2114,7 @@ datas = _tools.RODict({
         "removeAction": _87020063_remove,
         "propList": None,
         "desBuff": 64002069,
-        "score": 0
+        "score": 120
     }),
     87020064: _tools.RODict({
         "ID": 87020064,
@@ -1920,7 +2124,7 @@ datas = _tools.RODict({
         "removeAction": _87020064_remove,
         "propList": _tools.ROList([['adjMaxMagicArmor', 15], ['adjMinMagicArmor', 15]]),
         "desBuff": None,
-        "score": 0
+        "score": 120
     }),
     87020065: _tools.RODict({
         "ID": 87020065,
@@ -1930,7 +2134,7 @@ datas = _tools.RODict({
         "removeAction": _87020065_remove,
         "propList": None,
         "desBuff": 64002071,
-        "score": 0
+        "score": 120
     }),
     87020066: _tools.RODict({
         "ID": 87020066,
@@ -1950,7 +2154,7 @@ datas = _tools.RODict({
         "removeAction": _87020067_remove,
         "propList": None,
         "desBuff": 64002073,
-        "score": 0
+        "score": 120
     }),
     87020068: _tools.RODict({
         "ID": 87020068,
@@ -1970,7 +2174,7 @@ datas = _tools.RODict({
         "removeAction": _87020069_remove,
         "propList": None,
         "desBuff": 64002075,
-        "score": 0
+        "score": 120
     }),
     87020070: _tools.RODict({
         "ID": 87020070,
@@ -2000,7 +2204,7 @@ datas = _tools.RODict({
         "removeAction": _87020072_remove,
         "propList": None,
         "desBuff": 64002079,
-        "score": 0
+        "score": 120
     }),
     87020073: _tools.RODict({
         "ID": 87020073,
@@ -2051,7 +2255,347 @@ datas = _tools.RODict({
         "propList": _tools.ROList([['adjHit', 10]]),
         "desBuff": None,
         "score": 0
+    }),
+    87020078: _tools.RODict({
+        "ID": 87020078,
+        "name": "锐痕预感",
+        "level": 0,
+        "action": _87020078,
+        "removeAction": _87020078_remove,
+        "propList": None,
+        "desBuff": 64002091,
+        "score": 120
+    }),
+    87020079: _tools.RODict({
+        "ID": 87020079,
+        "name": "云端悠游",
+        "level": 0,
+        "action": _87020079,
+        "removeAction": _87020079_remove,
+        "propList": None,
+        "desBuff": 64002093,
+        "score": 120
+    }),
+    87020080: _tools.RODict({
+        "ID": 87020080,
+        "name": "招财窃法",
+        "level": 0,
+        "action": _87020080,
+        "removeAction": _87020080_remove,
+        "propList": None,
+        "desBuff": 64002095,
+        "score": 120
+    }),
+    87020081: _tools.RODict({
+        "ID": 87020081,
+        "name": "本源徽记",
+        "level": 0,
+        "action": _87020081,
+        "removeAction": _87020081_remove,
+        "propList": _tools.ROList([['adjFullHp', 30], ['adjFullMp', 10]]),
+        "desBuff": None,
+        "score": 120
+    }),
+    87020082: _tools.RODict({
+        "ID": 87020082,
+        "name": "月影镜御",
+        "level": 0,
+        "action": _87020082,
+        "removeAction": _87020082_remove,
+        "propList": None,
+        "desBuff": 64002097,
+        "score": 120
+    }),
+    87020083: _tools.RODict({
+        "ID": 87020083,
+        "name": "同心尖刺",
+        "level": 0,
+        "action": _87020083,
+        "removeAction": _87020083_remove,
+        "propList": _tools.ROList([['adjStunEnh', 5]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020084: _tools.RODict({
+        "ID": 87020084,
+        "name": "以守为攻",
+        "level": 0,
+        "action": _87020084,
+        "removeAction": _87020084_remove,
+        "propList": None,
+        "desBuff": 64002099,
+        "score": 120
+    }),
+    87020085: _tools.RODict({
+        "ID": 87020085,
+        "name": "等价破则",
+        "level": 0,
+        "action": _87020085,
+        "removeAction": _87020085_remove,
+        "propList": _tools.ROList([['adjPushEnh', 5]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020086: _tools.RODict({
+        "ID": 87020086,
+        "name": "坚冰镇守",
+        "level": 0,
+        "action": _87020086,
+        "removeAction": _87020086_remove,
+        "propList": _tools.ROList([['adjPushAnti', 5]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020087: _tools.RODict({
+        "ID": 87020087,
+        "name": "金蛋守护",
+        "level": 0,
+        "action": _87020087,
+        "removeAction": _87020087_remove,
+        "propList": None,
+        "desBuff": 64002101,
+        "score": 120
+    }),
+    87020088: _tools.RODict({
+        "ID": 87020088,
+        "name": "圆头哥基米技能2",
+        "level": 0,
+        "action": _87020088,
+        "removeAction": _87020088_remove,
+        "propList": None,
+        "desBuff": 64002103,
+        "score": 120
+    }),
+    87020089: _tools.RODict({
+        "ID": 87020089,
+        "name": "小僵尸晃晃技能2",
+        "level": 0,
+        "action": _87020089,
+        "removeAction": _87020089_remove,
+        "propList": _tools.ROList([['adjFullHp', 60]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020090: _tools.RODict({
+        "ID": 87020090,
+        "name": "熊猫石方方技能2",
+        "level": 0,
+        "action": _87020090,
+        "removeAction": _87020090_remove,
+        "propList": None,
+        "desBuff": 64002105,
+        "score": 120
+    }),
+    87020091: _tools.RODict({
+        "ID": 87020091,
+        "name": "持盾牛牛穆恩技能2",
+        "level": 0,
+        "action": _87020091,
+        "removeAction": _87020091_remove,
+        "propList": _tools.ROList([['adjDmgArmor', 0.05]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020092: _tools.RODict({
+        "ID": 87020092,
+        "name": "鼹鼠矿工黄金技能2",
+        "level": 0,
+        "action": _87020092,
+        "removeAction": _87020092_remove,
+        "propList": _tools.ROList([['adjHit', 6]]),
+        "desBuff": None,
+        "score": 0
+    }),
+    87020093: _tools.RODict({
+        "ID": 87020093,
+        "name": "魅惑学识",
+        "level": 0,
+        "action": _87020093,
+        "removeAction": _87020093_remove,
+        "propList": None,
+        "desBuff": 64002107,
+        "score": 400
+    }),
+    87020094: _tools.RODict({
+        "ID": 87020094,
+        "name": "金果回生",
+        "level": 0,
+        "action": _87020094,
+        "removeAction": _87020094_remove,
+        "propList": None,
+        "desBuff": 64002109,
+        "score": 400
+    }),
+    87020095: _tools.RODict({
+        "ID": 87020095,
+        "name": "岩核坚壁",
+        "level": 0,
+        "action": _87020095,
+        "removeAction": _87020095_remove,
+        "propList": None,
+        "desBuff": 64002111,
+        "score": 400
+    }),
+    87020096: _tools.RODict({
+        "ID": 87020096,
+        "name": "雷霆折跃",
+        "level": 0,
+        "action": _87020096,
+        "removeAction": _87020096_remove,
+        "propList": None,
+        "desBuff": 64002113,
+        "score": 400
+    }),
+    87020097: _tools.RODict({
+        "ID": 87020097,
+        "name": "恶魔契约",
+        "level": 0,
+        "action": _87020097,
+        "removeAction": _87020097_remove,
+        "propList": None,
+        "desBuff": 64002115,
+        "score": 400
+    }),
+    87020098: _tools.RODict({
+        "ID": 87020098,
+        "name": "杜格凝视",
+        "level": 0,
+        "action": _87020098,
+        "removeAction": _87020098_remove,
+        "propList": None,
+        "desBuff": 64002117,
+        "score": 400
+    }),
+    87020099: _tools.RODict({
+        "ID": 87020099,
+        "name": "凯旋汲取",
+        "level": 0,
+        "action": _87020099,
+        "removeAction": _87020099_remove,
+        "propList": None,
+        "desBuff": 64002119,
+        "score": 400
+    }),
+    87020100: _tools.RODict({
+        "ID": 87020100,
+        "name": "深海意志",
+        "level": 0,
+        "action": _87020100,
+        "removeAction": _87020100_remove,
+        "propList": None,
+        "desBuff": 64002121,
+        "score": 400
+    }),
+    87020101: _tools.RODict({
+        "ID": 87020101,
+        "name": "至爱庇护",
+        "level": 0,
+        "action": _87020101,
+        "removeAction": _87020101_remove,
+        "propList": None,
+        "desBuff": 64002123,
+        "score": 1900
+    }),
+    87020102: _tools.RODict({
+        "ID": 87020102,
+        "name": "天剑归元",
+        "level": 0,
+        "action": _87020102,
+        "removeAction": _87020102_remove,
+        "propList": None,
+        "desBuff": 64002125,
+        "score": 1900
+    }),
+    87020103: _tools.RODict({
+        "ID": 87020103,
+        "name": "涅槃圣域",
+        "level": 0,
+        "action": _87020103,
+        "removeAction": _87020103_remove,
+        "propList": None,
+        "desBuff": 64002127,
+        "score": 1900
+    }),
+    87020104: _tools.RODict({
+        "ID": 87020104,
+        "name": "虎魄御极",
+        "level": 0,
+        "action": _87020104,
+        "removeAction": _87020104_remove,
+        "propList": None,
+        "desBuff": 64002129,
+        "score": 1900
+    }),
+    87020105: _tools.RODict({
+        "ID": 87020105,
+        "name": "负壤玄龟技能3",
+        "level": 0,
+        "action": _87020105,
+        "removeAction": _87020105_remove,
+        "propList": None,
+        "desBuff": 64002131,
+        "score": 400
+    }),
+    87020106: _tools.RODict({
+        "ID": 87020106,
+        "name": "独角幻兽月蚀技能3",
+        "level": 0,
+        "action": _87020106,
+        "removeAction": _87020106_remove,
+        "propList": None,
+        "desBuff": 64002133,
+        "score": 400
+    }),
+    87020107: _tools.RODict({
+        "ID": 87020107,
+        "name": "堕命飞马英招技能3",
+        "level": 0,
+        "action": _87020107,
+        "removeAction": _87020107_remove,
+        "propList": None,
+        "desBuff": 64002135,
+        "score": 400
+    }),
+    87020108: _tools.RODict({
+        "ID": 87020108,
+        "name": "九尾冰狐技能3",
+        "level": 0,
+        "action": _87020108,
+        "removeAction": _87020108_remove,
+        "propList": None,
+        "desBuff": 64002137,
+        "score": 400
+    }),
+    87020109: _tools.RODict({
+        "ID": 87020109,
+        "name": "画中仙子婵娟技能4",
+        "level": 0,
+        "action": _87020109,
+        "removeAction": _87020109_remove,
+        "propList": None,
+        "desBuff": 64002139,
+        "score": 1900
+    }),
+    87020110: _tools.RODict({
+        "ID": 87020110,
+        "name": "水晶龙奥尔技能4",
+        "level": 0,
+        "action": _87020110,
+        "removeAction": _87020110_remove,
+        "propList": None,
+        "desBuff": 64002141,
+        "score": 1900
+    }),
+    87020111: _tools.RODict({
+        "ID": 87020111,
+        "name": "吞噬者贝希摩斯技能4",
+        "level": 0,
+        "action": _87020111,
+        "removeAction": _87020111_remove,
+        "propList": None,
+        "desBuff": 64002143,
+        "score": 1900
     })
 })
 minKey = 87010001
-maxKey = 87020077
+maxKey = 87020111

@@ -60,11 +60,11 @@ namespace KBEngine
             sdkFileStream.append(fileDatas, (uint)sdkFileStream.rpos, (uint)fileDatas.Length);
 
             warnUpdateSDK = "Download:" + fileName + " -> " + sdkFileStream.length() + "/" + fileSize + "bytes! " + (int)(((float)downloadFiles / (float)(downloadFiles + remainingFiles)) * 100) + "%";
-            DebugL8.Log(warnUpdateSDK);
+            GLog.Log(warnUpdateSDK);
 
             if (sdkFileStream.length() == fileSize)
             {
-                DebugL8.Log("onImportClientSDK: {0}->{1}bytes success!" ,fileName ,fileSize);
+                GLog.Log("onImportClientSDK: {0}->{1}bytes success!" ,fileName ,fileSize);
 
                 string path = Path.GetDirectoryName(sdkTempPath + "//" + fileName);
                 if (!Directory.Exists(path))

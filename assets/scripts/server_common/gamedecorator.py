@@ -10,6 +10,7 @@ import utils
 import gameconfig
 
 import visible_visible as UVVD
+import const_const as C_CD
 
 SERVER_LOAD_LV_NORMAL = 0
 
@@ -173,7 +174,11 @@ def checkGameconfigEnable(name):
             configName, convFunc, default, defaultV, desc, cid, flags = info
             v = KBEngine.globalData['CONFIG'][configName]
             if not v:
-                WARNING_MSG('gameconfig not enable: 2', name)
+                if KBEngine.component == 'cellapp':
+                    args[0].showMsg(C_CD.datas['systemSwitch']['value'], [])
+                else:
+                    args[0].onMessagePre(C_CD.datas['systemSwitch']['value'], [])
+                #WARNING_MSG('gameconfig not enable: 2', name)
                 return
             
             # 检查是否存在主从系统开关
@@ -214,4 +219,53 @@ def prevent_instance_reentry(method):
             return method(self, *args, **kwargs)
         finally:
             setattr(self, attr, False)
+    return wrapper
+
+
+def teleportInQueue(f):
+    @functools.wraps(f)
+    def wrapper(self, *args, **kwargs):
+        if self.teleportInfoDict:
+            WARNING_MSG(f"{f.__name__}::teleportInQueue::teleporting, skip")
+            self.teleportQueue.append((
+                f.__name__,
+                args,
+                kwargs
+            ))
+            return
+
+        return f(self, *args, **kwargs)
+
+    return wrapper
+
+
+_doubleTeleportEnable = False
+_doubleTeleportSet = set()
+_doubleTeleportQueue = []
+def testDoubleTeleport(f):
+    @functools.wraps(f)
+    def wrapper(self, *args, **kwargs):
+        if not _doubleTeleportEnable:
+            return f(self, *args, **kwargs)
+
+        if f.__name__ in _doubleTeleportSet:
+            return f(self, *args, **kwargs)
+
+        _doubleTeleportSet.add(f.__name__)
+
+        if _doubleTeleportQueue:
+            while _doubleTeleportQueue:
+                _func, _args, _kwargs = _doubleTeleportQueue.pop(0)
+                getattr(self, _func)(*_args, **_kwargs)
+
+            return f(self, *args, **kwargs)
+
+        else:
+            _doubleTeleportQueue.append((
+                f.__name__,
+                args,
+                kwargs
+            ))
+            return
+
     return wrapper

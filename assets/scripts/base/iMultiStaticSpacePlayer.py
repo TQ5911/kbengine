@@ -32,11 +32,22 @@ class IMultiStaticSpacePlayer(object):
         _linePlayers = self.allLines.get(_spaceNo)
 
         _timeoutTime = utils.getNow() - timeOutDuration
+        if not _linePlayers:
+            WARNING_MSG('onClearEnterTimeOut:spaceNo={}, _linePlayers is None'.format(_spaceNo))
+            return
+        
         _clearList = _linePlayers.clearTimeOutInfo(_timeoutTime)
         if _clearList:
             ERROR_MSG('onClearEnterTimeOut:spaceNo={}, clearList={}'.format(_spaceNo, _clearList))
             for _gbId in _clearList:
                 self.allPlayers.pop(_gbId, None)
+
+    def getSpaceAvatarNo(self, spaceNo):
+        _linePlayers = self.allLines.get(spaceNo)
+        if not _linePlayers:
+            return 0
+
+        return len(_linePlayers) + len(_linePlayers.pendingEnterPlayers)
 
     def canSpaceEnter(self, spaceNo):
         _linePlayers = self.allLines.get(spaceNo)

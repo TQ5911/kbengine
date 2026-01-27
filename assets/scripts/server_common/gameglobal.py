@@ -128,3 +128,5 @@ accountCompIdCache = {}
 # 同个进程内限制调用次数的字典
 callLimitDic = {}
 
+appCallIdx = 0
+

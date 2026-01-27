@@ -25,7 +25,7 @@ datas = _tools.RODict({
     }),
     "minLevelToPlay": _tools.RODict({
         "ID": "minLevelToPlay",
-        "value": 101,
+        "value": 100,
     }),
     "adjustLevelLimit": _tools.RODict({
         "ID": "adjustLevelLimit",

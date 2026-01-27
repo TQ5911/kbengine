@@ -170,16 +170,6 @@ datas = _tools.RODict({
         "traceDistance": 0.0,
         "traceTime": 0.0
     }),
-    31100023: _tools.RODict({
-        "bulletTimeScale": 1.0,
-        "traceDistance": 0.0,
-        "traceTime": 0.0
-    }),
-    31100024: _tools.RODict({
-        "bulletTimeScale": 1.0,
-        "traceDistance": 0.0,
-        "traceTime": 0.0
-    }),
     31100025: _tools.RODict({
         "bulletTimeScale": 1.0,
         "traceDistance": 0.0,
@@ -226,6 +216,26 @@ datas = _tools.RODict({
         "traceTime": 0.0
     }),
     31100034: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31100035: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31100036: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31100037: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31100038: _tools.RODict({
         "bulletTimeScale": 1.0,
         "traceDistance": 0.0,
         "traceTime": 0.0
@@ -415,22 +425,12 @@ datas = _tools.RODict({
         "traceDistance": 0.0,
         "traceTime": 0.0
     }),
-    31300011: _tools.RODict({
-        "bulletTimeScale": 0.0,
-        "traceDistance": 0.0,
-        "traceTime": 0.0
-    }),
     31300012: _tools.RODict({
         "bulletTimeScale": 0.0,
         "traceDistance": 0.0,
         "traceTime": 0.0
     }),
     31300013: _tools.RODict({
-        "bulletTimeScale": 0.0,
-        "traceDistance": 0.0,
-        "traceTime": 0.0
-    }),
-    31300014: _tools.RODict({
         "bulletTimeScale": 0.0,
         "traceDistance": 0.0,
         "traceTime": 0.0

@@ -7,13 +7,14 @@ import dataUtils
 import dropAward
 import gameclass
 import gamedecorator
+import LogTrackingMgr
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import raidBossChallenge_config as RBC_CFG
 
 class IChief(object):
     def onChiefDailyRewardNumUpdate(self, *args):
-        DEBUG_MSG('onChiefDailyRewardNumUpdate::')
+        INFO_MSG('onChiefDailyRewardNumUpdate::')
         dailyRewardNum = self.chiefInfo.dailyRewardNum
         if self.chiefInfo.rewardNumber < dailyRewardNum:
             self.chiefInfo.addRewardNumByDefault(dailyRewardNum - self.chiefInfo.rewardNumber)
@@ -22,13 +23,13 @@ class IChief(object):
         self.chiefInfo = self.chiefInfo
 
     def onChiefWeeklyAddRewardItemNumUpdate(self, *args):
-        DEBUG_MSG('onChiefWeeklyAddRewardItemNumUpdate::')
+        INFO_MSG('onChiefWeeklyAddRewardItemNumUpdate::')
         self.chiefInfo.resetUseItemAddRewardWeeklyNum()
         self.chiefInfo = self.chiefInfo
 
     @gamedecorator.checkGameconfigEnable('raidDungeon')
     def useItemToIncreaseChiefRewardNumber(self, exposed, useNum):
-        DEBUG_MSG('useItemToIncreaseChiefRewardNumber::', useNum)
+        INFO_MSG('useItemToIncreaseChiefRewardNumber::', useNum)
         if useNum <= 0:
             ERROR_MSG('useItemToIncreaseChiefRewardNumber:: invalid useNum', useNum)
 
@@ -42,7 +43,7 @@ class IChief(object):
 
     @gamedecorator.checkGameconfigEnable('raidDungeon')
     def useCoinToIncreaseChiefRewardNumber(self, exposed, useNum):
-        DEBUG_MSG('useCoinToIncreaseChiefRewardNumber::', useNum)
+        INFO_MSG('useCoinToIncreaseChiefRewardNumber::', useNum)
         if useNum <= 0:
             ERROR_MSG('useCoinToIncreaseChiefRewardNumber:: invalid useNum', useNum)
 
@@ -54,7 +55,7 @@ class IChief(object):
         self._useCoinToIncreaseChiefRewardNumber(useNum, {})
 
     def _useItemToIncreaseChiefRewardNumber(self, itemId, itemNum, extra):
-        DEBUG_MSG('_useItemToIncreaseChiefRewardNumber::', itemId, itemNum, extra)
+        INFO_MSG('_useItemToIncreaseChiefRewardNumber::', itemId, itemNum, extra)
 
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(itemId, itemNum, dataUtils.getItemDefaultBindType())
@@ -71,14 +72,14 @@ class IChief(object):
         self.onUseItemToIncreaseChiefRewardNumber(itemId, itemNum, extra)
 
     def onUseItemToIncreaseChiefRewardNumber(self, itemId, itemNum, extra):
-        DEBUG_MSG('onUseItemToIncreaseChiefRewardNumber::', itemId, itemNum, extra)
+        INFO_MSG('onUseItemToIncreaseChiefRewardNumber::', itemId, itemNum, extra)
         self.chiefInfo.addRewardNumByUseSpecialItem(itemNum)
         self.chiefInfo = self.chiefInfo
         self.onMessagePre(int(RBC_CFG.datas["useShanglingdingMsg"]["value"]),
                               [str(itemNum), str(self.chiefInfo.useItemAddRewardNumber)])
 
     def _useCoinToIncreaseChiefRewardNumber(self, useNum, extra):
-        DEBUG_MSG('_useCoinToIncreaseChiefRewardNumber::', useNum)
+        INFO_MSG('_useCoinToIncreaseChiefRewardNumber::', useNum)
 
         rewardNumCoin = int(RBC_CFG.datas['rewardNumCoin']['value'])
         deductWealthVal = dropAward.DeductWealthVal()
@@ -96,7 +97,7 @@ class IChief(object):
         self.onUseCoinToIncreaseChiefRewardNumber(useNum, extra)
 
     def onUseCoinToIncreaseChiefRewardNumber(self, useNum, extra):
-        DEBUG_MSG('onUseCoinToIncreaseChiefRewardNumber::', useNum, extra)
+        INFO_MSG('onUseCoinToIncreaseChiefRewardNumber::', useNum, extra)
         self.chiefInfo.addRewardNumByUseCoin(useNum)
         self.chiefInfo = self.chiefInfo
 
@@ -106,4 +107,17 @@ class IChief(object):
         self.chiefInfo = chiefInfo
         self.onEnterDungeon(spaceNo, spaceMgrBox, extra)
         self.activityComplete(RBC_CFG.datas['raidBossChallengeActID']['value'])
+
+        LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Consume(
+            extra.get('raidId'),
+            gameconst.DungeonPlayModeEnum.CHIEF,
+            dungeonNo,
+            chiefInfo.getUsedTicketType(),
+            extra.get('joinType'),
+            extra.get('totalNum'),
+            self.gbID,
+            self.getTotalScore(),
+            self.getRoleCacheAttr('level')
+        )
+
         INFO_MSG('in onEnterChiefDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

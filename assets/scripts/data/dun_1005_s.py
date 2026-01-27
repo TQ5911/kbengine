@@ -653,6 +653,26 @@ datas ={
           "Remark": ""
         }
       }
+    },
+    "BreakAwayStuckPos": {
+      "10058008": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 73.37614,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 10058008,
+        "PosX": 47.0,
+        "PosY": 141.6166,
+        "PosZ": 155.96,
+        "Props": {
+          "Remark": "",
+          "ShowInSceneMap": 1
+        }
+      }
     }
   }
 }

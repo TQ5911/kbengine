@@ -36,6 +36,7 @@ class DungeonSpaceVal(userType.UserSoleType):
         self.src = 0
         self.extraProps = extraPropsDic
         self.dungeonSpaceValType = dungeonSpaceValType
+        self.completedReasonType = gameconst.DunegonCompleteReasonType.DEFAULT
 
     def isActive(self):
         return self.state == self.SPACE_STATE_DURING

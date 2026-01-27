@@ -129,7 +129,7 @@ datas = _tools.RODict({
     }),
     "mineBattle_coreTempletId": _tools.RODict({
         "ID": "mineBattle_coreTempletId",
-        "value": 11238019,
+        "value": 10280001,
     }),
     "mineBattle_flagDropCollectionId": _tools.RODict({
         "ID": "mineBattle_flagDropCollectionId",
@@ -182,6 +182,14 @@ datas = _tools.RODict({
     "mineBattle_occupationTips": _tools.RODict({
         "ID": "mineBattle_occupationTips",
         "value": "成功占领{0}矿区",
+    }),
+    "mineBattle_unoccupationTips": _tools.RODict({
+        "ID": "mineBattle_unoccupationTips",
+        "value": "本期无帮会占领{0}矿区",
+    }),
+    "mineBattle_unoccupationSign": _tools.RODict({
+        "ID": "mineBattle_unoccupationSign",
+        "value": "无",
     }),
     "mineBattle_occupationTimeText": _tools.RODict({
         "ID": "mineBattle_occupationTimeText",

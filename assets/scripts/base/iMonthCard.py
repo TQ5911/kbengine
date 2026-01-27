@@ -22,12 +22,15 @@ import mailAssistor
 import itemData_set as IDSD
 import redisUtils
 import LogTrackingMgr
+import gamedecorator
 
 class IMonthCard(object):
     def __init__(self):
         self.offlineHangupChecked = False
+        self.tempLastDayRemainHangupMinutes = 0
         self.pyAddTimer(60, 60, gametimer.MONTH_CARD_CHECK_TIMER)
 
+    @gamedecorator.checkGameconfigEnable('monthCard')
     def isMonthCardExpired(self):
         return self.monthCardExpireTime < utils.getNow()
     
@@ -68,7 +71,8 @@ class IMonthCard(object):
                 rewardId,
                 _ctx
             )
-        self.addWealth(_src, _awardVal, KBEngine.genUUID64(), _detail)
+        awardCtx = self._getAvatarAwardCtx(0, None)
+        self.addWealth(_src, _awardVal, KBEngine.genUUID64(), _detail, awardCtx)
         self.checkMonthCardAward()
         self.updateRedisVIPFlag()
 
@@ -85,6 +89,7 @@ class IMonthCard(object):
         self.checkMonthCardAward()
 
     #检查并发放月卡每日奖励
+    @gamedecorator.checkGameconfigEnable('monthCard')
     def checkMonthCardAward(self):
         INFO_MSG("start checkMonthCardAward")
         if self.isMonthCardExpired():
@@ -111,7 +116,8 @@ class IMonthCard(object):
             rewardId,
             _ctx
         )
-        self.addWealth(_src, _awardVal, KBEngine.genUUID64(), _detail)
+        awardCtx = self._getAvatarAwardCtx(0, None)
+        self.addWealth(_src, _awardVal, KBEngine.genUUID64(), _detail, awardCtx)
 
         #挂机时长奖励
         self.checkAndGetHangupTime()
@@ -128,6 +134,7 @@ class IMonthCard(object):
                  "->", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.getNow())))
         INFO_MSG("remainHangupMinutes:", self.remainHangupMinutes, "->", BCBCCD.datas['dailyBaseTime']['value'])
         self.lastMonthCardHangupGetTime = utils.getNow()
+        self.tempLastDayRemainHangupMinutes = self.remainHangupMinutes
         self.remainHangupMinutes = BCBCCD.datas['dailyBaseTime']['value']
         return True
 
@@ -186,6 +193,7 @@ class IMonthCard(object):
         self.addWealth(_src, _awardVal, _opUUID, _detail, awardCtx)
 
     #主城、等级到达、有月卡 = 有挂机收益
+    @gamedecorator.checkGameconfigEnable('monthCard')
     def _onMonthCardTimer(self):
         #主城挂机收益
         if self.isMonthCardExpired():
@@ -211,7 +219,11 @@ class IMonthCard(object):
             self._checkAndAddIdleIncome(1)
 
     #结算挂机收益
+    @gamedecorator.checkGameconfigEnable('monthCard')
     def checkOfflineHangup(self):
+        if self.isCrossServer:
+            return
+
         if self.offlineHangupChecked:
             return
         self.offlineHangupChecked = True
@@ -221,6 +233,10 @@ class IMonthCard(object):
 
         endTime = min(self.monthCardExpireTime, utils.getNow())
         if endTime <= self.tLastOfflineBase + BCBCCD.datas['offlineTimeLimit']['value'] * 60:
+            return
+        
+        if self.tLastOfflineBase <= 0:
+            ERROR_MSG("checkOfflineHangup", "tLastOfflineBase <= 0", self.tLastOfflineBase, endTime)
             return
 
         totalMinutes = 0
@@ -235,9 +251,10 @@ class IMonthCard(object):
                 totalMinutes += timeDelta
                 self._deductRemainHangupMinutes(timeDelta)
         else:
-            accumulateTime = CC.datas['maxAccumulateTime']['value']
-            lastRemainHangupMinutes = self.remainHangupMinutes
             self.checkAndGetHangupTime()
+            accumulateTime = CC.datas['maxAccumulateTime']['value']
+            lastRemainHangupMinutes = self.tempLastDayRemainHangupMinutes
+            self.tempLastDayRemainHangupMinutes = 0
 
             #计算最早那天的收益
             #那天的挂机时长有浪费
@@ -251,13 +268,13 @@ class IMonthCard(object):
             INFO_MSG("checkOfflineHangup begin", "timeDelta", timeDelta, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime, "tLastOfflineBase", self.tLastOfflineBase, "endTime", endTime)
 
             #中间天数
-            dayDelta = utils.getCurrentDayTS(endTime, gameconst.COMMON_CYCLE_TIME) - \
-                       utils.getCurrentDayTS(self.tLastOfflineBase, gameconst.COMMON_CYCLE_TIME) - 1
+            dayDelta = (utils.getCurrentDayTS(endTime, gameconst.COMMON_CYCLE_TIME) - \
+                       utils.getCurrentDayTS(self.tLastOfflineBase, gameconst.COMMON_CYCLE_TIME)) // gameconst.ONE_DAY_SECONDS - 1
             if dayDelta > 0:
                 minutes = min(accumulateTime, BCBCCD.datas['dailyBaseTime']['value'] * dayDelta)
                 totalMinutes += minutes
                 accumulateTime -= minutes
-            INFO_MSG("checkOfflineHangup middle", "dayDelta", dayDelta, "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
+                INFO_MSG("checkOfflineHangup middle", "dayDelta", dayDelta, "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
 
             #今天
             minutes = min((endTime - utils.getCurrentDayTS(endTime, gameconst.COMMON_CYCLE_TIME)) // 60, self.remainHangupMinutes)
@@ -300,7 +317,7 @@ class IMonthCard(object):
         INFO_MSG("_checkMonthCardOfflineExpMail", "totalOfflineExp", exp)
         _addVal = dropAward.MailWealthVal()
         _addVal.addWealthByItemId(gameconst.ItemId.EXP, exp)
-        mailAssistor.sendMailToPlayers([self.gbID], CC.datas['offlineMail']['value'], extraAttach=_addVal)
+        mailAssistor.sendMailToPlayers([self.gbID], CC.datas['offlineMail']['value'], extraAttach=_addVal, srcType=AAC_AACDD.datas.BONUS_SRC_MONTHCARD_OFFLINE_BONUS)
 
     #更新redis的特权标识(排队优先)
     def updateRedisVIPFlag(self):

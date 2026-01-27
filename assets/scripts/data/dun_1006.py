@@ -393,5 +393,25 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 1
     }
+  },
+  "10068020": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "BreakAwayStuckPos",
+    "ClassNameType": 22,
+    "CustomID": "",
+    "Dir": 180.289,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 10068020,
+    "Name": "\u8131\u5361\u70b9",
+    "PosX": 144.3234,
+    "PosY": 102.1951,
+    "PosZ": 162.1168,
+    "Props": {
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
   }
 }

@@ -273,7 +273,7 @@ datas = _tools.RODict({
         "combatAreaID": 32038004,
         "refreshMonsterID": _tools.ROList([32030088]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011004, 11011005, 11011006]),
+        "countMonsterID": _tools.ROList([11012004, 11012005, 11012006]),
         "countResetTime": 60
     }),
     320302: _tools.RODict({
@@ -282,7 +282,7 @@ datas = _tools.RODict({
         "combatAreaID": 32038005,
         "refreshMonsterID": _tools.ROList([32030129]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011004, 11011005, 11011006]),
+        "countMonsterID": _tools.ROList([11012004, 11012005, 11012006]),
         "countResetTime": 60
     }),
     320303: _tools.RODict({
@@ -291,7 +291,7 @@ datas = _tools.RODict({
         "combatAreaID": 32038006,
         "refreshMonsterID": _tools.ROList([32030170]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011004, 11011005, 11011006]),
+        "countMonsterID": _tools.ROList([11012004, 11012005, 11012006]),
         "countResetTime": 60
     }),
     320401: _tools.RODict({
@@ -300,7 +300,7 @@ datas = _tools.RODict({
         "combatAreaID": 32048004,
         "refreshMonsterID": _tools.ROList([32040088]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011004, 11011005, 11011006]),
+        "countMonsterID": _tools.ROList([11012004, 11012005, 11012006]),
         "countResetTime": 60
     }),
     320402: _tools.RODict({
@@ -309,7 +309,7 @@ datas = _tools.RODict({
         "combatAreaID": 32048005,
         "refreshMonsterID": _tools.ROList([32040129]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011004, 11011005, 11011006]),
+        "countMonsterID": _tools.ROList([11012004, 11012005, 11012006]),
         "countResetTime": 60
     }),
     320403: _tools.RODict({
@@ -318,7 +318,7 @@ datas = _tools.RODict({
         "combatAreaID": 32048006,
         "refreshMonsterID": _tools.ROList([32040170]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011004, 11011005, 11011006]),
+        "countMonsterID": _tools.ROList([11012004, 11012005, 11012006]),
         "countResetTime": 60
     }),
     320501: _tools.RODict({
@@ -327,7 +327,7 @@ datas = _tools.RODict({
         "combatAreaID": 32058004,
         "refreshMonsterID": _tools.ROList([32050088]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011004, 11011005, 11011006]),
+        "countMonsterID": _tools.ROList([11012004, 11012005, 11012006]),
         "countResetTime": 60
     }),
     320502: _tools.RODict({
@@ -336,7 +336,7 @@ datas = _tools.RODict({
         "combatAreaID": 32058005,
         "refreshMonsterID": _tools.ROList([32050129]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011004, 11011005, 11011006]),
+        "countMonsterID": _tools.ROList([11012004, 11012005, 11012006]),
         "countResetTime": 60
     }),
     320503: _tools.RODict({
@@ -345,7 +345,7 @@ datas = _tools.RODict({
         "combatAreaID": 32058006,
         "refreshMonsterID": _tools.ROList([32050170]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011004, 11011005, 11011006]),
+        "countMonsterID": _tools.ROList([11012004, 11012005, 11012006]),
         "countResetTime": 60
     }),
     321201: _tools.RODict({
@@ -354,7 +354,7 @@ datas = _tools.RODict({
         "combatAreaID": 32128004,
         "refreshMonsterID": _tools.ROList([32120088]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011011, 11011012, 11011013]),
+        "countMonsterID": _tools.ROList([11012011, 11012012, 11012013]),
         "countResetTime": 60
     }),
     321202: _tools.RODict({
@@ -363,7 +363,7 @@ datas = _tools.RODict({
         "combatAreaID": 32128005,
         "refreshMonsterID": _tools.ROList([32120129]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011011, 11011012, 11011013]),
+        "countMonsterID": _tools.ROList([11012011, 11012012, 11012013]),
         "countResetTime": 60
     }),
     321203: _tools.RODict({
@@ -372,7 +372,7 @@ datas = _tools.RODict({
         "combatAreaID": 32128006,
         "refreshMonsterID": _tools.ROList([32120170]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011011, 11011012, 11011013]),
+        "countMonsterID": _tools.ROList([11012011, 11012012, 11012013]),
         "countResetTime": 60
     }),
     321301: _tools.RODict({
@@ -381,7 +381,7 @@ datas = _tools.RODict({
         "combatAreaID": 32138004,
         "refreshMonsterID": _tools.ROList([32130088]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011011, 11011012, 11011013]),
+        "countMonsterID": _tools.ROList([11012011, 11012012, 11012013]),
         "countResetTime": 60
     }),
     321302: _tools.RODict({
@@ -390,7 +390,7 @@ datas = _tools.RODict({
         "combatAreaID": 32138005,
         "refreshMonsterID": _tools.ROList([32130129]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011011, 11011012, 11011013]),
+        "countMonsterID": _tools.ROList([11012011, 11012012, 11012013]),
         "countResetTime": 60
     }),
     321303: _tools.RODict({
@@ -399,7 +399,7 @@ datas = _tools.RODict({
         "combatAreaID": 32138006,
         "refreshMonsterID": _tools.ROList([32130170]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011011, 11011012, 11011013]),
+        "countMonsterID": _tools.ROList([11012011, 11012012, 11012013]),
         "countResetTime": 60
     }),
     321401: _tools.RODict({
@@ -408,7 +408,7 @@ datas = _tools.RODict({
         "combatAreaID": 32148004,
         "refreshMonsterID": _tools.ROList([32140088]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011011, 11011012, 11011013]),
+        "countMonsterID": _tools.ROList([11012011, 11012012, 11012013]),
         "countResetTime": 60
     }),
     321402: _tools.RODict({
@@ -417,7 +417,7 @@ datas = _tools.RODict({
         "combatAreaID": 32148005,
         "refreshMonsterID": _tools.ROList([32140129]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011011, 11011012, 11011013]),
+        "countMonsterID": _tools.ROList([11012011, 11012012, 11012013]),
         "countResetTime": 60
     }),
     321403: _tools.RODict({
@@ -426,7 +426,7 @@ datas = _tools.RODict({
         "combatAreaID": 32148006,
         "refreshMonsterID": _tools.ROList([32140170]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011011, 11011012, 11011013]),
+        "countMonsterID": _tools.ROList([11012011, 11012012, 11012013]),
         "countResetTime": 60
     }),
     321801: _tools.RODict({
@@ -435,7 +435,7 @@ datas = _tools.RODict({
         "combatAreaID": 32188004,
         "refreshMonsterID": _tools.ROList([32180088]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011046, 11011047, 11011048]),
+        "countMonsterID": _tools.ROList([11012046, 11012047, 11012048]),
         "countResetTime": 60
     }),
     321802: _tools.RODict({
@@ -444,7 +444,7 @@ datas = _tools.RODict({
         "combatAreaID": 32188005,
         "refreshMonsterID": _tools.ROList([32180129]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011046, 11011047, 11011048]),
+        "countMonsterID": _tools.ROList([11012046, 11012047, 11012048]),
         "countResetTime": 60
     }),
     321803: _tools.RODict({
@@ -453,7 +453,7 @@ datas = _tools.RODict({
         "combatAreaID": 32188006,
         "refreshMonsterID": _tools.ROList([32180170]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011046, 11011047, 11011048]),
+        "countMonsterID": _tools.ROList([11012046, 11012047, 11012048]),
         "countResetTime": 60
     }),
     321901: _tools.RODict({
@@ -462,7 +462,7 @@ datas = _tools.RODict({
         "combatAreaID": 32198004,
         "refreshMonsterID": _tools.ROList([32190088]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011050, 11011051, 11011052]),
+        "countMonsterID": _tools.ROList([11012050, 11012051, 11012052]),
         "countResetTime": 60
     }),
     321902: _tools.RODict({
@@ -471,7 +471,7 @@ datas = _tools.RODict({
         "combatAreaID": 32198005,
         "refreshMonsterID": _tools.ROList([32190129]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011050, 11011051, 11011052]),
+        "countMonsterID": _tools.ROList([11012050, 11012051, 11012052]),
         "countResetTime": 60
     }),
     321903: _tools.RODict({
@@ -480,7 +480,7 @@ datas = _tools.RODict({
         "combatAreaID": 32198006,
         "refreshMonsterID": _tools.ROList([32190170]),
         "countLimit": 1000,
-        "countMonsterID": _tools.ROList([11011050, 11011051, 11011052]),
+        "countMonsterID": _tools.ROList([11012050, 11012051, 11012052]),
         "countResetTime": 60
     }),
     322001: _tools.RODict({
@@ -489,7 +489,7 @@ datas = _tools.RODict({
         "combatAreaID": 32208008,
         "refreshMonsterID": _tools.ROList([32200096, 32200104]),
         "countLimit": 100,
-        "countMonsterID": _tools.ROList([11011030, 11011032, 11011032]),
+        "countMonsterID": _tools.ROList([11012030, 11012032, 11012032]),
         "countResetTime": 60
     }),
     322002: _tools.RODict({
@@ -498,7 +498,7 @@ datas = _tools.RODict({
         "combatAreaID": 32208008,
         "refreshMonsterID": _tools.ROList([32200112, 32200120]),
         "countLimit": 100,
-        "countMonsterID": _tools.ROList([11011035, 11011036, 11011037]),
+        "countMonsterID": _tools.ROList([11012035, 11012036, 11012037]),
         "countResetTime": 60
     }),
     322003: _tools.RODict({
@@ -507,7 +507,7 @@ datas = _tools.RODict({
         "combatAreaID": 32208008,
         "refreshMonsterID": _tools.ROList([32200129, 32200137]),
         "countLimit": 100,
-        "countMonsterID": _tools.ROList([11011040, 11011041, 11011042]),
+        "countMonsterID": _tools.ROList([11012040, 11012041, 11012042]),
         "countResetTime": 60
     }),
     322004: _tools.RODict({
@@ -516,7 +516,7 @@ datas = _tools.RODict({
         "combatAreaID": 32208008,
         "refreshMonsterID": _tools.ROList([32200168]),
         "countLimit": 60,
-        "countMonsterID": _tools.ROList([11011033, 11011034, 11011038, 11011039, 11011043, 11011044]),
+        "countMonsterID": _tools.ROList([11012033, 11012034, 11012038, 11012039, 11012043, 11012044]),
         "countResetTime": 150
     }),
     330301: _tools.RODict({

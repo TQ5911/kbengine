@@ -24,10 +24,10 @@ class IGuildTrainCell(object):
 
                 if isinstance(ret, int):
                     propVal = ret
-                    scoreTmp = dataUtils.filterFightPropScore(self.school, propName) * propVal
+                    scoreTmp = dataUtils.calcFightPropScore(self.school, propName, propVal)
                 elif isinstance(ret, float):
                     propVal = ret
-                    scoreTmp = dataUtils.filterFightPropScore(self.school, propName) * propVal
+                    scoreTmp = dataUtils.calcFightPropScore(self.school, propName, propVal)
                 else:
                     propVal, scoreTmp = ret
 
@@ -54,7 +54,7 @@ class IGuildTrainCell(object):
 
         DEBUG_MSG('onUpgradeTrainLevel:', propName, targetValue, curValue, trainId, targetLevel)
         self.addProp(propName, targetValue - curValue, gameconst.SourceType.GuildTrain)
-
+        score = dataUtils.calcFightPropScore(self.school, propName, targetValue - curValue)
         self.onUpdateGuildTrainScore(score)
 
     def onResetGuildTrain(self, syncDic):

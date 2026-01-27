@@ -4,6 +4,8 @@
 import KBEngine
 from KBEDebug import *
 
+import LogTrackingMgr
+import gameconfig
 import userType
 import utils
 import gameclass
@@ -116,8 +118,6 @@ class AchievementsVal(userType.UserSoleType):
         waitList = waitList[:] # 复制一份，防止修改原列表
         _updateList = []
         _maxTimes = 1000
-        _name = avatar.getRoleCacheAttr('name', '')
-        _gbId = str(avatar.gbID)
         while waitList:
             _maxTimes -= 1
             if _maxTimes <= 0:
@@ -135,7 +135,7 @@ class AchievementsVal(userType.UserSoleType):
             _oldIsFinished = False
             if _achieveVal:
                 _oldIsFinished = _achieveVal.isFinished()
-                if _achieveVal.updateFromNewAchieveData(avatar, A_DD.datas[_achieveId], ctx):
+                if _achieveVal.updateFromNewAchieveData(avatar, A_DD.datas[_achieveId], ctx, gameconst.ACHIEVE_SRC_UPDATE):
                     _updateList.append(_achieveVal)
 
             else:
@@ -148,22 +148,7 @@ class AchievementsVal(userType.UserSoleType):
                 _updateList.append(_achieveVal)
 
             if _oldIsFinished != self.achieveDic[_achieveId].isFinished():
-                _msgIds = _achieveVal.configData()['finishMessage']
-                for _msgId in _msgIds:
-                    _msgData = M_CMD.datas[_msgId]
-
-                    if gameconst.ChatChannel.WORLD in _msgData['channelID']:
-                        gameengine.broadcastBaseapp(
-                            'broadcastToAllAvatar',
-                            (
-                                gameconst.BASE,
-                                'onMessagePre',
-                                (_msgId, [str(_achieveId), _name, _gbId]),
-                                (),
-                            )
-                        )
-                    else:
-                        avatar.onMessagePre(_msgId, [str(_achieveId)])
+                self._notifyFinishMsg(_achieveVal, _achieveId, avatar)
 
                 # 这里如果是完成状态，更新wait列表
                 _sons = A_DD.sonAchieveDic.get(_achieveId, [])
@@ -175,6 +160,29 @@ class AchievementsVal(userType.UserSoleType):
         DEBUG_MSG('updateByWaitList left times:', _maxTimes)
 
         return _updateList
+
+    def _notifyFinishMsg(self, achieveVal, achieveId, avatar):
+        if not gameconfig.visibleConfigEable('achievement'):
+            return
+
+        _name = avatar.getRoleCacheAttr('name', '')
+        _gbId = str(avatar.gbID)
+        _msgIds = achieveVal.configData()['finishMessage']
+        for _msgId in _msgIds:
+            _msgData = M_CMD.datas[_msgId]
+
+            if gameconst.ChatChannel.WORLD in _msgData['channelID']:
+                gameengine.broadcastBaseapp(
+                    'broadcastToAllAvatar',
+                    (
+                        gameconst.BASE,
+                        'onMessagePre',
+                        (_msgId, [str(achieveId), _name, _gbId]),
+                        (),
+                    )
+                )
+            else:
+                avatar.onMessagePre(_msgId, [str(achieveId)])
 
     def updateAchieveData(self, avatar):
         _index = utils.binarySearchFirstGreater(A_DD.versionList, self.maxVersion)
@@ -213,6 +221,16 @@ class AchievementsVal(userType.UserSoleType):
             _takeIds.append(_achieveId)
 
             self.sumPoint += _achieveVal.configData()['achPoint']
+
+            LogTrackingMgr.LogTrackingMgr.Achievement_Update(
+                avatar.accountEntity.accountName,
+                avatar.gbID,
+                gameconfig.gameId(),
+                _achieveVal.achieveId,
+                self.maxVersion,
+                gameconst.ACHIEVE_STATE_RECEIVE,
+                _achieveVal.step,
+            )
 
         avatar._showPopReward(_src, popRewardUUID, gameclass.AwardDetail(achievementId=_takeIds))
         avatar.client.onTakeAchievementRewards(_takeIds, self.sumPoint)

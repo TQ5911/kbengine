@@ -28,12 +28,14 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         iLineStubBase.ILineStubBase.__init__(self)
         self.addDatetimeTimerTick()
         self.allPlayers = linePlayers.AllLinePlayers(self.lineType)
+        self.clearTimeOutIter = None
 
         interval = 60 * branchData_set.datas["Branch_mergeInterval"]["value"]
         waitTime = 60 * branchData_set.datas["Branch_mergeWaitingTime"]["value"]
 
         self.pyAddTimer(interval, interval, gametimer.WORLD_LINE_CHECK_LINE_MERGE)
         self.pyAddTimer(interval + waitTime, interval, gametimer.WORLD_LINE_DO_LINE_MERGE)
+        self.pyAddTimer(5, 5, gametimer.CLEAR_WORLDLINE_ENTER_TIME_OUT)
 
     def doNext(self):
         DEBUG_MSG('WorldLine doNext', self.lineType)
@@ -47,6 +49,8 @@ class WorldLineStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             self._checkLineMerge()
         elif userArg == gametimer.WORLD_LINE_DO_LINE_MERGE:
             self._doLineMerge()
+        elif userArg == gametimer.CLEAR_WORLDLINE_ENTER_TIME_OUT:
+            self.onClearEnterTimeOut(gameconst.WORLDLINE_ENTER_TIME_OUT_DUR)
 
         super().onTimer(tid, userArg)
 

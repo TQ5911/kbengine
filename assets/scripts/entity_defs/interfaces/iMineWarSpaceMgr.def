@@ -9,6 +9,7 @@
         <onRegisterMineWarSpaceMgr>
             <Arg>       GUILD_UUID     </Arg>
             <Arg>       UINT8          </Arg>
+            <Arg>       TIMESTAMP      </Arg>
         </onRegisterMineWarSpaceMgr>
 
         <transferAllAvatarInSpace>

@@ -60,7 +60,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 18000063,
     "ID": 10054001,
-    "Name": "\u8389\u83b2\u5a1c",
+    "Name": "\u4f0a\u8482\u65af",
     "PosX": 231.44,
     "PosY": 167.7493,
     "PosZ": 185.69,
@@ -324,7 +324,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 18000625,
     "ID": 10054027,
-    "Name": "\u957f\u8033\u5251\u5ba2\u90a6\u5c3c",
+    "Name": "\u98de\u5929\u5c0f\u732a\u6566\u6566",
     "PosX": 183.4848,
     "PosY": 165.6987,
     "PosZ": 148.0818,
@@ -612,7 +612,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 16000103,
     "ID": 10058004,
-    "Name": "\u4efb\u52a1\u5b9d\u7bb1",
+    "Name": "\u4efb\u52a1\u7528\u7a7a\u5b9d\u7bb1",
     "PosX": 30.21859,
     "PosY": 161.509,
     "PosZ": 273.4665,
@@ -694,6 +694,26 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": ""
+    }
+  },
+  "10058008": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "BreakAwayStuckPos",
+    "ClassNameType": 22,
+    "CustomID": "",
+    "Dir": 73.37614,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 10058008,
+    "Name": "\u8131\u5361\u70b9",
+    "PosX": 47.0,
+    "PosY": 141.6166,
+    "PosZ": 155.96,
+    "Props": {
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   }
 }

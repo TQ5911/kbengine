@@ -811,10 +811,6 @@
             <Arg>        FLOAT         </Arg>
         </displacedBySkill>
 
-        <rateInDungeon>
-            <Arg>        FLOAT         </Arg>
-        </rateInDungeon>
-
         <getBuffInfo> <Exposed/>
             <Arg>        OBJECT_ID        </Arg>
         </getBuffInfo>
@@ -830,8 +826,8 @@
         <reliveToPos>
             <Arg>           PYTHON         </Arg>
             <Arg>           PYTHON         </Arg>
-            <Arg>           HP          </Arg>
-            <Arg>           PYTHON          </Arg>
+            <Arg>           HP             </Arg>
+            <Arg>           PYTHON         </Arg>
         </reliveToPos>
 
         <doActionOnChangeSlot>
@@ -839,17 +835,13 @@
             <Arg>           LEVEL          </Arg>
             <Arg>           BOOL           </Arg>
             <Arg>           BOOL           </Arg>
+            <Arg>           DOUBLETIME     </Arg>
         </doActionOnChangeSlot>
 
         <removeSkill>
             <Arg>           SKILLID        </Arg>
             <Arg>           BOOL           </Arg>
         </removeSkill>
-
-        <addPassiveSkill>
-            <Arg>           SKILLID        </Arg>
-            <Arg>           LEVEL          </Arg>
-        </addPassiveSkill>
     </CellMethods>
 
     <ClientMethods>

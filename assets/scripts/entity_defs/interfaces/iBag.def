@@ -34,13 +34,6 @@
             <Persistent>    true            </Persistent>
         </darkIron>
 
-        <geniusQi>
-            <Type>          GENIUS_QI       </Type>
-            <Flags>         BASE_AND_CLIENT </Flags>
-            <Default>       0               </Default>
-            <Persistent>    true            </Persistent>
-        </geniusQi>
-
         <coin>
             <Type>          SCOIN           </Type>
             <Flags>         BASE_AND_CLIENT </Flags>
@@ -241,6 +234,7 @@
             <Arg>       SPACE_NO   </Arg>
             <Arg>       PYTHON     </Arg>
             <Arg>       UINT8     </Arg>
+            <Arg>       UINT64     </Arg>
         </baseDoApplyGather>
 
         <unlockBag>
@@ -332,6 +326,10 @@
         <reqShareReward> <Exposed/>
             <Arg>           UINT32                  </Arg>
         </reqShareReward>
+
+        <reqCanShareReward> <Exposed/>
+            <Arg>           UINT32                  </Arg>
+        </reqCanShareReward>
 
         <doAwardOnKillMonster>
             <Arg>      PYTHON       </Arg>
@@ -636,5 +634,12 @@
             <Arg>       ARRAY    <of>   UINT32    </of>     </Arg>
             <Arg>       ARRAY    <of>   INT64    </of>     </Arg>
         </onQueryCurrencyExchangeData>
+
+        <onQueryCanShareReward>
+            <Arg>       BOOL      </Arg>
+        </onQueryCanShareReward>
+
+        <onCheckGatherCondFailed>
+        </onCheckGatherCondFailed>
     </ClientMethods>
 </root>

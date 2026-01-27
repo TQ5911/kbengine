@@ -102,9 +102,6 @@ datas = _tools.RODict({
     242113: _tools.RODict({
         "triggerName": "UIDrawPetPanel_Self",
     }),
-    242116: _tools.RODict({
-        "triggerName": "UIMainCityPanel_Self",
-    }),
     242121: _tools.RODict({
         "triggerName": "UIMainCityPanel_Self",
     }),
@@ -141,26 +138,11 @@ datas = _tools.RODict({
     242183: _tools.RODict({
         "triggerName": "UIEquipTrainingPanel_Self",
     }),
-    242191: _tools.RODict({
-        "triggerName": "UIMainCityPanel_Self",
-    }),
-    242193: _tools.RODict({
-        "triggerName": "UIEquipTrainingPanel_Self",
-    }),
-    242201: _tools.RODict({
-        "triggerName": "UIMainCityPanel_Self",
-    }),
-    242203: _tools.RODict({
-        "triggerName": "UIEquipTrainingPanel_Self",
-    }),
     242211: _tools.RODict({
         "triggerName": "UIMainCityPanel_Self",
     }),
     242213: _tools.RODict({
         "triggerName": "UISquarePanel_Self",
-    }),
-    242215: _tools.RODict({
-        "triggerName": "UIMainCityPanel_Self",
     }),
     242221: _tools.RODict({
         "triggerName": "UIMainCityPanel_Self",

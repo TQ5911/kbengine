@@ -539,12 +539,10 @@ class IComplexTeleport(object):
             fromLineType = formula.getMapId(fromSpaceNo)
             if fromLineType != lineType:
                 extra['toLine'] = True # 如果从副本进入大世界只有走这里
+                extra["telToMainCityWhenFull"] = True
                 self.applyEnterLineInternal(lineType, lineNo, position, direction, extra=extra)
             else:
                 self.switchLineAndPosition(lineNo, position, src=src, extra=extra)
-
-            if lineNo < 0:
-                captainToSpaceNo = 0
 
         else:
             # NOTE(): 刺客取消濒死状态
@@ -698,18 +696,6 @@ class IComplexTeleport(object):
         self.spaceMgrId = spaceMgrBox.id
         self.spaceMgr.onPlayerEnter(self.id)
 
-        # if self.spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.GUILD_CHALLENGE:
-        #     _kwargs = dict(
-        #         GameSvrId=None, dtEventTime=None, vGameAppid=None,
-        #         iBattleType=gametlog.BATTLETYPE.RaidChallenge,
-        #         iBattleID=dungeonNo,
-        #         iTeamID=self.raidUUID,
-        #         TeamUserNum=self.raidInfo.raidPlayerNum,
-        #         SingleOrteam=gametlog.SingleOrteam.RAID
-        #     )
-        #     extra['tlogProps'] = _kwargs
-        #     extra['actId'] = gameconst.ACT_ID_CONST.ACTIVITY_GUILD_CHALLENGE_ID
-
         # 【【死亡复活】玩家在大世界内死亡后，通过点击个人资料-头像-驭灵殿按钮进入副本后需要复活玩家】
         # NOTE(): 进入副本前复活会导致hp同步不到客户端导致显示问题, 先放在后面
         if self.isDie():
@@ -718,6 +704,9 @@ class IComplexTeleport(object):
 
         # callback base
         extra['raidId'] = self.raidId
+        extra['totalNum'] = self.raidInfo.raidPlayerNum
+        extra['joinType'] = self.joinType
+        
         if self.spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF:
             self.base.onEnterChiefDungeon(self.spaceNo, dungeonNo, spaceMgrBox, extra)
         else:
@@ -770,17 +759,6 @@ class IComplexTeleport(object):
 
         if formula.isLineSpace(toSpaceNo) and not formula.isYanWuSpace(toSpaceNo):
             self.clearTeleportOutsideRecord()
-
-        # if spaceMgr and spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.GUILD_CHALLENGE:
-        #     _kwargs = dict(
-        #         GameSvrId=None, dtEventTime=None, vGameAppid=None,
-        #         iBattleType=gametlog.BATTLETYPE.RaidChallenge,
-        #         iBattleID=dungeonNo,
-        #         iRoundTime=max(0, utils.getNow() - self.getSpaceEnterT()),
-        #         iResult=int(spaceMgr.isDungeonWin),
-        #         iRank=0
-        #     )
-        #     self.base.beforeLeaveDungeonHandleTLog(fromSpaceNo, toSpaceNo, _kwargs)
 
         # fix big world position
         bigWorldDungeonLeaveType = self._getPrmBydungeonNo(dungeonNo, 'leave')
@@ -1066,6 +1044,9 @@ class IComplexTeleport(object):
             )
             extra['tlogProps'] = _kwargs
             extra['actId'] = gameconst.ACT_ID_CONST.ACTIVITY_CRUSADE_ID
+            extra['teamUUID'] = teamUUID
+            extra['totalNum'] = self.teamInfo.howManyMember()
+            extra['joinType'] = self.joinType
             self.base.onEnterCrusadeDungeon(toSpaceNo, dungeonNo, spaceMgrBox, extra)
         else:
             self.base.onEnterDungeon(toSpaceNo, spaceMgrBox, extra)
@@ -1224,7 +1205,10 @@ class IComplexTeleport(object):
     # cube
     # ----------------------------------------------------------------------
 
+    @gamedecorator.checkTeleportLock(gameconst.TeleportLock.ENTER_CUBE)
     def _beforeEnter_cube(self, fromSpaceNo, toSpaceNo, options, context):
+        INFO_MSG('_beforeEnter_cube::~')
+        self.aquireTeleportLock(gameconst.TeleportLock.ENTER_CUBE)
         self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
 
         _extra = context['cube']
@@ -1239,6 +1223,8 @@ class IComplexTeleport(object):
         return True
 
     def _afterEnter_cube(self, fromSpaceNo, toSpaceNo, options, context):
+        INFO_MSG('_afterEnter_cube::~')
+        self.releaseTeleportLock(gameconst.TeleportLock.ENTER_CUBE)
         self.spaceMgrId = context['e']['spaceMgrId']
         self.spaceMgr.onPlayerEnter(self.id)
 
@@ -1251,6 +1237,9 @@ class IComplexTeleport(object):
             _dur = cube_config.datas['cubeNumTime']['value'] * 60
             self.cubeQuota.addLeftTime(self, _dur)
             self.base.afterEnterCubeDeductTimes()
+
+        if not formula.isCubeSpace(fromSpaceNo):
+            self.base.activityComplete(cube_config.datas['cubeActID']['value'])
 
         self._dealWithCubeTimer(fromSpaceNo, toSpaceNo)
 
@@ -1277,6 +1266,7 @@ class IComplexTeleport(object):
         return True
 
     def _beforeLeave_cube(self, fromSpaceNo, toSpaceNo, options, context):
+        INFO_MSG('_beforeLeave_cube::~')
         position, direction, spaceNo = self._fetchCommonLeavePosAndDir(fromSpaceNo, toSpaceNo, options, context)
 
         if options.teleportType == gameconst.ComplexTeleportType.LEAVE:
@@ -1292,6 +1282,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_cube(self, fromSpaceNo, toSpaceNo, options, context):
+        INFO_MSG('_afterLeave_cube::~')
         _spaceMgrCell = context['l']['spaceMgrCell']
         _spaceMgrCell.onPlayerLeave(self.gbId, self.id, self.base)
 
@@ -1322,7 +1313,11 @@ class IComplexTeleport(object):
     # wonderland
     # ----------------------------------------------------------------------
 
+    @gamedecorator.checkTeleportLock(gameconst.TeleportLock.ENTER_WONDERLAND)
     def _beforeEnter_wonderLand(self, fromSpaceNo, toSpaceNo, options, context):
+        INFO_MSG('_beforeEnter_wonderland::~')
+        self.aquireTeleportLock(gameconst.TeleportLock.ENTER_WONDERLAND)
+
         self.tryRegiTeleportOutsideRecord(fromSpaceNo, options)
 
         _dir = self._getEntranceDirByDungeonNo(formula.getMapId(toSpaceNo))
@@ -1333,6 +1328,7 @@ class IComplexTeleport(object):
 
     def _afterEnter_wonderLand(self, fromSpaceNo, toSpaceNo, options, context):
         INFO_MSG('_afterEnter_wonderland::~')
+        self.releaseTeleportLock(gameconst.TeleportLock.ENTER_WONDERLAND)
         self.spaceMgrId = context['e']['spaceMgrId']
         self.spaceMgr.onPlayerEnter(self.id)
 

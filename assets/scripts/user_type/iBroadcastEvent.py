@@ -35,7 +35,7 @@ class IBroadcastEvent(object):
         #     gameglobal.globalMailsCacheList.pop(0)
         sendList = list(gameglobal.roleCache.keys())
         DEBUG_MSG('     in onSyncOneGlobalMail, len(sendList):', len(sendList))
-        self.sendGlobalMailToAvatar( sendList, globalMail)
+        self.sendGlobalMailToAvatar(sendList, globalMail)
         return
 
     def sendGlobalMailToAvatar(self, sendList, globalMail):
@@ -203,11 +203,11 @@ class IBroadcastEvent(object):
         DEBUG_MSG('in onSyncNewAuctionItemCache:', playerGBID, itemId, auctionId, playerGBIDSet)
 
     ################################### gm ##########################################
-    def gmSendMailByEntityId(self, entId, mailId, attach, despArgs, title, cont):
-        DEBUG_MSG('in gmSendMailByEntityId:', entId, mailId, attach, despArgs)
+    def gmSendMailByEntityId(self, entId, mailId, attach, despArgs, title, count, srcType):
+        DEBUG_MSG('in gmSendMailByEntityId:', entId, mailId, attach, despArgs, title, count, srcType)
         ent = KBEngine.entities.get(entId)
         if not ent:
             return
-        mailAssistor.sendMailToPlayers([ent.gbID], mailId, attach, despArgs, title=title, cont=cont)
+        mailAssistor.sendMailToPlayers([ent.gbID], mailId, attach, despArgs, title=title, cont=count, srcType=srcType)
         return
     ################################### gm end ##########################################

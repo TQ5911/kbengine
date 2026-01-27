@@ -46,6 +46,7 @@ import gearBase_gearConst as GBGCD
 import skill_specialMonsterAI as S_SMAD
 import character_charData as CCD
 import teamMatch_matchConfig as TMMCD
+import fightProp_atkBlessScore as FASD
 
 def getRaidConstDataValue(key):
     raidConstData = RAID_CONST.datas.get(key, None)
@@ -485,8 +486,7 @@ def getPassiveSkillScore(school, passiveSkillId):
     petPropList = PSPSD.datas[passiveSkillId]['propList']
     if petPropList:
         for propName, val in petPropList:
-            propBaseScore = filterFightPropScore(school, propName)
-            score += int(propBaseScore * val)
+            score += calcFightPropScore(school, propName, val)
     return score
 
 def getBlessAffixIdByGearType(mainType):
@@ -553,7 +553,10 @@ def checkEquipmentEnhancementType(equipType):
 def checkEquipmentGlyphType(equipType):
     return equipType in (gameconst.EquipTypes.MAIN_TYPE_WEAPON,)
 
-def checkEquipmentBlessType(equipType):
+def checkEquipmentBlessType(equipType, quality):
+    # 绿色品质不可祝福
+    if quality == gameconst.ItemQuality.GREEN:
+        return False
     return equipType in (gameconst.EquipTypes.MAIN_TYPE_WEAPON,)
 
 def checkEquipmentSpiritType(equipType):
@@ -569,15 +572,20 @@ def checkEquipmentUpgradeType(equipType):
     return True
 
 def checkEquipGrowingForbidden(equipItem):
+    if not equipItem.isGood():
+        return True
     data = GBGCD.datas['equipGrowingForbidden']['value']
-    if not data:
-        return False
-    isForbidden = equipItem.itemId in data
-    if isForbidden:
+    if data and equipItem.itemId in data:
         return True
-    isBroken = not equipItem.isGood()
-    if isBroken:
-        return True
+    return False
+
+def checkAuctionAllowListing(itemID):
+    itemData = GBGBD.datas.get(itemID, None)
+    if itemData:
+        return itemData['auctionAllowListing'] == 1
+    itemData = ITEMDATA.datas.get(itemID, None)
+    if itemData:
+        return itemData['auctionAllowListing'] == 1
     return False
 
 def checkLockAvailableStatus(itemID):
@@ -598,6 +606,14 @@ def gellItemSellPrice(itemID):
         return itemData['sellPrice']
     return None
 
+def getItemQuality(itemID):
+    itemData = ITEMDATA.datas.get(itemID, None)
+    if itemData:
+        return itemData['quality']
+    itemData = GBGBD.datas.get(itemID, None)
+    if itemData:
+        return itemData['quality']
+    return None
 
 def getAIParameters(creepId):
     _aiParamId = CBD.datas[creepId]['AIParameters']
@@ -631,6 +647,16 @@ def filterFightPropScore(school, propName):
             return 0
 
     return cfgData['perPropertyScore']
+
+# 计算属性评分之前，需要先加属性（addProp)
+def calcFightPropScore(school, propName, val):
+    scoreResult = filterFightPropScore(school, propName) * val
+    return int(scoreResult)
+
+def calcAvatarBlessScore(playerBox):
+    val = playerBox.getProp('adjAtkBless')
+    val = min(int(val), FASD.maxKey)
+    return FASD.atkBlessScoreDic.get(val, 0)
 
 def getAuctionPublicityKey(equipType, equipQuality):
     return equipType * 100 + equipQuality

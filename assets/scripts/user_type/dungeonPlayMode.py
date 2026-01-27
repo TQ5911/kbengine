@@ -45,13 +45,14 @@ class ChallengeDungeonPlayMode(_DungeonPlayMode):
 
 class CrusadeDungeonPlayMode(_DungeonPlayMode):
 
-    def __init__(self, dunLevel=0, mulFinalDmg=0, mulHurt=0):
+    def __init__(self, dunLevel=0, mulFinalDmg=0, mulHurt=0, teamUUID = 0):
         super(CrusadeDungeonPlayMode, self).__init__(
             playMode=gameconst.DungeonPlayModeEnum.CRUSADE)
         self.spaceLevel = 0
         self.dunLevel = dunLevel
         self.mulFinalDmg = mulFinalDmg
         self.mulHurt = mulHurt
+        self.teamUUID = teamUUID
 
 class DungeonPlayModePlayerMiXin(userType.UserSoleType):
     def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
@@ -136,6 +137,9 @@ class DungeonPlayModePlayerMiXin(userType.UserSoleType):
     def hasCoinCount(self):
         return self.rewardCoinNumber > 0
     
+    def getUsedTicketType(self):
+        return self.ticketType
+    
     def clear(self):
         self.rewardNumber = 0
         self.rewardCoinNumber = 0
@@ -162,13 +166,14 @@ class CrusadeDungeonPlayModePlayerObj(DungeonPlayModePlayerMiXin):
 
 class ChiefDungeonPlayMode(_DungeonPlayMode):
 
-    def __init__(self, dunLevel=0, mulFinalDmg=0, mulHurt=0):
+    def __init__(self, dunLevel=0, mulFinalDmg=0, mulHurt=0, raidUUID = 0):
         super(ChiefDungeonPlayMode, self).__init__(
             playMode=gameconst.DungeonPlayModeEnum.CHIEF)
         self.spaceLevel = 0
         self.dunLevel = dunLevel
         self.mulFinalDmg = mulFinalDmg
         self.mulHurt = mulHurt
+        self.raidUUID = raidUUID
 
 class ChiefDungeonPlayModePlayerObj(DungeonPlayModePlayerMiXin):
     def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):

@@ -105,19 +105,18 @@ class BodyEquips(userType.UserSoleType):
         return bool(self.equips_map)
 
     def applyBodyEquipsProps(self, owner, isLogin=False):
-        DEBUG_MSG("BodyEquips-->applyBodyEquipsProps, begin~ islogin:", isLogin)
+        INFO_MSG("BodyEquips-->applyBodyEquipsProps, begin~ islogin:", isLogin)
         self.addSkillLvDic = {}
         for slotId, equipItem in self.equips_map.items():
             equipItem.applyEquipEffectToAvatar(owner, isLogin=isLogin)
-        self.recalculateAllInscriptionEffects(owner)
         self.modifyAvatarAttrs(owner, 1)
-        DEBUG_MSG("BodyEquips-->applyBodyEquipsProps, end~ ")
+        INFO_MSG("BodyEquips-->applyBodyEquipsProps, end~ ")
 
     def tryLockBodyEquips(self, desp=''):
         if self.isBodyEquipsBeLocked():
             WARNING_MSG('   tryLockBodyEquips failed:', self.lockedDesp)
             return False
-        DEBUG_MSG('tryLockBodyEquips:', desp)
+        INFO_MSG('tryLockBodyEquips:', desp)
         self.lockedTime = utils.getNow() + self.EQUIPS_LOCK_TIME
         self.lockedDesp = desp
         return True
@@ -133,12 +132,12 @@ class BodyEquips(userType.UserSoleType):
         return self.lockedTime > utils.getNow()
 
     def doUnlockBodyEquips(self):
-        DEBUG_MSG('doUnlockBodyEquips')
+        INFO_MSG('doUnlockBodyEquips')
         self.lockedTime = 0
         self.lockedDesp= ''
 
     def _removeSetEffect(self, owner, oldSetLv):
-        DEBUG_MSG('in _removeSetEffect:', self.setInfo)
+        INFO_MSG('in _removeSetEffect:', self.setInfo)
         if oldSetLv == 0:
             return
         for attrName, val in self.setInfo['propVal'].items():
@@ -147,7 +146,7 @@ class BodyEquips(userType.UserSoleType):
         return
 
     def addPropBySet(self, owner, propList, valList, startIdx=0, endIdx=-1):
-        DEBUG_MSG('in addPropBySet:', propList, valList)
+        INFO_MSG('in addPropBySet:', propList, valList)
         valsNum = len(valList)
         if endIdx >= valsNum:
             gameengine.reportCritical('addPropBySet, param error:', startIdx, endIdx, valList)
@@ -163,7 +162,7 @@ class BodyEquips(userType.UserSoleType):
 
             self.setInfo['propVal'][attrName] += val
             owner.addProp(attrName, val, gameconst.SourceType.Equip)
-        DEBUG_MSG('     in addPropBySet, after:', self.setInfo)
+        INFO_MSG('     in addPropBySet, after:', self.setInfo)
         return
 
     def getDressSlotInfo(self, bagEquipItem, dstSlotId=0):
@@ -236,7 +235,7 @@ class BodyEquips(userType.UserSoleType):
         owner.updateEquipmentScore()
 
     def doBodyUndressEquip(self, owner, slotId):
-        DEBUG_MSG('in doBodyUndressEquip, slotId:', slotId)
+        INFO_MSG('in doBodyUndressEquip, slotId:', slotId)
         equipItem = self.removeEquipItem(owner, slotId)
         if not equipItem:
             ERROR_MSG(' in doBodyUndressEquip, data err, no equip:', slotId)
@@ -250,7 +249,7 @@ class BodyEquips(userType.UserSoleType):
         return equipItem
     
     def changeAvatarAttrs(self, owner):
-        DEBUG_MSG('in _changeAvatarAttrs')
+        INFO_MSG('in _changeAvatarAttrs')
         # 先移除
         self.modifyAvatarAttrs(owner, -1)
         # 重新计算
@@ -275,19 +274,19 @@ class BodyEquips(userType.UserSoleType):
         equipItem = self.equips_map.pop(slotId, None)
         if not equipItem:
             return equipItem
-        DEBUG_MSG("BodyEquips-->removeEquipItem, begin~ ", slotId, self.equips_map)
+        INFO_MSG("BodyEquips-->removeEquipItem, begin~ ", slotId, self.equips_map)
         self.recalculateAllInscriptionEffects(owner)
-        DEBUG_MSG("BodyEquips-->removeEquipItem, end~", slotId, self.equips_map)
+        INFO_MSG("BodyEquips-->removeEquipItem, end~", slotId, self.equips_map)
         return equipItem
     
     def addEquipItem(self, owner, slotId, equipItem):
-        DEBUG_MSG("BodyEquips-->addEquipItem, begin~")
+        INFO_MSG("BodyEquips-->addEquipItem, begin~")
         self.equips_map[slotId] = equipItem
         self.recalculateAllInscriptionEffects(owner)
-        DEBUG_MSG("BodyEquips-->addEquipItem, end~")
+        INFO_MSG("BodyEquips-->addEquipItem, end~")
 
     def recalculateAllInscriptionEffects(self, owner):
-        DEBUG_MSG("recalculateAllInscriptionEffects")
+        INFO_MSG("recalculateAllInscriptionEffects")
         owner.glyphEquipData.cleanInscriptionEffects(owner)
         for equipItem in self.equips_map.values():
             owner.glyphEquipData.calculateAllInscriptionEffects(owner, equipItem.getGlyphAffixes())
@@ -301,7 +300,7 @@ class BodyEquips(userType.UserSoleType):
         return self.addSkillLvDic.get(skillId, 0) + self.addSkillLvDic.get(gameconst.ClassSkillID, 0) + inscriptionAddLevel
 
     def addSkillLv(self, owner, skillIdList, addLvList, isLogin=False):
-        DEBUG_MSG('in bodyEquips:addSkillLv:', skillIdList, addLvList, self.addSkillLvDic)
+        INFO_MSG('in bodyEquips:addSkillLv:', skillIdList, addLvList, self.addSkillLvDic)
         newSkillLv = []
         for skillId, addLv in zip(skillIdList, addLvList):
             self.addSkillLvDic[skillId] = self.addSkillLvDic.get(skillId, 0) + addLv

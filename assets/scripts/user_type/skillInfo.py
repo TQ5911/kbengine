@@ -42,7 +42,7 @@ class ServerSkillsInfo(object):
             skillCls = combatSkill.getSkillClass(skillId)
             if not skillCls:
                 continue
-            skills[skillId] = skillCls(skillId, sVal['skillLv'], sVal['tNextCast'], sVal['cdDelta'])
+            skills[skillId] = skillCls(skillId, sVal['skillLv'], tNextCast=sVal['tNextCast'], cdDelta=sVal['cdDelta'])
         skillSwitches = dict.get('skillSwitches', {})
         for k, v in skillSwitches.items():
             skills.skillSwitches[k] = v

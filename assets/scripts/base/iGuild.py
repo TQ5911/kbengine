@@ -585,7 +585,7 @@ class IGuild(object):
 
         self.guildBox.doDealGuildApply(self.gbID, self, gbId, isAgree)
 
-    @gamedecorator.limitcall(1, keyFunc=lambda x: '{}'.format(*x))
+    @gamedecorator.limitcall(5, keyFunc=lambda x: '{1}'.format(*x))
     def getGuildDetailInfo(self, exposed, guildUUID):
         INFO_MSG("IGuild::getGuildDetailInfo:", guildUUID)
         gameengine.getGlobalBase('GuildStub').getGuildBox(
@@ -718,7 +718,7 @@ class IGuild(object):
             return
 
         if self.guildAssistTimes <= 0:
-            ERROR_MSG('Guild::guildAssist: guildAssistTimes <= 0')
+            WARNING_MSG('Guild::guildAssist: guildAssistTimes <= 0')
             return
 
         _deductVal = dropAward.DeductWealthVal()

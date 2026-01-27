@@ -167,6 +167,22 @@ datas = _tools.RODict({
         "ID": "cube_useItem",
         "value": 54001919,
     }),
+    "cube_prayConfirm1": _tools.RODict({
+        "ID": "cube_prayConfirm1",
+        "value": 54003250,
+    }),
+    "cube_prayConfirm2": _tools.RODict({
+        "ID": "cube_prayConfirm2",
+        "value": 54003251,
+    }),
+    "cube_prayNoTimes": _tools.RODict({
+        "ID": "cube_prayNoTimes",
+        "value": 54003252,
+    }),
+    "cube_chapmanLeave": _tools.RODict({
+        "ID": "cube_chapmanLeave",
+        "value": 54003253,
+    }),
     "cubeExpansionTitle": _tools.RODict({
         "ID": "cubeExpansionTitle",
         "value": "限定时间：{0}",
@@ -215,8 +231,16 @@ datas = _tools.RODict({
         "ID": "cube_hall",
         "value": 3100,
     }),
-    "cube_cowPassBuffID": _tools.RODict({
-        "ID": "cube_cowPassBuffID",
-        "value": 64000107,
+    "cube_prayTimesEveryDay": _tools.RODict({
+        "ID": "cube_prayTimesEveryDay",
+        "value": 1,
+    }),
+    "cube_chapmanRefreshInterval": _tools.RODict({
+        "ID": "cube_chapmanRefreshInterval",
+        "value": 10,
+    }),
+    "cube_prayCostItem": _tools.RODict({
+        "ID": "cube_prayCostItem",
+        "value": 30000314,
     })
 })

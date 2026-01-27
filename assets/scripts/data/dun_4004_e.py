@@ -2,12 +2,10 @@ datas ={
   "1003": {
     "type": "createMonster",
     "entityID": [
-      40040004,
-      40040005,
-      40040006
+      40040004
     ],
     "num": 0,
-    "lv": "1",
+    "lv": "12",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -34,7 +32,8 @@ datas ={
       "finished": [
         1003,
         1015,
-        1004
+        1004,
+        1016
       ]
     }
   },
@@ -50,6 +49,29 @@ datas ={
       40040003
     ],
     "num": 0,
+    "transition": {}
+  },
+  "1016": {
+    "type": "monsterHp",
+    "monsterID": [
+      40040004
+    ],
+    "compare": 2,
+    "hpPercent": 30.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1017
+      ]
+    }
+  },
+  "1017": {
+    "type": "popupdialog",
+    "entityID": [
+      40040004
+    ],
+    "dialogID": 19900314,
     "transition": {}
   }
 }

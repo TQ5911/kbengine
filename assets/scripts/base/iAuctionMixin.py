@@ -14,12 +14,12 @@ class IAuctionMixin(object):
     """玩家AuctionMixin"""
 
     def _loadPlayerAuctionData(self, auctionInfo):
-        DEBUG_MSG('_loadPlayerAuctionData::', auctionInfo and auctionInfo.__dict__)
+        INFO_MSG('_loadPlayerAuctionData::', auctionInfo and auctionInfo.__dict__)
         m_extra = {}
         self.stub.loadPlayerAuctionItem(self.gbID, m_extra)
 
     def _getAuctionPlayerInfo(self, auctionInfo):
-        DEBUG_MSG("_getAuctionPlayerInfo::", auctionInfo and auctionInfo.__dict__)
+        INFO_MSG("_getAuctionPlayerInfo::", auctionInfo and auctionInfo.__dict__)
         if not gameconfig.enableAuction():
             INFO_MSG("_getAuctionPlayerInfo not enableAuction")
             return gameconst.AuctionErrno.AUCTION_IDIP_GM_BAN
@@ -28,7 +28,7 @@ class IAuctionMixin(object):
         return gameconst.AuctionErrno.AUCTION_OK
 
     def _saleItemInAuctioCommonCheck(self, auctionInfo, itemId, uniqueId, totalPrice, number, bagType):
-        DEBUG_MSG("_saleItemInAuctionCheck::", itemId, uniqueId, totalPrice, number, bagType)
+        INFO_MSG("_saleItemInAuctionCheck::", itemId, uniqueId, totalPrice, number, bagType)
         _r_False = (None, {})
 
         if not auctionInfo.isCacheInited():
@@ -53,6 +53,9 @@ class IAuctionMixin(object):
             if not _w_itemObj:
                 return gameconst.AuctionErrno.AUCTION_DEDUCT_ITEM_NOT_FOUND
 
+            if _w_itemObj.itemId != itemId:                
+                return gameconst.AuctionErrno.AUCTION_SALE_ITEM_ID_ERROR
+
             if _w_itemObj.bindType != gameconst.ItemBindType.NORMAL:
                 return gameconst.AuctionErrno.AUCTION_ITEM_ALREADY_BE_BINDED
 
@@ -61,6 +64,9 @@ class IAuctionMixin(object):
 
             if _w_itemObj.isEquipmentItem() and (not _w_itemObj.isGood() or _w_itemObj.hasBindValue()):
                 return gameconst.AuctionErrno.AUCTION_EQUIP_IN_DROP_REPAIR
+            
+            if not dataUtils.checkAuctionAllowListing(_w_itemObj.itemId):
+                return gameconst.AuctionErrno.AUCTION_ITEM_IS_FORBIDDEN
 
             if _w_itemObj.isLocked():
                 return gameconst.AuctionErrno.AUCTION_ITEM_IN_BAG_LOCKED_STATUS
@@ -87,12 +93,12 @@ class IAuctionMixin(object):
 
             _i_errno = __itemCommonCheck(i_itemObj)
             if _i_errno != gameconst.AuctionErrno.AUCTION_OK:
-                DEBUG_MSG("_saleItemInAuctionCheck:: skipped {}".format(_i_errno),
+                INFO_MSG("_saleItemInAuctionCheck:: skipped {}".format(_i_errno),
                           i_gridId, i_itemObj.itemId)
                 continue
 
             if not m_itemObj.canMerge(i_itemObj):
-                DEBUG_MSG("_saleItemInAuctionCheck:: skipped, cannot be merged",
+                INFO_MSG("_saleItemInAuctionCheck:: skipped, cannot be merged",
                           m_gridId, m_itemObj.itemId, i_gridId, i_itemObj.itemId)
                 continue
 

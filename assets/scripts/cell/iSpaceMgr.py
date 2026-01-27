@@ -97,9 +97,9 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         (srcId, args), timestamp = self.aiEvents.pop(eventId)
         return srcId, args
 
-    def onPlayerEnter(self, palyerEntId):
-        self.players[palyerEntId] = PlayerInfo(palyerEntId)
-        ent = self.getEntityById(palyerEntId)
+    def onPlayerEnter(self, playerEntId):
+        self.players[playerEntId] = PlayerInfo(playerEntId)
+        ent = self.getEntityById(playerEntId)
         if ent:
             self.spaceVars and ent.base.syncSpaceVariable(self.spaceNo, self.spaceVars)
             # 开启数据统计
@@ -219,9 +219,16 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         for eid in list(self.spaceEntities.keys()):
             if eid == self.id:
                 continue
+
             e = self.getEntityById(eid)
-            if not e or e.IsPet:
+            if not e:
                 continue
+
+            if e.IsSummon:
+                _host = e.getHost()
+                if _host and _host.IsAvatar:
+                    continue
+
             e.safeDestroy()
             # self.removeEntityById(eid)
 

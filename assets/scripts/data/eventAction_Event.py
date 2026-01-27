@@ -189,6 +189,24 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "OpenResExchange": _tools.RODict({
+        "ID": "OpenResExchange",
+        "EventID": 10030,
+        "sendType": 0,
+        "npcId": None
+    }),
+    "NavigateToMapPoint": _tools.RODict({
+        "ID": "NavigateToMapPoint",
+        "EventID": 10031,
+        "sendType": 0,
+        "npcId": None
+    }),
+    "CheckGuild": _tools.RODict({
+        "ID": "CheckGuild",
+        "EventID": 10032,
+        "sendType": 0,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,

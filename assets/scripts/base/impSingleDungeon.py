@@ -25,7 +25,7 @@ class ImpSingleDungeon(object):
                 return prm[pName]
 
     def checkSingleDungeonCondition(self, dungeonNo, extra):
-        DEBUG_MSG('checkSingleDungeonCondition::', dungeonNo, extra)
+        INFO_MSG('checkSingleDungeonCondition::', dungeonNo, extra)
         checkBox, reason = self._checkSingleDungeonCondition(dungeonNo, extra)
         reasonDic = {}
         return self.cell.onCheckSingleDungeonCondition(
@@ -36,7 +36,7 @@ class ImpSingleDungeon(object):
 
     def useItemAndEnterSingleDungeon(self, needDic, spaceBox, spaceMgrBox, spaceMgrId,
                                      spaceNo, playerBox, playerGbId, teamUUID, extra):
-        DEBUG_MSG('useItemAndEnterSingleDungeon::', needDic, spaceBox, spaceMgrBox,
+        INFO_MSG('useItemAndEnterSingleDungeon::', needDic, spaceBox, spaceMgrBox,
                   spaceMgrId, spaceNo, playerBox, playerGbId, teamUUID, extra)
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemDict(needDic)

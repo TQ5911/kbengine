@@ -219,6 +219,11 @@
             <Flags>         CELL_PRIVATE        </Flags>
             <Default>       set()               </Default>
         </viewCrossServerSet>
+
+        <lastFightTime>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </lastFightTime>
     </Properties>
 
     <CellMethods>
@@ -470,6 +475,7 @@
         <onChangeSkill>
             <Arg>        SKILLID        </Arg>
             <Arg>        SKILLID        </Arg>
+            <Arg>        DOUBLETIME     </Arg>  
         </onChangeSkill>
 
         <buildAddActiveSkill>

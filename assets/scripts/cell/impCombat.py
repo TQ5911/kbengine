@@ -80,7 +80,7 @@ class AvatarBuildsMixin(object):
         skill.setLevel(self, toLv)
 
     def hasTakeSkill(self, skillId):
-        skillVal = self.getSkillDic().get(skillId, None)
+        skillVal = self.skillDic.doGetSkill(skillId)
         if not skillVal:
             return False
 
@@ -187,7 +187,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if skill:
             self.base.buildAddActiveSkill(skillId, skillLv)
 
-            skillSwitch = SkillManager.SkillManager.getSkillDic(self).getSkillSwitch(skillId)
+            skillSwitch = self.skillDic.getSkillSwitch(skillId)
             self.client.onAddSkill(
                 skillId,
                 skillLv,
@@ -201,7 +201,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def takeSkill(self, skillId, skillLv, tNextCast=0):
         skill = SkillManager.SkillManager.addSkill(self, skillId, skillLv, tNextCast)
         if skill:
-            skillSwitch = SkillManager.SkillManager.getSkillDic(self).getSkillSwitch(skillId)
+            skillSwitch = self.skillDic.getSkillSwitch(skillId)
             self.client.onAddSkill(skillId, skillLv, skill.getExtraLv(self), skill.tNextCast, skill.getCD(self), skillSwitch)
         return self.getSkill(skillId, True, True)
 
@@ -329,6 +329,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.calcDeadStats(killer)
 
         self.base.triggerAchievement(gameconst.AchieveType.DEAD_TIMES)
+
+        if formula.isCubeSpace(self.spaceNo):
+            spaceMgr and spaceMgr.onPlayerKillAnother(self, host)
 
         if formula.isWonderLandSpace(self.spaceNo):
             _mapId = formula.getMapId(self.spaceNo)
@@ -531,6 +534,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self._cancelCallback(self.rmFightStateTimeId, gametimer.TIMER_TAG_REMOVE_FIGHTING_STATE)
         removeTime = CONST.datas.get('leaveFightStateTime', {}).get('value')
         self.rmFightStateTimeId = self._callback(removeTime, 'removeFightingState', (), gametimer.TIMER_TAG_REMOVE_FIGHTING_STATE)
+        self.lastFightTime = utils.getNow()
 
     def leaveFightingState(self):
         if self.hasBuff(64000067):
@@ -944,7 +948,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                 skillVal, targetId = usingSkills[sid]
                 skillVal.resetSkill(self, reason)
 
-        for skillVal in self.getSkillDic().values():
+        for skillVal in self.skillDic.values():
             if skillVal.hasTempData('changeToSkill'):
                 toSkillId = skillVal.getTempData('changeToSkill')
                 changeToSkillVal = self.getSkillByCategory(toSkillId, skillVal.getLevel(self))
@@ -1018,6 +1022,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         if not gameconfig.visibleConfigEable('quickSettings')\
                 and flagType in gameconst.AvatarFlagCell.QUICK_SETTING_RANGE:
+            self.showMsg(CONST.datas['systemSwitch']['value'], [])
             return
 
         self._updateCommonFlagCell(flagType, flag)
@@ -1137,18 +1142,15 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         self.syncMethodCallToLocalServerCell("setShowCompleteNum", (showCompleteNum,))
 
-    def getSkillDic(self):
-        return self.skillDic
-
     def clearAllSkillCD(self):
-        for skill in self.getSkillDic().values():
+        for skill in self.skillDic.values():
             skill.clearCD(self)
 
     def addAwardFightPropsCell(self, syncPropList):
         addScore = 0
         for propName, val in syncPropList:
             self.addProp(propName, val, gameconst.SourceType.awardFightProp)
-            addScore += int(round(dataUtils.filterFightPropScore(self.school, propName) * val))
+            addScore += dataUtils.calcFightPropScore(self.school, propName, val)
 
         if addScore:
             newScore = self.scoresInfo.rewardFightProp + addScore
@@ -1164,7 +1166,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         newScore = 0
 
         for propName, val in propList:
-            newScore += int(round(dataUtils.filterFightPropScore(self.school, propName) * val))
+            newScore += dataUtils.calcFightPropScore(self.school, propName, val)
 
         self.onUpdateRewardFightProp(newScore)
 
@@ -1251,7 +1253,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Jump)):
                 self.setState(gameconst.State.Jump)
             else:
-                ERROR_MSG('jumpType error:', jumpType)
+                WARNING_MSG('jumpType error:', jumpType)
         elif jumpType == gameconst.JumpType.DOUBLE_JUMP:
             # 二跳开关
             if not gameconfig.visibleConfigEable('skill'):
@@ -1259,7 +1261,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.doubleJump)):
                 self.setState(gameconst.State.doubleJump)
             else:
-                ERROR_MSG('jumpType error:', jumpType)
+                WARNING_MSG('jumpType error:', jumpType)
         elif jumpType == gameconst.JumpType.FLYING:
             # 飞行开关
             if not gameconfig.visibleConfigEable('skill'):
@@ -1269,14 +1271,14 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                 self.setState(gameconst.State.Flying)
                 self._checkFristFly()
             else:
-                ERROR_MSG('jumpType error:', jumpType)
+                WARNING_MSG('jumpType error:', jumpType)
         elif jumpType == gameconst.JumpType.SPEED_FALL:
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.speedFall)):
                 self.setState(gameconst.State.speedFall)
             else:
-                ERROR_MSG('jumpType error:', jumpType)
+                WARNING_MSG('jumpType error:', jumpType)
         else:
-            ERROR_MSG('jumpType error:', jumpType)
+            WARNING_MSG('jumpType error:', jumpType)
 
     def _checkFristFly(self):
         if self.getPersistentMiscProp(gameconst.AvatarProps.firstFly, False):
@@ -1304,7 +1306,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     @utils.isMyself
     def setSkillAutoCombat(self, exposed, skillId, status):
         INFO_MSG('setSkillAutoCombat', skillId, status)
-        SkillManager.SkillManager.getSkillDic(self).setSkillSwitch(skillId, status)
+        self.skillDic.setSkillSwitch(skillId, status)
 
     def addPropByPassiveSkill(self, propInfoList):
         DEBUG_MSG('addPropByPassiveSkill:', propInfoList)

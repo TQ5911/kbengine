@@ -59,6 +59,7 @@ class IMineWarSpaceMgr(object):
         self.flagPos = 0
         self.flagDir = 0
         self.flagGameEntityId = 0
+        self.flagDestroyTime = 0
 
         self.mineWarFlagBeAttackTimer = 0
         
@@ -81,10 +82,12 @@ class IMineWarSpaceMgr(object):
             gameengine.getGlobalBase('MineWarStub').registerMineWarSpaceMgr(lineType, self)
             INFO_MSG('Registered to MineWarStub with lineType:', lineType)
 
-    def onRegisterMineWarSpaceMgr(self, guildId, state):
+    def onRegisterMineWarSpaceMgr(self, guildId, state, flagDestroyTime):
         INFO_MSG('onRegisteredToMineWarStub', guildId, state, self.spaceNo)
         # 先记录状态
         self.mineWarState = state
+
+        self.flagDestroyTime = flagDestroyTime
         #
         if guildId > 0:
             self.reqSyncGuildMineWarInfo(guildId)
@@ -100,6 +103,7 @@ class IMineWarSpaceMgr(object):
         """请求同步工会矿战信息"""
         INFO_MSG('reqSyncGuildMineWarInfo', self.spaceNo, guildId, onRegister)
         if guildId <= 0:
+            self.onSyncGuildMineWarResult(0, '', 0, 0, '', {}, onRegister)
             return
 
         # 先做记录
@@ -110,7 +114,7 @@ class IMineWarSpaceMgr(object):
         """同步工会矿战信息回调"""
         INFO_MSG('onSyncGuildMineWarResult', self.spaceNo, guildId, guildName, guildIcon, guildDspFlag, guildDesc, res, onRegister)
         # 设置junxu器械等级
-        if not res:
+        if guildId > 0 and not res:
             # 帮派解散
             gameengine.getGlobalBase('MineWarStub').doMineWarGuildDisbanded(guildId)
             return
@@ -154,11 +158,18 @@ class IMineWarSpaceMgr(object):
             self.hasLoadEntities = True
             self._loadEntities()
         else:
+            # 删除旗帜
+            self.rebuildFlag(0, 0)
             # 同步monster状态
             self.setMineWarMonsterState(0, state, state)
             self.syncMineWarMonsterInfo()
 
     def syncMineWarMonsterInfo(self):
+        """同步矿战怪物信息给所有玩家"""
+        # 延迟同步，活动结束时，旗帜可能还没创建
+        self._callback(1, '_syncMineWarMonsterInfo', (), gametimer.TIMER_TAG_MINE_WAR_SYNC_MONSTER)
+
+    def _syncMineWarMonsterInfo(self):
         playerList = list(self.players.keys())
         # 同步玩家状态
         def _iterNotify():
@@ -415,6 +426,8 @@ class IMineWarSpaceMgr(object):
         self._startNotifyAllPlayers()
         
         self.checkAllEntityCamp(True)
+        
+        self.killAllOtherMonster()
 
     def _startNotifyAllPlayers(self):
         playerList = list(self.players.keys())
@@ -434,8 +447,11 @@ class IMineWarSpaceMgr(object):
         self.reqSyncGuildMineWarInfo(guildId, False)
 
         #
-        self.rebuildFlag(guildId, 0)
+        self.flagDestroyTime = 0
+        self.rebuildFlag(guildId, self.flagDestroyTime)
 
+        #
+        self.recoverAllOtherMonster()
         
     # 传走所有玩家
     def transferAllAvatarInSpace(self, toLineType, exceptGuildId):
@@ -499,9 +515,12 @@ class IMineWarSpaceMgr(object):
             self.flagGameEntityId = monsterBox.gameEntityId
             INFO_MSG('addMineWarMonsterOnInit set flag pos', self.spaceNo, self.flagMonsterId, self.flagPos, self.flagDir, self.flagGameEntityId, monsterBox.id)
             
-            # 无归属时，删除旗帜，延迟一点
-            if self.mineWarGuildId == 0:
-                self._callback(1, 'flagBoxDestroy', (), gametimer.TIMER_TAG_ON_MINE_WAR_LOGIN)
+            # 无归属时，删除旗帜，延迟一点 # 或者与上次破坏时间在同一天 则销毁
+            if self.mineWarGuildId == 0 or not utils.isDiffDay(utils.getNow(), self.flagDestroyTime, gameconst.COMMON_CYCLE_TIME):
+                self._callback(2, 'flagBoxDestroy', (), gametimer.TIMER_TAG_ON_MINE_WAR_LOGIN)
+                if self.mineWarGuildId > 0:
+                    # 创建被毁旗帜实体 todo
+                    pass
                 return
             
             # 同步旗帜血量
@@ -674,8 +693,8 @@ class IMineWarSpaceMgr(object):
                 ent.notEnemyCacheSet.clear()
                 # INFO_MSG('onEndMineWarShow clear monster enemy cache', self.spaceNo, ent.id)
 
-        if self.mineWarGuildId <= 0:
-            return
+        # if self.mineWarGuildId <= 0:
+        #     return
         
         self.endNotify()
         
@@ -690,6 +709,31 @@ class IMineWarSpaceMgr(object):
                 yield lambda: None
         self.batchlyCall(_iter(), 30, 0.2)
             
+    def killAllOtherMonster(self):
+        """删除场景内所有非矿战怪物"""
+        #
+        self.onTemporaryDestroyTimerEntities([gameconst.EntityType.MONSTER])
+
+        ents = self.getEntitiesByTag('Monster')
+        INFO_MSG('killAllOtherMonster', self.spaceNo, len(ents))
+        def _iter():
+            for ent in ents:
+                if not ent or ent.isDie():
+                    continue
+                if ent.isMineWarCore() or ent.isMineWarFlag() or ent.isMineWarFlagBroken():
+                    continue
+                if ent.isNeedRefresh():
+                    # 非计数刷新才需要在这里做立即刷新
+                    if not ent.needCountRefresh:
+                        ent.onEntityRefresh()
+                ent.safeDestroy()
+                yield lambda: None
+        self.batchlyCall(_iter(), 30, 0.5)
+
+    def recoverAllOtherMonster(self):
+        """恢复场景内所有非矿战怪物"""
+        self.onRestoreTemporaryDestroyTimerEntities()
+        
             
                      
             

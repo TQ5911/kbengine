@@ -12,7 +12,6 @@ import gameconst
 import simpleBotBase
 from simpleBotBase import AIState
 from botUtils import botUtils
-import utils
 
 BOT_CONFIG = botBase.initBotConfig(__file__)
 

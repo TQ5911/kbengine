@@ -28,6 +28,7 @@ class GlobalMail(userType.UserSoleType):
         self.title = ''
         self.cont = ''
         self.channel = 0
+        self.srcType = 0
 
     def _lateReload(self):
         super(GlobalMail, self)._lateReload()
@@ -35,8 +36,8 @@ class GlobalMail(userType.UserSoleType):
         return
 
     def initNewGlobalMail(self, mailId, extraAttach:dropAward.MailWealthVal, 
-                          despArgs, title, cont, minRoleTime,
-                          maxRoleTime, minRoleLevel, maxRoleLevel, channel):
+                          despArgs, title, cont, minRoleTime, maxRoleTime, 
+                          minRoleLevel, maxRoleLevel, channel, srcType):
         self.globalMailGBID = KBEngine.genUUID64()
         self.mailId = mailId
         self.despArgs = despArgs if despArgs else []
@@ -50,6 +51,7 @@ class GlobalMail(userType.UserSoleType):
         self.title = title
         self.cont = cont
         self.channel = channel
+        self.srcType = srcType
 
     def fromGlobalMailDict(self, dataDic):
         self.globalMailGBID = dataDic['globalMailGBID']
@@ -67,6 +69,7 @@ class GlobalMail(userType.UserSoleType):
         self.title = dataDic.get('title', '')
         self.cont = dataDic.get('cont', '')
         self.channel = dataDic.get('channel', 0)
+        self.srcType = dataDic.get('srcType', 0)
         return
 
     def toGlobalMailDict(self):
@@ -84,6 +87,7 @@ class GlobalMail(userType.UserSoleType):
             'title':self.title,
             'cont':self.cont,
             'channel': self.channel,
+            'srcType': self.srcType,
         }
 
     def isExpired(self):

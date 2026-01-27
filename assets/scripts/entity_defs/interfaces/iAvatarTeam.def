@@ -8,6 +8,12 @@
             <WitnessName>   true            </WitnessName>
         </teamId>
 
+        <joinType>
+            <Type>          INT8            </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+            <Default>       0               </Default>
+        </joinType>
+
         <teamIdBase>
             <Type>          TEAMID          </Type>
             <Flags>         BASE            </Flags>
@@ -128,6 +134,7 @@
         <applyJoinTeam> <Exposed/>
             <Arg>           TEAMID          </Arg>
             <Arg>           STRING          </Arg>
+            <Arg>           INT8            </Arg>
         </applyJoinTeam>
 
         <onApplyJoinTeam>
@@ -147,6 +154,7 @@
             <Arg>           UNICODE         </Arg>
             <Arg>           LEVEL           </Arg>
             <Arg>           SCHOOL          </Arg>
+            <Arg>           INT8            </Arg>
         </onReplyJoinTeam>
 
         <onRemoveApplyJoinPlayer>
@@ -203,6 +211,7 @@
 
         <onJoinTeam>
             <Arg>           TEAMID          </Arg>
+            <Arg>           INT8            </Arg>
         </onJoinTeam>
 
         <procJoinTeamMsg>
@@ -264,13 +273,6 @@
         <selfCancelFollowTeamCaptain>
             <Arg>   STRING  </Arg>
         </selfCancelFollowTeamCaptain>
-
-        <followCaptainToGuildSpaceFailed>
-        </followCaptainToGuildSpaceFailed>
-
-        <cellPlayerFollowToGuildSpaceFailed>
-            <Arg>      ENTITYCALL      </Arg>
-        </cellPlayerFollowToGuildSpaceFailed>
 
         <replyFollowTeamCaptain> <Exposed/>
             <Arg>           BOOL            </Arg>
@@ -405,9 +407,6 @@
             <Arg>           UINT32          </Arg>
             <Arg>           TEAMTARGET      </Arg>
         </onGetTeamListFinished>
-
-        <onAskedFollowCaptain>
-        </onAskedFollowCaptain>
 
         <onMemJoinTeamByAutoMatch>
             <Arg>           PLAYER_GBID         </Arg>
@@ -624,6 +623,7 @@
             <Arg>           UINT16       </Arg>
             <Arg>           UINT32       </Arg>
             <Arg>           STRING       </Arg>
+            <Arg>           INT8         </Arg>
         </onApplyJoinTeamFailed>
         <onGetTeamList>
             <Arg>           LONGTIME         </Arg>

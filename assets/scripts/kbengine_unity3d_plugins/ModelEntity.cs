@@ -1,3 +1,4 @@
+using RuntimeInspectorNamespace;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -255,7 +256,7 @@ namespace KBEngine
         //        DataUserInfoManager.Instance.allSkills[skillID].tNextCast = nextCastTime;
         //    }
 
-        //    //DebugL8.LogError("Set SkillCD: {0}  {1} {2}", skillID, cd, nextCastTime);
+        //    //GLog.LogError("Set SkillCD: {0}  {1} {2}", skillID, cd, nextCastTime);
         //    EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_SKILL_UPDATE_CD, id, skillID, isReset == 1 ? true : false);
         //}
 
@@ -312,7 +313,7 @@ namespace KBEngine
         {
             if (id / 1000000 == 58)
             {
-                DebugL8.Log($"onMessage  chatMessage表的消息{id}，暂时不显示!  {MyUtils.ListToString(param)}");
+                GLog.Log($"onMessage  chatMessage表的消息{id}，暂时不显示!  {MyUtils.ListToString(param)}");
                 return;
             }
 
@@ -758,7 +759,7 @@ namespace KBEngine
         /// <param name="oldValue"></param>
         public override void onSelectedTargetIdChanged(int oldValue)
         {
-            DebugL8.Log($"onSelectedTargetIdChanged {this.id}: {this.selectedTargetId}");
+            GLog.Log($"onSelectedTargetIdChanged {this.id}: {this.selectedTargetId}");
             if (hasView)
                 view.OnSelectedTargetIdChanged();
             EventMgr.Instance.SendEvent(EventDef.EVENT_TARGET_ONTARGETCHANGED, this.id);
@@ -888,12 +889,12 @@ namespace KBEngine
 
         public override void popDialog(int arg1)
         {
-            DebugL8.Log($"popDialog {id} {arg1}");
+            GLog.Log($"popDialog {id} {arg1}");
             UITipsManager.ShowPopDialog((uint)arg1);
         }
         public override void showPopoverMsg(UInt32 id)
         {
-            DebugL8.Log($"showPopoverMsg {id}");
+            GLog.Log($"showPopoverMsg {id}");
             //EventMgr.Instance.SendEvent(EventDef.EVENT_UI_MSG_SHOW_CHAT, this.id, (int)id);
         }
 
@@ -918,11 +919,19 @@ namespace KBEngine
 
         public override void onEnterWorld()
         {
+           
             base.onEnterWorld();
             //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_ENTER_WORLD, this);
             BattleManager.Instance.OnHandleEnterWorld(this);
             if (isPlayer())
             {
+#if !UNITY_EDITOR
+                //BuglyAgent.SetUserId(gbId.ToString());
+                //BuglyAgent.AddSceneData("UserName", name);
+                CrashSightAgent.SetUserId(gbId.ToString());
+                CrashSightAgent.AddSceneData("username", name);
+#endif
+
                 //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_ENTER_WORLD_PLAYER, this);
             }
 
@@ -931,7 +940,7 @@ namespace KBEngine
                 onDirectionChanged(Vector3.zero);
                 // onEnterSpace();
             }
-            //DebugL8.LogError("~~~~~  onEnterWorld this=" + this.id);
+            //GLog.LogError("~~~~~  onEnterWorld this=" + this.id);
             CheckBuffInfo();
         }
 

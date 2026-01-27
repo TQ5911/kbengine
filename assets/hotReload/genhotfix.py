@@ -63,6 +63,24 @@ def getImportInfo(methodInfo:MI.MethodInfo):
 
     importLines.append('import {}\n'.format(methodInfo.inModuleName))
 
+    # find modules from default args
+    try:
+        method_ast = ast.parse(methodInfo.sourceCode)
+        func_def_node = method_ast.body[0]
+        if isinstance(func_def_node, ast.FunctionDef):
+            import astor
+            for default_arg in func_def_node.args.defaults:
+                arg_str = astor.to_source(default_arg).strip()
+                match = re.match(r'([a-zA-Z_][a-zA-Z0-9_]*)\.', arg_str)
+                if match:
+                    default_mod = match.group(1)
+                    if default_mod not in importedMods:
+                        importLines.append('import {}\n'.format(default_mod))
+                        importedMods.append(default_mod)
+    except Exception as e:
+        print("Warning: Could not parse default arguments for extra imports: {}".format(e))
+
+
     fileObject.close()
     return importedMods, importLines
 

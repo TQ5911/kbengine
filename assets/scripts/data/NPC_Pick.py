@@ -53,22 +53,22 @@ def _16000047(self, *args):
     return self.siegeWarInvokeBoss(*args)
 
 def _16002004_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000313, 1, 31170002, *args)
+    return self.checkSummonWonderLandBoss(30000313, 130, 31170002, *args)
 
 def _16002004(self, *args):
-    self.summonWonderLandBoss(30000313, 1, 31170002, *args)
+    self.summonWonderLandBoss(30000313, 130, 31170002, *args)
 
 def _16002104_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000313, 1, 32170002, *args)
+    return self.checkSummonWonderLandBoss(30000313, 157, 32170002, *args)
 
 def _16002104(self, *args):
-    self.summonWonderLandBoss(30000313, 1, 32170002, *args)
+    self.summonWonderLandBoss(30000313, 157, 32170002, *args)
 
 def _16002204_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000313, 1, 33170002, *args)
+    return self.checkSummonWonderLandBoss(30000313, 188, 33170002, *args)
 
 def _16002204(self, *args):
-    self.summonWonderLandBoss(30000313, 1, 33170002, *args)
+    self.summonWonderLandBoss(30000313, 188, 33170002, *args)
 
 def _16002304_precheck(self, *args):
     return self.checkSummonWonderLandBoss(30000313, 1, 34170002, *args)
@@ -83,58 +83,58 @@ def _16002404(self, *args):
     self.summonWonderLandBoss(30000313, 1, 35170002, *args)
 
 def _16003101_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000305, 1, 51000001, *args)
+    return self.checkSummonWonderLandBoss(30000305, 450, 51000001, *args)
 
 def _16003101(self, *args):
-    self.summonWonderLandBoss(30000305, 1, 51000001, *args)
+    self.summonWonderLandBoss(30000305, 450, 51000001, *args)
 
 def _16003102_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000305, 1, 51000002, *args)
+    return self.checkSummonWonderLandBoss(30000305, 300, 51000002, *args)
 
 def _16003102(self, *args):
-    self.summonWonderLandBoss(30000305, 1, 51000002, *args)
+    self.summonWonderLandBoss(30000305, 300, 51000002, *args)
 
 def _16003103_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000305, 1, 51000003, *args)
+    return self.checkSummonWonderLandBoss(30000305, 150, 51000003, *args)
 
 def _16003103(self, *args):
-    self.summonWonderLandBoss(30000305, 1, 51000003, *args)
+    self.summonWonderLandBoss(30000305, 150, 51000003, *args)
 
 def _16003201_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000305, 1, 51010001, *args)
+    return self.checkSummonWonderLandBoss(30000305, 540, 51010001, *args)
 
 def _16003201(self, *args):
-    self.summonWonderLandBoss(30000305, 1, 51010217, *args)
+    self.summonWonderLandBoss(30000305, 540, 51010001, *args)
 
 def _16003202_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000305, 1, 51010002, *args)
+    return self.checkSummonWonderLandBoss(30000305, 360, 51010002, *args)
 
 def _16003202(self, *args):
-    self.summonWonderLandBoss(30000305, 1, 51010002, *args)
+    self.summonWonderLandBoss(30000305, 360, 51010002, *args)
 
 def _16003203_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000305, 1, 51010003, *args)
+    return self.checkSummonWonderLandBoss(30000305, 180, 51010003, *args)
 
 def _16003203(self, *args):
-    self.summonWonderLandBoss(30000305, 1, 51010003, *args)
+    self.summonWonderLandBoss(30000305, 180, 51010003, *args)
 
 def _16003301_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000305, 1, 51020001, *args)
+    return self.checkSummonWonderLandBoss(30000305, 648, 51020001, *args)
 
 def _16003301(self, *args):
-    self.summonWonderLandBoss(30000305, 1, 51020001, *args)
+    self.summonWonderLandBoss(30000305, 648, 51020001, *args)
 
 def _16003302_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000305, 1, 51020002, *args)
+    return self.checkSummonWonderLandBoss(30000305, 432, 51020002, *args)
 
 def _16003302(self, *args):
-    self.summonWonderLandBoss(30000305, 1, 51020002, *args)
+    self.summonWonderLandBoss(30000305, 432, 51020002, *args)
 
 def _16003303_precheck(self, *args):
-    return self.checkSummonWonderLandBoss(30000305, 1, 51020003, *args)
+    return self.checkSummonWonderLandBoss(30000305, 216, 51020003, *args)
 
 def _16003303(self, *args):
-    self.summonWonderLandBoss(30000305, 1, 51020003, *args)
+    self.summonWonderLandBoss(30000305, 216, 51020003, *args)
 
 def _16006000_apply(self,target,context):
     self.addBuffBySkill(self, context, 64000103, 1, 1.0,-1)
@@ -2138,7 +2138,7 @@ datas = _tools.RODict({
         "ID": 16000056,
         "name": "绑淘淘的绳",
         "type": 0,
-        "pickDistance": 3.0,
+        "pickDistance": 1.0,
         "taskCheck": None,
         "toolCheck": None,
         "time": 3,
@@ -2165,7 +2165,7 @@ datas = _tools.RODict({
         "ID": 16000057,
         "name": "绑士兵的绳",
         "type": 0,
-        "pickDistance": 3.0,
+        "pickDistance": 1.0,
         "taskCheck": None,
         "toolCheck": None,
         "time": 3,
@@ -2299,7 +2299,7 @@ datas = _tools.RODict({
     16000062: _tools.RODict({
         "ID": 16000062,
         "name": "精灵召唤台",
-        "type": 0,
+        "type": 6,
         "pickDistance": 3.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5323,7 +5323,7 @@ datas = _tools.RODict({
     16000082: _tools.RODict({
         "ID": 16000082,
         "name": "神秘矿石",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5377,7 +5377,7 @@ datas = _tools.RODict({
     16000084: _tools.RODict({
         "ID": 16000084,
         "name": "神秘地点1（无古董）",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5404,7 +5404,7 @@ datas = _tools.RODict({
     16000085: _tools.RODict({
         "ID": 16000085,
         "name": "神秘地点2（无古董）",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5431,7 +5431,7 @@ datas = _tools.RODict({
     16000086: _tools.RODict({
         "ID": 16000086,
         "name": "神秘地点3（有古董）",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5566,7 +5566,7 @@ datas = _tools.RODict({
     16000090: _tools.RODict({
         "ID": 16000090,
         "name": "月光海港珍珠",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5593,7 +5593,7 @@ datas = _tools.RODict({
     16000092: _tools.RODict({
         "ID": 16000092,
         "name": "新元城海妖文字地点",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5620,7 +5620,7 @@ datas = _tools.RODict({
     16000093: _tools.RODict({
         "ID": 16000093,
         "name": "船员日志2地点",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5674,7 +5674,7 @@ datas = _tools.RODict({
     16000095: _tools.RODict({
         "ID": 16000095,
         "name": "船员日志3地点",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5701,7 +5701,7 @@ datas = _tools.RODict({
     16000096: _tools.RODict({
         "ID": 16000096,
         "name": "新元码头古董",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5782,7 +5782,7 @@ datas = _tools.RODict({
     16000099: _tools.RODict({
         "ID": 16000099,
         "name": "鱼饵地点1",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5809,7 +5809,7 @@ datas = _tools.RODict({
     16000100: _tools.RODict({
         "ID": 16000100,
         "name": "鱼饵地点2",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5836,7 +5836,7 @@ datas = _tools.RODict({
     16000101: _tools.RODict({
         "ID": 16000101,
         "name": "鱼饵地点3",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5917,7 +5917,7 @@ datas = _tools.RODict({
     16000104: _tools.RODict({
         "ID": 16000104,
         "name": "任务用空采集物1",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5944,7 +5944,7 @@ datas = _tools.RODict({
     16000105: _tools.RODict({
         "ID": 16000105,
         "name": "任务用空采集物2",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5971,7 +5971,7 @@ datas = _tools.RODict({
     16000106: _tools.RODict({
         "ID": 16000106,
         "name": "任务用空采集物3",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -5998,7 +5998,7 @@ datas = _tools.RODict({
     16000107: _tools.RODict({
         "ID": 16000107,
         "name": "任务用空采集物4",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -6159,8 +6159,8 @@ datas = _tools.RODict({
     }),
     16000113: _tools.RODict({
         "ID": 16000113,
-        "name": "祖柯遗迹采集物",
-        "type": 1,
+        "name": "祖珂遗迹采集物",
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -6186,8 +6186,8 @@ datas = _tools.RODict({
     }),
     16000114: _tools.RODict({
         "ID": 16000114,
-        "name": "祖柯日记1",
-        "type": 1,
+        "name": "祖珂日记1",
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -6213,8 +6213,8 @@ datas = _tools.RODict({
     }),
     16000115: _tools.RODict({
         "ID": 16000115,
-        "name": "祖柯日记2",
-        "type": 1,
+        "name": "祖珂日记2",
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -6240,8 +6240,8 @@ datas = _tools.RODict({
     }),
     16000116: _tools.RODict({
         "ID": 16000116,
-        "name": "祖柯日记3",
-        "type": 1,
+        "name": "祖珂日记3",
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -6267,8 +6267,8 @@ datas = _tools.RODict({
     }),
     16000117: _tools.RODict({
         "ID": 16000117,
-        "name": "祖柯日记4",
-        "type": 1,
+        "name": "祖珂日记4",
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -6295,7 +6295,7 @@ datas = _tools.RODict({
     16000118: _tools.RODict({
         "ID": 16000118,
         "name": "飞沙密信",
-        "type": 1,
+        "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
         "toolCheck": None,
@@ -12058,7 +12058,7 @@ datas = _tools.RODict({
         "triggerAction": None,
         "isUnique": 1,
         "ifBornState": 0,
-        "rewardID": 40036001,
+        "rewardID": 40035001,
         "displayMode": 0,
         "triggerTask": None,
         "triggerPos": None,
@@ -12085,7 +12085,7 @@ datas = _tools.RODict({
         "triggerAction": None,
         "isUnique": 1,
         "ifBornState": 0,
-        "rewardID": 40036002,
+        "rewardID": 40035002,
         "displayMode": 0,
         "triggerTask": None,
         "triggerPos": None,
@@ -12112,7 +12112,7 @@ datas = _tools.RODict({
         "triggerAction": None,
         "isUnique": 1,
         "ifBornState": 0,
-        "rewardID": 40036003,
+        "rewardID": 40035003,
         "displayMode": 0,
         "triggerTask": None,
         "triggerPos": None,
@@ -12139,7 +12139,7 @@ datas = _tools.RODict({
         "triggerAction": None,
         "isUnique": 1,
         "ifBornState": 0,
-        "rewardID": 40036004,
+        "rewardID": 40035004,
         "displayMode": 0,
         "triggerTask": None,
         "triggerPos": None,
@@ -12166,7 +12166,7 @@ datas = _tools.RODict({
         "triggerAction": None,
         "isUnique": 1,
         "ifBornState": 0,
-        "rewardID": 40036005,
+        "rewardID": 40035005,
         "displayMode": 0,
         "triggerTask": None,
         "triggerPos": None,
@@ -12193,7 +12193,7 @@ datas = _tools.RODict({
         "triggerAction": None,
         "isUnique": 1,
         "ifBornState": 0,
-        "rewardID": 40036006,
+        "rewardID": 40035006,
         "displayMode": 0,
         "triggerTask": None,
         "triggerPos": None,
@@ -12842,6 +12842,87 @@ datas = _tools.RODict({
         "isUnique": 1,
         "ifBornState": 0,
         "rewardID": 40036256,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
+    16006104: _tools.RODict({
+        "ID": 16006104,
+        "name": "朱焰灵主",
+        "type": 7,
+        "pickDistance": 2.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 5,
+        "isUnstoppble": 1,
+        "precheckAction": None,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": None,
+        "isUnique": 1,
+        "ifBornState": 0,
+        "rewardID": 40034501,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
+    16006105: _tools.RODict({
+        "ID": 16006105,
+        "name": "影袭斧王",
+        "type": 7,
+        "pickDistance": 2.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 5,
+        "isUnstoppble": 1,
+        "precheckAction": None,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": None,
+        "isUnique": 1,
+        "ifBornState": 0,
+        "rewardID": 40034502,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
+    16006106: _tools.RODict({
+        "ID": 16006106,
+        "name": "炎兽咒主",
+        "type": 7,
+        "pickDistance": 2.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 5,
+        "isUnstoppble": 1,
+        "precheckAction": None,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": None,
+        "isUnique": 1,
+        "ifBornState": 0,
+        "rewardID": 40034503,
         "displayMode": 0,
         "triggerTask": None,
         "triggerPos": None,

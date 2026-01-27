@@ -44,7 +44,7 @@ class Affix(userType.UserSoleType):
         
         propScore = 0
         if prop:
-            propScore = int(dataUtils.filterFightPropScore(school, prop) * self.affixVal)
+            propScore = dataUtils.calcFightPropScore(school, prop, self.affixVal)
         return int(propScore + score_data)
 
     def getAffixId(self):
@@ -190,7 +190,7 @@ def genBlessAffix(iLevel, affixId):
 
 def applyAffixPropEffectToAvatar(owner, affixItem, attrNameList, attrValList, attrSrcType, afxValStartIdx=0, afxValEndIdx=-1):
     #词条对avatar单属性的加成
-    DEBUG_MSG('in applyAffixPropEffectToAvatar:',  attrNameList, attrValList)
+    INFO_MSG('in applyAffixPropEffectToAvatar:',  attrNameList, attrValList)
     valNum = len(attrValList)
     if afxValEndIdx >= valNum:
         gameengine.reportCritical('applyAffixPropEffectToAvatar, afx end idx error:', attrValList, afxValStartIdx, afxValEndIdx)
@@ -207,9 +207,9 @@ def applyAffixPropEffectToAvatar(owner, affixItem, attrNameList, attrValList, at
     return
 
 def removeAffixEffectFromAvatar(owner, affixItem, baseAttrAddValDic, attrSrcType):
-    DEBUG_MSG('in removeAffixEffectFromAvatar')
+    INFO_MSG('in removeAffixEffectFromAvatar')
     # 移除单属性加成
-    DEBUG_MSG('     in removeAffixEffectFromAvatar, baseAttrsByAfxVal:', baseAttrAddValDic)
+    INFO_MSG('     in removeAffixEffectFromAvatar, baseAttrsByAfxVal:', baseAttrAddValDic)
     for propName, val in baseAttrAddValDic.items():
         owner.addProp(propName, -1 * val, attrSrcType)
     # # 移除技能加成

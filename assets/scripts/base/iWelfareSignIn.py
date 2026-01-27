@@ -46,7 +46,7 @@ class IWelfareSignIn(object):
 
     @gamedecorator.checkGameconfigEnable('welfare')
     def reqWelfareSignIn(self, exposed, signInDayNo, welfareType):
-        INFO_MSG('call reqWelfareSignIn')
+        INFO_MSG('call reqWelfareSignIn', welfareType, signInDayNo)
         welfareSignInInfo = self.welfareSignInInfos.get(welfareType, None)
         if not welfareSignInInfo:
             ERROR_MSG('call reqWelfareSignIn: no welfareType', welfareType)
@@ -104,7 +104,7 @@ class IWelfareSignIn(object):
 
         condition = WLRD.datas[rid]['condition']
         if self.getAvatarLevel() < condition:
-            ERROR_MSG('call reqLevelWelfare: not meet condition', slotNo, self.level, condition)
+            ERROR_MSG('call reqLevelWelfare: not meet condition', slotNo, self.getAvatarLevel(), condition)
             return
         
         if not self.checkUnlock(levelWelfareIDS[welfareType]):
@@ -121,7 +121,7 @@ class IWelfareSignIn(object):
         awardCtx = self._getAvatarAwardCtx(rewardId, None)
         detail = gameclass.AwardDetail()
         opUUID = KBEngine.genUUID64()
-        self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_SIGN_IN, rewardId, 1, opUUID, detail, awardCtx)
+        self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_LEVEL, rewardId, 1, opUUID, detail, awardCtx)
 
         self.sendLevelWelfareInfo(welfareType)
 
@@ -151,7 +151,8 @@ class IWelfareSignIn(object):
         awardCtx = self._getAvatarAwardCtx(rewardId, None)
         detail = gameclass.AwardDetail(signInDayNo=signInDayNo)
         opUUID = KBEngine.genUUID64()
-        self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_SIGN_IN, rewardId, 1, opUUID, detail, awardCtx)
+        srcType = AAC_AACDD.datas.BONUS_SRC_WELFARE_SIGN_IN if welfareType == "SevenSign" else AAC_AACDD.datas.BONUS_SRC_WELFARE_TEN_SIGN_IN
+        self.addAwards(srcType, rewardId, 1, opUUID, detail, awardCtx)
         return True
 
     def welfareSignInOnLogin(self):
@@ -275,14 +276,14 @@ class IWelfareSignIn(object):
                 return
             maxSignInDay = WSLCONFIG.maxDayData[welfareType]
             welfareSignInDay = min(utils.getSvrOpenDays(), maxSignInDay)
-            DEBUG_MSG('call updateWelfareSignIn: TenSign', welfareSignInDay)
+            INFO_MSG('call updateWelfareSignIn: TenSign', welfareSignInDay)
             welfareSignInInfo.welfareSignInDay = welfareSignInDay
         else:
             welfareSignInInfo.welfareSignInDay += 1
         welfareSignInInfo.welfareLastSignInTimestamp = curTimestamp
 
     def gmUpdateWelfareSignIn(self, flag, welfareType):
-        DEBUG_MSG('call gmUpdateWelfareSignIn', flag, welfareType)
+        INFO_MSG('call gmUpdateWelfareSignIn', flag, welfareType)
         welfareSignInInfo = self.welfareSignInInfos.get(welfareType, None)
         if not welfareSignInInfo:
             ERROR_MSG('call gmUpdateWelfareSignIn: no welfareType', welfareType)
@@ -290,7 +291,7 @@ class IWelfareSignIn(object):
 
 
         if not welfareSignInInfo.welfareSignInDay:
-            DEBUG_MSG('call gmUpdateWelfareSignIn, not lock', welfareSignInInfo.welfareSignInDay)
+            INFO_MSG('call gmUpdateWelfareSignIn, not lock', welfareSignInInfo.welfareSignInDay)
             return False, '未解锁福利签到'
 
         success = True
@@ -299,17 +300,17 @@ class IWelfareSignIn(object):
             welfareSignInInfo.welfareSignInDay = 1
             welfareSignInInfo.welfareLastSignInTimestamp = utils.getNow()
             welfareSignInInfo.welfareSignInData = 0
-            DEBUG_MSG('call gmUpdateWelfareSignIn: reset all', welfareSignInInfo.welfareSignInDay)
+            INFO_MSG('call gmUpdateWelfareSignIn: reset all', welfareSignInInfo.welfareSignInDay)
             msg = '重置签到天数成功'
         else:
             maxSignInDay = WSLCONFIG.maxKey
             if welfareSignInInfo.welfareSignInDay >= maxSignInDay:
-                DEBUG_MSG('call gmUpdateWelfareSignIn: all signed in', welfareSignInInfo.welfareSignInDay)
+                INFO_MSG('call gmUpdateWelfareSignIn: all signed in', welfareSignInInfo.welfareSignInDay)
                 msg ='已经达到最大签到天数'
                 success = False
             else:
                 self.updateWelfareSignIn(utils.getNow(), welfareType)
-                DEBUG_MSG('call gmUpdateWelfareSignIn: add signin day', welfareSignInInfo.welfareSignInDay)
+                INFO_MSG('call gmUpdateWelfareSignIn: add signin day', welfareSignInInfo.welfareSignInDay)
                 msg ='已累增1天'
 
         self.sendWelfareSignInInfo(welfareType)

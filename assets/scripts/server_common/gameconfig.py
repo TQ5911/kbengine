@@ -670,6 +670,7 @@ def crossDataServerInfo():
     return crossDataServersInfo
 
 
+# 这里和服务端约定好格式为 android_version;ios_version;windows_version
 @config(Str, '', 'hotfix version')
 def hotfixVersion():
     return ''
@@ -912,13 +913,6 @@ def enableMail():
 def enableOldLogout():
     return 1
 
-@cache
-def enableTeleportDict():
-    # try:
-    #     ret = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/enableTeleportDict'))
-    # except:
-    #     ret = 1
-    return 1
 
 @config(Bool, None, '是否开启切磋')
 def enableDuel():
@@ -985,7 +979,10 @@ def debugErrorLogHost():
 @cache
 def wxReportUrl():
     try:
+        '''
         host = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/errReportUrl')
+        '''
+        host = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=e7a6e5a5-18d0-4a5c-be78-01b4827e208b'
     except:
         host = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=92de3ed1-9bfe-4428-afc6-f1488f9bb452'
     return host

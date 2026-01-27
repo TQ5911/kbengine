@@ -574,6 +574,12 @@ class ImpAutoCombat(object):
             target = self.getRandomTarget(skillRange, 'AnyExGB')
         return target
 
+    def _getAutoFightRange(self, target):
+        range = CONST.datas['autoFightRange']['value']
+        if not target or not target.IsAICombatUnit:
+            return range
+        return range + target.getConfigData().get('attackDistanceCompensation', 0)
+
     def getNoneTypeTarget(self, skill):
         if skill.getEffectTarget(skill.skillId) == 'Self':
             return self
@@ -585,7 +591,7 @@ class ImpAutoCombat(object):
             if not target:
                 self.setSelectedTargetId(0)
             if not target or not target.IsCombatUnit or target.isDie() or target.spaceNo != self.spaceNo \
-                    or sMath.distance2D(target.position, self.position) > CONST.datas['autoFightRange']['value'] \
+                    or sMath.distance2D(target.position, self.position) > self._getAutoFightRange(target) \
                     or not utils.checkTargetType('Enemy', self, target) \
                     or not self.checkCombatRangeY(target):
                 target = self.getEffectSelectTarget(skill)
@@ -618,7 +624,7 @@ class ImpAutoCombat(object):
                 continue
             if mEnt.isDie() or mEnt.spaceNo != self.spaceNo:
                 continue
-            if sMath.distance2D(mEnt.position, self.position) > CONST.datas['autoFightRange']['value']:
+            if sMath.distance2D(mEnt.position, self.position) > self._getAutoFightRange(mEnt):
                 continue
             if not self.checkCombatRangeY(mEnt):
                 continue
@@ -655,6 +661,9 @@ class ImpAutoCombat(object):
             return
 
         if self.fightBackTimerId:
+            return
+
+        if not self._isUIVisibleStrCell('AutoCombat'):
             return
 
         if self.hasState(gameconst.State.Moving):
@@ -727,7 +736,7 @@ class ImpAutoCombat(object):
         _hateRecord = self.getTempMiscProp(gameconst.AvatarProps.hateRecord, {})
 
         if not target or target.spaceNo != self.spaceNo or not target.IsCombatUnit\
-                or sMath.distance2D(target.position, self.position) > CONST.datas['autoFightRange']['value'] \
+                or sMath.distance2D(target.position, self.position) > self._getAutoFightRange(target) \
                 or not utils.checkTargetType('Enemy', self, target)\
                 or not self.checkCombatRangeY(target):
             # 调整后：下面是顺序
@@ -791,7 +800,7 @@ class ImpAutoCombat(object):
         if not target:
             self.setSelectedTargetId(0)
         if not target or target.spaceNo != self.spaceNo \
-                or sMath.distance2D(target.position, self.position) > CONST.datas['autoFightRange']['value'] \
+                or sMath.distance2D(target.position, self.position) > self._getAutoFightRange(target) \
                 or not utils.checkTargetType(targetType, self, target) \
                 or not self.checkCombatRangeY(target):
 
@@ -821,8 +830,8 @@ class ImpAutoCombat(object):
         else:
             _useCreationSkill = True
 
-        for skillId, skill in self.getSkillDic().items():
-            ret = self.getSkillDic().checkSkillSwitch(skillId, gameconst.SkillSwitchStatus.AUTO)
+        for skillId, skill in self.skillDic.items():
+            ret = self.skillDic.checkSkillSwitch(skillId, gameconst.SkillSwitchStatus.AUTO)
             if not ret:
                 continue
             if not skill.hasTag(gameconst.SkillTag.AutoCombat):

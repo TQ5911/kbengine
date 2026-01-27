@@ -44,8 +44,7 @@ class LingShou(userType.UserSoleType):
         petData = PDPD.datas[self.petId]
         prop = petData.get('prop', [])
         for propName, val in prop:
-            propBaseScore = dataUtils.filterFightPropScore(self.school, propName)
-            totalScore += int(propBaseScore * val)
+            totalScore += dataUtils.calcFightPropScore(self.school, propName, val)
 
         return totalScore
 
@@ -74,12 +73,10 @@ class LingShou(userType.UserSoleType):
         gearNum = dataUtils.getPetGearNum(self.petId)
         expandCount = gearNum - len(self.equipList)
         if expandCount > 0:
-            DEBUG_MSG('avatarPet--->initFromDict expand begin', dataDict, self.equipList, expandCount)
             # 扩容处理
             petEquipStatus = dataUtils.getPetEquipDefaultStatus()
             for _ in range(0, expandCount):
                 self.equipList.append(petEquipStatus)
-            DEBUG_MSG('avatarPet--->initFromDict expand end', dataDict, self.equipList, expandCount)
 
         self.school = dataDict.get('school', 0)
         self.baseScore = self._getBaseLingShouScore()
@@ -288,7 +285,7 @@ class LingShouInfo(userType.UserSoleType):
         return index < petTeamNum
 
     def updateBattleList(self, owner, battleIndex, slotId, petId):
-        DEBUG_MSG("updateBattleList", battleIndex, slotId, petId)
+        INFO_MSG("updateBattleList", battleIndex, slotId, petId)
         self.battleList[battleIndex].setPetIdBySlot(petId, slotId)
         owner.client.onUpdateLingShouBattleList(battleIndex, petId, slotId)
 

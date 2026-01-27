@@ -23,6 +23,11 @@
             <Flags>     BASE            </Flags>
         </cubeNo>
 
+        <maxReadyLineNo>
+            <Type>      LINE_NO         </Type>
+            <Flags>     BASE            </Flags>
+        </maxReadyLineNo>
+
         <cubeRooms>
             <Type>      PY_DICT         </Type>
             <Flags>     BASE            </Flags>
@@ -32,6 +37,12 @@
             <Type>      PY_LIST         </Type>
             <Flags>     BASE            </Flags>
         </randomTeleporterPool>
+
+        <curChapManMapId>
+            <Type>      MAP_ID          </Type>
+            <Flags>     BASE            </Flags>
+            <Default>   0               </Default>
+        </curChapManMapId>
     </Properties>
 
     <BaseMethods>
@@ -42,12 +53,11 @@
             <Arg>       PYTHON              </Arg>
         </doEnterCube>
 
-        <reliveToCubeRoom>
+        <doEnterCubeReady>
             <Arg>       ENTITYCALL          </Arg>
-            <Arg>       MAP_ID              </Arg>
             <Arg>       PLAYER_GBID         </Arg>
             <Arg>       PYTHON              </Arg>
-        </reliveToCubeRoom>
+        </doEnterCubeReady>
 
         <onEnterCubeSuccess>
             <Arg>       PLAYER_GBID         </Arg>
@@ -63,7 +73,6 @@
         <logonEnterCube>
             <Arg>       ENTITYCALL          </Arg>
             <Arg>       PLAYER_GBID         </Arg>
-            <Arg>       SPACE_NO            </Arg>
             <Arg>       PYTHON              </Arg>
         </logonEnterCube>
 
@@ -81,6 +90,7 @@
              <Arg>       ENTITYCALL             </Arg>
              <Arg>       PLAYER_GBID            </Arg>
              <Arg>       PYTHON                 </Arg>
+             <Arg>       SPACE_NO               </Arg>
         </enterRandomRoom>
     </BaseMethods>
 </root>

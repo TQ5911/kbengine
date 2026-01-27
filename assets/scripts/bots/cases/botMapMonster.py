@@ -13,12 +13,18 @@ import simpleBotBase
 from simpleBotBase import AIState
 from botUtils import botUtils
 import utils
+import teamMatch_activity as TMACTD
+import gamePlay_gamePlay as GPD
 
 BOT_CONFIG = botBase.initBotConfig(__file__)
+
+MAP_TYPE_DUNGEON = 0
+MAP_TYPE_WORLD = 1
 
 AISTATE_INIT = 1
 AISTATE_COMBAT = 2
 AISTATE_GO_BATTLE_AREA = 3
+AISTATE_GO_DSTMAP = 4
 
 class BotAIState_Init(AIState):
     def enter(self, owner):
@@ -36,18 +42,46 @@ class BotAIState_Init(AIState):
         owner.debug("执行初始化状态逻辑 当前地图ID:%s" % curMapId)
         if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
             return
+        owner.unlockAllFunc()
+        if owner.isInDungeonSpace():
+            owner.doLeaveDungeon()
+            return
+
+        owner.changeAIState(AISTATE_GO_DSTMAP)
+
+    def exit(self, owner):
+        for idx, itemId in enumerate(owner.itemIds):
+            slotInfo = {"slotId": idx, "itemId": itemId, "potionState": 1}
+            owner.setInstantPotionSlots(slotInfo)
+        owner.debug("退出初始化状态")
+
+class BotAIState_GoDstMap(AIState):
+    def enter(self, owner):
+        owner.debug("进入前往目标地图状态")
+        owner.randomChoiceDstMap()
+        self.stateTime = time.time()
+
+    def execute(self, owner):
+        curMapId = owner.getSelfMapId()
+        random_wait = random.randint(10, 30)
+        now = time.time()
+        if now - self.stateTime < random_wait: # 等待随机时间
+            return
+        self.stateTime = now
+        owner.debug("执行前往目标地图状态逻辑 当前地图ID:%s 目标地图ID:%s" % (curMapId, owner.dstMapId))
+        if owner.hasState(gameconst.State.Teleporting) or owner.hasState(gameconst.State.Teleport):
+            return
         if int(curMapId) == owner.dstMapId:
-            for idx, itemId in enumerate(owner.itemIds):
-                slotInfo = {"slotId": idx, "itemId": itemId, "potionState": 1}
-                owner.setInstantPotionSlots(slotInfo)
-            owner.runGmCommand('$dressallequipments 0')
             owner.runGmCommand('$goto 0 %s %s %s' % (owner.dstPos.x, owner.dstPos.y, owner.dstPos.z))
             owner.changeAIState(AISTATE_GO_BATTLE_AREA)
             return
         if owner.isInDungeonSpace():
             owner.doLeaveDungeon()
             return
-        owner.runGmCommand(f'$entermap 0 {owner.dstMapId}')
+        if owner.mapType == MAP_TYPE_DUNGEON:
+            owner.reqPlayerAutoMatch()
+        else:
+            owner.runGmCommand(f'$entermap 0 {owner.dstMapId}')
 
     def exit(self, owner):
         owner.debug("退出初始化状态")
@@ -65,8 +99,11 @@ class BotAIState_Combat(AIState):
         if not owner.hasState(gameconst.State.autoFight):
             owner.cell.startAutoCombat(False)
             return
-        # if owner.hasState(gameconst.State.Fighting):
-        #     return
+        if owner.hasState(gameconst.State.Fighting):
+            return
+        if owner.needChangeDstMap():
+            owner.changeAIState(AISTATE_GO_DSTMAP)
+            return
         
     def exit(self, owner):
         owner.debug("退出战斗状态")
@@ -84,6 +121,9 @@ class BotAIState_GoBattleArea(AIState):
         if now - self.stateTime < random_wait:
             return
         self.stateTime = now
+        if owner.needChangeDstMap():
+            owner.changeAIState(AISTATE_GO_DSTMAP)
+            return
         owner.debug("执行前往战斗区域状态逻辑 %s %s" % (owner.state, str(owner.position)))
         if owner.hasState(gameconst.State.Death):
             owner.relive(2)
@@ -99,25 +139,62 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
     def __init__(self, robot, botClient):
         super(PlayerDelegate, self).__init__(robot, botClient)
         botClient.client.setSyncViewEntities(0)  # 关闭同步视野内实体数据，减少机器人客户端开销
-        self.dstMapId = 1036 # 世界boss        
+        self.mapType = 0
+        self.dstMapId = 1036 # 世界boss      
         # self.dstMapId = 1031
         self.itemIds = [30010006,30010005]
         self.pointRadius = 5
+        self.curTargetStartTime = 0
         self.aiStateMap = {
             AISTATE_INIT: BotAIState_Init(),
             AISTATE_COMBAT: BotAIState_Combat(),
             AISTATE_GO_BATTLE_AREA: BotAIState_GoBattleArea(),
+            AISTATE_GO_DSTMAP: BotAIState_GoDstMap(),
         }
-        
-    def initBot(self):
+
+    def unlockAllFunc(self):
         if self.getSelfMapId() == 4002 or self.player.level < 20:
             self.runGmCommand('$unlockallfunc 0')
             
+    def initBot(self):
+        self.unlockAllFunc()
         self.runGmCommand('$getitems 0 0 9999 0 30010005 30010006')
         if self.player.totalScore < 150000:
-            self.runGmCommand("$getequipment 0 0 3 4")
-        self.getDstPos()
+            self.runGmCommand("$enhanceRole 0 0")
 
+    def needChangeDstMap(self):
+        randomWaitTime = random.randint(10, 30)
+        if time.time() - self.curTargetStartTime < randomWaitTime*60:
+            return False
+        return True
+
+    def randomChoiceDstMap(self):        
+        if self.isInDungeonSpace():
+            self.doLeaveDungeon()    
+        self.curTargetStartTime = time.time()
+        self.mapType = random.choice([MAP_TYPE_DUNGEON, MAP_TYPE_WORLD])
+        if self.mapType == MAP_TYPE_DUNGEON:
+            if not hasattr(self, 'matchTargets'):
+                self.matchTargets = []
+                for tartgetId, data in TMACTD.datas.items():
+                    # 目前机器人不知道路线，只打首领副本
+                    if data['pareActivity'] == 32000001:
+                        self.matchTargets.append(tartgetId)
+            self.setMatchInfo(random.choice(self.matchTargets))
+            self.debug(f"随机选择目标匹配id {self.matchTargetId}")
+        else:
+            if not hasattr(self, 'mapIds'):
+                self.mapIds = []
+                for mapId in GPD.mapWorldSet:
+                    data = GPD.datas.get(mapId)
+                    if data and data.get('returnMapID') and data.get('returnMapID') != mapId:
+                        _, monsterNum = self.getMapMonsterPos(mapId)
+                        if monsterNum > 0:
+                            self.mapIds.append(mapId)
+            self.dstMapId = random.choice(self.mapIds)
+            self.getDstPos()
+            self.debug(f"随机选择目标地图id {self.dstMapId}")
+    
     def getDstPos(self):
         self.dstPos, monsterNum = self.getMapMonsterPos(self.dstMapId)
         # 只有一只怪的话， 分散一下

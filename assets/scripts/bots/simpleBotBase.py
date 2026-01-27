@@ -8,6 +8,10 @@ import threading
 import random
 import re
 import Math
+import gameconst
+
+import teamMatch_activity as TMACTD
+import activityControl_activityData as AC_ADD
 
 from botBase import Getter
 
@@ -54,6 +58,7 @@ class SimpleBotBase(object):
         self.aiState = 0
         self.aiStateMap = {}
         self.botIdx = self.getBotIndx()
+        self.matchTargetId = None
         
         
     def dealMultiPack(self, funcName, datas, index, isEnd):
@@ -287,7 +292,7 @@ class SimpleBotBase(object):
         elif formula.isRaidDungeonSpace(spaceNo):
             self.cell.leaveRaidDungeon()
         elif formula.isTeamDungeonSpace(spaceNo):
-            self.cell.leaveTeamDungeon()
+            self.cell.leaveTeamDungeonCell()
 
     def isInRaid(self):
         return self.player.raidId > 0
@@ -301,6 +306,56 @@ class SimpleBotBase(object):
     def runGmCommand(self, command):
         self.debug(f'runGmCommand: {command}')
         self.base.runGmCommand(command)
+
+    def quitTeamOrRaid(self):
+        if self.getSelfMapId() == self.dstMapId: # 可能断线重连， 目标是副本用这个应该还行，大世界不太行
+            return
+        if self.isInTeam():
+            self.cell.applyLeaveTeam()
+        elif self.isInRaid():
+            self.cell.leaveRaid()
+
+    def _getMatchData(self):
+        return TMACTD.datas.get(self.matchTargetId, {})
+
+    def setMatchInfo(self, matchTargetId=None):
+        if matchTargetId:
+            self.matchTargetId = matchTargetId
+        matchData = self._getMatchData()
+        self.dstMapId = matchData.get("enterDunID", 0)
+        self.dstPos, _ = self.getMapMonsterPos(self.dstMapId)
+
+    def createTeamOrRaidByMatchTargetId(self, matchTargetId=None):
+        matchTargetId = matchTargetId or self.matchTargetId
+        teamTargetInfo = self._getMatchData()
+        actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
+        teamType = int(actData['needTeam'])
+        membersRequire = actData['membersRequire'] or 1
+        self.debug(f"createTeamOrRaidByMatchTargetId: {matchTargetId}, {teamType}, {membersRequire}")
+        if teamType == gameconst.ActivityControlType.TEAM:
+            self.cell.applyCreateTeam(matchTargetId, 0, 0, '', '', 1)
+        elif teamType == gameconst.ActivityControlType.RAID:
+            self.cell.createRaidLonely(membersRequire, matchTargetId, 0, 0, '', '', 1)
+
+    def reqPlayerAutoMatch(self, matchTargetId=None):
+        matchTargetId = matchTargetId or self.matchTargetId
+        teamTargetInfo = self._getMatchData()
+        actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
+        teamType = int(actData['needTeam'])
+        membersRequire = actData['membersRequire'] or 1
+        # 末位做队长，如果只创建14个，说明主控会创建队伍
+        if self.botIdx % membersRequire == 0 and not self.isInTeam() and not self.isInRaid():
+            self.createTeamOrRaidByMatchTargetId()
+            return
+
+        self.debug(f"reqPlayerAutoMatch: {matchTargetId} {teamType}")
+
+        if teamType == gameconst.ActivityControlType.TEAM:
+            if self.player.autoMatchTarget != matchTargetId and not self.isInTeam():
+                self.cell.reqPlayerAutoMatch(matchTargetId)
+        elif teamType == gameconst.ActivityControlType.RAID:
+            if self.player.autoRaidMatchTarget != matchTargetId and not self.isInRaid():
+                self.cell.reqRaidPlayerAutoMatch(matchTargetId)
 
     def relive(self, reliveType):
         now = utils.getNow()

@@ -460,8 +460,8 @@ class AvatarOutfitInfo(userType.UserSoleType):
             if outfitType == gameconst.OutfitType.mount:
                 prop = MOUNTS.datas[outfitId]['prop']
                 if prop:
-                    owner.updateMountScore()
                     owner.cell.updatePropByMount(outfitId, True)
+                    owner.updateMountScore()
         else:
             outfit.setExpireTime(expireTime)
 
@@ -475,12 +475,12 @@ class AvatarOutfitInfo(userType.UserSoleType):
         self.outfitDict.pop(outfitKey, None)
 
         if outfitType == gameconst.OutfitType.mount:
-            score = MOUNTS.datas[outfitId]['score']
-            if score:
-                owner.updateMountScore()
             prop = MOUNTS.datas[outfitId]['prop']
             if prop:
                 owner.cell.updatePropByMount(outfitId, False)
+            score = MOUNTS.datas[outfitId]['score']
+            if score:
+                owner.updateMountScore()
 
     def getOutfitInfo(self, outfitType, outfitId):
         outfitKey = self.getOutfitKey(outfitType, outfitId)

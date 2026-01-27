@@ -19,6 +19,7 @@ import gameclass
 
 import gameglobal
 import dataUtils
+import LogTrackingMgr
 
 class Build(userType.UserSoleType):
     """BUILD_INFO"""
@@ -160,7 +161,7 @@ class Build(userType.UserSoleType):
         owner.removeSkillSetSummonSlotIdx([skillId])
         return True
 
-    def changeSkillSlot(self, owner, skillId, fromSlotId, toSlotId, isFromDeleteTempSkill = False):
+    def changeSkillSlot(self, owner, skillId, fromSlotId, toSlotId, isFromDeleteTempSkill = False, fromSkillNextCastTime = 0):
         if fromSlotId is None and toSlotId is None:
             return
 
@@ -168,12 +169,12 @@ class Build(userType.UserSoleType):
             return
 
         if fromSlotId is None:
-            owner.cell.doActionOnChangeSlot(skillId, self.skillLevels[skillId], True, True)
+            owner.cell.doActionOnChangeSlot(skillId, self.skillLevels[skillId], True, True, fromSkillNextCastTime)
         else:
             self.activeSkills[fromSlotId] = 0
 
         if toSlotId is None:
-            owner.cell.doActionOnChangeSlot(skillId, self.skillLevels[skillId], False, False)
+            owner.cell.doActionOnChangeSlot(skillId, self.skillLevels[skillId], False, False, fromSkillNextCastTime)
             owner.cell.removeSkill(skillId, isFromDeleteTempSkill)
         else:
             self.activeSkills[toSlotId] = skillId
@@ -235,10 +236,12 @@ class Build(userType.UserSoleType):
             ERROR_MSG('level limit:', selfLevel, levelLimit)
             return False
 
+        costItemInfo = {}
         consumeItem = cfgData.get('consumeItem')[oldLevel-1]
         deductVal = dropAward.DeductWealthVal()
         for costItemId, itemNum in zip(consumeItem[::2], consumeItem[1::2]):
             deductVal.addWealthByItemId(costItemId, itemNum)
+            costItemInfo[costItemId] = costItemInfo.get(costItemId, 0) + itemNum
 
         consumeMoney = cfgData.get('consumeMoney')[oldLevel-1]
         costItemId, itemNum = consumeMoney
@@ -254,6 +257,7 @@ class Build(userType.UserSoleType):
         owner.deductWealth(src, deductVal, opUUID, detail)
         newLevel = int(min(oldLevel + delta, self.getMaxLevel(owner, _morphBaseSkillId, oldSkillId)))
         self.skillLevels[skillId] = newLevel
+        self.skillLevels[oldSkillId] = newLevel
         owner.updateSkillLevelSetSummonSlotIdx(skillId, newLevel)
 
         # 被动技能替换的技能一并要升级
@@ -266,6 +270,8 @@ class Build(userType.UserSoleType):
 
         owner.onChangeSkillLv(skillId, newLevel)
         owner.client.onUpdateSkillLevel(skillIdList, [newLevel] * len(skillIdList))
+        #
+        LogTrackingMgr.LogTrackingMgr.Skill_Upgrade(skillId, list(costItemInfo.keys()), list(costItemInfo.values()), consumeMoney[0], consumeMoney[1], newLevel, opUUID)
         return True
 
     def resetAllSkill(self, caster):

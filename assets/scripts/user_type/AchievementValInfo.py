@@ -123,22 +123,35 @@ class AchievementValVal(userType.UserSoleType):
     def checkCouldChangeFinishedState(self, avatar, achieveData, ctx):
         return _CHECK_ACHIEVE_DIC[achieveData['targetType']][0](avatar, achieveData, self, ctx)
 
-    def updateFromNewAchieveData(self, avatar, achieveData, ctx):
+    def updateFromNewAchieveData(self, avatar, achieveData, ctx, src):
         if not achieveData['isOpen']:
             return False
 
+        _oldIsFinished = self.isFinished()
         _oldStep = self.step
         if self.checkCouldChangeFinishedState(avatar, achieveData, ctx):
             self.flag = utils.bitSet(self.flag, gameconst.AchievementFlag.FINISHED)
 
-        if _oldStep != self.step or self.isFinished():
+        if _oldIsFinished != self.isFinished():
+            _isLog = True
+            _state = gameconst.ACHIEVE_STATE_FINISH
+
+        elif src == gameconst.ACHIEVE_SRC_NEW:
+            _isLog = True
+            _state = gameconst.ACHIEVE_STATE_NEW
+
+        else:
+            _isLog = False
+            _state = 0
+
+        if _isLog:
             LogTrackingMgr.LogTrackingMgr.Achievement_Update(
                 avatar.accountEntity.accountName,
                 avatar.gbID,
                 gameconfig.gameId(),
                 self.achieveId,
                 avatar.achievementInfo.maxVersion,
-                self.isFinished(),
+                _state,
                 self.step,
             )
 
@@ -146,9 +159,10 @@ class AchievementValVal(userType.UserSoleType):
 
     @classmethod
     def fromAchieveData(cls, avatar, achieveData, ctx):
+        # 新增的成就会走到这里
         _achieveVal = cls(achieveData['ID'])
         if _CHECK_ACHIEVE_DIC[achieveData['targetType']][1]:
-            _achieveVal.updateFromNewAchieveData(avatar, achieveData, ctx)
+            _achieveVal.updateFromNewAchieveData(avatar, achieveData, ctx, gameconst.ACHIEVE_SRC_NEW)
         return _achieveVal
 
     def toAchievementValSavedDict(self):

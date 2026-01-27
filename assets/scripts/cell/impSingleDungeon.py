@@ -47,7 +47,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
             if exitCount == self.DEFAULT_EXIT_COUNT:
                 self.showMsg(MMD.datas.leavingDungeonArea, [str(exitCount)])
 
-            DEBUG_MSG('_singleDungeonTrapCallback::outside team dungeon range, '
+            INFO_MSG('_singleDungeonTrapCallback::outside team dungeon range, '
                       'exit in {}s'.format(exitCount * 1))
             exitCount -= 1
         elif self.DEFAULT_EXIT_COUNT != exitCount:
@@ -59,7 +59,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
     @gamedecorator.limitcall(2, msgId=MMD.datas.dungeonRefused)
     def selfEnterSingleDungeon(self, dungeonNo, src):
-        DEBUG_MSG('selfEnterSingleDungeon:', dungeonNo, src)
+        INFO_MSG('selfEnterSingleDungeon:', dungeonNo, src)
 
         _targetSpaceNo = formula.getLineSpaceNo(dungeonNo, 0)
         if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, _targetSpaceNo):
@@ -101,7 +101,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         self.onCheckSingleDungeonCondition(dungeonNo, True, {}, extra)
 
     def onCheckSingleDungeonCondition(self, dungeonNo, result, reasonDic, extra):
-        DEBUG_MSG('onCheckSingleDungeonCondition::', dungeonNo, result, reasonDic)
+        INFO_MSG('onCheckSingleDungeonCondition::', dungeonNo, result, reasonDic)
         if not result:
             WARNING_MSG('onCheckSingleDungeonCondition:: failed', dungeonNo, reasonDic)
             return
@@ -213,12 +213,12 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         self.doLeaveSingleDungeon(dungeonNo, src, 'client leave')
 
     def leaveTutorialIsComplete(self, dungeonNo):
-        DEBUG_MSG('leaveTutorialIsComplete:', dungeonNo)
+        INFO_MSG('leaveTutorialIsComplete:', dungeonNo)
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
         self.doLeaveSingleDungeon(dungeonNo, src, 'client leave')
 
     def selfLeaveSingleDungeon(self, dungeonNo, src):
-        DEBUG_MSG('selfLeaveSingleDungeon:', dungeonNo, src)
+        INFO_MSG('selfLeaveSingleDungeon:', dungeonNo, src)
         _now = utils.getNow()
         if self.isGlobalTeleportLocked(now=_now):
             WARNING_MSG("selfLeaveSingleDungeon:: teleport locked", dungeonNo, src, self.teleportGlobalLockRlsT)
@@ -227,7 +227,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         self.doLeaveSingleDungeon(dungeonNo, src, 'server leave')
 
     def doLeaveSingleDungeon(self, dungeonNo, src, reason):
-        DEBUG_MSG('wl: doLeaveSingleDungeon', dungeonNo, src, reason)
+        INFO_MSG('wl: doLeaveSingleDungeon', dungeonNo, src, reason)
         if not formula.isDungeonSpace(self.spaceNo):
             return
 
@@ -258,9 +258,9 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
     def doLeaveSingleDungeonWithDstPos(self, dstNo, dstPos, dstDir):
         """task使用, 这个接口只用于从单人副本返回到大世界分线"""
-        DEBUG_MSG('in doLeaveSingleDungeonWithDstPos: 1', self.spaceNo, dstNo, dstPos, dstDir)
+        INFO_MSG('in doLeaveSingleDungeonWithDstPos: 1', self.spaceNo, dstNo, dstPos, dstDir)
         if not formula.isDungeonSpace(self.spaceNo):
-            DEBUG_MSG('in doLeaveSingleDungeonWithDstPos: 2', self.spaceNo, dstNo, dstPos, dstDir)
+            INFO_MSG('in doLeaveSingleDungeonWithDstPos: 2', self.spaceNo, dstNo, dstPos, dstDir)
             return
 
         dungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)

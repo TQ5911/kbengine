@@ -142,7 +142,6 @@
     <NEW_BIE_STEP>    UINT32            </NEW_BIE_STEP>
     <GUILD_LEVEL>    UINT8            </GUILD_LEVEL>
     <DARK_IRON>          INT64       </DARK_IRON>
-    <GENIUS_QI>          INT64       </GENIUS_QI>
     <SCENE_STATE>       UINT16          </SCENE_STATE>
     <LEADER_BOARD_PAGE>     UINT8       </LEADER_BOARD_PAGE>
     <RANK>              UINT16          </RANK>
@@ -946,13 +945,13 @@
             <skillLv>
                 <Type>  UINT8   </Type>
             </skillLv>
+            <tNextCast>
+                <Type>  DOUBLE  </Type>
+            </tNextCast>
             <cdDelta>
                 <Type>  FLOAT   </Type>
                 <Persistent>      false      </Persistent>
             </cdDelta>
-            <tNextCast>
-                <Type>  DOUBLE  </Type>
-            </tNextCast>
         </Properties>
     </SERVER_SKILL_VAL>
 
@@ -1456,6 +1455,9 @@
             <openId>
                 <Type> UNICODE </Type>
             </openId>
+            <joinType>
+                <Type> INT8 </Type>
+            </joinType>
         </Properties>
     </TEAM_MEMBER_VAL>
     <TEAM_MARK_VAL> FIXED_DICT
@@ -1567,6 +1569,9 @@
             <sex>
                 <Type>  SEX             </Type>
             </sex>
+            <applySource>
+                <Type>  INT8             </Type>
+            </applySource>
         </Properties>
     </APPLY_JOIN_INFO>
 
@@ -1588,8 +1593,11 @@
                 <Type>  UINT8         </Type>
             </mountState>
             <score>
-                <Type>  INT64           </Type>
+                <Type>  INT64         </Type>
             </score>
+            <joinType>
+                <Type>  INT8          </Type>
+            </joinType>
         </Properties>
     </TEAM_MEMBER_CACHE_VAL>
     <TEAM_INFO_CACHE> FIXED_DICT
@@ -2341,6 +2349,9 @@
             <meridian>
                 <Type>  SCORE   </Type>
             </meridian>
+            <bless>
+                <Type>  SCORE   </Type>
+            </bless>
         </Properties>
     </AVATAR_SCORES_VAL>
 
@@ -2833,6 +2844,9 @@
             <channel>
                 <Type> CHANNEL  </Type>
             </channel>
+            <srcType>
+                <Type> UINT16  </Type>
+            </srcType>
         </Properties>
     </GLOBAL_MAIL_VAL>
 
@@ -3400,6 +3414,9 @@
     <GUILD_CHALLENGE_DATA_INFO> FIXED_DICT
         <implementedBy>     GuildChallengeDataInfo.GuildChallengeDataInfoInstance    </implementedBy>
         <Properties>
+            <opUUID>
+                <Type>  INT64  </Type>
+            </opUUID>
             <openedFundCount>
                 <Type>  UINT8  </Type>
             </openedFundCount>
@@ -4745,9 +4762,6 @@
             <oldDarkIron>
                 <Type>  DARK_IRON               </Type>
             </oldDarkIron>
-            <oldGeniusQi>
-                <Type>  GENIUS_QI               </Type>
-            </oldGeniusQi>
             <otherGbId>
                 <Type>  PLAYER_GBID             </Type>
             </otherGbId>
@@ -5363,4 +5377,22 @@
             </entryStatus>
         </Properties>
     </DUNGEON_PASS_RECRODS>
+
+    <CUBE_ARENA_DATA_INFO> FIXED_DICT
+        <implementedBy>     CubeArenaInfo.CubeArenaInstance    </implementedBy>
+        <Properties>
+            <arenaStage>
+                <Type>  UINT8                   </Type>
+            </arenaStage>
+            <arenaKing>
+                <Type>  OBJECT_ID               </Type>
+            </arenaKing>
+            <stageChangeTime>
+                <Type>  LONGTIME                </Type>
+            </stageChangeTime>
+            <kingBuffId>
+                <Type>  BUFFID                  </Type>
+            </kingBuffId>
+        </Properties>
+    </CUBE_ARENA_DATA_INFO>
 </root>

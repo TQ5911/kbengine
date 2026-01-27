@@ -47,6 +47,7 @@ Avatar property cubeUseItemTimes 95
 Avatar property curReliveCD 87
 Avatar property dailyHealWoundsTimes 162
 Avatar property darkIron 155
+Avatar property deathResetCD 20
 Avatar property dmgArmor 130
 Avatar property dodge 76
 Avatar property drugsQuantity 163
@@ -66,7 +67,6 @@ Avatar property fullHp 89
 Avatar property fullMp 90
 Avatar property gatherRate 152
 Avatar property gbId 26
-Avatar property geniusQi 159
 Avatar property gmMode 27
 Avatar property guildAssistTimes 105
 Avatar property guildBossPassRecords 16

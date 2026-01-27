@@ -1,4 +1,4 @@
-﻿namespace KBEngine
+namespace KBEngine
 {
 	using UnityEngine;
 	using System;
@@ -62,9 +62,16 @@
                 state.socket.ConnectAsync(state.connectIP, state.connectPort);
                 //state.socket.Connect(state.connectIP, state.connectPort);
                 List<Socket> writeList = new List<Socket>();
+				List<Socket> errorList = new List<Socket>();
                 writeList.Add(state.socket);
-                Socket.Select(null, writeList, null, 3000000);
-                if(writeList.Count>0)
+				errorList.Add(state.socket);
+                Socket.Select(null, writeList, errorList, 3000000);
+				if (errorList.Count > 0)
+				{
+                    state.error = "connect error";
+                    Dbg.ERROR_MSG(string.Format("NetworkInterfaceTCP::_asyncConnect(), connect to '{0}:{1}' error", state.connectIP, state.connectPort));
+                }
+                else if(writeList.Count>0)
                 {
                     state.socket.Blocking = true;
                 }

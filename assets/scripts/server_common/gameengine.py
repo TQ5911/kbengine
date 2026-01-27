@@ -291,24 +291,29 @@ def exceptHook(ty, val, tb):
 
 
 def callBaseApps(func, args):
-    setBaseAppData(gameconst.GLOBALDATA_KEY_APPCALL, ('all', func, args))
+    setBaseAppData(gameconst.GLOBALDATA_KEY_APPCALL, (gameglobal.appCallIdx, 'all', func, args))
+    gameglobal.appCallIdx += 1
 
 
 def callBaseApp(pythonServer, func, args):
-    setBaseAppData(gameconst.GLOBALDATA_KEY_APPCALL, (pythonServer, func, args))
+    setBaseAppData(gameconst.GLOBALDATA_KEY_APPCALL, (gameglobal.appCallIdx, pythonServer, func, args))
+    gameglobal.appCallIdx += 1
 
 
 def callCellApps(func, args):
-    setCellAppData(gameconst.GLOBALDATA_KEY_CELLAPP_CALL, ('all', func, args))
+    setCellAppData(gameconst.GLOBALDATA_KEY_CELLAPP_CALL, (gameglobal.appCallIdx, 'all', func, args))
+    gameglobal.appCallIdx += 1
 
 
 def callCellApp(pythonServer, func, args):
-    setCellAppData(gameconst.GLOBALDATA_KEY_CELLAPP_CALL, (pythonServer, func, args))
+    setCellAppData(gameconst.GLOBALDATA_KEY_CELLAPP_CALL, (gameglobal.appCallIdx, pythonServer, func, args))
+    gameglobal.appCallIdx += 1
 
 
 def callAllApps(func, args):
-    setBaseAppData(gameconst.GLOBALDATA_KEY_APPCALL, ('all', func, args))
-    setCellAppData(gameconst.GLOBALDATA_KEY_CELLAPP_CALL, ('all', func, args))
+    setBaseAppData(gameconst.GLOBALDATA_KEY_APPCALL, (gameglobal.appCallIdx, 'all', func, args))
+    setCellAppData(gameconst.GLOBALDATA_KEY_CELLAPP_CALL, (gameglobal.appCallIdx, 'all', func, args))
+    gameglobal.appCallIdx += 1
 
 
 def _realCallApp(func, args):
@@ -323,7 +328,7 @@ def _realCallApp(func, args):
 
 
 def onAppCall(val):
-    python_server, func, args = val
+    _, python_server, func, args = val
     if python_server == 'all' or python_server == utils.getPythonServer():
         _realCallApp(func, args)
 

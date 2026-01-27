@@ -58,7 +58,7 @@ datas = _tools.RODict({
     9: _tools.RODict({
         "ID": 9,
         "name": "cityBattle_convertRecord",
-        "log": "<color=#F3D58F>{0}</color>将{1}城池金币转换为了{2}帮会金币"
+        "log": "<color=#F3D58F>{0}</color>将{1}城池金币转换为了{2}帮会元宝"
     })
 })
 minKey = 1

@@ -2,12 +2,10 @@ datas ={
   "1003": {
     "type": "createMonster",
     "entityID": [
-      40100001,
-      40100002,
-      40100003
+      40100001
     ],
-    "num": 0,
-    "lv": "1",
+    "num": 1,
+    "lv": "28",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -36,8 +34,12 @@ datas ={
     "transition": {}
   },
   "1021": {
-    "type": "taskFinished",
-    "taskID": 86090120,
+    "type": "monsterHp",
+    "monsterID": [
+      40100001
+    ],
+    "compare": 1,
+    "hpPercent": 0.0,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -47,11 +49,11 @@ datas ={
     }
   },
   "1022": {
-    "type": "showPopoverMsg",
+    "type": "popupdialog",
     "entityID": [
       40100001
     ],
-    "messageID": 19900243,
+    "dialogID": 19900243,
     "transition": {
       "finished": [
         1024

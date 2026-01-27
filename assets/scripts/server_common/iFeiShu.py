@@ -46,6 +46,11 @@ class IFeiShu():
         if len(msgs) <= 0:
             return
 
+        self.msgList = []
+        #
+        self.goBlinReport(msgs)
+
+    def wxReportDirect(self, msgs):
         if gameglobal.curServerAlias:
             _serverName = gameglobal.curServerAlias
         else:
@@ -57,7 +62,6 @@ class IFeiShu():
                 'mentioned_mobile_list':[_serverName]
             },
         }
-        self.msgList = []
         url = gameconfig.wxReportUrl()
         if not url:
             return
@@ -65,30 +69,43 @@ class IFeiShu():
         #     url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=72713252-20ea-4ef8-976a-0befb867d20f"
 
         cbFunc = lambda httpcode, data, headers, success, url: \
-            self.onReportResult(httpcode, data, headers, success, url)
-
+            self.onReportResult(httpcode, data, headers, success, url, msgs, 'wechat')
+        
         KBEngine.urlopenv2(url, cbFunc, method='POST',
                            postData=json.dumps(datas).encode('utf-8'),
                            headers={"Content-Type": "application/json"},
                            timeoutSec=1)
-
+    
+    def goBlinReport(self, msgs):
         debugErrorLogHost = gameconfig.debugErrorLogHost()
         if not debugErrorLogHost:
+            self.wxReportDirect(msgs)
             return
 
         url = '{}/logs'.format(debugErrorLogHost)
+        if gameglobal.curServerAlias:
+            _serverName = gameglobal.curServerAlias
+        else:
+            _serverName = gameglobal.curServerName
+        
+        sendMsg = [_serverName]
+        sendMsg.extend(msgs)
         datas = {
-            'raw': '$-$'.join(msgs)
+            'raw': '$-$'.join(sendMsg)
         }
+
+        cbFunc = lambda httpcode, data, headers, success, url: \
+            self.onReportResult(httpcode, data, headers, success, url, msgs, 'goblin')
         KBEngine.urlopenv2(url, cbFunc, method='POST',
                            postData=json.dumps(datas).encode('utf-8'),
                            headers={"Content-Type": "application/json"},
                            timeoutSec=1)
 
-
-    def onReportResult(self, httpcode, data, headers, success, url):
-        pass
-
+    def onReportResult(self, httpcode, data, headers, success, url, msgs, channel):
+        INFO_MSG('onReportResult: code: {}, data: {}, headers: {}, success: {}, url: {}, channel: {}'.format(httpcode, data, headers, success, url, channel))
+        if channel != 'wechat' and (httpcode != 200 or KBEngine.publish()):
+            # report to wechat
+            self.wxReportDirect(msgs)
 
 def instance():
     return IFeiShu.instance()

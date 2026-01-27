@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "46A9CBBCF8F5244F440BDC3B15ECB818";
+        public string serverEntitydefMD5 = "3487CA460EAFF29BF66040111184CEE7";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -748,26 +748,26 @@ namespace KBEngine
                 if (_args.forceDisableUDP || baseappUdpPort == 0)
                 {
                     _networkInterface = new NetworkInterfaceTCP();
-//#if UNITY_IOS && !UNITY_EDITOR
-//					//baseapp没有外网ipv6
-//					if (VersionUtils.IsInAudit())
-//                    {
-//						//为了应对ios审核，这里只能写死域名
-//						baseappIP = "fengyan-shenhefu-apple.yunxingu.com";
-//                    }
-//#endif
+#if UNITY_IOS && !UNITY_EDITOR
+ 					//baseapp没有外网ipv6
+ 					if (VersionUtils.IsInAudit())
+                     {
+ 						//为了应对ios审核，这里只能写死域名
+ 						baseappIP = "shenhe-baseapp.yunxingu.com";
+                     }
+#endif
                     _networkInterface.connectTo(baseappIP, baseappTcpPort, onConnectTo_baseapp_callback, null);
                 }
                 else
                 {
                     _networkInterface = new NetworkInterfaceKCP();
-//#if UNITY_IOS && !UNITY_EDITOR
-//                    if (VersionUtils.IsInAudit())
-//                    {
-//						//为了应对ios审核，这里只能写死域名
-//						baseappIP = "fengyan-shenhefu-apple.yunxingu.com";
-//					}
-//#endif
+#if UNITY_IOS && !UNITY_EDITOR
+                     if (VersionUtils.IsInAudit())
+                     {
+ 						//为了应对ios审核，这里只能写死域名
+ 						baseappIP = "shenhe-baseapp.yunxingu.com";
+ 					}
+#endif
                     _networkInterface.connectTo(baseappIP, baseappUdpPort, onConnectTo_baseapp_callback, null);
                 }
             }

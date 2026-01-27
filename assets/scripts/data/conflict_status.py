@@ -380,7 +380,7 @@ datas = _tools.RODict({
         "varName": "autoCollect",
         "statusName": "自动采集",
         "clearOnline": 1,
-        "clearTeleport": 1,
+        "clearTeleport": 0,
         "event": 29100040,
         "buffTag": 0,
         "popupIndex": 0
@@ -390,7 +390,7 @@ datas = _tools.RODict({
         "varName": "autoFight",
         "statusName": "自动战斗",
         "clearOnline": 1,
-        "clearTeleport": 1,
+        "clearTeleport": 0,
         "event": 29100104,
         "buffTag": 0,
         "popupIndex": 0
@@ -434,10 +434,20 @@ datas = _tools.RODict({
         "event": 0,
         "buffTag": 0,
         "popupIndex": 0
+    }),
+    46: _tools.RODict({
+        "ID": 46,
+        "varName": "unstuck",
+        "statusName": "脱离卡死",
+        "clearOnline": 1,
+        "clearTeleport": 1,
+        "event": 29100111,
+        "buffTag": 0,
+        "popupIndex": 0
     })
 })
 minKey = 0
-maxKey = 45
+maxKey = 46
 
 eventToStateDic = _tools.RODict({ 
         "29100003":0,
@@ -479,4 +489,5 @@ eventToStateDic = _tools.RODict({
         "29100041":38,
         "29100105":43,
         "29100106":44,
+        "29100111":46,
 })

@@ -48,8 +48,10 @@ import actionContext
 import checkUserType
 import gamePlay_set as GP_SD
 import visible_visible as V_VD
-
 import message_chatMessage as MCMD
+import guildAuthorization_authorization_def as GA_A_DD
+import buff_buff as B_BD
+
 import iFubenSpace
 import impTask
 import impCombat
@@ -81,7 +83,7 @@ import iNewbie
 import iCrossServer
 import gzip
 import json
-import guildAuthorization_authorization_def as GA_A_DD
+
 import iMeridian
 import iMonthCard
 import iMineWarCell
@@ -283,8 +285,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         # todo x 玩家下线更新排行榜数据
         self._clearRaidJoinRecords()
-        self.leaveTeamAutoMatch()
-        self.leaveRaidAutoMatch()
+        self.leaveTeamAuto()
+        self.leaveRaidAuto()
         # TODO x: logout log
         self.clearStateOffline()
         self._onCubeOffline()
@@ -315,10 +317,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
             # 这里每次上线时候，将变身状态恢复为1
             self.changeMorphPreAddSkill(gameconst.MORPH_BUILD_STATE)
+            
+        if self.raidUUID > 0:
+            gameengine.getRaidStub(self.raidUUID).onAvatarLogin(self.base, self.gbId, self.raidUUID)
 
-        # int raid cache
-        raidId = self.raidUUID
-        raidId and gameengine.getRaidStub(raidId).onAvatarLogin(self.base, self.gbId, raidId)
         # TODO:玩家上线时在base.onClientGetCell时调用，此处发送给客户端需要显示但存储在cell的数据，例如技能列表，任务列表等
         INFO_MSG('zt: initClientOnCell', isRelogin)
 
@@ -411,6 +413,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         if self.teamId > 0 and not self.isCrossServerInOtherServer:
             gameengine.getTeamStub(self.teamId).getTeamInfoOnLogin(self.base, self.gbId, self.teamId)
+    
+        if self.raidUUID > 0 and not self.isCrossServerInOtherServer:
+            gameengine.getRaidStub(self.raidUUID).onAvatarLogin(self.base, self.gbId, self.raidUUID)
 
         self._initLogonCell()
         self._initNewbieCell()
@@ -591,7 +596,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if mapId == formula.getMapId(self.spaceNo):
             self.teleportToCell(self, self.spaceNo,  toPosition, self.direction,'', ())
         else:
-            self.applyEnterLineInternal(mapId, -1, toPosition, self.direction, {'fromLineNo': formula.getLineNo(self.spaceNo)})
+            self.applyEnterLineInternal(mapId, -1, toPosition, self.direction, {'fromLineNo': formula.getLineNo(self.spaceNo), 'telToMainCityWhenFull': False, 'mpFailCb': 'transmitWithMapPointEnterFail'})
+
 
     def syncRoleCacheBattlePoint(self):
         self.base.updateRoleCache({'battlePoint': self.getTotalScore()})
@@ -734,6 +740,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if e.IsAvatar and self.isInTeam(e.gbId):
             self.teammateEntIdInAoiSet.add(e.id)
             self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
+            
+        if e.IsAvatar and self.isInRaid():
+            self.raidmateEntIdInAoiSet.add(e.id)
 
         if self.useTargetTypeCacheFlag and e.IsCombatUnit:
             utils.isEnemy(self, e)
@@ -756,6 +765,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if self.isReal() and e.IsAvatar and self.isInTeam(e.gbId):
             self.teammateEntIdInAoiSet.discard(e.id)
             self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
+        
+        if self.isReal() and e.IsAvatar and self.isInRaid():
+            self.raidmateEntIdInAoiSet.discard(e.id)
 
         if e.IsCombatUnit:
             self.removeTargetTypeCache(e)
@@ -898,13 +910,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 WARNING_MSG('teleportByTeleporter::lineNo == lineNo', lineNo, self.spaceNo)
                 # self.checkLineArea(dstPos, '_onCheckLineAreaByTeleport', (teleporter, dstPos, src, desTelId, fromTelId))
         elif self.onCheckMapUnlocked(formula.getMapId(desTelId)):
-            self.applyEnterLineInternal(lineType, lineNo, dstPos, telDirection, False)
+            self.applyEnterLineInternal(lineType, lineNo, dstPos, telDirection, {"telToMainCityWhenFull": False})
 
     def beforeTeleport(self, toSpaceNo):
         if self.spaceNo != toSpaceNo:
-            if self.petList:
-                #有道士召唤的狼切成状态3
-                self.changeMorphState(None, None, 3)
             self.destroyAllSummon()
             self.clearAllTargetTypeCache(True)
             self.removeBuffsByTag('scenesClear')
@@ -915,41 +924,23 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         # 先移除身上buff再传送
 
     def _resetTeleportCache(self, spaceNo, callback, callbackArgs):
-        if gameconfig.enableTeleportDict():
-            _oldCacheCtx = self.teleportInfoDict.get(spaceNo)
-            if _oldCacheCtx:
-                WARNING_MSG('_resetTeleportCache:: teleport while teleporting:', _oldCacheCtx)
+        _oldCacheCtx = self.teleportInfoDict.get(spaceNo)
+        if _oldCacheCtx:
+            WARNING_MSG('_resetTeleportCache:: teleport while teleporting:', _oldCacheCtx)
 
-            self.teleportInfoDict[spaceNo] = actionContext.TeleportInfoContext(
-                self.position,
-                self.spaceNo,
-                callback,
-                callbackArgs,
-                utils.getNow(),
-            )
-        else:
-            if self.teleportInfoCache:
-                crtMapId = formula.getMapId(spaceNo)
-                cahMapId = formula.getMapId(self.teleportInfoCache[1])
-                if crtMapId != cahMapId:
-                    ERROR_MSG('_resetTeleportCache::teleport while teleporting', self.teleportInfoCache,
-                              crtMapId, cahMapId)
-                else:
-                    WARNING_MSG('_resetTeleportCache::teleport while teleporting', self.teleportInfoCache)
-
-            self.teleportInfoCache = (self.position, spaceNo, callback, callbackArgs)
+        self.teleportInfoDict[spaceNo] = actionContext.TeleportInfoContext(
+            self.position,
+            self.spaceNo,
+            callback,
+            callbackArgs,
+            utils.getNow(),
+        )
 
     def _teleportInfoCache(self, spaceNo=None):
-        if gameconfig.enableTeleportDict():
-            return self.teleportInfoDict.get(spaceNo)
-        else:
-            return self.teleportInfoCache
+        return self.teleportInfoDict.get(spaceNo)
 
     def _getTeleportInfoCache(self):
-        if gameconfig.enableTeleportDict():
-            return self.teleportInfoDict
-        else:
-            return self.teleportInfoCache
+        return self.teleportInfoDict
 
     def _onClearTeleportInfoCache(self):
         now = utils.getNow()
@@ -982,6 +973,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         DEBUG_MSG('myh: onChangeToGhost', self.isReal())
         #清除缓存必须放在最下面
         self.teammateEntIdInAoiSet.clear()
+        self.raidmateEntIdInAoiSet.clear()
         self.clearAllTargetTypeCache(True)
 
     @gamedecorator.crossServer
@@ -1019,10 +1011,15 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             ERROR_MSG('breakAwayStuck:', self.spaceNo, self.position)
             return
 
+        if not self.checkConflictState(CCD.datas.Unstuck, bMsg=True, remConflctState=True):
+            WARNING_MSG('_breakAwayStuck conflict state')
+            return
+
         self.beforeTeleport(self.spaceNo)
         self.telToPos(pos, (0.0, 0.0, direction * math.pi / 180))
         self.showMsg(CONST.datas['resetPositionSuccessMsg']['value'], [])
         self.setTempMiscProp(gameconst.AvatarProps.lastBreakAwayTime, now)
+        self.teleportSummonsToMe()
 
     def onTeleportSuccessBefore(self, nearbyEntity):
         self.lastTeleportSpaceNoRecord = self.spaceNo
@@ -1050,18 +1047,20 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         if ret:
             self.client.onTeleportDone(self.lastTeleportSpaceNoRecord, self.spaceNo)
-            if self.petList:
-                #传送后 距离过远 有道士召唤的狼 将狼拉过来
-                for summonId in self.petList:
-                    summon = KBEngine.entities.get(summonId)
-                    if summon:
-                        dis = sMath.distance2DToCompareFrom3DPosition(self.position, summon.position)
-                        if dis >= CONST.datas['summonBcakRange']['value'] * CONST.datas['summonBcakRange']['value']:
-                            summon.telToPos(self.position)
+            #传送后 距离过远 有道士召唤的狼 将狼拉过来
+            self.teleportSummonsToMe()
         else:
             WARNING_MSG("onTeleportSuccess:: failure handle method", self._getTeleportInfoCache())
-            if not gameconfig.enableTeleportDict():
-                self.teleportInfoCache = None
+
+    def teleportSummonsToMe(self):
+        if not self.petList:
+            return
+        for summonId in self.petList:
+            summon = KBEngine.entities.get(summonId)
+            if summon:
+                dis = sMath.distance2DToCompareFrom3DPosition(self.position, summon.position)
+                if dis >= CONST.datas['summonBcakRange']['value'] * CONST.datas['summonBcakRange']['value']:
+                    summon.telToPos(self.position)
 
     def resetStateTeleport(self, oldSpaceNo):
         for i in self.stateList:
@@ -1074,19 +1073,15 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def _onTeleportSuccess(self, nearbyEntity):
         INFO_MSG('zt: onTeleportSuccess', self.gbId, self.spaceNo, self._getTeleportInfoCache())
         self.refreshAreaTaskTimer()
-        self.recoverAutoCombat(0, gameconst.SuspendAutoCombatReason.Teleport)
         self.base.setBaseSpaceNo(self.spaceNo)
         self.resetStateTeleport(self.lastTeleportSpaceNoRecord)
+        self.recoverAutoCombat(0, gameconst.SuspendAutoCombatReason.Teleport)
 
         if not self._teleportInfoCache(self.spaceNo):
             return False
 
-        if gameconfig.enableTeleportDict():
-            ctx = self.teleportInfoDict.pop(self.spaceNo)
-            lastPos, _spaceNo, callback, callbackArgs = ctx.getTeleportInfoCache()
-        else:
-            lastPos, _spaceNo, callback, callbackArgs = self.teleportInfoCache
-            self.teleportInfoCache = None
+        ctx = self.teleportInfoDict.pop(self.spaceNo)
+        _, _spaceNo, callback, callbackArgs = ctx.getTeleportInfoCache()
 
         if callback:
             method = getattr(self, callback)
@@ -1105,16 +1100,27 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         self.popTempMiscProp(gameconst.AvatarProps.isLightningArea)
 
-        # gamelog.log('Teleport', {
-        #     'role_id': self.gbId,
-        #     'role_name': self.name,
-        #     'map_id': formula.getMapId(self.spaceNo),
-        #     'from_map_id': formula.getMapId(_spaceNo),
-        #     'space_no': self.spaceNo,
-        #     'from_space_no': _spaceNo,
-        # })
+        if self.teleportQueue:
+            self._callback(0.1, '_doTeleportQueue', (), gametimer.TIMER_TAG_TELEPORT_QUEUE)
 
+        # 保护buffId
+        teleportationProtectionBuffIdCfg = CONST.datas.get('teleportationProtectionBuffId')
+        # 保护时间
+        teleportationProtectionTimeCfg = CONST.datas.get('teleportationProtectionTime')
+        if teleportationProtectionBuffIdCfg and teleportationProtectionTimeCfg:
+            teleportationProtectionBuffId = int(teleportationProtectionBuffIdCfg['value'])
+            teleportationProtectionTime = int(teleportationProtectionTimeCfg['value'])
+            if teleportationProtectionTime > 0 and teleportationProtectionBuffId in B_BD.datas:
+                INFO_MSG('_onTeleportSuccess, add protection buff: ', teleportationProtectionBuffId, teleportationProtectionTime)
+                self.addBuff(teleportationProtectionBuffId, 1, self.id, duration = teleportationProtectionTime)
         return True
+
+    def _doTeleportQueue(self):
+        if not self.teleportQueue:
+            return
+
+        _func, _args, _kwargs = self.teleportQueue.pop(0)
+        getattr(self, _func)(*_args, **_kwargs)
 
     def onTeleportFailure(self):
         ERROR_MSG('zt: onTeleportFailure')
@@ -1122,8 +1128,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.removeState(gameconst.State.Teleporting)
 
     def _onTeleportFailure(self):
-        if not gameconfig.enableTeleportDict():
-            self.teleportInfoCache = None
+        pass
 
     # -------------------------------------------------------------------
     # Arrow trackers
@@ -1212,9 +1217,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def modifyNameFailedRestore(self, name):
         self.name = name
-
-    def hasTeleportLock(self):
-        return self.isTeleportLocked(gameconst.TeleportLock.UNKNOWN, utils.getNow())
 
     def cancelAllTeamAndRaidJoinRequest(self):
         INFO_MSG("cancelAllTeamAndRaidJoinRequest::")
@@ -1402,7 +1404,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         elif self.onCheckMapUnlocked(lineType):
             extra = {
                 'callback': callback,
-                'callbackArgs': callbackArgs
+                'callbackArgs': callbackArgs,
+                'isForceEnter': True
             }
             self.applyEnterLineInternal(lineType, -1, dstPos, dstDir, extra)
             self._stopCommonCast()
@@ -1423,7 +1426,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         for debuffId in GP_SD.datas['clearDebuffID']['value']:
             if self.hasBuff(debuffId):
                 return True
-        return False
+        if self.hp == self.fullHp and self.mp == self.fullMp:
+            return False
+        return True
 
     def checkHealWoundsItemCond(self):
         if self._hasWoundsCanHeal():
@@ -1436,6 +1441,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     @gamedecorator.limitcall(1)
     def tryHealWoundsFromNpc(self, exposed):
         if not self._hasWoundsCanHeal():
+            INFO_MSG('tryHealWoundsFromNpc:: no wounds can heal')
             self.showMsg(MMD.datas.HealingWoundsMsg2, [])
             return
 
@@ -1461,10 +1467,13 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             if self.hasBuff(debuffId):
                 self.removeBuff(debuffId)
         self.showMsg(MMD.datas.HealingWoundsMsg1, [])
+        self.modifyHP(self.fullHp, self.id, gameconst.SourceType.HealWounds, self.id)
+        self.modifyMP(self.fullMp)
         return gameconst.UseItem.TRUE
 
     @utils.isMyself
     @gamedecorator.limitcall(1)
+    @gamedecorator.checkGameconfigEnable('myPage')
     def getTargetPlayerInfo(self, exposed, targetGbId):
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             [targetGbId, ],

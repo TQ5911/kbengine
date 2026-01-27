@@ -288,8 +288,9 @@ class BehaveCtrl(object):
 
     def clearHateAndGoHome(self):
         self.clearHateAndResetSkill()
-        self.moveToPos(self.owner.bornPosition, 0, gamemove.AI_GO_HOME_MOVE_OVER)
+        ret = self.moveToPos(self.owner.bornPosition, 0, gamemove.AI_GO_HOME_MOVE_OVER)
         self.machine.transform(self, State.BACK)
+        return ret
 
     def clearHateAndTelBack(self):
         self.clearHateAndResetSkill()
@@ -772,6 +773,8 @@ class AuxFunc(object):
                     _needNavTime = False
                     # 可以寻路时，清除计时
                     self.clearNavigationTimes()
+                else:
+                    self.targetId = 0
             else:
                 self.targetId = 0
 
@@ -1057,7 +1060,7 @@ class AuxFunc(object):
                 return skill
 
         skillList = []
-        for skillId, skillVal in owner.getSkillDic().items():
+        for skillId, skillVal in owner.skillDic.items():
             if not skillVal.inCDTime() and skillId != petAntiCCSkillId:
                 skillList.append(skillId)
         if skillList:
@@ -1391,7 +1394,9 @@ class HateCtrl(object):
             if entity.hasState(gameconst.State.Fighting):
                 continue
             for targetId in self.hateDict._hateDict:
-                if entity.aiController and not entity.aiController.hateDict.isInHateList(targetId):
+                if entity.aiController \
+                        and entity.aiController.machine.testEvent(Event.HATE)\
+                        and not entity.aiController.hateDict.isInHateList(targetId):
                     entity.aiController.syncHateTo(targetId, isVisionTrigger=True)
 
     def clearHate(self):
@@ -1507,10 +1512,11 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             self.iTimerDict.pop(targetId, None)
         if (self.isActive and (owner.isVisible(target) or owner.hasBuffTag(gameconst.BuffTag.SeeHiddenEnt))) and not self.hateDict.isInHateList(targetId):
             isFirstHate = True if self.hateDict.length == 0 else False
-            if self.machine.testEvent(Event.ATTACK):
+            if self.machine.testEvent(Event.HATE):
                 self.increaseHate(targetId, isVisionTrigger=True, isFirstHate=isFirstHate)
                 owner.setState(gameconst.State.Fighting, False)
-                self.doForceTask(Task(Event.ATTACK, False, False, None))
+
+            self.doForceTask(Task(Event.ATTACK, False, False, None))
 
         if hasattr(owner, 'aiTriggerEvent'):
             owner.aiTriggerEvent(self.ownerId, gameconst.AI_EVENT_ENENY_ENTER_TRAP, (targetId,))

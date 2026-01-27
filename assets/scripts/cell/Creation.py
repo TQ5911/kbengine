@@ -52,7 +52,6 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         self.speed = self.flySpeed
         self.cancleLockTarget = False
 
-        self.areaLoop = self.getAreaLoopCount()
         self.loopIntervalTime = self.getLoopIntervalTime()
         self.creationLiveTime = self.getCreationLiveTime()
 
@@ -149,10 +148,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         return creation_creation.datas[self.creationId].get('areaAction', '')
 
     def getLoopIntervalTime(self):
-        defaultValue = creation_creation.datas[self.creationId].get('loopIntervalTime') or 0
-        # 默认最小间隔0.1秒一次
-        if defaultValue < 0.1:
-            defaultValue = 0.1
+        defaultValue = self.getIntervalTime()
 
         skillId = self.tmpProps.get('skillId', 0)
         if skillId > 0:
@@ -161,11 +157,8 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             if host:
                 ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
                 if ret:
-                    DEBUG_MSG("in loopIntervalTime, inscription effect is triggered ", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, datas)
-                    totalTime = self.getAreaLoop() * defaultValue
-                    if totalTime == 0:
-                        return defaultValue
-                    
+                    DEBUG_MSG("in getLoopIntervalTime, inscription effect is triggered ", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, datas)
+                    totalTime = self.getLastTime()
                     totolCount = self.getAreaLoopCount()
                     if totolCount > 0:
                         defaultValue = totalTime / totolCount 
@@ -174,7 +167,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         return round(defaultValue, 2)
 
     def getCreationLiveTime(self):
-        defaultTime = float(creation_creation.datas[self.creationId].get('time') or 0)
+        defaultTime = self.getLastTime()
         skillId = self.tmpProps.get('skillId', 0)
         if skillId > 0:
             host = self.getAvatar()
@@ -193,21 +186,35 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
 
         return defaultTime
 
-    def getAreaLoop(self):
-        return int(creation_creation.datas[self.creationId].get('areaLoop') or 0)
+    @property
+    def areaLoop(self):
+        realCount = self.getAreaLoopCount()
+        cfgCount = int(creation_creation.datas[self.creationId].get('areaLoop') or 0)
+        if realCount <= cfgCount:
+            return realCount
+        return cfgCount
+
+    def getLastTime(self):
+        return creation_creation.datas[self.creationId].get('time')
     
+    def getIntervalTime(self):
+        return creation_creation.datas[self.creationId].get('loopIntervalTime') or 0.1
+    
+    def getAreaLoop(self):
+        return int(self.getCreationLiveTime() / self.getIntervalTime())
+
     def getAreaLoopCount(self):
         defaultValue = self.getAreaLoop()
         skillId = self.tmpProps.get('skillId', 0)
         if skillId > 0:
             host = self.getAvatar()
-            DEBUG_MSG("in getAreaLoop ", self, skillId, host)
+            DEBUG_MSG("in getAreaLoopCount ", self, skillId, host)
             if host:
                 ret, datas = host.getInscriptionEffects(skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY)
                 if ret:
                     if len(datas) == 1:
                         defaultValue += datas[0]
-                        DEBUG_MSG("in areaLoop, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, datas)
+                        DEBUG_MSG("in getAreaLoopCount, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", skillId, gameconst.InscriptionEffectType.CREATION_ADD_PHASE_WITH_FREQUENCY, datas)
         return defaultValue
 
     @property
@@ -374,6 +381,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         if self.areaLoop > 0 and self.curAreaLoopNum >= self.areaLoop:
             self.pyDelTimer(self.loopTimeId, gametimer.CREATION_LOOP)
             self.loopTimeId = 0
+            DEBUG_MSG('_onLoop', self.curAreaLoopNum, self.areaLoop, self.creationId)
             return
 
         if not self.isWitnessed:
@@ -437,7 +445,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             self,
             self,
             self.hostId,
-            lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r, loopTimes=self.loopTimes))
+            lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r, loopTimes=self.loopTimes, context = self.context))
 
     def customId(self):
         _customId, _ = utils.getCustomIdAndGid(self.spaceNo, self.gameEntityId)
@@ -500,7 +508,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         if skillId <= 0:
             return
 
-        skill = self.skillDic.get(skillId, None)
+        skill = self.skillDic.doGetSkill(skillId)
         if not skill and reportError:
             import traceback
             traceback.print_stack()
@@ -557,7 +565,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         if not self.timeIsUpAction:
             return
 
-        self.doCombatActions(self.timeIsUpAction, self, self, self.hostId, lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r))
+        self.doCombatActions(self.timeIsUpAction, self, self, self.hostId, lambda r:actionContext.CreationCtx(self.id, self.getTargetEntityIds(), r, context = self.context))
 
     def onGetWitness(self):
         """
@@ -647,7 +655,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             effectEntIds.add(entity.id)
             self.setTempMiscProp(gameconst.AvatarProps.creationEffectEntIds, effectEntIds)
             self.doCombatActions(self.continueAction, self, entity, self.hostId,
-                                 lambda r: actionContext.CreationCtx(self.id, [], r))
+                                 lambda r: actionContext.CreationCtx(self.id, [], r, context = self.context))
 
             return True
         else:
@@ -655,7 +663,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                 return
 
             #enterAction应该不需要作用目标，只要施法目标，先传空列表
-            self.doCombatActions(self.enterAction, self, entity, self.hostId, lambda r:actionContext.CreationCtx(self.id, [], r))
+            self.doCombatActions(self.enterAction, self, entity, self.hostId, lambda r:actionContext.CreationCtx(self.id, [], r, context = self.context))
             return True
 
     def reChooseTarget(self):
@@ -665,7 +673,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
             if effectEnt and not effectEnt.isDestroyed:
                 if self.isVisible(effectEnt) and utils.checkTargetType(self.continueTarget, self, effectEnt):
                     self.doCombatActions(self.continueAction, self, effectEnt, self.hostId,
-                                         lambda r: actionContext.CreationCtx(self.id, [], r))
+                                         lambda r: actionContext.CreationCtx(self.id, [], r, context = self.context))
                     return
 
         if self.selectActionType==self.CREATION_AREA_CIRCLE:
@@ -684,7 +692,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                     effectEntIds.add(eid)
                     self.setTempMiscProp(gameconst.AvatarProps.creationEffectEntIds, effectEntIds)
                     self.doCombatActions(self.continueAction, self, e, self.hostId,
-                                         lambda r: actionContext.CreationCtx(self.id, [], r))
+                                         lambda r: actionContext.CreationCtx(self.id, [], r, context = self.context))
                     break
 
             return entIds
@@ -710,7 +718,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
                         effectEntIds.add(eid)
                         self.setTempMiscProp(gameconst.AvatarProps.creationEffectEntIds, effectEntIds)
                         self.doCombatActions(self.continueAction, self, e, self.hostId,
-                                             lambda r: actionContext.CreationCtx(self.id, [], r))
+                                             lambda r: actionContext.CreationCtx(self.id, [], r, context = self.context))
                         break
             return entIds
 
@@ -723,7 +731,7 @@ class Creation(SkillManager.SkillManager, iTimer.ITimer, EventMgr.EventMgr,
         if not utils.checkTargetType(self.target, self, entity):
             return
         #leaveAction应该不需要作用目标，只要施法目标，作用目标先传空列表
-        self.doCombatActions(self.leaveAction, self, entity, self.hostId, lambda r:actionContext.CreationCtx(self.id, [], r))
+        self.doCombatActions(self.leaveAction, self, entity, self.hostId, lambda r:actionContext.CreationCtx(self.id, [], r, context = self.context))
 
 
     def checkArea(self, entity):

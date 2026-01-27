@@ -112,16 +112,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000049,
           "ID": 10014001,
-          "PosX": 275.2056,
-          "PosY": -0.78,
-          "PosZ": 125.995,
+          "PosX": 295.1044,
+          "PosY": -1.399901,
+          "PosZ": 124.4232,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": "11",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10014002": {
@@ -165,7 +167,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10014004": {
@@ -200,16 +204,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000050,
           "ID": 10014005,
-          "PosX": 275.0056,
-          "PosY": -0.78,
-          "PosZ": 132.7294,
+          "PosX": 295.0886,
+          "PosY": -1.399902,
+          "PosZ": 128.7369,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": "11",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10014006": {
@@ -790,20 +796,22 @@ datas ={
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
-          "Dir": 226.047,
+          "Dir": 176.9806,
           "DisplayName": "",
           "EntityID": 18000551,
           "ID": 10014036,
-          "PosX": 292.0,
-          "PosY": -1.52,
-          "PosZ": 131.0,
+          "PosX": 308.9443,
+          "PosY": -2.428884,
+          "PosZ": 129.5187,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": "11",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10014037": {
@@ -979,7 +987,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10014047": {
@@ -1133,7 +1143,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10014054": {
@@ -1287,7 +1299,7 @@ datas ={
           "PosZ": 169.92,
           "Props": {
             "IsOpen": 1,
-            "MapEntityType": "11",
+            "MapEntityType": "14",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -1320,8 +1332,10 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
             "ShowInMap": 1,
+            "ShowInSceneMap": 1,
             "TelDir": 180.0,
             "TelX": 315.5,
             "TelY": 0.44,
@@ -2009,7 +2023,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10014092": {
@@ -2154,9 +2170,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 10014098,
-          "PosX": 249.227,
-          "PosY": 1.100404,
-          "PosZ": 144.0259,
+          "PosX": 284.0,
+          "PosY": -1.54,
+          "PosZ": 130.224,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
@@ -2796,16 +2812,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 10014135,
-          "PosX": 271.9734,
-          "PosY": -0.7957951,
-          "PosZ": 129.6178,
+          "PosX": 291.42,
+          "PosY": -1.210223,
+          "PosZ": 126.3,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10014136": {
@@ -2827,7 +2845,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10014137": {
@@ -3587,6 +3607,30 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 1
           }
+        },
+        "10014171": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 3.113622,
+          "DisplayName": "",
+          "EntityID": 18000610,
+          "ID": 10014171,
+          "PosX": 281.5,
+          "PosY": -1.49,
+          "PosZ": 114.72,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
         }
       },
       "Collection": {
@@ -4027,6 +4071,26 @@ datas ={
         "Props": {
           "CameraId": 0,
           "MapEntityType": "26",
+          "Remark": "",
+          "ShowInSceneMap": 1
+        }
+      }
+    },
+    "BreakAwayStuckPos": {
+      "10018074": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 0.0,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 10018074,
+        "PosX": 176.786,
+        "PosY": 0.87186,
+        "PosZ": 93.61855,
+        "Props": {
           "Remark": "",
           "ShowInSceneMap": 1
         }

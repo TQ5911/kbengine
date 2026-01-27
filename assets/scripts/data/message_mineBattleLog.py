@@ -28,7 +28,7 @@ datas = _tools.RODict({
     3: _tools.RODict({
         "ID": 3,
         "name": "mineBattle_flagDamageRecord1",
-        "log": "<color=#038304>{0}</color>帮会的<color=#F3D58F>{1}</color>破坏了矿区荣誉旗帜，地面散落了众多宝箱”"
+        "log": "<color=#038304>{0}</color>帮会的<color=#F3D58F>{1}</color>破坏了矿区荣誉旗帜，地面散落了众多宝箱"
     }),
     4: _tools.RODict({
         "ID": 4,

@@ -1124,7 +1124,7 @@ def getSvrOpenDayFiveTS():
 
 def getSvrOpenDays(now=None):
     svrOpenTime = getSvrOpenDayFiveTS()
-    return math.ceil(((now or getNow()) - svrOpenTime) / gameconst.ONE_DAY_SECONDS)
+    return math.floor(((now or getNow()) - svrOpenTime) / gameconst.ONE_DAY_SECONDS) + 1
 
 
 def getIntervalDaysFromTime(tLastOffline):
@@ -2353,7 +2353,11 @@ def isMineWarEnemy(src, target):
                         return False, True
                     return src.mineWarCamp != target.mineWarCamp, True
             if src.IsAvatar and target.IsAvatar and src.mineWarCanAttack and target.mineWarCanAttack:
-                return src.guildUUID != target.guildUUID or src.guildUUID == 0 or target.guildUUID == 0, True
+                if src.guildUUID > 0 and (src.guildUUID == target.guildUUID or getGuildRelation(src.guildUUID, target.guildUUID) == gameconst.GuildRelationType.UNION):
+                    result = False
+                else:
+                    result = True
+                return result, True
     return False, False
 
 def isPVP(src, target):
@@ -3538,10 +3542,11 @@ def isInAttackLineWithRadius(targetPos, startPos, direction, length, width, targ
     dirMagnitude = math.sqrt(direction.x * direction.x + direction.z * direction.z)
     if dirMagnitude <= 0.000001:
         # 方向向量无效，无法确定矩形方向
-        return False
-        
-    unitDirX = direction.x / dirMagnitude
-    unitDirZ = direction.z / dirMagnitude
+        unitDirX = 0.0
+        unitDirZ = 0.0
+    else:
+        unitDirX = direction.x / dirMagnitude
+        unitDirZ = direction.z / dirMagnitude
 
     # 2. 计算目标相对于起始点的向量
     dx = targetPos.x - startPos.x

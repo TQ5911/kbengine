@@ -324,6 +324,7 @@ Avatar datetimeTimerIdCellCount 30381
 Avatar dbId 30307
 Avatar deathPenaltyData 31269
 Avatar deathPenaltyTimes 31270
+Avatar deathResetCD 54
 Avatar delayAddMountSpeedBuffTimer 30975
 Avatar delayDestroyTimerID 30368
 Avatar destroyTimer 30318
@@ -372,7 +373,6 @@ Avatar gameLength 30336
 Avatar gatherRate 31536
 Avatar gbID 30308
 Avatar gbId 11
-Avatar geniusQi 361
 Avatar giftKeyRecordDic 31556
 Avatar glyphEquipData 32063
 Avatar gmGroup 30314
@@ -421,11 +421,13 @@ Avatar isNeedDisturb 30465
 Avatar isNeedResortView 30354
 Avatar isSwitchServer 31332
 Avatar isWitnessComplete 19
+Avatar joinType 32247
 Avatar kickState 30316
 Avatar knockAnti 590
 Avatar knockEnh 586
 Avatar lastDeadTime 415
 Avatar lastDeathPentlyTime 30242
+Avatar lastFightTime 32245
 Avatar lastMonthCardDailyRewardTime 31613
 Avatar lastMonthCardHangupGetTime 31658
 Avatar lastNotifyScoreTime 30048
@@ -529,6 +531,7 @@ Avatar raidId 78
 Avatar raidInfo 30564
 Avatar raidProcessLock 30563
 Avatar raidUUIDBase 30565
+Avatar raidmateEntIdInAoiSet 30355
 Avatar randomSynthesisDic 31268
 Avatar rbVersion 32227
 Avatar realDmg 459
@@ -623,10 +626,10 @@ Avatar teamInfo 30549
 Avatar teamTimerId 30524
 Avatar teammateEntIdInAoiSet 30911
 Avatar teleportGlobalLockRlsT 30323
-Avatar teleportInfoCache 30355
 Avatar teleportInfoDict 30356
 Avatar teleportLock 30321
 Avatar teleportLockRlsT 30322
+Avatar teleportQueue 32249
 Avatar tempMiscProps 30372
 Avatar tempMiscPropsBase 30331
 Avatar timerDataBase 30374
@@ -1177,6 +1180,8 @@ CubeSpaceMgr birthInMem 31300
 CubeSpaceMgr cellFlags 31527
 CubeSpaceMgr collBeCollectedDict 31319
 CubeSpaceMgr collToBoss 31381
+CubeSpaceMgr cubeArena 32251
+CubeSpaceMgr cubeArenaTimerId 32252
 CubeSpaceMgr datetimeTimerDataCell 31324
 CubeSpaceMgr datetimeTimerDataNextTCell 31326
 CubeSpaceMgr datetimeTimerDataTimeCacheCell 31325
@@ -1209,6 +1214,7 @@ CubeSpaceMgr ttl 31304
 CubeStub birthInDB 31290
 CubeStub cubeNo 31288
 CubeStub cubeRooms 31327
+CubeStub curChapManMapId 32253
 CubeStub datetimeTimerDataBase 31296
 CubeStub datetimeTimerDataNextTBase 31298
 CubeStub datetimeTimerDataTimeCacheBase 31297
@@ -1216,6 +1222,7 @@ CubeStub datetimeTimerIdBase 31295
 CubeStub datetimeTimerIdBaseCount 31294
 CubeStub isDestroying 31289
 CubeStub loadWaitSet 31634
+CubeStub maxReadyLineNo 32250
 CubeStub methodPoolBase 31291
 CubeStub randomRooms 31328
 CubeStub randomTeleporterPool 32174
@@ -1271,6 +1278,7 @@ DungeonSpaceMgr datetimeTimerDataTimeCacheCell 30885
 DungeonSpaceMgr datetimeTimerIdCell 30883
 DungeonSpaceMgr datetimeTimerIdCellCount 30882
 DungeonSpaceMgr delayDestroyTimerID 30864
+DungeonSpaceMgr dungeonAutoBattleTimes 32248
 DungeonSpaceMgr dungeonCompleteDelayNotifyTimer 31047
 DungeonSpaceMgr dungeonExtraDatas 32202
 DungeonSpaceMgr dungeonGoodManActId 30854
@@ -1296,6 +1304,7 @@ DungeonSpaceMgr methodPoolBase 30860
 DungeonSpaceMgr miscProps 30869
 DungeonSpaceMgr notifyNearPosList 30908
 DungeonSpaceMgr onLoseCellReason 30857
+DungeonSpaceMgr opUUID 32246
 DungeonSpaceMgr players 30872
 DungeonSpaceMgr refreshEntityQueue 32168
 DungeonSpaceMgr refreshGID2TimerListMap 32200

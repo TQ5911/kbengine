@@ -72,7 +72,7 @@ class ImpAvatarPet(object):
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def updateLingShouBattleList(self, exposed, battleIndex, petId, slotId):
-        DEBUG_MSG('updateLingShouBattleList', battleIndex, petId, slotId)
+        INFO_MSG('updateLingShouBattleList', battleIndex, petId, slotId)
         myLevel = gameglobal.roleCache[self.id]['level']
         unlockRank = PDUD.datas[slotId+1]['unlockRank']
         if myLevel < unlockRank:
@@ -245,7 +245,7 @@ class ImpAvatarPet(object):
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def useLingShouEquip(self, exposed, gridId, petId, slotId):
-        DEBUG_MSG("useLingShouEquip ", gridId, petId, slotId)
+        INFO_MSG("useLingShouEquip ", gridId, petId, slotId)
         pet = self.lingShouInfo.getLingShouByPetId(petId)
         if not pet:
             return
@@ -265,7 +265,7 @@ class ImpAvatarPet(object):
             return
 
         deductWealthVal = dropAward.DeductWealthVal().addWealthByObjList([item])
-        DEBUG_MSG('useLingShouEquip itemId:', itemId)
+        INFO_MSG('useLingShouEquip itemId:', itemId)
         if not self.canDeductWealth(deductWealthVal, sendMsg=True):
             return False
 
@@ -284,7 +284,7 @@ class ImpAvatarPet(object):
             actionContext.AchievementCtx())
 
     def addLingShouBase(self, addContext):
-        DEBUG_MSG("addLingShouBase ", addContext.__dict__)
+        INFO_MSG("addLingShouBase ", addContext.__dict__)
         if addContext.reason == gameconst.AddLingShouReason.normal:
             self.lingShouInfo.addLingShou(self, addContext)
 

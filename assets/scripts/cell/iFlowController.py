@@ -15,7 +15,7 @@ class IFlowController(object):
         # ERROR_MSG("flowCtrlIsTaskCompleteCallback::", state, taskId, eid, expect, checkOnce)
         # fix inprogress
         if state in (gameconst.TaskStat.TASK_STAT_RUNNING, gameconst.TaskStat.TASK_STAT_FINISHED):
-            DEBUG_MSG("flowCtrlIsTaskCompleteCallback:: fixed inprogress callback state", state, taskId, eid, expect, checkOnce)
+            INFO_MSG("flowCtrlIsTaskCompleteCallback:: fixed inprogress callback state", state, taskId, eid, expect, checkOnce)
             state = gameconst.TaskStat.TASK_STAT_RUNNING
 
         if state != expect:
@@ -114,11 +114,11 @@ class IFlowController(object):
             self.flowController.onMonsterRestNumberDecreased(monsterGID, newNumber, newTotalNumber)
 
     def triggeredFlowControllerRestNumIncreased(self):
-        # DEBUG_MSG("triggeredFlowControllerRestNumIncreased::")
+        # INFO_MSG("triggeredFlowControllerRestNumIncreased::")
         return self._triggeredFlowControllerRestNumChanged(increased=True)
 
     def triggeredFlowControllerRestNumDecreased(self):
-        DEBUG_MSG("triggeredFlowControllerRestNumDecreased::")
+        INFO_MSG("triggeredFlowControllerRestNumDecreased::")
         return self._triggeredFlowControllerRestNumChanged(decreased=True)
 
     def _triggeredFlowControllerRestNumChanged(self, decreased=False, increased=False):
@@ -286,7 +286,7 @@ class IFlowController(object):
             spaceMgr.flowController.onEntityRoutingMissingEscort(-1, -1)
 
     def _onAnyPlayerCinemaPlayEndedTimeout(self, cinemaPlayID, eid):
-        DEBUG_MSG("_onAnyPlayerCinemaPlayEndedTimeout::", cinemaPlayID, eid)
+        INFO_MSG("_onAnyPlayerCinemaPlayEndedTimeout::", cinemaPlayID, eid)
         if self.flowController:
             e = self.flowController.getEventByEventId(eid)
             if e and isinstance(e, flowController.AnyPlayerCinemaPlayEndedEvent):

@@ -76,14 +76,14 @@ class ImpAvatarVariable(object):
             return default
 
     def incAvatarVariableByTag(self, varName, deltaVal, opUUID, valueSrc, desc):
-        DEBUG_MSG('in incAvatarVariableByTag:', varName, deltaVal, valueSrc, desc)
+        INFO_MSG('in incAvatarVariableByTag:', varName, deltaVal, valueSrc, desc)
         valIdList = VLVLD.varTagDic.get(varName, [])
         for valId in valIdList:
             self.incAvatarVariable(valId, deltaVal, opUUID, valueSrc, desc)
         return
 
     def setAvatarVariableByTag(self, varName, newVal, opUUID, valueSrc, desc):
-        DEBUG_MSG('in setAvatarVariableByTag:', varName, newVal, valueSrc, desc)
+        INFO_MSG('in setAvatarVariableByTag:', varName, newVal, valueSrc, desc)
         valIdList = VLVLD.varTagDic.get(varName, [])
         for valId in valIdList:
             self.setAvatarVariable(valId, newVal, opUUID, valueSrc, desc)
@@ -91,13 +91,13 @@ class ImpAvatarVariable(object):
 
     def incAvatarVariable(self, varId, deltaVal, opUUID, valueSrc, desc):
         # 变量值累加
-        DEBUG_MSG('in incAvatarVariable:', varId, deltaVal, valueSrc, desc)
+        INFO_MSG('in incAvatarVariable:', varId, deltaVal, valueSrc, desc)
         oldVal = self.getVariable(varId)
         self.setAvatarVariable(varId, oldVal + deltaVal, opUUID, valueSrc, desc)
         return
 
     def setAvatarVariable(self, varId, newVal, opUUID, varSrc, desc):
-        DEBUG_MSG('in setAvatarVariable:', varId, newVal, varSrc, desc)
+        INFO_MSG('in setAvatarVariable:', varId, newVal, varSrc, desc)
         # avatarVarDic 保存 avatar私有变量，包括avatar的非base属性及数据关联的变量；
         # avatar的base属性及数据关联的变量不需要保存在 avatarVarDic
         if not dataUtils.isAvatarVar(varId):
@@ -115,13 +115,13 @@ class ImpAvatarVariable(object):
         if oldVal == newVal:
             return
         self.avatarVarDic[varId] = newVal
-        DEBUG_MSG('     setAvatarVariable, varId:{} {} ==> {}'.format(varId, oldVal, newVal))
+        INFO_MSG('     setAvatarVariable, varId:{} {} ==> {}'.format(varId, oldVal, newVal))
         self.onAvatarVarValueChanged([varId], [newVal])
         return
 
     def onAvatarVarValueChanged(self, varIdList, varValueList):
         # avatar变量发生变化的回调， space变量不要调该接口
-        DEBUG_MSG('in onAvatarVarValueChanged:', varIdList, varValueList)
+        INFO_MSG('in onAvatarVarValueChanged:', varIdList, varValueList)
         cliValIdList = []
         cliValValueList = []
         for varId, varValue in zip(varIdList, varValueList):
@@ -151,7 +151,7 @@ class ImpAvatarVariable(object):
         return
 
     def updateHomeAdvMonsterNumAvatarVar(self, newMonsterNumber, src, opUUID=None, desc=None):
-        DEBUG_MSG("updateHomeAdvMonsterNumAvatarVar::", newMonsterNumber)
+        INFO_MSG("updateHomeAdvMonsterNumAvatarVar::", newMonsterNumber)
         m_varId = VLVLD_DEF.datas.amountPillarSpirits
         m_newMonsterNum = self.getVariable(m_varId, -1)
         if m_newMonsterNum < 0:
@@ -172,7 +172,7 @@ class ImpAvatarVariable(object):
                                                                         gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED)])
 
     def updateFengLingZhouSpHelpCountAvatarVar(self, fengLingZhouSpHelpCount, src, opUUID=None, desc=None):
-        DEBUG_MSG("updateFengLingZhouSpHelpCountAvatarVar::", fengLingZhouSpHelpCount)
+        INFO_MSG("updateFengLingZhouSpHelpCountAvatarVar::", fengLingZhouSpHelpCount)
         m_varId = VLVLD_DEF.datas.fengLingZhouSpecialTask
         m_newHelpCount = self.getVariable(m_varId, -1)
         if m_newHelpCount < 0 or src in (
@@ -187,7 +187,7 @@ class ImpAvatarVariable(object):
 
     #################################### space 变量 #################################
     def syncSpaceVariable(self, spaceNo, varDic):
-        DEBUG_MSG('in syncSpaceVariable:', spaceNo, varDic)
+        INFO_MSG('in syncSpaceVariable:', spaceNo, varDic)
         dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
         self.spaceVarDic.setdefault(dungeonNo, {})
         varIdList = []
@@ -207,7 +207,7 @@ class ImpAvatarVariable(object):
         return
 
     def clearSpaceVariable(self, dungeonNo):
-        DEBUG_MSG('in clearSpaceVariable:', dungeonNo)
+        INFO_MSG('in clearSpaceVariable:', dungeonNo)
         # dungeonNo = formula.getDungeonNoBySpaceNo(spaceNo)
         varDic = self.spaceVarDic.pop(dungeonNo, None)
         if not varDic:
@@ -217,14 +217,14 @@ class ImpAvatarVariable(object):
         for varId, newVal in varDic.items():
             varIdList.append(varId)
             varValueList.append(0)
-        DEBUG_MSG('in clearSpaceVariable:', varIdList, varValueList)
+        INFO_MSG('in clearSpaceVariable:', varIdList, varValueList)
         self.client.onVariableChanged(varIdList, varValueList)
 
     #################################### space 变量 end #################################
 
     #################################### gm 指令 #################################
     def gmSetVar(self, varId, newVar, opUUID, varSrc, desc):
-        DEBUG_MSG('in gmSetVar:', varId, newVar)
+        INFO_MSG('in gmSetVar:', varId, newVar)
         if dataUtils.isAvatarVar(varId):
             self.setAvatarVariable(varId, newVar, opUUID, varSrc, '')
 

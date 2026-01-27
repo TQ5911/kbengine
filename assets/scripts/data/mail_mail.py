@@ -448,7 +448,7 @@ datas = _tools.RODict({
         "ID": 37001019,
         "type": 1,
         "title": "矿区占领",
-        "content": "经过浴血奋战，帮主<color=#dea050>{0}</color>率领帮众占领了<color=#65b276>{1}</color>矿区",
+        "content": "经过浴血奋战，<color=#45a6f1>{0}</color>的帮主<color=#dea050>{1}</color>率领帮众占领了<color=#65b276>{2}</color>矿区",
         "isOpen": 1,
         "rewardId": 0,
         "period": "360",
@@ -521,7 +521,7 @@ MailArgsNumMap = _tools.RODict({
         37001016:6,
         37001017:0,
         37001018:2,
-        37001019:2,
+        37001019:3,
         37001020:1,
         37990001:0,
 })

@@ -23,6 +23,7 @@
         <buyCreditNumDic>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
+            <Default>       {}                      </Default>
             <Persistent>    true                    </Persistent>
         </buyCreditNumDic>
     </Properties>
@@ -38,8 +39,8 @@
 
     <ClientMethods>
         <onUpdateCreditNum>
-            <Arg>           BUY_CREDIT_ID           </Arg>
-            <Arg>           UINT32                  </Arg>
+            <Arg>           ARRAY <of> BUY_CREDIT_ID </of>            </Arg>
+            <Arg>           ARRAY <of> UINT32 </of>                   </Arg>
         </onUpdateCreditNum>
 
         <onAddFirstBuyCredit>

@@ -7,7 +7,7 @@ import userType
 class GuildChallengeDataInfoVal(userType.UserSoleType):
     '''GUILD_CHALLENGE_DATA_INFO'''
     def __init__(self, openedId = 0, openedFundCount = 0, openedMoneyCount = 0, openedTime = 0, openedType = 0, consumedType = 0, openedDungeonId = 0, \
-                 openedDungeonStatus = 0, settleTs = 0):
+                 openedDungeonStatus = 0, settleTs = 0, opUUID = 0):
         self.openedId = openedId
         self.openedFundCount = openedFundCount
         self.openedMoneyCount = openedMoneyCount
@@ -21,6 +21,7 @@ class GuildChallengeDataInfoVal(userType.UserSoleType):
         self.spaceNo = 0
         self.curHP = 0
         self.fullHP = 0
+        self.opUUID = opUUID
 
     def toSavedDict(self):
         return {
@@ -32,7 +33,8 @@ class GuildChallengeDataInfoVal(userType.UserSoleType):
             'openedType': self.openedType,
             'consumedType': self.consumedType,
             'openedDungeonStatus': self.openedDungeonStatus,
-            'settleTs': self.settleTs
+            'settleTs': self.settleTs,
+            'opUUID': self.opUUID,
         }
 
     def toClientInfo(self):
@@ -52,6 +54,7 @@ class GuildChallengeDataInfoVal(userType.UserSoleType):
         self.openedMoneyCount = 0
 
     def completeDungeon(self):
+        self.opUUID = 0
         self.openedId = 0
         self.openedTime = 0
         self.openedType = 0
@@ -66,7 +69,8 @@ class GuildChallengeDataInfoVal(userType.UserSoleType):
         if not isinstance(value, GuildChallengeDataInfoVal):
             return False
 
-        return self.openedId == value.openedId and \
+        return self.opUUID == value.opUUID and \
+                self.openedId == value.openedId and \
                 self.openedFundCount == value.openedFundCount and \
                 self.openedMoneyCount == value.openedMoneyCount and \
                 self.openedTime == value.openedTime and \

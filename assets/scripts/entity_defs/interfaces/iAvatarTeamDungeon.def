@@ -46,7 +46,8 @@
     </BaseMethods>
 
     <CellMethods>
-
+        <leaveTeamDungeonCell>
+        </leaveTeamDungeonCell>
         <onCheckTeamNeedItem>
             <Arg>   UINT32  </Arg>
             <Arg>   UINT32  </Arg>

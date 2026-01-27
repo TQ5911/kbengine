@@ -913,7 +913,7 @@ func (self *LoginClientService) _loginByOfficial(channelInfo *ChannelInfo, offic
 		return false
 	}
 
-	reqURL := "http://" + reqHost + reqURI
+	reqURL := reqHost + reqURI
 
 	appLog.Info(fmt.Sprintf("_loginByOfficial reqURL: %s, token: %s", reqURL, token))
 

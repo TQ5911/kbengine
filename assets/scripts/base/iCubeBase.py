@@ -15,6 +15,7 @@ import activityControl_config as AC_CD
 import cube_config
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import agent_agentFunction as A_AFD
+import cube_buff
 
 
 class ICubeBase(object):
@@ -25,21 +26,17 @@ class ICubeBase(object):
     def _cubeWeeklyRefresh(self, *args):
         self.cubeUseItemTimes = 0
 
-    def beforeEnterCubeDecrementCnt(self, spaceNo, extra):
+    def beforeEnterCubeDecrementCnt(self, extra):
         if self.leftCubeTimes <= 0:
             WARNING_MSG('beforeEnterCubeDecrementCnt: leftCubeTimes <= 0')
             return False
 
         extra['enterCubeType'] = gameconst.ENTER_CUBE_DEDUCT_TIMES
-        _mapId = formula.getMapId(spaceNo)
-        gameengine.getCubeStubBySpaceNo(spaceNo).doEnterCube(
-            self, _mapId, self.gbID, extra)
+        gameengine.getCubeStub(1).doEnterCubeReady(
+            self, self.gbID, extra)
 
     def afterEnterCubeDeductTimes(self):
         self.leftCubeTimes = max(0, self.leftCubeTimes - 1)
-        self.activityComplete(cube_config.datas['cubeActID']['value'])
-        #蜂巢秘境 又名魔方阵
-        self.completeGuildTask(gameconst.GuildTaskType.ENTERMAP,cube_config.datas['cubeActID']['value'])
 
     def autoRenewCubeRoom(self, switchData, cubeDurCtx):
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']):
@@ -73,8 +70,9 @@ class ICubeBase(object):
 
         self.useItemAddCubeTimes(cube_config.datas['cubeNumItem']['value'], 1, True, True, gameconst.CubeAddTimesReason.RENEW_USE_ITEM)
 
-    def onLogonEnterCubeGetSpaceBox(self, spaceBox, spaceMgrId):
+    def onLogonEnterCubeGetSpaceBox(self, spaceBox, spaceMgrId, spaceNo):
         INFO_MSG('onLogonEnterCubeGetSpaceBox', spaceBox.id)
+        self.cellData['spaceNo'] = spaceNo
         self.addCreateCellCB('onLogonEnterCubeCB', (spaceMgrId,))
         spaceBox.createCellNearSelf(self)
 
@@ -173,3 +171,43 @@ class ICubeBase(object):
     def _resetCubeCowDur(self):
         self.cell.resetCubeCowDur()
 
+    # ----------------------- 祈福之间 start ---------------------
+    def cubePray(self, isCostItem):
+        INFO_MSG('ICubeCell::cubePray: isCostItem={}'.format(isCostItem))
+        _curQifuTimes = self.getDailyData(gameconst.AvatarDailyProps.qifuTimes, 0)
+        if _curQifuTimes >= cube_config.datas['cube_prayTimesEveryDay']['value']:
+            self.onMessagePre(cube_config.datas['cube_prayNoTimes']['value'], [])
+            return
+
+        _buffs = []
+        _weights = []
+        if isCostItem:
+            _deductVal = dropAward.DeductWealthVal()
+            _deductVal.addWealthByItemId(cube_config.datas['cube_prayCostItem']['value'], 1)
+            if not self.canDeductWealth(_deductVal):
+                WARNING_MSG('ICubeCell::qifu: can not deduct wealth')
+                return
+
+            self.deductWealth(
+                AAC_AACDD.datas.BONUS_SRC_CUBE_PRAY_COST_ITEM, 
+                _deductVal, 
+                KBEngine.genUUID64(), 
+                gameclass.AwardDetail(reason='qifu cost item'))
+
+            for _data in cube_buff.datas.values():
+                if _data['type'] != gameconst.CUBE_PRAY_BUFF:
+                    continue
+
+                _buffs.append(_data['buffID'])
+                _weights.append(_data['weight'])
+
+        else:
+            for _data in cube_buff.datas.values():
+                _buffs.append(_data['buffID'])
+                _weights.append(_data['weight'])
+
+        self.addDailyData(gameconst.AvatarDailyProps.qifuTimes)
+        _idx = utils.randomByWeight(_weights)
+        self.cell.addBuff(_buffs[_idx], 1, self.id)
+
+    # ----------------------- 祈福之间 end ---------------------

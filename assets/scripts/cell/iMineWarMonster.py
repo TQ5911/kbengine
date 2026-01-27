@@ -37,7 +37,8 @@ class IMineWarMonster(object):
             INFO_MSG('IMineWarMonster::initGuildProp', self.gameEntityId, self.mineWarMonsterType, self.mineWarGuildId)
             
             # 初始化状态
-            self.onMineWarStateChange(self.spaceMgr.mineWarGuildId, self.spaceMgr.mineWarState, self.spaceMgr.mineWarState)
+            if self.isMineWarFlag():
+                self.onMineWarStateChange(self.spaceMgr.mineWarGuildId, self.spaceMgr.mineWarState, self.spaceMgr.mineWarState)
 
     def isMineWarCore(self):
         return self.mineWarMonsterType == gameconst.MineWarMonsterType.MINE_CORE
@@ -65,9 +66,7 @@ class IMineWarMonster(object):
             
             if self.isMineWarCore():
                 # 去掉回血
-                if self.recoverTimer > 0:
-                    self.pyDelTimer(self.recoverTimer, gametimer.MINE_WAR_CORE_RECOVER_HP)
-                    self.recoverTimer = 0
+                self.doCancelRecoverHp()
                     
             # 恢复满血
             self.hp = self.fullHp
@@ -155,7 +154,8 @@ class IMineWarMonster(object):
 
         # 旗帜被毁，生成被毁旗帜实体
         if self.isMineWarFlag():
-            gameengine.getGlobalBase('MineWarStub').onMineWarFlagBeKill(formula.getLineType(self.spaceNo), killer.guildName, killer.name)
+            gameengine.getGlobalBase('MineWarStub').onMineWarFlagBeKill(formula.getLineType(self.spaceNo), killer.guildUUID, killer.guildName, killer.gbId, killer.name)
+            self.spaceMgr.flagDestroyTime = utils.getNow()
             
             # 创建被毁旗帜，暂时不创建损坏的旗帜了
             # props = {

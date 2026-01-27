@@ -50,7 +50,7 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
 
     def startReportStatistics(self, gbId, playerBox, spaceNo, extraDic):
-        DEBUG_MSG("startReportStatistics", gbId, spaceNo, extraDic)
+        INFO_MSG("startReportStatistics", gbId, spaceNo, extraDic)
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
             ERROR_MSG("startReportStatistics space cannot statistic", gbId, spaceNo)
             return
@@ -63,13 +63,13 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         sVal.addMember(gbId, playerBox, extraDic)
 
     def stopReportStatistics(self, gbId, playBox, spaceNo):
-        DEBUG_MSG("startReportStatistics", gbId, spaceNo)
+        INFO_MSG("startReportStatistics", gbId, spaceNo)
         sVal = self.statisticDic.get(spaceNo, None)
         if sVal:
             sVal.delMember(gbId)
 
     def reportStatistics(self, gbId, spaceNo, statisticDic):
-        DEBUG_MSG("reportStatistics", gbId, spaceNo, statisticDic)
+        INFO_MSG("reportStatistics", gbId, spaceNo, statisticDic)
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
             ERROR_MSG("reportStatistics space cannot statistic", gbId, spaceNo)
             return
@@ -97,7 +97,7 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def stopGetStatistics(self, gbId, spaceNo):
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            DEBUG_MSG("stopGetStatistics space cannot statistic", gbId, spaceNo)
+            INFO_MSG("stopGetStatistics space cannot statistic", gbId, spaceNo)
             return
 
         if spaceNo not in self.statisticDic:
@@ -108,11 +108,11 @@ class StatisticStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onSpaceGone(self, spaceNo):
         if not utils.getCrtMapNeedStatisticFlag(spaceNo):
-            DEBUG_MSG("onSpaceGone space cannot statistic", spaceNo)
+            INFO_MSG("onSpaceGone space cannot statistic", spaceNo)
             return
 
         if spaceNo in self.statisticDic:
-            DEBUG_MSG("onSpaceGone", spaceNo)
+            INFO_MSG("onSpaceGone", spaceNo)
             self.statisticDic.pop(spaceNo)
 
     def showData(self):

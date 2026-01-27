@@ -30,16 +30,17 @@
 
     <BaseMethods>
         <sendGlobalMail>
-            <Arg>   MAILID      </Arg>
-            <Arg>   PYTHON      </Arg>
+            <Arg>   MAILID                      </Arg>
+            <Arg>   PYTHON                      </Arg>
             <Arg>   ARRAY <of> UNICODE </of>    </Arg>
-            <Arg>   UNICODE   </Arg>
-            <Arg>   UNICODE   </Arg>
-            <Arg>   LONGTIME    </Arg>
-            <Arg>   LONGTIME    </Arg>
-            <Arg>   LEVEL       </Arg>
-            <Arg>   LEVEL       </Arg>
-            <Arg>   CHANNEL     </Arg>
+            <Arg>   UNICODE                     </Arg>
+            <Arg>   UNICODE                     </Arg>
+            <Arg>   LONGTIME                    </Arg>
+            <Arg>   LONGTIME                    </Arg>
+            <Arg>   LEVEL                       </Arg>
+            <Arg>   LEVEL                       </Arg>
+            <Arg>   CHANNEL                     </Arg>
+            <Arg>   UINT16                      </Arg>
         </sendGlobalMail>
 
         <sendIDIPGlobalMail>

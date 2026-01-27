@@ -477,7 +477,7 @@ class Auction(userType.UserSTDSoleType):
             return self._iterGetItemsFromAuctionNoIndex(searchOptions, filterFn), _m_errno.AUCTION_OK
 
     def _iterGetItemsFromAuctionWithIndex(self, indexKey, indexItemKey, filterFn):
-        DEBUG_MSG("_iterGetItemsFromAuctionWithIndex::", indexKey, indexItemKey)
+        INFO_MSG("_iterGetItemsFromAuctionWithIndex::", indexKey, indexItemKey)
         self._sortAuctionItemIndex(indexKey, indexItemKey)
 
         if not filterFn:

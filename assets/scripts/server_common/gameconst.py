@@ -32,6 +32,8 @@ GLOBALDATA_KEY_TODAY_REG_NUM = 'kTodayRegAccountNum'
 GLOBALDATA_KEY_TOTAL_ONLINE_NUM = 'kAvatarNum'
 GLOBALDATA_KEY_CELLAPP_INITED = 'kCellappInited'
 
+gameUpdateHertz = 10
+
 # baseapp上的数据key定义
 BASEAPP_DATA_KEY_SPACE_MARKER = 'kSpaceMarker'
 BASEAPP_DATA_KEY_SPACE_TO_BASE = 'kSpaceToBase'
@@ -509,6 +511,7 @@ class AvatarProps(metaclass=UniqueIntEnum):
     verifyCodeTimestamp = 369
     firstPcLoginTimestamp = 370
     claimPcLoginRewardTimestamp = 371
+    autoCombatStartTimestamp = 372
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
@@ -551,8 +554,6 @@ class ItemId(object):
     GUILD_FUND = IDSD.datas['itemID_guildCoin']['value']
     GUILD_EXP = IDSD.datas['itemID_guildExp']['value']
     COLL_SKIP_MSG_HANDLE = ()
-    # 真气
-    GENIUS_QI = 30000100
     BIND_MONEY = IDSD.datas['itemID_bind_money']['value']
 
 class ItemBindType(object):
@@ -804,13 +805,11 @@ class EntNumPerPlayerInAOI(object):
 
 class TeleportLock(metaclass=UniqueIntEnum):
     FREE_TO_TELEPORT = 0
+    ENTER_CUBE = 1
+    ENTER_WONDERLAND = 2
     ENTER_LINE = 7
     SWITCH_LINE = 8
     ENTER_DUNGEON = 9
-    ENTER_GUILD = 10
-    ENTER_HOME = 11
-    ENTER_PLANE = 3
-
     ENTER_SINGLE_DUNGEON = 12
 
     UNKNOWN = 255
@@ -1300,6 +1299,7 @@ class SourceType(metaclass=UniqueIntEnum):
     DuelEnd = 42
     DropDeath = 43
     MeridianProp = 44
+    HealWounds = 45
 
 MAX_BUFF_COUNT = 50
 
@@ -2298,7 +2298,6 @@ class DungeonFlowEventName(object):
     entityRoutingMissingEscort = 'entityRoutingMissingEscort'   # 实体路点寻路中附近没有护卫（没有玩家在distance内）
     anyPlayerCinemaPlayEnded = 'anyPlayerCinemaPlayEnded'       # 副本内任一玩家动画播放结束触发
     castCinemaPlay = 'castCinemaPlay'           # 开始播放指定ID动画
-    changeWeather = 'changeWeather'             # 当前场景切换到指定天气
     playerRestNum = 'playerRestNum'             # 剩余玩家数量
 
     stopCurTrans = 'stopCurTrans'  # 结束当前副本内所有玩家的变身效果
@@ -2838,18 +2837,25 @@ class AvatarFlagCell(object):
 
 
 DEATH_PENALTY_INVALID_REC_TIMES = 255
-CUBE_MAX_NUM = 2
-CUBE_MAX_ENTER_NUM = 300
+CUBE_MAX_ENTER_NUM = 300 # 混沌回廊分线最大承载量
+CUBE_NEW_LINE_THRESHOLD = 200 # 超过这个值之后，混沌回廊的一层会创建新分线
 SIEGEWAR_MAX_ENTER_NUM = 500
 CUBE_DAILY_TIMES = 1
 CUBE_COIN_ITEM_ID = ItemId.MONEY
 CUBE_ENTER_TIME_OUT_DUR = 60
+WORLDLINE_ENTER_TIME_OUT_DUR = 60
 
 MONSTER_BE_ATTACK_CLEAR_DUR = 5 * 60
 
 CUBE_EVENT_ENTER = 1
 CUBE_EVENT_EXIT = 2
 CUBE_EVENT_ADD_TIME = 3
+
+CUBE_PRAY_BUFF = 1
+CUBE_PRAY_DEBUFF = 2
+
+CUBE_SIGN_ARENA = 1
+
 
 class RenewDurStatus(object):
     NONE = 0
@@ -2966,6 +2972,8 @@ class _AuctionErrno(object):
     AUCTION_SALED_ITEM_REJECTED             = _errno(20041)     # 交易行对应物品无法出售
     AUCTION_EQUIP_IN_DROP_REPAIR            = _errno(20042)     # 玩家装备处于掉落修复状态
     AUCTION_ITEM_IN_BAG_LOCKED_STATUS       = _errno(20043)     # 交易行物品处于背包锁住状态
+    AUCTION_ITEM_IS_FORBIDDEN               = _errno(20044)     # 交易行物品不允许上架
+    AUCTION_SALE_ITEM_ID_ERROR              = _errno(20045)     # 交易物品ID错误
 
     AUCTION_IDIP_GM_BAN                     = _errno(20100)     # IDIP禁止
 
@@ -3096,6 +3104,14 @@ class LogOnEnterType(object):
 
 class AchievementFlag(object):
     FINISHED = 0
+
+ACHIEVE_SRC_NEW = 1
+ACHIEVE_SRC_UPDATE = 2
+
+# 1:新增 2.完成 3.领取
+ACHIEVE_STATE_NEW = 1
+ACHIEVE_STATE_FINISH = 2
+ACHIEVE_STATE_RECEIVE = 3
 
 
 class AchieveType(object):
@@ -3463,6 +3479,10 @@ class MonsterType(object):
 
 LARGE_ENTITY_DEFAULT_AOI = 250
 
+class MonsterSuffix(object):
+    # 对应creep base表中的nameSuffixID字段
+    BOSS = 5 # 首领
+
 class WorldLineSceneState(object):
     THUNDER = 0 # 落雷
     WIND = 1 # 风场
@@ -3605,6 +3625,7 @@ class AvatarDailyProps(metaclass=UniqueIntEnum):
     dailyTest = 0
     releaseRbNum = 1  # 今日已发红包数量
     fetchRbNum = 2   # 今日已领红包数量
+    qifuTimes = 3 # 每日祈福次数
 
 class AvatarWeeklyProps(metaclass=UniqueIntEnum):
     weeklyTest = 0
@@ -3879,3 +3900,49 @@ class DrawCardGuaranteedType(object):
     PITY_RESET = 2
     GET_RESET = 3
     TIME_LIMIT_RESET = 4
+
+class CapacityExpansionType(metaclass=UniqueIntEnum):
+    # 背包金币
+    BAG_GOLD = 1
+    # 背包道具
+    BAG_ITEM = 2
+    # 仓库金币
+    WAREHOUSE_GOLD = 3
+    # 仓库道具
+    WAREHOUSE_ITEM = 4
+
+class ItemDisassemblyType(metaclass=UniqueIntEnum):
+    # 道具
+    ITEM = 1
+    # 装备
+    EQUIP = 2
+
+class TeamJoinType(metaclass=UniqueIntEnum):
+    # 默认
+    DEFAULT = 0
+    # 创建
+    CREATE = 1
+    # 申请
+    APPLY = 2
+    # 匹配
+    MATCH = 3
+    # 招募
+    RECRUIT = 4
+
+class ApplySource(metaclass=UniqueIntEnum):
+    # 招募
+    RECRUIT = 1
+    # 队伍申请
+    APPLY = 2
+
+    VALID_APPLY_SOURCE = (RECRUIT, APPLY)
+
+class DunegonCompleteReasonType(metaclass=UniqueIntEnum):
+    # 默认
+    DEFAULT = 0
+    # 超时
+    TIMEOUT = 1
+    # 离开
+    LEAVE = 2
+    # 完成
+    FINISHED = 3

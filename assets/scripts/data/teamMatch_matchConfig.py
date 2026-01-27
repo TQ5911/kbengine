@@ -307,6 +307,10 @@ datas = _tools.RODict({
         "ID": "targetInRaidMsg",
         "value": 54000646,
     }),
+    "raid_applicantOffline": _tools.RODict({
+        "ID": "raid_applicantOffline",
+        "value": 54000108,
+    }),
     "teamMatch_needCancleMatchMsg": _tools.RODict({
         "ID": "teamMatch_needCancleMatchMsg",
         "value": 54000601,

@@ -46,6 +46,15 @@
             <Arg>       METHOD_ARGS    </Arg>
         </autoSwitchLine>
 
+        <autoSwitchLineToMainCity>
+            <Arg>       MAILBOX        </Arg>
+            <Arg>       PLAYER_GBID    </Arg>
+            <Arg>       SPACE_NO       </Arg>
+            <Arg>       PYTHON         </Arg>
+            <Arg>       METHOD_NAME    </Arg>
+            <Arg>       METHOD_ARGS    </Arg>
+        </autoSwitchLineToMainCity>
+
         <switchLine>
             <Arg>       LINE_NO        </Arg>
             <Arg>       LINE_NO        </Arg>
@@ -132,5 +141,10 @@
 
         <debugPlayerAreaInfo>
         </debugPlayerAreaInfo>
+
+        <onFightingPlayersCntSync>
+            <Arg>       LINE_NO        </Arg>
+            <Arg>       INT32          </Arg>
+        </onFightingPlayersCntSync>
     </BaseMethods>
 </root>

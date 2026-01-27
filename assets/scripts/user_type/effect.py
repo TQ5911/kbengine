@@ -495,11 +495,6 @@ class EventEffect(EffectBase):
                 return
             target = releaseRole
 
-        if effectData.get('EventSourceType') == gameconst.EffetEventSourceType.LINGSHOU_SKILL_BUFF:
-            bufVal = callerInfo.getCaller(owner)
-            if bufVal and bufVal.rootContext and bufVal.rootContext.actionType == actionContext.ACTION_PASSIVE_SKILL:
-                owner.updateLingShouEffectEventInfo(bufVal.rootContext.objId, bufVal.rootContext.skillId, bufVal.buffId, self.effectId, self.tNextTime)
-
         #有可能不是combatUnit触发的事件，比如Creation
         _ret = None
         if (target and target.IsCombatUnit) or targetType=='None':
@@ -521,6 +516,11 @@ class EventEffect(EffectBase):
             self.tNextTime = time.time() + effectData.get('EventCD', 0)
         elif _ret:
             self.tNextTime = time.time() + effectData.get('EventCD', 0)
+
+        if effectData.get('EventSourceType') == gameconst.EffetEventSourceType.LINGSHOU_SKILL_BUFF:
+            bufVal = callerInfo.getCaller(owner)
+            if bufVal and bufVal.rootContext and bufVal.rootContext.actionType == actionContext.ACTION_PASSIVE_SKILL:
+                owner.updateLingShouEffectEventInfo(bufVal.rootContext.objId, bufVal.rootContext.skillId, bufVal.buffId, self.effectId, self.tNextTime)
 
     def removeEffect(self, owner, callerInfo, isOverleap=False):
         self.isValid = False

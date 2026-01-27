@@ -124,7 +124,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
         return True, 'OK'
 
     def useItemAndEnterTeamDungeon(self, needDic, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
-        DEBUG_MSG('useItemAndEnterTeamDungeon::', needDic, spaceNo, spaceUUID, spaceBox,
+        INFO_MSG('useItemAndEnterTeamDungeon::', needDic, spaceNo, spaceUUID, spaceBox,
                   spaceMgrBox, extra)
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemDict(needDic)

@@ -155,21 +155,37 @@ datas = _tools.RODict({
         "ID": "gearButtonAction_unbounding",
         "value": "findNearestEntityByTempleteIds,18000019,18000067,18000119",
     }),
+    "gearButtonLimitID_train": _tools.RODict({
+        "ID": "gearButtonLimitID_train",
+        "value": "UIEquipTrainingPanel",
+    }),
     "gearButtonLimitID_enhance": _tools.RODict({
         "ID": "gearButtonLimitID_enhance",
-        "value": "UIEquipTrainingPanel",
+        "value": "UIEquipIntensifyPage",
     }),
     "gearButtonLimitID_rune": _tools.RODict({
         "ID": "gearButtonLimitID_rune",
-        "value": "UIEquipTrainingPanel",
+        "value": "UIEquipRunePage",
     }),
     "gearButtonLimitID_bless": _tools.RODict({
         "ID": "gearButtonLimitID_bless",
-        "value": "UIEquipTrainingPanel",
+        "value": "UIEquipBlessPage",
     }),
     "gearButtonLimitID_identify": _tools.RODict({
         "ID": "gearButtonLimitID_identify",
-        "value": "UIEquipEnchantingPanel",
+        "value": "UIEquipEnchantingPage",
+    }),
+    "gearButtonLimitID_class": _tools.RODict({
+        "ID": "gearButtonLimitID_class",
+        "value": "UIEquipClassPage",
+    }),
+    "gearButtonLimitID_make": _tools.RODict({
+        "ID": "gearButtonLimitID_make",
+        "value": "UIEquipMakePanel",
+    }),
+    "gearButtonLimitID_unbundle": _tools.RODict({
+        "ID": "gearButtonLimitID_unbundle",
+        "value": "UIEquipUnbundlePanel",
     }),
     "gearStrengthenMax": _tools.RODict({
         "ID": "gearStrengthenMax",
@@ -302,5 +318,9 @@ datas = _tools.RODict({
     "gearBlessFulingValue": _tools.RODict({
         "ID": "gearBlessFulingValue",
         "value": ((1, 0), (2, 2), (3, 3), (4, 3), (5, 3)),
+    }),
+    "equipWear_partMsg": _tools.RODict({
+        "ID": "equipWear_partMsg",
+        "value": 54000322,
     })
 })

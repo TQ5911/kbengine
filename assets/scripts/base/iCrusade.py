@@ -3,24 +3,19 @@ from KBEDebug import *
 import KBEngine
 
 import gameconst
-import gameengine
-import utils
-import formula
 import dataUtils
-import dungeonPlayMode
 import dropAward
 import gameclass
-import gametlog
 import gamedecorator
+import LogTrackingMgr
 
-import message_Message_def as MMD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import teamDunChallenge_config as TDC_CFG
 import gameconst
 
 class ICrusade(object):
     def onCrusadeDailyRewardNumUpdate(self, *args):
-        DEBUG_MSG('onCrusadeDailyRewardNumUpdate::')
+        INFO_MSG('onCrusadeDailyRewardNumUpdate::')
         dailyRewardNum = self.crusadeInfo.dailyRewardNum
         if self.crusadeInfo.rewardNumber < dailyRewardNum:
             self.crusadeInfo.addRewardNumByDefault(dailyRewardNum - self.crusadeInfo.rewardNumber)
@@ -29,13 +24,13 @@ class ICrusade(object):
         self.crusadeInfo = self.crusadeInfo
 
     def onCrusadeWeeklyAddRewardItemNumUpdate(self, *args):
-        DEBUG_MSG('onCrusadeWeeklyAddRewardItemNumUpdate::')
+        INFO_MSG('onCrusadeWeeklyAddRewardItemNumUpdate::')
         self.crusadeInfo.resetUseItemAddRewardWeeklyNum()
         self.crusadeInfo = self.crusadeInfo
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useItemToIncreaseCrusadeRewardNumber(self, exposed, useNum):
-        DEBUG_MSG('useItemToIncreaseCrusadeRewardNumber::', useNum)
+        INFO_MSG('useItemToIncreaseCrusadeRewardNumber::', useNum)
         if useNum <= 0:
             ERROR_MSG('useItemToIncreaseCrusadeRewardNumber:: invalid useNum', useNum)
 
@@ -49,7 +44,7 @@ class ICrusade(object):
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useCoinToIncreaseCrusadeRewardNumber(self, exposed, useNum):
-        DEBUG_MSG('useCoinToIncreaseCrusadeRewardNumber::', useNum)
+        INFO_MSG('useCoinToIncreaseCrusadeRewardNumber::', useNum)
         if useNum <= 0:
             ERROR_MSG('useCoinToIncreaseCrusadeRewardNumber:: invalid useNum', useNum)
 
@@ -61,7 +56,7 @@ class ICrusade(object):
         self._useCoinToIncreaseCrusadeRewardNumber(useNum, {})
 
     def _useItemToIncreaseCrusadeRewardNumber(self, itemId, itemNum, extra):
-        DEBUG_MSG('_useItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
+        INFO_MSG('_useItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
 
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(itemId, itemNum, dataUtils.getItemDefaultBindType())
@@ -78,14 +73,14 @@ class ICrusade(object):
         self.onUseItemToIncreaseCrusadeRewardNumber(itemId, itemNum, extra)
 
     def onUseItemToIncreaseCrusadeRewardNumber(self, itemId, itemNum, extra):
-        DEBUG_MSG('onUseItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
+        INFO_MSG('onUseItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
         self.crusadeInfo.addRewardNumByUseSpecialItem(itemNum)
         self.crusadeInfo = self.crusadeInfo
         self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]),
                               [str(itemNum), str(self.crusadeInfo.useItemAddRewardNumber)])
 
     def _useCoinToIncreaseCrusadeRewardNumber(self, useNum, extra):
-        DEBUG_MSG('_useCoinToIncreaseCrusadeRewardNumber::', useNum)
+        INFO_MSG('_useCoinToIncreaseCrusadeRewardNumber::', useNum)
 
         rewardNumCoin = int(TDC_CFG.datas['rewardNumCoin']['value'])
         deductWealthVal = dropAward.DeductWealthVal()
@@ -103,7 +98,7 @@ class ICrusade(object):
         self.onUseCoinToIncreaseCrusadeRewardNumber(useNum, extra)
 
     def onUseCoinToIncreaseCrusadeRewardNumber(self, useNum, extra):
-        DEBUG_MSG('onUseCoinToIncreaseCrusadeRewardNumber::', useNum, extra)
+        INFO_MSG('onUseCoinToIncreaseCrusadeRewardNumber::', useNum, extra)
         self.crusadeInfo.addRewardNumByUseCoin(useNum)
         self.crusadeInfo = self.crusadeInfo
 
@@ -113,4 +108,17 @@ class ICrusade(object):
         self.crusadeInfo = crusadeInfo
         self.onEnterDungeon(spaceNo, spaceMgrBox, extra)
         self.activityComplete(TDC_CFG.datas['teamDunChallengeActID']['value'])
+
+        LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Consume(
+            extra.get('teamUUID'),
+            gameconst.DungeonPlayModeEnum.CRUSADE,
+            dungeonNo,
+            crusadeInfo.getUsedTicketType(),
+            extra.get('joinType'),
+            extra.get('totalNum'),
+            self.gbID,
+            self.getTotalScore(),
+            self.getRoleCacheAttr('level')
+        )
+        
         INFO_MSG('in onEnterCrusadeDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

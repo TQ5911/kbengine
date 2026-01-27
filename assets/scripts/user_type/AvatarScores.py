@@ -30,7 +30,7 @@ class AvatarScores(userType.UserSoleType):
         else:
             DEBUG_MSG('\= AvatarScoreColl:: un-change "{}" {} == {}'.format(key, crtValue, value))
 
-    def __init__(self, equipments=0, level=0, rewardFightProp=0, mount=0, pet=0, skill=0, guildtrain=0, meridian=0):
+    def __init__(self, equipments=0, level=0, rewardFightProp=0, mount=0, pet=0, skill=0, guildtrain=0, meridian=0, bless=0):
         self.equipments = equipments            # 装备评分
         self.level = level                      # 等级评分
         self.rewardFightProp = rewardFightProp  # reward奖励属性评分
@@ -39,10 +39,13 @@ class AvatarScores(userType.UserSoleType):
         self.skill = skill                      # 技能评分
         self.guildtrain = guildtrain            # 公会训练评分
         self.meridian = meridian                # 经脉评分
+        self.bless = bless                      # 祝福评分
 
     @property
     def totalScore(self):
-        return sum([self.equipments, self.level, self.rewardFightProp, self.mount, self.pet, self.skill, self.guildtrain, self.meridian])
+        scores = [self.equipments, self.level, self.rewardFightProp, self.mount, self.pet, self.skill, self.guildtrain, self.meridian, self.bless]
+        totalScores = sum(scores)
+        return totalScores
 
     def updateScore(self, scoreKey, newScoreVal):
         crtScoreVal = getattr(self, scoreKey)
@@ -67,6 +70,7 @@ class AvatarScoresInfo(userType.ABCInfo):
             'skill': math.floor(obj.skill),
             'guildtrain': math.floor(obj.guildtrain),
             'meridian': math.floor(obj.meridian),
+            'bless': math.floor(obj.bless)
         }
 
     def isSameType(self, obj):

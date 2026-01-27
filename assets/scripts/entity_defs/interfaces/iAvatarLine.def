@@ -87,6 +87,9 @@
         <onGetLineInfo>
             <Arg>        UNICODE    </Arg>
         </onGetLineInfo>
+
+        <beginMergeLine>
+        </beginMergeLine>
     </ClientMethods>
 
 </root>

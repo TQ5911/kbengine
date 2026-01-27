@@ -30,6 +30,7 @@
             <Arg>            RAID_ID         </Arg>
             <Arg>            BOOL            </Arg>
             <Arg>            UINT32          </Arg>
+            <Arg>            INT8            </Arg>
         </completeRaidDungeon>
 
         <leaveRaidDungeon>

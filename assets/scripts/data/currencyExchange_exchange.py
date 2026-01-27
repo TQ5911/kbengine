@@ -21,36 +21,63 @@ datas = _tools.RODict({
         "currencyTo": 30000002,
         "exchangeType": 0,
         "exchangeRate": 10000,
-        "timeLimit": 20,
-        "dailyLimit": -1
+        "timeLimit": 100,
+        "dailyLimit": -1,
     }),
     2: _tools.RODict({
         "ID": 2,
         "currencyFrom": 30000021,
         "currencyTo": 30000002,
         "exchangeType": 0,
-        "exchangeRate": 1000,
+        "exchangeRate": 10000,
         "timeLimit": 100,
-        "dailyLimit": 10000
+        "dailyLimit": -1,
     }),
     3: _tools.RODict({
         "ID": 3,
         "currencyFrom": 30000001,
         "currencyTo": 30000013,
         "exchangeType": 0,
-        "exchangeRate": 1000,
+        "exchangeRate": 100,
         "timeLimit": 100,
-        "dailyLimit": -1
+        "dailyLimit": -1,
     }),
     4: _tools.RODict({
         "ID": 4,
+        "currencyFrom": 30000021,
+        "currencyTo": 30000013,
+        "exchangeType": 0,
+        "exchangeRate": 100,
+        "timeLimit": 100,
+        "dailyLimit": -1,
+    }),
+    5: _tools.RODict({
+        "ID": 5,
         "currencyFrom": 30000013,
         "currencyTo": 30000021,
         "exchangeType": 1,
-        "exchangeRate": 1000,
+        "exchangeRate": 125,
         "timeLimit": -1,
-        "dailyLimit": 50000000
+        "dailyLimit": -1,
+    }),
+    6: _tools.RODict({
+        "ID": 6,
+        "currencyFrom": 30000001,
+        "currencyTo": 30000235,
+        "exchangeType": 1,
+        "exchangeRate": 100,
+        "timeLimit": -1,
+        "dailyLimit": -1,
+    }),
+    7: _tools.RODict({
+        "ID": 7,
+        "currencyFrom": 30000001,
+        "currencyTo": 30000021,
+        "exchangeType": 0,
+        "exchangeRate": 1,
+        "timeLimit": 1000,
+        "dailyLimit": -1,
     })
 })
 minKey = 1
-maxKey = 4
+maxKey = 7

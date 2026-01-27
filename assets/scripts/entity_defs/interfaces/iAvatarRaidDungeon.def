@@ -71,6 +71,9 @@
             <Arg>   PYTHON  </Arg>
         </doEnterRaidDungeonAfterCheck>
 
+        <leaveRaidDungeonCell>
+        </leaveRaidDungeonCell>
+
         <!--团队成员离开副本-->
         <leaveRaidDungeon>
             <Exposed/>

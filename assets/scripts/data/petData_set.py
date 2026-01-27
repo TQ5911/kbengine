@@ -57,7 +57,7 @@ datas = _tools.RODict({
     }),
     "petTeamSwitchCD": _tools.RODict({
         "ID": "petTeamSwitchCD",
-        "value": 2,
+        "value": 1,
     }),
     "petTeamSwitchCD_msgID": _tools.RODict({
         "ID": "petTeamSwitchCD_msgID",

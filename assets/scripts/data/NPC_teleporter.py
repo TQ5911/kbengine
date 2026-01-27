@@ -281,7 +281,7 @@ datas = _tools.RODict({
     }),
     17102401: _tools.RODict({
         "ID": 17102401,
-        "name": "祖珂地堡五层2",
+        "name": "祖珂地堡五层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -303,7 +303,7 @@ datas = _tools.RODict({
     }),
     17102501: _tools.RODict({
         "ID": 17102501,
-        "name": "祖珂地堡四层2",
+        "name": "祖珂地堡四层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -314,7 +314,7 @@ datas = _tools.RODict({
     }),
     17102502: _tools.RODict({
         "ID": 17102502,
-        "name": "祖珂地堡七层",
+        "name": "祖珂地堡六层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,

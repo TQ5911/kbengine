@@ -63,15 +63,16 @@ datas ={
     "Name": "\u65b0\u5143\u57ce\u90ca",
     "PosX": 93.84155,
     "PosY": 0.3145871,
-    "PosZ": -100.65,
+    "PosZ": -127.6,
     "Props": {
       "CameraId": 0,
       "GateType": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 0.0,
-      "TelX": 93.74155,
-      "TelY": 0.3145871,
-      "TelZ": -84.92
+      "TelX": 93.82999,
+      "TelY": 0.25,
+      "TelZ": -84.92004
     }
   },
   "10044001": {
@@ -139,11 +140,13 @@ datas ={
     "PosZ": 52.70981,
     "Props": {
       "IsOpen": 1,
-      "MapEntityType": "14",
+      "MapEntityType": "11",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10044004": {
@@ -163,11 +166,13 @@ datas ={
     "PosZ": 51.94603,
     "Props": {
       "IsOpen": 1,
-      "MapEntityType": "14",
+      "MapEntityType": "11",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10044006": {
@@ -235,11 +240,13 @@ datas ={
     "PosZ": 24.47,
     "Props": {
       "IsOpen": 1,
-      "MapEntityType": "23",
+      "MapEntityType": "11",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10044010": {
@@ -404,30 +411,6 @@ datas ={
     "Props": {
       "IsOpen": 1,
       "MapEntityType": "11",
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "Remark": ""
-    }
-  },
-  "10044018": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Npc",
-    "ClassNameType": 1,
-    "CustomID": "",
-    "Dir": 180.4946,
-    "DisplayName": "",
-    "EntityID": 18000149,
-    "ID": 10044018,
-    "Name": "\u675c\u4e2d\u5bb5",
-    "PosX": 53.55,
-    "PosY": 1.496258,
-    "PosZ": 120.34,
-    "Props": {
-      "IsOpen": 1,
-      "MapEntityType": "12",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
@@ -1302,32 +1285,6 @@ datas ={
       "Remark": ""
     }
   },
-  "10044055": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Npc",
-    "ClassNameType": 1,
-    "CustomID": "",
-    "Dir": 64.64078,
-    "DisplayName": "",
-    "EntityID": 0,
-    "ID": 10044055,
-    "Name": "Npc",
-    "PosX": 96.09608,
-    "PosY": 0.5415036,
-    "PosZ": 113.2139,
-    "Props": {
-      "IsOpen": 1,
-      "MapEntityType": 0,
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "RefreshTimedID": 0,
-      "Remark": "",
-      "ShowInSceneMap": 1
-    }
-  },
   "10048016": {
     "ActivityID": 0,
     "AttachedGIDList": [],
@@ -1347,6 +1304,7 @@ datas ={
       "CameraId": 0,
       "GateType": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 106.6212,
       "TelX": 12.98104,
       "TelY": 1.151614,
@@ -1621,6 +1579,26 @@ datas ={
       "RefreshNum": 1,
       "RefreshTime": 1,
       "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10048032": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "BreakAwayStuckPos",
+    "ClassNameType": 22,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 10048032,
+    "Name": "\u8131\u5361\u70b9",
+    "PosX": 93.87201,
+    "PosY": 0.3321809,
+    "PosZ": -93.33844,
+    "Props": {
       "Remark": "",
       "ShowInSceneMap": 1
     }

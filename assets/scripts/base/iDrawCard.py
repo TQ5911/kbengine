@@ -146,7 +146,7 @@ class IDrawCard(object):
 
 		rewardId = rollReward
 		awardCtx = self._getAvatarAwardCtx(rewardId, None)
-		awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum})
+		awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum, 'opUUID': opUUID })
 		detail = gameclass.AwardDetail(rewardId=rewardId)
 		self.addAwards(AAC_AACDD.datas.BONUS_SRC_PETROLL_REWARD, rewardId, 1, opUUID, detail, awardCtx, False)
 
@@ -162,6 +162,7 @@ class IDrawCard(object):
 		pool = poolData.get('pool', 0)
 		summonNum = poolData.get('summonNum', 1)
 		realRollNum = poolData.get('realRollNum', 1)
+		opUUID = poolData.get('opUUID', 0)
 		poolData = GGP.datas[pool]
 		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool))
 		
@@ -224,6 +225,7 @@ class IDrawCard(object):
 			befGuaranteed,
 			aftGuaranteed,
 			guaranteedType,
+			opUUID,
 		)
 
 	@gamedecorator.checkGameconfigEnable('drawPet')
@@ -257,10 +259,11 @@ class IDrawCard(object):
 			pityReward,
 			guaranteed,
 			gameconst.DrawCardGuaranteedType.GET_RESET,
+			opUUID,
 		)
 
 	@gamedecorator.checkGameconfigEnable('drawPet')
-	@gamedecorator.limitcall(1)
+	@gamedecorator.limitcall(5)
 	def reqPetDrawCardRecord(self, exposed, pool):
 		INFO_MSG('call petDrawCardRecord', pool)
 		#if not self.checkGachaPoolVaild(pool):
@@ -292,7 +295,8 @@ class IDrawCard(object):
 			pityReward = poolData.get('pityReward', 0)
 			mailWealth = dropAward.MailWealthVal()
 			mailWealth.addWealthByItemId(pityReward, guaranteed)
-			mailAssistor.sendMailToPlayers([self.gbID], GGS.datas['PoolEndMailID']['value'], extraAttach=mailWealth, despArgs=())
+			opUUID = KBEngine.genUUID64()
+			mailAssistor.sendMailToPlayers([self.gbID], GGS.datas['PoolEndMailID']['value'], extraAttach=mailWealth, despArgs=(), opUUID=opUUID, srcType=AAC_AACDD.datas.BONUS_SRC_DRAWCARD_GUARANTEED_BONUS)
 			LogTrackingMgr.LogTrackingMgr.DrawCard_GuaranteedReward(
 				self.gbID,
 				pool,
@@ -300,6 +304,7 @@ class IDrawCard(object):
 				pityReward,
 				guaranteed,
 				gameconst.DrawCardGuaranteedType.TIME_LIMIT_RESET,
+				opUUID,
 			)
 
 	@gamedecorator.checkGameconfigEnable('drawPet')

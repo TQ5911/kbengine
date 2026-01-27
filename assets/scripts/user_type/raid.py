@@ -298,7 +298,8 @@ class RaidVal(userType.UserSTDSoleType):
                     playerBox=raidMemberVal.playerBox,
                     bFollow=raidMemberVal.bFollow,
                     spaceNo=raidMemberVal.spaceNo,
-                    score=raidMemberVal.score)
+                    score=raidMemberVal.score,
+                    joinType=raidMemberVal.joinType)
 
     def iterGetRaidMember(self):
         for teamIDX, teamVal in self.raidTeamDic.items():
@@ -455,6 +456,7 @@ class RaidVal(userType.UserSTDSoleType):
         if err == gameconst.RaidErrno.RAID_OK:
             # 新来的，应该刷一下团队信息缓存
             self.refreshRaidCacheValToAllPlayers()
+            self.broadcastAllRaidMembersCell('onRaidAddNewMember', (raidMemberVal.playerBox.id,), (playerGBID,))
             if toClient:
             # broadcast message
                 raidLeaderVal = self.getRaidLeader()
@@ -706,9 +708,11 @@ class RaidVal(userType.UserSTDSoleType):
             raidMemberVal.playerBox and raidMemberVal.playerBox.client.onClearRaidData()
             self.broadcastAllRaidMembersClient('onPopRaidTeamMember', (self.raidUUID, teamIDX, playerGBID))
 
+        self.broadcastAllRaidMembersCell('onRaidRemoveMember', (raidMemberVal.playerBox.id,), (playerGBID,))
+
         # 该小队最后一个人离开
         if raidTeamVal.isEmpty():
-            DEBUG_MSG('popMember:: pop team when it empty')
+            INFO_MSG('popMember:: pop team when it empty')
             self.raidTeamDic.pop(teamIDX)
         self.raidFilterPlayers[playerGBID] = utils.getNow()
         return raidMemberVal, gameconst.RaidErrno.RAID_OK
@@ -812,7 +816,7 @@ class RaidVal(userType.UserSTDSoleType):
             return False
         return self.raidDeputyGBID == gbid
 
-    def addSingleRaidJoin(self, playerGBID, playerName, level, school, sex, score):
+    def addSingleRaidJoin(self, playerGBID, playerName, level, school, sex, score, applySource):
         if playerGBID in self.raidApplyJoinDic and self.raidApplyJoinDic[playerGBID].raidJoinType == gameconst.RaidJoinType.SINGLE:
             return None, gameconst.RaidErrno.RAID_ALREADY_APPLY_JOIN.initkvbody(source='addSingleRaidJoin',
                                                                                 playerGBID=playerGBID,
@@ -823,7 +827,7 @@ class RaidVal(userType.UserSTDSoleType):
                                                                                    raidUUID=self.raidUUID,
                                                                                    joinRecordNum=len(self.raidApplyJoinDic))
 
-        applyJoinVal = team.applyJoinPlayerVal(playerGBID, playerName, level, school, sex, score)
+        applyJoinVal = team.applyJoinPlayerVal(playerGBID, playerName, level, school, sex, applySource, score)
         raidApplyJoinPlayerVal = RaidApplyJoinPlayerVal(
             raidJoinType=gameconst.RaidJoinType.SINGLE, joinPlayerGBID=playerGBID,
             raidJoinPlayerDic={playerGBID: applyJoinVal}, tCreate=utils.getNow())
@@ -1134,7 +1138,7 @@ class RaidVal(userType.UserSTDSoleType):
         return self.raidAutoMatchTime != 0
 
     def stopAutoMatch(self, timeout=False):
-        DEBUG_MSG('in stopAutoMatch:', timeout, self.raidAutoMatchTime)
+        INFO_MSG('in stopAutoMatch:', timeout, self.raidAutoMatchTime)
         if not self.isRaidInAutoMatch():
             return
         self.raidAutoMatchTime = 0

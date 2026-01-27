@@ -246,7 +246,7 @@ datas = _tools.RODict({
     58000202: _tools.RODict({
         "ID": 58000202,
         "name": "mineBattle_chatChannelMsg2",
-        "Message": "经过浴血奋战，帮主<color=#dea050>{0}</color>率领帮众占领了<color=#65b276>{1}</color>矿区",
+        "Message": "经过浴血奋战，<color=#45a6f1>{0}</color>的帮主<color=#dea050>{1}</color>率领帮众占领了<color=#65b276>{2}</color>矿区",
         "channelID": (2, 3, 99)
     }),
     58000203: _tools.RODict({

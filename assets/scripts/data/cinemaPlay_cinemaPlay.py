@@ -411,6 +411,48 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
+    98000070: _tools.RODict({
+        "ID": 98000070,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000071: _tools.RODict({
+        "ID": 98000071,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000072: _tools.RODict({
+        "ID": 98000072,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000073: _tools.RODict({
+        "ID": 98000073,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000074: _tools.RODict({
+        "ID": 98000074,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000075: _tools.RODict({
+        "ID": 98000075,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98000076: _tools.RODict({
+        "ID": 98000076,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
     98010001: _tools.RODict({
         "ID": 98010001,
         "cinemaTime": 12,
@@ -524,7 +566,19 @@ datas = _tools.RODict({
         "cinemaTime": 12,
         "event": "",
         "parm": "",
+    }),
+    98010021: _tools.RODict({
+        "ID": 98010021,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
+    }),
+    98010022: _tools.RODict({
+        "ID": 98010022,
+        "cinemaTime": 12,
+        "event": "",
+        "parm": "",
     })
 })
 minKey = 98000001
-maxKey = 98010020
+maxKey = 98010022

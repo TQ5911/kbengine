@@ -10,6 +10,7 @@ import MeridianInfo
 import dropAward
 import gameclass
 import copy
+import gamedecorator
 
 import meridian_config as  MCD
 import meridian_meridian as MMD
@@ -75,7 +76,7 @@ class IMeridian(object):
         self.cell.onMeridianAward(indexList)
         # INFO_MSG("IMeridian._refreshMeridianProperty: {}".format(indexList))
 
-
+    @gamedecorator.checkGameconfigEnable('UIPracticePanel')
     def reqGetMeridianData(self, exposed):
         """
             客户端请求获取经脉数据
@@ -95,6 +96,7 @@ class IMeridian(object):
             INFO_MSG("IMeridian._syncMeridianDataToClient: {}".format(meridianData))
         self.client.onGetMeridianData(meridianData['curSlot'], meridianData['maxSlots'], meridianData['slots'])
 
+    @gamedecorator.checkGameconfigEnable('UIPracticePanel')
     def reqLevelUpMeridianPoint(self, exposed, slotIdx, pointIdx, bagType, itemInfoList):
         """
             客户端请求经脉穴位升级
@@ -160,7 +162,7 @@ class IMeridian(object):
             DEBUG_MSG("IMeridian.reqLevelUpMeridianPoint: level up failed {}, {}, {}".format(
                 slotIdx, pointIdx, ret))
         
-
+    @gamedecorator.checkGameconfigEnable('UIPracticePanel')
     def reqEnhanceMeridianSlot(self, exposed, slotIdx, bagType, itemInfoList):
         """
             客户端请求经脉强化

@@ -76,11 +76,20 @@ def ban_chat():
     _args = f"{_gbId} {_endTime}"                             # Command arguments
     return _cmd, _args
 
+def add_buff():
+    # $addbuff 0 64000002 1
+    _cmd = '$addbuff'
+    _id = 10058
+    _buff_id = 64000002
+    _num = 1
+    _args = f"{_id} {_buff_id} {_num}"                             # Command arguments
+    return _cmd, _args
+
 def test_docmd():
     # -------------------------- CONFIGURATION --------------------------
     # Edit these parameters directly in the file:
 
-    _cmd, _args = send_mail()
+    _cmd, _args = add_buff()
     print(f'{_cmd} {_args}')
     URL = "http://192.168.10.13:8080/docmd"           # Admin server docmd URL
     PARTITION = 20223                                  # Partition ID (0 for broadcast to all servers)

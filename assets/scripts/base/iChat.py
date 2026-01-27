@@ -20,7 +20,7 @@ import activityControl_activityData as AC_ADD
 
 class IChat(object):
     def setChatChannel(self, exposed, channel):
-        DEBUG_MSG('setChatChannel', channel)
+        INFO_MSG('setChatChannel', channel)
         if channel >= gameconst.ChatChannel.MAX:
             return
 
@@ -31,7 +31,7 @@ class IChat(object):
         self.chatChannel = newChannel
 
     def removeChatChannel(self, exposed, channel):
-        DEBUG_MSG('removeChatChannel', channel)
+        INFO_MSG('removeChatChannel', channel)
         if channel >= gameconst.ChatChannel.MAX:
             return
 
@@ -251,7 +251,7 @@ class IChat(object):
             # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannel.RAID)
 
     def useTrumpetItem(self, exposed, itemId, msg):
-        DEBUG_MSG('useTrumpetItem', itemId, msg)
+        INFO_MSG('useTrumpetItem', itemId, msg)
         if self.isSilentChat(gameconst.SilentSpeakScene.CHAT):
             self.client.onRecvTrumpetMsg(self._getChatChannelAvatarInfo(), itemId, msg)
         else:
@@ -274,7 +274,7 @@ class IChat(object):
 
 
     def checkUseTrumpetBase(self, pendingCheckId,msg):
-        DEBUG_MSG("checkUseTrumpetBase ",pendingCheckId)
+        INFO_MSG("checkUseTrumpetBase ",pendingCheckId)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
@@ -282,7 +282,7 @@ class IChat(object):
         self.cell.afterCheckTrumpetMsg(pendingCheckId, msg)
 
     def queryPetLink(self, petGbId, gbId):
-        DEBUG_MSG('queryPetLink', petGbId)
+        INFO_MSG('queryPetLink', petGbId)
         # self.getPetDateDetailInfoInternal(gbId, petGbId, '_queryPetLink', ())
 
     # def _queryPetLink(self, result, data):
@@ -292,7 +292,7 @@ class IChat(object):
     #         self.onMessagePre(MMD.datas.channel_noItem, [])
 
     def registerItemLink(self, exposed, itemIdList, uniqueIdList):
-        DEBUG_MSG('registerItemLink', itemIdList, uniqueIdList)
+        INFO_MSG('registerItemLink', itemIdList, uniqueIdList)
 
         if len(itemIdList) != len(uniqueIdList):
             return
@@ -303,7 +303,7 @@ class IChat(object):
         #         gameengine.getGlobalBase('ItemLinkStub').uploadItemInfo(uniqueIdList[i], item.toItemSavedDict())
 
     def queryItemLink(self, exposed, uniqueId, itemId, gbId):
-        DEBUG_MSG('queryItemLink', uniqueId, itemId, gbId)
+        INFO_MSG('queryItemLink', uniqueId, itemId, gbId)
         if not gbId:
             ERROR_MSG('queryItemLink but invalid gbId', gbId)
             return
@@ -336,11 +336,11 @@ class IChat(object):
             gameglobal.roleCache[self.id]['picFrameId'])
 
     # def queryTransportGoodsLink(self, gbId):
-    #     DEBUG_MSG('huyf: queryTransportGoodsLink', gbId)
+    #     INFO_MSG('huyf: queryTransportGoodsLink', gbId)
     #     gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'handleQueryTransportGoodsLink', (self, 0, gbId, 0, 0), None, '', ())
     #
     # def handleQueryTransportGoodsLink(self, box, actId, gbId, helpNum, guildUUID):
-    #     DEBUG_MSG('huyf: handleQueryTransportGoodsLink', box, actId, gbId, helpNum, guildUUID)
+    #     INFO_MSG('huyf: handleQueryTransportGoodsLink', box, actId, gbId, helpNum, guildUUID)
     #     # TODO not same guildUUID immediately return  tips message
     #     # 【【货运】点击非同一帮会的玩家的求助信息，没有消息提示，点击求助链接无响应】
     #     if not guildUUID or self.guildUUIDBase != guildUUID:
@@ -357,7 +357,7 @@ class IChat(object):
         self._sendMatchMessage(teamId, content, teamTarget, curNum, channel, True)
 
     def _sendMatchMessage(self, teamId, content, teamTarget, curNum, channel, isTeam):
-        DEBUG_MSG('in sendTeamMatchMessage:', teamId, content, teamTarget, curNum, channel)
+        INFO_MSG('in sendTeamMatchMessage:', teamId, content, teamTarget, curNum, channel)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(CCD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
@@ -503,6 +503,6 @@ class IChat(object):
         return message[start:-1]
 
     def onRecvAvatarChannelMsgPre(self, channel, avatarInfo, msg):
-        DEBUG_MSG("onRecvAvatarChannelMsgPre::", channel, avatarInfo, msg)
+        INFO_MSG("onRecvAvatarChannelMsgPre::", channel, avatarInfo, msg)
         self.client.onRecvAvatarChannelMsg(channel, avatarInfo, msg)
 

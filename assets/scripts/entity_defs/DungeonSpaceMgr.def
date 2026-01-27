@@ -77,6 +77,11 @@
             <Flags>     CELL_PRIVATE        </Flags>
         </guildBox>
 
+        <opUUID>
+            <Type>      INT64               </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+        </opUUID>
+
         <dungeonExtraDatas>
             <Type>      PYTHON          </Type>
             <Flags>     CELL_PRIVATE    </Flags>
@@ -88,6 +93,12 @@
             <Flags>     CELL_PRIVATE    </Flags>
             <Default>   {}              </Default>
         </dungeonRewardDatas>
+
+        <dungeonAutoBattleTimes>
+            <Type>      PYTHON          </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>   {}              </Default>
+        </dungeonAutoBattleTimes>
     </Properties>
 
     <BaseMethods>
@@ -113,7 +124,11 @@
             <Arg>            FLOAT           </Arg>
             <Arg>            INT32           </Arg>
             <Arg>            PLAYER_GBID     </Arg>
+            <Arg>            INT8            </Arg>
         </onTeamDungeonCompleted>
+
+        <finishGuildDungeonTask>
+        </finishGuildDungeonTask>
 
         <onRaidDungeonCompleted>
             <Arg>            SPACE_NO        </Arg>
@@ -124,6 +139,7 @@
             <Arg>            PY_LIST         </Arg>
             <Arg>            INT32           </Arg>
             <Arg>            PLAYER_GBID     </Arg>
+            <Arg>            INT8            </Arg>
         </onRaidDungeonCompleted>
 
         <onGuildBossDungeonCompleted>
@@ -132,6 +148,7 @@
             <Arg>            BOOL            </Arg>
             <Arg>            INT32           </Arg>
             <Arg>            INT64           </Arg>
+            <Arg>            INT8            </Arg>
         </onGuildBossDungeonCompleted>
 
         <doEnterTeamDungeon>
@@ -174,7 +191,8 @@
         </onDungeonStatisticData>
 
         <setGuildBox>
-            <Arg>   MAILBOX                 </Arg>
+            <Arg>   MAILBOX   </Arg>
+            <Arg>   INT64     </Arg>
         </setGuildBox>
 
         <dungeonCompleted>
@@ -208,5 +226,11 @@
             <Arg>   ARRAY <of>  BAG_ITEM_BRIEF_VAL </of>                   </Arg>
             <Arg>   ARRAY <of>  BAG_ITEM_BRIEF_VAL </of>                   </Arg>
         </onNotifySettlementResult>
+
+        <recordAutoFightTimes>
+            <Arg>       PLAYER_GBID  </Arg>
+            <Arg>       INT16        </Arg>
+            <Arg>       INT16        </Arg>
+        </recordAutoFightTimes>
     </CellMethods>
 </root>

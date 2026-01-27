@@ -1476,14 +1476,6 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSoleType,
         e.add_param('transPetId', transPetId)
         return e
 
-    def buildChangeDungeonWeather(self, eventId, weatherType, strongerTime):
-        e = self.build_element(FlowEvent, element_id=eventId,
-                               event_handler=handleChangeDungeonWeather,
-                               name=gameconst.DungeonFlowEventName.changeWeather)
-        e.add_param('weatherType', weatherType)
-        e.add_param('strongerTime', strongerTime)
-        return e
-
     def buildChangeAllPlayerCameraStatus(self, eventId, cameraId):
         e = self.build_element(FlowEvent, element_id=eventId,
                                event_handler=handleChangeAllPlayerCameraStatus,
@@ -1800,11 +1792,11 @@ def handleEndDungeon(e, src_e, ctx, **ref_params):
     if formula.isSingleDungeonSpace(spaceNo):
         dunStubBox.completeSingleDungeon(spaceNo, spaceMgr.singleDungeonBelongPlayerGBID, not isFail, delayTime)
     elif formula.isTeamDungeonSpace(spaceNo):
-        dunStubBox.completeTeamDungeon(spaceNo, spaceMgr.teamDungeonBelongTeamUUID, not isFail, delayTime)
+        dunStubBox.completeTeamDungeon(spaceNo, spaceMgr.teamDungeonBelongTeamUUID, not isFail, delayTime, gameconst.DunegonCompleteReasonType.FINISHED)
     elif formula.isRaidDungeonSpace(spaceNo):
-        dunStubBox.completeRaidDungeon(spaceNo, spaceMgr.raidDungeonBelongRaidUUID, not isFail, delayTime)
+        dunStubBox.completeRaidDungeon(spaceNo, spaceMgr.raidDungeonBelongRaidUUID, not isFail, delayTime, gameconst.DunegonCompleteReasonType.FINISHED)
     elif formula.isGuildBossDungeonSpace(spaceNo):
-        dunStubBox.completeGuildBossDungeon(spaceNo, spaceMgr.guildBossDungeonBelongGuildUUID, not isFail, delayTime)
+        dunStubBox.completeGuildBossDungeon(spaceNo, spaceMgr.guildBossDungeonBelongGuildUUID, not isFail, delayTime, gameconst.DunegonCompleteReasonType.FINISHED)
     else:
         ERROR_MSG('flowController::handleEndDungeon:', dungeonNo, spaceNo)
         return
@@ -3106,17 +3098,6 @@ def handleDungeonPlayerForceTrans(e, src_e, ctx, **ref_param):
             ERROR_MSG('flowController::handleDungeonPlayerForceTrans::player ent not found Avatar({})'.format(pid))
             return
         ent.transformMonster(transPetId, True)
-
-def handleChangeDungeonWeather(e, src_e, ctx, **ref_param):
-    pass
-    # weatherType = e.get_param('weatherType', weather.WeatherType.invalid)
-    # strongerTime = e.get_param('strongerTime', 0)
-    # spaceMgr = e.controller.owner
-    #
-    # WARNING_MSG('DUNGEON FLOW -- EVENT[{}]: change dungeon weather-> {} t={}'.format(e.id, weatherType, strongerTime))
-    # strongerTime = strongerTime if strongerTime > 0 else -1
-    # weatherVal = weather.WeatherBase.getWeatherVal(weatherType, spaceMgr.id, strongerTime)
-    # spaceMgr.changeWeather(weatherVal)
 
 
 def handleChangeAllPlayerCameraStatus(e, src_e, ctx, **ref_param):

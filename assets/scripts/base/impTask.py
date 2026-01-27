@@ -39,7 +39,7 @@ class TaskEvent(object):
     def doTaskEvent(self, eventActionSrc, taskId, eventStr, paramStr):
         if not eventStr:
             return
-        DEBUG_MSG('in doTaskEvent, eventStr:', eventActionSrc, eventStr, paramStr)
+        INFO_MSG('in doTaskEvent, eventStr:', eventActionSrc, eventStr, paramStr)
         event_list = eventStr.split('|')
         param_list = paramStr.split('|')
         for eventName, eventParams in zip(event_list, param_list):
@@ -59,7 +59,7 @@ class TaskEvent(object):
         return
 
     def doBaseCommEvent(self, eventActionSrc, eventName, eventArgs, eventKwargs):
-        DEBUG_MSG('in doBaseCommEvent:', eventActionSrc, eventName, eventArgs, eventKwargs)
+        INFO_MSG('in doBaseCommEvent:', eventActionSrc, eventName, eventArgs, eventKwargs)
         actionType, actionFunc = CommEventAction.CommEventActionMap[eventName]
         if actionType != CommEventAction.ActionType.BASE:
             gameengine.reportCritical('doBaseCommEvent, actionType Error:', eventActionSrc, eventName, eventArgs,
@@ -71,7 +71,7 @@ class TaskEvent(object):
 
     def _eventActionFnstalk(self, eventActionSrc, *args, **kwargs):
         # 与npc交谈是任务目标
-        DEBUG_MSG('in _eventActionFnstalk:', kwargs)
+        INFO_MSG('in _eventActionFnstalk:', kwargs)
         if len(args) > 0:
             taskId = int(args[0])
         else:
@@ -107,13 +107,13 @@ class TaskEvent(object):
         return
 
     def _eventActionSetVariableNoCharProp(self, eventActionSrc, varId, fmlId, paramsStr, *args, **kwargs):
-        DEBUG_MSG('_eventActionSetVariableNoCharProp:', eventActionSrc, varId, fmlId, paramsStr, args, kwargs)
+        INFO_MSG('_eventActionSetVariableNoCharProp:', eventActionSrc, varId, fmlId, paramsStr, args, kwargs)
         opUUID = KBEngine.genUUID64()
         self._innerSetVariable(gameconst.VarChangeSrc.VAR_SRC_COMM_ACTION, varId, fmlId, paramsStr, opUUID, '')
         return
 
     def _eventActionTemporarySkill(self, eventActionSrc, *args, **kwargs):
-        DEBUG_MSG('_eventActionTemporarySkill:', eventActionSrc, args, kwargs)
+        INFO_MSG('_eventActionTemporarySkill:', eventActionSrc, args, kwargs)
 
         taskId = kwargs['_srcTaskId']
         school = self.getRoleCacheAttr('school')
@@ -135,7 +135,7 @@ class TaskProgress(object):
         taskIds = TLDD.datas.get(str(dungeonNo))
         if not taskIds:
             return
-        DEBUG_MSG('in onTaskLeaveSpace:', spaceNo)
+        INFO_MSG('in onTaskLeaveSpace:', spaceNo)
         for taskId in taskIds:
             self.taskInfo.doTaskLeaveDungeon(self, taskId)
         self.sendUpdateTasksToClient()
@@ -240,19 +240,19 @@ class ImpTask(TaskProgress, TaskEvent):
         # 提交任务
         popRewardUUID = KBEngine.genUUID64()
         taskIdSet = set()
-        DEBUG_MSG('in reqSubmitTask1:', taskIds)
+        INFO_MSG('in reqSubmitTask1:', taskIds)
         for taskId in taskIds:
             if self.startSubmitTask(taskId, popRewardUUID):
                 taskIdSet.add(taskId)
         if len(taskIdSet):
             taskIdsDicts = self.getTempMiscProp(gameconst.AvatarProps.reqSubmitTaskList, {})
             taskIdsInfo = taskIdsDicts.setdefault(popRewardUUID, [taskIdSet, list(taskIdSet)])
-            DEBUG_MSG('in reqSubmitTask2:', popRewardUUID, taskIdsInfo)
+            INFO_MSG('in reqSubmitTask2:', popRewardUUID, taskIdsInfo)
         return
 
     @gamedecorator.checkGameconfigEnable('task')
     def reqDeductTaskTargetItems(self, exposed, taskId):
-        DEBUG_MSG('in reqDeductTaskTargetItems:', taskId)
+        INFO_MSG('in reqDeductTaskTargetItems:', taskId)
         if self.taskInfo.deductTaskTgtItems(self, taskId):
             self.sendUpdateTasksToClient()
 
@@ -261,7 +261,7 @@ class ImpTask(TaskProgress, TaskEvent):
 
     @gamedecorator.checkGameconfigEnable('task')
     def reqQuitTask(self, exposed, taskId):
-        DEBUG_MSG('in reqQuitTask:', taskId)
+        INFO_MSG('in reqQuitTask:', taskId)
         if not self.taskInfo.canQuitTaskManual(taskId):
             WARNING_MSG('   in reqQuitTask, cant quit taskId:', taskId)
             return
@@ -313,7 +313,7 @@ class ImpTask(TaskProgress, TaskEvent):
         self.taskInfo.doUpdateTaskTimeout(self, 1)
 
     def onTaskDailyUpdate(self, *args):
-        DEBUG_MSG('onTaskDailyUpdate:', args)
+        INFO_MSG('onTaskDailyUpdate:', args)
         myLevel = self.getAvatarLevel()
         removeTaskIds = self.taskInfo.doTaskDailyUpdate(self, myLevel)
         self.client.onTasksRem(removeTaskIds)
@@ -321,7 +321,7 @@ class ImpTask(TaskProgress, TaskEvent):
         self.taskInfo.sendHookRewardTaskList(self)
 
     def onTaskWeeklyUpdate(self, *args):
-        DEBUG_MSG('onTaskWeeklyUpdate:', args)
+        INFO_MSG('onTaskWeeklyUpdate:', args)
         myLevel = self.getAvatarLevel()
         removeTaskIds = self.taskInfo.doTaskWeeklyUpdate(self, myLevel)
         self.client.onTasksRem(removeTaskIds)
@@ -430,17 +430,6 @@ class ImpTask(TaskProgress, TaskEvent):
         elif logName == "TaskQuit":
             _state = gameconst.TASK_EVENT_QUIT
 
-        LogTrackingMgr.LogTrackingMgr.Task_Event(
-            self.gbID,
-            gameconfig.gameId(),
-            opUUID if opUUID else 0,
-            taskId,
-            _state,
-            taskType,
-            claimSrc if claimSrc else taskType,
-            reason,
-        )
-
     # 自动领取任务
     def triggerAutoClaimTask(self, taskList):
         if not taskList:
@@ -475,14 +464,14 @@ class ImpTask(TaskProgress, TaskEvent):
         taskIds = TLDD.datas.get(str(dungeonNo))
         if not taskIds:
             return
-        DEBUG_MSG('in onTaskLeaveSpace:', spaceNo)
+        INFO_MSG('in onTaskLeaveSpace:', spaceNo)
         for taskId in taskIds:
             self.taskInfo.doTaskLeaveDungeon(self, taskId)
         self.sendUpdateTasksToClient()
     # ------------------- 其他更新任务进度或状态的接口 -------------------------------------------------
     @gamedecorator.checkGameconfigEnable('task')
     def reqCompleteTaskNoTarget(self, exposed, taskId):
-        DEBUG_MSG('in reqCompleteTaskNoTarget:', taskId)
+        INFO_MSG('in reqCompleteTaskNoTarget:', taskId)
         self.doCompleteTaskNoTarget(taskId)
 
     def doCompleteTaskNoTarget(self, taskId):
@@ -493,7 +482,7 @@ class ImpTask(TaskProgress, TaskEvent):
     def reqTaskCompleteTarget(self, exposed, taskId, tgtType, tgtId):
         # 客户端检测的任务目标完成接口；目前有两种任务目标：完成一个行为(目前只有使用技能行为)目标 和 完成播放剧情任务目标
         # 完成播放剧情任务目标 已经废弃
-        DEBUG_MSG('in reqTaskCompleteTarget:', taskId, tgtType, tgtId)
+        INFO_MSG('in reqTaskCompleteTarget:', taskId, tgtType, tgtId)
         if tgtType == gameconst.TaskTargetType.TASK_TARGET_ACTION:
             task = self.getTask(taskId)
             if not task:
@@ -519,7 +508,7 @@ class ImpTask(TaskProgress, TaskEvent):
 
     def forceCompleteTaskNoCond(self, taskId):
         # 强制完成并提交任务，不做任何校验; 对于没有目标的任务，调用 doCompleteTaskNoTarget
-        DEBUG_MSG('in forceCompleteTaskNoCond:', taskId)
+        INFO_MSG('in forceCompleteTaskNoCond:', taskId)
         self._doCompleteTaskTarget(taskId)
         return
 
@@ -550,14 +539,14 @@ class ImpTask(TaskProgress, TaskEvent):
         task.setStat(self, state)
 
     def _doCompleteTaskTarget(self, taskId):
-        DEBUG_MSG('     in _doCompleteTaskTarget:', taskId)
+        INFO_MSG('     in _doCompleteTaskTarget:', taskId)
         if self.taskInfo.forceCompleteTask(self, taskId):
             self.taskInfo.doSubmitTask(self, taskId)
         self.sendUpdateTasksToClient()
 
     def startSubmitTask(self, taskId, popRewardUUID=0):
         # 提交任务的入口
-        DEBUG_MSG('in startSubmitTask:', taskId, popRewardUUID)
+        INFO_MSG('in startSubmitTask:', taskId, popRewardUUID)
         task = self.getTask(taskId)
         if not task or task.isStat(gameconst.TaskStat.TASK_STAT_SUBMITTED):
             WARNING_MSG('startSubmitTask, no task or already submit:', taskId)
@@ -569,20 +558,22 @@ class ImpTask(TaskProgress, TaskEvent):
         return False
 
     def onCheckCellSubmitCondSucc(self, taskId, isCaptain, popRewardUUID):
-        DEBUG_MSG('in onCheckCellSubmitCondSucc, taskId:', taskId, isCaptain, popRewardUUID)
+        INFO_MSG('in onCheckCellSubmitCondSucc, taskId:', taskId, isCaptain, popRewardUUID)
         self._baseTaskSubmit(taskId, popRewardUUID)
         if popRewardUUID:
             taskIdsDicts = self.getTempMiscProp(gameconst.AvatarProps.reqSubmitTaskList, {})
             taskIdsInfo = taskIdsDicts.get(popRewardUUID, [{taskId}, [taskId]])
-            DEBUG_MSG('in onCheckCellSubmitCondSucc, taskId:', taskId, popRewardUUID, taskIdsInfo)
+            INFO_MSG('in onCheckCellSubmitCondSucc, taskId:', taskId, popRewardUUID, taskIdsInfo)
             taskIdsInfo[0].discard(taskId)
             if not len(taskIdsInfo[0]):
-                self._showPopReward(AAC_AACDD.datas.BONUS_SRC_COMPLETE_TASK, popRewardUUID, gameclass.AwardDetail(taskId=taskIdsInfo[1]))
+                taskData = dataUtils.getTaskData(taskId)
+                if not dataUtils.taskFieldVal(taskData, 'FinBlockPopReward'):
+                    self._showPopReward(AAC_AACDD.datas.BONUS_SRC_COMPLETE_TASK, popRewardUUID, gameclass.AwardDetail(taskId=taskIdsInfo[1]))
                 taskIdsDicts.pop(popRewardUUID, {})
         return
 
     def _baseTaskSubmit(self, taskId, popRewardUUID=0, check=True):
-        DEBUG_MSG('in _baseTaskSubmit, taskId:', taskId, popRewardUUID)
+        INFO_MSG('in _baseTaskSubmit, taskId:', taskId, popRewardUUID)
         if check and not self.taskInfo.checkSubmitBaseCond(self, taskId):
             return
         self.taskInfo.doSubmitTask(self, taskId, popRewardUUID, check)
@@ -591,13 +582,13 @@ class ImpTask(TaskProgress, TaskEvent):
         return True
 
     def startTaskFailed(self, taskId, reason=gameconst.TaskNotSuccReason.UNKNOWN):
-        DEBUG_MSG('in startTaskFailed:', taskId, reason)
+        INFO_MSG('in startTaskFailed:', taskId, reason)
         if not self.shouldSyncTaskData(taskId) or dataUtils.isSingleSupportTeamTask(taskId):
             # 单人任务以及单人支持的组队任务，不需要同步任务失败
             self.baseTaskFailed(taskId, reason)
 
     def baseTaskFailed(self, taskId, reason):
-        DEBUG_MSG('in baseTaskFailed:', taskId)
+        INFO_MSG('in baseTaskFailed:', taskId)
         self.taskInfo.doTaskFailed(self, taskId, reason)
         self.sendUpdateTasksToClient()
 
@@ -621,7 +612,7 @@ class ImpTask(TaskProgress, TaskEvent):
                 self.doTaskQuitNoCond(taskId, reson)
 
     def startQuitTask(self, taskId, reason=gameconst.TaskNotSuccReason.UNKNOWN):
-        DEBUG_MSG('in startQuitTask:', taskId)
+        INFO_MSG('in startQuitTask:', taskId)
         # 放弃任务入口
         if not self.shouldSyncTaskData(taskId) or dataUtils.isSingleSupportTeamTask(taskId):
             # 单人任务以及单人支持的组队任务，不需要同步任务放弃
@@ -630,7 +621,7 @@ class ImpTask(TaskProgress, TaskEvent):
 
     def doTaskQuitNoCond(self, taskId, reason):
         # 任务必定放弃成功
-        DEBUG_MSG('in doTaskQuitNoCond, taskId:', taskId, reason)
+        INFO_MSG('in doTaskQuitNoCond, taskId:', taskId, reason)
         result = self.taskInfo.doQuitTask(self, taskId, reason)
         self.sendUpdateTasksToClient()
 
@@ -652,7 +643,7 @@ class ImpTask(TaskProgress, TaskEvent):
 
     @gamedecorator.checkGameconfigEnable('task')
     def reqEnterTaskTargetDungeon(self, exposed, taskId, dungeonNo):
-        DEBUG_MSG('reqEnterTaskTargetDungeon:', taskId, dungeonNo)
+        INFO_MSG('reqEnterTaskTargetDungeon:', taskId, dungeonNo)
         if self.taskInfo.isTaskTryingEnterDungeon(dungeonNo):
             return
 
@@ -702,7 +693,7 @@ class ImpTask(TaskProgress, TaskEvent):
     def _innerSetVariable(self, varSrc, varId, fmlId, paramsStr, opUUID, desc):
         if not varId or not fmlId:
             return
-        DEBUG_MSG('_innerSetVariable:', varSrc, varId, fmlId, paramsStr)
+        INFO_MSG('_innerSetVariable:', varSrc, varId, fmlId, paramsStr)
         varId = int(varId)
         fmlId = int(fmlId)
         paramsStr = paramsStr.strip(' ')
@@ -769,7 +760,7 @@ class ImpTask(TaskProgress, TaskEvent):
 
     @gamedecorator.checkGameconfigEnable('task')
     def reqTaskEnterSpace(self, exposed, taskId):
-        DEBUG_MSG('reqTaskEnterSpace:', taskId)
+        INFO_MSG('reqTaskEnterSpace:', taskId)
         task = self.taskInfo.getTask(taskId)
         if not task:
             WARNING_MSG('reqTaskEnterSpace, missing task, task id:', taskId)

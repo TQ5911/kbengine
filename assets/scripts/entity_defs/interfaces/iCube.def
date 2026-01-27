@@ -60,7 +60,6 @@
 
     <BaseMethods>
         <beforeEnterCubeDecrementCnt>
-            <Arg>           SPACE_NO                </Arg>
             <Arg>           PYTHON                  </Arg>
         </beforeEnterCubeDecrementCnt>
 
@@ -89,7 +88,7 @@
 
         <autoRenewCubeRoom>
             <Arg>           CUBE_SWITCH             </Arg>
-            <Arg>           BOOL                    </Arg>
+            <Arg>           PYTHON                  </Arg>
         </autoRenewCubeRoom>
 
         <afterEnterCubeDeductTimes>
@@ -98,6 +97,7 @@
         <onLogonEnterCubeGetSpaceBox>
             <Arg>           ENTITYCALL              </Arg>
             <Arg>           OBJECT_ID               </Arg>
+            <Arg>           SPACE_NO                </Arg>
         </onLogonEnterCubeGetSpaceBox>
     </BaseMethods>
 

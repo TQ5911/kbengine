@@ -10,6 +10,7 @@ class Event(object):
     SKILL       = 1
     MOVE        = 2
     ATTACK      = 4
+    HATE        = 8
 
 # 状态枚举
 class State(object):
@@ -266,7 +267,7 @@ class StateAngryEx(StateImp):
 class StateBack(StateImp):
     '''通用脱战'''
     name = State.BACK
-    mask = Event.ATTACK
+    mask = Event.ATTACK | Event.HATE
 
     def tick(self, ctrl):
         if ctrl.getHome():
@@ -275,7 +276,12 @@ class StateBack(StateImp):
             ctrl.restart()
 
         elif not ctrl.inMoving():
-            ctrl.clearHateAndGoHome()
+            if not ctrl.clearHateAndGoHome():
+                # 寻路失败了也算到家了
+                ctrl.addContinueBuff()
+                ctrl.addHomeBuff()
+                ctrl.restart()
+
 
 @withName('telBackAfterResetAnim')
 class StateTelBackAfterResetAnim(StateImp):
@@ -298,8 +304,7 @@ class StateStandAndResetAnim(StateImp):
     mask = Event.ATTACK
 
     def tick(self, ctrl):
-        ctrl.destroyAllVassal()
-        ctrl.addContinueBuff()
+        ctrl.addHomeBuff()
         ctrl.transformBack()
         ctrl.changeBornState(gameconst.BornStateType.resetAnim)
         ctrl.tickOnce()
@@ -1362,6 +1367,8 @@ class Machine3052(MachineWithChangeTime):
         self.speialAICombatTup = True
 
     def doLoseWitnessTask(self, ctrl):
+        ctrl.addHomeBuff()
+        ctrl.clearHateAndTelBack()
         ctrl.backWait()
         ctrl.changeBornState(gameconst.BornStateType.reMove)
 

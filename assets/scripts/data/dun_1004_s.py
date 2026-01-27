@@ -64,15 +64,16 @@ datas ={
           "ID": 10040006,
           "PosX": 93.84155,
           "PosY": 0.3145871,
-          "PosZ": -100.65,
+          "PosZ": -127.6,
           "Props": {
             "CameraId": 0,
             "GateType": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "TelDir": 0.0,
-            "TelX": 93.74155,
-            "TelY": 0.3145871,
-            "TelZ": -84.92
+            "TelX": 93.82999,
+            "TelY": 0.25,
+            "TelZ": -84.92004
           }
         },
         "10048016": {
@@ -92,6 +93,7 @@ datas ={
             "CameraId": 0,
             "GateType": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "TelDir": 106.6212,
             "TelX": 12.98104,
             "TelY": 1.151614,
@@ -159,11 +161,13 @@ datas ={
           "PosZ": 52.70981,
           "Props": {
             "IsOpen": 1,
-            "MapEntityType": "14",
+            "MapEntityType": "11",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10044004": {
@@ -181,11 +185,13 @@ datas ={
           "PosZ": 51.94603,
           "Props": {
             "IsOpen": 1,
-            "MapEntityType": "14",
+            "MapEntityType": "11",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10044006": {
@@ -247,11 +253,13 @@ datas ={
           "PosZ": 24.47,
           "Props": {
             "IsOpen": 1,
-            "MapEntityType": "23",
+            "MapEntityType": "11",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
-            "Remark": ""
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10044010": {
@@ -402,28 +410,6 @@ datas ={
           "Props": {
             "IsOpen": 1,
             "MapEntityType": "11",
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "Remark": ""
-          }
-        },
-        "10044018": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 180.4946,
-          "DisplayName": "",
-          "EntityID": 18000149,
-          "ID": 10044018,
-          "PosX": 53.55,
-          "PosY": 1.496258,
-          "PosZ": 120.34,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": "12",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -1225,30 +1211,6 @@ datas ={
             "RefreshTime": 1,
             "Remark": ""
           }
-        },
-        "10044055": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 64.64078,
-          "DisplayName": "",
-          "EntityID": 0,
-          "ID": 10044055,
-          "PosX": 96.09608,
-          "PosY": 0.5415036,
-          "PosZ": 113.2139,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": 0,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "RefreshTimedID": 0,
-            "Remark": "",
-            "ShowInSceneMap": 1
-          }
         }
       },
       "Collection": {
@@ -1502,6 +1464,26 @@ datas ={
           "CameraId": 0,
           "MapEntityType": "26",
           "Remark": ""
+        }
+      }
+    },
+    "BreakAwayStuckPos": {
+      "10048032": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 0.0,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 10048032,
+        "PosX": 93.87201,
+        "PosY": 0.3321809,
+        "PosZ": -93.33844,
+        "Props": {
+          "Remark": "",
+          "ShowInSceneMap": 1
         }
       }
     }

@@ -1762,6 +1762,7 @@ namespace KBEngine
 			datas.level = stream.readUint32();
 			datas.school = stream.readUint16();
 			datas.sex = stream.readUint8();
+			datas.applySource = stream.readInt8();
 			return datas;
 		}
 
@@ -1773,6 +1774,7 @@ namespace KBEngine
 			stream.writeUint32(v.level);
 			stream.writeUint16(v.school);
 			stream.writeUint8(v.sex);
+			stream.writeInt8(v.applySource);
 		}
 	}
 
@@ -5087,7 +5089,6 @@ namespace KBEngine
 			datas.oldMoney = stream.readUint64();
 			datas.oldCoin = stream.readUint64();
 			datas.oldDarkIron = stream.readInt64();
-			datas.oldGeniusQi = stream.readInt64();
 			datas.otherGbId = stream.readUint64();
 			datas.authExpire = stream.readUint32();
 			datas.itemUniqueIds = itemUniqueIds_DataType.createFromStreamEx(stream);
@@ -5107,7 +5108,6 @@ namespace KBEngine
 			stream.writeUint64(v.oldMoney);
 			stream.writeUint64(v.oldCoin);
 			stream.writeInt64(v.oldDarkIron);
-			stream.writeInt64(v.oldGeniusQi);
 			stream.writeUint64(v.otherGbId);
 			stream.writeUint32(v.authExpire);
 			itemUniqueIds_DataType.addToStreamEx(stream, v.itemUniqueIds);
@@ -7927,6 +7927,47 @@ namespace KBEngine
 
 	public class DATATYPE_AnonymousArray_10068 : DATATYPE_BASE
 	{
+		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
+		{
+			int rpos = stream.rpos;
+			UInt32 size = stream.readUint32();
+			if ((size & 0xFF000000) > 0)
+			{
+				int idx = (int)size & 0xFFFFFF;
+				oldList[idx] = stream.readUint32();
+				return oldList;
+			}
+			stream.rpos = rpos;
+			return createFromStreamEx(stream);
+		}
+		public List<UInt32> createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			List<UInt32> datas = new List<UInt32>();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(stream.readUint32());
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, List<UInt32> v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				stream.writeUint32(v[i]);
+			};
+		}
+	}
+
+
+
+	public class DATATYPE_AnonymousArray_10069 : DATATYPE_BASE
+	{
 		private DATATYPE_CLI_BUY_CREDIT_NUM_DATA itemType = new DATATYPE_CLI_BUY_CREDIT_NUM_DATA();
 
 		public List<CLI_BUY_CREDIT_NUM_DATA> createFromStreamEx(MemoryStream stream)
@@ -7955,7 +7996,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10069 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10070 : DATATYPE_BASE
 	{
 		private DATATYPE_CLI_DRAW_CARD_INFO itemType = new DATATYPE_CLI_DRAW_CARD_INFO();
 
@@ -7985,7 +8026,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10070 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10071 : DATATYPE_BASE
 	{
 		private DATATYPE_COLLECTIBLE_ITEM_VAL itemType = new DATATYPE_COLLECTIBLE_ITEM_VAL();
 
@@ -8015,7 +8056,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10071 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10072 : DATATYPE_BASE
 	{
 		private DATATYPE_TRAIN_DATA itemType = new DATATYPE_TRAIN_DATA();
 
@@ -8045,7 +8086,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10072 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10073 : DATATYPE_BASE
 	{
 		private DATATYPE_BAG_ITEM_VAL itemType = new DATATYPE_BAG_ITEM_VAL();
 
@@ -8075,7 +8116,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10073 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10074 : DATATYPE_BASE
 	{
 		private DATATYPE_LEADER_BOARD_AVATAR_CACHE_DATA_INFO itemType = new DATATYPE_LEADER_BOARD_AVATAR_CACHE_DATA_INFO();
 
@@ -8105,7 +8146,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10074 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10075 : DATATYPE_BASE
 	{
 		private DATATYPE_LEADER_BOARD_AVATAR_SCORE_DATA_INFO itemType = new DATATYPE_LEADER_BOARD_AVATAR_SCORE_DATA_INFO();
 
@@ -8135,7 +8176,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10075 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10076 : DATATYPE_BASE
 	{
 		private DATATYPE_LEADER_BOARD_GUILD_DATA_INFO itemType = new DATATYPE_LEADER_BOARD_GUILD_DATA_INFO();
 
@@ -8165,7 +8206,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10076 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10077 : DATATYPE_BASE
 	{
 		private DATATYPE_LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO itemType = new DATATYPE_LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO();
 
@@ -8195,7 +8236,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10077 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10078 : DATATYPE_BASE
 	{
 		public List<UInt64> updateFromStream(MemoryStream stream, List<UInt64> oldList)
 		{
@@ -8236,7 +8277,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10078 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10079 : DATATYPE_BASE
 	{
 		public List<UInt32> updateFromStream(MemoryStream stream, List<UInt32> oldList)
 		{
@@ -8277,7 +8318,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10079 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10080 : DATATYPE_BASE
 	{
 		private DATATYPE_ACHIEVEMENT_VAL_DATA_INFO itemType = new DATATYPE_ACHIEVEMENT_VAL_DATA_INFO();
 
@@ -8307,7 +8348,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10080 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10081 : DATATYPE_BASE
 	{
 		private DATATYPE_ENEMY_FRESH_INFO itemType = new DATATYPE_ENEMY_FRESH_INFO();
 
@@ -8337,7 +8378,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10081 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10082 : DATATYPE_BASE
 	{
 		private DATATYPE_RELATION_ENEMY_DATA_INFO itemType = new DATATYPE_RELATION_ENEMY_DATA_INFO();
 
@@ -8367,7 +8408,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10082 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10083 : DATATYPE_BASE
 	{
 		private DATATYPE_ENEMY_RECORD_DATA_LIST itemType = new DATATYPE_ENEMY_RECORD_DATA_LIST();
 
@@ -8397,7 +8438,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10083 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10084 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL itemType = new DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL();
 
@@ -8427,7 +8468,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10084 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10085 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_GUILD_VAL itemType = new DATATYPE_SIEGEWAR_GUILD_VAL();
 
@@ -8457,7 +8498,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10085 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10086 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_SCORE_VAL itemType = new DATATYPE_SIEGEWAR_SCORE_VAL();
 
@@ -8487,7 +8528,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10086 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10087 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_BATTLE_END_DATA_VAL itemType = new DATATYPE_SIEGEWAR_BATTLE_END_DATA_VAL();
 
@@ -8517,7 +8558,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10087 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10088 : DATATYPE_BASE
 	{
 		private DATATYPE_CITY_RECENT_ACTIVITY_VAL itemType = new DATATYPE_CITY_RECENT_ACTIVITY_VAL();
 
@@ -8547,7 +8588,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10088 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10089 : DATATYPE_BASE
 	{
 		private DATATYPE_CITY_OFFICER_LIST itemType = new DATATYPE_CITY_OFFICER_LIST();
 
@@ -8577,7 +8618,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10089 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10090 : DATATYPE_BASE
 	{
 		private DATATYPE_CITY_ORDER_REMAIN_TIMES_VAL itemType = new DATATYPE_CITY_ORDER_REMAIN_TIMES_VAL();
 
@@ -8607,7 +8648,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10090 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10091 : DATATYPE_BASE
 	{
 		private DATATYPE_CITY_FUND_RECORD_VAL itemType = new DATATYPE_CITY_FUND_RECORD_VAL();
 
@@ -8637,7 +8678,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10091 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10092 : DATATYPE_BASE
 	{
 		private DATATYPE_SIEGEWAR_SEARCH_VAL itemType = new DATATYPE_SIEGEWAR_SEARCH_VAL();
 
@@ -8667,7 +8708,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10092 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10093 : DATATYPE_BASE
 	{
 		private DATATYPE_RED_BAG_CLIENT_VAL itemType = new DATATYPE_RED_BAG_CLIENT_VAL();
 
@@ -8697,7 +8738,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10093 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10094 : DATATYPE_BASE
 	{
 		private DATATYPE_MERIDIAN_ENHANCE_ITEM_INFO itemType = new DATATYPE_MERIDIAN_ENHANCE_ITEM_INFO();
 
@@ -8727,7 +8768,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10094 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10095 : DATATYPE_BASE
 	{
 		private DATATYPE_MERIDIAN_SLOT_INFO itemType = new DATATYPE_MERIDIAN_SLOT_INFO();
 
@@ -8757,7 +8798,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10095 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10096 : DATATYPE_BASE
 	{
 		private DATATYPE_MINE_WAR_GUILD_SHARE_INFO itemType = new DATATYPE_MINE_WAR_GUILD_SHARE_INFO();
 
@@ -8787,7 +8828,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10096 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10097 : DATATYPE_BASE
 	{
 		private DATATYPE_MINE_WAR_SINGLE_INFO itemType = new DATATYPE_MINE_WAR_SINGLE_INFO();
 
@@ -8817,7 +8858,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10097 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10098 : DATATYPE_BASE
 	{
 		private DATATYPE_MINE_WAR_GUILD_RANK_INFO itemType = new DATATYPE_MINE_WAR_GUILD_RANK_INFO();
 
@@ -8847,7 +8888,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10098 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10099 : DATATYPE_BASE
 	{
 		private DATATYPE_MINE_WAR_GUILD_PLAYER_RANK_INFO itemType = new DATATYPE_MINE_WAR_GUILD_PLAYER_RANK_INFO();
 
@@ -8877,7 +8918,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10099 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10100 : DATATYPE_BASE
 	{
 		private DATATYPE_MINE_WAR_GUILD_MEMBER_SCORE_INFO itemType = new DATATYPE_MINE_WAR_GUILD_MEMBER_SCORE_INFO();
 
@@ -8907,7 +8948,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10100 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10101 : DATATYPE_BASE
 	{
 		private DATATYPE_CLI_DUNGEON_SETTLEMENT_DATA itemType = new DATATYPE_CLI_DUNGEON_SETTLEMENT_DATA();
 
@@ -8937,7 +8978,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10101 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10102 : DATATYPE_BASE
 	{
 		private DATATYPE_CLI_DUNGEON_SETTLEMENT_RANK_DATA itemType = new DATATYPE_CLI_DUNGEON_SETTLEMENT_RANK_DATA();
 
@@ -8967,7 +9008,7 @@ namespace KBEngine
 
 
 
-	public class DATATYPE_AnonymousArray_10102 : DATATYPE_BASE
+	public class DATATYPE_AnonymousArray_10103 : DATATYPE_BASE
 	{
 		private DATATYPE_STATISTIC_PLAYER_VAL itemType = new DATATYPE_STATISTIC_PLAYER_VAL();
 

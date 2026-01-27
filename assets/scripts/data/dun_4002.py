@@ -218,9 +218,9 @@ datas ={
     "EntityID": 11212003,
     "ID": 40020012,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 676.2617,
+    "PosX": 675.32,
     "PosY": 55.17317,
-    "PosZ": 289.8994,
+    "PosZ": 280.49,
     "Props": {
       "GroupID": "",
       "Level": 2,
@@ -250,9 +250,9 @@ datas ={
     "EntityID": 11212003,
     "ID": 40020013,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 683.8459,
-    "PosY": 55.17317,
-    "PosZ": 290.0331,
+    "PosX": 682.9042,
+    "PosY": 55.173172,
+    "PosZ": 280.623718,
     "Props": {
       "GroupID": "",
       "Level": 2,
@@ -279,9 +279,9 @@ datas ={
     "EntityID": 11212003,
     "ID": 40020014,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 675.0844,
-    "PosY": 55.17317,
-    "PosZ": 284.7823,
+    "PosX": 674.1427,
+    "PosY": 55.173172,
+    "PosZ": 275.3729,
     "Props": {
       "GroupID": "",
       "Level": 2,
@@ -308,9 +308,9 @@ datas ={
     "EntityID": 11212003,
     "ID": 40020015,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 684.4432,
-    "PosY": 55.17317,
-    "PosZ": 285.0957,
+    "PosX": 683.501465,
+    "PosY": 55.173172,
+    "PosZ": 275.6863,
     "Props": {
       "GroupID": "",
       "Level": 2,
@@ -337,12 +337,13 @@ datas ={
     "EntityID": 11212006,
     "ID": 40020016,
     "Name": "\u8d64\u77db\u6218\u517d",
-    "PosX": 668.9462,
+    "PosX": 670.5577,
     "PosY": 55.17317,
-    "PosZ": 279.8619,
+    "PosZ": 270.605164,
     "Props": {
       "GroupID": "",
       "Level": 2,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 3,
@@ -350,7 +351,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u76fe\u725b\u62182\u4eba\u7ec4\u7b2c\u4e94\u6ce2"
     }
   },
@@ -366,12 +369,13 @@ datas ={
     "EntityID": 11212006,
     "ID": 40020017,
     "Name": "\u8d64\u77db\u6218\u517d",
-    "PosX": 690.9678,
+    "PosX": 686.977661,
     "PosY": 55.17317,
-    "PosZ": 280.6599,
+    "PosZ": 270.795166,
     "Props": {
       "GroupID": "",
       "Level": 2,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 3,
@@ -379,7 +383,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u76fe\u725b\u62182\u4eba\u7ec4\u7b2c\u4e94\u6ce2"
     }
   },
@@ -1680,6 +1686,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 3,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 17,
@@ -1687,7 +1694,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u77f3\u67f1\u602a\u7ec4"
     }
   },
@@ -1738,6 +1747,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 3,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 3,
@@ -1745,7 +1755,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u76fe\u725b\u62182\u4eba\u7ec4\u7b2c\u4e94\u6ce2"
     }
   },
@@ -1796,6 +1808,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 3,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 4,
@@ -1803,7 +1816,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u725b\u5f132\u4eba\u7ec4\u7b2c\u516d\u6ce2"
     }
   },
@@ -2033,7 +2048,8 @@ datas ={
     "PosZ": 348.3747,
     "Props": {
       "GroupID": "",
-      "Level": 1,
+      "Level": 4,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": "",
@@ -2041,7 +2057,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },

@@ -16,9 +16,10 @@ import gameengine
 import RedBagInfo
 import dropAward
 import mailAssistor
+import LogTrackingMgr
 import chatConfig_chatConfig as CC_CCD
 import message_Message_def as MMD
-    
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
     def __init__(self):
@@ -84,10 +85,10 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         self._onGetRedBagRankList(playerbox, guildUUID, playerFetchList, self.rankCacheList)
 
     def _onGetRedBagRankList(self, playerbox, guildUUID, playerFetchList, result):
-        INFO_MSG('_onGetRedBagRankList: playerbox={} result={}'.format(playerbox, result[:5]))
         if result is None:
             return
 
+        INFO_MSG('_onGetRedBagRankList: playerbox={} result={}'.format(playerbox, result[:5]))
         # 做个缓存
         self.rankCacheList = result
         if not playerbox:   # 系统拉的数据，不用往下执行
@@ -193,6 +194,8 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         # 创建 rank 数据
         redisUtils.RedBagUtils.createRedBagRank(redbagId, _RbVal.releaseTime,
                                                 functools.partial(self._onCreateRedBagRank, playerbox, _RbVal))
+        #
+        LogTrackingMgr.LogTrackingMgr.Release_RedBag(redbagType, channel, num, gameconst.ItemId.MONEY, money, redbagId)
 
     def _onCreateRedBagRank(self, playerbox, _RbVal, error):
         INFO_MSG('_onCreateRedBagRank: redbagId={} error={}'.format(_RbVal.redbagId, error))
@@ -300,6 +303,9 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         
         if len(_FcVal.fetchPlayerDict) % 20 == 0 or _RbVal.leftNum == 0:
             self.writeToDB()
+
+        #
+        LogTrackingMgr.LogTrackingMgr.Fetch_RedBag(_RbVal.redbagType, _RbVal.channel, gameconst.ItemId.MONEY, _money, _RbVal.leftNum, gameconst.ItemId.MONEY, _RbVal.leftMoney, redbagId)
         
     def _onAddRedbagFetchInfo(self, playerbox, redbagId, _money, releaseTime):
         INFO_MSG('_onAddRedbagFetchInfo: redbagId={} _money={}'.format(redbagId, _money))
@@ -368,8 +374,9 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         mailAssistor.sendMailToPlayers(
             [playerGbId],
             _mailId,
-            opUUID=KBEngine.genUUID64(),
-            extraAttach=addWealthVal
+            opUUID=_RbVal.redbagId,
+            extraAttach=addWealthVal,
+            srcType = AAC_AACDD.datas.BONUS_SRC_REDPACKAGE_RETURN
         )
 
     #

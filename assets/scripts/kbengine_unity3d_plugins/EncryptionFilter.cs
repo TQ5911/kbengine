@@ -59,7 +59,7 @@
                 stream.wpos += padSize;
 
 				if(stream.wpos > MemoryStream.BUFFER_MAX)
-					DebugL8.LogError("BlowfishFilter::encrypt: stream.wpos({0}) > MemoryStream.BUFFER_MAX({1})!", stream.wpos, MemoryStream.BUFFER_MAX);
+					GLog.LogError("BlowfishFilter::encrypt: stream.wpos({0}) > MemoryStream.BUFFER_MAX({1})!", stream.wpos, MemoryStream.BUFFER_MAX);
             }
 
             _blowfish.encipher(stream.data(), (int)stream.length());

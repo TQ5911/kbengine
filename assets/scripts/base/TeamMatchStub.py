@@ -69,7 +69,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self._onTimerCallback(tid)
 
     def teamAutoMatch(self, teamInfoDic):
-        DEBUG_MSG('in teamAutoMatch:', teamInfoDic)
+        INFO_MSG('in teamAutoMatch:', teamInfoDic)
         if 0 == teamInfoDic['teamTarget']:
             return
         tmVal = self.teamsDic.get(teamInfoDic['teamId'])
@@ -83,7 +83,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def onTeamInfoUpdate(self, teamInfoDic):
-        DEBUG_MSG('in onTeamInfoUpdate:', teamInfoDic)
+        INFO_MSG('in onTeamInfoUpdate:', teamInfoDic)
         if 0 == teamInfoDic['teamTarget']:
             self._rmTeamFromMatchPool(teamInfoDic['teamId'])
             return
@@ -101,12 +101,12 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def teamStopAutoMatch(self, teamId):
-        DEBUG_MSG('in teamStopAutoMatch:', teamId)
+        INFO_MSG('in teamStopAutoMatch:', teamId)
         self._rmTeamFromMatchPool(teamId)
         return
 
     def teamAutoMatchTimeout(self, teamId):
-        DEBUG_MSG('in teamAutoMatchTimeout:', teamId)
+        INFO_MSG('in teamAutoMatchTimeout:', teamId)
         if self._rmTeamFromMatchPool(teamId):
             gameengine.getTeamStub(teamId).onTeamAutoMatchTimeout(teamId)
         return
@@ -120,7 +120,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return True
 
     def onPlayerMatchInfoUpdate(self, playerInfoDic):
-        DEBUG_MSG('in onPlayerMatchInfoUpdate:', playerInfoDic)
+        INFO_MSG('in onPlayerMatchInfoUpdate:', playerInfoDic)
         pmVal = self.playersDic.get(playerInfoDic['playerGbId'], None)
         if not pmVal:
             return
@@ -128,7 +128,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def playerAutoMatch(self, playerMatchDic):
-        DEBUG_MSG('in playerAutoMatch:', playerMatchDic)
+        INFO_MSG('in playerAutoMatch:', playerMatchDic)
         pmVal = self.playersDic.get(playerMatchDic['playerGbId'], None)
         if pmVal:
             self._rmPlayerFromMatchPool(playerMatchDic['playerGbId'])
@@ -153,7 +153,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def playerStopAutoMatch(self, playerGbId):
-        DEBUG_MSG('in playerStopAutoMatch:', playerGbId)
+        INFO_MSG('in playerStopAutoMatch:', playerGbId)
         pmVal = self.playersDic.get(playerGbId, None)
         if not pmVal:
             return
@@ -162,7 +162,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def playerAutoMatchTimeout(self, playerGbId):
-        DEBUG_MSG('in playerAutoMatchTimeout:', playerGbId)
+        INFO_MSG('in playerAutoMatchTimeout:', playerGbId)
         pmVal = self.playersDic.get(playerGbId, None)
         if not pmVal:
             return
@@ -171,7 +171,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         return
 
     def _rmPlayerFromMatchPool(self, playerGbId):
-        DEBUG_MSG('in _rmPlayerFromMatchPool:', playerGbId)
+        INFO_MSG('in _rmPlayerFromMatchPool:', playerGbId)
         pmVal = self.playersDic.pop(playerGbId, None)
         if not pmVal:
             return False
@@ -198,7 +198,7 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                         if not tmVal.canAddPlayer(pmVal):
                             continue
                         #matched
-                        DEBUG_MSG('     in _doMatch, matched:', playerGbid, teamId)
+                        INFO_MSG('     in _doMatch, matched:', playerGbid, teamId)
                         if tmVal.addPlayerToTeam(pmVal):
                             matchedPlayers.append(playerGbid)
                             if tmVal.isTeamFull():

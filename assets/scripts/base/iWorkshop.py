@@ -10,9 +10,11 @@ import gamedecorator
 import dataUtils
 import dropAward
 import gameclass
+import LogTrackingMgr
 
 import workShop_config as WSC
 import workShop_produce as WSP
+import itemData_itemData as ITEMDATA
 import antiAddictCategory_antiAddictCategory_def as AAC_AACD
 
 class IWorkshop(object):
@@ -22,7 +24,7 @@ class IWorkshop(object):
     @gamedecorator.checkGameconfigEnable('workshop')
     @gamedecorator.limitcall(1)
     def reqWorkshopMF(self, exposed, itemID, batchCount, isAutoMF):    
-        DEBUG_MSG("reqWorkshopMF ", exposed, itemID, batchCount, isAutoMF)
+        INFO_MSG("reqWorkshopMF ", exposed, itemID, batchCount, isAutoMF)
         normalDatas = []
         luckyDatas = []
         if not gameconfig.enableWorkshop():
@@ -87,14 +89,18 @@ class IWorkshop(object):
             opUUID = KBEngine.genUUID64()
             srcType = AAC_AACD.datas.BONUS_SRC_WORKSHOP_COST
             addWealthVal = dropAward.AwardVal()
+            normalDatas = []
+            luckyDatas = []
             # 常规物品
             for outItemKey, outItemCount in normalItems.items():
                 mID, mBindType = self.splitWorkshopItemKey(outItemKey)
                 addWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
+                normalDatas.append({'itemId':mID, 'itemCount':outItemCount, 'bindTyoe':mBindType, 'quality':dataUtils.getItemQuality(mID)})
             # 幸运物品
             for outItemKey, outItemCount in luckyItems.items():
                 mID, mBindType = self.splitWorkshopItemKey(outItemKey)
                 addWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
+                luckyDatas.append({'itemId':mID, 'itemCount':outItemCount, 'bindTyoe':mBindType, 'quality':dataUtils.getItemQuality(mID)})
 
             if not self.canAddWealthVal(srcType, addWealthVal):
                 WARNING_MSG("doWorkshopManufactoring ~ bag space is not enough")
@@ -157,11 +163,13 @@ class IWorkshop(object):
             for outItemKey, outItemCount in luckyItems.items():
                 mID, mBindType = self.splitWorkshopItemKey(outItemKey)
                 luckyWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
+
+            LogTrackingMgr.LogTrackingMgr.Work_Shop(opUUID, self.gbID, normalDatas, luckyDatas)
             return ret, normalWealthVal.toBriefList(), luckyWealthVal.toBriefList()
         return ret, None, None
 
     def calculateWorkshopMaterials(self, itemID, batchCount, costCurrency, costItems, normalItems, luckyItems, costExtraItems, isAutoMF):
-        DEBUG_MSG("calculateWorkshopMaterials ", itemID, batchCount, costCurrency, costItems, normalItems, luckyItems, costExtraItems, isAutoMF)
+        INFO_MSG("calculateWorkshopMaterials ", itemID, batchCount, costCurrency, costItems, normalItems, luckyItems, costExtraItems, isAutoMF)
         produceCfgData = WSP.datas.get(itemID)
         if not produceCfgData:
             WARNING_MSG("calculateWorkshopMaterials ~ this item has no configuration", produceCfgData, itemID, batchCount)

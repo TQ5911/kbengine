@@ -41,7 +41,7 @@ datas = _tools.RODict({
     }),
     "recommendGiftConfig": _tools.RODict({
         "ID": "recommendGiftConfig",
-        "value": 68000100,
+        "value": (68000101, 68000102, 68000103, 68000104, 68000105, 68000106, 68000107, 68000108),
     }),
     "singlePurchaseLimit3_msg": _tools.RODict({
         "ID": "singlePurchaseLimit3_msg",
@@ -101,7 +101,7 @@ datas = _tools.RODict({
     }),
     "dailyRewards": _tools.RODict({
         "ID": "dailyRewards",
-        "value": 40000012,
+        "value": 40000157,
     }),
     "dailyBaseTime": _tools.RODict({
         "ID": "dailyBaseTime",
@@ -118,5 +118,13 @@ datas = _tools.RODict({
     "monthCard": _tools.RODict({
         "ID": "monthCard",
         "value": "MonthCard",
+    }),
+    "limitText": _tools.RODict({
+        "ID": "limitText",
+        "value": ('终生限购', '日限购', '周限购', '月限购'),
+    }),
+    "rmbSwitch": _tools.RODict({
+        "ID": "rmbSwitch",
+        "value": 0,
     })
 })

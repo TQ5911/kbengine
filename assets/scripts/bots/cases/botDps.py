@@ -14,8 +14,7 @@ from simpleBotBase import AIState
 from botUtils import botUtils
 
 import utils
-import teamMatch_activity as TMACTD
-import activityControl_activityData as AC_ADD
+
 
 BOT_CONFIG = botBase.initBotConfig(__file__)
 
@@ -30,7 +29,7 @@ STATUS_DURATION = 180
 # 过滤的类型，比如药品
 IGNORE_SOURCETYPES = [gameconst.SourceType.Item]
 
-IGNORE_HITTYPES = [gameconst.HitType.Absorb,]
+IGNORE_HITTYPES = [gameconst.HitType.Absorb, gameconst.HitType.ImmuneDmg]
 HEAL_HITTYPES = [gameconst.HitType.Heal, gameconst.HitType.HealCrit, gameconst.HitType.HPRecover, ]
 
 
@@ -166,8 +165,6 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             AISTATE_AFTER_COMPLETED: BotAIState_AfterCompleted()
         }
 
-    def _getMatchData(self):
-        return TMACTD.datas.get(self.matchTargetId, {})
 
     def initBot(self):
         if self.getSelfMapId() == 4002:
@@ -178,12 +175,6 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
             self.runGmCommand("$getequipment 0 0 3 4")
         self.setMatchInfo()
 
-    def setMatchInfo(self, matchTargetId=None):
-        if matchTargetId:
-            self.matchTargetId = matchTargetId
-        matchData = self._getMatchData()
-        self.dstMapId = matchData.get("enterDunID", 0)
-        self.dstPos, _ = self.getMapMonsterPos(self.dstMapId)
 
     def changeRandomTimeDelay(self, useRandom=None):
         if useRandom is None:
@@ -205,46 +196,6 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
 
     def onTeleportDone(self, *args):
         self.debug(f'onTeleportDone{args}')
-
-    def quitTeamOrRaid(self):
-        if self.getSelfMapId() == self.dstMapId: # 可能断线重连， 目标是副本用这个应该还行，大世界不太行
-            return
-        if self.isInTeam():
-            self.cell.applyLeaveTeam()
-        elif self.isInRaid():
-            self.cell.leaveRaid()
-
-    def createTeamOrRaid(self, matchTargetId=None):
-        matchTargetId = matchTargetId or self.matchTargetId
-        teamTargetInfo = self._getMatchData()
-        actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
-        teamType = int(actData['needTeam'])
-        membersRequire = actData['membersRequire'] or 1
-        self.debug(f"createTeamOrRaid: {matchTargetId}, {teamType}, {membersRequire}")
-        if teamType == gameconst.ActivityControlType.TEAM:
-            self.cell.applyCreateTeam(membersRequire, matchTargetId, 0, 0, '', '', 1)
-        elif teamType == gameconst.ActivityControlType.RAID:
-            self.cell.createRaidLonely(membersRequire, matchTargetId, 0, 0, '', '', 1)
-
-    def reqPlayerAutoMatch(self, matchTargetId=None):
-        matchTargetId = matchTargetId or self.matchTargetId
-        teamTargetInfo = self._getMatchData()
-        actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
-        teamType = int(actData['needTeam'])
-        membersRequire = actData['membersRequire'] or 1
-        # 末位做队长，如果只创建14个，说明主控会创建队伍
-        if self.botIdx % membersRequire == 0 and not self.isInTeam() and not self.isInRaid():
-            self.createTeamOrRaid()
-            return
-
-        self.debug(f"reqPlayerAutoMatch: {matchTargetId} {teamType}")
-
-        if teamType == gameconst.ActivityControlType.TEAM:
-            if self.player.autoMatchTarget != matchTargetId and not self.isInTeam():
-                self.cell.reqPlayerAutoMatch(matchTargetId)
-        elif teamType == gameconst.ActivityControlType.RAID:
-            if self.player.autoRaidMatchTarget != matchTargetId and not self.isInRaid():
-                self.cell.reqRaidPlayerAutoMatch(matchTargetId)
 
     def reqGetTeamStatisticData(self, statsType):
         self.debug("reqGetTeamStatisticData: %s" % statsType)
@@ -302,17 +253,22 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
         self.statsSkillDamage()
 
     def statsSkillDamage(self):
-        def _stats(mainKey, sub1Key, sub2Key, sourceKey, hurt, statsDict):
+        def _stats(mainKey, sub1Key, sub2Key, sub3Key, hurt, statsDict):
             if mainKey not in statsDict:
                 statsDict[mainKey] = {}
             if sub1Key not in statsDict[mainKey]:
                 statsDict[mainKey][sub1Key] = {}
             if sub2Key not in statsDict[mainKey][sub1Key]:
                 statsDict[mainKey][sub1Key][sub2Key] = {"total": 0, "count": 0, "details": {}}
-            if sourceKey not in statsDict[mainKey][sub1Key][sub2Key]["details"]:
-                statsDict[mainKey][sub1Key][sub2Key]["details"][sourceKey] = {"total": 0, "count": 0}
-            statsDict[mainKey][sub1Key][sub2Key]["details"][sourceKey]['total'] += hurt
-            statsDict[mainKey][sub1Key][sub2Key]["details"][sourceKey]['count'] += 1
+            if sub3Key not in statsDict[mainKey][sub1Key][sub2Key]["details"]:
+                statsDict[mainKey][sub1Key][sub2Key]["details"][sub3Key] = {"total": 0, "count": 0, "max": 0, "min": 0}
+            statsDict[mainKey][sub1Key][sub2Key]["details"][sub3Key]['total'] += hurt
+            statsDict[mainKey][sub1Key][sub2Key]["details"][sub3Key]['count'] += 1
+            if hurt > statsDict[mainKey][sub1Key][sub2Key]["details"][sub3Key]['max']:
+                statsDict[mainKey][sub1Key][sub2Key]["details"][sub3Key]['max'] = hurt
+            if hurt < statsDict[mainKey][sub1Key][sub2Key]["details"][sub3Key]['min'] or statsDict[mainKey][sub1Key][sub2Key]["details"][sub3Key]['min'] == 0:
+                statsDict[mainKey][sub1Key][sub2Key]["details"][sub3Key]['min'] = hurt
+
             statsDict[mainKey][sub1Key][sub2Key]["total"] += hurt
             statsDict[mainKey][sub1Key][sub2Key]["count"] += 1
 
@@ -350,8 +306,8 @@ class PlayerDelegate(simpleBotBase.SimpleBotBase):
                     idset.add(targetId)
                     hurt = damageInfo.get('hurt', 0)
                     hitType = damageInfo.get('hitType', 0)
-                    _stats(casterId, targetId, hitType, sourceKey, hurt, self.damageStats)
-                    _stats(targetId, casterId, hitType, sourceKey, hurt, self.behurtStats)
+                    _stats(casterId, targetId, sourceKey, hitType, hurt, self.damageStats)
+                    _stats(targetId, casterId, sourceKey, hitType, hurt, self.behurtStats)
                     _statsTotal(casterId, hitType, hurt, self.totalDamageStats)
                     _statsTotal(targetId, hitType, hurt, self.totalBehurtStats)
         selfId = self.player.id

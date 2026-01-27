@@ -14,12 +14,11 @@ class AuthStatisticsVal(userType.UserSoleType):
     def __init__(self, oldLevel=0, oldMoney=0, otherGbId=0, authExpire=0,
                  oldScore=0, itemUniqueIds=(), actTimes=(), dailyUseMoney=0,
                  oldExp=0.0, items=(), hostOffline=0, authLogin=0, oldCoin=0,
-                 oldDarkIron=0, oldGeniusQi=0):
+                 oldDarkIron=0):
         self.oldLevel = oldLevel
         self.oldMoney = oldMoney
         self.oldCoin = oldCoin
         self.oldDarkIron = oldDarkIron
-        self.oldGeniusQi = oldGeniusQi
         self.otherGbId = otherGbId
         self.authExpire = authExpire
         self.oldScore = oldScore
@@ -75,7 +74,6 @@ class AuthStatisticsVal(userType.UserSoleType):
         self.oldMoney = owner.money
         self.oldCoin = owner.coin
         self.oldDarkIron = owner.darkIron
-        self.oldGeniusQi = owner.geniusQi
         self.oldScore = owner.getTotalScore()
         self.itemUniqueIds = []
         self.actTimesDic = {}
@@ -106,8 +104,7 @@ class AuthStatisticsVal(userType.UserSoleType):
             'hostOffline': self.hostOffline,
             'authLogin': self.authLogin,
             'oldCoin': self.oldCoin,
-            'oldDarkIron': self.oldDarkIron,
-            'oldGeniusQi': self.oldGeniusQi
+            'oldDarkIron': self.oldDarkIron
         }
 
 

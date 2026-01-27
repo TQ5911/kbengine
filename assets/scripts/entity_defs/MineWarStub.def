@@ -27,7 +27,9 @@
 
         <onMineWarFlagBeKill>
             <Arg>          LINE_NO         </Arg>
+            <Arg>          GUILD_UUID      </Arg>
             <Arg>          UNICODE        </Arg>
+            <Arg>          PLAYER_GBID         </Arg>
             <Arg>          UNICODE        </Arg>
         </onMineWarFlagBeKill>
 
@@ -95,5 +97,10 @@
         <doMineWarGuildDisbanded>
             <Arg>          GUILD_UUID      </Arg>
         </doMineWarGuildDisbanded>
+
+        <doGetMineWarFlagHp>
+            <Arg>          LINE_NO         </Arg>
+            <Arg>          MAILBOX         </Arg>
+        </doGetMineWarFlagHp>
     </BaseMethods>
 </root>

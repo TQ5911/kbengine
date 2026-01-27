@@ -10,7 +10,6 @@ import gameengine
 import gameconst
 import gameconfig
 import gametimer
-import gametlog
 import formula
 import dataUtils
 import utils

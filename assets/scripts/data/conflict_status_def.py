@@ -58,4 +58,5 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     serverControl = 43
     duel = 44
     silenceImmunity = 45
+    unstuck = 46
 

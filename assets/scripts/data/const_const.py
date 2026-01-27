@@ -137,15 +137,15 @@ datas = _tools.RODict({
     }),
     "autoFightReturnRange": _tools.RODict({
         "ID": "autoFightReturnRange",
-        "value": (40, 100),
+        "value": (10, 100),
     }),
     "dropTime": _tools.RODict({
         "ID": "dropTime",
-        "value": 3.0,
+        "value": 5.0,
     }),
     "dropDelay": _tools.RODict({
         "ID": "dropDelay",
-        "value": 2.0,
+        "value": 3.0,
     }),
     "dropShareRange": _tools.RODict({
         "ID": "dropShareRange",
@@ -493,11 +493,11 @@ datas = _tools.RODict({
     }),
     "playerDamageOffset": _tools.RODict({
         "ID": "playerDamageOffset",
-        "value": ((80, -120), (110, -120), (130, 20), (-150, -100), (-115, -20), (-115, 0), (-170, -100), (-170, -40), (0, -80), (0, -80), (80, -120), (110, -120)),
+        "value": ((80, -120), (110, -120), (130, 20), (-130, -100), (-115, -20), (-115, 0), (-170, -100), (-170, -40), (0, -80), (0, -80), (80, -120), (110, -120)),
     }),
     "othersDamageOffset": _tools.RODict({
         "ID": "othersDamageOffset",
-        "value": ((80, 70), (80, 70), (130, 20), (150, -100), (-115, -20), (-115, 0), (170, -100), (170, -40), (0, -80), (0, -80), (80, 70), (80, 70)),
+        "value": ((70, 30), (80, 50), (130, 20), (130, -100), (-115, -20), (-115, 0), (170, -100), (170, -40), (0, -80), (0, -80), (90, 30), (90, 70)),
     }),
     "playerDamageHudscale": _tools.RODict({
         "ID": "playerDamageHudscale",
@@ -513,7 +513,7 @@ datas = _tools.RODict({
     }),
     "itemUnboundProb": _tools.RODict({
         "ID": "itemUnboundProb",
-        "value": 0.5,
+        "value": 0.0,
     }),
     "ultimatePowerMax": _tools.RODict({
         "ID": "ultimatePowerMax",
@@ -951,122 +951,6 @@ datas = _tools.RODict({
         "ID": "bossRefreshSystem",
         "value": 2,
     }),
-    "agreementUnchecked": _tools.RODict({
-        "ID": "agreementUnchecked",
-        "value": 54002070,
-    }),
-    "phoneEmpty": _tools.RODict({
-        "ID": "phoneEmpty",
-        "value": 54002071,
-    }),
-    "phoneInvalid": _tools.RODict({
-        "ID": "phoneInvalid",
-        "value": 54002072,
-    }),
-    "smsSentSuccess": _tools.RODict({
-        "ID": "smsSentSuccess",
-        "value": 54002073,
-    }),
-    "smsEmpty": _tools.RODict({
-        "ID": "smsEmpty",
-        "value": 54002074,
-    }),
-    "smsInvalid": _tools.RODict({
-        "ID": "smsInvalid",
-        "value": 54002075,
-    }),
-    "smsExpired": _tools.RODict({
-        "ID": "smsExpired",
-        "value": 54002076,
-    }),
-    "nameEmpty": _tools.RODict({
-        "ID": "nameEmpty",
-        "value": 54002077,
-    }),
-    "nameFormatInvalid": _tools.RODict({
-        "ID": "nameFormatInvalid",
-        "value": 54002078,
-    }),
-    "idCardEmpty": _tools.RODict({
-        "ID": "idCardEmpty",
-        "value": 54002079,
-    }),
-    "idCardFormatInvalid": _tools.RODict({
-        "ID": "idCardFormatInvalid",
-        "value": 54002080,
-    }),
-    "authProcessing": _tools.RODict({
-        "ID": "authProcessing",
-        "value": 54002081,
-    }),
-    "authSuccess": _tools.RODict({
-        "ID": "authSuccess",
-        "value": 54002082,
-    }),
-    "authFailed": _tools.RODict({
-        "ID": "authFailed",
-        "value": 54002083,
-    }),
-    "minorAuth": _tools.RODict({
-        "ID": "minorAuth",
-        "value": 54002084,
-    }),
-    "policeApiError": _tools.RODict({
-        "ID": "policeApiError",
-        "value": 54002085,
-    }),
-    "infoMismatch": _tools.RODict({
-        "ID": "infoMismatch",
-        "value": 54002086,
-    }),
-    "realNameAuth": _tools.RODict({
-        "ID": "realNameAuth",
-        "value": 54002087,
-    }),
-    "authUnfinished": _tools.RODict({
-        "ID": "authUnfinished",
-        "value": 54002088,
-    }),
-    "phoneRepeat": _tools.RODict({
-        "ID": "phoneRepeat",
-        "value": 54002089,
-    }),
-    "phoneSuccess": _tools.RODict({
-        "ID": "phoneSuccess",
-        "value": 54002090,
-    }),
-    "phoneFrequentTime": _tools.RODict({
-        "ID": "phoneFrequentTime",
-        "value": 10,
-    }),
-    "phoneFrequent": _tools.RODict({
-        "ID": "phoneFrequent",
-        "value": 54002091,
-    }),
-    "phoneFrequentLockTime": _tools.RODict({
-        "ID": "phoneFrequentLockTime",
-        "value": 25,
-    }),
-    "phoneFrequentLock": _tools.RODict({
-        "ID": "phoneFrequentLock",
-        "value": 54002092,
-    }),
-    "webRequestException": _tools.RODict({
-        "ID": "webRequestException",
-        "value": 54002093,
-    }),
-    "webFrequentRequests": _tools.RODict({
-        "ID": "webFrequentRequests",
-        "value": 54002094,
-    }),
-    "underageBlock": _tools.RODict({
-        "ID": "underageBlock",
-        "value": 54002095,
-    }),
-    "agreementContent": _tools.RODict({
-        "ID": "agreementContent",
-        "value": "我已详细阅读并同意<link url label=《用户协议》 url=https://api.yunxingu.com/mobile/index.html/#/privacy?index=0>、<link url label=《隐私政策》 url=https://api.yunxingu.com/mobile/index.html/#/privacy?index=1>和<link url label=《儿童隐私保护政策》 url=https://api.yunxingu.com/mobile/index.html/#/privacy?index=2>。",
-    }),
     "mapHelpInfo": _tools.RODict({
         "ID": "mapHelpInfo",
         "value": 50,
@@ -1086,5 +970,49 @@ datas = _tools.RODict({
     "loginVideoFilePath_Mobile": _tools.RODict({
         "ID": "loginVideoFilePath_Mobile",
         "value": "login_video_mobile.mp4",
+    }),
+    "shareSuccessMsg": _tools.RODict({
+        "ID": "shareSuccessMsg",
+        "value": 54920009,
+    }),
+    "saveSuccessMsg": _tools.RODict({
+        "ID": "saveSuccessMsg",
+        "value": 54920010,
+    }),
+    "saveFailedMsg": _tools.RODict({
+        "ID": "saveFailedMsg",
+        "value": 54920011,
+    }),
+    "photoMinDistance": _tools.RODict({
+        "ID": "photoMinDistance",
+        "value": 1.5,
+    }),
+    "wechatFailedJump": _tools.RODict({
+        "ID": "wechatFailedJump",
+        "value": 54000390,
+    }),
+    "pathFindAutoRide": _tools.RODict({
+        "ID": "pathFindAutoRide",
+        "value": 5.0,
+    }),
+    "pathFindAutoRun": _tools.RODict({
+        "ID": "pathFindAutoRun",
+        "value": 5.0,
+    }),
+    "regularTurn": _tools.RODict({
+        "ID": "regularTurn",
+        "value": 600,
+    }),
+    "ridingTurn": _tools.RODict({
+        "ID": "ridingTurn",
+        "value": 420,
+    }),
+    "teleportationProtectionBuffId": _tools.RODict({
+        "ID": "teleportationProtectionBuffId",
+        "value": 64000103,
+    }),
+    "teleportationProtectionTime": _tools.RODict({
+        "ID": "teleportationProtectionTime",
+        "value": 5,
     })
 })

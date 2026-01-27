@@ -74,6 +74,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.userInfoId = clientData.get('userId', '')
         self.otherData = clientData.get('otherData', {})
         self.udid = clientData.get('deviceUniqueIdentifier', '')
+        self.packageSource = clientData.get('packageSource', '')
         self.devicePlatId = devicePlatId
         self.channelId = channelId
         if not self.phone:
@@ -292,7 +293,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 avatarProps['name'],
                 gameconfig.gameId(),
                 self.userInfoId,
-                _now
+                _now,
+                self.packageSource,
             )
         else:
             ERROR_MSG('failed to create avatar', self.accountName)
@@ -792,6 +794,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.operatingSystem,
             self.accountType,
             self.channelId,
+            self.packageSource,
         )
 
     def cancelDeleteFlag(self):
@@ -1069,7 +1072,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.devicePlatId,
             self.clientIP,
             self.operatingSystem,
-            self.accountType
+            self.accountType,
+            self.packageSource,
         )
         self.destroyAccountReason(reason)
 
@@ -1348,6 +1352,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             avatar.birthInDB,
             self.accountType,
             self.channelId,
+            self.packageSource,
         )
 
 # ---------------------------- switch avatar server start ----------------------------

@@ -87,7 +87,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
                     self.founders.destoryFounder(sVal.ownerGbId, sVal.spaceUUID)
 
     def destoryDungeonSpace(self, spaceNo, spaceUUID, reason):
-        DEBUG_MSG('destoryDungeonSpace', spaceNo, spaceUUID, reason)
+        INFO_MSG('destoryDungeonSpace', spaceNo, spaceUUID, reason)
         if spaceNo not in self.spaces:
             ERROR_MSG('wl: destoryDungeonSpace cannot find space:', spaceNo)
             return
@@ -122,7 +122,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             self.founders.destoryFounder(sVal.ownerGbId, sVal.spaceUUID)
 
     def _destoryDungeonSpaceDelay(self, spaceNo, spaceUUID, reason):
-        DEBUG_MSG("_destoryDungeonSpaceDelay::", spaceNo, spaceUUID, reason)
+        INFO_MSG("_destoryDungeonSpaceDelay::", spaceNo, spaceUUID, reason)
         if spaceNo not in self.spaces:
             return
 
@@ -137,7 +137,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
         self.destoryDungeonSpace(spaceNo, spaceUUID, reason)
 
     def _kickoutPlayer(self, spaceNo):
-        DEBUG_MSG('_kickoutPlayer', spaceNo)
+        INFO_MSG('_kickoutPlayer', spaceNo)
         if spaceNo not in self.spaces:
             ERROR_MSG('wl: _kickoutPlayer: cannot find space', spaceNo)
             return
@@ -158,7 +158,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
 
 
     def applyCreateDungeon(self, playerBox, gbId, teamUUID, extra):
-        DEBUG_MSG("applyCreateDungeon::", playerBox, gbId, teamUUID, extra)
+        INFO_MSG("applyCreateDungeon::", playerBox, gbId, teamUUID, extra)
         if self.dungeonNo != extra['dungeonNo']:
             ERROR_MSG('applyCreateDungeon: SingleDungeonStub mismatch')
             return
@@ -231,7 +231,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
                 playerBox.cell.onSingleDungeonSpaceReady(sVal.spaceBox, sVal.spaceMgr, sVal.spaceMgr.id, spaceNo, playerBox, playerGbId, teamUUID, extra)
 
     def enterDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
-        DEBUG_MSG('wl :enterDungeonSpaceSucc', spaceNo, playerBox, playerGbId, extra['spaceUUID'])
+        INFO_MSG('wl :enterDungeonSpaceSucc', spaceNo, playerBox, playerGbId, extra['spaceUUID'])
         if spaceNo not in self.spaces:
             ERROR_MSG('wl: enterDungeonSpaceSucc cannot find space:', spaceNo)
             return
@@ -244,7 +244,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
         fVal.onAvatarEnter(playerGbId)
 
     def leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
-        DEBUG_MSG('wl :leaveDungeonSpaceSucc', spaceNo, playerBox, playerGbId, teamUUID, extra)
+        INFO_MSG('wl :leaveDungeonSpaceSucc', spaceNo, playerBox, playerGbId, teamUUID, extra)
         fVal = self.founders.getFounderVal(playerGbId, extra['spaceUUID'])
         if not fVal:
             #【【服务端log】[SingleDungeonStub(22019)]
@@ -262,7 +262,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
                 self.completeSingleDungeonForce(spaceNo, playerGbId, False)
 
     def onAvatarOffline(self, spaceNo, playerGbId):
-        DEBUG_MSG('wl :onAvatarOffline', spaceNo, playerGbId)
+        INFO_MSG('wl :onAvatarOffline', spaceNo, playerGbId)
         if spaceNo not in self.spaces:
             WARNING_MSG('wl: onAvatarOffline::cannot get space', spaceNo)
             return
@@ -280,7 +280,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
         return self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType, reliveHp)
 
     def onDungeonStarted(self, spaceNo, tCreate):
-        DEBUG_MSG('onDungeonStarted::', spaceNo, tCreate)
+        INFO_MSG('onDungeonStarted::', spaceNo, tCreate)
         if spaceNo not in self.spaces:
             ERROR_MSG('onDungeonStarted::cannot get space', spaceNo)
             return
@@ -316,7 +316,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
         return self._onSingleDungeonCompleted(spaceNo, playerGbId, win, delay)
 
     def _onSingleDungeonCompleted(self, spaceNo, playerGbId, win, delay):
-        DEBUG_MSG('in completeSingleDungeon:', spaceNo, playerGbId, win, delay)
+        INFO_MSG('in completeSingleDungeon:', spaceNo, playerGbId, win, delay)
         if spaceNo not in self.spaces:
             if playerGbId:
                 WARNING_MSG('_onSingleDungeonCompleted::cannot get space', spaceNo, playerGbId)
@@ -348,7 +348,7 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
             self._onSingleDungeonCompletedCallback(spaceNo, sVal.spaceUUID, playerGbId, win)
 
     def _onSingleDungeonCompletedCallback(self, spaceNo, spaceUUID, playerGbId, win):
-        DEBUG_MSG('_onSingleDungeonCompletedCallback::', spaceNo, spaceUUID, playerGbId, win)
+        INFO_MSG('_onSingleDungeonCompletedCallback::', spaceNo, spaceUUID, playerGbId, win)
         if spaceNo not in self.spaces:
             ERROR_MSG('_onSingleDungeonCompletedCallback::cannot get space', spaceNo)
             return

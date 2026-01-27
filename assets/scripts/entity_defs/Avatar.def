@@ -458,15 +458,15 @@
             <Default>       0                   </Default>
         </showCompleteNum>
 
-        <teleportInfoCache>
-            <Type>          PYTHON            </Type>
-            <Flags>         CELL_PRIVATE      </Flags>
-        </teleportInfoCache>
-
         <teleportInfoDict>
             <Type>          PY_DICT             </Type>
             <Flags>         CELL_PRIVATE        </Flags>
         </teleportInfoDict>
+
+        <teleportQueue>
+            <Type>          PY_LIST             </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+        </teleportQueue>
 
         <logInfo>
             <Type>          PYTHON        </Type>
@@ -708,6 +708,10 @@
         <onGetCellAppearance>
             <Arg>        APPEARANCE_INFO                </Arg>
         </onGetCellAppearance>
+
+        <transmitWithMapPointEnterFail>
+            <Arg>       INT32            </Arg>
+        </transmitWithMapPointEnterFail>
     </BaseMethods>
 
     <CellMethods>
@@ -928,8 +932,9 @@
         </onAppearanceOutfitUpdated>
 
         <onTeleportCasting>
-            <Arg>        UINT8        </Arg>
-            <Arg>        FLOAT        </Arg>
+            <Arg>        UINT8          </Arg>
+            <Arg>        FLOAT          </Arg>
+            <Arg>        DOUBLE         </Arg>
         </onTeleportCasting>
 
         <onNewBlazeId>

@@ -27,6 +27,18 @@ datas = _tools.RODict({
         "key": "auctionPriceMinNumMsg",
         "value": 54000135,
     }),
+    "auctionPriceMaxNumMsg": _tools.RODict({
+        "key": "auctionPriceMaxNumMsg",
+        "value": 54000261,
+    }),
+    "auctionUnitPriceMinMsg": _tools.RODict({
+        "key": "auctionUnitPriceMinMsg",
+        "value": 54000262,
+    }),
+    "auctionUnitPriceMaxMsg": _tools.RODict({
+        "key": "auctionUnitPriceMaxMsg",
+        "value": 54000263,
+    }),
     "auctionTaxRate": _tools.RODict({
         "key": "auctionTaxRate",
         "value": 10,
@@ -133,7 +145,7 @@ datas = _tools.RODict({
     }),
     "auctionPublicityTime": _tools.RODict({
         "key": "auctionPublicityTime",
-        "value": 8,
+        "value": ((2, 4), (3, 8), (4, 8)),
     }),
     "auctionOnSale": _tools.RODict({
         "key": "auctionOnSale",

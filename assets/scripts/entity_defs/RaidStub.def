@@ -109,6 +109,7 @@
             <Arg>   PYTHON          </Arg>
             <Arg>   STRING          </Arg>
             <Arg>   BOOL            </Arg>
+            <Arg>   INT8            </Arg>
         </applyJoinRaidLonely>
 
         <applyJoinRaidWithTeam>
@@ -531,14 +532,6 @@
             <Arg>           UINT8         </Arg>
             <Arg>           ENTITYCALL         </Arg>
         </checkDuoHunItemRaidMemberIds>
-
-        <reCreateOrJoinRaid>
-            <Arg>       MAILBOX         </Arg>
-            <Arg>       PLAYER_GBID     </Arg>
-            <Arg>       RAID_ID         </Arg>
-            <Arg>       UINT8           </Arg>
-            <Arg>       PY_LIST         </Arg>
-        </reCreateOrJoinRaid>
 
         <getRaidLeaderName>
             <Arg>       RAID_ID         </Arg>

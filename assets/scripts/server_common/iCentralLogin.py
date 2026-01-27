@@ -179,8 +179,8 @@ class ICentralLogin(object):
             return
 
         curAge = otherData.get('age', gameconst.LEGAL_AGE_OF_MAJORITY)
-        INFO_MSG('onVerifyLogin: antiAddictionData', gameglobal.antiAddictionData, curAge)
         antiAddictionSwitch = AASC.datas.get('antiAddictSwitchAge18', {}).get('value', 0)
+        INFO_MSG('onVerifyLogin: antiAddictionData', antiAddictionSwitch, gameglobal.antiAddictionData, curAge)
         if utils.isMinorAccount(curAge) and (antiAddictionSwitch or gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT):
             #fmtMessage = MMD.datas[AASC.datas['antiAddictForbiddenTime']['value']]['Message']
             fmtMessage = ""

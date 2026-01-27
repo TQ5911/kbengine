@@ -5,11 +5,29 @@
     </Interfaces>
 
     <Properties>
+        <cubeArena>
+            <Type>          CUBE_ARENA_DATA_INFO    </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+        </cubeArena>
+
+        <cubeArenaTimerId>
+            <Type>          TIMER_ID                </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </cubeArenaTimerId>
     </Properties>
 
     <CellMethods>
         <createTeleporterToCow>
             <Arg>       UINT8               </Arg>
         </createTeleporterToCow>
+
+        <destroyChanMap>
+        </destroyChanMap>
+
+        <createChapMan>
+            <Arg>       POSITION3D          </Arg>
+            <Arg>       FLOAT               </Arg>
+        </createChapMan>
     </CellMethods>
 </root>

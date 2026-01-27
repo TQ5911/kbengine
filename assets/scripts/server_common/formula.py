@@ -5,6 +5,7 @@ import gameconst
 import functools
 import random
 import math
+import cube_room
 
 import gamePlay_gamePlay as GGD
 import decimal
@@ -143,7 +144,7 @@ def isCubeSpace(spaceNo):
 
 def isCubeReady(spaceNo):
     _mapId = getMapId(spaceNo)
-    return _mapId == 3100
+    return cube_room.datas.get(_mapId, {}).get('type') == gameconst.CubeRoomType.READY
 
 
 def isWonderLandSpace(spaceNo):

@@ -171,7 +171,7 @@ class IMineWarBase(object):
             # 跑马灯
             mapCfg = MBMA.datas.get(mapId, {})
             mapName = mapCfg.get('name', '')
-            self.onMessagePre(utils.getNeedTranslateMsgId(msgId), [info['leaderName'], utils.getNeedTranslateArg(mapName)])
+            self.onMessagePre(utils.getNeedTranslateMsgId(msgId), [info['guildName'], info['leaderName'], utils.getNeedTranslateArg(mapName)])
 
             # 邮件
             mailId = MBC.datas['mineBatte_occupyMail']['value']
@@ -180,7 +180,7 @@ class IMineWarBase(object):
             mailAssistor.sendMailToPlayers(
                 [self.gbID],
                 mailId,
-                despArgs=(info['leaderName'], mapName),
+                despArgs=(info['guildName'], info['leaderName'], mapName),
                 opUUID=KBEngine.genUUID64(),
                 title=title, cont=content,
             )
@@ -466,6 +466,13 @@ class IMineWarBase(object):
         revenue = self.getMineWarFactor() * 100
 
         self.client.onGetMineWarCollectInfo(leftTime, revenue)
+
+    def reqMineWarFlagHp(self, exposed, mapId):
+        """
+        客户端请求矿战荣誉旗帜血量
+        """
+        # INFO_MSG('iMineWarBase.reqMineWarFlagHp called for player:', self.id, 'mapId:', mapId)
+        gameengine.getGlobalBase('MineWarStub').doGetMineWarFlagHp(mapId, self)
 
     # ======================================  客户端回调 ======================================
 

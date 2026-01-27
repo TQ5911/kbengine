@@ -27,7 +27,7 @@
 
 		// 是否使用别名机制
 		// 这个参数的选择必须与kbengine_defs.xml::cellapp/aliasEntityID的参数保持一致
-		public bool useAliasEntityID = true;
+		public bool useAliasEntityID = false;
 
         // 在Entity初始化时是否触发属性的set_*事件(callPropertysSetMethods)
         public bool isOnInitCallPropertysSetMethods = true;

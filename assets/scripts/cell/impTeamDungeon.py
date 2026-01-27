@@ -131,7 +131,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
                 playerBaseVal.playerBox.cell.checkMemberTeamDungeonConditions(dungeonNo, extra)
 
     def checkMemberTeamDungeonConditions(self, dungeonNo, extra):
-        DEBUG_MSG("checkMemberTeamDungeonConditions::", dungeonNo, extra)
+        INFO_MSG("checkMemberTeamDungeonConditions::", dungeonNo, extra)
         captainBox = self.teamInfo.getCaptainBox()
         if not captainBox:
             ERROR_MSG("checkMemberTeamDungeonConditions::captainBox not found", self.teamInfo.teamCaptainGbId, self.teamId)
@@ -228,7 +228,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
 
         if self._stillCheckingCondition(gbId, checkBox):
             # team condition check: checker not complete
-            DEBUG_MSG('onCheckTeamDungeonConditions::team still checking...')
+            INFO_MSG('onCheckTeamDungeonConditions::team still checking...')
             return
 
         checkFlag = False
@@ -272,7 +272,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
 
         teammateConfirm = False#self._getPrmBydungeonNo(dungeonNo, 'teammateConfirm')
         if teammateConfirm and not _allTeammateAutoComplete:
-            DEBUG_MSG('onCheckTeamDungeonConditions:: need confirm...')
+            INFO_MSG('onCheckTeamDungeonConditions:: need confirm...')
             fnName, args, timeout = self.getTeamDungeonTeammateConfimFunction(dungeonNo, dungeonPlayMode, _allMeregueIdDict, _goodManList)
 
             if self.hasTempMiscProp(gameconst.AvatarProps.teamDungeonTeammateConfirmRecord):
@@ -312,7 +312,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         return fnName, args, timeout
 
     def _handleTeamDungeonCheckConditionsFailedMsg(self, dungeonPlayMode, dungeonNo):
-        DEBUG_MSG("_handleTeamDungeonCheckConditionsFailedMsg::", dungeonPlayMode, dungeonNo, self.tDungeonCheckDic)
+        INFO_MSG("_handleTeamDungeonCheckConditionsFailedMsg::", dungeonPlayMode, dungeonNo, self.tDungeonCheckDic)
         m_tr = gameconst.TeamDungeonCheckConditionErrno
 
         _scoreFailedNameList = []
@@ -367,7 +367,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def onTeammateBeConfirmed(self, exposed, dungeonNo, confirmed):
-        DEBUG_MSG('onTeammateBeConfirmed::', dungeonNo, confirmed)
+        INFO_MSG('onTeammateBeConfirmed::', dungeonNo, confirmed)
         if not self.isInTeam(self.gbId):
             return
 
@@ -417,7 +417,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         # 【【任务】上灵试练进入流程调整-服务端】
         # checkBox为False时不等待, 直接失败
         if checkBox and self._stillCheckingCondition(gbId, checkBox):
-            DEBUG_MSG('_onTeammateBeConfirmed::team skill confirmed...')
+            INFO_MSG('_onTeammateBeConfirmed::team skill confirmed...')
             return
 
         checkFlag = False
@@ -455,7 +455,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         self.popTempMiscProp(gameconst.AvatarProps.teamDungeonTeammateConfirmRecord)
 
     def autoCancelDungeonTeammateBeConfirmed(self):
-        DEBUG_MSG("autoCancelDungeonTeammateBeConfirmed::~")
+        INFO_MSG("autoCancelDungeonTeammateBeConfirmed::~")
         if not self.hasTempMiscProp(gameconst.AvatarProps.teamDungeonTeammateConfirmRecord):
             return
 
@@ -558,11 +558,11 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         return True
 
     def selfEnterTeamDungeon(self, dungeonNo, src):
-        DEBUG_MSG('in enterTeamDungeon::selfEnterTeamDungeon:', dungeonNo, src)
+        INFO_MSG('in enterTeamDungeon::selfEnterTeamDungeon:', dungeonNo, src)
         return self._enterTeamDungeon(dungeonNo, src)
 
     def gmEnterTeamDungeon(self, dungeonNo, src):
-        DEBUG_MSG('gm enterTeamDungeon: {}'.format(dungeonNo), src)
+        INFO_MSG('gm enterTeamDungeon: {}'.format(dungeonNo), src)
         teamStub = gameengine.getTeamStub(self.teamId)
         extra = {'src': src}
         teamStub.enterTeamDungeon(self.base, self.gbId, self.teamId, dungeonNo, extra)
@@ -572,10 +572,14 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
     @gamedecorator.limitcall(5)
     def leaveTeamDungeon(self, exposed):
         INFO_MSG("leaveTeamDungeon::~")
+        self.leaveTeamDungeonCell()
+
+    def leaveTeamDungeonCell(self):
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
         self._leaveTeamDungeon(src)
 
     def _leaveTeamDungeon(self, src):
+        INFO_MSG('_leaveTeamDungeon ', src)
         teamStub = gameengine.getTeamStub(self.teamId)
         dungeonNo = formula.getMapId(self.spaceNo)
 
@@ -622,7 +626,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
     # Callbacks
 
     def onReadyCheckTeamDungeon(self, dungeonNo, extraInfo):
-        DEBUG_MSG('onReadyCheckTeamDungeon::', dungeonNo, extraInfo)
+        INFO_MSG('onReadyCheckTeamDungeon::', dungeonNo, extraInfo)
 
         if 'createAndEnter' in extraInfo and extraInfo['createAndEnter']:
             # lock for team captain
@@ -636,7 +640,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
             teamStub.createTeamDungeon(self.base, self.gbId, dungeonNo, self.teamId, extraInfo)
 
     def doEnterTeamDungeon(self, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
-        DEBUG_MSG('doEnterTeamDungeon::')
+        INFO_MSG('doEnterTeamDungeon::')
         if extra.get('createAndEnter', 0) != self.gbId:
             # lock for team members
             _now = utils.getNow()
@@ -653,9 +657,10 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         # enter directly
         self.readyUseItemAndEnterTeamDungeon(0, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra)
 
+    @gamedecorator.teleportInQueue
     def readyUseItemAndEnterTeamDungeon(self, state, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra):
         """在这里进入副本"""
-        DEBUG_MSG('readyUseItemAndEnterTeamDungeon::')
+        INFO_MSG('readyUseItemAndEnterTeamDungeon::')
         if state != 0:
             ERROR_MSG('Enter TeamDungeon Failed, use item error: code={}, spaceNo={}'.format(state, spaceNo))
             return
@@ -709,7 +714,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
             if exitCount == self.DEFAULT_EXIT_COUNT:
                 self.showMsg(MMD.datas.leavingDungeonArea, [str(exitCount)])
 
-            DEBUG_MSG('_teamDungeonTrapCallback::outside team dungeon range, '
+            INFO_MSG('_teamDungeonTrapCallback::outside team dungeon range, '
                       'exit in {}s'.format(exitCount * 1))
             exitCount -= 1
         elif self.DEFAULT_EXIT_COUNT != exitCount:

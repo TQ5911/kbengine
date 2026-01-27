@@ -27,7 +27,7 @@ class ImpTalk(object):
         # if the npc talk is not being interrupted, then continue the process
         if not isNPCTalkDone:
             self.doNPCTalk(npcEntityID, npcId, taskId, dialogId, idx)
-            DEBUG_MSG('in _doTalkToNPC, doNPCTalk:', npcEntityID, npcId, taskId, dialogId, idx)
+            INFO_MSG('in _doTalkToNPC, doNPCTalk:', npcEntityID, npcId, taskId, dialogId, idx)
 
     def makeTalkToNPC(self, npcEntityId, npcId, taskId, dialogId, idx):
         self._doTalkToNPC(npcEntityId, npcId, taskId, dialogId, idx)
@@ -39,7 +39,7 @@ class ImpTalk(object):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def talkToNpc(self, exposed, npcEntityId, taskId, dialogId, idx):
-        DEBUG_MSG('in talkToNpc:', taskId, npcEntityId, dialogId, idx)
+        INFO_MSG('in talkToNpc:', taskId, npcEntityId, dialogId, idx)
         npcId = 0
         if npcEntityId:
             ent = KBEngine.entities.get(npcEntityId)
@@ -68,7 +68,7 @@ class ImpTalk(object):
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def talkToClientNpc(self, exposed, npcId, taskId, dialogId, idx):
-        DEBUG_MSG('in talkToClientNpc:', taskId, npcId, dialogId, idx)
+        INFO_MSG('in talkToClientNpc:', taskId, npcId, dialogId, idx)
         self.makeTalkToNPC(0, npcId, taskId, dialogId, idx)
 
     # npc talk
@@ -93,7 +93,7 @@ class ImpTalk(object):
 
         param_str = dialogData.get('parm')
         param_list = param_str.split('|')
-        DEBUG_MSG('in _checkDialogEventConfig:', event_list, param_list)
+        INFO_MSG('in _checkDialogEventConfig:', event_list, param_list)
         if 0 < len(event_list) < idx:
             ERROR_MSG('in _checkDialogEventConfig, event idx error:', idx)
             return

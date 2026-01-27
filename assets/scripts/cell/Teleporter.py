@@ -77,6 +77,7 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
         self._doTeleport(user, desTelId, lineNo, src)
 
     def doTeleport(self, exposed, desTelId, lineNo=-1):
+        lineNo = -1
         INFO_MSG('doTeleport::~', exposed, desTelId, lineNo)
         user = KBEngine.entities.get(exposed)
         if self._checkBadEnt(user):
@@ -94,14 +95,12 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
             user.enterCubeByMapIds([self.getMapIdByCustomId()])
             return
 
-        src = dungeonSrc.DungeonFromClientSrc(user.base, user.gbId)
-        lineType = utils.getLineTypeFromCfgGameEntityId(desTelId)
-
-        spaceNo = formula.getLineSpaceNo(lineType, 0)
-        if formula.isCubeSpace(spaceNo):
-            user.enterCubeByMapIds([lineType])
+        if formula.isCubeSpace(self.spaceNo):
+            user.doRandomCubeRoom()
             return
 
+        src = dungeonSrc.DungeonFromClientSrc(user.base, user.gbId)
+        lineType = utils.getLineTypeFromCfgGameEntityId(desTelId)
         self._doTeleport(user, desTelId, lineType, lineNo, src)
 
     def getMapIdByCustomId(self):

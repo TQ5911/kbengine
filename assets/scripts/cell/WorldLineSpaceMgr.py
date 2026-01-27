@@ -12,6 +12,7 @@ import creep_base
 import const_const as CONST
 import gameglobal
 import iMineWarSpaceMgr
+import branchData_set as BDS
 
 class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWarSpaceMgr.IMineWarSpaceMgr):
     def __init__(self):
@@ -36,6 +37,10 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         if not formula.isMineWarSpace(self.spaceNo):
             self._callback(0.1, '_loadEntities', (), gametimer.TIMER_TAG_WORLD_LINE_LOAD_ENTITIES)
         self.addDatetimeTimerTick()
+
+        #每分钟统计一次当前line活跃人数(5分钟内进入过战斗状态)
+        self.pyAddTimer(1, 60, gametimer.STATISTIC_FIGHTING_COUNT)
+        self.fightingPlayersCnt = 0
 
     def _loadEntities(self):
         _space = gameglobal.localSpaceIDMap[self.spaceID]
@@ -94,6 +99,8 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
             self._onTimerCallback(tid)
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userArg == gametimer.STATISTIC_FIGHTING_COUNT:
+            self._statisticFightingCount()
         else:
             self._onTimer(tid, userArg)
 
@@ -132,6 +139,7 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
 
     def onWorldBossDead(self, refreshTime):
         DEBUG_MSG('onWorldBossDead', self.spaceNo, refreshTime, CONST.datas['bossRefreshSystem']['value'])
+        self.setSceneStates([gameconst.WorldLineSceneState.THUNDER])
         _delay = CONST.datas['messageDelayAfterDeath']['value']
         self._callback(_delay, 'setSceneStates', ([gameconst.WorldLineSceneState.LEI_JI],), gametimer.TIMER_TAG_BOSS_DEAD_SET_SCENE_STATE)
 
@@ -153,3 +161,20 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
 
         _nextCreateTime = _now + refreshTime
         _stub.onWorldBossDeadAddTimer(self.spaceNo, _nextCreateTime)
+
+    def _statisticFightingCount(self):
+        now = utils.getNow()
+        lastCnt = self.fightingPlayersCnt
+        self.fightingPlayersCnt = 0
+        dt = BDS.datas["Branch_activePlayer"]["value"] * 60
+        for pid in self.players:
+            ent = KBEngine.entities.get(pid)
+            if not ent:
+                continue
+            #5分钟内有进入过战斗视为"活跃用户"
+            if now - ent.lastFightTime < dt:
+                self.fightingPlayersCnt += 1
+
+        if lastCnt != self.fightingPlayersCnt:
+            stubName = 'WorldLineStub{}'.format(formula.getMapId(self.spaceNo))
+            gameengine.getGlobalBase(stubName).onFightingPlayersCntSync(formula.getLineNo(self.spaceNo), self.fightingPlayersCnt)

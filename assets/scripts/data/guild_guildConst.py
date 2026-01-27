@@ -57,11 +57,11 @@ datas = _tools.RODict({
     }),
     "guildCreateLevelRequire": _tools.RODict({
         "key": "guildCreateLevelRequire",
-        "value": 17,
+        "value": 16,
     }),
     "guildJoinLevelRequire": _tools.RODict({
         "key": "guildJoinLevelRequire",
-        "value": 17,
+        "value": 16,
     }),
     "guildMoneyToCoinRatio": _tools.RODict({
         "key": "guildMoneyToCoinRatio",
@@ -117,7 +117,7 @@ datas = _tools.RODict({
     }),
     "guildSwitchCooldown": _tools.RODict({
         "key": "guildSwitchCooldown",
-        "value": 2,
+        "value": 1,
     }),
     "guildAutoApplyNum": _tools.RODict({
         "key": "guildAutoApplyNum",
@@ -722,5 +722,9 @@ datas = _tools.RODict({
     "guild_guildLvNotEnough_msg": _tools.RODict({
         "key": "guild_guildLvNotEnough_msg",
         "value": 54990063,
+    }),
+    "guild_accessMethodMsg": _tools.RODict({
+        "key": "guild_accessMethodMsg",
+        "value": 54000598,
     })
 })

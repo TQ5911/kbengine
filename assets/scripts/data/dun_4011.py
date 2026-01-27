@@ -31,6 +31,32 @@ datas ={
       "ShowMonsterGroupID": ""
     }
   },
+  "40114001": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 126.2778,
+    "DisplayName": "",
+    "EntityID": 18000737,
+    "ID": 40114001,
+    "Name": "\u767d\u5ddd\u6c34",
+    "PosX": 238.4577,
+    "PosY": 119.403,
+    "PosZ": 444.7597,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": "11",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
   "40118001": {
     "ActivityID": 0,
     "AttachedGIDList": [],

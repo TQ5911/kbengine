@@ -12,12 +12,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236006,
           "ID": 10270001,
-          "PosX": 271.9487,
-          "PosY": 75.86946,
-          "PosZ": 526.7544,
+          "PosX": 271.4419,
+          "PosY": 76.26633,
+          "PosZ": 522.1368,
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": "22",
             "MonsterGroupID": "",
@@ -27,6 +28,7 @@ datas ={
             "RefreshTime": 0.0,
             "RefreshTimedID": 2,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -46,6 +48,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 43,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": "22",
             "MonsterGroupID": "",
@@ -55,6 +58,7 @@ datas ={
             "RefreshTime": 0.0,
             "RefreshTimedID": 2,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -64,16 +68,17 @@ datas ={
           "ClassName": "Monster",
           "ClassNameType": 0,
           "CustomID": "",
-          "Dir": 200.9009,
+          "Dir": 272.0349,
           "DisplayName": "",
           "EntityID": 11236002,
           "ID": 10270003,
-          "PosX": 521.2795,
-          "PosY": 106.7155,
-          "PosZ": 306.0854,
+          "PosX": 541.2115,
+          "PosY": 106.4349,
+          "PosZ": 310.9303,
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": "22",
             "MonsterGroupID": "",
@@ -83,6 +88,7 @@ datas ={
             "RefreshTime": 0.0,
             "RefreshTimedID": 2,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -96,12 +102,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236003,
           "ID": 10270004,
-          "PosX": 364.2089,
-          "PosY": 98.4055,
-          "PosZ": 312.5832,
+          "PosX": 344.312,
+          "PosY": 98.79782,
+          "PosZ": 296.707,
           "Props": {
             "GroupID": "",
             "Level": 45,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": "22",
             "MonsterGroupID": "",
@@ -111,6 +118,7 @@ datas ={
             "RefreshTime": 0.0,
             "RefreshTimedID": 2,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -124,12 +132,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236005,
           "ID": 10270005,
-          "PosX": 539.7095,
-          "PosY": 86.67525,
-          "PosZ": 180.2111,
+          "PosX": 540.8906,
+          "PosY": 87.48067,
+          "PosZ": 175.1042,
           "Props": {
             "GroupID": "",
             "Level": 46,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": "22",
             "MonsterGroupID": "",
@@ -139,6 +148,7 @@ datas ={
             "RefreshTime": 0.0,
             "RefreshTimedID": 2,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -152,9 +162,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236004,
           "ID": 10270006,
-          "PosX": 452.5512,
-          "PosY": 48.04586,
-          "PosZ": 239.1672,
+          "PosX": 454.7817,
+          "PosY": 48.0203,
+          "PosZ": 251.1413,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -1196,6 +1206,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 13,
@@ -1205,6 +1216,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -1666,12 +1678,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236013,
           "ID": 10270060,
-          "PosX": 517.385742,
-          "PosY": 106.640327,
-          "PosZ": 352.34024,
+          "PosX": 517.3857,
+          "PosY": 106.6403,
+          "PosZ": 352.3402,
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 18,
@@ -1681,6 +1694,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -1700,6 +1714,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 19,
@@ -1709,6 +1724,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -1784,6 +1800,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 20,
@@ -1793,6 +1810,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -1868,6 +1886,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 21,
@@ -1877,6 +1896,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -1952,6 +1972,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 22,
@@ -1961,6 +1982,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -1980,6 +2002,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 22,
@@ -1989,6 +2012,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -2030,12 +2054,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236012,
           "ID": 10270073,
-          "PosX": 535.8113,
-          "PosY": 106.349327,
-          "PosZ": 305.499084,
+          "PosX": 508.555634,
+          "PosY": 105.251938,
+          "PosZ": 292.9303,
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 23,
@@ -2045,6 +2070,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -2058,9 +2084,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236014,
           "ID": 10270074,
-          "PosX": 531.6609,
-          "PosY": 106.693771,
-          "PosZ": 308.151,
+          "PosX": 504.405273,
+          "PosY": 104.8911,
+          "PosZ": 295.582184,
           "Props": {
             "GroupID": "",
             "Level": 42,
@@ -2086,9 +2112,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236014,
           "ID": 10270075,
-          "PosX": 531.1771,
-          "PosY": 106.692,
-          "PosZ": 302.19928,
+          "PosX": 503.921448,
+          "PosY": 104.275932,
+          "PosZ": 289.630463,
           "Props": {
             "GroupID": "",
             "Level": 42,
@@ -2114,12 +2140,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236012,
           "ID": 10270076,
-          "PosX": 541.368835,
-          "PosY": 106.746346,
-          "PosZ": 315.4937,
+          "PosX": 522.788757,
+          "PosY": 106.742523,
+          "PosZ": 303.406219,
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 24,
@@ -2129,6 +2156,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -2142,9 +2170,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236014,
           "ID": 10270077,
-          "PosX": 537.218445,
-          "PosY": 107.024513,
-          "PosZ": 318.145569,
+          "PosX": 518.6383,
+          "PosY": 106.756821,
+          "PosZ": 306.0581,
           "Props": {
             "GroupID": "",
             "Level": 42,
@@ -2170,9 +2198,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236014,
           "ID": 10270078,
-          "PosX": 536.7343,
-          "PosY": 106.549965,
-          "PosZ": 312.1935,
+          "PosX": 518.1543,
+          "PosY": 106.74733,
+          "PosZ": 300.106049,
           "Props": {
             "GroupID": "",
             "Level": 42,
@@ -2204,6 +2232,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 42,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 25,
@@ -2213,6 +2242,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -2288,6 +2318,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 43,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 26,
@@ -2297,6 +2328,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -2424,10 +2456,11 @@ datas ={
           "ID": 10270087,
           "PosX": 305.5856,
           "PosY": 72.99575,
-          "PosZ": 404.399872,
+          "PosZ": 404.3999,
           "Props": {
             "GroupID": "",
             "Level": 43,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 27,
@@ -2437,6 +2470,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -2876,6 +2910,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 43,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 33,
@@ -2885,6 +2920,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -3066,12 +3102,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236010,
           "ID": 10270110,
-          "PosX": 245.689484,
-          "PosY": 55.9963646,
-          "PosZ": 247.912872,
+          "PosX": 245.6895,
+          "PosY": 55.99636,
+          "PosZ": 247.9129,
           "Props": {
             "GroupID": "",
             "Level": 43,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 35,
@@ -3081,6 +3118,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -3319,11 +3357,12 @@ datas ={
           "EntityID": 11236010,
           "ID": 10270119,
           "PosX": 264.1208,
-          "PosY": 55.8239365,
-          "PosZ": 236.804871,
+          "PosY": 55.82394,
+          "PosZ": 236.8049,
           "Props": {
             "GroupID": "",
             "Level": 43,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 38,
@@ -3333,6 +3372,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -3880,9 +3920,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236023,
           "ID": 10270139,
-          "PosX": 464.35,
-          "PosY": 47.91744,
-          "PosZ": 244.4,
+          "PosX": 464.6163,
+          "PosY": 48.0215149,
+          "PosZ": 236.603378,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -3910,9 +3950,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236025,
           "ID": 10270140,
-          "PosX": 460.199738,
-          "PosY": 48.01987,
-          "PosZ": 247.052292,
+          "PosX": 460.466,
+          "PosY": 48.02353,
+          "PosZ": 239.255661,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -3938,9 +3978,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236025,
           "ID": 10270141,
-          "PosX": 459.715546,
-          "PosY": 48.0301361,
-          "PosZ": 241.1004,
+          "PosX": 459.98175,
+          "PosY": 48.02353,
+          "PosZ": 233.303757,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -3966,9 +4006,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236023,
           "ID": 10270142,
-          "PosX": 452.334137,
-          "PosY": 48.02353,
-          "PosZ": 248.574066,
+          "PosX": 442.0,
+          "PosY": 48.0252,
+          "PosZ": 237.3,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -3996,9 +4036,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236025,
           "ID": 10270143,
-          "PosX": 448.184265,
-          "PosY": 48.0211678,
-          "PosZ": 251.226532,
+          "PosX": 437.850128,
+          "PosY": 48.02353,
+          "PosZ": 239.9524,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -4024,9 +4064,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236025,
           "ID": 10270144,
-          "PosX": 447.699951,
-          "PosY": 48.0240326,
-          "PosZ": 245.274689,
+          "PosX": 437.365845,
+          "PosY": 48.02353,
+          "PosZ": 234.000549,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -4052,9 +4092,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236023,
           "ID": 10270145,
-          "PosX": 440.2578,
+          "PosX": 433.9,
           "PosY": 48.02246,
-          "PosZ": 233.1562,
+          "PosZ": 228.67,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -4082,9 +4122,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236025,
           "ID": 10270146,
-          "PosX": 436.1079,
+          "PosX": 429.7501,
           "PosY": 47.8720436,
-          "PosZ": 235.8089,
+          "PosZ": 231.3227,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -4110,9 +4150,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236025,
           "ID": 10270147,
-          "PosX": 435.623657,
+          "PosX": 429.265839,
           "PosY": 47.886795,
-          "PosZ": 229.856934,
+          "PosZ": 225.370728,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -4138,9 +4178,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236023,
           "ID": 10270148,
-          "PosX": 453.8994,
+          "PosX": 450.2,
           "PosY": 48.02353,
-          "PosZ": 231.221481,
+          "PosZ": 229.4,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -4168,9 +4208,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236025,
           "ID": 10270149,
-          "PosX": 449.749481,
+          "PosX": 446.050079,
           "PosY": 48.02353,
-          "PosZ": 233.874176,
+          "PosZ": 232.052673,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -4196,9 +4236,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236025,
           "ID": 10270150,
-          "PosX": 449.265472,
+          "PosX": 445.566071,
           "PosY": 48.034153,
-          "PosZ": 227.922348,
+          "PosZ": 226.100845,
           "Props": {
             "GroupID": "",
             "Level": 44,
@@ -4848,6 +4888,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 44,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 58,
@@ -4857,6 +4898,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -5010,12 +5052,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236029,
           "ID": 10270185,
-          "PosX": 571.363464,
-          "PosY": 83.0854645,
-          "PosZ": 354.995758,
+          "PosX": 571.3635,
+          "PosY": 83.08546,
+          "PosZ": 354.9958,
           "Props": {
             "GroupID": "",
             "Level": 46,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 60,
@@ -5025,6 +5068,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -5096,10 +5140,11 @@ datas ={
           "ID": 10270188,
           "PosX": 581.9274,
           "PosY": 83.1055,
-          "PosZ": 361.638275,
+          "PosZ": 361.6383,
           "Props": {
             "GroupID": "",
             "Level": 46,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 61,
@@ -5109,6 +5154,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -5766,12 +5812,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236030,
           "ID": 10270212,
-          "PosX": 570.279846,
+          "PosX": 570.2798,
           "PosY": 82.93194,
-          "PosZ": 227.650864,
+          "PosZ": 227.6509,
           "Props": {
             "GroupID": "",
             "Level": 46,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 69,
@@ -5781,6 +5828,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -6186,12 +6234,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236030,
           "ID": 10270227,
-          "PosX": 535.769531,
-          "PosY": 82.8975143,
-          "PosZ": 233.566711,
+          "PosX": 535.7695,
+          "PosY": 82.89751,
+          "PosZ": 233.5667,
           "Props": {
             "GroupID": "",
             "Level": 46,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 74,
@@ -6201,6 +6250,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -6438,12 +6488,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236030,
           "ID": 10270236,
-          "PosX": 551.310242,
+          "PosX": 551.3102,
           "PosY": 86.65404,
-          "PosZ": 174.312759,
+          "PosZ": 174.3128,
           "Props": {
             "GroupID": "",
             "Level": 46,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 77,
@@ -6453,6 +6504,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -6668,6 +6720,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 45,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 80,
@@ -6677,6 +6730,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -6802,12 +6856,13 @@ datas ={
           "DisplayName": "",
           "EntityID": 11236017,
           "ID": 10270249,
-          "PosX": 451.436127,
+          "PosX": 451.4361,
           "PosY": 98.37861,
-          "PosZ": 317.180939,
+          "PosZ": 317.1809,
           "Props": {
             "GroupID": "",
             "Level": 45,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 81,
@@ -6817,6 +6872,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -7396,6 +7452,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 45,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 88,
@@ -7405,6 +7462,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -7424,6 +7482,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 46,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 92,
@@ -7433,6 +7492,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e8c\u4eba\u7ec4"
           }
         },
@@ -7760,6 +7820,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 46,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 97,
@@ -7769,6 +7830,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -7788,6 +7850,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 46,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 97,
@@ -7797,6 +7860,7 @@ datas ={
             "RefreshTime": 20.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -7816,15 +7880,17 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 43,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 98,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -7850,7 +7916,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -7878,7 +7944,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -7906,7 +7972,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -7934,7 +8000,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -7962,7 +8028,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -7990,7 +8056,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8018,7 +8084,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8046,7 +8112,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8074,7 +8140,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8102,7 +8168,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8130,7 +8196,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8158,7 +8224,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8186,7 +8252,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8214,7 +8280,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8242,7 +8308,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8270,7 +8336,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8298,7 +8364,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8326,7 +8392,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8354,7 +8420,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8382,7 +8448,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8410,7 +8476,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8438,7 +8504,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8466,7 +8532,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8494,7 +8560,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8522,7 +8588,7 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
@@ -8544,15 +8610,17 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 43,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 106,
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 20.0,
+            "RefreshTime": 10.0,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
           }
         },
@@ -8572,6 +8640,7 @@ datas ={
           "Props": {
             "GroupID": 1,
             "Level": 45,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -8684,9 +8753,13 @@ datas ={
               ]
             ],
             "RefreshNum": 1,
-            "RefreshTime": 1800.0,
+            "RefreshTime": [
+              1600.0,
+              2000.0
+            ],
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         }
@@ -8709,6 +8782,7 @@ datas ={
             "CameraId": 0,
             "GateType": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "TelDir": 97.95319,
             "TelX": 165.2521,
             "TelY": 75.96454,
@@ -8721,21 +8795,22 @@ datas ={
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10288003",
-          "Dir": 334.5763,
+          "Dir": 154.9398,
           "DisplayName": "",
           "EntityID": 17102302,
           "ID": 10278004,
-          "PosX": 147.2018,
-          "PosY": 47.8637,
-          "PosZ": 285.89,
+          "PosX": 142.45,
+          "PosY": 49.85656,
+          "PosZ": 296.09,
           "Props": {
             "CameraId": 33102302,
             "GateType": 0,
             "Remark": "",
-            "TelDir": 157.0314,
-            "TelX": 153.2999,
-            "TelY": 47.2637,
-            "TelZ": 273.3872
+            "ShowInSceneMap": 1,
+            "TelDir": 156.3662,
+            "TelX": 147.9129,
+            "TelY": 48.21656,
+            "TelZ": 284.3596
           }
         },
         "10278005": {
@@ -8744,21 +8819,22 @@ datas ={
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "10288004",
-          "Dir": 122.6349,
+          "Dir": 300.647,
           "DisplayName": "",
           "EntityID": 17102401,
           "ID": 10278005,
-          "PosX": 570.3375,
-          "PosY": 47.80619,
-          "PosZ": 116.8239,
+          "PosX": 578.34,
+          "PosY": 50.07375,
+          "PosZ": 111.94,
           "Props": {
             "CameraId": 33102302,
             "GateType": 0,
             "Remark": "",
-            "TelDir": 293.8183,
-            "TelX": 553.3882,
-            "TelY": 46.51619,
-            "TelZ": 125.1249
+            "ShowInSceneMap": 1,
+            "TelDir": 301.6273,
+            "TelX": 567.319,
+            "TelY": 48.15375,
+            "TelZ": 118.5282
           }
         },
         "10278006": {
@@ -8771,17 +8847,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17102502,
           "ID": 10278006,
-          "PosX": 235.4847,
-          "PosY": 84.71618,
-          "PosZ": 155.0734,
+          "PosX": 235.6232,
+          "PosY": 86.98374,
+          "PosZ": 147.09,
           "Props": {
             "CameraId": 33102301,
             "GateType": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "TelDir": 0.0,
-            "TelX": 235.4247,
-            "TelY": 84.71618,
-            "TelZ": 159.8734
+            "TelX": 235.5932,
+            "TelY": 85.00374,
+            "TelZ": 159.99
           }
         }
       },
@@ -8953,12 +9030,13 @@ datas ={
         "DisplayName": "",
         "EntityID": 11236006,
         "ID": 10270001,
-        "PosX": 271.9487,
-        "PosY": 75.86946,
-        "PosZ": 526.7544,
+        "PosX": 271.4419,
+        "PosY": 76.26633,
+        "PosZ": 522.1368,
         "Props": {
           "GroupID": "",
           "Level": 42,
+          "LightPillar": "",
           "MapEntityScale": 0,
           "MapEntityType": "22",
           "MonsterGroupID": "",
@@ -8968,6 +9046,7 @@ datas ={
           "RefreshTime": 0.0,
           "RefreshTimedID": 2,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "ShowMonsterGroupID": ""
         }
       },
@@ -8987,6 +9066,7 @@ datas ={
         "Props": {
           "GroupID": "",
           "Level": 43,
+          "LightPillar": "",
           "MapEntityScale": 0,
           "MapEntityType": "22",
           "MonsterGroupID": "",
@@ -8996,6 +9076,7 @@ datas ={
           "RefreshTime": 0.0,
           "RefreshTimedID": 2,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "ShowMonsterGroupID": ""
         }
       },
@@ -9005,16 +9086,17 @@ datas ={
         "ClassName": "Monster",
         "ClassNameType": 0,
         "CustomID": "",
-        "Dir": 200.9009,
+        "Dir": 272.0349,
         "DisplayName": "",
         "EntityID": 11236002,
         "ID": 10270003,
-        "PosX": 521.2795,
-        "PosY": 106.7155,
-        "PosZ": 306.0854,
+        "PosX": 541.2115,
+        "PosY": 106.4349,
+        "PosZ": 310.9303,
         "Props": {
           "GroupID": "",
           "Level": 42,
+          "LightPillar": "",
           "MapEntityScale": 0,
           "MapEntityType": "22",
           "MonsterGroupID": "",
@@ -9024,6 +9106,7 @@ datas ={
           "RefreshTime": 0.0,
           "RefreshTimedID": 2,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "ShowMonsterGroupID": ""
         }
       },
@@ -9037,12 +9120,13 @@ datas ={
         "DisplayName": "",
         "EntityID": 11236003,
         "ID": 10270004,
-        "PosX": 364.2089,
-        "PosY": 98.4055,
-        "PosZ": 312.5832,
+        "PosX": 344.312,
+        "PosY": 98.79782,
+        "PosZ": 296.707,
         "Props": {
           "GroupID": "",
           "Level": 45,
+          "LightPillar": "",
           "MapEntityScale": 0,
           "MapEntityType": "22",
           "MonsterGroupID": "",
@@ -9052,6 +9136,7 @@ datas ={
           "RefreshTime": 0.0,
           "RefreshTimedID": 2,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "ShowMonsterGroupID": ""
         }
       },
@@ -9065,12 +9150,13 @@ datas ={
         "DisplayName": "",
         "EntityID": 11236005,
         "ID": 10270005,
-        "PosX": 539.7095,
-        "PosY": 86.67525,
-        "PosZ": 180.2111,
+        "PosX": 540.8906,
+        "PosY": 87.48067,
+        "PosZ": 175.1042,
         "Props": {
           "GroupID": "",
           "Level": 46,
+          "LightPillar": "",
           "MapEntityScale": 0,
           "MapEntityType": "22",
           "MonsterGroupID": "",
@@ -9080,6 +9166,7 @@ datas ={
           "RefreshTime": 0.0,
           "RefreshTimedID": 2,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "ShowMonsterGroupID": ""
         }
       },
@@ -9093,9 +9180,9 @@ datas ={
         "DisplayName": "",
         "EntityID": 11236004,
         "ID": 10270006,
-        "PosX": 452.5512,
-        "PosY": 48.04586,
-        "PosZ": 239.1672,
+        "PosX": 454.7817,
+        "PosY": 48.0203,
+        "PosZ": 251.1413,
         "Props": {
           "GroupID": "",
           "Level": 44,
@@ -10880,6 +10967,26 @@ datas ={
         "PosX": 401.7554,
         "PosY": 48.00908,
         "PosZ": 180.9498,
+        "Props": {
+          "Remark": "",
+          "ShowInSceneMap": 1
+        }
+      }
+    },
+    "BreakAwayStuckPos": {
+      "10278111": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 92.95791,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 10278111,
+        "PosX": 168.7088,
+        "PosY": 76.0071,
+        "PosZ": 546.6988,
         "Props": {
           "Remark": "",
           "ShowInSceneMap": 1

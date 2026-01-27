@@ -19,6 +19,8 @@ import iWelfareSignIn
 import visible_visible as UVVD
 import welfare_config as W_CDD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import LogTrackingMgr
+import login_set as LSD
 
 class IBindPhone(object):
     def __init__(self):
@@ -33,7 +35,7 @@ class IBindPhone(object):
     def sendClaimPcLoginRewardInfo(self):
         firstTimestamp = self.accountEntity.getPersistentMiscProp(gameconst.AvatarProps.firstPcLoginTimestamp, 0)
         claimTimestamp = self.accountEntity.getPersistentMiscProp(gameconst.AvatarProps.claimPcLoginRewardTimestamp, 0)
-        DEBUG_MSG("IBindPhone sendClaimPcLoginRewardInfo", firstTimestamp, claimTimestamp, self.accountEntity.devicePlatId)
+        INFO_MSG("IBindPhone sendClaimPcLoginRewardInfo", firstTimestamp, claimTimestamp, self.accountEntity.devicePlatId)
         self.client.claimPcLoginRewardInfo(firstTimestamp, claimTimestamp)
 
     def isUnlocked(self, type):
@@ -83,7 +85,7 @@ class IBindPhone(object):
 
         curCnt = self.accountEntity.getPersistentMiscProp(gameconst.AvatarProps.reqBindPhoneCnt, 0)
         INFO_MSG("IBindPhone controlReqLimit ", curCnt, utils.getTimeStrFromTimeStamp(resetTime))
-        maxCnt = CONST.datas['phoneFrequentLockTime']['value']
+        maxCnt = LSD.datas['phoneFrequentLockTime']['value']
         if curCnt >= maxCnt:
             WARNING_MSG("IBindPhone controlReqLimit cnt limit", curCnt, maxCnt)
             self.onMessagePre(MMD.datas.login_phoneFrequentLock, [])
@@ -128,7 +130,7 @@ class IBindPhone(object):
         url = gameconfig.tapTapBindPhoneReqUrl()
         message = json.dumps({"phone": str(phone)})
         self.setTempPhone(phone)
-        DEBUG_MSG("IBindPhone reqBindPhone url", url, message)
+        INFO_MSG("IBindPhone reqBindPhone url", url, message)
         KBEngine.urlopenv2(url, self._reqBindPhoneResponse, method='POST',
                 postData=message.encode('utf-8'),
                 headers={"Content-Type": "application/json"},
@@ -147,6 +149,7 @@ class IBindPhone(object):
         code = data['code']
         if code == 200 or code == 202:
             self.onMessagePre(MMD.datas.smsSentSuccess, [])
+            INFO_MSG("IBindPhone _reqBindPhoneResponse success ", self.getTempPhone())
         elif code == 1002 or code == 1003:
             curCnt = self.accountEntity.getPersistentMiscProp(gameconst.AvatarProps.reqBindPhoneCnt, 0)
             curCnt = max(int(curCnt - 1), 0)
@@ -197,7 +200,7 @@ class IBindPhone(object):
 
         url = gameconfig.tapTapBindPhoneVerifyUrl()
         message = json.dumps({"phone": str(self.getTempPhone()), "code": str(code)})
-        DEBUG_MSG("IBindPhone reqVerifyCode url", url, message)
+        INFO_MSG("IBindPhone reqVerifyCode url", url, message)
         KBEngine.urlopenv2(url, self._reqVerifyCodeResponse, method='POST',
                 postData=message.encode('utf-8'),
                 headers={"Content-Type": "application/json"},
@@ -220,13 +223,14 @@ class IBindPhone(object):
             self.client.bindPhoneReplay(True, self.accountEntity.phone)
             self.popTempPhone()
             self.onMessagePre(MMD.datas.login_phoneSuccess, [])
+            INFO_MSG("IBindPhone _reqVerifyCodeResponse success ", self.accountEntity.phone)
         elif code == 1002 or code == 1003:
             self.onMessagePre(MMD.datas.login_phoneRepeat, [])
         else:
             self.onMessagePre(MMD.datas.smsInvalid, [])
 #####################################################################################
     def checkDevicePlatId(self, devicePlatId):
-        DEBUG_MSG("IBindPhone checkDevicePlatId", devicePlatId)
+        INFO_MSG("IBindPhone checkDevicePlatId", devicePlatId)
         return devicePlatId in (gameconst.DevicePlatId.PC_CLIENT, )
 
     @AuthClsWraper.onlyHost
@@ -242,16 +246,25 @@ class IBindPhone(object):
         if not self.checkDevicePlatId(self.accountEntity.devicePlatId):
             return
 
-        self.accountEntity.setPersistentMiscProp(gameconst.AvatarProps.claimPcLoginRewardTimestamp, utils.getNow())
+        claimTimestamp = utils.getNow()
+        self.accountEntity.setPersistentMiscProp(gameconst.AvatarProps.claimPcLoginRewardTimestamp, claimTimestamp)
+
+        self.sendClaimPcLoginRewardInfo()
+
+        opUUID = KBEngine.genUUID64()
+        LogTrackingMgr.LogTrackingMgr.Welfare_PcDrainage(
+            self.accountName,
+            self.gbID,
+            self.accountEntity.devicePlatId,
+            claimTimestamp,
+            opUUID,
+        )
 
         rewardId = W_CDD.datas.get('PcLoginReward', {}).get('value', 0)
         if not rewardId:
-            WARNING_MSG('IBindPhone reqClaimPcLoginReward: no reward')
-            return False
+            ERROR_MSG('IBindPhone reqClaimPcLoginReward: no reward')
+            return
 
         awardCtx = self._getAvatarAwardCtx(rewardId, None)
         detail = gameclass.AwardDetail(claimTimestamp=claimTimestamp)
-        opUUID = KBEngine.genUUID64()
-        self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_SIGN_IN, rewardId, 1, opUUID, detail, awardCtx)
-
-        self.sendClaimPcLoginRewardInfo()
+        self.addAwards(AAC_AACDD.datas.BONUS_SRC_WELFARE_PCDRAINAGE, rewardId, 1, opUUID, detail, awardCtx)

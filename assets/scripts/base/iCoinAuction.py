@@ -9,7 +9,6 @@ import gameengine
 import gameconst
 import gameglobal
 import gameconfig
-import gametlog
 import redisUtils
 import utils
 import iAuctionMixin
@@ -32,6 +31,7 @@ import gearBase_gearBase as GBGBD
 import gearBase_typeTab as GBTTD
 import agent_agentFunction as A_AFD
 import auction_publicityCategory as A_PC
+import itemData_itemData as ITEMDATA
 
 def lockCoinAuction(timeout=3):
     def _lockCoinAuction(fn):
@@ -132,13 +132,13 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         self._getCoinAuctionPlayerInfo()
 
     def onGetCoinAuctionPlayerInfo(self, auctionItems, extra):
-        DEBUG_MSG("onGetCoinAuctionPlayerInfo::", auctionItems, extra)
+        INFO_MSG("onGetCoinAuctionPlayerInfo::", auctionItems, extra)
         auctionItemUUIDList = [auctionItem.auctionItemUUID for auctionItem in auctionItems]
         self.coinAuctionInfo.updatePlayerCache(auctionItemUUIDList, extra.get('cacheSyncT', utils.getNow()))
         self.client.onGetCoinAuctionPlayerInfo(True, self.coinAuctionInfo.unlockedGrids, self.transServerAuctionItemToClientAuctionItemList(auctionItems))
 
     # def selfGetAuctionPlayerInfo(self):
-    #     DEBUG_MSG("selfGetAuctionPlayerInfo::")
+    #     INFO_MSG("selfGetAuctionPlayerInfo::")
     #     self._getCoinAuctionPlayerInfo()
 
     def _getCoinAuctionPlayerInfo(self):
@@ -147,7 +147,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             self.client.onGetCoinAuctionPlayerInfo(False, 0, [])
 
     def _loadPlayerCoinAuctionData(self):
-        DEBUG_MSG('_loadPlayerCoinAuctionData::')
+        INFO_MSG('_loadPlayerCoinAuctionData::')
         self._loadPlayerAuctionData(self.coinAuctionInfo)
         redisUtils.PlayerCoinAuctionRecord.clearExpiredMessageRecords(self.gbID)
 
@@ -256,14 +256,19 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         isPublicity = 0
         # 装备
         if m_itemObj.isEquipmentItem():
-            lowestQulity = A_PC.equipDataDic.get(m_itemObj.getEquipType(), -1)
+            lowestQulity = A_PC.equipQualityDataDic.get(m_itemObj.getEquipType(), -1)
             if lowestQulity > 0 and m_itemObj.getEquipQuality() >= lowestQulity:
                 isPublicity = 1
         # 道具
         else:
-           if A_PC.itemDataDic.get(m_itemObj.itemId, False):
-               isPublicity = 1
-        
+            if A_PC.itemDataDic.get(m_itemObj.itemId, False):
+                isPublicity = 1
+            else:
+                dataKey = '{0}_{1}'.format(m_itemObj.itemType, m_itemObj.itemSubType)
+                lowestQulity = A_PC.itemQualityDataDic.get(dataKey, -1)
+                if lowestQulity > 0 and m_itemObj.quality >= lowestQulity:
+                    isPublicity = 1
+
         m_opUUID = KBEngine.genUUID64()
         _tlogProps = dict(role_name=self.getRoleCacheAttr('name', ''))
         m_extra = {
@@ -277,8 +282,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         return True
 
     def _saleItemInCoinAuctionCheck(self, itemId, uniqueId, totalPrice, number, bagType):
-        _, m_errno = self._saleItemInCoinAuctionServicePriceCheck(
-            itemId, uniqueId, totalPrice, number)
+        m_errno = self._saleItemInCoinAuctionServicePriceCheck(bagType, itemId, uniqueId, totalPrice, number)
         if m_errno != gameconst.AuctionErrno.AUCTION_OK:
             return (None, None), m_errno
 
@@ -291,20 +295,54 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         return self._saleItemInAuctioCommonCheck(
             self.coinAuctionInfo, itemId, uniqueId, totalPrice, number, bagType)
 
-    def _saleItemInCoinAuctionServicePriceCheck(self, itemId, uniqueId, totalPrice, number):
-        auctionMinListingPrice = AUT_CONST.datas['auctionMinListingPrice']['value']
-        if totalPrice < auctionMinListingPrice:
-            return None, gameconst.AuctionErrno.UNKNOWN_ERR.initkvbody(reason='price limit')
-
+    def _saleItemInCoinAuctionServicePriceCheck(self, bagType, itemId, uniqueId, totalPrice, number):
+        # 交易行全服关闭
         if not gameconfig.enableAuction():
             INFO_MSG("_saleItemInCoinAuctionServicePriceCheck not enableAuction")
-            return None, gameconst.AuctionErrno.AUCTION_IDIP_GM_BAN
-
+            return gameconst.AuctionErrno.AUCTION_IDIP_GM_BAN
+        
+        # 交易行个人关闭
         if self.checkAuctionForbidden():
             INFO_MSG('_saleItemInCoinAuctionServicePriceCheck forbidden')
-            return None, gameconst.AuctionErrno.AUCTION_IDIP_GM_BAN
+            return gameconst.AuctionErrno.AUCTION_IDIP_GM_BAN
+        
+        if number <= 0:
+            return gameconst.AuctionErrno.UNKNOWN_ERR.initkvbody(reason='invalid item number')
+        
+        # 最小总价
+        auctionMinListingPrice = AUT_CONST.datas['auctionMinListingPrice']['value']
+        if auctionMinListingPrice <= 0:
+            return gameconst.AuctionErrno.UNKNOWN_ERR.initkvbody(reason='wrong auctionMinListingPrice')
+        
+        if totalPrice < auctionMinListingPrice:
+            return gameconst.AuctionErrno.UNKNOWN_ERR.initkvbody(reason='min total price limit')
+        
+        # 最大总价
+        auctionMaxListingPrice = AUT_CONST.datas['auctionMaxListingPrice']['value']
+        if auctionMaxListingPrice <= 0:
+            return gameconst.AuctionErrno.UNKNOWN_ERR.initkvbody(reason='wrong auctionMaxListingPrice')
+        
+        if totalPrice > auctionMaxListingPrice:
+            return gameconst.AuctionErrno.UNKNOWN_ERR.initkvbody(reason='max total price limit')
+        
+        # 看看道具单价限制
+        itemData = ITEMDATA.datas.get(itemId)
+        if not itemData:
+            itemData = GBGBD.datas.get(itemId)
+        if not itemData:
+            return gameconst.AuctionErrno.UNKNOWN_ERR.initkvbody(reason='invalid item id')
+        
+        # 检查交易行单价
+        auctionPriceDuration = itemData['auctionPriceDuration']
+        if auctionPriceDuration:
+            if len(auctionPriceDuration) != 2 or auctionPriceDuration[0] <= 0 or auctionPriceDuration[1] <= 0:
+                return gameconst.AuctionErrno.UNKNOWN_ERR.initkvbody(reason='wrong item auctionPriceDuration')
+            
+            avgPrice = totalPrice / number
+            if avgPrice < auctionPriceDuration[0] or avgPrice > auctionPriceDuration[1]:
+                return gameconst.AuctionErrno.UNKNOWN_ERR.initkvbody(reason='wrong item avg price')
 
-        return None, gameconst.AuctionErrno.AUCTION_OK
+        return gameconst.AuctionErrno.AUCTION_OK
 
     def doSaleItemInCoinAuction(self, auctionItem, extra):
         INFO_MSG("doSaleItemInCoinAuction::",
@@ -517,7 +555,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
                                          extra=None):
         """玩家商品被其他玩家购买后回调"""
 
-        DEBUG_MSG("onPlayerGlobalAuctionItemBeSaled::", auctionItem, number, totalPrice, cacheSyncT,
+        INFO_MSG("onPlayerGlobalAuctionItemBeSaled::", auctionItem, number, totalPrice, cacheSyncT,
                   totalPriceInDeductTax, extra)
         self.saleItemMoney += totalPriceInDeductTax
         self.onMessagePre(int(AUT_CONST.datas["auctionSoldMsg"]["value"]),
@@ -528,7 +566,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     def onPlayerGlobalAuctionItemBeSaledOffline(self, auctionItem, number, totalPrice, cacheSyncT, totalPriceInDeductTax,
                                                 extra=None):
         """玩家商品被其他玩家购买后回调"""
-        DEBUG_MSG("onPlayerGlobalAuctionItemBeSaledOffline::", auctionItem, number, totalPrice, cacheSyncT,
+        INFO_MSG("onPlayerGlobalAuctionItemBeSaledOffline::", auctionItem, number, totalPrice, cacheSyncT,
                   totalPriceInDeductTax, extra)
         if extra is None:
             extra = {}
@@ -643,7 +681,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         self.onCancelSaleItemInCoinAuction(m_errno.errno, auctionItem, extra)
 
     def _doCancelSaleItemInCoinAuction(self, auctionItemUUID, auctionItem, extra):
-        DEBUG_MSG("_doCancelSaleItemInCoinAuction::", auctionItemUUID, auctionItem, extra)
+        INFO_MSG("_doCancelSaleItemInCoinAuction::", auctionItemUUID, auctionItem, extra)
         m_itemId = auctionItem.itemId
         m_number = auctionItem.number
         m_bagType = auctionItem.bagType
@@ -673,28 +711,12 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         m_needReSale = extra.get('needReSale', False)
         _stacked = auctionItem.itemData.canMerge(auctionItem.itemData, skipExpired=True, skipBindType=True)
         if auctionItem.number > 1 or _stacked:
-            DEBUG_MSG("onCancelSaleItemInCoinAuction::stacked")
+            INFO_MSG("onCancelSaleItemInCoinAuction::stacked")
             self.client.onCancelSaleCanStackedItemInCoinAuction(m_auctionItemUUID, auctionItem.itemId,
                                                                 auctionItem.number, m_needReSale)
         else:
-            DEBUG_MSG("onCancelSaleItemInCoinAuction::single")
+            INFO_MSG("onCancelSaleItemInCoinAuction::single")
             self.client.onCancelSaleItemInCoinAuction(m_auctionItemUUID, m_itemUniqueID, m_needReSale)
-
-        # if auctionItem.status == gameconst.AuctionItemStatus.EXPIRED:
-        #     m_cancelSaleType = gametlog.iCancelSaleType.AUTO
-        # else:
-        #     m_cancelSaleType = gametlog.iCancelSaleType.MANUAL
-
-        # tlogParams = {
-        #     "role_id": self.gbID,
-        #     "role_name": self.getRoleCacheAttr('name', ''),
-        #     "item_id": auctionItem.itemId,
-        #     "item_num": auctionItem.number,
-        #     "auction_uuid": auctionItem.auctionItemUUID,
-        #     "total_price": auctionItem.totalPrice,
-        #     "cancel_sale_type": m_cancelSaleType,
-        # }
-        # gamelog.makeWLog("CancelSaleItemFlow", tlogParams)
 
     @unlockCoinAuction
     def onCancelSaleItemInCoinAuctionFail(self, errno, auctionItemUUID, extra):
@@ -862,7 +884,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
 
     def onGetItemNumByCategoryIdResp(self, categoryId, itemIds, itemNums, prices, isPublicity):
-        DEBUG_MSG("onGetItemNumByCategoryIdResp::", categoryId, itemIds, itemNums, prices, isPublicity)
+        INFO_MSG("onGetItemNumByCategoryIdResp::", categoryId, itemIds, itemNums, prices, isPublicity)
         self.client.onGetItemNumByCategoryIdResp(categoryId, itemIds, itemNums, prices, isPublicity)
 
     @gamedecorator.checkGameconfigEnable('business')
@@ -1033,7 +1055,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         self.addWealth(m_src, _awardVal, m_opUUID, m_desc)
 
     def _initPlayerCollectionAuctionList(self):
-        DEBUG_MSG("_initPlayerCollectionAuctionList", self.cliConfigDic, self.collectionAuctionIdList, self.collectionAuctionIdCategoryList, self.collectionAuctionItemCategoryList)
+        INFO_MSG("_initPlayerCollectionAuctionList", self.cliConfigDic, self.collectionAuctionIdList, self.collectionAuctionIdCategoryList, self.collectionAuctionItemCategoryList)
         for key in range(gameconst.AuctionIdCollection.START_KEY, gameconst.AuctionIdCollection.START_KEY + gameconst.AuctionIdCollection.MAX_COUNT):
             itemId = self.cliConfigDic.get(key, 0)
             self.addCollectionAuctionIdList(key, itemId)
@@ -1054,7 +1076,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if itemId in self.collectionAuctionItemCategoryList:
             return
         self.collectionAuctionItemCategoryList.append(itemId)
-        DEBUG_MSG("addCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
+        INFO_MSG("addCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
 
     def removeCollectionAuctionItemCategoryList(self, key, itemId):
         if key < gameconst.AuctionItemCategoryCollection.START_KEY or key >= gameconst.AuctionItemCategoryCollection.START_KEY + gameconst.AuctionItemCategoryCollection.MAX_COUNT:
@@ -1062,7 +1084,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not itemId:
             return
         self.collectionAuctionItemCategoryList.remove(itemId)
-        DEBUG_MSG("removeCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
+        INFO_MSG("removeCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
 
     def addCollectionAuctionIdList(self, key, itemId):
         if key < gameconst.AuctionIdCollection.START_KEY or key >= gameconst.AuctionIdCollection.START_KEY + gameconst.AuctionIdCollection.MAX_COUNT:
@@ -1072,7 +1094,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if itemId in self.collectionAuctionIdList:
             return
         self.collectionAuctionIdList.append(itemId)
-        DEBUG_MSG("addCollectionAuctionIdList", self.collectionAuctionIdList)
+        INFO_MSG("addCollectionAuctionIdList", self.collectionAuctionIdList)
 
     def removeCollectionAuctionIdList(self, key, itemId):
         if key < gameconst.AuctionIdCollection.START_KEY or key >= gameconst.AuctionIdCollection.START_KEY + gameconst.AuctionIdCollection.MAX_COUNT:
@@ -1080,7 +1102,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not itemId:
             return
         self.collectionAuctionIdList.remove(itemId)
-        DEBUG_MSG("removeCollectionAuctionIdList", self.collectionAuctionIdList)
+        INFO_MSG("removeCollectionAuctionIdList", self.collectionAuctionIdList)
 
     def addCollectionAuctionIdCategoryList(self, key, itemId):
         if key < gameconst.AuctionIdCategoryCollection.START_KEY or key >= gameconst.AuctionIdCategoryCollection.START_KEY + gameconst.AuctionIdCategoryCollection.MAX_COUNT:
@@ -1090,7 +1112,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if itemId in self.collectionAuctionIdCategoryList:
             return
         self.collectionAuctionIdCategoryList.append(itemId)
-        DEBUG_MSG("addCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
+        INFO_MSG("addCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
 
     def removeCollectionAuctionIdCategoryList(self, key, itemId):
         if key < gameconst.AuctionIdCategoryCollection.START_KEY or key >= gameconst.AuctionIdCategoryCollection.START_KEY + gameconst.AuctionIdCategoryCollection.MAX_COUNT:
@@ -1098,14 +1120,14 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not itemId:
             return
         self.collectionAuctionIdCategoryList.remove(itemId)
-        DEBUG_MSG("removeCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
+        INFO_MSG("removeCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
 
     def tipPlayerAuctionItemCollection(self, newAuctionItemCache):
         if not len(newAuctionItemCache):
             return
 
         auctionIdList = []
-        DEBUG_MSG("call tipPlayerAuctionItemCollection", self.gbID, self.collectionAuctionIdList, newAuctionItemCache, id(newAuctionItemCache))
+        INFO_MSG("call tipPlayerAuctionItemCollection", self.gbID, self.collectionAuctionIdList, newAuctionItemCache, id(newAuctionItemCache))
         for auctionId, playerGBID in newAuctionItemCache.items():
             if auctionId not in self.collectionAuctionIdList:
                 continue
@@ -1114,7 +1136,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             auctionIdList.append(auctionIdList)
 
         if len(auctionIdList):
-            DEBUG_MSG("call tipPlayerAuctionItemCollection", auctionIdList)
+            INFO_MSG("call tipPlayerAuctionItemCollection", auctionIdList)
             self.client.onNotiyNewAuctionItemCollection(auctionIdList)
 
     @gamedecorator.checkGameconfigEnable('business')
@@ -1123,7 +1145,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         self.stub.getAuctionItemsByAuctionIdList(self.gbID, gameconst.AuctionConst.ATTENTION_GOODS, auctionIdList)
 
     def onGetAuctionItemsByAuctionIdsResp(self, categoryId, auctionItems):
-        DEBUG_MSG("onGetAuctionItemsByAuctionIdsResp::", categoryId, auctionItems)
+        INFO_MSG("onGetAuctionItemsByAuctionIdsResp::", categoryId, auctionItems)
         if len(auctionItems) > 0:
             gbIds = []
             for auctionItem in auctionItems:

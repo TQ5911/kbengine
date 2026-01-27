@@ -42,12 +42,12 @@ def _34000004(qua, grade):
     factor4 = ((qua - 1) * 4 + grade )* 0.25
     return [factor1,factor2,factor3,factor4]
 def _34000007(cnt):
-    if cnt < 5:
-        wt = cnt * 5
-    elif cnt < 11:
-        wt = (cnt-4) * 10 + 20
+    if cnt < 6:
+        wt = (cnt-1) * 3 + 5
+    elif cnt < 13:
+        wt = (cnt-6) * 5 + 20
     else:
-        wt = 90
+        wt = 60
 
     return wt
 def _34000010(lv):

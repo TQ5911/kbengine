@@ -211,7 +211,7 @@ class WealthItem(WealthUnit):
                     bagLimitItemsDic[itemId] = self.data.pop(itemId)
 
         if bagLimitItemsDic:
-            DEBUG_MSG('popRemainBagLimitItems:', bagLimitItemsDic, canAddNum)
+            INFO_MSG('popRemainBagLimitItems:', bagLimitItemsDic, canAddNum)
         return bagLimitItemsDic
 
     def clear(self):
@@ -405,12 +405,11 @@ class AwardMixin(object):
 
 class BaseAwardVal(WealthVal, AwardMixin):
 
-    def __init__(self, exp=0, coin=0, money=0, guildContrib=0, itemObjs=None, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, geniusQi=0, bindMoney=0):
+    def __init__(self, exp=0, coin=0, money=0, guildContrib=0, itemObjs=None, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0):
         self.exp = WealthNumeric('exp', gameconst.ItemId.EXP, exp)
         self.coin = WealthNumeric('coin', gameconst.ItemId.COIN, coin)
         self.money = WealthNumeric('money', gameconst.ItemId.MONEY, money)
         self.darkIron = WealthNumeric('darkIron', gameconst.ItemId.DARK_IRON, darkIron)
-        self.geniusQi = WealthNumeric('geniusQi', gameconst.ItemId.GENIUS_QI, geniusQi)
         self.guildContrib = WealthNumeric('guildContrib', gameconst.ItemId.GUILD_CONTRIB, guildContrib)
         self.guildMoney = WealthNumeric('guildMoney', gameconst.ItemId.GUILD_MONEY, guildMoney)
         self.guildFund = WealthNumeric('guildFund', gameconst.ItemId.GUILD_FUND, guildFund)
@@ -441,7 +440,6 @@ class BaseAwardVal(WealthVal, AwardMixin):
         self.coin += other.coin
         self.money += other.money
         self.darkIron += other.darkIron
-        self.geniusQi += other.geniusQi
         self.guildContrib += other.guildContrib
         self.itemWealth += other.itemWealth
         self.petItemWealth += other.petItemWealth
@@ -477,10 +475,10 @@ class BaseAwardVal(WealthVal, AwardMixin):
             self.__dict__[k].__setstate__(v)
 
     def getNumericWealth(self):
-        return (self.exp, self.coin, self.money, self.guildContrib, self.guildFund, self.guildExp, self.darkIron, self.guildMoney, self.geniusQi, self.bindMoney)
+        return (self.exp, self.coin, self.money, self.guildContrib, self.guildFund, self.guildExp, self.darkIron, self.guildMoney, self.bindMoney)
 
     def getBaseNumeric(self):
-        return (self.coin, self.money, self.guildContrib, self.darkIron, self.geniusQi, self.bindMoney)
+        return (self.coin, self.money, self.guildContrib, self.darkIron, self.bindMoney)
 
     def getAllWealth(self):
         return self.getNumericWealth() + (self.itemWealth, self.petItemWealth)
@@ -536,7 +534,7 @@ class BaseAwardVal(WealthVal, AwardMixin):
     def addWealthByObjList(self, itemObjs):
         if not itemObjs:
             return
-        # DEBUG_MSG('in addWealthByObjList:', [it.itemId for it in itemObjs])
+        # INFO_MSG('in addWealthByObjList:', [it.itemId for it in itemObjs])
         itemObjs = list(filter(lambda it: it.itemNum > 0, itemObjs))
         normalItemList = []
         petItemList = []
@@ -602,11 +600,10 @@ class AwardVal(BaseAwardVal):
 
 
 class DeductWealthVal(WealthVal, AwardMixin):
-    def __init__(self, coin=0, money=0, itemsDic=None, petItemsDic=None, guildContrib=0, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, geniusQi=0, bindMoney=0):
+    def __init__(self, coin=0, money=0, itemsDic=None, petItemsDic=None, guildContrib=0, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0):
         self.coin = WealthNumeric('coin', gameconst.ItemId.COIN, coin)
         self.money = WealthNumeric('', gameconst.ItemId.MONEY, money)
         self.darkIron = WealthNumeric('darkIron', gameconst.ItemId.DARK_IRON, darkIron)
-        self.geniusQi = WealthNumeric('geniusQi', gameconst.ItemId.GENIUS_QI, geniusQi)
         self.guildContrib = WealthNumeric('guildContrib', gameconst.ItemId.GUILD_CONTRIB, guildContrib)
         self.itemWealth = WealthItem(itemsDic)
         self.petItemWealth = WealthItem(petItemsDic)
@@ -629,7 +626,7 @@ class DeductWealthVal(WealthVal, AwardMixin):
             self.__dict__[k].__setstate__(v)
 
     def getNumericWealth(self):
-        return (self.coin, self.money, self.guildContrib, self.darkIron, self.geniusQi, self.bindMoney)
+        return (self.coin, self.money, self.guildContrib, self.darkIron, self.bindMoney)
 
     def getAllWealth(self):
         return self.getNumericWealth() + (self.itemWealth, self.petItemWealth)
@@ -759,13 +756,13 @@ class MailWealthVal(BaseAwardVal):
         self.titleWealth.data.append(WealthTitleOne(titleId, startTime))
 
     def addWealthByRewardId(self, rewardId):
-        DEBUG_MSG('in addWealthByRewardId:', rewardId)
+        INFO_MSG('in addWealthByRewardId:', rewardId)
         wealthVal = getAward(rewardId, 1, awardContext.CommonContext(0))
         self.addWealthByAwardVal(wealthVal)
         return
 
     def addWealthByAwardVal(self, wealthVal:AwardVal):
-        DEBUG_MSG('in addWealthByAwardVal:', wealthVal)
+        INFO_MSG('in addWealthByAwardVal:', wealthVal)
         if wealthVal.isEmpty():
             return
         for awardIt in wealthVal.getNumericWealth():
@@ -844,7 +841,6 @@ class MailWealthVal(BaseAwardVal):
             coin=self.coin.data,
             money=self.money.data,
             darkIron=self.darkIron.data,
-            geniusQi=self.geniusQi.data,
             itemObjs=self.itemWealth.itemsObjs,
             guildContrib=self.guildContrib.data,
             guildMoney=self.guildMoney.data,
@@ -880,11 +876,6 @@ def _getResourceFixReward(awardId, context):
     return ret
 
 def _getDefaultBindType(itemId):
-    itemData = IDIDD.datas.get(itemId, None)
-    if itemData:
-        if itemData.get('auctionAllowListing') == 0:
-            return gameconst.ItemBindType.BIND
-
     gearDropBindProb = C_CD.datas['itemUnboundProb']['value']
     if random.uniform(0, 1) > gearDropBindProb:
         return gameconst.ItemBindType.BIND
@@ -903,7 +894,7 @@ def _genEquipItemList(itemId, itemNum, bindType, quality, context):
 
     if itemId == gameconst.ItemId.COMMON_EQUIPMENT_ID:
         itemId = EquipmentItem.EquipItemIdGen.genEquipItemIdByDropData(**dropParamDic)
-        DEBUG_MSG('_genEquipItemList, gen Equipitem ItemId:', itemId, dropParamDic)
+        INFO_MSG('_genEquipItemList, gen Equipitem ItemId:', itemId, dropParamDic)
 
     equipList = []
     if itemId:
@@ -1202,11 +1193,6 @@ def _getRealDropTarget(dropTargetData, context):
 
 
 def _getBindType(itemID, bindWeight, context):
-    itemData = IDIDD.datas.get(itemID, None)
-    if itemData:
-        if itemData.get('auctionAllowListing') == 0:
-            return gameconst.ItemBindType.BIND
-
     if random.randint(1, 10000) <= bindWeight:
         return gameconst.ItemBindType.BIND
     else:

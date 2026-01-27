@@ -15,8 +15,8 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    "feeNotEnoughMsg": _tools.RODict({
-        "ID": "feeNotEnoughMsg",
-        "value": 54001192,
+    "currencyExchangeLack": _tools.RODict({
+        "ID": "currencyExchangeLack",
+        "value": 54003130,
     })
 })

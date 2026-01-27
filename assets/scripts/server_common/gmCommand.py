@@ -1157,12 +1157,18 @@ class GmCommand(object):
                 elif not _isEntityExist(ent):
                     self._callback(data, 'failCallback')
                     return
+
             if type(self.args[index]) is PlayerAccount:
                 if isRawAccount(ent):
                     if self.component == gameconst.BASE and not gameengine.isFirstBaseApp():
                         self._callback(data, 'failCallback')
                         return
                 elif not _isEntityExist(ent):
+                    self._callback(data, 'failCallback')
+                    return
+
+            if isinstance(self.args[index], (Entity, CellEntity, BaseEntity)):
+                if not _isEntityExist(ent):
                     self._callback(data, 'failCallback')
                     return
 

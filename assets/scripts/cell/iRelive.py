@@ -80,9 +80,10 @@ class IRelive(object):
 
         # 处理cd时间
         if _dpData['addReliveTime']:
-            if _now - self.lastDeathPentlyTime < GP_SD.datas['resWaitResetTime']['value']:
+            if _now <= self.deathResetCD:
                 self.deathPenaltyTimes += 1 # 带有死亡惩罚的死亡次数
             else:
+                self.deathResetCD = _now + GP_SD.datas['resWaitResetTime']['value']
                 self.deathPenaltyTimes = 0
 
             self.lastDeathPentlyTime = _now # 上次死亡惩罚时间
@@ -170,12 +171,7 @@ class IRelive(object):
             return True
 
         elif _type == gameconst.SpaceType.SpaceCube:
-            # _src = dungeonSrc.BasicDungeonSrc()
-            # _enterPos = formula.whatSpaceBornPoint(resSceneId)
-            # self.doEnterWorldCube(resSceneId, 0, _src, 0, _enterPos, self.direction)
-            _mapId = cube_config.datas['cube_hall']['value']
-            _floor = cube_room.datas[_mapId]['floor']
-            gameengine.getCubeStub(_floor).reliveToCubeRoom(self.base, _mapId, self.gbId, {})
+            gameengine.getCubeStub(1).doEnterCubeReady(self.base, self.gbId, {})
 
         return False
 
@@ -236,19 +232,4 @@ class IRelive(object):
             self.doRelive(reliveType)
         else:
             self.doRelive(reliveType)
-        #
-        # reliveTlogProps = {
-        #     'GameSvrId': None,
-        #     'dtEventTime': None,
-        #     'vGameAppid': None,
-        #     'MapId': formula.getMapId(self.spaceNo),
-        #     'AreaId': 0,
-        #     'ReliveType': reliveType,
-        #     'ItemId': resId,
-        #     'ItemNum': costCoin,
-        #     'RestReliveNum': reliveRest
-        # }
-        #
-        # self.base.playerReliveTlog(reliveTlogProps)
-        #
-
+        

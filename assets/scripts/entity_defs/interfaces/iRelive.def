@@ -32,6 +32,12 @@
             <Persistent>    true                </Persistent>
         </lastDeathPentlyTime>
 
+        <deathResetCD>
+            <Type>          LONGTIME            </Type>
+            <Flags>         OWN_CLIENT          </Flags>
+            <Persistent>    true                </Persistent>
+        </deathResetCD>
+
         <deathPenaltyTimes>
             <Type>          UINT16              </Type>
             <Flags>         CELL_PRIVATE        </Flags>
