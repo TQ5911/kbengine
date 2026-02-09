@@ -102,6 +102,9 @@ datas = _tools.RODict({
     242113: _tools.RODict({
         "triggerName": "UIDrawPetPanel_Self",
     }),
+    242114: _tools.RODict({
+        "triggerName": "UITenPet_Self",
+    }),
     242121: _tools.RODict({
         "triggerName": "UIMainCityPanel_Self",
     }),

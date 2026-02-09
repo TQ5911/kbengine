@@ -520,24 +520,25 @@ def isCrit(self, target, context, *args):
     else:
         return False
 
-def randomAtk(self,classTag):
+def randomAtk(self, classTag):
     # 攻击在大小攻范围内浮动，受幸运值影响
     # 随机区间取小数点后2位
     atkBlessToplimit = const_const.datas.get('atkBlessToplimit', {}).get('value')
     blessing_value = self.getProp("atkBless")
-    import action_RandomAtk as ARD
     import utils
-    
-    probabilityList = ARD.datas[blessing_value]['probability']
+
+    maxAtkPropList = [0, 236, 500, 804, 1167, 1625, 2250, 3208, 5000, 10000]
+
+    probabilityList = [15, 70, 15]
     randNode = utils.randomByWeight(probabilityList)
- 
+
     if classTag == 1:
-        #物理攻击
+        # 物理攻击
         min_damage = self.getProp("minPhysicalAtk")
         max_damage = self.getProp("maxPhysicalAtk")
 
     if classTag == 2:
-        #法术攻击
+        # 法术攻击
         min_damage = self.getProp("minMagicAtk")
         max_damage = self.getProp("maxMagicAtk")
 
@@ -546,20 +547,24 @@ def randomAtk(self,classTag):
         return max_damage
     elif min_damage >= max_damage:
         return max_damage
-    
-    if randNode == 0:
-        damage = min_damage
-    elif randNode == 1:
-        damage = (max_damage-min_damage)*0.2 + min_damage
-    elif randNode == 2:
-        damage = (max_damage-min_damage)*0.4 + min_damage
-    elif randNode == 3:
-        damage = (max_damage-min_damage)*0.6 + min_damage 
-    elif randNode == 4:
-        damage = (max_damage-min_damage)*0.8 + min_damage
-    elif randNode == 5:
-        damage = max_damage
 
+    if random.randint(0, 10000) <= maxAtkPropList[blessing_value]:
+        return max_damage
+
+    minDamage = min_damage
+    maxDamage = max_damage
+
+    if randNode == 0:
+        minDamage = min_damage
+        maxDamage = (max_damage - min_damage) / 3 + min_damage
+    elif randNode == 1:
+        minDamage = (max_damage - min_damage) / 3 + min_damage
+        maxDamage = (max_damage - min_damage) * 2 / 3 + min_damage
+    elif randNode == 2:
+        minDamage = (max_damage - min_damage) * 2 / 3 + min_damage
+        maxDamage = max_damage
+
+    damage = random.randint(int(minDamage), int(maxDamage))
     return damage
 
 def fatalDmg(self, target, context):
@@ -685,7 +690,7 @@ def dragTarget(self, target, context, *args):
     if not target:
         return False
 
-    if (not target.IsAvatar and target.hasTag(99)) or target.hasBuffTag(99):
+    if (not target.IsAvatar and target.hasCreepTag(99)) or target.hasBuffTag(99):
         return False
 
     if arg3 == 1 and not utils.isPVP(self, target):
@@ -954,7 +959,7 @@ def dragTargetToPos(self, target, context, *args):
     if not target:
         return
 
-    if (not target.IsAvatar and target.hasTag(99)) or target.hasBuffTag(99):
+    if (not target.IsAvatar and target.hasCreepTag(99)) or target.hasBuffTag(99):
         return
 
     if arg3 == 1 and not utils.isPVP(self, target):

@@ -578,5 +578,11 @@ datas = _tools.RODict({
     }),
     "BelongChapter": _tools.RODict({
         "value": 0
+    }),
+    "AbanCanRemoveItems": _tools.RODict({
+        "value": False
+    }),
+    "AbanRemoveItems": _tools.RODict({
+        "value": _tools.ROList([])
     })
 })

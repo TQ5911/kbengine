@@ -105,12 +105,6 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self._rmRaidFromMatchPool(raidID)
         return
 
-    def raidAutoMatchTimeout(self, raidID):
-        INFO_MSG('in raidAutoMatchTimeout:', raidID)
-        if self._rmRaidFromMatchPool(raidID):
-            gameengine.getRaidStub(raidID).onRaidAutoMatchTimeout(raidID)
-        return
-
     def _rmRaidFromMatchPool(self, raidID):
         tmVal = self.raidsDic.pop(raidID, None)
         if not tmVal:
@@ -223,16 +217,10 @@ class RaidMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         for playerGBID in rmPlayers:
             self.playerAutoMatchTimeout(playerGBID)
 
-        rmTeams = []
         fullTeams = []
         for raidUUID, tmVal in self.raidsDic.items():
-            if tmVal.isTimeOut():
-                rmTeams.append(raidUUID)
             if tmVal.isRaidFull():
                 fullTeams.append(raidUUID)
-
-        for raidUUID in rmTeams:
-            self.raidAutoMatchTimeout(raidUUID)
 
         for raidUUID in fullTeams:
             self.raidStopAutoMatch(raidUUID)
@@ -270,8 +258,6 @@ class RaidTeamMatchVal(userType.UserSoleType):
             return False
         if self.isRaidFull():
             return False
-        if self._isPlayerBanned(pmVal.playerGbId):
-            return False
         if pmVal.level < self.raidMinLv:
             return False
         if pmVal.score < self.raidMinScore:
@@ -280,16 +266,6 @@ class RaidTeamMatchVal(userType.UserSoleType):
 
     def isRaidFull(self):
         return len(self.raidPlayerDic) >= self.raidCapacity
-
-    def _isPlayerBanned(self, gbId):
-        leaveTime = self.raidFilterPlayers.get(gbId)
-        if not leaveTime:
-            return False
-        blockTime = TMMCD.datas['blockTime']['value']
-        if leaveTime + blockTime > utils.getNow():
-            WARNING_MSG("in _isPlayerBanned, player banned:", gbId, leaveTime, blockTime, utils.getNow())
-            return True
-        return False
 
     def isTimeOut(self):
         maxMatchTime = TMMCD.datas['maxMatchTime']['value']

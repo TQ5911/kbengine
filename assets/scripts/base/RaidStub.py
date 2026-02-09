@@ -2834,38 +2834,6 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         srcPlayerBox.onMessagePre(RAID_CONST.datas["raid_captainSummonDone_msg"]["value"], [])
         return None, gameconst.RaidErrno.RAID_OK
 
-    def askOneMemberFollow(self, srcPlayerBox, raidUUID, srcPlayerGBID, askPlayerGBID):
-        _, err = self._askOneMemberFollow(srcPlayerBox, raidUUID, srcPlayerGBID, askPlayerGBID)
-        if err != gameconst.RaidErrno.RAID_OK:
-            WARNING_MSG('askOneMemberFollow:: failed, {}'.format(err))
-
-    def _askOneMemberFollow(self, srcPlayerBox, raidUUID, srcPlayerGBID, askPlayerGBID):
-        if raidUUID not in self.raidDic:
-            return None, gameconst.RaidErrno.RAID_RAID_ID_NOT_FOUND
-
-        raidVal = self.raidDic[raidUUID]
-        if srcPlayerGBID != raidVal.raidLeaderGBID:
-            return None, gameconst.RaidErrno.RAID_NOT_RAID_LEADER
-
-        askPlayerTeamIDX = raidVal.getRaidTeamIDX(askPlayerGBID)
-        if not askPlayerTeamIDX:
-            return None, gameconst.RaidErrno.RAID_TEAM_IDX_NOT_FOUND
-
-        raidTeamVal = raidVal.raidTeamDic[askPlayerTeamIDX]
-        if not raidTeamVal.isInTeam(askPlayerGBID):
-            return None, gameconst.RaidErrno.RAID_PLAYER_GBID_NOT_FOUND
-
-        raidMemberVal = raidTeamVal.teamPlayerDic[askPlayerGBID]
-
-        if not raidMemberVal.bOnline:
-            return None, gameconst.RaidErrno.RAID_TEAM_MEMBER_OFFLINE
-
-        if not (raidMemberVal.playerBox and raidMemberVal.playerBox.client):
-            return None, gameconst.RaidErrno.RAID_TEAM_MEMBER_OFFLINE
-
-        raidMemberVal.playerBox.cell.onAskedFollowCaptain()
-        return None, gameconst.RaidErrno.RAID_OK
-
     def cancelAllMemberFollow(self, srcPlayerBox, raidUUID, srcPlayerGBID):
         _, err = self._cancelAllMemberFollow(srcPlayerBox, raidUUID, srcPlayerGBID)
         if err != gameconst.RaidErrno.RAID_OK:
@@ -2941,14 +2909,6 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return
         raidVal.stopAutoMatch()
 
-    def onRaidAutoMatchTimeout(self, randUUID):
-        INFO_MSG('in onRaidAutoMatchTimeout:', randUUID)
-        teamVal = self.getRaidByRaidUUID(randUUID)
-        if not teamVal:
-            return
-        teamVal.stopAutoMatch(timeout=True)
-        return
-
     def newRaidPlayerMatched(self, raidUUID, playerProps):
         teamVal = self.getRaidByRaidUUID(raidUUID)
         INFO_MSG('in newRaidPlayerMatched:', raidUUID, playerProps, teamVal)
@@ -2956,7 +2916,6 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return
         playerProps['joinType'] = gameconst.TeamJoinType.MATCH
         if teamVal.addNewMember(playerProps['playerGbId'], playerProps, toClient=True):
-            teamVal.getRaidLeader().playerBox.cell.onMemJoinRaidByAutoMatch(playerProps['playerGbId'])
             if teamVal.isRaidFull():
                 INFO_MSG('in newRaidPlayerMatched, raid is full, stop match ~:', raidUUID, playerProps, teamVal)
                 teamVal.stopAutoMatch()

@@ -186,6 +186,7 @@ import random
 import gmAdmin
 
 import gmGroup
+import LogTrackingMgr
 
 from KBEDebug import *
 import proto.centralLogin_pb2 as centralLogin
@@ -1670,6 +1671,11 @@ def doCommandInside(su, command):
         return
 
     _doCommand(su, command, gmAdmin.INSIDE)
+    srcStr = su.__getstate__() if hasattr(su, '__getstate__') else str(su)
+    LogTrackingMgr.LogTrackingMgr.GM_GM(
+        srcStr,
+        command
+    )
 
 
 def doCommandOutside(su, command, reason):

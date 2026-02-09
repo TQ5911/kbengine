@@ -2,13 +2,16 @@
 
 import KBEngine
 from KBEDebug import *
+
 import utils
 import userType
 import dropAward
-import dataUtils
 import gameconst
 import _pickle as cPickle
 import mailAssistor
+
+import LogTrackingMgr
+
 import mail_mail as MAMAD
 import mail_config as MACF
 
@@ -171,6 +174,7 @@ class MailCacheData(userType.UserSoleType):
         if not mail:
             return
         mail.setReadState(gameconst.MailReadState.HasRead)
+        LogTrackingMgr.LogTrackingMgr.Mail_Read(mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach)
         return
 
     def setAttachHasGet(self, mailGBID):

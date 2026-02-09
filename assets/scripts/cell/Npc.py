@@ -141,9 +141,6 @@ class Npc(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iGameEn
     def initBornAction(self):
         self.otherClients.onBornAction()
 
-    def cancelDance(self):
-        self.danceTime = 0
-
     def setAI(self, aiName):
         # no combat NPC doesn't need AI Controller
         pass

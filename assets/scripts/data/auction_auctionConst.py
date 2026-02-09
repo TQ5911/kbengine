@@ -21,7 +21,7 @@ datas = _tools.RODict({
     }),
     "auctionMaxListingPrice": _tools.RODict({
         "key": "auctionMaxListingPrice",
-        "value": 999999,
+        "value": 9999999,
     }),
     "auctionPriceMinNumMsg": _tools.RODict({
         "key": "auctionPriceMinNumMsg",

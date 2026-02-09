@@ -242,5 +242,9 @@ datas = _tools.RODict({
     "cube_prayCostItem": _tools.RODict({
         "ID": "cube_prayCostItem",
         "value": 30000314,
+    }),
+    "cube_prayCostCurrency": _tools.RODict({
+        "ID": "cube_prayCostCurrency",
+        "value": _tools.ROList([30000021, 30]),
     })
 })

@@ -13,6 +13,7 @@ import actionContext
 import Friendship
 import AuthClsWraper
 import gamedecorator
+import LogTrackingMgr
 
 import relationConfig_relationConfig as RC_RCD
 import agent_agentFunction as A_AFD
@@ -223,9 +224,9 @@ class IFriendship(object):
         # 判断目标 好友数量
         gamesql.queryFriendsNum(
             fcVal.gbId,
-            lambda ret, num, insertId, err: self._sendFriendRequestOnGetTargetFriendsNum(ret, num, insertId, err, fcVal.gbId))
+            functools.partial(self._sendFriendRequestOnGetTargetFriendsNum, fcVal))
 
-    def _sendFriendRequestOnGetTargetFriendsNum(self, ret, num, insertId, err, gbId):
+    def _sendFriendRequestOnGetTargetFriendsNum(self, fcVal, ret, num, insertId, err):
         if err:
             ERROR_MSG("IFriends::sendFriendRequestOnGetTargetFriendsNum error={}".format(err))
             return
@@ -244,11 +245,20 @@ class IFriendship(object):
 
         redisUtils.FriendUtils.sendFriendRequest(
             self.gbID,
-            gbId,
+            fcVal.gbId,
             _st,
             _ed,
             RC_RCD.datas['relationApplicationMax_receive']['value'],
             lambda cid, err, ret: self._sendFriendRequestAfterAddRedis(cid, err, ret, gbId, _ed)
+        )
+
+        LogTrackingMgr.LogTrackingMgr.Friend_Opr(
+            self.gbID,
+            fcVal.gbId,
+            len(self.friendship.friendsDict),
+            gameconst.FRIEND_OPR_SEND_REQ,
+            fcVal.school,
+            fcVal.battleEffect
         )
 
     def toFriendData(self):
@@ -400,7 +410,7 @@ class IFriendship(object):
             return
 
         self.friendship.addFriend(gbId, self)
-        self._updateFriendOne(gbId)
+        self._updateFriendOne(gbId, gameconst.ADD_FRIEND_ACCEPT)
 
         # 删除好友请求
         self._removeRecvRequest(gbId)
@@ -435,9 +445,21 @@ class IFriendship(object):
         self.friendship.removeReceiveReq(gbId)
         self.client.onRemoveFriendRequests([gbId])
 
-    def _updateFriendOne(self, gbId):
+    def _updateFriendOne(self, gbId, src):
         redisUtils.RedisUtils.getSingleUserInfo(
-            gbId, lambda fcVal: self.friendship.updateFriend(fcVal, self))
+            gbId, functools.partial(self._updateFriendOneAfterRedis, src))
+
+    def _updateFriendOneAfterRedis(self, src, fcVal):
+        self.friendship.updateFriend(fcVal, self)
+        if src == gameconst.ADD_FRIEND_ACCEPT:
+            LogTrackingMgr.LogTrackingMgr.Friend_Opr(
+                self.gbID,
+                fcVal.gbId,
+                len(self.friendship.friendsDict),
+                gameconst.FRIEND_OPR_ACCEPT_REQ,
+                fcVal.school,
+                fcVal.battleEffect
+            )
 
     def onAcceptFriendOffline(self, gbIds):
         _fVal = self.friendship.getFriend(gbIds[0])
@@ -457,6 +479,7 @@ class IFriendship(object):
 
         gamesql.recordAvatarOfflineCallback(gbIds[0], '_offlineTriggerAchieve', ())
 
+    @gamedecorator.offlineCallback
     def _offlineTriggerAchieve(self):
         self.achievementInfo.triggerAchieveByType(
             self,
@@ -511,7 +534,7 @@ class IFriendship(object):
 
         if src == gameconst.FriendOnlineSrc.MAKE_FRIENDS1:
             self.friendship.addFriend(gbId, self)
-            self._updateFriendOne(gbId)
+            self._updateFriendOne(gbId, gameconst.ADD_FRIEND_ONLINE)
             box.onNotifyOnline(self.gbID, self, gameconst.FriendOnlineSrc.MAKE_FRIENDS2)
 
             self.achievementInfo.triggerAchieveByType(
@@ -630,31 +653,41 @@ class IFriendship(object):
         gamesql.removeFriends(
             self.gbID,
             gbId,
-            lambda ret, num, insertId, err: self._removeFriendAfterDelFriend(err, gbId, reason))
+            functools.partial(self._removeFriendAfterDelFriend, _fVal, reason)
+        )
 
-    def _removeFriendAfterDelFriend(self, err, gbId, reason):
+    def _removeFriendAfterDelFriend(self, fVal, reason, ret, num, insertId, err):
         if err:
             ERROR_MSG("IFriends::_removeFriendAfterDelFriend error={}".format(err))
             return
 
         self.friendship.removeRelation(
-            gbId,
+            fVal.gbId,
             gameconst.FriendRelation.FRIEND,
             reason,
             self,
         )
 
-        if self.friendship.isInRecent(gbId) and reason == gameconst.FriendRemoveReason.CLIENT_REMOVE:
-            self._removeRecent(gbId)
+        if self.friendship.isInRecent(fVal.gbId) and reason == gameconst.FriendRemoveReason.CLIENT_REMOVE:
+            self._removeRecent(fVal.gbId)
 
         # 通知对方
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-            [gbId],
+            [fVal.gbId],
             'onFriendRemoveYou',
             (self.gbID,),
             None,
             '',
             ())
+
+        LogTrackingMgr.LogTrackingMgr.Friend_Opr(
+            self.gbID,
+            fVal.gbId,
+            len(self.friendship.friendsDict),
+            gameconst.FRIEND_OPR_DELETE,
+            fVal.school,
+            fVal.score
+        )
 
     def onFriendRemoveYou(self, gbId):
         INFO_MSG("IFriends::onFriendRemoveYou gbId={}".format(gbId))
@@ -714,6 +747,15 @@ class IFriendship(object):
         _clientData = self.friendship.updateBlock(fcVal)
         self.client.onUpdateBlocks([_clientData])
 
+        LogTrackingMgr.LogTrackingMgr.Friend_Opr(
+            self.gbID,
+            fcVal.gbId,
+            len(self.friendship.friendsDict),
+            gameconst.FRIEND_OPR_BLACKLIST,
+            fcVal.school,
+            fcVal.battleEffect
+        )
+
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
     def removeFromBlock(self, exposed, gbId):
@@ -751,7 +793,7 @@ class IFriendship(object):
             return
 
         if self.friendship.isHasRelation(gbId):
-            self._sendFriendMsg(gbId, msg)
+            self._doSendFriendMsg(gbId, msg)
             return
 
         redisUtils.RedisUtils.getSingleUserInfo(
@@ -761,9 +803,9 @@ class IFriendship(object):
     def _sendFriendMsgOnGetSingleUserInfo(self, fcVal, gbId, msg):
         _clientData = self.friendship.addStranger(fcVal)
         self.client.onUpdateStrangerData([_clientData])
-        self._sendFriendMsg(gbId, msg)
+        self._doSendFriendMsg(gbId, msg)
 
-    def _sendFriendMsg(self, gbId, msg):
+    def _doSendFriendMsg(self, gbId, msg):
         _newTS = self.friendship.genNewSendMsgTS()
         redisUtils.FriendUtils.sendFriendMsg(
             self.gbID,
@@ -793,12 +835,25 @@ class IFriendship(object):
                 None,
                 '',
                 ())
-            return
+            _isOnline = True
+            _isFriend = False
 
-        if utils.isBoxOffline(_fVal.box):
-            return
+        elif utils.isBoxOffline(_fVal.box):
+            _isOnline = False
+            _isFriend = True
 
-        _fVal.box.onRecvMsg(self.gbID, ts, msg)
+        else:
+            _isOnline = True
+            _isFriend = True
+            _fVal.box.onRecvMsg(self.gbID, ts, msg)
+
+        LogTrackingMgr.LogTrackingMgr.Friend_Msg(
+            self.gbID,
+            gbId,
+            msg,
+            _isOnline,
+            _isFriend,
+        )
 
     def onRecvMsg(self, gbId, ts, msg):
         INFO_MSG("IFriends::onRecvMsg gbId={} ts={} msg={}".format(gbId, ts, msg))

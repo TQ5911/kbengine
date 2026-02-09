@@ -113,6 +113,8 @@ class ICubeCell(object):
         _fromNeed = self._needTimerOn(fromSpaceNo)
         _toNeed = self._needTimerOn(toSpaceNo)
 
+        self.cubeQuota.refreshEnterTime()
+
         if _fromNeed == _toNeed:
             return
 
@@ -313,6 +315,7 @@ class ICubeCell(object):
             self._cancelDatetimeCallback(self.cubeRoomTimerId, gametimer.TIMER_TAG_CUBE_ROOM)
 
         _fireTime = utils.getNow() + max(1, self.cubeQuota.calcLeftTime())
+        DEBUG_MSG('next cube fire time', _fireTime)
         self.cubeRoomTimerId = self._datetimeCallback(_fireTime, '_onCubeTimeOut', (), gametimer.TIMER_TAG_CUBE_ROOM, 'cubeRoomTimerId')
 
     def _onCubeTimeOut(self):

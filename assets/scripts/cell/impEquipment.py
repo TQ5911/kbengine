@@ -8,6 +8,7 @@ import gzip
 import _pickle as cPickle
 
 import utils
+import formula
 import gameconst
 import mailAssistor
 import actionContext
@@ -170,7 +171,7 @@ class ImpEquipment(object):
         upgradeAttrsBefore = equipItem.getUpgradeAttrs()
         addBindValueBefore = equipItem.getAddBindValueStatus()
         levelBefore = equipItem.getEnhanceLevel()
-
+        bindValueBefore = equipItem.getBindValue()
         if bindValue > 0:
             equipItem.updateBindValue()
         checkEnhanceLv = enhanceLv + 1
@@ -178,13 +179,16 @@ class ImpEquipment(object):
             checkEnhanceLv = enhanceLv
         if equipItem and equipItem.checkEnhancementValid(checkEnhanceLv, isGM):
             enhanceVal = equipItem.doEnhanceEquip(self, opUUID, enhanceLv, onBody=True, isGM = isGM)
+            bindValueAfter = equipItem.getBindValue()
             # 装备破碎了
             if enhanceVal == gameconst.EquipConstVale.ENHANCEMENT_BROKEN_FLAG:
-                self.bodyEquipData.doBodyUndressEquip(self, slotId)
+                bodyEquip = self.bodyEquipData.doBodyUndressEquip(self, slotId)
+                if bodyEquip:
+                    self.base.cellBrokenEquipment(opUUID, bodyEquip.toItemSavedDict())
                 self.base.triggerAchievement(gameconst.AchieveType.ENHANCE_EQUIPMENT)
                 LogTrackingMgr.LogTrackingMgr.Equip_Enhancement(opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, baseAttrsBefore, enhanceAttrsBefore, \
                                                             upgradeAttrsBefore, equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), addBindValueBefore, \
-                                                            equipItem.getAddBindValueStatus(), bindValue, levelBefore, equipItem.getEnhanceLevel(), enhanceVal, equipItem.getEquipScore())
+                                                            equipItem.getAddBindValueStatus(), bindValue, levelBefore, equipItem.getEnhanceLevel(), enhanceVal, equipItem.getEquipScore(), bindValueBefore, bindValueAfter)
 
                 self.client.onEquipBroken(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId)
             else:
@@ -193,7 +197,7 @@ class ImpEquipment(object):
 
                 LogTrackingMgr.LogTrackingMgr.Equip_Enhancement(opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, baseAttrsBefore, enhanceAttrsBefore, \
                                                             upgradeAttrsBefore, equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), addBindValueBefore, \
-                                                            equipItem.getAddBindValueStatus(), bindValue, levelBefore, equipItem.getEnhanceLevel(), enhanceVal, equipItem.getEquipScore())
+                                                            equipItem.getAddBindValueStatus(), bindValue, levelBefore, equipItem.getEnhanceLevel(), enhanceVal, equipItem.getEquipScore(), bindValueBefore, bindValueAfter)
 
 
                 self.client.onEquipEnhanceSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, equipItem.getEnhanceLevel(), equipItem.getEquipScore(), equipItem.getAddBindValueStatus(), equipItem.bindType, equipItem.getMaxEnhanceLevel())
@@ -257,12 +261,13 @@ class ImpEquipment(object):
         enhanceAttrsBefore = equipItem.getEnhanceAttrs()
         upgradeAttrsBefore = equipItem.getUpgradeAttrs()
         gradeBefore = equipItem.getGrade()
-
+        bindValueBefore = equipItem.getBindValue()
         equipItem.doUpgradeEquip(self, opUUID, onBody=True)
         equipItem.setBindValue(equipItem.getOriginalBindValue() + bindValue)
+        bindValueAfter = equipItem.getBindValue()
         self.updateEquipmentScore()
         LogTrackingMgr.LogTrackingMgr.Equip_Upgrade(opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, baseAttrsBefore, enhanceAttrsBefore, upgradeAttrsBefore, \
-                                                    equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), gradeBefore, equipItem.getGrade(), bindValue, equipItem.getOriginalBindValue(), \
+                                                    equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), gradeBefore, equipItem.getGrade(), bindValueBefore, bindValueAfter, \
                                                     equipItem.getEquipScore())
         self.client.onEquipUpgradeSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, equipItem.getGrade(), equipItem.getEquipScore(), equipItem.getOriginalBindValue(), equipItem.getAddBindValueStatus(), equipItem.bindType)
 
@@ -327,17 +332,18 @@ class ImpEquipment(object):
 
         spiritDataBefore = equipItem.getSpiritDatas()
         addBindValueBefore = equipItem.getAddBindValueStatus()
+        bindValueBefore = equipItem.getBindValue()
         if bindValue > 0:
             equipItem.updateBindValue()
         equipItem.removeEquipEffectToAvatar(self)
         ret, _, _ = equipItem.doEquipSpiritWashing(self, spiritPos, unbinValue)
         equipItem.applyEquipEffectToAvatar(self)
         self.updateEquipmentScore()
-
+        bindValueAfter = equipItem.getBindValue()
         if ret:
             spiritData = equipItem.equipAttr.spiritDatas[spiritPos]
             LogTrackingMgr.LogTrackingMgr.Equip_Spirit(opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, spiritDataBefore,\
-                                                       equipItem.getSpiritDatas(), addBindValueBefore, equipItem.getAddBindValueStatus(), bindValue, equipItem.getEquipScore())
+                                                       equipItem.getSpiritDatas(), addBindValueBefore, equipItem.getAddBindValueStatus(), bindValue, equipItem.getEquipScore(), spiritPos, bindValueBefore, bindValueAfter)
             self.client.onEquipSpiritWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, spiritData.toClientData(), spiritPos,
                                                  equipItem.getEquipScore(), equipItem.getAddBindValueStatus(), equipItem.bindType)
         return
@@ -477,19 +483,20 @@ class ImpEquipment(object):
 
         glyphDataBefore = equipItem.getGlyphDatas()
         addBindValueBefore = equipItem.getAddBindValueStatus()
-
+        bindValueBefore = equipItem.getBindValue()
         if bindValue > 0:
             equipItem.updateBindValue()
         equipItem.removeEquipEffectToAvatar(self)
         ret, _, _ = equipItem.doEquipGlyphWashing(self, glyphPos)
         equipItem.applyEquipEffectToAvatar(self)
         self.updateEquipmentScore()
+        bindValueAfter = equipItem.getBindValue()
         if ret:
             glyphData = equipItem.equipAttr.getGlyphData(glyphPos)
             self.bodyEquipData.recalculateAllInscriptionEffects(self)
             
             LogTrackingMgr.LogTrackingMgr.Equip_Glyph(opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, glyphDataBefore,\
-                                                       equipItem.getGlyphDatas(), addBindValueBefore, equipItem.getAddBindValueStatus(), bindValue, equipItem.getEquipScore())
+                                                       equipItem.getGlyphDatas(), addBindValueBefore, equipItem.getAddBindValueStatus(), bindValue, equipItem.getEquipScore(), glyphPos // 2, glyphPos, bindValueBefore, bindValueAfter)
 
 
             self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, glyphPos, glyphData.toClientData(),
@@ -547,7 +554,7 @@ class ImpEquipment(object):
         blessLvRateBefore = equipItem.getBlessLvRate()
         maxBlessLvBefore = equipItem.getBlessMaxLv()
         addBindValueBefore = equipItem.getAddBindValueStatus()
-
+        bindValueBefore = equipItem.getBindValue()
         if bindValue > 0:
             equipItem.updateBindValue()
         equipItem.removeEquipEffectToAvatar(self)
@@ -557,10 +564,11 @@ class ImpEquipment(object):
         self.bodyEquipData.changeAvatarAttrs(self)
 
         self.updateEquipmentScore()
+        bindValueAfter = equipItem.getBindValue()
         if ret:
-            LogTrackingMgr.LogTrackingMgr.Equip_Bless(opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, blessDataBefore, equipItem.getBlessDatas(), \
-                                                      addBindValueBefore, equipItem.getAddBindValueStatus(), bindValue, blessLvRateBefore, equipItem.getBlessLvRate(), \
-                                                      maxBlessLvBefore, equipItem.getBlessMaxLv(), equipItem.getEquipScore())
+            LogTrackingMgr.LogTrackingMgr.Equip_Bless(opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, blessDataBefore, \
+                                                      equipItem.getBlessDatas(), addBindValueBefore, equipItem.getAddBindValueStatus(), bindValue, blessLvRateBefore, equipItem.getBlessLvRate(), \
+                                                      maxBlessLvBefore, equipItem.getBlessMaxLv(), equipItem.getEquipScore(), bindValueBefore, bindValueAfter)
 
             blessAffixes = []
             for oneAffix in equipItem.equipAttr.blessAffixes:
@@ -729,10 +737,10 @@ class ImpEquipment(object):
     ################################### drop equip start ##############################
     def takeEquip(self, uniqueId):
         INFO_MSG('in takeEquip, uniqueId:', uniqueId)
-        self.base.takeEquipBase(uniqueId)
+        self.base.takeEquipBase(uniqueId, self.spaceNo, self.position)
 
     def _dealDeathDrop(self, killerGbId, killerName):
-        if not gameconfig.visibleConfigEable('deathDrop'):
+        if not gameconfig.visibleConfigEnabled('deathDrop'):
             return
 
         if not (self._isCritInjured() or (self.moralValue <= GB_GCD.datas['equipDropMoralBound']['value'])):
@@ -770,6 +778,17 @@ class ImpEquipment(object):
         if not bodyEquip:
             ERROR_MSG('in dropEquip, no equip in slotId:', slotId)
             return
+
+        LogTrackingMgr.LogTrackingMgr.Drop_Equip(
+            self.gbId,
+            bodyEquip.uniqueId,
+            bodyEquip.itemId,
+            bodyEquip.getQuality(),
+            bodyEquip.getGrade(),
+            formula.getMapId(self.spaceNo),
+            str(self.position),
+            gameconst.EQUIP_OPR_DROP,
+        )
 
         self.dropEquipByItem(bodyEquip, killerName)
 
@@ -829,6 +848,18 @@ class ImpEquipment(object):
             opUUID=KBEngine.genUUID64(),
             despArgs=_args,
             srcType=AAC_AACDD.datas.BONUS_SRC_EQUIPMENT_DROP
+        )
+
+    def logPickDropEquip(self, uniqueId, itemId, quality, grade):
+        LogTrackingMgr.LogTrackingMgr.Drop_Equip(
+            self.gbId,
+            uniqueId,
+            itemId,
+            quality,
+            grade,
+            formula.getMapId(self.spaceNo),
+            str(self.position),
+            gameconst.EQUIP_OPR_PICK,
         )
 
     ################################### drop equip end ##############################

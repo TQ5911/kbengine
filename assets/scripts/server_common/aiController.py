@@ -538,12 +538,19 @@ class BehaveCtrl(object):
             self.clearHate()
         owner = self.owner
         host = owner.getHost()
-        if host:
-            dis = sMath.distance2DToCompareFrom3DPosition(owner.position, host.position)
-            if dis > CONST.datas['summonBcakRange']['value'] * CONST.datas['summonBcakRange']['value']:
-                owner.telToPos(host.position)
+        if not host:
+            return
+
+        dis = sMath.distance2DToCompareFrom3DPosition(owner.position, host.position)
+        if dis > CONST.datas['summonBcakRange']['value'] * CONST.datas['summonBcakRange']['value']:
+            _posList = host.getRandomPoints(host.position, 1, 1, 0)
+            if _posList:
+                owner.telToPos(_posList[0])
             else:
-                self.moveToHost(gameconst.AIDefine.SummonDisAd)
+                WARNING_MSG("goBackToHost: can't find good pos", host.position)
+
+        else:
+            self.moveToHost(gameconst.AIDefine.SummonDisAd)
 
     def hasGiveTimes(self):
         return self.owner.ifHasGiveTimes()
@@ -1492,6 +1499,9 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
 
         # 战斗和脱战时总是tick
         if self.machine.tell() == State.ANGRY or self.machine.tell() == State.BACK:
+            return True
+
+        if owner.IsSummon:
             return True
 
         return owner.isWitnessed

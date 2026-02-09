@@ -975,6 +975,10 @@ datas = _tools.RODict({
         "ID": "shareSuccessMsg",
         "value": 54920009,
     }),
+    "shareFailedMsg": _tools.RODict({
+        "ID": "shareFailedMsg",
+        "value": 54920012,
+    }),
     "saveSuccessMsg": _tools.RODict({
         "ID": "saveSuccessMsg",
         "value": 54920010,
@@ -1009,10 +1013,22 @@ datas = _tools.RODict({
     }),
     "teleportationProtectionBuffId": _tools.RODict({
         "ID": "teleportationProtectionBuffId",
-        "value": 64000103,
+        "value": 64000126,
     }),
     "teleportationProtectionTime": _tools.RODict({
         "ID": "teleportationProtectionTime",
         "value": 5,
+    }),
+    "legalRegulationsTest": _tools.RODict({
+        "ID": "legalRegulationsTest",
+        "value": "http://192.168.10.16:3007/#/privacy",
+    }),
+    "legalRegulations": _tools.RODict({
+        "ID": "legalRegulations",
+        "value": "https://api.yunxingu.com/mobile/index.html/#/privacy",
+    }),
+    "taskQualityTest": _tools.RODict({
+        "ID": "taskQualityTest",
+        "value": "简单#困难#危险",
     })
 })

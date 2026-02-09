@@ -63,6 +63,14 @@ class IMineWarSpaceMgr(object):
 
         self.mineWarFlagBeAttackTimer = 0
         
+        utils.subscribe(gameconst.UserEventTag.EVENT_ON_GUILD_UNION_CHANGE, self, 'onGuildUnionChange')
+        
+    def onGuildUnionChange(self, *args):
+        changeType, guildId1, guildId2, relationType, _ = args
+        DEBUG_MSG('onGuildUnionChange call :', changeType, guildId1, guildId2, relationType)
+        if self.mineWarGuildId in (guildId1, guildId2):
+            self._callback(0.1, 'checkAllEntityCamp', (), gametimer.TIMER_TAG_ON_MINE_WAR_GUILD_UNION_CHANGE)
+        
     def resetMineWarScoreData(self):
         """重置矿战积分数据"""
         INFO_MSG('resetMineWarScoreData', self.spaceNo)
@@ -336,18 +344,25 @@ class IMineWarSpaceMgr(object):
         if onlySummon:
             return
         # 玩家
-        for eid, val in self.players.items():
-            ent = self.getEntityById(eid)
-            if ent:
-                self.checkAndChangeCamp(ent)
+        playerList = list(self.players.keys())
+        def _iter():
+            for eid in playerList:
+                ent = self.getEntityById(eid)
+                if ent:
+                    self.checkAndChangeCamp(ent)
+                yield lambda: None
+        self.batchlyCall(_iter(), 30, 0.1)
 
     def checkAndChangeCamp(self, ent):
         # 初始都是攻方
         ent.mineWarCamp = gameconst.MINE_WAR_CAMP.CAMP_ATTACK
+        if ent.IsCombatUnit:
+            # 攻守切换，清下缓存
+            ent.resetAllTargetTypeCache(False)
 
         host = utils.getEntityRealEntity(ent)
         # 帮派相同才是守方
-        if host.IsAvatar and host.guildUUID > 0 and host.guildUUID == self.mineWarGuildId:
+        if host.IsAvatar and host.guildUUID > 0 and (host.guildUUID == self.mineWarGuildId or utils.getGuildRelation(host.guildUUID, self.mineWarGuildId) == gameconst.GuildRelationType.UNION):
             ent.mineWarCamp = gameconst.MINE_WAR_CAMP.CAMP_DEFEND
             INFO_MSG('checkAndChangeCamp set defend camp', self.spaceNo, ent.id, host.guildUUID, self.mineWarGuildId)
 
@@ -449,9 +464,6 @@ class IMineWarSpaceMgr(object):
         #
         self.flagDestroyTime = 0
         self.rebuildFlag(guildId, self.flagDestroyTime)
-
-        #
-        self.recoverAllOtherMonster()
         
     # 传走所有玩家
     def transferAllAvatarInSpace(self, toLineType, exceptGuildId):
@@ -729,6 +741,8 @@ class IMineWarSpaceMgr(object):
                 ent.safeDestroy()
                 yield lambda: None
         self.batchlyCall(_iter(), 30, 0.5)
+
+        self._callback(gameconst.ONE_HOUR_SECONDES, 'recoverAllOtherMonster', (), gametimer.TIMER_TAG_MINE_WAR_RECOVER_OTHER_MONSTER)
 
     def recoverAllOtherMonster(self):
         """恢复场景内所有非矿战怪物"""

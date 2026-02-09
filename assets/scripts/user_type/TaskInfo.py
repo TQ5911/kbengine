@@ -13,20 +13,17 @@ import actionContext
 import userType
 import dropAward
 import awardContext
-
-import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-import itemFactory
-import taskItemSrc as TISD
-import taskRelate as TRD
-import rewardTask_taskInfo as RRTID
-import rewardTask_config as RRTIC
 import gameclass
-import gameglobal
 import Task
-import gamelog
 import formula
-import visible_visible as V_VD
 
+import taskRelate as TRD
+import taskItemSrc as TISD
+
+import visible_visible as V_VD
+import rewardTask_config as RRTIC
+import rewardTask_taskInfo as RRTID
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 
 class TaskCountLimitType(object):
     TASK_LIMIT_CLAIM_COUNT = 0  # 领取任务时检查领取次数限制
@@ -1677,8 +1674,12 @@ class TaskInfo(userType.UserSoleType):
         if dataUtils.taskFieldVal(taskData, 'ClaimCanRewardITems'):
             # 回收任务物
             owner.remTaskItems(taskId, opUUID, srcType)
+        # 放弃任务时，需要处理掉背包里指定的任务道具
+        if srcType == AAC_AACDD.datas.BONUS_SRC_ABANDON_TASK:
+            owner.abandonTaskItems(taskId, opUUID, srcType)
+
         self.remReachAreaTargetTask(owner, taskId)
-        self.removeTaskCache(taskId)
+        self.removeTaskCache(taskId)    
 
     def getRootTask(self, taskId):
         # 理论上最多10层子任务，实际应该不会超出10层

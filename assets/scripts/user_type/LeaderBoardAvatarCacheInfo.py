@@ -2,7 +2,7 @@
 # coding: utf-8
 
 import userType
-
+import LogTrackingMgr
 
 class LeaderBoardAvatarCacheVal(userType.UserSoleType):
     '''LEADER_BOARD_AVATAR_CACHE_DATA_INFO'''
@@ -46,6 +46,19 @@ class LeaderBoardAvatarCacheVal(userType.UserSoleType):
             'guildName': self.guildName,
             'guildUUID': self.guildUUID,
         }
+
+    # 必须实现
+    def leaderBoardLog(self, leaderType, rank):
+        LogTrackingMgr.LogTrackingMgr.LeaderBoard_Level(
+            leaderType,
+            rank,
+            self.gbId,
+            self.name,
+            self.level,
+            self.school,
+            self.guildUUID,
+            self.guildName,
+        )
 
 
 class LeaderBoardAvatarCacheInfo(object):

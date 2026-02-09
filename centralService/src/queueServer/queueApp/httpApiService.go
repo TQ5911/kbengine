@@ -173,6 +173,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 			return
 		}
 		fmt.Fprintf(w, string(data))
+		appLog.Info("queue success")
 	} else {
 		VIPFlag := false
 		isVIP, err := redis.String(conn.Do("get", "g:vip:v:"+accountNameStr))

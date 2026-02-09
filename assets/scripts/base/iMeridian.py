@@ -16,6 +16,7 @@ import meridian_config as  MCD
 import meridian_meridian as MMD
 import meridian_acupoint as MAD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import LogTrackingMgr
 
 class IMeridian(object):
     """ 
@@ -158,6 +159,8 @@ class IMeridian(object):
             self.client.onLeveUpMeridianPointTo(slotIdx, pointIdx, newLevel)
             
             self._syncMeridianDataToClient()
+            
+            LogTrackingMgr.LogTrackingMgr.Meridian_UpGrade(opUUID, self.gbID, slotIdx, pointIdx, newLevel)
         else:
             DEBUG_MSG("IMeridian.reqLevelUpMeridianPoint: level up failed {}, {}, {}".format(
                 slotIdx, pointIdx, ret))
@@ -216,6 +219,8 @@ class IMeridian(object):
             self.client.onEnhanceMeridian(slotIdx)
             
             self._syncMeridianDataToClient()
+            
+            LogTrackingMgr.LogTrackingMgr.Meridian_Enhance(opUUID, self.gbID, slotIdx)
         else:
             DEBUG_MSG("IMeridian.reqEnhanceMeridianSlot: enhance failed {}".format(slotIdx))
 

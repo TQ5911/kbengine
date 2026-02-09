@@ -120,7 +120,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         if not self.canServerStartMineWar():
             return gameconst.MINE_WAR_STATE.END
         
-        if self.gmDisableMineWar:
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
         # if True:
             return gameconst.MINE_WAR_STATE.END
         
@@ -177,6 +177,8 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         self._callback(offset, '_transferMineWarPersonnel', (), gametimer.TIMER_TAG_TRANSFER_MINE_WAR_PERSONNEL)
 
     def _transferMineWarPersonnel(self):
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
         self.callAllMineWarSpaceMgr('transferAllAvatarInSpace', [], {'transferMapId': True, 'guildId': True})
 
     # 矿战开始阶段
@@ -231,9 +233,14 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             ownerList.sort(key=lambda x: x.ownerTime, reverse=True)
             ownerList = ownerList[:MBC.datas['mineBatte_rankGuildNum']['value']]
             mineWarVal.ownerRankList = ownerList    # 暂存
-            ownerRankDict = {guildVal.guildGbId: guildVal.ownerTime for guildVal in ownerList}
-            #
-            LogTrackingMgr.LogTrackingMgr.MineBattle_End(self.endTime, mapId, tempguildGbId, ownerRankDict)
+
+            try:
+                logRankList = []
+                for i, guildVal in enumerate(ownerList):
+                    logRankList.append({'rank': i+1, 'guildGbId': guildVal.guildGbId, 'ownerTime': guildVal.ownerTime, 'revenue': guildVal.revenue})
+                LogTrackingMgr.LogTrackingMgr.MineBattle_End(self.endTime, mapId, tempguildGbId, logRankList)
+            except Exception as e:
+                ERROR_MSG('LogTrackingMgr.MineBattle_End error:', mapId, tempguildGbId)
 
         # 结算
         self.onEndRewardByScore()
@@ -437,7 +444,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         # 重新拉下数据
         self.playerGetMineWarInfo(box, srcGbId)
 
-        LogTrackingMgr.LogTrackingMgr.MineBattle_Shared(mapVal.getGuildGbId(), mapVal.currCollectNum, playerList, bonusNumList, opUUID)
+        LogTrackingMgr.LogTrackingMgr.MineBattle_Shared(srcGbId, mapVal.getGuildGbId(), mapVal.currCollectNum, playerList, bonusNumList, opUUID)
 
     def doGetMineWarGuildMemberScore(self, mapId, playerBox, guildGbId):
         mapVal = self.mineMapData.get(mapId, None)
@@ -614,31 +621,38 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             mineWarVal.scoreRankList.extend(guildMemberList) # 加上归属帮派所有成员
             mineWarVal.playerScoreDict = {} # 清理
 
-            sendRankList = rankList[:len(rankCfg)]
-            for i, obj in enumerate(sendRankList):
-                if i < len(rankCfg):
-                    _addVal = dropAward.MailWealthVal()
-                    _addVal.addWealthByItemId(rankCfg[i + 1], 1)
-                    mailAssistor.sendMailToPlayers([obj.gbId], MBC.datas['mineBatte_scoreRankMail']['value'], 
-                                                extraAttach=_addVal, despArgs=(mapName,), srcType=srcType, opUUID=opUUID)
-                    INFO_MSG('onEndRewardByScore send mail', mapId, obj.gbId, i + 1, rankCfg[i + 1])
-                else:
-                    # 参与奖 
-                    otherList.append(obj)
-            
-            _otherVal = dropAward.MailWealthVal()
-            _otherVal.addWealthByItemId(MBC.datas['mineBattle_rewardParticipation']['value'], 1)
-            # 参与奖
-            def _sendOthers():
-                for obj in otherList:
-                    playerId = obj.gbId
-                    mailAssistor.sendMailToPlayers([playerId], MBC.datas['mineBatte_scoreRankMail']['value'],
-                                                    extraAttach=_otherVal, despArgs=(mapName,), srcType=srcType, opUUID=opUUID)
-                    yield lambda: None
-            def _sendOthersDone():
-                INFO_MSG('MineWarStub.onEndRewardByScore _sendOthersDone mapId:', mapId)
-            self.batchlyCall(_sendOthers(), 30, 0.2, _sendOthersDone)
+            if gameconfig.visibleConfigEnabled('mineBattle'):
+                sendRankList = rankList[:len(rankCfg)]
+                for i, obj in enumerate(sendRankList):
+                    if i < len(rankCfg):
+                        _addVal = dropAward.MailWealthVal()
+                        _addVal.addWealthByItemId(rankCfg[i + 1], 1)
+                        mailAssistor.sendMailToPlayers([obj.gbId], MBC.datas['mineBatte_scoreRankMail']['value'], 
+                                                    extraAttach=_addVal, despArgs=(mapName,), srcType=srcType, opUUID=opUUID)
+                        INFO_MSG('onEndRewardByScore send mail', mapId, obj.gbId, i + 1, rankCfg[i + 1])
+                    else:
+                        # 参与奖 
+                        otherList.append(obj)
+                
+                _otherVal = dropAward.MailWealthVal()
+                _otherVal.addWealthByItemId(MBC.datas['mineBattle_rewardParticipation']['value'], 1)
+                # 参与奖
+                def _sendOthers():
+                    for obj in otherList:
+                        playerId = obj.gbId
+                        mailAssistor.sendMailToPlayers([playerId], MBC.datas['mineBatte_scoreRankMail']['value'],
+                                                        extraAttach=_otherVal, despArgs=(mapName,), srcType=srcType, opUUID=opUUID)
+                        yield lambda: None
+                def _sendOthersDone():
+                    INFO_MSG('MineWarStub.onEndRewardByScore _sendOthersDone mapId:', mapId)
+                self.batchlyCall(_sendOthers(), 30, 0.2, _sendOthersDone)
             #
-            LogTrackingMgr.LogTrackingMgr.MineBattle_End_Reward(self.endTime, mapId, {obj.gbId: obj.totalScore for obj in mineWarVal.scoreRankList})
+            try:
+                logRankList = []
+                for i, obj in enumerate(mineWarVal.scoreRankList[:len(rankCfg)]):
+                    logRankList.append({'rank': i+1, 'playerGbId': obj.gbId, 'playerScore': obj.totalScore})
+                LogTrackingMgr.LogTrackingMgr.MineBattle_End_Reward(self.endTime, mapId, logRankList)
+            except Exception as e:
+                ERROR_MSG('LogTrackingMgr.MineBattle_End_Reward error:', mapId)
                 
         INFO_MSG('MineWarStub.onEndRewardByScore done')

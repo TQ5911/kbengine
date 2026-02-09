@@ -4,6 +4,8 @@ import random
 import KBEngine
 from KBEDebug import *
 
+from rpc import RpcChannel
+
 import traceback
 import sys
 import hashlib
@@ -12,12 +14,13 @@ import utils
 import gameconst
 import gameglobal
 import formula
-import gamePlay_gamePlay as GGD
+import gameconfig
+
 import cube_room
 import wonderLand_floor
-import gameconfig
-from rpc import RpcChannel
 
+import gamePlay_gamePlay as GGD
+import taskdata as TDD
 
 def isBase():
     return KBEngine.component == 'baseapp'
@@ -482,3 +485,81 @@ def removeEquipDropDestroyCollection(collectionId, dropEquipId):
     _ent = KBEngine.entities.get(collectionId)
     if _ent:
         _ent.onEquipDropDestroy(dropEquipId)
+
+# 不要直接使用，请通过 utils.subscribe 使用
+def subscribeEvent(tag, eId, func):
+    if tag not in gameglobal.hookDict:
+        gameglobal.hookDict[tag] = {}
+    if eId in gameglobal.hookDict[tag]:
+        ERROR_MSG('subscribe tag {} box {} already exists'.format(tag, eId))
+        return
+
+    DEBUG_MSG('subscribe tag {} box {} func {}'.format(tag, eId, func))
+    gameglobal.hookDict[tag][eId] = func
+
+# 不要直接使用，请通过 utils.unsubscribe 使用
+def unsubscribeEvent(tag, eId):
+    if tag in gameglobal.hookDict and eId in gameglobal.hookDict[tag]:
+        del gameglobal.hookDict[tag][eId]
+        
+        if len(gameglobal.hookDict[tag]) == 0:
+            del gameglobal.hookDict[tag]
+
+# 不要直接使用，请通过 utils.distribute 使用
+def callEvent(tag, *args):
+    if tag not in gameglobal.hookDict:
+        return
+
+    for eId, func in gameglobal.hookDict[tag].items():
+        ent = KBEngine.entities.get(eId)
+        if not ent:
+            continue
+        DEBUG_MSG('callEvent tag {} args {}'.format(tag, *args))
+        try:
+            hasattr(ent, func) and getattr(ent, func)(*args)
+        except Exception as e:
+            ERROR_MSG('hookOn {} exception: {}'.format(tag, e))
+    return
+    
+def hasBaseEvent(tag):
+    if IS_BASE and tag in gameglobal.hookDict:
+        return True
+    if IS_CELL and tag not in gameglobal.hookDict:
+        return True
+    return False
+
+def hasCellEvent(tag):
+    if IS_CELL and tag in gameglobal.hookDict:
+        return True
+    if IS_BASE and tag not in gameglobal.hookDict:
+        return True
+    return False
+
+# 不要直接使用，请通过 utils.distribute 使用
+def callAppsByEventTag(tag, *args):
+    if hasBaseEvent(tag):
+        callBaseApps(
+            'gameengine.callEvent',
+            (tag, *args),
+        )
+    if hasCellEvent(tag):
+        callCellApps(
+            'gameengine.callEvent',
+            (tag, *args),
+        )
+
+def addForbiddenTaskIds(taskId):
+    gameglobal.forbiddenTaskIds[taskId] = True
+    INFO_MSG("addForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
+
+def removeForbiddenTaskIds(taskId):
+    gameglobal.forbiddenTaskIds.pop(taskId, None)
+    INFO_MSG("removeForbiddenTaskIds,", taskId, gameglobal.forbiddenTaskIds)
+
+def quertForbiddenTaskIds():
+    taskIds = list(gameglobal.forbiddenTaskIds.keys())
+    INFO_MSG("quertForbiddenTaskIds,", gameglobal.forbiddenTaskIds)
+    return taskIds
+
+def checkForbiddenTaskId(taskId):
+    return taskId in gameglobal.forbiddenTaskIds

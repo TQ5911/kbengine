@@ -65,6 +65,10 @@
             <Arg>           UINT8           </Arg>
         </switchPKModel>
 
+        <setPKModel>
+            <Arg>           UINT8           </Arg>
+        </setPKModel>
+
         <setPKProtect> <Exposed/>
             <Arg>           UINT8           </Arg>
             <Arg>           BOOL            </Arg>

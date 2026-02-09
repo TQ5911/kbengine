@@ -6140,6 +6140,8 @@ namespace KBEngine
 		public UInt32 petId = 0;
 		public Int32 score = 0;
 		public List<UInt32> equipList = new List<UInt32>();
+		public Int16 level = 0;
+		public Int32 exp = 0;
 
 	}
 

@@ -69,6 +69,9 @@ class AvatarBaseEntityCall(object):
     def createGuild(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'createGuild', (arg1, )))
 
+    def cubePray(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'cubePray', (arg1, )))
+
     def dealAuthRole(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'dealAuthRole', (arg1, )))
 
@@ -209,6 +212,9 @@ class AvatarBaseEntityCall(object):
 
     def leaveCrossServerSiegeWarSpace(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'leaveCrossServerSiegeWarSpace', ()))
+
+    def levelUpPet(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'levelUpPet', (arg1, arg2, )))
 
     def modifyAuthPermission(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'modifyAuthPermission', (arg1, arg2, )))
@@ -378,8 +384,8 @@ class AvatarBaseEntityCall(object):
     def reqExpOutfit(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqExpOutfit', (arg1, arg2, arg3, )))
 
-    def reqFetchRedBag(self, arg1, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqFetchRedBag', (arg1, )))
+    def reqFetchRedBag(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqFetchRedBag', (arg1, arg2, )))
 
     def reqGetAllMailsAttach(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'reqGetAllMailsAttach', ()))
@@ -1147,9 +1153,6 @@ class AvatarCellEntityCall(object):
 
     def sendAllMemberFollowAsk(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'sendAllMemberFollowAsk', ()))
-
-    def sendOneMemberFollowAsk(self, arg1, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'sendOneMemberFollowAsk', (arg1, )))
 
     def setAutoCombatReliveReturnTimes(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'setAutoCombatReliveReturnTimes', (arg1, )))

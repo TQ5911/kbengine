@@ -11,13 +11,16 @@ datas ={
     "EntityID": 0,
     "ID": 32030001,
     "Name": "\u51fa\u751f\u70b9",
-    "PosX": 167.698,
-    "PosY": 527.809,
-    "PosZ": 107.4192,
+    "PosX": 167.6575,
+    "PosY": 527.8172,
+    "PosZ": 112.0,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 0.0,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 0.0,
       "TelX": 39.52325,
       "TelY": 39.0038,
@@ -3788,6 +3791,32 @@ datas ={
       "TelX": 167.5635,
       "TelY": 526.2747,
       "TelZ": 12.07692
+    }
+  },
+  "32038010": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Teleporter",
+    "ClassNameType": 2,
+    "CustomID": "",
+    "Dir": 310.0,
+    "DisplayName": "",
+    "EntityID": 17310002,
+    "ID": 32038010,
+    "Name": "\u4f20\u9001\u70b9",
+    "PosX": 174.94,
+    "PosY": 527.7442,
+    "PosZ": 107.44,
+    "Props": {
+      "CameraId": 0,
+      "GateType": 1,
+      "Remark": "",
+      "ShowInSceneMap": 1,
+      "TelDir": 304.1893,
+      "TelX": 174.94,
+      "TelY": 527.7442,
+      "TelZ": 107.44
     }
   }
 }

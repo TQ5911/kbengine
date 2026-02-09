@@ -14,7 +14,9 @@ class CubeQuotaVal(userType.UserSoleType):
     '''CUBE_QUOTA_DATA_INFO'''
     def __init__(self, leftTime=0, enterTime=0, cubeDurState=gameconst.CubeDurStatus.NORMAL):
         self.leftTime = leftTime
-        self.enterTime = enterTime
+        self.enterTime = enterTime 
+        # 这个时间可不是进入房间的时间，因为算经过多少时间需要靠于enterTime和leftTime的差值来计算
+        # 但是如果enterTime一直不变的话，假设出现非法关服，会出现累计时间非常大的情况 
         self.cubeDurState = cubeDurState
 
     def __str__(self):
@@ -35,6 +37,15 @@ class CubeQuotaVal(userType.UserSoleType):
 
         return self.leftTime
 
+    def refreshEnterTime(self):
+        if self.cubeDurState != gameconst.CubeDurStatus.ENTER:
+            return
+
+        _now = utils.getNow()
+        _cost = _now - self.enterTime
+        self.leftTime = max(0, self.leftTime - _cost)
+        self.enterTime = _now
+
     def setCubeEnterTime(self, avatar, enterTime):
         if self.cubeDurState == gameconst.CubeDurStatus.ENTER:
             ERROR_MSG('setCubeEnterTime error, cubeDurState is enter')
@@ -45,6 +56,9 @@ class CubeQuotaVal(userType.UserSoleType):
 
     def addLeftTime(self, avatar, delta):
         self.leftTime += delta
+
+        self.refreshEnterTime()
+
         avatar.client.onCubeRoomEndTime(self.calcLeftTime() + utils.getNow())
 
         _mapId = formula.getMapId(avatar.spaceNo)
@@ -55,6 +69,7 @@ class CubeQuotaVal(userType.UserSoleType):
             _floor,
             _mapId,
             gameconst.CUBE_EVENT_ADD_TIME,
+            self.calcLeftTime(),
         )
 
     def checkout(self):

@@ -7,7 +7,7 @@ datas ={
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
-        "Dir": 55.0,
+        "Dir": 88.37499,
         "DisplayName": "",
         "EntityID": 0,
         "ID": 40050002,
@@ -15,9 +15,12 @@ datas ={
         "PosY": 105.2704,
         "PosZ": 159.771,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "TelX": 322.4684,
           "TelY": 1.518272,
           "TelZ": 226.8232

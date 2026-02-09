@@ -1186,8 +1186,10 @@ class SkillBase(userType.UserSoleType):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
             skillRange = self.getRange(caster, self.skillId, self.skillLv)
             # 根据target的碰撞距离处理
-            if target and hasattr(target, 'creepBaseId'):
-                collisionDis = utils.getCollisionDistance(target.creepBaseId, 2.0)
+            if target:
+                collisionDis = 2.0
+                if hasattr(target, 'creepBaseId'):
+                    collisionDis = utils.getCollisionDistance(target.creepBaseId, collisionDis)
                 dis = sMath.distance2D(caster.position, target.position)
                 # 距离超过碰撞距离，需要减去碰撞距离。否则原地不动
                 dis = dis - collisionDis if dis > collisionDis else 0
@@ -1570,8 +1572,18 @@ class SkillBase(userType.UserSoleType):
 
     def _cancelTempTimer(self, owner, timerName, timerTag=''):
         tid = self.popTempData(timerName, 0)
+        if owner.IsAvatar:
+            owner.skillTimerLogQueue.addSkillTimerLog(
+                id(self), 
+                tid, 
+                gameconst.SKILL_LOG_OPR_REMOVE_TIMER, 
+                timerName,
+                self.skillId
+            )
+
         if tid:
-            owner._cancelCallback(tid, timerTag)
+            if owner._cancelCallback(tid, timerTag) == gameconst.TIMER_CANCEL_RET_MISMATCH and owner.IsAvatar:
+                owner.skillTimerLogQueue.errReportLogQueue()
             return True
         return False
 
@@ -1583,12 +1595,12 @@ class SkillBase(userType.UserSoleType):
             owner.IsAvatar and owner.client.onUseStageSkill(self.skillId, 1, time.time())
 
         if not self.hasTempData('tNextCast'):
-            self.setTempData('tNextCast', self.tNextCast)
+            self.setTempData(owner, 'tNextCast', self.tNextCast)
         self.tNextCast = time.time() - 0.1
         owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), True, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
         tid = owner._callback(duration, '_onSkillCallback', (self, 'invalidateRefreshCD', ()),
                               gametimer.TIMER_TAG_RESTORE_CD)
-        self.setTempData('restoreCDTimer', tid)
+        self.setTempData(owner, 'restoreCDTimer', tid)
 
     def invalidateRefreshCD(self, owner, doReset=True, notifyClient=True):
         owner.combatDebugMsg('invalidateRefreshCD: skillId:%s, tempData:%s', self.skillId, self.tempData)
@@ -1601,7 +1613,7 @@ class SkillBase(userType.UserSoleType):
 
     def beginUseSkill(self, owner, targetId, skillArgs, compensateTime, doSetState=True, enterCD=True, parentCtx=None):
         self.isInSkill = True
-        self.setTempData('skillArgs', skillArgs)
+        self.setTempData(owner, 'skillArgs', skillArgs)
         owner.combatDebugMsg('SkillBase.beginUseSkill: skillId:%s, targetId:%s, skillArgs:%s', self.skillId, targetId, skillArgs)
         target = KBEngine.entities.get(targetId)
         startAction = self.getStartAction(self.skillId)
@@ -1664,12 +1676,12 @@ class SkillBase(userType.UserSoleType):
                 totalReleaseCount = self.getTempData('totalReleaseCount', 0)
                 # 激活条件
                 if releasedCount == 0 or releasedCount != totalReleaseCount:
-                    self.setTempData('releasedCount', addValue + 1)
-                    self.setTempData('totalReleaseCount', addValue + 1)
-                    self.setTempData('releaseTime', time.time())
+                    self.setTempData(owner, 'releasedCount', addValue + 1)
+                    self.setTempData(owner, 'totalReleaseCount', addValue + 1)
+                    self.setTempData(owner, 'releaseTime', time.time())
                 # 消耗一次
                 if releasedCount > 0:
-                    self.setTempData('releasedCount', releasedCount - 1)
+                    self.setTempData(owner, 'releasedCount', releasedCount - 1)
             self.enterCDTime(owner)
             owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
 
@@ -1700,7 +1712,7 @@ class SkillBase(userType.UserSoleType):
         if context.actionStage >= 50:
             gameengine.reportCritical('skill action stage reach max', context.actionStage, self.skillId)
 
-        self.setTempData('duration', duration)
+        self.setTempData(owner, 'duration', duration)
         if delay <= 0:
             owner.doSkillAction(self.skillId, context, firstStageCalcDelay, True,
                                 gameconst.UseSkillCheck.MUL_ATTACK_CHECK_IGNORES, duration)
@@ -1710,7 +1722,7 @@ class SkillBase(userType.UserSoleType):
                                   gametimer.TIMER_TAG_DO_SKILL_ACTION)
 
             self._cancelTempTimer(owner, 'mulAttackActionTimer', gametimer.TIMER_TAG_DO_SKILL_ACTION)
-            self.setTempData('mulAttackActionTimer', tid)
+            self.setTempData(owner, 'mulAttackActionTimer', tid)
 
     def applySkillEffect(self, owner, targetId, skillArgs, actionCtx, calcDelay, doRemoveState=True):
         realSkillArgs = skillArgs
@@ -1758,7 +1770,7 @@ class SkillBase(userType.UserSoleType):
                                       gametimer.TIMER_TAG_SKILL_DONE)
 
                 self._cancelTempTimer(owner, 'skillDoneTimer', gametimer.TIMER_TAG_SKILL_DONE)
-                self.setTempData('skillDoneTimer', tid)
+                self.setTempData(owner, 'skillDoneTimer', tid)
 
     def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True):
         self._cancelTempTimer(owner, 'skillDoneTimer', gametimer.TIMER_TAG_SKILL_DONE)
@@ -1805,7 +1817,7 @@ class SkillBase(userType.UserSoleType):
         if self.hasTempData('changeToSkill'):
             toSkillId = self.getTempData('changeToSkill')
             skillVal = owner.getSkillByCategory(toSkillId, self.getLevel(owner))
-            skillVal.setTempData('changedFromSkill', self.skillId)
+            skillVal.setTempData(owner, 'changedFromSkill', self.skillId)
             return skillVal, True
         return self, False
 
@@ -1831,7 +1843,7 @@ class SkillBase(userType.UserSoleType):
         pass
 
     def changeToSkill(self, toSkillId):
-        self.setTempData('changeToSkill', toSkillId)
+        self.setTempData(None, 'changeToSkill', toSkillId)
 
     def onChangedSkillBegin(self, owner):
         if self.hasTempData('restoreCDTimer'):
@@ -1840,9 +1852,15 @@ class SkillBase(userType.UserSoleType):
         self.enterCDTime(owner)
         owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast), False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
 
-    def setTempData(self, name, val):
-        if self.tempData.get(name) and name.endswith('Timer'):
-            gameengine.reportCritical('setTempData cover timer', name, val)
+    def setTempData(self, owner, name, val):
+        if name.endswith('Timer') and owner.IsAvatar:
+            owner.skillTimerLogQueue.addSkillTimerLog(
+                id(self),
+                val,
+                gameconst.SKILL_LOG_OPR_SET_TIMER,
+                name,
+                self.skillId,
+            )
 
         self.tempData[name] = val
 
@@ -1967,7 +1985,7 @@ class CommonSkillVal(SkillBase):
                         bkData = owner.getTempMiscProp(gameconst.AvatarProps.timebackSkillData)
                         if bkData:
                             skillArgs.extend(list(bkData.position))
-                    self.setTempData(
+                    self.setTempData(owner, 
                         'delayCalcTimer',
                         owner._callback(
                             calcDelay + 0.1,
@@ -2001,8 +2019,8 @@ class CommonSkillVal(SkillBase):
         timerId = caster._callback(delayTime, 'channelingSkillTick',
                                    (self, targetID, arr, tuple(caster.position), actionCtx),
                                    gametimer.TIMER_TAG_CHANNELING_CALC)
-        self.setTempData('channelingCalcTimer', timerId)
-        self.setTempData('tChannelingStart', time.time() + delayTime)
+        self.setTempData(caster, 'channelingCalcTimer', timerId)
+        self.setTempData(caster, 'tChannelingStart', time.time() + delayTime)
 
     def calBulletTime(self, owner, targetId):
         target = KBEngine.entities.get(targetId)
@@ -2028,7 +2046,7 @@ class CommonSkillVal(SkillBase):
             owner.setState(gameconst.State.UsingSkill)
             endTimer = owner._callback(postSkillTime, '_onSkillCallback', (self, 'onChannelingEnd', (True,)),
                                        gametimer.TIMER_TAG_ON_CHANNELING_END)
-            self.setTempData('channelingEndTimer', endTimer)
+            self.setTempData(owner, 'channelingEndTimer', endTimer)
         else:
             self.onChannelingEnd(owner, True)
 
@@ -2181,7 +2199,7 @@ class CastingSkillVal(CommonSkillVal):
 
         tid = caster._callback(1, 'castingSkillCheck', (targetID, arr, tuple(caster.position)),
                                gametimer.TIMER_TAG_CASTING_CHECK)
-        self.setTempData('castingCheckTimer', tid)
+        self.setTempData(caster, 'castingCheckTimer', tid)
         # caster.setTempMiscProp(gameconst.AvatarProps.castingCheckTimer, checkTimer)
 
         # #主角由客户端发起释放，其他实体服务器自动放
@@ -2190,7 +2208,7 @@ class CastingSkillVal(CommonSkillVal):
         castingTime = self.getCastingtimeMax(self.skillId)
         useTimer = caster._callback(castingTime, '_useSkillBySkillObj', (self, targetID, arr),
                                     gametimer.TIMER_TAG_CASTING_SKILL)
-        self.setTempData('castingSkillTimer', useTimer)
+        self.setTempData(caster, 'castingSkillTimer', useTimer)
 
         castingAction = self.getSkillData(self.skillId).get('castingAction')
         if castingAction:
@@ -2369,7 +2387,7 @@ class StagedSkill(ZedSkillVal):
             if not curStageSkillId:
                 return self, False
             curStageSKill = StagedSkill(curStageSkillId, self.skillLv, parentSkill=self)
-            self.setTempData('stageChild', curStageSKill)
+            self.setTempData(owner, 'stageChild', curStageSKill)
             return curStageSKill, False
 
     def getSkillIdForStage(self, stageIndex):
@@ -2431,7 +2449,7 @@ class StagedSkill(ZedSkillVal):
                 stageDuration = SSD.datas[nextStageSkillId]['mulSkillCD']
                 cdTimer = owner._callback(stageDuration, '_onSkillCallback', (self, 'onStageEnd', (True,)),
                                           gametimer.TIMER_TAG_ON_STAGE_END)
-                self.setTempData('stageCDTimer', cdTimer)
+                self.setTempData(owner, 'stageCDTimer', cdTimer)
 
                 clientStageIdx = self.stageIndex
                 if isEnhancedStage and nextStageSkillId:
@@ -2525,7 +2543,7 @@ class ShooterSkillVal(CommonSkillVal):
         endTime = self.tCanUseEndTime - time.time()
         cdTimer = owner._callback(endTime, '_onSkillCallback', (self, 'resetSkill', (owner,)),
                                   gametimer.TIMER_TAG_SHOOTER_SKILL_END)
-        self.setTempData('shooterCDTimer', cdTimer)
+        self.setTempData(owner, 'shooterCDTimer', cdTimer)
 
         return isSucc, None, effectTargetIds
 

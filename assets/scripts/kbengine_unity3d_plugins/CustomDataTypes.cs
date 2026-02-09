@@ -2427,6 +2427,8 @@ namespace KBEngine
 			datas.petId = stream.readUint32();
 			datas.score = stream.readInt32();
 			datas.equipList = equipList_DataType.createFromStreamEx(stream);
+			datas.level = stream.readInt16();
+			datas.exp = stream.readInt32();
 			return datas;
 		}
 
@@ -2435,6 +2437,8 @@ namespace KBEngine
 			stream.writeUint32(v.petId);
 			stream.writeInt32(v.score);
 			equipList_DataType.addToStreamEx(stream, v.equipList);
+			stream.writeInt16(v.level);
+			stream.writeInt32(v.exp);
 		}
 	}
 

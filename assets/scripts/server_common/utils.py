@@ -854,12 +854,6 @@ def getEntitiesByIds(entIdList):
 def getBuffEffectKey(effectId, effectIndex):
     return effectId * 100 + effectIndex
 
-def getObjIdSkillInfoKey(objId, skillId):
-    return objId * 100000000 + skillId
-
-def getBuffEffectInfoKey(buffId, effectId):
-    return buffId * 100000000 + effectId
-
 def mustInSpecialSpace(type_):
     def _wrapper(fn):
         @functools.wraps(fn)
@@ -3186,6 +3180,9 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                         'lightPillar': int(_pP['LightPillar']),
                     })
 
+            if 'IsOnGround' in _pP:
+                params['isOnGround'] = bool(_pP['IsOnGround'])
+
         if className == 'Monster':
             _monsterId = int(_mPrm['EntityID'])
             if formula.spaceInWorldLine(spaceNo):
@@ -3599,3 +3596,40 @@ def isInAttackLineWithRadius(targetPos, startPos, direction, length, width, targ
 
     return distSq <= (targetRadius * targetRadius)
 
+# 事件订阅，任意组件的实体都可以使用
+# 注意：
+#   1. avatar的cell上不要使用，传送时可能跨进程，导致数据同步问题
+#   2. 如果在avatar(base)等动态创建的entity上使用，务必在destroy时调用 unsubscribe
+#   3. 由于是跨进程调用，注意确认下时序问题
+def subscribe(tag, box, func):
+    if IS_BASE:
+        gameengine.callBaseApps(
+            'gameengine.subscribeEvent',
+            (tag, box.id, func),
+        )
+    else:
+        # avatar 的cell上不要使用
+        if box and box.IsAvatar:
+            ERROR_MSG('subscribe event failed, avatar in cell  cannot use:', box, tag)
+            return
+        gameengine.callCellApps(
+            'gameengine.subscribeEvent',
+            (tag, box.id, func),
+        )
+def unsubscribe(tag, box):
+    if IS_BASE:
+        gameengine.callBaseApps(
+            'gameengine.unsubscribeEvent',
+            (tag, box.id),
+        )
+    else:
+        gameengine.callCellApps(
+            'gameengine.unsubscribeEvent',
+            (tag, box.id),
+        )
+        
+# 分发事件，任意组件的实体都可以使用
+# 注意：
+#   1. 不要传复杂的结构化数据
+def distribute(tag, *args):
+    gameengine.callAppsByEventTag(tag, *args)

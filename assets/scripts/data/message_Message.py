@@ -1869,6 +1869,15 @@ datas = _tools.RODict({
         "confirmFunc": "",
         "cancelFunc": "",
     }),
+    54000212: _tools.RODict({
+        "ID": 54000212,
+        "name": "taskFailed",
+        "Message": "当前任务已失败！请前往任务界面放弃此任务！",
+        "DisplayMode": 13,
+        "defaultCountdown": 2.0,
+        "confirmFunc": "",
+        "cancelFunc": "",
+    }),
     54000213: _tools.RODict({
         "ID": 54000213,
         "name": "dungeonTeamNearby",
@@ -2016,7 +2025,7 @@ datas = _tools.RODict({
     54000242: _tools.RODict({
         "ID": 54000242,
         "name": "auctionPutawayConfirm",
-        "Message": "确认以<#itemId={0}>*{1}的价格出售<#itemId={2}>*{3}？",
+        "Message": "确认以<#itemId={0}>*<color=#038304>{1}</color>的价格出售<#itemId={2}>*<color=#038304>{3}</color>？",
         "DisplayMode": 8,
         "defaultCountdown": 0.0,
         "confirmFunc": "确定",
@@ -2088,7 +2097,7 @@ datas = _tools.RODict({
     54000250: _tools.RODict({
         "ID": 54000250,
         "name": "auctionPublicityConfirm",
-        "Message": "<#itemId={0}>为高价值商品，需经过{1}小时公示期后才可交易，是否继续？",
+        "Message": "<#itemId={0}>为高价值商品，需经过<color=#038304>{1}小时</color>公示期后才可交易，是否继续？",
         "DisplayMode": 19,
         "defaultCountdown": 0.0,
         "confirmFunc": "确定",
@@ -5694,6 +5703,24 @@ datas = _tools.RODict({
         "confirmFunc": "",
         "cancelFunc": "",
     }),
+    54001800: _tools.RODict({
+        "ID": 54001800,
+        "name": "petExpOverflowMsg",
+        "Message": "所选材料已够升至满级",
+        "DisplayMode": 13,
+        "defaultCountdown": 2.0,
+        "confirmFunc": "",
+        "cancelFunc": "",
+    }),
+    54001801: _tools.RODict({
+        "ID": 54001801,
+        "name": "petMaxLevelMsg",
+        "Message": "当前精灵已满级",
+        "DisplayMode": 13,
+        "defaultCountdown": 2.0,
+        "confirmFunc": "",
+        "cancelFunc": "",
+    }),
     54001838: _tools.RODict({
         "ID": 54001838,
         "name": "dolphin_downloadNetError",
@@ -7179,6 +7206,15 @@ datas = _tools.RODict({
         "confirmFunc": "",
         "cancelFunc": "",
     }),
+    54002164: _tools.RODict({
+        "ID": 54002164,
+        "name": "serverUnlockTimeMsg",
+        "Message": "距服务器开放剩余<color=#038304>{0}</color>，敬请期待！",
+        "DisplayMode": 34,
+        "defaultCountdown": 0.0,
+        "confirmFunc": "确定",
+        "cancelFunc": "",
+    }),
     54002165: _tools.RODict({
         "ID": 54002165,
         "name": "synthesisItemIsBound",
@@ -8442,7 +8478,7 @@ datas = _tools.RODict({
     54003206: _tools.RODict({
         "ID": 54003206,
         "name": "mineBattle_notPickableMsg",
-        "Message": "本帮会成员不可拾取",
+        "Message": "本帮会成员与同盟成员不可拾取",
         "DisplayMode": 13,
         "defaultCountdown": 2.0,
         "confirmFunc": "",
@@ -8686,6 +8722,15 @@ datas = _tools.RODict({
         "ID": 54920009,
         "name": "shareSuccess",
         "Message": "分享成功",
+        "DisplayMode": 13,
+        "defaultCountdown": 2.0,
+        "confirmFunc": "",
+        "cancelFunc": "",
+    }),
+    54920012: _tools.RODict({
+        "ID": 54920012,
+        "name": "shareFailed",
+        "Message": "分享失败",
         "DisplayMode": 13,
         "defaultCountdown": 2.0,
         "confirmFunc": "",
@@ -9438,6 +9483,15 @@ datas = _tools.RODict({
         "confirmFunc": "",
         "cancelFunc": "",
     }),
+    54990125: _tools.RODict({
+        "ID": 54990125,
+        "name": "ElfRoof",
+        "Message": "可在铁匠铺附近找到。",
+        "DisplayMode": 13,
+        "defaultCountdown": 2.0,
+        "confirmFunc": "",
+        "cancelFunc": "",
+    }),
     54480001: _tools.RODict({
         "ID": 54480001,
         "name": "jingaofenduan",
@@ -9953,4 +10007,4 @@ datas = _tools.RODict({
     })
 })
 minKey = 54000000
-maxKey = 54990124
+maxKey = 54990125

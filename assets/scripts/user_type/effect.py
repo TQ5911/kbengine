@@ -413,10 +413,11 @@ class EventEffect(EffectBase):
         super(EventEffect, self).__init__(owner, callerInfo, effectId, effectIndex, extraInfo)
         effectData = self.getEffectData()
         triggerTime = 0
-        if effectData.get('EventSourceType') == gameconst.EffetEventSourceType.LINGSHOU_SKILL_BUFF:
-            bufVal = callerInfo.getCaller(owner)
-            if bufVal and bufVal.rootContext and bufVal.rootContext.actionType == actionContext.ACTION_PASSIVE_SKILL:
-                triggerTime = owner.getLingShouEffectEventInfo(bufVal.rootContext.objId, bufVal.rootContext.skillId, bufVal.buffId, self.effectId)
+        if effectData.get('EventSourceType', 0) and effectData.get('EventCD', 0):
+            triggerTime = owner.getEffectEventCDInfo(self.effectId)
+        else:
+            # 默认需求:不持久化的，即便CD非0也重置
+            pass
         self.tNextTime = triggerTime
         #DEBUG_MSG('init EventEffect', self.effectId, self.tNextTime, utils.getNowTimeStr(self.tNextTime))
 
@@ -512,15 +513,10 @@ class EventEffect(EffectBase):
                     return
                 _ret = owner.doCombatActions(action, owner, target, callerInfo.getFromEntId(owner), ctxBuilder)
 
-        if _ret is None:
+        if _ret is None or _ret:
             self.tNextTime = time.time() + effectData.get('EventCD', 0)
-        elif _ret:
-            self.tNextTime = time.time() + effectData.get('EventCD', 0)
-
-        if effectData.get('EventSourceType') == gameconst.EffetEventSourceType.LINGSHOU_SKILL_BUFF:
-            bufVal = callerInfo.getCaller(owner)
-            if bufVal and bufVal.rootContext and bufVal.rootContext.actionType == actionContext.ACTION_PASSIVE_SKILL:
-                owner.updateLingShouEffectEventInfo(bufVal.rootContext.objId, bufVal.rootContext.skillId, bufVal.buffId, self.effectId, self.tNextTime)
+            if effectData.get('EventSourceType', 0) and effectData.get('EventCD', 0):
+                owner.updateEffectEventCDInfo(self.effectId, self.tNextTime)
 
     def removeEffect(self, owner, callerInfo, isOverleap=False):
         self.isValid = False

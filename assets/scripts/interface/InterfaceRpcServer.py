@@ -6,6 +6,7 @@ import gameconfig
 import utils
 import gameconst
 import gameglobal
+import json
 
 from rpc import RpcChannel, TcpServer
 from proto.interface_pb2 import Interface, BaseApp_Stub, Void, SetAccountCompResult
@@ -84,6 +85,10 @@ class Baseapp2InterfaceRpcService(Interface):
         timestamp = request.timestamp
         INFO_MSG('updateAntiAddictionData:', timeType, timestamp)
         gameglobal.antiAddictionData = [timeType, timestamp]
+
+    def setMapleServerInfo(self, rpc_controller, request, done):
+        gameglobal.mapleServerInfo = json.loads(request.data)
+        INFO_MSG('setMapleServerInfo:', gameglobal.mapleServerInfo)
 
 class BaseappClientMgr(object):
     def __init__(self):

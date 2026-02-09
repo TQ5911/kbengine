@@ -13,11 +13,7 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1018
-      ]
-    }
+    "transition": {}
   },
   "1004": {
     "type": "delayLoop",
@@ -233,7 +229,7 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1048,
+        1188,
         1049
       ]
     }
@@ -395,24 +391,9 @@ datas ={
       ]
     }
   },
-  "1048": {
-    "type": "monsterHp",
-    "monsterID": [
-      40020074
-    ],
-    "compare": 2,
-    "hpPercent": 60.0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1033
-      ]
-    }
-  },
   "1049": {
     "type": "delayLoop",
-    "firstDelay": 60.0,
+    "firstDelay": 130.0,
     "loopDelay": 0.0,
     "loopNum": 1,
     "transition": {
@@ -425,7 +406,6 @@ datas ={
     "type": "integrationEvent",
     "transition": {
       "finished": [
-        1052,
         1107
       ]
     }
@@ -1037,18 +1017,21 @@ datas ={
   "1107": {
     "type": "dungeonTaskForceComplete",
     "taskID": 86060098,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1199,
+        1198
+      ]
+    }
   },
   "1108": {
     "type": "taskFinished",
-    "taskID": 86060098,
+    "taskID": 86060085,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1109,
-        1110,
-        1111
+        1195
       ]
     }
   },
@@ -1056,15 +1039,6 @@ datas ={
     "type": "taskUndertake",
     "taskID": 86060129,
     "transition": {}
-  },
-  "1110": {
-    "type": "castCinemaPlay",
-    "cinemaPlayID": 98010021,
-    "transition": {
-      "finished": [
-        1184
-      ]
-    }
   },
   "1111": {
     "type": "taskUndertake",
@@ -1210,19 +1184,10 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1142,
+        1143,
         1068,
         1181,
         1183
-      ]
-    }
-  },
-  "1142": {
-    "type": "castCinemaPlay",
-    "cinemaPlayID": 98010016,
-    "transition": {
-      "finished": [
-        1143
       ]
     }
   },
@@ -1256,17 +1221,8 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1146,
+        1147,
         1067
-      ]
-    }
-  },
-  "1146": {
-    "type": "castCinemaPlay",
-    "cinemaPlayID": 98010019,
-    "transition": {
-      "finished": [
-        1147
       ]
     }
   },
@@ -1459,27 +1415,7 @@ datas ={
     "exitTime": 26.0,
     "transition": {
       "finished": [
-        1185
-      ]
-    }
-  },
-  "1185": {
-    "type": "createMonster",
-    "entityID": [
-      40020085
-    ],
-    "num": 1,
-    "lv": "5",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1163
+        1193
       ]
     }
   },
@@ -1500,6 +1436,82 @@ datas ={
     "posY": 63.0,
     "posZ": 116.0,
     "angle": 160,
+    "transition": {}
+  },
+  "1188": {
+    "type": "monsterHp",
+    "monsterID": [
+      40020074
+    ],
+    "compare": 2,
+    "hpPercent": 70.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1033
+      ]
+    }
+  },
+  "1193": {
+    "type": "createMonster",
+    "entityID": [
+      40020085
+    ],
+    "num": 1,
+    "lv": "7",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1163
+      ]
+    }
+  },
+  "1195": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1184,
+        1052,
+        1111
+      ]
+    }
+  },
+  "1198": {
+    "type": "monsterHp",
+    "monsterID": [
+      40020074
+    ],
+    "compare": 2,
+    "hpPercent": 30.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1200
+      ]
+    }
+  },
+  "1199": {
+    "type": "delayLoop",
+    "firstDelay": 130.0,
+    "loopDelay": 0.0,
+    "loopNum": 1,
+    "transition": {
+      "finished": [
+        1200
+      ]
+    }
+  },
+  "1200": {
+    "type": "dungeonTaskForceComplete",
+    "taskID": 86060085,
     "transition": {}
   }
 }

@@ -34,7 +34,7 @@ datas = _tools.RODict({
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
-        "goodsList": (148, 149, 150, 151, 152, 153, 154, 155, 156),
+        "goodsList": (152, 153, 154, 155, 148, 149, 150, 151),
         "groupId": None,
         "numberWeight": None,
         "groupRefreshTime": 0,
@@ -62,7 +62,19 @@ datas = _tools.RODict({
         "groupId": None,
         "numberWeight": None,
         "groupRefreshTime": 0,
+    }),
+    6: _tools.RODict({
+        "ID": 6,
+        "name": "神秘商人",
+        "type": 2,
+        "isTimeLimit": 0,
+        "openTime": None,
+        "closeTime": None,
+        "goodsList": (201, 202, 203, 204, 205, 206, 207, 208),
+        "groupId": None,
+        "numberWeight": None,
+        "groupRefreshTime": 0,
     })
 })
 minKey = 1
-maxKey = 5
+maxKey = 6

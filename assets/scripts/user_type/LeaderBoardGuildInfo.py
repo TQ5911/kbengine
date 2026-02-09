@@ -2,7 +2,7 @@
 # coding: utf-8
 
 import userType
-
+import LogTrackingMgr
 
 class LeaderBoardGuildVal(userType.UserSoleType):
     '''LEADER_BOARD_GUILD_DATA_INFO'''
@@ -41,6 +41,17 @@ class LeaderBoardGuildVal(userType.UserSoleType):
     @staticmethod
     def calcSchool():
         return False
+
+    # 必须实现
+    def leaderBoardLog(self, leaderType, rank):
+        LogTrackingMgr.LogTrackingMgr.LeaderBoard_Guild(
+            leaderType,
+            rank,
+            self.guildUUID,
+            self.guildName,
+            self.guildLevel,
+            self.guildScore,
+        )
 
     def toLeaderBoardCacheSavedDict(self):
         # 通用名字不能变

@@ -42,6 +42,7 @@ import skill_skill as SSD
 import creep_base as CBD
 import guild_guildConst as G_GCD
 import wonderLand_floor as WL_FD
+import experience_config as EXPC
 
 
 class AvatarBuildsMixin(object):
@@ -208,9 +209,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def unlockDodgeSkill(self, oldLevel, newLevel):
         dodgeSkillId = CHD.datas[self.school].get('dodgeSkillID', 0)
         if dodgeSkillId:
-            skill = SkillManager.SkillManager.addSkill(self, dodgeSkillId, 1, 0)
-            #todo add dodge skill from config
-            # self.client.onAddSkill(dodgeSkillId, 1, 0, 0, skill.getCD(self))
+            SkillManager.SkillManager.addSkill(self, dodgeSkillId, 1, 0)
 
     def getExtraSkillLv(self, skillId):
         # 获得装备、系统对技能等级的提升，包含全技能的加成
@@ -219,17 +218,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def getFatalDmgFromTable(self):
         return CHD.datas[self.school].get('baseMortal', 0) / 100.0
-
-    def _notifyRaidDungeonPlayerLastReliveCountToClient(self):
-        # dunData = DDL.datas[formula.getDungeonNoBySpaceNo(self.spaceNo)]
-        # _limit = dunData['rebornLimit'].get(gameconst.RELIVE_TYPE_DIRECTLY, None)
-        # *_, _lmt = formula.unpackGamePlayRebornLimit(gameconst.RELIVE_TYPE_DIRECTLY, _limit)
-        # reliveCount = self.spaceMgr.getPlayerReliveRecord(self.gbId)
-        # lastCount = max(_lmt - reliveCount, 0)
-        # if lastCount == float('inf'):
-        #     lastCount = -1
-        # self.client.onGetRaidDungeonPlayerLastReliveCount(-1)
-        pass
 
     # ------------------- dead and relive start -------------------
 
@@ -264,9 +252,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.ultraSkillPower = 0
 
         spaceMgr = self.spaceMgr
-        if spaceMgr and formula.isRaidDungeonSpace(self.spaceNo):
-            self._notifyRaidDungeonPlayerLastReliveCountToClient()
-
         isSiegeWar = False
         if spaceMgr and formula.isSiegeWarSpace(self.spaceNo):
             isSiegeWar = True
@@ -333,16 +318,16 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if formula.isCubeSpace(self.spaceNo):
             spaceMgr and spaceMgr.onPlayerKillAnother(self, host)
 
-        if formula.isWonderLandSpace(self.spaceNo):
-            _mapId = formula.getMapId(self.spaceNo)
-            _killerGbId = host.gbId if _hostIsAvatar else 0
-            LogTrackingMgr.LogTrackingMgr.Common_Death(
-                self.gbId,
-                gameconfig.gameId(),
-                _mapId,
-                _killerGbId,
-                killer.__class__.__name__ if killer else '',
-            )
+        _mapId = formula.getMapId(self.spaceNo)
+        _killerGbId = host.gbId if _hostIsAvatar else 0
+
+        LogTrackingMgr.LogTrackingMgr.Common_Death(
+            self.gbId,
+            _mapId,
+            _killerGbId,
+            killer.__class__.__name__ if killer else '',
+            self.position
+        )
 
     def onKillAvatar(self, deadAvatar):
         if self.IsAvatar:
@@ -401,7 +386,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         
         # 疾跑开关
         if state == gameconst.State.Sprinting:
-            if not gameconfig.visibleConfigEable('skill'):
+            if not gameconfig.visibleConfigEnabled('skill'):
                 return
         
         if self.hasState(CSDD.datas.serverControl):
@@ -575,14 +560,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         super(ImpCombat, self).goDie(killer, srcType, srcId, forceDead, context)
 
-    def isDeadWhenLogin(self, isRelogin):
-        INFO_MSG('in isDeadWhenLogin:', self.tAutoReliveTime, isRelogin)
-        if not self.isDie():
-            return
-
-        if self.spaceMgr and formula.isRaidDungeonSpace(self.spaceNo):
-            self._notifyRaidDungeonPlayerLastReliveCountToClient()
-
     def onDoDamage(self, targetId, damageVal, absorbVal, srcType, srcId):
         super(ImpCombat, self).onDoDamage(targetId, damageVal, absorbVal, srcType, srcId)
 
@@ -594,7 +571,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         INFO_MSG('     in doAutoRelive, start doRelive')
         self.doRelive(reliveType)
         return
-
 
     @property
     def dayFreeReliveDirectlyTimesLimit(self):
@@ -612,15 +588,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         # 由gm指令调用，不考虑给宠物增加经验；不占用当日经验额度
         self._modifyExp(baseExp, opUUID, src, detail, srcSubType=srcSubType, idipSource=idipSource)
 
-    def gmDeductExp(self, deltaVal, opUUID, src, detail, srcSubType=0, idipSource=0):
-        # 由gm指令调用，扣除经验值；
-        # 只支持扣除玩家身上的经验值，不能降等级
-        oldExp = self.exp
-        self.exp = max(0, self.exp - deltaVal)
-        # self.base.playerExpFlowLog(oldExp - self.exp, self.level, self.level, utils.getNow(), src, srcSubType, detail,
-        #                            idipSource)
-        return
-
     def addExpByTask(self, baseExp, rewardId, opUUID, src, desc):
         self._addExp(int(baseExp), opUUID, src, desc, rewardId=rewardId)
 
@@ -637,7 +604,21 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         self._addExp(int(baseExp), opUUID, src, detail, isNeedAddition=isNeedAddition)
 
-    def addExpByWealthVal(self, baseExp, rewardId, opUUID, src, detail):
+    def addExpByWealthVal(self, accountName, bagType, baseExp, rewardId, opUUID, src, detail):
+        LogTrackingMgr.LogTrackingMgr.Get_Item(
+            accountName,
+            self.gbId,
+            gameconfig.gameId(),
+            gameconst.ItemId.EXP,
+            0,
+            bagType,
+            gameconst.ItemBindType.NORMAL,
+            baseExp,
+            self.exp,
+            src,
+            opUUID,
+            str(detail),
+        )
         self._addExp(baseExp, opUUID, src, detail, rewardId=rewardId)
 
     def addExpByMail(self, baseExp, opUUID, src, desc):
@@ -667,25 +648,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if totalExpVal > 0:
             self._modifyExp(totalExpVal, opUUID, src, detail)
 
-    def _addExpCoin(self, exceedExp, opUUID, src, detail):
-        # DEBUG_MSG("in _addExpCoin:", exceedExp)
-        # formularId = EXPCD.datas.get('exp2CurrencyProp', {}).get('value')
-        # if not formularId:
-        #     return
-        # expFormular = FGFD.datas.get(formularId, {}).get('serverFormula')
-        # exp2CoinRatio = expFormular(self.level)
-        # if exceedExp > 0 and exp2CoinRatio > 0:
-        #     itemNum = math.floor(exceedExp / exp2CoinRatio)
-        #     itemId = EXPCD.datas.get('exp2CurrencyID', {}).get('value')
-        #     wealthVal = dropAward.AwardVal().addWealthByItemId(itemId, itemNum, dataUtils.getItemDefaultBindType())
-        #     if wealthVal.isEmpty():
-        #         DEBUG_MSG('_addExpCoin: empty wealthVal:', itemId, itemNum)
-        #         return
-        #     self.base.onMessagePre_localCross(MMD.datas.expCoin,
-        #                                       [str(exceedExp), str(gameconst.ItemId.EXP), str(0), str(itemNum)])
-        #     self.base.addWealth(src, wealthVal, opUUID, detail, awardContext.CommonContext(0), True)
-        return
-
     def dailyCheckLevelUp(self):
         svrLimitLevel = self.serverLimitLevel()
         levelExp = 120000
@@ -694,18 +656,40 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             opUUID = KBEngine.genUUID64()
             src = AAC_AACDD.datas.BONUS_SRC_AUTOLVUP
             detail = gameclass.AwardDetail()
+            LogTrackingMgr.LogTrackingMgr.Level_LevelUp(
+                self.gbId,
+                self.level,
+                self.level + 1,
+                levelExp,
+                self.exp,
+                src,
+                opUUID,
+            )
             self.levelUp(self.level + 1, opUUID, src, detail)
+
+    def makeUpdateExpLog(self, deltaVal, modifyVal, opUUID, src):
+        LogTrackingMgr.LogTrackingMgr.Update_Exp(
+            self.gbId,
+            deltaVal,
+            modifyVal,
+            opUUID,
+            src,
+            self.spaceNo,
+        )
 
     def _modifyExp(self, expVal, opUUID, src, detail, chaseExp=0, srcSubType=0, idipSource=0):
         # oldLevel = self.level
         expVal = int(expVal)
+        befExpVal = self.exp
         if expVal <= 0:
             self.exp = max(0, self.exp + expVal)
+            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src)
             return
 
         exp = self.exp + expVal
         if exp <= 0:
             self.exp = 0
+            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src)
             return
 
         level = self.level
@@ -722,8 +706,18 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             # self.base.playerExpFlowLog(realExpVal, oldLevel, level, utils.getNow(), src, srcSubType, detail, idipSource)
 
         if level > self.level:
+            LogTrackingMgr.LogTrackingMgr.Level_LevelUp(
+                self.gbId,
+                self.level,
+                level,
+                expVal,
+                int(exp),
+                src,
+                opUUID,
+            )
             self.levelUp(level, opUUID, src, detail)
         self.exp = int(exp)
+        self.makeUpdateExpLog(expVal, expVal, opUUID, src)
         self._updateExpRateToBase()
 
     def _updateExpRateToBase(self):
@@ -757,6 +751,47 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         self.base.onAvatarLevelUpBase(oldLevel, level)
         self.resetAllTargetTypeCache()
+
+        # 杀怪buff
+        self.checkLevelChange()
+
+    def getAwardAddIdxByLevel(self):
+        levelCfg = EXPC.datas.get('initialGainScope', {}).get('value', ())
+        if not levelCfg:
+            return -1
+        levelCfg = levelCfg[1:]  # 去掉第一个1
+        for idx, lv in enumerate(levelCfg):
+            if self.level <= lv:
+                return idx
+        return -1
+
+    def getKillMonsterAwardFactor(self, monsterLevel):
+        idx = self.getAwardAddIdxByLevel()
+        if idx < 0:
+            return 1.0
+        levelCfg = EXPC.datas.get('initialGainScope', {}).get('value', ())
+        if monsterLevel > levelCfg[idx+1] or monsterLevel <= levelCfg[idx]:
+            return 1.0
+        factorCfg = EXPC.datas.get('initialGainValue', {}).get('value', ())
+        if not factorCfg:
+            return 1.0
+        return factorCfg[idx]
+
+    def checkLevelChange(self):
+        buffCfg = (64006029, 64006030)
+        idx = self.getAwardAddIdxByLevel()
+        if idx < 0:
+            for buffId in buffCfg:
+                if self.hasBuff(buffId):
+                    self.removeBuff(buffId)
+        elif idx == 0:
+            if not self.hasBuff(buffCfg[0]):
+                self.addBuff(buffCfg[0], 1, self.id)
+        elif idx == 1:
+            if self.hasBuff(buffCfg[0]):
+                self.removeBuff(buffCfg[0])
+            if not self.hasBuff(buffCfg[1]):
+                self.addBuff(buffCfg[1], 1, self.id)
 
     def getBuffMirrorData(self):
         buffMirrorData = {'buffs': []}
@@ -848,61 +883,32 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             targetID = self.id
             target = self
 
-        succ = self.doUseSkill(skillID, targetID, arr, isClient, compensateTime)
-        # if succ and gameconfig.enableGeneralSkillCheatDetect() and isClient and realSkillVal.hasTag(
-        #         gameconst.SkillTag.GeneralSkill):
-        #     cheatDuration = 1
-        #     warnNum = 80
-        #     warnCD = 3600
-        #     useCnt, tLastUse, cheatCnt, warnCnt, sumWarnCnt, tLastWarn = self.getTempMiscProp(
-        #         gameconst.AvatarProps.GeneralSkillCheatDetect, (0, 0, 0, 0, 0, 0))
-        #     useCnt += 1
-        #     now = time.time()
-        #     if now - tLastUse < cheatDuration:
-        #         cheatCnt += 1
-        #
-        #     if cheatCnt >= warnNum:
-        #         sumWarnCnt += 1
-        #         warnCnt += 1
-        #         if now - tLastWarn > warnCD:
-        #             tLastWarn = now
-        #             msg = f'''上个小时触发次数: {warnCnt} 本次在线累计总触发次数: {sumWarnCnt} 本次触发异常普攻次数: {cheatCnt} 角色GBID: {self.gbId} 角色名字: {self.name}'''
-        #             WXWorkClient.instance().sendErrorMsg(msg, 'rewardAlarm')
-        #             ERROR_MSG(msg)
-        #             warnCnt = 0
-        #
-        #     if useCnt >= 100:
-        #         cheatCnt = 0
-        #         useCnt = 0
-        #
-        #     tLastUse = now
-        #     data = (useCnt, tLastUse, cheatCnt, warnCnt, sumWarnCnt, tLastWarn)
-        #     self.setTempMiscProp(gameconst.AvatarProps.GeneralSkillCheatDetect, data)
+        self.doUseSkill(skillID, targetID, arr, isClient, compensateTime)
 
     @utils.isMyself
     def useTargetSkill(self, exposed, skillID, targetID, arr, compensateTime):
         characterData = CHD.datas[self.school]
         # 翻滚开关
         if characterData['dodgeSkillID'] == skillID:
-            if not gameconfig.visibleConfigEable('skill'):
+            if not gameconfig.visibleConfigEnabled('skill'):
                 return
 
         buildSkills = characterData['build']
         #普攻开关
         if buildSkills[0] == skillID:
-            if not gameconfig.visibleConfigEable('skill'):
+            if not gameconfig.visibleConfigEnabled('skill'):
                 return
             
         # 大招或者基础技能
         if skillID == characterData['ult'] or skillID in buildSkills[1:]:
             if self.school == gameconst.CharacterType.Taoist:
-                if not gameconfig.visibleConfigEable('skillTaoist'):
+                if not gameconfig.visibleConfigEnabled('skillTaoist'):
                     return
             elif self.school == gameconst.CharacterType.Mage:
-                if not gameconfig.visibleConfigEable('skillMage'):
+                if not gameconfig.visibleConfigEnabled('skillMage'):
                     return
             elif self.school == gameconst.CharacterType.Warrior:
-                if not gameconfig.visibleConfigEable('skillWarrior'):
+                if not gameconfig.visibleConfigEnabled('skillWarrior'):
                     return
                 
         INFO_MSG("skill useTargetSkill", skillID, targetID, arr, compensateTime)
@@ -1020,7 +1026,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             WARNING_MSG("updateCommonFlagCell flagType is error:", flagType)
             return
 
-        if not gameconfig.visibleConfigEable('quickSettings')\
+        if not gameconfig.visibleConfigEnabled('quickSettings')\
                 and flagType in gameconst.AvatarFlagCell.QUICK_SETTING_RANGE:
             self.showMsg(CONST.datas['systemSwitch']['value'], [])
             return
@@ -1248,7 +1254,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         DEBUG_MSG('jump', jumpType)
         if jumpType == gameconst.JumpType.FIRST_JUMP:
             # 一跳开关
-            if not gameconfig.visibleConfigEable('skill'):
+            if not gameconfig.visibleConfigEnabled('skill'):
                 return
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Jump)):
                 self.setState(gameconst.State.Jump)
@@ -1256,7 +1262,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                 WARNING_MSG('jumpType error:', jumpType)
         elif jumpType == gameconst.JumpType.DOUBLE_JUMP:
             # 二跳开关
-            if not gameconfig.visibleConfigEable('skill'):
+            if not gameconfig.visibleConfigEnabled('skill'):
                 return
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.doubleJump)):
                 self.setState(gameconst.State.doubleJump)
@@ -1264,7 +1270,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                 WARNING_MSG('jumpType error:', jumpType)
         elif jumpType == gameconst.JumpType.FLYING:
             # 飞行开关
-            if not gameconfig.visibleConfigEable('skill'):
+            if not gameconfig.visibleConfigEnabled('skill'):
                 return
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Flying)):
                 self.topSpeed = gameconst.TopSpeedType.FlyingTopSpeed
@@ -1336,7 +1342,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return
 
         _ultSkillId = CHD.datas[self.school]['ult']
-        if not self.hasSkill(_ultSkillId):
+        # 处理下大招被铭文给替换的情况
+        newSkillId, _ = self.glyphEquipData.getInscriptionSrcSkillId(_ultSkillId)
+        if not self.hasSkill(newSkillId):
             return
 
         ultimatePowerMax = CONST.datas['ultimatePowerMax'].get('value')
@@ -1444,7 +1452,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             WARNING_MSG('changeSkillCDStatus, skill cd status change, same status,', skillId, status)
             return True
         
-        skill.setTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, status)
+        skill.setTempData(self, gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, status)
         if status == gameconst.SkillCDStatus.ENABLED:
             # 重新进入cd
             skill.enterCDTime(self)

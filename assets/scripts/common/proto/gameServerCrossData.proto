@@ -97,6 +97,7 @@ message GuildRelation {
 message BroadcastGuildRelationSingle {
     GuildRelation guildRelation = 1;
     uint32 version = 2;
+    int64 endTime = 3;
 }
 
 message GuildRelationAll {

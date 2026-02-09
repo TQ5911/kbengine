@@ -12,6 +12,7 @@ import Store
 import mall_storeList as MSLD
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import LogTrackingMgr
 
 class ImpStore(object):
 
@@ -115,6 +116,7 @@ class ImpStore(object):
         srcType = AAC_AACDD.datas.BONUS_SRC_BUY_STORE_ITEMS
         
         storeCfgData = MSLD.datas.get(storeId)
+        tp = 0
         if storeCfgData:
             tp = storeCfgData["type"]
             if tp == gameconst.STORE_TYPE.EXCHANGE_STORE1 or tp == gameconst.STORE_TYPE.EXCHANGE_STORE2:
@@ -142,3 +144,17 @@ class ImpStore(object):
 
         self.addWealth(srcType, wealthVal, opUUID, detail, awardCtx=awardCtx)
         self.client.onBuyStoreItems(storeId, itemId, itemNum, bindType, buyNum)
+
+        LogTrackingMgr.LogTrackingMgr.Store_Buy(
+            self.gbID,
+            storeId,
+            tp,
+            itemId,
+            realItemId,
+            itemNum,
+            storeItemData['limitType'],
+            storeItemData['limitNumber'],
+            buyNum,
+            str(costItem),
+            opUUID,
+        )

@@ -31,13 +31,6 @@
             <Type>          PYTHON                  </Type>
             <Flags>         CELL_PRIVATE            </Flags>
         </lingShouBattleList>
-
-        <lingShouEffectEventInfo>
-            <Type>          PY_DICT                 </Type>
-            <Flags>         CELL_PRIVATE            </Flags>
-            <Default>       {}                      </Default>
-            <Persistent>    true                    </Persistent>
-        </lingShouEffectEventInfo>
     </Properties>
 
     <BaseMethods>
@@ -76,15 +69,24 @@
         <setBattleIndex> <Exposed/>
             <Arg>   UINT8       </Arg>
         </setBattleIndex>
+
+        <levelUpPet> <Exposed/>
+            <Arg>   ARRAY <of> GRIDID </of>     </Arg>
+            <Arg>   PETID                       </Arg>
+        </levelUpPet>
+    
     </BaseMethods>
 
     <CellMethods>
         <setFollowPet>
             <Arg>   BOOL        </Arg>
             <Arg>   PETID       </Arg>
+            <Arg>   PYTHON      </Arg>
         </setFollowPet>
 
         <onSetLingShouBattleList>
+            <Arg>   PYTHON       </Arg>
+            <Arg>   UINT8        </Arg>
             <Arg>   PYTHON       </Arg>
         </onSetLingShouBattleList>
 
@@ -92,10 +94,6 @@
             <Arg>   PYTHON      </Arg>
             <Arg>   SLOTID      </Arg>
         </onUpdateLingShouBattleList>
-
-		<onInitPetProps>
-			<Arg>   PYTHON      </Arg>
-        </onInitPetProps>
     </CellMethods>
 
     <ClientMethods>
@@ -123,5 +121,12 @@
             <Arg>   UINT8       </Arg>
             <Arg>   ITEMID      </Arg>
         </onUpdateLingShouEquip>
+
+        <onLevelUpPet>
+            <Arg>   PETID       </Arg>
+            <Arg>   UINT16      </Arg>
+            <Arg>   UINT16      </Arg>
+            <Arg>   BOOL        </Arg>
+        </onLevelUpPet>
     </ClientMethods>
 </root>

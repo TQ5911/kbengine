@@ -94,6 +94,10 @@
         <afterEnterCubeDeductTimes>
         </afterEnterCubeDeductTimes>
 
+        <cubePray> <Exposed/>
+            <Arg>           BOOL                    </Arg>
+        </cubePray>
+
         <onLogonEnterCubeGetSpaceBox>
             <Arg>           ENTITYCALL              </Arg>
             <Arg>           OBJECT_ID               </Arg>
@@ -184,5 +188,13 @@
         <onCubeRoomLeftTime>
             <Arg>           LONGTIME                </Arg>
         </onCubeRoomLeftTime>
+
+        <onArenaKing>
+            <Arg>           OBJECT_ID               </Arg>
+        </onArenaKing>
+
+        <onCubePrayResult>
+            <Arg>           UINT8                   </Arg>
+        </onCubePrayResult>
     </ClientMethods>
 </root>

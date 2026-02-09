@@ -2525,6 +2525,12 @@
             <school>
                 <Type>  INT16                       </Type>
             </school>
+            <level>
+                <Type>  INT16                       </Type>
+            </level>
+            <exp>
+                <Type>  INT32                       </Type>
+            </exp>
         </Properties>
     </LINGSHOU_ITEM_VAL>
 
@@ -2594,6 +2600,12 @@
             <equipList>
                 <Type>  ARRAY <of> ITEM_ID </of>          </Type>
             </equipList>
+            <level>
+                <Type>  INT16                       </Type>
+            </level>
+            <exp>
+                <Type>  INT32                       </Type>
+            </exp>
         </Properties>
     </CLIENT_LINGSHOU_ITEM_VAL>
 
@@ -5395,4 +5407,37 @@
             </kingBuffId>
         </Properties>
     </CUBE_ARENA_DATA_INFO>
+
+    <SKILL_TIMER_LOG_DATA_INFO> FIXED_DICT
+        <implementedBy>     SkillTimerLogInfo.SkillTimerLogInstance    </implementedBy>
+        <Properties>
+            <objId>
+                <Type>  UINT64                  </Type>
+            </objId>
+            <timerId>
+                <Type>  TIMER_ID                </Type>
+            </timerId>
+            <skillId>
+                <Type>  SKILLID                 </Type>
+            </skillId>
+            <opr>
+                <Type>  UINT8                   </Type>
+            </opr>
+            <key>
+                <Type>  STRING                  </Type>
+            </key>
+            <ts>
+                <Type>  LONGTIME                </Type>
+            </ts>
+        </Properties>
+    </SKILL_TIMER_LOG_DATA_INFO>
+
+    <SKILL_TIMER_LOG_QUEUE_DATA_INFO> FIXED_DICT
+        <implementedBy>     SkillTimerLogQueueInfo.SkillTimerLogQueueInstance    </implementedBy>
+        <Properties>
+            <logQueue>
+                <Type>  ARRAY <of>  SKILL_TIMER_LOG_DATA_INFO   </of>   </Type>
+            </logQueue>
+        </Properties>
+    </SKILL_TIMER_LOG_QUEUE_DATA_INFO>
 </root>

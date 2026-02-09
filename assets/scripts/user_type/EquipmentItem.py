@@ -1347,6 +1347,18 @@ class EquipAttr(userType.UserSoleType):
         self.enhanceAttrs = self.calculateEnhancementAttrs(self.enhanceLv)
         self.calcScore()
 
+    def getBlessAffixId(self):
+        blessAffixId = 0
+        # 根据装备品质获取对应的幸运词条
+        blessAffixIdCfg = GEGCD.datas['blessAffixID']['value']
+        if blessAffixIdCfg:
+            for blessAffixIdData in blessAffixIdCfg:
+                quality, affixId = blessAffixIdData
+                if quality == self.quality:
+                    blessAffixId = affixId
+                    break
+        return blessAffixId
+    
     def spiritWashing(self, spiritPos, unbindValue):
         INFO_MSG('in spiritWashing:', self.washingLuckData, spiritPos, unbindValue)
         if self.spiritSlotNum <= 0:
@@ -1368,7 +1380,9 @@ class EquipAttr(userType.UserSoleType):
         totalAffixesNum = 0
         specificAffixId = 0
         triggerLuck = False
-        blessAffixId = int(GEGCD.datas['blessAffixID']['value'])
+        # 幸运词条
+        blessAffixId = self.getBlessAffixId()
+
         for idx, washRecords in self.washingLuckData.items():
             # washRecords :[curNum, dstNum]
             # 固定词条中指定词条数量必须等于配置数量才会触发这条保底

@@ -42,6 +42,11 @@ message AntiAddictionData
     uint64 timestamp = 2;
 }
 
+message MapleServerInfo
+{
+    string data = 1;
+}
+
 // Interface 进程的 service
 service Interface
 {
@@ -54,6 +59,7 @@ service Interface
     rpc syncRegisterCount(IntVal) returns(Void);
     rpc setAccountComp(SetAccountCompVal) returns(Void);
     rpc updateAntiAddictionData(AntiAddictionData) returns(Void);
+    rpc setMapleServerInfo(MapleServerInfo) returns(Void);
 }
 
 // BaseApp 的 service

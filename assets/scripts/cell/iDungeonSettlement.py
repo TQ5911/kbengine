@@ -41,13 +41,13 @@ class IDungeonSettlement(object):
         INFO_MSG('IDungeonSettlement::checkDungeonVisibleConfigEnabled: begin ', dungeonPlayMode)
         ret = True
         if dungeonPlayMode == gameconst.DungeonPlayModeEnum.CRUSADE:
-            if not gameconfig.visibleConfigEable('teamDungeon'):
+            if not gameconfig.visibleConfigEnabled('teamDungeon'):
                 ret = False
         elif dungeonPlayMode == gameconst.DungeonPlayModeEnum.CHIEF:
-            if not gameconfig.visibleConfigEable('raidDungeon'):
+            if not gameconfig.visibleConfigEnabled('raidDungeon'):
                 ret = False
         elif dungeonPlayMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
-            if not gameconfig.visibleConfigEable('guildBossChallenge'):
+            if not gameconfig.visibleConfigEnabled('guildBossChallenge'):
                 ret = False
 
         INFO_MSG('IDungeonSettlement::checkDungeonVisibleConfigEnabled: end ', dungeonPlayMode, ret)

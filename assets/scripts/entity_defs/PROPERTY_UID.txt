@@ -336,6 +336,7 @@ Avatar drugsQuantity 550
 Avatar drugsQuantityBase 31262
 Avatar duelAttr 133
 Avatar duelBlackDict 31225
+Avatar effectEventCDInfo 32254
 Avatar endCrossServerTimerId 31583
 Avatar enemyCacheSet 30440
 Avatar enemyMgr 441
@@ -437,7 +438,6 @@ Avatar leftGuildTS 426
 Avatar level 5
 Avatar limitStoreRefreshDict 32061
 Avatar lingShouBattleList 31130
-Avatar lingShouEffectEventInfo 31487
 Avatar lingShouId 275
 Avatar lingShouInfo 31128
 Avatar loadMailCDTime 31272
@@ -584,6 +584,7 @@ Avatar silentSpeakTime 30674
 Avatar skillBroken 30364
 Avatar skillCD 473
 Avatar skillDic 30137
+Avatar skillTimerLogQueue 32259
 Avatar slowAnti 457
 Avatar slowEnh 456
 Avatar spaceMgrBox 30400
@@ -979,6 +980,7 @@ Creation disappearTimer 31260
 Creation dmgArmor 566
 Creation dodge 308
 Creation drugsQuantity 639
+Creation effectEventCDInfo 32258
 Creation enemyCacheSet 31176
 Creation eventDic 31246
 Creation fatal 291
@@ -1445,6 +1447,7 @@ LeaderBoardStub leaderBoardType 31393
 LeaderBoardStub methodPoolBase 31419
 LeaderBoardStub tempMiscPropsBase 31420
 LeaderBoardStub timerDataBase 31421
+LoginStub SVIPOnlineNum 32260
 LoginStub account2box 30163
 LoginStub accountCache 30159
 LoginStub accountNumCounter 30166
@@ -1640,6 +1643,7 @@ Monster dodge 416
 Monster dropBelongId 30573
 Monster drugsQuantity 597
 Monster dungeonFlagId 31687
+Monster effectEventCDInfo 32255
 Monster enemyCacheSet 30697
 Monster escortDistance 31117
 Monster escortLeaveDistance 31118
@@ -1952,12 +1956,12 @@ Npc cloneList 30527
 Npc controlledStates 30551
 Npc createTime 32241
 Npc creationList 30528
-Npc danceTime 38
 Npc datetimeTimerDataCell 30183
 Npc datetimeTimerDataNextTCell 30185
 Npc datetimeTimerDataTimeCacheCell 30184
 Npc datetimeTimerIdCell 30182
 Npc datetimeTimerIdCellCount 30181
+Npc deathTime 69
 Npc delayDestroyTimerID 30146
 Npc dirIndex 30187
 Npc disappearTime 30189
@@ -1966,6 +1970,7 @@ Npc dmgArmor 540
 Npc dodge 231
 Npc drugsQuantity 626
 Npc dungeonFlagId 30890
+Npc effectEventCDInfo 32257
 Npc enemyCacheSet 30552
 Npc escortDistance 31123
 Npc escortLeaveDistance 31124
@@ -2494,6 +2499,7 @@ Summon dmgArmor 518
 Summon dodge 181
 Summon drugsQuantity 621
 Summon dungeonFlagId 31108
+Summon effectEventCDInfo 32256
 Summon enemyCacheSet 31020
 Summon eventDic 31096
 Summon exclusiveGBID 30757
@@ -2746,6 +2752,7 @@ WorldBossStub isDestroying 31975
 WorldBossStub methodPoolBase 31977
 WorldBossStub tempMiscPropsBase 31978
 WorldBossStub timerDataBase 31979
+WorldLineSpaceMgr afterDeadSetSceneTimer 31487
 WorldLineSpaceMgr aiController 31948
 WorldLineSpaceMgr aiEventListener 31952
 WorldLineSpaceMgr aiEvents 31951

@@ -11,6 +11,7 @@ import socket
 import gameconst
 import visible_visible as UVVD
 from KBEDebug import *
+import buyCredit_buyCredit
 
 CONFIG = {}
 CID2CONFIG = {}
@@ -117,6 +118,9 @@ def initVisibleConfig():
     visibleSet = set()
     for key, data in UVVD.datas.items():
         visibleSet.add(data['type'])
+    for key, data in buyCredit_buyCredit.datas.items():
+        visibleSet.add("pay" + str(key))
+        visibleSet.add("buyCreditType" + str(data['type']))
     for key in visibleSet:
         def _config():
             return 1
@@ -216,6 +220,9 @@ def onGameConfigChanged(name, value, fromBaseappGroupdOrder):
 
     elif name == 'roleAuthorization':
         _type = gameconst.GAME_CONFIG_TYPE_ROLE_AUTHORIZATION
+
+    elif name == 'autoCombat':
+        _type = gameconst.GAME_CONFIG_TYPE_AUTO_COMBAT
 
     elif name == 'hotfixVersion' and gameglobal.localBaseApp:
         gameglobal.localBaseApp.broadcastToAllAvatar(
@@ -914,22 +921,6 @@ def enableOldLogout():
     return 1
 
 
-@config(Bool, None, '是否开启切磋')
-def enableDuel():
-    try:
-        ret = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/enableDuel'))
-    except:
-        ret = 1
-    return ret
-
-@config(Bool, None, '是否开启敌方')
-def enableEnemy():
-    try:
-        ret = int(ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/enableEnemy'))
-    except:
-        ret = 1
-    return ret
-
 @config(Bool, None, '是否开启伤害统计', (ConfigFlag.CACHE_CONFIG, ))
 def enableStatistic():
     try:
@@ -970,7 +961,11 @@ def httpCmdIdempotent():
 @cache
 def debugErrorLogHost():
     try:
+        '''
         host = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'debug/debugErrorLogHost')
+        '''
+        # 往我的 wxReportUrl里发
+        host = ''
     except:
         host = ''
 
@@ -993,7 +988,7 @@ def enableWorkshop():
     return 1
 
 
-def visibleConfigEable(configName):
+def visibleConfigEnabled(configName):
     info = CONFIG.get(configName)
     if not info:
         ERROR_MSG('gameconfig not found:', configName)
@@ -1008,3 +1003,16 @@ def visibleConfigEable(configName):
     return True
 
 
+def payConfigEnable(code, buyCreditId):
+    name = code + str(buyCreditId)
+    info = CONFIG.get(name)
+    if not info:
+        return True
+
+    configName, convFunc, default, defaultV, desc, cid, flags = info
+
+    v = KBEngine.globalData['CONFIG'][configName]
+    if not v:
+        return False
+
+    return True

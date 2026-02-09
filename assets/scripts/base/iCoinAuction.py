@@ -20,6 +20,7 @@ import json
 import itemFactory
 import dataUtils
 import awardContext
+import LogTrackingMgr
 
 import message_Message_def as MMD
 import auction_auctionConst as AUT_CONST
@@ -899,7 +900,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             return gameconst.AuctionErrno.AUCTION_PLAYER_BAG_GRID_NOT_ENOUGH
 
         if not gameconfig.enableAuction():
-            INFO_MSG("saleItemInCoinAuction not enableAuction")
+            INFO_MSG("_buyItemByItemIdCheck not enableAuction")
             return gameconst.AuctionErrno.AUCTION_IDIP_GM_BAN
 
         if self.checkAuctionForbidden():
@@ -1058,17 +1059,17 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         INFO_MSG("_initPlayerCollectionAuctionList", self.cliConfigDic, self.collectionAuctionIdList, self.collectionAuctionIdCategoryList, self.collectionAuctionItemCategoryList)
         for key in range(gameconst.AuctionIdCollection.START_KEY, gameconst.AuctionIdCollection.START_KEY + gameconst.AuctionIdCollection.MAX_COUNT):
             itemId = self.cliConfigDic.get(key, 0)
-            self.addCollectionAuctionIdList(key, itemId)
+            self.addCollectionAuctionIdList(key, itemId, True)
 
         for key in range(gameconst.AuctionIdCategoryCollection.START_KEY, gameconst.AuctionIdCategoryCollection.START_KEY + gameconst.AuctionIdCategoryCollection.MAX_COUNT):
             itemId = self.cliConfigDic.get(key, 0)
-            self.addCollectionAuctionIdCategoryList(key, itemId)
+            self.addCollectionAuctionIdCategoryList(key, itemId, True)
 
         for key in range(gameconst.AuctionItemCategoryCollection.START_KEY, gameconst.AuctionItemCategoryCollection.START_KEY + gameconst.AuctionItemCategoryCollection.MAX_COUNT):
             itemId = self.cliConfigDic.get(key, 0)
-            self.addCollectionAuctionItemCategoryList(key, itemId)
+            self.addCollectionAuctionItemCategoryList(key, itemId, True)
 
-    def addCollectionAuctionItemCategoryList(self, key, itemId):
+    def addCollectionAuctionItemCategoryList(self, key, itemId, isInit = False):
         if key < gameconst.AuctionItemCategoryCollection.START_KEY or key >= gameconst.AuctionItemCategoryCollection.START_KEY + gameconst.AuctionItemCategoryCollection.MAX_COUNT:
             return
         if not itemId:
@@ -1076,6 +1077,9 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if itemId in self.collectionAuctionItemCategoryList:
             return
         self.collectionAuctionItemCategoryList.append(itemId)
+        if not isInit:
+            LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.RECOMMEND_CATEGORY, gameconst.AuctionCollectOpType.ADD, itemId)
+
         INFO_MSG("addCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
 
     def removeCollectionAuctionItemCategoryList(self, key, itemId):
@@ -1084,9 +1088,10 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not itemId:
             return
         self.collectionAuctionItemCategoryList.remove(itemId)
+        LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.RECOMMEND_CATEGORY, gameconst.AuctionCollectOpType.REMOVE, itemId)
         INFO_MSG("removeCollectionAuctionItemCategoryList", self.collectionAuctionItemCategoryList)
 
-    def addCollectionAuctionIdList(self, key, itemId):
+    def addCollectionAuctionIdList(self, key, itemId, isInit = False):
         if key < gameconst.AuctionIdCollection.START_KEY or key >= gameconst.AuctionIdCollection.START_KEY + gameconst.AuctionIdCollection.MAX_COUNT:
             return
         if not itemId:
@@ -1094,6 +1099,8 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if itemId in self.collectionAuctionIdList:
             return
         self.collectionAuctionIdList.append(itemId)
+        if not isInit:
+            LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_CATEGORY, gameconst.AuctionCollectOpType.ADD, itemId)
         INFO_MSG("addCollectionAuctionIdList", self.collectionAuctionIdList)
 
     def removeCollectionAuctionIdList(self, key, itemId):
@@ -1102,9 +1109,10 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not itemId:
             return
         self.collectionAuctionIdList.remove(itemId)
+        LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_CATEGORY, gameconst.AuctionCollectOpType.REMOVE, itemId)
         INFO_MSG("removeCollectionAuctionIdList", self.collectionAuctionIdList)
 
-    def addCollectionAuctionIdCategoryList(self, key, itemId):
+    def addCollectionAuctionIdCategoryList(self, key, itemId, isInit = False):
         if key < gameconst.AuctionIdCategoryCollection.START_KEY or key >= gameconst.AuctionIdCategoryCollection.START_KEY + gameconst.AuctionIdCategoryCollection.MAX_COUNT:
             return
         if not itemId:
@@ -1112,6 +1120,8 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if itemId in self.collectionAuctionIdCategoryList:
             return
         self.collectionAuctionIdCategoryList.append(itemId)
+        if not isInit:
+            LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_ITEM, gameconst.AuctionCollectOpType.ADD, itemId)
         INFO_MSG("addCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
 
     def removeCollectionAuctionIdCategoryList(self, key, itemId):
@@ -1120,6 +1130,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not itemId:
             return
         self.collectionAuctionIdCategoryList.remove(itemId)
+        LogTrackingMgr.LogTrackingMgr.Auction_ItemCollect(self.gbID, gameconst.AuctionCollectDataType.PUBLICITY_ITEM, gameconst.AuctionCollectOpType.REMOVE, itemId)
         INFO_MSG("removeCollectionAuctionIdCategoryList", self.collectionAuctionIdCategoryList)
 
     def tipPlayerAuctionItemCollection(self, newAuctionItemCache):

@@ -96,6 +96,9 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
         return
 
     def createCellLocally(self, entType, pos, direction, properties):
+        if KBEngine.isShuttingDown():
+            return
+
         direction = (float(direction[0]), float(direction[1]), float(direction[2]))
         DEBUG_MSG('createCellLocally~~~~~~~~~~', pos, direction)
         properties['spaceNo'] = self.spaceNo

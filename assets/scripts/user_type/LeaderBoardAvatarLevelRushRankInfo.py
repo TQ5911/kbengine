@@ -2,7 +2,7 @@
 # coding: utf-8
 
 import userType
-
+import LogTrackingMgr
 
 class LeaderBoardAvatarLevelRushRankVal(userType.UserSoleType):
     '''LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO'''
@@ -51,6 +51,18 @@ class LeaderBoardAvatarLevelRushRankVal(userType.UserSoleType):
             'phone': self.phone,
         }
 
+    # 必须实现
+    def leaderBoardLog(self, leaderType, rank):
+        LogTrackingMgr.LogTrackingMgr.LeaderBoard_Level(
+            leaderType,
+            rank,
+            self.gbId,
+            self.name,
+            self.level,
+            self.school,
+            self.guildUUID,
+            self.guildName,
+        )
 
 class LeaderBoardAvatarLevelRushRankInfo(object):
     def createObjFromDict(self, dataDict):

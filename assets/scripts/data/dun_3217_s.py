@@ -11,9 +11,9 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 32170001,
-        "PosX": 134.5863,
+        "PosX": 132.5105,
         "PosY": 527.8172,
-        "PosZ": 20.02799,
+        "PosZ": 17.48057,
         "Props": {
           "MapEntityType": 0,
           "Num": 0,
@@ -107,6 +107,32 @@ datas ={
             "ShowInSceneMap": 1
           }
         }
+      },
+      "Teleporter": {
+        "32178005": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Teleporter",
+          "ClassNameType": 2,
+          "CustomID": "",
+          "Dir": 170.4391,
+          "DisplayName": "",
+          "EntityID": 17310002,
+          "ID": 32178005,
+          "PosX": 129.3976,
+          "PosY": 527.7435,
+          "PosZ": 25.79705,
+          "Props": {
+            "CameraId": 0,
+            "GateType": 1,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "TelDir": 220.4391,
+            "TelX": 129.3976,
+            "TelY": 527.7435,
+            "TelZ": 25.79705
+          }
+        }
       }
     },
     "TimerEntities": {},
@@ -131,9 +157,9 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 0,
             "TelDir": 312.6052,
-            "TelX": 207.8489,
+            "TelX": 207.849182,
             "TelY": 527.7394,
-            "TelZ": 22.75964
+            "TelZ": 22.7596054
           }
         },
         "32178003": {

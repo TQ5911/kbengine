@@ -894,8 +894,8 @@ datas = _tools.RODict({
         "isAntiAddicted": 0,
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
-        "messageId": 0,
-        "rewardMessage": None
+        "messageId": 54001994,
+        "rewardMessage": ('<color=&color211>月卡奖励</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
     }),
     99: _tools.RODict({
         "ID": 99,
@@ -1301,7 +1301,25 @@ datas = _tools.RODict({
         "rewardDescribe": "",
         "messageId": 0,
         "rewardMessage": None
+    }),
+    144: _tools.RODict({
+        "ID": 144,
+        "name": "BONUS_SRC_PET_LEVEL_UP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
+    }),
+    145: _tools.RODict({
+        "ID": 145,
+        "name": "BONUS_SRC_MAP_HANG_UP_INCOME",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None
     })
 })
 minKey = 1
-maxKey = 143
+maxKey = 145

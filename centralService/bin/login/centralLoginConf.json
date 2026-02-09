@@ -1,52 +1,25 @@
 {
     "serverName":"centralServer",
-    "serverId":1,
     "clientServiceAddr": "0.0.0.0:2020",
     "gameServerServiceAddr": "0.0.0.0:2030",
-    "appSecret":"22aff677bf54447c8cacaaca903515b0",
     "mysql":{
     	"addr":"127.0.0.1:3306",
     	"user":"fengyan",
     	"passwd":"123456",
     	"db":"test_login"
     },
-    "enablePasswdLogin":true,
-    "needCDKey":false,
-    "cdKeyServer":"192.168.17.238:7000",
     "centralServerId":1,
     "addressForDebug":"localhost:8989",
-    "msdkUrl":"https://itop.qq.com",
-    "gameId":"27828",
-    "msdkServerKey":"9304f4b581a264f9c0f7e88816e81fc8",
     "idipHttpServer":"0.0.0.0:8999",
     "logPath":"login.log",
     "logLevel":0,
     "logRotateSize":500,
-    "httpServerListDir":{
-    	"1":"http://10.219.64.55:81/redmine/attachments/download/13/serverList.txt",
-    	"2":"http://122.224.78.234:8888/serverList.txt",
-    	"3":"http://122.224.78.234:8888/serverList.txt",
-    	"4":"122.224.78.234:8888/serverList_shenhe.txt",
-    	"5":"http://122.224.78.234:8888/serverList.txt"
-    },
-    "mapleServer":{
-    	"1":"1",
-    	"2":"2",
-    	"3":"3",
-    	"4":"4",
-    	"5":"5"
-    },
     "redisServer":{
     	"addr":"192.168.10.172:6379",
     	"passwd":"",
     	"db":""
     },
-    "MSDKChannels":[1,2],
     "AccountTypes":[],
-    "yidunCaptcha":0,
-    "yidunCaptchaID":"db604d47a72143138935bc0505761ff9",
-	"yidunSecurityID":"bbd7f829b62ebf34529a349bdd221299",
-	"yidunSecurityKey":"7b7415d07b06badd4134470d4385e7bd",
     "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5",
     "tapTap":{
         "clientId":"kcqk8sx9sregfsf2wn",

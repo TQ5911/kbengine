@@ -5,7 +5,7 @@ datas ={
       40080001
     ],
     "num": 0,
-    "lv": "7",
+    "lv": "8",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -50,7 +50,7 @@ datas ={
       40080002
     ],
     "num": 0,
-    "lv": "7",
+    "lv": "8",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -62,7 +62,7 @@ datas ={
   },
   "1017": {
     "type": "taskFinished",
-    "taskID": 86050003,
+    "taskID": 86050066,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -73,7 +73,7 @@ datas ={
   },
   "1018": {
     "type": "taskInProgress",
-    "taskID": 86050005,
+    "taskID": 86050067,
     "transition": {
       "finished": [
         1016

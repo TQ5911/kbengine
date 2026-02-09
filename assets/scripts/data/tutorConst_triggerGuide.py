@@ -195,6 +195,9 @@ datas = _tools.RODict({
     24201103: _tools.RODict({
         "conditionArgs": "",
     }),
+    24201104: _tools.RODict({
+        "conditionArgs": "",
+    }),
     24201201: _tools.RODict({
         "conditionArgs": "",
     }),
@@ -345,12 +348,6 @@ datas = _tools.RODict({
     24202103: _tools.RODict({
         "conditionArgs": "",
     }),
-    24202104: _tools.RODict({
-        "conditionArgs": "",
-    }),
-    24202105: _tools.RODict({
-        "conditionArgs": "",
-    }),
     24202201: _tools.RODict({
         "conditionArgs": "",
     }),
@@ -383,7 +380,136 @@ datas = _tools.RODict({
     }),
     24202307: _tools.RODict({
         "conditionArgs": "",
+    }),
+    24110001: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110002: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110101: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110201: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110202: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110401: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110501: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110601: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110602: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110603: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110701: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110702: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110703: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110704: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110705: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210201: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210301: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210302: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210303: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210304: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210701: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210702: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210703: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210704: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210705: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210706: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24210707: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211401: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211402: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211403: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211404: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211405: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211501: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211502: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211201: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211202: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211203: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211204: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211205: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211206: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211207: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211208: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24211209: _tools.RODict({
+        "conditionArgs": "",
     })
 })
 minKey = 24100001
-maxKey = 24202307
+maxKey = 24211502

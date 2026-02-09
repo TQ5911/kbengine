@@ -511,10 +511,6 @@
             <Exposed/>
         </reqRaidStopAutoMatch>
 
-        <onMemJoinRaidByAutoMatch>
-            <Arg>           PLAYER_GBID         </Arg>
-        </onMemJoinRaidByAutoMatch>
-
         <onCellRaidPlayerStartAutoMatch>
             <Arg>           LONGTIME         </Arg>
             <Arg>           TEAMTARGET       </Arg>

@@ -224,6 +224,11 @@
             <Type>          FLOAT          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
         </lastFightTime>
+        
+        <skillTimerLogQueue>
+            <Type>          SKILL_TIMER_LOG_QUEUE_DATA_INFO         </Type>
+            <Flags>         CELL_PRIVATE                            </Flags>
+        </skillTimerLogQueue>
     </Properties>
 
     <CellMethods>
@@ -252,6 +257,8 @@
         </addExpByKill>
 
         <addExpByWealthVal>
+            <Arg>            STRING                   </Arg>
+            <Arg>            UINT8                    </Arg>
             <Arg>            EXP                      </Arg>
             <Arg>            REWARD_ID                </Arg>
             <Arg>            OP_UUID                  </Arg>
@@ -348,15 +355,6 @@
             <Arg>   UINT32      </Arg>
             <Arg>   UINT32      </Arg>
         </gmAddExp>
-
-        <gmDeductExp>
-            <Arg>   EXP         </Arg>
-            <Arg>   OP_UUID     </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   PYTHON      </Arg>
-            <Arg>   UINT32      </Arg>
-            <Arg>   UINT32      </Arg>
-        </gmDeductExp>
 
         <unlockDodgeSkill>
             <Arg>           LEVEL               </Arg>

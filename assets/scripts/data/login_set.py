@@ -862,5 +862,9 @@ datas = _tools.RODict({
     "codeFailed_isLimited": _tools.RODict({
         "ID": "codeFailed_isLimited",
         "value": 54002111,
+    }),
+    "serverUnlockTimeMsg": _tools.RODict({
+        "ID": "serverUnlockTimeMsg",
+        "value": 54002164,
     })
 })

@@ -311,6 +311,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         mpPercent = self.mp / self.fullMp if self.fullMp else 1
         self.initBaseProperties()
         self.initCombatProps(hpPercent, mpPercent)
+        self.checkEffectEventCDInfoExpired()
         self.isWitnessComplete = gameconst.WitnessType.WITNESS_TYPE_ALL
         self.stateList = formula.getInt64VectorOnIndexes(self.getStateBitVector())
 
@@ -1463,6 +1464,15 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         # delay过程中如果有传送，skillVal不是skillDic里的值，这里重拿一次
         skill = self.getSkill(skillVal.skillId, reportError=False)
         # 如果getSkill没拿到，说明这种技能不是skillDic里的技能，就用iTimer里存的即可
+        if self.IsAvatar:
+            self.skillTimerLogQueue.addSkillTimerLog(
+                id(skill) if skill else 0,
+                0,
+                gameconst.SKILL_LOG_OPR_ON_TIMER,
+                str(id(skillVal)),
+                skillVal.skillId
+            )
+
         skill = skill or skillVal
         actionCtx.skillObj = skill
         if not skill:
@@ -1545,7 +1555,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             return
 
         timerId = self._callback(1, 'castingSkillCheck', (targetID, arr, castPos), gametimer.TIMER_TAG_CASTING_CHECK)
-        skillObj.setTempData('castingCheckTimer', timerId)
+        skillObj.setTempData(self, 'castingCheckTimer', timerId)
         return
 
     def getCastingSkillInfo(self):
@@ -1607,7 +1617,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if not effectTargetIds:
             if not scopes or scopes == gameconst.SkillScope.TARGET_AUTO:
                 if skillObj.channelCount == 0 and self.IsAvatar:
-                    skillObj.setTempData('isChannelingEmpty', True)
+                    skillObj.setTempData(self, 'isChannelingEmpty', True)
                 if not skillObj.getTempData('isChannelingEmpty', False):
                     self.killChannelingSkill(gameconst.EndCasting.MissingTarget)
                     return
@@ -1623,14 +1633,14 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         bulletTimer = self._callback(bulletTime, "channelingSkillEffect", (skillObj, targetID, arr, actionCtx, 0,
                                                                            channelPos),
                                      gametimer.TIMER_TAG_CHANNELING_SKILL_EFFECT)
-        skillObj.setTempData('channelingBulletTimer', bulletTimer)
+        skillObj.setTempData(self, 'channelingBulletTimer', bulletTimer)
 
         channelInterval = max(cfgData.get('channelInterval') or 1, 0.3)
         if not isFinished:
             timerId = self._callback(channelInterval, 'channelingSkillTick', (skillObj, targetID, arr, channelPos,
                                                                               actionCtx),
                                      gametimer.TIMER_TAG_CHANNELING_CALC)
-            skillObj.setTempData('channelingCalcTimer', timerId)
+            skillObj.setTempData(self, 'channelingCalcTimer', timerId)
         self.combatDebugMsg('channelingSkillTick done: skillId:%s, state:%s, targetId:%s, channelCount:%s, channelInterval:%s, isFinished:%s',
                             skillId, self.state, targetID, skillObj.channelCount, channelInterval, isFinished)
         return
@@ -2874,7 +2884,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 tid = self._callback(remainTime, '_onSkillCallback',
                                      (skill, 'useSkillDone', (targetId, context.skillArgs, True, False, True)),
                                      gametimer.TIMER_TAG_SKILL_DONE)
-                skill.setTempData('skillDoneTimer', tid)
+                skill.setTempData(self, 'skillDoneTimer', tid)
 
     def onLungeMoveOver(self, isSucc):
         DEBUG_MSG("###onLungeMoveOver")
@@ -2926,7 +2936,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 tid = self._callback(remainTime, '_onSkillCallback',
                                      (skill, 'useSkillDone', (targetId, context.skillArgs, True, False, True)),
                                      gametimer.TIMER_TAG_SKILL_DONE)
-                skill.setTempData('skillDoneTimer', tid)
+                skill.setTempData(self, 'skillDoneTimer', tid)
 
     def onDodgeMoveOver(self, isSucc):
         self.setNeedUpdateWitnessPosDir(1)
@@ -2977,7 +2987,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 tid = self._callback(remainTime, '_onSkillCallback',
                                      (skill, 'useSkillDone', (targetId, context.skillArgs, True, False, True)),
                                      gametimer.TIMER_TAG_SKILL_DONE)
-                skill.setTempData('skillDoneTimer', tid)
+                skill.setTempData(self, 'skillDoneTimer', tid)
 
     def onEnterTrap(self, entity, rangeXZ, rangeY, controllerId, userArg):
         if hasattr(super(), 'onEnterTrap'):
@@ -3310,7 +3320,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         self.checkRemoveBuffOnTargetTypeChanged()
         self.allChildrenResetTargetTypeCache(entities)
 
-    def resetAllTargetTypeCache(self):
+    def resetAllTargetTypeCache(self, updateImmediately=True):
         if self.IsAvatar:
             self.guildRelationVersion = gameglobal.guildRelationVersion
 
@@ -3320,24 +3330,25 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         self.friendCacheSet.clear()
         self.notFriendCacheSet.clear()
 
-        for eId in cacheIds:
-            target = KBEngine.entities.get(eId)
-            if not target:
-                ERROR_MSG("resetAllTargetTypeCache target is None")
-                continue
+        if updateImmediately:
+            for eId in cacheIds:
+                target = KBEngine.entities.get(eId)
+                if not target:
+                    ERROR_MSG("resetAllTargetTypeCache target is None")
+                    continue
 
-            utils.isEnemy(self, target)
-            utils.isFriend(self, target)
+                utils.isEnemy(self, target)
+                utils.isFriend(self, target)
 
-        for eId in list(self.cacheSelfSet):
-            target = KBEngine.entities.get(eId)
-            if not target:
-                ERROR_MSG("resetAllTargetTypeCache cacheSelfSet target is None", eId)
-                continue
+            for eId in list(self.cacheSelfSet):
+                target = KBEngine.entities.get(eId)
+                if not target:
+                    ERROR_MSG("resetAllTargetTypeCache cacheSelfSet target is None", eId)
+                    continue
 
-            target.removeTargetTypeCache(self)
-            utils.isEnemy(target, self)
-            utils.isFriend(target, self)
+                target.removeTargetTypeCache(self)
+                utils.isEnemy(target, self)
+                utils.isFriend(target, self)
 
         self.checkRemoveBuffOnTargetTypeChanged()
         self.allChildrenResetAllTargetTypeCache()
@@ -3509,3 +3520,24 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if _host and _host.IsAvatar:
             return _host
         return None
+
+    def updateEffectEventCDInfo(self, effectId, triggerTime):
+        self.effectEventCDInfo[effectId] = triggerTime
+        #DEBUG_MSG('update EventEffect', effectId, triggerTime, utils.getNowTimeStr(triggerTime))
+
+    def getEffectEventCDInfo(self, effectId):
+        triggerTime = self.effectEventCDInfo.get(effectId, 0)
+        #DEBUG_MSG('get EventEffect', effectId, triggerTime, utils.getNowTimeStr(triggerTime))
+        return triggerTime
+
+    def removeEffectEventCDInfo(self, effectId):
+        triggerTime = self.effectEventCDInfo.pop(effectId, None)
+        #DEBUG_MSG('remove EventEffect', effectId, triggerTime)
+
+    def checkEffectEventCDInfoExpired(self):
+        now = time.time()
+        effectIdList = list(self.effectEventCDInfo.keys())
+        INFO_MSG('check EventEffect', self.effectEventCDInfo)
+        for effectId in effectIdList:
+            if self.getEffectEventCDInfo(effectId) <= now:
+                self.removeEffectEventCDInfo(effectId)

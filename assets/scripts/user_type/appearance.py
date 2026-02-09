@@ -39,8 +39,17 @@ class FaceDataVal(userType.UserSoleType):
             'hairColorIdSkinColorId': self.hairColorIdSkinColorId,
         }
 
-    def faceID(self):
-        return str(self.suitId) + ":" + str(self.hairIdFaceId) + ":" + str(self.hairColorIdSkinColorId)
+    def faceId(self):
+        return self.hairIdFaceId & 0xff
+
+    def hairId(self):
+        return (self.hairIdFaceId >> 8) & 0xff
+
+    def hairColorId(self):
+        return (self.hairColorIdSkinColorId >> 8) & 0xff
+
+    def skinColorId(self):
+        return self.hairColorIdSkinColorId & 0xff
 
     def initFromDict(self, savedDic):
         self.suitId = savedDic['suitId']

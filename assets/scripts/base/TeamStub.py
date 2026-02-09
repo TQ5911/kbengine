@@ -1232,29 +1232,6 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         teamVal.askAllMemberFollow(spaceNo, pos)
 
-    def askOneMemberFollow(self, box, teamId, gbId, askGbId):
-        teamVal = self.getTeamByTeamId(teamId)
-        if not teamVal:
-            ERROR_MSG("askOneMemberFollow team not found", teamId, gbId, askGbId)
-            return
-
-        if gbId != teamVal.getCaptainGbId():
-            ERROR_MSG('askOneMemberFollow not captain', teamId, gbId)
-            return
-
-        if not teamVal.isInTeam(askGbId):
-            WARNING_MSG('askOneMemberFollow not in team', askGbId)
-            return
-
-        memberVal = teamVal.teamPlayerDic[askGbId]
-        if not memberVal.bOnline:
-            WARNING_MSG("askOneMemberFollow:: player not online", teamId, gbId, askGbId)
-            return
-
-        if not (memberVal.playerBox and memberVal.playerBox.client):
-            WARNING_MSG("askOneMemberFollow:: player not have client", teamId, gbId, askGbId)
-            return
-
     def cancelAllMemberFollow(self, box, teamId, gbId):
         teamVal = self.getTeamByTeamId(teamId)
         if gbId != teamVal.getCaptainGbId():
@@ -1558,16 +1535,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if not teamVal:
             return
         newPlayerDic['joinType'] = gameconst.TeamJoinType.MATCH
-        if self.addTeamMember(teamId, newPlayerDic):
-            teamVal.getCaptainBox().cell.onMemJoinTeamByAutoMatch(newPlayerDic['gbId'])
-        return
-
-    def onTeamAutoMatchTimeout(self, teamId):
-        INFO_MSG('in onTeamAutoMatchTimeout:', teamId)
-        teamVal = self.getTeamByTeamId(teamId)
-        if not teamVal:
-            return
-        teamVal.stopAutoMatch(timeout=True)
+        self.addTeamMember(teamId, newPlayerDic)
         return
 
     def setTeamTarget(self, gbID, teamId, teamTarget, minLv, minScore, recruitInfo, password, isAutoExpedition, guildUUID):

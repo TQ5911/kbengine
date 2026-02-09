@@ -149,14 +149,14 @@ class IWarehouse(object):
             opStat, planDic = self.warehouse.addItemsWithPlan(self, [itemObj, ], opUUID, srcType, detail, notify=False)
             if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
                 gameengine.reportCritical('reqMoveItemToWarehouse, op error:', opStat, gridId, itemId, itemNum)
-
+        LogTrackingMgr.LogTrackingMgr.Item_Movement(opUUID, self.gbID, itemObj.uniqueId, itemId, itemNum, itemObj.bindType, gameconst.ItemMovementType.BagToWarehouse)
         self.client.onWarehouseInItems(opStat, self.warehouse._getClientDataFromPlanDic(planDic))
 
     @gamedecorator.checkGameconfigEnable('warehouse')
     def reqMoveItemToBag(self, exposed, gridId, itemId, itemNum):
         INFO_MSG('in reqMoveItemToBag:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
-            WARNING_MSG('     in reqMoveItemToBag, bag locked')
+            WARNING_MSG('in reqMoveItemToBag, bag locked')
             return
 
         if self.bagData.isFull():
@@ -189,12 +189,12 @@ class IWarehouse(object):
             
             roomItem = self.warehouse.cleanGridByGridId(self, gridId, itemId, opUUID, srcType, detail, sendClient=False)
             if not roomItem:
-                WARNING_MSG('     in moveItemToBag, roomItem is None')
+                WARNING_MSG('in reqMoveItemToBag, roomItem is None')
                 return
             
             opStat, planDic = self.bagData.addItemsWithPlan(self, [roomItem, ], opUUID, srcType, detail, notify=False)
             if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
-                gameengine.reportCritical('reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
+                gameengine.reportCritical('in reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
         else:
             # 移动一部分
             itemObj = itemFactory.ItemFactory.createItem(itemId, itemNum, itemObj.bindType)
@@ -208,7 +208,8 @@ class IWarehouse(object):
             # 加入仓库
             opStat, planDic = self.bagData.addItemsWithPlan(self, [itemObj, ], opUUID, srcType, detail, notify=False)
             if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
-                gameengine.reportCritical('reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
+                gameengine.reportCritical('in reqMoveItemToBag, op error:', opStat, gridId, itemId, itemNum)
+        LogTrackingMgr.LogTrackingMgr.Item_Movement(opUUID, self.gbID, itemObj.uniqueId, itemId, itemNum, itemObj.bindType, gameconst.ItemMovementType.WarehouseToBag)
         self.client.onWarehouseOutItems(opStat, gridId, itemNum)
 
     @gamedecorator.checkGameconfigEnable('warehouse')

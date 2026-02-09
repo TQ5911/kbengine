@@ -81,6 +81,10 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
 
             self.getCurrentSpace().createCellLocally(_className, _pos, _dir, _params)
 
+        if self.afterDeadSetSceneTimer:
+            self._cancelCallback(self.afterDeadSetSceneTimer, gametimer.TIMER_TAG_BOSS_DEAD_SET_SCENE_STATE)
+            self.afterDeadSetSceneTimer = 0
+
         self.setSceneStates([
             gameconst.WorldLineSceneState.THUNDER
         ])
@@ -141,7 +145,13 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         DEBUG_MSG('onWorldBossDead', self.spaceNo, refreshTime, CONST.datas['bossRefreshSystem']['value'])
         self.setSceneStates([gameconst.WorldLineSceneState.THUNDER])
         _delay = CONST.datas['messageDelayAfterDeath']['value']
-        self._callback(_delay, 'setSceneStates', ([gameconst.WorldLineSceneState.LEI_JI],), gametimer.TIMER_TAG_BOSS_DEAD_SET_SCENE_STATE)
+        self.afterDeadSetSceneTimer = self._callback(
+            _delay, 
+            'setSceneStates', 
+            ([gameconst.WorldLineSceneState.LEI_JI],), 
+            gametimer.TIMER_TAG_BOSS_DEAD_SET_SCENE_STATE,
+            'afterDeadSetSceneTimer'
+        )
 
         # 不通知刷新了,由 ITimerEntityRefresh 控制下次刷新
         if CONST.datas['bossRefreshSystem']['value'] == gameconst.WorldBossRefreshType.TIMED_INTERVALS_TIMER:

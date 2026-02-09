@@ -15,9 +15,12 @@ datas ={
     "PosY": 139.8291,
     "PosZ": 150.9764,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 0.0,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 90.0,
       "TelX": 91.522316,
       "TelY": 0.49902156,
@@ -238,7 +241,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10054024": {
@@ -406,7 +411,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10054031": {
@@ -469,16 +476,18 @@ datas ={
     "EntityID": 18000002,
     "ID": 10054034,
     "Name": "\u6807\u8bb0\u7528\u4efb\u52a1\u5730\u70b9",
-    "PosX": 96.01707,
+    "PosX": 95.39,
     "PosY": 158.9596,
-    "PosZ": 247.9256,
+    "PosZ": 246.6,
     "Props": {
       "IsOpen": 1,
       "MapEntityType": 0,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10054035": {
@@ -493,16 +502,18 @@ datas ={
     "EntityID": 18000002,
     "ID": 10054035,
     "Name": "\u6807\u8bb0\u7528\u4efb\u52a1\u5730\u70b9",
-    "PosX": 44.06319,
-    "PosY": 161.509,
-    "PosZ": 272.8989,
+    "PosX": 98.92,
+    "PosY": 158.83,
+    "PosZ": 260.04,
     "Props": {
       "IsOpen": 1,
       "MapEntityType": 0,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10054036": {
@@ -527,7 +538,8 @@ datas ={
       "RefreshNum": 1,
       "RefreshTime": 1,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10058001": {
@@ -549,6 +561,7 @@ datas ={
       "CameraId": 0,
       "GateType": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 72.73184,
       "TelX": 47.90308,
       "TelY": 142.3228,
@@ -574,6 +587,7 @@ datas ={
       "CameraId": 0,
       "GateType": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 216.8647,
       "TelX": 235.2051,
       "TelY": 168.1863,
@@ -592,13 +606,14 @@ datas ={
     "EntityID": 0,
     "ID": 10058003,
     "Name": "\u795e\u884c\u70b9",
-    "PosX": 205.7901,
+    "PosX": 197.4,
     "PosY": 165.7011,
-    "PosZ": 150.2149,
+    "PosZ": 140.6,
     "Props": {
       "CameraId": 0,
       "MapEntityType": "26",
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10058004": {
@@ -613,15 +628,18 @@ datas ={
     "EntityID": 16000103,
     "ID": 10058004,
     "Name": "\u4efb\u52a1\u7528\u7a7a\u5b9d\u7bb1",
-    "PosX": 30.21859,
-    "PosY": 161.509,
-    "PosZ": 273.4665,
+    "PosX": 95.49564,
+    "PosY": 158.8577,
+    "PosZ": 246.6332,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10058005": {
@@ -640,12 +658,14 @@ datas ={
     "PosY": 141.6366,
     "PosZ": 130.2921,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10058006": {
@@ -664,12 +684,14 @@ datas ={
     "PosY": 171.591,
     "PosZ": 142.08,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10058007": {
@@ -688,12 +710,14 @@ datas ={
     "PosY": 171.9927,
     "PosZ": 257.9973,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10058008": {
@@ -703,15 +727,75 @@ datas ={
     "ClassName": "BreakAwayStuckPos",
     "ClassNameType": 22,
     "CustomID": "",
-    "Dir": 73.37614,
+    "Dir": 289.8626,
     "DisplayName": "",
     "EntityID": 0,
     "ID": 10058008,
     "Name": "\u8131\u5361\u70b9",
-    "PosX": 47.0,
-    "PosY": 141.6166,
-    "PosZ": 155.96,
+    "PosX": 151.94,
+    "PosY": 150.875,
+    "PosZ": 288.75,
     "Props": {
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10058009": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "FastMovePoint",
+    "ClassNameType": 19,
+    "CustomID": "0",
+    "Dir": 206.9177,
+    "DisplayName": "",
+    "EntityID": 13000003,
+    "ID": 10058009,
+    "Name": "\u75be\u63a0\u70b9",
+    "PosX": 106.82,
+    "PosY": 154.4315,
+    "PosZ": 284.02,
+    "Props": {
+      "Remark": "",
+      "ShowInSceneMap": 1,
+      "SubPoints": [
+        [
+          98.94,
+          158.8577,
+          260.23,
+          10.0,
+          5.0,
+          98.94,
+          158.8577,
+          260.23,
+          30.0,
+          5.0
+        ]
+      ]
+    }
+  },
+  "10058010": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Collection",
+    "ClassNameType": 3,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 16005127,
+    "ID": 10058010,
+    "Name": "\u7cbe\u7075\u6751\u4e2a\u4eba\u5b9d\u7bb14",
+    "PosX": 39.97,
+    "PosY": 161.3437,
+    "PosZ": 273.33,
+    "Props": {
+      "IsOnGround": 1,
+      "IsOpen": 1,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1
     }

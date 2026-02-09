@@ -125,6 +125,6 @@ datas = _tools.RODict({
     }),
     "rmbSwitch": _tools.RODict({
         "ID": "rmbSwitch",
-        "value": 0,
+        "value": 1,
     })
 })

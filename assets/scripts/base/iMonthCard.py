@@ -23,15 +23,20 @@ import itemData_set as IDSD
 import redisUtils
 import LogTrackingMgr
 import gamedecorator
+import gameconfig
 
 class IMonthCard(object):
     def __init__(self):
         self.offlineHangupChecked = False
         self.tempLastDayRemainHangupMinutes = 0
-        self.pyAddTimer(60, 60, gametimer.MONTH_CARD_CHECK_TIMER)
+        self.monthCardTimer = 0
+        if not self.isMonthCardExpired():
+            INFO_MSG("init month card timer", self.monthCardExpireTime)
+            self.monthCardTimer = self.pyAddTimer(60, 60, gametimer.MONTH_CARD_CHECK_TIMER)
 
-    @gamedecorator.checkGameconfigEnable('monthCard')
     def isMonthCardExpired(self):
+        if not gameconfig.visibleConfigEnabled('monthCard'):
+            return True
         return self.monthCardExpireTime < utils.getNow()
     
     def addMonthCardByItem(self, monthCardId, opUUID, ctx):
@@ -50,6 +55,8 @@ class IMonthCard(object):
                  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
         if self.monthCardExpireTime > maxTime:
             return False
+        if not gameconfig.visibleConfigEnabled('monthCard'):
+            return False
         return True
 
     #只要调用了这个，就会发一次月卡获得奖励
@@ -62,6 +69,10 @@ class IMonthCard(object):
             self.monthCardExpireTime += seconds
         INFO_MSG("after add month card", self.monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.monthCardExpireTime)))
 
+        if not self.monthCardTimer:
+            INFO_MSG("add month card timer", self.monthCardExpireTime)
+            self.monthCardTimer = self.pyAddTimer(60, 60, gametimer.MONTH_CARD_CHECK_TIMER)
+
         _detail = gameclass.AwardDetail()
         _src = AAC_AACDD.datas.BONUS_SRC_BUYCREDIT_MONTHCARD
         _awardVal = dropAward.AwardVal()
@@ -72,7 +83,8 @@ class IMonthCard(object):
                 _ctx
             )
         awardCtx = self._getAvatarAwardCtx(0, None)
-        self.addWealth(_src, _awardVal, KBEngine.genUUID64(), _detail, awardCtx)
+        opUUID = KBEngine.genUUID64()
+        self.addWealth(_src, _awardVal, opUUID, _detail, awardCtx)
         self.checkMonthCardAward()
         self.updateRedisVIPFlag()
 
@@ -80,16 +92,16 @@ class IMonthCard(object):
             self.gbID,
             self.getAvatarLevel(),
             utils.getNow(),
-            self.monthCardExpireTime
+            self.monthCardExpireTime,
+            opUUID
         )
-        return True
+        return opUUID
     
 
     def tryGetMonthCardDailyReward(self, exposed):
         self.checkMonthCardAward()
 
     #检查并发放月卡每日奖励
-    @gamedecorator.checkGameconfigEnable('monthCard')
     def checkMonthCardAward(self):
         INFO_MSG("start checkMonthCardAward")
         if self.isMonthCardExpired():
@@ -184,7 +196,7 @@ class IMonthCard(object):
         
         _opUUID = KBEngine.genUUID64()
         _detail = gameclass.AwardDetail()
-        _src = AAC_AACDD.datas.BONUS_SRC_HANG_UP_INCOME
+        _src = AAC_AACDD.datas.BONUS_SRC_MAP_HANG_UP_INCOME
         _awardVal = dropAward.AwardVal()
 
         _awardVal.addWealthByItemId(gameconst.ItemId.EXP, income)
@@ -192,8 +204,14 @@ class IMonthCard(object):
         awardCtx = self._getAvatarAwardCtx(0, None)
         self.addWealth(_src, _awardVal, _opUUID, _detail, awardCtx)
 
+        LogTrackingMgr.LogTrackingMgr.MonthCard_Afk(
+            self.gbID,
+            self.remainHangupMinutes,
+            minutes,
+            _opUUID
+        )
+
     #主城、等级到达、有月卡 = 有挂机收益
-    @gamedecorator.checkGameconfigEnable('monthCard')
     def _onMonthCardTimer(self):
         #主城挂机收益
         if self.isMonthCardExpired():
@@ -219,9 +237,12 @@ class IMonthCard(object):
             self._checkAndAddIdleIncome(1)
 
     #结算挂机收益
-    @gamedecorator.checkGameconfigEnable('monthCard')
     def checkOfflineHangup(self):
         if self.isCrossServer:
+            return
+        
+        if not gameconfig.visibleConfigEnabled('monthCard'):
+            WARNING_MSG("checkOfflineHangup", "monthCard not enabled", self.gbID, self.tLastOfflineBase, self.offlineHangupChecked)
             return
 
         if self.offlineHangupChecked:
@@ -288,6 +309,11 @@ class IMonthCard(object):
         self.totalOfflineExp = self._calcIdleIncome(totalMinutes)
         self.totalOfflineMinute = totalMinutes
         INFO_MSG("checkOfflineHangup", "totalMinutes", totalMinutes, "totalOfflineExp", self.totalOfflineExp)
+        LogTrackingMgr.LogTrackingMgr.MonthCard_Offline(
+            self.gbID,
+            self.remainHangupMinutes,
+            totalMinutes
+        )
         return True
 
     def reqOfflineHangupData(self, exposed):
@@ -303,8 +329,20 @@ class IMonthCard(object):
         exp = self.totalOfflineExp
         self.totalOfflineExp = 0
         self.totalOfflineMinute = 0
-        _src = AAC_AACDD.datas.BONUS_SRC_HANG_UP_INCOME
-        self.cell.addExpByMonthCard(exp, KBEngine.genUUID64(), _src, "")
+        
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_HANG_UP_INCOME
+        wealthVal = dropAward.AwardVal()
+        wealthVal.addWealthByItemId(gameconst.ItemId.EXP, exp)
+        awardCtx = self._getAvatarAwardCtx(0, None)
+        _detail = gameclass.AwardDetail()
+        self.addWealth(srcType, wealthVal, opUUID, _detail, awardCtx)
+        
+        LogTrackingMgr.LogTrackingMgr.MonthCard_OfflineReward(
+            self.gbID,
+            1,
+            opUUID
+        )
 
     #如果在线时没有领取离线收益，离线后会转化成邮件
     def _checkMonthCardOfflineExpMail(self):
@@ -317,7 +355,14 @@ class IMonthCard(object):
         INFO_MSG("_checkMonthCardOfflineExpMail", "totalOfflineExp", exp)
         _addVal = dropAward.MailWealthVal()
         _addVal.addWealthByItemId(gameconst.ItemId.EXP, exp)
-        mailAssistor.sendMailToPlayers([self.gbID], CC.datas['offlineMail']['value'], extraAttach=_addVal, srcType=AAC_AACDD.datas.BONUS_SRC_MONTHCARD_OFFLINE_BONUS)
+        opUUID = KBEngine.genUUID64()
+        mailAssistor.sendMailToPlayers([self.gbID], CC.datas['offlineMail']['value'], extraAttach=_addVal,
+                                       srcType=AAC_AACDD.datas.BONUS_SRC_MONTHCARD_OFFLINE_BONUS, opUUID=opUUID)
+        LogTrackingMgr.LogTrackingMgr.MonthCard_OfflineReward(
+            self.gbID,
+            2,
+            opUUID
+        )
 
     #更新redis的特权标识(排队优先)
     def updateRedisVIPFlag(self):

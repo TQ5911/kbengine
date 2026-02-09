@@ -355,6 +355,10 @@ datas = _tools.RODict({
         "ID": 16000118,
         "pickTimes": 1
     }),
+    16000119: _tools.RODict({
+        "ID": 16000119,
+        "pickTimes": 1
+    }),
     16001001: _tools.RODict({
         "ID": 16001001,
         "pickTimes": 20
@@ -643,6 +647,14 @@ datas = _tools.RODict({
         "ID": 16002008,
         "pickTimes": 150
     }),
+    16002009: _tools.RODict({
+        "ID": 16002009,
+        "pickTimes": 1
+    }),
+    16002010: _tools.RODict({
+        "ID": 16002010,
+        "pickTimes": 1
+    }),
     16002101: _tools.RODict({
         "ID": 16002101,
         "pickTimes": 1
@@ -675,6 +687,14 @@ datas = _tools.RODict({
         "ID": 16002108,
         "pickTimes": 150
     }),
+    16002109: _tools.RODict({
+        "ID": 16002109,
+        "pickTimes": 1
+    }),
+    16002110: _tools.RODict({
+        "ID": 16002110,
+        "pickTimes": 1
+    }),
     16002201: _tools.RODict({
         "ID": 16002201,
         "pickTimes": 1
@@ -706,6 +726,14 @@ datas = _tools.RODict({
     16002208: _tools.RODict({
         "ID": 16002208,
         "pickTimes": 150
+    }),
+    16002209: _tools.RODict({
+        "ID": 16002209,
+        "pickTimes": 1
+    }),
+    16002210: _tools.RODict({
+        "ID": 16002210,
+        "pickTimes": 1
     }),
     16002301: _tools.RODict({
         "ID": 16002301,

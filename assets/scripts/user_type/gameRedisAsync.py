@@ -105,8 +105,8 @@ class RedisAsyncClient(object):
             return False
 
         GameCommon.executeRawRedis(self.cid, cmd, resultCallback)
-        DEBUG_MSG('RedisAsyncClient::executeRawRedis cid={} cmd={} resultCallback={}'.format(self.cid, cmd,
-                                                                                             1))  # id(resultCallback) if resultCallback not None else None))
+        # DEBUG_MSG('RedisAsyncClient::executeRawRedis cid={} cmd={} resultCallback={}'.format(self.cid, cmd,
+        #                                                                                      1))  # id(resultCallback) if resultCallback not None else None))
         return True
 
     def _executeBytesRedis(self, args, resultCallback=None):

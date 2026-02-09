@@ -399,6 +399,23 @@ def getPetGearNum(petId):
     gearNum = PDRK.datas.get(grade, {}).get('gearNum', 0)
     return gearNum
 
+def getPetLevelUpExp(petId):
+    cfgData = PDPD.datas.get(petId)
+    grade = cfgData.get('petRank', 0)
+    levelUpExp = PDRK.datas.get(grade, {}).get('levelExp', None)
+    return levelUpExp
+
+def getPetLevelUpConsumeItem(petId):
+    cfgData = PDPD.datas.get(petId)
+    grade = cfgData.get('petRank', 0)
+    consumeItem = PDRK.datas.get(grade, {}).get('consumeItem', None)
+    return consumeItem
+
+def getPetLevelProp(petId):
+    cfgData = PDPD.datas.get(petId)
+    levelProp = cfgData.get('levelProp')
+    return levelProp
+
 def isRing(mType, sType):
     return mType == gameconst.EquipTypes.MAIN_TYPE_RING and sType in gameconst.EquipTypes.SUBTYPE_ORNAMENTS_RING
 
@@ -524,6 +541,7 @@ def getMonsterExp(monsterId, monsterLv):
     propCurveID = CBD.datas.get(monsterId).get('propCurveID')
     expCurve = MSPPCD.datas[propCurveID].get('expCurve')
     return int(MSPPD.datas[monsterLv].get(expCurve)*expRatio)
+
 def getExpByLevel(avatarLevel,monsterLv, monsterExp):
     if avatarLevel > monsterLv:
         levelDiff = min(avatarLevel - monsterLv, 5)

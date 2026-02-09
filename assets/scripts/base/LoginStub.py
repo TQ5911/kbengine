@@ -28,6 +28,7 @@ import iTimer
 import globalDataCounter
 from Crypto.Cipher import AES
 import LogTrackingMgr
+import redisUtils
 
 
 class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
@@ -42,6 +43,9 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                                                     gameglobal.localBaseApp.registerBaseappDataCallback, globalDataSum.DATA_BASEAPP, cd=2)
 
         self.accountTodayRegNum = globalDataSum.GloalDataSum(gameconst.GLOBALDATA_KEY_TODAY_REG_NUM,
+                                                    gameglobal.localBaseApp.registerBaseappDataCallback, globalDataSum.DATA_BASEAPP, cd=2)
+        
+        self.SVIPOnlineNum = globalDataSum.GloalDataSum(gameconst.GLOBALDATA_KEY_SVIP_ONLINE_NUM,
                                                     gameglobal.localBaseApp.registerBaseappDataCallback, globalDataSum.DATA_BASEAPP, cd=2)
 
         # 注册人数
@@ -74,6 +78,8 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         elif userData == gametimer.LOGIN_STUB_SERVERINFO_SYNC:
             if gameconfig.enableCentralLogin():
                 self.updateServerInfo()
+                if gameglobal.isBootstrap:
+                    self.updateSVIPOnlineNum()
 
         elif userData == gametimer.LOGIN_STUB_ACTIVE_TICK:
             if gameconfig.enableCentralLogin():
@@ -132,6 +138,29 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         if gameconfig.enableCentralLogin():
             self.notifyCentralServerOffline(accountName, accountType, centralServerId)
+        
+        redisUtils.RedisUtils.getSVIPFlag(accountName, self._onDecSVIPAccount)
+
+    def _onIncSVIPAccount(self, cid, err, res):
+        INFO_MSG("_onIncSVIPAccount", "cid", cid, "err", err, "res", res)
+        if err:
+            ERROR_MSG("_onIncSVIPAccount", "err", err)
+            return
+
+        if res and res.decode() == '1':
+            self.SVIPOnlineNum.incSum(self)
+
+    def _onDecSVIPAccount(self, cid, err, res):
+        INFO_MSG("_onDecSVIPAccount", "cid", cid, "err", err, "res", res)
+        if err:
+            ERROR_MSG("_onDecSVIPAccount", "err", err)
+            return
+
+        if res and res.decode() == '1':
+            self.SVIPOnlineNum.decSum(self)
+
+    def updateSVIPOnlineNum(self):
+        redisUtils.RedisUtils.set(gameconst.RedisKey.NORMAL_ONLINE_NUM + str(gameconfig.serverId()), self.accountNumCounter.dataSum - self.SVIPOnlineNum.dataSum)
 
     def onAccountLogin(self, accountName, devicePlatId, box, accountType):
         INFO_MSG("onAccountLogin::", accountName, devicePlatId, box, accountType)
@@ -154,6 +183,8 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         curPlat = self.playerNumPlat.setdefault(devicePlatId, {})
         curNum = curPlat.get(channelId, 0)
         self.playerNumPlat[devicePlatId][channelId] = curNum + 1
+        
+        redisUtils.RedisUtils.getSVIPFlag(accountName, self._onIncSVIPAccount)
 
     def onKickAccount(self, accountType, accountName, kickReason):
         realAccountName = utils.getRealAccountName(accountType, accountName)

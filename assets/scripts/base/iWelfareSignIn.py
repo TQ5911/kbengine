@@ -46,6 +46,23 @@ class IWelfareSignIn(object):
 
     @gamedecorator.checkGameconfigEnable('welfare')
     def reqWelfareSignIn(self, exposed, signInDayNo, welfareType):
+        if welfareType == "TenSign":
+            self.reqWelfareSignInTenDay(welfareType, signInDayNo)
+        elif welfareType == "SevenSign":
+            self.reqWelfareSignInSevenDay(welfareType, signInDayNo)
+        else:
+            ERROR_MSG('call reqWelfareSignIn: no welfareType', welfareType)
+            return
+
+    @gamedecorator.checkGameconfigEnable('welfare_tenSign')
+    def reqWelfareSignInTenDay(self, welfareType, signInDayNo):
+        self._reqWelfareSignIn(welfareType, signInDayNo)
+
+    @gamedecorator.checkGameconfigEnable('welfare_sevenSign')
+    def reqWelfareSignInSevenDay(self, welfareType, signInDayNo):
+        self._reqWelfareSignIn(welfareType, signInDayNo)
+    
+    def _reqWelfareSignIn(self, welfareType, signInDayNo):
         INFO_MSG('call reqWelfareSignIn', welfareType, signInDayNo)
         welfareSignInInfo = self.welfareSignInInfos.get(welfareType, None)
         if not welfareSignInInfo:
@@ -68,7 +85,8 @@ class IWelfareSignIn(object):
 
         self.sendWelfareSignInInfo(welfareType)
 
-        if not self.addSignInAward(signInDayNo, welfareType):
+        opUUID = self.addSignInAward(signInDayNo, welfareType)
+        if not opUUID:
             ERROR_MSG('call reqWelfareSignIn: add award err', signInDayNo)
             return
         
@@ -76,16 +94,22 @@ class IWelfareSignIn(object):
             LogTrackingMgr.LogTrackingMgr.Welfare_SignInSevenDay(
                 self.gbID,
                 WSLCONFIG.kvData.get(welfareType, {}).get(signInDayNo, 0),
-                self.getAvatarLevel()
+                self.getAvatarLevel(),
+                welfareSignInInfo.welfareSignInDay,
+                signInDayNo,
+                opUUID
             )
         elif welfareType == "TenSign":
             LogTrackingMgr.LogTrackingMgr.Welfare_SignInTenDay(
                 self.gbID,
                 WSLCONFIG.kvData.get(welfareType, {}).get(signInDayNo, 0),
-                self.getAvatarLevel()
+                self.getAvatarLevel(),
+                welfareSignInInfo.welfareSignInDay,
+                signInDayNo,
+                opUUID
             )
     
-    @gamedecorator.checkGameconfigEnable('welfare')
+    @gamedecorator.checkGameconfigEnable('welfare_levelReward')
     def reqLevelWelfare(self, exposed, slotNo, welfareType):
         INFO_MSG('call reqLevelWelfare', slotNo, welfareType)
         if welfareType not in self.welfareLevelInfos:
@@ -153,7 +177,7 @@ class IWelfareSignIn(object):
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_WELFARE_SIGN_IN if welfareType == "SevenSign" else AAC_AACDD.datas.BONUS_SRC_WELFARE_TEN_SIGN_IN
         self.addAwards(srcType, rewardId, 1, opUUID, detail, awardCtx)
-        return True
+        return opUUID
 
     def welfareSignInOnLogin(self):
         INFO_MSG('call welfareSignInOnLogin')

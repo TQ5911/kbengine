@@ -58,17 +58,35 @@ def _16002004_precheck(self, *args):
 def _16002004(self, *args):
     self.summonWonderLandBoss(30000313, 130, 31170002, *args)
 
+def _16002009_precheck(self, *args):
+    return self.interactArenaKing()
+
+def _16002009(self, *args):
+    self.interactArenaKing()
+
 def _16002104_precheck(self, *args):
     return self.checkSummonWonderLandBoss(30000313, 157, 32170002, *args)
 
 def _16002104(self, *args):
     self.summonWonderLandBoss(30000313, 157, 32170002, *args)
 
+def _16002109_precheck(self, *args):
+    return self.interactArenaKing()
+
+def _16002109(self, *args):
+    self.interactArenaKing()
+
 def _16002204_precheck(self, *args):
     return self.checkSummonWonderLandBoss(30000313, 188, 33170002, *args)
 
 def _16002204(self, *args):
     self.summonWonderLandBoss(30000313, 188, 33170002, *args)
+
+def _16002209_precheck(self, *args):
+    return self.interactArenaKing()
+
+def _16002209(self, *args):
+    self.interactArenaKing()
 
 def _16002304_precheck(self, *args):
     return self.checkSummonWonderLandBoss(30000313, 1, 34170002, *args)
@@ -3270,7 +3288,7 @@ datas = _tools.RODict({
     }),
     16002003: _tools.RODict({
         "ID": 16002003,
-        "name": "混沌回廊一层协助宝箱-中级",
+        "name": "旧占位",
         "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
@@ -3430,6 +3448,60 @@ datas = _tools.RODict({
         "isInvalid": 0,
         "rewardPool": 0
     }),
+    16002009: _tools.RODict({
+        "ID": 16002009,
+        "name": "混沌回廊一层擂主石",
+        "type": 5,
+        "pickDistance": 6.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 4,
+        "isUnstoppble": 1,
+        "precheckAction": _16002009_precheck,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": _16002009,
+        "isUnique": 1,
+        "ifBornState": 0,
+        "rewardID": 0,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
+    16002010: _tools.RODict({
+        "ID": 16002010,
+        "name": "混沌回廊一层祈福台",
+        "type": 5,
+        "pickDistance": 6.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 5,
+        "isUnstoppble": 1,
+        "precheckAction": None,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": None,
+        "isUnique": 1,
+        "ifBornState": 0,
+        "rewardID": 0,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
     16002101: _tools.RODict({
         "ID": 16002101,
         "name": "混沌回廊二层入口宝箱-低级",
@@ -3486,7 +3558,7 @@ datas = _tools.RODict({
     }),
     16002103: _tools.RODict({
         "ID": 16002103,
-        "name": "混沌回廊二层协助宝箱-中级",
+        "name": "旧占位",
         "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
@@ -3646,6 +3718,60 @@ datas = _tools.RODict({
         "isInvalid": 0,
         "rewardPool": 0
     }),
+    16002109: _tools.RODict({
+        "ID": 16002109,
+        "name": "混沌回廊二层擂主石",
+        "type": 5,
+        "pickDistance": 6.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 4,
+        "isUnstoppble": 1,
+        "precheckAction": _16002109_precheck,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": _16002109,
+        "isUnique": 1,
+        "ifBornState": 0,
+        "rewardID": 0,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
+    16002110: _tools.RODict({
+        "ID": 16002110,
+        "name": "混沌回廊二层祈福台",
+        "type": 5,
+        "pickDistance": 6.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 5,
+        "isUnstoppble": 1,
+        "precheckAction": None,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": None,
+        "isUnique": 1,
+        "ifBornState": 0,
+        "rewardID": 0,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
     16002201: _tools.RODict({
         "ID": 16002201,
         "name": "混沌回廊三层入口宝箱-低级",
@@ -3702,7 +3828,7 @@ datas = _tools.RODict({
     }),
     16002203: _tools.RODict({
         "ID": 16002203,
-        "name": "混沌回廊三层协助宝箱-中级",
+        "name": "旧占位",
         "type": 0,
         "pickDistance": 2.0,
         "taskCheck": None,
@@ -3851,6 +3977,60 @@ datas = _tools.RODict({
         "isUnique": 1,
         "ifBornState": 0,
         "rewardID": 40035509,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
+    16002209: _tools.RODict({
+        "ID": 16002209,
+        "name": "混沌回廊三层擂主石",
+        "type": 5,
+        "pickDistance": 6.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 4,
+        "isUnstoppble": 1,
+        "precheckAction": _16002209_precheck,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": _16002209,
+        "isUnique": 1,
+        "ifBornState": 0,
+        "rewardID": 0,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
+    16002210: _tools.RODict({
+        "ID": 16002210,
+        "name": "混沌回廊三层祈福台",
+        "type": 5,
+        "pickDistance": 6.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 5,
+        "isUnstoppble": 1,
+        "precheckAction": None,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": None,
+        "isUnique": 1,
+        "ifBornState": 0,
+        "rewardID": 0,
         "displayMode": 0,
         "triggerTask": None,
         "triggerPos": None,
@@ -6308,6 +6488,33 @@ datas = _tools.RODict({
         "isUnique": 1,
         "ifBornState": 0,
         "rewardID": 40019974,
+        "displayMode": 0,
+        "triggerTask": None,
+        "triggerPos": None,
+        "pickType": 0,
+        "bagCheck": 0,
+        "timeCheck": 0,
+        "lifeSkillId": 0,
+        "isDisappear": 0,
+        "isInvalid": 0,
+        "rewardPool": 0
+    }),
+    16000119: _tools.RODict({
+        "ID": 16000119,
+        "name": "主线铁匠宝箱",
+        "type": 0,
+        "pickDistance": 2.0,
+        "taskCheck": None,
+        "toolCheck": None,
+        "time": 3,
+        "isUnstoppble": 1,
+        "precheckAction": None,
+        "applyAction": None,
+        "unApplyAction": None,
+        "triggerAction": None,
+        "isUnique": 0,
+        "ifBornState": 0,
+        "rewardID": 40019967,
         "displayMode": 0,
         "triggerTask": None,
         "triggerPos": None,

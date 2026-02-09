@@ -232,9 +232,9 @@ class IBindPhone(object):
     def checkDevicePlatId(self, devicePlatId):
         INFO_MSG("IBindPhone checkDevicePlatId", devicePlatId)
         return devicePlatId in (gameconst.DevicePlatId.PC_CLIENT, )
-
+    
     @AuthClsWraper.onlyHost
-    @gamedecorator.checkGameconfigEnable(UVVD.datas.get('PcLoginReward', {}).get('type', 'welfare'))
+    @gamedecorator.checkGameconfigEnable('welfare_pcLogin')
     def reqClaimPcLoginReward(self, exposed):
         INFO_MSG("IBindPhone reqClaimPcLoginReward", self.gbID, self.accountName)
         claimTimestamp = self.accountEntity.getPersistentMiscProp(gameconst.AvatarProps.claimPcLoginRewardTimestamp, 0)

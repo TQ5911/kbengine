@@ -379,6 +379,15 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             'onRemoveGuildRelationClient',
             (reply.guildUUID1,),
         )
+        
+        utils.distribute(
+            gameconst.UserEventTag.EVENT_ON_GUILD_UNION_CHANGE, 
+            'remove', 
+            reply.guildUUID1, 
+            reply.guildUUID2, 
+            gameconst.GuildRelationType.UNION,
+            0,
+        )
 
     def onBroadcastGuildRelationSingle(self, reply):
         INFO_MSG('CrossDataStub onBroadcastGuildRelationSingle', reply)
@@ -401,6 +410,15 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             [reply.guildRelation.guildUUID2],
             'onAddGuildRelationClient',
             (reply.guildRelation.guildUUID1, reply.guildRelation.relationType),
+        )
+        
+        utils.distribute(
+            gameconst.UserEventTag.EVENT_ON_GUILD_UNION_CHANGE, 
+            'add', 
+            reply.guildRelation.guildUUID1, 
+            reply.guildRelation.guildUUID2, 
+            reply.guildRelation.relationType, 
+            reply.endTime
         )
 
     def onGuildRelationAll(self, reply):

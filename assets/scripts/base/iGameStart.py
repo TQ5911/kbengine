@@ -80,6 +80,11 @@ class IGameStart(object):
                 self.pyAddTimer(0.1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
                 return
 
+            if gameglobal.mapleServerInfo[gameconfig.serverId()]['start_time'] != gameconfig.serverOpenTime():
+                ERROR_MSG(f'server startTime not match: {gameglobal.mapleServerInfo[gameconfig.serverId()]}, {gameconfig.serverOpenTime()}')
+                self.pyAddTimer(1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
+                return
+
             self.pyAddTimer(0.1, 0, gametimer.CREATE_LEADER_BOARD_STUB)
 
         elif userArg == gametimer.CREATE_LEADER_BOARD_STUB:
@@ -558,5 +563,6 @@ class IGameStart(object):
             'gameengine.setMapleServerInfo',
             (_dic, _alias, _serverName))
 
+        self.setMapleServerInfo(json.dumps(_dic))
         self.pyAddTimer(0.1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
 

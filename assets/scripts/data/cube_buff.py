@@ -18,27 +18,51 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "type": 1,
-        "buffID": 64000097,
+        "buffID": 64000130,
         "weight": 10
     }),
     2: _tools.RODict({
         "ID": 2,
         "type": 1,
-        "buffID": 64000098,
-        "weight": 20
+        "buffID": 64000131,
+        "weight": 10
     }),
     3: _tools.RODict({
         "ID": 3,
-        "type": 2,
-        "buffID": 64000099,
-        "weight": 30
+        "type": 1,
+        "buffID": 64000132,
+        "weight": 10
     }),
     4: _tools.RODict({
         "ID": 4,
+        "type": 1,
+        "buffID": 64000133,
+        "weight": 10
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "type": 1,
+        "buffID": 64000134,
+        "weight": 10
+    }),
+    6: _tools.RODict({
+        "ID": 6,
         "type": 2,
-        "buffID": 64000100,
-        "weight": 40
+        "buffID": 64000135,
+        "weight": 10
+    }),
+    7: _tools.RODict({
+        "ID": 7,
+        "type": 2,
+        "buffID": 64000136,
+        "weight": 10
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "type": 2,
+        "buffID": 64000137,
+        "weight": 10
     })
 })
 minKey = 1
-maxKey = 4
+maxKey = 8

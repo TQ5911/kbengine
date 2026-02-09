@@ -169,15 +169,6 @@ func (a *AuctionItem) getIndexVal(indexKey string) string {
 	}
 }
 
-func (a *AuctionItem) isPreciousItem() bool {
-	itemCfg := ItemConfig.GetStringMap(strconv.FormatUint(uint64(a.ItemData.ItemId), 10))
-	if itemCfg == nil {
-		appLog.Error("isPreciousItem itemCfg is nil, itemId:", a.ItemData.ItemId)
-		return false
-	}
-	return itemCfg["preciousItem"] == 1
-}
-
 func (a *AuctionItem) isItemExpired(cutTime int64) bool {
 	if a.Status == AUCTION_STATUS_EXPIRED {
 		return true
@@ -254,17 +245,13 @@ func (a *AuctionItem) isLocked() bool {
 }
 
 func (a *AuctionItem) itemExpiredSecond() int64 {
-	normalItemSalePeriod := AuctionConfig.GetStringMap("auctionAutoUnlist")
-	if normalItemSalePeriod == nil {
-		appLog.Error("itemExpiredSecond normalItemSalePeriod is nil")
+	auctionCfg, ret := ConfigStore.cfgVipers.Get(CFG_TYPE_AUCTION_CONST)
+	if !ret {
+		appLog.Error("itemExpiredSecond missing cfg store ", CFG_TYPE_AUCTION_CONST)
 		return 0
 	}
-	normalItemSalePeriodValue, ok := normalItemSalePeriod["value"]
-	if !ok {
-		appLog.Error("itemExpiredSecond normalItemSalePeriod value is nil")
-		return 0
-	}
-	t := int64(normalItemSalePeriodValue.(float64) * 3600)
+	normalItemSalePeriod := auctionCfg.GetInt("auctionAutoUnlist")
+	t := int64(normalItemSalePeriod * 3600)
 	if a.IsPublicity == 1 {
 		t += a.GetPublicityGap()
 	}
@@ -272,17 +259,67 @@ func (a *AuctionItem) itemExpiredSecond() int64 {
 }
 
 func (a *AuctionItem) GetPublicityGap() int64 {
-	auctionPublicityTime := AuctionConfig.GetStringMap("auctionPublicityTime")
+	auctionCfg, ret := ConfigStore.cfgVipers.Get(CFG_TYPE_AUCTION_CONST)
+	if !ret || nil == auctionCfg {
+		appLog.Error("GetPublicityGap missing cfg store ", CFG_TYPE_AUCTION_CONST)
+		return 0
+	}
+	auctionPublicityTime := auctionCfg.GetIntSlice("auctionPublicityTime")
 	if auctionPublicityTime == nil {
 		appLog.Error("GetPublicityGap auctionPublicityTime is nil")
 		return 0
 	}
-	auctionPublicityTimeValue, ok := auctionPublicityTime["value"]
-	if !ok {
-		appLog.Error("GetPublicityGap auctionPublicityTime value is nil")
+	if nil == a.ItemData {
+		appLog.Error("GetPublicityGap item data is nil")
 		return 0
 	}
-	return int64(auctionPublicityTimeValue.(float64) * 3600)
+
+	found := false
+	quality := -1
+
+	itemCfg, ret := ConfigStore.cfgVipers.Get(CFG_TYPE_ITEM_DATA)
+	if !ret || nil == itemCfg {
+		appLog.Error("GetPublicityGap missing cfg store ", CFG_TYPE_ITEM_DATA)
+		return 0
+	}
+	b := itemCfg.GetStringMap(strconv.FormatUint(uint64(a.ItemData.ItemId), 10))
+	if nil != b {
+		if c, ok := b["quality"]; ok {
+			found = true
+			d, ok := c.(float64)
+			if ok {
+				quality = int(d)
+			}
+		}
+	}
+	if !found {
+		itemCfg, ret := ConfigStore.cfgVipers.Get(CFG_TYPE_EQUIP_DATA)
+		if !ret || nil == itemCfg {
+			appLog.Error("GetPublicityGap missing cfg store ", CFG_TYPE_EQUIP_DATA)
+			return 0
+		}
+		b := itemCfg.GetStringMap(strconv.FormatUint(uint64(a.ItemData.ItemId), 10))
+		if nil != b {
+			if c, ok := b["quality"]; ok {
+				found = true
+				d, ok := c.(float64)
+				if ok {
+					quality = int(d)
+				}
+			}
+		}
+	}
+	if !found || quality == -1 {
+		appLog.Error("GetPublicityGap not found item quality", a.ItemData.ItemId)
+		return 0
+	}
+
+	for idx := 0; idx < len(auctionPublicityTime) && idx+1 < len(auctionPublicityTime); idx = idx + 2 {
+		if auctionPublicityTime[idx] == quality {
+			return int64(auctionPublicityTime[idx+1]) * 3600
+		}
+	}
+	return 0
 }
 
 func (a *AuctionItem) itemExpiredTime() int64 {

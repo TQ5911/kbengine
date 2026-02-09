@@ -68,7 +68,7 @@ datas = _tools.RODict({
     38000011: _tools.RODict({
         "ID": 38000011,
         "name": "guildLog_guildMoneyUsed",
-        "log": "<color=#b35b00>{0}</color>将<color=#b35b00>{1}帮会金币</color>转化为<color=#038304>{2}帮会资金</color>",
+        "log": "<color=#b35b00>{0}</color>将<color=#b35b00>{1}帮会元宝</color>转化为<color=#038304>{2}帮会资金</color>",
     }),
     38000012: _tools.RODict({
         "ID": 38000012,

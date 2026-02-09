@@ -95,6 +95,22 @@ const (
 	INDEX_KEY_PLAYERGBID = "fromPlayerGBID"
 )
 
+const (
+	CFG_TYPE_AUCTION_CONST = "1"
+	CFG_TYPE_ITEM_DATA     = "2"
+	CFG_TYPE_EQUIP_DATA    = "3"
+)
+
+// 设置配置数据
+func GetCfgFiles() map[string]string {
+	datas := map[string]string{
+		CFG_TYPE_AUCTION_CONST: "../data/auction.auctionConst.txt",
+		CFG_TYPE_ITEM_DATA:     "../data/itemData.itemData.txt",
+		CFG_TYPE_EQUIP_DATA:    "../data/gearBase.gearBase.txt",
+	}
+	return datas
+}
+
 var auctionIndexKeys = []string{ // 拍卖行索引信息
 	INDEX_KEY_ITEMID,
 	INDEX_KEY_PLAYERGBID}
@@ -108,3 +124,5 @@ func DirectUInt32Sharding(key uint32) uint32 {
 func DirectUInt64Sharding(key uint64) uint32 {
 	return uint32(key) ^ uint32(key>>32)
 }
+
+var ConfigStore *CfgData

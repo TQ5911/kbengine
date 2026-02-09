@@ -6,6 +6,7 @@ from KBEDebug import *
 import gameconst
 import gameglobal
 import utils
+import formula
 import functools
 import json
 import actionContext
@@ -21,6 +22,8 @@ import gamedecorator
 import gametimer
 import gameengine
 import gameclass
+import gameconfig
+
 import value_value as VLVLD
 import gearManufacture_details as GMDD
 import gearBase_gearConst as GBGCD
@@ -251,10 +254,29 @@ class ImpEquipment(object):
         INFO_MSG('in cellUndressEquipmentSucc', bodyEquipDic)
         self.unlockBag()
         self.bagData.doBagUndressEquip(self, bodyEquipDic)
-
+    
     def cellUndressEquipmentFail(self, slotId, reason):
         INFO_MSG("cellUndressEquipmentFail::", slotId, reason)
         self.unlockBag(gameconst.BagType.BAG_TYPE_NORMAL, reason)
+
+    def cellBrokenEquipment(self, uniqueId, bodyEquipDic):
+        INFO_MSG("cellBrokenEquipment::", uniqueId, bodyEquipDic)
+        srcType = AAC_AACDD.datas.BONUS_SRC_ENHANCE_BODY_EQUIP
+        detail = gameclass.AwardDetail(uniqueid=uniqueId, itemid=bodyEquipDic['itemId'])
+        LogTrackingMgr.LogTrackingMgr.Get_Item(
+            self.accountEntity.accountName,
+            self.gbID,
+            gameconfig.gameId(),
+            bodyEquipDic['itemId'],
+            bodyEquipDic['uniqueId'],
+            self.bagData.bagType,
+            bodyEquipDic['bindType'],
+            -1,
+            self.getItemNum(bodyEquipDic['itemId']),
+            srcType,
+            uniqueId,
+            str(detail),
+        )
 
     def bagEquipEnhance(self, gridId, uniqueId, gridIdList, gridCountList, autoBuy):
         INFO_MSG('in bagEquipEnhance:', gridId, uniqueId, gridIdList, gridCountList, autoBuy)
@@ -303,10 +325,12 @@ class ImpEquipment(object):
         upgradeAttrsBefore = bagEquipItem.getUpgradeAttrs()
         addBindValueBefore = bagEquipItem.getAddBindValueStatus()
         levelBefore = bagEquipItem.getEnhanceLevel()
+        bindValueBefore = bagEquipItem.getBindValue()
         if bindValue > 0:
             bagEquipItem.updateBindValue()
         
         enhanceVal = bagEquipItem.doEnhanceEquip(self, opUUID, bagEquipItem.getEnhanceLevel())
+        bindValueAfter = bagEquipItem.getBindValue()
         # 装备破碎了
         if enhanceVal == gameconst.EquipConstVale.ENHANCEMENT_BROKEN_FLAG:
             srcType = AAC_AACDD.datas.BONUS_SRC_ENHANCE_BAG_EQUIP
@@ -315,13 +339,13 @@ class ImpEquipment(object):
             self.triggerAchievement(gameconst.AchieveType.ENHANCE_EQUIPMENT)
             LogTrackingMgr.LogTrackingMgr.Equip_Enhancement(opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, baseAttrsBefore, enhanceAttrsBefore, \
                                                             upgradeAttrsBefore, bagEquipItem.getBaseAttrs(), bagEquipItem.getEnhanceAttrs(), bagEquipItem.getUpgradeAttrs(), addBindValueBefore, \
-                                                            bagEquipItem.getAddBindValueStatus(), bindValue, levelBefore, bagEquipItem.getEnhanceLevel(), enhanceVal, bagEquipItem.getEquipScore())
+                                                            bagEquipItem.getAddBindValueStatus(), bindValue, levelBefore, bagEquipItem.getEnhanceLevel(), enhanceVal, bagEquipItem.getEquipScore(), bindValueBefore, bindValueAfter)
             self.client.onEquipBroken(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId)
         else:
             self.triggerAchievement(gameconst.AchieveType.ENHANCE_EQUIPMENT)
             LogTrackingMgr.LogTrackingMgr.Equip_Enhancement(opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, baseAttrsBefore, enhanceAttrsBefore, \
                                                             upgradeAttrsBefore, bagEquipItem.getBaseAttrs(), bagEquipItem.getEnhanceAttrs(), bagEquipItem.getUpgradeAttrs(), addBindValueBefore, \
-                                                            bagEquipItem.getAddBindValueStatus(), bindValue, levelBefore, bagEquipItem.getEnhanceLevel(), enhanceVal, bagEquipItem.getEquipScore())
+                                                            bagEquipItem.getAddBindValueStatus(), bindValue, levelBefore, bagEquipItem.getEnhanceLevel(), enhanceVal, bagEquipItem.getEquipScore(), bindValueBefore, bindValueAfter)
             self.client.onEquipEnhanceSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, bagEquipItem.getEnhanceLevel(), bagEquipItem.getEquipScore(), bagEquipItem.getAddBindValueStatus(), bagEquipItem.bindType, bagEquipItem.getMaxEnhanceLevel())
         return
 
@@ -372,11 +396,13 @@ class ImpEquipment(object):
         enhanceAttrsBefore = bagEquipItem.getEnhanceAttrs()
         upgradeAttrsBefore = bagEquipItem.getUpgradeAttrs()
         gradeBefore = bagEquipItem.getGrade()
-
+        bindValueBefore = bagEquipItem.getBindValue()
         bagEquipItem.doUpgradeEquip(self, opUUID)
         bagEquipItem.setBindValue(bagEquipItem.getOriginalBindValue() + bindValue)
+        bindValueAfter = bagEquipItem.getBindValue()
+
         LogTrackingMgr.LogTrackingMgr.Equip_Upgrade(opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, baseAttrsBefore, enhanceAttrsBefore, upgradeAttrsBefore, \
-                                                    bagEquipItem.getBaseAttrs(), bagEquipItem.getEnhanceAttrs(), bagEquipItem.getUpgradeAttrs(), gradeBefore, bagEquipItem.getGrade(), bindValue, bagEquipItem.getOriginalBindValue(), \
+                                                    bagEquipItem.getBaseAttrs(), bagEquipItem.getEnhanceAttrs(), bagEquipItem.getUpgradeAttrs(), gradeBefore, bagEquipItem.getGrade(), bindValueBefore, bindValueAfter, \
                                                     bagEquipItem.getEquipScore())
 
         self.client.onEquipUpgradeSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, bagEquipItem.getGrade(), bagEquipItem.getEquipScore(), bagEquipItem.getOriginalBindValue(), bagEquipItem.getAddBindValueStatus(), bagEquipItem.bindType)
@@ -428,15 +454,16 @@ class ImpEquipment(object):
 
         glyphDataBefore = bagEquipItem.getGlyphDatas()
         addBindValueBefore = bagEquipItem.getAddBindValueStatus()
-
+        bindValueBefore = bagEquipItem.getBindValue()
         if bindValue > 0:
             bagEquipItem.updateBindValue()
         ret, _, _ = bagEquipItem.doEquipGlyphWashing(self, glyphPos)
+        bindValueAfter = bagEquipItem.getBindValue()
         if ret:
             glyphData = bagEquipItem.equipAttr.getGlyphData(glyphPos)
 
             LogTrackingMgr.LogTrackingMgr.Equip_Glyph(opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, glyphDataBefore,\
-                                                       bagEquipItem.getGlyphDatas(), addBindValueBefore, bagEquipItem.getAddBindValueStatus(), bindValue, bagEquipItem.getEquipScore())
+                                                       bagEquipItem.getGlyphDatas(), addBindValueBefore, bagEquipItem.getAddBindValueStatus(), bindValue, bagEquipItem.getEquipScore(), glyphPos // 2, glyphPos, bindValueBefore, bindValueAfter)
             self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, glyphPos, glyphData.toClientData(), bagEquipItem.getEquipScore(), bagEquipItem.getAddBindValueStatus(), bagEquipItem.bindType)
         return
 
@@ -538,13 +565,16 @@ class ImpEquipment(object):
         blessLvRateBefore = bagEquipItem.getBlessLvRate()
         maxBlessLvBefore = bagEquipItem.getBlessMaxLv()
         addBindValueBefore = bagEquipItem.getAddBindValueStatus()
+        bindValueBefore = bagEquipItem.getBindValue()
 
         if bindValue > 0:
             bagEquipItem.updateBindValue()
         if bagEquipItem.doEquipBlessing(self):
+
+            bindValueAfter = bagEquipItem.getBindValue()
             LogTrackingMgr.LogTrackingMgr.Equip_Bless(opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, blessDataBefore, \
                                                       bagEquipItem.getBlessDatas(), addBindValueBefore, bagEquipItem.getAddBindValueStatus(), bindValue, blessLvRateBefore, \
-                                                      bagEquipItem.getBlessLvRate(), maxBlessLvBefore, bagEquipItem.getBlessMaxLv(), bagEquipItem.getEquipScore())
+                                                      bagEquipItem.getBlessLvRate(), maxBlessLvBefore, bagEquipItem.getBlessMaxLv(), bagEquipItem.getEquipScore(), bindValueBefore, bindValueAfter)
 
             blessAffixes = []
             for oneAffix in bagEquipItem.equipAttr.blessAffixes:
@@ -629,15 +659,17 @@ class ImpEquipment(object):
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
         spiritDataBefore = bagEquipItem.getSpiritDatas()
         addBindValueBefore = bagEquipItem.getAddBindValueStatus()
-
+        bindValueBefore = bagEquipItem.getBindValue()
         if bindValue > 0:
             bagEquipItem.updateBindValue()
         ret, _, _ = bagEquipItem.doEquipSpiritWashing(self, spiritPos, unbindValue)
+        bindValueAfter = bagEquipItem.getBindValue()
         if ret:
             spiritData = bagEquipItem.equipAttr.spiritDatas[spiritPos]
             self.achievementInfo.triggerAchieveByType(self, gameconst.AchieveType.EQUIPMENT_WITH_SPIRIT, actionContext.AchievementCtx())
             LogTrackingMgr.LogTrackingMgr.Equip_Spirit(opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, spiritDataBefore,\
-                                                       bagEquipItem.getSpiritDatas(), addBindValueBefore, bagEquipItem.getAddBindValueStatus(), bindValue, bagEquipItem.getEquipScore())
+                                                       bagEquipItem.getSpiritDatas(), addBindValueBefore, bagEquipItem.getAddBindValueStatus(), bindValue, bagEquipItem.getEquipScore(), \
+                                                       spiritPos, bindValueBefore, bindValueAfter)
 
             self.client.onEquipSpiritWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, spiritData.toClientData(),
                                                  spiritPos, bagEquipItem.getEquipScore(), bagEquipItem.getAddBindValueStatus(), bagEquipItem.bindType)
@@ -983,6 +1015,14 @@ class ImpEquipment(object):
             self.onMessagePre(
                 GBGCD.datas['equipPickUp_msgID']['value'],
                 [str(equipItem.itemId)])
+
+            self.cell.logPickDropEquip(
+                equipItem.uniqueId,
+                equipItem.itemId,
+                equipItem.getQuality(),
+                equipItem.getGrade(),
+            )
+
         else:
             _args = [
                 str(equipItem.itemId),
@@ -1079,12 +1119,29 @@ class ImpEquipment(object):
             _mailId,
             opUUID=KBEngine.genUUID64(),
             despArgs=_args,
-            src=AAC_AACDD.datas.BONUS_SRC_EQUIPMENT_TAKE_OK
+            srcType=AAC_AACDD.datas.BONUS_SRC_EQUIPMENT_TAKE_OK
         )
 
         self.onMessagePre(
             GBGCD.datas['pickOthersDropEquip_msgID']['value'],
             [str(equipItem.itemId)])
+
+        _posInfo = self.popTempMiscProp(gameconst.AvatarProps.takeDropInfo, None)
+        if _posInfo is None:
+            ERROR_MSG('onGetBackDropEquip not found temp misc prop:', uniqueId)
+            return
+
+        _spaceNo, _pos = _posInfo
+        LogTrackingMgr.LogTrackingMgr.Drop_Equip(
+            self.gbID,
+            equipItem.uniqueId,
+            equipItem.itemId,
+            equipItem.getQuality(),
+            equipItem.getGrade(),
+            formula.getMapId(_spaceNo),
+            str(_pos),
+            gameconst.EQUIP_OPR_PICK,
+        )
 
     @gamedecorator.checkGameconfigEnable('equip')
     def giveUpDropEquip(self, exposed, uniqueId):
@@ -1351,13 +1408,14 @@ class ImpEquipment(object):
         else:
             self.setTempMiscProp(gameconst.AvatarProps.equipDropInitStatus, 0)
 
-    def takeEquipBase(self, uniqueId):
+    def takeEquipBase(self, uniqueId, spaceNo, position):
         if not self.checkPickDropEquip(uniqueId):
             ERROR_MSG('takeEquipBase not could take drop:', uniqueId)
             return
 
         gameengine.getGlobalBase('DropStub').takeDropEquip(self.gbID, uniqueId, self)
         self.pickDropEquipLockTime = utils.getNow() + 60
+        self.setTempMiscProp(gameconst.AvatarProps.takeDropInfo, (spaceNo, position))
 
     def onGiveUpDropEquip(self, uniqueId, result, dropGbId):
         INFO_MSG('onGiveUpDropEquip:', uniqueId, result, dropGbId)

@@ -11,7 +11,8 @@ datas ={
         1013,
         1025,
         1026,
-        1028
+        1028,
+        1043
       ]
     }
   },
@@ -37,7 +38,7 @@ datas ={
       40030023
     ],
     "num": 1,
-    "lv": "10",
+    "lv": "11",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -75,7 +76,7 @@ datas ={
       40030035
     ],
     "num": 1,
-    "lv": "10",
+    "lv": "11",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -99,7 +100,11 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1038
+      ]
+    }
   },
   "1019": {
     "type": "taskFinished",
@@ -164,7 +169,7 @@ datas ={
       40030009
     ],
     "num": 1,
-    "lv": "1",
+    "lv": "6",
     "initState": 0,
     "hp": 220,
     "minAtk": 0,
@@ -180,7 +185,7 @@ datas ={
       40030010
     ],
     "num": 1,
-    "lv": "1",
+    "lv": "6",
     "initState": 0,
     "hp": 220,
     "minAtk": 0,
@@ -196,7 +201,7 @@ datas ={
       40030011
     ],
     "num": 1,
-    "lv": "1",
+    "lv": "6",
     "initState": 0,
     "hp": 220,
     "minAtk": 0,
@@ -212,7 +217,7 @@ datas ={
       40030012
     ],
     "num": 1,
-    "lv": "1",
+    "lv": "6",
     "initState": 0,
     "hp": 220,
     "minAtk": 0,
@@ -220,6 +225,72 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
+    "transition": {}
+  },
+  "1038": {
+    "type": "monsterHp",
+    "monsterID": [
+      40030008
+    ],
+    "compare": 5,
+    "hpPercent": 60.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1039
+      ]
+    }
+  },
+  "1039": {
+    "type": "popupdialog",
+    "entityID": [
+      40030008
+    ],
+    "dialogID": 19900388,
+    "transition": {
+      "finished": [
+        1040
+      ]
+    }
+  },
+  "1040": {
+    "type": "monsterHp",
+    "monsterID": [
+      40030008
+    ],
+    "compare": 5,
+    "hpPercent": 20.0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1041
+      ]
+    }
+  },
+  "1041": {
+    "type": "popupdialog",
+    "entityID": [
+      40030008
+    ],
+    "dialogID": 19900389,
+    "transition": {}
+  },
+  "1043": {
+    "type": "addBuffToMonster",
+    "monsterID": [
+      40030009,
+      40030010,
+      40030011,
+      40030012
+    ],
+    "buffID": [
+      64004998
+    ],
+    "lv": "6",
+    "lvlmt": -1,
+    "duration": -1.0,
     "transition": {}
   }
 }

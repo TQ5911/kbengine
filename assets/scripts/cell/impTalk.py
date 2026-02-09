@@ -196,3 +196,8 @@ class ImpTalk(object):
             newTaskId = kwargs.get('_srcTaskId')
 
         self.startClaimTask(newTaskId, taskCtx=actionContext.ClaimTaskCtx(claimSrc=gameconst.ClaimTaskSrc.FROM_ACTION))
+
+    def _eventActionAddUltraSkillPower(self, eventActionSrc, *args, **kwargs):
+        INFO_MSG('_eventActionAddUltraSkillPower:', eventActionSrc, args, kwargs)
+
+        self.addUltraSkillPower(int(args[0]))

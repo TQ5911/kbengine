@@ -4946,49 +4946,49 @@ datas = _tools.RODict({
     100705: _tools.RODict({
         "ID": 100705,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.015}),
+        "propList": _tools.RODict({"adjExpGrow":0.015}),
         "equipment": None,
         "props": _tools.ROList([30001001, 30001002, 30001003, 30001004, 30001005])
     }),
     100706: _tools.RODict({
         "ID": 100706,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.015}),
+        "propList": _tools.RODict({"adjExpGrow":0.015}),
         "equipment": None,
         "props": _tools.ROList([30001006, 30001007, 30001008, 30001009, 30001010])
     }),
     100707: _tools.RODict({
         "ID": 100707,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.015}),
+        "propList": _tools.RODict({"adjExpGrow":0.015}),
         "equipment": None,
         "props": _tools.ROList([30001001, 30001002, 30001003, 30001004, 30001010])
     }),
     100708: _tools.RODict({
         "ID": 100708,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001003, 30001004, 30001005, 30001006])
     }),
     100709: _tools.RODict({
         "ID": 100709,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001005, 30001006, 30001007, 30001008])
     }),
     100710: _tools.RODict({
         "ID": 100710,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001007, 30001008, 30001009, 30001010])
     }),
     100711: _tools.RODict({
         "ID": 100711,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001001, 30001002, 30001009, 30001010])
     }),
@@ -5044,63 +5044,63 @@ datas = _tools.RODict({
     100719: _tools.RODict({
         "ID": 100719,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001001, 30001002, 30001003])
     }),
     100720: _tools.RODict({
         "ID": 100720,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001002, 30001003, 30001004])
     }),
     100721: _tools.RODict({
         "ID": 100721,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001003, 30001004, 30001005])
     }),
     100722: _tools.RODict({
         "ID": 100722,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001004, 30001005, 30001006])
     }),
     100723: _tools.RODict({
         "ID": 100723,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001005, 30001006, 30001007])
     }),
     100724: _tools.RODict({
         "ID": 100724,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001006, 30001007, 30001008])
     }),
     100725: _tools.RODict({
         "ID": 100725,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001007, 30001008, 30001009])
     }),
     100726: _tools.RODict({
         "ID": 100726,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001008, 30001009, 30001010])
     }),
     100727: _tools.RODict({
         "ID": 100727,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjCopper":0.01}),
+        "propList": _tools.RODict({"adjExpGrow":0.01}),
         "equipment": None,
         "props": _tools.ROList([30001009, 30001010, 30001001])
     }),
@@ -5170,77 +5170,77 @@ datas = _tools.RODict({
     100737: _tools.RODict({
         "ID": 100737,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.015}),
+        "propList": _tools.RODict({"adjCopper":0.015}),
         "equipment": None,
         "props": _tools.ROList([30003008, 30003010, 30003012, 30003013, 30003004])
     }),
     100738: _tools.RODict({
         "ID": 100738,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.01}),
+        "propList": _tools.RODict({"adjCopper":0.01}),
         "equipment": None,
         "props": _tools.ROList([30003007, 30003009, 30003011])
     }),
     100739: _tools.RODict({
         "ID": 100739,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.01}),
+        "propList": _tools.RODict({"adjCopper":0.01}),
         "equipment": None,
         "props": _tools.ROList([30003002, 30003004, 30003006])
     }),
     100740: _tools.RODict({
         "ID": 100740,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.01}),
+        "propList": _tools.RODict({"adjCopper":0.01}),
         "equipment": None,
         "props": _tools.ROList([30003001, 30003003, 30003005])
     }),
     100741: _tools.RODict({
         "ID": 100741,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.01}),
+        "propList": _tools.RODict({"adjCopper":0.01}),
         "equipment": None,
         "props": _tools.ROList([30003001, 30003002, 30003003, 30003004])
     }),
     100742: _tools.RODict({
         "ID": 100742,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.01}),
+        "propList": _tools.RODict({"adjCopper":0.01}),
         "equipment": None,
         "props": _tools.ROList([30003005, 30003006, 30003007, 30003008])
     }),
     100743: _tools.RODict({
         "ID": 100743,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.015}),
+        "propList": _tools.RODict({"adjCopper":0.015}),
         "equipment": None,
         "props": _tools.ROList([30003009, 30003010, 30003011, 30003012, 30003013])
     }),
     100744: _tools.RODict({
         "ID": 100744,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.025}),
+        "propList": _tools.RODict({"adjCopper":0.025}),
         "equipment": None,
         "props": _tools.ROList([30003014, 30003015, 30003016, 30003017])
     }),
     100745: _tools.RODict({
         "ID": 100745,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.025}),
+        "propList": _tools.RODict({"adjCopper":0.025}),
         "equipment": None,
         "props": _tools.ROList([30003018, 30003019, 30003020, 30003021])
     }),
     100746: _tools.RODict({
         "ID": 100746,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.025}),
+        "propList": _tools.RODict({"adjCopper":0.025}),
         "equipment": None,
         "props": _tools.ROList([30003022, 30003023, 30003024, 30003025])
     }),
     100747: _tools.RODict({
         "ID": 100747,
         "unavailableClass": None,
-        "propList": _tools.RODict({"adjExpGrow":0.025}),
+        "propList": _tools.RODict({"adjCopper":0.025}),
         "equipment": None,
         "props": _tools.ROList([30003026, 30003027, 30003028, 30003029, 30003030])
     }),

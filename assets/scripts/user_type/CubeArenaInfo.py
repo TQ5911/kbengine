@@ -44,6 +44,7 @@ class CubeArenaVal(userType.UserSoleType):
         player.addBuff(self.kingBuffId, 1, player.id)
         spaceMgr.dealWithArenaTimer()
         INFO_MSG('arena king by set', player.gbId)
+        spaceMgr.syncPlayer(lambda box: box.client.onArenaKing(self.arenaKing))
         return True
 
     def getChallengerBuff(self, spaceNo):
@@ -125,6 +126,7 @@ class CubeArenaVal(userType.UserSoleType):
         self.kingBuffId = 0
         
         spaceMgr.dealWithArenaTimer()
+        spaceMgr.syncPlayer(lambda box: box.client.onArenaKing(self.arenaKing))
         return True
 
 

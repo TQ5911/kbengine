@@ -34,5 +34,13 @@ datas = _tools.RODict({
     "nameSuffixNoRevenue": _tools.RODict({
         "ID": "nameSuffixNoRevenue",
         "value": (4, 5, 6),
+    }),
+    "initialGainScope": _tools.RODict({
+        "ID": "initialGainScope",
+        "value": (1, 30, 40),
+    }),
+    "initialGainValue": _tools.RODict({
+        "ID": "initialGainValue",
+        "value": (2, 1.5),
     })
 })

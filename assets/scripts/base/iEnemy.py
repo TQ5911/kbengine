@@ -16,7 +16,7 @@ class IEnemy(object):
     def onDeadAddEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score):
         self.enemyMgr.addEnemy(self, killerGbId, killerName, killerSchool, killerLevel, spaceNo, sex, score)
 
-    @gamedecorator.checkGameconfigEnable('enableEnemy')
+    @gamedecorator.checkGameconfigEnable('enemy')
     def reqRemoveEnemy(self, exposed, gbId):
         self.enemyMgr.removeEnemy(gbId)
         self.client.onRemoveEnemy([gbId])
@@ -33,7 +33,7 @@ class IEnemy(object):
         self.enemyMgr.updateByFcVals(usersInfo)
         self.client.onGetEnemyFreshInfo(self.enemyMgr.getEnemyFreshInfo())
 
-    @gamedecorator.checkGameconfigEnable('enableEnemy')
+    @gamedecorator.checkGameconfigEnable('enemy')
     def getEnemyPosInfo(self, exposed, gbId):
         if not self.enemyMgr.isEnemy(gbId):
             self.client.sendEnemyPosInfoToClient(gbId, False, 0)

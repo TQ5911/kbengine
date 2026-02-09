@@ -500,7 +500,7 @@ class AwardMixin(object):
             awardId = 0
             if awardCtx and awardCtx.awardId:
                 awardId = awardCtx.awardId
-            self.cell.addExpByWealthVal(awardVal.exp.data, awardId, opUUID, srcType, detail)
+            self.cell.addExpByWealthVal(self.accountEntity.accountName, self.bagData.bagType, awardVal.exp.data, awardId, opUUID, srcType, detail)
         if awardVal.coin:
             self.addCoin(awardVal.coin.data, opUUID, srcType, detail, srcSubType, idipSource)
         if awardVal.money:
@@ -567,6 +567,7 @@ class AwardMixin(object):
 
             self.makeItemFlowLog(
                 self.bagData.bagType,
+                gameconst.ItemBindType.NORMAL,
                 _it.itemId,
                 0,
                 _it.data,
@@ -1352,6 +1353,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
            
             self.makeItemFlowLog(
                 self.bagData.bagType,
+                gameconst.ItemBindType.NORMAL,
                 _it.itemId,
                 0,
                 -_it.data,
@@ -2493,6 +2495,12 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         detail = gameclass.AwardDetail(itemId=addItemId)
         self.addWealth(AAC_AACDD.datas.BONUS_SRC_CURRENCY_EXCHANGE_GET, addWealthVal, opUUID, detail)
 
+        LogTrackingMgr.LogTrackingMgr.Currency_Exchange(
+            self.gbID,
+            cId,
+            opUUID
+        )
+
     @gamedecorator.checkGameconfigEnable('bag')
     @gamedecorator.limitcall(2)
     def exchangeGiftKeyReward(self, exposed, giftKey):
@@ -2568,7 +2576,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         # else:
         #     gamelog.makeWLog("CurrencyUse", logData)
 
-    def makeItemFlowLog(self, bagType, itemId, uniqueId, itemNum, opUUID, src, newCount, srcDetail=None):
+    def makeItemFlowLog(self, bagType, bindType, itemId, uniqueId, itemNum, opUUID, src, newCount, srcDetail=None):
         LogTrackingMgr.LogTrackingMgr.Get_Item(
             self.accountEntity.accountName,
             self.gbID,
@@ -2576,6 +2584,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             itemId,
             uniqueId,
             bagType,
+            bindType,
             itemNum,
             newCount,
             src,
@@ -2863,6 +2872,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.client.onUpdateSynthesisUpgradeNum(synthesisUpgradeNumList)
         self.client.onRandomSynthesis(itemIdList)
         self.makeSynthesisLog(
+            self.gbID,
             list(costItemInfo.keys()),
             list(costItemInfo.values()),
             0, 0,
@@ -2939,6 +2949,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.client.onUpdateSynthesisUpgradeNum([{'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)}])
         # self.client.onUpgradeSynthesis(ranItemId)
         self.makeSynthesisLog(
+            self.gbID,
             list(costItemInfo.keys()),
             list(costItemInfo.values()),
             0, 0,
@@ -2949,8 +2960,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             opUUID
         )
     
-    def makeSynthesisLog(self, costItemID, costItemNum, costCurrencyID, costCurrencyNum, getID, getNum, getQuality, desc, opUUID):
+    def makeSynthesisLog(self, playerGbId, costItemID, costItemNum, costCurrencyID, costCurrencyNum, getID, getNum, getQuality, desc, opUUID):
         LogTrackingMgr.LogTrackingMgr.Synthesis_Item(
+            playerGbId,
             costItemID,
             costItemNum,
             costCurrencyID,

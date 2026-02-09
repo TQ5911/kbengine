@@ -140,8 +140,17 @@ func (mhs *MapleHttpService) getAllServer(w http.ResponseWriter, r *http.Request
 
 	kvMap := mhs.getAllKV()
 
+	var zoneList []model.ZoneData
+	for id, name := range zoneMap {
+		zoneList = append(zoneList, model.ZoneData{
+			ZoneId:   int(id),
+			ZoneName: name,
+		})
+	}
+
 	response := model.GetAllServerResponse{
 		Servers: serverList,
+		Zones:   zoneList,
 		KV:      kvMap,
 	}
 
@@ -156,13 +165,13 @@ func (mhs *MapleHttpService) getAllServer(w http.ResponseWriter, r *http.Request
 }
 
 func (mhs *MapleHttpService) handleImport(w http.ResponseWriter, r *http.Request) {
-    // Allow CORS for browser-based tools
-    enableCors(&w)
-    if !mhs.handleAuth(w, r) {
-        w.WriteHeader(http.StatusUnauthorized)
-        w.Write([]byte("unauthorized"))
-        return
-    }
+	// Allow CORS for browser-based tools
+	enableCors(&w)
+	if !mhs.handleAuth(w, r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("unauthorized"))
+		return
+	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -183,109 +192,109 @@ func (mhs *MapleHttpService) handleImport(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-    appLog.Info("serverList: ", serverList)
+	appLog.Info("serverList: ", serverList)
 
-    // Full import: clear existing data, then insert all
-    tx, err := mhs.app.db.Begin()
-    if err != nil {
-        appLog.Error("begin tx error: ", err.Error())
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte("begin tx error"))
-        return
-    }
+	// Full import: clear existing data, then insert all
+	tx, err := mhs.app.db.Begin()
+	if err != nil {
+		appLog.Error("begin tx error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("begin tx error"))
+		return
+	}
 
-    // Delete from child table first to satisfy FK constraints, if any
-    if _, err = tx.Exec("DELETE FROM `maple`"); err != nil {
-        appLog.Error("clear maple error: ", err.Error())
-        tx.Rollback()
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte("clear maple error"))
-        return
-    }
-    if _, err = tx.Exec("DELETE FROM `maple_zone`"); err != nil {
-        appLog.Error("clear maple_zone error: ", err.Error())
-        tx.Rollback()
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte("clear maple_zone error"))
-        return
-    }
+	// Delete from child table first to satisfy FK constraints, if any
+	if _, err = tx.Exec("DELETE FROM `maple`"); err != nil {
+		appLog.Error("clear maple error: ", err.Error())
+		tx.Rollback()
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("clear maple error"))
+		return
+	}
+	if _, err = tx.Exec("DELETE FROM `maple_zone`"); err != nil {
+		appLog.Error("clear maple_zone error: ", err.Error())
+		tx.Rollback()
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("clear maple_zone error"))
+		return
+	}
 
-    for _, server := range serverList.Servers {
-        // Insert or update zone first to ensure referential integrity
-        sql := "INSERT INTO `maple_zone` (`zone_id`, `zone_name`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `zone_name`=VALUES(`zone_name`)"
-        if _, err = tx.Exec(sql, server.ZoneId, server.ZoneName); err != nil {
-            appLog.Error("exec zone sql error: ", err.Error())
-            tx.Rollback()
-            w.WriteHeader(http.StatusInternalServerError)
-            w.Write([]byte("insert zone error"))
-            return
-        }
+	for _, server := range serverList.Servers {
+		// Insert or update zone first to ensure referential integrity
+		sql := "INSERT INTO `maple_zone` (`zone_id`, `zone_name`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `zone_name`=VALUES(`zone_name`)"
+		if _, err = tx.Exec(sql, server.ZoneId, server.ZoneName); err != nil {
+			appLog.Error("exec zone sql error: ", err.Error())
+			tx.Rollback()
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("insert zone error"))
+			return
+		}
 
-        sql = "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`, `central_login`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        if _, err = tx.Exec(sql, server.Id, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.CentralLogin); err != nil {
-            appLog.Error("exec server sql error: ", err.Error())
-            tx.Rollback()
-            w.WriteHeader(http.StatusInternalServerError)
-            w.Write([]byte("insert server error"))
-            return
-        }
-    }
+		sql = "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`, `central_login`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+		if _, err = tx.Exec(sql, server.Id, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.CentralLogin); err != nil {
+			appLog.Error("exec server sql error: ", err.Error())
+			tx.Rollback()
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("insert server error"))
+			return
+		}
+	}
 
-    if err = tx.Commit(); err != nil {
-        appLog.Error("commit tx error: ", err.Error())
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte("commit tx error"))
-        return
-    }
+	if err = tx.Commit(); err != nil {
+		appLog.Error("commit tx error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("commit tx error"))
+		return
+	}
 
-    w.WriteHeader(http.StatusOK)
-    w.Write([]byte("success"))
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("success"))
 }
 
 // handleExport returns full JSON of zones and servers
 func (mhs *MapleHttpService) handleExport(w http.ResponseWriter, r *http.Request) {
-    appLog.Info("handleExport")
-    enableCors(&w)
+	appLog.Info("handleExport")
+	enableCors(&w)
 
-    if !mhs.handleAuth(w, r) {
-        w.WriteHeader(http.StatusUnauthorized)
-        w.Write([]byte("unauthorized"))
-        return
-    }
+	if !mhs.handleAuth(w, r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("unauthorized"))
+		return
+	}
 
-    zoneMap := mhs.getAllZone()
+	zoneMap := mhs.getAllZone()
 
-    sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_state, server_flag_state, alias, start_time, central_login FROM `maple`"
-    rows, err := mhs.app.db.Query(sql)
-    if err != nil {
-        appLog.Error("exec sql error: ", err.Error())
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte("internal server error"))
-        return
-    }
+	sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_state, server_flag_state, alias, start_time, central_login FROM `maple`"
+	rows, err := mhs.app.db.Query(sql)
+	if err != nil {
+		appLog.Error("exec sql error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("internal server error"))
+		return
+	}
 
-    var list model.ServerList
-    for rows.Next() {
-        var s model.Server
-        if err = rows.Scan(&s.Id, &s.ServerName, &s.ZoneId, &s.GameServer, &s.QueueServer, &s.ServerGroup, &s.ServerState, &s.ServerFlagState, &s.Alias, &s.StartTime, &s.CentralLogin); err != nil {
-            appLog.Error("scan row error: ", err.Error())
-            w.WriteHeader(http.StatusInternalServerError)
-            w.Write([]byte("scan row error"))
-            return
-        }
-        s.ZoneName = zoneMap[uint32(s.ZoneId)]
-        list.Servers = append(list.Servers, s)
-    }
+	var list model.ServerList
+	for rows.Next() {
+		var s model.Server
+		if err = rows.Scan(&s.Id, &s.ServerName, &s.ZoneId, &s.GameServer, &s.QueueServer, &s.ServerGroup, &s.ServerState, &s.ServerFlagState, &s.Alias, &s.StartTime, &s.CentralLogin); err != nil {
+			appLog.Error("scan row error: ", err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("scan row error"))
+			return
+		}
+		s.ZoneName = zoneMap[uint32(s.ZoneId)]
+		list.Servers = append(list.Servers, s)
+	}
 
-    jsonData, err := json.Marshal(list)
-    if err != nil {
-        appLog.Error("marshal json error:", err.Error())
-        w.WriteHeader(http.StatusInternalServerError)
-        return
-    }
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-    w.Write(jsonData)
+	jsonData, err := json.Marshal(list)
+	if err != nil {
+		appLog.Error("marshal json error:", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonData)
 }
 
 func enableCors(w *http.ResponseWriter) {
@@ -336,6 +345,72 @@ func (mhs *MapleHttpService) addZone(w http.ResponseWriter, r *http.Request) {
 
 	sql := "INSERT INTO `maple_zone` (`zone_id`, `zone_name`) VALUES (?, ?)"
 	_, err = mhs.app.db.Exec(sql, zoneData.ZoneId, zoneData.ZoneName)
+	if err != nil {
+		appLog.Error("exec sql error: ", err.Error())
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("success"))
+}
+
+func (mhs *MapleHttpService) removeZone(w http.ResponseWriter, r *http.Request) {
+	appLog.Info("removeZone")
+	enableCors(&w)
+
+	if !mhs.handleAuth(w, r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("unauthorized"))
+		return
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		appLog.Error("read body error: ", err.Error())
+	}
+
+	appLog.Info("body: ", string(body))
+
+	var req model.RemoveZoneRequest
+	err = json.Unmarshal(body, &req)
+	if err != nil {
+		appLog.Error("unmarshal body error: ", err.Error())
+	}
+
+	sql := "DELETE FROM `maple_zone` WHERE `zone_id` = ?"
+	_, err = mhs.app.db.Exec(sql, req.ZoneId)
+	if err != nil {
+		appLog.Error("exec sql error: ", err.Error())
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("success"))
+}
+
+func (mhs *MapleHttpService) updateZone(w http.ResponseWriter, r *http.Request) {
+	appLog.Info("updateZone")
+	enableCors(&w)
+
+	if !mhs.handleAuth(w, r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("unauthorized"))
+		return
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		appLog.Error("read body error: ", err.Error())
+	}
+
+	appLog.Info("body: ", string(body))
+
+	var zoneData model.ZoneData
+	err = json.Unmarshal(body, &zoneData)
+	if err != nil {
+		appLog.Error("unmarshal body error: ", err.Error())
+	}
+
+	sql := "UPDATE `maple_zone` SET `zone_name` = ? WHERE `zone_id` = ?"
+	_, err = mhs.app.db.Exec(sql, zoneData.ZoneName, zoneData.ZoneId)
 	if err != nil {
 		appLog.Error("exec sql error: ", err.Error())
 	}
@@ -505,14 +580,16 @@ func corsMiddleware(next http.Handler) http.Handler {
 }
 
 func (mhs *MapleHttpService) start(listenAddr string) {
-    http.Handle("/getAllServer", corsMiddleware(http.HandlerFunc(mhs.getAllServer)))
-    http.Handle("/getAllZoneData", corsMiddleware(http.HandlerFunc(mhs.getAllZoneData)))
-    http.Handle("/import", corsMiddleware(http.HandlerFunc(mhs.handleImport)))
-    http.Handle("/export", corsMiddleware(http.HandlerFunc(mhs.handleExport)))
-    http.Handle("/addZone", corsMiddleware(http.HandlerFunc(mhs.addZone)))
-    http.Handle("/updateServer", corsMiddleware(http.HandlerFunc(mhs.updateServer)))
-    http.Handle("/removeServer", corsMiddleware(http.HandlerFunc(mhs.removeServer)))
-    http.Handle("/updateKV", corsMiddleware(http.HandlerFunc(mhs.handleUpdateKV)))
+	http.Handle("/getAllServer", corsMiddleware(http.HandlerFunc(mhs.getAllServer)))
+	http.Handle("/getAllZoneData", corsMiddleware(http.HandlerFunc(mhs.getAllZoneData)))
+	http.Handle("/import", corsMiddleware(http.HandlerFunc(mhs.handleImport)))
+	http.Handle("/export", corsMiddleware(http.HandlerFunc(mhs.handleExport)))
+	http.Handle("/addZone", corsMiddleware(http.HandlerFunc(mhs.addZone)))
+	http.Handle("/removeZone", corsMiddleware(http.HandlerFunc(mhs.removeZone)))
+	http.Handle("/updateZone", corsMiddleware(http.HandlerFunc(mhs.updateZone)))
+	http.Handle("/updateServer", corsMiddleware(http.HandlerFunc(mhs.updateServer)))
+	http.Handle("/removeServer", corsMiddleware(http.HandlerFunc(mhs.removeServer)))
+	http.Handle("/updateKV", corsMiddleware(http.HandlerFunc(mhs.handleUpdateKV)))
 
 	err := http.ListenAndServe(listenAddr, nil)
 	if err != nil {

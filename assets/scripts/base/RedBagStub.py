@@ -195,7 +195,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         redisUtils.RedBagUtils.createRedBagRank(redbagId, _RbVal.releaseTime,
                                                 functools.partial(self._onCreateRedBagRank, playerbox, _RbVal))
         #
-        LogTrackingMgr.LogTrackingMgr.Release_RedBag(redbagType, channel, num, gameconst.ItemId.MONEY, money, redbagId)
+        LogTrackingMgr.LogTrackingMgr.Release_RedBag(playerGbId, redbagType, channel, num, gameconst.ItemId.MONEY, money, redbagId)
 
     def _onCreateRedBagRank(self, playerbox, _RbVal, error):
         INFO_MSG('_onCreateRedBagRank: redbagId={} error={}'.format(_RbVal.redbagId, error))
@@ -305,7 +305,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             self.writeToDB()
 
         #
-        LogTrackingMgr.LogTrackingMgr.Fetch_RedBag(_RbVal.redbagType, _RbVal.channel, gameconst.ItemId.MONEY, _money, _RbVal.leftNum, gameconst.ItemId.MONEY, _RbVal.leftMoney, redbagId)
+        LogTrackingMgr.LogTrackingMgr.Fetch_RedBag(playerGbId, _RbVal.redbagType, _RbVal.channel, gameconst.ItemId.MONEY, _money, _RbVal.leftNum, gameconst.ItemId.MONEY, _RbVal.leftMoney, redbagId)
         
     def _onAddRedbagFetchInfo(self, playerbox, redbagId, _money, releaseTime):
         INFO_MSG('_onAddRedbagFetchInfo: redbagId={} _money={}'.format(redbagId, _money))
@@ -378,6 +378,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             extraAttach=addWealthVal,
             srcType = AAC_AACDD.datas.BONUS_SRC_REDPACKAGE_RETURN
         )
+        LogTrackingMgr.LogTrackingMgr.Return_RedBag(playerGbId, _RbVal.redbagId)
 
     #
     def showData(self):

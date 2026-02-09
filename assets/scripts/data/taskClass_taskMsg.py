@@ -102,7 +102,7 @@ datas = _tools.RODict({
     }),
     "taskClickAlert_Fail": _tools.RODict({
         "ID": "taskClickAlert_Fail",
-        "value": 54000837,
+        "value": 54000212,
         "type": "uint"
     }),
     "taskTargetAlert_SearchArea01": _tools.RODict({

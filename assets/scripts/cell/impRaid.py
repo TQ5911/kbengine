@@ -248,7 +248,7 @@ class ImpRaid(object):
     def _onEnterNewRaid(self):
         if self.isCanLeaveTeam():
             gameengine.getTeamStub(self.teamId).leaveTeam(self.spaceNo, self.base, self.teamId, self.gbId, True)
-        self._reqPlayerStopAutoMatch()
+        self.stopTeamMatch()
 
     @property
     def raidTickTimerId(self):
@@ -2202,6 +2202,12 @@ class ImpRaid(object):
             WARNING_MSG('   in reqRaidPlayerAutoMatch, cond failed:', self.getTotalScore(), self.level)
             return
 
+        # 取消队伍匹配
+        self.stopTeamMatch()
+
+        # 取消团队匹配
+        self.stopRaidMatch()
+
         playerMatchDic = {
             'target' : target,
             'playerGbId': self.gbId,
@@ -2233,9 +2239,14 @@ class ImpRaid(object):
     @utils.isMyself
     def reqRaidPlayerStopAutoMatch(self, exposed):
         INFO_MSG('reqRaidPlayerStopAutoMatch::~')
-        self.autoRaidMatchStartTime = 0
-        self.autoRaidMatchTarget = 0
-        gameengine.getGlobalBase('RaidMatchStub').raidPlayerStopAutoMatch(self.gbId)
+        self.stopRaidMatch()
+
+    def stopRaidMatch(self):
+        if self.autoRaidMatchStartTime > 0:
+            INFO_MSG('in stopRaidMatch')
+            self.autoRaidMatchStartTime = 0
+            self.autoRaidMatchTarget = 0
+            gameengine.getGlobalBase('RaidMatchStub').raidPlayerStopAutoMatch(self.gbId)
 
     @gamedecorator.checkGameconfigEnable('raid')
     @utils.isMyself
@@ -2264,9 +2275,6 @@ class ImpRaid(object):
             return
 
         gameengine.getRaidStub(self.raidUUID).raidPrepareStopAutoMatch(self.raidUUID)
-
-    def onMemJoinRaidByAutoMatch(self, gbID):
-        self._doSendOneMemberFollowAsk(gbID)
 
     def onCellRaidPlayerStartAutoMatch(self, startMatchTime, target):
         self.autoRaidMatchStartTime = startMatchTime

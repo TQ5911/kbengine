@@ -253,10 +253,6 @@
         <reqCaptainFollowInfo> <Exposed/>
         </reqCaptainFollowInfo>
 
-        <sendOneMemberFollowAsk> <Exposed/>
-            <Arg>           PLAYER_GBID     </Arg>
-        </sendOneMemberFollowAsk>
-
         <cancelAllMemberFollow> <Exposed/>
         </cancelAllMemberFollow>
 
@@ -407,10 +403,6 @@
             <Arg>           UINT32          </Arg>
             <Arg>           TEAMTARGET      </Arg>
         </onGetTeamListFinished>
-
-        <onMemJoinTeamByAutoMatch>
-            <Arg>           PLAYER_GBID         </Arg>
-        </onMemJoinTeamByAutoMatch>
 
         <reqUpdateTeamSilentAttr><Exposed/>
             <Arg>       BOOL                 </Arg>

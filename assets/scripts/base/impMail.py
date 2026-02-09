@@ -25,7 +25,7 @@ import itemData_set as IDSD
 import itemData_itemData_set as IDIDS
 import agent_agentFunction as A_AFD
 import AuthClsWraper
-
+import LogTrackingMgr
 
 class ImpMail(object):
 
@@ -456,6 +456,7 @@ class ImpMail(object):
             detail = gameclass.AwardDetail(mailId=mail.mailId, mailGBID=[mailGBID], desc=mail.desc, popRewardUUID=popRewardUUID)
             self.addWealth(srcType, wealthVal, opUUID, detail=detail, srcSubType=mail.srcSubType, idipSource=mail.source, directly=False)
 
+            LogTrackingMgr.LogTrackingMgr.Mail_Get(mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach)
         self._showPopReward(AAC_AACDD.datas.BONUS_SRC_MAIL_ATTACH, popRewardUUID, gameclass.AwardDetail(mailGBID=_mailGBIDs))
         self.client.onGetMailAttach(_mailGBIDs)
         return
@@ -546,7 +547,7 @@ class ImpMail(object):
         return
 
     def doRecordDeleteMailLog(self, mail, opUUID, srcType, srcSubType, desc, idipSource, mailGBID):
-        attachStr = mail.attach.getItemsTLogStr()
+        LogTrackingMgr.LogTrackingMgr.Mail_Delete(mail.fromGBID, mail.mailId, mail.mailGBID, mail.globalMailGBID, mail.srcType, mail.srcSubType, mail.opUUID, mail.source, mail.attach, srcType)
 
     def leftMailSpace(self):
         return self.mailCacheData.mailSpaceLeft()

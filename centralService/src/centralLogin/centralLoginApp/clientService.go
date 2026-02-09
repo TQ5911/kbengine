@@ -5,11 +5,9 @@ import (
 	clientService "centralService/src/centralLogin/centralLoginApp/clientService"
 	"centralService/src/common"
 	"centralService/src/trpc"
-	yiDunSDK "centralService/src/yidunSDK/sdk"
 	"crypto/ecdsa"
 	"crypto/hmac"
 	"crypto/sha1"
-	sqllib "database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -171,6 +169,7 @@ func (self *LoginClientService) checkIsReqLogin() {
 }
 
 func (self *LoginClientService) OnLoseConnection() {
+	appLog.Infof("OnLoseConnection from %v\n", self.GetRpcChannel().GetRemoteAddr())
 	self.app.removeClient(self)
 }
 
@@ -213,33 +212,6 @@ func (self *LoginClientService) onLoginSucess(accountType clientService.AccountT
 	if err != nil {
 		appLog.Error("write account err: ", accountType, accountName, err.Error())
 	}
-}
-
-func (self *LoginClientService) _verifyCDkey(accType clientService.AccountType, accName string) (bool, error) {
-	if !LoginConfig.NeedCDKey {
-		return true, nil
-	}
-
-	if self.loginResult == clientService.LoginReply_LOGIN_SUCCESS {
-		return true, nil
-	}
-
-	sql := "select accountCDKey from account where accountType=? and accountName=?"
-	row := self.app.db.QueryRow(sql, accType, accName)
-
-	var cdkey string
-	err := row.Scan(&cdkey)
-	if err == sqllib.ErrNoRows {
-		return false, nil
-	} else if err != nil {
-		return false, errors.New(fmt.Sprint("scan cdkey error:", err.Error()))
-	}
-
-	if cdkey == "" {
-		return false, nil
-	}
-
-	return true, nil
 }
 
 func (self *LoginClientService) _replyNeedCDKey() error {
@@ -299,11 +271,6 @@ func (self *LoginClientService) LoginByPassword(r *clientService.PasswordLogin) 
 		return nil, errors.New(fmt.Sprintf("LoginByPassword is locked"))
 	}
 
-	isValidCDKey, err := self._verifyCDkey(clientService.AccountType_ACCOUNT_PASSWD, r.AccountName)
-	if err != nil {
-		return nil, err
-	}
-
 	self.accountName = r.AccountName
 	self.accountType = clientService.AccountType_ACCOUNT_PASSWD
 	self.userId = fmt.Sprintf("PWD:%d:%s", self.accountType, self.accountName)
@@ -312,15 +279,10 @@ func (self *LoginClientService) LoginByPassword(r *clientService.PasswordLogin) 
 
 	self.onLoginSucess(self.accountType, self.accountName)
 
-	appLog.Info("LoginByPassword: ", self.accountType, self.userId, self.accountName, self.loginToken, isValidCDKey)
+	appLog.Info("LoginByPassword: ", self.accountType, self.userId, self.accountName, self.loginToken)
 
-	if !isValidCDKey {
-		self.loginResult = clientService.LoginReply_LOGIN_NEED_CDKEY
-		err = self._replyNeedCDKey()
-	} else {
-		self.loginResult = clientService.LoginReply_LOGIN_SUCCESS
-		err = self._replyLoginSuccess()
-	}
+	self.loginResult = clientService.LoginReply_LOGIN_SUCCESS
+	err := self._replyLoginSuccess()
 
 	if err != nil {
 		self.app.removeClient(self)
@@ -331,7 +293,7 @@ func (self *LoginClientService) LoginByPassword(r *clientService.PasswordLogin) 
 }
 
 func (self *LoginClientService) CheckCDkey(in *clientService.CheckCDKeyRequest) (*clientService.Void, error) {
-	checkUrl := fmt.Sprintf("http://%s/checkCdkey?key=%s", LoginConfig.CdKeyServer, in.Key)
+	checkUrl := fmt.Sprintf("http://%s/checkCdkey?key=%s", "", in.Key)
 	client := http.Client{Timeout: 3 * time.Second}
 	resp, err := client.Get(checkUrl)
 	if err != nil {
@@ -479,19 +441,9 @@ func (self *LoginClientService) ActiveTick(in *clientService.Void) (*clientServi
 func (self *LoginClientService) GetServerListDir(r *clientService.ServerListRequest) (*clientService.Void, error) {
 	appLog.Info("GetServerListDir: request: ", r.ClientType, r.ClientVersion, r.IsMaple)
 	if r.IsMaple {
-		serverAreaId := ""
-		if value, ok := LoginConfig.MapleServer[r.ClientType]; ok {
-			serverAreaId = value.(string)
-		}
-		reply := clientService.ServerListReply{IsMaple: r.IsMaple, ServerListInfo: serverAreaId}
-		self.GetClientEndPoint().(clientService.IGameClientInterface).OnGetServerListDir(&reply)
+		return nil, nil
 	} else {
-		httpServerListDir := ""
-		if value, ok := LoginConfig.HttpServerListDir[r.ClientType]; ok {
-			httpServerListDir = value.(string)
-		}
-		reply := clientService.ServerListReply{IsMaple: r.IsMaple, ServerListInfo: httpServerListDir}
-		self.GetClientEndPoint().(clientService.IGameClientInterface).OnGetServerListDir(&reply)
+		return nil, nil
 	}
 	return nil, nil
 }
@@ -959,7 +911,7 @@ func (self *LoginClientService) LoginByThird(r *clientService.ThirdLogin) (*clie
 		reply := clientService.LoginReply{Result: loginResult, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: self.otherJsonData}
 		self.GetClientEndPoint().(clientService.IGameClientInterface).OnLoginReply(&reply)
 		appLog.Warn(fmt.Sprintf("loginByThird verify failed res : %d", loginResult))
-		return nil, errors.New(fmt.Sprintf("loginByThird verify failed res : %d", loginResult))
+		return nil, nil
 	}
 	appLog.Info(fmt.Sprintf("LoginByThird: verify success, accountType: %d, userId: %s, accountName: %s", self.accountType, self.userId, self.accountName))
 
@@ -981,13 +933,6 @@ func (self *LoginClientService) LoginByThird(r *clientService.ThirdLogin) (*clie
 
 // 回复登录
 func (self *LoginClientService) _replyLogin() error {
-	// 如果开启了易盾验证码
-	if LoginConfig.YidunCaptcha == 1 {
-		err, needCaptcha := self._checkNeedCaptcha()
-		if needCaptcha {
-			return err
-		}
-	}
 	self.loginResult = clientService.LoginReply_LOGIN_SUCCESS
 	err := self._replyLoginSuccess()
 	return err
@@ -1124,38 +1069,6 @@ func (self *LoginClientService) _calculateRecordType(isSuccess, isTimeout, isQPS
 
 func (self *LoginClientService) CaptchaValidate(r *clientService.CaptchaValidateRequest) (*clientService.Void, error) {
 	appLog.Infof(fmt.Sprintf("CaptchaValidate: check request: %v, accountName: %v, accountType: %v ", r.CaptchaData, self.accountName, self.accountType))
-	verifyResult := true
-	isTimeout := false
-	isQPSLimit := false
-	//失败
-	if len(r.CaptchaData) == 0 {
-		appLog.Debugf(fmt.Sprintf("CaptchaValidate: client check fail request: %v, accountName: %v, accountType: %v ", r.CaptchaData, self.accountName, self.accountType))
-		verifyResult = false
-		//超时
-	} else if r.CaptchaData == "TimeOut" {
-		appLog.Debugf(fmt.Sprintf("CaptchaValidate: client check timeout request: %v, accountName: %v, accountType: %v ", r.CaptchaData, self.accountName, self.accountType))
-		verifyResult = false
-		isTimeout = true
-		//客户端QPS超限
-	} else if r.CaptchaData == "CaptchaError" {
-		appLog.Debugf(fmt.Sprintf("CaptchaValidate: client check CaptchaError request: %v, accountName: %v, accountType: %v ", r.CaptchaData, self.accountName, self.accountType))
-		verifyResult = true
-		isQPSLimit = true
-		//易盾验证码
-	} else {
-		appLog.Debugf(fmt.Sprintf("CaptchaValidate: client need check request: %v, accountName: %v, accountType: %v ", r.CaptchaData, self.accountName, self.accountType))
-		verifyResult, isQPSLimit = self.verifyWithYiDun(r.CaptchaData, r.CaptchaType)
-		//qps限制就默认给成功
-		if isQPSLimit {
-			verifyResult = true
-		}
-	}
-
-	if r.CaptchaType == clientService.CaptchaType_CT_Login {
-		self.captchaLoginValidate(verifyResult, isTimeout, isQPSLimit)
-	} else {
-		appLog.Errorf(fmt.Sprintf("CaptchaValidate: Unknow captcha type, accountName: %v, accountType: %v", self.accountName, self.accountType))
-	}
 	return nil, nil
 }
 
@@ -1297,24 +1210,6 @@ func (self *LoginClientService) _replyCaptchaResult(captchaType clientService.Ca
 			self._replyCheckCaptcha(true, 0, captchaType)
 		}
 	}
-}
-
-func (self *LoginClientService) verifyWithYiDun(captchaVerifyData string, captchaType clientService.CaptchaType) (bool, bool) {
-	appLog.Debugf(fmt.Sprintf("verifyWithYiDun: captchaVerifyData: %v, accountName: %v, accountType: %v", captchaVerifyData, self.accountName, self.accountType))
-	user := fmt.Sprintf("%v:%v:%v", self.accountType, self.accountName, captchaType)
-	verifiler, err := yiDunSDK.New(LoginConfig.YidunCaptchaID, LoginConfig.YidunSecurityID, LoginConfig.YidunSecurityKey)
-	if err != nil {
-		//创建sdk有问题，放过
-		appLog.Errorf(fmt.Sprintf("verifyWithYiDun: yidun sdk create failed, accountName: %v, accountType: %v", self.accountName, self.accountType))
-		return true, false
-	}
-	verifyResult, err := verifiler.Verify(captchaVerifyData, user)
-	if err != nil {
-		//sdk verify有问题，放过
-		appLog.Errorf(fmt.Sprintf("verifyWithYiDun: yidun sdk verify failed, accountName: %v, accountType: %v", self.accountName, self.accountType))
-		return true, false
-	}
-	return verifyResult.Result, verifyResult.Err == 430
 }
 
 func (self *LoginClientService) recordValidateLog(name string, accountName string, accountType, riskLevel, checkType, checkResult, successTimes, failureTimes, recordType int) {

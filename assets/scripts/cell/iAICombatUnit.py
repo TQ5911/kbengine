@@ -388,7 +388,7 @@ class IAICombatUnit(SkillManager.SkillManager):
         value = int(self.getConfigData().get('activeAttack', 0))
         return True if value else False
 
-    def hasTag(self, tag):
+    def hasCreepTag(self, tag):
         tags = self.getConfigData().get('tag')
         if not tags:
             return False

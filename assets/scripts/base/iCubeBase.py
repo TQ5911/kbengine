@@ -172,7 +172,8 @@ class ICubeBase(object):
         self.cell.resetCubeCowDur()
 
     # ----------------------- 祈福之间 start ---------------------
-    def cubePray(self, isCostItem):
+    @gamedecorator.checkGameconfigEnable('square')
+    def cubePray(self, exposed, isCostItem):
         INFO_MSG('ICubeCell::cubePray: isCostItem={}'.format(isCostItem))
         _curQifuTimes = self.getDailyData(gameconst.AvatarDailyProps.qifuTimes, 0)
         if _curQifuTimes >= cube_config.datas['cube_prayTimesEveryDay']['value']:
@@ -198,16 +199,17 @@ class ICubeBase(object):
                 if _data['type'] != gameconst.CUBE_PRAY_BUFF:
                     continue
 
-                _buffs.append(_data['buffID'])
+                _buffs.append(_data)
                 _weights.append(_data['weight'])
 
         else:
             for _data in cube_buff.datas.values():
-                _buffs.append(_data['buffID'])
+                _buffs.append(_data)
                 _weights.append(_data['weight'])
 
         self.addDailyData(gameconst.AvatarDailyProps.qifuTimes)
         _idx = utils.randomByWeight(_weights)
-        self.cell.addBuff(_buffs[_idx], 1, self.id)
+        self.cell.addBuff(_buffs[_idx]['buffID'], 1, self.id)
+        self.client.onCubePrayResult(_buffs[_idx]['ID'])
 
     # ----------------------- 祈福之间 end ---------------------

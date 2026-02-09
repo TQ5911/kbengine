@@ -162,7 +162,7 @@ class IMineWarCell(object):
             return False
         _mapId = formula.getMapId(self.spaceNo)
         reliveHp = int(self.fullHp * GP_SD.datas['resurrectHP']['value'] / 100)
-        if self.mineWarCamp == gameconst.MINE_WAR_CAMP.CAMP_DEFEND:
+        if self.spaceMgr.mineWarGuildId > 0 and self.myGuildInfo.get('guildGbId', 0) == self.spaceMgr.mineWarGuildId:
             _pos, _dir = self.getMineWarRebornPos(_mapId, 'RebornPos')
             if not _pos:
                 return False
@@ -186,3 +186,19 @@ class IMineWarCell(object):
             return
          
         self.spaceMgr.sendMineWarMonsterInfo(self)
+
+    def mineWarCellPrecheckCollection(self, collectionId):
+        """
+        矿战采集预检查
+        """
+        if not formula.isMineWarMineArea(self.spaceNo):
+            return True
+        
+        collectionList = MBC.datas['mineBattle_flagDropCollectionId']['value']
+        #  
+        # 矿战宝箱检查
+        if collectionId in collectionList and self.mineWarCamp == gameconst.MINE_WAR_CAMP.CAMP_DEFEND:
+            self.base.onMessagePre(MBC.datas['mineBattle_notPickableMsg']['value'], [])
+            return False
+        
+        return True

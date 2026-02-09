@@ -4,6 +4,7 @@ import (
 	"centralService/src/appLog"
 	gameServerService "centralService/src/auction/auctionApp/gameServerService"
 	"centralService/src/common"
+	cmap "centralService/src/common/concurrent_map"
 	"centralService/src/trpc"
 	"database/sql"
 	"encoding/json"
@@ -28,12 +29,14 @@ import (
 )
 
 var AuctionAppConfig = AppConfig{GmBuyInterception: 0}
-var AuctionConfig = viper.New()
-var AuctionConfMD5 = ""
-var ItemConfig = viper.New()
-var ItemConfMD5 = ""
 
 type AuctionAction func(*AuctionApp) error
+
+type CfgData struct {
+	cfgVipers       cmap.ConcurrentMap[string, *viper.Viper]
+	cfgFileMD5Datas cmap.ConcurrentMap[string, string]
+	cfgFiles        map[string]string
+}
 
 type GameServerInfo struct {
 	serverName     string
@@ -55,7 +58,68 @@ type AuctionApp struct {
 	funcChan      chan func()
 }
 
+func InitConfigStore() bool {
+	ConfigStore = &CfgData{
+		cfgFileMD5Datas: cmap.New[string](),
+		cfgVipers:       cmap.New[*viper.Viper](),
+		cfgFiles:        GetCfgFiles(),
+	}
+	return ConfigStore != nil
+}
+
+func InitJsonCfg(cfgType string, cfgPath string) error {
+	cfg := viper.New()
+	cfg.SetConfigType("json")
+	cfg.SetConfigFile(cfgPath)
+	err := cfg.ReadInConfig()
+	if err != nil {
+		appLog.Error("Error reading cfg file", err.Error(), cfgPath)
+		return err
+	}
+	cfgMD5, err := common.ReadFileMd5(cfgPath)
+	if err != nil {
+		appLog.Error("fail to get config md5:", err.Error())
+		return err
+	}
+	// 记录文件MD5
+	ConfigStore.cfgFileMD5Datas.Set(cfgType, cfgMD5)
+	// 记录viper
+	ConfigStore.cfgVipers.Set(cfgType, cfg)
+	// 设置文件变化事件监听
+	cfg.OnConfigChange(func(e fsnotify.Event) {
+		appLog.Info("cfg file changed:", e.Name)
+		curMD5, err := common.ReadFileMd5(cfgPath)
+		if err != nil {
+			log.Println("fail to get cfg md5:", err.Error())
+			return
+		}
+
+		oldMD5, ret := ConfigStore.cfgFileMD5Datas.Get(cfgType)
+		if ret {
+			if curMD5 == oldMD5 {
+				appLog.Info("cfg file no changed:", e.Name, curMD5, oldMD5)
+				return
+			}
+		}
+
+		appLog.Info("cfg file real changed:", e.Name, curMD5, oldMD5)
+		ConfigStore.cfgFileMD5Datas.Set(cfgType, curMD5)
+		err = cfg.ReadInConfig()
+		if err != nil {
+			appLog.Error("Error reading cfg file", err.Error())
+		}
+	})
+	// 启动文件监听
+	cfg.WatchConfig()
+	return nil
+}
+
 func NewAuctionApp() *AuctionApp {
+	if !InitConfigStore() {
+		appLog.Error("init config store error !!!")
+		return nil
+	}
+
 	gameServers := make(map[uint32]map[uint32]*GameServerInfo)
 	channelMap := make(map[uuid.UUID]uint32)
 	actions := make(chan AuctionAction, 10)
@@ -76,79 +140,6 @@ func NewAuctionApp() *AuctionApp {
 		return nil
 	}
 
-	AuctionConfig = viper.New()
-	auctionConfigPath := "../data/auction.auctionConst.txt"
-	AuctionConfig.SetConfigType("json")
-	AuctionConfig.SetConfigFile(auctionConfigPath)
-	err = AuctionConfig.ReadInConfig()
-	if err != nil {
-		appLog.Error("Error reading AuctionConfig file", err.Error())
-		return nil
-	}
-
-	AuctionConfMD5, err = common.ReadFileMd5(auctionConfigPath)
-	if err != nil {
-		log.Println("fail to get config md5:", err.Error())
-		return nil
-	}
-
-	AuctionConfig.WatchConfig()
-	AuctionConfig.OnConfigChange(func(e fsnotify.Event) {
-		appLog.Info("AuctionConfig file changed:", e.Name)
-		curMD5, err := common.ReadFileMd5(auctionConfigPath)
-		if err != nil {
-			log.Println("fail to get AuctionConfig md5:", err.Error())
-			return
-		}
-
-		if curMD5 == AuctionConfMD5 {
-			return
-		}
-		appLog.Info("AuctionConfig file real changed:", e.Name)
-		AuctionConfMD5 = curMD5
-		err = AuctionConfig.ReadInConfig()
-		if err != nil {
-			appLog.Error("Error reading AuctionConfig file", err.Error())
-		}
-	})
-
-	ItemConfig = viper.New()
-	itemConfigPath := "../data/itemData.itemData.txt"
-	ItemConfig.SetConfigType("json")
-	ItemConfig.SetConfigFile(itemConfigPath)
-	err = ItemConfig.ReadInConfig()
-	if err != nil {
-		appLog.Error("Error reading ItemConfig file", err.Error())
-		return nil
-	}
-
-	ItemConfMD5, err = common.ReadFileMd5(itemConfigPath)
-	if err != nil {
-		appLog.Error("fail to get ItemConfig md5:", err.Error())
-		return nil
-	}
-
-	ItemConfig.WatchConfig()
-	ItemConfig.OnConfigChange(func(e fsnotify.Event) {
-		appLog.Info("ItemConfig file changed:", e.Name)
-		curMD5, err := common.ReadFileMd5(itemConfigPath)
-		if err != nil {
-			appLog.Error("fail to get ItemConfig md5:", err.Error())
-			return
-		}
-
-		if curMD5 == ItemConfMD5 {
-			return
-		}
-		appLog.Info("ItemConfig file real changed:", e.Name)
-		ItemConfMD5 = curMD5
-		err = ItemConfig.ReadInConfig()
-		if err != nil {
-			appLog.Error("Error reading ItemConfig file", err.Error())
-			return
-		}
-	})
-
 	app := AuctionApp{common.App{AppName: "AuctionApp"},
 		gameServers,
 		channelMap,
@@ -159,6 +150,14 @@ func NewAuctionApp() *AuctionApp {
 		0,
 		0,
 		make(chan func())}
+	// 逐个初始化配置
+	for cfgType, cfgPath := range ConfigStore.cfgFiles {
+		ret := InitJsonCfg(cfgType, cfgPath)
+		if ret != nil {
+			appLog.Error("cfg init failed ", ret.Error(), cfgType, cfgPath)
+			return nil
+		}
+	}
 	app.auctionMgr = NewAuctionMgr(db, &app)
 	return &app
 }

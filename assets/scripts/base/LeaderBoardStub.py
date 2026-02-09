@@ -106,7 +106,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         
         td = time.time()
         redisUtils.RedisUtils.set(key, json.dumps(self.leaderBoardList.toLeaderBoardListSavedDict(), separators=(',', ':'), indent=None), self._onGenRushRankDataCB)
-        INFO_MSG("gen rush rank data time: ", time.time() - td)
+        INFO_MSG("gen rush rank data time: ", time.time() - td, "len: ", len(self.leaderBoardList))
 
     def _onGenRushRankDataCB(self, ok, data):
         if not ok:
@@ -163,6 +163,20 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             _iter = self._sendLeaderBoardRankIdx()
             self.batchlyCall(_iter, 1, 0.1)
 
+        _iter = self._doLeaderBoardLogIter()
+        self.batchlyCall(_iter, 1, 0.1)
+
+    def _doLeaderBoardLogIter(self):
+        _idx = 0
+        while _idx < len(self.leaderBoardList):
+            if _idx + 1 > gameconst.LEADER_BOARD_MAX_LOG_SIZE:
+                break
+
+            _lbcVal = self.leaderBoardList[_idx]
+            _lbcVal.leaderBoardLog(self.leaderBoardType, _idx + 1)
+            yield utils.emptyFunc
+            _idx += 1
+
     def _sendLeaderBoardRankIdx(self):
         _idx = 0
         while _idx < len(self.leaderBoardList):
@@ -213,7 +227,6 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             _list.append(_lbcVal)
 
         getattr(box.client, _func)(self.leaderBoardIdx, _list, page, _isEnd, _rank)
-
 
     def doGetLeaderBoardList(self, box, gbId, leaderBoardIdx, school, page):
         if leaderBoardIdx >= self.leaderBoardIdx:

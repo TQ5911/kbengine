@@ -749,6 +749,13 @@
             <Type>          INT32          </Type>
             <Flags>         ALL_CLIENTS     </Flags>
         </selectedTargetId>
+
+        <effectEventCDInfo>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+            <Persistent>    true                    </Persistent>
+        </effectEventCDInfo>
     </Properties>
 
     <CellMethods>

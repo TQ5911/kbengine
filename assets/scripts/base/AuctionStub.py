@@ -12,7 +12,6 @@ import gametimer
 import gameconfig
 import auction
 import itemFactory
-import gamelog
 import redisUtils
 import iRouter
 
@@ -29,8 +28,7 @@ from proto.gameServerAuction_pb2 import (
 import gameglobal
 import gameconst
 import json
-import dataUtils
-
+import LogTrackingMgr
 
 class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def __init__(self):
@@ -400,23 +398,13 @@ class AuctionStubService(GameServer):
         auctionItem = self.transAuctionItem(request.auctionItem)
         extra = json.loads(request.extra)
         INFO_MSG("replyDoSaleItem", playerGBID, auctionItem, extra)
-        if playerGBID != 0:
+        if playerGBID:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                 [playerGBID], "onSaleItemInCoinAuction", (auctionItem, extra),
                 None, '', ())
-        else:
-            tlogParams = {
-                "role_id": playerGBID,
-                "role_name": extra.get('tlogProps').get('role_name'),
-                "item_id": auctionItem.itemId,
-                "item_num": auctionItem.number,
-                "auction_uuid": auctionItem.auctionItemUUID,
-                "each_price": auctionItem.price,
-                "recommend_price": extra.get('recommendPrice'),
-                "total_price": auctionItem.totalPrice,
-                "total_price_tax": extra.get('totalPriceTax'),
-            }
-            # gamelog.makeWLog("SaleItemFlow", tlogParams)
+
+            LogTrackingMgr.LogTrackingMgr.Auction_ItemSale(playerGBID, extra.get('opUUID'), auctionItem.auctionItemUUID, auctionItem.itemId, \
+                                                        auctionItem.number, auctionItem.price, auctionItem.totalPrice, extra.get('isPublicity'))
 
     def replyBuyItem(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
@@ -439,12 +427,12 @@ class AuctionStubService(GameServer):
         if not isOK:
             pass
         else:
-            number = extra.get('auctionBuyItemNum')
             if playerGBID:
+                number = extra.get('auctionBuyItemNum')
+                opUUID = extra.get('opUUID')
                 price = auctionItem.price
                 if price > 0:
                     now = utils.getNow()
-                    opUUID = extra.get('opUUID')
                     redisUtils.PlayerBuyAuctionItemRecord.recordMessage(
                         now, playerGBID, auctionItem.itemId, number, price,
                         auctionItem.itemData.toItemSavedDict(), opUUID)
@@ -455,6 +443,7 @@ class AuctionStubService(GameServer):
                     (auctionItem, price, extra),
                     stub, 'recordOfflineCallback',
                     (playerGBID, 'onBuyItemInCoinAuctionByAuctionItemUUIDOffline', (auctionItem, price, extra)))
+                LogTrackingMgr.LogTrackingMgr.Auction_ItemBuy(playerGBID, opUUID, auctionItem.auctionItemUUID, auctionItem.itemId, number, price)
 
     def replyCancelSaleItem(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
@@ -482,7 +471,7 @@ class AuctionStubService(GameServer):
         extra = json.loads(request.extra)
         INFO_MSG("replyDoCancelSaleItem", playerGBID, errno, auctionItem, extra)
 
-        if playerGBID != 0:
+        if playerGBID:
             retCode = gameconst.AuctionErrno._errno(errno)
             if not auctionItem or retCode != gameconst.AuctionErrno.AUCTION_OK:
                 auctionItemUUID = extra.get('auctionItemUUID', -1)
@@ -496,7 +485,9 @@ class AuctionStubService(GameServer):
                 [playerGBID], "doCancelSaleItemInCoinAuction", (errno, auctionItem, extra),
                 m_playerStub, 'recordOfflineCallback',
                 (playerGBID, 'doCancelSaleItemInCoinAuction', (errno, auctionItem, extra)))
-
+            LogTrackingMgr.LogTrackingMgr.Auction_ItemCanel(playerGBID, auctionItem.auctionItemUUID, auctionItem.itemId, \
+                                                        auctionItem.number, auctionItem.price, auctionItem.totalPrice)
+            
     def replySearchItemsByItemId(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
         itemIds = []
@@ -603,24 +594,8 @@ class AuctionStubService(GameServer):
         _stub = iRouter.RemoteServerStubEntityCall(crossSiegeWarServerInfo['crossServerId'], 'CrossSiegeWarStub')
         _stub.onCityAuctionTax(gameconfig.serverId(), totalPriceTax)
 
-        try:
-            tlogParams = {
-                "role_id": auctionItem.fromPlayerGBID,
-                "role_name": auctionItem.extraInfo.get('tlogProps').get('role_name'),
-                "item_id": auctionItem.itemId,
-                "item_num": auctionItem.number,
-                "auction_uuid": auctionItem.auctionItemUUID,
-                "real_add_price": totalPriceInDeductTax,
-                "total_price_tax": totalPriceTax,
-                "totalPrice": totalPrice,
-                "item_sale_num": number,
-                "op_nuid": opUUID,
-                "buyer_role_id": playerGBID,
-            }
-            # gamelog.makeWLog("ItemBeSaleFlow", tlogParams)
-        except Exception as e:
-            gameengine.reportCritical(
-                "replyDoBuyItem:: ItemBeSaleFlow -- tlog props raise exception", e)
+        LogTrackingMgr.LogTrackingMgr.Auction_ItemDeal(playerGBID, auctionItem.fromPlayerGBID, opUUID, auctionItem.auctionItemUUID, \
+                                                       auctionItem.itemId, auctionItem.number, totalPrice, totalPriceInDeductTax, totalPriceTax)
 
     def replyGetAuctionItemNumByCategoryId(self, rpc_controller, request, done):
         playerGBID = request.playerGBID

@@ -33,8 +33,15 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
 
     def onPlayerRelogin(self, box, playerGbId):
         super().onPlayerRelogin(box, playerGbId)
+        if not self._isArenaSpace():
+            return
+
+        box.client.onArenaKing(self.cubeArena.arenaKing)
 
     def createTeleporterToCow(self, num, pos=None):
+        if KBEngine.isShuttingDown():
+            return
+
         _mapId = formula.getMapId(self.spaceNo)
         _dunData = utils.getDunStructureModuleData(_mapId)
         if not _dunData:
@@ -98,12 +105,13 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         _buffId = self.cubeArena.getChallengerBuff(self.spaceNo)
         DEBUG_MSG('enter arena cube', _buffId)
         _player.addBuff(_buffId, 1, _player.id)
+        _player.client.onArenaKing(self.cubeArena.arenaKing)
 
     def _isArenaSpace(self):
         _mapId = formula.getMapId(self.spaceNo)
         return cube_room.datas[_mapId]['sign'] == gameconst.CUBE_SIGN_ARENA
 
-    def interactArenaKing(self, player):
+    def doInteractArenaKing(self, player):
         if not self._isArenaSpace():
             return
 
@@ -168,6 +176,7 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
             'position': position,
             'npcId': _npcId,
             'name': N_ND.datas[_npcId]['name'],
+            'deathTime': cube_config.datas['cube_chapmanRefreshInterval']['value'] * 10 + utils.getNow(),
         }
 
         _space = gameglobal.localSpaceIDMap.get(self.spaceID)

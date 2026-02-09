@@ -164,13 +164,6 @@
             <Arg>           POSITION_ARG    </Arg>
         </askAllMemberFollow>
 
-        <askOneMemberFollow>
-            <Arg>           ENTITYCALL      </Arg>
-            <Arg>           TEAMID          </Arg>
-            <Arg>           PLAYER_GBID     </Arg>
-            <Arg>           PLAYER_GBID     </Arg>
-        </askOneMemberFollow>
-
         <cancelAllMemberFollow>
             <Arg>           ENTITYCALL      </Arg>
             <Arg>           TEAMID          </Arg>
@@ -435,10 +428,6 @@
             <Arg>           TEAMID       </Arg>
             <Arg>           PY_DICT      </Arg>
         </newPlayerMatched>
-
-        <onTeamAutoMatchTimeout>
-            <Arg>           TEAMID       </Arg>
-        </onTeamAutoMatchTimeout>
 
         <setTeamTarget>
             <Arg>           PLAYER_GBID  </Arg>

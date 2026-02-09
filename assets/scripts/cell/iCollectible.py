@@ -22,7 +22,7 @@ class ICollectible(object):
                 self.gbId,
                 propIndex,
                 gameconst.CollectibleDetailStatus.COLLECTED,
-                json.dumps(propChange),
+                propChange,
                 opUUID,
             )
 

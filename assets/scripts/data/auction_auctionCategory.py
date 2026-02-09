@@ -75,10 +75,10 @@ datas = _tools.RODict({
         "ID": 8,
         "linkToSpecificItem": ""
     }),
-    801: _tools.RODict({
-        "ID": 801,
+    9: _tools.RODict({
+        "ID": 9,
         "linkToSpecificItem": ""
     })
 })
 minKey = 1
-maxKey = 801
+maxKey = 403

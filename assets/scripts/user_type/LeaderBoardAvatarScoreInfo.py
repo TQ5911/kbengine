@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import userType
+import LogTrackingMgr
 
 
 class LeaderBoardAvatarScoreVal(userType.UserSoleType):
@@ -35,6 +36,20 @@ class LeaderBoardAvatarScoreVal(userType.UserSoleType):
     @staticmethod
     def calcSchool():
         return True
+
+    # 必须实现
+    def leaderBoardLog(self, leaderType, rank):
+        LogTrackingMgr.LogTrackingMgr.LeaderBoard_Avatar(
+            leaderType,
+            rank,
+            self.gbId,
+            self.name,
+            self.level,
+            self.score,
+            self.school,
+            self.guildUUID,
+            self.guildName,
+        )
 
     def toLeaderBoardCacheSavedDict(self):
         # 通用名字不能变

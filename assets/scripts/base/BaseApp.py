@@ -28,7 +28,7 @@ import mailAssistor
 import elasticUtils
 
 from proto.interface_pb2 import BaseApp as BaseAppService
-from proto.interface_pb2 import Void, Interface_Stub, ConfigVal, ListVal, IntVal, SetAccountCompVal, AntiAddictionData
+from proto.interface_pb2 import Void, Interface_Stub, ConfigVal, ListVal, IntVal, SetAccountCompVal, AntiAddictionData, MapleServerInfo
 
 from rpc import RpcChannel
 
@@ -650,3 +650,12 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         for client in self.interfaceClient.values():
             if client and client.channel.dispatcher:
                 client.interfaceStub.updateAntiAddictionData(None, _req, None)
+
+    def setMapleServerInfo(self, data):
+        DEBUG_MSG("setMapleServerInfo", data)
+        _req = MapleServerInfo()
+        _req.data = data
+
+        for client in self.interfaceClient.values():
+            if client and client.channel.dispatcher:
+                client.interfaceStub.setMapleServerInfo(None, _req, None)

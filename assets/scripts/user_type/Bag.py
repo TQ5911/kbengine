@@ -116,6 +116,7 @@ class Bag(BaseBag.BaseBag):
             newCount = self.getItemCount(itemObj.itemId, itemObj.bindType)
             owner.makeItemFlowLog(
                 self.bagType,
+                itemObj.bindType,
                 itemObj.itemId,
                 itemObj.uniqueId,
                 itemObj.itemNum,
@@ -155,6 +156,7 @@ class Bag(BaseBag.BaseBag):
             newCount = self.getItemCount(item.itemId, item.bindType)
             owner.makeItemFlowLog(
                 self.bagType,
+                item.bindType,
                 item.itemId,
                 item.uniqueId,
                 mergeNum,
@@ -219,6 +221,7 @@ class Bag(BaseBag.BaseBag):
             newCount = self.getItemCount(item.itemId, item.bindType)
             owner.makeItemFlowLog(
                 self.bagType, 
+                item.bindType,
                 item.itemId,
                 item.uniqueId,
                 -num, 
@@ -242,6 +245,7 @@ class Bag(BaseBag.BaseBag):
         newCount = self.getItemCount(cleanItem.itemId, cleanItem.bindType)
         owner.makeItemFlowLog(
             self.bagType, 
+            cleanItem.bindType,
             cleanItem.itemId,
             cleanItem.uniqueId,
             -cleanItem.itemNum, 

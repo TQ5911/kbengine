@@ -2,21 +2,20 @@
 from KBEDebug import *
 import KBEngine
 
+import functools
+import formula
+
 import gameconst
+import actionContext
+import LogTrackingMgr
+
+import petData_set as PDSD
 import petData_petData as PDPDD
 import passiveSkill_passiveSkill as PSPSD
 import petData_petGear as PDPGD
-import actionContext
-import utils
 
 
 class ImpAvatarPet(object):
-    def onInitPetProps(self, petIdList):
-        for petId in petIdList:
-            propList = PDPDD.datas[petId]['prop']
-            for propName, val in propList:
-                self.addProp(propName, val, gameconst.SourceType.PetProp)
-
     # ---------------------------      item  action  ------------------------------------
     def checkLingShouEggItemCond(self, gridId, itemId, useNum, ctx):
         pendingCheckId = self.setPendingCheckId(gridId, itemId, useNum, ctx)
@@ -39,13 +38,17 @@ class ImpAvatarPet(object):
         else:
             return skills
 
-    def setFollowPet(self, bFollow, petId):
+    def setFollowPet(self, bFollow, petId, followData):
+        followType = gameconst.PetFollowType.CANCEL
         if bFollow:
             self.lingShouId = petId
+            followType = gameconst.PetFollowType.FOLLOW
         else:
             self.lingShouId = 0
 
-    def onSetLingShouBattleList(self, battleList):
+        LogTrackingMgr.LogTrackingMgr.Pet_Follow(self.gbId, formula.getMapId(self.spaceNo), petId, followData[0], followData[1], followData[2], followType)
+
+    def onSetLingShouBattleList(self, battleList, battleIdx, battleData):
         INFO_MSG('onSetLingShouBattleList', battleList)
         if self.lingShouBattleList:
             for petId, equipList in self.lingShouBattleList:
@@ -72,8 +75,10 @@ class ImpAvatarPet(object):
                         action and action(self, self, actionContext.PassiveSkillCtx(itemId, passiveSkill))
 
         self.lingShouBattleList = battleList
+        LogTrackingMgr.LogTrackingMgr.Pet_ChangeTeam(self.gbId, formula.getMapId(self.spaceNo), battleIdx, battleData)
 
     def onUpdateLingShouBattleList(self, petInfo, slotId):
+        INFO_MSG('onUpdateLingShouBattleList', petInfo, slotId)
         petId, equipList = petInfo
         oldPetId, oldEquipList = self.lingShouBattleList[slotId]
         if oldPetId:
@@ -102,30 +107,3 @@ class ImpAvatarPet(object):
                         action and action(self, self, actionContext.PassiveSkillCtx(itemId, passiveSkill))
 
         self.lingShouBattleList[slotId] = petInfo
-
-    def updateLingShouEffectEventInfo(self, objId, skillId, buffId, effectId, triggerTime):
-        objIdSkillInfoKey = utils.getObjIdSkillInfoKey(objId, skillId)
-        buffEffectInfos = self.lingShouEffectEventInfo.setdefault(objIdSkillInfoKey, {})
-        buffEffectInfoKey = utils.getBuffEffectInfoKey(buffId, effectId)
-        buffEffectInfos[buffEffectInfoKey] = triggerTime
-        #DEBUG_MSG('update EventEffect', objId, skillId, buffId, effectId, utils.getNowTimeStr(triggerTime),
-        #          objIdSkillInfoKey, buffEffectInfoKey)
-
-    def getLingShouEffectEventInfo(self, objId, skillId, buffId, effectId):
-        #DEBUG_MSG('get EventEffect', objId, skillId, buffId, effectId)
-        objIdSkillInfoKey = utils.getObjIdSkillInfoKey(objId, skillId)
-        if not self.lingShouEffectEventInfo:
-            #DEBUG_MSG('get EventEffect1')
-            return 0
-
-        if objIdSkillInfoKey not in self.lingShouEffectEventInfo:
-            #DEBUG_MSG('get EventEffect2')
-            return 0
-
-        buffEffectInfoKey = utils.getBuffEffectInfoKey(buffId, effectId)
-        if buffEffectInfoKey not in self.lingShouEffectEventInfo[objIdSkillInfoKey]:
-            #DEBUG_MSG('get EventEffect3')
-            return 0
-
-        #DEBUG_MSG('get EventEffect', objIdSkillInfoKey, buffEffectInfoKey)
-        return self.lingShouEffectEventInfo[objIdSkillInfoKey][buffEffectInfoKey]

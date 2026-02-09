@@ -116,7 +116,6 @@ globalSiegeWarData = {
 guildRelationDic = {}
 # 帮会关系记录的版本
 guildRelationVersion = 0
-
 # 当前服务器别名
 curServerAlias = ''
 curServerName = ''
@@ -130,3 +129,8 @@ callLimitDic = {}
 
 appCallIdx = 0
 
+# 事件注册记录
+hookDict = {}
+
+# 全服屏蔽的任务记录
+forbiddenTaskIds = {}

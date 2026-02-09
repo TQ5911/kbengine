@@ -409,12 +409,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         _cubeQuota = cellData.get('cubeQuota', 0)
         if _cubeQuota.calcLeftTime() > 0\
                 and formula.isCubeSpace(spaceNo)\
-                and gameconfig.visibleConfigEable('square'):
+                and gameconfig.visibleConfigEnabled('square'):
             _logonEnterType = gameconst.LogOnEnterType.CUBE
 
         elif cellData.get('wonderLandLeftTime', 0) > _now \
                 and formula.isWonderLandSpace(spaceNo)\
-                and gameconfig.visibleConfigEable('wonderLand'):
+                and gameconfig.visibleConfigEnabled('wonderLand'):
             _logonEnterType = gameconst.LogOnEnterType.WONDER_LAND
 
         spaceNo, lineType = self._restoreFromOutsideRecord(cellData, lineType, spaceNo, _logonEnterType)
@@ -898,15 +898,18 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
                 gameengine.getTeamStub(teamId).updateOnlineState(None, teamId, self.gbID, False)
 
             if formula.isTeamDungeonSpace(spaceNo) and teamId:
-                gameengine.getTeamStub(teamId).onAvatarOffline(self.gbID, teamId, formula.getDungeonNoBySpaceNo(spaceNo))
-                gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
+                if not KBEngine.isShuttingDown():
+                    gameengine.getTeamStub(teamId).onAvatarOffline(self.gbID, teamId, formula.getDungeonNoBySpaceNo(spaceNo))
+                    gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
 
             elif formula.isRaidDungeonSpace(spaceNo) and raidId:
-                gameengine.getRaidStub(raidId).onAvatarOffline(raidId, 0, self.gbID)
-                gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
+                if not KBEngine.isShuttingDown():
+                    gameengine.getRaidStub(raidId).onAvatarOffline(raidId, 0, self.gbID)
+                    gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
 
             elif formula.isDungeonSpace(spaceNo):
-                gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
+                if not KBEngine.isShuttingDown():
+                    gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
 
             elif formula.isWonderLandSpace(spaceNo):
                 gameengine.getWonderLandStubBySpaceNo(spaceNo).onLeaveWonderLand(self.gbID)
@@ -1707,6 +1710,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         elif configType == gameconst.GAME_CONFIG_TYPE_ROLE_AUTHORIZATION:
             if not val:
                 self.forceAuthOffline()
+
+        elif configType == gameconst.GAME_CONFIG_TYPE_AUTO_COMBAT:
+            if not val:
+                self.cell.stopAutoCombat()
 
     def gmBanAvatar(self, endTime):
         self.banLogin = endTime

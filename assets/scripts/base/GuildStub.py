@@ -16,6 +16,7 @@ import GuildJoinCondInfo
 import redisUtils
 import gameglobal
 import gameengine
+import LogTrackingMgr
 import guild_guildConst as G_GCD
 import _pickle as cPickle
 
@@ -53,6 +54,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def __init__(self):
         self.guildDic = {}
         self._callback(0.1, '_loadGuildEntity', (), gametimer.TIMER_TAG_LOAD_GUILD_ENTITY)
+        utils.subscribe(gameconst.UserEventTag.EVENT_ON_GUILD_UNION_CHANGE, self, 'onGuildUnionChangeToLog')
 
     def _loadGuildEntity(self):
         gamesql.loadAllGuildEntityInfo(self._onLoadGuildEntity)
@@ -309,4 +311,27 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             return
 
         _gcVal.guildBox.getGuildMineWarForRegister(box, onRegister)
+
+    def onGuildUnionChangeToLog(self, changeType, guildUUID1, guildUUID2, relationType, endTime):
+        if guildUUID1 not in self.guildDic:
+            return
+
+        if changeType == 'add':
+            if relationType == gameconst.GuildRelationType.UNION:
+                _opr = gameconst.GUILD_UNION_FORGE
+            else:
+                _opr = gameconst.GUILD_HOSTILE_DECLARE
+
+        else:
+            if relationType == gameconst.GuildRelationType.UNION:
+                _opr = gameconst.GUILD_UNION_BREAK
+            else:
+                _opr = gameconst.GUILD_HOSTILE_CEASE
+
+        LogTrackingMgr.LogTrackingMgr.Guild_Relation(
+            guildUUID1,
+            guildUUID2,
+            _opr,
+            endTime
+        )
 

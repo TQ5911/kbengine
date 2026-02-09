@@ -275,6 +275,8 @@
 
         <takeEquipBase>
             <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       SPACE_NO            </Arg>
+            <Arg>       POSITION_ARG        </Arg>
         </takeEquipBase>
 
         <getTakerWaitReward> <Exposed/>
@@ -328,6 +330,11 @@
             <Arg>   UINT32     </Arg>
             <Arg>   UINT32     </Arg>
         </gmGlyphWashingEquips>
+
+        <cellBrokenEquipment>
+            <Arg>   UNIQUE_ID    </Arg>
+            <Arg>   ITEM_VAL     </Arg>
+        </cellBrokenEquipment>
     </BaseMethods>
 
     <CellMethods>
@@ -488,6 +495,13 @@
         <recalculateAllInscriptionEffects>
             <Arg>   BOOL    </Arg>
         </recalculateAllInscriptionEffects>
+
+        <logPickDropEquip>
+            <Arg>   UNIQUE_ID   </Arg>
+            <Arg>   ITEM_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
+        </logPickDropEquip>
     </CellMethods>
 
     <ClientMethods>

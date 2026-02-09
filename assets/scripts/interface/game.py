@@ -131,6 +131,14 @@ def _onCheckWhiteList(result, error, isNewAccount, realAccountName, password, da
             INFO_MSG('_onCheckWhiteList check server limit error.', nowNum, cfgNum)
             KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER5)
             return
+        nowTime = utils.getNow()
+        openTime = gameconfig.serverOpenTime()
+        if nowTime < openTime:
+            INFO_MSG('_onCheckWhiteList check server open time limit.', nowTime, openTime, str(openTime - nowTime))
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, 
+                    bytes(str(openTime - nowTime), encoding='utf-8'), 
+                    0, KBEngine.SERVER_ERR_USER9)
+            return
         #clientData = utils.decodeClientData(dataBytes)
         # accountType, accountName = utils.getAccountTypeAndName(clientData.get(''))
         # gamelog.makeWLog("ServerBanByWhiteList", {

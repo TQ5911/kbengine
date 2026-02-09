@@ -35,10 +35,12 @@ import sMath
 import gamePlay_gamePlay as GP_GP
 import message_Message_def as M_M_D
 import creep_countRefresh as CCR
+import creep_tag as C_TD
 
 import iSiegeWarMonster
 import iMineWarMonster
 import iGuildBossMonster
+import gameconfig
 
 import LogTrackingMgr
 
@@ -97,7 +99,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         spaceMgr = self.spaceMgr
         _isLarge = False
-        if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
+        if self.hasCreepTag(gameconst.CREEP_TAG_LARGE_ENT):
             _isLarge = True
             self.setBodySize((gameconst.LARGE_ENTITY_DEFAULT_AOI, gameconst.LARGE_ENTITY_DEFAULT_AOI))
 
@@ -457,8 +459,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         spaceMgr = self.spaceMgr
         if spaceMgr:
             spaceMgr.removeEntityById(self.id)
-            if self.getConfigData().get('type', 0) == gameconst.MonsterType.ADVANCE:
-                _msgId = M_M_D.datas.messageAfterDeath
+            if self.hasCreepTag(gameconst.CREEP_TAG_DEATH_MSG):
+                _msgId = int(C_TD.datas[gameconst.CREEP_TAG_DEATH_MSG]['value'])
                 spaceMgr.syncPlayer(lambda playerEnt: playerEnt.showMsg(_msgId, []))
 
         mGrp = self.monsterGroup
@@ -547,9 +549,14 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             srcType = AAC_AACDD.datas.BONUS_SRC_KILL_MONSTER
             detail = gameclass.AwardDetail(monsterId=self.monsterId, spaceNo=self.spaceNo)
             rewardIDList, shareRewardIDList, displayModeList = self.getDeathDrop()
+            factor = 1.0
+            if self.getConfigData().get('type', 0) == gameconst.MonsterType.NORMAL:
+                host = utils.getEntityRealEntity(killer)
+                if host and host.IsAvatar:
+                    factor = host.getKillMonsterAwardFactor(self.level)
             dropCtx = awardContext.DropAwardCtx(self.id,
                                                 self.level,
-                                                {'lv': self.level},
+                                                {'lv': self.level, 'factor': factor},
                                                 eventTipId=self.monsterId,
                                                 monsterId=self.monsterId,
                                                 monsterSpaceNo=self.spaceNo,
@@ -594,6 +601,16 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                 gameengine.getRaidStub(raidId).onMarkMonsterDead(self.id)
         except Exception as e:
             ERROR_MSG("Error in onDead for clear team record: ", e)
+
+        _suffixId = creep_base.datas.get(self.monsterId, {}).get('nameSuffixID', 0)
+        if _suffixId not in gameconst.MonsterSuffix.NEED_LOG_SUFFIX:
+            return
+
+        LogTrackingMgr.LogTrackingMgr.Kill_Monster(
+            self.monsterId,
+            formula.getMapId(self.spaceNo),
+            _suffixId,
+        )
 
     def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx):
         INFO_MSG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
@@ -746,15 +763,13 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
     def calculateRefreshTimeMonster(self):
         _refreshTime = self.calculateRefreshTime()
-        if formula.isMineWarSpace(self.spaceNo) and self.spaceMgr:
+        if formula.isMineWarSpace(self.spaceNo) and gameconfig.visibleConfigEnabled('mineBattle'):
             startOffsetSec = utils.getMineWarStartOffsetSec()
             startTime = utils.getCurrentWeekTS(offsetSec=startOffsetSec)
             endOffsetSec = utils.getMineWarEndOffsetSec()
             entTime = utils.getCurrentWeekTS(offsetSec=endOffsetSec)
             if entTime > utils.getNow():
-                if self.spaceMgr.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
-                    _refreshTime = max(0, entTime - utils.getNow())
-                elif utils.getNow() + _refreshTime >= startTime and utils.getNow() + _refreshTime < entTime:
+                if startTime <= utils.getNow() + _refreshTime < entTime:
                     _refreshTime = max(0, entTime - utils.getNow())
                 DEBUG_MSG('IEntityRefresh.calculateRefreshTime: mine war refresh time calculated, refreshTime=%d' % _refreshTime)
 

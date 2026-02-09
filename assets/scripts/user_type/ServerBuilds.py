@@ -271,7 +271,7 @@ class Build(userType.UserSoleType):
         owner.onChangeSkillLv(skillId, newLevel)
         owner.client.onUpdateSkillLevel(skillIdList, [newLevel] * len(skillIdList))
         #
-        LogTrackingMgr.LogTrackingMgr.Skill_Upgrade(skillId, list(costItemInfo.keys()), list(costItemInfo.values()), consumeMoney[0], consumeMoney[1], newLevel, opUUID)
+        LogTrackingMgr.LogTrackingMgr.Skill_Upgrade(owner.gbID, skillId, list(costItemInfo.keys()), list(costItemInfo.values()), consumeMoney[0], consumeMoney[1], newLevel, opUUID)
         return True
 
     def resetAllSkill(self, caster):

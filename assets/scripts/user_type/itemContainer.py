@@ -137,13 +137,23 @@ class ItemContainer(userType.UserSoleType):
             if gridObj.bindType == bindType:
                 return gridId, gridObj
         return -1, None
+    
+    def getGridObjsByItemId(self, itemId, bindType = gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED):
+        gridObjs = []
+        grids = self.getGridIdsByItemId(itemId)
+        for gridId in grids:
+            gridObj = self.getItemObjByGridId(gridId)
+            if gridObj.bindType == bindType or bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED:
+                gridObjs.append(gridObj)
+        return gridObjs
 
     def _recycleGrid(self, gridId, itemId):
         INFO_MSG('_recycleGrid:', gridId, itemId)
-        if itemId in self.itemId2gridIds and gridId in self.itemId2gridIds[itemId]:
-            self.itemId2gridIds[itemId].remove(gridId)
-            if 0 == len(self.itemId2gridIds[itemId]):
-                self.itemId2gridIds.pop(itemId, None)
+        gridIds = self.itemId2gridIds.get(itemId)
+        if gridId in gridIds:
+            gridIds.remove(gridId)
+        if len(gridIds) == 0:
+            self.itemId2gridIds.pop(itemId, None)
         self.gridId2GridObj.pop(gridId, None)
 
     def getItemCount(self, itemId, bindType):

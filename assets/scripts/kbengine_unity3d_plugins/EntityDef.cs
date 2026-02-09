@@ -3460,6 +3460,25 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onApplyJoinTeamMsg / 348).");
 
+			List<DATATYPE_BASE> pAvatar_onArenaKing_args = new List<DATATYPE_BASE>();
+			pAvatar_onArenaKing_args.Add(EntityDef.id2datatypes[8]);
+
+			Method pAvatar_onArenaKing = new Method();
+			pAvatar_onArenaKing.name = "onArenaKing";
+			pAvatar_onArenaKing.methodUtype = 259;
+			pAvatar_onArenaKing.aliasID = -1;
+			pAvatar_onArenaKing.args = pAvatar_onArenaKing_args;
+
+			pAvatarModule.methods["onArenaKing"] = pAvatar_onArenaKing; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onArenaKing.methodUtype] = pAvatar_onArenaKing;
+
+			pAvatarModule.cell_methods["onArenaKing"] = pAvatar_onArenaKing;
+
+			pAvatarModule.idcell_methods[pAvatar_onArenaKing.methodUtype] = pAvatar_onArenaKing;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onArenaKing / 259).");
+
 			List<DATATYPE_BASE> pAvatar_onAvatarTotalScoreInitCompleted_args = new List<DATATYPE_BASE>();
 
 			Method pAvatar_onAvatarTotalScoreInitCompleted = new Method();
@@ -4219,6 +4238,25 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onCubeLoginData.methodUtype] = pAvatar_onCubeLoginData;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onCubeLoginData / 693).");
+
+			List<DATATYPE_BASE> pAvatar_onCubePrayResult_args = new List<DATATYPE_BASE>();
+			pAvatar_onCubePrayResult_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_onCubePrayResult = new Method();
+			pAvatar_onCubePrayResult.name = "onCubePrayResult";
+			pAvatar_onCubePrayResult.methodUtype = 260;
+			pAvatar_onCubePrayResult.aliasID = -1;
+			pAvatar_onCubePrayResult.args = pAvatar_onCubePrayResult_args;
+
+			pAvatarModule.methods["onCubePrayResult"] = pAvatar_onCubePrayResult; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onCubePrayResult.methodUtype] = pAvatar_onCubePrayResult;
+
+			pAvatarModule.cell_methods["onCubePrayResult"] = pAvatar_onCubePrayResult;
+
+			pAvatarModule.idcell_methods[pAvatar_onCubePrayResult.methodUtype] = pAvatar_onCubePrayResult;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onCubePrayResult / 260).");
 
 			List<DATATYPE_BASE> pAvatar_onCubeRoomEndTime_args = new List<DATATYPE_BASE>();
 			pAvatar_onCubeRoomEndTime_args.Add(EntityDef.id2datatypes[4]);
@@ -6875,6 +6913,28 @@ namespace KBEngine
 			pAvatarModule.idcell_methods[pAvatar_onLeveUpMeridianPointTo.methodUtype] = pAvatar_onLeveUpMeridianPointTo;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onLeveUpMeridianPointTo / 1064).");
+
+			List<DATATYPE_BASE> pAvatar_onLevelUpPet_args = new List<DATATYPE_BASE>();
+			pAvatar_onLevelUpPet_args.Add(EntityDef.id2datatypes[4]);
+			pAvatar_onLevelUpPet_args.Add(EntityDef.id2datatypes[3]);
+			pAvatar_onLevelUpPet_args.Add(EntityDef.id2datatypes[3]);
+			pAvatar_onLevelUpPet_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_onLevelUpPet = new Method();
+			pAvatar_onLevelUpPet.name = "onLevelUpPet";
+			pAvatar_onLevelUpPet.methodUtype = 247;
+			pAvatar_onLevelUpPet.aliasID = -1;
+			pAvatar_onLevelUpPet.args = pAvatar_onLevelUpPet_args;
+
+			pAvatarModule.methods["onLevelUpPet"] = pAvatar_onLevelUpPet; 
+			pAvatarModule.useMethodDescrAlias = false;
+			pAvatarModule.idmethods[pAvatar_onLevelUpPet.methodUtype] = pAvatar_onLevelUpPet;
+
+			pAvatarModule.cell_methods["onLevelUpPet"] = pAvatar_onLevelUpPet;
+
+			pAvatarModule.idcell_methods[pAvatar_onLevelUpPet.methodUtype] = pAvatar_onLevelUpPet;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(onLevelUpPet / 247).");
 
 			List<DATATYPE_BASE> pAvatar_onLightPillarUpdate_args = new List<DATATYPE_BASE>();
 			pAvatar_onLightPillarUpdate_args.Add(EntityDef.id2datatypes[10008]);
@@ -11009,6 +11069,22 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(createGuild / 738).");
 
+			List<DATATYPE_BASE> pAvatar_cubePray_args = new List<DATATYPE_BASE>();
+			pAvatar_cubePray_args.Add(EntityDef.id2datatypes[2]);
+
+			Method pAvatar_cubePray = new Method();
+			pAvatar_cubePray.name = "cubePray";
+			pAvatar_cubePray.methodUtype = 248;
+			pAvatar_cubePray.aliasID = -1;
+			pAvatar_cubePray.args = pAvatar_cubePray_args;
+
+			pAvatarModule.methods["cubePray"] = pAvatar_cubePray; 
+			pAvatarModule.base_methods["cubePray"] = pAvatar_cubePray;
+
+			pAvatarModule.idbase_methods[pAvatar_cubePray.methodUtype] = pAvatar_cubePray;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(cubePray / 248).");
+
 			List<DATATYPE_BASE> pAvatar_dealAuthRole_args = new List<DATATYPE_BASE>();
 			pAvatar_dealAuthRole_args.Add(EntityDef.id2datatypes[2]);
 
@@ -11771,6 +11847,23 @@ namespace KBEngine
 			pAvatarModule.idbase_methods[pAvatar_leaveCrossServerSiegeWarSpace.methodUtype] = pAvatar_leaveCrossServerSiegeWarSpace;
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(leaveCrossServerSiegeWarSpace / 981).");
+
+			List<DATATYPE_BASE> pAvatar_levelUpPet_args = new List<DATATYPE_BASE>();
+			pAvatar_levelUpPet_args.Add(EntityDef.id2datatypes[10017]);
+			pAvatar_levelUpPet_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pAvatar_levelUpPet = new Method();
+			pAvatar_levelUpPet.name = "levelUpPet";
+			pAvatar_levelUpPet.methodUtype = 246;
+			pAvatar_levelUpPet.aliasID = -1;
+			pAvatar_levelUpPet.args = pAvatar_levelUpPet_args;
+
+			pAvatarModule.methods["levelUpPet"] = pAvatar_levelUpPet; 
+			pAvatarModule.base_methods["levelUpPet"] = pAvatar_levelUpPet;
+
+			pAvatarModule.idbase_methods[pAvatar_levelUpPet.methodUtype] = pAvatar_levelUpPet;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(levelUpPet / 246).");
 
 			List<DATATYPE_BASE> pAvatar_modifyAuthPermission_args = new List<DATATYPE_BASE>();
 			pAvatar_modifyAuthPermission_args.Add(EntityDef.id2datatypes[351]);
@@ -12700,6 +12793,7 @@ namespace KBEngine
 
 			List<DATATYPE_BASE> pAvatar_reqFetchRedBag_args = new List<DATATYPE_BASE>();
 			pAvatar_reqFetchRedBag_args.Add(EntityDef.id2datatypes[9]);
+			pAvatar_reqFetchRedBag_args.Add(EntityDef.id2datatypes[6]);
 
 			Method pAvatar_reqFetchRedBag = new Method();
 			pAvatar_reqFetchRedBag.name = "reqFetchRedBag";
@@ -16912,22 +17006,6 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(sendAllMemberFollowAsk / 320).");
 
-			List<DATATYPE_BASE> pAvatar_sendOneMemberFollowAsk_args = new List<DATATYPE_BASE>();
-			pAvatar_sendOneMemberFollowAsk_args.Add(EntityDef.id2datatypes[5]);
-
-			Method pAvatar_sendOneMemberFollowAsk = new Method();
-			pAvatar_sendOneMemberFollowAsk.name = "sendOneMemberFollowAsk";
-			pAvatar_sendOneMemberFollowAsk.methodUtype = 321;
-			pAvatar_sendOneMemberFollowAsk.aliasID = -1;
-			pAvatar_sendOneMemberFollowAsk.args = pAvatar_sendOneMemberFollowAsk_args;
-
-			pAvatarModule.methods["sendOneMemberFollowAsk"] = pAvatar_sendOneMemberFollowAsk; 
-			pAvatarModule.cell_methods["sendOneMemberFollowAsk"] = pAvatar_sendOneMemberFollowAsk;
-
-			pAvatarModule.idcell_methods[pAvatar_sendOneMemberFollowAsk.methodUtype] = pAvatar_sendOneMemberFollowAsk;
-
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Avatar), method(sendOneMemberFollowAsk / 321).");
-
 			List<DATATYPE_BASE> pAvatar_setAutoCombatReliveReturnTimes_args = new List<DATATYPE_BASE>();
 			pAvatar_setAutoCombatReliveReturnTimes_args.Add(EntityDef.id2datatypes[2]);
 
@@ -20253,20 +20331,20 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), property(bornState / 62).");
 
-			Property pNpc_danceTime = new Property();
-			pNpc_danceTime.name = "danceTime";
-			pNpc_danceTime.properUtype = 38;
-			pNpc_danceTime.properFlags = 4;
-			pNpc_danceTime.aliasID = 4;
-			UInt32 Npc_danceTime_defval;
-			UInt32.TryParse("0", out Npc_danceTime_defval);
-			pNpc_danceTime.defaultVal = Npc_danceTime_defval;
-			pNpcModule.propertys["danceTime"] = pNpc_danceTime; 
+			Property pNpc_deathTime = new Property();
+			pNpc_deathTime.name = "deathTime";
+			pNpc_deathTime.properUtype = 69;
+			pNpc_deathTime.properFlags = 4;
+			pNpc_deathTime.aliasID = 5;
+			UInt32 Npc_deathTime_defval;
+			UInt32.TryParse("0", out Npc_deathTime_defval);
+			pNpc_deathTime.defaultVal = Npc_deathTime_defval;
+			pNpcModule.propertys["deathTime"] = pNpc_deathTime; 
 
 			pNpcModule.usePropertyDescrAlias = true;
-			pNpcModule.idpropertys[(UInt16)pNpc_danceTime.aliasID] = pNpc_danceTime;
+			pNpcModule.idpropertys[(UInt16)pNpc_deathTime.aliasID] = pNpc_deathTime;
 
-			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), property(danceTime / 38).");
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Npc), property(deathTime / 69).");
 
 			Property pNpc_dmgArmor = new Property();
 			pNpc_dmgArmor.name = "dmgArmor";

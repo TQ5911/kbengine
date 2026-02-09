@@ -47,13 +47,13 @@ class IDungeonSettlement(object):
     def checkDungeonPlayModeOpen(self, playMode):
         ret = True
         if playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
-            if not gameconfig.visibleConfigEable('teamDungeon'):
+            if not gameconfig.visibleConfigEnabled('teamDungeon'):
                 ret = False
         elif playMode == gameconst.DungeonPlayModeEnum.CHIEF:
-            if not gameconfig.visibleConfigEable('raidDungeon'):
+            if not gameconfig.visibleConfigEnabled('raidDungeon'):
                 ret = False
         elif playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
-            if not gameconfig.visibleConfigEable('guildBossChallenge'):
+            if not gameconfig.visibleConfigEnabled('guildBossChallenge'):
                 ret = False
         else:
             ret = False
@@ -202,6 +202,3 @@ class IDungeonSettlement(object):
     
     def dungeonSettlementWeeklyReset(self):
         self.guildBossRewardWeeklyCount = 0
-    
-    def _sendMail(self, opUUID, gbIDs, mailID, mailArgs):
-        mailAssistor.sendMailToPlayers(gbIDs, mailID, opUUID=opUUID, despArgs=mailArgs)

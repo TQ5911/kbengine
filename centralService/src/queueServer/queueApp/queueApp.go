@@ -93,11 +93,7 @@ func NewQueueApp() *QueueApp {
 }
 
 func (self *QueueApp) GetServices() []*common.ServiceInfo {
-	services := []*common.ServiceInfo{
-		&common.ServiceInfo{SERVICE_CLIENT_AUTH, "客户端连接监听", QueueConfig.ClientServiceAddr},
-		&common.ServiceInfo{SERVICE_GAME_SERVER, "游戏服连接监听", QueueConfig.GameServerServiceAddr},
-	}
-	return services
+	return nil
 }
 
 func (self *QueueApp) Start() {
@@ -113,8 +109,8 @@ func (self *QueueApp) Start() {
 	}()
 
 	self.httpServer = &HttpService{self}
-	go self.httpServer.startHttpServer(QueueConfig.HttpServer)
 	go self.StartDebugService(QueueConfig.AddressForDebug)
+	self.httpServer.startHttpServer(QueueConfig.HttpServer)
 }
 
 func (self *QueueApp) Stop() {

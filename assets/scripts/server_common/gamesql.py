@@ -243,14 +243,25 @@ def checkAccountWhiteList(accountName, callback):
     KBEngine.executeRawDatabaseCommand(sql, callback)
 
 
-def addAccountWhiteList(accountName):
-    sql = "insert into game_login_white_list (accountName, accountGmMode) values (%s, %s)" % (
-        utils.escape_string(accountName), 0)
+def addAccountWhiteList(accountNameList):
+    valueList = [f"({utils.escape_string(accountName)}, 0)" for accountName in accountNameList]
+    valueStr = ",".join(valueList)
+    addMultAccountWhiteList(valueStr)
+
+def addMultAccountWhiteList(valueStr):
+    sql = "insert ignore into game_login_white_list (accountName, accountGmMode) values %s;" % (valueStr)
+    DEBUG_MSG('addMultAccountWhiteList', sql)
     KBEngine.executeRawDatabaseCommand(sql)
 
 
-def deleteAccountWhiteList(accountName):
-    sql = """DELETE FROM game_login_white_list where accountName=%s""" % utils.escape_string(accountName)
+def deleteAccountWhiteList(accountNameList):
+    valueList = [f"{utils.escape_string(accountName)}" for accountName in accountNameList]
+    valueStr = ",".join(valueList)
+    deleteMultAccountWhiteList(valueStr)
+
+def deleteMultAccountWhiteList(valueStr):
+    sql = "DELETE FROM game_login_white_list where accountName in (%s);" % (valueStr)
+    DEBUG_MSG('deleteMultAccountWhiteList', sql)
     KBEngine.executeRawDatabaseCommand(sql)
 
 def loadAvatarAppearanceDataFromDB(gbIdList, callback):

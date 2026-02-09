@@ -78,33 +78,45 @@ datas = _tools.RODict({
     11: _tools.RODict({
         "ID": 11,
         "type": 2,
-        "condition": 10,
+        "condition": 2,
         "rewardID": 40000148
     }),
     12: _tools.RODict({
         "ID": 12,
         "type": 2,
-        "condition": 50,
+        "condition": 3,
         "rewardID": 40000149
     }),
     13: _tools.RODict({
         "ID": 13,
         "type": 2,
-        "condition": 100,
+        "condition": 10,
         "rewardID": 40000150
     }),
     14: _tools.RODict({
         "ID": 14,
         "type": 2,
-        "condition": 300,
+        "condition": 50,
         "rewardID": 40000151
     }),
     15: _tools.RODict({
         "ID": 15,
         "type": 2,
-        "condition": 500,
+        "condition": 100,
         "rewardID": 40000152
+    }),
+    16: _tools.RODict({
+        "ID": 16,
+        "type": 2,
+        "condition": 300,
+        "rewardID": 40000201
+    }),
+    17: _tools.RODict({
+        "ID": 17,
+        "type": 2,
+        "condition": 500,
+        "rewardID": 40000202
     })
 })
 minKey = 1
-maxKey = 15
+maxKey = 17

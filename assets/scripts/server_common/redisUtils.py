@@ -325,6 +325,10 @@ class RedisUtils(object):
             cb
         )
 
+    @classmethod
+    def getSVIPFlag(cls, accountName, cb):
+        gameglobal.localBaseApp.getRedisClient().get(gameconst.PrivilegeRedisKey.SVIP + accountName, cb)
+
 class FriendUtils(object):
     @classmethod
     def deleteAllFriendRedis(cls, gbId):

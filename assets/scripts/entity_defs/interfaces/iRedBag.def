@@ -51,6 +51,7 @@
 
         <reqFetchRedBag> <Exposed/>
             <Arg>           INT64            </Arg>
+            <Arg>           INT8            </Arg>
         </reqFetchRedBag>
 
         <reqRedBagFetchInfo> <Exposed/>

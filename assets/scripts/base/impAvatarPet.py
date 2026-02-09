@@ -9,6 +9,8 @@ import gamedecorator
 import avatarPet
 import dataUtils
 import AuthClsWraper
+import LogTrackingMgr
+import formula
 
 import itemData_itemData as IDID
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
@@ -19,11 +21,11 @@ import petData_unlock as PDUD
 import taskClass_taskTarget as TCCTD
 import qualityData_qualityData as QD_QDD
 import agent_agentFunction as A_AFD
-
+import petData_petGear as PDPGD
 
 class ImpAvatarPet(object):
     def initPetProps(self):
-        self.cell.onInitPetProps(list(self.lingShouInfo.pets.keys()))
+        pass
 
     def initNovicePetInfo(self):
         petTeamNum = PDSD.datas['petTeamNum']['value']
@@ -38,14 +40,16 @@ class ImpAvatarPet(object):
         if not battleList or len(battleList) == 0:
             WARNING_MSG("petOnLogin battleList is None")
             return
+        battleData = []
         battleListInfo = []
         for petId in battleList:
             pet = self.lingShouInfo.getLingShouByPetId(petId)
             if pet:
                 battleListInfo.append((petId, pet.equipList))
+                battleData.append([petId, pet.quality, pet.level, pet.equipList])
             else:
                 battleListInfo.append((0, []))
-        self.cell.onSetLingShouBattleList(battleListInfo)
+        self.cell.onSetLingShouBattleList(battleListInfo, self.battleIndex, battleData)
 
     def sendLingShouInfo(self):
         self.lingShouInfo.sendLingShouData(self)
@@ -67,8 +71,8 @@ class ImpAvatarPet(object):
             ERROR_MSG("setFollowPet pet not found", petId)
             return
 
-        self.cell.setFollowPet(bFollow, petId)
-
+        self.cell.setFollowPet(bFollow, petId, [pet.quality, pet.level, pet.equipList])
+        
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     def updateLingShouBattleList(self, exposed, battleIndex, petId, slotId):
@@ -205,14 +209,16 @@ class ImpAvatarPet(object):
 
         self.battleIndex = battleIndex
         battleList = self.lingShouInfo.getBattleListByIndex(battleIndex)
+        battleData = []
         battleListInfo = []
         for petId in battleList:
             pet = self.lingShouInfo.getLingShouByPetId(petId)
             if pet:
                 battleListInfo.append((petId, pet.equipList))
+                battleData.append([petId, pet.quality, pet.level, pet.equipList])
             else:
                 battleListInfo.append((0, []))
-        self.cell.onSetLingShouBattleList(battleListInfo)
+        self.cell.onSetLingShouBattleList(battleListInfo, self.battleIndex, battleData)
         self.updatePetScore()
 
     # ---------------------------      item   ------------------------------------
@@ -297,3 +303,112 @@ class ImpAvatarPet(object):
         #     self.lingShouInfo.addGmAllBossLingShou(self, addContext)
 
         # self.onAvatarVarValueChanged([VLVLD.AvatarDataVarPropDic['amountPet']], [self.lingShouInfo.lingShouNum()])
+
+    @gamedecorator.checkGameconfigEnable('pet')
+    @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
+    def levelUpPet(self, exposed, gridIds, petId):
+        INFO_MSG("levelUpPet ", exposed, gridIds, petId)
+        # 检查消耗的格子数
+        if len(gridIds) == 0:
+            ERROR_MSG("levelUpPet, lack of materials ", gridIds, petId)
+            return
+        # 检查宠物
+        pet = self.lingShouInfo.getLingShouByPetId(petId)
+        if not pet:
+            ERROR_MSG("levelUpPet, petId is invalid ", petId)
+            return
+        # 升级消耗的物品筛选
+        consumeItems = dataUtils.getPetLevelUpConsumeItem(petId)
+        if not consumeItems:
+            ERROR_MSG("levelUpPet, consumeItems is wrong ", petId)
+            return
+        # 升级所需经验分类
+        leveUpExps = dataUtils.getPetLevelUpExp(petId)
+        if not leveUpExps:
+            ERROR_MSG("levelUpPet, leveUpExps is wrong ", petId)
+            return
+        
+        oldLevel = pet.getLevel()
+        curLevel = oldLevel
+        curExp = pet.getExp()
+        if curLevel - 1 >= len(leveUpExps):
+            WARNING_MSG("levelUpPet, level is in top 1 ", petId, curExp, curLevel, leveUpExps)
+            return
+        # 看看最大等级限制
+        petMaxLevel = int(PDSD.datas['petMaxLevel']['value'])
+        if curLevel >= petMaxLevel:
+            WARNING_MSG("levelUpPet, level is in limit ", petId, curExp, curLevel, petMaxLevel)
+            return
+        # 总的经验
+        totalExp = 0
+        deductItems = []
+        for gridId in gridIds:
+            itemObj = self.petBag.getItemObjByGridId(gridId)
+            if not itemObj:
+                ERROR_MSG('levelUpPet pet bag not found', gridId)
+                return
+            itemData = IDID.datas.get(itemObj.itemId)
+            if not itemData:
+                ERROR_MSG('levelUpPet item not found', itemObj.itemId)
+                return
+            
+            # 秘宝类型
+            itemType = itemData['type']
+            itemSubType = itemData['subType']
+            itemQuality = itemData['quality']
+            isValidItem = False
+            for consumeItem in consumeItems:
+                if itemType == consumeItem[0] or itemSubType == consumeItem[1] or itemQuality == consumeItem[2]:
+                    isValidItem = True
+                    break
+
+            # 检查消耗类型
+            if not isValidItem:
+                ERROR_MSG('levelUpPet invalid pet consume item', itemObj.itemId, itemType, itemSubType, itemQuality, consumeItems)
+                return
+            
+            # 吞噬经验
+            datas = PDPGD.datas.get(itemObj.itemId)
+            if not datas:
+                ERROR_MSG('levelUpPet invalid pet gear exp', itemObj.itemId)
+                return
+            totalExp += datas['claimExp']
+            deductItems.append(itemObj)
+        # 扣除材料    
+        deductWealthVal = dropAward.DeductWealthVal().addWealthByObjList(deductItems)
+        if not self.canDeductWealth(deductWealthVal, sendMsg=True):
+            ERROR_MSG('levelUpPet can not deduct items', deductItems, petId)
+            return False
+
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_PET_LEVEL_UP
+        detail = gameclass.AwardDetail(petId=petId)
+        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+        
+        topExps = leveUpExps[curLevel - 1:]
+        INFO_MSG("levelUpPet begin:", petId, curLevel, curExp, totalExp, leveUpExps, topExps)
+        # 处理等级和经验
+        isTopLevel = False
+        curExp += totalExp
+        for topExp in topExps:
+            if curExp - topExp >= 0:
+                curLevel += 1
+                curExp -= topExp
+                if curLevel >= petMaxLevel:
+                    isTopLevel = True
+                    curExp = 0
+                    break
+        # 检查下是否顶级
+        if curLevel - 1 >= len(leveUpExps):
+            curExp = 0
+            isTopLevel = True
+        # 设置宠物新的等级和经验
+        oldScore = pet.score
+        oldLevel = pet.level
+        pet.setLevelAndExp(curLevel, curExp, self)
+        newScore = pet.score - oldScore
+        LogTrackingMgr.LogTrackingMgr.Pet_LevelUp(self.gbID, opUUID, pet.petId, pet.quality, oldLevel, pet.level, pet.equipList, newScore)
+        INFO_MSG("levelUpPet end:", petId, curLevel, curExp, totalExp, isTopLevel)
+        # 更新客户端宠物数据   
+        self.client.onLevelUpPet(petId, curLevel, curExp, isTopLevel)
+        return True

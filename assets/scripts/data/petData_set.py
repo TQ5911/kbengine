@@ -158,6 +158,22 @@ datas = _tools.RODict({
     "petTeamNameEmpty": _tools.RODict({
         "ID": "petTeamNameEmpty",
         "value": 54000962,
+    }),
+    "petMinLevel": _tools.RODict({
+        "ID": "petMinLevel",
+        "value": 1,
+    }),
+    "petMaxLevel": _tools.RODict({
+        "ID": "petMaxLevel",
+        "value": 5,
+    }),
+    "petExpOverflowMsg": _tools.RODict({
+        "ID": "petExpOverflowMsg",
+        "value": 54001800,
+    }),
+    "petMaxLevelMsg": _tools.RODict({
+        "ID": "petMaxLevelMsg",
+        "value": 54001801,
     })
 })
 

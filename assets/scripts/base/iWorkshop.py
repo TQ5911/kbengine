@@ -95,12 +95,12 @@ class IWorkshop(object):
             for outItemKey, outItemCount in normalItems.items():
                 mID, mBindType = self.splitWorkshopItemKey(outItemKey)
                 addWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
-                normalDatas.append({'itemId':mID, 'itemCount':outItemCount, 'bindTyoe':mBindType, 'quality':dataUtils.getItemQuality(mID)})
+                normalDatas.append({'itemId':mID, 'itemCount':outItemCount, 'bindType':mBindType, 'quality':dataUtils.getItemQuality(mID)})
             # 幸运物品
             for outItemKey, outItemCount in luckyItems.items():
                 mID, mBindType = self.splitWorkshopItemKey(outItemKey)
                 addWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
-                luckyDatas.append({'itemId':mID, 'itemCount':outItemCount, 'bindTyoe':mBindType, 'quality':dataUtils.getItemQuality(mID)})
+                luckyDatas.append({'itemId':mID, 'itemCount':outItemCount, 'bindType':mBindType, 'quality':dataUtils.getItemQuality(mID)})
 
             if not self.canAddWealthVal(srcType, addWealthVal):
                 WARNING_MSG("doWorkshopManufactoring ~ bag space is not enough")
@@ -164,7 +164,14 @@ class IWorkshop(object):
                 mID, mBindType = self.splitWorkshopItemKey(outItemKey)
                 luckyWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
 
-            LogTrackingMgr.LogTrackingMgr.Work_Shop(opUUID, self.gbID, normalDatas, luckyDatas)
+            # 最终的产出
+            finalItems = []
+            for outItemKey, outItemCount in normalItems.items():
+                mID, mBindType = self.splitWorkshopItemKey(outItemKey)
+                addWealthVal.addWealthByItemId(mID, outItemCount, mBindType)
+                finalItems.append({'itemId':mID, 'itemCount':outItemCount, 'bindType':mBindType, 'quality':dataUtils.getItemQuality(mID)})
+
+            LogTrackingMgr.LogTrackingMgr.Work_Shop(opUUID, self.gbID, normalDatas, luckyDatas, finalItems)
             return ret, normalWealthVal.toBriefList(), luckyWealthVal.toBriefList()
         return ret, None, None
 

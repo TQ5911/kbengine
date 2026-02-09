@@ -18,22 +18,32 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "gearNum": 1,
+        "levelExp": (30, 90),
+        "consumeItem": ((1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4)),
     }),
     2: _tools.RODict({
         "ID": 2,
         "gearNum": 2,
+        "levelExp": (120, 360, 1080),
+        "consumeItem": ((1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4)),
     }),
     3: _tools.RODict({
         "ID": 3,
         "gearNum": 3,
+        "levelExp": (480, 1440, 4320, 12960),
+        "consumeItem": ((1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4)),
     }),
     4: _tools.RODict({
         "ID": 4,
         "gearNum": 4,
+        "levelExp": (1920, 5760, 17280, 51840),
+        "consumeItem": ((1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4)),
     }),
     5: _tools.RODict({
         "ID": 5,
         "gearNum": 5,
+        "levelExp": (1920, 5760, 17280, 51840),
+        "consumeItem": ((1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4)),
     })
 })
 minKey = 1

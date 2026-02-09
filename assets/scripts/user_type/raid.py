@@ -1184,8 +1184,7 @@ class RaidVal(userType.UserSTDSoleType):
         self.recruitInfo = recruitInfo
         self.password = password
         self.isAutoExpedition = isAutoExpedition
-        if len(self.password) > 0:
-            self.isPublish = True
+        self.isPublish = len(self.password) == 0
         return True
 
     def checkRaidTarget(self, minLevel, minScore):

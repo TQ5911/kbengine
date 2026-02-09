@@ -5,7 +5,7 @@ import KBEngine
 
 import formula
 import gameconst
-import gameengine
+import gameconfig
 import utils
 import gamedecorator
 import gametimer
@@ -654,6 +654,9 @@ class ImpAutoCombat(object):
         return _targets
 
     def _checkFightBack(self, srcEntId):
+        if not gameconfig.visibleConfigEnabled('autoCombat'):
+            return
+
         if not self.getCommonFlagCell(gameconst.AvatarFlagCell.AUTO_FIGHT_BACK):
             return
 

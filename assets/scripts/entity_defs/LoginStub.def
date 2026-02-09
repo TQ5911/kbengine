@@ -56,6 +56,11 @@
             <Flags>     BASE        </Flags>
         </accountNumCounter>
 
+        <SVIPOnlineNum>
+            <Type>      PYTHON      </Type>
+            <Flags>     BASE        </Flags>
+        </SVIPOnlineNum>
+
         <accountRegNum>
             <Type>      PYTHON      </Type>
             <Flags>     BASE        </Flags>

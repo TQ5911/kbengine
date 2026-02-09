@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='gameInterface',
   syntax='proto3',
   serialized_options=_b('\220\001\001'),
-  serialized_pb=_b('\n\x0finterface.proto\x12\rgameInterface\"\x06\n\x04Void\"&\n\tConfigVal\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03val\x18\x02 \x01(\t\"\x17\n\x07ListVal\x12\x0c\n\x04vals\x18\x01 \x03(\t\"\x17\n\x06IntVal\x12\r\n\x05value\x18\x01 \x01(\r\"J\n\x11SetAccountCompVal\x12\x13\n\x0b\x61\x63\x63ountName\x18\x01 \x01(\t\x12\x0e\n\x06\x63ompID\x18\x02 \x01(\x04\x12\x10\n\x08\x65ntityID\x18\x03 \x01(\r\"8\n\x14SetAccountCompResult\x12\x0e\n\x06result\x18\x01 \x01(\r\x12\x10\n\x08\x65ntityID\x18\x02 \x01(\r\"8\n\x11\x41ntiAddictionData\x12\x10\n\x08timeType\x18\x01 \x01(\r\x12\x11\n\ttimestamp\x18\x02 \x01(\x04\x32\xff\x04\n\tInterface\x12K\n\x1agameConfigChangedOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12\x45\n\x14\x63\x61\x63heConfigOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12I\n\x18syncCacheConfigOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12\x36\n\nactiveTick\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12;\n\x0finterfaceReload\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12\x42\n\x13interfaceDataReload\x12\x16.gameInterface.ListVal\x1a\x13.gameInterface.Void\x12?\n\x11syncRegisterCount\x12\x15.gameInterface.IntVal\x1a\x13.gameInterface.Void\x12G\n\x0esetAccountComp\x12 .gameInterface.SetAccountCompVal\x1a\x13.gameInterface.Void\x12P\n\x17updateAntiAddictionData\x12 .gameInterface.AntiAddictionData\x1a\x13.gameInterface.Void2\xe4\x01\n\x07\x42\x61seApp\x12>\n\x12\x61\x63tiveTickCallback\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12G\n\x1breqSyncCacheConfigOnBaseapp\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12P\n\x14setAccountCompResult\x12#.gameInterface.SetAccountCompResult\x1a\x13.gameInterface.VoidB\x03\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0finterface.proto\x12\rgameInterface\"\x06\n\x04Void\"&\n\tConfigVal\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03val\x18\x02 \x01(\t\"\x17\n\x07ListVal\x12\x0c\n\x04vals\x18\x01 \x03(\t\"\x17\n\x06IntVal\x12\r\n\x05value\x18\x01 \x01(\r\"J\n\x11SetAccountCompVal\x12\x13\n\x0b\x61\x63\x63ountName\x18\x01 \x01(\t\x12\x0e\n\x06\x63ompID\x18\x02 \x01(\x04\x12\x10\n\x08\x65ntityID\x18\x03 \x01(\r\"8\n\x14SetAccountCompResult\x12\x0e\n\x06result\x18\x01 \x01(\r\x12\x10\n\x08\x65ntityID\x18\x02 \x01(\r\"8\n\x11\x41ntiAddictionData\x12\x10\n\x08timeType\x18\x01 \x01(\r\x12\x11\n\ttimestamp\x18\x02 \x01(\x04\"\x1f\n\x0fMapleServerInfo\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t2\xca\x05\n\tInterface\x12K\n\x1agameConfigChangedOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12\x45\n\x14\x63\x61\x63heConfigOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12I\n\x18syncCacheConfigOnBaseapp\x12\x18.gameInterface.ConfigVal\x1a\x13.gameInterface.Void\x12\x36\n\nactiveTick\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12;\n\x0finterfaceReload\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12\x42\n\x13interfaceDataReload\x12\x16.gameInterface.ListVal\x1a\x13.gameInterface.Void\x12?\n\x11syncRegisterCount\x12\x15.gameInterface.IntVal\x1a\x13.gameInterface.Void\x12G\n\x0esetAccountComp\x12 .gameInterface.SetAccountCompVal\x1a\x13.gameInterface.Void\x12P\n\x17updateAntiAddictionData\x12 .gameInterface.AntiAddictionData\x1a\x13.gameInterface.Void\x12I\n\x12setMapleServerInfo\x12\x1e.gameInterface.MapleServerInfo\x1a\x13.gameInterface.Void2\xe4\x01\n\x07\x42\x61seApp\x12>\n\x12\x61\x63tiveTickCallback\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12G\n\x1breqSyncCacheConfigOnBaseapp\x12\x13.gameInterface.Void\x1a\x13.gameInterface.Void\x12P\n\x14setAccountCompResult\x12#.gameInterface.SetAccountCompResult\x1a\x13.gameInterface.VoidB\x03\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -271,6 +271,37 @@ _ANTIADDICTIONDATA = _descriptor.Descriptor(
   serialized_end=322,
 )
 
+
+_MAPLESERVERINFO = _descriptor.Descriptor(
+  name='MapleServerInfo',
+  full_name='gameInterface.MapleServerInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='data', full_name='gameInterface.MapleServerInfo.data', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=324,
+  serialized_end=355,
+)
+
 DESCRIPTOR.message_types_by_name['Void'] = _VOID
 DESCRIPTOR.message_types_by_name['ConfigVal'] = _CONFIGVAL
 DESCRIPTOR.message_types_by_name['ListVal'] = _LISTVAL
@@ -278,6 +309,7 @@ DESCRIPTOR.message_types_by_name['IntVal'] = _INTVAL
 DESCRIPTOR.message_types_by_name['SetAccountCompVal'] = _SETACCOUNTCOMPVAL
 DESCRIPTOR.message_types_by_name['SetAccountCompResult'] = _SETACCOUNTCOMPRESULT
 DESCRIPTOR.message_types_by_name['AntiAddictionData'] = _ANTIADDICTIONDATA
+DESCRIPTOR.message_types_by_name['MapleServerInfo'] = _MAPLESERVERINFO
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Void = _reflection.GeneratedProtocolMessageType('Void', (_message.Message,), dict(
@@ -329,6 +361,13 @@ AntiAddictionData = _reflection.GeneratedProtocolMessageType('AntiAddictionData'
   ))
 _sym_db.RegisterMessage(AntiAddictionData)
 
+MapleServerInfo = _reflection.GeneratedProtocolMessageType('MapleServerInfo', (_message.Message,), dict(
+  DESCRIPTOR = _MAPLESERVERINFO,
+  __module__ = 'interface_pb2'
+  # @@protoc_insertion_point(class_scope:gameInterface.MapleServerInfo)
+  ))
+_sym_db.RegisterMessage(MapleServerInfo)
+
 
 DESCRIPTOR._options = None
 
@@ -338,8 +377,8 @@ _INTERFACE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=325,
-  serialized_end=964,
+  serialized_start=358,
+  serialized_end=1072,
   methods=[
   _descriptor.MethodDescriptor(
     name='gameConfigChangedOnBaseapp',
@@ -422,6 +461,15 @@ _INTERFACE = _descriptor.ServiceDescriptor(
     output_type=_VOID,
     serialized_options=None,
   ),
+  _descriptor.MethodDescriptor(
+    name='setMapleServerInfo',
+    full_name='gameInterface.Interface.setMapleServerInfo',
+    index=9,
+    containing_service=None,
+    input_type=_MAPLESERVERINFO,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_INTERFACE)
 
@@ -434,8 +482,8 @@ _BASEAPP = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=967,
-  serialized_end=1195,
+  serialized_start=1075,
+  serialized_end=1303,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTickCallback',

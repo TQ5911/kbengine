@@ -23,10 +23,6 @@ datas = _tools.RODict({
         "ID": "captainActiveTime",
         "value": 180,
     }),
-    "blockTime": _tools.RODict({
-        "ID": "blockTime",
-        "value": 180,
-    }),
     "teamChannel_applyTeamMsg": _tools.RODict({
         "ID": "teamChannel_applyTeamMsg",
         "value": 58000028,

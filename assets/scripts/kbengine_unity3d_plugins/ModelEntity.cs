@@ -925,14 +925,9 @@ namespace KBEngine
             BattleManager.Instance.OnHandleEnterWorld(this);
             if (isPlayer())
             {
-#if !UNITY_EDITOR
-                //BuglyAgent.SetUserId(gbId.ToString());
-                //BuglyAgent.AddSceneData("UserName", name);
-                CrashSightAgent.SetUserId(gbId.ToString());
-                CrashSightAgent.AddSceneData("username", name);
-#endif
 
-                //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_ENTER_WORLD_PLAYER, this);
+
+                EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_ENTER_WORLD_PLAYER, this);
             }
 
             if (!KBEngineApp.app.getInitArgs().isOnInitCallPropertysSetMethods)

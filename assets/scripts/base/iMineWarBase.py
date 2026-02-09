@@ -142,7 +142,6 @@ class IMineWarBase(object):
         msgId = MBC.datas['mineBatte_chatChannelMsg1']['value']
         self.onMessagePre(msgId, [])
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onMineWarEndPlayer(self, changeInfo):
         """
         MINE_WAR_STATE.END状态开始
@@ -168,27 +167,29 @@ class IMineWarBase(object):
             if self.guildUUIDBase in guildRevenueRate:
                 self.MineRevenueDict[mapId] = guildRevenueRate[self.guildUUIDBase]
 
-            # 跑马灯
-            mapCfg = MBMA.datas.get(mapId, {})
-            mapName = mapCfg.get('name', '')
-            self.onMessagePre(utils.getNeedTranslateMsgId(msgId), [info['guildName'], info['leaderName'], utils.getNeedTranslateArg(mapName)])
+            if gameconfig.visibleConfigEnabled('mineBattle'):
+                # 跑马灯
+                mapCfg = MBMA.datas.get(mapId, {})
+                mapName = mapCfg.get('name', '')
+                self.onMessagePre(utils.getNeedTranslateMsgId(msgId), [info['guildName'], info['leaderName'], utils.getNeedTranslateArg(mapName)])
 
-            # 邮件
-            mailId = MBC.datas['mineBatte_occupyMail']['value']
-            title = MAMAD.datas[mailId]['title']
-            content = MAMAD.datas[mailId]['content']
-            mailAssistor.sendMailToPlayers(
-                [self.gbID],
-                mailId,
-                despArgs=(info['guildName'], info['leaderName'], mapName),
-                opUUID=KBEngine.genUUID64(),
-                title=title, cont=content,
-            )
+                # 邮件
+                mailId = MBC.datas['mineBatte_occupyMail']['value']
+                title = MAMAD.datas[mailId]['title']
+                content = MAMAD.datas[mailId]['content']
+                mailAssistor.sendMailToPlayers(
+                    [self.gbID],
+                    mailId,
+                    despArgs=(info['guildName'], info['leaderName'], mapName),
+                    opUUID=KBEngine.genUUID64(),
+                    title=title, cont=content,
+                )
 
         # 同步cell
         self.syncCellMineWarInfo(gameconst.MINE_WAR_STATE.END)
         # 同步client
-        self.client.showMineWarEnd()
+        if gameconfig.visibleConfigEnabled('mineBattle'):
+            self.client.showMineWarEnd()
 
         # 重新拉数据
         if formula.isMineWarSpace(self.baseSpaceNo):

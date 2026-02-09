@@ -459,7 +459,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         # teamDungeonDic: key: dungeonNo, value: dungeonSpaceNo
         self.teamDungeonDic = TeamDungeonCache()
         self.teamDuelData = TeamDuelData()
-        self.teamFilterPlayers = {}
         # -----------------------------------------------------------
         # team mics
         self.teamMicsSwitch = teamMicsSwitch        # type: int
@@ -510,7 +509,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         self.randQimoInfo = BanditCacheVal.getBanditCacheVal(savedDataDict['randQimoInfo'])
         self.lastSortBag = 0
         self.usingItemsInfo = {}
-        self.teamFilterPlayers = {}
         self.teamMicsSwitch = savedDataDict['teamMicsSwitch']
         self.teamMicsBlocked = savedDataDict['teamMicsBlocked']
         self.recruitInfo = savedDataDict['recruitInfo']
@@ -689,7 +687,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
                     WARNING_MSG('delMember teamMember has no client', gbId)
 
         self.teamPlayerDic.pop(playerGbId, None)
-        self.teamFilterPlayers[playerGbId] = utils.getNow()
         self.teamMatchInfoUpdate()
     
     def setCaptainGbId(self, captainGbId):
@@ -1126,7 +1123,6 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
             'teamTarget' : self.teamTarget,
             'teamMinLv' : self.teamMinLv,
             'teamMinScore' : self.teamMinScore,
-            'teamFilterPlayers' : copy.deepcopy(self.teamFilterPlayers),
             'teamPlayerDic': teamPlayerDic,
         }
         return teamInfoDic
@@ -1155,8 +1151,7 @@ class TeamVal(userType.UserSoleType, TeamDungeonMixin):
         self.recruitInfo = recruitInfo
         self.password = password
         self.isAutoExpedition = isAutoExpedition
-        if len(self.password) == 0:
-            self.isPublish = False
+        self.isPublish = len(self.password) == 0
         self.broadcastAllMembersClient('onSetTeamTarget', (self.teamId, self.teamTarget, self.teamMinLv, self.teamMinScore, self.password, self.isAutoExpedition, self.recruitInfo))
         return True
     

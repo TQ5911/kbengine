@@ -1312,7 +1312,7 @@ class IEventActions(object):
 
         length = sMath.distance2D(self.position, dstPosition)
         delayTime = sMath.limit(length / speed, 0.01, 20.0)
-        skillVal.setTempData('beginSkillPosition', beginSkillPosition)
+        skillVal.setTempData(self, 'beginSkillPosition', beginSkillPosition)
         self.topSpeed = gameconst.TopSpeedType.ShiftingSkillTopSpeed
         self.setNeedUpdateWitnessPosDir(0)
         shiftOrDodgeTimer = self._callback(delayTime + 1, 'endUpdateWitnessPosDir', (),gametimer.TIMER_TAG_SKILL_CHANGE_POS,'','resetShiftOrDodgeTimer',())
@@ -1340,7 +1340,7 @@ class IEventActions(object):
         else:
             return False
 
-        skillVal.setTempData('beginSkillPosition', beginSkillPosition)
+        skillVal.setTempData(self, 'beginSkillPosition', beginSkillPosition)
         length = sMath.distance2D(self.position, realDstPos)
         delayTime = sMath.limit(length / speed, 0.01, 20.0)
         self.setNeedUpdateWitnessPosDir(0)
@@ -1368,7 +1368,7 @@ class IEventActions(object):
         else:
             return False
 
-        skillVal.setTempData('beginSkillPosition', beginSkillPosition)
+        skillVal.setTempData(self, 'beginSkillPosition', beginSkillPosition)
         length = sMath.distance2D(self.position, realDstPos)
         delayTime = sMath.limit(length / speed, 0.01, 20.0)
         self.setNeedUpdateWitnessPosDir(0)
@@ -1451,7 +1451,7 @@ class IEventActions(object):
         if not target.aiController:
             return
 
-        if target.hasTag(98):
+        if target.hasCreepTag(gameconst.CREEP_TAG_ANTI_TAUNT):
             return
 
         maxHateEntId, maxHate = target.aiController.hateDict.getMaximumHatredTarget()
@@ -1600,5 +1600,11 @@ class IEventActions(object):
         _detail = gameclass.AwardDetail()
         self._addExp(expVal, _opUUID, _src, _detail)
 
+    def interactArenaKing(self):
+        if not formula.isCubeSpace(self.spaceNo):
+            WARNING_MSG('interactArenaKing fail: not cube space', self.spaceNo)
+            return
 
+        INFO_MSG('interactArenaKing')
+        self.spaceMgr.doInteractArenaKing(self)
 

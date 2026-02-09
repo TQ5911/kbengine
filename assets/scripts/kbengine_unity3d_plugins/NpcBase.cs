@@ -23,8 +23,8 @@ namespace KBEngine
 		public Int32 antiFatal = 0;
 		public float bePushedSpeed = 0f;
 		
-		public UInt32 danceTime = 0;
-		public virtual void onDanceTimeChanged(UInt32 oldValue) {}
+		public UInt32 deathTime = 0;
+		public virtual void onDeathTimeChanged(UInt32 oldValue) {}
 		public float dmgArmor = 0f;
 		
 		
@@ -411,19 +411,19 @@ namespace KBEngine
 						}
 
 						break;
-					case 38:
-						UInt32 oldval_danceTime = danceTime;
-						danceTime = stream.readUint32();
+					case 69:
+						UInt32 oldval_deathTime = deathTime;
+						deathTime = stream.readUint32();
 
 						if(prop.isBase())
 						{
 							if(inited)
-								onDanceTimeChanged(oldval_danceTime);
+								onDeathTimeChanged(oldval_deathTime);
 						}
 						else
 						{
 							if(inWorld)
-								onDanceTimeChanged(oldval_danceTime);
+								onDeathTimeChanged(oldval_deathTime);
 						}
 
 						break;
@@ -862,23 +862,23 @@ namespace KBEngine
 				}
 			}
 
-			UInt32 oldval_danceTime = danceTime;
-			Property prop_danceTime = pdatas[4];
-			if(prop_danceTime.isBase())
+			UInt32 oldval_deathTime = deathTime;
+			Property prop_deathTime = pdatas[5];
+			if(prop_deathTime.isBase())
 			{
 				if(inited && !inWorld)
-					onDanceTimeChanged(oldval_danceTime);
+					onDeathTimeChanged(oldval_deathTime);
 			}
 			else
 			{
 				if(inWorld)
 				{
-					if(prop_danceTime.isOwnerOnly() && !isPlayer())
+					if(prop_deathTime.isOwnerOnly() && !isPlayer())
 					{
 					}
 					else
 					{
-						onDanceTimeChanged(oldval_danceTime);
+						onDeathTimeChanged(oldval_deathTime);
 					}
 				}
 			}

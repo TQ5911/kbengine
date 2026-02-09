@@ -1261,6 +1261,7 @@ class IComplexTeleport(object):
             _floor,
             _toMapId,
             gameconst.CUBE_EVENT_ENTER,
+            self.cubeQuota.calcLeftTime()
         )
 
         return True
@@ -1305,6 +1306,7 @@ class IComplexTeleport(object):
             _floor,
             _fromMapId,
             gameconst.CUBE_EVENT_EXIT,
+            self.cubeQuota.calcLeftTime(),
         )
         return True
     # ----------------------------------------------------------------------

@@ -1199,7 +1199,7 @@ def _66000112(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.25)
+        self.attack(ent, context, 3)
 
 # 生成的技能代码
 def _66000113_enter(self, target, context):
@@ -1210,7 +1210,7 @@ def _66000113_enter(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.3)
+        self.attack(ent, context, 1)
 
 def _66000114(self, target, context):
     import action_FightAction
@@ -2383,7 +2383,7 @@ datas = _tools.RODict({
         "targetNum": 0,
         "flySpeed": 0.0,
         "selectType": 1,
-        "selectPar": 3,
+        "selectPar": 5,
         "delayTime": 3.0,
     }),
     66000009: _tools.RODict({
@@ -5296,7 +5296,7 @@ datas = _tools.RODict({
         "flySpeed": 0.0,
         "selectType": 1,
         "selectPar": 5,
-        "delayTime": 1.5,
+        "delayTime": 1.0,
     }),
     66000113: _tools.RODict({
         "ID": 66000113,

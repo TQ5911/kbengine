@@ -209,11 +209,11 @@ datas = _tools.RODict({
     }),
     "HealingWoundsCost": _tools.RODict({
         "ID": "HealingWoundsCost",
-        "value": _tools.ROList([0, 180]),
+        "value": _tools.ROList([0, 40, 70, 100]),
     }),
     "HealingWoundsCostCurrency": _tools.RODict({
         "ID": "HealingWoundsCostCurrency",
-        "value": 30000001,
+        "value": 30000021,
     }),
     "HealingWoundsMsg1": _tools.RODict({
         "ID": "HealingWoundsMsg1",

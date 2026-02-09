@@ -83,6 +83,7 @@ import iNewbie
 import iCrossServer
 import gzip
 import json
+import LogTrackingMgr
 
 import iMeridian
 import iMonthCard
@@ -421,6 +422,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self._initNewbieCell()
         self.base.setBaseSpaceNo(self.spaceNo)
 
+        # 等级检查
+        self.checkLevelChange()
+
     def _initNoviceAvatar(self):
         if self.showCompleteNum == 0:
             self.showCompleteNum = utils.getShowCompleteModelNum()
@@ -578,10 +582,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             return
 
         toPosition = (_anchorData['PosX'], _anchorData['PosY'], _anchorData['PosZ'])
+        toDir = (0.0, 0.0, _anchorData['Dir'] * math.pi / 180)
 
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(gameconst.ItemId.COIN, CONST.datas['transportcost'].get("value", 0))
-        extraProps = {"mapId" : mapId, "toPosition" : toPosition}
+        extraProps = {"mapId" : mapId, "toPosition" : toPosition, 'toDir': toDir}
         self.base.onCheckAndCostWealth(gameconst.CELL, AAC_AACDD.datas.BONUS_SRC_TRANSPORT_COST, 'transmitWithMapPointCallback', deductWealthVal, extraProps)
 
     def transmitWithMapPointCallback(self, checkResult, extraProps):
@@ -593,10 +598,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         mapId = extraProps["mapId"]
         toPosition = extraProps["toPosition"]
+        toDir = extraProps['toDir']
         if mapId == formula.getMapId(self.spaceNo):
-            self.teleportToCell(self, self.spaceNo,  toPosition, self.direction,'', ())
+            self.teleportToCell(self, self.spaceNo,  toPosition, toDir,'', ())
         else:
-            self.applyEnterLineInternal(mapId, -1, toPosition, self.direction, {'fromLineNo': formula.getLineNo(self.spaceNo), 'telToMainCityWhenFull': False, 'mpFailCb': 'transmitWithMapPointEnterFail'})
+            self.applyEnterLineInternal(mapId, -1, toPosition, toDir, {'fromLineNo': formula.getLineNo(self.spaceNo), 'telToMainCityWhenFull': False, 'mpFailCb': 'transmitWithMapPointEnterFail'})
 
 
     def syncRoleCacheBattlePoint(self):
@@ -1035,6 +1041,18 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             else:
                 self.cellFlags = utils.bitReset(self.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE)
 
+            _fromMapId = formula.getMapId(self.lastTeleportSpaceNoRecord)
+            _toMapId = formula.getMapId(self.spaceNo)
+            LogTrackingMgr.LogTrackingMgr.Teleport(
+                self.gbId,
+                self.level,
+                _fromMapId,
+                _toMapId,
+                '',
+                True,
+                '',
+            )
+
     def onTeleportSuccess(self, nearbyEntity):
         gameglobal.roleGBIDToEntId[self.gbId] = self.id
         try:
@@ -1422,16 +1440,18 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def onDailyHealWoundsTimesRefresh(self):
         self.dailyHealWoundsTimes = 0
 
-    def _hasWoundsCanHeal(self):
+    def _hasWoundsCanHeal(self, fromItem=False):
         for debuffId in GP_SD.datas['clearDebuffID']['value']:
             if self.hasBuff(debuffId):
                 return True
+        if fromItem:
+            return False
         if self.hp == self.fullHp and self.mp == self.fullMp:
             return False
         return True
 
     def checkHealWoundsItemCond(self):
-        if self._hasWoundsCanHeal():
+        if self._hasWoundsCanHeal(True):
             return gameconst.UseItem.TRUE
         else:
             self.showMsg(MMD.datas.HealingWoundsMsg2, [])
@@ -1462,13 +1482,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.dailyHealWoundsTimes += 1
         self.doHealWounds()
 
-    def doHealWounds(self):
+    def doHealWounds(self, recoverHpMp=True):
         for debuffId in GP_SD.datas['clearDebuffID']['value']:
             if self.hasBuff(debuffId):
                 self.removeBuff(debuffId)
         self.showMsg(MMD.datas.HealingWoundsMsg1, [])
-        self.modifyHP(self.fullHp, self.id, gameconst.SourceType.HealWounds, self.id)
-        self.modifyMP(self.fullMp)
+        if recoverHpMp:
+            self.modifyHP(self.fullHp, self.id, gameconst.SourceType.HealWounds, self.id)
+            self.modifyMP(self.fullMp)
         return gameconst.UseItem.TRUE
 
     @utils.isMyself

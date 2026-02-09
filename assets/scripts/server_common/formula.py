@@ -102,7 +102,7 @@ def whatSpaceBornPosAndDir(mapId):
         return None, None
 
     _data = random.choice(list(dunSData['BornPos'].values()))
-    return bornPosFromData(_data), (0, 0, _data['Dir'])
+    return bornPosFromData(_data), (0, 0, _data['Dir'] * math.pi / 180)
 
 
 def range2D(p1, p2):

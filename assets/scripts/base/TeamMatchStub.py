@@ -105,12 +105,6 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self._rmTeamFromMatchPool(teamId)
         return
 
-    def teamAutoMatchTimeout(self, teamId):
-        INFO_MSG('in teamAutoMatchTimeout:', teamId)
-        if self._rmTeamFromMatchPool(teamId):
-            gameengine.getTeamStub(teamId).onTeamAutoMatchTimeout(teamId)
-        return
-
     def _rmTeamFromMatchPool(self, teamId):
         tmVal = self.teamsDic.pop(teamId, None)
         if not tmVal:
@@ -222,17 +216,10 @@ class TeamMatchStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 DEBUG_MSG('     in _checkTimeOutMatch, rmPlayers:', rmPlayers)
         for rmPlayeId in rmPlayers:
             self.playerAutoMatchTimeout(rmPlayeId)
-        rmTeams = []
         fullTeams = []
         for teamId, tmVal in self.teamsDic.items():
-            if tmVal.isTimeOut():
-                rmTeams.append(teamId)
-                if tmVal.isTeamFull():
-                    #如果队伍目标最低人数是5，匹配到机器人后，队伍是可能满的
-                    fullTeams.append(teamId)
-
-        for teamId in rmTeams:
-            self.teamAutoMatchTimeout(teamId)
+            if tmVal.isTeamFull():
+                fullTeams.append(teamId)
 
         for rmTeamId in fullTeams:
             self.teamStopAutoMatch(rmTeamId)
@@ -245,7 +232,6 @@ class TeamMatchVal(userType.UserSoleType):
         self.teamMinLv = teamInfoDic['teamMinLv']
         self.teamMinScore = teamInfoDic['teamMinScore']
         self.teamPlayerDic = teamInfoDic['teamPlayerDic']
-        self.teamFilterPlayers = teamInfoDic['teamFilterPlayers']
         self.startTime = startTime
         self.guildUUID = teamInfoDic.get('guildUUID', 0)
 
@@ -256,7 +242,6 @@ class TeamMatchVal(userType.UserSoleType):
         self.teamMinLv = teamInfoDic['teamMinLv']
         self.teamMinScore = teamInfoDic['teamMinScore']
         self.teamPlayerDic = teamInfoDic['teamPlayerDic']
-        self.teamFilterPlayers = teamInfoDic['teamFilterPlayers']
         guildUUID = teamInfoDic.get('guildUUID')
         if guildUUID:
             self.guildUUID = guildUUID
@@ -274,8 +259,6 @@ class TeamMatchVal(userType.UserSoleType):
             return False
         if self.isTeamFull():
             return False
-        if self._isPlayerBanned(pmVal.playerGbId):
-            return False
         if pmVal.level < self.teamMinLv:
             return False
         if pmVal.score < self.teamMinScore:
@@ -284,16 +267,6 @@ class TeamMatchVal(userType.UserSoleType):
 
     def isTeamFull(self):
         return len(self.teamPlayerDic) >= gameconst.TEAM_MEMBER_MAX_NUM
-
-    def _isPlayerBanned(self, gbId):
-        leaveTime = self.teamFilterPlayers.get(gbId)
-        if not leaveTime:
-            return False
-        blockTime = TMMCD.datas['blockTime']['value']
-        if leaveTime + blockTime > utils.getNow():
-            WARNING_MSG("in _isPlayerBanned, player banned:", gbId, leaveTime, blockTime, utils.getNow())
-            return True
-        return False
 
     def isTimeOut(self):
         maxMatchTime = TMMCD.datas['maxMatchTime']['value']

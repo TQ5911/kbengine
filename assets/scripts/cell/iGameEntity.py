@@ -18,6 +18,10 @@ class IGameEntity(object):
     """
 
     def __init__(self):
+        _dunData = self.dunData()
+        if _dunData and 'IsOnGround' in _dunData.get('Props', {}):
+            self.isOnGround = _dunData['Props']['IsOnGround']
+
         self.createTime = utils.getNow()
         DEBUG_MSG("iGameEntity.IGameEntity.__init__", self.disappearTime, self.createTime, self.gameEntityId)
         if self.disappearTime > self.createTime:

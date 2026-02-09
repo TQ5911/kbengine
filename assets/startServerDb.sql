@@ -110,9 +110,8 @@ CREATE TABLE IF NOT EXISTS `game_account_mails`
 CREATE TABLE IF NOT EXISTS `game_login_white_list`
         (
         `id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        `accountName` varchar(128) NOT NULL,
-        `accountGmMode` int(10) NOT NULL DEFAULT 0,
-         index `accountName` (`accountName`)
+        `accountName` varchar(128) NOT NULL UNIQUE,
+        `accountGmMode` int(10) NOT NULL DEFAULT 0
         );
 
 CREATE TABLE IF NOT EXISTS `game_avatar_offline_callbacks`

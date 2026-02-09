@@ -12,6 +12,9 @@ import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import buyCredit_buyCredit as BC_BCD
 import buyCredit_buyCreditConst as BC_BCCD
 import gamedecorator
+import gameconfig
+import LogTrackingMgr
+import message_Message_def as MMD
 
 class BuyCreditLimitType:
     Once = 1
@@ -46,7 +49,12 @@ class IPay(object):
 
         monthCardId = cfgData.get('ID')
         seconds = BC_BCCD.datas['durationHours']['value'] * 3600
-        self.doAddMonthCard(seconds, monthCardId)
+        opUUID = self.doAddMonthCard(seconds, monthCardId)
+        LogTrackingMgr.LogTrackingMgr.Gift_Buy(
+            self.gbID,
+            buyCreditId,
+            opUUID
+        )
         return True
 
     @gamedecorator.checkGameconfigEnable('pay')
@@ -56,8 +64,18 @@ class IPay(object):
         if not cfgData:
             ERROR_MSG('clientBuyGoods buyCreditId not in config', buyCreditId)
             return
-
+        
+        if not gameconfig.payConfigEnable("pay", buyCreditId):
+            WARNING_MSG('clientBuyGoods payConfigEnable is False', buyCreditId)
+            return
+        
         creditType = cfgData.get('type')
+        
+        if not gameconfig.payConfigEnable("buyCreditType", creditType):
+            WARNING_MSG('clientBuyGoods payConfigEnable is False, buyCreditType', creditType)
+            self.onMessagePre(MMD.datas.systemSwitchClose, [])
+            return
+
         price = cfgData.get('price')
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_BUYCREDIT
@@ -81,6 +99,11 @@ class IPay(object):
                 detail = gameclass.AwardDetail(buyCreditId=buyCreditId)
             ctx = self._getAvatarAwardCtx(0, None)
             self.addWealth(srcType, wealthVal, opUUID, detail=detail, awardCtx=ctx)
+            LogTrackingMgr.LogTrackingMgr.Gift_Buy(
+                self.gbID,
+                buyCreditId,
+                opUUID
+            )
         elif creditType == gameconst.BuyCreditType.PermanentGift:
             priceID = cfgData.get('priceID')
             quantity = cfgData.get('quantity')
@@ -140,6 +163,11 @@ class IPay(object):
         for rewardId in reward:
             awardCtx = awardContext.CommonContext(gameconst.MailConstID.REWARD_MAIL_ID)
             self.addAwards(src, rewardId, 1, opUUID, detail, awardCtx)
+        LogTrackingMgr.LogTrackingMgr.Gift_Buy(
+            self.gbID,
+            buyCreditId,
+            opUUID
+        )
 
     @property
     def totalPayMoney(self):

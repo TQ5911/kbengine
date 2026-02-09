@@ -365,7 +365,8 @@ def modifyAttrByLevel(su, player, level):
             continue
         if player.getProp(attrName) is None:
             continue
-        delta = attrVal - player.getProp(attrName)  # 根据当前属性差值补足
+        oldVal = player.getProp(attrName)
+        delta = type(oldVal)(attrVal - oldVal)  # 根据当前属性差值补足
         attrList.append(("adj" + attrName[0].upper() + attrName[1:], delta))
     forwardCommand(su, '$addAwardFightProps', player.id, str(attrList))
 
@@ -381,7 +382,7 @@ def addAwardFightProps(su, player, attrList):
     except Exception as e:
         return False, f'执行失败，attrList格式错误: {str(e)}'
     player.addAwardFightProps(attrList, gameconst.SourceType.Item, 0, 0, "_gmAddAwardFightProps")
-    return True, '执行成功'
+    return su.onCommandResult(0, 'ok,替换成功', {'attrList': attrList})
 
 @gm_cmd('$Alladdbuff', (Int("buffid"),), RALL, gameconst.CELL, '所有人添加buff', ALLSIDE, GOD_GROUPS)
 def Alladdbuff(su, buffid):
@@ -1364,4 +1365,10 @@ def gmLevelUpMeridianPoint(su,player,slotId,pointId,level):
     return True, '执行成功'
 
 
+@gm_cmd('$levelUpPet', (Player("gbId/Id"),Int("gridId"), Int("petId")), RARG(0), gameconst.BASE, '升级宠物等级', ALLSIDE, GOD_GROUPS)
+def levelUpPet(su, player, gridId, petId):
+    if player is None:
+        return False, '执行失败'
+    player.levelUpPet(player.id, [gridId], petId)
+    return True, '执行成功'
 # --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

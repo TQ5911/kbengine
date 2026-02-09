@@ -20,21 +20,21 @@ datas = _tools.RODict({
         "upgradeContributionCost": 500,
         "upgradeCoinCost": 5000,
         "yanWuGeLvReq": 1,
-        "charLevelReq": 18
+        "charLevelReq": 15
     }),
     2: _tools.RODict({
         "ID": 2,
         "upgradeContributionCost": 550,
         "upgradeCoinCost": 5000,
         "yanWuGeLvReq": 1,
-        "charLevelReq": 18
+        "charLevelReq": 15
     }),
     3: _tools.RODict({
         "ID": 3,
         "upgradeContributionCost": 600,
         "upgradeCoinCost": 5000,
         "yanWuGeLvReq": 1,
-        "charLevelReq": 18
+        "charLevelReq": 15
     }),
     4: _tools.RODict({
         "ID": 4,

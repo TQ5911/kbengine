@@ -191,6 +191,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         LogTrackingMgr.LogTrackingMgr.Guild_Info(
             self.guildUUID,
             self.guildLevel,
+            self.guildExp,
             self.guildFund,
             self.guildMoney,
             self.cityBattleToken,
@@ -213,6 +214,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         LogTrackingMgr.LogTrackingMgr.Guild_Info(
             self.guildUUID,
             self.guildLevel,
+            self.guildExp,
             self.guildFund,
             self.guildMoney,
             self.cityBattleToken,
@@ -641,6 +643,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         _eId = M_GL_DD.datas.guildLog_guildEstablished
         _args = [fcVal.name, self.guildName]
         self.addGuildEvent(_eId, _args)
+        LogTrackingMgr.LogTrackingMgr.Guild_Opr(
+            self.guildUUID,
+            fcVal.gbId,
+            1,
+            self.guildLevel,
+            gameconst.GUILD_OPR_CREATE
+        )
 
     def sendJoinGuildMail(self, gbId):
         _opUUID = KBEngine.genUUID64()
@@ -758,6 +767,21 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         if len(self.members) == 0:
             self._dissolveGuild(gameconst.DissolveGuildReason.NO_MEMBER)
+            LogTrackingMgr.LogTrackingMgr.Guild_Opr(
+                self.guildUUID,
+                gbId,
+                len(self.members),
+                self.guildLevel,
+                gameconst.GUILD_OPR_DISSOLVE
+            )
+        else:
+            LogTrackingMgr.LogTrackingMgr.Guild_Opr(
+                self.guildUUID,
+                gbId,
+                len(self.members),
+                self.guildLevel,
+                gameconst.GUILD_OPR_EXIT
+            )
 
     def exitGuildButOffline(self, gbIds):
         redisUtils.RedisUtils.onModifyAttr(gbIds[0], {
@@ -897,6 +921,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             lambda fcVal: self._doApplyJoinGuildAfterGetFcVal(fcVal, box),
         )
 
+        LogTrackingMgr.LogTrackingMgr.Guild_Opr(
+            self.guildUUID,
+            gbId,
+            len(self.members),
+            self.guildLevel,
+            gameconst.GUILD_OPR_JOIN
+        )
+
     def toJoinGuildData(self):
         return {
             'guildName': self.guildName,
@@ -971,6 +1003,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         redisUtils.RedisUtils.getSingleUserInfo(
             gbId,
             lambda fcVal: self._doDealGuildApplyAfterGetFcVal(fcVal, oprGbId, oprBox),
+        )
+
+        LogTrackingMgr.LogTrackingMgr.Guild_Opr(
+            self.guildUUID,
+            gbId,
+            len(self.members),
+            self.guildLevel,
+            gameconst.GUILD_OPR_JOIN
         )
 
     def onAvatarJoinGuild(self, gbId, box):
@@ -1091,6 +1131,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         LogTrackingMgr.LogTrackingMgr.Guild_Info(
             self.guildUUID,
             self.guildLevel,
+            self.guildExp,
             self.guildFund,
             self.guildMoney,
             self.cityBattleToken,
@@ -1419,7 +1460,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             gbId,
             self.guildUUID,
             _building.level,
-            _building.exp
+            _building.exp,
+            _opUUID,
+            _src
         )
 
     # ------------------------------------ guild building end ------------------------------------
@@ -1437,14 +1480,15 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         box.onGuildAssistResult(True, opUUID)
         box.client.onGuildBuildingChanged(self.guildBuilding)
 
-        
         _building = self._getBuilding(buildingId)
         LogTrackingMgr.LogTrackingMgr.Guild_Assist(
             buildingId,
             gbId,
             self.guildUUID,
             _building.level,
-            _building.exp
+            _building.exp,
+            opUUID,
+            _src
         )
 
     def doModifyGuildName(self, gbId, box, ctx):
@@ -1783,7 +1827,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     def doChangeCityMoneyToGuildMoney(self, srcGbId, val):
         INFO_MSG('[lj]doChangeCityMoneyToGuildMoney', val)
-        self.modifyGuildFund(val, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_MONEY_TO_COIN, srcGbId, gameclass.AwardDetail())
+        _opUUID = KBEngine.genUUID64()
+        self.modifyGuildFund(val, AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_MONEY_TO_COIN, _opUUID, gameclass.AwardDetail())
 
     def getCacheBeforeEnterCrossSiegeWar(self, box, gbId):
         cache = {}
@@ -2201,6 +2246,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         LogTrackingMgr.LogTrackingMgr.Guild_Info(
             self.guildUUID,
             self.guildLevel,
+            self.guildExp,
             self.guildFund,
             self.guildMoney,
             self.cityBattleToken,
@@ -2396,6 +2442,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         LogTrackingMgr.LogTrackingMgr.Guild_BossChallenge_Open(
             self.guildChallengeData.opUUID,
             self.guildUUID,
+            self.getGuildJob(gbID),
             openType,
             self.guildChallengeData.consumedType,
             cost,
@@ -2757,3 +2804,10 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             # 把数据统计去掉
             stub = gameengine.getStatisticStub(self.guildChallengeData.spaceNo)
             stub.stopReportStatistics(gbId, box, self.guildChallengeData.spaceNo)
+
+    def getGuildJob(self, gbId): 
+        _gmVal = self.members.get(gbId)
+        if not _gmVal:
+            WARNING_MSG('getGuildJob: gbId not in guild', gbId)
+            return GA_A_DD.datas.BONUS_SRC_UNKNOWN
+        return _gmVal.job

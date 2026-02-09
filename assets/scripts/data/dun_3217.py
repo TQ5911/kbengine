@@ -11,9 +11,9 @@ datas ={
     "EntityID": 0,
     "ID": 32170001,
     "Name": "\u51fa\u751f\u70b9",
-    "PosX": 134.5863,
+    "PosX": 132.5105,
     "PosY": 527.8172,
-    "PosZ": 20.02799,
+    "PosZ": 17.48057,
     "Props": {
       "MapEntityType": 0,
       "Num": 0,
@@ -38,7 +38,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 11012029,
     "ID": 32170002,
-    "Name": "\u52c7\u725b\u62183\u72c2\u6f6e",
+    "Name": "\u7360\u9762\u5211\u541b",
     "PosX": 173.5494,
     "PosY": 524.8943,
     "PosZ": 65.75397,
@@ -95,7 +95,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 17321701,
     "ID": 32178002,
-    "Name": "\u4f20\u9001\u70b9",
+    "Name": "\u6df7\u6c8c\u4e4b\u5883",
     "PosX": 127.4835,
     "PosY": 527.7394,
     "PosZ": 91.31271,
@@ -105,9 +105,9 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 0,
       "TelDir": 312.6052,
-      "TelX": 207.8489,
+      "TelX": 207.849182,
       "TelY": 527.7394,
-      "TelZ": 22.75964
+      "TelZ": 22.7596054
     }
   },
   "32178003": {
@@ -121,7 +121,7 @@ datas ={
     "DisplayName": "",
     "EntityID": 17321701,
     "ID": 32178003,
-    "Name": "\u4f20\u9001\u70b9",
+    "Name": "\u6df7\u6c8c\u4e4b\u5883",
     "PosX": 207.8485,
     "PosY": 527.7394,
     "PosZ": 22.75973,
@@ -156,6 +156,32 @@ datas ={
       "Radius": 36.0,
       "Remark": "",
       "ShowInSceneMap": 1
+    }
+  },
+  "32178005": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Teleporter",
+    "ClassNameType": 2,
+    "CustomID": "",
+    "Dir": 170.4391,
+    "DisplayName": "",
+    "EntityID": 17310002,
+    "ID": 32178005,
+    "Name": "\u4f20\u9001\u70b9",
+    "PosX": 129.3976,
+    "PosY": 527.7435,
+    "PosZ": 25.79705,
+    "Props": {
+      "CameraId": 0,
+      "GateType": 1,
+      "Remark": "",
+      "ShowInSceneMap": 1,
+      "TelDir": 220.4391,
+      "TelX": 129.3976,
+      "TelY": 527.7435,
+      "TelZ": 25.79705
     }
   }
 }

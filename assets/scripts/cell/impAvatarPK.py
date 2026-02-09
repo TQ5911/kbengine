@@ -10,6 +10,7 @@ import gameengine
 import utils
 import gametimer
 import formula
+import LogTrackingMgr
 
 import PKData_PKData as PKD
 import formula_generalFormula as FGFD
@@ -203,7 +204,7 @@ class ImpAvatarPK(object):
 
         return sceneInfo['ifSafeArea'] == gameconst.PKMapType.DANGER
 
-    def increaseMoralValue(self, delta):
+    def increaseMoralValue(self, delta, srcType):
         DEBUG_MSG('increaseMoralValue', delta)
         upperLimitOfMoralValues = PKD.datas['upperLimitOfMoralValues']['value']
         if self.moralValue >= upperLimitOfMoralValues:
@@ -217,13 +218,21 @@ class ImpAvatarPK(object):
         if self.moralValue > upperLimitOfMoralValues:
             self.moralValue = upperLimitOfMoralValues
 
+        _oldLevel = self.moralLevel
         self.moralLevel = utils.getMoralLevel(self.moralValue)
+        if _oldLevel != self.moralLevel:
+            LogTrackingMgr.LogTrackingMgr.Moral_Change(
+                self.gbId,
+                self.moralValue,
+                delta,
+                srcType,
+            )
 
         if oldInRedName and not self.inRedName():
             self.resetAllTargetTypeCache()
 
     # -1 代表完全消除
-    def reduceMoralValue(self, delta):
+    def reduceMoralValue(self, delta, srcType):
         DEBUG_MSG('reduceMoralValue', delta)
         lowerLimitOfMoralValues = PKD.datas['lowerLimitOfMoralValues']['value']
         if self.moralValue <= lowerLimitOfMoralValues:
@@ -241,7 +250,15 @@ class ImpAvatarPK(object):
             lowerLimitOfMoralValues = PKD.datas['lowerLimitOfMoralValues']['value']
             self.moralValue = max(lowerLimitOfMoralValues, self.moralValue - delta)
 
+        _oldLevel = self.moralLevel
         self.moralLevel = utils.getMoralLevel(self.moralValue)
+        if _oldLevel != self.moralLevel:
+            LogTrackingMgr.LogTrackingMgr.Moral_Change(
+                self.gbId,
+                self.moralValue,
+                -delta,
+                srcType,
+            )
 
         if not oldInRedName and self.inRedName():
             self.resetAllTargetTypeCache()
@@ -385,7 +402,7 @@ class ImpAvatarPK(object):
         if checkRedTarget():
             formulaId = PKD.datas['defeatRedPlayerMoralValues']['value']
             increaseMoralValue = utils.getValByFormula('formula:{}'.format(formulaId), self.moralValue)
-            self.increaseMoralValue(increaseMoralValue)
+            self.increaseMoralValue(increaseMoralValue, gameconst.MORAL_SRC_TYPE_KILL_PLAYER)
             self.redNameKillTime[target.id] = utils.getNow()
             DEBUG_MSG('onCheckKillAvatarInPK checkRedTarget', increaseMoralValue, self.redNameKillTime)
 
@@ -393,7 +410,7 @@ class ImpAvatarPK(object):
             return
 
         value = PKD.datas['deductingMoralValues']['value']
-        self.reduceMoralValue(value)
+        self.reduceMoralValue(value, gameconst.MORAL_SRC_TYPE_KILL_PLAYER)
 
     def inPKProtect(self, target):
         if self.hasPKProtect(gameconst.PKProtectType.TEAM) and self.isInTeam(target.gbId):
@@ -414,4 +431,4 @@ class ImpAvatarPK(object):
         levelDelta = abs(self.level - monsterLv)
         if levelDelta <= PKD.datas['differenceInMonsterLv']['value'] and self.moralValue < 0:
             increasingMoralValues = PKD.datas['increasingMoralValues']['value']
-            self.increaseMoralValue(increasingMoralValues)
+            self.increaseMoralValue(increasingMoralValues, gameconst.MORAL_SRC_TYPE_KILL_MONSTER)

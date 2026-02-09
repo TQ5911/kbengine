@@ -5,7 +5,7 @@ datas ={
       40040004
     ],
     "num": 0,
-    "lv": "12",
+    "lv": "16",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

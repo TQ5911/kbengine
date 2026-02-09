@@ -162,7 +162,7 @@ class AchievementsVal(userType.UserSoleType):
         return _updateList
 
     def _notifyFinishMsg(self, achieveVal, achieveId, avatar):
-        if not gameconfig.visibleConfigEable('achievement'):
+        if not gameconfig.visibleConfigEnabled('achievement'):
             return
 
         _name = avatar.getRoleCacheAttr('name', '')

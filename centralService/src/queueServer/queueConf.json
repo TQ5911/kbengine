@@ -1,8 +1,6 @@
 {
     "serverName":"queueServer",
     "serverId":1,
-    "clientServiceAddr": "0.0.0.0:4395",
-    "gameServerServiceAddr": "0.0.0.0:4394",
     "httpServer": "0.0.0.0:4396",
     "addressForDebug":"localhost:8989",
     "logPath":"queue.log",

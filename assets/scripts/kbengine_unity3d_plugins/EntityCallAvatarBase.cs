@@ -245,6 +245,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void cubePray(Byte arg1)
+		{
+			Bundle pBundle = newCall("cubePray", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			sendCall(null);
+		}
+
 		public void dealAuthRole(Byte arg1)
 		{
 			Bundle pBundle = newCall("dealAuthRole", 0);
@@ -723,6 +733,17 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
+			sendCall(null);
+		}
+
+		public void levelUpPet(List<UInt16> arg1, UInt32 arg2)
+		{
+			Bundle pBundle = newCall("levelUpPet", 0);
+			if(pBundle == null)
+				return;
+
+			((DATATYPE_AnonymousArray_10017)EntityDef.id2datatypes[10017]).addToStreamEx(bundle, arg1);
+			bundle.writeUint32(arg2);
 			sendCall(null);
 		}
 
@@ -1316,13 +1337,14 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void reqFetchRedBag(Int64 arg1)
+		public void reqFetchRedBag(Int64 arg1, SByte arg2)
 		{
 			Bundle pBundle = newCall("reqFetchRedBag", 0);
 			if(pBundle == null)
 				return;
 
 			bundle.writeInt64(arg1);
+			bundle.writeInt8(arg2);
 			sendCall(null);
 		}
 
@@ -4007,16 +4029,6 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			sendCall(null);
-		}
-
-		public void sendOneMemberFollowAsk(UInt64 arg1)
-		{
-			Bundle pBundle = newCall("sendOneMemberFollowAsk", 0);
-			if(pBundle == null)
-				return;
-
-			bundle.writeUint64(arg1);
 			sendCall(null);
 		}
 

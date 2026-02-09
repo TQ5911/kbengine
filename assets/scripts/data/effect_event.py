@@ -1018,7 +1018,7 @@ datas = _tools.RODict({
     13090157: _tools.RODict({
         "ID": 13090157,
         "Event": "onSkill",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090157,
         "Target": "self",
         "EventCD": 5.0
@@ -1178,7 +1178,7 @@ datas = _tools.RODict({
     13090220: _tools.RODict({
         "ID": 13090220,
         "Event": "onBeat",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090220,
         "Target": "other",
         "EventCD": 10.0
@@ -1978,7 +1978,7 @@ datas = _tools.RODict({
     13090336: _tools.RODict({
         "ID": 13090336,
         "Event": "onSkill",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090336,
         "Target": "self",
         "EventCD": 120.0
@@ -1986,7 +1986,7 @@ datas = _tools.RODict({
     13090337: _tools.RODict({
         "ID": 13090337,
         "Event": "onDodge",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090337,
         "Target": "self",
         "EventCD": 0.0
@@ -1994,7 +1994,7 @@ datas = _tools.RODict({
     13090338: _tools.RODict({
         "ID": 13090338,
         "Event": "onBeat",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090338,
         "Target": "self",
         "EventCD": 60.0
@@ -2002,7 +2002,7 @@ datas = _tools.RODict({
     13090339: _tools.RODict({
         "ID": 13090339,
         "Event": "onHPModify",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090339,
         "Target": "self",
         "EventCD": 60.0
@@ -2010,7 +2010,7 @@ datas = _tools.RODict({
     13090340: _tools.RODict({
         "ID": 13090340,
         "Event": "onHPModify",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090340,
         "Target": "self",
         "EventCD": 60.0
@@ -2018,7 +2018,7 @@ datas = _tools.RODict({
     13090341: _tools.RODict({
         "ID": 13090341,
         "Event": "onHPModify",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090341,
         "Target": "self",
         "EventCD": 60.0
@@ -2026,7 +2026,7 @@ datas = _tools.RODict({
     13090342: _tools.RODict({
         "ID": 13090342,
         "Event": "onHPModify",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090342,
         "Target": "self",
         "EventCD": 60.0
@@ -2202,7 +2202,7 @@ datas = _tools.RODict({
     13090364: _tools.RODict({
         "ID": 13090364,
         "Event": "onHPModify",
-        "EventSourceType": 0,
+        "EventSourceType": 1,
         "Action": _13090364,
         "Target": "self",
         "EventCD": 120.0

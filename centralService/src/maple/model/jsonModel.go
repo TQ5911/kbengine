@@ -27,7 +27,12 @@ type RemoveServerRequest struct {
 	Id int `json:"id"`
 }
 
+type RemoveZoneRequest struct {
+	ZoneId int `json:"zone_id"`
+}
+
 type GetAllServerResponse struct {
 	Servers []Server          `json:"servers"`
+	Zones   []ZoneData        `json:"zones"`
 	KV      map[string]string `json:"kv"`
 }

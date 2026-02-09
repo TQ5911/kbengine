@@ -83,8 +83,8 @@ class Teleporter(iCell.ICell, iTimer.ITimer, iGameEntity.IGameEntity,
         if self._checkBadEnt(user):
             return
 
-        if self.teleportType == gameconst.TeleporterType.CUBE_HALL:
-            user.enterCubeByFloorConfig()
+        if self.teleportType == gameconst.TeleporterType.CUBE_RANDOM:
+            user.doRandomCubeRoom()
             return
 
         elif self.teleportType == gameconst.TeleporterType.CUBE_BACK:

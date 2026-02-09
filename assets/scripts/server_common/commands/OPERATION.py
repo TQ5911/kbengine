@@ -174,9 +174,14 @@ def disbanAvatar(su, gbId):
 @gm_cmd('$addWhite', (Str('accountName'),), RONE, BASE, '添加白名单', ALLSIDE, DEV_GROUPS)
 def addWhite(su, accountName):
     INFO_MSG('addWhite', accountName)
-    gamesql.addAccountWhiteList(accountName)
+    gamesql.addAccountWhiteList(accountName.split(','))
     return True, '执行成功'
 
+@gm_cmd('$deleteWhite', (Str('accountName'),), RONE, BASE, '移除白名单', ALLSIDE, DEV_GROUPS)
+def deleteWhite(su, accountName):
+    INFO_MSG('deleteWhite', accountName)
+    gamesql.deleteAccountWhiteList(accountName.split(','))
+    return True, '执行成功'
 
 @gm_cmd('$sendHotfixToPlayer', (Player("gbId/Id"), Str('version')), RARG(0), BASE, '发送热更到玩家', ALLSIDE, GOD_GROUPS)
 def sendHotfixToPlayer(su, player, version):

@@ -510,13 +510,6 @@
             <Arg>       POSITION_ARG    </Arg>
         </askAllMemberFollow>
 
-        <askOneMemberFollow>
-            <Arg>       MAILBOX         </Arg>
-            <Arg>       RAID_ID         </Arg>
-            <Arg>       PLAYER_GBID     </Arg>
-            <Arg>       PLAYER_GBID     </Arg>
-        </askOneMemberFollow>
-
         <cancelAllMemberFollow>
             <Arg>       MAILBOX         </Arg>
             <Arg>       RAID_ID         </Arg>
@@ -547,10 +540,6 @@
         <raidPrepareStopAutoMatch>
             <Arg>           RAID_ID       </Arg>
         </raidPrepareStopAutoMatch>
-
-        <onRaidAutoMatchTimeout>
-            <Arg>           RAID_ID       </Arg>
-        </onRaidAutoMatchTimeout>
 
         <newRaidPlayerMatched>
             <Arg>           RAID_ID      </Arg>

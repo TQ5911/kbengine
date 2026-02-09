@@ -35,11 +35,11 @@ func (self *GameServerService) clearQueue() {
 }
 
 func (self *GameServerService) tickQueue() {
-	conn := self.app.redisPool.Get()
-	defer conn.Close()
 	for {
+		conn := self.app.redisPool.Get()
 		<-self.queueTicker.C
 		onlineNum, err := redis.Int(conn.Do("get", "ServerOnlineNum_"+strconv.Itoa(int(self.hostId))))
+		conn.Close()
 		if err != nil {
 			appLog.Error("tickQueue get ServerOnlineNum_"+strconv.Itoa(int(self.hostId))+" failed", err.Error())
 			continue

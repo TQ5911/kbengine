@@ -395,21 +395,21 @@ class ITimer(DatetimeTimerMixin):
 
     def _cancelCallback(self, timerID, tag):
         if not timerID:
-            return
+            return gameconst.TIMER_CANCEL_RET_ZERO_TIMER
 
         data = self.__getTimerData(timerID)
         if not data:
-            return
+            return gameconst.TIMER_CANCEL_RET_NOT_DATA
 
         if self.isDestroyed:
-            return
+            return gameconst.TIMER_CANCEL_RET_DESTROY
 
         funcName, funcArgs, varTimerId, timerTag, clearTimerIdFunc, clearTimerIdArgs = data
         if tag != gametimer.TIMER_TAG_NONE and tag != timerTag:
             ERROR_MSG('cancel timer mismatch', timerID, '|', tag, '|', data, self.getControllers())
             for line in traceback.format_stack():
                 ERROR_MSG(line)
-            return
+            return gameconst.TIMER_CANCEL_RET_MISMATCH
         else:
             self.__popTimerData(timerID)
 
@@ -424,6 +424,8 @@ class ITimer(DatetimeTimerMixin):
             ERROR_MSG('invalid timerId', timerID, '|', tag, '|', data, self.getControllers())
             for line in traceback.format_stack():
                 ERROR_MSG(line)
+
+        return gameconst.TIMER_CANCEL_RET_SUCCESS
 
     def _cancelAllCallbacks(self):
         timerProp = getattr(self, TIMER_PROP)

@@ -19,7 +19,7 @@ datas = _tools.RODict({
         "ID": 3100,
         "floor": 1,
         "type": 3,
-        "weight": 5,
+        "weight": 0,
         "sign": 0
     }),
     3101: _tools.RODict({
@@ -27,7 +27,7 @@ datas = _tools.RODict({
         "floor": 1,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3102: _tools.RODict({
         "ID": 3102,
@@ -41,7 +41,7 @@ datas = _tools.RODict({
         "floor": 1,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3104: _tools.RODict({
         "ID": 3104,
@@ -62,7 +62,7 @@ datas = _tools.RODict({
         "floor": 1,
         "type": 1,
         "weight": 5,
-        "sign": 1
+        "sign": 0
     }),
     3107: _tools.RODict({
         "ID": 3107,
@@ -90,7 +90,7 @@ datas = _tools.RODict({
         "floor": 1,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3111: _tools.RODict({
         "ID": 3111,
@@ -104,7 +104,7 @@ datas = _tools.RODict({
         "floor": 1,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3113: _tools.RODict({
         "ID": 3113,
@@ -124,15 +124,15 @@ datas = _tools.RODict({
         "ID": 3115,
         "floor": 1,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3116: _tools.RODict({
         "ID": 3116,
         "floor": 1,
         "type": 1,
-        "weight": 5,
-        "sign": 0
+        "weight": 10,
+        "sign": 1
     }),
     3117: _tools.RODict({
         "ID": 3117,
@@ -176,11 +176,18 @@ datas = _tools.RODict({
         "weight": 5,
         "sign": 0
     }),
+    3123: _tools.RODict({
+        "ID": 3123,
+        "floor": 1,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
     3200: _tools.RODict({
         "ID": 3200,
         "floor": 2,
         "type": 3,
-        "weight": 5,
+        "weight": 0,
         "sign": 0
     }),
     3201: _tools.RODict({
@@ -188,7 +195,7 @@ datas = _tools.RODict({
         "floor": 2,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3202: _tools.RODict({
         "ID": 3202,
@@ -202,7 +209,7 @@ datas = _tools.RODict({
         "floor": 2,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3204: _tools.RODict({
         "ID": 3204,
@@ -215,14 +222,14 @@ datas = _tools.RODict({
         "ID": 3205,
         "floor": 2,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3206: _tools.RODict({
         "ID": 3206,
         "floor": 2,
         "type": 1,
-        "weight": 10,
+        "weight": 5,
         "sign": 0
     }),
     3207: _tools.RODict({
@@ -251,7 +258,7 @@ datas = _tools.RODict({
         "floor": 2,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3211: _tools.RODict({
         "ID": 3211,
@@ -265,7 +272,7 @@ datas = _tools.RODict({
         "floor": 2,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3213: _tools.RODict({
         "ID": 3213,
@@ -278,22 +285,22 @@ datas = _tools.RODict({
         "ID": 3214,
         "floor": 2,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3215: _tools.RODict({
         "ID": 3215,
         "floor": 2,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3216: _tools.RODict({
         "ID": 3216,
         "floor": 2,
         "type": 1,
-        "weight": 5,
-        "sign": 0
+        "weight": 10,
+        "sign": 1
     }),
     3217: _tools.RODict({
         "ID": 3217,
@@ -313,14 +320,14 @@ datas = _tools.RODict({
         "ID": 3219,
         "floor": 2,
         "type": 1,
-        "weight": 2,
+        "weight": 10,
         "sign": 0
     }),
     3220: _tools.RODict({
         "ID": 3220,
         "floor": 2,
         "type": 1,
-        "weight": 5,
+        "weight": 2,
         "sign": 0
     }),
     3221: _tools.RODict({
@@ -337,11 +344,18 @@ datas = _tools.RODict({
         "weight": 5,
         "sign": 0
     }),
+    3223: _tools.RODict({
+        "ID": 3223,
+        "floor": 2,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
     3300: _tools.RODict({
         "ID": 3300,
         "floor": 3,
         "type": 3,
-        "weight": 5,
+        "weight": 0,
         "sign": 0
     }),
     3301: _tools.RODict({
@@ -349,7 +363,7 @@ datas = _tools.RODict({
         "floor": 3,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3302: _tools.RODict({
         "ID": 3302,
@@ -363,13 +377,13 @@ datas = _tools.RODict({
         "floor": 3,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3304: _tools.RODict({
         "ID": 3304,
         "floor": 3,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3305: _tools.RODict({
@@ -383,7 +397,7 @@ datas = _tools.RODict({
         "ID": 3306,
         "floor": 3,
         "type": 1,
-        "weight": 10,
+        "weight": 5,
         "sign": 0
     }),
     3307: _tools.RODict({
@@ -412,7 +426,7 @@ datas = _tools.RODict({
         "floor": 3,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3311: _tools.RODict({
         "ID": 3311,
@@ -426,62 +440,62 @@ datas = _tools.RODict({
         "floor": 3,
         "type": 1,
         "weight": 10,
-        "sign": 1
+        "sign": 0
     }),
     3313: _tools.RODict({
         "ID": 3313,
         "floor": 3,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3314: _tools.RODict({
         "ID": 3314,
         "floor": 3,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3315: _tools.RODict({
         "ID": 3315,
         "floor": 3,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3316: _tools.RODict({
         "ID": 3316,
         "floor": 3,
         "type": 1,
-        "weight": 5,
-        "sign": 0
+        "weight": 10,
+        "sign": 1
     }),
     3317: _tools.RODict({
         "ID": 3317,
         "floor": 3,
         "type": 1,
-        "weight": 10,
+        "weight": 5,
         "sign": 0
     }),
     3318: _tools.RODict({
         "ID": 3318,
         "floor": 3,
         "type": 1,
-        "weight": 2,
+        "weight": 10,
         "sign": 0
     }),
     3319: _tools.RODict({
         "ID": 3319,
         "floor": 3,
         "type": 1,
-        "weight": 5,
+        "weight": 10,
         "sign": 0
     }),
     3320: _tools.RODict({
         "ID": 3320,
         "floor": 3,
         "type": 1,
-        "weight": 10,
+        "weight": 2,
         "sign": 0
     }),
     3321: _tools.RODict({
@@ -497,25 +511,330 @@ datas = _tools.RODict({
         "type": 1,
         "weight": 5,
         "sign": 0
+    }),
+    3323: _tools.RODict({
+        "ID": 3323,
+        "floor": 3,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3400: _tools.RODict({
+        "ID": 3400,
+        "floor": 4,
+        "type": 3,
+        "weight": 5,
+        "sign": 0
+    }),
+    3401: _tools.RODict({
+        "ID": 3401,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3402: _tools.RODict({
+        "ID": 3402,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3403: _tools.RODict({
+        "ID": 3403,
+        "floor": 4,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3404: _tools.RODict({
+        "ID": 3404,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3405: _tools.RODict({
+        "ID": 3405,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3406: _tools.RODict({
+        "ID": 3406,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3407: _tools.RODict({
+        "ID": 3407,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3408: _tools.RODict({
+        "ID": 3408,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3409: _tools.RODict({
+        "ID": 3409,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3410: _tools.RODict({
+        "ID": 3410,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3411: _tools.RODict({
+        "ID": 3411,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3412: _tools.RODict({
+        "ID": 3412,
+        "floor": 4,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3413: _tools.RODict({
+        "ID": 3413,
+        "floor": 4,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3414: _tools.RODict({
+        "ID": 3414,
+        "floor": 4,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3415: _tools.RODict({
+        "ID": 3415,
+        "floor": 4,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3417: _tools.RODict({
+        "ID": 3417,
+        "floor": 4,
+        "type": 1,
+        "weight": 2,
+        "sign": 0
+    }),
+    3418: _tools.RODict({
+        "ID": 3418,
+        "floor": 4,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3419: _tools.RODict({
+        "ID": 3419,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3420: _tools.RODict({
+        "ID": 3420,
+        "floor": 4,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3421: _tools.RODict({
+        "ID": 3421,
+        "floor": 4,
+        "type": 2,
+        "weight": 0,
+        "sign": 0
+    }),
+    3500: _tools.RODict({
+        "ID": 3500,
+        "floor": 5,
+        "type": 3,
+        "weight": 5,
+        "sign": 0
+    }),
+    3501: _tools.RODict({
+        "ID": 3501,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3502: _tools.RODict({
+        "ID": 3502,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3503: _tools.RODict({
+        "ID": 3503,
+        "floor": 5,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3504: _tools.RODict({
+        "ID": 3504,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3505: _tools.RODict({
+        "ID": 3505,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3506: _tools.RODict({
+        "ID": 3506,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3507: _tools.RODict({
+        "ID": 3507,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3508: _tools.RODict({
+        "ID": 3508,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3509: _tools.RODict({
+        "ID": 3509,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3510: _tools.RODict({
+        "ID": 3510,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3511: _tools.RODict({
+        "ID": 3511,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3512: _tools.RODict({
+        "ID": 3512,
+        "floor": 5,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3513: _tools.RODict({
+        "ID": 3513,
+        "floor": 5,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3514: _tools.RODict({
+        "ID": 3514,
+        "floor": 5,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3515: _tools.RODict({
+        "ID": 3515,
+        "floor": 5,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3517: _tools.RODict({
+        "ID": 3517,
+        "floor": 5,
+        "type": 1,
+        "weight": 2,
+        "sign": 0
+    }),
+    3518: _tools.RODict({
+        "ID": 3518,
+        "floor": 5,
+        "type": 1,
+        "weight": 5,
+        "sign": 0
+    }),
+    3519: _tools.RODict({
+        "ID": 3519,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3520: _tools.RODict({
+        "ID": 3520,
+        "floor": 5,
+        "type": 1,
+        "weight": 10,
+        "sign": 0
+    }),
+    3521: _tools.RODict({
+        "ID": 3521,
+        "floor": 5,
+        "type": 2,
+        "weight": 0,
+        "sign": 0
     })
 })
 minKey = 3100
-maxKey = 3322
+maxKey = 3521
 
 floor2Rooms = _tools.RODict({
-    1: _tools.ROList([3101, 3102, 3103, 3104, 3105, 3106, 3107, 3108, 3109, 3110, 3111, 3112, 3113, 3114, 3115, 3116, 3117, 3118, 3119, 3120, 3122]),
-    2: _tools.ROList([3201, 3202, 3203, 3204, 3205, 3206, 3207, 3208, 3209, 3210, 3211, 3212, 3213, 3214, 3215, 3216, 3217, 3218, 3219, 3220, 3222]),
-    3: _tools.ROList([3301, 3302, 3303, 3304, 3305, 3306, 3307, 3308, 3309, 3310, 3311, 3312, 3313, 3314, 3315, 3316, 3317, 3318, 3319, 3320, 3322]),
+    1: _tools.ROList([3101, 3102, 3103, 3104, 3105, 3106, 3107, 3108, 3109, 3110, 3111, 3112, 3113, 3114, 3115, 3116, 3117, 3118, 3119, 3120, 3122, 3123]),
+    2: _tools.ROList([3201, 3202, 3203, 3204, 3205, 3206, 3207, 3208, 3209, 3210, 3211, 3212, 3213, 3214, 3215, 3216, 3217, 3218, 3219, 3220, 3222, 3223]),
+    3: _tools.ROList([3301, 3302, 3303, 3304, 3305, 3306, 3307, 3308, 3309, 3310, 3311, 3312, 3313, 3314, 3315, 3316, 3317, 3318, 3319, 3320, 3322, 3323]),
+    4: _tools.ROList([3401, 3402, 3403, 3404, 3405, 3406, 3407, 3408, 3409, 3410, 3411, 3412, 3413, 3414, 3415, 3417, 3418, 3419, 3420]),
+    5: _tools.ROList([3501, 3502, 3503, 3504, 3505, 3506, 3507, 3508, 3509, 3510, 3511, 3512, 3513, 3514, 3515, 3517, 3518, 3519, 3520]),
 })
 floor2Cow = _tools.RODict({
     1: 3121,
     2: 3221,
     3: 3321,
+    4: 3421,
+    5: 3521,
 })
 floor2SignMapIds = _tools.RODict({
-    1: _tools.ROList([3101, 3103, 3106, 3110, 3112]),
-    2: _tools.ROList([3201, 3203, 3210, 3212]),
-    3: _tools.ROList([3301, 3303, 3310, 3312]),
+    1: _tools.ROList([3116]),
+    2: _tools.ROList([3216]),
+    3: _tools.ROList([3316]),
 })
 floorTypeMapDic = _tools.RODict({
     1 : _tools.RODict({
@@ -544,6 +863,7 @@ floorTypeMapDic = _tools.RODict({
             3119,
             3120,
             3122,
+            3123,
         ]),
         2 : _tools.ROList([
             3121,
@@ -575,6 +895,7 @@ floorTypeMapDic = _tools.RODict({
             3219,
             3220,
             3222,
+            3223,
         ]),
         2 : _tools.ROList([
             3221,
@@ -606,9 +927,68 @@ floorTypeMapDic = _tools.RODict({
             3319,
             3320,
             3322,
+            3323,
         ]),
         2 : _tools.ROList([
             3321,
+        ]),
+    }),
+    4 : _tools.RODict({
+        3 : _tools.ROList([
+            3400,
+        ]),
+        1 : _tools.ROList([
+            3401,
+            3402,
+            3403,
+            3404,
+            3405,
+            3406,
+            3407,
+            3408,
+            3409,
+            3410,
+            3411,
+            3412,
+            3413,
+            3414,
+            3415,
+            3417,
+            3418,
+            3419,
+            3420,
+        ]),
+        2 : _tools.ROList([
+            3421,
+        ]),
+    }),
+    5 : _tools.RODict({
+        3 : _tools.ROList([
+            3500,
+        ]),
+        1 : _tools.ROList([
+            3501,
+            3502,
+            3503,
+            3504,
+            3505,
+            3506,
+            3507,
+            3508,
+            3509,
+            3510,
+            3511,
+            3512,
+            3513,
+            3514,
+            3515,
+            3517,
+            3518,
+            3519,
+            3520,
+        ]),
+        2 : _tools.ROList([
+            3521,
         ]),
     }),
 })

@@ -133,7 +133,7 @@ datas = _tools.RODict({
     }),
     "receivePacketThankMsg": _tools.RODict({
         "ID": "receivePacketThankMsg",
-        "value": ('<color=&color13>{0}</color> 老板大气！祝你爆神装！', '多谢 <color=&color13>{0}</color> 的红包，大佬霸气！', '<color=&color13>{0}</color>红包给力！小弟拜谢！', '感谢 <color=&color13>{0}</color> 的红包！战力+10086！', '<color=&color13>{0}</color> 红包威武，小弟拜谢！'),
+        "value": ('<color=#c4971d>{0}</color> 老板大气！祝你爆神装！', '多谢 <color=#c4971d>{0}</color> 的红包，大佬霸气！', '<color=#c4971d>{0}</color>红包给力！小弟拜谢！', '感谢 <color=#c4971d>{0}</color> 的红包！战力+10086！', '<color=#c4971d>{0}</color> 红包威武，小弟拜谢！'),
     }),
     "sendPacketMsg": _tools.RODict({
         "ID": "sendPacketMsg",

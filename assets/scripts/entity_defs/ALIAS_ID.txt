@@ -336,7 +336,7 @@ Npc property adjCD 16
 Npc property antiFatal 58
 Npc property bePushedSpeed 22
 Npc property bornState 17
-Npc property danceTime 4
+Npc property deathTime 5
 Npc property dmgArmor 55
 Npc property force 184
 Npc property fullHp 80

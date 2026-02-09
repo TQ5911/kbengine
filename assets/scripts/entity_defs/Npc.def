@@ -63,11 +63,11 @@
             <Default>   0                </Default>
         </belongFestivalId>
 
-        <danceTime>
-            <Type>      TIMESTAMP   </Type>
+        <deathTime>
+            <Type>      LONGTIME        </Type>
             <Flags>     ALL_CLIENTS     </Flags>
-            <Default>   0           </Default>
-        </danceTime>
+            <Default>   0               </Default>
+        </deathTime>
 
     </Properties>
 

@@ -133,23 +133,23 @@ def _34010007(e):
 def _34010008(e):
     return 7
 def _34010009(e):
-    return int(e.level*3+57)
+    return int(e.level*4+56)
 def _34010010(e):
     return 6
 def _34010011(e):
     return 6
 def _34010012(e):
-    return int(e.level+ 26)
+    return int(e.level*2+ 25)
 def _34010013(e):
-    return int(e.level*3 + 57)
+    return int(e.level*4 + 56)
 def _34010014(e):
-    return int(e.level*3 + 57)
+    return int(e.level*4 + 56)
 def _34010015(e):
     return 7
 def _34010016(e):
-     return int(e.level + 26)
+     return int(e.level*2 + 25)
 def _34010017(e):
-    return int(e.level + 26)
+    return int(e.level*2 + 25)
 def _34010018(e):
     return 6
 def _34010019(e):

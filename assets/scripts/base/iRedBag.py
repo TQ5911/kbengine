@@ -20,6 +20,7 @@ import message_Message_def as MMD
 import agent_agentFunction as A_AFD
 import gamedecorator
 import visible_visible as UVVD
+import random
 
 
 class IRedBag(object):
@@ -231,10 +232,10 @@ class IRedBag(object):
     # 请求领取红包
     @gamedecorator.checkGameconfigEnable('redPacket')
     @AuthClsWraper.authWithPermission(A_AFD.UIRedPacketPanel)
-    def reqFetchRedBag(self, exposed, redbagId):
-        self._reqFetchRedBag(redbagId)
+    def reqFetchRedBag(self, exposed, redbagId, autoReply):
+        self._reqFetchRedBag(redbagId, autoReply)
 
-    def _reqFetchRedBag(self, redbagId):
+    def _reqFetchRedBag(self, redbagId, autoReply=True):
         # INFO_MSG("reqFetchRedBag: %s" % redbagId)
         if not self.checkPlayerLimit():
             return
@@ -248,11 +249,14 @@ class IRedBag(object):
         if self.getFetchRedBagTime(redbagId) > 0:
             return
 
+        # 暂存自动回复标记
+        self.setTempMiscProp(redbagId, autoReply)
         gameengine.getGlobalBase('RedBagStub').doFetchRedBag(self, redbagId, self.gbID, self.guildUUIDBase, self.characterName, False)
 
     def onFetchRedBag(self, redbagId, money, releaseTime, fetchDict):
         INFO_MSG("onFetchRedBag: {} {} {}".format(redbagId, money, fetchDict))
 
+        autoReply = self.popTempMiscProp(redbagId)
         # 领红包
         if money > 0:
             self.addDailyData(gameconst.AvatarDailyProps.fetchRbNum, 1)
@@ -265,6 +269,15 @@ class IRedBag(object):
             self.addWealth(src, addWealthVal, redbagId, m_desc)
 
             # fetchDict['hasFetch'] = 1
+
+            if autoReply and self.gbID != fetchDict['playerGbId']:
+                thankMsgs = CC_CCD.datas.get('receivePacketThankMsg', {}).get('value')
+                # 自动回复
+                replyMsg = random.choice(thankMsgs).format(fetchDict['playerName'])
+                if fetchDict['channel'] == gameconst.RedBagChannel.WORLD:
+                    self.afterCheckWorldChatMsg(replyMsg)
+                else:
+                    self.afterCheckGuildChatMsg(True, False, True, replyMsg)
 
         # 展示红包数据
         self.client.onShowRedBagInfo(redbagId, money, fetchDict)
@@ -310,8 +323,8 @@ class IRedBag(object):
     def gmCreateRedBag(self, redbagType, channel, money, num, desc):
         self._reqReleaseRedBag(redbagType, channel, money, num, desc)
 
-    def gmFetchRedBag(self, redbagId):
-        self._reqFetchRedBag(redbagId)
+    def gmFetchRedBag(self, redbagId, autoReply):
+        self._reqFetchRedBag(redbagId, autoReply)
 
     def gmShowData(self):
         INFO_MSG('gmPlayerShowReleaseData: ', self.releaseRedBagDict.keys())

@@ -16,25 +16,15 @@ type REDISConfig struct {
 type AppConfig struct {
 	ClientServiceAddr     string
 	GameServerServiceAddr string
-	AppSecret             string
 	Mysql                 MYSQLConfig
-	EnablePasswdLogin     bool
-	NeedCDKey             bool
-	CdKeyServer           string
 	CentralServerId       uint32
 	AddressForDebug       string
 	IdipHttpServer        string
 	LogPath               string
 	LogLevel              string
 	LogRotateSize         string
-	HttpServerListDir     map[string]interface{}
-	MapleServer           map[string]interface{}
 	RedisServer           REDISConfig
 	AccountTypes          []uint8
-	YidunCaptcha          uint8
-	YidunCaptchaID        string
-	YidunSecurityID       string
-	YidunSecurityKey      string
 	TapTap				  map[string]interface{}
 	Official			  map[string]interface{}
 }

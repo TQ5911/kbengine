@@ -287,6 +287,14 @@ datas = _tools.RODict({
         "tmxRes": "hunDunHuiLang_09",
         "weatherType": 0,
     }),
+    "field_hundunhuilang_10": _tools.RODict({
+        "sceneRes": "field_hundunhuilang_10",
+        "sceneName": "混沌回廊擂台",
+        "defaultMapID": 3116,
+        "returnPos": None,
+        "tmxRes": "hunDunHuiLang_10",
+        "weatherType": 0,
+    }),
     "field_xinyuanchengzhan": _tools.RODict({
         "sceneRes": "field_xinyuanchengzhan",
         "sceneName": "城战",

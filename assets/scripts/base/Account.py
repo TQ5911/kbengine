@@ -295,6 +295,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 self.userInfoId,
                 _now,
                 self.packageSource,
+                _appearance.faceData.faceId(),
+                _appearance.faceData.skinColorId(),
+                _appearance.faceData.hairId(),
+                _appearance.faceData.hairColorId(),
             )
         else:
             ERROR_MSG('failed to create avatar', self.accountName)
@@ -521,7 +525,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         isForceHost: 是否强制以host登录游戏
         """
         if not self.isAuthHost(gbId):
-            if not gameconfig.visibleConfigEable('roleAuthorization'):
+            if not gameconfig.visibleConfigEnabled('roleAuthorization'):
                 return
 
             gamesql.getAuthExpire(gbId, functools.partial(self._onGetAuthDataWhenSelectAvatar, isForceHost))
@@ -1304,20 +1308,6 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.writeToDB(callBackFunc)
         else:
             self.writeToDB()
-
-    # def makeCreateAvatarLog(self, _appearance, roleId='', roleName='', isSuccess=False):
-    #     gamelog.makeWLog("CreateRole", {
-    #         "ip": self.clientIP,
-    #         "udid": str(self.deviceUniqueIdentifier),
-    #         "app_channel": str(self.channelId),
-    #         "account_id": str(self.accountName),
-    #         "role_id": roleId,
-    #         "role_name": roleName,
-    #         "face_id": str(_appearance.faceData.faceID()),
-    #         "clothes_id": str(_appearance.outfitData.clothesId),
-    #         "create_time": str(utils.getTimestamp64()),
-    #         "is_sucess": str(isSuccess),
-    #     })
 
     def getClientData(self):
         return {

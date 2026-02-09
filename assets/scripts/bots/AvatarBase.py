@@ -44,6 +44,7 @@ class AvatarBase(KBEngine.Entity):
     def onApplyJoinRaidLonelyFailed(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onApplyJoinTeamFailed(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
     def onApplyJoinTeamMsg(self, arg0, arg1, arg2, arg3, arg4, arg5): pass
+    def onArenaKing(self, arg0): pass
     def onAvatarTotalScoreInitCompleted(self): pass
     def onBackSelectCharacter(self): pass
     def onBagItemsDailyUpdate(self, arg0): pass
@@ -81,6 +82,7 @@ class AvatarBase(KBEngine.Entity):
     def onCrossServerTokenResp(self, arg0, arg1, arg2): pass
     def onCubeAutoRenewSwitch(self, arg0, arg1): pass
     def onCubeLoginData(self, arg0, arg1, arg2, arg3): pass
+    def onCubePrayResult(self, arg0): pass
     def onCubeRoomEndTime(self, arg0): pass
     def onCubeRoomLeftTime(self, arg0): pass
     def onDailyUseMoneyChanged(self, arg0): pass
@@ -213,6 +215,7 @@ class AvatarBase(KBEngine.Entity):
     def onLeaderBoardGuild(self, arg0, arg1, arg2, arg3, arg4): pass
     def onLeaveTeam(self): pass
     def onLeveUpMeridianPointTo(self, arg0, arg1, arg2): pass
+    def onLevelUpPet(self, arg0, arg1, arg2, arg3): pass
     def onLightPillarUpdate(self, arg0, arg1): pass
     def onLockItemSucc(self, arg0, arg1, arg2, arg3): pass
     def onMapUnlockMessagePre(self, arg0): pass

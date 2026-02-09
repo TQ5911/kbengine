@@ -309,6 +309,7 @@ namespace KBEngine
 		public virtual void onApplyJoinRaidLonelyFailed(UInt16 arg1, UInt64 arg2, UInt16 arg3, UInt32 arg4, string arg5, SByte arg6) {} 
 		public virtual void onApplyJoinTeamFailed(UInt16 arg1, UInt64 arg2, UInt16 arg3, UInt32 arg4, string arg5, SByte arg6) {} 
 		public virtual void onApplyJoinTeamMsg(UInt64 arg1, string arg2, UInt32 arg3, UInt16 arg4, Byte arg5, Int32 arg6) {} 
+		public virtual void onArenaKing(Int32 arg1) {} 
 		public virtual void onAvatarTotalScoreInitCompleted() {} 
 		public virtual void onBackSelectCharacter() {} 
 		public virtual void onBagItemsDailyUpdate(List<UInt16> arg1) {} 
@@ -344,6 +345,7 @@ namespace KBEngine
 		public virtual void onCrossServerTokenResp(string arg1, UInt32 arg2, Int32 arg3) {} 
 		public virtual void onCubeAutoRenewSwitch(Byte arg1, CUBE_SWITCH arg2) {} 
 		public virtual void onCubeLoginData(UInt32 arg1, Byte arg2, CUBE_SWITCH arg3, List<BAG_ITEM_BRIEF_VAL> arg4) {} 
+		public virtual void onCubePrayResult(Byte arg1) {} 
 		public virtual void onCubeRoomEndTime(UInt32 arg1) {} 
 		public virtual void onCubeRoomLeftTime(UInt32 arg1) {} 
 		public virtual void onDailyUseMoneyChanged(UInt64 arg1) {} 
@@ -471,6 +473,7 @@ namespace KBEngine
 		public virtual void onLeaderBoardGuild(UInt16 arg1, List<LEADER_BOARD_GUILD_DATA_INFO> arg2, Byte arg3, Byte arg4, UInt16 arg5) {} 
 		public virtual void onLeaveTeam() {} 
 		public virtual void onLeveUpMeridianPointTo(Byte arg1, Byte arg2, Byte arg3) {} 
+		public virtual void onLevelUpPet(UInt32 arg1, UInt16 arg2, UInt16 arg3, Byte arg4) {} 
 		public virtual void onLightPillarUpdate(List<Int32> arg1, List<Byte> arg2) {} 
 		public virtual void onLockItemSucc(Byte arg1, UInt16 arg2, UInt32 arg3, SByte arg4) {} 
 		public virtual void onMapUnlockMessagePre(UInt16 arg1) {} 
@@ -936,6 +939,10 @@ namespace KBEngine
 					Int32 onApplyJoinTeamMsg_arg6 = stream.readInt32();
 					onApplyJoinTeamMsg(onApplyJoinTeamMsg_arg1, onApplyJoinTeamMsg_arg2, onApplyJoinTeamMsg_arg3, onApplyJoinTeamMsg_arg4, onApplyJoinTeamMsg_arg5, onApplyJoinTeamMsg_arg6);
 					break;
+				case 259:
+					Int32 onArenaKing_arg1 = stream.readInt32();
+					onArenaKing(onArenaKing_arg1);
+					break;
 				case 472:
 					onAvatarTotalScoreInitCompleted();
 					break;
@@ -1140,6 +1147,10 @@ namespace KBEngine
 					CUBE_SWITCH onCubeLoginData_arg3 = ((DATATYPE_CUBE_SWITCH)method.args[2]).createFromStreamEx(stream);
 					List<BAG_ITEM_BRIEF_VAL> onCubeLoginData_arg4 = ((DATATYPE_AnonymousArray_10025)method.args[3]).createFromStreamEx(stream);
 					onCubeLoginData(onCubeLoginData_arg1, onCubeLoginData_arg2, onCubeLoginData_arg3, onCubeLoginData_arg4);
+					break;
+				case 260:
+					Byte onCubePrayResult_arg1 = stream.readUint8();
+					onCubePrayResult(onCubePrayResult_arg1);
 					break;
 				case 688:
 					UInt32 onCubeRoomEndTime_arg1 = stream.readUint32();
@@ -1816,6 +1827,13 @@ namespace KBEngine
 					Byte onLeveUpMeridianPointTo_arg2 = stream.readUint8();
 					Byte onLeveUpMeridianPointTo_arg3 = stream.readUint8();
 					onLeveUpMeridianPointTo(onLeveUpMeridianPointTo_arg1, onLeveUpMeridianPointTo_arg2, onLeveUpMeridianPointTo_arg3);
+					break;
+				case 247:
+					UInt32 onLevelUpPet_arg1 = stream.readUint32();
+					UInt16 onLevelUpPet_arg2 = stream.readUint16();
+					UInt16 onLevelUpPet_arg3 = stream.readUint16();
+					Byte onLevelUpPet_arg4 = stream.readUint8();
+					onLevelUpPet(onLevelUpPet_arg1, onLevelUpPet_arg2, onLevelUpPet_arg3, onLevelUpPet_arg4);
 					break;
 				case 141:
 					List<Int32> onLightPillarUpdate_arg1 = ((DATATYPE_AnonymousArray_10008)method.args[0]).createFromStreamEx(stream);

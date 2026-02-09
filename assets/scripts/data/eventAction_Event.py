@@ -207,6 +207,24 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "OpenTaskDialogPanel": _tools.RODict({
+        "ID": "OpenTaskDialogPanel",
+        "EventID": 10033,
+        "sendType": 0,
+        "npcId": None
+    }),
+    "cubePray": _tools.RODict({
+        "ID": "cubePray",
+        "EventID": 10034,
+        "sendType": 0,
+        "npcId": None
+    }),
+    "OpenGuildStore": _tools.RODict({
+        "ID": "OpenGuildStore",
+        "EventID": 10035,
+        "sendType": 0,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,
@@ -241,6 +259,12 @@ datas = _tools.RODict({
         "ID": "addEquipWashAnima",
         "EventID": 20006,
         "sendType": 1,
+        "npcId": None
+    }),
+    "GettaskPopup": _tools.RODict({
+        "ID": "GettaskPopup",
+        "EventID": 20007,
+        "sendType": 2,
         "npcId": None
     }),
     "taskRepeat": _tools.RODict({

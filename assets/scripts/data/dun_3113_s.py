@@ -11,13 +11,16 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 31130001,
-        "PosX": 167.698,
-        "PosY": 527.809,
-        "PosZ": 107.4192,
+        "PosX": 167.6708,
+        "PosY": 527.8172,
+        "PosZ": 112.0054,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "TelDir": 0.0,
           "TelX": 39.52325,
           "TelY": 39.0038,
@@ -3408,6 +3411,80 @@ datas ={
             "AreaType": 1,
             "Radius": 40.0,
             "Remark": "\u53f3"
+          }
+        }
+      },
+      "Teleporter": {
+        "31138010": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Teleporter",
+          "ClassNameType": 2,
+          "CustomID": "",
+          "Dir": 305.4991,
+          "DisplayName": "",
+          "EntityID": 17310002,
+          "ID": 31138010,
+          "PosX": 175.2635,
+          "PosY": 527.7433,
+          "PosZ": 107.7879,
+          "Props": {
+            "CameraId": 0,
+            "GateType": 1,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "TelDir": 305.4991,
+            "TelX": 175.2635,
+            "TelY": 527.7433,
+            "TelZ": 107.7879
+          }
+        },
+        "31138011": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Teleporter",
+          "ClassNameType": 2,
+          "CustomID": "",
+          "Dir": 316.5647,
+          "DisplayName": "",
+          "EntityID": 17310002,
+          "ID": 31138011,
+          "PosX": 242.8079,
+          "PosY": 524.7935,
+          "PosZ": 48.93368,
+          "Props": {
+            "CameraId": 0,
+            "GateType": 1,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "TelDir": 305.4991,
+            "TelX": 175.2635,
+            "TelY": 527.7433,
+            "TelZ": 107.7879
+          }
+        },
+        "31138012": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Teleporter",
+          "ClassNameType": 2,
+          "CustomID": "",
+          "Dir": 32.78884,
+          "DisplayName": "",
+          "EntityID": 17310002,
+          "ID": 31138012,
+          "PosX": 91.38422,
+          "PosY": 524.7932,
+          "PosZ": 47.16385,
+          "Props": {
+            "CameraId": 0,
+            "GateType": 1,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "TelDir": 305.4991,
+            "TelX": 175.2635,
+            "TelY": 527.7433,
+            "TelZ": 107.7879
           }
         }
       }

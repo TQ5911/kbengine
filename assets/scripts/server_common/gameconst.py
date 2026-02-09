@@ -31,6 +31,7 @@ GLOBALDATA_KEY_REG_NUM = 'kRegAccountNum'
 GLOBALDATA_KEY_TODAY_REG_NUM = 'kTodayRegAccountNum'
 GLOBALDATA_KEY_TOTAL_ONLINE_NUM = 'kAvatarNum'
 GLOBALDATA_KEY_CELLAPP_INITED = 'kCellappInited'
+GLOBALDATA_KEY_SVIP_ONLINE_NUM = 'kSVIPOnlineNum'
 
 gameUpdateHertz = 10
 
@@ -131,6 +132,7 @@ ENTITY_POS_POLICY_MAX_NUM = 1000
 GAME_CONFIG_TYPE_WONDER_LAND = 1
 GAME_CONFIG_TYPE_SQUARE = 2
 GAME_CONFIG_TYPE_ROLE_AUTHORIZATION = 3
+GAME_CONFIG_TYPE_AUTO_COMBAT = 4
 
 LEGAL_AGE_OF_MAJORITY = 18
 
@@ -368,6 +370,7 @@ class ItemSubType(object):
     HEAL_MP = 2
     Equipment = 4
     EQUIP_CORE = 6
+    TASK = 15
     ExtractReward = 52
 
 class AvatarProps(metaclass=UniqueIntEnum):
@@ -512,6 +515,7 @@ class AvatarProps(metaclass=UniqueIntEnum):
     firstPcLoginTimestamp = 370
     claimPcLoginRewardTimestamp = 371
     autoCombatStartTimestamp = 372
+    takeDropInfo = 373
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
@@ -1078,6 +1082,7 @@ class RedisKey(object):
     GIFT_CODE_TBL = 'global:gift_codes'
     PRIVILEGE_TBL = 'g:vip'
     LEVEL_RUSH_RANK_DATA_KEY = 'g:alrr'
+    NORMAL_ONLINE_NUM = 'g:normal_online_num'
 
 class ForbidType(object):
     SHORT_FORBID = 1  # 临时封禁
@@ -1147,6 +1152,10 @@ class ChatSysGMErr:
     FAIL = 1
     DBERR = 2
 
+CREEP_TAG_LARGE_ENT = 1 # 超大视野的实体
+CREEP_TAG_DEATH_MSG = 2 # 死亡会喊话
+CREEP_TAG_ANTI_TAUNT = 98 # 嘲讽反制
+CREEP_TAG_ANTI_MOVE = 99 # 推拉反制
 
 class SkillTag(metaclass=UniqueIntEnum):
     Hot = 13
@@ -2544,6 +2553,9 @@ class EquipTypes(object):
         SUBTYPE_BELT_MONK, SUBTYPE_BELT_MAGE, SUBTYPE_BELT_WARRIOR
                    ) + SUBTYPE_ORNAMENTS_RING + SUBTYPE_ORNAMENTS_BRACELET
 
+EQUIP_OPR_DROP = 1 # 用于log， 掉落
+EQUIP_OPR_PICK = 2 # 用于log， 拾取
+
 class BodyEquipSlot(object):
     EQUIP_WEAPON_SLOT = 1
     EQUIP_CLOTHES_SLOT = 2
@@ -2649,6 +2661,16 @@ SEND_MSG_PACK_NUM = 10
 SEND_INIT_PACK_NUM = 10
 FRIEND_MSG_MAX_LEN = 999
 
+
+# <!-- 1：发送申请，2：接受申请，3：删除好友，4：拉黑 -->
+FRIEND_OPR_SEND_REQ = 1
+FRIEND_OPR_ACCEPT_REQ = 2
+FRIEND_OPR_DELETE = 3
+FRIEND_OPR_BLACKLIST = 4
+
+ADD_FRIEND_ONLINE = 1
+ADD_FRIEND_ACCEPT = 2
+
 class PacketSendStatus(object):
     BEGIN = 1
     MID = 2
@@ -2693,7 +2715,7 @@ class DissolveGuildReason(object):
 
 LEADER_BOARD_UPDATE_INTERVAL = 60 * 20
 LEADER_BOARD_PAGE_SIZE = 10
-
+LEADER_BOARD_MAX_LOG_SIZE = 100
 
 GUILD_APPLY_CTX_CHECK_TIME_OUT = 60
 GUILD_APPLY_TIME_OUT_DUR = 2 * ONE_DAY_SECONDS
@@ -2717,6 +2739,16 @@ GUILD_DONATE_CONTRIBUTION = 1
 GUILD_DONATE_MONEY = 1
 
 GUILD_INVITE_DURATION = 10
+
+GUILD_OPR_CREATE = 1 # 创建公会
+GUILD_OPR_JOIN = 2 # 加入工会
+GUILD_OPR_EXIT = 3 # 退出工会
+GUILD_OPR_DISSOLVE = 4 # 解散公会
+
+GUILD_UNION_FORGE = 1 # 联盟建立
+GUILD_UNION_BREAK = 2 # 联盟破裂
+GUILD_HOSTILE_DECLARE = 3 # 敌对宣战
+GUILD_HOSTILE_CEASE = 4 # 敌对撤销
 
 
 class GuildBuilding(object):
@@ -3071,6 +3103,10 @@ SEND_ENEMY_RECORD_BATCH_NUM = 10
 class MoralType(object):
     MORAL_NOT_CHANGE = 0 # 善恶值保持不变
     MORAL_COULD_CHANGE = 1
+
+
+MORAL_SRC_TYPE_KILL_PLAYER = 1 # 杀人
+MORAL_SRC_TYPE_KILL_MONSTER = 2 # 杀怪物
 
 
 class DungeonFlowMoveAni(object):
@@ -3481,7 +3517,11 @@ LARGE_ENTITY_DEFAULT_AOI = 250
 
 class MonsterSuffix(object):
     # 对应creep base表中的nameSuffixID字段
+    ELITE = 4 # 头目
     BOSS = 5 # 首领
+    LUCKY = 7 # 幸运怪
+
+    NEED_LOG_SUFFIX = (ELITE, BOSS, LUCKY)
 
 class WorldLineSceneState(object):
     THUNDER = 0 # 落雷
@@ -3504,7 +3544,7 @@ CUBE_COW_DUR_INTERVAL = 5
 
 class TeleporterType(object):
     NONE = 0
-    CUBE_HALL = 1 # 混沌回廊大厅的传送门
+    CUBE_RANDOM = 1 # 在混沌回廊随机传送
     CUBE_BACK = 2 # 从奶牛房返回原房间
     TO_CUBE_COW = 3 # 传送到混沌回廊奶牛关
     TO_CUBE_MAP_ID = 4 # 进混沌回廊，customID作为mapId用
@@ -3629,10 +3669,6 @@ class AvatarDailyProps(metaclass=UniqueIntEnum):
 
 class AvatarWeeklyProps(metaclass=UniqueIntEnum):
     weeklyTest = 0
-
-class EffetEventSourceType(object):
-    NONE = 0
-    LINGSHOU_SKILL_BUFF = 1
 
 class EquipConstVale(object):
     # 装备强化破碎标记
@@ -3946,3 +3982,60 @@ class DunegonCompleteReasonType(metaclass=UniqueIntEnum):
     LEAVE = 2
     # 完成
     FINISHED = 3
+    
+SKILL_TIMER_LOG_QUEUE_MAX_CNT = 20
+
+
+TIMER_CANCEL_RET_SUCCESS = 0
+TIMER_CANCEL_RET_ZERO_TIMER = 1
+TIMER_CANCEL_RET_NOT_DATA = 2
+TIMER_CANCEL_RET_DESTROY = 3
+TIMER_CANCEL_RET_MISMATCH = 4
+
+
+SKILL_LOG_OPR_SET_TIMER = 1
+SKILL_LOG_OPR_REMOVE_TIMER = 2
+SKILL_LOG_OPR_ON_TIMER = 3
+
+class UserEventTag(object):
+    EVENT_ON_TEST = 'onTest'
+    EVENT_ON_GUILD_UNION_CHANGE = 'onGuildUnionChange'
+
+class ItemMovementType(object):
+    BagToWarehouse = 1
+    WarehouseToBag = 2
+
+class PetMakeTeamType(object):
+    # 出战
+    JOIN = 1
+    # 离开
+    LEAVE = 2
+
+class PetFollowType(object):
+    # 取消
+    CANCEL = 1
+    # 跟随
+    FOLLOW = 2
+
+class AuctionCollectDataType(object):
+    # 推荐大类关注
+    RECOMMEND_CATEGORY = 1
+    # 公示大类关注
+    PUBLICITY_CATEGORY = 2
+    # 公示物品关注
+    PUBLICITY_ITEM = 3
+
+
+class AuctionCollectOpType(object):
+    # 加入
+    ADD = 1
+    # 物品
+    REMOVE = 2
+
+class ForbiddenTaskIdOpType(object):
+    # 查询
+    QUERY = 1
+    # 加入
+    ADD = 2
+    # 移除
+    REMOVE = 3

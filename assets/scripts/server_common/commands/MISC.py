@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import hashlib
+
 import time
 import KBEngine
 from KBEDebug import *
@@ -19,9 +19,7 @@ import buff_buff as BBD
 import itemData_itemData as ITEM_DATA
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import gearBase_gearBase as GBG
-import gearEnhance_gearconst as GEGCD
-import gearBase_typeTab as GBTT
-import gearEnhance_gearStrengthen as GEGS
+import taskdata as TDD
 
 import json
 import redisUtils
@@ -33,13 +31,10 @@ import awardContext
 import gameconfig
 import mailAssistor
 
-import Mail
 import base64
 import gameclass
-import mail_config as MCD
-import _pickle as cPickle
 import itemFactory
-import math, Math, sMath
+import math, Math
 import actionContext
 import iRouter
 import gearBase_gearConst as GBGCD
@@ -804,6 +799,9 @@ def getDropid(su, player, dropId, num):
         awardCtx = awardContext.CommonContext(0, {'lv': player.getRoleCacheAttr('level', 0)})
         awardCtx.addContextVar('avatarId', player.id)
         awardCtx.addContextVar('school', player.getRoleCacheAttr('school', 0))
+        awardCtx.addContextVar('isMonthCardExpired', player.getRoleCacheAttr('monthCardExpired', True))
+        awardCtx.addContextVar('avatarScoreRank', player.avatarScoreRank)
+        awardCtx.addContextVar('isCrossServer', player.isCrossServer)
         opUUID = KBEngine.genUUID64()
         awardVal = dropAward._getDropAward([dropId], awardCtx)
         autoDisassemble = player.cliConfigDic.get(gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY,
@@ -2505,13 +2503,30 @@ def queryChatForbidden(su, player):
                             'forbiddenCount': forbiddenCount})
     return True, '执行成功'
 
-@gm_cmd('$addBuff', (Entity('entity id'), Int('buffId'), Int('lv')), RARG(0), CELL, '给实体加buff', ALLSIDE, GOD_GROUPS)
-def addBuff(su, e, buffId, buffLv):
+
+@gm_cmd('$setPKModel', (Player('gbId/Id'), Int('mode')), RARG(0), CELL, '设置战斗模式', ALLSIDE, GOD_GROUPS)
+def setPKModel(su, player, pkMode):
+    player.setPKModel(pkMode)
+
+
+@gm_cmd('$setAllPKModel', (Int('mode'), ), RONE, BASE, '设置所有战斗模式', ALLSIDE, GOD_GROUPS)
+def setAllPKModel(su, pkMode):
+    gameengine.broadcastBaseapp(
+        'broadcastToAllAvatar',
+        (
+            gameconst.CELL, 
+            'setPKModel',
+            (pkMode,), ()))
+
+
+@gm_cmd('$addBuff', (Entity('entity id'), Int('buffId'), Int('lv'), Int('duration')), RARG(0), CELL, '添加buff', ALLSIDE, GOD_GROUPS, minArgs=2)
+def addBuff(su, e, buffId, buffLv=1, duration=-1):
     if buffId in BBD.datas and e.IsCombatUnit:
-        e.addBuff(buffId, buffLv, e.id)
+        e.addBuff(buffId, buffLv, e.id, duration)
         return True, '执行成功'
     else:
         return False, '执行失败'
+
 
 @gm_cmd('$setlv', (Player("gbId/Id"), Int("lv"),), RARG(0), gameconst.CELL, '设置人物等级', ALLSIDE, GOD_GROUPS)
 def setPlayerlv(su, player, lv):
@@ -2973,3 +2988,18 @@ def setVIP(su, player, account):
 def setSVIP(su, player, account):
     redisUtils.RedisUtils.set(gameconst.PrivilegeRedisKey.SVIP + account, "1")
     return True, '执行成功'
+
+@gm_cmd('$gmOpForbiddenTaskIds', (Int('opType'), Int('taskId')), RONE, BASE, '禁止任务', ALLSIDE, GOD_GROUPS)
+def gmOpForbiddenTaskIds(su, opType, taskId):
+    if opType != gameconst.ForbiddenTaskIdOpType.QUERY and str(taskId) not in TDD.datas:
+        return False, '执行失败'
+    if opType == gameconst.ForbiddenTaskIdOpType.QUERY:
+        taskIds = gameengine.quertForbiddenTaskIds()
+        return True, '执行成功, taskIds:' + ','.join([str(i) for i in taskIds])
+    elif opType == gameconst.ForbiddenTaskIdOpType.ADD:
+        gameengine.callAllApps('gameengine.addForbiddenTaskIds', (taskId,))
+        return True, '执行成功'
+    elif opType == gameconst.ForbiddenTaskIdOpType.REMOVE:
+        gameengine.callAllApps('gameengine.removeForbiddenTaskIds', (taskId,))
+        return True, '执行成功'
+    return False, '执行失败'

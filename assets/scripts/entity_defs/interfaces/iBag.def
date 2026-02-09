@@ -301,6 +301,7 @@
 
         <makeItemFlowLog>
             <Arg>       INT8        </Arg>
+            <Arg>       INT8        </Arg>
             <Arg>       ITEM_ID      </Arg>
             <Arg>       INT32       </Arg>
             <Arg>       UUID         </Arg>

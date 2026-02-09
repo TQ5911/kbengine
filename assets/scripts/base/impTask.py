@@ -2,38 +2,32 @@
 import KBEngine
 from KBEDebug import *
 
+import json
+import gzip
+
 import utils
 import dataUtils
-import gameglobal
 import CommEventAction
 import gameconst
-import gameconfig
 import gameengine
 import gametimer
 import actionContext
 import formula
 import gamedecorator
-import LogTrackingMgr
+import gameclass
 
 import taskGetItems as TID
 import taskCollect as TCD
 import taskLeaveDungeon as TLDD
 import taskCounter as TCTD
-import json
-import gzip
 import taskAutoClaimRelatetask as TACRTD
 import taskAutoClaimMinLevel as TACMLD
 import taskAutoClaimCondItems as TACCID
 import taskMonster as TMD
-import gearEnhance_gearconst as GEGCD
-import gearBase_gearConst as GBGCD
-import value_value as VLVLD
-import gamelog
-import gameclass
 import taskdata as TDD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import visible_visible as V_VD
-
+import itemData_itemData as ITEM_DATA
 
 class TaskEvent(object):
     def doTaskEvent(self, eventActionSrc, taskId, eventStr, paramStr):
@@ -339,6 +333,11 @@ class ImpTask(TaskProgress, TaskEvent):
     def baseTaskClaim(self, taskId, taskCtx=None, needCheck=True):
         if not taskCtx:
             taskCtx = actionContext.ClaimTaskCtx()
+        if gameengine.checkForbiddenTaskId(taskId):
+            WARNING_MSG('baseTaskClaim, task is forbidden !!! ', taskId)
+            checkResult = gameclass.TaskCondResult(False)
+            self.cell.claimTaskFailed(taskId, taskCtx, checkResult.msgId, checkResult.msgArgs)
+            return
         if needCheck:
             checkResult = self.taskInfo.canClaimTask(self, taskId)
             if not checkResult:
@@ -377,7 +376,6 @@ class ImpTask(TaskProgress, TaskEvent):
         # 目前任务道具最多发放3个
         # ClaimRewardItems
         taskData = dataUtils.getTaskData(taskId)
-
         bindType = dataUtils.getItemDefaultBindType()
         rmTaskItemDic = {}
         if dataUtils.taskFieldVal(taskData, 'ClaimCanRewardITems'):
@@ -387,10 +385,43 @@ class ImpTask(TaskProgress, TaskEvent):
                     rmTaskItemDic[itemId] = {}
                 itemInfo = rmTaskItemDic[itemId]
                 itemInfo[bindType] = itemInfo.get(bindType, 0) + rewardItems['Count']
+        
         detail = gameclass.AwardDetail(taskId=taskId)
         opStat, _ = self.bagData.deductItemsWithPlan(self, rmTaskItemDic, None, opUUID, srcType, detail, None, True)
         if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
             WARNING_MSG('rem task items err:', rmTaskItemDic)
+
+    def abandonTaskItems(self, taskId, opUUID, srcType):
+        taskData = dataUtils.getTaskData(taskId)
+        if not dataUtils.taskFieldVal(taskData, 'AbanCanRemoveItems'):
+            return
+        abanRemoveItemIds = dataUtils.taskFieldVal(taskData, 'AbanRemoveItems')
+        if not abanRemoveItemIds:
+            return
+        abandonedItems = {}
+        for abanRemoveItemId in abanRemoveItemIds:
+            itemDataCfg = ITEM_DATA.datas.get(abanRemoveItemId)
+            if not itemDataCfg \
+                or itemDataCfg['type'] != gameconst.ItemType.Normal \
+                or itemDataCfg['subType'] != gameconst.ItemSubType.TASK:
+                WARNING_MSG('abandonTaskItems, rem task items err, wrong item cfg:', abanRemoveItemId)
+                continue
+
+            ret = self.bagData.getGridIdsByItemId(abanRemoveItemId)
+            if ret:
+                gridIds = abandonedItems.get(abanRemoveItemId)
+                if not gridIds:
+                    gridIds = []
+                    abandonedItems[abanRemoveItemId] = gridIds
+                gridIds.extend(ret)
+
+        if not abandonedItems:
+            return
+        detail = gameclass.AwardDetail(taskId=taskId)
+        for itemId, gridIds in abandonedItems.items():
+            DEBUG_MSG('abandonTaskItems, rem task items:', itemId, gridIds, opUUID, srcType, detail)
+            for gridId in gridIds:
+                self.bagData.cleanGridByGridId(self, gridId, itemId, opUUID, srcType, detail)
 
     @gamedecorator.checkGameconfigEnable('task')
     def reqDropTaskItem(self, exposed, gridId, itemId):
@@ -547,6 +578,9 @@ class ImpTask(TaskProgress, TaskEvent):
     def startSubmitTask(self, taskId, popRewardUUID=0):
         # 提交任务的入口
         INFO_MSG('in startSubmitTask:', taskId, popRewardUUID)
+        if gameengine.checkForbiddenTaskId(taskId):
+            WARNING_MSG('startSubmitTask, task is forbidden!!! ', taskId)
+            return False
         task = self.getTask(taskId)
         if not task or task.isStat(gameconst.TaskStat.TASK_STAT_SUBMITTED):
             WARNING_MSG('startSubmitTask, no task or already submit:', taskId)

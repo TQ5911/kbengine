@@ -67,17 +67,17 @@ datas = _tools.RODict({
     }),
     "fallSpeed": _tools.RODict({
         "ID": "fallSpeed",
-        "value": "30",
+        "value": "40",
         "Type": "int"
     }),
     "fallSpeedGravity": _tools.RODict({
         "ID": "fallSpeedGravity",
-        "value": "20",
+        "value": "28",
         "Type": "float"
     }),
     "speedFallSpeed": _tools.RODict({
         "ID": "speedFallSpeed",
-        "value": "40",
+        "value": "60",
         "Type": "int"
     }),
     "horizontalMaxSpeed": _tools.RODict({

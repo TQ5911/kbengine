@@ -297,7 +297,7 @@ datas = _tools.RODict({
     }),
     "blessAffixID": _tools.RODict({
         "ID": "blessAffixID",
-        "value": 78000030,
+        "value": _tools.ROList([(3, 78000030), (4, 78000031)]),
     }),
     "noStrengthenList": _tools.RODict({
         "ID": "noStrengthenList",

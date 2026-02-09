@@ -440,7 +440,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014017": {
@@ -752,7 +754,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014032": {
@@ -824,7 +828,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014035": {
@@ -994,7 +1000,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014042": {
@@ -1116,7 +1124,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014049": {
@@ -1499,8 +1509,10 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowInMap": 1,
+      "ShowInSceneMap": 1,
       "TelDir": 270.0,
       "TelX": 200.814,
       "TelY": 0.92,
@@ -1549,17 +1561,19 @@ datas ={
     "DisplayName": "",
     "EntityID": 18000117,
     "ID": 10014066,
-    "Name": "\u9057\u9050\u5e74",
-    "PosX": 70.23475,
-    "PosY": 0.6,
-    "PosZ": 73.7962,
+    "Name": "\u9648\u54ac\u6625",
+    "PosX": 223.01,
+    "PosY": 1.110439,
+    "PosZ": 127.98,
     "Props": {
       "IsOpen": 1,
       "MapEntityType": "11",
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelX": 70.23475,
       "TelY": 0.5796547,
       "TelZ": 73.7962
@@ -2259,30 +2273,6 @@ datas ={
       "Remark": ""
     }
   },
-  "10014095": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Npc",
-    "ClassNameType": 1,
-    "CustomID": "",
-    "Dir": 267.1916,
-    "DisplayName": "",
-    "EntityID": 18000556,
-    "ID": 10014095,
-    "Name": "\u6ce1\u6ce1",
-    "PosX": 350.7276,
-    "PosY": 20.28558,
-    "PosZ": 268.6025,
-    "Props": {
-      "IsOpen": 1,
-      "MapEntityType": "11",
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "Remark": ""
-    }
-  },
   "10014096": {
     "ActivityID": 0,
     "AttachedGIDList": [],
@@ -2498,7 +2488,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014108": {
@@ -2642,7 +2634,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014114": {
@@ -2884,7 +2878,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014129": {
@@ -3248,7 +3244,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014144": {
@@ -3320,7 +3318,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014147": {
@@ -3634,7 +3634,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014160": {
@@ -3778,7 +3780,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10014166": {
@@ -3935,6 +3939,162 @@ datas ={
       "ShowInSceneMap": 1
     }
   },
+  "10014172": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 186.4205,
+    "DisplayName": "",
+    "EntityID": 18000007,
+    "ID": 10014172,
+    "Name": "\u4e01\u94c3\u94db",
+    "PosX": 178.2195,
+    "PosY": 10.13483,
+    "PosZ": 369.0679,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": "11",
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10014174": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 86.05359,
+    "DisplayName": "",
+    "EntityID": 18000743,
+    "ID": 10014174,
+    "Name": "\u5c39\u971c\u7ec3",
+    "PosX": 58.28613,
+    "PosY": 0.3762971,
+    "PosZ": 246.6077,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10014175": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 92.03731,
+    "DisplayName": "",
+    "EntityID": 18000007,
+    "ID": 10014175,
+    "Name": "\u4e01\u94c3\u94db",
+    "PosX": 59.09526,
+    "PosY": 0.3762971,
+    "PosZ": 249.1005,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10014176": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 171.625,
+    "DisplayName": "",
+    "EntityID": 18000556,
+    "ID": 10014176,
+    "Name": "\u6ce1\u6ce1",
+    "PosX": 134.2081,
+    "PosY": 58.24506,
+    "PosZ": 557.1554,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10014177": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 176.9267,
+    "DisplayName": "",
+    "EntityID": 18000007,
+    "ID": 10014177,
+    "Name": "\u4e01\u94c3\u94db",
+    "PosX": 179.5119,
+    "PosY": 2.519999,
+    "PosZ": 249.6648,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10014178": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 88.90122,
+    "DisplayName": "",
+    "EntityID": 18000628,
+    "ID": 10014178,
+    "Name": "\u6807\u8bb0\u7528\u7279\u6b8a\u4efb\u52a1\u5730\u70b9",
+    "PosX": 50.86619,
+    "PosY": 1.478168,
+    "PosZ": 184.6867,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
   "10018048": {
     "ActivityID": 0,
     "AttachedGIDList": [],
@@ -3951,12 +4111,14 @@ datas ={
     "PosY": 0.4022861,
     "PosZ": 163.92,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018049": {
@@ -3966,7 +4128,7 @@ datas ={
     "ClassName": "Anchor",
     "ClassNameType": 20,
     "CustomID": "",
-    "Dir": 178.7702,
+    "Dir": 89.59608,
     "DisplayName": "\u795e\u884c\u70b9\u00b7\u7ea2\u6f31\u697c",
     "EntityID": 0,
     "ID": 10018049,
@@ -3977,7 +4139,8 @@ datas ={
     "Props": {
       "CameraId": 0,
       "MapEntityType": "26",
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018050": {
@@ -3987,7 +4150,7 @@ datas ={
     "ClassName": "Anchor",
     "ClassNameType": 20,
     "CustomID": "",
-    "Dir": 90.65114,
+    "Dir": 1.00406,
     "DisplayName": "\u795e\u884c\u70b9\u00b7\u6f14\u6b66\u573a",
     "EntityID": 0,
     "ID": 10018050,
@@ -3998,7 +4161,8 @@ datas ={
     "Props": {
       "CameraId": 0,
       "MapEntityType": "26",
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018051": {
@@ -4008,7 +4172,7 @@ datas ={
     "ClassName": "Anchor",
     "ClassNameType": 20,
     "CustomID": "",
-    "Dir": 89.19588,
+    "Dir": 357.9902,
     "DisplayName": "\u795e\u884c\u70b9\u00b7\u795e\u9633\u5927\u8857",
     "EntityID": 0,
     "ID": 10018051,
@@ -4039,11 +4203,14 @@ datas ={
     "PosY": 0.4514041,
     "PosZ": 255.0972,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018054": {
@@ -4062,11 +4229,14 @@ datas ={
     "PosY": 2.425162,
     "PosZ": 273.5001,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018055": {
@@ -4085,11 +4255,14 @@ datas ={
     "PosY": 0.8038552,
     "PosZ": 344.7924,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018056": {
@@ -4108,11 +4281,14 @@ datas ={
     "PosY": 0.8024302,
     "PosZ": 214.0553,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018057": {
@@ -4131,11 +4307,14 @@ datas ={
     "PosY": 1.291539,
     "PosZ": 208.4862,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018058": {
@@ -4154,11 +4333,14 @@ datas ={
     "PosY": 15.37136,
     "PosZ": 275.2836,
     "Props": {
+      "IsOnGround": 0,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018059": {
@@ -4177,11 +4359,14 @@ datas ={
     "PosY": 14.58104,
     "PosZ": 288.3354,
     "Props": {
+      "IsOnGround": 0,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018060": {
@@ -4200,11 +4385,14 @@ datas ={
     "PosY": 15.37136,
     "PosZ": 275.2322,
     "Props": {
+      "IsOnGround": 0,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018061": {
@@ -4223,11 +4411,14 @@ datas ={
     "PosY": 0.359022,
     "PosZ": 67.31911,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018063": {
@@ -4246,11 +4437,14 @@ datas ={
     "PosY": 45.82,
     "PosZ": 276.17,
     "Props": {
+      "IsOnGround": 0,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018067": {
@@ -4269,11 +4463,14 @@ datas ={
     "PosY": 0.5996966,
     "PosZ": 63.96712,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018068": {
@@ -4292,11 +4489,14 @@ datas ={
     "PosY": 1.093261,
     "PosZ": 106.7935,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018069": {
@@ -4315,11 +4515,14 @@ datas ={
     "PosY": 12.08009,
     "PosZ": 197.4,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018070": {
@@ -4338,11 +4541,14 @@ datas ={
     "PosY": 1.788197,
     "PosZ": 343.0552,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018071": {
@@ -4361,11 +4567,14 @@ datas ={
     "PosY": 0.4333332,
     "PosZ": 347.1805,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018072": {
@@ -4384,11 +4593,14 @@ datas ={
     "PosY": 2.492605,
     "PosZ": 345.2557,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018073": {
@@ -4407,11 +4619,14 @@ datas ={
     "PosY": 20.07458,
     "PosZ": 276.2399,
     "Props": {
+      "IsOnGround": 1,
       "IsOpen": 1,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10018074": {
@@ -4430,6 +4645,54 @@ datas ={
     "PosY": 0.87186,
     "PosZ": 93.61855,
     "Props": {
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10018076": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Anchor",
+    "ClassNameType": 20,
+    "CustomID": "",
+    "Dir": 358.2231,
+    "DisplayName": "\u795e\u884c\u70b9\u00b7\u7687\u57ce",
+    "EntityID": 0,
+    "ID": 10018076,
+    "Name": "\u795e\u884c\u70b9",
+    "PosX": 176.73,
+    "PosY": 2.499957,
+    "PosZ": 324.82,
+    "Props": {
+      "CameraId": 0,
+      "MapEntityType": "26",
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10018077": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Collection",
+    "ClassNameType": 3,
+    "CustomID": "",
+    "Dir": 88.90122,
+    "DisplayName": "",
+    "EntityID": 16000119,
+    "ID": 10018077,
+    "Name": "\u4e3b\u7ebf\u94c1\u5320\u5b9d\u7bb1",
+    "PosX": 50.86619,
+    "PosY": 1.478168,
+    "PosZ": 184.6867,
+    "Props": {
+      "IsOnGround": 1,
+      "IsOpen": 1,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1
     }

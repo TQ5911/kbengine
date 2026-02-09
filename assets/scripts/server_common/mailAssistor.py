@@ -17,6 +17,8 @@ import gamelog
 import gameconfig
 import random
 
+import LogTrackingMgr
+
 
 MAIL_EXPIRED_TIME_DEFAULT = 2145888000  #2038年
 SEND_NUM_PER_TIME = 50
@@ -156,6 +158,7 @@ def _onSendMailByGBIDSucc(toGBID, mailId, mailGBID, title, cont, attachStr, srcT
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase([toGBID], 'onNewMailInsertSucc',
                                         (mailId, mailGBID, title, cont, attachStr, srcType, srcSubType, opUUID, desc, idipSource),
                                                               failedBox, 'recordOfflinePlayerMailLog', failedArgs)
+    LogTrackingMgr.LogTrackingMgr.Mail_Send(toGBID, mailId, mailGBID, srcType, srcSubType, opUUID, idipSource, attachStr)
 
 def doRecordOfflinePlayerMailLog(toGBID, mailId, mailGBID, title, cont, attachStr, srcType, srcSubType, opUUID, desc, idipSource):
     #sql = "select sm_accountName, sm_accountType, sm_name, sm_level from tbl_Avatar where sm_gbID=%s" % toGBID

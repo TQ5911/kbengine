@@ -177,6 +177,11 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             WARNING_MSG("checkAvatarGather::failed")
             return False
 
+        # 矿战预检查
+        avatar = KBEngine.entities.get(avatarBase.id)
+        if avatar and not avatar.mineWarCellPrecheckCollection(self.collectionId):
+            return False
+
         avatarBase.checkGatherCond(self.collectionId, self.id, self.dropEquipId, ctx)
         return True
 

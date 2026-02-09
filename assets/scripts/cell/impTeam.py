@@ -613,11 +613,8 @@ class ImpTeam(object):
         self.teamId = teamId
         self.joinType = joinType
         self.base.onJoinTeamBase(self.teamId)
-        if self.autoMatchStartTime > 0:
-            self.autoMatchStartTime = 0
-            gameengine.getGlobalBase('TeamMatchStub').playerStopAutoMatch(self.gbId)
-            self.showMsg(TMMCD.datas['teamMatch_inTeamQuitMsg']['value'], [])
-
+        self.stopTeamMatch()
+        self.stopRaidMatch()
         self.resetTryAddTeamCD()
         self.resetAllTargetTypeCache()
         self.cancelAllTeamAndRaidJoinRequest()
@@ -1560,30 +1557,6 @@ class ImpTeam(object):
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
                 (leaderGBID, ), 'requestCaptainFollowProps', (self.base, ), None, "", ())
 
-    @gamedecorator.checkGameconfigEnable('team')
-    @gamedecorator.crossServer
-    @utils.isMyself
-    def sendOneMemberFollowAsk(self, exposed, gbId):
-        INFO_MSG('sendOneMemberFollowAsk', gbId)
-        self._doSendOneMemberFollowAsk(gbId)
-
-    def _doSendOneMemberFollowAsk(self, gbId):
-        if self.teamId <= 0 and self.raidUUID <= 0:
-            ERROR_MSG('sendOneMemberFollowAsk error not in team or raid', self.teamId, self.raidUUID)
-            return
-
-        if formula.spaceForbidTeamFollow(self.spaceNo):
-            self.showMsg(MMD.datas.teamFollow_forbid, [])
-            return
-
-        if self.raidUUID > 0:
-            gameengine.getRaidStub(self.raidUUID).askOneMemberFollow(self.base, self.raidUUID, self.gbId, gbId)
-        elif self.teamId > 0:
-            gameengine.getTeamStub(self.teamId).askOneMemberFollow(self.base, self.teamId, self.gbId, gbId)
-
-    def onMemJoinTeamByAutoMatch(self, gbId):
-        self._doSendOneMemberFollowAsk(gbId)
-
     def doReplyCaptainFollow(self, bAgree):
         if bAgree:
             self.applyFollowTeamCaptain(self.id)
@@ -1829,6 +1802,12 @@ class ImpTeam(object):
         if not self.isReachTeamMinCond(target):
             WARNING_MSG('reqPlayerAutoMatch:', self.getTotalScore(), self.level)
             return
+        
+        # 取消队伍匹配
+        self.stopTeamMatch()
+
+        # 取消团队匹配
+        self.stopRaidMatch()
 
         playerMatchDic = {
             'target': target,
@@ -1873,14 +1852,14 @@ class ImpTeam(object):
     @utils.isMyself
     def reqPlayerStopAutoMatch(self, exposed):
         INFO_MSG('reqPlayerStopAutoMatch::~')
-        self._reqPlayerStopAutoMatch()
-        return
+        self.stopTeamMatch()
 
-    def _reqPlayerStopAutoMatch(self):
-        INFO_MSG('in reqPlayerStopAutoMatch')
-        self.autoMatchStartTime = 0
-        self.autoMatchTarget = 0
-        gameengine.getGlobalBase('TeamMatchStub').playerStopAutoMatch(self.gbId)
+    def stopTeamMatch(self):
+        if self.autoMatchStartTime > 0:
+            INFO_MSG('in stopTeamMatch')
+            self.autoMatchStartTime = 0
+            self.autoMatchTarget = 0
+            gameengine.getGlobalBase('TeamMatchStub').playerStopAutoMatch(self.gbId)
 
     def onPlayerMatchedSucc(self):
         self.autoMatchStartTime = 0

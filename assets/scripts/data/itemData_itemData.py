@@ -23,13 +23,13 @@ def _30000020_condition(self, gridId, itemId, useNum, context):
     return self.checkHealWoundsItemCond()
 
 def _30000020(self, gridId, itemId, useNum, opUUID, context):
-    return self.doHealWounds()
+    return self.doHealWounds(False)
 
 def _30000234_condition(self, gridId, itemId, useNum, context):
     return self.checkUseTelToMainCity(itemId)
 
 def _30000234(self, gridId, itemId, useNum, opUUID, context):
-    return self.useTelToMainCity(opUUID, context, castTime=5)
+    return self.useTelToMainCity(opUUID, context, castTime=3)
 
 def _30000237_condition(self, gridId, itemId, useNum, context):
     return self.checkModifyName(gridId, itemId, useNum, context)
@@ -41,9 +41,6 @@ def _30000312(self, gridId, itemId, useNum, opUUID, context):
     return self.addMonthCardByItem(68000301, opUUID, context)
 
 def _30000330(self, gridId, itemId, useNum, opUUID, context):
-    return self.getReward(40020674,  1, gridId, itemId, useNum, opUUID, context)
-
-def _30000331(self, gridId, itemId, useNum, opUUID, context):
     return self.getReward(40020674,  1, gridId, itemId, useNum, opUUID, context)
 
 def _30000401(self, gridId, itemId, useNum, opUUID, context):
@@ -162,6 +159,9 @@ def _30000546(self, gridId, itemId, useNum, opUUID, context):
 
 def _30000547(self, gridId, itemId, useNum, opUUID, context):
     return self.getReward(40027025,  1, gridId, itemId, useNum, opUUID, context)
+
+def _30000548(self, gridId, itemId, useNum, opUUID, context):
+    return self.getReward(40027031,  1, gridId, itemId, useNum, opUUID, context)
 
 def _30001001(self, gridId, itemId, useNum, opUUID, context):
     return self.useLingShouEggItem(opUUID, context)
@@ -444,15 +444,6 @@ def _30010024_condition(self, gridId, itemId, useNum, context):
 
 def _30010024(self, gridId, itemId, useNum, opUUID, context):
     return self.useHealSalveItem(itemId, 1, 0.1*(1+self.medicineRate), 0, 0) and self.useAddMpItem(itemId, 0, 0.1*(1+self.medicineRate))
-
-def _30990110(self, gridId, itemId, useNum, opUUID, context):
-    return self.getReward(40000010,  1, gridId, itemId, useNum, opUUID, context)
-
-def _30990111(self, gridId, itemId, useNum, opUUID, context):
-    return self.getReward(40000009,  1, gridId, itemId, useNum, opUUID, context)
-
-def _30990120(self, gridId, itemId, useNum, opUUID, context):
-    return self.getReward(40000059,  1, gridId, itemId, useNum, opUUID, context)
 
 def _30990152(self, gridId, itemId, useNum, opUUID, context):
     return self.getReward(40000008,  1, gridId, itemId, useNum, opUUID, context)
@@ -1323,7 +1314,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10, 80),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1374,7 +1365,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1425,7 +1416,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1476,7 +1467,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1527,7 +1518,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1578,7 +1569,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1629,7 +1620,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1680,7 +1671,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1731,7 +1722,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1782,7 +1773,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1833,7 +1824,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1884,7 +1875,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1935,7 +1926,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -1986,7 +1977,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2037,7 +2028,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2088,7 +2079,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2139,7 +2130,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2190,7 +2181,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2241,7 +2232,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2292,7 +2283,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2343,7 +2334,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2394,7 +2385,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2445,7 +2436,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2496,7 +2487,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2547,7 +2538,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2598,7 +2589,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2649,7 +2640,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2700,7 +2691,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2751,7 +2742,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2802,7 +2793,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2853,7 +2844,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2904,7 +2895,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -2955,7 +2946,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3006,7 +2997,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3057,7 +3048,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3108,7 +3099,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3159,7 +3150,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3210,7 +3201,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3261,7 +3252,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3312,7 +3303,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3363,7 +3354,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3414,7 +3405,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3465,7 +3456,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3516,7 +3507,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3567,7 +3558,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3618,7 +3609,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3669,7 +3660,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3720,7 +3711,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3771,7 +3762,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3822,7 +3813,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3873,7 +3864,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3924,7 +3915,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -3975,7 +3966,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4026,7 +4017,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4077,7 +4068,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4128,7 +4119,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4179,7 +4170,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4230,7 +4221,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4281,7 +4272,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4332,7 +4323,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4383,7 +4374,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4434,7 +4425,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4485,7 +4476,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4536,7 +4527,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4587,7 +4578,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4638,7 +4629,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4689,7 +4680,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4740,7 +4731,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4791,7 +4782,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4842,7 +4833,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4893,7 +4884,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4944,7 +4935,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -4995,7 +4986,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5046,7 +5037,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5097,7 +5088,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5148,7 +5139,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5199,7 +5190,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5250,7 +5241,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5301,7 +5292,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5352,7 +5343,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5403,7 +5394,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5454,7 +5445,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5505,7 +5496,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5556,7 +5547,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5607,7 +5598,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5658,7 +5649,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5709,7 +5700,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5760,7 +5751,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5811,7 +5802,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5862,7 +5853,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5913,7 +5904,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -5964,7 +5955,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360, 2500),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6015,7 +6006,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6066,7 +6057,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6117,7 +6108,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6168,7 +6159,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6219,7 +6210,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6270,7 +6261,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6321,7 +6312,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6372,7 +6363,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6423,7 +6414,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6474,7 +6465,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6525,7 +6516,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6576,7 +6567,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6627,7 +6618,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10000, 70000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6678,7 +6669,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6729,7 +6720,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6780,7 +6771,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6831,7 +6822,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6882,7 +6873,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6933,7 +6924,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -6984,7 +6975,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7035,7 +7026,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7086,7 +7077,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7137,7 +7128,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7188,7 +7179,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7239,7 +7230,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7290,7 +7281,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (360000, 2000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7392,7 +7383,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (300, 5000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7442,7 +7433,7 @@ datas = _tools.RODict({
         "param": "UIEquipTrainingPanel,5",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
@@ -7545,9 +7536,9 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (1, 4),
         "auctionItemPubDuration": 0,
-        "lockAvailable": 1,
+        "lockAvailable": 0,
         "sellPrice": 0
     }),
     30000224: _tools.RODict({
@@ -7596,7 +7587,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10, 60),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7647,7 +7638,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (60, 400),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7698,7 +7689,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (180, 1100),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7749,7 +7740,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (6, 50),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -7799,11 +7790,11 @@ datas = _tools.RODict({
         "param": "UIEquipTrainingPanel,2",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30000229: _tools.RODict({
         "ID": 30000229,
@@ -7850,11 +7841,11 @@ datas = _tools.RODict({
         "param": "UIEquipTrainingPanel,2",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1500
     }),
     30000230: _tools.RODict({
         "ID": 30000230,
@@ -7901,11 +7892,11 @@ datas = _tools.RODict({
         "param": "UIEquipTrainingPanel,2",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 2000
     }),
     30000231: _tools.RODict({
         "ID": 30000231,
@@ -7953,7 +7944,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (15, 100),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -8075,7 +8066,7 @@ datas = _tools.RODict({
         "dailyUseLimit": 0,
         "itemCD": 0,
         "CDGroup": 0,
-        "casting": 5.0,
+        "casting": 3.0,
         "indexID": 0,
         "rndSynNotAvail": 0,
         "isPutInCustomSlot": 1,
@@ -8211,7 +8202,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 10000
     }),
     30000237: _tools.RODict({
         "ID": 30000237,
@@ -8262,7 +8253,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 10000
     }),
     30000238: _tools.RODict({
         "ID": 30000238,
@@ -8313,7 +8304,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 10000
     }),
     30000239: _tools.RODict({
         "ID": 30000239,
@@ -8364,7 +8355,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 300
     }),
     30000240: _tools.RODict({
         "ID": 30000240,
@@ -8415,7 +8406,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 300
     }),
     30000241: _tools.RODict({
         "ID": 30000241,
@@ -8466,7 +8457,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 300
     }),
     30000242: _tools.RODict({
         "ID": 30000242,
@@ -8517,7 +8508,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 600
     }),
     30000243: _tools.RODict({
         "ID": 30000243,
@@ -8568,7 +8559,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 600
     }),
     30000244: _tools.RODict({
         "ID": 30000244,
@@ -8619,7 +8610,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 600
     }),
     30000245: _tools.RODict({
         "ID": 30000245,
@@ -8670,7 +8661,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 900
     }),
     30000246: _tools.RODict({
         "ID": 30000246,
@@ -8721,7 +8712,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 900
     }),
     30000247: _tools.RODict({
         "ID": 30000247,
@@ -8772,7 +8763,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 900
     }),
     30000248: _tools.RODict({
         "ID": 30000248,
@@ -8823,7 +8814,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1200
     }),
     30000249: _tools.RODict({
         "ID": 30000249,
@@ -8874,7 +8865,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1200
     }),
     30000250: _tools.RODict({
         "ID": 30000250,
@@ -8925,7 +8916,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1200
     }),
     30000251: _tools.RODict({
         "ID": 30000251,
@@ -8976,7 +8967,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 5000
     }),
     30000263: _tools.RODict({
         "ID": 30000263,
@@ -9027,7 +9018,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 200
     }),
     30000264: _tools.RODict({
         "ID": 30000264,
@@ -9078,7 +9069,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 200
     }),
     30000265: _tools.RODict({
         "ID": 30000265,
@@ -9129,7 +9120,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 200
     }),
     30000266: _tools.RODict({
         "ID": 30000266,
@@ -9180,7 +9171,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 200
     }),
     30000267: _tools.RODict({
         "ID": 30000267,
@@ -9227,11 +9218,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (1, 6),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 2000
     }),
     30000268: _tools.RODict({
         "ID": 30000268,
@@ -9278,11 +9269,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (1, 6),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 2000
     }),
     30000269: _tools.RODict({
         "ID": 30000269,
@@ -9329,11 +9320,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (1, 6),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 2000
     }),
     30000270: _tools.RODict({
         "ID": 30000270,
@@ -9380,11 +9371,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (1, 6),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 2000
     }),
     30000271: _tools.RODict({
         "ID": 30000271,
@@ -9431,11 +9422,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (6, 60),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 20000
     }),
     30000272: _tools.RODict({
         "ID": 30000272,
@@ -9482,11 +9473,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (6, 60),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 20000
     }),
     30000273: _tools.RODict({
         "ID": 30000273,
@@ -9533,11 +9524,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (6, 60),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 20000
     }),
     30000274: _tools.RODict({
         "ID": 30000274,
@@ -9584,11 +9575,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (6, 60),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 20000
     }),
     30000275: _tools.RODict({
         "ID": 30000275,
@@ -9635,11 +9626,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (60, 600),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 200000
     }),
     30000276: _tools.RODict({
         "ID": 30000276,
@@ -9686,11 +9677,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (60, 600),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 200000
     }),
     30000277: _tools.RODict({
         "ID": 30000277,
@@ -9737,11 +9728,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (60, 600),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 200000
     }),
     30000278: _tools.RODict({
         "ID": 30000278,
@@ -9788,11 +9779,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (60, 600),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 200000
     }),
     30000279: _tools.RODict({
         "ID": 30000279,
@@ -9839,11 +9830,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (6, 60),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30000280: _tools.RODict({
         "ID": 30000280,
@@ -9890,11 +9881,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (60, 600),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 10000
     }),
     30000281: _tools.RODict({
         "ID": 30000281,
@@ -9941,11 +9932,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (600, 6000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 100000
     }),
     30000282: _tools.RODict({
         "ID": 30000282,
@@ -9992,11 +9983,11 @@ datas = _tools.RODict({
         "param": "UIPracticePanel,1",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (6000, 60000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000000
     }),
     30000283: _tools.RODict({
         "ID": 30000283,
@@ -10043,11 +10034,11 @@ datas = _tools.RODict({
         "param": "UIEquipMakePanel",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 300
     }),
     30000284: _tools.RODict({
         "ID": 30000284,
@@ -10094,11 +10085,11 @@ datas = _tools.RODict({
         "param": "UIEquipMakePanel",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 300
     }),
     30000285: _tools.RODict({
         "ID": 30000285,
@@ -10145,11 +10136,11 @@ datas = _tools.RODict({
         "param": "UIEquipMakePanel",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 300
     }),
     30000286: _tools.RODict({
         "ID": 30000286,
@@ -10196,11 +10187,11 @@ datas = _tools.RODict({
         "param": "UIEquipMakePanel",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 300
     }),
     30000287: _tools.RODict({
         "ID": 30000287,
@@ -10248,10 +10239,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (2, 10),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 6000
     }),
     30000288: _tools.RODict({
         "ID": 30000288,
@@ -10299,10 +10290,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (2, 10),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 6000
     }),
     30000289: _tools.RODict({
         "ID": 30000289,
@@ -10350,10 +10341,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (2, 10),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 6000
     }),
     30000290: _tools.RODict({
         "ID": 30000290,
@@ -10401,10 +10392,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (2, 10),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 6000
     }),
     30000291: _tools.RODict({
         "ID": 30000291,
@@ -10452,10 +10443,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (20, 100),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 70000
     }),
     30000292: _tools.RODict({
         "ID": 30000292,
@@ -10503,10 +10494,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (20, 100),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 70000
     }),
     30000293: _tools.RODict({
         "ID": 30000293,
@@ -10554,10 +10545,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (20, 100),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 70000
     }),
     30000294: _tools.RODict({
         "ID": 30000294,
@@ -10605,10 +10596,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (20, 100),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 70000
     }),
     30000295: _tools.RODict({
         "ID": 30000295,
@@ -10656,10 +10647,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (200, 1000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 750000
     }),
     30000296: _tools.RODict({
         "ID": 30000296,
@@ -10707,10 +10698,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (200, 1000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 750000
     }),
     30000297: _tools.RODict({
         "ID": 30000297,
@@ -10758,10 +10749,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (200, 1000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 750000
     }),
     30000298: _tools.RODict({
         "ID": 30000298,
@@ -10809,10 +10800,10 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (200, 1000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 750000
     }),
     30000303: _tools.RODict({
         "ID": 30000303,
@@ -10863,7 +10854,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30000304: _tools.RODict({
         "ID": 30000304,
@@ -10935,159 +10926,6 @@ datas = _tools.RODict({
         "indexID": 0,
         "rndSynNotAvail": 0,
         "isPutInCustomSlot": 0,
-        "isAutoUseInCustomSlot": 0,
-        "batchUse": 0,
-        "quickUse": 0,
-        "pickUpReward": 0,
-        "Ncn": 0,
-        "content": None,
-        "Ctoplimit": 0,
-        "disassemblyReward": 0,
-        "disassemblyReward2": 0,
-        "synthesisID": 0,
-        "quantityLimit": 0,
-        "AutomaticallyChangetoItem": None,
-        "itemTimeOut": "",
-        "expirationDate": 0,
-        "incrementTime": 0,
-        "usableTime": "",
-        "recycleType": 1,
-        "recycleParameter": None,
-        "recycleForm": 0,
-        "recycleReplaceItem": None,
-        "messageTipsID": 54000002,
-        "messageChatID": 58000062,
-        "event": "",
-        "param": "",
-        "conditionCheckAction": None,
-        "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
-        "auctionItemPubDuration": 0,
-        "lockAvailable": 0,
-        "sellPrice": 0
-    }),
-    30000306: _tools.RODict({
-        "ID": 30000306,
-        "name": "真元",
-        "type": 0,
-        "subType": 0,
-        "class": 0,
-        "quality": 2,
-        "qualityValue": 0,
-        "levelRequirement": 0,
-        "maxStackSize": 9999,
-        "use": "",
-        "useNum": 0,
-        "dailyUseLimit": 0,
-        "itemCD": 0,
-        "CDGroup": 0,
-        "casting": 0.0,
-        "indexID": 0,
-        "rndSynNotAvail": 0,
-        "isPutInCustomSlot": 0,
-        "isAutoUseInCustomSlot": 0,
-        "batchUse": 0,
-        "quickUse": 0,
-        "pickUpReward": 0,
-        "Ncn": 0,
-        "content": None,
-        "Ctoplimit": 0,
-        "disassemblyReward": 0,
-        "disassemblyReward2": 0,
-        "synthesisID": 0,
-        "quantityLimit": 0,
-        "AutomaticallyChangetoItem": None,
-        "itemTimeOut": "",
-        "expirationDate": 0,
-        "incrementTime": 0,
-        "usableTime": "",
-        "recycleType": 1,
-        "recycleParameter": None,
-        "recycleForm": 0,
-        "recycleReplaceItem": None,
-        "messageTipsID": 54000002,
-        "messageChatID": 58000062,
-        "event": "",
-        "param": "",
-        "conditionCheckAction": None,
-        "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
-        "auctionItemPubDuration": 0,
-        "lockAvailable": 0,
-        "sellPrice": 0
-    }),
-    30000307: _tools.RODict({
-        "ID": 30000307,
-        "name": "随机传送卷轴",
-        "type": 0,
-        "subType": 0,
-        "class": 0,
-        "quality": 1,
-        "qualityValue": 0,
-        "levelRequirement": 0,
-        "maxStackSize": 999,
-        "use": "使用",
-        "useNum": 0,
-        "dailyUseLimit": 0,
-        "itemCD": 0,
-        "CDGroup": 0,
-        "casting": 5.0,
-        "indexID": 0,
-        "rndSynNotAvail": 0,
-        "isPutInCustomSlot": 1,
-        "isAutoUseInCustomSlot": 0,
-        "batchUse": 0,
-        "quickUse": 0,
-        "pickUpReward": 0,
-        "Ncn": 0,
-        "content": None,
-        "Ctoplimit": 0,
-        "disassemblyReward": 0,
-        "disassemblyReward2": 0,
-        "synthesisID": 0,
-        "quantityLimit": 0,
-        "AutomaticallyChangetoItem": None,
-        "itemTimeOut": "",
-        "expirationDate": 0,
-        "incrementTime": 0,
-        "usableTime": "",
-        "recycleType": 1,
-        "recycleParameter": None,
-        "recycleForm": 0,
-        "recycleReplaceItem": None,
-        "messageTipsID": 54000002,
-        "messageChatID": 58000062,
-        "event": "",
-        "param": "",
-        "conditionCheckAction": None,
-        "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
-        "auctionItemPubDuration": 0,
-        "lockAvailable": 0,
-        "sellPrice": 0
-    }),
-    30000308: _tools.RODict({
-        "ID": 30000308,
-        "name": "逃离卷轴",
-        "type": 0,
-        "subType": 0,
-        "class": 0,
-        "quality": 1,
-        "qualityValue": 0,
-        "levelRequirement": 0,
-        "maxStackSize": 999,
-        "use": "使用",
-        "useNum": 0,
-        "dailyUseLimit": 0,
-        "itemCD": 0,
-        "CDGroup": 0,
-        "casting": 5.0,
-        "indexID": 0,
-        "rndSynNotAvail": 0,
-        "isPutInCustomSlot": 1,
         "isAutoUseInCustomSlot": 0,
         "batchUse": 0,
         "quickUse": 0,
@@ -11522,57 +11360,6 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": _30000330,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
-        "auctionItemPubDuration": 0,
-        "lockAvailable": 0,
-        "sellPrice": 0
-    }),
-    30000331: _tools.RODict({
-        "ID": 30000331,
-        "name": "传说精灵礼包",
-        "type": 0,
-        "subType": 3,
-        "class": 0,
-        "quality": 4,
-        "qualityValue": 0,
-        "levelRequirement": 0,
-        "maxStackSize": 999,
-        "use": "使用",
-        "useNum": 0,
-        "dailyUseLimit": 0,
-        "itemCD": 0,
-        "CDGroup": 0,
-        "casting": 0.0,
-        "indexID": 0,
-        "rndSynNotAvail": 0,
-        "isPutInCustomSlot": 0,
-        "isAutoUseInCustomSlot": 0,
-        "batchUse": 1,
-        "quickUse": 0,
-        "pickUpReward": 0,
-        "Ncn": 0,
-        "content": None,
-        "Ctoplimit": 0,
-        "disassemblyReward": 0,
-        "disassemblyReward2": 0,
-        "synthesisID": 0,
-        "quantityLimit": 0,
-        "AutomaticallyChangetoItem": None,
-        "itemTimeOut": "",
-        "expirationDate": 0,
-        "incrementTime": 0,
-        "usableTime": "",
-        "recycleType": 0,
-        "recycleParameter": None,
-        "recycleForm": 0,
-        "recycleReplaceItem": None,
-        "messageTipsID": 54000002,
-        "messageChatID": 58000062,
-        "event": "",
-        "param": "",
-        "conditionCheckAction": None,
-        "action": _30000331,
         "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
@@ -13562,6 +13349,57 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": _30000547,
+        "auctionAllowListing": 0,
+        "auctionPriceDuration": None,
+        "auctionItemPubDuration": 0,
+        "lockAvailable": 0,
+        "sellPrice": 0
+    }),
+    30000548: _tools.RODict({
+        "ID": 30000548,
+        "name": "玄铁箱",
+        "type": 0,
+        "subType": 3,
+        "class": 0,
+        "quality": 4,
+        "qualityValue": 0,
+        "levelRequirement": 0,
+        "maxStackSize": 999,
+        "use": "使用",
+        "useNum": 0,
+        "dailyUseLimit": 0,
+        "itemCD": 0,
+        "CDGroup": 0,
+        "casting": 0.0,
+        "indexID": 0,
+        "rndSynNotAvail": 0,
+        "isPutInCustomSlot": 0,
+        "isAutoUseInCustomSlot": 0,
+        "batchUse": 1,
+        "quickUse": 0,
+        "pickUpReward": 0,
+        "Ncn": 0,
+        "content": None,
+        "Ctoplimit": 0,
+        "disassemblyReward": 0,
+        "disassemblyReward2": 0,
+        "synthesisID": 0,
+        "quantityLimit": 0,
+        "AutomaticallyChangetoItem": None,
+        "itemTimeOut": "",
+        "expirationDate": 0,
+        "incrementTime": 0,
+        "usableTime": "",
+        "recycleType": 0,
+        "recycleParameter": None,
+        "recycleForm": 0,
+        "recycleReplaceItem": None,
+        "messageTipsID": 54000002,
+        "messageChatID": 58000062,
+        "event": "",
+        "param": "",
+        "conditionCheckAction": None,
+        "action": _30000548,
         "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
@@ -16622,8 +16460,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -16673,8 +16511,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -16724,8 +16562,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -16775,8 +16613,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -16826,8 +16664,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -16877,8 +16715,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -16928,8 +16766,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -16979,8 +16817,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17030,8 +16868,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17081,8 +16919,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17132,8 +16970,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17183,8 +17021,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17234,8 +17072,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2, 20),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17285,8 +17123,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17336,8 +17174,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17387,8 +17225,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17438,8 +17276,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17489,8 +17327,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17540,8 +17378,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17591,8 +17429,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17642,8 +17480,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17693,8 +17531,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17744,8 +17582,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17795,8 +17633,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17846,8 +17684,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17897,8 +17735,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17948,8 +17786,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -17999,8 +17837,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18050,8 +17888,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18101,8 +17939,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (75, 750),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18152,8 +17990,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18203,8 +18041,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18254,8 +18092,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18305,8 +18143,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18356,8 +18194,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18407,8 +18245,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18458,8 +18296,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18509,8 +18347,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18560,8 +18398,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18611,8 +18449,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18662,8 +18500,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18713,8 +18551,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18764,8 +18602,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (2000, 20000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18815,8 +18653,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (70000, 700000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18866,8 +18704,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (70000, 700000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18917,8 +18755,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (70000, 700000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -18968,8 +18806,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (70000, 700000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -19019,8 +18857,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (70000, 700000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -19070,8 +18908,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (70000, 700000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -19121,8 +18959,8 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": None,
         "action": None,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
+        "auctionAllowListing": 1,
+        "auctionPriceDuration": (70000, 700000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -19172,11 +19010,11 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": _30010001_condition,
         "action": _30010001,
-        "auctionAllowListing": 1,
-        "auctionPriceDuration": (11, 100),
+        "auctionAllowListing": 0,
+        "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 5
     }),
     30010002: _tools.RODict({
         "ID": 30010002,
@@ -19223,11 +19061,11 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": _30010002_condition,
         "action": _30010002,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 2
     }),
     30010003: _tools.RODict({
         "ID": 30010003,
@@ -19274,11 +19112,11 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": _30010003_condition,
         "action": _30010003,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 15
     }),
     30010004: _tools.RODict({
         "ID": 30010004,
@@ -19325,11 +19163,11 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": _30010004_condition,
         "action": _30010004,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 7
     }),
     30010005: _tools.RODict({
         "ID": 30010005,
@@ -19376,11 +19214,11 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": _30010005_condition,
         "action": _30010005,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 45
     }),
     30010006: _tools.RODict({
         "ID": 30010006,
@@ -19427,11 +19265,11 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": _30010006_condition,
         "action": _30010006,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 22
     }),
     30010007: _tools.RODict({
         "ID": 30010007,
@@ -19478,11 +19316,11 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": _30010007_condition,
         "action": _30010007,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010008: _tools.RODict({
         "ID": 30010008,
@@ -19529,11 +19367,11 @@ datas = _tools.RODict({
         "param": "",
         "conditionCheckAction": _30010008_condition,
         "action": _30010008,
-        "auctionAllowListing": 1,
+        "auctionAllowListing": 0,
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010009: _tools.RODict({
         "ID": 30010009,
@@ -19584,7 +19422,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010010: _tools.RODict({
         "ID": 30010010,
@@ -19635,7 +19473,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010011: _tools.RODict({
         "ID": 30010011,
@@ -19686,7 +19524,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010012: _tools.RODict({
         "ID": 30010012,
@@ -19737,7 +19575,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010013: _tools.RODict({
         "ID": 30010013,
@@ -19788,7 +19626,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010014: _tools.RODict({
         "ID": 30010014,
@@ -19839,7 +19677,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010015: _tools.RODict({
         "ID": 30010015,
@@ -19890,7 +19728,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010016: _tools.RODict({
         "ID": 30010016,
@@ -19941,7 +19779,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010017: _tools.RODict({
         "ID": 30010017,
@@ -19992,7 +19830,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010018: _tools.RODict({
         "ID": 30010018,
@@ -20043,7 +19881,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010019: _tools.RODict({
         "ID": 30010019,
@@ -20094,7 +19932,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010020: _tools.RODict({
         "ID": 30010020,
@@ -20145,7 +19983,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010021: _tools.RODict({
         "ID": 30010021,
@@ -20196,7 +20034,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010022: _tools.RODict({
         "ID": 30010022,
@@ -20247,7 +20085,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010023: _tools.RODict({
         "ID": 30010023,
@@ -20298,7 +20136,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30010024: _tools.RODict({
         "ID": 30010024,
@@ -20349,160 +20187,7 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 0
-    }),
-    30990110: _tools.RODict({
-        "ID": 30990110,
-        "name": "装备培养礼包",
-        "type": 0,
-        "subType": 3,
-        "class": 0,
-        "quality": 4,
-        "qualityValue": 0,
-        "levelRequirement": 0,
-        "maxStackSize": 999,
-        "use": "使用",
-        "useNum": 0,
-        "dailyUseLimit": 0,
-        "itemCD": 0,
-        "CDGroup": 0,
-        "casting": 0.0,
-        "indexID": 0,
-        "rndSynNotAvail": 0,
-        "isPutInCustomSlot": 0,
-        "isAutoUseInCustomSlot": 0,
-        "batchUse": 0,
-        "quickUse": 0,
-        "pickUpReward": 0,
-        "Ncn": 0,
-        "content": None,
-        "Ctoplimit": 0,
-        "disassemblyReward": 0,
-        "disassemblyReward2": 0,
-        "synthesisID": 0,
-        "quantityLimit": 0,
-        "AutomaticallyChangetoItem": None,
-        "itemTimeOut": "",
-        "expirationDate": 0,
-        "incrementTime": 0,
-        "usableTime": "",
-        "recycleType": 1,
-        "recycleParameter": None,
-        "recycleForm": 0,
-        "recycleReplaceItem": None,
-        "messageTipsID": 54000002,
-        "messageChatID": 58000062,
-        "event": "",
-        "param": "",
-        "conditionCheckAction": None,
-        "action": _30990110,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
-        "auctionItemPubDuration": 0,
-        "lockAvailable": 0,
-        "sellPrice": 0
-    }),
-    30990111: _tools.RODict({
-        "ID": 30990111,
-        "name": "精灵礼包",
-        "type": 0,
-        "subType": 3,
-        "class": 0,
-        "quality": 4,
-        "qualityValue": 0,
-        "levelRequirement": 0,
-        "maxStackSize": 999,
-        "use": "使用",
-        "useNum": 0,
-        "dailyUseLimit": 0,
-        "itemCD": 0,
-        "CDGroup": 0,
-        "casting": 0.0,
-        "indexID": 0,
-        "rndSynNotAvail": 0,
-        "isPutInCustomSlot": 0,
-        "isAutoUseInCustomSlot": 0,
-        "batchUse": 0,
-        "quickUse": 0,
-        "pickUpReward": 0,
-        "Ncn": 0,
-        "content": None,
-        "Ctoplimit": 0,
-        "disassemblyReward": 0,
-        "disassemblyReward2": 0,
-        "synthesisID": 0,
-        "quantityLimit": 0,
-        "AutomaticallyChangetoItem": None,
-        "itemTimeOut": "",
-        "expirationDate": 0,
-        "incrementTime": 0,
-        "usableTime": "",
-        "recycleType": 1,
-        "recycleParameter": None,
-        "recycleForm": 0,
-        "recycleReplaceItem": None,
-        "messageTipsID": 54000002,
-        "messageChatID": 58000062,
-        "event": "",
-        "param": "",
-        "conditionCheckAction": None,
-        "action": _30990111,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
-        "auctionItemPubDuration": 0,
-        "lockAvailable": 0,
-        "sellPrice": 0
-    }),
-    30990120: _tools.RODict({
-        "ID": 30990120,
-        "name": "装备制造材料包",
-        "type": 0,
-        "subType": 3,
-        "class": 0,
-        "quality": 3,
-        "qualityValue": 0,
-        "levelRequirement": 0,
-        "maxStackSize": 999,
-        "use": "使用",
-        "useNum": 0,
-        "dailyUseLimit": 0,
-        "itemCD": 0,
-        "CDGroup": 0,
-        "casting": 0.0,
-        "indexID": 0,
-        "rndSynNotAvail": 0,
-        "isPutInCustomSlot": 0,
-        "isAutoUseInCustomSlot": 0,
-        "batchUse": 0,
-        "quickUse": 0,
-        "pickUpReward": 0,
-        "Ncn": 0,
-        "content": None,
-        "Ctoplimit": 0,
-        "disassemblyReward": 0,
-        "disassemblyReward2": 0,
-        "synthesisID": 0,
-        "quantityLimit": 0,
-        "AutomaticallyChangetoItem": None,
-        "itemTimeOut": "",
-        "expirationDate": 0,
-        "incrementTime": 0,
-        "usableTime": "",
-        "recycleType": 1,
-        "recycleParameter": None,
-        "recycleForm": 0,
-        "recycleReplaceItem": None,
-        "messageTipsID": 54000002,
-        "messageChatID": 58000062,
-        "event": "",
-        "param": "",
-        "conditionCheckAction": None,
-        "action": _30990120,
-        "auctionAllowListing": 0,
-        "auctionPriceDuration": None,
-        "auctionItemPubDuration": 0,
-        "lockAvailable": 0,
-        "sellPrice": 0
+        "sellPrice": 1000
     }),
     30990121: _tools.RODict({
         "ID": 30990121,
@@ -20550,7 +20235,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (20, 200),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -20601,7 +20286,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10, 100),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -20652,7 +20337,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10, 100),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -20703,7 +20388,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (10, 100),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -20754,7 +20439,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (600, 6000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -20805,7 +20490,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (300, 3000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -20856,7 +20541,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (300, 3000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -20907,7 +20592,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (300, 3000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -20958,7 +20643,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (18000, 180000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -21009,7 +20694,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (9000, 90000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -21060,7 +20745,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (9000, 90000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -21111,7 +20796,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (9000, 90000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -21162,7 +20847,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (600000, 6000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -21213,7 +20898,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (300000, 3000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -21264,7 +20949,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (300000, 3000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -21315,7 +21000,7 @@ datas = _tools.RODict({
         "conditionCheckAction": None,
         "action": None,
         "auctionAllowListing": 1,
-        "auctionPriceDuration": None,
+        "auctionPriceDuration": (300000, 3000000),
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
         "sellPrice": 0
@@ -21477,7 +21162,7 @@ datas = _tools.RODict({
         "ID": 30990155,
         "name": "日记文物1",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21522,13 +21207,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990156: _tools.RODict({
         "ID": 30990156,
         "name": "日记文物2",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21573,13 +21258,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990157: _tools.RODict({
         "ID": 30990157,
         "name": "日记文物3",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21624,13 +21309,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990158: _tools.RODict({
         "ID": 30990158,
         "name": "赃物",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21681,7 +21366,7 @@ datas = _tools.RODict({
         "ID": 30990159,
         "name": "补给",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21732,7 +21417,7 @@ datas = _tools.RODict({
         "ID": 30990160,
         "name": "皮货",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21783,7 +21468,7 @@ datas = _tools.RODict({
         "ID": 30990161,
         "name": "鱼翅",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21834,7 +21519,7 @@ datas = _tools.RODict({
         "ID": 30990162,
         "name": "神秘文字",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21879,13 +21564,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990163: _tools.RODict({
         "ID": 30990163,
         "name": "船员日志1",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21930,13 +21615,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990164: _tools.RODict({
         "ID": 30990164,
         "name": "船员日志2",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -21981,13 +21666,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990165: _tools.RODict({
         "ID": 30990165,
         "name": "船员日志3",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22032,13 +21717,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990166: _tools.RODict({
         "ID": 30990166,
         "name": "玉佩",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22089,7 +21774,7 @@ datas = _tools.RODict({
         "ID": 30990167,
         "name": "魔物肉",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22140,7 +21825,7 @@ datas = _tools.RODict({
         "ID": 30990168,
         "name": "魔物角",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22191,7 +21876,7 @@ datas = _tools.RODict({
         "ID": 30990169,
         "name": "古董",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22242,7 +21927,7 @@ datas = _tools.RODict({
         "ID": 30990170,
         "name": "鱼饵",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22293,7 +21978,7 @@ datas = _tools.RODict({
         "ID": 30990171,
         "name": "士兵的家书",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22338,13 +22023,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990172: _tools.RODict({
         "ID": 30990172,
         "name": "神秘丹药",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22395,7 +22080,7 @@ datas = _tools.RODict({
         "ID": 30990173,
         "name": "张贝尔的信",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22440,13 +22125,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990174: _tools.RODict({
         "ID": 30990174,
         "name": "村长的信件",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22491,13 +22176,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990175: _tools.RODict({
         "ID": 30990175,
         "name": "士兵的信件",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22542,13 +22227,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990176: _tools.RODict({
         "ID": 30990176,
         "name": "祖珂碑文",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22593,13 +22278,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990177: _tools.RODict({
         "ID": 30990177,
         "name": "祖珂日记1",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22644,13 +22329,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990178: _tools.RODict({
         "ID": 30990178,
         "name": "祖珂日记2",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22695,13 +22380,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990179: _tools.RODict({
         "ID": 30990179,
         "name": "祖珂日记3",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22746,13 +22431,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990180: _tools.RODict({
         "ID": 30990180,
         "name": "祖珂日记4",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22797,13 +22482,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990181: _tools.RODict({
         "ID": 30990181,
         "name": "少女的信",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22848,13 +22533,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990182: _tools.RODict({
         "ID": 30990182,
         "name": "要塞密信",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22905,7 +22590,7 @@ datas = _tools.RODict({
         "ID": 30990183,
         "name": "线索一",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -22950,13 +22635,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990184: _tools.RODict({
         "ID": 30990184,
         "name": "线索二",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -23001,13 +22686,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990185: _tools.RODict({
         "ID": 30990185,
         "name": "线索三",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -23052,13 +22737,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990186: _tools.RODict({
         "ID": 30990186,
         "name": "线索四",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -23103,13 +22788,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990187: _tools.RODict({
         "ID": 30990187,
         "name": "指挥官的信",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -23154,13 +22839,13 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
     }),
     30990188: _tools.RODict({
         "ID": 30990188,
         "name": "城郊高人的信",
         "type": 0,
-        "subType": 0,
+        "subType": 15,
         "class": 0,
         "quality": 0,
         "qualityValue": 0,
@@ -23205,8 +22890,59 @@ datas = _tools.RODict({
         "auctionPriceDuration": None,
         "auctionItemPubDuration": 0,
         "lockAvailable": 0,
-        "sellPrice": 500
+        "sellPrice": 0
+    }),
+    30990189: _tools.RODict({
+        "ID": 30990189,
+        "name": "铁匠的工具",
+        "type": 0,
+        "subType": 15,
+        "class": 0,
+        "quality": 0,
+        "qualityValue": 0,
+        "levelRequirement": 0,
+        "maxStackSize": 100,
+        "use": "",
+        "useNum": 0,
+        "dailyUseLimit": 0,
+        "itemCD": 0,
+        "CDGroup": 0,
+        "casting": 0.0,
+        "indexID": 0,
+        "rndSynNotAvail": 0,
+        "isPutInCustomSlot": 0,
+        "isAutoUseInCustomSlot": 0,
+        "batchUse": 0,
+        "quickUse": 0,
+        "pickUpReward": 0,
+        "Ncn": 0,
+        "content": None,
+        "Ctoplimit": 0,
+        "disassemblyReward": 0,
+        "disassemblyReward2": 0,
+        "synthesisID": 0,
+        "quantityLimit": 0,
+        "AutomaticallyChangetoItem": None,
+        "itemTimeOut": "",
+        "expirationDate": 0,
+        "incrementTime": 0,
+        "usableTime": "",
+        "recycleType": 0,
+        "recycleParameter": None,
+        "recycleForm": 0,
+        "recycleReplaceItem": None,
+        "messageTipsID": 54000002,
+        "messageChatID": 58000062,
+        "event": "",
+        "param": "",
+        "conditionCheckAction": None,
+        "action": None,
+        "auctionAllowListing": 0,
+        "auctionPriceDuration": None,
+        "auctionItemPubDuration": 0,
+        "lockAvailable": 0,
+        "sellPrice": 0
     })
 })
 minKey = 30000001
-maxKey = 30990188
+maxKey = 30990189
