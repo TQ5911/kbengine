@@ -181,3 +181,6 @@ cd Server/kbeLinux/kbengine/assets
  
 
 
+fengyan@ubuntumyh:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/hotReload$ python3 ./genhotfix.py baseapp iBag IBag reqBagSort
+fengyan@ubuntumyh:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/hotReload$ python3 ./genhotfix.py cellapp impCombat ImpCombat clientSetState
+fengyan@ubuntumyh:/mnt/hgfs/game/Server/kbeLinux/kbengine/assets/hotReload$ python3 ./genhotfix.py interface game _onCheckWhiteList
