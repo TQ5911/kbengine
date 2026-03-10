@@ -115,3 +115,69 @@ def _refreshData(includeModules):
                 DEBUG_MSG('_refreshData::reReference({}, {})'.format(
                     moduleName, r_name))
                 setattr(module, r_name, r_module)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+线上代码热更以及分支操作流程
+服务端线上热更方法：
+1. 安装astor模块
+    sudo apt-get install python3-astor
+
+2. 执行getHotReload.py脚本
+	cd Server/kbeLinux/kbengine/assets/hotReload
+2.1 对于类方法参数格式为：component module class method
+      python3 ./genhotfix.py cellapp iCrusade ICrusade _enterTeamCrusadeDungeon
+
+2.2 对于模块方法，参数格式为：component module method
+     python3 ./genhotfix.py baseapp dataUtils getRaidConstDataValue
+
+3.在游戏中 GM执行$hotreload命令， 游戏内的代码就会热更到最新
+
+cd Server/kbeLinux/kbengine/assets
+
+./cmd_hotReload.sh
+
+注：1.每次运行脚本工具 会在 hotReload.py 中增加一个 要热更新的函数，原有的其他函数会保留。 
+      2.使用GM命令的的时候，会热更 hotReload.py 内的 refreshCell() 或者 refreshBase() 中的 所有函数
+      3.提供三个GM命令：
+	
+	$hotreload:同时在cellapp和baseapp上执行
+	
+	$hotreloadCell: 在各个cellapp上执行hotReload.refreshCell()函数
+	
+	$hotreloadBase: 在各个baseapp上执行hotReload.refreshBase()函数
+
+线上分支操作流程：
+
+1. 功能代码修复后，提交到trunk分支
+2. 合并分支，merge到online本地分支
+3. 用上面的服务端线上热更方法，在online本地分支制作hotreload, 位置：Server/kbeLinux/kbengine/assets/scripts/server_common/hotreload.py
+4.在online本地分支测试hotreload功能生效
+5.提交hotreload和修复的代码到svn远程online分支
+6.找对应的功能测试同学，在online分支验证：1. hotreload代码，2. 功能代码
+7.走发布流程发布到线上
+ 
+
+
