@@ -1,0 +1,220 @@
+传送文件相关命令
+
+	#从服务器 / 虚拟机向本地终端（物理机）传输文件的工具，属于 lrzsz 工具集的一部，特别适合没有共享文件夹、只想快速传小文件的场景
+	sudo apt install lrzsz
+	sz = 「Linux → 本地」传文件；rz = 「本地 → Linux」传文件
+
+
+	在「本地 ↔ 远程服务器」、「远程服务器 A ↔ 远程服务器 B」之间，安全的传输文件 / 文件夹
+	scp命令
+	在当前windows桌面的powerShell下输入命令
+	上传到虚拟机如 scp C:\Users\Administrator\Desktop\kbengine.rar fengyan@192.168.10.172:/home/fengyan
+	从虚拟机下载如 scp fengyan@192.168.10.172:/home/fengyan/kbengine.rar "C:\Users\Administrator\Desktop\"
+	如果是文件夹则加 scp 后跟 -r 参数
+
+	也可以再虚拟机里
+	有的可以使用如下
+	scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null fengyan@192.168.10.172:/home/fengyan/kbengine.rar /c/Users/Administrator/Desktop
+	有的如下会下载到  C:\Users\Administrator\Recent
+	scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null fengyan@192.168.10.172:/home/fengyan/kbengine.rar ~/
+
+
+账号相关
+	whoami命令查看当前终端登录的用户
+	su root切换到root用户， exit命令返回原用户
+	sudo passwd 用户名 重置指定账户的密码
+
+
+vim 里
+:数字+回车跳转到指定行
+# 普通模式下
+yy复制
+按p粘贴到光标下方
+按P粘贴到光标上方
+# 或者直接复制指定单行
+:数字+y
+# 复制指定10-20多行
+:10,20y 或者 :10yy20
+#在当前光标位置向下查找字符串test
+/test
+#在当前光标位置向上查找字符串test
+?test
+按n,N上下跳转到下一个匹配位置
+# 查找整词，\<要查找的单词\>， 即想只匹配独立的test单词
+:/\<test\>
+#默认是大小写铭感的，也就是区分大小写,忽略大小写的话加\c
+:/\ctest
+# 用^匹配行首的字符串, 如查找所有以#开头的注释行
+:/^# 
+# 匹配行尾的字符串：用$结尾, 如查找所有以;结尾的行
+:/;$
+# 替换
+:%s/旧字符串/新字符串/gi （%表示全文件，g表示全局替换，无g仅替换每行第一个匹配项，i忽略大小写）
+# 只替换光标向下的第一个
+:s/旧字符串/新字符串/
+
+# 查看文件的MD5值,一般用在文件是否有更新检测
+md5sum 文件
+
+#实时查看文件最后20行
+tail -f -n 20 a.txt	
+查看文件最后20行	
+tail -n 20 a.txt
+
+查找文件里指定字符串
+# -n显示行号
+# -i忽略大小写
+# -x匹配整行
+grep -in "ztq" a.txt
+
+
+# 查看端口监听信息
+-t是tcp
+-u是udp
+-l显示处于监听状态的端口
+-n以数字形式显示端口和 IP
+-p限时对应的进程
+-a显示所有状态的套接字（包括监听、已建立、TIME_WAIT、CLOSE_WAIT 等，核心获取连接情况）
+
+# 查看指定端口的情况
+ss -tulnp | grep 20013
+# 查看指定进程的情况
+sudo ss -tlnap | grep 进程名或者进程id
+
+查性能问题
+top -c 展示  按p按cpu排序，找到cpu最高的进程PID，如 1280785
+top -H -p 1280785 查看该进程，如下 
+Threads:   3 total,   0 running,   3 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  2.4 us,  2.5 sy,  0.0 ni, 94.9 id,  0.0 wa,  0.0 hi,  0.2 si,  0.0 st 
+MiB Mem :   7894.0 total,    267.4 free,   3303.9 used,   4630.9 buff/cache     
+MiB Swap:   4096.0 total,   3266.0 free,    830.0 used.   4590.2 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                      
+1280785 fengyan   20   0  712700 449124  18276 S   4.0   5.6  14:29.45 cellapp                   # PID就是线程，主线程id=进程id吗               
+1280941 fengyan   20   0  712700 449124  18276 S   0.0   5.6   0:00.04 cellapp                    #子线程 
+1280942 fengyan   20   0  712700 449124  18276 S   0.0   5.6   0:00.03 cellapp
+
+
+printf "%x\n" 1280785    打印线程id的16进制
+138b11
+
+ sudo perf record -g -p 1280785 -o kbe_perf.data sleep 10
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.122 MB kbe_perf.data (604 samples) ]
+生成了分析报告
+
+perf report -i kbe_perf.data  # 查看分析报告  q退出
+
+
+
+
+# 1. 附加到高CPU进程
+gdb -p <PID>
+
+# 2. 查看所有线程
+info threads
+
+# 3. 切换到高CPU线程（对应第一步的TID，注意gdb中线程ID是序号，不是TID）
+thread <线程序号>
+
+# 4. 查看调用栈（关键！定位到具体函数）
+bt  # 简写，完整命令：backtrace
+
+# 5. 如果进程卡死，强制打印所有线程栈
+thread apply all bt
+
+
+
+
+
+虚拟机共享目录后 服务器里需要手动挂载
+# 创建挂载点（不存在时）
+sudo mkdir -p /mnt/hgfs
+# 临时挂载所有共享（允许普通用户访问）
+sudo vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other
+# 查看结果
+ls /mnt/hgfs
+# 设置开机自动挂载（永久生效）
+sudo vim /etc/fstab
+# 添加以下行（末尾换行），共享名替换为实际名称
+.host:/ /mnt/hgfs fuse.vmhgfs-fuse allow_other,defaults 0 0
+# 生效配置
+sudo mount -a
+
+
+
+下载抓包工具
+sudo apt install tcpdump
+查看网卡
+ip addr
+抓指定网卡，如ens33
+抓取与 192.168.11.3的数据包, 保存抓包数据到 当前目录下的a.pcap
+sudo tcpdump -i ens33 host 192.168.11.3 -w a.pcap
+抓取本地端口为30015 的数据包
+sudo tcpdump -i any -n udp port 30015 -w udp_30015.pcap
+
+winshark里 过滤
+ip.src  == 192.168.11.3 && ip.dst == 192.168.10.172 and udp and udp.port == 30015
+
+
+安装jenkins时
+通过官方源 GPG秘钥一直提示 秘钥有问题
+最后通过下载
+直接下载 Jenkins 的 .deb 安装包手动安装，绕过 apt 源的签名验证环节
+
+wget https://pkg.jenkins.io/debian-stable/binary/jenkins_2.479.1_all.deb
+
+# 安装下载的 deb 包，自动处理依赖
+sudo dpkg -i jenkins_2.479.1_all.deb
+
+# 若出现依赖缺失，执行以下命令修复
+sudo apt -f install -y
+
+# 启动服务
+sudo systemctl start jenkins
+
+# 设置开机自启
+sudo systemctl enable jenkins
+
+# 检查服务状态
+sudo systemctl status jenkins
+
+#开放 8080 端口
+sudo ufw allow 8080/tcp && sudo ufw reload
+# 查看防火墙状态（确认 8080 端口已开放）
+sudo ufw status
+
+# 获取初始管理员密码
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+安装推荐插件
+
+
+
+工程在设置 Repository URL时,提示
+在表单字段验证（HTTP 403）过程中发生了内部错误。请重新加载页面，如果问题依旧，请向管理员寻求帮助
+一般是 jenkins没有访问 svn目录的权限(当前是挂载的共享目录的权限)，需要开放jenkins的权限
+
+id jenkins
+#输出id gid信息
+sudo vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other,uid=113,gid=113
+# 模拟jenkins用户执行svn命令,测试
+sudo -u jenkins svn info file:///mnt/hgfs/shared_floder/test_svn/trunk
+
+
+#还有就是目标服务器对应目录需要jenkins的可写权限
+#如
+ls -ld /home/fengyan/jenkins
+drwxr-xr-x 2 root root 4096 Jan 27 10:11 /home/fengyan/jenkins# 标识只有root可写
+
+# 给部署根目录赋权
+# 方式1：最简单（测试/内网环境推荐），给部署目录最大权限
+chmod -R 777 /home/fengyan/jenkins
+
+## 方式2：更安全（生产环境），给SSH登录用户赋权（假设SSH用户是fengyan）
+sudo chown -R fengyan:fengyan /home/fengyan/jenkins
+sudo chmod -R 775 /home/fengyan/jenkins
+
+点击构建，jenkins会拉取新到代码然后打包推送的目标服务器,我这里是
+从 本地 svn file:///mnt/hgfs/shared_floder/test_svn/trunk 
+推到 192.168.10.172/home/fengyan/jenkins 下

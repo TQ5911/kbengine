@@ -1,0 +1,117 @@
+请求进入城战
+enterCrossServerSiegeWarSpace
+
+回复可进入时
+onCheckCanEnterSiegeWarSpace里的
+	# 正式进入城战前 线获取工会 权限信息
+	self.guildBox.getCacheBeforeEnterCrossSiegeWar(self, self.gbID)
+
+收到onGetSiegeWarGuildCacheData后
+reqCrossServer请求进入目标跨服 服务器id为 gameconfig.crossSiegeWarServerInfo()['crossServerId'] 
+onEnterCrossSiegeWarSpaceRemotely 就是跨服角色创建和初始化完毕后的回调
+
+onReqCrossServer 通知跨服的 CrossServerStub 处理 进入请求
+同时 self.endCrossServerTimerId 定时器处理进入超时的 结束进入跨服逻辑
+
+
+onReqCrossServer里会记录跨服的账号名accountName 和 生成一个token返给原服的客户端
+回复原服 onCrossServerResp 记录 token 信息用于后续客户端连接登录跨服时的凭证
+回复客户端 token 目标跨服服务器id 和 城战地图id
+然后客户端根据 跨服服务器id 走登录流程去连接和登录跨服服务器
+
+
+跨服登录账号类型 也就是 accountType是 centralLogin.ACCOUNT_CROSS_SERVER=3 用于区分三方登录，即正常三方如taptap登录 是类型4, 账号名为 AAAAA, 会发送4:AAAAA 过来,但跨服会发送 3:AAAAA 过来
+且附带数据clientData里会携带 "crossServerToken" 字段也就是上面的 token
+登录时 回调脚本的onRequestAccountLogin
+判断是 accountType == centralLogin.ACCOUNT_CROSS_SERVER 且携带 "crossServerToken" 时判断为跨服登录
+直接走登录成功流程,底层会在跨服里创建 账号然后 回调Account 模板进行初始化,Account中通过 self.accountType==centralLogin.ACCOUNT_CROSS_SERVER 判断在跨服中
+然后 checkCrossServerToken 通知 CrossServerStub 校验token， 回复 onCheckCrossServerTokenRet
+校验成功后 account 回复 原服 onReqGetAvatarPorperties 请求角色信息						,否则销毁跨服Account
+
+本服 通过 self.addAllPropertiesToStream()封装当前账号 和 角色的相关信息, 是由底层实现的，
+会回调 onGetAllProperties,参数就是封装好的信息
+def onGetAllProperties(self, baseMemoryStream, cellMemoryStream)
+
+通过 onGetAvatarPorpertiesResp 发给跨服
+跨服里创建对应的Avatar
+setAccountInfo 设置avatar的 self.crossServerState为 gameconst.CrossServerState.IN_CROSS_SERVER
+self.otherServerAvatarBox = self.accountEntity.otherServerAvatarBox  设置原服ServerCall
+
+
+通过self.giveClientTo(avatar， 在跨服中奖权限交给avatar,回调 avatar的onClientEnabled
+onClientEnabled 创建cell实体，传递参数
+cellData['cellCrossServerState'] = self.crossServerState
+cellData['isInLocalServer'] = int(False)
+
+创建成功后回调base avatar的onGetCell
+通过
+        if self.isCrossServerInOtherServer:
+            self.crossServerSuccess()
+回复原服跨服成功
+crossServerSyncOtherInitedDataFromLocalServer 原服base请求cell同步其他数据
+onCrossServerSyncOtherInitedDataFromLocalServer 原服cell回复base同步的其他数据
+通知跨服 crossServerCallBack 处理其他数据
+
+最后 通过 回调 onEnterCrossSiegeWarSpaceRemotely 处理在跨服中让角色进入城战space
+然后 self.goBackServerTimerId 设置角色在跨服允许待着的时长 的超时定时器
+
+
+onEnterCrossSiegeWarSpaceRemotely 中通知 SiegeWarSpaceStub 处理角色进入城战space
+设置城战阵营等信息
+通过
+box.beginEnterSiegeWarSpace(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, spaceNo, False)
+进入城战space
+
+
+重登逻辑
+		       	 if self.isCrossServerInLocalServer:
+            			self.onReloginInCrossServerState()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+退出跨服逻辑
+主动退出leaveCrossServerSiegeWarSpace 和 超时self.goBackServerTimerId
+都是调用 gobackServer
+
+# 通知原服结束跨服
+self.otherServerAvatarBox.onCrossServerEnd
+# 跨福里角色下线
+self.cell.offline
+
+
+原服处理 onCrossServerEnd
+
+在跨服中选择角色会退出跨服, 原服回调 backSelectCharacterFromCrossServer
+            self.base.gobackServer(gameconst.CrossServerCallbackComponent.CELL,
+                                   'backSelectCharacterFromCrossServer', ())
+
+在跨服中下线也会会退出跨服, 原服回调 backSelectCharacterFromCrossServer，offlineFromCrossServer
+            self.base.gobackServer(gameconst.CrossServerCallbackComponent.CELL,
+                                   'offlineFromCrossServer', (reason, ))
+
+原服回调 都会调用setCrossServerWaitingClientInitReason 设置超时,目的是等待客户端重新连接 原服后
+initClientOnCell后 调用 handleCrossServerWaitingClientInitReason，移除超时
+
+
+
+
+
+
+
+重登原服时处理重登跨服
+self.onReloginInCrossServerState()

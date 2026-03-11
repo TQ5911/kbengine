@@ -11,7 +11,7 @@ def selectAvatarGame(self, exposed, gbId, isForceHost):
 
 def kickAccount(self, reason, accountName, accountType):
 def delAccount(self):
-def destroyAccount(self, reason=gameconst.AVATAR_OFFLINE_REASON_DESTORY):
+def destroyAccount(self, reason=gameconst.AVATAR_OFFLINE_REASON_DESTORY): 用这个
 
 
 注意还有子账户 看 getAccountByChn
