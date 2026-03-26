@@ -38,13 +38,13 @@ func (self *GameServerService) tickQueue() {
 	for {
 		conn := self.app.redisPool.Get()
 		<-self.queueTicker.C
-		onlineNum, err := redis.Int(conn.Do("get", "ServerOnlineNum_"+strconv.Itoa(int(self.hostId))))
+		onlineNum, err := redis.Int(conn.Do("get", "g:normal_online_num"+strconv.Itoa(int(self.hostId))))
 		conn.Close()
 		if err != nil {
-			appLog.Error("tickQueue get ServerOnlineNum_"+strconv.Itoa(int(self.hostId))+" failed", err.Error())
+			appLog.Error("tickQueue get g:normal_online_num"+strconv.Itoa(int(self.hostId))+" failed", err.Error())
 			continue
 		}
-		appLog.Info("tickQueue: ", onlineNum, " ", "ServerOnlineNum_"+strconv.Itoa(int(self.hostId)), " ", MaxOnlineNum)
+		appLog.Info("tickQueue: ", onlineNum, " ", "g:normal_online_num"+strconv.Itoa(int(self.hostId)), " ", MaxOnlineNum)
 		var items []string
 		for k, v := range self.app.serverVIPQueues {
 			items = append(items, fmt.Sprintf("(%d: %v), ", k, v.Items))

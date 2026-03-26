@@ -316,7 +316,7 @@ func (a *AuctionItem) GetPublicityGap() int64 {
 
 	for idx := 0; idx < len(auctionPublicityTime) && idx+1 < len(auctionPublicityTime); idx = idx + 2 {
 		if auctionPublicityTime[idx] == quality {
-			return int64(auctionPublicityTime[idx+1]) * 3600
+			return int64(auctionPublicityTime[idx+1]) * 60
 		}
 	}
 	return 0

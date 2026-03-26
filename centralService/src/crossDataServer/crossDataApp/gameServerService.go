@@ -98,7 +98,7 @@ func (gss *GameServerService) RemoveGuildInfo(in *gameServerService.RemoveGuildI
 	return nil, nil
 }
 
-func (gss *GameServerService) BroadcastGuildRelationSingle(relation *gameServerService.BroadcastGuildRelationSingle) {
+func (gss *GameServerService) BroadcastGuildRelationSingleMsg(relation *gameServerService.BroadcastGuildRelationSingle) {
 	for _, server := range gss.app.gameServers {
 		server.GetClientEndPoint().(*gameServerService.GameServerClient).OnBroadcastGuildRelationSingle(relation)
 	}
@@ -112,7 +112,7 @@ func (gss *GameServerService) AddGuildRelation(in *gameServerService.AddGuildRel
 	receiverGuildInfo := gss.app.guildData.getGuildInfo(in.GuildUUID2)
 
 	if relation != nil {
-		gss.BroadcastGuildRelationSingle(relation)
+		gss.BroadcastGuildRelationSingleMsg(relation)
 		_, err := gss.GetClientEndPoint().(*gameServerService.GameServerClient).OnAddGuildRelation(&gameServerService.AddGuildRelationResult{
 			Uuid:      in.Uuid,
 			Success:   true,

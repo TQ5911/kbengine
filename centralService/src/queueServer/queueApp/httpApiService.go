@@ -59,7 +59,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	onlineNum, err := redis.Int(conn.Do("get", "ServerOnlineNum_"+serverIdStr))
+	onlineNum, err := redis.Int(conn.Do("get", "g:normal_online_num"+serverIdStr))
 	if err != nil {
 		appLog.Warn("handleStartQueue request invalid serverId:\n", serverId, self.app.gameServers, err.Error())
 		response := QueueReply{}
@@ -176,11 +176,12 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		appLog.Info("queue success")
 	} else {
 		VIPFlag := false
-		isVIP, err := redis.String(conn.Do("get", "g:vip:v:"+accountNameStr))
-		if err == nil && isVIP == "1" {
+		expireTime, err := redis.String(conn.Do("get", "g:vip:v:"+accountNameStr))
+		expireTimeI64, err2 := strconv.ParseInt(expireTime, 10, 64)
+		if err == nil && err2 == nil && expireTimeI64 > time.Now().Unix() {
 			VIPFlag = true
 		}
-		appLog.Info("isVIP: ", VIPFlag, " err:", err)
+		appLog.Info("isVIP: ", VIPFlag, " err:", err, " err2:", err2)
 
 		var client = self.app.NewHttpClientService(accountNameStr, serverIdStr)
 		self.app.addClient(client)

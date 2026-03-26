@@ -1,1 +1,11 @@
-app starting: {ClientServiceAddr:0.0.0.0:2020 GameServerServiceAddr:0.0.0.0:2030 Mysql:{Addr:127.0.0.1:3306 User:fengyan Passwd:123456 Db:test_login} CentralServerId:1 AddressForDebug:localhost:8989 IdipHttpServer:0.0.0.0:8999 LogPath:login.log LogLevel:0 LogRotateSize:500 RedisServer:{Addr:192.168.10.172:6379 Passwd: Db:} AccountTypes:[] TapTap:map[clientid:kcqk8sx9sregfsf2wn nonce:y7xakqLCz6rCsuN9lldRQ3fi reqhost:open.tapapis.cn requri:/account/profile/v1?client_id=] Official:map[reqhost:http://192.168.10.16:8080/user requri:/api/v1/user-info/check-token]}
+app starting: {ClientServiceAddr:0.0.0.0:2020 GameServerServiceAddr:0.0.0.0:2030 Mysql:{Addr:127.0.0.1:3306 User:fengyan Passwd:123456 Db:login} CentralServerId:1 AddressForDebug:localhost:8989 IdipHttpServer:0.0.0.0:8999 LogPath:login.log LogLevel:0 LogRotateSize:500 RedisServer:{Addr:127.0.0.1:6379 Passwd: Db:} AccountTypes:[] TapTap:map[clientid:kcqk8sx9sregfsf2wn nonce:y7xakqLCz6rCsuN9lldRQ3fi reqhost:open.tapapis.cn requri:/account/profile/v1?client_id=] Official:map[reqhost:https://test.api.hzyunxingu.cn/user requri:/api/v1/user-info/check-token]}
+2026/03/21 14:01:26 qiwei report error, report data: ms report, server name: centralServer, server id: 0, time: 2026-03-21 14:01:11.628387531 +0800 CST m=+255590.043826854
+checkClientLogin failed: cannot find client1shenxisheng7
+verifyLogin failed: 1shenxisheng7CuyhquKpLTRUKUR, resp data: , err: Post "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5": dial tcp: lookup qyapi.weixin.qq.com on 127.0.0.53:53: read udp 127.0.0.1:38666->127.0.0.53:53: i/o timeout
+conn redis failed, dial tcp 127.0.0.1:6379: connect: connection refused
+conn redis failed, dial tcp 127.0.0.1:6379: connect: connection refused
+2026/03/25 06:09:21 qiwei report error, report data: ms report, server name: centralServer, server id: 0, time: 2026-03-25 06:09:11.004244455 +0800 CST m=+572869.419683773
+UpdateServerInfo set failed20227read tcp 127.0.0.1:36668->127.0.0.1:6379: read: connection reset by peer
+handle request error: read tcp 127.0.0.1:36668->127.0.0.1:6379: read: connection reset by peer
+UpdateServerInfo set failed20227dial tcp 127.0.0.1:6379: connect: connection refused
+handle request error: dial tcp 127.0.0.1:6379: connect: connection refused, resp data: , err: Post "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5": dial tcp: lookup qyapi.weixin.qq.com on 127.0.0.53:53: read udp 127.0.0.1:52601->127.0.0.53:53: i/o timeout

@@ -6,7 +6,7 @@
     	"addr":"127.0.0.1:3306",
     	"user":"fengyan",
     	"passwd":"123456",
-    	"db":"test_login"
+    	"db":"login"
     },
     "centralServerId":1,
     "addressForDebug":"localhost:8989",
@@ -15,7 +15,7 @@
     "logLevel":0,
     "logRotateSize":500,
     "redisServer":{
-    	"addr":"192.168.10.172:6379",
+    	"addr":"127.0.0.1:6379",
     	"passwd":"",
     	"db":""
     },
@@ -28,7 +28,7 @@
         "reqURI":"/account/profile/v1?client_id="
     },
     "official":{
-        "reqHost":"http://192.168.10.16:8080/user",
+        "reqHost":"https://test.api.hzyunxingu.cn/user",
         "reqURI":"/api/v1/user-info/check-token"
     }
 }

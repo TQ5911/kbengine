@@ -128,7 +128,7 @@ func (self *RpcChannel) ReadData(dataBuf []byte) error {
 	for totalConsumed < dataLen {
 		didReadRequest, consumedLen, err := self.RpcRequestReader.readRequest(&self.RpcRequest, dataBuf, totalConsumed)
 		if err != nil {
-			appLog.Error("read error:", err.Error())
+			appLog.Error("read error:", err.Error(), self.RawConn.RemoteAddr())
 			return err
 		}
 

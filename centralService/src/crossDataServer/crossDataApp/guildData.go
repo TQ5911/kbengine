@@ -325,6 +325,7 @@ func (gd *GuildData) AddGuildRelation(
 			RelationType: int32(relationType),
 		},
 		Version: uint32(gd.relationVersion),
+		EndTime: endTime,
 	}, ERROR_CODE_SUCCESS
 }
 
