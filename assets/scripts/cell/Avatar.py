@@ -51,6 +51,7 @@ import visible_visible as V_VD
 import message_chatMessage as MCMD
 import guildAuthorization_authorization_def as GA_A_DD
 import buff_buff as B_BD
+import message_Message_def as M_M_DD
 
 import iFubenSpace
 import impTask
@@ -74,7 +75,7 @@ import iCubeCell
 import iGuildCell
 import iGuildTrainCell
 import iLeaderBoardCell
-import cell.iWonderLandCell as iWonderLandCell
+import iWonderLandCell
 import iCollectible
 import iDuelCell
 import iSiegeWarCell
@@ -114,6 +115,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         impAvatarPK.ImpAvatarPK.__init__(self)
         impRaid.ImpRaid.__init__(self)
         iCubeCell.ICubeCell.__init__(self)
+        iWonderLandCell.IWonderLandCell.__init__(self)
         iComplexTeleport.IComplexTeleport.__init__(self)
         iMount.IMount.__init__(self)
         impTeam.ImpTeam.__init__(self)
@@ -197,8 +199,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.checkAverageLoad()
         elif userData == gametimer.AVATAR_PROPERTY_CHECK:
             checkUserType.checkProperty(self)
-        elif userData == gametimer.CUBE_COW_TICK:
-            self.cubeCowTick()
         elif userData == gametimer.MINE_WAR_PLAYER_GET_SCORE:
             self.mineWarPlayerGetScoreTick()
         else:
@@ -291,6 +291,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         # TODO x: logout log
         self.clearStateOffline()
         self._onCubeOffline()
+        self._onWonderLandOffline()
         self.base.startOffline(self.spaceNo, reason)
         self.safeDestroy()
         if self.spaceMgr:
@@ -298,9 +299,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def kickGm(self, reason, messageId):
         if not self.gmModeCell:
-            self._callback(30 * random.random(), 'offline', (self.id, reason), gametimer.TIMER_TAG_OFFLINE)
-            # self.offline(exposed, reason)
-            self.showMsg(messageId, [])
+            self.offline(self.id, reason)
 
     # 这里客户端每次连上来都会调用到，包括第一次登录和后面断线后重连
     # 所以只能做一些向客户端同步数据的事情，cell进程自己的数据放到__init__中初始化
@@ -350,8 +349,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         self.handleCrossServerWaitingClientInitReason()
         self.toClientCubeLoginData()
-
-        #self._callback(10, 'getAliasIDs', (), gametimer.TIMER_TAG_SEND_ALL_ALIAS_IDS)
+        self._sendRoomKickLeftTime(self.spaceNo)
 
     # 客户端加载完成的回调
     @gamedecorator.crossServer
@@ -553,7 +551,12 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     @utils.isMyself
     def reqTransmitWithMapPoint(self, exposed, mapId, exampleId):
+        DEBUG_MSG('reqTransmitWithMapPoint', mapId, exampleId)
         if not self.onCheckMapUnlocked(mapId):
+            return
+
+        if not formula.isLineSpace(self.spaceNo):
+            self.showMsg(M_M_DD.datas.areaCannotFly, [])
             return
 
         self._commonNeedCast(
@@ -570,6 +573,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         _dunData = utils.getDunModuleData(mapId)
         if not _dunData:
             ERROR_MSG('reqTransmitWithMapPoint: error mapId: {}'.format(mapId))
+            return
+
+        if not formula.isLineSpace(self.spaceNo):
+            self.showMsg(M_M_DD.datas.areaCannotFly, [])
             return
 
         _anchorData = _dunData.get(str(exampleId))
@@ -1026,6 +1033,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.showMsg(CONST.datas['resetPositionSuccessMsg']['value'], [])
         self.setTempMiscProp(gameconst.AvatarProps.lastBreakAwayTime, now)
         self.teleportSummonsToMe()
+        self.client.onBreakAwayStuckSuccess()
 
     def onTeleportSuccessBefore(self, nearbyEntity):
         self.lastTeleportSpaceNoRecord = self.spaceNo
@@ -1565,8 +1573,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 break
 
         if not _checkOk:
-            ERROR_MSG('blaze:: blazeId not in range', blazeId, self.position)
-            return
+            WARNING_MSG('blaze:: blazeId not in range', blazeId, self.position)
 
         if not self.checkConflictState(CCD.datas.blaze):
             return
@@ -1629,6 +1636,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 # ----------------------------------------- map buff start -----------------------------
     @utils.isMyself
     def setMapBuff(self, exposed):
+        if formula.isWolrdBossSpace(self.spaceNo):
+            if not self.spaceMgr.hasSceneState(gameconst.WorldLineSceneState.LEI_JI):
+                return
+
         self.setTempMiscProp(gameconst.AvatarProps.isLightningArea, 1)
         _mapId = formula.getMapId(self.spaceNo)
         _buffList = DDL.datas[_mapId]['addbufflist']
@@ -1640,7 +1651,16 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     @utils.isMyself
     def removeMapBuff(self, exposed):
+        self.removeMapBuffInternal()
+
+    def removeMapBuffInternal(self):
         self.popTempMiscProp(gameconst.AvatarProps.isLightningArea)
+
+    def onSceneStateChange(self, newState):
+        self.client.onSceneState(newState)
+
+        if not self.spaceMgr.hasSceneState(gameconst.WorldLineSceneState.LEI_JI):
+            self.removeMapBuffInternal()
 
 # ----------------------------------------- map buff end -----------------------------
 
@@ -1664,10 +1684,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def _isUIVisibleCell(self, bit):
         return self.visibleBitsCell.isHasState(bit)
 
-    def _isUIVisibleStrCell(self, bitStr):
+    def _isUIVisibleStrCell(self, bitStr, needCheckBaseCondition = False):
         _bit = V_VD.funcDic[bitStr]
-        return self._isUIVisibleCell(_bit)
-
+        ret = self._isUIVisibleCell(_bit)
+        if not ret:
+            if needCheckBaseCondition:
+                self.base.CheckFuncConditions(bitStr)
+        return ret
+    
     def setCellFlags(self, flags):
         self.cellFlags = utils.bitSet(self.cellFlags, flags)
 

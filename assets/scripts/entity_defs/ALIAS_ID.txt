@@ -18,6 +18,7 @@ Account property lastSelectGbId 5
 Account property phone 4
 Avatar property PVPDmg 124
 Avatar property PVPDmgAnti 125
+Avatar property accuracy 23
 Avatar property adjCD 10
 Avatar property antiFatal 65
 Avatar property antiMortal 67
@@ -27,6 +28,7 @@ Avatar property authPermission 160
 Avatar property authStatistics 139
 Avatar property autoCombat 35
 Avatar property autoCombatReliveReturnTimes 117
+Avatar property autoCombatSkillFrequent 25
 Avatar property autoMatchTarget 19
 Avatar property autoRaidMatchTarget 84
 Avatar property battleIndex 31
@@ -42,6 +44,7 @@ Avatar property copper 149
 Avatar property crossServerState 156
 Avatar property crusadeInfo 39
 Avatar property crusadePassRecords 14
+Avatar property cubePrayTimes 22
 Avatar property cubeUseCoinTimes 94
 Avatar property cubeUseItemTimes 95
 Avatar property curReliveCD 87
@@ -53,6 +56,7 @@ Avatar property dodge 76
 Avatar property drugsQuantity 163
 Avatar property duelAttr 82
 Avatar property enemyMgr 123
+Avatar property evasion 24
 Avatar property exp 80
 Avatar property expGrow 151
 Avatar property fatal 81
@@ -119,6 +123,8 @@ Avatar property newbieGuideIds 104
 Avatar property nextRecoverGuildAssistTime 112
 Avatar property nextRecoverQixieAssistTime 146
 Avatar property obId 62
+Avatar property paidCubeTimes 28
+Avatar property paidWonderLandTicket 29
 Avatar property pkModel 45
 Avatar property pkProtect 56
 Avatar property pushAnti 173
@@ -148,11 +154,9 @@ Avatar property stunEnh 178
 Avatar property summonSlotIdx 157
 Avatar property tGreyNameStart 61
 Avatar property teamId 34
-Avatar property todayCubeCowDur 161
 Avatar property totalScore 43
 Avatar property ultraSkillPower 71
 Avatar property wonderLandAddTimes 63
-Avatar property wonderLandSwapTokenWeek 66
 Avatar property wonderLandTicket 68
 Barrier property barrierId 4
 Barrier property force 6

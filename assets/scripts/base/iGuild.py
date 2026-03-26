@@ -920,7 +920,7 @@ class IGuild(object):
             _ctx = self._getAvatarAwardCtx(_rewardId, None)
             _awardVal = dropAward.getAward(_rewardId, _num, _ctx)
             self.addWealth(_src, _awardVal, _opUUID, _detail)
-            self.completeGuildTask(gameconst.GuildTaskType.DONATION,ctx['itemId'],ctx['num'])
+            self.completeGuildTask(gameconst.GuildTaskType.DONATION,ctx['itemId'], ctx['num'])
 
     @AuthClsWraper.authWithPermission(A_AFD.Guild)
     def guildRecruit(self, exposed):
@@ -1077,7 +1077,7 @@ class IGuild(object):
 
     def onQixieAssistFetchCostCoinResult(self, qixieType, cost):
         if self.qixieAssistTimes <= 0:
-            ERROR_MSG('IGuild::onQixieAssistFetchCostCoinResult: qixieAssistTimes <= 0')
+            WARNING_MSG('IGuild::onQixieAssistFetchCostCoinResult: qixieAssistTimes <= 0')
             return
 
         _deductVal = dropAward.DeductWealthVal()
@@ -1322,6 +1322,7 @@ class IGuild(object):
             taskID,
             self.guildTask[taskID].get('num', 0),
             self.guildTask[taskID].get('isCompleted', False),
+            opUUID,
         )
 
     def completeGuildTask(self, taskType, para, num=1):
@@ -1346,6 +1347,7 @@ class IGuild(object):
                 taskID,
                 self.guildTask[taskID].get('num', 0),
                 self.guildTask[taskID].get('isCompleted', False),
+                0
             )
 
         if needSyncClient:

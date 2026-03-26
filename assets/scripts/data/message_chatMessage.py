@@ -132,7 +132,7 @@ datas = _tools.RODict({
     58000023: _tools.RODict({
         "ID": 58000023,
         "name": "highFallingMsg",
-        "Message": "你失足坠落摔死了!",
+        "Message": "你从高处坠落，失去意识！",
         "channelID": (6,)
     }),
     58000024: _tools.RODict({
@@ -302,7 +302,25 @@ datas = _tools.RODict({
         "name": "cityBattle_declareWar3",
         "Message": "<color=#fe6a6a>{0}</color>帮会对新元城宣战，此次新元城决战，攻城帮会：<color=#fe6a6a>{1}</color>，守城帮会：无。<color=#038304>{2}年{3}月{4}号21点</color>，本次新元城战正式开始。烽烟再起，舍我其谁！",
         "channelID": (3, 99)
+    }),
+    58000212: _tools.RODict({
+        "ID": 58000212,
+        "name": "boss_born5001",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>深海之王</color>现身于<color=#739cc9>月光海港五层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "channelID": (2, 99)
+    }),
+    58000213: _tools.RODict({
+        "ID": 58000213,
+        "name": "boss_born5002",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>祖珂教主</color>现身于<color=#739cc9>祖珂地堡六层</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "channelID": (2, 99)
+    }),
+    58000214: _tools.RODict({
+        "ID": 58000214,
+        "name": "unknownCauseMsg",
+        "Message": "你因异常伤害，失去意识！",
+        "channelID": (6,)
     })
 })
 minKey = 58000001
-maxKey = 58000211
+maxKey = 58000214

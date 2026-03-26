@@ -529,6 +529,7 @@
             <Arg>      ARRAY <of>   ITEM_VAL       </of>     </Arg>
             <Arg>      ARRAY <of>   GRIDID </of>     </Arg>
             <Arg>      ARRAY <of>   CLI_EQUIP_ITEM_VAL    </of>     </Arg>
+            <Arg>      ARRAY <of>   BAG_ITEM_BRIEF_VAL    </of>     </Arg>
         </onAddBagItems>
         <onBagItemsDailyUpdate>
             <Arg>      ARRAY <of> GRIDID </of>     </Arg>

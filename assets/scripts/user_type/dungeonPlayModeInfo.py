@@ -8,14 +8,18 @@ import dungeonPlayMode
 class CrusadeDungeonPlayModePlayerObjInfo(userType.ABCInfo):
 
     def createObjFromDict(self, dic):
-        return dungeonPlayMode.CrusadeDungeonPlayModePlayerObj(**dic)
+        return dungeonPlayMode.CrusadeDungeonPlayModePlayerObj(dic['rewardNumber'], 
+                                                                dic['rewardDailyCount'], 
+                                                                dic['useCoinAddRewardNum'], 
+                                                                dic['rewardCoinNumber'], 
+                                                                dic['rewardItemNumber'], 
+                                                                dic['ticketType'])
 
     def getDictFromObj(self, obj):
         return {'rewardNumber': obj.rewardNumber,
                 'rewardCoinNumber': obj.rewardCoinNumber,
                 'rewardItemNumber': obj.rewardItemNumber,
                 'rewardDailyCount': obj.rewardDailyCount,
-                'useItemAddRewardNumber': obj.useItemAddRewardNumber,
                 'useCoinAddRewardNum': obj.useCoinAddRewardNum,
                 'ticketType': obj.ticketType}
 
@@ -27,14 +31,18 @@ crusadeDungeonPlayModePlayerObjInstance = CrusadeDungeonPlayModePlayerObjInfo()
 class ChiefDungeonPlayModePlayerObjInfo(userType.ABCInfo):
 
     def createObjFromDict(self, dic):
-        return dungeonPlayMode.ChiefDungeonPlayModePlayerObj(**dic)
+        return dungeonPlayMode.ChiefDungeonPlayModePlayerObj(dic['rewardNumber'], 
+                                                                dic['rewardDailyCount'], 
+                                                                dic['useCoinAddRewardNum'], 
+                                                                dic['rewardCoinNumber'], 
+                                                                dic['rewardItemNumber'], 
+                                                                dic['ticketType'])
 
     def getDictFromObj(self, obj):
         return {'rewardNumber': obj.rewardNumber,
                 'rewardCoinNumber': obj.rewardCoinNumber,
                 'rewardItemNumber': obj.rewardItemNumber,
                 'rewardDailyCount': obj.rewardDailyCount,
-                'useItemAddRewardNumber': obj.useItemAddRewardNumber,
                 'useCoinAddRewardNum': obj.useCoinAddRewardNum,
                 'ticketType': obj.ticketType}
 

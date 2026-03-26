@@ -19,9 +19,15 @@
     </CellMethods>
 
     <BaseMethods>
+        <increaseCrusadeRewardNumber>
+            <Exposed/>
+            <Arg>   UINT16   </Arg>
+            <Arg>   UINT16   </Arg>
+        </increaseCrusadeRewardNumber>
+
         <useItemToIncreaseCrusadeRewardNumber>
             <Exposed/>
-            <Arg>   UINT8   </Arg>
+            <Arg>   UINT16   </Arg>
         </useItemToIncreaseCrusadeRewardNumber>
 
         <useCoinToIncreaseCrusadeRewardNumber>

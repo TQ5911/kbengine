@@ -138,16 +138,24 @@
             <Flags>         CELL_PRIVATE   </Flags>
         </skillCD>
         <drugsQuantity>
-            <Type>          INT32          </Type>
-            <Flags>         CELL_PRIVATE     </Flags>
+            <Type>          INT32               </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
         </drugsQuantity>
         <pushEnh>
-            <Type>          INT32        </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
+            <Type>          INT32           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
         </pushEnh>
         <pushAnti>
-            <Type>          INT32        </Type>
-            <Flags>         CELL_PRIVATE   </Flags>
+            <Type>          INT32           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
         </pushAnti>
+        <accuracy>
+            <Type>          INT32           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </accuracy>
+        <evasion>
+            <Type>          INT32           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </evasion>
     </Properties>
 </root>

@@ -170,12 +170,12 @@ class ICentralLogin(object):
                 KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(
                     fmtMessage.format(banAccountReason, LSD.datas['foreverText']['value']), encoding='utf-8'),
                                               _forceCompId,
-                                              KBEngine.SERVER_ERR_USER3)
+                                              gameconst.GAME_SERVER_ERR_BAN_FOREVER)
             else:
                 KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(
                     fmtMessage.format(banAccountReason,
                                       time.strftime("%Y年%m月%d日%H时%M分%S秒", time.localtime(banAccountTime))),
-                    encoding='utf-8'), _forceCompId, KBEngine.SERVER_ERR_USER3)
+                    encoding='utf-8'), _forceCompId, gameconst.GAME_SERVER_ERR_BAN_WITH_TIME)
             return
 
         curAge = otherData.get('age', gameconst.LEGAL_AGE_OF_MAJORITY)
@@ -186,7 +186,7 @@ class ICentralLogin(object):
             fmtMessage = ""
             KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'),
                                               _forceCompId,
-                                              KBEngine.SERVER_ERR_USER8)
+                                              gameconst.GAME_SERVER_ERR_ANTI_ADDICT)
             return
 
         if resCode == VerifyAccountReply.VERIFY_ACCOUNT_OK:
@@ -198,7 +198,7 @@ class ICentralLogin(object):
 
             KBEngine.accountLoginResponse(realAccountName, realAccountName, dataBytes, _forceCompId, responseCode)
             return
-        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', _forceCompId, KBEngine.SERVER_ERR_USER7)
+        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', _forceCompId, gameconst.GAME_SERVER_ERR_VERIFY_FAIL)
 
     # 将在interfaces进程上执行账号验证相关逻辑
     def checkPlayerLogin(self, realAccountName, data, centralServerId):
@@ -258,7 +258,7 @@ class ICentralLogin(object):
 
         tid, token, data = userInfo
         realAccountName = utils.getRealAccountName(accountType, accountName)
-        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER4)
+        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_VERIFY_TIMEOUT)
 
     def registerServer(self, centralServerId):
         serverId = gameconfig.serverId()

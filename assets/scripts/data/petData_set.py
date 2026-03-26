@@ -174,6 +174,46 @@ datas = _tools.RODict({
     "petMaxLevelMsg": _tools.RODict({
         "ID": "petMaxLevelMsg",
         "value": 54001801,
+    }),
+    "petLevelUpFx": _tools.RODict({
+        "ID": "petLevelUpFx",
+        "value": "Assets/Res/ui/effect/prefab/UIPetPanel_Temp/fx_Temp_shengji.prefab",
+    }),
+    "petLevelUpFxUI": _tools.RODict({
+        "ID": "petLevelUpFxUI",
+        "value": (0, 0, 0, 0, 0, 0, 1, 1, 1),
+    }),
+    "petLevelUpEmpty": _tools.RODict({
+        "ID": "petLevelUpEmpty",
+        "value": "<color=#dea050>{0}</color>",
+    }),
+    "petLevelUpPreview": _tools.RODict({
+        "ID": "petLevelUpPreview",
+        "value": "<color=#dea050>{0}</color><color=#FFFBD7>(+{1})</color>",
+    }),
+    "petOneClick0": _tools.RODict({
+        "ID": "petOneClick0",
+        "value": 54000963,
+    }),
+    "petOneClickLack": _tools.RODict({
+        "ID": "petOneClickLack",
+        "value": 54000964,
+    }),
+    "petOneClickOver": _tools.RODict({
+        "ID": "petOneClickOver",
+        "value": 54000965,
+    }),
+    "petGearNoSelectMsg": _tools.RODict({
+        "ID": "petGearNoSelectMsg",
+        "value": 54000966,
+    }),
+    "petGearUnlockMsg": _tools.RODict({
+        "ID": "petGearUnlockMsg",
+        "value": 54000967,
+    }),
+    "petGearWarningMsg": _tools.RODict({
+        "ID": "petGearWarningMsg",
+        "value": 54000968,
     })
 })
 

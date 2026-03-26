@@ -177,7 +177,7 @@ def TLOG(name="", logData="", fromTracking=False):
     if logFlag == gameconst.LogType.NORMAL:
         INFO_MSG(logData)
     elif logFlag == gameconst.LogType.WLOG:
-        INFO_MSG(logData)
+        DEBUG_MSG(logData)
         if platform.system() == 'Linux':
             syslogLogger.info(str(logData))
 

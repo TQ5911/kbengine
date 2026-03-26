@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     68000001: _tools.RODict({
         "ID": 68000001,
-        "name": "购买60金币",
+        "name": "购买60元宝",
         "type": 1,
         "subType": 0,
         "price": 6,
@@ -37,7 +37,7 @@ datas = _tools.RODict({
     }),
     68000002: _tools.RODict({
         "ID": 68000002,
-        "name": "购买300金币",
+        "name": "购买300元宝",
         "type": 1,
         "subType": 0,
         "price": 30,
@@ -57,7 +57,7 @@ datas = _tools.RODict({
     }),
     68000003: _tools.RODict({
         "ID": 68000003,
-        "name": "购买680金币",
+        "name": "购买680元宝",
         "type": 1,
         "subType": 0,
         "price": 68,
@@ -77,7 +77,7 @@ datas = _tools.RODict({
     }),
     68000004: _tools.RODict({
         "ID": 68000004,
-        "name": "购买1280金币",
+        "name": "购买1280元宝",
         "type": 1,
         "subType": 0,
         "price": 128,
@@ -97,7 +97,7 @@ datas = _tools.RODict({
     }),
     68000005: _tools.RODict({
         "ID": 68000005,
-        "name": "购买3280金币",
+        "name": "购买3280元宝",
         "type": 1,
         "subType": 0,
         "price": 328,
@@ -117,7 +117,7 @@ datas = _tools.RODict({
     }),
     68000006: _tools.RODict({
         "ID": 68000006,
-        "name": "购买6480金币",
+        "name": "购买6480元宝",
         "type": 1,
         "subType": 0,
         "price": 648,
@@ -381,7 +381,7 @@ datas = _tools.RODict({
         "type": 2,
         "subType": 2,
         "price": 0,
-        "priceID": 30000001,
+        "priceID": 30000021,
         "quantity": 980,
         "VIPPoint": 0,
         "productID": "",

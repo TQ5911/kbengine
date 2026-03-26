@@ -264,5 +264,7 @@
         <onStartPlayCinema>
             <Arg>  UINT32  </Arg>
         </onStartPlayCinema>
+        <onNoNeedPlayFx>
+        </onNoNeedPlayFx>
     </ClientMethods>
 </root>

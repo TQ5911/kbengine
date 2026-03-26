@@ -3524,6 +3524,25 @@ def isInAttackLine(targetPos, vCenter, direction, length, width, fixCenter=False
     return True
 
 
+def itemListToBriefList(itemList):
+    _dic = {}
+    for it in itemList:
+        _key = (it.itemId, it.bindType)
+        _dic[_key] = _dic.get(_key, 0) + it.itemNum
+
+    _result = []
+    for k, v in _dic.items():
+        _result.append(
+            {
+                'itemId': k[0],
+                'bindType': k[1],
+                'itemNum': v,
+            }
+        )
+
+    return _result
+
+
 def isInAttackLineWithRadius(targetPos, startPos, direction, length, width, targetRadius):
     """
     判断目标是否在矩形攻击范围内（支持目标半径）
@@ -3633,3 +3652,67 @@ def unsubscribe(tag, box):
 #   1. 不要传复杂的结构化数据
 def distribute(tag, *args):
     gameengine.callAppsByEventTag(tag, *args)
+
+
+"""
+    从 posList 中选出 m 个点，使得选出的点两两距离不小于 radius。
+    如果无法找到足够的点，则随机补充直到有 m 个点。
+"""
+def select_positions(posList, m, radius):
+    n = len(posList)
+    if m > n:
+        gameengine.reportCritical('select_positions: not enough points to select', m, n)
+        return []
+    
+    maxVaildNum = 0
+    vaildList = None
+    shuffled = posList[:]
+    for i in range(5):
+        # 随机打乱列表以便随机选择
+        random.shuffle(shuffled)
+        selected = []
+
+        if radius <= 0:
+            return shuffled[:m]
+        
+        # 贪心选择：遍历打乱后的点，如果某个点与已选点距离都大于 radius，则选中
+        for point in shuffled:
+            if len(selected) >= m:
+                break
+            valid = True
+            for selected_point in selected:
+                dist = sMath.distance3D(point, selected_point)
+                if dist < radius:
+                    valid = False
+                    break
+            if valid:
+                selected.append(point)
+        
+        vaildNum = len(selected)
+        # 如果已选点数不足 m，从剩余点中随机补充
+        if len(selected) < m:
+            DEBUG_MSG('select_positions: not enough valid points, selected:', len(selected), 'need:', m, 'all:', len(shuffled))
+            # 找出未被选中的点
+            remaining = [p for p in shuffled if p not in selected]
+            # 如果剩余点数不够，从所有点中补充（包括已选点，避免重复使用同一个点）
+            if len(remaining) < m - len(selected):
+                # 但题目要求从 n 个中选 m 个，且 n>m，所以理论上不会发生
+                # 这里为了安全，从原始列表中重新选（排除已选点）
+                all_points = posList[:]
+                available = [p for p in all_points if p not in selected]
+                # 随机选择需要的点数
+                num_needed = m - len(selected)
+                additional = random.sample(available, num_needed)
+                selected.extend(additional)
+            else:
+                num_needed = m - len(selected)
+                additional = random.sample(remaining, num_needed)
+                selected.extend(additional)
+        else:
+            return selected
+
+        if vaildNum > maxVaildNum:
+            maxVaildNum = vaildNum
+            vaildList = selected
+    
+    return vaildList

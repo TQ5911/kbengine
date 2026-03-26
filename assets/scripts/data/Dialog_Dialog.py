@@ -213,11 +213,6 @@ datas = _tools.RODict({
     19000007003: _tools.RODict({
         "ID": 19000007003,
         "event": "Openinterface",
-        "parm": "UIEquipUnbundlePanel",
-    }),
-    19000007004: _tools.RODict({
-        "ID": 19000007004,
-        "event": "Openinterface",
         "parm": "UIEquipTrainingPanel,1",
     }),
     19000008000: _tools.RODict({
@@ -357,7 +352,7 @@ datas = _tools.RODict({
     }),
     19000254000: _tools.RODict({
         "ID": 19000254000,
-        "event": "",
+        "event": "Cnttask",
         "parm": "",
     }),
     19000254001: _tools.RODict({
@@ -437,6 +432,21 @@ datas = _tools.RODict({
     }),
     19400002002: _tools.RODict({
         "ID": 19400002002,
+        "event": "Fnstalk",
+        "parm": "",
+    }),
+    19400003000: _tools.RODict({
+        "ID": 19400003000,
+        "event": "",
+        "parm": "",
+    }),
+    19400003001: _tools.RODict({
+        "ID": 19400003001,
+        "event": "arenaKing",
+        "parm": "",
+    }),
+    19400003002: _tools.RODict({
+        "ID": 19400003002,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -3055,16 +3065,6 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
-    19000301000: _tools.RODict({
-        "ID": 19000301000,
-        "event": "Cnttask",
-        "parm": "",
-    }),
-    19000301001: _tools.RODict({
-        "ID": 19000301001,
-        "event": "",
-        "parm": "",
-    }),
     19000302000: _tools.RODict({
         "ID": 19000302000,
         "event": "Cnttask",
@@ -3072,6 +3072,16 @@ datas = _tools.RODict({
     }),
     19000302001: _tools.RODict({
         "ID": 19000302001,
+        "event": "",
+        "parm": "",
+    }),
+    19000301000: _tools.RODict({
+        "ID": 19000301000,
+        "event": "Cnttask",
+        "parm": "",
+    }),
+    19000301001: _tools.RODict({
+        "ID": 19000301001,
         "event": "",
         "parm": "",
     }),
@@ -3445,13 +3455,13 @@ datas = _tools.RODict({
         "event": "",
         "parm": "",
     }),
-    19100008008: _tools.RODict({
-        "ID": 19100008008,
+    19100008007: _tools.RODict({
+        "ID": 19100008007,
         "event": "",
         "parm": "",
     }),
-    19100008009: _tools.RODict({
-        "ID": 19100008009,
+    19100008008: _tools.RODict({
+        "ID": 19100008008,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -4167,7 +4177,7 @@ datas = _tools.RODict({
     }),
     19100053010: _tools.RODict({
         "ID": 19100053010,
-        "event": "",
+        "event": "Fnstalk",
         "parm": "",
     }),
     19100053011: _tools.RODict({
@@ -5532,11 +5542,6 @@ datas = _tools.RODict({
     }),
     19100109009: _tools.RODict({
         "ID": 19100109009,
-        "event": "",
-        "parm": "",
-    }),
-    19100109010: _tools.RODict({
-        "ID": 19100109010,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -6207,7 +6212,7 @@ datas = _tools.RODict({
     }),
     19100024005: _tools.RODict({
         "ID": 19100024005,
-        "event": "Fnstask",
+        "event": "Gettask",
         "parm": "",
     }),
     19100031000: _tools.RODict({
@@ -6237,7 +6242,7 @@ datas = _tools.RODict({
     }),
     19100031005: _tools.RODict({
         "ID": 19100031005,
-        "event": "Gettask",
+        "event": "Fnstalk",
         "parm": "",
     }),
     19100032000: _tools.RODict({
@@ -7077,7 +7082,7 @@ datas = _tools.RODict({
     }),
     19300001004: _tools.RODict({
         "ID": 19300001004,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300002000: _tools.RODict({
@@ -7097,7 +7102,7 @@ datas = _tools.RODict({
     }),
     19300002003: _tools.RODict({
         "ID": 19300002003,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300003000: _tools.RODict({
@@ -7122,7 +7127,7 @@ datas = _tools.RODict({
     }),
     19300003004: _tools.RODict({
         "ID": 19300003004,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300004000: _tools.RODict({
@@ -7132,7 +7137,7 @@ datas = _tools.RODict({
     }),
     19300004001: _tools.RODict({
         "ID": 19300004001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300005000: _tools.RODict({
@@ -7162,7 +7167,7 @@ datas = _tools.RODict({
     }),
     19300006001: _tools.RODict({
         "ID": 19300006001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300105000: _tools.RODict({
@@ -7237,7 +7242,7 @@ datas = _tools.RODict({
     }),
     19300007002: _tools.RODict({
         "ID": 19300007002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300008000: _tools.RODict({
@@ -7252,7 +7257,7 @@ datas = _tools.RODict({
     }),
     19300008002: _tools.RODict({
         "ID": 19300008002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300009000: _tools.RODict({
@@ -7277,7 +7282,7 @@ datas = _tools.RODict({
     }),
     19300010003: _tools.RODict({
         "ID": 19300010003,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300011000: _tools.RODict({
@@ -7292,7 +7297,7 @@ datas = _tools.RODict({
     }),
     19300011002: _tools.RODict({
         "ID": 19300011002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300012000: _tools.RODict({
@@ -7307,7 +7312,7 @@ datas = _tools.RODict({
     }),
     19300012002: _tools.RODict({
         "ID": 19300012002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300013000: _tools.RODict({
@@ -7322,7 +7327,7 @@ datas = _tools.RODict({
     }),
     19300013002: _tools.RODict({
         "ID": 19300013002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300081000: _tools.RODict({
@@ -7337,7 +7342,7 @@ datas = _tools.RODict({
     }),
     19300081002: _tools.RODict({
         "ID": 19300081002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300110000: _tools.RODict({
@@ -7347,7 +7352,7 @@ datas = _tools.RODict({
     }),
     19300014000: _tools.RODict({
         "ID": 19300014000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300015000: _tools.RODict({
@@ -7357,7 +7362,7 @@ datas = _tools.RODict({
     }),
     19300015001: _tools.RODict({
         "ID": 19300015001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300016000: _tools.RODict({
@@ -7372,7 +7377,7 @@ datas = _tools.RODict({
     }),
     19300016002: _tools.RODict({
         "ID": 19300016002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300085000: _tools.RODict({
@@ -7387,7 +7392,7 @@ datas = _tools.RODict({
     }),
     19300085002: _tools.RODict({
         "ID": 19300085002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300017000: _tools.RODict({
@@ -7402,7 +7407,7 @@ datas = _tools.RODict({
     }),
     19300017002: _tools.RODict({
         "ID": 19300017002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300018000: _tools.RODict({
@@ -7417,7 +7422,7 @@ datas = _tools.RODict({
     }),
     19300018002: _tools.RODict({
         "ID": 19300018002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300019000: _tools.RODict({
@@ -7432,7 +7437,7 @@ datas = _tools.RODict({
     }),
     19300019002: _tools.RODict({
         "ID": 19300019002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300108000: _tools.RODict({
@@ -7447,7 +7452,7 @@ datas = _tools.RODict({
     }),
     19300108002: _tools.RODict({
         "ID": 19300108002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300020000: _tools.RODict({
@@ -7477,7 +7482,7 @@ datas = _tools.RODict({
     }),
     19300021002: _tools.RODict({
         "ID": 19300021002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300022000: _tools.RODict({
@@ -7487,7 +7492,7 @@ datas = _tools.RODict({
     }),
     19300022001: _tools.RODict({
         "ID": 19300022001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300023000: _tools.RODict({
@@ -7502,7 +7507,7 @@ datas = _tools.RODict({
     }),
     19300023002: _tools.RODict({
         "ID": 19300023002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300024000: _tools.RODict({
@@ -7517,7 +7522,7 @@ datas = _tools.RODict({
     }),
     19300024002: _tools.RODict({
         "ID": 19300024002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300025000: _tools.RODict({
@@ -7532,7 +7537,7 @@ datas = _tools.RODict({
     }),
     19300025002: _tools.RODict({
         "ID": 19300025002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300080000: _tools.RODict({
@@ -7567,7 +7572,7 @@ datas = _tools.RODict({
     }),
     19300026000: _tools.RODict({
         "ID": 19300026000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300027000: _tools.RODict({
@@ -7607,7 +7612,7 @@ datas = _tools.RODict({
     }),
     19300028002: _tools.RODict({
         "ID": 19300028002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300029000: _tools.RODict({
@@ -7637,7 +7642,7 @@ datas = _tools.RODict({
     }),
     19300031000: _tools.RODict({
         "ID": 19300031000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300032000: _tools.RODict({
@@ -7647,7 +7652,7 @@ datas = _tools.RODict({
     }),
     19300032001: _tools.RODict({
         "ID": 19300032001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300034000: _tools.RODict({
@@ -7662,7 +7667,7 @@ datas = _tools.RODict({
     }),
     19300034002: _tools.RODict({
         "ID": 19300034002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300035000: _tools.RODict({
@@ -7697,7 +7702,7 @@ datas = _tools.RODict({
     }),
     19300036002: _tools.RODict({
         "ID": 19300036002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300037000: _tools.RODict({
@@ -7712,7 +7717,7 @@ datas = _tools.RODict({
     }),
     19300037002: _tools.RODict({
         "ID": 19300037002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300038000: _tools.RODict({
@@ -7762,12 +7767,12 @@ datas = _tools.RODict({
     }),
     19300039004: _tools.RODict({
         "ID": 19300039004,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300040000: _tools.RODict({
         "ID": 19300040000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300041000: _tools.RODict({
@@ -7797,7 +7802,7 @@ datas = _tools.RODict({
     }),
     19300042002: _tools.RODict({
         "ID": 19300042002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300043000: _tools.RODict({
@@ -7827,7 +7832,7 @@ datas = _tools.RODict({
     }),
     19300044002: _tools.RODict({
         "ID": 19300044002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300045000: _tools.RODict({
@@ -7847,7 +7852,7 @@ datas = _tools.RODict({
     }),
     19300046000: _tools.RODict({
         "ID": 19300046000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300047000: _tools.RODict({
@@ -7862,7 +7867,7 @@ datas = _tools.RODict({
     }),
     19300047002: _tools.RODict({
         "ID": 19300047002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300048000: _tools.RODict({
@@ -7877,7 +7882,7 @@ datas = _tools.RODict({
     }),
     19300048002: _tools.RODict({
         "ID": 19300048002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300049000: _tools.RODict({
@@ -7907,7 +7912,7 @@ datas = _tools.RODict({
     }),
     19300050002: _tools.RODict({
         "ID": 19300050002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300051000: _tools.RODict({
@@ -7942,7 +7947,7 @@ datas = _tools.RODict({
     }),
     19300052001: _tools.RODict({
         "ID": 19300052001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300053000: _tools.RODict({
@@ -7977,7 +7982,7 @@ datas = _tools.RODict({
     }),
     19300056001: _tools.RODict({
         "ID": 19300056001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300057000: _tools.RODict({
@@ -7997,7 +8002,7 @@ datas = _tools.RODict({
     }),
     19300057003: _tools.RODict({
         "ID": 19300057003,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300058000: _tools.RODict({
@@ -8012,7 +8017,7 @@ datas = _tools.RODict({
     }),
     19300058002: _tools.RODict({
         "ID": 19300058002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300058003: _tools.RODict({
@@ -8032,7 +8037,7 @@ datas = _tools.RODict({
     }),
     19300058006: _tools.RODict({
         "ID": 19300058006,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300059000: _tools.RODict({
@@ -8047,7 +8052,7 @@ datas = _tools.RODict({
     }),
     19300059002: _tools.RODict({
         "ID": 19300059002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300067000: _tools.RODict({
@@ -8092,7 +8097,7 @@ datas = _tools.RODict({
     }),
     19300068003: _tools.RODict({
         "ID": 19300068003,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300068004: _tools.RODict({
@@ -8107,7 +8112,7 @@ datas = _tools.RODict({
     }),
     19300068006: _tools.RODict({
         "ID": 19300068006,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300069000: _tools.RODict({
@@ -8147,7 +8152,7 @@ datas = _tools.RODict({
     }),
     19300070003: _tools.RODict({
         "ID": 19300070003,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300070004: _tools.RODict({
@@ -8162,7 +8167,7 @@ datas = _tools.RODict({
     }),
     19300070006: _tools.RODict({
         "ID": 19300070006,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300071000: _tools.RODict({
@@ -8197,7 +8202,7 @@ datas = _tools.RODict({
     }),
     19300072001: _tools.RODict({
         "ID": 19300072001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300073000: _tools.RODict({
@@ -8222,7 +8227,7 @@ datas = _tools.RODict({
     }),
     19300074000: _tools.RODict({
         "ID": 19300074000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300109000: _tools.RODict({
@@ -8232,17 +8237,27 @@ datas = _tools.RODict({
     }),
     19300109001: _tools.RODict({
         "ID": 19300109001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300075000: _tools.RODict({
         "ID": 19300075000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300076000: _tools.RODict({
         "ID": 19300076000,
-        "event": "Gettask",
+        "event": "",
+        "parm": "",
+    }),
+    19300076001: _tools.RODict({
+        "ID": 19300076001,
+        "event": "",
+        "parm": "",
+    }),
+    19300076002: _tools.RODict({
+        "ID": 19300076002,
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300077000: _tools.RODict({
@@ -8282,7 +8297,7 @@ datas = _tools.RODict({
     }),
     19300079000: _tools.RODict({
         "ID": 19300079000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300112000: _tools.RODict({
@@ -8302,7 +8317,7 @@ datas = _tools.RODict({
     }),
     19300086002: _tools.RODict({
         "ID": 19300086002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300087000: _tools.RODict({
@@ -8362,7 +8377,7 @@ datas = _tools.RODict({
     }),
     19300090000: _tools.RODict({
         "ID": 19300090000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300091000: _tools.RODict({
@@ -8377,12 +8392,12 @@ datas = _tools.RODict({
     }),
     19300091002: _tools.RODict({
         "ID": 19300091002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300092000: _tools.RODict({
         "ID": 19300092000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300103000: _tools.RODict({
@@ -8397,7 +8412,7 @@ datas = _tools.RODict({
     }),
     19300103002: _tools.RODict({
         "ID": 19300103002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300093000: _tools.RODict({
@@ -8422,7 +8437,7 @@ datas = _tools.RODict({
     }),
     19300093004: _tools.RODict({
         "ID": 19300093004,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300094000: _tools.RODict({
@@ -8442,12 +8457,12 @@ datas = _tools.RODict({
     }),
     19300094003: _tools.RODict({
         "ID": 19300094003,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300095000: _tools.RODict({
         "ID": 19300095000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300096000: _tools.RODict({
@@ -8467,7 +8482,7 @@ datas = _tools.RODict({
     }),
     19300096003: _tools.RODict({
         "ID": 19300096003,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300097000: _tools.RODict({
@@ -8482,12 +8497,12 @@ datas = _tools.RODict({
     }),
     19300097002: _tools.RODict({
         "ID": 19300097002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300099000: _tools.RODict({
         "ID": 19300099000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300100000: _tools.RODict({
@@ -8587,7 +8602,7 @@ datas = _tools.RODict({
     }),
     19300113004: _tools.RODict({
         "ID": 19300113004,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300113005: _tools.RODict({
@@ -8597,7 +8612,7 @@ datas = _tools.RODict({
     }),
     19300113006: _tools.RODict({
         "ID": 19300113006,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300114000: _tools.RODict({
@@ -8622,7 +8637,7 @@ datas = _tools.RODict({
     }),
     19300114004: _tools.RODict({
         "ID": 19300114004,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300114005: _tools.RODict({
@@ -8632,7 +8647,7 @@ datas = _tools.RODict({
     }),
     19300114006: _tools.RODict({
         "ID": 19300114006,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300115000: _tools.RODict({
@@ -8677,7 +8692,7 @@ datas = _tools.RODict({
     }),
     19300115008: _tools.RODict({
         "ID": 19300115008,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300116000: _tools.RODict({
@@ -8692,7 +8707,7 @@ datas = _tools.RODict({
     }),
     19300116002: _tools.RODict({
         "ID": 19300116002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300117000: _tools.RODict({
@@ -8717,7 +8732,7 @@ datas = _tools.RODict({
     }),
     19300117004: _tools.RODict({
         "ID": 19300117004,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300118000: _tools.RODict({
@@ -8767,7 +8782,7 @@ datas = _tools.RODict({
     }),
     19300119004: _tools.RODict({
         "ID": 19300119004,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300120000: _tools.RODict({
@@ -8787,7 +8802,7 @@ datas = _tools.RODict({
     }),
     19300120003: _tools.RODict({
         "ID": 19300120003,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300121000: _tools.RODict({
@@ -8822,7 +8837,7 @@ datas = _tools.RODict({
     }),
     19300121006: _tools.RODict({
         "ID": 19300121006,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300122000: _tools.RODict({
@@ -8847,7 +8862,7 @@ datas = _tools.RODict({
     }),
     19300122004: _tools.RODict({
         "ID": 19300122004,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300123000: _tools.RODict({
@@ -8862,6 +8877,11 @@ datas = _tools.RODict({
     }),
     19300123002: _tools.RODict({
         "ID": 19300123002,
+        "event": "",
+        "parm": "",
+    }),
+    19300123003: _tools.RODict({
+        "ID": 19300123003,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -8872,7 +8892,7 @@ datas = _tools.RODict({
     }),
     19300124000: _tools.RODict({
         "ID": 19300124000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300125000: _tools.RODict({
@@ -8882,7 +8902,7 @@ datas = _tools.RODict({
     }),
     19300125001: _tools.RODict({
         "ID": 19300125001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300126000: _tools.RODict({
@@ -8897,17 +8917,17 @@ datas = _tools.RODict({
     }),
     19300126002: _tools.RODict({
         "ID": 19300126002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300127000: _tools.RODict({
         "ID": 19300127000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300128000: _tools.RODict({
         "ID": 19300128000,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300129000: _tools.RODict({
@@ -8932,7 +8952,7 @@ datas = _tools.RODict({
     }),
     19300131002: _tools.RODict({
         "ID": 19300131002,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300145000: _tools.RODict({
@@ -8972,7 +8992,7 @@ datas = _tools.RODict({
     }),
     19300133001: _tools.RODict({
         "ID": 19300133001,
-        "event": "Gettask",
+        "event": "GettaskPopup",
         "parm": "",
     }),
     19300134000: _tools.RODict({
@@ -9037,6 +9057,11 @@ datas = _tools.RODict({
     }),
     19300135008: _tools.RODict({
         "ID": 19300135008,
+        "event": "",
+        "parm": "",
+    }),
+    19300135009: _tools.RODict({
+        "ID": 19300135009,
         "event": "Fnstalk",
         "parm": "",
     }),
@@ -9225,6 +9250,11 @@ datas = _tools.RODict({
         "event": "Fnstalk",
         "parm": "",
     }),
+    19300147000: _tools.RODict({
+        "ID": 19300147000,
+        "event": "GettaskPopup",
+        "parm": "",
+    }),
     1940001000: _tools.RODict({
         "ID": 1940001000,
         "event": "",
@@ -9411,7 +9441,6 @@ dialogIdMap = _tools.RODict({
         19000007001,
         19000007002,
         19000007003,
-        19000007004,
     ),
     19000008: (
         19000008000,
@@ -9487,6 +9516,11 @@ dialogIdMap = _tools.RODict({
         19400002000,
         19400002001,
         19400002002,
+    ),
+    19400003: (
+        19400003000,
+        19400003001,
+        19400003002,
     ),
     19000009: (
         19000009000,
@@ -10532,13 +10566,13 @@ dialogIdMap = _tools.RODict({
         19000300000,
         19000300001,
     ),
-    19000301: (
-        19000301000,
-        19000301001,
-    ),
     19000302: (
         19000302000,
         19000302001,
+    ),
+    19000301: (
+        19000301000,
+        19000301001,
     ),
     19000303: (
         19000303000,
@@ -10651,8 +10685,8 @@ dialogIdMap = _tools.RODict({
         19100008004,
         19100008005,
         19100008006,
+        19100008007,
         19100008008,
-        19100008009,
     ),
     19100009: (
         19100009000,
@@ -11215,7 +11249,6 @@ dialogIdMap = _tools.RODict({
         19100109007,
         19100109008,
         19100109009,
-        19100109010,
     ),
     19100111: (
         19100111000,
@@ -12043,6 +12076,8 @@ dialogIdMap = _tools.RODict({
     ),
     19300076: (
         19300076000,
+        19300076001,
+        19300076002,
     ),
     19300077: (
         19300077000,
@@ -12233,6 +12268,7 @@ dialogIdMap = _tools.RODict({
         19300123000,
         19300123001,
         19300123002,
+        19300123003,
     ),
     19300142: (
         19300142000,
@@ -12288,6 +12324,7 @@ dialogIdMap = _tools.RODict({
     ),
     19300135: (
         19300135008,
+        19300135009,
         19300135000,
         19300135001,
         19300135002,
@@ -12349,6 +12386,9 @@ dialogIdMap = _tools.RODict({
     19300146: (
         19300146000,
         19300146001,
+    ),
+    19300147: (
+        19300147000,
     ),
     1940001: (
         1940001000,

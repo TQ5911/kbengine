@@ -38,7 +38,6 @@ class PureItem(userType.UserSoleType):
         elif expireTimeStr:
             if expireTimeStr.startswith('cityBattle'):
                 expireTime = utils.getSiegeWarItemExpireTime()
-                DEBUG_MSG('[lj]pureitem getSiegeWarItemExpireTime:', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.getNow())), time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(expireTime)))
             else:
                 expireTime = int(utils.parseTimeStr(expireTimeStr))
 

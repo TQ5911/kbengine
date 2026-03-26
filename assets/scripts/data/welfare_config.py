@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "AttentionMethod": _tools.RODict({
         "ID": "AttentionMethod",
-        "value": "领取方式:关注官方微信公众号发送口令【烽烟NBCC限定】即可领取专属礼包奖励",
+        "value": "第一步：关注官方公众号，发送口令\n“烽烟再起”，领取专属兑换码。\n第二步：点击【兑换礼包】使用兑换码。",
     }),
     "AttentionReward": _tools.RODict({
         "ID": "AttentionReward",
@@ -57,7 +57,7 @@ datas = _tools.RODict({
     }),
     "AttentionAccounts": _tools.RODict({
         "ID": "AttentionAccounts",
-        "value": "烽烟手游",
+        "value": "烽烟",
     }),
     "AttentionCopyMsg": _tools.RODict({
         "ID": "AttentionCopyMsg",
@@ -69,7 +69,7 @@ datas = _tools.RODict({
     }),
     "LevelRankDeadLine": _tools.RODict({
         "ID": "LevelRankDeadLine",
-        "value": "202601240000",
+        "value": "202603270500",
     }),
     "LevelNotEnough": _tools.RODict({
         "ID": "LevelNotEnough",

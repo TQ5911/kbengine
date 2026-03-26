@@ -17,15 +17,15 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "name": "试炼峰boss高级光柱",
+        "name": "天劫崖boss高级光柱",
     }),
     2: _tools.RODict({
         "ID": 2,
-        "name": "试炼峰boss中级光柱",
+        "name": "天劫崖boss中级光柱",
     }),
     3: _tools.RODict({
         "ID": 3,
-        "name": "试炼峰boss初级光柱",
+        "name": "天劫崖boss初级光柱",
     })
 })
 minKey = 1

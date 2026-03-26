@@ -107,12 +107,7 @@ def onRequestCreateAccount(registerName, password, datas):
 
     # 默认账号名就是提交时的名
     realAccountName = commitName
-    clientData = utils.decodeClientData(datas)
-    gamelog.makeWLog("ServerParseAccountInfo", {
-        "account_id": realAccountName,
-        "login_channel": clientData.get('loginChannel', ''),
-        "udid": clientData.get('deviceUniqueIdentifier', ''),
-    })
+    
     # 此处可通过http等手段将请求提交至第三方平台，平台返回的数据也可放入datas
     # datas将会回调至客户端
     # 如果使用http访问，因为interfaces是单线程的，同步http访问容易卡住主线程，建议使用
@@ -129,7 +124,7 @@ def _onCheckWhiteList(result, error, isNewAccount, realAccountName, password, da
         cfgNum = int(gameconfig.getServerRegLimit())
         if isNewAccount and nowNum >= cfgNum:
             INFO_MSG('_onCheckWhiteList check server limit error.', nowNum, cfgNum)
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER5)
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_MEET_REG_MAX)
             return
         nowTime = utils.getNow()
         openTime = gameconfig.serverOpenTime()
@@ -137,19 +132,11 @@ def _onCheckWhiteList(result, error, isNewAccount, realAccountName, password, da
             INFO_MSG('_onCheckWhiteList check server open time limit.', nowTime, openTime, str(openTime - nowTime))
             KBEngine.accountLoginResponse(realAccountName, realAccountName, 
                     bytes(str(openTime - nowTime), encoding='utf-8'), 
-                    0, KBEngine.SERVER_ERR_USER9)
+                    0, gameconst.GAME_SERVER_ERR_SERVER_OPEN_TIME)
             return
-        #clientData = utils.decodeClientData(dataBytes)
-        # accountType, accountName = utils.getAccountTypeAndName(clientData.get(''))
-        # gamelog.makeWLog("ServerBanByWhiteList", {
-        #     "client_id": str(clientData.get('devicePlatId', 0)),
-        #     "account_id": realAccountName,
-        #     "udid": clientData.get('deviceUniqueIdentifier', ''),
-        #     "app_channel": clientData.get('channelId', 0),
-        #     "account_id": realAccountName
-        # })
+
         if not gameconfig.permitLogin():
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER2)
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_PERMIT)
             return
 
     _requestAccountLogin(realAccountName, password, dataBytes)
@@ -162,13 +149,13 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
     if len(result) == 0:
         isNewAccount = True
         if not loginManager:
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER2)
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_NO_LOGIN_MGR)
             return
 
         switch = int(gameconfig.getServerRegSwitch())
         if not switch:
             INFO_MSG('_onCheckBanAccount check server switch error.', switch)
-            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER5)
+            KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_REG_SWITCH)
             return
     else:
         # forbidLoginFlag = int(result[0][0])
@@ -180,25 +167,8 @@ def _onCheckBanAccount(result, err, realAccountName, password, dataBytes):
             INFO_MSG('reject login,account delete', isDelete, realAccountName)
             fmtMessage = MMD.datas[LSD.datas['accountCancellation']['value']]['Message']
             KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'), 0,
-                                          KBEngine.SERVER_ERR_USER6)
+                                          gameconst.GAME_SERVER_ERR_REJECT_LOGIN)
             return
-
-        # if forbidLoginFlag:
-        #     fmtMessage = MMD.datas[LSD.datas['idip_accountBanned_msg']['value']]['Message']
-        #     if forbidLoginType == gameconst.ForbidType.FOREVER_FORBID:
-        #         KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(
-        #             fmtMessage.format(forbidLoginReason, LSD.datas['foreverText']['value']), encoding='utf-8'),
-        #                                       KBEngine.SERVER_ERR_USER3)
-        #         return
-        #     elif forbidLoginType == gameconst.ForbidType.SHORT_FORBID:
-        #         if utils.getNow() < forbidLoginTime:
-        #             KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(
-        #                 fmtMessage.format(forbidLoginReason,
-        #                                   time.strftime("%Y年%m月%d日%H时%M分%S秒", time.localtime(forbidLoginTime))),
-        #                 encoding='utf-8'), KBEngine.SERVER_ERR_USER3)
-        #             return
-        #         elif forbidLoginTime > 0:
-        #             pass
 
     gamesql.checkAccountWhiteList(accountName,
                                   lambda ret, nRow, insertid, error: _onCheckWhiteList(ret, error, isNewAccount,
@@ -251,7 +221,7 @@ def _requestAccountLogin(realAccountName, password, dataBytes):
     clientData = utils.decodeClientData(dataBytes)
     centralServerId = clientData.get('loginServerId', 0)
     if not loginManager:
-        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, KBEngine.SERVER_ERR_USER2)
+        KBEngine.accountLoginResponse(realAccountName, realAccountName, b'', 0, gameconst.GAME_SERVER_ERR_NO_LOGIN_MGR2)
         return
 
     loginManager.checkPlayerLogin(realAccountName, dataBytes, centralServerId)

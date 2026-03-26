@@ -27,7 +27,7 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "ID": 2,
-        "Areaname": "试炼峰",
+        "Areaname": "天劫崖",
         "N4": 100,
         "N5": 150,
         "ifSafeArea": 1,

@@ -243,7 +243,9 @@ class TaskInfo(userType.UserSoleType):
             if taskId not in exist_set:
                 result_list.append(taskId)
         taskNum = min(taskNum, len(result_list))
-        return random.sample(result_list, taskNum)
+        result_list = random.sample(result_list, taskNum)
+        result_list.extend(exist_set)
+        return result_list
 
     def initNoviceHookRewardTask(self):
         hookRewardTaskNum = RRTIC.datas.get('dailyLimitNum', {}).get('value', 0)

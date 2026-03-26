@@ -118,7 +118,7 @@ class IFlowController(object):
         return self._triggeredFlowControllerRestNumChanged(increased=True)
 
     def triggeredFlowControllerRestNumDecreased(self):
-        INFO_MSG("triggeredFlowControllerRestNumDecreased::")
+        DEBUG_MSG("triggeredFlowControllerRestNumDecreased::")
         return self._triggeredFlowControllerRestNumChanged(decreased=True)
 
     def _triggeredFlowControllerRestNumChanged(self, decreased=False, increased=False):

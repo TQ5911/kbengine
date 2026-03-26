@@ -37,7 +37,7 @@ datas = _tools.RODict({
     }),
     "initialGainScope": _tools.RODict({
         "ID": "initialGainScope",
-        "value": (1, 30, 40),
+        "value": (0, 30, 40),
     }),
     "initialGainValue": _tools.RODict({
         "ID": "initialGainValue",

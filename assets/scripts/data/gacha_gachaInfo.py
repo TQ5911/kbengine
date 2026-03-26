@@ -15,11 +15,6 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    10101: _tools.RODict({
-        "ID": 10101,
-        "title": "<color=#beab67>传说品质精灵</color><color=#9e9886>召唤获得概率0.002%</color>",
-        "petList": (15000030, 15000031, 15000032, 15000033)
-    }),
     10102: _tools.RODict({
         "ID": 10102,
         "title": "<color=#a677c6>史诗品质精灵</color><color=#9e9886>召唤获得概率0.2%</color>",
@@ -32,9 +27,9 @@ datas = _tools.RODict({
     }),
     10104: _tools.RODict({
         "ID": 10104,
-        "title": "<color=#65b276>优秀品质精灵</color><color=#9e9886>召唤获得概率89.998%</color>",
+        "title": "<color=#65b276>优秀品质精灵</color><color=#9e9886>召唤获得概率90%</color>",
         "petList": (15000001, 15000002, 15000003, 15000004, 15000005, 15000006, 15000007, 15000008, 15000009, 15000010)
     })
 })
-minKey = 10101
+minKey = 10102
 maxKey = 10104

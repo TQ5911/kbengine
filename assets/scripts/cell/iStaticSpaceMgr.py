@@ -19,9 +19,7 @@ class IStaticSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr):
         self.addDatetimeTimerTick()
 
     def onTimer(self, tid, userData):
-        if userData == gametimer.NOTIFY_NEAR_MONSTER_TICK:
-            self.notifyAvatarNearMonPos()
-        elif userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
+        if userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
         else:
             self._onTimer(tid, userData)

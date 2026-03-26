@@ -92,15 +92,19 @@
         </bagEquipEnhanceDeductItemsCB>
 
         <bagEquipUpgrade>
-            <Arg>       GRIDID     </Arg>
-            <Arg>       UUID       </Arg>
-            <Arg>       GRIDID     </Arg>
-            <Arg>       BOOL       </Arg>
+            <Arg>       UINT8                       </Arg>
+            <Arg>       GRIDID                      </Arg>
+            <Arg>       UUID                        </Arg>
+            <Arg>       ARRAY <of> GRIDID </of>     </Arg>
+            <Arg>       UINT8                       </Arg>
+            <Arg>       BOOL                        </Arg>
         </bagEquipUpgrade>
 
         <bagEquipUpgradeDeductItemsCB>
             <Arg>       OP_STAT     </Arg>
             <Arg>       UINT16      </Arg>
+            <Arg>       UINT8       </Arg>
+            <Arg>       UINT8       </Arg>
             <Arg>       UUID        </Arg>
             <Arg>       GRIDID      </Arg>
         </bagEquipUpgradeDeductItemsCB>
@@ -335,6 +339,12 @@
             <Arg>   UNIQUE_ID    </Arg>
             <Arg>   ITEM_VAL     </Arg>
         </cellBrokenEquipment>
+
+        <baseMultiEquipEnhance>
+            <Arg>   PY_LIST    </Arg>
+            <Arg>   PY_DICT    </Arg>
+            <Arg>   PYTHON     </Arg>
+        </baseMultiEquipEnhance>
     </BaseMethods>
 
     <CellMethods>
@@ -470,16 +480,20 @@
         </cellEquipBindValueWashing>
 
         <reqEquipUpgrade> <Exposed/>
-            <Arg>      UINT8   </Arg>
-            <Arg>      GRIDID  </Arg>
-            <Arg>      UINT64  </Arg>
-            <Arg>      GRIDID  </Arg>
-            <Arg>      BOOL    </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UINT64                       </Arg>
+            <Arg>      ARRAY <of> GRIDID    </of>   </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      BOOL                         </Arg>
         </reqEquipUpgrade>
 
         <cellEquipUpgrade>
             <Arg>   UINT8      </Arg>
             <Arg>   UINT16     </Arg>
+            <Arg>   UINT8      </Arg>
+            <Arg>   UINT8      </Arg>
             <Arg>   UUID       </Arg>
             <Arg>   UINT32     </Arg>
         </cellEquipUpgrade>
@@ -502,6 +516,20 @@
             <Arg>   UINT8       </Arg>
             <Arg>   UINT8       </Arg>
         </logPickDropEquip>
+
+        <reqMultiEquipEnhance> <Exposed/>
+            <Arg>   ARRAY <of> UINT8        </of> </Arg>
+            <Arg>   ARRAY <of> UINT16       </of> </Arg>
+            <Arg>   ARRAY <of> UNIQUE_ID    </of> </Arg>
+        </reqMultiEquipEnhance>
+
+        <cellMultiEquipEnhance>
+            <Arg>       UNIQUE_ID   </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       PYTHON      </Arg>
+        </cellMultiEquipEnhance>
     </CellMethods>
 
     <ClientMethods>
@@ -652,6 +680,12 @@
             <Arg>       ARRAY <of> UINT32 </of>     </Arg>
             <Arg>       ARRAY <of> UINT32 </of>     </Arg>
         </onGlyphReplacedSkillIdx>
+
+        <onMultiEquipEnhance>
+            <Arg>   UINT8                                                   </Arg>
+            <Arg>   ARRAY <of> CLI_MULTI_ENHANCE_EQUIP_RESULT </of>         </Arg>
+            <Arg>   ARRAY <of> CLI_MULTI_ENHANCE_CONSUMED_RESULT </of>      </Arg>
+        </onMultiEquipEnhance>
     </ClientMethods>
 </root>
 

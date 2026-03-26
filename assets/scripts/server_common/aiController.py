@@ -749,7 +749,13 @@ class AuxFunc(object):
         if not self._checkNeedNav(pos):
             return True
 
-        _pos = self.getPositionWithinAngle(pos, radius, target)
+        lastTag = 'lastMovePos'
+        lastPos = self.owner.actGetVar(lastTag, None)
+        if lastPos and sMath.distance3D(lastPos, pos) <= radius:
+            _pos = lastPos
+        else:
+            _pos = self.getPositionWithinAngle(pos, radius, target)
+            self.owner.actDefVar(lastTag, _pos)
         return self.moveToPos(_pos, 0)
 
     def moveToPos(self, pos, dis=0, extra=None):
@@ -774,8 +780,6 @@ class AuxFunc(object):
             if self.machine.moveable:
                 mDis = max(0.5, skillRange * 0.9)
                 #if self.moveToPos(target.position,mDis):
-                # 这里要传进去的是偏转角，策划配的是两个偏转角加一个快的总扇形
-                _angle = CONST.datas['monsterCombatPathingMaxAngle']['value'] / 2
                 if self.moveToPosWithAngleDis(target.position, mDis, target):
                     _needNavTime = False
                     # 可以寻路时，清除计时
@@ -1471,6 +1475,8 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         self.hostTargetId = 0
         self.luckyGroupLastTickTime = 0
 
+        self.warningList = []  # 警戒列表
+
     @property
     def owner(self):
         return KBEngine.entities.get(self.ownerId)
@@ -1510,12 +1516,23 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
     def reset(self):
         pass
 
-    def onEnemyEnter(self, targetId):
+    def onEnemyEnter(self, targetId, checkWarning=True):
         owner = self.owner
         target = KBEngine.entities.get(targetId)
 
         if not owner or owner.isDie() or not target or target.isDie():
             return
+        
+        if checkWarning and owner.IsMonster and owner.hasCreepTag(gameconst.CREEP_TAG_WARNING_RANGE):
+            if targetId not in self.warningList:
+                self.warningList.append(targetId)
+                if owner.warningTimerId == 0:
+                    owner.checkWarningList()
+            DEBUG_MSG('add warning target onEnter: {}, warningList: {}'.format(targetId, self.warningList))
+            return
+        if targetId in self.warningList:
+            DEBUG_MSG('remove warning target onEnter: {}, warningList: {}'.format(targetId, self.warningList))
+            self.warningList.remove(targetId)
 
         if targetId in self.iTimerDict:
             owner._cancelCallback(self.iTimerDict[targetId], gametimer.TIMER_TAG_MODIFY_OUT_VISION_HATE_CB)
@@ -1580,7 +1597,7 @@ class AIController(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
             return
 
         if owner.isDie():
-            if self.isGroupMonster() and not self.hateDict:
+            if self.isGroupMonster() and self.hateDict.isEmpty():
                 self.syncIncreaseHateInGroup(targetId, damage=damage)
             return
 

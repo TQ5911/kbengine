@@ -78,7 +78,7 @@ class IWelfareSignIn(object):
             return
 
         if welfareSignInInfo.hasSignIn(signInDayNo):
-            ERROR_MSG('call reqWelfareSignIn: alerady sign in', signInDayNo)
+            WARNING_MSG('call reqWelfareSignIn: alerady sign in', signInDayNo)
             return
 
         welfareSignInInfo.doSignIn(signInDayNo)
@@ -300,6 +300,8 @@ class IWelfareSignIn(object):
                 return
             maxSignInDay = WSLCONFIG.maxDayData[welfareType]
             welfareSignInDay = min(utils.getSvrOpenDays(), maxSignInDay)
+            if welfareSignInDay < 0:
+                welfareSignInDay = 0
             INFO_MSG('call updateWelfareSignIn: TenSign', welfareSignInDay)
             welfareSignInInfo.welfareSignInDay = welfareSignInDay
         else:

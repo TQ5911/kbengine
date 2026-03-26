@@ -41,6 +41,13 @@
             <Persistent>    true            </Persistent>
             <Default>       0               </Default>
         </totalOfflineMinute>
+
+        <lastMonthcardLoginTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                 </Flags>
+            <Default>       0                    </Default>
+            <Persistent>    true                 </Persistent>
+        </lastMonthcardLoginTime>
     </Properties>
 
     <BaseMethods>

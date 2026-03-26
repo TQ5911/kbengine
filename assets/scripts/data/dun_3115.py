@@ -11,9 +11,9 @@ datas ={
     "EntityID": 0,
     "ID": 31150001,
     "Name": "\u51fa\u751f\u70b9",
-    "PosX": 69.69228,
-    "PosY": 3.737541,
-    "PosZ": 78.12269,
+    "PosX": 69.59397,
+    "PosY": 3.811837,
+    "PosZ": 87.07374,
     "Props": {
       "MapEntityType": 0,
       "Num": 0,
@@ -44,7 +44,8 @@ datas ={
     "PosZ": 130.2683,
     "Props": {
       "GroupID": "",
-      "Level": 30.0,
+      "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -75,7 +76,8 @@ datas ={
     "PosZ": 120.7225,
     "Props": {
       "GroupID": "",
-      "Level": 30.0,
+      "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -106,7 +108,8 @@ datas ={
     "PosZ": 117.1892,
     "Props": {
       "GroupID": "",
-      "Level": 30.0,
+      "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -137,7 +140,8 @@ datas ={
     "PosZ": 125.2552,
     "Props": {
       "GroupID": "",
-      "Level": 30.0,
+      "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -168,7 +172,8 @@ datas ={
     "PosZ": 123.7423,
     "Props": {
       "GroupID": "",
-      "Level": 30.0,
+      "Level": 28,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -262,23 +267,23 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "",
-    "Dir": 145.4883,
+    "Dir": 130.2126,
     "DisplayName": "",
     "EntityID": 17310002,
     "ID": 31158004,
     "Name": "\u4f20\u9001\u70b9",
-    "PosX": 59.30928,
-    "PosY": 3.726588,
-    "PosZ": 83.91571,
+    "PosX": 59.58692,
+    "PosY": 3.726687,
+    "PosZ": 87.07021,
     "Props": {
       "CameraId": 0,
       "GateType": 1,
       "Remark": "",
       "ShowInSceneMap": 1,
-      "TelDir": 145.4883,
-      "TelX": 59.30928,
-      "TelY": 3.726588,
-      "TelZ": 83.91571
+      "TelDir": 130.2126,
+      "TelX": 59.58692,
+      "TelY": 3.726687,
+      "TelZ": 87.07021
     }
   }
 }

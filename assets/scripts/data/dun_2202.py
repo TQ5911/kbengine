@@ -17,6 +17,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 35,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": "18",
       "MonsterGroupID": 1,
@@ -26,6 +27,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -40,7 +42,7 @@ datas ={
     "DisplayName": "\u541f\u8bf5\u8005\u00b7\u827e\u83b2",
     "EntityID": 11032002,
     "ID": 22020002,
-    "Name": "5007_01",
+    "Name": "\u53cc\u751f\u6d77\u5996",
     "PosX": 374.9342,
     "PosY": 317.0118,
     "PosZ": 385.2422,
@@ -150,8 +152,32 @@ datas ={
       "Radius": 50.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
+    }
+  },
+  "22028005": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "CombatArea",
+    "ClassNameType": 21,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EntityID": 0,
+    "ID": 22028005,
+    "Name": "\u6218\u6597\u533a",
+    "PosX": 376.9,
+    "PosY": 317.1095,
+    "PosZ": 373.6,
+    "Props": {
+      "AreaType": 1,
+      "Radius": 63.0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   }
 }

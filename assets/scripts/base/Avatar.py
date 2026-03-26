@@ -99,6 +99,9 @@ import iGuildBossChallenge
 import impStatistics
 import iBindPhone
 import gamePlay_gamePlay as GP_GPD
+import const_const as CONST
+import YiDunUtils
+import taskDesc_taskDesc as TD_TDD
 
 import cube_room
 
@@ -155,8 +158,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.tLoginBase = utils.getNow()
         self.initFirst()
         self.logInfo = {}
+        self.lastYidunCheckTime = utils.getNow()
 
         self.pyAddTimer(10, 10, gametimer.AVATAR_SYNC_SERVER_TIME)
+        self.pyAddTimer(60, 60, gametimer.YIDUN_CHECK)
         if not KBEngine.publish():
             self.pyAddTimer(1, 15, gametimer.AVATAR_PROPERTY_CHECK)
 
@@ -175,6 +180,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self._modifyRedisAttr({
             'isOnline': 1,
         })
+        self.setTempMiscProp(gameconst.AvatarProps.cellTotalScore, self.getCellData('totalScore', 0))
+        self.setTempMiscProp(gameconst.AvatarProps.cellExperience, self.getCellData('exp', 0))
+        self.setTempMiscProp(gameconst.AvatarProps.cellMapId, self.getCellData('spaceNo', 0))
 
     def initFirst(self):
         if self.freeRecoverDeathPenaltyTimes != gameconst.DEATH_PENALTY_INVALID_REC_TIMES:
@@ -383,6 +391,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         cellData['gmModeCell'] = self.gmMode
         cellData['isBotCell'] = self.isBotBase
         cellData['tLogin'] = self.tLoginBase
+        cellData['accountNameCell'] = self.accountEntity.accountName
         tempMiscProps = cellData.setdefault('tempMiscProps', {})
         tempMiscProps[gameconst.AvatarProps.offlineTimeForRestoreBuff] = self.tLastOfflineBase
         tempMiscProps[gameconst.AvatarProps.newbieStepCellCache] = self.newbieStep
@@ -407,12 +416,13 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         _logonEnterType = gameconst.LogOnEnterType.NONE
         _cubeQuota = cellData.get('cubeQuota', 0)
+        _wonderLandQuota = cellData.get('wonderLandQuota', 0)
         if _cubeQuota.calcLeftTime() > 0\
                 and formula.isCubeSpace(spaceNo)\
                 and gameconfig.visibleConfigEnabled('square'):
             _logonEnterType = gameconst.LogOnEnterType.CUBE
 
-        elif cellData.get('wonderLandLeftTime', 0) > _now \
+        elif _wonderLandQuota.calcLeftTime() > 0 \
                 and formula.isWonderLandSpace(spaceNo)\
                 and gameconfig.visibleConfigEnabled('wonderLand'):
             _logonEnterType = gameconst.LogOnEnterType.WONDER_LAND
@@ -566,6 +576,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self._onAutoDrinkPotionTimer()
         elif userArg == gametimer.MONTH_CARD_CHECK_TIMER:
             self._onMonthCardTimer()
+        elif userArg == gametimer.YIDUN_CHECK:
+            self._yidunCheck()
         else:
             super(Avatar, self).onTimer(tid, userArg)
 
@@ -617,7 +629,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
         # 无论有没有cell，都等20分钟后销毁，如果没cell，可能是客户端在cell创建好前就断线了
         if not self.isCrossServer:
-            fakeOnlineTime = EXPD.datas[self.getAvatarLevel()]['fakeOnlineTime'] * 60
+            level = self.getAvatarLevel() or 1
+            fakeOnlineTime = EXPD.datas[level]['fakeOnlineTime'] * 60
             INFO_MSG('startDestroyCountDown cb destroy delay:', fakeOnlineTime)
 
             if self.destroyTimer > 0:
@@ -1410,6 +1423,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
             self.getRoleCacheAttr('name'),
             self.getRoleCacheAttr('level'),
             self.accountEntity.packageSource if self.accountEntity else '',
+            self.getTotalScore(),
+            self.getTempMiscProp(gameconst.AvatarProps.cellExperience, 0),
+            self.money,
+            self.coin,
+            formula.getMapId(self.baseSpaceNo),
+            reason,
         )
         return
         emulatorInfo = self.scriptClientData.get(gameconst.ClientUploadDataType.EMULATOR_INFO, {})
@@ -1438,7 +1457,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('_cubeDailyRefresh')
         self.registerDailyEvent('onCrusadeDailyRewardNumUpdate')
         self.registerDailyEvent('refreshFreeRecoverDeathPenaltyTimes')
-        self.registerWeekEvent('onCrusadeWeeklyAddRewardItemNumUpdate')
         self.registerWeekEvent('_cubeWeeklyRefresh')
         self.registerDailyEvent('onStoreDailyUpdate')
         self.registerWeekEvent('onStoreWeeklyUpdate')
@@ -1447,10 +1465,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('_clearApplyedGuilds')
         self.registerDailyEvent('_guildDailyReset')
         self.registerDailyEvent('_wonderLandRefreshDaily')
-        self.registerWeekEvent('_wonderLandRefreshWeekly')
         self.registerDailyEvent('checkAndUpdateWelfareSignIn')
         self.registerDailyEvent('onChiefDailyRewardNumUpdate')
-        self.registerWeekEvent('onChiefWeeklyAddRewardItemNumUpdate')
         self.registerDailyEvent('_checkAchieveDailyRefresh')
         self.registerDailyEvent('_resetCubeCowDur')
         self.registerDailyEvent('_onDailyHealWoundsTimesRefresh')
@@ -1458,6 +1474,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
         self.registerDailyEvent('_dailyUpdateVisible')
         self.registerHourlyEvent('onLimitedStoreHourlyUpdate')
         self.registerDailyEvent('checkMonthCardAward')
+        self.registerDailyEvent('_dailyServerLoginLog')
         self.registerWeekEvent('dungeonSettlementWeeklyReset')
         self.registerDailyEvent('_onBuyCreditDailyUpdate')
         self.registerWeekEvent('_onBuyCreditWeeklyUpdate')
@@ -1514,18 +1531,23 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
     def popForbiddenData(self, forbiddenType):
         return self.forbiddenFlags.pop(forbiddenType, None)
 
-    def isUIVisible(self, uiId):
+    def isUIVisible(self, uiId, notifyClient=False):
         uiData = UVVD.datas.get(uiId)
         if not uiData:
             return False
 
         missionID = uiData['task']
         if missionID and not self.isTaskComplete(missionID):
+            if notifyClient:
+                taskName = TD_TDD.datas.get(missionID, {}).get('TaskName', '')
+                self.onMessagePre(CONST.datas['uiVisibleTaskLimitMsg']['value'], [taskName])
             return False
 
         lvLimit = uiData['level']
         myRoleCache = gameglobal.roleCache.get(self.id)
         if lvLimit and myRoleCache['level'] < lvLimit:
+            if notifyClient:
+                self.onMessagePre(CONST.datas['uiVisibleLvLimitMsg']['value'], [lvLimit])
             return False
 
         if uiData['day'] and utils.getSvrOpenDays() < uiData['day']:
@@ -1721,4 +1743,87 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEvent, 
 
     def onGetCellAppearance(self, appearance):
         self.accountEntity.setCharAppearance(self.gbID, appearance)
+
+    def _yidunCheck(self):
+        if utils.getNow() - self.lastYidunCheckTime > int(gameconfig.getYidunData("checkTimeout")):
+            self.onYiDunCheckToken(self, "", 0, "", "")
+
+    def onYiDunCheckToken(self, exposed, token, clientCode, gameVersion, assetVersion):
+        INFO_MSG("onYiDunCheckToken")
+        platform = self.accountEntity.operatingSystem
+        yiDunPlatform = {
+            "Windows": "Windows",
+            "Android": "Android",
+            "iOS": "iOS",
+            "iPad": "iOS",
+        }
+        for k, v in yiDunPlatform.items():
+            if k in platform:
+                platform = v
+                break
+
+        url = gameconfig.getYidunData("checkUrl")
+        ydCls = YiDunUtils.YiDunGen(platform)
+        jsonDic = ydCls.getData()
+        jsonDic["token"] = token
+        jsonDic["account"] = self.accountName
+        jsonDic["roleId"] = self.gbID
+        jsonDic["nickname"] = self.getRoleCacheAttr('name')
+        jsonDic["ip"] = self.getClientIp()
+        jsonDic["registerTime"] = self.birthInDB * 1000
+        jsonDic["registerIp"] = self.birthIp
+        jsonDic["clientCode"] = clientCode
+        
+        roleInfo = gameglobal.roleCache.get(self.id, {})
+        sceneData = {
+            "gameVersion": gameVersion,
+            "assetVersion": assetVersion,
+            "serverId": gameconfig.serverId(),
+            "serverName": gameglobal.curServerName,
+            "gameJson": roleInfo
+        }
+        jsonDic["sceneData"] = json.dumps(sceneData)
+        jsonDic["signature"] = ydCls.gen_signature(jsonDic)
+
+        message = json.dumps(jsonDic)
+        INFO_MSG("_onYiDunCheckToken", url, message, self.gbID)
+        KBEngine.urlopenv2(url, self._onYiDunCheckToken, method='POST',
+                postData=message.encode('utf-8'),
+                headers={"Content-Type": "application/json"},
+                timeoutSec=3)
+        self.lastYidunCheckTime = utils.getNow()
+        
+
+    def _onYiDunCheckToken(self, httpCode, data, headers, success, *args):
+        INFO_MSG("_onYiDunCheckToken", httpCode, data, headers, success)
+
+    def CheckFuncConditions(self, funcStr):
+        self.isUIVisible(funcStr, True)
+
+    def _dailyServerLoginLog(self, *args):
+        _account = self.accountEntity
+        if not _account:
+            ERROR_MSG('_dailyServerLoginLog but account not exist')
+            return
+
+        LogTrackingMgr.LogTrackingMgr.Server_Role_Login(
+            _account.accountName,
+            self.gbID,
+            self.getRoleCacheAttr('school'),
+            self.getRoleCacheAttr('name'),
+            self.getRoleCacheAttr('level'),
+            gameconfig.gameId(),
+            _account.userInfoId,
+            self.birthInDB,
+            _account.accountType,
+            _account.channelId,
+            _account.packageSource,
+            gameconst.SERVER_LOG_TYPE_DAILY,
+            self.getTotalScore(),
+            self.getTempMiscProp(gameconst.AvatarProps.cellExperience, 0),
+            self.money,
+            self.coin,
+            formula.getMapId(self.baseSpaceNo),
+        )
+
 

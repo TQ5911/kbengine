@@ -33,7 +33,7 @@ datas = _tools.RODict({
     }),
     "mineBattle_startTime": _tools.RODict({
         "ID": "mineBattle_startTime",
-        "value": _tools.ROList([3, 2000, 2100]),
+        "value": _tools.ROList([2, 2000, 2100]),
     }),
     "mineBattle_interfacePromptTime": _tools.RODict({
         "ID": "mineBattle_interfacePromptTime",
@@ -93,7 +93,7 @@ datas = _tools.RODict({
     }),
     "mineBattle_miningPersonalDuration": _tools.RODict({
         "ID": "mineBattle_miningPersonalDuration",
-        "value": _tools.ROList([30, 60]),
+        "value": _tools.ROList([30, 30]),
     }),
     "mineBattle_incomeCoefficient": _tools.RODict({
         "ID": "mineBattle_incomeCoefficient",
@@ -310,5 +310,9 @@ datas = _tools.RODict({
     "mineBattle_prohibitExit": _tools.RODict({
         "ID": "mineBattle_prohibitExit",
         "value": 54003214,
+    }),
+    "mineBattle_teleportMsg": _tools.RODict({
+        "ID": "mineBattle_teleportMsg",
+        "value": 54003257,
     })
 })

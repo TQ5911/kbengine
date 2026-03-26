@@ -135,6 +135,9 @@ class AvatarBaseEntityCall(object):
     def getCoinAuctionPlayerInfo(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getCoinAuctionPlayerInfo', ()))
 
+    def getCubeReadyLineCnt(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getCubeReadyLineCnt', ()))
+
     def getCurrentSaleItemInfo(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'getCurrentSaleItemInfo', (arg1, arg2, )))
 
@@ -204,6 +207,12 @@ class AvatarBaseEntityCall(object):
     def guildRecruit(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'guildRecruit', ()))
 
+    def increaseChiefRewardNumber(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'increaseChiefRewardNumber', (arg1, arg2, )))
+
+    def increaseCrusadeRewardNumber(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'increaseCrusadeRewardNumber', (arg1, arg2, )))
+
     def inviteJoinGuild(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'inviteJoinGuild', (arg1, )))
 
@@ -248,6 +257,9 @@ class AvatarBaseEntityCall(object):
 
     def onSiegeWarSpaceEnter(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'onSiegeWarSpaceEnter', ()))
+
+    def onYiDunCheckToken(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'onYiDunCheckToken', (arg1, arg2, arg3, arg4, )))
 
     def oneKeyGuildApply(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.BASE, 'oneKeyGuildApply', (arg1, )))
@@ -800,6 +812,9 @@ class AvatarCellEntityCall(object):
     def castingSkill(self, arg1, arg2, arg3, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'castingSkill', (arg1, arg2, arg3, )))
 
+    def changeAutoCombatRange(self, arg1, arg2, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'changeAutoCombatRange', (arg1, arg2, )))
+
     def cinemaPlayEnd(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'cinemaPlayEnd', (arg1, )))
 
@@ -884,6 +899,9 @@ class AvatarCellEntityCall(object):
     def followCaptainInCube(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'followCaptainInCube', ()))
 
+    def getArenaKingPos(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getArenaKingPos', ()))
+
     def getAureoleInfo(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getAureoleInfo', (arg1, )))
 
@@ -898,6 +916,9 @@ class AvatarCellEntityCall(object):
 
     def getChangllengeDataInfo(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getChangllengeDataInfo', ()))
+
+    def getCubeKickLeftTime(self, arg1, arg2, arg3, arg4, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getCubeKickLeftTime', (arg1, arg2, arg3, arg4, )))
 
     def getCubeRoomLeftTime(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getCubeRoomLeftTime', ()))
@@ -919,6 +940,9 @@ class AvatarCellEntityCall(object):
 
     def getTargetPlayerInfo(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getTargetPlayerInfo', (arg1, )))
+
+    def getWonderLandLeftTime(self, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'getWonderLandLeftTime', ()))
 
     def jump(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'jump', (arg1, )))
@@ -1070,8 +1094,8 @@ class AvatarCellEntityCall(object):
     def reqEquipSpiritWashing(self, arg1, arg2, arg3, arg4, arg5, arg6, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipSpiritWashing', (arg1, arg2, arg3, arg4, arg5, arg6, )))
 
-    def reqEquipUpgrade(self, arg1, arg2, arg3, arg4, arg5, ):
-        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipUpgrade', (arg1, arg2, arg3, arg4, arg5, )))
+    def reqEquipUpgrade(self, arg1, arg2, arg3, arg4, arg5, arg6, arg7, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqEquipUpgrade', (arg1, arg2, arg3, arg4, arg5, arg6, arg7, )))
 
     def reqGetRaidList(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqGetRaidList', (arg1, arg2, )))
@@ -1090,6 +1114,9 @@ class AvatarCellEntityCall(object):
 
     def reqJoinTeam(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqJoinTeam', (arg1, arg2, )))
+
+    def reqMultiEquipEnhance(self, arg1, arg2, arg3, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqMultiEquipEnhance', (arg1, arg2, arg3, )))
 
     def reqPlayerAutoMatch(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'reqPlayerAutoMatch', (arg1, )))
@@ -1157,8 +1184,14 @@ class AvatarCellEntityCall(object):
     def setAutoCombatReliveReturnTimes(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'setAutoCombatReliveReturnTimes', (arg1, )))
 
+    def setAutoCombatSkillFrequent(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'setAutoCombatSkillFrequent', (arg1, )))
+
     def setBAutoHeal(self, arg1, arg2, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'setBAutoHeal', (arg1, arg2, )))
+
+    def setDoubleBarFlag(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'setDoubleBarFlag', (arg1, )))
 
     def setEnterCubeFloor(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'setEnterCubeFloor', (arg1, )))
@@ -1198,6 +1231,9 @@ class AvatarCellEntityCall(object):
 
     def stopAutoCombat(self, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'stopAutoCombat', ()))
+
+    def switchCubeLine(self, arg1, ):
+        self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'switchCubeLine', (arg1, )))
 
     def switchPKModel(self, arg1, ):
         self.callBuffer.append(RemoteMethod(EntityMethodType.CELL, 'switchPKModel', (arg1, )))

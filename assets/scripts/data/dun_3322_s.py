@@ -340,6 +340,7 @@ datas ={
           "PosY": 8.806934,
           "PosZ": 153.29,
           "Props": {
+            "IsOnGround": 1,
             "IsOpen": 1,
             "Radius": 0.0,
             "RefreshNum": 1,
@@ -361,14 +362,14 @@ datas ={
           "DisplayName": "",
           "EntityID": 3,
           "ID": 33228003,
-          "PosX": 91.0,
+          "PosX": 90.0,
           "PosY": 3.85355,
           "PosZ": 83.54,
           "Props": {
             "AreaType": 2,
             "Height": 5.0,
             "Length": 60.0,
-            "MPosX": 88.0,
+            "MPosX": 87.0,
             "MPosY": 3.85,
             "MPosZ": 21.0,
             "Remark": "",
@@ -385,14 +386,14 @@ datas ={
           "DisplayName": "",
           "EntityID": 3,
           "ID": 33228004,
-          "PosX": 49.0,
+          "PosX": 50.0,
           "PosY": 3.85355,
           "PosZ": 85.17,
           "Props": {
             "AreaType": 2,
             "Height": 5.0,
             "Length": 60.0,
-            "MPosX": 46.0,
+            "MPosX": 47.0,
             "MPosY": 3.85,
             "MPosZ": 23.0,
             "Remark": "",
@@ -434,18 +435,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 33228007,
-          "PosX": 61.26976,
+          "PosX": 60.72458,
           "PosY": 3.717128,
-          "PosZ": 28.54253,
+          "PosZ": 28.49254,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 0.0,
-            "TelX": 61.26976,
+            "TelX": 60.72458,
             "TelY": 3.717128,
-            "TelZ": 28.54253
+            "TelZ": 28.49254
           }
         }
       }
@@ -462,9 +463,9 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 33228001,
-        "PosX": 69.50409,
-        "PosY": 4.787661,
-        "PosZ": 18.97103,
+        "PosX": 69.55374,
+        "PosY": 4.787662,
+        "PosZ": 27.20732,
         "Props": {
           "MapEntityType": 0,
           "Num": 0,

@@ -621,10 +621,6 @@ class DungeonFlowControllerBuilder(object):
         entityGID = eventData['entityID'][0]
         return self.controller.buildDungeonEntityImmuneDeath(eventId, entityGID)
 
-    def build_ifAllSelectEntityImmuneDeath(self, eventId, eventData):
-        entityGIDs = eventData['entityID']
-        return self.controller.buildIfAllSelectEntityImmuneDeath(eventId, entityGIDs)
-
     def build_checkValue(self, eventId, eventData):
         formula = eventData['formula']
         paramVarIDs = eventData['paramVarIDs']

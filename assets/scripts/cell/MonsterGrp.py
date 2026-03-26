@@ -59,6 +59,9 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
         return _groupData.get(str(self.groupId))
 
     def doEntityRefreshGrp(self, gameEntityId):
+        if KBEngine.isShuttingDown():
+            return
+
         _entityProps = []
         utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps, True)
         for _, _, _className, _, _pos, _dir, _params, _ in _entityProps:

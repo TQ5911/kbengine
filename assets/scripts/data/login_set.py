@@ -75,6 +75,10 @@ datas = _tools.RODict({
         "ID": "idip_accountBanned_msg",
         "value": 54001560,
     }),
+    "idip_accountBanned_msg2": _tools.RODict({
+        "ID": "idip_accountBanned_msg2",
+        "value": 54001562,
+    }),
     "accountNotWhitelisted": _tools.RODict({
         "ID": "accountNotWhitelisted",
         "value": 54000798,
@@ -581,7 +585,7 @@ datas = _tools.RODict({
     }),
     "simulatorloginForbidMsg": _tools.RODict({
         "ID": "simulatorloginForbidMsg",
-        "value": 54990127,
+        "value": 54980010,
     }),
     "announcementInfoURL": _tools.RODict({
         "ID": "announcementInfoURL",
@@ -866,5 +870,9 @@ datas = _tools.RODict({
     "serverUnlockTimeMsg": _tools.RODict({
         "ID": "serverUnlockTimeMsg",
         "value": 54002164,
+    }),
+    "TaptaploginAnomaly": _tools.RODict({
+        "ID": "TaptaploginAnomaly",
+        "value": 54481007,
     })
 })

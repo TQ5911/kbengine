@@ -115,7 +115,7 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
 
         self.worldLineSceneState = _state
         DEBUG_MSG('setSceneStates', self.spaceNo, states, self.worldLineSceneState)
-        self.syncPlayer(lambda box: box.client.onSceneState(self.worldLineSceneState))
+        self.syncPlayer(lambda box: box.onSceneStateChange(self.worldLineSceneState))
 
     def onPlayerEnter(self, eid):
         iSpaceMgr.ISpaceMgr.onPlayerEnter(self, eid)

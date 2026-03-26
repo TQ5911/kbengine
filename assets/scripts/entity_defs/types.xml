@@ -2694,9 +2694,6 @@
             <rewardDailyCount>
                 <Type>  UINT32  </Type>
             </rewardDailyCount>
-            <useItemAddRewardNumber>
-                <Type>  UINT32  </Type>
-            </useItemAddRewardNumber>
             <useCoinAddRewardNum>
                 <Type>  UINT32  </Type>
             </useCoinAddRewardNum>
@@ -2721,9 +2718,6 @@
             <rewardDailyCount>
                 <Type>  UINT32  </Type>
             </rewardDailyCount>
-            <useItemAddRewardNumber>
-                <Type>  UINT32  </Type>
-            </useItemAddRewardNumber>
             <useCoinAddRewardNum>
                 <Type>  UINT32  </Type>
             </useCoinAddRewardNum>
@@ -3804,6 +3798,7 @@
             </school>
             <listData>
                 <Type>  PY_LIST                 </Type>
+                <DatabaseLength>  5120000                                       </DatabaseLength>
             </listData>
         </Properties>
     </LEADER_BOARD_SCHOOL_LIST_DATA_INFO>
@@ -3816,6 +3811,7 @@
             </leaderBoardType>
             <listData>
                 <Type>  PY_LIST                 </Type>
+                <DatabaseLength>  5120000                                       </DatabaseLength>
             </listData>
             <schoolsData>
                 <Type>  ARRAY   <of>    LEADER_BOARD_SCHOOL_LIST_DATA_INFO </of>    </Type>
@@ -3852,6 +3848,36 @@
             </guildUUID>
         </Properties>
     </LEADER_BOARD_AVATAR_SCORE_DATA_INFO>
+
+    <LEADER_BOARD_AVATAR_ACHIEVEMENT_DATA_INFO> FIXED_DICT
+        <implementedBy>     LeaderBoardAvatarAchievementInfo.LeaderBoardAvatarAchievementInstance    </implementedBy>
+        <Properties>
+            <gbId>
+                <Type>  PLAYER_GBID         </Type>
+            </gbId>
+            <name>
+                <Type>  UNICODE             </Type>
+            </name>
+            <level>
+                <Type>  LEVEL               </Type>
+            </level>
+            <school>
+                <Type>  SCHOOL              </Type>
+            </school>
+            <point>
+                <Type>  SCORE               </Type>
+            </point>
+            <ts>
+                <Type>  LONGTIME            </Type>
+            </ts>
+            <guildName>
+                <Type>  UNICODE             </Type>
+            </guildName>
+            <guildUUID>
+                <Type>  GUILD_UUID          </Type>
+            </guildUUID>
+        </Properties>
+    </LEADER_BOARD_AVATAR_ACHIEVEMENT_DATA_INFO>
 
     <INVITE_DATA> FIXED_DICT
         <Properties>
@@ -4039,6 +4065,12 @@
             <pos>
                 <Type>  POSITION_ARG            </Type>
             </pos>
+            <switch>
+                <Type>  BOOL                    </Type>
+            </switch>
+            <range>
+                <Type>  UINT8    </Type>
+            </range>
         </Properties>
     </COMBAT_RETURN_IDLE_DATA_INFO>
 
@@ -4856,9 +4888,9 @@
             <enterTime>
                 <Type>  LONGTIME            </Type>
             </enterTime>
-            <cubeDurState>
+            <quotaDurState>
                 <Type>  UINT8               </Type>
-            </cubeDurState>
+            </quotaDurState>
         </Properties>
     </CUBE_QUOTA_DATA_INFO>
 
@@ -5440,4 +5472,53 @@
             </logQueue>
         </Properties>
     </SKILL_TIMER_LOG_QUEUE_DATA_INFO>
+
+    <CLI_MULTI_ENHANCE_EQUIP_RESULT> FIXED_DICT
+        <Properties>
+            <eqipIn>
+                <Type>  UINT8             </Type>
+            </eqipIn>
+            <eqipPos>
+                <Type>  UINT16            </Type>
+            </eqipPos>
+            <enhanceVal>
+                <Type>  INT16             </Type>
+            </enhanceVal>
+            <itemId>
+                <Type>  INT32             </Type>
+            </itemId>
+            <uniqueId>
+                <Type>  UNIQUE_ID         </Type>
+            </uniqueId>
+            <enhanceLv>
+                <Type>  UINT16            </Type>
+            </enhanceLv>
+            <score>
+                <Type>  UINT64            </Type>
+            </score>
+            <addBindValueStatus>
+                <Type>  UINT8             </Type>
+            </addBindValueStatus>
+            <bindType>
+                <Type>  UINT8             </Type>
+            </bindType>
+            <maxEnhanceLv>
+                <Type>  UINT16            </Type>
+            </maxEnhanceLv>
+        </Properties>
+    </CLI_MULTI_ENHANCE_EQUIP_RESULT>
+
+    <CLI_MULTI_ENHANCE_CONSUMED_RESULT> FIXED_DICT
+        <Properties>
+            <itemId>
+                <Type>  UINT32              </Type>
+            </itemId>
+            <itemNum>
+                <Type>  UINT32              </Type>
+            </itemNum>
+            <bindType>
+                <Type>  UINT8               </Type>
+            </bindType>
+        </Properties>
+    </CLI_MULTI_ENHANCE_CONSUMED_RESULT>
 </root>

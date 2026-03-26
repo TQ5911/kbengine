@@ -26,9 +26,9 @@
         <serverOpenTime> 1764709200 </serverOpenTime>
         <enableAdminServer> 0 </enableAdminServer>
         <enableRouterServer> 1 </enableRouterServer>
-        <giftCodeUrl> http://192.168.10.16:8080/user/api/v1/redeem-code/use </giftCodeUrl>
-        <tapTapBindPhoneReqUrl> http://192.168.10.16:8080/user/api/v1/user-info/taptap/send-code </tapTapBindPhoneReqUrl>
-        <tapTapBindPhoneVerifyUrl> http://192.168.10.16:8080/user/api/v1/user-info/taptap/verify-code </tapTapBindPhoneVerifyUrl>
+        <giftCodeUrl> https://test.api.hzyunxingu.cn/user/api/v1/redeem-code/use </giftCodeUrl>
+        <tapTapBindPhoneReqUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/taptap/send-code </tapTapBindPhoneReqUrl>
+        <tapTapBindPhoneVerifyUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/taptap/verify-code </tapTapBindPhoneVerifyUrl>
         <gm>
             <item ip='192.168.10.13' port='2040' httpApi='8080'/>
         </gm>
@@ -60,7 +60,7 @@
         <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
         <enableGlobalAuction> 1 </enableGlobalAuction>
 
-        <redisServer> 192.168.10.13 </redisServer>
+        <redisServer> 192.168.10.12 </redisServer>
         <redisPort> 6379 </redisPort>
 
         <elasticServer> 192.168.10.13 </elasticServer>
@@ -90,6 +90,16 @@
         
         <errReportUrl> https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=92de3ed1-9bfe-4428-afc6-f1488f9bb452 </errReportUrl>
     </game>
+
+    <yidun>
+        <checkUrl> http://ir-open.dun.163.com/v6/risk/check </checkUrl>
+        <business_Windows> 0579d8235c3d82f2aa82c65a83af98d5 </business_Windows>
+        <business_Android> ab9004cbf846e2a65e09b8ac45cd9042 </business_Android>
+        <business_iOS> 5dc97511f3d158f3375d8b91a545b4a1 </business_iOS>
+        <secretId> 7d95da2ecddbd4bae37e9fdab29f7402 </secretId>
+        <secretKey> 4c1beb30a3c11ab667708b4c3d77252a </secretKey>
+        <checkTimeout> 900 </checkTimeout>
+    </yidun>
     
     <platform>
         

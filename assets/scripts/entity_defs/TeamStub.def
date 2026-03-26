@@ -33,6 +33,7 @@
             <Arg>           PY_DICT         </Arg>
             <Arg>           BOOL            </Arg>
             <Arg>           INT8            </Arg>
+            <Arg>           PYTHON          </Arg>
         </applyJoinTeam>
 
         <addTeamMember>
@@ -48,6 +49,7 @@
             <Arg>           SCHOOL          </Arg>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           UNICODE         </Arg>
+            <Arg>           PYTHON          </Arg>
         </applyInviteTeam>
 
         <replyInviteTeam>
@@ -509,6 +511,8 @@
             <Arg>   PLAYER_GBID </Arg>
             <Arg>   UNICODE     </Arg>
             <Arg>   TEAMID      </Arg>
+            <Arg>   SCORE           </Arg>
+            <Arg>   LEVEL           </Arg>
             <Arg>   PYTHON      </Arg>
         </raidApplyInvitedRaid>
 

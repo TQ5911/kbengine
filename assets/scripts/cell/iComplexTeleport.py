@@ -28,6 +28,7 @@ import gamePlay_gamePlay as GP_GP
 import conflict_conflict_def as CCD
 import gamePlay_singleSceneData as GPSSDD
 import wonderLand_floor as WL_FD
+import wonderLand_config as WL_CD
 
 class IComplexTeleport(object):
     """处理所有诸如从 场景A --传送--> 场景B 的问题,
@@ -143,7 +144,7 @@ class IComplexTeleport(object):
 
     @lastTeleportSpaceNoRecord.setter
     def lastTeleportSpaceNoRecord(self, spaceNo):
-        self.popTempMiscProp(gameconst.AvatarProps.lastTeleportSpaceNoRecord, spaceNo)
+        self.setTempMiscProp(gameconst.AvatarProps.lastTeleportSpaceNoRecord, spaceNo)
 
     @property
     def lastTeleportWorldlinePosRecord(self):
@@ -205,6 +206,7 @@ class IComplexTeleport(object):
         #     return gameconst.MapIdDef.mapUnknown, None
 
         _m_records = self.getTeleportOutsideRecord()
+        self.mineWarChangeOutsideRecord(_m_records)
         for i_mapId in reversed(list(_m_records)):
             # 大世界分线
             if i_mapId in gameconst.MapIdDef.mapWorldSet:
@@ -1235,19 +1237,19 @@ class IComplexTeleport(object):
 
         if _type == gameconst.ENTER_CUBE_DEDUCT_TIMES:
             _dur = cube_config.datas['cubeNumTime']['value'] * 60
-            self.cubeQuota.addLeftTime(self, _dur)
+            self.cubeQuota.addCubeLeftTime(self, _dur)
             self.base.afterEnterCubeDeductTimes()
 
         if not formula.isCubeSpace(fromSpaceNo):
             self.base.activityComplete(cube_config.datas['cubeActID']['value'])
 
+        self._dealWithCubeKickTimer(fromSpaceNo, toSpaceNo)
         self._dealWithCubeTimer(fromSpaceNo, toSpaceNo)
 
         _toMapId = formula.getMapId(toSpaceNo)
         if dataUtils.isCubeCow(_toMapId):
             _fromMapId = formula.getMapId(fromSpaceNo)
             self.fromCubeMapId = _fromMapId
-            self.startCubeCowTimer()
 
             _floor = cube_room.datas[_toMapId]['floor']
             _buffId = cube_floor.datas[_floor]['cowPassBuffID']
@@ -1296,6 +1298,7 @@ class IComplexTeleport(object):
             self.clearCubeRoomRewardRecord()
 
         if not formula.isCubeSpace(toSpaceNo):
+            self._dealWithCubeKickTimer(fromSpaceNo, toSpaceNo)
             self._dealWithCubeTimer(fromSpaceNo, toSpaceNo)
 
         _fromMapId = formula.getMapId(fromSpaceNo)
@@ -1335,10 +1338,13 @@ class IComplexTeleport(object):
         self.spaceMgr.onPlayerEnter(self.id)
 
         gameengine.getWonderLandStubBySpaceNo(toSpaceNo).onEnterWonderLandSuccess(self.gbId, toSpaceNo)
-        self._startWonderLandTimerOnEnter()
-        _bossList = list(self.spaceMgr.collToBoss.values())
-        self.client.onWonderLandBossInfo(_bossList)
-        self.base.afterEnterWonderLandDeductTimes()
+
+        if context.get('enterType') == gameconst.WONDER_LAND_ENTER_TYPE_TICKET:
+            self.wonderLandQuota.addWonderLandLeftTime(self, WL_CD.datas['wonderLandNumTime']['value'] * 60)
+            self.base.afterEnterWonderLandDeductTimes()
+
+        self.base.activityComplete(WL_CD.datas['wonderLandActID']['value'])
+        self._dealWithWonderLandTimer(fromSpaceNo, toSpaceNo)
 
         _mapId = formula.getMapId(toSpaceNo)
         LogTrackingMgr.LogTrackingMgr.Wonderland_Info(
@@ -1346,6 +1352,7 @@ class IComplexTeleport(object):
             gameconfig.gameId(),
             WL_FD.id2floor[_mapId],
             gameconst.WONDER_LAND_EVENT_ENTER,
+            self.wonderLandQuota.calcLeftTime(),
         )
         return True
 
@@ -1374,6 +1381,9 @@ class IComplexTeleport(object):
         gameengine.getWonderLandStubBySpaceNo(fromSpaceNo).onLeaveWonderLand(self.gbId)
         self.afterLeaveWonderLand()
 
+        if not formula.isWonderLandSpace(toSpaceNo):
+            self._dealWithWonderLandTimer(fromSpaceNo, toSpaceNo)
+
         _mapId = formula.getMapId(fromSpaceNo)
 
         LogTrackingMgr.LogTrackingMgr.Wonderland_Info(
@@ -1381,6 +1391,7 @@ class IComplexTeleport(object):
             gameconfig.gameId(),
             WL_FD.id2floor[_mapId],
             gameconst.WONDER_LAND_EVENT_EXIT,
+            self.wonderLandQuota.calcLeftTime(),
         )
         return True
     # ----------------------------------------------------------------------

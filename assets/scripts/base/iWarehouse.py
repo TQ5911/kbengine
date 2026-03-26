@@ -64,7 +64,7 @@ class IWarehouse(object):
         LogTrackingMgr.LogTrackingMgr.Capacity_Expansion(
             opUUID,
             self.gbID,
-            gameconst.CapacityExpansionType.WAREHOUSE_GOLD,
+            gameconst.CapacityExpansionType.WAREHOUSE_ITEM,
             oldCapacity,
             gridNum,
             self.warehouse.capacity,

@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "DC5A082059B3A5D59D635F625DC19D23";
+        public string serverEntitydefMD5 = "02CD3026D95B4580FA04A5CDEB0AF61B";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -1474,7 +1474,7 @@ namespace KBEngine
 
             if (!entities.TryGetValue(eid, out entity))
             {
-                Dbg.ERROR_MSG("KBEngine::Client_onEntityLeaveWorld: entity(" + eid + ") not found!");
+                Dbg.WARNING_MSG("KBEngine::Client_onEntityLeaveWorld: entity(" + eid + ") not found!");
                 return;
             }
 
@@ -1906,7 +1906,7 @@ namespace KBEngine
             _entityServerPos.z = z;
 
             Avatar entity = player() as Avatar;
-            if (entity != null && (entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL) || entity.IsObPlayer()))
+            if (entity != null && (entity.isControlled || entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL) || entity.IsObPlayer()))
             {
                 entity.position.Set(_entityServerPos.x, _entityServerPos.y, _entityServerPos.z);
                 Event.fireOut(EventOutTypes.updatePosition, entity);
@@ -1921,7 +1921,7 @@ namespace KBEngine
             _entityServerPos.z = z;
 
             Avatar entity = player() as Avatar;
-            if (entity != null && (entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL)  || entity.IsObPlayer()))
+            if (entity != null && (entity.isControlled || entity.HasState((int)CHARACTER_STATE.CS_SERVER_CONTROL)  || entity.IsObPlayer()))
             {
                 entity.position.x = _entityServerPos.x;
                 entity.position.z = _entityServerPos.z;

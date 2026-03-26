@@ -38,9 +38,7 @@ datas ={
         1034,
         1036,
         1040,
-        1042,
-        1044,
-        1058
+        1044
       ]
     }
   },
@@ -88,14 +86,13 @@ datas ={
     "monsterID": [
       40230009
     ],
-    "compare": 5,
-    "hpPercent": 10.0,
+    "compare": 1,
+    "hpPercent": 0.0,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1035,
-        1047
+        1035
       ]
     }
   },
@@ -172,11 +169,7 @@ datas ={
     "taskID": 86010168,
     "checkNow": 0,
     "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1043
-      ]
-    }
+    "transition": {}
   },
   "1043": {
     "type": "createMonster",
@@ -231,11 +224,6 @@ datas ={
         1056
       ]
     }
-  },
-  "1047": {
-    "type": "dungeonTaskForceComplete",
-    "taskID": 86010166,
-    "transition": {}
   },
   "1048": {
     "type": "monsterHp",

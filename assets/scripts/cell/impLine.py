@@ -368,6 +368,10 @@ class ImpLine(object):
     @gamedecorator.crossServer
     @utils.isMyself
     def queryLineInfo(self, exposed, lineType):
+        if self._getCubeRoomTypeByMapId(lineType) == gameconst.CubeRoomType.READY:
+            gameengine.getCubeStub(1).doGetCubeReadyLineCnt(self.base)
+            return
+
         if lineType not in gameconst.lineStubMap():
             ERROR_MSG('queryLineInfo invalid lineType:', lineType)
             return

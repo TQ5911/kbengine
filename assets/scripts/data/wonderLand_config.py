@@ -31,9 +31,9 @@ datas = _tools.RODict({
         "ID": "wonderLandNumItem",
         "value": 30000304,
     }),
-    "wonderLandNumItemWeeklyLimit": _tools.RODict({
-        "ID": "wonderLandNumItemWeeklyLimit",
-        "value": 10,
+    "wonderLandNumItemLimit": _tools.RODict({
+        "ID": "wonderLandNumItemLimit",
+        "value": 14,
     }),
     "wonderLandActID": _tools.RODict({
         "ID": "wonderLandActID",
@@ -53,11 +53,11 @@ datas = _tools.RODict({
     }),
     "timeExplanation3": _tools.RODict({
         "ID": "timeExplanation3",
-        "value": "使用金币或背包中的入场券\n可以将限定时间延长30分钟。",
+        "value": "使用元宝或背包中的入场券\n可以将限定时间延长30分钟。",
     }),
     "wonderLandUseGold": _tools.RODict({
         "ID": "wonderLandUseGold",
-        "value": "使用金币({0}/{1})",
+        "value": "使用元宝({0}/{1})",
     }),
     "wonderLandUseTicket": _tools.RODict({
         "ID": "wonderLandUseTicket",
@@ -190,5 +190,17 @@ datas = _tools.RODict({
     "AutoExpansionTimeText": _tools.RODict({
         "ID": "AutoExpansionTimeText",
         "value": "{0}次",
+    }),
+    "WonderLand_ticketAutoLimitMsg": _tools.RODict({
+        "ID": "WonderLand_ticketAutoLimitMsg",
+        "value": 54003265,
+    }),
+    "WonderLand_ticketAutoLimit": _tools.RODict({
+        "ID": "WonderLand_ticketAutoLimit",
+        "value": 200,
+    }),
+    "WonderLand_fullyBooked": _tools.RODict({
+        "ID": "WonderLand_fullyBooked",
+        "value": 54003266,
     })
 })

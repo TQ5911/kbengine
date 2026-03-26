@@ -16,7 +16,8 @@ export KBE_BIN_PATH="$KBE_ROOT/kbe/bin/server"
 
 
 cmd_str=$1
-sed "s/TARGET/${cmd_str}/g" hotReload/_genCommand.py > ._doCommand.py
-
+enc_cmd=$(printf '%s' "$1" | base64 |  tr -d '\n') 
+sed "s/TARGET/${enc_cmd}/g" hotReload/_genCommand.py > ._doCommand.py
+cat ._doCommand.py
 $KBE_BIN_PATH/runscript -base --script=._doCommand.py
 rm ._doCommand.py

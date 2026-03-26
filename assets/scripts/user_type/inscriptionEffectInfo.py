@@ -35,7 +35,7 @@ class InscriptionEffectInfo(object):
             upLimit = inscriptionValue[1]
             if lowLimit > upLimit:
                 ERROR_MSG('InscriptionEffectInfo-->getEffectValue, wrong inscription data ', inscriptionId)
-                return False, None, None, None, None
+                return False, None, None
             if upLimit == lowLimit:
                 return True, inscriptionType, [upLimit]
             else:

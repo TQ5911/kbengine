@@ -169,13 +169,12 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
             self.setProp('baseMaxPhysicalArmor', int(owner.getProp('baseMaxPhysicalArmor')*self.basePhysicalArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
             self.setProp('baseMaxMagicArmor', int(owner.getProp('baseMaxMagicArmor')*self.baseMagicArmorRatio()*self.inheritPropRatio), gameconst.SourceType.Init)
 
-            otherProps = ['adjFullHp', 'adjFullHpAbs', 'mulFullHp', 'adjMinPhysicalAtk', 'adjMinPhysicalAtkAbs',
-                        'adjMinMagicAtk', 'adjMinMagicAtkAbs', 'adjMaxPhysicalAtk', 'adjMaxPhysicalAtkAbs', 'adjMaxMagicAtk',
-                        'adjMaxMagicAtkAbs',
-                        'baseHit', 'adjHit', 'baseDodge', 'adjDodge',
-                       'baseFatal', 'adjFatal', 'baseAntiFatal',
-                       'adjAntiFatal', 'baseMortal', 'adjMortal', 'baseAntiMortal', 'adjAntiMortal',
-                       ]
+            otherProps = [
+                            'adjFullHp', 'adjFullHpAbs', 'mulFullHp', 'adjMinPhysicalAtk', 'adjMinPhysicalAtkAbs', 'adjMinMagicAtk', 'adjMinMagicAtkAbs', 
+                            'adjMaxPhysicalAtk', 'adjMaxPhysicalAtkAbs', 'adjMaxMagicAtk', 'adjMaxMagicAtkAbs', 'baseHit', 'adjHit', 'baseDodge', 'adjDodge', 
+                            'baseFatal', 'adjFatal', 'baseAntiFatal', 'adjAntiFatal', 'baseMortal', 'adjMortal', 'baseAntiMortal', 'adjAntiMortal',
+                            'evasion', 'accuracy',
+                        ]
             # 没有被定义和使用的属性,先移出来,不然报错
             # 'mulHit', 'mulDodge', 'baseDodgeDmg', 'adjDodgeDmg',
             # 'mulDodgeDmg', 'mulFatal', 'mulAntiFatal', 'mulMortal', 'mulAntiMortal'

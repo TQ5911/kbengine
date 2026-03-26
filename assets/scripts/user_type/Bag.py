@@ -528,7 +528,7 @@ class Bag(BaseBag.BaseBag):
         LogTrackingMgr.LogTrackingMgr.Capacity_Expansion(
             opUUID,
             owner.gbID,
-            gameconst.CapacityExpansionType.BAG_ITEM,
+            gameconst.CapacityExpansionType.BAG_GOLD,
             oldCapacity,
             gridNum,
             self.capacity,
@@ -671,7 +671,6 @@ class Bag(BaseBag.BaseBag):
         for gridId, uniqueId in zip(succGridIdList, succUniqueIdList):
             bagEquipItem = self.getItemObjByGridId(gridId)
             itemNum = bagEquipItem.itemNum
-            bagEquipItem.setItemNum(0)
             self.cleanGridByGridId(owner, gridId, bagEquipItem.itemId, opUUID, srcType, detail, sendClient=False)
             clientData.append({'gridId': gridId, 'itemNum': 0})
             consumedItems.append({'uniqueId':uniqueId, 'itemId':bagEquipItem.itemId, 'itemNum':itemNum})

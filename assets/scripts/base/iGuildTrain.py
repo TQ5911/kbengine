@@ -74,6 +74,7 @@ class IGuildTrain(object):
 
         LogTrackingMgr.LogTrackingMgr.Guild_Train_Reset(
             self.gbID,
+            opUUID,
         )
 
     def _checkCanUpgradeTrainLevel(self, trainId, targetLevel, gtuData):
@@ -145,6 +146,7 @@ class IGuildTrain(object):
         self.trainDic[_trainId] = _targetLevel
 
         score = self._calcGuildTrainScore()
+        INFO_MSG('onCheckUpgradeTrainLevelResult:', result, ctx, self.trainDic, score)
         self.cell.onUpgradeTrainLevel(_trainId, _targetLevel, score)
         self.client.onUpdateGuildTrains([{
             'trainId': _trainId,
@@ -156,6 +158,7 @@ class IGuildTrain(object):
             _trainId,
             _targetLevel,
             GT_GTD.datas[_trainId]['fightProp'],
+            opUUID
         )
 
     def _addGuildMoneyFromGuildTrain(self, delta):

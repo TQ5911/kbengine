@@ -198,6 +198,7 @@ def attackShare(self, target, context, *args):
         realDmgRatioEx = realDmgRatio(self, target,context)
 
     avatar = self.getAvatar()
+    addSkillRatio = 0 
     if avatar:
         sourceSkillId = avatar.getSourceSkillId(context)
         ret, datas = avatar.getInscriptionEffects(sourceSkillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO)
@@ -205,8 +206,8 @@ def attackShare(self, target, context, *args):
             if len(datas) == 1:
                 from KBEDebug import DEBUG_MSG
                 DEBUG_MSG("in attackShare, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_DAMAGE_INCREASE_RATIO, datas)
-                addValue = datas[0]
-                realDmgRatioEx += addValue
+                addSkillRatio = datas[0]
+                # realDmgRatioEx += addValue
 
     # 善恶值对伤害影响
     moralEffectRatio = moralEffect(self, target)
@@ -234,7 +235,7 @@ def attackShare(self, target, context, *args):
                     from KBEDebug import DEBUG_MSG
                     DEBUG_MSG("in attackShare, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO, datas)
 
-        realHurt =max((((realAtk - dmgAvoidance) * arg1 + arg2 + addValue) *(1+addRatio) * fatalDmgRatio * realDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef"))* moralEffectRatio, 0.1 * realAtk + 1)
+        realHurt =max((((realAtk - dmgAvoidance) *(arg1+addSkillRatio)+ arg2 + addValue) *(1+addRatio) * fatalDmgRatio * realDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef"))* moralEffectRatio, 0.1 * realAtk + 1)
     
     if target.IsMonster:
         if not hasattr(context, "ignoreMaxDamage"):
@@ -466,10 +467,13 @@ def healByValueShare(self, target, context, *args):
 def isHit(self, target, context):
     minHitRate = const_const.datas.get('minHitRate', {}).get('value')
     maxHitRate = const_const.datas.get('maxHitRate', {}).get('value')
+    
     if not target:
         return False
     # 基础命中90%
     addValue = 0
+    AtkRatio = 0
+    DefRatio = 0
     avatar = self.getAvatar()
     if avatar:
         sourceSkillId = avatar.getSourceSkillId(context)
@@ -479,8 +483,39 @@ def isHit(self, target, context):
                 addValue = datas[0]
                 from KBEDebug import DEBUG_MSG
                 DEBUG_MSG("in isHit, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.SKILL_HIT_INCREASE_RATIO, datas)
+    
+    if self.IsAvatar:
+        if target.IsAvatar:
+            AtkRatio = self.getProp("hit")
+            DefRatio = target.getProp("dodge")
+        elif target.IsMonster:
+            AtkRatio = self.getProp("accuracy")
+            DefRatio = target.getProp("evasion")
+    elif self.IsMonster:
+        if target.IsAvatar:
+            AtkRatio = self.getProp("accuracy")
+            DefRatio = target.getProp("evasion")
+        elif target.IsMonster:
+            AtkRatio = self.getProp("accuracy")
+            DefRatio = target.getProp("evasion")
+    elif self.IsSummon or self.IsCreation:       
+        hostRole = KBEngine.entities.get(self.hostId, None)
+        if hostRole and hostRole.IsAvatar:
+            if target.IsAvatar:
+                AtkRatio = hostRole.getProp("accuracy")
+                DefRatio = target.getProp("evasion")
+            elif target.IsMonster:
+                AtkRatio = hostRole.getProp("accuracy")
+                DefRatio = target.getProp("evasion")
+        elif hostRole and hostRole.IsMonster:
+            if target.IsAvatar:
+                AtkRatio = hostRole.getProp("accuracy")
+                DefRatio = target.getProp("evasion")
+            elif target.IsMonster:
+                AtkRatio = hostRole.getProp("accuracy")
+                DefRatio = target.getProp("evasion")
 
-    hitRatio = min(max(0.95 + addValue + (self.getProp("hit") - target.getProp("dodge") - min(max((target.level - self.level), 0), 10)) / 100, minHitRate), maxHitRate)
+    hitRatio = min(max(0.95 + (addValue + AtkRatio - DefRatio - min(max((target.level - self.level), 0), 10)) / 100, minHitRate), maxHitRate)
     if random.randint(1, 100) <= hitRatio * 100:
         return True
     else:
@@ -627,10 +662,10 @@ def realDmgRatio(self, target, context):
             DefDmgRatio = target.getProp("PVPDmgAnti")
         elif target.IsMonster:
             AtkDmgRatio = self.getProp("monsterDmg")
-            DefDmgRatio = target.getProp("PVPDmgAnti")
+            DefDmgRatio = target.getProp("monsterDmgAnti")
     elif self.IsMonster:
         if target.IsAvatar:
-            AtkDmgRatio = self.getProp("PVPDmg")
+            AtkDmgRatio = self.getProp("monsterDmg")
             DefDmgRatio = target.getProp("monsterDmgAnti")
         elif target.IsMonster:
             AtkDmgRatio = self.getProp("monsterDmg")
@@ -759,7 +794,7 @@ def controlResist(self, target, context, *args):
     srcControlPower = 796 + 12 * (skillLv-1)  # 投放中控制技能强
     if context.actionType == actionContext.ACTION_EQUIP:
         srcControlPower = 42 + context.affixLv * context.affixLevelGap * 8
-    controlPower = controlEnh - min(max((target.level - self.level),0), 5) - controlAnti
+    controlPower = controlAnti - controlEnh + min(max((target.level - self.level),0), 5)
 
     result = combatSkill.AntiControlResult()
     result.resultCode = 0
@@ -787,9 +822,9 @@ def controlResist(self, target, context, *args):
             else:
                 if utils.isPVP(self, target):
                     # PVP控制保底概率0%下限，100%上限
-                    controlPowerData = min(max(target.getProp("baseStateRate") + controlPower + arg2 * 100, 0), 100)
+                    controlPowerData = min(max(target.getProp("baseStateRate") + 100 - controlPower, 0), 100)
                 else:
-                    controlPowerData = target.getProp("baseStateRate") + controlPower + arg2 * 100
+                    controlPowerData = min(max(target.getProp("baseStateRate") + 100 - controlPower, 0), 100)
                 if random.randint(1, 100) <= controlPowerData:
                     # 控制衰减
                     if isDecay:

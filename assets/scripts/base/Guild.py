@@ -944,8 +944,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             ERROR_MSG("_doApplyJoinGuildAfterGetFcVal: gbId not in guild:", fcVal.gbId)
             box.joinGuildCB(gameconst.JoinGuildEvent.MAYBE_REMOVE, self.toGuildApplyedVal())
             return
-
-        self.applyJoins.pop(fcVal.gbId, None)
+        
+        self.onJoinClearApply(fcVal.gbId)
         _gmVal.updateFromFcVal(fcVal)
         _gmVal.setProperty('box', box)
         box.joinGuildCB(gameconst.JoinGuildEvent.JOIN, self.toGuildApplyedVal())
@@ -1653,10 +1653,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.recruitCDEnd = _now + G_GCD.datas['guildRecruitBoradcastCooldown']['value']
 
     def removeApplyFromApplicant(self, gbId):
-        self.applyJoins.pop(gbId, None)
-        self.broadcastByPermission(
-            GA_AI_DD.datas.allowApplication,
-            lambda box: box.client.onRemoveGuildApplys([gbId]))
+        self.onJoinClearApply(gbId)
 
     def doModifyGuildDisp(self, oprGbId, oprBox, dspFlag):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.renameGuild):
@@ -2139,7 +2136,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             oprGbId,
             self.guildUUID,
             _qixie.level,
-            _qixie.exp
+            _qixie.exp,
+            opUUID
         )
 
     def doUpgradeQixie(self, oprGbId, box, qixieType):
@@ -2167,7 +2165,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             WARNING_MSG('Guild::doUpgradeQixie: not enough fund', oprGbId, self.guildFund, _qixie.upgradeFundCost())
             return
 
-        self.modifyGuildFund(-_qixie.upgradeFundCost(), AAC_AACDD.datas.BONUS_SRC_GUILD_BUILDING_UPGRADE, oprGbId, gameclass.AwardDetail())
+        opUUID = KBEngine.genUUID64()
+        self.modifyGuildFund(-_qixie.upgradeFundCost(), AAC_AACDD.datas.BONUS_SRC_GUILD_BUILDING_UPGRADE, opUUID, gameclass.AwardDetail())
         _qixie.upgrade()
         box.client.onQixieChanged(_qixie)
 
@@ -2180,7 +2179,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEvent):
             oprGbId,
             self.guildUUID,
             _qixie.level,
-            _qixie.exp
+            _qixie.exp,
+            opUUID
         )
 
     def onAddGuildUnionToGuild(self, otherGuildUUID, otherGuildName):

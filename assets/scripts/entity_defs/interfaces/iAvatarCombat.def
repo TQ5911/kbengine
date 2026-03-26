@@ -232,21 +232,9 @@
     </Properties>
 
     <CellMethods>
-        <onCellCombatDailyUpdate>
-            <Arg>            EXP            </Arg>
-        </onCellCombatDailyUpdate>
-
         <doRelive>
             <Arg>        UINT8                        </Arg>
         </doRelive>
-
-        <addExpByTask>
-            <Arg>            EXP                      </Arg>
-            <Arg>            REWARD_ID                </Arg>
-            <Arg>            OP_UUID                  </Arg>
-            <Arg>            BONUS_SRC                </Arg>
-            <Arg>            STRING                   </Arg>
-        </addExpByTask>
 
         <addExpByKill>
             <Arg>            EXP                      </Arg>
@@ -265,20 +253,6 @@
             <Arg>            BONUS_SRC                </Arg>
             <Arg>            PYTHON                   </Arg>
         </addExpByWealthVal>
-
-        <addExpByMail>
-            <Arg>            EXP                      </Arg>
-            <Arg>            OP_UUID                  </Arg>
-            <Arg>            BONUS_SRC                </Arg>
-            <Arg>            STRING                   </Arg>
-        </addExpByMail>
-
-        <addExpByMonthCard>
-            <Arg>            EXP                      </Arg>
-            <Arg>            OP_UUID                  </Arg>
-            <Arg>            BONUS_SRC                </Arg>
-            <Arg>            STRING                   </Arg>
-        </addExpByMonthCard>
 
         <clientSetIsOnGround>
             <Exposed/>

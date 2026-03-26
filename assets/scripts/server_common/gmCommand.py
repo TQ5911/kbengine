@@ -1671,11 +1671,6 @@ def doCommandInside(su, command):
         return
 
     _doCommand(su, command, gmAdmin.INSIDE)
-    srcStr = su.__getstate__() if hasattr(su, '__getstate__') else str(su)
-    LogTrackingMgr.LogTrackingMgr.GM_GM(
-        srcStr,
-        command
-    )
 
 
 def doCommandOutside(su, command, reason):
@@ -1742,6 +1737,14 @@ def _doCommand(su, command, side, args=None, reason=""):
         gmBCastRealDoCommand(cmd.component, su, command, real_args)
     else:
         cmd.getArgMailBoxes(su, command, real_args, cmd_args, reason)
+    
+    
+    srcStr = su.__getstate__() if hasattr(su, '__getstate__') else str(su)
+    LogTrackingMgr.LogTrackingMgr.GM_GM(
+        srcStr,
+        cmd_name,
+        ' '.join(cmd_args)
+    )
 
 
 # 直接在系统内部发起的GM调用，不做相关权限检查

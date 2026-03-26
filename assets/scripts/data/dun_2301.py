@@ -7,10 +7,10 @@ datas ={
     "ClassNameType": 0,
     "CustomID": "",
     "Dir": 181.8781,
-    "DisplayName": "\u8854\u5203\u72ee\u874e",
+    "DisplayName": "",
     "EntityID": 11051001,
     "ID": 23010001,
-    "Name": "6007_00\u874e\u5c3e\u72ee",
+    "Name": "\u5b88\u6e0a\u72c2\u72ee",
     "PosX": 84.25647,
     "PosY": 5.640731,
     "PosZ": 154.7108,
@@ -47,10 +47,12 @@ datas ={
     "PosY": 0.7438358,
     "PosZ": 12.48213,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 6.0,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "23018002": {

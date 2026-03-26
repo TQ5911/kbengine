@@ -25,7 +25,13 @@ import petData_petGear as PDPGD
 
 class ImpAvatarPet(object):
     def initPetProps(self):
-        pass
+        petIds = []
+        petLevels = []
+        for petId, petData in self.lingShouInfo.pets.items():
+            petIds.append(petId)
+            petLevels.append(petData.getLevel())
+            
+        self.cell.onInitPetProps(petIds, petLevels)
 
     def initNovicePetInfo(self):
         petTeamNum = PDSD.datas['petTeamNum']['value']
@@ -96,6 +102,10 @@ class ImpAvatarPet(object):
             ERROR_MSG("updateLingShouBattleList battleIndex invalid", battleIndex)
             return
 
+        if petId > 0 and self.lingShouInfo.checkBattlePetRepeat(battleIndex, slotId, petId):
+            ERROR_MSG("updateLingShouBattleList pet id is repeated", battleIndex, slotId, petId)
+            return
+        
         self.lingShouInfo.updateBattleList(self, battleIndex, slotId, petId)
         if battleIndex == self.battleIndex:
             equipList = pet.equipList if pet else []
@@ -242,7 +252,7 @@ class ImpAvatarPet(object):
             self.cell.onPendingUseItem(pendingUseId, gameconst.UseItem.FALSE)
             return
 
-        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'item': info['gridObj'], 'school':self.getAvatarSchool()})
+        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'opUUID':opUUID, 'item': info['gridObj'], 'school':self.getAvatarSchool()})
         self.addLingShouBase(abCtx)
 
         # self.onMessagePre(MMD.datas.petEggHatchTip, [])
@@ -403,10 +413,10 @@ class ImpAvatarPet(object):
             curExp = 0
             isTopLevel = True
         # 设置宠物新的等级和经验
-        oldScore = pet.score
+        oldScore = pet.baseScore
         oldLevel = pet.level
-        pet.setLevelAndExp(curLevel, curExp, self)
-        newScore = pet.score - oldScore
+        pet.setLevelAndExp(oldLevel, curLevel, curExp, self)
+        newScore = pet.baseScore - oldScore
         LogTrackingMgr.LogTrackingMgr.Pet_LevelUp(self.gbID, opUUID, pet.petId, pet.quality, oldLevel, pet.level, pet.equipList, newScore)
         INFO_MSG("levelUpPet end:", petId, curLevel, curExp, totalExp, isTopLevel)
         # 更新客户端宠物数据   

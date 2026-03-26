@@ -8,6 +8,7 @@ import time
 import sMath
 import formula
 import gameconst
+import mailAssistor
 import utils
 import gametimer
 import SkillManager
@@ -321,6 +322,29 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         _mapId = formula.getMapId(self.spaceNo)
         _killerGbId = host.gbId if _hostIsAvatar else 0
 
+        # TODO:translate
+        _name = host.name if host else ''
+        _mapId = formula.getMapId(self.spaceNo)
+        _mapName = DDL.datas[_mapId]['name']
+        if srcType == gameconst.SourceType.DropDeath:
+            _args = [_mapName]
+            _mailId = PKD.datas['DeathMail_fall']['value']
+
+        elif host and host.id != self.id:
+            _mailId = PKD.datas['DeathMail']['value']
+            _args = [_mapName, _name]
+
+        else:
+            _mailId = PKD.datas['DeathMail_abnormalDamage']['value']
+            _args = [_mapName]
+
+        mailAssistor.sendMailToPlayers(
+            [self.gbId],
+            _mailId,
+            opUUID=KBEngine.genUUID64(),
+            despArgs=_args,
+        )
+
         LogTrackingMgr.LogTrackingMgr.Common_Death(
             self.gbId,
             _mapId,
@@ -391,7 +415,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         
         if self.hasState(CSDD.datas.serverControl):
             if state != gameconst.State.Sprinting:
-                ERROR_MSG('clientSetState but in server control')
+                WARNING_MSG('clientSetState but in server control')
                 return
 
         if state == gameconst.State.Idle and not self.hasState(gameconst.State.Moving):
@@ -413,6 +437,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         DEBUG_MSG('clientRemoveState 2', state)
         self.removeState(state)
+
+        if state == gameconst.State.Moving and self.autoCombat == gameconst.AutoCombatState.Suspending:
+            self._callback(0.1, 'recoverAndTickOnce', (), gametimer.TIMER_TAG_REMOVE_MOVE_AND_AUTO_COMBAT)
 
     @utils.isMyself
     @AuthClsWraper.onlyMainChannel
@@ -549,11 +576,13 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.showMsg(CONST.datas['highFallingMsgID']['value'], [])
         else:
             if dmgHostEnt and dmgHostEnt.IsAvatar:
-                self.showMsg(PKD.datas['beKilledByPlayer']['value'], [dmgHostEnt.name, str(dmgHostEnt.gbId)])
+                if dmgHostEnt.id != self.id:
+                    self.showMsg(PKD.datas['beKilledByPlayer']['value'], [dmgHostEnt.name, str(dmgHostEnt.gbId)])
+                    dmgHostEnt.showMsg(PKD.datas['killPlayer']['value'], [self.name, str(self.gbId)])
+                else:
+                    self.showMsg(PKD.datas['abnormalDamageMsg']['value'], [])
             elif hasattr(dmgHostEnt, 'name'):
                 self.showMsg(PKD.datas['beKilledByOtherUnit']['value'], [dmgHostEnt.name])
-
-            dmgHostEnt.showMsg(PKD.datas['killPlayer']['value'], [self.name, str(self.gbId)])
 
             onDeadLaterTime = CONST.datas.get('OnDeadLaterTime', 0).get('value')
             self.setTempMiscProp(gameconst.AvatarProps.deadLaterCallbackInfo, self._callback(onDeadLaterTime, '_onDeadLaterCallback', (killer.id,),  gametimer.TIMER_TAG_ON_DEAD_LATER_TIMER))
@@ -576,56 +605,19 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def dayFreeReliveDirectlyTimesLimit(self):
         return self.totalPayFreeReliveTimes + self.monthCardFreeReliveTimes
 
-    def onCellCombatDailyUpdate(self, totalRetrieveExp):
-        if self.dailyFreeReliveTimes:
-            self.dailyFreeReliveTimes = 0
-            self.sendLeftFreeReliveTimes()
-        self.base.updateRetrieveExpLimit(self.level, self.exp)
-        self.dailyCheckLevelUp()
-        self.preRefreshChaseExpFactor(totalRetrieveExp, 1)
-
     def gmAddExp(self, baseExp, opUUID, src, detail, srcSubType=0, idipSource=0):
         # 由gm指令调用，不考虑给宠物增加经验；不占用当日经验额度
         self._modifyExp(baseExp, opUUID, src, detail, srcSubType=srcSubType, idipSource=idipSource)
 
-    def addExpByTask(self, baseExp, rewardId, opUUID, src, desc):
-        self._addExp(int(baseExp), opUUID, src, desc, rewardId=rewardId)
-
     def addExpByKill(self, baseExp, level, opUUID, src, detail, isNeedAddition=False):
         DEBUG_MSG("impCombat->addExpByKill ", baseExp, level, opUUID, src, detail, isNeedAddition)
-        if formula.isCubeSpace(self.spaceNo):
-            self.addCubeRoomRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
-
-        elif formula.isWonderLandSpace(self.spaceNo):
-            self.addWonderLandRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
-
         if src == AAC_AACDD.datas.BONUS_SRC_GATHER_DROP or src == AAC_AACDD.datas.BONUS_SRC_GATHER:
             self.client and self.client.onAddGatherRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
 
         self._addExp(int(baseExp), opUUID, src, detail, isNeedAddition=isNeedAddition)
 
     def addExpByWealthVal(self, accountName, bagType, baseExp, rewardId, opUUID, src, detail):
-        LogTrackingMgr.LogTrackingMgr.Get_Item(
-            accountName,
-            self.gbId,
-            gameconfig.gameId(),
-            gameconst.ItemId.EXP,
-            0,
-            bagType,
-            gameconst.ItemBindType.NORMAL,
-            baseExp,
-            self.exp,
-            src,
-            opUUID,
-            str(detail),
-        )
         self._addExp(baseExp, opUUID, src, detail, rewardId=rewardId)
-
-    def addExpByMail(self, baseExp, opUUID, src, desc):
-        self._addExp(baseExp, opUUID, src, desc)
-
-    def addExpByMonthCard(self, baseExp, opUUID, src, detail):
-        self._addExp(baseExp, opUUID, src, detail)
 
     def _addExp(self, expVal, opUUID, src, detail, rewardId=0, isNeedAddition=False):
         if expVal <= 0:
@@ -645,27 +637,30 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             #'''
         else:
             totalExpVal = expVal
+
+        if formula.isCubeSpace(self.spaceNo):
+            self.addCubeRoomRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': totalExpVal, 'bindType': gameconst.ItemBindType.BIND}])
+
+        elif formula.isWonderLandSpace(self.spaceNo):
+            self.addWonderLandRewardRecord([{'itemId': gameconst.ItemId.EXP, 'itemNum': totalExpVal, 'bindType': gameconst.ItemBindType.BIND}])
+
         if totalExpVal > 0:
             self._modifyExp(totalExpVal, opUUID, src, detail)
 
-    def dailyCheckLevelUp(self):
-        svrLimitLevel = self.serverLimitLevel()
-        levelExp = 120000
-        if self.exp >= levelExp and self.level < svrLimitLevel:
-            self.exp -= levelExp
-            opUUID = KBEngine.genUUID64()
-            src = AAC_AACDD.datas.BONUS_SRC_AUTOLVUP
-            detail = gameclass.AwardDetail()
-            LogTrackingMgr.LogTrackingMgr.Level_LevelUp(
-                self.gbId,
-                self.level,
-                self.level + 1,
-                levelExp,
-                self.exp,
-                src,
-                opUUID,
-            )
-            self.levelUp(self.level + 1, opUUID, src, detail)
+        # LogTrackingMgr.LogTrackingMgr.Get_Item(
+        #     self.accountNameCell,
+        #     self.gbId,
+        #     gameconfig.gameId(),
+        #     gameconst.ItemId.EXP,
+        #     0,
+        #     0,
+        #     gameconst.ItemBindType.NORMAL,
+        #     expVal,
+        #     self.exp,
+        #     src,
+        #     opUUID,
+        #     str(detail),
+        # )
 
     def makeUpdateExpLog(self, deltaVal, modifyVal, opUUID, src):
         LogTrackingMgr.LogTrackingMgr.Update_Exp(
@@ -675,6 +670,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             opUUID,
             src,
             self.spaceNo,
+            self.level
         )
 
     def _modifyExp(self, expVal, opUUID, src, detail, chaseExp=0, srcSubType=0, idipSource=0):
@@ -722,7 +718,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
     def _updateExpRateToBase(self):
         levelExp = EPED.datas[self.level]['expPlayer']
-        self.base.onUpdateExpRate(self.exp / levelExp)
+        self.base.onUpdateExpRate(self.exp, self.exp / levelExp)
 
     def levelUp(self, level, opUUID, src, detail):
         level = min(level, utils.getPlayerMaxLevel())
@@ -1312,7 +1308,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     @utils.isMyself
     def setSkillAutoCombat(self, exposed, skillId, status):
         INFO_MSG('setSkillAutoCombat', skillId, status)
-        self.skillDic.setSkillSwitch(skillId, status)
+        self.skillDic.setSkillSwitch(self, skillId, status)
 
     def addPropByPassiveSkill(self, propInfoList):
         DEBUG_MSG('addPropByPassiveSkill:', propInfoList)

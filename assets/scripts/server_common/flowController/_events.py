@@ -62,8 +62,6 @@ __all__ = [
     'DungeonPlayerRestNumEvent',
 
     'DungeonEntityImmuneDeath',
-    'AllDungeonSelectedEntitiesImmuneDeath',
-
     'EntityRouteFinishedEvent',
     'EntityRoutingMissingEscortEvent',
 
@@ -1393,26 +1391,6 @@ class DungeonEntityImmuneDeath(ep_ctrl.event.BaseWaitingEvent, _ElementHotReload
     @staticmethod
     def get_immune_death_key(entityGID):
         return "entity_immune_death_{}".format(entityGID)
-
-
-class AllDungeonSelectedEntitiesImmuneDeath(FlowEvent):
-
-    def handle_be_triggered(self, src_e, src_idx, idx, obj, **ref_params):
-        entityGIDs = self.get_param('entityGIDs', [])
-
-        spaceMgr = self.controller.owner
-
-        _result = True
-        for entityGID in entityGIDs:
-            gidTag = 'gid_{}'.format(entityGID)
-            ents = spaceMgr.getEntitiesByTag(gidTag)
-            for ent in ents:
-                if not ent.isImmuneDeath():
-                    _result = False
-
-        if _result:
-            super(AllDungeonSelectedEntitiesImmuneDeath, self).handle_be_triggered(
-                src_e, src_idx, idx, obj, **ref_params)
 
 
 class EntityRouteFinishedEvent(ep_ctrl.event.BaseWaitingEvent, _ElementHotReloadMixin, _WaitingCancelMixin):

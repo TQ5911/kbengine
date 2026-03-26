@@ -61,7 +61,7 @@ datas = _tools.RODict({
     }),
     "minHitRate": _tools.RODict({
         "ID": "minHitRate",
-        "value": 0.2,
+        "value": 0.5,
     }),
     "maxHitRate": _tools.RODict({
         "ID": "maxHitRate",
@@ -137,7 +137,7 @@ datas = _tools.RODict({
     }),
     "autoFightReturnRange": _tools.RODict({
         "ID": "autoFightReturnRange",
-        "value": (10, 100),
+        "value": (20, 50),
     }),
     "dropTime": _tools.RODict({
         "ID": "dropTime",
@@ -415,6 +415,10 @@ datas = _tools.RODict({
         "ID": "getRewardAndBagFull_mailID",
         "value": 37000002,
     }),
+    "getRewardAndBagLock_mailID": _tools.RODict({
+        "ID": "getRewardAndBagLock_mailID",
+        "value": 37000020,
+    }),
     "renameEmptyTip": _tools.RODict({
         "ID": "renameEmptyTip",
         "value": 54001017,
@@ -687,6 +691,14 @@ datas = _tools.RODict({
         "ID": "popupNotificationAutoClose",
         "value": "<color=#e4dabd>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口",
     }),
+    "rewardPopupQualityLowList": _tools.RODict({
+        "ID": "rewardPopupQualityLowList",
+        "value": (30000002, 30000003),
+    }),
+    "rewardPopupQualityHigh": _tools.RODict({
+        "ID": "rewardPopupQualityHigh",
+        "value": 2,
+    }),
     "selectedDuration": _tools.RODict({
         "ID": "selectedDuration",
         "value": 10,
@@ -834,6 +846,10 @@ datas = _tools.RODict({
     "pathFindingInterrupt": _tools.RODict({
         "ID": "pathFindingInterrupt",
         "value": 54000718,
+    }),
+    "monsterResetCount": _tools.RODict({
+        "ID": "monsterResetCount",
+        "value": 8,
     }),
     "monsterResetTimer": _tools.RODict({
         "ID": "monsterResetTimer",
@@ -1030,5 +1046,41 @@ datas = _tools.RODict({
     "taskQualityTest": _tools.RODict({
         "ID": "taskQualityTest",
         "value": "简单#困难#危险",
+    }),
+    "skillFrequentNormal": _tools.RODict({
+        "ID": "skillFrequentNormal",
+        "value": (2, 2),
+    }),
+    "mainLockTime": _tools.RODict({
+        "ID": "mainLockTime",
+        "value": (-1, 5, 15, 30),
+    }),
+    "mainLockTimeDefaultStatus": _tools.RODict({
+        "ID": "mainLockTimeDefaultStatus",
+        "value": 2,
+    }),
+    "mainLockDefaultStatus": _tools.RODict({
+        "ID": "mainLockDefaultStatus",
+        "value": 1,
+    }),
+    "mainLockTimeTxt": _tools.RODict({
+        "ID": "mainLockTimeTxt",
+        "value": "{0}分钟",
+    }),
+    "taskReset": _tools.RODict({
+        "ID": "taskReset",
+        "value": 54002167,
+    }),
+    "iDoYouWantToResetTheTask": _tools.RODict({
+        "ID": "iDoYouWantToResetTheTask",
+        "value": 54002168,
+    }),
+    "functionNotAvailable": _tools.RODict({
+        "ID": "functionNotAvailable",
+        "value": 54481006,
+    }),
+    "areaCannotJump": _tools.RODict({
+        "ID": "areaCannotJump",
+        "value": 54481008,
     })
 })

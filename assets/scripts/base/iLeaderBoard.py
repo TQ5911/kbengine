@@ -9,6 +9,7 @@ import gameglobal
 import LeaderBoardAvatarCacheInfo
 import LeaderBoardAvatarScoreInfo
 import LeaderBoardAvatarLevelRushRankInfo
+import LeaderBoardAvatarAchievementInfo
 
 import rank_Rank as R_RD
 import rank_rankConfig as R_RCD
@@ -88,6 +89,20 @@ class ILeaderBoard(object):
             self.accountName,
             self.accountEntity.phone,
             )
+    
+    def toLeaderBoardAvatarAchievement(self):
+        roleInfo = gameglobal.roleCache.get(self.id, None)
+        return LeaderBoardAvatarAchievementInfo.LeaderBoardAvatarAchievementVal(
+            self.gbID,
+            roleInfo['name'],
+            roleInfo['level'],
+            roleInfo['school'],
+            self.propChangedTimes.get(gameconst.LeaderBoardType.ACHIEVEMENT, 0),
+            self.guildNameBase,
+            self.guildUUIDBase,
+            self.accountName,
+            self.achievementInfo.sumPoint,
+            )
 
     def _updateLeaderBoardAvatar(self):
         if not gameglobal.roleCache.get(self.id, None):
@@ -100,6 +115,11 @@ class ILeaderBoard(object):
         if _level >= R_RD.datas[gameconst.LeaderBoardType.AVATAR_SCORE]['minLevel']:
             _lbacVal = self.toLeaderBoardAvatarScore()
             gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_SCORE).onGetLeaderBoardCache(_lbacVal)
+
+        if _level >= R_RD.datas[gameconst.LeaderBoardType.ACHIEVEMENT]['minLevel']:
+            if self.achievementInfo.sumPoint > 0:
+                _lbacVal = self.toLeaderBoardAvatarAchievement()
+                gameengine.getLeaderStub(gameconst.LeaderBoardType.ACHIEVEMENT).onGetLeaderBoardCache(_lbacVal)
         
         _lbacVal = self.toLeaderBoardAvatarLevelRushRank()
         gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK).onGetLeaderBoardCache(_lbacVal)

@@ -6177,7 +6177,6 @@ namespace KBEngine
 	{
 		public UInt32 rewardNumber = 0;
 		public UInt32 rewardDailyCount = 0;
-		public UInt32 useItemAddRewardNumber = 0;
 		public UInt32 useCoinAddRewardNum = 0;
 		public UInt32 rewardItemNumber = 0;
 		public UInt32 rewardCoinNumber = 0;
@@ -6189,7 +6188,6 @@ namespace KBEngine
 	{
 		public UInt32 rewardNumber = 0;
 		public UInt32 rewardDailyCount = 0;
-		public UInt32 useItemAddRewardNumber = 0;
 		public UInt32 useCoinAddRewardNum = 0;
 		public UInt32 rewardItemNumber = 0;
 		public UInt32 rewardCoinNumber = 0;
@@ -6582,6 +6580,19 @@ namespace KBEngine
 		public UInt32 level = 0;
 		public UInt16 school = 0;
 		public Int32 score = 0;
+		public UInt32 ts = 0;
+		public string guildName = "";
+		public UInt64 guildUUID = 0;
+
+	}
+
+	public class LEADER_BOARD_AVATAR_ACHIEVEMENT_DATA_INFO
+	{
+		public UInt64 gbId = 0;
+		public string name = "";
+		public UInt32 level = 0;
+		public UInt16 school = 0;
+		public Int32 point = 0;
 		public UInt32 ts = 0;
 		public string guildName = "";
 		public UInt64 guildUUID = 0;
@@ -7044,6 +7055,29 @@ namespace KBEngine
 	{
 		public List<Byte> entryIds = new List<Byte>();
 		public List<Byte> entryStatus = new List<Byte>();
+
+	}
+
+	public class CLI_MULTI_ENHANCE_EQUIP_RESULT
+	{
+		public Byte eqipIn = 0;
+		public UInt16 eqipPos = 0;
+		public Int16 enhanceVal = 0;
+		public Int32 itemId = 0;
+		public UInt64 uniqueId = 0;
+		public UInt16 enhanceLv = 0;
+		public UInt64 score = 0;
+		public Byte addBindValueStatus = 0;
+		public Byte bindType = 0;
+		public UInt16 maxEnhanceLv = 0;
+
+	}
+
+	public class CLI_MULTI_ENHANCE_CONSUMED_RESULT
+	{
+		public UInt32 itemId = 0;
+		public UInt32 itemNum = 0;
+		public Byte bindType = 0;
 
 	}
 

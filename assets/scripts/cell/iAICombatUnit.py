@@ -45,6 +45,8 @@ class IAICombatUnit(SkillManager.SkillManager):
         if hasattr(self, 'getAIParam') and self.getAIParam():
             self.cellFlags = utils.bitSet(self.cellFlags, gameconst.CELL_FLAGS_IS_SPECIAL_AI)
 
+        self.warningTimerId = 0
+
     def _initBornState(self):
         if not self.bornState:
             self.changeBornState(gameconst.BornStateType.move)
@@ -825,6 +827,10 @@ class IAICombatUnit(SkillManager.SkillManager):
     def onLeaveTrap(self, entity, rangeXZ, rangeY, controllerID, userArg):
         super(IAICombatUnit, self).onLeaveTrap(
             entity, rangeXZ, rangeY, controllerID, userArg)
+        
+        if userArg == gameconst.HATE_TRAP and self.IsMonster and self.aiController and entity.id in self.aiController.warningList:
+            DEBUG_MSG('remove warning target onLeave: {}, warningList: {}'.format(entity.id, self.aiController.warningList))
+            self.aiController.warningList.remove(entity.id)
 
         if entity.IsCombatUnit and userArg == gameconst.LEAVE_AOI_TRAP:
             self.aiController and self.aiController.onEnemyLeave(entity.id)
@@ -877,3 +883,22 @@ class IAICombatUnit(SkillManager.SkillManager):
             return True
         # 检测是否在战斗区内
         return utils.checkInCombatArea(self.creepBaseId, srcPos, combatAreaDatas)
+    
+    def checkWarningList(self):
+        self.warningTimerId = 0
+        if not self.aiController or not self.aiController.warningList:
+            return
+        removeList = []
+        dis = self.getAlertDistance()
+        dis2 = dis * dis
+        for targetId in self.aiController.warningList:
+            target = KBEngine.entities.get(targetId)
+            if sMath.distance2DToCompareFrom3DPosition(self.position, target.position) < dis2:  # 小于才算进入
+                removeList.append(targetId)
+                
+        DEBUG_MSG('checkWarningList:', self.aiController.warningList)
+        for targetId in removeList:
+            self.aiController.onEnemyEnter(targetId, False)
+        
+        if self.aiController.warningList:
+            self.warningTimerId = self._callback(0.2, 'checkWarningList', (), gametimer.TIMER_TAG_CHECK_WARNING_LIST)

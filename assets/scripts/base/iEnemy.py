@@ -23,13 +23,13 @@ class IEnemy(object):
 
     @gamedecorator.limitcall(60)
     def getEnemyFreshInfo(self, exposed):
-        WARNING_MSG('getEnemyFreshInfo')
+        INFO_MSG('getEnemyFreshInfo')
         _gbIds = self.enemyMgr.getEnemyGbIds()
 
         redisUtils.RedisUtils.getUsersInfo(_gbIds, self._onGetEnemyFreshInfo)
 
     def _onGetEnemyFreshInfo(self, usersInfo):
-        WARNING_MSG('usersInfo:', usersInfo)
+        DEBUG_MSG('usersInfo:', usersInfo)
         self.enemyMgr.updateByFcVals(usersInfo)
         self.client.onGetEnemyFreshInfo(self.enemyMgr.getEnemyFreshInfo())
 

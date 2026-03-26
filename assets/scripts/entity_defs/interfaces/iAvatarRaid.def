@@ -252,6 +252,8 @@
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   UNICODE         </Arg>
             <Arg>   UNICODE         </Arg>
+            <Arg>   SCORE           </Arg>
+            <Arg>   LEVEL           </Arg>
             <Arg>   PYTHON          </Arg>
         </invitedPlayerOnApplyInvitedRaid>
 

@@ -33,7 +33,7 @@ datas ={
   "1020": {
     "type": "createRebornPos",
     "entityID": [
-      40218002
+      40268002
     ],
     "num": 0,
     "transition": {}
@@ -159,9 +159,7 @@ datas ={
     "type": "createMonster",
     "entityID": [
       40260012,
-      40260013,
-      40260014,
-      40260015
+      40260013
     ],
     "num": 0,
     "lv": "25",

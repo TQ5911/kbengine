@@ -2,6 +2,7 @@
 import gameconst
 import gmAdmin
 import gmCommand
+import functools
 import importlib
 import gameglobal
 from KBEDebug import *
@@ -95,6 +96,13 @@ def kickAvatar(su, player,messageId):
 
         return ret, '执行完成：%s,%s'% (ret,messageId)
 
+
+def _kickAllAccount(msgId, *args):
+    import gameengine
+    gameengine.broadcastBaseapp(
+        'broadcastToAllAccount',
+        ('kickAccountGm', (msgId, )))
+
 @gm_cmd('$killallavatar', (Int('messageId'),), RONE, BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=0)
 def killAllAvatar(su,messageId=0):
     import gameengine
@@ -107,9 +115,12 @@ def killAllAvatar(su,messageId=0):
     callApps(gameconst.CELL, 'gameconfig.setCacheConfig', ('permitLogin', '0'))
     gameglobal.localBaseApp.notifyInterfaceCacheConfigChanged('permitLogin', '0')
 
-    gameengine.broadcastBaseapp('broadcastToAllAvatar',
-                                    (gameconst.CELL, 'kickGm',
-                                     (gameconst.AVATAR_OFFLINE_REASON_GMKICK,messageId )))
+    # gameengine.broadcastBaseapp('broadcastToAllAvatar',
+    #                                 (gameconst.CELL, 'kickGm',
+    #                                  (gameconst.AVATAR_OFFLINE_REASON_GMKICK,messageId )))
+    #
+    import KBEngine
+    KBEngine.addTimer(5, 0, functools.partial(_kickAllAccount, messageId))
 
 
 @gm_cmd('$hotreload', (), RONE, BASE, 'hotreload', ALLSIDE, GOD_GROUPS)

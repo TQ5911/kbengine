@@ -203,9 +203,17 @@ datas = _tools.RODict({
         "ID": "teamMinLevelMsg",
         "value": 54001336,
     }),
+    "teamInviteScoreMsg": _tools.RODict({
+        "ID": "teamInviteScoreMsg",
+        "value": 54001471,
+    }),
     "teamInviteLevelMsg": _tools.RODict({
         "ID": "teamInviteLevelMsg",
         "value": 54001472,
+    }),
+    "teamInviteQuestMsg": _tools.RODict({
+        "ID": "teamInviteQuestMsg",
+        "value": 54001473,
     }),
     "createTeamCD": _tools.RODict({
         "ID": "createTeamCD",

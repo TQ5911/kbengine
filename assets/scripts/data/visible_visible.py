@@ -43,7 +43,7 @@ datas = _tools.RODict({
         "function": "ChangeTarget",
         "type": "changeTarget",
         "level": 0,
-        "task": 0,
+        "task": 86010003,
         "day": 0,
         "switch": 1
     }),
@@ -51,7 +51,7 @@ datas = _tools.RODict({
         "function": "UI_camera",
         "type": "UI_camera",
         "level": 0,
-        "task": 0,
+        "task": 86010003,
         "day": 0,
         "switch": 2
     }),
@@ -91,7 +91,7 @@ datas = _tools.RODict({
         "function": "QuickSettings",
         "type": "quickSettings",
         "level": 0,
-        "task": 0,
+        "task": 86060115,
         "day": 0,
         "switch": 0
     }),
@@ -107,7 +107,7 @@ datas = _tools.RODict({
         "function": "photograph",
         "type": "photograph",
         "level": 0,
-        "task": 0,
+        "task": 86010003,
         "day": 0,
         "switch": 0
     }),
@@ -251,7 +251,7 @@ datas = _tools.RODict({
         "function": "UIDrawPetPanel",
         "type": "drawPet",
         "level": 0,
-        "task": 86010037,
+        "task": 86010038,
         "day": 0,
         "switch": 0
     }),
@@ -259,7 +259,7 @@ datas = _tools.RODict({
         "function": "UIPetPanel",
         "type": "pet",
         "level": 0,
-        "task": 86010037,
+        "task": 86010038,
         "day": 0,
         "switch": 1
     }),
@@ -267,7 +267,7 @@ datas = _tools.RODict({
         "function": "UIEquipTrainingPanel",
         "type": "equip",
         "level": 0,
-        "task": 86050003,
+        "task": 86010096,
         "day": 0,
         "switch": 0
     }),
@@ -282,7 +282,7 @@ datas = _tools.RODict({
     "UIEquipUnbundlePanel": _tools.RODict({
         "function": "UIEquipUnbundlePanel",
         "type": "equip_unbundle",
-        "level": 0,
+        "level": 999,
         "task": 86050003,
         "day": 0,
         "switch": 0
@@ -1059,7 +1059,7 @@ datas = _tools.RODict({
         "function": "xinyuanchenjiaoopentask",
         "type": "mapTask",
         "level": 23,
-        "task": 0,
+        "task": 86010024,
         "day": 0,
         "switch": 0
     }),
@@ -1067,7 +1067,7 @@ datas = _tools.RODict({
         "function": "zuke1Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010084,
+        "task": 86010195,
         "day": 0,
         "switch": 0
     }),
@@ -1075,7 +1075,7 @@ datas = _tools.RODict({
         "function": "zuke2Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010084,
+        "task": 86010195,
         "day": 0,
         "switch": 0
     }),
@@ -1083,7 +1083,7 @@ datas = _tools.RODict({
         "function": "zuke3Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010084,
+        "task": 86010195,
         "day": 0,
         "switch": 0
     }),
@@ -1091,7 +1091,7 @@ datas = _tools.RODict({
         "function": "zuke4Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010084,
+        "task": 86010195,
         "day": 0,
         "switch": 0
     }),
@@ -1099,15 +1099,15 @@ datas = _tools.RODict({
         "function": "zuke5Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010084,
+        "task": 86010195,
         "day": 0,
         "switch": 0
     }),
     "zuke6Fopentask": _tools.RODict({
         "function": "zuke6Fopentask",
         "type": "mapTask",
-        "level": 50,
-        "task": 86010057,
+        "level": 40,
+        "task": 86010195,
         "day": 0,
         "switch": 0
     }),
@@ -1146,7 +1146,7 @@ datas = _tools.RODict({
     "yueguang5Fopentask": _tools.RODict({
         "function": "yueguang5Fopentask",
         "type": "mapTask",
-        "level": 34,
+        "level": 30,
         "task": 86010029,
         "day": 0,
         "switch": 0
@@ -1268,6 +1268,30 @@ datas = _tools.RODict({
         "type": "pet",
         "level": 0,
         "task": 86010037,
+        "day": 0,
+        "switch": 1
+    }),
+    "UIDeathPunishmentPanel": _tools.RODict({
+        "function": "UIDeathPunishmentPanel",
+        "type": "deathDrop",
+        "level": 0,
+        "task": 86060115,
+        "day": 0,
+        "switch": 0
+    }),
+    "UIMainLockPanel": _tools.RODict({
+        "function": "UIMainLockPanel",
+        "type": "mainLock",
+        "level": 15,
+        "task": 0,
+        "day": 0,
+        "switch": 1
+    }),
+    "CurrencyExchange": _tools.RODict({
+        "function": "CurrencyExchange",
+        "type": "currencyExchange",
+        "level": 0,
+        "task": 0,
         "day": 0,
         "switch": 1
     })
@@ -1429,6 +1453,9 @@ UISocialPanel = 151
 Hotkey = 152
 MountBtn = 153
 CardChangeBtn = 154
+UIDeathPunishmentPanel = 155
+UIMainLockPanel = 156
+CurrencyExchange = 157
 
 
 
@@ -1588,6 +1615,9 @@ funcDic = _tools.RODict({
     "Hotkey" : 152,
     "MountBtn" : 153,
     "CardChangeBtn" : 154,
+    "UIDeathPunishmentPanel" : 155,
+    "UIMainLockPanel" : 156,
+    "CurrencyExchange" : 157,
 })
 reverseFuncDic = _tools.RODict({
     0 : "UIBagPanel",
@@ -1745,6 +1775,9 @@ reverseFuncDic = _tools.RODict({
     152 : "Hotkey",
     153 : "MountBtn",
     154 : "CardChangeBtn",
+    155 : "UIDeathPunishmentPanel",
+    156 : "UIMainLockPanel",
+    157 : "CurrencyExchange",
 })
 levelDic = _tools.RODict({
     15 : _tools.ROList([
@@ -1752,6 +1785,14 @@ levelDic = _tools.RODict({
         89,
         102,
         115,
+        156,
+    ]),
+    999 : _tools.ROList([
+        31,
+        75,
+        76,
+        77,
+        148,
     ]),
     4 : _tools.ROList([
         50,
@@ -1773,12 +1814,7 @@ levelDic = _tools.RODict({
         131,
         132,
         133,
-    ]),
-    999 : _tools.ROList([
-        75,
-        76,
-        77,
-        148,
+        139,
     ]),
     6 : _tools.ROList([
         86,
@@ -1810,6 +1846,7 @@ levelDic = _tools.RODict({
         106,
         119,
         127,
+        134,
     ]),
     48 : _tools.ROList([
         94,
@@ -1821,10 +1858,6 @@ levelDic = _tools.RODict({
     ]),
     23 : _tools.ROList([
         128,
-    ]),
-    50 : _tools.ROList([
-        134,
-        140,
     ]),
     10 : _tools.ROList([
         135,
@@ -1838,8 +1871,8 @@ levelDic = _tools.RODict({
     28 : _tools.ROList([
         138,
     ]),
-    34 : _tools.ROList([
-        139,
+    50 : _tools.ROList([
+        140,
     ]),
     52 : _tools.ROList([
         141,
@@ -1850,47 +1883,17 @@ levelDic = _tools.RODict({
 })
 taskDic = _tools.RODict({
     86010003 : _tools.ROList([
+        1,
+        2,
+        9,
         14,
         16,
         17,
         18,
         19,
     ]),
-    86010014 : _tools.ROList([
-        15,
-        55,
-    ]),
-    86010082 : _tools.ROList([
-        20,
-        21,
-        22,
-    ]),
-    86050075 : _tools.ROList([
-        23,
-    ]),
-    86010013 : _tools.ROList([
-        24,
-        25,
-        149,
-    ]),
-    86010027 : _tools.ROList([
-        26,
-        153,
-    ]),
-    86010037 : _tools.ROList([
-        27,
-        28,
-        154,
-    ]),
-    86050003 : _tools.ROList([
-        29,
-        30,
-        31,
-    ]),
-    86060104 : _tools.ROList([
-        32,
-    ]),
     86060115 : _tools.ROList([
+        7,
         33,
         34,
         35,
@@ -1919,9 +1922,43 @@ taskDic = _tools.RODict({
         150,
         151,
         152,
+        155,
+    ]),
+    86010014 : _tools.ROList([
+        15,
+        55,
+    ]),
+    86010082 : _tools.ROList([
+        20,
+        21,
+        22,
+    ]),
+    86050075 : _tools.ROList([
+        23,
+    ]),
+    86010013 : _tools.ROList([
+        24,
+        25,
+        149,
+    ]),
+    86010027 : _tools.ROList([
+        26,
+        153,
+    ]),
+    86010038 : _tools.ROList([
+        27,
+        28,
     ]),
     86010096 : _tools.ROList([
+        29,
         56,
+    ]),
+    86050003 : _tools.ROList([
+        30,
+        31,
+    ]),
+    86060104 : _tools.ROList([
+        32,
     ]),
     86050035 : _tools.ROList([
         57,
@@ -1984,6 +2021,7 @@ taskDic = _tools.RODict({
     ]),
     86010024 : _tools.ROList([
         122,
+        128,
     ]),
     86010058 : _tools.ROList([
         124,
@@ -1994,17 +2032,17 @@ taskDic = _tools.RODict({
     ]),
     86010057 : _tools.ROList([
         127,
-        134,
         140,
         141,
         142,
     ]),
-    86010084 : _tools.ROList([
+    86010195 : _tools.ROList([
         129,
         130,
         131,
         132,
         133,
+        134,
     ]),
     86010029 : _tools.ROList([
         135,
@@ -2013,9 +2051,12 @@ taskDic = _tools.RODict({
         138,
         139,
     ]),
+    86010037 : _tools.ROList([
+        154,
+    ]),
 })
 dayDic = _tools.RODict({
 })
-maxBit = 154
+maxBit = 157
 
 typeToMain = {'UI_camera': 'UI', 'UI_cards': 'UI', 'UI_hp': 'UI', 'UI_level': 'UI', 'UI_score': 'UI', 'welfare_tenSign': 'welfare', 'welfare_attention': 'welfare', 'welfare_phoneBind': 'welfare', 'welfare_levelReward': 'welfare', 'welfare_pcLogin': 'welfare', 'welfare_sevenSign': 'welfare', 'equip_make': 'equip', 'equip_unbundle': 'equip', 'equip_strengthen': 'equip', 'equip_class': 'equip', 'equip_spirit': 'equip', 'equip_weaponGlyph': 'equip', 'equip_bless': 'equip', 'settings_giftKey': 'settings', 'pay_hotGift': 'pay', 'pay_holidayGift': 'pay', 'pay_rmb': 'pay', 'settings_hotKey': 'settings'}

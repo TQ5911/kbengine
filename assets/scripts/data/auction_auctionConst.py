@@ -145,7 +145,7 @@ datas = _tools.RODict({
     }),
     "auctionPublicityTime": _tools.RODict({
         "key": "auctionPublicityTime",
-        "value": ((2, 4), (3, 8), (4, 8)),
+        "value": ((2, 20), (3, 480), (4, 480)),
     }),
     "auctionOnSale": _tools.RODict({
         "key": "auctionOnSale",

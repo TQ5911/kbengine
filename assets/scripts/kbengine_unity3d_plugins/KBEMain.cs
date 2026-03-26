@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using KBEngine;
@@ -238,9 +238,13 @@ public class KBEMain : MonoBehaviour
 		args.serverHeartbeatTick = serverHeartbeatTick / 2;
 		args.useAliasEntityID = useAliasEntityID;
 		args.isOnInitCallPropertysSetMethods = isOnInitCallPropertysSetMethods;
-		args.forceDisableUDP = forceDisableUDP || VersionUtils.IsInAudit();
+#if UNITY_IOS && !UNITY_EDITOR
+        args.forceDisableUDP = forceDisableUDP || VersionUtils.IsInAudit();
+#else
+        args.forceDisableUDP = forceDisableUDP;
+#endif
 
-		args.TCP_SEND_BUFFER_MAX = (UInt32)TCP_SEND_BUFFER_MAX;
+        args.TCP_SEND_BUFFER_MAX = (UInt32)TCP_SEND_BUFFER_MAX;
 		args.TCP_RECV_BUFFER_MAX = (UInt32)TCP_RECV_BUFFER_MAX;
 		args.UDP_SEND_BUFFER_MAX = (UInt32)UDP_SEND_BUFFER_MAX;
 		args.UDP_RECV_BUFFER_MAX = (UInt32)UDP_RECV_BUFFER_MAX;

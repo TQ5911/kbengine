@@ -406,13 +406,13 @@ def _13080069(self, target, context):
         buffSrc.addMpByPct(target, context, *context.args.ActionParam)
 
 def _13080070(self, target, context):
-    self.addExpAction(1000)
+   self.addExpAction(int(115.5606*math.pow(1.081, min( self.level,30)-20)))
 
 def _13080071(self, target, context):
-    self.addExpAction(100)
+       self.addExpAction(int(251.676*math.pow(1.064, min( self.level,40)-30)))
 
 def _13080072(self, target, context):
-    self.addExpAction(200)
+       self.addExpAction(int(467.2793*math.pow(1.063, min( self.level,50)-40)))
 
 def _13080073(self, target, context):
     self.addExpAction(300)
@@ -445,40 +445,40 @@ def _13080079(self, target, context):
         buffSrc.addMpByPct(target, context, *context.args.ActionParam)
 
 def _13080080(self, target, context):
-    self.addExpAction(40)
+    self.addExpAction(int(0.45*115.5606*math.pow(1.081, min( self.level,30)-20)))
 
 def _13080081(self, target, context):
-    self.addExpAction(80)
+    self.addExpAction(int(0.45*251.676*math.pow(1.064, min( self.level,40)-30)))
 
 def _13080082(self, target, context):
-    self.addExpAction(160)
+    self.addExpAction(int(0.45*467.2793*math.pow(1.063, min( self.level,50)-40)))
 
 def _13080083(self, target, context):
-    self.addExpAction(80)
+    self.addExpAction(int(0.9*115.5606*math.pow(1.081, min( self.level,30)-20)))
 
 def _13080084(self, target, context):
-    self.addExpAction(100)
+    self.addExpAction(int(0.99*115.5606*math.pow(1.081, min( self.level,30)-20)))
 
 def _13080085(self, target, context):
-    self.addExpAction(120)
+    self.addExpAction(int(1.08*115.5606*math.pow(1.081, min( self.level,30)-20)))
 
 def _13080086(self, target, context):
-    self.addExpAction(160)
+     self.addExpAction(int(0.9*251.676*math.pow(1.064, min( self.level,40)-30)))
 
 def _13080087(self, target, context):
-    self.addExpAction(200)
+     self.addExpAction(int(0.99*251.676*math.pow(1.064, min( self.level,40)-30)))
 
 def _13080088(self, target, context):
-    self.addExpAction(240)
+     self.addExpAction(int(1.08*251.676*math.pow(1.064, min( self.level,40)-30)))
 
 def _13080089(self, target, context):
-    self.addExpAction(320)
+    self.addExpAction(int(0.9*467.2793*math.pow(1.063, min( self.level,50)-40)))
 
 def _13080090(self, target, context):
-    self.addExpAction(400)
+    self.addExpAction(int(0.99*467.2793*math.pow(1.063, min( self.level,50)-40)))
 
 def _13080091(self, target, context):
-    self.addExpAction(480)
+    self.addExpAction(int(1.08*467.2793*math.pow(1.063, min( self.level,50)-40)))
 
 datas = _tools.RODict({ 
     13080000: _tools.RODict({

@@ -89,7 +89,7 @@ datas = _tools.RODict({
     }),
     "beInjuredBuffLevel": _tools.RODict({
         "ID": "beInjuredBuffLevel",
-        "value": 3,
+        "value": 1,
     }),
     "beInjuredBuffLimit": _tools.RODict({
         "ID": "beInjuredBuffLimit",

@@ -91,7 +91,10 @@ class BotClient(object):
         print('login....', accountName, loginAddr, loginPort, clientData)
 
         if not clientData:
-            clientData = json.dumps({'loginServerId': 1})
+            clientData = json.dumps({
+                'loginServerId': 1,
+                'operatingSystem': "Windows 10  (10.0.19045) 64bit"
+            })
 
         if loginAddr and loginPort:
             self.client = KBEngine.login(accountName, loginAddr, loginPort, clientData)

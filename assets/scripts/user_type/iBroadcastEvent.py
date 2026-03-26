@@ -141,9 +141,23 @@ class IBroadcastEvent(object):
                            gametimer.TIMER_TAG_DO_BROADCAST_TO_CLIENTS)
         return
 
+    @staticmethod
+    def _doBroadcastToAllAccount(methodName, args):
+        _boxList = list(gameglobal.localAccountCache.values())
+        for _box in _boxList:
+            if _box.isDestroyed:
+                continue
+
+            getattr(_box, methodName)(*args)
+            yield utils.emptyFunc
+
+    def broadcastToAllAccount(self, methodName, args):
+        DEBUG_MSG('in broadcastToAllAccount:', methodName, args)
+        gameglobal.localBaseApp.batchlyCall(self._doBroadcastToAllAccount(methodName, args), self.BROADCAST_ACCOUNTS_NUM_PER_TIME, 0.1)
+
     def broadcastToAllAvatar(self, baseOrCell, methodName, args, excludes=()):
-        DEBUG_MSG('in broadcastToAllAvatar:', baseOrCell, methodName)
         sendList = list(gameglobal.roleCache.keys())
+        DEBUG_MSG('in broadcastToAllAvatar:', baseOrCell, methodName, sendList)
         if len(sendList) > 0:
             self._doBroadcastToAvatar(sendList, baseOrCell, methodName, args)
         return

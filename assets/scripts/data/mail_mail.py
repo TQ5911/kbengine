@@ -227,8 +227,8 @@ datas = _tools.RODict({
     37000020: _tools.RODict({
         "ID": 37000020,
         "type": 2,
-        "title": "帮会伏魔成功奖励",
-        "content": "您在本次帮会伏魔 - {0}中表现优秀，根据您的伤害贡献，已发放对应档位奖励，请查收~",
+        "title": "未进入背包物品补偿",
+        "content": "由于物流异常，获得的奖励无法领取，现通过邮件发放给您。",
         "isOpen": 1,
         "rewardId": 0,
         "period": "360",
@@ -238,8 +238,8 @@ datas = _tools.RODict({
     37000030: _tools.RODict({
         "ID": 37000030,
         "type": 2,
-        "title": "精灵秘宝调整通知",
-        "content": "由于版本更新，精灵装备栏位数量发生变化，为避免您的损失，我们自动为您回收了精灵秘宝{0}，现通过邮件发放给您，请查收！",
+        "title": "精灵遗器调整通知",
+        "content": "由于版本更新，精灵装备栏位数量发生变化，为避免您的损失，我们自动为您回收了精灵遗器{0}，现通过邮件发放给您，请查收！",
         "isOpen": 1,
         "rewardId": 0,
         "period": "360",
@@ -466,6 +466,39 @@ datas = _tools.RODict({
         "event": "",
         "parm": ""
     }),
+    37001021: _tools.RODict({
+        "ID": 37001021,
+        "type": 1,
+        "title": "战败通知",
+        "content": "您在<color=#65b276>{0}</color>被<color=#c60c0c>{1}</color>击败！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001022: _tools.RODict({
+        "ID": 37001022,
+        "type": 1,
+        "title": "坠落通知",
+        "content": "您在<color=#65b276>{0}</color>不幸坠崖，失去意识！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37001023: _tools.RODict({
+        "ID": 37001023,
+        "type": 1,
+        "title": "异常伤害通知",
+        "content": "您在<color=#65b276>{0}</color>因异常伤害，失去意识！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
     37990001: _tools.RODict({
         "ID": 37990001,
         "type": 2,
@@ -501,7 +534,7 @@ MailArgsNumMap = _tools.RODict({
         37000017:2,
         37000018:1,
         37000019:1,
-        37000020:1,
+        37000020:0,
         37000030:1,
         37001001:0,
         37001002:0,
@@ -523,5 +556,8 @@ MailArgsNumMap = _tools.RODict({
         37001018:2,
         37001019:3,
         37001020:1,
+        37001021:2,
+        37001022:1,
+        37001023:1,
         37990001:0,
 })

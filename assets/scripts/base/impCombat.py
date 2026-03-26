@@ -286,7 +286,7 @@ class ImpCombat(AvatarBuildsMixin):
                 _formulaId = GP_SD.datas['normalExpRecCost']['value']
                 _num = F_GFD.datas[_formulaId]['serverFormula'](_exp)
                 _ratio = GP_SD.datas['normalExpRecPct']['value']
-            elif itemId == gameconst.ItemId.MONEY:
+            elif itemId == gameconst.ItemId.BIND_MONEY:
                 _formulaId = GP_SD.datas['advancedExpRecCost']['value']
                 _num = F_GFD.datas[_formulaId]['serverFormula'](_exp)
                 _ratio = GP_SD.datas['advancedExpRecPct']['value']
@@ -337,6 +337,7 @@ class ImpCombat(AvatarBuildsMixin):
         self.achievementInfo.onLvUpAchievement(oldLv, newLv, self)
         self.checkAndUnlockWelfareSignIn()
         self.checkUnlockBountyTask()
+        self._updateLeaderBoardAvatar()
 
     def playerDeadTlog(self, tlogProps):
         pass

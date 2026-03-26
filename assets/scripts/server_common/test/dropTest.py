@@ -199,7 +199,7 @@ class DropUnit():
             Level = 0
             if ClassName == 'Monster':
                 Level = props.get('Level', 0)
-                rewardIDs = CBD.datas.get(EntityID, {}).get('rewardID', ())
+                rewardIDs = CBD.datas.get(EntityID, {}).get('rewardID', ()) or []
                 Name = Name or CBD.datas.get(EntityID, {}).get('name', '')
                 goCount = True
             elif ClassName == 'Collection':

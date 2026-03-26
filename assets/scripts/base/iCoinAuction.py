@@ -608,13 +608,6 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             INFO_MSG('_cancelSaleItemInCoinAuction forbidden')
             return None, gameconst.AuctionErrno.AUCTION_IDIP_GM_BAN
 
-        bagData = self.getBagByType(gameconst.BagType.BAG_TYPE_NORMAL)
-        if bagData.isLocked():
-            return None, gameconst.AuctionErrno.AUCTION_PLAYER_BAG_IS_LOCKED
-
-        if bagData.isFull():
-            return None, gameconst.AuctionErrno.AUCTION_PLAYER_BAG_GRID_NOT_ENOUGH
-
         return None, gameconst.AuctionErrno.AUCTION_OK
 
     def cancelSaleItemInCoinAuctionCallback(self, auctionItem, extra):
@@ -644,10 +637,9 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if not m_bagData:
             return None, gameconst.AuctionErrno.AUCTION_PLAYER_BAG_TYPE_UNKNOWN.initkvbody(
                 itemId=itemData.itemId, bagType=itemData.bagType)
-
+        
         if m_bagData.isLocked():
             return None, gameconst.AuctionErrno.AUCTION_PLAYER_BAG_IS_LOCKED
-
         else:
             m_src = AAC_AACDD.datas.BONUS_SRC_AUCTION_UNLIST_ITEM
             m_addWealth = dropAward.AwardVal(itemObjs=list(itemData.iterToItemDataList()))

@@ -3362,18 +3362,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 32018010,
-          "PosX": 174.8201,
-          "PosY": 527.7436,
-          "PosZ": 107.5684,
+          "PosX": 179.3208,
+          "PosY": 527.7403,
+          "PosZ": 110.5827,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 310.0536,
-            "TelX": 174.8201,
-            "TelY": 527.7436,
-            "TelZ": 107.5684
+            "TelX": 179.3208,
+            "TelY": 527.7403,
+            "TelZ": 110.5827
           }
         }
       }

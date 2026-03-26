@@ -9,7 +9,7 @@ datas ={
           "ClassNameType": 0,
           "CustomID": "",
           "Dir": 181.8781,
-          "DisplayName": "\u8854\u5203\u72ee\u874e",
+          "DisplayName": "",
           "EntityID": 11051001,
           "ID": 23010001,
           "PosX": 84.25647,
@@ -96,10 +96,12 @@ datas ={
         "PosY": 0.7438358,
         "PosZ": 12.48213,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 6.0,
           "RefreshTimedID": 0,
-          "Remark": ""
+          "Remark": "",
+          "ShowInSceneMap": 1
         }
       }
     },

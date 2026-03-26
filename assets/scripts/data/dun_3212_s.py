@@ -3443,18 +3443,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 32128010,
-          "PosX": 175.2049,
-          "PosY": 527.7436,
-          "PosZ": 107.6066,
+          "PosX": 179.3465,
+          "PosY": 527.7404,
+          "PosZ": 110.4848,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 0.0,
-            "TelX": 175.2049,
-            "TelY": 527.7436,
-            "TelZ": 107.6066
+            "TelX": 179.3465,
+            "TelY": 527.7404,
+            "TelZ": 110.4848
           }
         }
       }

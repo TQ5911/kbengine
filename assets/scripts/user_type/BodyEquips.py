@@ -230,9 +230,14 @@ class BodyEquips(userType.UserSoleType):
         # bagEquipItem.setItemBind()
         self.addEquipItem(owner, slotId, bagEquipItem)
         bagEquipItem.applyEquipEffectToAvatar(owner)
-        owner.appearance.setEquip(owner, slotId, bagEquipItem.itemId)
+        owner.appearance.setEquip(owner, slotId, bagEquipItem.itemId, bagEquipItem.getGrade())
         self.changeAvatarAttrs(owner)
         owner.updateEquipmentScore()
+
+    def updateEquipDressAppearance(self, owner, uniqueId):
+        slotId, equipItem = self.getEquipItemByUniqueId(uniqueId)
+        if equipItem:
+            owner.appearance.setEquip(owner, slotId, equipItem.itemId, equipItem.getGrade())
 
     def doBodyUndressEquip(self, owner, slotId):
         INFO_MSG('in doBodyUndressEquip, slotId:', slotId)
@@ -242,7 +247,7 @@ class BodyEquips(userType.UserSoleType):
             return
 
         equipItem.removeEquipEffectToAvatar(owner)
-        owner.appearance.setEquip(owner, slotId, 0)
+        owner.appearance.setEquip(owner, slotId, 0, 0)
         self.changeAvatarAttrs(owner)
         owner.updateEquipmentScore()
         owner.client.onUndressEquipment(slotId)
@@ -269,6 +274,16 @@ class BodyEquips(userType.UserSoleType):
     
     def getEquipItem(self, slotId):
         return self.equips_map.get(slotId, None)
+
+    def getEquipItemByUniqueId(self, uniqueId):
+        slotId = None
+        equipItem = None
+        for k, v in self.equips_map.items():
+            if v.uniqueId == uniqueId:
+                slotId = k
+                equipItem = v
+                break
+        return slotId, equipItem
 
     def removeEquipItem(self, owner, slotId):
         equipItem = self.equips_map.pop(slotId, None)

@@ -25,6 +25,12 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
         iCollectionBossForMgr.ICollectionBossForMgr.__init__(self)
         gameengine.getCubeStubBySpaceNo(self.spaceNo).onSpaceMgrReady(self.spaceNo, self)
 
+    def onTimer(self, tid, userData):
+        if utils.isBelongTimerTag(userData):
+            self._onTimerCallback(tid)
+        else:
+            super(CubeSpaceMgr, self).onTimer(tid, userData)
+
     def initStaticSpace(self):
         super().initStaticSpace()
 
@@ -113,9 +119,9 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
 
     def doInteractArenaKing(self, player):
         if not self._isArenaSpace():
-            return
+            return False
 
-        self.cubeArena.setArenaKing(player, self)
+        return self.cubeArena.setArenaKing(player, self)
 
     def dealWithArenaTimer(self):
         if self.cubeArenaTimerId:
@@ -143,6 +149,30 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
             return
 
         self.cubeArena.onArenaPlayerKillAnother(deathPlayer, killerPlayer, self)
+        
+    def doSendArenaKingPos(self, box):
+        if not self._isArenaSpace():
+            WARNING_MSG('doSendArenaKingPos', self.spaceNo)
+            return
+
+        _king = KBEngine.entities.get(self.cubeArena.arenaKing)
+        if not _king:
+            return
+
+        DEBUG_MSG('_notifyArenaKingPos', _king.position)
+        box.client.onArenaKingPos(_king.position)
+
+    def onPlayerRelive(self, box, playerGbId):
+        super(CubeSpaceMgr, self).onPlayerRelive(box, playerGbId)
+        if not self._isArenaSpace():
+            return
+
+        _boxCell = KBEngine.entities.get(box.id)
+        if not _boxCell:
+            WARNING_MSG('can not find boxCell', box.id)
+            return
+        _boxCell.addBuff(self.cubeArena.getChallengerBuff(self.spaceNo), 1, _boxCell.id)
+
     # ------------------ 擂台房玩法 end --------------------------------
 
     # ------------------ 神秘商人 start -----------------------------------

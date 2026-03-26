@@ -105,6 +105,9 @@
             <Arg>       UINT8       </Arg>
         </onAccountDestroy>
 
+        <incSVIPOnlineNumBySetSVIP>
+        </incSVIPOnlineNumBySetSVIP>
+
         <onAccountLogin>
             <Arg>       UNICODE     </Arg>
             <Arg>       UINT8       </Arg>

@@ -11,9 +11,9 @@ datas ={
     "EntityID": 0,
     "ID": 32200001,
     "Name": "\u51fa\u751f\u70b9",
-    "PosX": 69.48672,
-    "PosY": 4.837173,
-    "PosZ": 11.76322,
+    "PosX": 69.44469,
+    "PosY": 4.837174,
+    "PosZ": 28.66224,
     "Props": {
       "MapEntityType": 0,
       "Num": 0,
@@ -44,7 +44,7 @@ datas ={
     "PosZ": 53.67,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -76,7 +76,7 @@ datas ={
     "PosZ": 52.1389275,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -105,7 +105,7 @@ datas ={
     "PosZ": 48.4278,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -134,7 +134,7 @@ datas ={
     "PosZ": 54.56264,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -166,7 +166,7 @@ datas ={
     "PosZ": 58.5724869,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -195,7 +195,7 @@ datas ={
     "PosZ": 46.30776,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -224,7 +224,7 @@ datas ={
     "PosZ": 61.97208,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -254,7 +254,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "InitLoad": 0,
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -286,7 +286,7 @@ datas ={
     "PosZ": 86.06149,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -315,7 +315,7 @@ datas ={
     "PosZ": 84.53079,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -344,7 +344,7 @@ datas ={
     "PosZ": 79.16451,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -373,7 +373,7 @@ datas ={
     "PosZ": 86.95394,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -405,7 +405,7 @@ datas ={
     "PosZ": 93.59702,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -434,7 +434,7 @@ datas ={
     "PosZ": 80.60316,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -463,7 +463,7 @@ datas ={
     "PosZ": 90.96422,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -493,7 +493,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "InitLoad": 0,
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -525,7 +525,7 @@ datas ={
     "PosZ": 81.93382,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -554,7 +554,7 @@ datas ={
     "PosZ": 80.40285,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -583,7 +583,7 @@ datas ={
     "PosZ": 76.69122,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -612,7 +612,7 @@ datas ={
     "PosZ": 89.20575,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -641,7 +641,7 @@ datas ={
     "PosZ": 86.83633,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -670,7 +670,7 @@ datas ={
     "PosZ": 74.57158,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -699,7 +699,7 @@ datas ={
     "PosZ": 84.02303,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -729,7 +729,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "InitLoad": 0,
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -761,7 +761,7 @@ datas ={
     "PosZ": 110.8301,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -790,7 +790,7 @@ datas ={
     "PosZ": 109.2991,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -819,7 +819,7 @@ datas ={
     "PosZ": 105.5875,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -851,7 +851,7 @@ datas ={
     "PosZ": 111.7225,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -880,7 +880,7 @@ datas ={
     "PosZ": 115.7326,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -909,7 +909,7 @@ datas ={
     "PosZ": 103.4679,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -938,7 +938,7 @@ datas ={
     "PosZ": 119.1321,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -968,7 +968,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "InitLoad": 0,
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -1000,7 +1000,7 @@ datas ={
     "PosZ": 59.58,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1029,7 +1029,7 @@ datas ={
     "PosZ": 58.050972,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1058,7 +1058,7 @@ datas ={
     "PosZ": 54.33722,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1087,7 +1087,7 @@ datas ={
     "PosZ": 60.4724,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1116,7 +1116,7 @@ datas ={
     "PosZ": 64.4825,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1145,7 +1145,7 @@ datas ={
     "PosZ": 51.35043,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1174,7 +1174,7 @@ datas ={
     "PosZ": 67.882,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1204,7 +1204,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "InitLoad": 0,
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -1236,7 +1236,7 @@ datas ={
     "PosZ": 111.115,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1265,7 +1265,7 @@ datas ={
     "PosZ": 109.5839,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1294,7 +1294,7 @@ datas ={
     "PosZ": 105.8722,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -1326,7 +1326,7 @@ datas ={
     "PosZ": 112.0074,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1355,7 +1355,7 @@ datas ={
     "PosZ": 116.0175,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1384,7 +1384,7 @@ datas ={
     "PosZ": 103.7528,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1413,7 +1413,7 @@ datas ={
     "PosZ": 119.416992,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1443,7 +1443,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "InitLoad": 0,
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -1475,7 +1475,7 @@ datas ={
     "PosZ": 87.0388,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1504,7 +1504,7 @@ datas ={
     "PosZ": 85.70723,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1533,7 +1533,7 @@ datas ={
     "PosZ": 87.30561,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1562,7 +1562,7 @@ datas ={
     "PosZ": 78.29802,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1591,7 +1591,7 @@ datas ={
     "PosZ": 95.78229,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -1623,7 +1623,7 @@ datas ={
     "PosZ": 91.51274,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1652,7 +1652,7 @@ datas ={
     "PosZ": 57.78163,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1681,7 +1681,7 @@ datas ={
     "PosZ": 67.31371,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1710,7 +1710,7 @@ datas ={
     "PosZ": 73.76814,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1739,7 +1739,7 @@ datas ={
     "PosZ": 97.61877,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1768,7 +1768,7 @@ datas ={
     "PosZ": 97.77381,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1797,7 +1797,8 @@ datas ={
     "PosZ": 118.2001,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1805,7 +1806,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 12.0,
+      "RefreshTimedID": 0,
       "Remark": "\u4e3b\u52a8\u7cbe\u82f1",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u6563"
     }
   },
@@ -1826,7 +1829,7 @@ datas ={
     "PosZ": 50.33879,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1855,7 +1858,7 @@ datas ={
     "PosZ": 45.29264,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1885,7 +1888,7 @@ datas ={
     "PosZ": 49.1647,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1914,7 +1917,7 @@ datas ={
     "PosZ": 65.34262,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1943,7 +1946,7 @@ datas ={
     "PosZ": 74.36696,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -1973,7 +1976,7 @@ datas ={
     "PosZ": 60.30106,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -2002,7 +2005,7 @@ datas ={
     "PosZ": 68.07478,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -2031,7 +2034,7 @@ datas ={
     "PosZ": 64.90659,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -2063,7 +2066,7 @@ datas ={
     "PosZ": 73.18503,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -2092,7 +2095,7 @@ datas ={
     "PosZ": 71.73981,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -2121,7 +2124,7 @@ datas ={
     "PosZ": 61.03967,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -2150,7 +2153,7 @@ datas ={
     "PosZ": 93.28583,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -2182,7 +2185,7 @@ datas ={
     "PosZ": 92.76176,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -2211,7 +2214,7 @@ datas ={
     "PosZ": 102.0542,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -2240,7 +2243,7 @@ datas ={
     "PosZ": 108.8718,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -2269,7 +2272,7 @@ datas ={
     "PosZ": 99.40069,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -2298,7 +2301,7 @@ datas ={
     "PosZ": 100.8025,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -2331,7 +2334,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "InitLoad": 0,
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -2407,18 +2410,18 @@ datas ={
     "EntityID": 17310002,
     "ID": 32208009,
     "Name": "\u4f20\u9001\u70b9",
-    "PosX": 62.45609,
-    "PosY": 4.837174,
-    "PosZ": 21.14348,
+    "PosX": 57.5411,
+    "PosY": 3.657127,
+    "PosZ": 31.47314,
     "Props": {
       "CameraId": 0,
       "GateType": 1,
       "Remark": "",
       "ShowInSceneMap": 1,
       "TelDir": 0.0,
-      "TelX": 62.45609,
-      "TelY": 4.837174,
-      "TelZ": 21.14348
+      "TelX": 57.5411,
+      "TelY": 3.657127,
+      "TelZ": 31.47314
     }
   }
 }

@@ -11,9 +11,9 @@ datas ={
     "EntityID": 11041011,
     "ID": 21010024,
     "Name": "\u5ca9\u9762\u9b3c\u9c7c",
-    "PosX": 511.9771,
-    "PosY": 335.7306,
-    "PosZ": 137.7371,
+    "PosX": 513.8357,
+    "PosY": 335.5416,
+    "PosZ": 136.4762,
     "Props": {
       "GroupID": "",
       "Level": 17,
@@ -43,12 +43,13 @@ datas ={
     "EntityID": 11041012,
     "ID": 21010025,
     "Name": "\u5ca9\u7075\u9b3c\u9c7c",
-    "PosX": 506.3397,
-    "PosY": 332.7085,
-    "PosZ": 130.2414,
+    "PosX": 508.302,
+    "PosY": 331.5717,
+    "PosZ": 128.4561,
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 0,
@@ -58,6 +59,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u7b2c\u4e00\u6ce2"
     }
   },
@@ -73,12 +75,13 @@ datas ={
     "EntityID": 11041012,
     "ID": 21010026,
     "Name": "\u5ca9\u7075\u9b3c\u9c7c",
-    "PosX": 495.7974,
-    "PosY": 327.2108,
-    "PosZ": 114.7946,
+    "PosX": 499.0259,
+    "PosY": 327.3536,
+    "PosZ": 113.1255,
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 0,
@@ -88,6 +91,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u7b2c\u4e00\u6ce2"
     }
   },
@@ -281,12 +285,13 @@ datas ={
     "EntityID": 11041011,
     "ID": 21010033,
     "Name": "\u5ca9\u9762\u9b3c\u9c7c",
-    "PosX": 466.396118,
-    "PosY": 320.946075,
+    "PosX": 466.3961,
+    "PosY": 320.9461,
     "PosZ": 118.7267,
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 10,
@@ -296,6 +301,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u7b2c\u4e00\u6ce2"
     }
   },
@@ -311,12 +317,13 @@ datas ={
     "EntityID": 11041012,
     "ID": 21010034,
     "Name": "\u5ca9\u7075\u9b3c\u9c7c",
-    "PosX": 465.645325,
-    "PosY": 320.964844,
-    "PosZ": 114.413132,
+    "PosX": 465.6453,
+    "PosY": 320.9648,
+    "PosZ": 114.4131,
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 10,
@@ -324,7 +331,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u7b2c\u4e00\u6ce2"
     }
   },
@@ -376,6 +385,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 11,
@@ -385,6 +395,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "\u7279\u6b8a\u7cbe\u82f1\uff0c\u6709\u914d\u5957\u51fa\u751f\u7279\u6548",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u7b2c\u4e00\u6ce2"
     }
   },
@@ -400,12 +411,13 @@ datas ={
     "EntityID": 11041012,
     "ID": 21010037,
     "Name": "\u5ca9\u7075\u9b3c\u9c7c",
-    "PosX": 441.51369999999997,
-    "PosY": 319.609,
-    "PosZ": 107.14,
+    "PosX": 437.5615,
+    "PosY": 318.9107,
+    "PosZ": 108.0771,
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 44,
@@ -415,6 +427,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u7b2c\u4e00\u6ce2"
     }
   },
@@ -430,12 +443,13 @@ datas ={
     "EntityID": 11041012,
     "ID": 21010038,
     "Name": "\u5ca9\u7075\u9b3c\u9c7c",
-    "PosX": 442.0037,
-    "PosY": 319.3081,
-    "PosZ": 113.3897,
+    "PosX": 441.8306,
+    "PosY": 319.0642,
+    "PosZ": 110.4021,
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 44,
@@ -445,6 +459,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u7b2c\u4e00\u6ce2"
     }
   },
@@ -556,6 +571,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 14,
@@ -565,6 +581,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "\u7279\u6b8a\u7cbe\u82f1\uff0c\u6709\u914d\u5957\u51fa\u751f\u7279\u6548",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u7b2c\u4e8c\u6ce2"
     }
   },
@@ -610,12 +627,13 @@ datas ={
     "EntityID": 11041025,
     "ID": 21010050,
     "Name": "\u6f9c\u9102\u72c2\u9ca8",
-    "PosX": 387.875031,
+    "PosX": 387.875,
     "PosY": 311.071,
     "PosZ": 142.6255,
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 14,
@@ -625,6 +643,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u7b2c\u4e8c\u6ce2"
     }
   },
@@ -646,6 +665,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 17,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": "",
@@ -655,6 +675,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -3610,7 +3631,8 @@ datas ={
       "MPosX": 519.0,
       "MPosY": 338.47,
       "MPosZ": 173.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018006": {
@@ -3635,7 +3657,8 @@ datas ={
       "MPosX": 510.0,
       "MPosY": 338.14,
       "MPosZ": 168.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018007": {
@@ -3660,7 +3683,8 @@ datas ={
       "MPosX": 505.0,
       "MPosY": 338.0,
       "MPosZ": 160.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018008": {
@@ -3685,7 +3709,8 @@ datas ={
       "MPosX": 504.0,
       "MPosY": 337.8,
       "MPosZ": 151.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018009": {
@@ -3710,7 +3735,8 @@ datas ={
       "MPosX": 504.0,
       "MPosY": 337.64,
       "MPosZ": 142.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018010": {
@@ -3725,17 +3751,18 @@ datas ={
     "EntityID": 1,
     "ID": 21018010,
     "Name": "\u7a7a\u6c14\u5899",
-    "PosX": 505.31,
+    "PosX": 504.8,
     "PosY": 313.8,
-    "PosZ": 134.79,
+    "PosZ": 133.7,
     "Props": {
       "AreaType": 2,
       "Height": 33.0,
-      "Length": 12.0,
-      "MPosX": 496.0,
+      "Length": 13.0,
+      "MPosX": 495.0,
       "MPosY": 313.8,
-      "MPosZ": 122.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "MPosZ": 120.0,
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018011": {
@@ -3745,22 +3772,23 @@ datas ={
     "ClassName": "AirWall",
     "ClassNameType": 5,
     "CustomID": "",
-    "Dir": 320.8876,
+    "Dir": 336.475,
     "DisplayName": "",
     "EntityID": 1,
     "ID": 21018011,
     "Name": "\u7a7a\u6c14\u5899",
-    "PosX": 495.65,
+    "PosX": 495.19,
     "PosY": 314.8604,
-    "PosZ": 122.24,
+    "PosZ": 121.21,
     "Props": {
       "AreaType": 2,
       "Height": 32.0,
-      "Length": 5.0,
+      "Length": 4.0,
       "MPosX": 489.0,
       "MPosY": 314.86,
-      "MPosZ": 116.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "MPosZ": 117.0,
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018012": {
@@ -3785,7 +3813,8 @@ datas ={
       "MPosX": 481.0,
       "MPosY": 314.8,
       "MPosZ": 117.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018013": {
@@ -3810,7 +3839,8 @@ datas ={
       "MPosX": 476.0,
       "MPosY": 314.87,
       "MPosZ": 119.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018014": {
@@ -3835,7 +3865,8 @@ datas ={
       "MPosX": 467.0,
       "MPosY": 308.59,
       "MPosZ": 125.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018015": {
@@ -3860,7 +3891,8 @@ datas ={
       "MPosX": 455.0,
       "MPosY": 309.8,
       "MPosZ": 127.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018016": {
@@ -3885,7 +3917,8 @@ datas ={
       "MPosX": 447.0,
       "MPosY": 309.92,
       "MPosZ": 118.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018017": {
@@ -3895,22 +3928,23 @@ datas ={
     "ClassName": "AirWall",
     "ClassNameType": 5,
     "CustomID": "",
-    "Dir": 305.2685,
+    "Dir": 297.8019,
     "DisplayName": "",
     "EntityID": 1,
     "ID": 21018017,
     "Name": "\u7a7a\u6c14\u5899",
-    "PosX": 448.93,
+    "PosX": 448.66,
     "PosY": 310.18,
-    "PosZ": 118.91,
+    "PosZ": 118.2,
     "Props": {
       "AreaType": 2,
       "Height": 32.0,
-      "Length": 3.0,
+      "Length": 4.0,
       "MPosX": 444.0,
       "MPosY": 310.18,
-      "MPosZ": 114.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "MPosZ": 112.0,
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018018": {
@@ -3927,15 +3961,16 @@ datas ={
     "Name": "\u7a7a\u6c14\u5899",
     "PosX": 437.12,
     "PosY": 310.58,
-    "PosZ": 118.21,
+    "PosZ": 116.39,
     "Props": {
       "AreaType": 2,
       "Height": 32.0,
       "Length": 11.0,
       "MPosX": 424.0,
       "MPosY": 310.58,
-      "MPosZ": 114.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "MPosZ": 112.0,
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018019": {
@@ -3960,7 +3995,8 @@ datas ={
       "MPosX": 421.0,
       "MPosY": 310.07,
       "MPosZ": 118.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018020": {
@@ -3985,7 +4021,8 @@ datas ={
       "MPosX": 407.0,
       "MPosY": 309.6,
       "MPosZ": 132.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018021": {
@@ -4010,7 +4047,8 @@ datas ={
       "MPosX": 386.0,
       "MPosY": 309.2,
       "MPosZ": 146.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018022": {
@@ -4035,7 +4073,8 @@ datas ={
       "MPosX": 223.0,
       "MPosY": 299.6,
       "MPosZ": 193.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018023": {
@@ -4060,7 +4099,8 @@ datas ={
       "MPosX": 316.0,
       "MPosY": 309.54,
       "MPosZ": 167.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018024": {
@@ -4085,7 +4125,8 @@ datas ={
       "MPosX": 339.0,
       "MPosY": 310.36,
       "MPosZ": 147.0,
-      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899"
+      "Remark": "\u5916\u56f4\u7a7a\u6c14\u5899",
+      "ShowInSceneMap": 1
     }
   },
   "21018025": {
@@ -4110,7 +4151,8 @@ datas ={
       "MPosX": 336.0,
       "MPosY": 322.71,
       "MPosZ": 95.0,
-      "Remark": "\u9636\u6bb5\u7a7a\u6c14\u58991"
+      "Remark": "\u9636\u6bb5\u7a7a\u6c14\u58991",
+      "ShowInSceneMap": 1
     }
   },
   "21018026": {

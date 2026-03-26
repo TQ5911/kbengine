@@ -575,10 +575,10 @@ class RaidMixin(object):
 
     def raidApplyInvitedRaid(self, raidTarget, srcPlayerBox, srcPlayerGBID, raidUUID, srcPlayerName,
                              raidLeaderGBID, raidLeaderName, invitedPlayerGBID, invitedPlayerName,
-                             invitedTeamUUID, extraProps):
-        INFO_MSG("raidApplyInvitedRaid::", raidTarget, srcPlayerBox, srcPlayerGBID, raidUUID, srcPlayerName,
-                   raidLeaderGBID, raidLeaderName, invitedPlayerGBID, invitedPlayerName,
-                   invitedTeamUUID, extraProps)
+                             invitedTeamUUID, raidScore, raidLevel, extraProps):
+        INFO_MSG("raidApplyInvitedRaid::", raidTarget, srcPlayerBox, srcPlayerGBID, raidUUID, 
+                    srcPlayerName, raidLeaderGBID, raidLeaderName, invitedPlayerGBID, invitedPlayerName,
+                    invitedTeamUUID, raidScore, raidLevel, extraProps)
 
         def _raidApplyInvitedRaid():
             if invitedTeamUUID not in self.teamDic:
@@ -608,7 +608,7 @@ class RaidMixin(object):
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             [invitedPlayerGBID], 'invitedPlayerOnApplyInvitedRaid',
-            (raidUUID, raidTarget, srcPlayerGBID, srcPlayerName, raidLeaderName, extraProps),
+            (raidUUID, raidTarget, srcPlayerGBID, srcPlayerName, raidLeaderName, raidScore, raidLevel, extraProps),
             self, 'onPlayerIsOffline', (srcPlayerGBID, invitedPlayerName))
 
     def onReplyInviteRaidWithTeamFail(self, playerBox, playerGBID, raidId, srcPlayerGBID, teamId, errno, extra):
@@ -764,11 +764,21 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                     return
             teamVal.autoStartTimer = self._callback(5, 'checkAutoStart', (teamID,), gametimer.TIMER_TAG_TEAM_AUTO_START)
 
-    def isCanApplyJoinTeam(self, box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp, applySource):
+    def isCanApplyJoinTeam(self, box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp, applySource, isTeamUIVisibleId, isTeamDungeonUIVisibleId):
         teamVal = self.getTeamByTeamId(teamId)
         if not teamVal:
             box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_IS_NOT_EXIST, 0, 0, 0, '', applySource)
             return False
+        if teamVal.teamTarget > gameconst.PARE_ACTIVITY_ID:
+            if not isTeamUIVisibleId:
+                box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_RAID_UI_IS_NOT_VISIBLE, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
+                box.CheckFuncConditions(dataUtils.getRaidConstDataValue("teamUIVisibleId"))
+                return False
+            if not isTeamDungeonUIVisibleId:
+                box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_RAID_UI_IS_NOT_VISIBLE, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
+                box.CheckFuncConditions(dataUtils.getRaidConstDataValue("teamDungeonUIVisibleId"))
+                return False
+            
         if self.checkInDungeon(teamId):
             box.client and box.client.onApplyJoinTeamFailed(gameconst.TeamApplyResult.TEAM_APPLY_IS_IN_DUNGEON, teamVal.teamId, teamVal.teamMinLv, teamVal.teamMinScore, teamVal.password, applySource)
             return False
@@ -851,14 +861,15 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         self._callback(60, 'notifyRemoveApplyInfo', (teamId, gbId), gametimer.TIMER_TAG_NOTIFY_REMOVE_APPLY_INFO)
 
-    def applyJoinTeam(self, teamId, password, teamPlayerInfoDic, ignorePassword, applySource):
+    def applyJoinTeam(self, teamId, password, teamPlayerInfoDic, ignorePassword, applySource, datas):
         gbId = teamPlayerInfoDic['gbId']
         box = teamPlayerInfoDic['box']
         level = teamPlayerInfoDic['level']
         score = teamPlayerInfoDic['score']
         siegeWarCamp = teamPlayerInfoDic['siegeWarCamp']
-
-        if self.isCanApplyJoinTeam(box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp, applySource):
+        isTeamUIVisibleId = datas.get('isTeamUIVisibleId', True)
+        isTeamDungeonUIVisibleId = datas.get('isTeamDungeonUIVisibleId', True)
+        if self.isCanApplyJoinTeam(box, teamId, gbId, level, score, password, ignorePassword, siegeWarCamp, applySource, isTeamUIVisibleId, isTeamDungeonUIVisibleId):
             self._applyJoinTeam(teamId, teamPlayerInfoDic, applySource)
 
 
@@ -950,53 +961,57 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def teamDungeonFinished(self, teamId):
         self._disbandTeam(teamId)
 
-    def isCanInviteTeam(self, box, srcTeamId, srcPlayerGbId, invitedPlayerGbId):
-        if srcTeamId not in self.teamDic:
+    def isCanInviteTeam(self, box, srcTeamId, srcPlayerGbId, invitedPlayerGbId, datas):
+        teamVal = self.teamDic.get(srcTeamId)
+        if not teamVal:
             WARNING_MSG('isCanInviteTeam teamId error', srcTeamId, srcPlayerGbId)
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([invitedPlayerGbId], 'onMessagePre',
                                       (TMMCD.datas['teamDisbandMsg']['value'], []), None, '', ())
             return False
-        teamVal = self.teamDic.get(srcTeamId)
+        
+        if teamVal.teamTarget > gameconst.PARE_ACTIVITY_ID:
+            isTeamUIVisibleId = datas.get('isTeamUIVisibleId', True)
+            isTeamDungeonUIVisibleId = datas.get('isTeamDungeonUIVisibleId', True)
+            if not isTeamUIVisibleId:
+                box.CheckFuncConditions(dataUtils.getRaidConstDataValue("teamUIVisibleId"))
+                return False
+            if not isTeamDungeonUIVisibleId:
+                box.CheckFuncConditions(dataUtils.getRaidConstDataValue("teamDungeonUIVisibleId"))
+                return False
         if teamVal.isTeamFull():
             box.onMessagePre(TMMCD.datas['teamFullMsg']['value'], [])
             return False
-
+        
         return True
 
     def _applyInviteTeam(self, srcTeamId, srcPlayerGbId, srcLevel, srcSchool, invitedPlayerGbId, name):
         teamVal = self.getTeamByTeamId(srcTeamId)
         captainGbId = teamVal.getCaptainGbId()
+        isDirect = False
         if captainGbId == srcPlayerGbId and teamVal.isInApplyJoinDic(invitedPlayerGbId):
             teamVal.removeFromApplyDic(invitedPlayerGbId)
-            gameengine.getGlobalBase('PlayerStub').doOnOthersCell([invitedPlayerGbId], 'procDirectJoinMsg', (
-                srcTeamId,), self, 'onPlayerIsOffline', (srcPlayerGbId, name))
-        else:
-            captainName = teamVal.getPlayerName(captainGbId)
-            srcPlayerName = teamVal.getPlayerName(srcPlayerGbId)
-            gameengine.getGlobalBase('PlayerStub').doOnOthersCell([invitedPlayerGbId], 'procInviteTeamMsg', (
-                srcTeamId, teamVal.teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool), self, 'onPlayerIsOffline', (srcPlayerGbId, name))
+            isDirect = True
+        captainName = teamVal.getPlayerName(captainGbId)
+        srcPlayerName = teamVal.getPlayerName(srcPlayerGbId)
+        gameengine.getGlobalBase('PlayerStub').doOnOthersCell([invitedPlayerGbId], 'procInviteTeamMsg', (
+            srcTeamId, teamVal.teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool, teamVal.teamMinScore, teamVal.teamMinLv, isDirect), self, 'onPlayerIsOffline', (srcPlayerGbId, name))
 
-    def applyInviteTeam(self, box, srcTeamId, srcPlayerGbId, srcLevel, srcSchool, invitedPlayerGbId, name):
-        ret = True
-        if not self.isCanInviteTeam(box, srcTeamId, srcPlayerGbId, invitedPlayerGbId):
-            ret = False
-        else:
+    def applyInviteTeam(self, box, srcTeamId, srcPlayerGbId, srcLevel, srcSchool, invitedPlayerGbId, name, datas):
+        if self.isCanInviteTeam(box, srcTeamId, srcPlayerGbId, invitedPlayerGbId, datas):
             self._applyInviteTeam(srcTeamId, srcPlayerGbId, srcLevel, srcSchool, invitedPlayerGbId, name)
-
-        # todo 自动匹配列表中删除
 
     def replyInviteTeam(self, srcTeamId, srcPlayerGbId, teamPlayerInfoDic):
         invitedPlayerGbId = teamPlayerInfoDic['gbId']
         box = teamPlayerInfoDic['box']
 
-        if not self.isCanInviteTeam(box, srcTeamId, srcPlayerGbId, invitedPlayerGbId):
+        if not self.isCanInviteTeam(box, srcTeamId, srcPlayerGbId, invitedPlayerGbId, {}):
             box and box.cell and box.cell.resetTryAddTeamCD()
         else:
             teamVal = self.getTeamByTeamId(srcTeamId)
             if srcPlayerGbId == teamVal.getCaptainGbId():
                 self.addTeamMember(srcTeamId, teamPlayerInfoDic)
             else:
-                self.applyJoinTeam(srcTeamId, '', teamPlayerInfoDic, True, gameconst.ApplySource.RECRUIT)
+                self.applyJoinTeam(srcTeamId, '', teamPlayerInfoDic, True, gameconst.ApplySource.RECRUIT, {})
 
     def isCanLeaveTeam(self, teamId, gbId):
         if not teamId:
@@ -1147,11 +1162,17 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def _becomeCaptain(self, teamId, becomeGbId):
         teamVal = self.getTeamByTeamId(teamId)
+        if not teamVal:
+            return None
+        if not teamVal.isInTeam(becomeGbId):
+            return None
         teamVal.setCaptainGbId(becomeGbId)
         return teamVal
 
     def replyBecomeCaptain(self, box, teamId, gbId, becomeGbId):
         teamVal = self._becomeCaptain(teamId, becomeGbId)
+        if not teamVal:
+            return
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase([becomeGbId], 'onMessagePre',
                                                   (TMMCD.datas['beCaptainMsg']['value'], []), None, '', ())
         if teamVal.captainOfflineTimer > 0:

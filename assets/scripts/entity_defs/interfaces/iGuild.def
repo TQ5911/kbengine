@@ -13,6 +13,7 @@
         <guildName>
             <Type>          UNICODE                     </Type>
             <Flags>         ALL_CLIENTS                 </Flags>
+            <WitnessName>   true                        </WitnessName>
         </guildName>
 
         <guildNameBase>
@@ -34,6 +35,7 @@
         <guildUUID>
             <Type>          GUILD_UUID                  </Type>
             <Flags>         ALL_CLIENTS                 </Flags>
+            <WitnessName>   true                        </WitnessName>
         </guildUUID>
 
         <leftGuildTS>

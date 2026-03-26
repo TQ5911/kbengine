@@ -50,5 +50,13 @@ datas = _tools.RODict({
     "pressRideButtonCannotRideOnWater": _tools.RODict({
         "ID": "pressRideButtonCannotRideOnWater",
         "value": 54000136,
+    }),
+    "mountUpQuickTimeRatio": _tools.RODict({
+        "ID": "mountUpQuickTimeRatio",
+        "value": 0.8,
+    }),
+    "mountUpQuickDistanceRatio": _tools.RODict({
+        "ID": "mountUpQuickDistanceRatio",
+        "value": 1.0,
     })
 })

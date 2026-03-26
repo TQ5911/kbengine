@@ -136,7 +136,7 @@ class ImpRaid(object):
         gameengine.getRaidStub(raidUUID).refreshRaidCache(raidUUID, [self.gbId], extraProps)
 
     def onRefreshPlayerRaidCacheVal(self, newRaidCacheVal: raid.PlayerRaidCacheVal):
-        DEBUG_MSG('onRefreshPlayerRaidCacheVal::', newRaidCacheVal.raidUUID)
+        INFO_MSG('onRefreshPlayerRaidCacheVal::', newRaidCacheVal)
         self.raidInfo = newRaidCacheVal
         self.joinType = gameconst.TeamJoinType.DEFAULT
 
@@ -145,6 +145,7 @@ class ImpRaid(object):
             if playerInfo:
                 self.raidInfo.raidTeamIDX = teamVal.teamIDX
                 self.joinType = playerInfo.joinType
+                break
 
         if formula.isLineSpace(self.spaceNo):
             isLeader = self.gbId == self.raidInfo.raidCaptainGBID
@@ -345,6 +346,7 @@ class ImpRaid(object):
             self.raidTickTimerId = 0
 
     def _autoCtrlRaidTimer(self, crtRaidUUID, newRaidUUID):
+        INFO_MSG('_autoCtrlRaidTimer::~ ', crtRaidUUID, newRaidUUID)
         if newRaidUUID and not self.raidTickTimerId:
             # 有新的raidUUID, 且没有timerID, 需要开始timerTick
             self.startRaidTimer()
@@ -506,7 +508,8 @@ class ImpRaid(object):
         if self.teamInfo.offlineMembers():
             return None, errno.RAID_TEAM_MEMBER_OFFLINE.initkvbody(source='_createRaidWithTeamCheck')
 
-        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
+        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), True) \
+            or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), True):
             return None, errno.RAID_UI_DENIED.initkvbody(source='_createRaidWithTeamCheck', level=self.level)
 
         return None, errno.RAID_OK
@@ -519,7 +522,8 @@ class ImpRaid(object):
             if self.isInRaid():
                 return None, gameconst.RaidErrno.RAID_ALREADY_IN_RAID.initkvbody(
                     source='_checkCreateRaidWithTeamMemberConditions')
-            if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
+            if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), True) \
+                or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), True):
                 return None, gameconst.RaidErrno.RAID_UI_DENIED.initkvbody(
                     source='_checkCreateRaidWithTeamMemberConditions', level=self.level)
             return None, gameconst.RaidErrno.RAID_OK
@@ -609,6 +613,10 @@ class ImpRaid(object):
             if not actData or gameconst.ActivityControlType.RAID != int(actData['needTeam']):
                 ERROR_MSG("createRaidLonely, wrong activity control need team type", raidTarget)
                 return
+            if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), True) \
+                or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), True):
+                WARNING_MSG("createRaidLonely, func is locked")
+                return
 
         if not self.checkTeamCond(raidTarget, minLevel, minScore):
             return
@@ -625,9 +633,6 @@ class ImpRaid(object):
         errno = gameconst.RaidErrno
         if not dataUtils.isRaidCapacityValidate(capacity):
             return None, errno.RAID_UNKNOWN_CAPACITY
-
-        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
-            return None, errno.RAID_UI_DENIED.initkvbody(level=self.level)
 
         if self.isInRaid():
             return None, errno.RAID_ALREADY_IN_RAID
@@ -677,16 +682,16 @@ class ImpRaid(object):
             err = err.initkvbody(source=self._applyJoinRaidLonelyCheck.__name__)
             WARNING_MSG('applyJoinRaidLonely:: check failed, {}'.format(err))
             return
-
-        joinProps, extraProps = self._getAvatarPropsForRaid().toSavedDict(), {}
+        
+        extraProps = {}
+        extraProps['isRaidUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), False)
+        extraProps['isRaidDungeonUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), False)
+        
+        joinProps = self._getAvatarPropsForRaid().toSavedDict()
         gameengine.getRaidStub(raidUUID).applyJoinRaidLonely(self.base, self.gbId, joinProps, raidUUID, extraProps, password, False, applySource)
 
     def _applyJoinRaidLonelyCheck(self, raidUUID, applySource):
         _errno = gameconst.RaidErrno
-        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
-            self.client and self.client.onApplyJoinRaidLonelyFailed(gameconst.TeamApplyResult.RAID_APPLY_RAID_UI_IS_NOT_VISIBLE, 0, 0, 0, '', applySource)
-            return None, _errno.RAID_UI_DENIED.initkvbody(level=self.level)
-
         if not raidUUID:
             return None, _errno.RAID_PARAM_ERR.initkvbody(raidUUID=raidUUID)
 
@@ -736,7 +741,8 @@ class ImpRaid(object):
 
     def _applyJoinRaidWithTeamCheck(self, raidUUID):
         _errno = gameconst.RaidErrno
-        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
+        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), True) \
+            or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), True):
             return None, _errno.RAID_UI_DENIED.initkvbody(level=self.level)
 
         if not raidUUID:
@@ -805,7 +811,7 @@ class ImpRaid(object):
     def onJoinPlayerReplyJoinRaidLonely(self, srcPlayerGBID, raidUUID, playerGBID, playerJoinProps, extraProps, applySource):
         """玩家申请(单人请求)通过后接受回调"""
         INFO_MSG('onJoinPlayerReplyJoinRaidLonely::', srcPlayerGBID, raidUUID, playerGBID, playerJoinProps, extraProps)
-        _, err = self._onJoinPlayerReplyJoinRaidLonelyCheck(raidUUID)
+        _, err = self._onJoinPlayerReplyJoinRaidLonelyCheck(srcPlayerGBID, raidUUID, extraProps.get('raidTarget', 0))
         if err != gameconst.RaidErrno.RAID_OK:
             err = err.initkvbody(source=self._applyJoinRaidLonelyCheck.__name__)
             ERROR_MSG('onJoinPlayerReplyJoinRaidLonely::, check failed, {}'.format(err))
@@ -828,12 +834,19 @@ class ImpRaid(object):
             return True
         return False
 
-    def _onJoinPlayerReplyJoinRaidLonelyCheck(self, raidUUID):
+    def _onJoinPlayerReplyJoinRaidLonelyCheck(self, srcPlayerGBID, raidUUID, raidTarget):
+        INFO_MSG('_onJoinPlayerReplyJoinRaidLonelyCheck::', srcPlayerGBID, raidUUID, raidTarget)
         _errno = gameconst.RaidErrno
         if self.isInRaid():
             return None, _errno.RAID_ALREADY_IN_RAID.initkvbody(raidUUID=raidUUID)
-        # if raidUUID not in self.raidJoinRecord:
-        #     return None, _errno.RAID_APPLY_JOIN_RECORD_NOT_FOUND.initkvbody(raidUUID=raidUUID)
+        if self.isInTeam(self.gbId):
+            return None, _errno.RAID_ALREADY_IN_TEAM.initkvbody(raidUUID=raidUUID)
+        if raidTarget > gameconst.PARE_ACTIVITY_ID:
+            if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), False) \
+                or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), False):
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGBID], 'onMessagePre',
+                    (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
+                return None, gameconst.RaidErrno.RAID_UI_DENIED.initkvbody(level=self.level)
         return None, _errno.RAID_OK
 
     def onJoinPlayerHandleReplyJoinRaidReject(self, raidUUID):
@@ -902,6 +915,7 @@ class ImpRaid(object):
 
         extraProps = {
             'siegeWarCamp': self.siegeWarCamp,
+            'srcPlayerGBID': self.gbId,
         }
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             (playerGBID, ), 'tryBeInvitedInRaid', (self.base, extraProps),
@@ -918,7 +932,8 @@ class ImpRaid(object):
 
     def tryBeInvitedInRaid(self, invitedPlayerBox, extraProps):
         INFO_MSG("tryBeInvitedInRaid::")
-        _, err = self._tryBeInvitedInRaidCheck()
+        srcPlayerGBID = extraProps['srcPlayerGBID']
+        _, err = self._tryBeInvitedInRaidCheck(srcPlayerGBID)
         if err != gameconst.RaidErrno.RAID_OK:
             WARNING_MSG("tryBeInvitedInRaid:: failed, {}".format(err))
             if err == gameconst.RaidErrno.RAID_ALREADY_IN_RAID:
@@ -932,9 +947,7 @@ class ImpRaid(object):
         invitedPlayerBox.client.onTryBeInvitedInRaid(self.gbId, self.teamId, self.name,
                                                      self.isCaptain())
 
-    def _tryBeInvitedInRaidCheck(self):
-        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
-            return None, gameconst.RaidErrno.RAID_UI_DENIED.initkvbody(level=self.level)
+    def _tryBeInvitedInRaidCheck(self, srcPlayerGBID):
         if self.isInRaid():
             return None, gameconst.RaidErrno.RAID_ALREADY_IN_RAID
         return None, gameconst.RaidErrno.RAID_OK
@@ -972,10 +985,7 @@ class ImpRaid(object):
         elif self.isRaidCaptain():
             self.raidTeamCaptainApplyInviteRaidLonely(playerGBID, playerName)
         '''
-
     def applyInviteRaidLonelyWithLonely(self, playerGBID, playerName):
-        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
-            return gameconst.RaidErrno.RAID_UI_DENIED.initkvbody(level=self.level)
         if self.isInRaid():
             return gameconst.RaidErrno.RAID_ALREADY_IN_RAID
         if self.isInTeam():
@@ -983,11 +993,12 @@ class ImpRaid(object):
         if not playerGBID or playerGBID == self.gbId:
             return gameconst.RaidErrno.UNKNOWN
 
-        extraProps = {'inviteSource': gameconst.RaidPermission.LEADER}
+        extraProps = {}
+        extraProps['inviteSource'] = gameconst.RaidPermission.LEADER
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell((playerGBID,), 'invitedPlayerOnApplyInvitedRaid', (
-                0, 0, self.gbId, self.name, self.name, extraProps), self, 'tryApplyInviteRaidOffline', (playerName, ))
+                0, 0, self.gbId, self.name, self.name, 0, 0, extraProps), self, 'tryApplyInviteRaidOffline', (playerName, ))
         return gameconst.RaidErrno.RAID_OK
-
+    
     def _applyInviteRaidLonelyCommonCheck(self, playerGBID):
         if not playerGBID:
             return None, gameconst.RaidErrno.RAID_PARAM_ERR.initkvbody(playerGBID=playerGBID)
@@ -1032,18 +1043,23 @@ class ImpRaid(object):
             self.base, self.gbId, raidUUID, playerGBID, playerName, extraProps)
 
     def invitedPlayerOnApplyInvitedRaid(self, raidUUID, raidTarget, srcPlayerGBID,
-                                        srcPlayerName, leaderName, extraProps):
+                                        srcPlayerName, leaderName, raidScore, raidLevel, extraProps):
         """邀请单人/组队加入团队流程成功后回调"""
         INFO_MSG('invitedPlayerOnApplyInvitedRaid::',
-                 raidUUID, raidTarget, srcPlayerGBID, extraProps, srcPlayerName, leaderName)
+                 raidUUID, raidTarget, srcPlayerGBID, extraProps, srcPlayerName, leaderName, raidScore, raidLevel)
         raidTeamIDX = extraProps.get('raidTeamIDX', 0)
         teamUUID = extraProps.get('teamUUID', 0)
         inviteSource = extraProps.get('inviteSource', gameconst.RaidPermission.UNKNOWN)
-        recordId, err = self._invitedPlayerOnApplyInvitedRaid(raidUUID, teamUUID, raidTarget, srcPlayerGBID,
-                                                              srcPlayerName, leaderName, raidTeamIDX, inviteSource)
+        recordId, err = self._invitedPlayerOnApplyInvitedRaid(raidUUID, teamUUID, raidTarget, srcPlayerGBID, srcPlayerName, 
+                                                              leaderName, raidTeamIDX, inviteSource, raidScore, raidLevel)
         if err != gameconst.RaidErrno.RAID_OK:
             err = err.initkvbody(raidUUID=raidUUID, srcPlayerGBID=srcPlayerGBID)
-            if err == gameconst.RaidErrno.RAID_NOT_TEAM_CAPTAIN:
+            if err == gameconst.RaidErrno.RAID_UI_DENIED:
+                WARNING_MSG('invitedPlayerOnApplyInvitedRaid:: func is locked, errno={}'.format(err))
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGBID], 'onMessagePre',
+                  (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
+                
+            elif err == gameconst.RaidErrno.RAID_NOT_TEAM_CAPTAIN:
                 WARNING_MSG('invitedPlayerOnApplyInvitedRaid:: not team captain, errno={}'.format(err))
                 gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                     [srcPlayerGBID, ], 'onMessagePre',
@@ -1064,11 +1080,19 @@ class ImpRaid(object):
                     (RAID_CONST.datas["raid_inviteFail_cooldown_msg"]["value"], []),
                     None, '', ())
             elif err == gameconst.RaidErrno.RAID_UI_DENIED:
-                WARNING_MSG('invitedPlayerOnApplyInvitedRaid:: player level too low, errno={}'.format(err))
+                WARNING_MSG('invitedPlayerOnApplyInvitedRaid:: ui is denied, errno={}'.format(err))
                 gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
                     [srcPlayerGBID, ], 'onMessagePre',
                     (RAID_CONST.datas["raid_inviteFail_cooldown_msg"]["value"], []),
                     None, '', ())
+            elif err == gameconst.RaidErrno.RAID_LEVEL_IS_ILLEGAL:
+                WARNING_MSG('invitedPlayerOnApplyInvitedRaid:: player level too low, errno={}'.format(err))
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGBID], 'onMessagePre',
+                    (int(TMMCD.datas['teamInviteLevelMsg']['value']), [self.name]), None, '', ())
+            elif err == gameconst.RaidErrno.RAID_SOCRE_IS_ILLEGAL:
+                WARNING_MSG('invitedPlayerOnApplyInvitedRaid:: player score too low, errno={}'.format(err))
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGBID], 'onMessagePre',
+                    (int(TMMCD.datas['teamInviteScoreMsg']['value']), [self.name]), None, '', ())
             else:
                 ERROR_MSG('invitedPlayerOnApplyInvitedRaid:: failed, {}'.format(err))
 
@@ -1081,15 +1105,25 @@ class ImpRaid(object):
 
         INFO_MSG('invitedPlayerOnApplyInvitedRaid:: set record', raidUUID, recordId)
 
-    def _invitedPlayerOnApplyInvitedRaid(self, raidUUID, teamUUID, raidTarget, srcPlayerGBID,
-                                         srcPlayerName, leaderName, raidTeamIDX, inviteSource):
-        # 判断玩家等级是否够
-        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
-            return None, gameconst.RaidErrno.RAID_UI_DENIED.initkvbody(level=self.level)
+    def _invitedPlayerOnApplyInvitedRaid(self, raidUUID, teamUUID, raidTarget, srcPlayerGBID, srcPlayerName, 
+                                         leaderName, raidTeamIDX, inviteSource, raidScore, raidLevel):
+        if raidTarget > gameconst.PARE_ACTIVITY_ID:
+            if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), False) \
+                or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), False):
+                return None, gameconst.RaidErrno.RAID_UI_DENIED.initkvbody(level=self.level)
 
         if self.isInRaid():
             return None, gameconst.RaidErrno.RAID_ALREADY_IN_RAID
+        
+        if self.isInTeam(self.gbId):
+            return None, gameconst.RaidErrno.RAID_ALREADY_IN_TEAM
 
+        if self.level < raidLevel:
+            return None, gameconst.RaidErrno.RAID_LEVEL_IS_ILLEGAL
+        
+        if self.getTotalScore() < raidScore:
+            return None, gameconst.RaidErrno.RAID_SOCRE_IS_ILLEGAL
+        
         if teamUUID:
             # 传入teamID代表邀请的是组队, 回调者应该是小队队长
             if self.teamInfo.teamId != teamUUID:
@@ -1159,12 +1193,6 @@ class ImpRaid(object):
     def _replyInviteRaidLonelyCheck(self, raidUUID, recordID, srcPlayerGBID, beInvited):
         if not beInvited:
             return None, gameconst.RaidErrno.RAID_AVATAR_REJECTED_ACT.initkvbody(raidUUID=raidUUID)
-
-        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId")):
-            return None, gameconst.RaidErrno.RAID_UI_DENIED.initkvbody(level=self.level)
-
-        #if not raidUUID:
-        #    return None, gameconst.RaidErrno.RAID_PARAM_ERR.initkvbody(raidUUID=raidUUID)
 
         if self.isInRaid():
             return None, gameconst.RaidErrno.RAID_ALREADY_IN_RAID
@@ -2175,17 +2203,20 @@ class ImpRaid(object):
     @raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def reqRaidPlayerAutoMatch(self, exposed, target):
         INFO_MSG('in reqRaidPlayerAutoMatch')
-
+        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidUIVisibleId"), True) \
+            or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("raidDungeonUIVisibleId"), True):
+            WARNING_MSG("reqRaidPlayerAutoMatch, func is locked")
+            return
         if target == 0 or target == 1:
             WARNING_MSG("reqRaidPlayerAutoMatch target error", target)
             return
 
         if self.isInTeam(self.gbId):
-            WARNING_MSG('   in reqRaidPlayerAutoMatch, already in a team:', self.teamId)
+            WARNING_MSG('reqRaidPlayerAutoMatch, already in a team:', self.teamId)
             return
 
         if self.isInRaid():
-            WARNING_MSG('   in reqRaidPlayerAutoMatch, already in a raid:', self.raidUUID)
+            WARNING_MSG('reqRaidPlayerAutoMatch, already in a raid:', self.raidUUID)
             return
 
         raidTargetInfo = TMACTD.datas.get(target)

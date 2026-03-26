@@ -163,7 +163,7 @@ def getCrossServerId():
         return int(data[0]['crossServerId'])
     except:
         WARNING_MSG('[lj]crossServerInfo load fail')
-        return 20228
+        return 99999
 
 @cache
 def crossSiegeWarServerInfo():
@@ -834,6 +834,14 @@ def mapleAllServerUrl():
         ret = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'game/mapleAllServerUrl')
     except:
         ret = ''
+    return ret
+
+def getYidunData(tail):
+    try:
+        ret = ResMgr.getStringContentForPath(ResMgr.kbengineConfig(), 'yidun/' + tail)
+    except:
+        ret = ''
+        ERROR_MSG("getYidunData fail", tail)
     return ret
 
 @cache

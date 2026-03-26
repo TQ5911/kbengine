@@ -55,29 +55,13 @@ datas ={
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
-            "PathID": 57103601,
+            "PathID": 57103602,
             "Radius": 0.0,
             "RandomRegion": [
               [
-                438.0377,
-                133.9444,
-                351.0136,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                372.534729,
-                103.666916,
-                531.5465,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                303.0973,
-                121.605171,
-                567.239746,
+                501.529663,
+                171.761856,
+                426.596039,
                 0.0,
                 1.0,
                 0.0
@@ -94,14 +78,6 @@ datas ={
                 259.726959,
                 109.812,
                 373.392883,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                213.345215,
-                99.14359,
-                513.703857,
                 0.0,
                 1.0,
                 0.0
@@ -137,14 +113,6 @@ datas ={
                 0.0,
                 1.0,
                 0.0
-              ],
-              [
-                287.839874,
-                150.74649,
-                163.924255,
-                0.0,
-                1.0,
-                0.0
               ]
             ],
             "RefreshNum": 1,
@@ -153,7 +121,7 @@ datas ={
               2000.0
             ],
             "RefreshTimedID": 0,
-            "Remark": "",
+            "Remark": "\u5e78\u8fd0\u602a7\u533a\u57df",
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
@@ -1818,9 +1786,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11227017,
           "ID": 10360081,
-          "PosX": 257.639771,
-          "PosY": 118.334328,
-          "PosZ": 421.089264,
+          "PosX": 257.6398,
+          "PosY": 118.3343,
+          "PosZ": 421.0893,
           "Props": {
             "GroupID": "",
             "Level": 35,
@@ -1908,8 +1876,8 @@ datas ={
           "DisplayName": "",
           "EntityID": 11227017,
           "ID": 10360084,
-          "PosX": 257.706848,
-          "PosY": 118.378296,
+          "PosX": 257.7068,
+          "PosY": 118.3783,
           "PosZ": 433.133,
           "Props": {
             "GroupID": "",
@@ -1943,7 +1911,7 @@ datas ={
           "PosZ": 369.1242,
           "Props": {
             "GroupID": "",
-            "Level": 37,
+            "Level": 36,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -8682,46 +8650,6 @@ datas ={
         "PosZ": 370.5763,
         "Props": {
           "CameraId": "33103600",
-          "MapEntityType": "26",
-          "Remark": "",
-          "ShowInSceneMap": 1
-        }
-      },
-      "10368049": {
-        "ActivityID": 0,
-        "AttachedGIDList": [],
-        "ClassName": "Anchor",
-        "ClassNameType": 20,
-        "CustomID": "",
-        "Dir": 68.30937,
-        "DisplayName": "\u795e\u884c\u70b9\u00b7\u5384\u8fd0\u6c99\u6ee9",
-        "EntityID": 0,
-        "ID": 10368049,
-        "PosX": 248.0472,
-        "PosY": 109.3423,
-        "PosZ": 327.9063,
-        "Props": {
-          "CameraId": 0,
-          "MapEntityType": "26",
-          "Remark": "",
-          "ShowInSceneMap": 1
-        }
-      },
-      "10368050": {
-        "ActivityID": 0,
-        "AttachedGIDList": [],
-        "ClassName": "Anchor",
-        "ClassNameType": 20,
-        "CustomID": "",
-        "Dir": 333.9967,
-        "DisplayName": "\u795e\u884c\u70b9\u00b7\u9ab8\u9aa8\u8425\u5730",
-        "EntityID": 0,
-        "ID": 10368050,
-        "PosX": 444.3456,
-        "PosY": 121.3851,
-        "PosZ": 163.6063,
-        "Props": {
-          "CameraId": 0,
           "MapEntityType": "26",
           "Remark": "",
           "ShowInSceneMap": 1

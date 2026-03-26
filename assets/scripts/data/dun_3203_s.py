@@ -3480,18 +3480,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 32038010,
-          "PosX": 174.94,
-          "PosY": 527.7442,
-          "PosZ": 107.44,
+          "PosX": 179.3604,
+          "PosY": 527.7404,
+          "PosZ": 110.5033,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 304.1893,
-            "TelX": 174.94,
-            "TelY": 527.7442,
-            "TelZ": 107.44
+            "TelX": 179.3604,
+            "TelY": 527.7404,
+            "TelZ": 110.5033
           }
         }
       }

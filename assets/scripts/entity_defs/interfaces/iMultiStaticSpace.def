@@ -9,6 +9,12 @@
             <Type>      PYTHON          </Type>
             <Flags>     BASE            </Flags>
         </loadWaitSet>
+
+        <doNextFlag>
+            <Type>          UINT8           </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </doNextFlag>
     </Properties>
 
     <BaseMethods>

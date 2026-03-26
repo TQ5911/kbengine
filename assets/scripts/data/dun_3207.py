@@ -120,18 +120,18 @@ datas ={
     "EntityID": 17310002,
     "ID": 32078003,
     "Name": "\u4f20\u9001\u70b9",
-    "PosX": 241.36,
-    "PosY": 527.7433,
-    "PosZ": 25.31917,
+    "PosX": 236.2624,
+    "PosY": 527.7401,
+    "PosZ": 25.88964,
     "Props": {
       "CameraId": 0,
       "GateType": 1,
       "Remark": "",
       "ShowInSceneMap": 1,
       "TelDir": 201.5556,
-      "TelX": 241.36,
-      "TelY": 527.7433,
-      "TelZ": 25.31917
+      "TelX": 236.2624,
+      "TelY": 527.7401,
+      "TelZ": 25.88964
     }
   }
 }

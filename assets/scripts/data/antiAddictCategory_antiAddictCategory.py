@@ -22,7 +22,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 10)
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -31,7 +32,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001985,
-        "rewardMessage": ('<color=&color211>任务完成</color>', '完成<color=&color57>{0}</color>任务<color=&color57>{1}</color>，获得奖励：', '完成任务，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>任务完成</color>', '完成<color=&color57>{0}</color>任务<color=&color57>{1}</color>，获得奖励：', '完成任务，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -40,7 +42,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54000009,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -49,7 +52,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     5: _tools.RODict({
         "ID": 5,
@@ -58,7 +62,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     6: _tools.RODict({
         "ID": 6,
@@ -67,7 +72,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001984,
-        "rewardMessage": ('开启礼包，获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('开启礼包，获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 2
     }),
     7: _tools.RODict({
         "ID": 7,
@@ -76,7 +82,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 3
     }),
     8: _tools.RODict({
         "ID": 8,
@@ -85,7 +92,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 3
     }),
     9: _tools.RODict({
         "ID": 9,
@@ -94,7 +102,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 10)
     }),
     10: _tools.RODict({
         "ID": 10,
@@ -103,7 +112,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     11: _tools.RODict({
         "ID": 11,
@@ -112,7 +122,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     12: _tools.RODict({
         "ID": 12,
@@ -121,7 +132,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     13: _tools.RODict({
         "ID": 13,
@@ -130,7 +142,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     14: _tools.RODict({
         "ID": 14,
@@ -139,7 +152,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     15: _tools.RODict({
         "ID": 15,
@@ -148,7 +162,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001987,
-        "rewardMessage": ('<color=&color211>邮件附件</color>', '查收邮件，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>邮件附件</color>', '查收邮件，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     16: _tools.RODict({
         "ID": 16,
@@ -157,7 +172,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     17: _tools.RODict({
         "ID": 17,
@@ -166,7 +182,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 10)
     }),
     18: _tools.RODict({
         "ID": 18,
@@ -175,7 +192,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     19: _tools.RODict({
         "ID": 19,
@@ -184,7 +202,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     20: _tools.RODict({
         "ID": 20,
@@ -193,7 +212,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001990,
-        "rewardMessage": ('<color=&color211>交易成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>交易成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": (1, 2)
     }),
     21: _tools.RODict({
         "ID": 21,
@@ -202,7 +222,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     22: _tools.RODict({
         "ID": 22,
@@ -211,7 +232,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 10)
     }),
     23: _tools.RODict({
         "ID": 23,
@@ -220,7 +242,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     24: _tools.RODict({
         "ID": 24,
@@ -229,7 +252,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     25: _tools.RODict({
         "ID": 25,
@@ -238,7 +262,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     26: _tools.RODict({
         "ID": 26,
@@ -247,7 +272,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 3
     }),
     27: _tools.RODict({
         "ID": 27,
@@ -256,7 +282,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     28: _tools.RODict({
         "ID": 28,
@@ -265,7 +292,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001997,
-        "rewardMessage": ('<color=&color211>分解获得</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>分解获得</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": (1, 2)
     }),
     29: _tools.RODict({
         "ID": 29,
@@ -274,7 +302,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     30: _tools.RODict({
         "ID": 30,
@@ -283,7 +312,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     31: _tools.RODict({
         "ID": 31,
@@ -292,7 +322,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     32: _tools.RODict({
         "ID": 32,
@@ -301,7 +332,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     33: _tools.RODict({
         "ID": 33,
@@ -310,7 +342,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 3
     }),
     34: _tools.RODict({
         "ID": 34,
@@ -319,7 +352,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     35: _tools.RODict({
         "ID": 35,
@@ -328,7 +362,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     36: _tools.RODict({
         "ID": 36,
@@ -337,7 +372,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     37: _tools.RODict({
         "ID": 37,
@@ -346,7 +382,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     38: _tools.RODict({
         "ID": 38,
@@ -355,7 +392,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     39: _tools.RODict({
         "ID": 39,
@@ -364,7 +402,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     40: _tools.RODict({
         "ID": 40,
@@ -373,7 +412,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     41: _tools.RODict({
         "ID": 41,
@@ -382,7 +422,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 3
     }),
     42: _tools.RODict({
         "ID": 42,
@@ -391,7 +432,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 3
     }),
     43: _tools.RODict({
         "ID": 43,
@@ -400,7 +442,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 3
     }),
     44: _tools.RODict({
         "ID": 44,
@@ -409,7 +452,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     45: _tools.RODict({
         "ID": 45,
@@ -418,7 +462,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001990,
-        "rewardMessage": ('<color=&color211>购买成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>购买成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     46: _tools.RODict({
         "ID": 46,
@@ -427,7 +472,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001990,
-        "rewardMessage": ('<color=&color211>购买成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>购买成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": (1, 2)
     }),
     47: _tools.RODict({
         "ID": 47,
@@ -436,7 +482,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     48: _tools.RODict({
         "ID": 48,
@@ -445,7 +492,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     49: _tools.RODict({
         "ID": 49,
@@ -454,7 +502,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     50: _tools.RODict({
         "ID": 50,
@@ -463,7 +512,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     51: _tools.RODict({
         "ID": 51,
@@ -472,7 +522,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     52: _tools.RODict({
         "ID": 52,
@@ -481,7 +532,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     53: _tools.RODict({
         "ID": 53,
@@ -490,7 +542,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     54: _tools.RODict({
         "ID": 54,
@@ -499,7 +552,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 4)
     }),
     55: _tools.RODict({
         "ID": 55,
@@ -508,7 +562,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     56: _tools.RODict({
         "ID": 56,
@@ -517,7 +572,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     57: _tools.RODict({
         "ID": 57,
@@ -526,7 +582,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     58: _tools.RODict({
         "ID": 58,
@@ -535,7 +592,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2, 4)
     }),
     59: _tools.RODict({
         "ID": 59,
@@ -544,7 +602,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2, 4)
     }),
     60: _tools.RODict({
         "ID": 60,
@@ -553,7 +612,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (2, 5)
     }),
     61: _tools.RODict({
         "ID": 61,
@@ -562,7 +622,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 5)
     }),
     62: _tools.RODict({
         "ID": 62,
@@ -571,7 +632,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 5)
     }),
     63: _tools.RODict({
         "ID": 63,
@@ -580,7 +642,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (2, 5)
     }),
     64: _tools.RODict({
         "ID": 64,
@@ -589,7 +652,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (2, 5)
     }),
     65: _tools.RODict({
         "ID": 65,
@@ -598,7 +662,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 5)
     }),
     66: _tools.RODict({
         "ID": 66,
@@ -607,7 +672,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001986,
-        "rewardMessage": ('<color=&color211>成就达成</color>', '达成<color=&color57>{0}</color>成就，获得奖励：', '达成成就，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>成就达成</color>', '达成<color=&color57>{0}</color>成就，获得奖励：', '达成成就，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     67: _tools.RODict({
         "ID": 67,
@@ -616,7 +682,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     68: _tools.RODict({
         "ID": 68,
@@ -625,7 +692,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     69: _tools.RODict({
         "ID": 69,
@@ -634,7 +702,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     70: _tools.RODict({
         "ID": 70,
@@ -643,7 +712,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     71: _tools.RODict({
         "ID": 71,
@@ -652,7 +722,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (2, 3)
     }),
     72: _tools.RODict({
         "ID": 72,
@@ -661,7 +732,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     73: _tools.RODict({
         "ID": 73,
@@ -670,7 +742,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     74: _tools.RODict({
         "ID": 74,
@@ -679,7 +752,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     75: _tools.RODict({
         "ID": 75,
@@ -688,7 +762,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001988,
-        "rewardMessage": ('<color=&color211>活动奖励</color>', '参与活动，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>活动奖励</color>', '参与活动，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     76: _tools.RODict({
         "ID": 76,
@@ -697,7 +772,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     77: _tools.RODict({
         "ID": 77,
@@ -706,7 +782,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     78: _tools.RODict({
         "ID": 78,
@@ -715,7 +792,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     79: _tools.RODict({
         "ID": 79,
@@ -724,7 +802,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     80: _tools.RODict({
         "ID": 80,
@@ -733,7 +812,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     81: _tools.RODict({
         "ID": 81,
@@ -742,7 +822,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     82: _tools.RODict({
         "ID": 82,
@@ -751,7 +832,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     83: _tools.RODict({
         "ID": 83,
@@ -760,7 +842,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     84: _tools.RODict({
         "ID": 84,
@@ -769,7 +852,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 4)
     }),
     85: _tools.RODict({
         "ID": 85,
@@ -778,7 +862,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     86: _tools.RODict({
         "ID": 86,
@@ -787,7 +872,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     87: _tools.RODict({
         "ID": 87,
@@ -796,7 +882,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     88: _tools.RODict({
         "ID": 88,
@@ -805,7 +892,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     89: _tools.RODict({
         "ID": 89,
@@ -814,7 +902,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     90: _tools.RODict({
         "ID": 90,
@@ -823,7 +912,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     91: _tools.RODict({
         "ID": 91,
@@ -832,7 +922,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001992,
-        "rewardMessage": ('<color=&color211>兑换成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>兑换成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": (1, 2)
     }),
     92: _tools.RODict({
         "ID": 92,
@@ -841,7 +932,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     93: _tools.RODict({
         "ID": 93,
@@ -850,7 +942,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     94: _tools.RODict({
         "ID": 94,
@@ -859,7 +952,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     95: _tools.RODict({
         "ID": 95,
@@ -868,7 +962,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 2)
     }),
     96: _tools.RODict({
         "ID": 96,
@@ -877,7 +972,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001993,
-        "rewardMessage": ('<color=&color211>激活月卡</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>激活月卡</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     97: _tools.RODict({
         "ID": 97,
@@ -886,7 +982,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001994,
-        "rewardMessage": ('<color=&color211>月卡奖励</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>月卡奖励</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     98: _tools.RODict({
         "ID": 98,
@@ -895,7 +992,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001994,
-        "rewardMessage": ('<color=&color211>月卡奖励</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>月卡奖励</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     99: _tools.RODict({
         "ID": 99,
@@ -904,7 +1002,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001992,
-        "rewardMessage": ('<color=&color211>兑换成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>兑换成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     100: _tools.RODict({
         "ID": 100,
@@ -913,7 +1012,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     101: _tools.RODict({
         "ID": 101,
@@ -922,7 +1022,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     102: _tools.RODict({
         "ID": 102,
@@ -931,7 +1032,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     103: _tools.RODict({
         "ID": 103,
@@ -940,7 +1042,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     104: _tools.RODict({
         "ID": 104,
@@ -949,7 +1052,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     105: _tools.RODict({
         "ID": 105,
@@ -958,7 +1062,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     106: _tools.RODict({
         "ID": 106,
@@ -967,7 +1072,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     107: _tools.RODict({
         "ID": 107,
@@ -976,7 +1082,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     108: _tools.RODict({
         "ID": 108,
@@ -985,7 +1092,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     109: _tools.RODict({
         "ID": 109,
@@ -994,7 +1102,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     110: _tools.RODict({
         "ID": 110,
@@ -1003,7 +1112,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     111: _tools.RODict({
         "ID": 111,
@@ -1012,7 +1122,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     112: _tools.RODict({
         "ID": 112,
@@ -1021,7 +1132,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     113: _tools.RODict({
         "ID": 113,
@@ -1030,7 +1142,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     114: _tools.RODict({
         "ID": 114,
@@ -1039,7 +1152,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 10)
     }),
     115: _tools.RODict({
         "ID": 115,
@@ -1048,7 +1162,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     116: _tools.RODict({
         "ID": 116,
@@ -1057,7 +1172,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     117: _tools.RODict({
         "ID": 117,
@@ -1066,7 +1182,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001988,
-        "rewardMessage": ('<color=&color211>活动奖励</color>', '参与活动，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>活动奖励</color>', '参与活动，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     118: _tools.RODict({
         "ID": 118,
@@ -1075,7 +1192,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     119: _tools.RODict({
         "ID": 119,
@@ -1084,7 +1202,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     120: _tools.RODict({
         "ID": 120,
@@ -1093,7 +1212,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     121: _tools.RODict({
         "ID": 121,
@@ -1102,7 +1222,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001995,
-        "rewardMessage": ('<color=&color211>混沌回廊奖励</color>', '战利品：{0}')
+        "rewardMessage": ('<color=&color211>混沌回廊奖励</color>', '战利品：{0}'),
+        "group": 1
     }),
     122: _tools.RODict({
         "ID": 122,
@@ -1111,7 +1232,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001996,
-        "rewardMessage": ('<color=&color211>试炼峰奖励</color>', '战利品：{0}')
+        "rewardMessage": ('<color=&color211>天劫崖奖励</color>', '战利品：{0}'),
+        "group": 1
     }),
     123: _tools.RODict({
         "ID": 123,
@@ -1120,7 +1242,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     124: _tools.RODict({
         "ID": 124,
@@ -1129,7 +1252,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     125: _tools.RODict({
         "ID": 125,
@@ -1138,7 +1262,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     126: _tools.RODict({
         "ID": 126,
@@ -1147,7 +1272,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     127: _tools.RODict({
         "ID": 127,
@@ -1156,7 +1282,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 54001988,
-        "rewardMessage": ('<color=&color211>活动奖励</color>', '参与活动，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口')
+        "rewardMessage": ('<color=&color211>活动奖励</color>', '参与活动，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
     }),
     128: _tools.RODict({
         "ID": 128,
@@ -1165,7 +1292,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     129: _tools.RODict({
         "ID": 129,
@@ -1174,7 +1302,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     130: _tools.RODict({
         "ID": 130,
@@ -1183,7 +1312,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     131: _tools.RODict({
         "ID": 131,
@@ -1192,7 +1322,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     132: _tools.RODict({
         "ID": 132,
@@ -1201,7 +1332,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     133: _tools.RODict({
         "ID": 133,
@@ -1210,7 +1342,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 4
     }),
     134: _tools.RODict({
         "ID": 134,
@@ -1219,7 +1352,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     135: _tools.RODict({
         "ID": 135,
@@ -1228,7 +1362,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     136: _tools.RODict({
         "ID": 136,
@@ -1237,7 +1372,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     137: _tools.RODict({
         "ID": 137,
@@ -1246,7 +1382,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     138: _tools.RODict({
         "ID": 138,
@@ -1255,7 +1392,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     139: _tools.RODict({
         "ID": 139,
@@ -1264,7 +1402,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     140: _tools.RODict({
         "ID": 140,
@@ -1273,7 +1412,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     141: _tools.RODict({
         "ID": 141,
@@ -1282,7 +1422,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 3
     }),
     142: _tools.RODict({
         "ID": 142,
@@ -1291,7 +1432,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     143: _tools.RODict({
         "ID": 143,
@@ -1300,7 +1442,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 1
     }),
     144: _tools.RODict({
         "ID": 144,
@@ -1309,7 +1452,8 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": 2
     }),
     145: _tools.RODict({
         "ID": 145,
@@ -1318,8 +1462,129 @@ datas = _tools.RODict({
         "abandonWhenBagFull": 0,
         "rewardDescribe": "",
         "messageId": 0,
-        "rewardMessage": None
+        "rewardMessage": None,
+        "group": (1, 10)
+    }),
+    146: _tools.RODict({
+        "ID": 146,
+        "name": "BONUS_SRC_ENTER_CUBE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    147: _tools.RODict({
+        "ID": 147,
+        "name": "BONUS_SRC_CUBE_AUTO_RENEW",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    148: _tools.RODict({
+        "ID": 148,
+        "name": "BONUS_SRC_CUBE_FAILED_REWIND",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    149: _tools.RODict({
+        "ID": 149,
+        "name": "BONUS_SRC_ENTER_WONDER_LAND",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    150: _tools.RODict({
+        "ID": 150,
+        "name": "BONUS_SRC_WONDER_LAND_AUTO_RENEW",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    151: _tools.RODict({
+        "ID": 151,
+        "name": "BONUS_SRC_WONDER_LAND_FAILED_REWIND",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    152: _tools.RODict({
+        "ID": 152,
+        "name": "BONUS_SRC_ITEM_DISASSEMBLE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001997,
+        "rewardMessage": ('<color=&color211>分解获得</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": (1, 2)
+    }),
+    153: _tools.RODict({
+        "ID": 153,
+        "name": "BONUS_SRC_AUTO_ENHANCE_BAG_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
+    }),
+    154: _tools.RODict({
+        "ID": 154,
+        "name": "BONUS_SRC_AUTO_ENHANCE_BODY_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
+    }),
+    155: _tools.RODict({
+        "ID": 155,
+        "name": "BONUS_SRC_LEVEL_UP_MERIDIAN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    156: _tools.RODict({
+        "ID": 156,
+        "name": "BONUS_SRC_ENHANCE_MERIDIAN",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    157: _tools.RODict({
+        "ID": 157,
+        "name": "BONUS_SRC_BIND_ITEM",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
     })
 })
 minKey = 1
-maxKey = 145
+maxKey = 157

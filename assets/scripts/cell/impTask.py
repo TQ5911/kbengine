@@ -65,6 +65,8 @@ class ImpTask(impTalk.ImpTalk):
     @utils.isMyself
     def reqClaimTask(self, exposed, claimSrcType, taskId, paramStr):
         INFO_MSG('in reqClaimTask:', taskId)
+        if paramStr == "reset":
+            self.base.reqQuitTask(taskId)
         self.startClaimTask(taskId)
         return
 
@@ -482,7 +484,7 @@ class ImpTask(impTalk.ImpTalk):
         INFO_MSG('in taskPreEnterSpace:', taskId, dungeonNo, dungeonSpaceType, dungeonEnterType, self.spaceNo, self.direction)
         if gameconst.DungeonType.isSingleDungeon(dungeonSpaceType, dungeonEnterType) or gameconst.DungeonType.isBothDungeon(dungeonSpaceType, dungeonEnterType):
             #单人任务才能进单人副本
-            not dataUtils.isTeamTask(taskId) and self.taskSelfEnterSingleDungeon(dungeonNo, dstPos, dstDir)
+            not dataUtils.isTeamTask(taskId) and self.taskSelfEnterSingleDungeon(dungeonNo, dstPos, dstDir, taskId)
         elif gameconst.DungeonType.isTeamDungeon(dungeonSpaceType, dungeonEnterType) or gameconst.DungeonType.isBothDungeon(dungeonSpaceType, dungeonEnterType):
             #组队任务才能进team dungeon
             dataUtils.isTeamTask(taskId) and self.taskSelfEnterTeamDungeon(taskId, dungeonNo)
@@ -513,9 +515,14 @@ class ImpTask(impTalk.ImpTalk):
         else:
             ERROR_MSG('_onCheckLineAreaByTaskTeltoPos failed, ', checkCode, dstPos)
 
-    def taskSelfEnterSingleDungeon(self, dungeonNo, dstPos, dstDir):
-        INFO_MSG('in taskSelfEnterSingleDungeon:', self.spaceNo, dungeonNo, dstPos, dstDir)
+    def taskSelfEnterSingleDungeon(self, dungeonNo, dstPos, dstDir, taskId):
+        INFO_MSG('in taskSelfEnterSingleDungeon:', self.spaceNo, dungeonNo, dstPos, dstDir, taskId)
         # TODO(DUNGEON_SRC): use task src
+        finRewardInstance = dataUtils.taskFieldVal(dataUtils.getTaskData(taskId), 'FinRewardInstance')
+        NeedPlayFx = finRewardInstance.get('NeedPlayFx', True)
+        if NeedPlayFx:
+            self.client.onNoNeedPlayFx()
+
         src = dungeonSrc.BasicDungeonSrc(srcId=gameconst.DungeonSrcEnum.FROM_TASK)
         myDungeonNo = formula.getDungeonNoBySpaceNo(self.spaceNo)
         if dungeonNo == myDungeonNo:

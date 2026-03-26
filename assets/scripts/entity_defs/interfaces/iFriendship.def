@@ -189,6 +189,7 @@
         </modifyAuthPermission>
 
         <onUpdateExpRate>
+            <Arg>           EXP                             </Arg>
             <Arg>           FLOAT                           </Arg>
         </onUpdateExpRate>
 

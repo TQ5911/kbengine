@@ -11,9 +11,9 @@ datas ={
     "EntityID": 0,
     "ID": 32160001,
     "Name": "\u51fa\u751f\u70b9",
-    "PosX": 116.3351,
+    "PosX": 116.38,
     "PosY": 529.2494,
-    "PosZ": 18.37877,
+    "PosZ": 18.24,
     "Props": {
       "MapEntityType": 0,
       "Num": 0,
@@ -27,27 +27,27 @@ datas ={
       "TelZ": 16.51987
     }
   },
-  "32168001": {
+  "32164001": {
     "ActivityID": 0,
     "AttachedGIDList": [],
     "AttachedGIDListStr": "",
-    "ClassName": "Collection",
-    "ClassNameType": 3,
+    "ClassName": "Npc",
+    "ClassNameType": 1,
     "CustomID": "",
-    "Dir": 252.7088,
+    "Dir": 253.2286,
     "DisplayName": "",
-    "EntityID": 16002109,
-    "ID": 32168001,
-    "Name": "\u6df7\u6c8c\u56de\u5eca\u4e8c\u5c42\u64c2\u4e3b\u77f3",
+    "EntityID": 18000747,
+    "ID": 32164001,
+    "Name": "\u64c2\u4e3b\u77f3",
     "PosX": 127.23,
     "PosY": 529.1593,
     "PosZ": 13.55,
     "Props": {
-      "IsOnGround": 1,
       "IsOpen": 1,
+      "MapEntityType": 0,
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": 1.0,
+      "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1
@@ -91,18 +91,18 @@ datas ={
     "EntityID": 17310002,
     "ID": 32168006,
     "Name": "\u4f20\u9001\u70b9",
-    "PosX": 122.7142,
-    "PosY": 529.1593,
-    "PosZ": 28.41946,
+    "PosX": 113.4302,
+    "PosY": 529.2494,
+    "PosZ": 27.84774,
     "Props": {
       "CameraId": 0,
       "GateType": 1,
       "Remark": "",
       "ShowInSceneMap": 1,
       "TelDir": 199.4602,
-      "TelX": 122.7142,
-      "TelY": 529.1593,
-      "TelZ": 28.41946
+      "TelX": 113.4302,
+      "TelY": 529.2494,
+      "TelZ": 27.84774
     }
   }
 }

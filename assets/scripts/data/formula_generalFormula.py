@@ -107,7 +107,7 @@ def _34000018(lv):
 def _34000019(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*6
+        a = i*25
         sum = a
     return sum
 def _34000020(lv):
@@ -117,11 +117,11 @@ def _34000020(lv):
         sum = a
     return sum
 def _34010001(e):
-    return int(e.level*60+340)
+    return int(e.level*70+330)
 def _34010002(e):
-    return int(e.level*60+340)
+    return int(e.level*70+330)
 def _34010003(e):
-    return int(e.level*60+340)
+    return int(e.level*70+330)
 def _34010004(e):
     return int(e.level*6+28)
 def _34010005(e):
@@ -219,7 +219,7 @@ datas = _tools.RODict({
     }),
     34000006: _tools.RODict({
         "ID": 34000006,
-        'serverFormula':lambda lv: lv * 1250,
+        'serverFormula':lambda lv: lv * 2500,
     }),
     34000007: _tools.RODict({
         "ID": 34000007,
@@ -227,11 +227,11 @@ datas = _tools.RODict({
     }),
     34000008: _tools.RODict({
         "ID": 34000008,
-        'serverFormula':lambda exp: int(exp/500+2000),
+        'serverFormula':lambda exp: int(exp/200+50000),
     }),
     34000009: _tools.RODict({
         "ID": 34000009,
-        'serverFormula':lambda exp: int(exp/580000+2),
+        'serverFormula':lambda exp: int(exp/2500000+10),
     }),
     34000010: _tools.RODict({
         "ID": 34000010,

@@ -17,44 +17,40 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "effect": None
+        "effect": None,
     }),
     2: _tools.RODict({
         "ID": 2,
-        "effect": None
+        "effect": None,
     }),
     3: _tools.RODict({
         "ID": 3,
-        "effect": None
+        "effect": None,
     }),
     4: _tools.RODict({
         "ID": 4,
-        "effect": None
+        "effect": None,
     }),
     5: _tools.RODict({
         "ID": 5,
-        "effect": None
+        "effect": None,
     }),
     6: _tools.RODict({
         "ID": 6,
-        "effect": None
+        "effect": None,
     }),
     7: _tools.RODict({
         "ID": 7,
-        "effect": None
+        "effect": None,
     }),
     8: _tools.RODict({
         "ID": 8,
-        "effect": _tools.ROList([['adjMortal', 0.1]])
+        "effect": _tools.ROList([['adjMortal', 0.1]]),
     }),
     9: _tools.RODict({
         "ID": 9,
-        "effect": _tools.ROList([['adjMortal', 0.2]])
-    }),
-    10: _tools.RODict({
-        "ID": 10,
-        "effect": _tools.ROList([['adjMortal', 0.2]])
+        "effect": _tools.ROList([['adjMortal', 0.2]]),
     })
 })
 minKey = 1
-maxKey = 10
+maxKey = 9

@@ -43,22 +43,22 @@ datas = _tools.RODict({
     6: _tools.RODict({
         "ID": 6,
         "name": "cityBattle_orderRecord",
-        "log": "<color=#F3D58F>{0}</color>颁发了敕令<color=#038304><link cityBattle privilege={1}></color>,消耗城池金币{2}"
+        "log": "<color=#F3D58F>{0}</color>颁发了敕令<color=#038304><link cityBattle privilege={1}></color>,消耗城池元宝{2}"
     }),
     7: _tools.RODict({
         "ID": 7,
         "name": "cityBattle_rewardRecord",
-        "log": "<color=#F3D58F>{0}</color>奖赏了<color=#F3D58F>{1}</color><color=#038304><link cityBattle privilege={2}></color>，消耗城池金币{3}"
+        "log": "<color=#F3D58F>{0}</color>奖赏了<color=#F3D58F>{1}</color><color=#038304><link cityBattle privilege={2}></color>，消耗城池元宝{3}"
     }),
     8: _tools.RODict({
         "ID": 8,
         "name": "cityBattle_wantedRecord",
-        "log": "<color=#F3D58F>{0}</color>对<color=#F3D58F>{1}</color>进行了通缉，消耗城池金币{2}"
+        "log": "<color=#F3D58F>{0}</color>对<color=#F3D58F>{1}</color>进行了通缉，消耗城池元宝{2}"
     }),
     9: _tools.RODict({
         "ID": 9,
         "name": "cityBattle_convertRecord",
-        "log": "<color=#F3D58F>{0}</color>将{1}城池金币转换为了{2}帮会元宝"
+        "log": "<color=#F3D58F>{0}</color>将{1}城池元宝转换为了{2}帮会元宝"
     })
 })
 minKey = 1

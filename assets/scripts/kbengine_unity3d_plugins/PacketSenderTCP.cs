@@ -1,4 +1,4 @@
-﻿namespace KBEngine
+namespace KBEngine
 {
 	using System; 
 	using System.Net.Sockets; 
@@ -103,54 +103,89 @@
 			return true;
 		}
 
-		protected override void _asyncSend()
-		{
-			if (_networkInterface == null || !_networkInterface.valid())
-			{
-				Dbg.WARNING_MSG("PacketSenderTCP::_asyncSend(): network interface invalid!");
-				return;
-			}
+        protected override void _asyncSend()
+        {
+            // 先做第一层检查，快速失败
+            if (_networkInterface == null || !_networkInterface.valid())
+            {
+                Dbg.WARNING_MSG("PacketSenderTCP::_asyncSend(): network interface invalid!");
+                return;
+            }
 
-			var socket = _networkInterface.sock();
+            var socket = _networkInterface.sock();
+            // 提前检查Socket是否为空（避免获取到已释放的Socket）
+            if (socket == null)
+            {
+                Dbg.WARNING_MSG("PacketSenderTCP::_asyncSend(): socket is null!");
+                return;
+            }
 
-			while (true)
-			{
-				Monitor.Enter(_sendingObj);
+            while (true)
+            {
+                // 使用finally确保锁一定会释放，避免锁泄漏
+                Monitor.Enter(_sendingObj);
+                try
+                {
+                    // 锁内二次检查，防止锁等待期间Socket被释放
+                    if (_networkInterface == null || !_networkInterface.valid() || socket == null)
+                    {
+                        Dbg.WARNING_MSG("PacketSenderTCP::_asyncSend(): network interface/socket invalid in lock!");
+                        break;
+                    }
 
-				int sendSize = _wpos - _spos;
-				int t_spos = _spos % _buffer.Length;
-				if (t_spos == 0)
-					t_spos = sendSize;
+                    int sendSize = _wpos - _spos;
+                    int t_spos = _spos % _buffer.Length;
+                    if (t_spos == 0)
+                        t_spos = sendSize;
 
-				if (sendSize > _buffer.Length - t_spos)
-					sendSize = _buffer.Length - t_spos;
+                    if (sendSize > _buffer.Length - t_spos)
+                        sendSize = _buffer.Length - t_spos;
 
-				int bytesSent = 0;
-				try
-				{
-					bytesSent = socket.Send(_buffer, _spos % _buffer.Length, sendSize, 0);
-				}
-				catch (SocketException se)
-				{
-					Dbg.ERROR_MSG(string.Format("PacketSenderTCP::_asyncSend(): send data error, disconnect from '{0}'! error = '{1}'", socket.RemoteEndPoint, se));
-					Event.fireIn("_closeNetwork", new object[] { _networkInterface });
+                    // 无数据可发送，直接退出
+                    if (sendSize <= 0)
+                    {
+                        _sending = false;
+                        break;
+                    }
 
-					Monitor.Exit(_sendingObj);
-					return;
-				}
+                    int bytesSent = 0;
+                    try
+                    {
+                        // 核心发送操作
+                        bytesSent = socket.Send(_buffer, _spos % _buffer.Length, sendSize, 0);
+                    }
+                    catch (ObjectDisposedException ode)
+                    {
+                        // 捕获Socket已释放的异常
+                        Dbg.ERROR_MSG(string.Format("PacketSenderTCP::_asyncSend(): socket disposed when send data, disconnect from '{0}'! error = '{1}'",
+                            socket.RemoteEndPoint, ode));
+                        Event.fireIn("_closeNetwork", new object[] { _networkInterface });
+                        break;
+                    }
+                    catch (SocketException se)
+                    {
+                        // 保留原有Socket异常处理
+                        Dbg.ERROR_MSG(string.Format("PacketSenderTCP::_asyncSend(): send data error, disconnect from '{0}'! error = '{1}'",
+                            socket.RemoteEndPoint, se));
+                        Event.fireIn("_closeNetwork", new object[] { _networkInterface });
+                        break;
+                    }
 
-				_spos += bytesSent;
+                    _spos += bytesSent;
 
-				// 所有数据发送完毕了
-				if (_spos == _wpos)
-				{
-					_sending = false;
-					Monitor.Exit(_sendingObj);
-					return;
-				}
-
-				Monitor.Exit(_sendingObj);
-			}
-		}
-	}
+                    // 所有数据发送完毕，退出循环
+                    if (_spos == _wpos)
+                    {
+                        _sending = false;
+                        break;
+                    }
+                }
+                finally
+                {
+                    // 无论是否异常，都确保锁释放
+                    Monitor.Exit(_sendingObj);
+                }
+            }
+        }
+    }
 } 

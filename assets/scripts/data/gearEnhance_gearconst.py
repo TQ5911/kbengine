@@ -322,5 +322,33 @@ datas = _tools.RODict({
     "equipWear_partMsg": _tools.RODict({
         "ID": "equipWear_partMsg",
         "value": 54000322,
+    }),
+    "gearEnhance_defaultLevel": _tools.RODict({
+        "ID": "gearEnhance_defaultLevel",
+        "value": 4,
+    }),
+    "gearEnhance_listFull": _tools.RODict({
+        "ID": "gearEnhance_listFull",
+        "value": 54003259,
+    }),
+    "gearEnhance_insufficientFunds": _tools.RODict({
+        "ID": "gearEnhance_insufficientFunds",
+        "value": 54003260,
+    }),
+    "gearEnhance_damagedMsg": _tools.RODict({
+        "ID": "gearEnhance_damagedMsg",
+        "value": 54003261,
+    }),
+    "equipmentClass_targetLevel": _tools.RODict({
+        "ID": "equipmentClass_targetLevel",
+        "value": 54003262,
+    }),
+    "gearEnhance_listNumLimit": _tools.RODict({
+        "ID": "gearEnhance_listNumLimit",
+        "value": 14,
+    }),
+    "gearBless_textDesc": _tools.RODict({
+        "ID": "gearBless_textDesc",
+        "value": "攻击触发最大值概率",
     })
 })

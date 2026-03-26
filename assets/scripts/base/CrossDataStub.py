@@ -361,6 +361,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
     def onBroadcastRemoveGuildRelation(self, reply):
         INFO_MSG('CrossDataStub onBroadcastRemoveGuildRelation', reply)
+        _relationType = utils.getGuildRelation(reply.guildUUID1, reply.guildUUID2)
         gameengine.callAllApps(
             'gameengine.removeGuildRelation',
             (
@@ -385,7 +386,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             'remove', 
             reply.guildUUID1, 
             reply.guildUUID2, 
-            gameconst.GuildRelationType.UNION,
+            _relationType,
             0,
         )
 

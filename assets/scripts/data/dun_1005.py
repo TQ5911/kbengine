@@ -97,7 +97,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10054015": {
@@ -502,9 +504,9 @@ datas ={
     "EntityID": 18000002,
     "ID": 10054035,
     "Name": "\u6807\u8bb0\u7528\u4efb\u52a1\u5730\u70b9",
-    "PosX": 98.92,
-    "PosY": 158.83,
-    "PosZ": 260.04,
+    "PosX": 114.842,
+    "PosY": 154.4315,
+    "PosZ": 300.5486,
     "Props": {
       "IsOpen": 1,
       "MapEntityType": 0,
@@ -746,15 +748,15 @@ datas ={
     "AttachedGIDListStr": "",
     "ClassName": "FastMovePoint",
     "ClassNameType": 19,
-    "CustomID": "0",
+    "CustomID": "",
     "Dir": 206.9177,
     "DisplayName": "",
     "EntityID": 13000003,
     "ID": 10058009,
     "Name": "\u75be\u63a0\u70b9",
-    "PosX": 106.82,
+    "PosX": 114.85,
     "PosY": 154.4315,
-    "PosZ": 284.02,
+    "PosZ": 300.42,
     "Props": {
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -768,7 +770,7 @@ datas ={
           98.94,
           158.8577,
           260.23,
-          30.0,
+          18.0,
           5.0
         ]
       ]

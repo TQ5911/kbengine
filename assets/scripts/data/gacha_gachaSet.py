@@ -130,5 +130,17 @@ datas = _tools.RODict({
     "pullInfoTitle": _tools.RODict({
         "ID": "pullInfoTitle",
         "value": "概率详情",
+    }),
+    "progressSound": _tools.RODict({
+        "ID": "progressSound",
+        "value": 85601031,
+    }),
+    "dropSound": _tools.RODict({
+        "ID": "dropSound",
+        "value": 85601032,
+    }),
+    "openSound": _tools.RODict({
+        "ID": "openSound",
+        "value": 85601033,
     })
 })

@@ -94,6 +94,18 @@
             <Arg>   PYTHON      </Arg>
             <Arg>   SLOTID      </Arg>
         </onUpdateLingShouBattleList>
+
+        <onInitPetProps>
+			<Arg>   ARRAY   <of>    UINT32     </of>   </Arg>
+            <Arg>   ARRAY   <of>    UINT16     </of>   </Arg>
+        </onInitPetProps>
+
+        <updateLevelProps>
+            <Arg>   UINT32   </Arg>
+			<Arg>   UINT16   </Arg>
+            <Arg>   UINT16   </Arg>
+        </updateLevelProps>
+        
     </CellMethods>
 
     <ClientMethods>

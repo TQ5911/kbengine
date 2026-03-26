@@ -21,7 +21,7 @@ datas = _tools.RODict({
         "sex": 2,
         "type": 2,
         "isOpen": 1,
-        "appearance": ((2, 2, 1, 202, 3, 1), (3, 3, 1, 4, 3, 1)),
+        "appearance": ((2, 2, 1, 202, 3, 1), (3, 31, 1, 4, 3, 1)),
     }),
     10031: _tools.RODict({
         "ID": 10031,

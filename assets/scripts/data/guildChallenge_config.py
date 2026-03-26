@@ -67,10 +67,6 @@ datas = _tools.RODict({
         "ID": "emailStart",
         "value": 37000019,
     }),
-    "emailSettle": _tools.RODict({
-        "ID": "emailSettle",
-        "value": 37000020,
-    }),
     "guildChallenge_win": _tools.RODict({
         "ID": "guildChallenge_win",
         "value": "帮会伏魔胜利",

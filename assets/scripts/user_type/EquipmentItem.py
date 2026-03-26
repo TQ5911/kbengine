@@ -77,14 +77,8 @@ class EquipmentItem(BaseItem.BaseItem):
             self.equipAttr.grade = grade
 
         # 绑定的装备才有绑定值
-        if self.bindType == gameconst.ItemBindType.BIND:
-            datas = GEGCD.datas['gearBlessBoundValue']['value']
-            if datas:
-                for data in datas:
-                    grade, bindValue = data
-                    if self.getGrade() == grade:
-                        self.setBindValue(bindValue)
-                        break
+        self.initBindValue()
+
         enhanceLv = kwargs.get('enhanceLv', 0)
         if enhanceLv > 0:
             enhanceLevelKey = self.equipAttr.getEnhanceLevelKey(enhanceLv)
@@ -103,6 +97,18 @@ class EquipmentItem(BaseItem.BaseItem):
         self.equipAttr.calcScore()
         self.onEquipAffixChanged()
         return True
+
+    def initBindValue(self):
+        if self.bindType != gameconst.ItemBindType.BIND:
+            return
+        datas = GEGCD.datas['gearBlessBoundValue']['value']
+        if not datas:
+            return
+        for data in datas:
+            grade, bindValue = data
+            if self.getGrade() == grade:
+                self.setBindValue(bindValue)
+                break
 
     def initEquipFromGearbaseData(self):
         #以 gearbase 表的数据 创建新装备
@@ -201,35 +207,6 @@ class EquipmentItem(BaseItem.BaseItem):
         if not GEGS.datas.get(nextKey):
             return False
         return True
-
-    def checkUpgradeValid(self):
-        # 检查下个升阶是否有效
-        nextGrade = self.getGrade() + 1
-        if nextGrade > GEGCD.datas['equipmentClassLevel']['value']:
-            return False
-        nextGradeKey = self.equipAttr.getUpgradeKey(nextGrade)
-        if not GEES.datas.get(nextGradeKey):
-            return False
-        return True
-
-    def upgradeNeedItems(self):
-        itemsDic = {}
-        nextKey = self.equipAttr.getUpgradeKey(self.getGrade() + 1)
-        nextCfgData = GEES.datas.get(nextKey)
-        if not nextCfgData:
-            ERROR_MSG('in upgradeNeedItems, equipment is upgrade to max:', nextKey)
-            return
-        curKey = self.equipAttr.getUpgradeKey(self.getGrade())
-        curCfgData = GEES.datas.get(curKey)
-        if not curCfgData:
-            ERROR_MSG('in upgradeNeedItems, missing upgrade cfg data:', curKey)
-            return
-
-        enhanceGoldCost = curCfgData.get('costCurrency')
-        for val in enhanceGoldCost:
-            costItemId, itemNum = val
-            itemsDic[costItemId] = itemsDic.get(costItemId, 0) + itemNum
-        return itemsDic
 
     def spiritWashingNeedItems(self):
         itemsDic, currencyDic, _ = self.equipAttr.spiritWashingNeedItems()
@@ -468,9 +445,18 @@ class EquipmentItem(BaseItem.BaseItem):
             self.applyEquipEffectToAvatar(owner)
         return encVal
 
-    def doUpgradeEquip(self, owner, opUUID, onBody=False):
-        INFO_MSG('in doUpgradeEquip')
-        upgradeKey = self.equipAttr.getUpgradeKey(self.getGrade() + 1)
+    def doUpgradeEquip(self, owner, opUUID, upgradeType, targetLv, onBody=False):
+        INFO_MSG('in doUpgradeEquip', opUUID, upgradeType, targetLv, onBody)
+
+        targetGrade = 0
+        if upgradeType == gameconst.EquipUpgradeType.SINGLE:
+            targetGrade = self.getGrade() + 1
+        elif upgradeType == gameconst.EquipUpgradeType.MULTIPLE:
+            targetGrade = targetLv
+        else:
+            ERROR_MSG('in doUpgradeEquip, args error', opUUID, upgradeType, targetLv, onBody)
+            return
+        upgradeKey = dataUtils.getEquipUpgradeKey(self.equipAttr.equipType, self.equipAttr.quality, targetGrade)
         cfgData = GEES.datas.get(upgradeKey)
         if not cfgData:
             ERROR_MSG('in doUpgradeEquip, equipment is upgraded to max grade:', upgradeKey)
@@ -478,7 +464,7 @@ class EquipmentItem(BaseItem.BaseItem):
 
         if onBody:
             self.removeEquipEffectToAvatar(owner)
-        self.equipAttr.doUpgrade(1)
+        self.equipAttr.doUpgrade(targetGrade)
         if onBody:
             self.applyEquipEffectToAvatar(owner)
         INFO_MSG('     in doUpgradeEquip, success:', self.getGrade())
@@ -562,15 +548,15 @@ class EquipmentItem(BaseItem.BaseItem):
 
     def setBindValue(self, value):
         self.equipAttr.bindValue = value
-        if self.equipAttr.bindValue > 0:
+        if self.hasBindValue():
             self.bindType = gameconst.ItemBindType.BIND
         else:
             self.bindType = gameconst.ItemBindType.NORMAL
 
     def doDecreaseBindValue(self, opUUID, value):
         if value >= self.getBindValue():
-            self.setBindValue(0)
             self.equipAttr.isAddBindValue = False
+            self.setBindValue(0)
         elif value >= self.getOriginalBindValue():
             self.setBindValue(0)
         else:
@@ -900,9 +886,6 @@ class EquipAttr(userType.UserSoleType):
 
     def getEnhanceLevelKey(self, enhanceLevel):
         return self.equipType * 10000 + self.quality * 1000 + self.grade * 100 + enhanceLevel
-
-    def getUpgradeKey(self, grade):
-        return self.equipType * 1000 + self.quality * 100 + grade
 
     def getUpgradePropKey(self, grade):
         return self.templateId* 100 + grade
@@ -1336,11 +1319,9 @@ class EquipAttr(userType.UserSoleType):
             enhanceAttrs[attrName] = math.ceil(strengthenPercent[enhanceLv - 1] * attrValue)
         return enhanceAttrs
 
-    def doUpgrade(self, val, isGM = False):
-        lv = self.grade + val
-        if isGM:
-            lv = val
-        grade = max(0, lv)
+    def doUpgrade(self, val):
+        # 装备默认为1阶
+        grade = max(1, val)
         self.grade = grade
         self.upgradeAttrs = self.calculateUpgradeAttrs(self.grade)
         # 强化属性根据升级后的属性需要同步调整
@@ -1436,7 +1417,9 @@ class EquipAttr(userType.UserSoleType):
             return False, None, None
 
         if spiritPos + 1 > len(self.spiritDatas):
-            self.spiritDatas.append(SpiritInfo.SpiritInfo())
+            # 提前初始化结构数据
+            for _ in range(len(self.spiritDatas), spiritPos + 1):
+                self.spiritDatas.append(SpiritInfo.SpiritInfo())
         spiritData = self.spiritDatas[spiritPos]
         oldSpiritAffixes = spiritData.GetSpiritAffixes()
         spiritData.UpdateSpiritAffixes(newSpiritAffixes)

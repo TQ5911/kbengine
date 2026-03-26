@@ -196,7 +196,7 @@ class ElasticUtils(object):
 
         def _func(httpcode, data, headers, success, url):
             if not (httpcode == 200 and success):
-                failedFunc()
+                failedFunc('search avatar failed', httpcode, success)
                 return
 
             try:
@@ -205,7 +205,7 @@ class ElasticUtils(object):
                 callback(hits)
             except Exception as e:
                 WARNING_MSG('reqSearchAvatarName:', e)
-                failedFunc()
+                failedFunc('search avatar meet exception', e)
 
         KBEngine.urlopenv2(uri, _func, method='POST', postData=data.encode('utf-8'), headers=cls.methodPOSTHeaders(), timeoutSec=timeoutSec)
 

@@ -151,6 +151,14 @@ def _78001031(self, target, context, *args):
     context.props = ['adjFinalDmgAnti']
     self.addPropByGear(target, context, ['adjFinalDmgAnti'])
 
+def _78001032(self, target, context, *args):
+    context.props = ['adjAccuracy']
+    self.addPropByGear(target, context, ['adjAccuracy'])
+
+def _78001033(self, target, context, *args):
+    context.props = ['adjEvasion']
+    self.addPropByGear(target, context, ['adjEvasion'])
+
 def _78002001(self, target, context, *args):
     context.props = ['adjAtkBless']
     self.addPropByGear(target, context, ['adjAtkBless'])
@@ -200,7 +208,7 @@ datas = _tools.RODict({
         "prop": "adjHit",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -216,7 +224,7 @@ datas = _tools.RODict({
         "prop": "adjDodge",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -232,7 +240,7 @@ datas = _tools.RODict({
         "prop": "adjFatal",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -248,7 +256,7 @@ datas = _tools.RODict({
         "prop": "adjAntiFatal",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -296,7 +304,7 @@ datas = _tools.RODict({
         "prop": "adjIgnoreArmor",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.006, 0.006], [0.012, 0.012], [0.018, 0.018], [0.03, 0.03]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -312,7 +320,7 @@ datas = _tools.RODict({
         "prop": "adjDmgArmor",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.006, 0.006], [0.012, 0.012], [0.018, 0.018], [0.03, 0.03]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -328,7 +336,7 @@ datas = _tools.RODict({
         "prop": "adjStunEnh",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -344,7 +352,7 @@ datas = _tools.RODict({
         "prop": "adjStunAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -360,7 +368,7 @@ datas = _tools.RODict({
         "prop": "adjSilentEnh",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -376,7 +384,7 @@ datas = _tools.RODict({
         "prop": "adjSilentAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -392,7 +400,7 @@ datas = _tools.RODict({
         "prop": "adjFrozenEnh",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -408,7 +416,7 @@ datas = _tools.RODict({
         "prop": "adjFrozenAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -424,7 +432,7 @@ datas = _tools.RODict({
         "prop": "adjSlowEnh",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -440,7 +448,7 @@ datas = _tools.RODict({
         "prop": "adjSlowAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -504,7 +512,7 @@ datas = _tools.RODict({
         "prop": "adjMonsterDmg",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -520,7 +528,7 @@ datas = _tools.RODict({
         "prop": "adjMonsterDmgAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -536,7 +544,7 @@ datas = _tools.RODict({
         "prop": "adjPVPDmg",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -552,7 +560,7 @@ datas = _tools.RODict({
         "prop": "adjPVPDmgAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -568,7 +576,7 @@ datas = _tools.RODict({
         "prop": "adjFinalDmg",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.06, 0.06], [0.06, 0.06], [0.06, 0.06], [0.06, 0.06]]),
+        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
         "assessmentWeight": _tools.ROList([0, 0, 33, 0]),
         "score": 0
     }),
@@ -584,7 +592,7 @@ datas = _tools.RODict({
         "prop": "adjFinalDmgAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.06, 0.06], [0.06, 0.06], [0.06, 0.06], [0.06, 0.06]]),
+        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
         "assessmentWeight": _tools.ROList([0, 0, 33, 0]),
         "score": 0
     }),
@@ -600,7 +608,7 @@ datas = _tools.RODict({
         "prop": "adjKnockEnh",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -616,7 +624,7 @@ datas = _tools.RODict({
         "prop": "adjKnockAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -632,7 +640,7 @@ datas = _tools.RODict({
         "prop": "adjPushEnh",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -648,7 +656,7 @@ datas = _tools.RODict({
         "prop": "adjPushAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
+        "assessmentInterval": _tools.ROList([[1, 1], [3, 3], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
@@ -664,7 +672,7 @@ datas = _tools.RODict({
         "prop": "adjFinalDmg",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.06, 0.06], [0.06, 0.06], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
         "assessmentWeight": _tools.ROList([0, 0, 33, 5]),
         "score": 0
     }),
@@ -680,8 +688,40 @@ datas = _tools.RODict({
         "prop": "adjFinalDmgAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.06, 0.06], [0.06, 0.06], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
         "assessmentWeight": _tools.ROList([0, 0, 33, 5]),
+        "score": 0
+    }),
+    78001032: _tools.RODict({
+        "ID": 78001032,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 1,
+        "event": "onDress",
+        "actionEffect": _78001032,
+        "inscription": 0,
+        "prop": "adjAccuracy",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
+        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "score": 0
+    }),
+    78001033: _tools.RODict({
+        "ID": 78001033,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 1,
+        "event": "onDress",
+        "actionEffect": _78001033,
+        "inscription": 0,
+        "prop": "adjEvasion",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
+        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
         "score": 0
     }),
     78003000: _tools.RODict({
@@ -804,7 +844,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 102302,
+        "inscription": 102401,
         "prop": "",
         "floor": lambda alv:[alv*2],
         "ceiling": lambda alv:[alv*2],
@@ -1220,7 +1260,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 109401,
+        "inscription": 109302,
         "prop": "",
         "floor": lambda alv:[alv],
         "ceiling": lambda alv:[alv],
@@ -1572,7 +1612,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 202303,
+        "inscription": 202302,
         "prop": "",
         "floor": lambda alv:[alv],
         "ceiling": lambda alv:[alv],
@@ -1588,7 +1628,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 202401,
+        "inscription": 202402,
         "prop": "",
         "floor": lambda alv:[alv*2],
         "ceiling": lambda alv:[alv*2],
@@ -1972,7 +2012,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 209302,
+        "inscription": 209303,
         "prop": "",
         "floor": lambda alv:[alv*2],
         "ceiling": lambda alv:[alv*2],
@@ -1988,7 +2028,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 209402,
+        "inscription": 209401,
         "prop": "",
         "floor": lambda alv:[alv*2],
         "ceiling": lambda alv:[alv*2],
@@ -2356,7 +2396,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 302402,
+        "inscription": 302403,
         "prop": "",
         "floor": lambda alv:[alv],
         "ceiling": lambda alv:[alv],
@@ -2772,7 +2812,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 309303,
+        "inscription": 309304,
         "prop": "",
         "floor": lambda alv:[alv*2],
         "ceiling": lambda alv:[alv*2],

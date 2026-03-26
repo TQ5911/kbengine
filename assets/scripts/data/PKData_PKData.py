@@ -25,7 +25,7 @@ datas = _tools.RODict({
     }),
     "deductingMoralValues": _tools.RODict({
         "ID": "deductingMoralValues",
-        "value": 500,
+        "value": 250,
     }),
     "increasingMoralValues": _tools.RODict({
         "ID": "increasingMoralValues",
@@ -130,5 +130,21 @@ datas = _tools.RODict({
     "RedScreenWarningResPath": _tools.RODict({
         "ID": "RedScreenWarningResPath",
         "value": "Assets/Res/art/effect/Prefabs/ui/fx_ui_com_hongpingbaojing.prefab",
+    }),
+    "DeathMail": _tools.RODict({
+        "ID": "DeathMail",
+        "value": 37001021,
+    }),
+    "DeathMail_fall": _tools.RODict({
+        "ID": "DeathMail_fall",
+        "value": 37001022,
+    }),
+    "DeathMail_abnormalDamage": _tools.RODict({
+        "ID": "DeathMail_abnormalDamage",
+        "value": 37001023,
+    }),
+    "abnormalDamageMsg": _tools.RODict({
+        "ID": "abnormalDamageMsg",
+        "value": 58000214,
     })
 })

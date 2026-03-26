@@ -141,6 +141,10 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         
         redisUtils.RedisUtils.getSVIPFlag(accountName, self._onDecSVIPAccount)
 
+    def incSVIPOnlineNumBySetSVIP(self):
+        INFO_MSG("incSVIPOnlineNumBySetSVIP")
+        self.SVIPOnlineNum.incSum(self)
+
     def _onIncSVIPAccount(self, cid, err, res):
         INFO_MSG("_onIncSVIPAccount", "cid", cid, "err", err, "res", res)
         if err:

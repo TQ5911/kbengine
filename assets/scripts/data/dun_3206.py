@@ -44,7 +44,7 @@ datas ={
     "PosZ": 63.19786,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -76,7 +76,7 @@ datas ={
     "PosZ": 53.08836,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -105,7 +105,7 @@ datas ={
     "PosZ": 50.36635,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -134,7 +134,7 @@ datas ={
     "PosZ": 65.58234,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -166,7 +166,7 @@ datas ={
     "PosZ": 57.71935,
     "Props": {
       "GroupID": "",
-      "Level": 40,
+      "Level": 38,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
@@ -241,18 +241,18 @@ datas ={
     "EntityID": 17310002,
     "ID": 32068003,
     "Name": "\u4f20\u9001\u70b9",
-    "PosX": 119.6441,
-    "PosY": 528.0034,
-    "PosZ": 58.5682,
+    "PosX": 116.4126,
+    "PosY": 528.0005,
+    "PosZ": 62.17204,
     "Props": {
       "CameraId": 0,
       "GateType": 1,
       "Remark": "",
       "ShowInSceneMap": 1,
       "TelDir": 254.3659,
-      "TelX": 119.6441,
-      "TelY": 528.0034,
-      "TelZ": 58.5682
+      "TelX": 116.4126,
+      "TelY": 528.0005,
+      "TelZ": 62.17204
     }
   }
 }

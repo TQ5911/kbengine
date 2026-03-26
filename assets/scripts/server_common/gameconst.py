@@ -373,6 +373,10 @@ class ItemSubType(object):
     TASK = 15
     ExtractReward = 52
 
+class LingShouSubType(object):
+    Egg = 0
+    Equipment = 1
+
 class AvatarProps(metaclass=UniqueIntEnum):
     commonCastCtx = 4
     callbackTmpInfo = 5
@@ -382,7 +386,6 @@ class AvatarProps(metaclass=UniqueIntEnum):
 
     lastTeleportSpaceNoRecord = 10
     backAccount = 11
-    immuneDeath = 12
     timebackSkillData = 13
 
     equipDressTempData = 14
@@ -463,7 +466,6 @@ class AvatarProps(metaclass=UniqueIntEnum):
     equipDropInitStatus = 257
     equipDropInitEvent = 258
     wonderLandSwitch = 260
-    wonderLandDurStatus = 261
     wonderLandRewardList = 262
 
     raidTickTimerId = 300
@@ -516,6 +518,12 @@ class AvatarProps(metaclass=UniqueIntEnum):
     claimPcLoginRewardTimestamp = 371
     autoCombatStartTimestamp = 372
     takeDropInfo = 373
+
+    creationOrder = 390
+    lastLoginTime = 391
+    cellTotalScore = 392
+    cellExperience = 393
+    cellMapId = 394
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
@@ -1154,6 +1162,7 @@ class ChatSysGMErr:
 
 CREEP_TAG_LARGE_ENT = 1 # 超大视野的实体
 CREEP_TAG_DEATH_MSG = 2 # 死亡会喊话
+CREEP_TAG_WARNING_RANGE = 4 # 有预警范围
 CREEP_TAG_ANTI_TAUNT = 98 # 嘲讽反制
 CREEP_TAG_ANTI_MOVE = 99 # 推拉反制
 
@@ -1165,7 +1174,7 @@ class SkillTag(metaclass=UniqueIntEnum):
     Channel = 25
     NeedNoTargetInCasting = 27
     TeleportSkill = 40
-    DodgeSkill = 46
+    ShiftSkill = 46
     EndTimebackSkill = 47
     IgnoreImmortal = 54
     MulStageSkill = 58
@@ -1186,6 +1195,7 @@ class SkillTag(metaclass=UniqueIntEnum):
     UltraSkill = 100
     talentSkill = 110
     changeCDStatusSkill = 130
+    DodgeSkill = 146
 
 class BuffTag(object):
     SeeHiddenEnt = 41
@@ -1622,7 +1632,6 @@ class RouteState(object):
     ROUTE_STATE_STOP = 5
 
 class MailConstID(object):
-    DROP_RWD_BAG_FULL_MAIL_ID = CSTD.datas['dropRewardAndBagFull_mailID']['value']
     REWARD_MAIL_ID = CSTD.datas['getRewardAndBagFull_mailID']['value']
 
 class JumpType(object):
@@ -1921,6 +1930,9 @@ class SuspendAutoCombatReason(object):
     StateBreak = 6
     Follow = 7
     ForceFollow = 8
+    RemoveMove = 9
+    DoubleBar = 10
+
 
 class ChangeAutoCombatReason(object):
     Default = 0
@@ -2703,9 +2715,10 @@ class LeaderBoardType(object):
     AVATAR_LEVEL = 1
     AVATAR_SCORE = 2
     GUILD = 3
+    ACHIEVEMENT = 4
     AVATAR_LEVEL_RUSH_RANK = 100
 
-    ALL_KEYS = (AVATAR_LEVEL, AVATAR_SCORE, GUILD, AVATAR_LEVEL_RUSH_RANK)
+    ALL_KEYS = (AVATAR_LEVEL, AVATAR_SCORE, GUILD, AVATAR_LEVEL_RUSH_RANK, ACHIEVEMENT)
 
 
 class DissolveGuildReason(object):
@@ -2887,6 +2900,17 @@ CUBE_PRAY_BUFF = 1
 CUBE_PRAY_DEBUFF = 2
 
 CUBE_SIGN_ARENA = 1
+
+CUBE_PRAY_FREE = 1
+CUBE_PRAY_ITEM = 2
+CUBE_PREY_YUANBAO = 3 #绑定元宝
+
+CUBE_ROOM_KICK_INTERVAL = 10 # 最多每十秒触发一次踢人的tick
+
+# 下面这个是魔方阵timer cb触发时候的回调类型
+CUBE_CB_AUTO_RENEW = 1 # 这个回调是自动延时
+CUBE_CB_TIME_OUT = 2 # 这个回调是超时踢出副本
+CUBE_CB_PROTECT = 3 # 这个回调是保护结束
 
 
 class RenewDurStatus(object):
@@ -3177,6 +3201,8 @@ class AchieveType(object):
     SIEGE_KILL = 25 # 城战击杀
     PERSONAL_BOX = 26 # 个人宝箱
     VIEWPOINT = 27 # 景观点
+    KILL_TAR_SUFFIX_MONSTER = 28 # 击杀特殊词缀怪物
+    KILL_TAR_MONSTER = 29 # 击杀特定怪物
 
 
 class DuelFlag(object):
@@ -3220,9 +3246,15 @@ WONDERLAND_LINE_NO = 0
 WONDERLAND_MAX_ENTER_NUM = 300
 WONDERLAND_COIN_ITEM_ID = ItemId.MONEY
 
+WONDER_LAND_DUR_RENEW = 1 # 试炼峰续期
+WONDER_LAND_DUR_TIMEOUT = 2 # 试炼峰超时
+
+WONDER_LAND_ENTER_TYPE_TICKET = 1 # 购票进入
+WONDER_LAND_ENTER_TYPE_LEFT_TIME = 2 # 还有剩余时间
+
 MORPH_BUILD_STATE = 1 # 变身状态对应技能在build里面对应的状态
 
-BLAZE_CHECK_DIS = 5 # 快速移动监测距离
+BLAZE_CHECK_DIS = 50 # 快速移动监测距离
 BLAZE_TIMEOUT = 6
 
 class WonderAddTicketReason(object):
@@ -3234,7 +3266,7 @@ class WonderAddTicketReason(object):
 
 WONDER_LAND_EVENT_ENTER = 1
 WONDER_LAND_EVENT_EXIT = 2
-WONDER_LAND_EVENT_DEATH = 3
+WONDER_LAND_EVENT_ADDTIME = 3
 
 # 城战阶段
 class SiegeWarState(object):
@@ -3517,6 +3549,7 @@ LARGE_ENTITY_DEFAULT_AOI = 250
 
 class MonsterSuffix(object):
     # 对应creep base表中的nameSuffixID字段
+    NORMAL = 1 # 小怪
     ELITE = 4 # 头目
     BOSS = 5 # 首领
     LUCKY = 7 # 幸运怪
@@ -3554,15 +3587,20 @@ class CubeRoomType(object):
     NORMAL = 1 # 普通房
     COW = 2 # 奶牛房
     READY = 3 # 大厅
+    TIDE = 4 # 狂潮
+
+    NeedKickTup = (COW, TIDE)
 
 
-class CubeDurStatus(object):
+class QuotaDurStatus(object):
     NORMAL = 0
     ENTER = 1
+    PROTECT = 2 # 混沌回廊切换房间后前几秒钟不开启倒计时
 
 
 ENTER_CUBE_HAS_LEFT_TIME = 0
 ENTER_CUBE_DEDUCT_TIMES = 1
+ENTER_CUBE_SWITCH_LINE = 2
 
 
 # ----------------------------- cube mock end -----------------------------
@@ -3665,7 +3703,6 @@ class AvatarDailyProps(metaclass=UniqueIntEnum):
     dailyTest = 0
     releaseRbNum = 1  # 今日已发红包数量
     fetchRbNum = 2   # 今日已领红包数量
-    qifuTimes = 3 # 每日祈福次数
 
 class AvatarWeeklyProps(metaclass=UniqueIntEnum):
     weeklyTest = 0
@@ -3749,6 +3786,8 @@ class TeamApplyResult(object):
     RAID_APPLY_IS_APPLIED = 10013
     # 团队UI不可见
     RAID_APPLY_RAID_UI_IS_NOT_VISIBLE = 10014
+    # 队伍UI不可见
+    TEAM_APPLY_RAID_UI_IS_NOT_VISIBLE = 10015
 
 class MINE_WAR_STATE(object):
     PREPARE = 1
@@ -4039,3 +4078,43 @@ class ForbiddenTaskIdOpType(object):
     ADD = 2
     # 移除
     REMOVE = 3
+
+GAME_SERVER_ERR_BAN_FOREVER         = 2001 # 账户被永久封禁
+GAME_SERVER_ERR_BAN_WITH_TIME       = 2002 # 账户被临时封禁
+GAME_SERVER_ERR_ANTI_ADDICT         = 2003 # 账户被防沉迷
+GAME_SERVER_ERR_VERIFY_FAIL         = 2004 # 中心服校验失败
+GAME_SERVER_ERR_VERIFY_TIMEOUT      = 2005 # 中心服校验超时
+GAME_SERVER_ERR_MEET_REG_MAX        = 2006 # 达到注册上限
+GAME_SERVER_ERR_SERVER_OPEN_TIME    = 2007 # 服务器没到开服时间
+GAME_SERVER_ERR_PERMIT              = 2008 # 白名单未关
+GAME_SERVER_ERR_NO_LOGIN_MGR        = 2009 # 登录管理器不存在
+GAME_SERVER_ERR_REG_SWITCH          = 2010 # 注册开关关闭
+GAME_SERVER_ERR_REJECT_LOGIN        = 2011 # 拒绝登录
+GAME_SERVER_ERR_NO_LOGIN_MGR2       = 2012 # 登录管理器不存在
+
+class EquipMultiEnhanceResult(object):
+    # 成功
+    OK = 1
+    # 失败
+    FAIL = 2
+    # 参数错误
+    ARG_ERR = 3
+    # 穿戴的装备锁住了
+    BODY_EQUIP_LOCKED = 4
+    # 背包的装备锁住了
+    BAG_EQUIP_LOCKED = 5
+    # 物品不足
+    ITEM_NOT_ENOUGH = 6
+
+class EquipUpgradeType(object):
+    # 单级升阶
+    SINGLE = 1
+    # 多级升阶
+    MULTIPLE = 2
+
+    VALID_UPGRADE_TYPE = (SINGLE, MULTIPLE)
+
+
+SERVER_LOG_TYPE_LOGIN = 1
+SERVER_LOG_TYPE_DAILY = 2
+

@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "initialRefresh": _tools.ROList([[[0], [0], [], [], [], []]]),
+        "initialRefresh": _tools.ROList([[[0], [20], [], [], [], []]]),
         "refreshInterval": 360,
         "EndRefresh": None,
         "RefreshType": 1
@@ -25,7 +25,7 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "initialRefresh": _tools.ROList([[[0], [0], [], [], [], []]]),
-        "refreshInterval": 30,
+        "refreshInterval": 60,
         "EndRefresh": None,
         "RefreshType": 1
     }),

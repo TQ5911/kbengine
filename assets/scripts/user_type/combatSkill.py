@@ -115,7 +115,8 @@ class ServerSkills(userType.UserDictType):
     def getSkillSwitch(self, skillID):
         return self.skillSwitches.get(skillID, gameconst.SkillSwitchStatus.AUTO)
 
-    def setSkillSwitch(self, skillID, status):
+    def setSkillSwitch(self, owner, skillID, status):
+        skillID, _ = owner.glyphEquipData.getInscriptionSrcSkillId(skillID)
         if not SSD.datas.get(skillID, None):
             ERROR_MSG("setSkillSwitch illeagal skill id", skillID, status)
             return
@@ -362,16 +363,18 @@ class SkillBase(userType.UserSoleType):
                             DEBUG_MSG("in getCD, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.REFRESH_CD, datas)
         return totalCD
 
+    # 修改cd时长
     def changeCD(self, owner, delta):
         owner.combatDebugMsg("SkillBase changeCD: skillId:%s, delta:%s, inCDTime:%s", self.getSkillId(), delta, self.inCDTime())
         self.cdDelta += delta
 
         owner.IsAvatar and owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast),
                                                         False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
-
+    # 修改本次cd的结束时间点
     def changeNextCast(self, owner, delta):
         self.tNextCast += delta
-        owner.IsAvatar and owner.client.onSetAddSkillCd(self.skillId, float(self.getCD(owner)), float(self.tNextCast),
+        realCD = self.tNextCast - time.time() if self.tNextCast > time.time() else self.getCD(owner)
+        owner.IsAvatar and owner.client.onSetAddSkillCd(self.skillId, float(realCD), float(self.tNextCast),
                                                         False, self.getTempData('releaseTime', 0), self.getTempData('totalReleaseCount', 0), self.getTempData('releasedCount', 0), not self.isSkillCDStatusFrozen())
 
     def inCDTime(self):
@@ -775,7 +778,7 @@ class SkillBase(userType.UserSoleType):
     @functools.lru_cache(1024)
     def isChangePositionSkill(skillId):
         tags = SkillBase.getTag(skillId)
-        return gameconst.SkillTag.DodgeSkill in tags or gameconst.SkillTag.Lunge in tags or gameconst.SkillTag.Chongfeng in tags or gameconst.SkillTag.TeleportSkill in tags or gameconst.SkillTag.BlinkToTarget in tags or gameconst.SkillTag.EndTimebackSkill in tags
+        return gameconst.SkillTag.ShiftSkill in tags or gameconst.SkillTag.DodgeSkill in tags or gameconst.SkillTag.Lunge in tags or gameconst.SkillTag.Chongfeng in tags or gameconst.SkillTag.TeleportSkill in tags or gameconst.SkillTag.BlinkToTarget in tags or gameconst.SkillTag.EndTimebackSkill in tags
 
     def clearCD(self, owner):
         oldInCD = self.inCDTime()
@@ -1200,7 +1203,7 @@ class SkillBase(userType.UserSoleType):
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
             realDstPos = utils.getRaycastPos(caster.spaceID, caster.position, dstPosition)
             desPosition = list(realDstPos)
-        elif self.hasTag(gameconst.SkillTag.DodgeSkill):
+        elif self.hasTag(gameconst.SkillTag.DodgeSkill) or self.hasTag(gameconst.SkillTag.ShiftSkill):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
             dstPosition = caster.position + skillDir * self.getRange(caster, self.skillId, self.skillLv)
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
@@ -1247,7 +1250,7 @@ class SkillBase(userType.UserSoleType):
         scopes = self.getScope(self.skillId)
         scopeParams, scopeAddRatio = self.getScopeParam(caster, self.skillId, context)
 
-        INFO_MSG("in _internalGetEffectTargets ", scopes, self.skillId, scopeParams, scopeAddRatio)
+        DEBUG_MSG("in _internalGetEffectTargets ", scopes, self.skillId, scopeParams, scopeAddRatio)
 
         if not scopes or scopes == gameconst.SkillScope.TARGET_AUTO:
             if self.hasTag(gameconst.SkillTag.SingleHeal) and hasattr(caster,
@@ -1437,7 +1440,7 @@ class SkillBase(userType.UserSoleType):
         return []
 
     def _checkUseSkillOwner(self, owner, targetId, ignoreReasons=0, checkInRange=True):
-        INFO_MSG('_checkUseSkillOwner', self.skillId, targetId, ignoreReasons, checkInRange)
+        DEBUG_MSG('_checkUseSkillOwner', self.skillId, targetId, ignoreReasons, checkInRange)
         code = gameconst.UseSkillCheck.IN_CD
         if not code & ignoreReasons and self.inCDTime():
             owner.combatDebugMsg('_checkUseSkillOwner cannot use inCDTime: skillId:%s, tNextCast:%s, now:%s', self.getSkillId(), self.tNextCast, time.time())
@@ -1489,7 +1492,7 @@ class SkillBase(userType.UserSoleType):
 
     def _checkUseSkillTarget(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         needReleaseTarget = self.needReleaseTarget()
-        INFO_MSG('_checkUseSkillTarget', self.skillId, targetId, needReleaseTarget)
+        DEBUG_MSG('_checkUseSkillTarget', self.skillId, targetId, needReleaseTarget)
         owner.combatDebugMsg('_checkUseSkillTarget: skillId:%s, targetId:%s, needReleaseTarget:%s', self.skillId, targetId, needReleaseTarget)
         if self.hasTag(gameconst.SkillTag.SingleHeal):
             target = KBEngine.entities.get(targetId)
@@ -1560,7 +1563,7 @@ class SkillBase(userType.UserSoleType):
         raise NotImplementedError()
 
     def enterCDTime(self, owner, delayCd=0):
-        INFO_MSG('enterCDTime 1', self.skillId, self.tNextCast, delayCd)
+        DEBUG_MSG('enterCDTime 1', self.skillId, self.tNextCast, delayCd)
         addCD = 0
         if delayCd > 0:
             addCD = delayCd
@@ -1568,7 +1571,7 @@ class SkillBase(userType.UserSoleType):
         else:
             addCD = self.getCD(owner)
             self.tNextCast = time.time() + addCD - 0.1
-        INFO_MSG('enterCDTime 2', self.skillId, self.tNextCast, addCD, delayCd)
+        DEBUG_MSG('enterCDTime 2', self.skillId, self.tNextCast, addCD, delayCd)
 
     def _cancelTempTimer(self, owner, timerName, timerTag=''):
         tid = self.popTempData(timerName, 0)
@@ -1663,7 +1666,7 @@ class SkillBase(userType.UserSoleType):
         if (not owner.IsAvatar or owner.gmModeCell != gameconst.GmMode.GM_NO_SKILLCD) and enterCD and not self.hasTag(
                 gameconst.SkillTag.Channel):
             host = owner.getAvatar()
-            INFO_MSG("in beginUseSkill ", owner, self.skillId, owner.IsAvatar, host)
+            INFO_MSG("in beginUseSkill ", owner, self.skillId, owner.IsAvatar, host, targetId, skillArgs)
             if host:
                 addValue = 0
                 ret, datas = host.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.SKILL_RELEASE_ADD_COUNT)

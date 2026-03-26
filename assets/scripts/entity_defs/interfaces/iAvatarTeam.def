@@ -231,6 +231,9 @@
             <Arg>           UNICODE         </Arg>
             <Arg>           LEVEL           </Arg>
             <Arg>           SCHOOL          </Arg>
+            <Arg>           SCORE           </Arg>
+            <Arg>           LEVEL           </Arg>
+            <Arg>           BOOL            </Arg>
         </procInviteTeamMsg>
 
         <procBecomeCaptainMsg>
@@ -242,10 +245,6 @@
         <onTeamDisband>
             <Arg>           BOOL            </Arg>
         </onTeamDisband>
-
-        <procDirectJoinMsg>
-            <Arg>           TEAMID          </Arg>
-        </procDirectJoinMsg>
 
         <sendAllMemberFollowAsk> <Exposed/>
         </sendAllMemberFollowAsk>

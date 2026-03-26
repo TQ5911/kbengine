@@ -225,6 +225,12 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "TriggerHook": _tools.RODict({
+        "ID": "TriggerHook",
+        "EventID": 10036,
+        "sendType": 0,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,

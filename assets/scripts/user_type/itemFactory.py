@@ -20,7 +20,7 @@ class ItemFactory(object):
     }
 
     LingShouItemClassMap = {
-        gameconst.ItemSubType.LingShouEgg:      lingShouEgg.LingShouEggItem,
+        gameconst.ItemSubType.LingShouEgg: lingShouEgg.LingShouEggItem,
     }
 
     @staticmethod

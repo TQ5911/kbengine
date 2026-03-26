@@ -64,7 +64,7 @@ class WarehouseBag(BaseBag.BaseBag):
         LogTrackingMgr.LogTrackingMgr.Capacity_Expansion(
             opUUID,
             owner.gbID,
-            gameconst.CapacityExpansionType.WAREHOUSE_ITEM,
+            gameconst.CapacityExpansionType.WAREHOUSE_GOLD,
             oldCapacity,
             gridNum,
             self.capacity,

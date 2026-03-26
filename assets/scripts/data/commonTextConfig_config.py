@@ -100,6 +100,11 @@ datas = _tools.RODict({
         "value": "本周剩余次数：{0}/{1}",
         "Type": "string"
     }),
+    "RemainNum": _tools.RODict({
+        "ID": "RemainNum",
+        "value": "本周剩余次数：无限制",
+        "Type": "string"
+    }),
     "enterNum": _tools.RODict({
         "ID": "enterNum",
         "value": "入场次数：{0}/{1}",
@@ -183,6 +188,26 @@ datas = _tools.RODict({
     "YXGSMSLoginText": _tools.RODict({
         "ID": "YXGSMSLoginText",
         "value": "短信登录",
+        "Type": "string"
+    }),
+    "hourDigits": _tools.RODict({
+        "ID": "hourDigits",
+        "value": "{0}小时",
+        "Type": "string"
+    }),
+    "minuteDigits": _tools.RODict({
+        "ID": "minuteDigits",
+        "value": "{0}分钟",
+        "Type": "string"
+    }),
+    "hourMinuteDigits": _tools.RODict({
+        "ID": "hourMinuteDigits",
+        "value": "{0}小时{1}分钟",
+        "Type": "string"
+    }),
+    "MonsterDigits": _tools.RODict({
+        "ID": "MonsterDigits",
+        "value": "{0}({1}级)",
         "Type": "string"
     })
 })

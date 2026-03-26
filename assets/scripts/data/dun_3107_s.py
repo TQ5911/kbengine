@@ -95,18 +95,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 31078003,
-          "PosX": 241.2977,
-          "PosY": 527.7434,
-          "PosZ": 25.47302,
+          "PosX": 236.4259,
+          "PosY": 527.7405,
+          "PosZ": 26.18818,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 171.5668,
-            "TelX": 241.2977,
-            "TelY": 527.7434,
-            "TelZ": 25.47302
+            "TelX": 236.4259,
+            "TelY": 527.7405,
+            "TelZ": 26.18818
           }
         }
       }

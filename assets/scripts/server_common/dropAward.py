@@ -1,3 +1,4 @@
+import KBEngine
 import random
 import const_const as C_CD
 import rewardData_rewardData as RDDT
@@ -80,16 +81,46 @@ class WealthItem(WealthUnit):
         return self
 
     def __mul__(self, factor):
+        delItemList = []
         for itemId, awardInfo in self.data.items():
             delTypeList = []
             for bindType, num in awardInfo.items():
-                newNum = int(num * factor)
+                val = num * factor
+                base = math.floor(val)
+                frac = val - base
+                newNum = base
+                if random.random() < frac:
+                    newNum += 1
                 if newNum <= 0:
                     delTypeList.append(bindType)
                 else:
                     awardInfo[bindType] = newNum
             for bindType in delTypeList:
                 del awardInfo[bindType]
+            if not awardInfo:
+                delItemList.append(itemId)
+        for itemId in delItemList:
+            del self.data[itemId]
+
+        addItemsObjs = []
+        delItemsList = []
+        for it in self.itemsObjs:
+            val = factor # 默认itemnum 是1
+            base = math.floor(val)
+            frac = val - base
+            newNum = base
+            if random.random() < frac:
+                newNum += 1
+            if newNum <= 0:
+                delItemsList.append(it)
+            elif newNum > 1:
+                for num in range(0, newNum-1):
+                    newItem = itemFactory.ItemFactory.forkItemObject(it)
+                    newItem.uniqueId = KBEngine.genUUID64()
+                    addItemsObjs.append(newItem)
+        for it in delItemsList:
+            self.itemsObjs.remove(it)
+        self.itemsObjs.extend(addItemsObjs)
 
     def __getstate__(self):
         return {'data': self.data, 'itemObjs': self.itemsObjs}
@@ -555,10 +586,10 @@ class BaseAwardVal(WealthVal, AwardMixin):
         return self.petItemWealth.itemsObjs
 
     def scrubWealthItemObjs(self, createTime=-1):
-        for _obj in self.petItemWealth.itemsObjs:
+        for _obj in self.itemWealth.itemsObjs:
             if createTime > 0:
                 _obj.createTime = createTime
-        for _obj in self.itemWealth.itemsObjs:
+        for _obj in self.petItemWealth.itemsObjs:
             if createTime > 0:
                 _obj.createTime = createTime
 

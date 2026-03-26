@@ -6,14 +6,18 @@ import userType
 
 class CombatReturnIdleVal(userType.UserSoleType):
     '''COMBAT_RETURN_IDLE_DATA_INFO'''
-    def __init__(self, spaceNo=0, pos=None):
+    def __init__(self, spaceNo=0, pos=None, switch=False, range=0):
         self.spaceNo = spaceNo
         self.pos = pos
+        self.switch = switch
+        self.range = range
 
     def toCombatReturnIdleSavedDict(self):
         return {
             "spaceNo": self.spaceNo,
-            "pos": self.pos
+            "pos": self.pos,
+            "switch": self.switch,
+            "range": self.range
         }
 
 

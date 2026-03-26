@@ -2581,7 +2581,7 @@ def enterMap(su, player, mapId):
 
 @gm_cmd('$EnterWonderLand', (Player("gbId/Id"), Int("mapId")), RARG(0), BASE, '进入秘境峰', ALLSIDE, GOD_GROUPS)
 def EnterWonderLand(su, player, mapId):
-    gameengine.getWonderLandStub(mapId).doEnterWonderLand(player, player.gbID)
+    gameengine.getWonderLandStub(mapId).doEnterWonderLand(player, player.gbID, {})
     return True, '执行成功'
 
 @gm_cmd('$enterCube', (Player("gbId/Id"), Int("floor")), RARG(0), CELL, '进入魔方阵', ALLSIDE, GOD_GROUPS)
@@ -2664,7 +2664,6 @@ def AllPlayerEnterMap(su,player,mapId,floor=1):
         for e in KBEngine.entities.values():
             if e.className == 'Avatar':
                 e.enterLineByNpc(mapId)
-    #gameengine.getWonderLandStub(mapId).doEnterWonderLand(player, player.gbID)
     return True, '执行成功'
 
 

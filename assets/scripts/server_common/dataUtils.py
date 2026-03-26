@@ -47,6 +47,10 @@ import skill_specialMonsterAI as S_SMAD
 import character_charData as CCD
 import teamMatch_matchConfig as TMMCD
 import fightProp_atkBlessScore as FASD
+import cube_config
+import gearEnhance_gearconst as GEGCD
+import gearEnhance_equipmentClass as GEES
+
 
 def getRaidConstDataValue(key):
     raidConstData = RAID_CONST.datas.get(key, None)
@@ -373,6 +377,10 @@ def isLingShouItem(itemId):
     itemData = getCommItemData(itemId)
     return itemData and itemData['type'] == gameconst.ItemType.LingShou
 
+def isLingShouEquipmentItem(itemId):
+    itemData = getCommItemData(itemId)
+    return itemData and itemData['type'] == gameconst.ItemType.LingShou and itemData['subType'] == gameconst.LingShouSubType.Equipment
+
 def getCommItemBagType(itemId):
     itemData = getCommItemData(itemId)
     if itemData['type'] == gameconst.ItemType.Normal:
@@ -686,3 +694,49 @@ def checkTeamPassword(password):
     if len(password) == 0:
         return True
     return password.isdigit() and len(password) == TMMCD.datas['teamMatch_pwLen']['value']
+
+@functools.lru_cache(10)
+def getCubeTypeMaxTime(cubeType):
+    for _type, _time in cube_config.datas['cube_eachRoomTime']['value']:
+        if _type == cubeType:
+            return _time * 60
+
+    return 0
+
+
+def getEquipUpgradeKey(equipType, quality, grade):
+    return equipType * 1000 + quality * 100 + grade
+
+def checkEquipUpgradeValid(equipType, quality, grade, upgradeType, targetLv):
+    nextGrade = 0
+    if upgradeType == gameconst.EquipUpgradeType.SINGLE:
+        # 检查下个升阶是否有效
+        nextGrade = grade + 1
+    elif upgradeType == gameconst.EquipUpgradeType.MULTIPLE:
+        if grade >= targetLv:
+            return False
+        nextGrade = targetLv
+    else:
+        return False
+    if nextGrade > GEGCD.datas['equipmentClassLevel']['value']:
+        return False
+    nextGradeKey = getEquipUpgradeKey(equipType, quality, nextGrade)
+    if not GEES.datas.get(nextGradeKey):
+        return False
+    return True
+
+def calcUpgradeNeedItems(itemsDic, equipType, quality, grade):
+    curKey = getEquipUpgradeKey(equipType, quality, grade)
+    curCfgData = GEES.datas.get(curKey)
+    if not curCfgData:
+        return None
+    
+    upgradeGoldCost = curCfgData.get('costCurrency')
+    for val in upgradeGoldCost:
+        costItemId, itemNum = val
+        itemsDic[costItemId] = itemsDic.get(costItemId, 0) + itemNum
+    DEBUG_MSG('in calcUpgradeNeedItems:', itemsDic, equipType, quality, grade, upgradeGoldCost)
+    return itemsDic
+
+def addAwardsCallBackKey():
+    return "addAwardCallBack"

@@ -141,7 +141,8 @@ class IMultiStaticSpace(iGlobal.IGlobal):
     def onLoadEntitiesEnd(self, spaceNo):
         INFO_MSG('onLoadEntitiesEnd:', spaceNo)
         self.loadWaitSet.remove(spaceNo)
-        if not self.loadWaitSet:
+        if not self.loadWaitSet and not self.doNextFlag:
+            self.doNextFlag = 1
             iGlobal.IGlobal.doNext(self)
 
     def onSpaceCellAppDeath(self, spaceNo):

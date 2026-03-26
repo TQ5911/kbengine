@@ -179,8 +179,13 @@ class Appearance(userType.UserSoleType):
         self.outfitData = OutfitDataVal(hairId=hairId, clothesId=clothesId, picFrameId=picFrameId, wingId=wingId, mountId=mountId)
         return
 
-    def setEquip(self, owner, part, val):
-        realVal = GBGBD.datas[val]['appearance'] if val else val
+    def setEquip(self, owner, part, val, grade):
+        INFO_MSG("setEquip ", part, val, grade)
+        realVal = 0
+        if val > 0 and grade > 0:
+            appearance = GBGBD.datas.get(val, {}).get('appearance', None)
+            if appearance and len(appearance) >= grade:
+                realVal = appearance[grade - 1]
         if part == gameconst.BodyEquipSlot.EQUIP_WEAPON_SLOT:
             if 0 == realVal:
                 realVal, _ = getDefaultAppearanceEquipPartId()

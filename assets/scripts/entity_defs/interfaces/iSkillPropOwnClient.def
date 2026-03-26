@@ -149,5 +149,13 @@
             <Type>          INT32        </Type>
             <Flags>         OWN_CLIENT   </Flags>
         </pushAnti>
+        <accuracy>
+            <Type>          INT32        </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </accuracy>
+        <evasion>
+            <Type>          INT32        </Type>
+            <Flags>         OWN_CLIENT   </Flags>
+        </evasion>
     </Properties>
 </root>

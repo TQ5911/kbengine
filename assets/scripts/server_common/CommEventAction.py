@@ -37,6 +37,10 @@ CommEventActionMap = {
 
     'temporaryskill' : (ActionType.BASE, 
                         lambda self, eventActionSrc, *args, **kwargs: self._eventActionTemporarySkill(eventActionSrc, *args, 
-                                                                                                      **kwargs))
+                                                                                                      **kwargs)),
+
+    'arenaKing' : (ActionType.CELL, 
+                        lambda self, eventActionSrc, *args, **kwargs: self._eventActionInteractArenaKing(*args, **kwargs))
+
 }
 

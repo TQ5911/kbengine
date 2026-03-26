@@ -122,8 +122,15 @@ class BaseBag(itemContainer.ItemContainer):
             return opStat, planDict
         if syncToClient:
             normalItemGridList, normalItemList, equipItemGridList, equipItemList = self._clientDataFromPlanDic(planDict)
-            owner.client.onAddBagItems(self.bagType, src, normalItemGridList, normalItemList, equipItemGridList,
-                                       equipItemList)
+            owner.client.onAddBagItems(
+                self.bagType, 
+                src, 
+                normalItemGridList, 
+                normalItemList, 
+                equipItemGridList,
+                equipItemList,
+                utils.itemListToBriefList(itemList)
+            )
 
         return opStat, planDict
 
@@ -134,9 +141,25 @@ class BaseBag(itemContainer.ItemContainer):
                                                                 idipSource=0)
         if opStat == gameconst.BagOPStat.BAG_OP_STAT_OK and syncToClient:
             if itemObj.isEquipmentItem():
-                owner.client.onAddBagItems(self.bagType, src, [], [], [gridId], [itemObj.toClientEquipItemDict()])
+                owner.client.onAddBagItems(
+                    self.bagType, 
+                    src, 
+                    [], 
+                    [], 
+                    [gridId], 
+                    [itemObj.toClientEquipItemDict()],
+                    utils.itemListToBriefList([itemObj])
+                )
             else:
-                owner.client.onAddBagItems(self.bagType, src, [gridId], [itemObj.toItemSavedDict()], [], [])
+                owner.client.onAddBagItems(
+                    self.bagType, 
+                    src, 
+                    [gridId], 
+                    [itemObj.toItemSavedDict()], 
+                    [], 
+                    [],
+                    utils.itemListToBriefList([itemObj])
+                )
 
         return opStat, gridId
 

@@ -229,8 +229,7 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1188,
-        1049
+        1188
       ]
     }
   },
@@ -388,17 +387,6 @@ datas ={
       "finished": [
         1037,
         1126
-      ]
-    }
-  },
-  "1049": {
-    "type": "delayLoop",
-    "firstDelay": 130.0,
-    "loopDelay": 0.0,
-    "loopNum": 1,
-    "transition": {
-      "finished": [
-        1033
       ]
     }
   },
@@ -1019,7 +1007,6 @@ datas ={
     "taskID": 86060098,
     "transition": {
       "finished": [
-        1199,
         1198
       ]
     }
@@ -1118,7 +1105,9 @@ datas ={
     "exitTime": 21.0,
     "transition": {
       "finished": [
-        1038
+        1038,
+        1201,
+        1202
       ]
     }
   },
@@ -1204,13 +1193,14 @@ datas ={
   "1144": {
     "type": "transferToTheDesignatedMap",
     "mapId": 4002,
-    "posX": 247.0,
-    "posY": 90.0,
-    "posZ": 348.0,
+    "posX": 245.5437,
+    "posY": 90.26721,
+    "posZ": 348.6067,
     "angle": 271,
     "transition": {
       "finished": [
-        1159
+        1159,
+        1203
       ]
     }
   },
@@ -1498,20 +1488,31 @@ datas ={
       ]
     }
   },
-  "1199": {
-    "type": "delayLoop",
-    "firstDelay": 130.0,
-    "loopDelay": 0.0,
-    "loopNum": 1,
-    "transition": {
-      "finished": [
-        1200
-      ]
-    }
-  },
   "1200": {
     "type": "dungeonTaskForceComplete",
     "taskID": 86060085,
+    "transition": {}
+  },
+  "1201": {
+    "type": "createRebornPos",
+    "entityID": [
+      40028043
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1202": {
+    "type": "removeRebornPos",
+    "entityID": [
+      40028001
+    ],
+    "transition": {}
+  },
+  "1203": {
+    "type": "removeRebornPos",
+    "entityID": [
+      40028043
+    ],
     "transition": {}
   }
 }

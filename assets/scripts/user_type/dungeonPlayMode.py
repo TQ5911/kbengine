@@ -55,26 +55,19 @@ class CrusadeDungeonPlayMode(_DungeonPlayMode):
         self.teamUUID = teamUUID
 
 class DungeonPlayModePlayerMiXin(userType.UserSoleType):
-    def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
+    def __init__(self, rewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
         self.rewardNumber = rewardNumber
         self.rewardCoinNumber = rewardCoinNumber
         self.rewardItemNumber = rewardItemNumber
         self.rewardDailyCount = rewardDailyCount
-        self.useItemAddRewardNumber = useItemAddRewardNumber
         self.useCoinAddRewardNum = useCoinAddRewardNum
         self.ticketType = ticketType
     
     def isCanTakeReward(self):
         return self.rewardNumber > 0
 
-    def isCanAddRewardByItem(self, useNum):
-        return self.useItemAddRewardNumber >= useNum
-
     def isCanAddRewardByCoin(self, useNum):
         return self.useCoinAddRewardNum >= useNum
-
-    def resetUseItemAddRewardWeeklyNum(self):
-        self.useItemAddRewardNumber = self.rewardNumItemWeeklyLimit
 
     def resetUseCoinAddRewardDailyNum(self):
         self.useCoinAddRewardNum = self.rewardNumCoinDailyLimit
@@ -84,8 +77,6 @@ class DungeonPlayModePlayerMiXin(userType.UserSoleType):
 
     def addRewardNumByUseSpecialItem(self, num):
         self.addRewardNum(gameconst.DungeonAddRewardNumCountType.ITEM_COUNT, num, overLimit=True)
-        nn = self.useItemAddRewardNumber - num
-        self.useItemAddRewardNumber = nn if nn >= 0 else 0
 
     def addRewardNumByUseCoin(self, num):
         self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COIN_COUNT, num, overLimit=True)
@@ -149,16 +140,12 @@ class DungeonPlayModePlayerMiXin(userType.UserSoleType):
         return self.ticketType == ticketType
 
 class CrusadeDungeonPlayModePlayerObj(DungeonPlayModePlayerMiXin):
-    def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
-        DungeonPlayModePlayerMiXin.__init__(self, rewardNumber, useItemAddRewardNumber, rewardDailyCount, useCoinAddRewardNum, rewardCoinNumber, rewardItemNumber, ticketType)
+    def __init__(self, rewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
+        DungeonPlayModePlayerMiXin.__init__(self, rewardNumber, rewardDailyCount, useCoinAddRewardNum, rewardCoinNumber, rewardItemNumber, ticketType)
 
     @property
     def dailyRewardNum(self):
         return int(TDC_CFG.datas['dailyRewardNum']['value'])
-
-    @property
-    def rewardNumItemWeeklyLimit(self):
-        return int(TDC_CFG.datas['rewardNumItemWeeklyLimit']['value'])
 
     @property
     def rewardNumCoinDailyLimit(self):
@@ -176,16 +163,12 @@ class ChiefDungeonPlayMode(_DungeonPlayMode):
         self.raidUUID = raidUUID
 
 class ChiefDungeonPlayModePlayerObj(DungeonPlayModePlayerMiXin):
-    def __init__(self, rewardNumber=0, useItemAddRewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
-        DungeonPlayModePlayerMiXin.__init__(self, rewardNumber, useItemAddRewardNumber, rewardDailyCount, useCoinAddRewardNum, rewardCoinNumber, rewardItemNumber, ticketType)
+    def __init__(self, rewardNumber=0, rewardDailyCount=0, useCoinAddRewardNum=0, rewardCoinNumber=0, rewardItemNumber=0, ticketType=0):
+        DungeonPlayModePlayerMiXin.__init__(self, rewardNumber, rewardDailyCount, useCoinAddRewardNum, rewardCoinNumber, rewardItemNumber, ticketType)
 
     @property
     def dailyRewardNum(self):
         return int(RBC_CFG.datas['dailyRewardNum']['value'])
-
-    @property
-    def rewardNumItemWeeklyLimit(self):
-        return int(RBC_CFG.datas['rewardNumItemWeeklyLimit']['value'])
 
     @property
     def rewardNumCoinDailyLimit(self):

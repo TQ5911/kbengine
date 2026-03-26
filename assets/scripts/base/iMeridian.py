@@ -138,7 +138,7 @@ class IMeridian(object):
             itemNum = itemInfo[1]
             needItems[itemId] = needItems.get(itemId, 0) + itemNum
 
-        srcType = AAC_AACDD.datas.BONUS_SRC_RANDOM_SYNTHESIS
+        srcType = AAC_AACDD.datas.BONUS_SRC_LEVEL_UP_MERIDIAN
         deductVal = dropAward.DeductWealthVal()
         detail = gameclass.AwardDetail()
         opUUID = KBEngine.genUUID64()
@@ -198,7 +198,7 @@ class IMeridian(object):
             itemNum = itemInfo[1]
             needItems[itemId] = needItems.get(itemId, 0) + itemNum
 
-        srcType = AAC_AACDD.datas.BONUS_SRC_RANDOM_SYNTHESIS
+        srcType = AAC_AACDD.datas.BONUS_SRC_ENHANCE_MERIDIAN
         deductVal = dropAward.DeductWealthVal()
         detail = gameclass.AwardDetail()
         opUUID = KBEngine.genUUID64()

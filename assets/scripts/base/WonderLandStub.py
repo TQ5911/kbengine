@@ -15,7 +15,7 @@ import utils
 import gameconst
 import gameconfig
 import wonderLand_floor as WL_FD
-
+import wonderLand_config as WL_CD
 
 
 class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
@@ -59,18 +59,18 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
 
         box.onLogonEnterWonderLandGetSpaceBox(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id)
 
-    def doEnterWonderLand(self, box, gbId):
+    def doEnterWonderLand(self, box, gbId, extra):
         _spaceVal = self.defaultSapceVal()
         if not _spaceVal:
             ERROR_MSG('WonderLandStub::doEnterWonderLand: spaceVal not found')
             return
 
         if not self.canSpaceEnter(_spaceVal.getSpaceNo()):
-            ERROR_MSG('WonderLandStub::doEnterWonderLand: can not enter: {}'.format(_spaceVal.getSpaceNo()))
+            box.onMessagePre(WL_CD.datas['WonderLand_fullyBooked']['value'], [])
             return
 
         self.addEnterPlayer(box, gbId, 0, 0, linePlayers.LinePlayerVal.ENTERING, _spaceVal.getSpaceNo(), {})
-        box.cell.beginEnterWonderLand(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, _spaceVal.getSpaceNo(), {})
+        box.cell.beginEnterWonderLand(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, _spaceVal.getSpaceNo(), extra)
 
     def onEnterWonderLandSuccess(self, gbId, spaceNo):
         _playerVal = self.allPlayers.get(gbId)

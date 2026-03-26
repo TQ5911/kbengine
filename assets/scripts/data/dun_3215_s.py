@@ -11,9 +11,9 @@ datas ={
         "DisplayName": "",
         "EntityID": 0,
         "ID": 32150001,
-        "PosX": 69.68106,
-        "PosY": 3.73933,
-        "PosZ": 78.1432,
+        "PosX": 69.61132,
+        "PosY": 3.811837,
+        "PosZ": 87.08584,
         "Props": {
           "MapEntityType": 0,
           "Num": 0,
@@ -45,7 +45,7 @@ datas ={
           "PosZ": 130.2683,
           "Props": {
             "GroupID": "",
-            "Level": 40,
+            "Level": 38,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -75,7 +75,7 @@ datas ={
           "PosZ": 120.7225,
           "Props": {
             "GroupID": "",
-            "Level": 40,
+            "Level": 38,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -105,7 +105,7 @@ datas ={
           "PosZ": 117.1892,
           "Props": {
             "GroupID": "",
-            "Level": 40,
+            "Level": 38,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -135,7 +135,7 @@ datas ={
           "PosZ": 125.2552,
           "Props": {
             "GroupID": "",
-            "Level": 40,
+            "Level": 38,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -165,7 +165,7 @@ datas ={
           "PosZ": 123.7423,
           "Props": {
             "GroupID": "",
-            "Level": 40,
+            "Level": 38,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -240,18 +240,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 32158004,
-          "PosX": 59.4628,
-          "PosY": 3.726582,
-          "PosZ": 83.69516,
+          "PosX": 59.46854,
+          "PosY": 3.726685,
+          "PosZ": 87.0801,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 0.0,
-            "TelX": 59.4628,
-            "TelY": 3.726582,
-            "TelZ": 83.69516
+            "TelX": 59.46854,
+            "TelY": 3.726685,
+            "TelZ": 87.0801
           }
         }
       }

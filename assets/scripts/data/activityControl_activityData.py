@@ -48,7 +48,7 @@ datas = _tools.RODict({
     }),
     32000003: _tools.RODict({
         "ID": 32000003,
-        "name": "试炼峰",
+        "name": "天劫崖",
         "membersRequire": 0,
         "isOpen": 1,
         "needTeam": 0,

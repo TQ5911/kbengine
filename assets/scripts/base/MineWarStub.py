@@ -591,11 +591,10 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         if self.state != gameconst.MINE_WAR_STATE.END:
             return
 
-        opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_MINE_WAR_SCORE
-        
         rankCfg = self.getRewardIdByRankCfg()
         for mapId, mineWarVal in self.mineMapData.items():
+            opUUID = KBEngine.genUUID64()
             scoreDict = mineWarVal.playerScoreDict
             rankList = []
             otherList = []
@@ -651,7 +650,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                 logRankList = []
                 for i, obj in enumerate(mineWarVal.scoreRankList[:len(rankCfg)]):
                     logRankList.append({'rank': i+1, 'playerGbId': obj.gbId, 'playerScore': obj.totalScore})
-                LogTrackingMgr.LogTrackingMgr.MineBattle_End_Reward(self.endTime, mapId, logRankList)
+                LogTrackingMgr.LogTrackingMgr.MineBattle_End_Reward(self.endTime, mapId, logRankList, opUUID)
             except Exception as e:
                 ERROR_MSG('LogTrackingMgr.MineBattle_End_Reward error:', mapId)
                 

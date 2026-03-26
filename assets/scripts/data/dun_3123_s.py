@@ -7,13 +7,13 @@ datas ={
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
-        "Dir": 40.64771,
+        "Dir": 40.647709999999996,
         "DisplayName": "",
         "EntityID": 0,
         "ID": 31238001,
-        "PosX": 132.5018,
-        "PosY": 527.8172,
-        "PosZ": 17.43954,
+        "PosX": 211.364136,
+        "PosY": 533.784363,
+        "PosZ": 111.497177,
         "Props": {
           "MapEntityType": 0,
           "Num": 0,
@@ -36,18 +36,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 31238002,
-          "PosX": 129.6144,
-          "PosY": 527.7436,
-          "PosZ": 25.68388,
+          "PosX": 204.3721,
+          "PosY": 533.7844,
+          "PosZ": 120.1068,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 170.5044,
-            "TelX": 129.6144,
-            "TelY": 527.7436,
-            "TelZ": 25.68388
+            "TelX": 204.3721,
+            "TelY": 533.7844,
+            "TelZ": 120.1068
           }
         }
       },
@@ -62,9 +62,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 16002010,
           "ID": 31238005,
-          "PosX": 167.72,
-          "PosY": 524.8846,
-          "PosZ": 57.72,
+          "PosX": 219.4,
+          "PosY": 533.8745,
+          "PosZ": 121.065,
           "Props": {
             "IsOnGround": 1,
             "IsOpen": 1,
@@ -76,60 +76,85 @@ datas ={
             "ShowInSceneMap": 1
           }
         }
-      }
-    },
-    "TimerEntities": {},
-    "Cube": {
-      "Teleporter": {
-        "31238003": {
+      },
+      "AirWall": {
+        "31238006": {
           "ActivityID": 0,
           "AttachedGIDList": [],
-          "ClassName": "Teleporter",
-          "ClassNameType": 2,
-          "CustomID": "31218002",
-          "Dir": 131.0332,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 39.7275,
           "DisplayName": "",
-          "EntityID": 17312301,
-          "ID": 31238003,
-          "PosX": 123.1713,
-          "PosY": 527.7394,
-          "PosZ": 95.56307,
+          "EntityID": 3,
+          "ID": 31238006,
+          "PosX": 199.66,
+          "PosY": 530.848,
+          "PosZ": 97.31,
           "Props": {
-            "CameraId": 0,
-            "GateType": 3,
+            "AreaType": 0,
+            "Height": 6.0,
+            "Length": 70.0,
+            "MPosX": 170.0,
+            "MPosY": 530.85,
+            "MPosZ": 72.0,
             "Remark": "",
             "ShowInSceneMap": 1,
-            "TelDir": 131.0332,
-            "TelX": 123.1713,
-            "TelY": 527.7394,
-            "TelZ": 95.56307
+            "Width": 0.0
           }
         },
-        "31238004": {
+        "31238007": {
           "ActivityID": 0,
           "AttachedGIDList": [],
-          "ClassName": "Teleporter",
-          "ClassNameType": 2,
-          "CustomID": "31218002",
-          "Dir": 309.1725,
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 130.1519,
           "DisplayName": "",
-          "EntityID": 17312301,
-          "ID": 31238004,
-          "PosX": 211.8599,
-          "PosY": 527.7394,
-          "PosZ": 19.96655,
+          "EntityID": 3,
+          "ID": 31238007,
+          "PosX": 189.5337,
+          "PosY": 533.4832,
+          "PosZ": 130.9982,
           "Props": {
-            "CameraId": 0,
-            "GateType": 3,
+            "AreaType": 0,
+            "Height": 6.0,
+            "Length": 70.0,
+            "MPosX": 164.0,
+            "MPosY": 533.48,
+            "MPosZ": 102.0,
             "Remark": "",
             "ShowInSceneMap": 1,
-            "TelDir": 309.1725,
-            "TelX": 211.8599,
-            "TelY": 527.7394,
-            "TelZ": 19.96655
+            "Width": 0.0
+          }
+        },
+        "31238008": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 130.1519,
+          "DisplayName": "",
+          "EntityID": 3,
+          "ID": 31238008,
+          "PosX": 242.6483,
+          "PosY": 533.7844,
+          "PosZ": 102.1208,
+          "Props": {
+            "AreaType": 0,
+            "Height": 6.0,
+            "Length": 80.0,
+            "MPosX": 214.0,
+            "MPosY": 533.78,
+            "MPosZ": 69.0,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "Width": 0.0
           }
         }
       }
-    }
+    },
+    "TimerEntities": {}
   }
 }

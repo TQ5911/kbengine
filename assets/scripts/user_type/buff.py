@@ -119,7 +119,7 @@ class ServerBuffs(userType.UserDictType):
         return self[buffId].get(buffSrcKey)
 
     def doAddBuff(self, owner, buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs):
-        INFO_MSG("trace doAddBuff ", buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs)
+        DEBUG_MSG("trace doAddBuff ", buffId, level, duration, releaseRoleId,releaseRoleName,releaseRoleGbId, srcType, srcKey, rootContext,kwargs)
         owner.combatDebugMsg('doAddBuff: buffId:%s, level:%s, duration:%s, releaseRoleId:%s, releaseRoleName:%s, buffSrcType:%s, srcKey:%s, rootContext:%s',
                                      buffId, level, duration, releaseRoleId, releaseRoleName, srcType, srcKey, rootContext)
         self.setdefault(buffId, {})
@@ -132,7 +132,7 @@ class ServerBuffs(userType.UserDictType):
         else :
             buffVal.initBuff(owner,**kwargs)
         self.buffTagSet = buffVal.addBuffTags(self.buffTagSet)
-        INFO_MSG('added buff', buffVal)
+        DEBUG_MSG('added buff', buffVal)
         return buffVal
 
     def hasBuffTag(self, tag):
@@ -157,7 +157,7 @@ class ServerBuffs(userType.UserDictType):
     def removeBuff(self, owner, buffId, buffSrcKeys, isFinished, removeType):
         if buffId not in self:
             return
-        INFO_MSG("trace removeBuff ", buffId, buffSrcKeys, isFinished, removeType)
+        DEBUG_MSG("trace removeBuff ", buffId, buffSrcKeys, isFinished, removeType)
         owner.combatDebugMsg('removeBuff: buffId:%s, buffSrcKeys:%s, isFinished:%s, removeType:%s',
                                      buffId, buffSrcKeys, isFinished, removeType)
         buffSrcKeys = buffSrcKeys or list(self[buffId].keys())
@@ -518,7 +518,7 @@ class Buff(userType.UserSoleType):
         return False
 
     def overlayBuff(self, owner, toLevel, duration):
-        INFO_MSG("trace overlayBuff 1")
+        DEBUG_MSG("trace overlayBuff 1")
         oldLevel = self.level
 
         if oldLevel == toLevel:
@@ -530,7 +530,7 @@ class Buff(userType.UserSoleType):
             if newDura <= 0:
                 newDura = float('inf')
 
-            INFO_MSG("trace overlayBuff 2 ", newDura, remainTime, self)
+            DEBUG_MSG("trace overlayBuff 2 ", newDura, remainTime, self)
 
         self.tStartTime = time.time()
         self.skillNum = 0
@@ -545,9 +545,10 @@ class Buff(userType.UserSoleType):
 
         duration = self.getBuffDuration()
         if duration > 0:
-            INFO_MSG("trace overlayBuff 3")
+            DEBUG_MSG("trace overlayBuff 3")
             buffCaller = self._getEffectCaller()
-            for effectVal in self.effectDic.values():
+            effectValues = list(self.effectDic.values())
+            for effectVal in effectValues:
                 effectVal.onOverlayBuff(owner, buffCaller)
 
             self.removeTimerId = owner._callback(duration, 'removeBuff', (self.buffId, (self.srcKey,), True,
@@ -555,10 +556,10 @@ class Buff(userType.UserSoleType):
                                                                         gametimer.TIMER_TAG_REMOVE_BUFF)
 
         if oldLevel != toLevel:
-            INFO_MSG("trace overlayBuff 4")
+            DEBUG_MSG("trace overlayBuff 4")
             buffCaller = self._getEffectCaller()
-
-            for effectVal in self.effectDic.values():
+            effectValues = list(self.effectDic.values())
+            for effectVal in effectValues:
 
                 if effectVal.EFFECT_TYPE == gameconst.EffecType.EFFECT_BASIC:
                     #先按旧的等级移除effect
@@ -573,7 +574,8 @@ class Buff(userType.UserSoleType):
             self.level = int(toLevel)
 
             #按新等级添加effect
-            for effectKey in list(self.effectDic.keys()):
+            effectKeys = list(self.effectDic.keys())
+            for effectKey in effectKeys:
                 #setupEffect可能kill目标导致移除buff，清空effectDic
                 effectVal = self.effectDic.get(effectKey)
                 if not effectVal:
@@ -592,7 +594,7 @@ class Buff(userType.UserSoleType):
             if refreshAction:
                 ctxFunc = lambda r:actionContext.BuffRefreshCtx(self.releaseRoleId, owner.id, self.buffId, self.level, self.srcKey, r, self.rootContext)
                 owner.doCombatActions(refreshAction, owner, owner, owner.id, ctxFunc)
-            INFO_MSG("trace overlayBuff ", self)
+            DEBUG_MSG("trace overlayBuff ", self)
 
     def isBuffTimeEnd(self, owner):
         buffCaller = self._getEffectCaller()

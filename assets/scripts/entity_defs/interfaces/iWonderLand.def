@@ -7,6 +7,13 @@
             <Default>       0                           </Default>
         </wonderLandTicket>
 
+        <paidWonderLandTicket>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    True                        </Persistent>
+            <Default>       0                           </Default>
+        </paidWonderLandTicket>
+
         <wonderLandAddTimes>
             <Type>          UINT8                       </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
@@ -14,25 +21,17 @@
             <Default>       0                           </Default>
         </wonderLandAddTimes>
 
-        <wonderLandSwapTokenWeek>
-            <Type>          UINT8                       </Type>
-            <Flags>         BASE_AND_CLIENT             </Flags>
-            <Persistent>    True                        </Persistent>
-            <Default>       0                           </Default>
-        </wonderLandSwapTokenWeek>
-
         <wonderLandTimerId>
             <Type>          TIMER_ID                    </Type>
             <Flags>         CELL_PRIVATE                </Flags>
             <Default>       0                           </Default>
         </wonderLandTimerId>
 
-        <wonderLandLeftTime>
-            <Type>          LONGTIME                    </Type>
+        <wonderLandQuota>
+            <Type>          CUBE_QUOTA_DATA_INFO        </Type>
             <Flags>         CELL_PRIVATE                </Flags>
             <Persistent>    True                        </Persistent>
-            <Default>       0                           </Default>
-        </wonderLandLeftTime>
+        </wonderLandQuota>
     </Properties>
 
     <BaseMethods>
@@ -46,6 +45,7 @@
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
+            <Arg>          OP_UUID                      </Arg>
         </doAddWonderLandTicket>
 
         <addWonderLandTicket> <Exposed/>
@@ -82,6 +82,7 @@
         </checkSummonWonderLandBossBase>
 
         <addWonderLandDurationFailedRewindTimes>
+            <Arg>          OP_UUID                      </Arg>
         </addWonderLandDurationFailedRewindTimes>
 
         <afterEnterWonderLandDeductTimes>
@@ -127,7 +128,8 @@
 
         <checkAddWonderLandDurationCondition>
             <Arg>           ITEM_ID                     </Arg>
-            <Arg>           UINT8                        </Arg>
+            <Arg>           UINT8                       </Arg>
+            <Arg>           OP_UUID                     </Arg>
         </checkAddWonderLandDurationCondition>
 
         <doSendWonderLandLoginData>
@@ -140,12 +142,19 @@
         <leaveWonderLandInternal>
             <Arg>           UINT8                       </Arg>
         </leaveWonderLandInternal>
+
+        <getWonderLandLeftTime> <Exposed/>
+        </getWonderLandLeftTime>
     </CellMethods>
 
     <ClientMethods>
         <onWonderLandLeftTime>
             <Arg>          LONGTIME                     </Arg>
         </onWonderLandLeftTime>
+
+        <onWonderLandLeftTimeDuration>
+            <Arg>          LONGTIME                     </Arg>
+        </onWonderLandLeftTimeDuration>
 
         <onWonderLandSwitch>
             <Arg>          BOOL                         </Arg>

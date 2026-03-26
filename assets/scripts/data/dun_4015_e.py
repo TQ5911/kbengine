@@ -32,7 +32,7 @@ datas ={
   "1020": {
     "type": "createRebornPos",
     "entityID": [
-      40158001
+      40158002
     ],
     "num": 0,
     "transition": {}

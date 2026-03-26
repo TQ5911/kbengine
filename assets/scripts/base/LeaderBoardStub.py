@@ -40,6 +40,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             delta = utils.getNow() % 3600
             self.pyAddTimer(3600 - delta, 3600, gametimer.GEN_RUSH_RANK_DATA)
             self._genRushRankData()
+            self._checkRushRankRefresh()
 
     def doNext(self):
         INFO_MSG('LeaderBoardAvatarStub doNext')
@@ -67,6 +68,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             self._onDatetimeTimerTick()
         elif userArg == gametimer.LEADER_BOARD_REFRESH:
             self._onLeaderBoardRefresh()
+            self._checkRushRankRefresh()
         elif userArg == gametimer.GEN_RUSH_RANK_DATA:
             self._genRushRankData()
         else:
@@ -107,6 +109,22 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         td = time.time()
         redisUtils.RedisUtils.set(key, json.dumps(self.leaderBoardList.toLeaderBoardListSavedDict(), separators=(',', ':'), indent=None), self._onGenRushRankDataCB)
         INFO_MSG("gen rush rank data time: ", time.time() - td, "len: ", len(self.leaderBoardList))
+
+    def _checkRushRankRefresh(self):
+        if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK:
+            return
+        
+        if not self._needRefresh():
+            return
+        
+        dateStr = W_CDD.datas['LevelRankDeadLine']['value']
+        date = datetime.strptime(dateStr, "%Y%m%d%H%M")
+        date = int(date.timestamp())
+        now = utils.getNow()
+        _dur = R_RCD.datas['refreshCD']['value']
+        if date > now and date - now < _dur:
+            INFO_MSG("rush rank make callback", now, date, _dur)
+            self._callback(date - now, '_onLeaderBoardRefresh', (), gametimer.TIMER_TAG_RUSH_RANK_REFRESH)
 
     def _onGenRushRankDataCB(self, ok, data):
         if not ok:

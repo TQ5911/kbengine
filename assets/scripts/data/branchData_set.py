@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "Branch_creepNotRefresh": _tools.RODict({
         "ID": "Branch_creepNotRefresh",
-        "value": _tools.ROList([2, 4, 5, 6, 7, 100, 103]),
+        "value": _tools.ROList([4, 5, 6, 7, 100, 103]),
     }),
     "Branch_activePlayer": _tools.RODict({
         "ID": "Branch_activePlayer",

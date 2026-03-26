@@ -485,8 +485,9 @@ class AuctionStubService(GameServer):
                 [playerGBID], "doCancelSaleItemInCoinAuction", (errno, auctionItem, extra),
                 m_playerStub, 'recordOfflineCallback',
                 (playerGBID, 'doCancelSaleItemInCoinAuction', (errno, auctionItem, extra)))
-            LogTrackingMgr.LogTrackingMgr.Auction_ItemCanel(playerGBID, auctionItem.auctionItemUUID, auctionItem.itemId, \
-                                                        auctionItem.number, auctionItem.price, auctionItem.totalPrice)
+            LogTrackingMgr.LogTrackingMgr.Auction_ItemCancel(playerGBID, auctionItem.auctionItemUUID, auctionItem.itemId, \
+                                                        auctionItem.number, auctionItem.price, auctionItem.totalPrice, \
+                                                        auctionItem.itemData.createTime, auctionItem.addTime, auctionItem.itemData.expireTime, auctionItem.status)
             
     def replySearchItemsByItemId(self, rpc_controller, request, done):
         playerGBID = request.playerGBID

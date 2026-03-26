@@ -192,7 +192,7 @@ def getLineSpaceNo(lineType, lineNo=-1):
 
 
 def getLineNo(spaceNo):
-    if not isLineSpace(spaceNo):
+    if not (isLineSpace(spaceNo) or isCubeSpace(spaceNo)):
         return -1
 
     return spaceNo % gameconst.SPACE_NO_INTERVAL

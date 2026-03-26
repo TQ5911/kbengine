@@ -120,7 +120,7 @@
         <cancelSaleItemInCoinAuction>
             <Exposed/>
             <Arg> AUCTION_ITEM_UUID </Arg>
-            <Arg> BOOL </Arg>
+            <Arg> BOOL              </Arg>
         </cancelSaleItemInCoinAuction>
 
         <cancelSaleItemInCoinAuctionCallback>

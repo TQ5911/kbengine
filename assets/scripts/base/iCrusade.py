@@ -23,84 +23,88 @@ class ICrusade(object):
         self.crusadeInfo.resetUseCoinAddRewardDailyNum()
         self.crusadeInfo = self.crusadeInfo
 
-    def onCrusadeWeeklyAddRewardItemNumUpdate(self, *args):
-        INFO_MSG('onCrusadeWeeklyAddRewardItemNumUpdate::')
-        self.crusadeInfo.resetUseItemAddRewardWeeklyNum()
-        self.crusadeInfo = self.crusadeInfo
+    @gamedecorator.checkGameconfigEnable('teamDungeon')
+    def increaseCrusadeRewardNumber(self, exposed, coinNum, itemNum):
+        INFO_MSG('increaseCrusadeRewardNumber::', coinNum, itemNum)
+        retCoin = self._useCoinToIncreaseCrusadeRewardNumber(coinNum, {}, needMsg = False)
+        retItem = self._useItemToIncreaseCrusadeRewardNumber(itemNum, {}, needMsg = False)
+        if retCoin or retItem:
+            totalNum = 0
+            if retCoin:
+                totalNum += coinNum
+            if retItem:
+                totalNum += itemNum
+            self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]), [str(totalNum)])
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useItemToIncreaseCrusadeRewardNumber(self, exposed, useNum):
         INFO_MSG('useItemToIncreaseCrusadeRewardNumber::', useNum)
-        if useNum <= 0:
-            ERROR_MSG('useItemToIncreaseCrusadeRewardNumber:: invalid useNum', useNum)
-
-            return
-        itemId = int(TDC_CFG.datas['rewardNumItem']['value'])
-        if not self.crusadeInfo.isCanAddRewardByItem(useNum):
-            ERROR_MSG('useItemToIncreaseCrusadeRewardNumber:: rewardNumber not enough')
-            return
-
-        self._useItemToIncreaseCrusadeRewardNumber(itemId, useNum, {})
+        self._useItemToIncreaseCrusadeRewardNumber(useNum, {})
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
     def useCoinToIncreaseCrusadeRewardNumber(self, exposed, useNum):
         INFO_MSG('useCoinToIncreaseCrusadeRewardNumber::', useNum)
-        if useNum <= 0:
-            ERROR_MSG('useCoinToIncreaseCrusadeRewardNumber:: invalid useNum', useNum)
-
-            return
-        if not self.crusadeInfo.isCanAddRewardByCoin(useNum):
-            ERROR_MSG('useCoinToIncreaseCrusadeRewardNumber:: rewardNumber not enough')
-            return
-
         self._useCoinToIncreaseCrusadeRewardNumber(useNum, {})
 
-    def _useItemToIncreaseCrusadeRewardNumber(self, itemId, itemNum, extra):
-        INFO_MSG('_useItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
+    def _useItemToIncreaseCrusadeRewardNumber(self, itemNum, extra, needMsg = True):
+        itemId = int(TDC_CFG.datas['rewardNumItem']['value'])
+        INFO_MSG('_useItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra, needMsg)
+        if itemNum <= 0:
+            return False
 
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(itemId, itemNum, dataUtils.getItemDefaultBindType())
 
         if not self.canDeductWealth(deductWealthVal):
             ERROR_MSG('_useItemToIncreaseCrusadeRewardNumber::check failed')
-            return
+            return False
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_TEAMDUN_ADD_REWARD
         detail = gameclass.AwardDetail(itemId=itemId, itemNum=itemNum)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
-        self.onUseItemToIncreaseCrusadeRewardNumber(itemId, itemNum, extra)
-
-    def onUseItemToIncreaseCrusadeRewardNumber(self, itemId, itemNum, extra):
+        self.onUseItemToIncreaseCrusadeRewardNumber(itemId, itemNum, extra, needMsg)
+        return True
+    
+    def onUseItemToIncreaseCrusadeRewardNumber(self, itemId, itemNum, extra, needMsg = True):
         INFO_MSG('onUseItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
         self.crusadeInfo.addRewardNumByUseSpecialItem(itemNum)
         self.crusadeInfo = self.crusadeInfo
-        self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]),
-                              [str(itemNum), str(self.crusadeInfo.useItemAddRewardNumber)])
+        if needMsg:
+            self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]), [str(itemNum)])
 
-    def _useCoinToIncreaseCrusadeRewardNumber(self, useNum, extra):
-        INFO_MSG('_useCoinToIncreaseCrusadeRewardNumber::', useNum)
-
+    def _useCoinToIncreaseCrusadeRewardNumber(self, useNum, extra, needMsg = True):
+        INFO_MSG('_useCoinToIncreaseCrusadeRewardNumber::', useNum, extra, needMsg)
+        if useNum <= 0:
+            return False
+        
+        if not self.crusadeInfo.isCanAddRewardByCoin(useNum):
+            ERROR_MSG('_useCoinToIncreaseCrusadeRewardNumber:: rewardNumber not enough')
+            return False
+        
         rewardNumCoin = int(TDC_CFG.datas['rewardNumCoin']['value'])
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(gameconst.ItemId.MONEY, rewardNumCoin * useNum)
 
         if not self.canDeductWealth(deductWealthVal):
             ERROR_MSG('_useCoinToIncreaseCrusadeRewardNumber::check failed')
-            return
+            return False
 
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_TEAMDUN_ADD_REWARD
         detail = gameclass.AwardDetail()
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
-        self.onUseCoinToIncreaseCrusadeRewardNumber(useNum, extra)
-
-    def onUseCoinToIncreaseCrusadeRewardNumber(self, useNum, extra):
+        self.onUseCoinToIncreaseCrusadeRewardNumber(useNum, extra, needMsg)
+        return True
+    
+    def onUseCoinToIncreaseCrusadeRewardNumber(self, useNum, extra, needMsg = True):
         INFO_MSG('onUseCoinToIncreaseCrusadeRewardNumber::', useNum, extra)
         self.crusadeInfo.addRewardNumByUseCoin(useNum)
         self.crusadeInfo = self.crusadeInfo
+        if needMsg:
+            self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]), [str(useNum)])
 
     def onEnterCrusadeDungeon(self, spaceNo, dungeonNo, spaceMgrBox, extra):
         crusadeInfo = self.crusadeInfo

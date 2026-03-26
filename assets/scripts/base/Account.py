@@ -61,28 +61,18 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         self.avatarID = 0
         self.shouldAutoBackup = False
 
-        loginJsonData, _ = self.getClientDatas(gameconst.ClientCallChannel.MAIN_CHANNEL)
-        clientData = utils.decodeClientData(loginJsonData)
-        self.centralServerId = clientData.get('loginServerId', 1)
+        self.parseClientDatas()
 
         self.accountType, self.accountName = utils.getAccountTypeAndName(self.__ACCOUNT_NAME__)
         self.onDailyEvent()
         self._hasLoadData = False # 先加载角色数据，再加载appearance数据
 
-        devicePlatId = clientData.get('devicePlatId', 0)
-        channelId = clientData.get('channelId', 0)
-        self.userInfoId = clientData.get('userId', '')
-        self.otherData = clientData.get('otherData', {})
-        self.udid = clientData.get('deviceUniqueIdentifier', '')
-        self.packageSource = clientData.get('packageSource', '')
-        self.devicePlatId = devicePlatId
-        self.channelId = channelId
         if not self.phone:
             self.phone = self.otherData.get('phone', 0)
 
         stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
-        gameclass.DuplicatedCallList(stubs).onAccountCreated(self.accountName, devicePlatId, self.isNewAccount,
-                                                             channelId)
+        gameclass.DuplicatedCallList(stubs).onAccountCreated(self.accountName, self.devicePlatId, self.isNewAccount,
+                                                             self.channelId)
         if self.isNewAccount:
             self.isNewAccount = False
         gameglobal.localAccountCache[self.__ACCOUNT_NAME__] = self
@@ -91,6 +81,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             gameglobal.localMinorAccountCache[self.__ACCOUNT_NAME__] = self
 
         if self.isCrossServer:
+            clientData = self.getClientJsonData()
             crossServerToken = clientData.get('crossServerToken')
             gameengine.getGlobalBase('CrossServerStub').checkCrossServerToken(self.accountName, crossServerToken, self,
                                                                         "onCheckCrossServerTokenRet",
@@ -243,12 +234,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         crusadeInfo = dungeonPlayMode.CrusadeDungeonPlayModePlayerObj()
         crusadeInfo.rewardNumber = crusadeInfo.dailyRewardNum
-        crusadeInfo.useItemAddRewardNumber = crusadeInfo.rewardNumItemWeeklyLimit
         crusadeInfo.useCoinAddRewardNum = crusadeInfo.rewardNumCoinDailyLimit
 
         chiefInfo = dungeonPlayMode.ChiefDungeonPlayModePlayerObj()
         chiefInfo.rewardNumber = chiefInfo.dailyRewardNum
-        chiefInfo.useItemAddRewardNumber = chiefInfo.rewardNumItemWeeklyLimit
         chiefInfo.useCoinAddRewardNum = chiefInfo.rewardNumCoinDailyLimit
 
         cliConfigDic = {gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY: gameconst.CliConfigDef.EQUIP_AUTO_DISA_DEFAULT_VAL}
@@ -279,13 +268,17 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             'gmGroup': 1 if self.accountName in gameconst.GM_ACCOUNT_LIST else 0,
             'warehouse': warehouse,
             'chiefInfo': chiefInfo,
-            'newbieStep': TC_NSD.minKey
+            'newbieStep': TC_NSD.minKey,
+            'birthIp': self.getClientIp()
         }
 
         avatar = KBEngine.createEntityLocally('Avatar', props)
         if avatar:
             INFO_MSG('create avatar success', avatar.id)
             avatar.pyWriteToDB(functools.partial(self._onAvatarSaved, props))
+            creationOrder = self.getPersistentMiscProp(gameconst.AvatarProps.creationOrder, 0)
+            creationOrder += 1
+            self.setPersistentMiscProp(gameconst.AvatarProps.creationOrder, creationOrder)
             LogTrackingMgr.LogTrackingMgr.Server_Create_Role(
                 self.accountName,
                 avatarProps['gbId'],
@@ -299,6 +292,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 _appearance.faceData.skinColorId(),
                 _appearance.faceData.hairId(),
                 _appearance.faceData.hairColorId(),
+                creationOrder,
+                avatarProps["sex"],
             )
         else:
             ERROR_MSG('failed to create avatar', self.accountName)
@@ -415,6 +410,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         exposed.
         客户端请求创建一个角色
         """
+        if self.waitingShutdown:
+            self.client.onMessage(L_SD.datas['login_serverClosed']['value'], [])
+            return
+
         if self.accountStatus != AccountStatus.normal:
             INFO_MSG('avatar is in creating', self.accountStatus)
             return
@@ -524,6 +523,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
         客户端选择某个角色进行游戏
         isForceHost: 是否强制以host登录游戏
         """
+        if self.waitingShutdown:
+            self.client.onMessage(L_SD.datas['login_serverClosed']['value'], [])
+            return
+
         if not self.isAuthHost(gbId):
             if not gameconfig.visibleConfigEnabled('roleAuthorization'):
                 return
@@ -760,10 +763,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             (self.id, self.client, self.getClientType(chn), self.getClientDatas(chn), self.avatarID, self.accountName),
             self.avatar)
         DEBUG_MSG("login state", self.loginState)
-        # gamelog.makeWLog("ServerOnClientConeect", {
-        #     "client_id": self.devicePlatId,
-        #     "ip": self.clientAddr(chn)[0],
-        # })
+        _now = utils.getNow()
+        self.parseClientDatas()
 
         if self.delayDestroyTimer:
             self._cancelCallback(self.delayDestroyTimer, gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT)
@@ -791,6 +792,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
         self.cancelDeleteFlag()
         self.clientIP = self.clientAddr(chn)[0]
+        lastLoginTime = self.getPersistentMiscProp(gameconst.AvatarProps.lastLoginTime, _now)
+        self.setPersistentMiscProp(gameconst.AvatarProps.lastLoginTime, _now)
+        clientData = self.getClientJsonData()
+        appVersion = clientData.get('appVersion', '0.0.0.0')
         LogTrackingMgr.LogTrackingMgr.Server_Login(
             self.accountName,
             self.devicePlatId,
@@ -799,6 +804,11 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.accountType,
             self.channelId,
             self.packageSource,
+            self.deviceUniqueIdentifier,
+            lastLoginTime,
+            _now,
+            appVersion,
+            self.userInfoId,
         )
 
     def cancelDeleteFlag(self):
@@ -825,17 +835,17 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.doLoginAccount()
 
         try:
-            self.parseClientDatas(self.getClientDatas(gameconst.ClientCallChannel.MAIN_CHANNEL))
-            # gamelog.makeWLog("ServerLogin", {
-            #     "client_id": self.devicePlatId,
-            #     "account_id": self.accountName,
-            #     "udid": self.deviceUniqueIdentifier
-            # })
+            self.parseClientDatas()
         except Exception as e:
             ERROR_MSG('loginAccount:', e)
             ERROR_MSG('parse client data failed:', self.getClientDatas(gameconst.ClientCallChannel.MAIN_CHANNEL))
 
-    def parseClientDatas(self, clientDatas):
+    def getClientJsonData(self):
+        _data, _ = self.getClientDatas(gameconst.ClientCallChannel.MAIN_CHANNEL)
+        return utils.decodeClientData(_data)
+
+    def parseClientDatas(self):
+        clientDatas = self.getClientDatas(gameconst.ClientCallChannel.MAIN_CHANNEL)
         if isinstance(clientDatas, tuple):
             loginJsonData = clientDatas[0]
             if not loginJsonData:
@@ -847,7 +857,11 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 self.deviceUniqueIdentifier = 'bots'
                 return
             clientDatas = json.loads(loginJsonData.decode('utf-8'))
+            self.userInfoId = clientDatas.get('userId', '')
+            self.centralServerId = clientDatas.get('loginServerId', 1)
+            self.otherData = clientDatas.get('otherData', {})
             self.deviceUniqueIdentifier = clientDatas.get('deviceUniqueIdentifier', '')
+            self.packageSource = clientDatas.get('packageSource', '')
             self.devicePlatId = clientDatas.get('devicePlatId', 0)
             self.operatingSystem = clientDatas.get('operatingSystem', '')
             self.channelId = clientDatas.get('channelId', 0)
@@ -1058,16 +1072,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
                 self.delayDestroyTimer = self._callback(300, 'destroyAccount',
                                                         (gameconst.AVATAR_OFFLINE_REASON_CLIENT_DEATH,),
                                                         gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT, 'delayDestroyTimer')
-        else:  # creating, avatarLoading: handle after avatar created
-            pass
-
-        # gamelog.makeWLog("ServerOnClientLost", {
-        #     "client_id": str(self.devicePlatId),
-        #     "account_id": str(self.accountName),
-        #     "udid": str(self.deviceUniqueIdentifier),
-        #     "role_name": self.avatar.characterName if self.avatar else '',
-        #     'role_id': str(self.avatar.gbID if self.avatar else '')
-        # })
+        
         INFO_MSG("Account[%i].onClientDeath:", self.id, self.avatar, chn)
 
     def destroyAccount(self, reason=gameconst.AVATAR_OFFLINE_REASON_DESTORY):
@@ -1343,6 +1348,12 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
             self.accountType,
             self.channelId,
             self.packageSource,
+            gameconst.SERVER_LOG_TYPE_LOGIN,
+            avatar.getTempMiscProp(gameconst.AvatarProps.cellTotalScore, 0),
+            avatar.getTempMiscProp(gameconst.AvatarProps.cellExperience, 0),
+            avatar.money,
+            avatar.coin,
+            avatar.getTempMiscProp(gameconst.AvatarProps.cellMapId, 0),
         )
 
 # ---------------------------- switch avatar server start ----------------------------
@@ -1930,3 +1941,19 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEvent):
 
     def hasPersistentMiscProp(self, propId):
         return propId in self.miscPropsBase
+
+    def kickAccountGm(self, msgId):
+        DEBUG_MSG('kickAccountGm')
+        self.waitingShutdown = True
+        if self.avatar:
+            self.avatar.onMessagePre(msgId, [])
+        else:
+            self.client.onMessage(msgId, [])
+
+        self._callback(5 + 25 * random.random(), '_kickAccountGm', (), gametimer.TIMER_TAG_KICK_ACCOUNT_GM)
+
+    def _kickAccountGm(self):
+        if self.avatar:
+            self.avatar.cell.kickGm(gameconst.AVATAR_OFFLINE_REASON_GMKICK, 0)
+        else:
+            self.destroyAccount(gameconst.AVATAR_OFFLINE_REASON_GMKICK)

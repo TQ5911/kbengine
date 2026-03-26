@@ -80,5 +80,14 @@
             <Arg>       BOOL                                </Arg>
             <Arg>       RANK                                </Arg>
         </onLeaderBoardAvatarLevelRushRank>
+
+        <onLeaderBoardAvatarAchievement>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+            <Arg>       ARRAY   <of>        LEADER_BOARD_AVATAR_ACHIEVEMENT_DATA_INFO     </of>   </Arg>
+            <Arg>       SCHOOL                              </Arg>
+            <Arg>       LEADER_BOARD_PAGE                              </Arg>
+            <Arg>       BOOL                                </Arg>
+            <Arg>       RANK                                </Arg>
+        </onLeaderBoardAvatarAchievement>
     </ClientMethods>
 </root>

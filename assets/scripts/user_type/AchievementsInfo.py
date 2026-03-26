@@ -230,6 +230,7 @@ class AchievementsVal(userType.UserSoleType):
                 self.maxVersion,
                 gameconst.ACHIEVE_STATE_RECEIVE,
                 _achieveVal.step,
+                self.sumPoint
             )
 
         avatar._showPopReward(_src, popRewardUUID, gameclass.AwardDetail(achievementId=_takeIds))

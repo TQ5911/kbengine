@@ -45,7 +45,8 @@ datas ={
           "PosZ": 63.19786,
           "Props": {
             "GroupID": "",
-            "Level": 30.0,
+            "Level": 28,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -53,7 +54,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "\u7cbe\u82f1",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -72,7 +75,7 @@ datas ={
           "PosZ": 53.08836,
           "Props": {
             "GroupID": "",
-            "Level": 30.0,
+            "Level": 28,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -99,7 +102,7 @@ datas ={
           "PosZ": 50.36635,
           "Props": {
             "GroupID": "",
-            "Level": 30.0,
+            "Level": 28,
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -126,7 +129,8 @@ datas ={
           "PosZ": 65.58234,
           "Props": {
             "GroupID": "",
-            "Level": 30.0,
+            "Level": 28,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -134,7 +138,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "\u7cbe\u82f1",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -153,7 +159,8 @@ datas ={
           "PosZ": 57.71935,
           "Props": {
             "GroupID": "",
-            "Level": 30.0,
+            "Level": 28,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -161,7 +168,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "\u5934\u76ee",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         }
@@ -199,18 +208,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 31068003,
-          "PosX": 119.7479,
-          "PosY": 528.0034,
-          "PosZ": 58.45937,
+          "PosX": 116.2643,
+          "PosY": 528.0003,
+          "PosZ": 62.20472,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 209.2193,
-            "TelX": 119.7479,
-            "TelY": 528.0034,
-            "TelZ": 58.45937
+            "TelX": 116.2643,
+            "TelY": 528.0003,
+            "TelZ": 62.20472
           }
         }
       }

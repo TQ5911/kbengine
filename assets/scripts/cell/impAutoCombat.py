@@ -20,6 +20,7 @@ import gamePlay_gamePlay as DDID
 import const_const as CONST
 import teamMatch_matchConfig as TMMCD
 import skill_skill as SSD
+import conflict_status as CSD
 
 class AutoCombatRet(object):
     FAIL_SKILL = 0
@@ -33,6 +34,8 @@ class DoAutoCombatReason(object):
     USE_SKILL = 2
     CHANGE_TARGET = 3
     MOVE_OVER = 4
+    RECOVER = 5
+
 
 class ImpAutoCombat(object):
     def __init__(self):
@@ -49,6 +52,9 @@ class ImpAutoCombat(object):
         DEBUG_MSG("sendAutoCombat")
         if self.autoCombat and self.autoCombatInfo.get('timer', 0):
             self.setControlleByReason(gameconst.ControlledByReason.AutoCombat)
+
+        # 登录下发
+        self.sendAutoCombatRange()
 
     def captainEnterFightingStateChangeAutoCombat(self):
         self._tryChangeCombatStateFollowTeamCaptain(gameconst.AutoCombatState.Fighting, gameconst.ChangeAutoCombatReason.CaptainEnterFightingState)
@@ -136,6 +142,12 @@ class ImpAutoCombat(object):
 
         self.autoCombatInfo['moveController'] = 0
         self.autoCombatInfo['notTarget'] = False
+
+        if self.doubleBarFlag and not isSuspend:
+            INFO_MSG('startAutoCombat: Suspend by doubleBarFlag')
+            isSuspend = True
+            suspendReason = gameconst.SuspendAutoCombatReason.DoubleBar
+
         if isSuspend:
             self.autoCombatSuspendReason = suspendReason
             self.autoCombatInfo['suspendTime'] = utils.getTimestamp64()
@@ -158,9 +170,8 @@ class ImpAutoCombat(object):
             self.autoCombatInterval = CONST.datas['autoFightTick']['value']
             self.autoCombatInfo['timer'] = self.pyAddTimer(0, CONST.datas['autoFightTick']['value'], gametimer.AUTO_COMBAT_CHECK)
 
-        if self.getCommonFlagCell(gameconst.AvatarFlagCell.RETURN_IDLE):
-            self.combatReturnInfo.spaceNo = self.spaceNo
-            self.combatReturnInfo.pos = tuple(self.position)
+        self.combatReturnInfo.spaceNo = self.spaceNo
+        self.combatReturnInfo.pos = tuple(self.position)
 
     @gamedecorator.crossServer
     @utils.isMyself
@@ -254,11 +265,11 @@ class ImpAutoCombat(object):
     @gamedecorator.crossServer
     @utils.isMyself
     @gamedecorator.limitcall(0.1)
-    def selectAutoCombatPriorityTarget(self, exposed, targetId):
-        DEBUG_MSG('selectAutoCombatPriorityTarget', targetId)
+    def selectAutoCombatPriorityTarget(self, exposed, targetIds):
+        DEBUG_MSG('selectAutoCombatPriorityTarget', targetIds)
         self.setTempMiscProp(gameconst.AvatarProps.AvatarActiveTimestamp, utils.getNow())
         # 优先攻击目标，这里的攻击目标id是怪物的模版id（monsterId）
-        self.autoCombatInfo['priorityTargetEnemyId'] = targetId
+        self.autoCombatInfo['priorityTargetEnemyId'] = targetIds
 
 
     @gamedecorator.crossServer
@@ -294,11 +305,27 @@ class ImpAutoCombat(object):
         self._cancelAutoCombatMoveController()
         self.releaseControlleBy(gameconst.ControlledByReason.AutoCombat)
 
+    def recoverAndTickOnce(self):
+        DEBUG_MSG('recoverAndTickOnce', self.autoCombatSuspendReason)
+        if not self.checkConflictState(CCD.datas.serverControling):
+            DEBUG_MSG('recoverAndTickOnce: conflict state')
+            return
+        # 【【自动战斗】开启自动战斗后，按住任意WASD，法师释放移形换影，位移失效】https://www.tapd.cn/tapd_fe/59721401/bug/detail/1159721401001009320
+        if self.hasState(gameconst.State.Dodging) or self.hasState(gameconst.State.UsingSkill):
+            DEBUG_MSG('recoverAndTickOnce: dodging state conflict')
+            return
+
+        self.recoverAutoCombat(self.spaceNo, self.autoCombatSuspendReason)
+        self.doAutoCombat(DoAutoCombatReason.CHANGE_TARGET)
+
     def recoverAutoCombat(self, oldSpaceNo, suspendReason):
         DEBUG_MSG('recoverAutoCombat ', self.autoCombat, oldSpaceNo, suspendReason, self.autoCombatSuspendReason )
         if self.autoCombatSuspendReason != suspendReason:
             return
         if self.autoCombat != gameconst.AutoCombatState.Suspending:
+            return
+        if self.hasState(gameconst.State.Dodging) or self.hasState(gameconst.State.UsingSkill):
+            DEBUG_MSG('recoverAutoCombat: dodging state conflict')
             return
 
         mapId = formula.getMapId(self.spaceNo)
@@ -375,6 +402,10 @@ class ImpAutoCombat(object):
                 if not self.checkForceFollowRecover():
                     return
                 self.recoverAutoCombat(self.spaceNo, self.autoCombatSuspendReason)
+            elif self.autoCombatSuspendReason == gameconst.SuspendAutoCombatReason.DoubleBar:
+                if utils.getTimestamp64() - self.lastDoubleBarTime > 2000:
+                    WARNING_MSG('recoverAutoCombat: doubleBarFlag timeout')
+                    self.setDoubleBarFlag(self.id, False)
         elif self.autoCombat == gameconst.AutoCombatState.Fighting:
             self.doAutoCombat(DoAutoCombatReason.TICK)
 
@@ -405,6 +436,9 @@ class ImpAutoCombat(object):
     def _returnIdle(self):
         if not self.getCommonFlagCell(gameconst.AvatarFlagCell.RETURN_IDLE):
             return False
+        
+        if DDID.datas.get(formula.getMapId(self.spaceNo), {}).get('closeAutoRangel', None):
+            return False
 
         if self.combatReturnInfo.spaceNo != self.spaceNo:
             return False
@@ -413,6 +447,11 @@ class ImpAutoCombat(object):
             return False
 
         if self.isDie():
+            return False
+
+        eventId = CSD.datas[gameconst.State.Moving].get('event')
+        conflictRes = self.checkConflictState(eventId)
+        if eventId and not conflictRes:
             return False
 
         dstPos = self.combatReturnInfo.pos
@@ -511,6 +550,10 @@ class ImpAutoCombat(object):
             self.autoCombatInfo['skill'] = skill
             if not skill:
                 return AutoCombatRet.FAIL_SKILL
+            if not utils.hasSkillTag(skill.skillId, gameconst.SkillTag.GeneralSkill):
+                skillFrequentNormal = CONST.datas['skillFrequentNormal']['value']
+                k = random.randint(int(skillFrequentNormal[0] * 1000), int(skillFrequentNormal[1] * 1000))
+                self.autoCombatInfo['ungeneralSkillLimitTime'] = utils.getTimestamp64() + k
             target = self._getCombatTarget(skill)
             if not target:
                 self.autoCombatInfo['notTarget'] = True
@@ -528,8 +571,7 @@ class ImpAutoCombat(object):
                     self.autoCombatInfo['targetId'] = 0
                     return AutoCombatRet.FAIL_USE_SKILL
             else:
-                if self.autoCombatInfo['moveController'] == 0:
-                    self.moveToCombatTarget(target, skill)
+                self.moveToCombatTarget(target, skill)
         else:
             self.autoCombatInfo['skill'] = None
             self.autoCombatInfo['targetId'] = 0
@@ -738,6 +780,8 @@ class ImpAutoCombat(object):
         # 攻击仇恨目标
         _hateRecord = self.getTempMiscProp(gameconst.AvatarProps.hateRecord, {})
 
+        closeAutoRangel = DDID.datas.get(formula.getMapId(self.spaceNo), {}).get('closeAutoRangel', None)
+
         if not target or target.spaceNo != self.spaceNo or not target.IsCombatUnit\
                 or sMath.distance2D(target.position, self.position) > self._getAutoFightRange(target) \
                 or not utils.checkTargetType('Enemy', self, target)\
@@ -752,7 +796,7 @@ class ImpAutoCombat(object):
             #就近
             targetsList = []
             entityIds = self.getTargetIdsByTargetType('Enemy')
-            priorityTargetEnemyId = self.autoCombatInfo.get('priorityTargetEnemyId', None)
+            priorityTargetEnemyIds = self.autoCombatInfo.get('priorityTargetEnemyId', None)
             _teamTargetIds = self.getTeamTargets()
             _maxVal = None
             target = None
@@ -773,12 +817,14 @@ class ImpAutoCombat(object):
                         # 1.仇恨目标
                         1 if eId in _hateRecord else 0,
                         # 2.任务目标
-                        1 if entity.IsMonster and entity.monsterId == priorityTargetEnemyId else 0,
+                        1 if entity.IsMonster and priorityTargetEnemyIds and entity.monsterId in priorityTargetEnemyIds else 0,
                         # 3.队伍目标
                         1 if eId in _teamTargetIds else 0,
                         # 4.距离
                         -sMath.distance2DToCompareFrom3DPosition(self.position, entity.position)
                     )
+                    if not closeAutoRangel and _val < (0, 0, 0, 1.0) and self.combatReturnInfo.switch and sMath.distance2D(entity.position, self.combatReturnInfo.pos) > self.combatReturnInfo.range:
+                        continue
 
                     if _maxVal is None:
                         _maxVal = _val
@@ -816,6 +862,9 @@ class ImpAutoCombat(object):
                         and self.checkCombatRangeY(entity):
                     return target
         return target
+    
+    def setAutoCombatSkillFrequent(self, exposed, isSet):
+        self.autoCombatSkillFrequent = isSet
 
     def _getCombatSkill(self):
         skillList = []
@@ -833,6 +882,7 @@ class ImpAutoCombat(object):
         else:
             _useCreationSkill = True
 
+        inAutoFightSkillCD = utils.getTimestamp64() < self.autoCombatInfo.get('ungeneralSkillLimitTime', 0)
         for skillId, skill in self.skillDic.items():
             ret = self.skillDic.checkSkillSwitch(skillId, gameconst.SkillSwitchStatus.AUTO)
             if not ret:
@@ -863,6 +913,11 @@ class ImpAutoCombat(object):
             if not _useCreationSkill and skillId in SSD.hasCreationSkill:
                 # 如果负载过高， 不使用创生物技能技能
                 continue
+
+            # 自动战斗技能公共CD中，只能用普攻
+            if not self.autoCombatSkillFrequent:
+                if inAutoFightSkillCD and not utils.hasSkillTag(skillId, gameconst.SkillTag.GeneralSkill):
+                    continue
 
             skillList.append(skill)
             weight = SSD.datas[skillId].get('autoBattleWeight')
@@ -1075,3 +1130,35 @@ class ImpAutoCombat(object):
     @utils.isMyself
     def setAutoCombatReliveReturnTimes(self, exposed, times):
         self.autoCombatReliveReturnTimes = times
+
+    @gamedecorator.crossServer
+    @utils.isMyself
+    def changeAutoCombatRange(self, exposed, switch, range):
+        rangeRange = (20, 50)
+        if range < rangeRange[0]:
+            range = rangeRange[0]
+        elif range > rangeRange[1]:
+            range = rangeRange[1]
+
+        self.combatReturnInfo.switch = switch
+        self.combatReturnInfo.range = range
+        self.sendAutoCombatRange()
+
+        self._updateCommonFlagCell(gameconst.AvatarFlagCell.RETURN_IDLE, switch)
+
+    def sendAutoCombatRange(self):
+        DEBUG_MSG('sendAutoCombatRange', self.combatReturnInfo.switch, self.combatReturnInfo.range)
+        self.client.onGetAutoCombatRange(self.combatReturnInfo.switch, self.combatReturnInfo.range)
+
+    @utils.isMyself
+    def setDoubleBarFlag(self, exposed, flag):
+        INFO_MSG("setDoubleBarFlag", flag)
+        self.client.onSetDoubleBarFlag(flag)
+        if flag != self.doubleBarFlag:
+            if flag:
+                self.suspendAutoCombat(gameconst.SuspendAutoCombatReason.DoubleBar)
+            else:
+                self.recoverAutoCombat(self.spaceNo, gameconst.SuspendAutoCombatReason.DoubleBar)
+        if flag:
+            self.lastDoubleBarTime = utils.getTimestamp64()
+        self.doubleBarFlag = flag

@@ -1375,12 +1375,6 @@ class FlowController(ep_ctrl.controller.Controller, userType.UserSoleType,
                                name=gameconst.DungeonFlowEventName.dungeonEntityImmuneDeath)
         return e
 
-    def buildIfAllSelectEntityImmuneDeath(self, eventId, entityGIDs):
-        e = self.build_element(AllDungeonSelectedEntitiesImmuneDeath, element_id=eventId,
-                               event_handler=handleIfAllSelectEntityImmuneDeath,
-                               name=gameconst.DungeonFlowEventName.ifAllSelectEntityImmuneDeath)
-        e.add_param("entityGIDs", entityGIDs)
-        return e
 
     def buildCreateDungeonTeleporter(self, eventId, entityGID, targetEntityGID, trapRange):
         e = self.build_element(DungeonTeleporterReleaseEvent, element_id=eventId,

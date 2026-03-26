@@ -210,6 +210,12 @@
             <DatabaseLength>  512000                </DatabaseLength>
             <Persistent>    true                    </Persistent>
         </miscPropsBase>
+
+        <waitingShutdown>
+            <Type>     BOOL                         </Type>
+            <Flags>    BASE                         </Flags>
+            <Default>  0                            </Default>
+        </waitingShutdown>
     </Properties>
 
     <ClientMethods>

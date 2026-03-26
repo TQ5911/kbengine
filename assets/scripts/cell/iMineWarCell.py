@@ -17,6 +17,8 @@ import gamePlay_set as GP_SD
 import mineBattle_config as MBC
 import mineBattle_miningArea as MBMA
 
+import outsideRecord
+
 class IMineWarCell(object):
     def __init__(self):
         
@@ -137,6 +139,7 @@ class IMineWarCell(object):
         """
         if hasattr(self, 'scoreTimer'):
             if self.scoreTimer:
+                DEBUG_MSG('iMineWarCell.cancelMineWarScoreTimer called for player:', self.id, self.spaceNo)
                 self.pyDelTimer(self.scoreTimer, gametimer.MINE_WAR_PLAYER_GET_SCORE)
                 self.scoreTimer = 0
 
@@ -179,6 +182,42 @@ class IMineWarCell(object):
             _src = dungeonSrc.BasicDungeonSrc()
             self.doEnterWorldLine(destSceneId, 0, _src, 0, _pos, _dir)
             return True
+        
+    def mineWarChangeOutsideRecord(self, _m_records):
+        """
+        退出到矿战场景，做转换
+        """
+        # 非战斗期间
+        startOffset = utils.getMineWarStartOffsetSec()
+        startTime = utils.getCurrentWeekTS(offsetSec=startOffset)
+        endOffset = utils.getMineWarEndOffsetSec()
+        endTime = utils.getCurrentWeekTS(offsetSec=endOffset)
+        prepareNeedSec = MBC.datas['mineBattle_transferPersonnelTime']['value'] * 60
+        nowTime = utils.getNow()
+        if nowTime < startTime - prepareNeedSec or nowTime > endTime:
+            return
+
+        mapId = None
+        for i_mapId in reversed(list(_m_records)):
+            # 大世界分线
+            if i_mapId in gameconst.MapIdDef.mapWorldSet and i_mapId in MBMA.datas.keys():
+                mapId = i_mapId
+                break
+
+        if not mapId:
+            return
+        destSpaceNo = formula.getLineSpaceNo(i_mapId)
+        mineWarArea = formula.getMineWarMineArea(destSpaceNo)
+        if not mineWarArea:
+            return
+        destSceneId = mineWarArea[-2]
+        _pos, _dir = self.getMineWarRebornPos(destSceneId, 'AttackRebornPos')
+        record = _m_records[mapId]
+        _m_records[destSceneId] = outsideRecord.OutsideRecord(
+            formula.getLineSpaceNo(destSceneId), _pos, _dir, record.hp, record.mp, record.isDie
+        )
+        _m_records.pop(mapId)
+        self.base.onMessagePre(MBC.datas['mineBattle_teleportMsg']['value'], [])
     
     @gamedecorator.checkGameconfigEnable('mineBattle')
     def getMineWarMonsterInfo(self, exposed):

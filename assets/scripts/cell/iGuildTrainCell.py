@@ -52,9 +52,8 @@ class IGuildTrainCell(object):
         targetValue = func(targetLevel)
         propName = gtData['fightProp']
 
-        DEBUG_MSG('onUpgradeTrainLevel:', propName, targetValue, curValue, trainId, targetLevel)
+        INFO_MSG('onUpgradeTrainLevel:', propName, targetValue, curValue, trainId, targetLevel, score)
         self.addProp(propName, targetValue - curValue, gameconst.SourceType.GuildTrain)
-        score = dataUtils.calcFightPropScore(self.school, propName, targetValue - curValue)
         self.onUpdateGuildTrainScore(score)
 
     def onResetGuildTrain(self, syncDic):

@@ -571,7 +571,7 @@ class Friendship(userType.UserSoleType):
         for _gbId in gbIds:
             _gbId = int(_gbId)
             if _gbId in self.friendsDict:
-                redisUtils.RedisUtils.removeBlockAvatar(owner.gbID, _gbId, None)
+                redisUtils.FriendUtils.removeBlockAvatar(owner.gbID, _gbId, None)
                 continue
 
             if _gbId in self.blockDict:

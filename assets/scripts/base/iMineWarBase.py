@@ -19,6 +19,7 @@ import gamedecorator
 import mineBattle_miningArea as MBMA
 import gametimer
 import NPC_Pick as NPD
+import LogTrackingMgr
 
 class IMineWarBase(object):
     def __init__(self):
@@ -457,6 +458,8 @@ class IMineWarBase(object):
             return
 
         gameengine.getGlobalBase('MineWarStub').doOnMineWarKillCoreForGuild(lineType, self, self.myGuildInfoBase)
+
+        LogTrackingMgr.LogTrackingMgr.MineBattle_KillCore(lineType, self.guildUUIDBase, self.gbID)
 
     @gamedecorator.checkGameconfigEnable('mineBattle')
     def reqMineWarCollectInfo(self, exposed):

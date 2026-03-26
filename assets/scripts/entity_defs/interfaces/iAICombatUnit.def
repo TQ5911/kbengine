@@ -102,6 +102,12 @@
             <Type>          HATE_COUNTER_DATA_INFO      </Type>
             <Flags>         CELL_PRIVATE                </Flags>
         </beHateCounter>
+
+        <warningTimerId>
+            <Type>          UINT32              </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Default>       0                   </Default>
+        </warningTimerId>
     </Properties>
 
     <BaseMethods>

@@ -1,6 +1,8 @@
 import re
 import os
+import ctypes
 import random
+import functools
 
 
 
@@ -76,13 +78,26 @@ class FACE_DATA:
         else:
             print('捏脸数据未初始化，使用默认')
     
- 
+            
 
+# 获取当前解释器状态对象的地址
+def get_interpreter_id():
+    # 这是一个底层的 hack，用来获取当前线程对应的解释器状态地址
+    try:
+        pythonapi = ctypes.PyDLL(None)
+        get_interp = pythonapi.PyThreadState_Get
+        get_interp.restype = ctypes.c_void_p
+        return get_interp()
+    except:
+        return "unknown"
 
+@functools.lru_cache(maxsize=1024)
 def parse_character_data_detailed(file_path):
     """
     更详细地解析角色数据
     """
+    print('ckz will get char data', __name__, id(parse_character_data_detailed), get_interpreter_id(), file_path)
+    print(f"ckz DEBUG: type={type(file_path)} | hash={hash(file_path)} | repr={repr(file_path)}")
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
     
@@ -99,14 +114,14 @@ def extract_templates(content):
     templates = {}
     
     # 匹配简单的List<int>模板
-    simple_pattern = r'.*?List<int> m_Template_(\d+) = new List<int>\{([^\}]+)\};'
+    simple_pattern = r'.*?List<int> m_const_(\d+) = new List<int>\{([^\}]+)\};'
     matches = re.findall(simple_pattern, content)
     for template_id, values in matches:
         numbers = [int(x.strip()) for x in values.split(',') if x.strip().isdigit()]
         templates[template_id] = numbers
     
     # 匹配List<List<int>>模板
-    nested_pattern = r'.*?List<List<int>> m_Template_(\d+) = new List<List<int>>\{([^}]+)\};'
+    nested_pattern = r'.*?List<List<int>> m_const_(\d+) = new List<List<int>>\{([^}]+)\};'
     nested_matches = re.findall(nested_pattern, content)
     for template_id, values in nested_matches:
         # 解析嵌套列表
@@ -120,32 +135,40 @@ def extract_templates(content):
     
     return templates
 
+def get_template_reference(s1, s2, content, templates):
+    pattern = r'public\s+static\s+' + s1 + r'\[\]\s+' + s2 + r'\s*=\s*new\s+' + s1 + '\[\]\{\s*([^}]+)\s*\};'
+    matches = re.findall(pattern, content)
+    matches = matches[0]
+    res = []
+    if s2 == "m_CharID":
+        for v in matches.split(','):
+            v = v.replace(" ", "")
+            if v:
+                res.append(int(v))
+        return res
+    for v in matches.split(','):
+        k = resolve_template_reference(v, templates)
+        if k:
+            res.append(k)
+    return res
+
 def extract_characters(content, templates):
     """提取角色数据"""
     characters = {}
-    
-    # 匹配角色数据行
-    pattern = r'\{(\d+),new character_roleData_line\(([^)]+)\)\}'
-    matches = re.findall(pattern, content)
-    
-    for ID, params_str in matches:
-        # 按逗号分割参数，但要注意嵌套的列表
-        params = split_params_safely(params_str)
-        
-        if len(params) >= 20:  # 确保参数数量足够
-            # 根据C#代码，外观选项是倒数第4到倒数第1个参数
-            charID = int(params[0].strip())
-            face_opt_param = params[-5].strip()
-            skin_color_opt_param = params[-4].strip()
-            hair_opt_param = params[-3].strip()
-            hair_color_opt_param = params[-2].strip()
-            
-            characters[charID] = {
-                'faceOpt': resolve_template_reference(face_opt_param, templates),
-                'skinColorOpt': resolve_template_reference(skin_color_opt_param, templates),
-                'hairOpt': resolve_template_reference(hair_opt_param, templates),
-                'hairColorOpt': resolve_template_reference(hair_color_opt_param, templates)
-            }
+    charIDs = get_template_reference("uint", "m_CharID", content, templates)
+    keys = ["m_FaceOpt", "m_SkinColorOpt", "m_HairOpt", "m_HairColorOpt"]
+    rets = {}
+    for k in keys:
+        ret = get_template_reference("List<int>", k, content, templates)
+        rets[k] = ret
+
+    for i in range(3):
+        characters[charIDs[i]] = {
+            'faceOpt': rets["m_FaceOpt"][i],
+            'skinColorOpt': rets["m_SkinColorOpt"][i],
+            'hairOpt': rets["m_HairOpt"][i],
+            'hairColorOpt': rets["m_HairColorOpt"][i],
+        }
     
     return characters
 
@@ -172,22 +195,17 @@ def split_params_safely(params_str):
     return params
 
 def resolve_template_reference(param, templates):
+    param = param.replace(" ", "")
     """解析模板引用"""
-    if param.startswith("m_Template_"):
-        template_id = param.replace("m_Template_", "")
+    if param.startswith("character_roleData_const."):
+        template_id = param.replace("character_roleData_const.m_const_", "")
         return templates.get(template_id, [])
-    elif "new List<int>" in param:
-        # 直接定义的列表
-        match = re.search(r'new List<int>\{([^\}]+)\}', param)
-        if match:
-            numbers = [int(x.strip()) for x in match.group(1).split(',') if x.strip().isdigit()]
-            return numbers
     return []
 
 
 # 使用示例
 def main():
-    file_path = r"/Client/Assets/CSHotUpdate/Scripts/ConfigData/character_roleData.cs"
+    file_path = r"/home/h1/tools/gamebot/scripts/bots/botUtils/character_roleData.cs"
     # file_path = r"\Client\Assets\CSHotUpdate\Scripts\ConfigData\character_roleData.cs"  # 替换为你的文件路径
     current_dir = os.path.dirname(os.path.abspath(__file__))
     print("当前机器人工具目录:", current_dir)

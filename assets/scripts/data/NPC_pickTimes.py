@@ -75,45 +75,13 @@ datas = _tools.RODict({
         "ID": 16000047,
         "pickTimes": 1
     }),
-    16000048: _tools.RODict({
-        "ID": 16000048,
-        "pickTimes": 5
-    }),
-    16000049: _tools.RODict({
-        "ID": 16000049,
-        "pickTimes": 10
-    }),
-    16000050: _tools.RODict({
-        "ID": 16000050,
-        "pickTimes": 15
-    }),
-    16000051: _tools.RODict({
-        "ID": 16000051,
-        "pickTimes": 20
-    }),
-    16000052: _tools.RODict({
-        "ID": 16000052,
-        "pickTimes": 20
-    }),
-    16000053: _tools.RODict({
-        "ID": 16000053,
-        "pickTimes": 10
-    }),
-    16000054: _tools.RODict({
-        "ID": 16000054,
-        "pickTimes": 15
-    }),
-    16000055: _tools.RODict({
-        "ID": 16000055,
-        "pickTimes": 20
-    }),
     16000056: _tools.RODict({
         "ID": 16000056,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000057: _tools.RODict({
         "ID": 16000057,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000058: _tools.RODict({
         "ID": 16000058,
@@ -201,163 +169,163 @@ datas = _tools.RODict({
     }),
     16000080: _tools.RODict({
         "ID": 16000080,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000081: _tools.RODict({
         "ID": 16000081,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000082: _tools.RODict({
         "ID": 16000082,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000083: _tools.RODict({
         "ID": 16000083,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000084: _tools.RODict({
         "ID": 16000084,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000085: _tools.RODict({
         "ID": 16000085,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000086: _tools.RODict({
         "ID": 16000086,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000087: _tools.RODict({
         "ID": 16000087,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000088: _tools.RODict({
         "ID": 16000088,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000089: _tools.RODict({
         "ID": 16000089,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000090: _tools.RODict({
         "ID": 16000090,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000091: _tools.RODict({
         "ID": 16000091,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000092: _tools.RODict({
         "ID": 16000092,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000093: _tools.RODict({
         "ID": 16000093,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000094: _tools.RODict({
         "ID": 16000094,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000095: _tools.RODict({
         "ID": 16000095,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000096: _tools.RODict({
         "ID": 16000096,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000097: _tools.RODict({
         "ID": 16000097,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000098: _tools.RODict({
         "ID": 16000098,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000099: _tools.RODict({
         "ID": 16000099,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000100: _tools.RODict({
         "ID": 16000100,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000101: _tools.RODict({
         "ID": 16000101,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000102: _tools.RODict({
         "ID": 16000102,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000103: _tools.RODict({
         "ID": 16000103,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000104: _tools.RODict({
         "ID": 16000104,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000105: _tools.RODict({
         "ID": 16000105,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000106: _tools.RODict({
         "ID": 16000106,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000107: _tools.RODict({
         "ID": 16000107,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000108: _tools.RODict({
         "ID": 16000108,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000109: _tools.RODict({
         "ID": 16000109,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000110: _tools.RODict({
         "ID": 16000110,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000111: _tools.RODict({
         "ID": 16000111,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000112: _tools.RODict({
         "ID": 16000112,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000113: _tools.RODict({
         "ID": 16000113,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000114: _tools.RODict({
         "ID": 16000114,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000115: _tools.RODict({
         "ID": 16000115,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000116: _tools.RODict({
         "ID": 16000116,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000117: _tools.RODict({
         "ID": 16000117,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000118: _tools.RODict({
         "ID": 16000118,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16000119: _tools.RODict({
         "ID": 16000119,
-        "pickTimes": 1
+        "pickTimes": 0
     }),
     16001001: _tools.RODict({
         "ID": 16001001,
@@ -1018,7 +986,239 @@ datas = _tools.RODict({
     16006106: _tools.RODict({
         "ID": 16006106,
         "pickTimes": 1
+    }),
+    16006107: _tools.RODict({
+        "ID": 16006107,
+        "pickTimes": 1
+    }),
+    16006108: _tools.RODict({
+        "ID": 16006108,
+        "pickTimes": 1
+    }),
+    16006109: _tools.RODict({
+        "ID": 16006109,
+        "pickTimes": 1
+    }),
+    16006110: _tools.RODict({
+        "ID": 16006110,
+        "pickTimes": 1
+    }),
+    16006111: _tools.RODict({
+        "ID": 16006111,
+        "pickTimes": 1
+    }),
+    16006112: _tools.RODict({
+        "ID": 16006112,
+        "pickTimes": 1
+    }),
+    16006113: _tools.RODict({
+        "ID": 16006113,
+        "pickTimes": 1
+    }),
+    16006114: _tools.RODict({
+        "ID": 16006114,
+        "pickTimes": 1
+    }),
+    16006115: _tools.RODict({
+        "ID": 16006115,
+        "pickTimes": 1
+    }),
+    16006116: _tools.RODict({
+        "ID": 16006116,
+        "pickTimes": 1
+    }),
+    16006117: _tools.RODict({
+        "ID": 16006117,
+        "pickTimes": 1
+    }),
+    16006118: _tools.RODict({
+        "ID": 16006118,
+        "pickTimes": 1
+    }),
+    16006119: _tools.RODict({
+        "ID": 16006119,
+        "pickTimes": 1
+    }),
+    16006120: _tools.RODict({
+        "ID": 16006120,
+        "pickTimes": 1
+    }),
+    16006121: _tools.RODict({
+        "ID": 16006121,
+        "pickTimes": 1
+    }),
+    16006122: _tools.RODict({
+        "ID": 16006122,
+        "pickTimes": 1
+    }),
+    16006123: _tools.RODict({
+        "ID": 16006123,
+        "pickTimes": 1
+    }),
+    16006124: _tools.RODict({
+        "ID": 16006124,
+        "pickTimes": 1
+    }),
+    16006125: _tools.RODict({
+        "ID": 16006125,
+        "pickTimes": 1
+    }),
+    16006126: _tools.RODict({
+        "ID": 16006126,
+        "pickTimes": 1
+    }),
+    16006127: _tools.RODict({
+        "ID": 16006127,
+        "pickTimes": 1
+    }),
+    16006128: _tools.RODict({
+        "ID": 16006128,
+        "pickTimes": 1
+    }),
+    16006129: _tools.RODict({
+        "ID": 16006129,
+        "pickTimes": 1
+    }),
+    16006130: _tools.RODict({
+        "ID": 16006130,
+        "pickTimes": 1
+    }),
+    16006131: _tools.RODict({
+        "ID": 16006131,
+        "pickTimes": 1
+    }),
+    16006132: _tools.RODict({
+        "ID": 16006132,
+        "pickTimes": 1
+    }),
+    16006133: _tools.RODict({
+        "ID": 16006133,
+        "pickTimes": 1
+    }),
+    16006134: _tools.RODict({
+        "ID": 16006134,
+        "pickTimes": 1
+    }),
+    16006135: _tools.RODict({
+        "ID": 16006135,
+        "pickTimes": 1
+    }),
+    16006136: _tools.RODict({
+        "ID": 16006136,
+        "pickTimes": 1
+    }),
+    16006137: _tools.RODict({
+        "ID": 16006137,
+        "pickTimes": 1
+    }),
+    16006138: _tools.RODict({
+        "ID": 16006138,
+        "pickTimes": 1
+    }),
+    16006139: _tools.RODict({
+        "ID": 16006139,
+        "pickTimes": 1
+    }),
+    16006140: _tools.RODict({
+        "ID": 16006140,
+        "pickTimes": 1
+    }),
+    16006141: _tools.RODict({
+        "ID": 16006141,
+        "pickTimes": 1
+    }),
+    16006142: _tools.RODict({
+        "ID": 16006142,
+        "pickTimes": 1
+    }),
+    16006143: _tools.RODict({
+        "ID": 16006143,
+        "pickTimes": 1
+    }),
+    16006144: _tools.RODict({
+        "ID": 16006144,
+        "pickTimes": 1
+    }),
+    16006145: _tools.RODict({
+        "ID": 16006145,
+        "pickTimes": 1
+    }),
+    16006146: _tools.RODict({
+        "ID": 16006146,
+        "pickTimes": 1
+    }),
+    16006147: _tools.RODict({
+        "ID": 16006147,
+        "pickTimes": 1
+    }),
+    16006148: _tools.RODict({
+        "ID": 16006148,
+        "pickTimes": 1
+    }),
+    16006149: _tools.RODict({
+        "ID": 16006149,
+        "pickTimes": 1
+    }),
+    16006150: _tools.RODict({
+        "ID": 16006150,
+        "pickTimes": 1
+    }),
+    16006151: _tools.RODict({
+        "ID": 16006151,
+        "pickTimes": 1
+    }),
+    16006152: _tools.RODict({
+        "ID": 16006152,
+        "pickTimes": 1
+    }),
+    16006153: _tools.RODict({
+        "ID": 16006153,
+        "pickTimes": 1
+    }),
+    16006154: _tools.RODict({
+        "ID": 16006154,
+        "pickTimes": 1
+    }),
+    16006155: _tools.RODict({
+        "ID": 16006155,
+        "pickTimes": 1
+    }),
+    16006156: _tools.RODict({
+        "ID": 16006156,
+        "pickTimes": 1
+    }),
+    16006157: _tools.RODict({
+        "ID": 16006157,
+        "pickTimes": 1
+    }),
+    16006158: _tools.RODict({
+        "ID": 16006158,
+        "pickTimes": 1
+    }),
+    16006159: _tools.RODict({
+        "ID": 16006159,
+        "pickTimes": 1
+    }),
+    16006160: _tools.RODict({
+        "ID": 16006160,
+        "pickTimes": 1
+    }),
+    16006161: _tools.RODict({
+        "ID": 16006161,
+        "pickTimes": 1
+    }),
+    16006162: _tools.RODict({
+        "ID": 16006162,
+        "pickTimes": 1
+    }),
+    16006163: _tools.RODict({
+        "ID": 16006163,
+        "pickTimes": 1
+    }),
+    16006164: _tools.RODict({
+        "ID": 16006164,
+        "pickTimes": 1
     })
 })
 minKey = 16000002
-maxKey = 16006106
+maxKey = 16006164

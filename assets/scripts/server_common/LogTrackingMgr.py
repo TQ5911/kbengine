@@ -44,7 +44,7 @@ class LogTrackingMgr:
 
     # 用户登录事件
     @staticmethod
-    def Server_Login(accountId, deviceModel, ipAddress, operatingSystem, accountType, channelSource, packageSource, **kwargs):
+    def Server_Login(accountId, deviceModel, ipAddress, operatingSystem, accountType, channelSource, packageSource, device, lastLoginTime, loginTime, appVersion, userInfoId, **kwargs):
         args = {}
         args["trackName"] = "Server_Login"
         args["accountId"] = str(accountId)
@@ -54,11 +54,16 @@ class LogTrackingMgr:
         args["accountType"] = str(accountType)
         args["channelSource"] = str(channelSource)
         args["packageSource"] = str(packageSource)
+        args["device"] = str(device)
+        args["lastLoginTime"] = lastLoginTime
+        args["loginTime"] = loginTime
+        args["appVersion"] = str(appVersion)
+        args["userInfoId"] = str(userInfoId)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 角色登录事件
     @staticmethod
-    def Server_Role_Login(accountId, gbId, school, name, level, gameId, userInfoId, createTimestamp, accountType, channelSource, packageSource, **kwargs):
+    def Server_Role_Login(accountId, gbId, school, name, level, gameId, userInfoId, createTimestamp, accountType, channelSource, packageSource, logType, score, experience, money, coin, mapId, **kwargs):
         args = {}
         args["trackName"] = "Server_Role_Login"
         args["accountId"] = str(accountId)
@@ -72,11 +77,17 @@ class LogTrackingMgr:
         args["accountType"] = str(accountType)
         args["channelSource"] = str(channelSource)
         args["packageSource"] = str(packageSource)
+        args["logType"] = logType
+        args["score"] = score
+        args["experience"] = experience
+        args["money"] = money
+        args["coin"] = coin
+        args["mapId"] = mapId
         LogTrackingMgr.LOG(args, kwargs)
 
     # 角色登出事件
     @staticmethod
-    def Server_Role_Logout(accountId, gbId, school, name, level, packageSource, **kwargs):
+    def Server_Role_Logout(accountId, gbId, school, name, level, packageSource, score, experience, money, coin, mapId, reason, **kwargs):
         args = {}
         args["trackName"] = "Server_Role_Logout"
         args["accountId"] = str(accountId)
@@ -85,11 +96,17 @@ class LogTrackingMgr:
         args["name"] = str(name)
         args["level"] = level
         args["packageSource"] = str(packageSource)
+        args["score"] = score
+        args["experience"] = experience
+        args["money"] = money
+        args["coin"] = coin
+        args["mapId"] = mapId
+        args["reason"] = reason
         LogTrackingMgr.LOG(args, kwargs)
 
     # 创建角色事件
     @staticmethod
-    def Server_Create_Role(accountId, gbId, school, name, gameId, userInfoId, createTimestamp, packageSource, faceId, faceColorId, hairId, hairColorId, **kwargs):
+    def Server_Create_Role(accountId, gbId, school, name, gameId, userInfoId, createTimestamp, packageSource, faceId, faceColorId, hairId, hairColorId, creationOrder, sex, **kwargs):
         args = {}
         args["trackName"] = "Server_Create_Role"
         args["accountId"] = str(accountId)
@@ -104,6 +121,8 @@ class LogTrackingMgr:
         args["faceColorId"] = faceColorId
         args["hairId"] = hairId
         args["hairColorId"] = hairColorId
+        args["creationOrder"] = creationOrder
+        args["sex"] = sex
         LogTrackingMgr.LOG(args, kwargs)
 
     # 善恶值变化事件
@@ -161,6 +180,22 @@ class LogTrackingMgr:
         args["guildName"] = str(guildName)
         LogTrackingMgr.LOG(args, kwargs)
 
+    # 玩家成就排行榜
+    @staticmethod
+    def LeaderBoard_Achievement(type, rank, gbId, name, level, point, school, guildUUID, guildName, **kwargs):
+        args = {}
+        args["trackName"] = "LeaderBoard_Achievement"
+        args["type"] = type
+        args["rank"] = rank
+        args["gbId"] = gbId
+        args["name"] = str(name)
+        args["level"] = level
+        args["point"] = point
+        args["school"] = school
+        args["guildUUID"] = guildUUID
+        args["guildName"] = str(guildName)
+        LogTrackingMgr.LOG(args, kwargs)
+
     # 合成道具事件
     @staticmethod
     def Synthesis_Item(gbId, costItemID, costItemNum, costCurrencyID, costCurrencyNum, getID, getNum, getQuality, desc, opUUID, **kwargs):
@@ -200,12 +235,13 @@ class LogTrackingMgr:
 
     # 矿战结束后奖励事件
     @staticmethod
-    def MineBattle_End_Reward(activityEndTime, mapId, activityRank, **kwargs):
+    def MineBattle_End_Reward(activityEndTime, mapId, activityRank, opUUID, **kwargs):
         args = {}
         args["trackName"] = "MineBattle_End_Reward"
         args["activityEndTime"] = str(activityEndTime)
         args["mapId"] = str(mapId)
         args["activityRank"] = str(activityRank)
+        args["opUUID"] = opUUID
         LogTrackingMgr.LOG(args, kwargs)
 
     # 矿战分红事件
@@ -230,6 +266,16 @@ class LogTrackingMgr:
         args["killerGuildID"] = str(killerGuildID)
         args["gbId"] = gbId
         args["flagDeathTimes"] = str(flagDeathTimes)
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 矿战击杀水晶事件
+    @staticmethod
+    def MineBattle_KillCore(mapId, killerGuildID, gbId, **kwargs):
+        args = {}
+        args["trackName"] = "MineBattle_KillCore"
+        args["mapId"] = str(mapId)
+        args["killerGuildID"] = str(killerGuildID)
+        args["gbId"] = gbId
         LogTrackingMgr.LOG(args, kwargs)
 
     # 好友操作事件
@@ -329,32 +375,35 @@ class LogTrackingMgr:
 
     # 公会练功场重置
     @staticmethod
-    def Guild_Train_Reset(gbId, **kwargs):
+    def Guild_Train_Reset(gbId, opUUID, **kwargs):
         args = {}
         args["trackName"] = "Guild_Train_Reset"
         args["gbId"] = gbId
+        args["opUUID"] = opUUID
         LogTrackingMgr.LOG(args, kwargs)
 
     # 公会练功场事件
     @staticmethod
-    def Guild_Train(gbId, trainId, trainLevel, trainProp, **kwargs):
+    def Guild_Train(gbId, trainId, trainLevel, trainProp, opUUID, **kwargs):
         args = {}
         args["trackName"] = "Guild_Train"
         args["gbId"] = gbId
         args["trainId"] = trainId
         args["trainLevel"] = trainLevel
         args["trainProp"] = str(trainProp)
+        args["opUUID"] = opUUID
         LogTrackingMgr.LOG(args, kwargs)
 
     # 公会任务事件
     @staticmethod
-    def Guild_Task(gbId, taskId, taskProgress, taskState, **kwargs):
+    def Guild_Task(gbId, taskId, taskProgress, taskState, opUUID, **kwargs):
         args = {}
         args["trackName"] = "Guild_Task"
         args["gbId"] = gbId
         args["taskId"] = taskId
         args["taskProgress"] = taskProgress
         args["taskState"] = taskState
+        args["opUUID"] = opUUID
         LogTrackingMgr.LOG(args, kwargs)
 
     # 公会商店事件
@@ -394,7 +443,7 @@ class LogTrackingMgr:
 
     # 帮会军需处协助
     @staticmethod
-    def Guild_QiXieAssist(guild_warEquipmentID, srcGbId, guildUUID, guild_warEquipmentLevel, exp, **kwargs):
+    def Guild_QiXieAssist(guild_warEquipmentID, srcGbId, guildUUID, guild_warEquipmentLevel, exp, opUUID, **kwargs):
         args = {}
         args["trackName"] = "Guild_QiXieAssist"
         args["guild_warEquipmentID"] = guild_warEquipmentID
@@ -402,6 +451,7 @@ class LogTrackingMgr:
         args["guildUUID"] = guildUUID
         args["guild_warEquipmentLevel"] = guild_warEquipmentLevel
         args["exp"] = exp
+        args["opUUID"] = opUUID
         LogTrackingMgr.LOG(args, kwargs)
 
     # 魔方事件
@@ -419,18 +469,19 @@ class LogTrackingMgr:
 
     # 仙境事件
     @staticmethod
-    def Wonderland_Info(gbId, gameId, floor, wonderLandEvent, **kwargs):
+    def Wonderland_Info(gbId, gameId, floor, wonderLandEvent, leftTime, **kwargs):
         args = {}
         args["trackName"] = "Wonderland_Info"
         args["gbId"] = gbId
         args["gameId"] = str(gameId)
         args["floor"] = floor
         args["wonderLandEvent"] = wonderLandEvent
+        args["leftTime"] = leftTime
         LogTrackingMgr.LOG(args, kwargs)
 
     # 成就事件
     @staticmethod
-    def Achievement_Update(accountId, gbId, gameId, achieveId, version, state, progress, **kwargs):
+    def Achievement_Update(accountId, gbId, gameId, achieveId, version, state, progress, sumPoint, **kwargs):
         args = {}
         args["trackName"] = "Achievement_Update"
         args["accountId"] = str(accountId)
@@ -440,6 +491,7 @@ class LogTrackingMgr:
         args["version"] = str(version)
         args["state"] = state
         args["progress"] = progress
+        args["sumPoint"] = sumPoint
         LogTrackingMgr.LOG(args, kwargs)
 
     # 道具事件
@@ -746,21 +798,25 @@ class LogTrackingMgr:
 
     # GM指令
     @staticmethod
-    def GM_GM(src, command, **kwargs):
+    def GM_GM(src, command, gmArgs, **kwargs):
         args = {}
         args["trackName"] = "GM_GM"
         args["src"] = str(src)
         args["command"] = str(command)
+        args["gmArgs"] = str(gmArgs)
         LogTrackingMgr.LOG(args, kwargs)
 
     # 货币兑换
     @staticmethod
-    def Currency_Exchange(gbId, exchangeID, opUUID, **kwargs):
+    def Currency_Exchange(gbId, exchangeID, opUUID, dailyLimit, dailyUsedBefore, dailyUsedAfter, **kwargs):
         args = {}
         args["trackName"] = "Currency_Exchange"
         args["gbId"] = gbId
         args["exchangeID"] = exchangeID
         args["opUUID"] = opUUID
+        args["dailyLimit"] = dailyLimit
+        args["dailyUsedBefore"] = dailyUsedBefore
+        args["dailyUsedAfter"] = dailyUsedAfter
         LogTrackingMgr.LOG(args, kwargs)
 
     # 商店购买
@@ -964,11 +1020,12 @@ class LogTrackingMgr:
 
     # 怪物死亡
     @staticmethod
-    def Kill_Monster(monsterId, mapId, suffix, **kwargs):
+    def Kill_Monster(monsterId, mapId, gid, suffix, **kwargs):
         args = {}
         args["trackName"] = "Kill_Monster"
         args["monsterId"] = monsterId
         args["mapId"] = mapId
+        args["gid"] = gid
         args["suffix"] = suffix
         LogTrackingMgr.LOG(args, kwargs)
 
@@ -1046,7 +1103,7 @@ class LogTrackingMgr:
 
     # 副本结算
     @staticmethod
-    def Dungeon_Settlement(uniqueId, dungeonType, dungeonId, spaceUUID, spaceNo, gbId, isClear, isFirstClear, finishTime, isWin, reasonType, finishedPlayerCount, deadCount, firstRewards, clearRewards, goldRewards, autoBattleTimes, playerScore, playerLevel, **kwargs):
+    def Dungeon_Settlement(uniqueId, dungeonType, dungeonId, spaceUUID, spaceNo, gbId, isClear, isFirstClear, finishTime, isWin, reasonType, finishedPlayerCount, deadCount, firstRewards, clearRewards, goldRewards, autoBattleTimes, playerScore, playerLevel, fightScore, **kwargs):
         args = {}
         args["trackName"] = "Dungeon_Settlement"
         args["uniqueId"] = uniqueId
@@ -1068,11 +1125,12 @@ class LogTrackingMgr:
         args["autoBattleTimes"] = autoBattleTimes
         args["playerScore"] = playerScore
         args["playerLevel"] = playerLevel
+        args["fightScore"] = fightScore
         LogTrackingMgr.LOG(args, kwargs)
 
     # 更新经验
     @staticmethod
-    def Update_Exp(gbId, deltaVal, modifyVal, opUUID, src, spaceNo, **kwargs):
+    def Update_Exp(gbId, deltaVal, modifyVal, opUUID, src, spaceNo, level, **kwargs):
         args = {}
         args["trackName"] = "Update_Exp"
         args["gbId"] = gbId
@@ -1081,6 +1139,7 @@ class LogTrackingMgr:
         args["opUUID"] = opUUID
         args["src"] = src
         args["spaceNo"] = spaceNo
+        args["level"] = level
         LogTrackingMgr.LOG(args, kwargs)
 
     # 死亡掉装
@@ -1147,10 +1206,11 @@ class LogTrackingMgr:
 
     # 精灵获取
     @staticmethod
-    def Pet_Get(gbId, petId, petQuality, petSrc, **kwargs):
+    def Pet_Get(gbId, opUUID, petId, petQuality, petSrc, **kwargs):
         args = {}
         args["trackName"] = "Pet_Get"
         args["gbId"] = gbId
+        args["opUUID"] = opUUID
         args["petId"] = petId
         args["petQuality"] = petQuality
         args["petSrc"] = petSrc
@@ -1173,7 +1233,7 @@ class LogTrackingMgr:
 
     # 精灵编组
     @staticmethod
-    def Pet_MakeTeam(gbId, playerLevel, battleId, battleType, petId, petQuality, petLevel, opType, joinBattleCount, battleCount, **kwargs):
+    def Pet_MakeTeam(gbId, playerLevel, battleId, battleType, petId, petQuality, petLevel, joinBattleCount, battleCount, **kwargs):
         args = {}
         args["trackName"] = "Pet_MakeTeam"
         args["gbId"] = gbId
@@ -1183,7 +1243,6 @@ class LogTrackingMgr:
         args["petId"] = petId
         args["petQuality"] = petQuality
         args["petLevel"] = petLevel
-        args["opType"] = opType
         args["joinBattleCount"] = joinBattleCount
         args["battleCount"] = battleCount
         LogTrackingMgr.LOG(args, kwargs)
@@ -1307,15 +1366,19 @@ class LogTrackingMgr:
 
     # 交易行下架
     @staticmethod
-    def Auction_ItemCanel(playerGBID, auctionUUID, itemId, itemNum, eachPrice, totalPrice, **kwargs):
+    def Auction_ItemCancel(playerGBID, auctionUUID, itemId, itemNum, eachPrice, totalPrice, createTime, addTime, expireTime, status, **kwargs):
         args = {}
-        args["trackName"] = "Auction_ItemCanel"
+        args["trackName"] = "Auction_ItemCancel"
         args["playerGBID"] = playerGBID
         args["auctionUUID"] = auctionUUID
         args["itemId"] = itemId
         args["itemNum"] = itemNum
         args["eachPrice"] = eachPrice
         args["totalPrice"] = totalPrice
+        args["createTime"] = createTime
+        args["addTime"] = addTime
+        args["expireTime"] = expireTime
+        args["status"] = status
         LogTrackingMgr.LOG(args, kwargs)
 
     # 交易行成交
@@ -1343,6 +1406,32 @@ class LogTrackingMgr:
         args["collectDataType"] = collectDataType
         args["collectOpType"] = collectOpType
         args["collectId"] = collectId
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 混沌回廊ticket事件
+    @staticmethod
+    def Cube_Ticket(gbId, src, delta, free, paid, opUUID, **kwargs):
+        args = {}
+        args["trackName"] = "Cube_Ticket"
+        args["gbId"] = gbId
+        args["src"] = src
+        args["delta"] = delta
+        args["free"] = free
+        args["paid"] = paid
+        args["opUUID"] = opUUID
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 秘境峰ticket事件
+    @staticmethod
+    def WonderLand_Ticket(gbId, src, delta, num, paid, opUUID, **kwargs):
+        args = {}
+        args["trackName"] = "WonderLand_Ticket"
+        args["gbId"] = gbId
+        args["src"] = src
+        args["delta"] = delta
+        args["num"] = num
+        args["paid"] = paid
+        args["opUUID"] = opUUID
         LogTrackingMgr.LOG(args, kwargs)
 
     @staticmethod

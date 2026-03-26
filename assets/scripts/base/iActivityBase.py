@@ -2,6 +2,7 @@
 import gameconst
 import cube_config
 import actionContext
+import wonderLand_config as WL_CD
 
 
 class IActivityBase(object):
@@ -15,6 +16,9 @@ class IActivityBase(object):
 
         if activityId == cube_config.datas['cubeActID']['value']:
             self.completeGuildTask(gameconst.GuildTaskType.ENTERMAP, cube_config.datas['cubeActID']['value'])
+
+        elif activityId == WL_CD.datas['wonderLandActID']['value']:
+            self.completeGuildTask(gameconst.GuildTaskType.ENTERMAP, WL_CD.datas['wonderLandActID']['value'])
 
 
 

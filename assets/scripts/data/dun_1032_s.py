@@ -7973,46 +7973,6 @@ datas ={
           "Remark": "",
           "ShowInSceneMap": 1
         }
-      },
-      "10328023": {
-        "ActivityID": 0,
-        "AttachedGIDList": [],
-        "ClassName": "Anchor",
-        "ClassNameType": 20,
-        "CustomID": "",
-        "Dir": 269.5939,
-        "DisplayName": "\u795e\u884c\u70b9\u00b7\u86c7\u6218\u8425\u5730",
-        "EntityID": 0,
-        "ID": 10328023,
-        "PosX": 189.838,
-        "PosY": 309.9854,
-        "PosZ": 419.9355,
-        "Props": {
-          "CameraId": 0,
-          "MapEntityType": "26",
-          "Remark": "",
-          "ShowInSceneMap": 1
-        }
-      },
-      "10328024": {
-        "ActivityID": 0,
-        "AttachedGIDList": [],
-        "ClassName": "Anchor",
-        "ClassNameType": 20,
-        "CustomID": "",
-        "Dir": 53.1677,
-        "DisplayName": "\u795e\u884c\u70b9\u00b7\u6c89\u8239",
-        "EntityID": 0,
-        "ID": 10328024,
-        "PosX": 516.2299,
-        "PosY": 321.5659,
-        "PosZ": 521.5059,
-        "Props": {
-          "CameraId": 0,
-          "MapEntityType": "26",
-          "Remark": "",
-          "ShowInSceneMap": 1
-        }
       }
     },
     "BreakAwayStuckPos": {

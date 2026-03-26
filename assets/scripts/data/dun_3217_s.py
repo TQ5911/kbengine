@@ -45,7 +45,7 @@ datas ={
           "PosZ": 65.75397,
           "Props": {
             "GroupID": "",
-            "Level": 40,
+            "Level": 38,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -119,18 +119,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 32178005,
-          "PosX": 129.3976,
-          "PosY": 527.7435,
-          "PosZ": 25.79705,
+          "PosX": 125.3504,
+          "PosY": 527.7408,
+          "PosZ": 25.98632,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 220.4391,
-            "TelX": 129.3976,
-            "TelY": 527.7435,
-            "TelZ": 25.79705
+            "TelX": 125.3504,
+            "TelY": 527.7408,
+            "TelZ": 25.98632
           }
         }
       }

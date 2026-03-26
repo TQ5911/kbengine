@@ -44,19 +44,6 @@ class LingShou(userType.UserSoleType):
 
         score += PDPD.datas[self.petId]['score']
         
-        petCfg = PDPD.datas.get(self.petId, None)
-        if petCfg:
-            levelPropList = petCfg['levelProp']
-            if levelPropList:
-                levelAddScore = 0
-                minLevel = int(PDSD.datas['petMinLevel']['value'])
-                for propName, val in levelPropList:
-                    minLevel += 1
-                    if minLevel > self.level:
-                        break
-                    levelAddScore += dataUtils.calcFightPropScore(self.school, propName, val)
-                score += levelAddScore
-                INFO_MSG("_getLingShouScore", levelAddScore, score)
         return score
 
     def _getBaseLingShouScore(self):
@@ -66,6 +53,16 @@ class LingShou(userType.UserSoleType):
         for propName, val in prop:
             totalScore += dataUtils.calcFightPropScore(self.school, propName, val)
 
+        levelAddScore = 0
+        levelPropList = petData['levelProp']
+        if levelPropList:
+            minLevel = int(PDSD.datas['petMinLevel']['value'])
+            for propName, val in levelPropList:
+                minLevel += 1
+                if minLevel > self.level:
+                    break
+                levelAddScore += dataUtils.calcFightPropScore(self.school, propName, val)
+            totalScore += levelAddScore
         return totalScore
 
     def updateLingShouScore(self, owner):
@@ -158,11 +155,13 @@ class LingShou(userType.UserSoleType):
     def getExp(self):
         return self.exp
     
-    def setLevelAndExp(self, level, exp, owner):
+    def setLevelAndExp(self, oldLevel, level, exp, owner):
         self.level = level
         self.exp = exp
-        self.updateLingShouScore(owner)
-    
+        self.updateLingShouBaseScore()
+        owner.updatePetScore()
+        owner.cell.updateLevelProps(self.petId, oldLevel, self.level)       
+
 class LingShouBattleListVal(userType.UserSoleType):
     def __init__(self, battleName, petIdList):
         self.battleName = battleName
@@ -280,12 +279,13 @@ class LingShouInfo(userType.UserSoleType):
         pet = addContext.pet
         self.pets[pet.petId] = pet
         pet.updateLingShouBaseScore()
+        owner.cell.onInitPetProps([pet.petId], [pet.level])
         owner.client.onUpdateLingShouData(self.toClientData([pet.petId]))
 
         pet.updateLingShouScore(owner)
         owner.onMessagePre(PDSD.datas['petUnlockTips']['value'], [str(IDIDS.petIndexDatas[pet.petId])])
 
-        LogTrackingMgr.LogTrackingMgr.Pet_Get(owner.gbID, pet.petId, pet.quality, addContext.reason)
+        LogTrackingMgr.LogTrackingMgr.Pet_Get(owner.gbID, addContext.extra['opUUID'], pet.petId, pet.quality, addContext.reason)
 
     def addLingShou(self, owner, addContext):
         pet = LingShou()
@@ -351,7 +351,7 @@ class LingShouInfo(userType.UserSoleType):
             battleCount = self.battleList[battleIndex].getPetCount()
 
             LogTrackingMgr.LogTrackingMgr.Pet_MakeTeam(owner.gbID, owner.getAvatarLevel(), battleIndex, battleType, \
-                                                    petId, petQuality, petLevel, battleType, joinBattleCount, battleCount)
+                                                        petId, petQuality, petLevel, joinBattleCount, battleCount)
         
         owner.client.onUpdateLingShouBattleList(battleIndex, petId, slotId)
 
@@ -360,4 +360,8 @@ class LingShouInfo(userType.UserSoleType):
 
     def getSlotIdByPetId(self, petId, battleListIndex):
         return self.battleList[battleListIndex].petIdList.index(petId)
+    
+    def checkBattlePetRepeat(self, battleIndex, slotId, petId):
+        INFO_MSG("checkBattlePetRepeat", battleIndex, slotId, petId)
+        return self.battleList[battleIndex].checkPet(petId)
     # --------------- battle list -------------------

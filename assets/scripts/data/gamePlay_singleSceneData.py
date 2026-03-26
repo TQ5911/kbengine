@@ -329,7 +329,7 @@ datas = _tools.RODict({
     }),
     "field_shilianfeng_01": _tools.RODict({
         "sceneRes": "field_shilianfeng_01",
-        "sceneName": "试炼峰一层",
+        "sceneName": "天劫崖一层",
         "defaultMapID": 5100,
         "returnPos": None,
         "tmxRes": "shiLianFeng_01",

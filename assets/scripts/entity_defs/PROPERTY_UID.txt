@@ -45,6 +45,7 @@ Account tLastWeekUpdateTimeDict 30300
 Account tempMiscPropsBase 32225
 Account timerDataBase 30293
 Account userInfoId 31202
+Account waitingShutdown 32298
 ActStub actTimeQueue 30969
 ActStub actTimerId 30968
 ActStub birthInDB 30959
@@ -96,8 +97,11 @@ Avatar PVPDmg 463
 Avatar PVPDmgAnti 464
 Avatar accountDBID 30305
 Avatar accountName 10
+Avatar accountNameCell 32294
 Avatar accountType 30304
+Avatar accuracy 142
 Avatar achievementInfo 31468
+Avatar adjAccuracy 32266
 Avatar adjAntiFatal 155
 Avatar adjAntiMortal 136
 Avatar adjAtkBless 30923
@@ -108,6 +112,7 @@ Avatar adjCopper 30257
 Avatar adjDmgArmor 449
 Avatar adjDodge 132
 Avatar adjDrugsQuantity 32082
+Avatar adjEvasion 32268
 Avatar adjExpGrow 30255
 Avatar adjFatal 25
 Avatar adjFinalDmg 31547
@@ -181,6 +186,7 @@ Avatar autoCombat 80
 Avatar autoCombatInfo 30035
 Avatar autoCombatInterval 30038
 Avatar autoCombatReliveReturnTimes 434
+Avatar autoCombatSkillFrequent 32265
 Avatar autoCombatSuspendReason 30034
 Avatar autoDrinkPotionTimerId 31064
 Avatar autoMatchStartTime 30562
@@ -195,6 +201,7 @@ Avatar bTeamCaptain 75
 Avatar backPeaceTimer 30050
 Avatar bagData 30386
 Avatar banLogin 32172
+Avatar baseAccuracy 32267
 Avatar baseAntiFatal 30244
 Avatar baseAntiMortal 30248
 Avatar baseBodyEquipDressDataDic 31267
@@ -203,6 +210,7 @@ Avatar baseDodge 30347
 Avatar baseDrugsQuantity 32081
 Avatar baseElementRate 30238
 Avatar baseEquipEncExtraTimesList 31265
+Avatar baseEvasion 32269
 Avatar baseFatal 30243
 Avatar baseFinalDmg 31546
 Avatar baseFinalDmgAnti 31548
@@ -250,6 +258,7 @@ Avatar bigWorldRouteController 30013
 Avatar bindMoney 29
 Avatar birthInDB 30310
 Avatar birthInMem 30366
+Avatar birthIp 32261
 Avatar blazeIds 256
 Avatar bloodSuck 141
 Avatar bodyEquipData 31261
@@ -292,9 +301,11 @@ Avatar crossServerTickBackTime 31580
 Avatar crossServerTickStartTime 31191
 Avatar crusadeInfo 413
 Avatar crusadePassRecords 41
-Avatar cubeCowTimerId 31942
 Avatar cubeEnterFloor 349
+Avatar cubePrayTimes 38
 Avatar cubeQuota 31488
+Avatar cubeRoomKickTimerId 30994
+Avatar cubeRoomLeftTimeDic 32296
 Avatar cubeRoomTimerId 31330
 Avatar cubeUseCoinTimes 423
 Avatar cubeUseItemTimes 424
@@ -330,6 +341,7 @@ Avatar delayDestroyTimerID 30368
 Avatar destroyTimer 30318
 Avatar dmgArmor 447
 Avatar dodge 58
+Avatar doubleBarFlag 31941
 Avatar drawCardInfo 31681
 Avatar drawCardRecord 31380
 Avatar drugsQuantity 550
@@ -345,6 +357,7 @@ Avatar equipDropData 31480
 Avatar escortDistance 30042
 Avatar escortLeaveDistance 30043
 Avatar escortTrapId 30044
+Avatar evasion 143
 Avatar eventDic 30455
 Avatar exp 3
 Avatar expAddRatioByTeam 88
@@ -428,9 +441,11 @@ Avatar knockAnti 590
 Avatar knockEnh 586
 Avatar lastDeadTime 415
 Avatar lastDeathPentlyTime 30242
+Avatar lastDoubleBarTime 31942
 Avatar lastFightTime 32245
 Avatar lastMonthCardDailyRewardTime 31613
 Avatar lastMonthCardHangupGetTime 31658
+Avatar lastMonthcardLoginTime 32297
 Avatar lastNotifyScoreTime 30048
 Avatar lastSpaceNo 30330
 Avatar leftCubeTimes 422
@@ -512,6 +527,8 @@ Avatar outfitExpireTimerId 31126
 Avatar outfitInfo 31127
 Avatar packetSendList 30896
 Avatar packetSendTimer 30895
+Avatar paidCubeTimes 156
+Avatar paidWonderLandTicket 107
 Avatar pathId 30040
 Avatar petBag 31129
 Avatar petList 30413
@@ -637,7 +654,6 @@ Avatar timerDataBase 30374
 Avatar timerDataCell 30380
 Avatar tmpProps 30369
 Avatar tmpTaskSkillIds 31609
-Avatar todayCubeCowDur 31941
 Avatar totalGameTime 30337
 Avatar totalOfflineExp 31657
 Avatar totalOfflineMinute 31660
@@ -661,8 +677,7 @@ Avatar warehouse 31386
 Avatar welfareLevelInfos 32222
 Avatar welfareSignInInfos 31220
 Avatar wonderLandAddTimes 106
-Avatar wonderLandLeftTime 30994
-Avatar wonderLandSwapTokenWeek 107
+Avatar wonderLandQuota 32295
 Avatar wonderLandTicket 105
 Avatar wonderLandTimerId 30944
 Avatar wuHuaLevel 31429
@@ -840,6 +855,8 @@ CoreAreaFlag tmpProps 31734
 CoreAreaFlag ttl 31735
 Creation PVPDmg 602
 Creation PVPDmgAnti 603
+Creation accuracy 32292
+Creation adjAccuracy 32288
 Creation adjAntiFatal 360
 Creation adjAntiMortal 350
 Creation adjAtkBless 31216
@@ -849,6 +866,7 @@ Creation adjChaosModifyRatio 31170
 Creation adjDmgArmor 580
 Creation adjDodge 344
 Creation adjDrugsQuantity 32154
+Creation adjEvasion 32290
 Creation adjFatal 294
 Creation adjFinalDmg 31747
 Creation adjFinalDmgAnti 31749
@@ -907,12 +925,14 @@ Creation antiMortal 345
 Creation atkBless 372
 Creation aureoleDic 31142
 Creation aureoleFormOtherDic 31143
+Creation baseAccuracy 32289
 Creation baseAntiFatal 31193
 Creation baseAntiMortal 31195
 Creation baseDmgArmor 567
 Creation baseDodge 31151
 Creation baseDrugsQuantity 32153
 Creation baseElementRate 31147
+Creation baseEvasion 32291
 Creation baseFatal 31192
 Creation baseFinalDmg 31746
 Creation baseFinalDmgAnti 31748
@@ -982,6 +1002,7 @@ Creation dodge 308
 Creation drugsQuantity 639
 Creation effectEventCDInfo 32258
 Creation enemyCacheSet 31176
+Creation evasion 32293
 Creation eventDic 31246
 Creation fatal 291
 Creation fbEntityId 31255
@@ -1222,6 +1243,7 @@ CubeStub datetimeTimerDataNextTBase 31298
 CubeStub datetimeTimerDataTimeCacheBase 31297
 CubeStub datetimeTimerIdBase 31295
 CubeStub datetimeTimerIdBaseCount 31294
+CubeStub doNextFlag 32262
 CubeStub isDestroying 31289
 CubeStub loadWaitSet 31634
 CubeStub maxReadyLineNo 32250
@@ -1488,6 +1510,8 @@ MineWarStub tempMiscPropsBase 31607
 MineWarStub timerDataBase 31713
 Monster PVPDmg 506
 Monster PVPDmgAnti 507
+Monster accuracy 32274
+Monster adjAccuracy 32270
 Monster adjAntiFatal 514
 Monster adjAntiMortal 494
 Monster adjAtkBless 30957
@@ -1497,6 +1521,7 @@ Monster adjChaosModifyRatio 30690
 Monster adjDmgArmor 479
 Monster adjDodge 490
 Monster adjDrugsQuantity 32100
+Monster adjEvasion 32272
 Monster adjFatal 403
 Monster adjFinalDmg 31597
 Monster adjFinalDmgAnti 31599
@@ -1560,12 +1585,14 @@ Monster antiMortal 492
 Monster atkBless 120
 Monster aureoleDic 30605
 Monster aureoleFormOtherDic 30606
+Monster baseAccuracy 32271
 Monster baseAntiFatal 30408
 Monster baseAntiMortal 30410
 Monster baseDmgArmor 478
 Monster baseDodge 30650
 Monster baseDrugsQuantity 32099
 Monster baseElementRate 30613
+Monster baseEvasion 32273
 Monster baseFatal 30407
 Monster baseFinalDmg 31596
 Monster baseFinalDmgAnti 31598
@@ -1648,6 +1675,7 @@ Monster enemyCacheSet 30697
 Monster escortDistance 31117
 Monster escortLeaveDistance 31118
 Monster escortTrapId 31119
+Monster evasion 32275
 Monster eventDic 30583
 Monster exclusiveGBID 30601
 Monster fatal 400
@@ -1777,6 +1805,7 @@ Monster tmpProps 30715
 Monster ttl 30716
 Monster useTargetTypeCacheFlag 30703
 Monster viewRadius 31988
+Monster warningTimerId 32299
 MonsterGrp baseGlobalIdx 30424
 MonsterGrp birthInDB 30533
 MonsterGrp birthInMem 30419
@@ -1823,6 +1852,8 @@ MonsterGrp tmpProps 30422
 MonsterGrp ttl 30423
 Npc PVPDmg 554
 Npc PVPDmgAnti 555
+Npc accuracy 32286
+Npc adjAccuracy 32282
 Npc adjAntiFatal 329
 Npc adjAntiMortal 309
 Npc adjAtkBless 30991
@@ -1832,6 +1863,7 @@ Npc adjChaosModifyRatio 30545
 Npc adjDmgArmor 542
 Npc adjDodge 305
 Npc adjDrugsQuantity 32136
+Npc adjEvasion 32284
 Npc adjFatal 218
 Npc adjFinalDmg 31697
 Npc adjFinalDmgAnti 31699
@@ -1895,12 +1927,14 @@ Npc antiMortal 307
 Npc atkBless 150
 Npc aureoleDic 30461
 Npc aureoleFormOtherDic 30462
+Npc baseAccuracy 32283
 Npc baseAntiFatal 30289
 Npc baseAntiMortal 30342
 Npc baseDmgArmor 541
 Npc baseDodge 30505
 Npc baseDrugsQuantity 32135
 Npc baseElementRate 30468
+Npc baseEvasion 32285
 Npc baseFatal 30286
 Npc baseFinalDmg 31696
 Npc baseFinalDmgAnti 31698
@@ -1975,6 +2009,7 @@ Npc enemyCacheSet 30552
 Npc escortDistance 31123
 Npc escortLeaveDistance 31124
 Npc escortTrapId 31125
+Npc evasion 32287
 Npc eventDic 30480
 Npc exclusiveGBID 30479
 Npc fatal 215
@@ -2089,6 +2124,7 @@ Npc tmpProps 30147
 Npc ttl 30148
 Npc useTargetTypeCacheFlag 30558
 Npc viewRadius 31990
+Npc warningTimerId 32301
 PlayerStub account2box 30066
 PlayerStub avatarCounter 30069
 PlayerStub birthInDB 30073
@@ -2244,6 +2280,7 @@ SiegeWarSpaceStub datetimeTimerDataNextTBase 31798
 SiegeWarSpaceStub datetimeTimerDataTimeCacheBase 31797
 SiegeWarSpaceStub datetimeTimerIdBase 31795
 SiegeWarSpaceStub datetimeTimerIdBaseCount 31794
+SiegeWarSpaceStub doNextFlag 32264
 SiegeWarSpaceStub isDestroying 31789
 SiegeWarSpaceStub loadWaitSet 31636
 SiegeWarSpaceStub methodPoolBase 31791
@@ -2352,6 +2389,8 @@ StatisticStub tempMiscPropsBase 32180
 StatisticStub timerDataBase 32181
 Summon PVPDmg 530
 Summon PVPDmgAnti 531
+Summon accuracy 32280
+Summon adjAccuracy 32276
 Summon adjAntiFatal 244
 Summon adjAntiMortal 234
 Summon adjAtkBless 31060
@@ -2361,6 +2400,7 @@ Summon adjChaosModifyRatio 31014
 Summon adjDmgArmor 520
 Summon adjDodge 225
 Summon adjDrugsQuantity 32118
+Summon adjEvasion 32278
 Summon adjFatal 176
 Summon adjFinalDmg 31647
 Summon adjFinalDmgAnti 31649
@@ -2424,12 +2464,14 @@ Summon antiMortal 226
 Summon atkBless 254
 Summon aureoleDic 30765
 Summon aureoleFormOtherDic 30766
+Summon baseAccuracy 32277
 Summon baseAntiFatal 31037
 Summon baseAntiMortal 31039
 Summon baseDmgArmor 519
 Summon baseDodge 30774
 Summon baseDrugsQuantity 32117
 Summon baseElementRate 30770
+Summon baseEvasion 32279
 Summon baseFatal 31036
 Summon baseFinalDmg 31646
 Summon baseFinalDmgAnti 31648
@@ -2501,6 +2543,7 @@ Summon drugsQuantity 621
 Summon dungeonFlagId 31108
 Summon effectEventCDInfo 32256
 Summon enemyCacheSet 31020
+Summon evasion 32281
 Summon eventDic 31096
 Summon exclusiveGBID 30757
 Summon fatal 173
@@ -2614,6 +2657,7 @@ Summon tmpProps 31085
 Summon ttl 31086
 Summon useTargetTypeCacheFlag 31026
 Summon viewRadius 31989
+Summon warningTimerId 32300
 TeamDungeonStub argsCache 30709
 TeamDungeonStub birthInDB 30711
 TeamDungeonStub crtGameEntityIdentifyID 30804
@@ -2734,6 +2778,7 @@ WonderLandStub datetimeTimerDataNextTBase 31512
 WonderLandStub datetimeTimerDataTimeCacheBase 31511
 WonderLandStub datetimeTimerIdBase 31509
 WonderLandStub datetimeTimerIdBaseCount 31508
+WonderLandStub doNextFlag 32263
 WonderLandStub floor 31502
 WonderLandStub isDestroying 31503
 WonderLandStub loadWaitSet 31635

@@ -265,7 +265,7 @@ class IBag(object):
         data.append([rewardID, rewardNum])
 
     def processKillMonsterExp(self, dropCtx, awardResults):
-        INFO_MSG("iBag-> processKillMonsterExp 1 ", dropCtx, awardResults)
+        DEBUG_MSG("iBag-> processKillMonsterExp 1 ", dropCtx, awardResults)
         monsterExp = dataUtils.getMonsterExp(dropCtx.monsterId, dropCtx.level)
         if monsterExp is None or monsterExp == 0:
             return
@@ -286,37 +286,37 @@ class IBag(object):
                         continue
                     memberExp = self._adjustKillMonsterExp(awardResults, teamExp, dropCtx.level, memVal.level)
                     self.addSettlementExp(awardResults, memEntId, memberExp)
-                    INFO_MSG("iBag-> processKillMonsterExp 2 ", dropCtx, awardResults, teamExp, dropCtx.level, memVal.level)
+                    DEBUG_MSG("iBag-> processKillMonsterExp 2 ", dropCtx, awardResults, teamExp, dropCtx.level, memVal.level)
                 # 杀怪的个人调整
-                INFO_MSG("iBag-> processKillMonsterExp 3 ", dropCtx, awardResults, teamExp, dropCtx.level, self.level)
+                DEBUG_MSG("iBag-> processKillMonsterExp 3 ", dropCtx, awardResults, teamExp, dropCtx.level, self.level)
                 killerExp = self._adjustKillMonsterExp(awardResults, teamExp, dropCtx.level, self.level)
                 self.addSettlementExp(awardResults, self.id, killerExp)
             else:
                 killerExp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
                 self.addSettlementExp(awardResults, self.id, killerExp)
-                INFO_MSG("iBag-> processKillMonsterExp 4 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
+                DEBUG_MSG("iBag-> processKillMonsterExp 4 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
         # 团战
         elif self.isInRaid():
             # 根据等级调整经验
             killerExp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
             self.addSettlementExp(awardResults, self.id, killerExp)
-            INFO_MSG("iBag-> processKillMonsterExp 5 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
+            DEBUG_MSG("iBag-> processKillMonsterExp 5 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
         else:
             # 根据等级调整经验
             killerExp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
             self.addSettlementExp(awardResults, self.id, killerExp)
-            INFO_MSG("iBag-> processKillMonsterExp 6 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
+            DEBUG_MSG("iBag-> processKillMonsterExp 6 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
         return
 
     def _adjustKillMonsterExp(self, awardResults, monsterExp, monsterLevel, playerLevel):
-        INFO_MSG("iBag-> _adjustKillMonsterExp", awardResults, monsterExp, monsterLevel, playerLevel)
+        DEBUG_MSG("iBag-> _adjustKillMonsterExp", awardResults, monsterExp, monsterLevel, playerLevel)
         # 根据等级调整经验
         config = formula.getKillMonsterRewardConfig(monsterLevel, playerLevel)
         realExp = int(monsterExp * config.get('expprop'))
         return realExp
 
     def preAwardOnKillMonster(self, dropCtx, dropRewardIds, shareRewards, displayModes):
-        INFO_MSG("iBag->preAwardOnKillMonster ", dropCtx, dropRewardIds, shareRewards, displayModes)
+        DEBUG_MSG("iBag->preAwardOnKillMonster ", dropCtx, dropRewardIds, shareRewards, displayModes)
         awardResults = {}
         self.processKillMonsterExp(dropCtx, awardResults)
         for idx in range(len(dropRewardIds)):
@@ -337,7 +337,7 @@ class IBag(object):
 
     def doKillMonsterAwards(self, dropCtx, exp, awards0, awards1):
         dropCtx.addContextVar('additionProps', {'copper': self.getProp('copper')})
-        INFO_MSG("iBag->doKillMonsterAwards ", dropCtx, exp, awards0, awards1)
+        DEBUG_MSG("iBag->doKillMonsterAwards ", dropCtx, exp, awards0, awards1)
         self.checkIncMoralValueOnKillMonster(dropCtx.level)
         if exp > 0:
             self.addExpByKill(exp, dropCtx.level, dropCtx.opUUID, dropCtx.srcType, dropCtx.detail, True)
@@ -345,7 +345,7 @@ class IBag(object):
         self.base.doAwardOnKillMonster(dropCtx, awards0, awards1)
 
     def processKillMonsterAward(self, awardResults, dropRewardId, rewardNum, shareReward, displayMode):
-        INFO_MSG("iBag->processKillMonsterAward ", awardResults, dropRewardId, rewardNum, shareReward, displayMode)
+        DEBUG_MSG("iBag->processKillMonsterAward ", awardResults, dropRewardId, rewardNum, shareReward, displayMode)
         # 组队
         if self.isInTeam(self.gbId):
             teammateNum = len(self.teammateEntIdInAoiSet)

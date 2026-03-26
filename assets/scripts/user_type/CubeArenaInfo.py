@@ -38,7 +38,7 @@ class CubeArenaVal(userType.UserSoleType):
         self.arenaStage = 1
         self.stageChangeTime = utils.getNow()
         _buffs = self.getStageBuff(player.spaceNo)
-        self.kingBuffId = _buffs[0]
+        self.kingBuffId = _buffs[0][1]
 
         player.removeBuff(self.getChallengerBuff(player.spaceNo))
         player.addBuff(self.kingBuffId, 1, player.id)
@@ -61,8 +61,6 @@ class CubeArenaVal(userType.UserSoleType):
         if deathPlayer.id != self.arenaKing:
             return False
 
-        deathPlayer.removeBuff(self.kingBuffId)
-        deathPlayer.addBuff(self.getChallengerBuff(spaceMgr.spaceNo), 1, deathPlayer.id)
         self.arenaKing = 0
         self.arenaStage = 0
         self.stageChangeTime = 0
@@ -99,7 +97,8 @@ class CubeArenaVal(userType.UserSoleType):
         self.arenaStage += 1
         self.stageChangeTime = utils.getNow()
         _player.removeBuff(self.kingBuffId)
-        _player.addBuff(_buffs[self.arenaStage - 1], 1, _player.id)
+        self.kingBuffId = _buffs[self.arenaStage - 1][1]
+        _player.addBuff(self.kingBuffId, 1, _player.id)
 
         spaceMgr.dealWithArenaTimer()
         return True
@@ -114,7 +113,9 @@ class CubeArenaVal(userType.UserSoleType):
         if self.arenaStage >= len(_buffInfos):
             return 0
 
-        return self.stageChangeTime + _buffInfos[self.arenaStage][0]
+        _delta = _buffInfos[self.arenaStage][0] - _buffInfos[self.arenaStage - 1][0]
+        _delta = max(0, _delta)
+        return self.stageChangeTime + _delta * 60
 
     def onPlayerLeaveArena(self, eid, spaceMgr):
         if eid != self.arenaKing:

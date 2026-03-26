@@ -756,6 +756,24 @@
             <Default>       {}                      </Default>
             <Persistent>    true                    </Persistent>
         </effectEventCDInfo>
+
+        <adjAccuracy>
+            <Type>          INT32           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </adjAccuracy>
+        <baseAccuracy>
+            <Type>          INT32           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </baseAccuracy>
+
+        <adjEvasion>
+            <Type>          INT32           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </adjEvasion>
+        <baseEvasion>
+            <Type>          INT32           </Type>
+            <Flags>         CELL_PRIVATE    </Flags>
+        </baseEvasion>
     </Properties>
 
     <CellMethods>

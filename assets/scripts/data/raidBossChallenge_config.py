@@ -31,10 +31,6 @@ datas = _tools.RODict({
         "ID": "rewardNumItem",
         "value": 30000309,
     }),
-    "rewardNumItemWeeklyLimit": _tools.RODict({
-        "ID": "rewardNumItemWeeklyLimit",
-        "value": 7,
-    }),
     "raidBossChallengeActID": _tools.RODict({
         "ID": "raidBossChallengeActID",
         "value": 32000001,

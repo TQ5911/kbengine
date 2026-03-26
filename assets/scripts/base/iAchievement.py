@@ -13,6 +13,9 @@ class IAchievement(object):
     def takeAchievementRewards(self, exposed, achievementIds):
         INFO_MSG('takeAchievementRewards:', achievementIds)
         self.achievementInfo.takeAllAchievementRewards(achievementIds, self)
+    
+    def triggerAchievementWithCtx(self, achieveType, ctx):
+        self.triggerAchievement(achieveType, ctx)
 
     def triggerAchievement(self, achieveType, ctx=None):
         ctx = ctx or actionContext.AchievementCtx()

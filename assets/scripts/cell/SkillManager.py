@@ -38,6 +38,7 @@ import gamePlay_gamePlay as GPGPD
 import gamePlay_set as GP_SD
 import aureola_aureola as AAD
 import aureole
+import NPC_Pick as NPD
 
 
 class AureoleMixin(object):
@@ -858,42 +859,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             buffLv = buffMap[buffSrcKey].level
         return buffLv
 
-    def _immuneDeathFinished(self, srcEntId, context):
-        iInfo = self.getTempMiscProp(gameconst.AvatarProps.immuneDeath)
-        if not iInfo:
-            return
-        if iInfo.immuneDeathFinishTimerId:
-            iInfo.immuneDeathFinishTimerId = 0
-
-        if iInfo.deadFuture:
-            self.popTempMiscProp(gameconst.AvatarProps.immuneDeath)
-
-        if iInfo.deadAfterImmunning:
-            iInfo.status = gameconst.ImmuneDeathState.IMMUNE_FINISHED
-
-            self.modifyHP(-self.hp, srcEntId, iInfo.srcType, iInfo.srcId, True, context)
-        else:
-            iInfo.status = gameconst.ImmuneDeathState.IMMUNE_VALID
-
-    def cancelImmuneDeath(self):
-        iInfo = self.getTempMiscProp(gameconst.AvatarProps.immuneDeath)
-        if not iInfo:
-            return
-        if iInfo.immuneDeathFinishTimerId:
-            self._cancelCallback(iInfo.immuneDeathFinishTimerId, gametimer.TIMER_TAG_IMMUNE_DEATH_FINISHED)
-            iInfo.immuneDeathFinishTimerId = 0
-        iInfo.status = gameconst.ImmuneDeathState.IMMUNE_VALID
-
-    def isImmuneDeath(self):
-        iInfo = self.getTempMiscProp(gameconst.AvatarProps.immuneDeath)
-        if not iInfo:
-            return False
-        return bool(iInfo.status == gameconst.ImmuneDeathState.IMMUNE_DURING)
-
     def killSelf(self, sourceType):
-        iInfo = self.getTempMiscProp(gameconst.AvatarProps.immuneDeath)
-        if iInfo:
-            iInfo.status = gameconst.ImmuneDeathState.IMMUNE_FINISHED
         self.modifyHP(-self.hp, self.id, sourceType, 0)
 
     def goDie(self, killer, srcType, srcId, forceDead=False, context=None):
@@ -917,10 +883,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         self.killChannelingSkill(gameconst.ChannelingBreak.SELF_DIE)
         self.killCastingSkill(gameconst.EndCasting.Dead)
         self.onDead(killer, srcType, srcId)
-
-        iInfo = self.getTempMiscProp(gameconst.AvatarProps.immuneDeath)
-        if iInfo:
-            iInfo.status = gameconst.ImmuneDeathState.IMMUNE_VALID
 
         if killer.IsAICombatUnit:
             killer.removeHate(self.id)
@@ -970,38 +932,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                     utils.getGidFromGameEntityId(self.gameEntityId), int(oldHp), int(curHp), self.fullHp)
                 pass
 
-        iInfo = self.getTempMiscProp(gameconst.AvatarProps.immuneDeath)
-        if iInfo:
-            # 【【任务】支持boss濒死】
-            # 修改curHp: 兼容原代码逻辑; 修改self.hp: 锁血相关, 需要将self.hp 修改提前到最先, 这里需求强制再赋值
-            if not forceDead and curHp <= 0 and iInfo.status == gameconst.ImmuneDeathState.IMMUNE_VALID:
-                self.hp = curHp = 1
-                iInfo.status = gameconst.ImmuneDeathState.IMMUNE_DURING
-                iInfo.srcType = srcType
-                iInfo.srcId = srcId
-
-                if releaseRoleId != self.id:
-                    iInfo.lastEnemyId = releaseRoleId
-
-                if iInfo.duration > 0:
-                    if iInfo.immuneDeathFinishTimerId:
-                        self._cancelCallback(iInfo.immuneDeathFinishTimerId, gametimer.TIMER_TAG_IMMUNE_DEATH_FINISHED)
-                    iInfo.immuneDeathFinishTimerId = self._callback(iInfo.duration, '_immuneDeathFinished',
-                                                                    (releaseRoleId, context),
-                                                                    gametimer.TIMER_TAG_IMMUNE_DEATH_FINISHED)
-                if not self.IsAvatar:
-                    self.flowCtrlDunEntityimmuneDeathTrigger(utils.getGidFromGameEntityId(self.gameEntityId))
-                if self.IsAvatar and realReleaseRole.IsAvatar and not self.hasTempMiscProp(gameconst.AvatarProps.isMoralValueChanged):
-                    self.setTempMiscProp(gameconst.AvatarProps.isMoralValueChanged, realReleaseRole.isMoralValueChanged(self))
-
-            elif iInfo.status == gameconst.ImmuneDeathState.IMMUNE_DURING:
-                self.hp = curHp = 1
-                if self.IsAvatar and realReleaseRole.IsAvatar and not self.hasTempMiscProp(gameconst.AvatarProps.isMoralValueChanged):
-                    self.setTempMiscProp(gameconst.AvatarProps.isMoralValueChanged, realReleaseRole.isMoralValueChanged(self))
-
         if curHp <= 0 and self.IsAvatar and self.duelAttr.inFight():
             if self.duelAttr.isDuelEnemy(realReleaseRole) or realReleaseRole.id == self.id:
                 self.hp = int(self.getDuelDeathHp(oldHp))
+                INFO_MSG('modifyHP:: duel death, hp: ', oldHp, self.hp)
                 duelFlag = self.duelAttr.duelFlagEnt()
                 if duelFlag:
                     duelFlag.onAvatarDuelFailed(self.id)
@@ -1363,6 +1297,21 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             return None
 
         return posList[0]
+
+    def getRandomPositionByBoxRadius(self, center, radii, boxRadii, num):
+        if num <= 10:
+            maxNum = num*3
+        else:
+            maxNum = num*2
+        _posList = self.getRandomPoints(center, radii, maxNum, 0)
+        if not _posList:
+            return [center]*num
+        if len(_posList) <= num:
+            _posList.extend([center]*(num-len(_posList)))
+            return _posList
+
+        selected = utils.select_positions(_posList, num, boxRadii)
+        return selected
 
     def recordUseSkill(self, skillVal, targetId):
         pass
@@ -2151,7 +2100,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
     def _healActionBefore(self, target, context, ignoreType=False):
         if not ignoreType:
-            if not target or target.isDie():
+            if not target or target.isDie() or target.hp <= 0: # 触发事件时，目标的状态可能还没改为Death
                 WARNING_MSG('target miss ', context)
                 return False
             healSrcEnt = context.getSrcEntity()
@@ -3334,7 +3283,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             for eId in cacheIds:
                 target = KBEngine.entities.get(eId)
                 if not target:
-                    ERROR_MSG("resetAllTargetTypeCache target is None")
+                    WARNING_MSG("resetAllTargetTypeCache target is None")
                     continue
 
                 utils.isEnemy(self, target)
@@ -3343,7 +3292,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             for eId in list(self.cacheSelfSet):
                 target = KBEngine.entities.get(eId)
                 if not target:
-                    ERROR_MSG("resetAllTargetTypeCache cacheSelfSet target is None", eId)
+                    WARNING_MSG("resetAllTargetTypeCache cacheSelfSet target is None", eId)
                     continue
 
                 target.removeTargetTypeCache(self)
@@ -3361,37 +3310,37 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         for eId in list(self.enemyCacheSet):
             target = KBEngine.entities.get(eId)
             if not target:
-                ERROR_MSG("checkCacheTargetType  error1", eId)
+                WARNING_MSG("checkCacheTargetType  error1", eId)
                 self.enemyCacheSet.remove(eId)
             elif not utils._isEnemy(self, target):
-                ERROR_MSG("checkCacheTargetType enemy cache error", eId)
+                WARNING_MSG("checkCacheTargetType enemy cache error", eId)
                 needRefreshList.append(target)
 
         for eId in list(self.notEnemyCacheSet):
             target = KBEngine.entities.get(eId)
             if not target:
-                ERROR_MSG("checkCacheTargetType  error2", eId)
+                WARNING_MSG("checkCacheTargetType  error2", eId)
                 self.notEnemyCacheSet.remove(eId)
             elif utils._isEnemy(self, target):
-                ERROR_MSG("checkCacheTargetType not enemy cache error", eId)
+                WARNING_MSG("checkCacheTargetType not enemy cache error", eId)
                 needRefreshList.append(target)
 
         for eId in list(self.friendCacheSet):
             target = KBEngine.entities.get(eId)
             if not target:
-                ERROR_MSG("checkCacheTargetType  error3", eId)
+                WARNING_MSG("checkCacheTargetType  error3", eId)
                 self.friendCacheSet.remove(eId)
             elif not utils._isFriend(self, target):
-                ERROR_MSG("checkCacheTargetType friend cache error", eId)
+                WARNING_MSG("checkCacheTargetType friend cache error", eId)
                 needRefreshList.append(target)
 
         for eId in list(self.notFriendCacheSet):
             target = KBEngine.entities.get(eId)
             if not target:
-                ERROR_MSG("checkCacheTargetType  error4", eId)
+                WARNING_MSG("checkCacheTargetType  error4", eId)
                 self.notFriendCacheSet.remove(eId)
             elif utils._isFriend(self, target):
-                ERROR_MSG("checkCacheTargetType not friend cache error", eId)
+                WARNING_MSG("checkCacheTargetType not friend cache error", eId)
                 needRefreshList.append(target)
 
         if len(needRefreshList) > 0:
@@ -3411,7 +3360,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         for eId in allCacheSet:
             target = KBEngine.entities.get(eId)
             if not target:
-                ERROR_MSG("clearAllTargetTypeCache target is None in allCacheSet", eId)
+                WARNING_MSG("clearAllTargetTypeCache target is None in allCacheSet", eId)
                 continue
             target.cacheSelfSet.remove(self.id)
 
@@ -3419,7 +3368,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             for eId in list(self.cacheSelfSet):
                 target = KBEngine.entities.get(eId)
                 if not target:
-                    ERROR_MSG("clearAllTargetTypeCache target is None in cacheSelfSet", eId)
+                    WARNING_MSG("clearAllTargetTypeCache target is None in cacheSelfSet", eId)
                     self.cacheSelfSet.remove(eId)
                     continue
                 target.removeTargetTypeCache(self)
@@ -3478,7 +3427,15 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             numList.append(num)
             numWeightList.append(weight)
 
+        boxRadius = 0
+        for weight, collectionId in collectionIdProb:
+            boxRadius = max(boxRadius, NPD.datas.get(collectionId, {}).get('chestRadius', 0))
         createNum = utils.weightChoice(numList, numWeightList)[0][0]
+        if createNum == 1:
+            posList = [self.position]
+        else:
+            posList = self.getRandomPositionByBoxRadius(self.position, radius, boxRadius, createNum)
+
         for i in range(createNum):
             collectionIdList = []
             collectionIdWeightList = []
@@ -3487,7 +3444,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 collectionIdWeightList.append(weight)
 
             collectionId = utils.weightChoice(collectionIdList, collectionIdWeightList)[0][0]
-            pos_ = self.getRandomPosition(self.position, radius) or self.position
+            pos_ = posList[i] if i < len(posList) else self.position
 
             props = {
                 'collectionId': collectionId,
@@ -3501,6 +3458,33 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 props['spaceMgrBox'] = self.spaceMgr.base
 
             KBEngine.createEntity('Collection', self.spaceID, pos_, self.direction, props)
+
+    def deathCreateCollectionByList(self, radius, collectionIdProb, disappearTime):
+        createNum = 0
+        boxRadius = 0
+        for (num, collectionId) in collectionIdProb:
+            createNum += num
+            boxRadius = max(boxRadius, NPD.datas.get(collectionId, {}).get('chestRadius', 0))
+            
+        posList = self.getRandomPositionByBoxRadius(self.position, radius, boxRadius, createNum)
+
+        idx = 0
+        for (num, collectionId) in collectionIdProb:
+            for i in range(num):
+                pos_ = posList[idx] if i < len(posList) else self.position
+                idx += 1
+                props = {
+                    'collectionId': collectionId,
+                    'spaceNo': self.spaceNo,
+                    'position': pos_,
+                    'direction': self.direction,
+                    'disappearTime': utils.getNow() + disappearTime
+                }
+                if self.spaceMgr:
+                    props['spaceMgrId'] = self.spaceMgr.id
+                    props['spaceMgrBox'] = self.spaceMgr.base
+
+                KBEngine.createEntity('Collection', self.spaceID, pos_, self.direction, props)
 
     def breakSkillByState(self):
         for skillId in list(self.skillDic):
@@ -3537,7 +3521,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
     def checkEffectEventCDInfoExpired(self):
         now = time.time()
         effectIdList = list(self.effectEventCDInfo.keys())
-        INFO_MSG('check EventEffect', self.effectEventCDInfo)
+        DEBUG_MSG('check EventEffect', self.effectEventCDInfo)
         for effectId in effectIdList:
             if self.getEffectEventCDInfo(effectId) <= now:
                 self.removeEffectEventCDInfo(effectId)

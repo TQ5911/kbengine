@@ -35,6 +35,7 @@ import mail_config as MACF
 import agent_agentConfig as A_ACD
 import gamePlay_gamePlay as GPGPD
 import agent_agentFunction as A_AFD
+import gacha_gachaSet as GGS
 
 import rewardData_rewardData as RDRDD
 import userType
@@ -112,7 +113,6 @@ class AwardMixin(object):
         awardCtx.addContextVar('isMonthCardExpired', self.isMonthCardExpired())
         awardCtx.addContextVar('avatarScoreRank', self.avatarScoreRank)
         awardCtx.addContextVar('isCrossServer', self.isCrossServer)
-
         return awardCtx
 
     def _getAvatarAwardsCtx(self, awardIds, awardCtx, mailId=0):
@@ -133,7 +133,7 @@ class AwardMixin(object):
         award.coin.data += math.floor(float(award.coin.data) * copper)
 
     def doAwardOnKillMonster(self, dropCtx, award0, award1):
-        INFO_MSG("iBag->doAwardOnKillMonster ", dropCtx, award0, award1)
+        DEBUG_MSG("iBag->doAwardOnKillMonster ", dropCtx, award0, award1)
         opUUID = dropCtx.opUUID
         srcType = dropCtx.srcType
         detail = dropCtx.detail
@@ -151,31 +151,10 @@ class AwardMixin(object):
                 self.dropAwards(srcType, awardId, awardNum, opUUID, detail, dropCtx)
         return
     
-    def _onKillMonsterAwardAdjust(self, award, context):
-        if getattr(context, 'srcType', None) != AACA.datas.BONUS_SRC_KILL_MONSTER:
-            return award
-        noRevenueList = EXPC.datas.get('nameSuffixNoRevenue', {}).get('value', ())
-        monsterId = context.extra.get('monsterId', 0)
-        nameSuffixID = CBD.datas.get(monsterId, {}).get('nameSuffixID', 0)
-        # INFO_MSG('_onKillMonsterAwardAdjust monsterId:', monsterId, nameSuffixID, noRevenueList)
-        # 不受跨级收益影响的怪物类型
-        if nameSuffixID in noRevenueList:
-            return award
-
-        monsterLevel = getattr(context, 'level', 0)
-        if type(monsterLevel) is not int or monsterLevel <= 0:
-            INFO_MSG('_onKillMonsterAwardAdjust no monster level in context', context)
-            return award
-        config = formula.getKillMonsterRewardConfig(monsterLevel, context.args.avatarLv)
-        rewardProp = config.get('rewardprop', 1)
-        boundProp = config.get('boundprop', 0)
-        newBindType = gameconst.ItemBindType.BIND if boundProp == 1 else gameconst.ItemBindType.NORMAL
-        # INFO_MSG('_onKillMonsterAwardAdjust before: ', monsterLevel, context.args.avatarLv, rewardProp, award.toClientDisplayVal())
-        oldAward = copy.deepcopy(award)
-        # 非物品奖励直接乘系数
-        award *= rewardProp
+    def _onKillMonsterItemWealthAdjust(self, oldItemWealth, newItemWealth, rewardProp, newBindType):
+        # data
         delList = []
-        for itemId, info in oldAward.itemWealth.data.items():
+        for itemId, info in oldItemWealth.data.items():
             newInfo = {}
             for bindType, num in info.items():
                 val = num * rewardProp
@@ -197,38 +176,63 @@ class AwardMixin(object):
             if not newInfo:
                 delList.append(itemId)
                 continue
-            award.itemWealth.data[itemId] = newInfo
+            newItemWealth.data[itemId] = newInfo
         for itemId in delList:
-            del award.itemWealth.data[itemId]
+            if itemId in newItemWealth.data:
+                del newItemWealth.data[itemId]
 
-        delList = []
-        for itemId, info in oldAward.petItemWealth.data.items():
-            newInfo = {}
-            for bindType, num in info.items():
-                val = num * rewardProp
-                base = math.floor(val)
-                frac = val - base
-                newNum = base
-                if random.random() < frac:
-                    newNum += 1
-
-                if newNum <= 0:
-                    continue
-                if bindType == gameconst.ItemBindType.BIND:
-                    newInfo.setdefault(bindType, 0)
-                    newInfo[bindType] += newNum
-                else:
-                    newInfo.setdefault(newBindType, 0)
-                    newInfo[newBindType] += newNum   # 加上调整后的数量
-                # INFO_MSG('_onKillMonsterAwardAdjust, petItemWealth, itemId:', itemId, 'bindType:', bindType, 'num:', num, 'newNum:', newNum)
-            if not newInfo:
-                delList.append(itemId)
+        # itemObjs
+        newItemObjs = []
+        for it in oldItemWealth.itemsObjs:
+            val = rewardProp # itemobj数量默认是1
+            base = math.floor(val)
+            frac = val - base
+            newNum = base
+            if random.random() < frac:
+                newNum += 1
+            if it.bindType != gameconst.ItemBindType.BIND:
+                it.bindType = newBindType
+                # 新获得的装备如果修改了绑定类型，需要处理下绑定值
+                if it.isEquipmentItem():
+                    it.initBindValue()
+            if newNum <= 0:
                 continue
-            award.petItemWealth.data[itemId] = newInfo
-        for itemId in delList:
-            del award.petItemWealth.data[itemId]
+            newItemObjs.append(it)
+            for num in range(0, newNum-1):
+                newItem = itemFactory.ItemFactory.forkItemObject(it)
+                newItem.uniqueId = KBEngine.genUUID64()
+                newItemObjs.append(newItem)
 
-        # INFO_MSG('_onKillMonsterAwardAdjust after: ', monsterLevel, context.args.avatarLv, rewardProp, award.toClientDisplayVal())
+        newItemWealth.itemsObjs = newItemObjs
+
+    def _onKillMonsterAwardAdjust(self, award, context):
+        if getattr(context, 'srcType', None) != AACA.datas.BONUS_SRC_KILL_MONSTER:
+            return award
+        noRevenueList = EXPC.datas.get('nameSuffixNoRevenue', {}).get('value', ())
+        monsterId = context.extra.get('monsterId', 0)
+        nameSuffixID = CBD.datas.get(monsterId, {}).get('nameSuffixID', 0)
+        # INFO_MSG('_onKillMonsterAwardAdjust monsterId:', monsterId, nameSuffixID, noRevenueList)
+        # 不受跨级收益影响的怪物类型
+        if nameSuffixID in noRevenueList:
+            return award
+
+        monsterLevel = getattr(context, 'level', 0)
+        if type(monsterLevel) is not int or monsterLevel <= 0:
+            INFO_MSG('_onKillMonsterAwardAdjust no monster level in context', context)
+            return award
+        config = formula.getKillMonsterRewardConfig(monsterLevel, context.args.avatarLv)
+        rewardProp = config.get('rewardprop', 1)
+        boundProp = config.get('boundprop', 0)
+        newBindType = gameconst.ItemBindType.BIND if boundProp == 1 else gameconst.ItemBindType.NORMAL
+        # DEBUG_MSG('_onKillMonsterAwardAdjust before: ', monsterLevel, context.args.avatarLv, rewardProp, award.toClientDisplayVal())
+        oldAward = copy.deepcopy(award)
+        # 非物品奖励直接乘系数
+        award *= rewardProp
+        # item部分需要单独处理
+        self._onKillMonsterItemWealthAdjust(oldAward.itemWealth, award.itemWealth, rewardProp, newBindType)
+        self._onKillMonsterItemWealthAdjust(oldAward.petItemWealth, award.petItemWealth, rewardProp, newBindType)
+
+        # DEBUG_MSG('_onKillMonsterAwardAdjust after: ', monsterLevel, context.args.avatarLv, rewardProp, award.toClientDisplayVal())
         return award
 
     # 掉落只支持印文铜贝和铜贝,物品，经验,装备
@@ -316,7 +320,7 @@ class AwardMixin(object):
 
         if not assignAwardVal.isEmpty():
             self.addWealth(srcType, assignAwardVal, opUUID, detail, awardContext.CommonContext(
-                gameconst.MailConstID.DROP_RWD_BAG_FULL_MAIL_ID, {}, **awardCtx.extra))
+                gameconst.MailConstID.REWARD_MAIL_ID, {}, **awardCtx.extra))
 
         return True
 
@@ -690,11 +694,12 @@ class AwardMixin(object):
 
         # addWealth已经校验了canAddWealthVal，所以如果背包被锁或空间不够，必定配置了mailId
         mailItemList = []
+        mailLockedItemList = []
         inBagItemList = []
         if itemsList:
             if self.bagData.isLocked():
                 # 所有物品通过邮件发送
-                mailItemList.extend(itemsList)
+                mailLockedItemList.extend(itemsList)
             else:
                 planOp, planDic, leftItems = self.bagData.calcAddItemsPlan(itemsList)
                 if planDic:
@@ -726,7 +731,7 @@ class AwardMixin(object):
         if petItemList:
             if self.petBag.isLocked():
                 # 所有物品通过邮件发送
-                mailItemList.extend(petItemList)
+                mailLockedItemList.extend(petItemList)
             else:
                 planOp, planDic, leftItems = self.petBag.calcAddItemsPlan(petItemList)
                 if planDic:
@@ -755,6 +760,13 @@ class AwardMixin(object):
                         # 都没有放入背包
                         mailItemList.append(it)
 
+        # 背包锁住了走邮件
+        if mailLockedItemList:
+            mailIdOnLock = CCDT.datas['getRewardAndBagLock_mailID']['value']
+            mailWealth = dropAward.MailWealthVal(itemObjs=mailLockedItemList)
+            mailAssistor.sendMailToPlayers([self.gbID], mailIdOnLock, extraAttach=mailWealth, opUUID=opUUID, srcType = srcType, srcSubType=srcSubType)
+        
+        # 背包满了走邮件  
         if mailItemList:
             if mailIdOnFull:
                 mailWealth = dropAward.MailWealthVal(itemObjs=mailItemList)
@@ -836,7 +848,7 @@ class AwardMixin(object):
             addWealthVal.itemWealth.addItemObjs(pickedItems)
             if addWealthVal:
                 self.addWealth(srcType, awardVal, opUUID, detail, awardContext.CommonContext(
-                    gameconst.MailConstID.DROP_RWD_BAG_FULL_MAIL_ID, **awardCtx.extra))
+                    gameconst.MailConstID.REWARD_MAIL_ID, **awardCtx.extra))
                 break
         return
 
@@ -875,7 +887,7 @@ class AwardMixin(object):
             awardVal.petItemWealth.addItemObjs(petItemList)
             disassembleEquips and self.onMessagePre(GBGCD.datas['disassembleChatMsg']['value'], [])
             self.addWealth(srcType, awardVal, opUUID, detail, awardContext.CommonContext(
-                gameconst.MailConstID.DROP_RWD_BAG_FULL_MAIL_ID, **awardCtx.extra))
+                gameconst.MailConstID.REWARD_MAIL_ID, **awardCtx.extra))
         return
 
     def getItemObjByItemID(self, itemID, bindType):
@@ -885,7 +897,7 @@ class AwardMixin(object):
 class CoinBillMixin(object):
     # 有些账单可能有小数，所以直接处理成字符串
     def onAvatarCoinChanged(self, coinType, srcType, detail, intChange, fraChange, intVal, fraVal):
-        INFO_MSG('onAvatarCoinChanged~', coinType, srcType, intChange, fraChange, intVal, fraVal)
+        DEBUG_MSG('onAvatarCoinChanged~', coinType, srcType, intChange, fraChange, intVal, fraVal)
         # billInfoList = self.coinBillInfo.setdefault(coinType, [])
         #
         # subSrc = 0
@@ -942,7 +954,7 @@ class ShareAwardMixin(object):
     def addShareAward(self, shareChannelId, srcType, rewardId, detail, awardCtx, opUUID):
         if self.canAddShareReward(shareChannelId):
             self.shareAwardDic[shareChannelId] += 1
-            self.addAwards(srcType, rewardId, 1, opUUID, detail, awardCtx, notify=False, popWindow=True)
+            self.addAwards(srcType, rewardId, 1, opUUID, detail, awardCtx, notify=True, popWindow=True)
             return True
         return False
 
@@ -1121,7 +1133,33 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             return
         itemObj.setItemBind()
         self.client.onBindItemSucc(bagType, gridId)
-        return
+
+        _opUUID = KBEngine.genUUID64()
+        _src = AAC_AACDD.datas.BONUS_SRC_BIND_ITEM
+        _bindCnt = bag.getItemCount(itemId, gameconst.ItemBindType.BIND)
+        _normalCnt = bag.getItemCount(itemId, gameconst.ItemBindType.NORMAL)
+        _detail = gameclass.AwardDetail(uniqueid=itemObj.uniqueId)
+        self.makeItemFlowLog(
+            bagType,
+            gameconst.ItemBindType.BIND,
+            itemId,
+            itemObj.uniqueId,
+            itemObj.itemNum, 
+            _opUUID,
+            _src,
+            _bindCnt, 
+            _detail)
+
+        self.makeItemFlowLog(
+            bagType,
+            gameconst.ItemBindType.NORMAL,
+            itemId,
+            itemObj.uniqueId,
+            -itemObj.itemNum, 
+            _opUUID,
+            _src,
+            _normalCnt, 
+            _detail)
 
     @gamedecorator.checkGameconfigEnable('bag')
     @gamedecorator.limitcall(1)
@@ -1733,7 +1771,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         pickData = NPD.datas[collectionId]
 
         #采集成功帮会任务
-        self.completeGuildTask(gameconst.GuildTaskType.COLLECTION,pickData['type'])
+        self.completeGuildTask(gameconst.GuildTaskType.COLLECTION, pickData['type'])
 
         taskId = None
         triggerTask = pickData['triggerTask']
@@ -1764,6 +1802,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                     eventTipId=collectionId, 
                     monsterSpaceNo=_monsterSpaceNo)
 
+                awardCtx.addContextVar(dataUtils.addAwardsCallBackKey(), 'onGatherRewardResult')
                 self.dropAwards(
                     AAC_AACDD.datas.BONUS_SRC_GATHER_DROP, 
                     rewardID, 
@@ -1778,6 +1817,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                     eventTipId=collectionId, 
                     monsterSpaceNo=_monsterSpaceNo)
 
+                awardCtx.addContextVar(dataUtils.addAwardsCallBackKey(), 'onGatherRewardResult')
                 self.addAwards(
                     AAC_AACDD.datas.BONUS_SRC_GATHER, 
                     rewardID, 
@@ -1808,6 +1848,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         factor += self.getMineWarFactor(collectionId)
 
         return factor
+
+    def onGatherRewardResult(self, briefList, awardCtx):
+        INFO_MSG('call onGatherRewardResult', briefList, awardCtx)
+        self.client and self.client.onAddGatherRewardRecord(briefList)
     ################################## 采集 end ######################################
     def onCheckAndCostWealth(self, callbackComponent, srcType, callbackName, deductWealthVal, extraProps):
         checkResult = True
@@ -1825,14 +1869,15 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             getattr(self.cell, callbackName)(checkResult, extraProps)
 
     def onGetRewardRecord(self, src, awardVal, awardCtx):
-        if src == AAC_AACDD.datas.BONUS_SRC_GATHER_DROP or src == AAC_AACDD.datas.BONUS_SRC_GATHER:
+        if src == AAC_AACDD.datas.BONUS_SRC_GATHER_DROP or src == AAC_AACDD.datas.BONUS_SRC_GATHER or src == AAC_AACDD.datas.BONUS_SRC_PETROLL_REWARD:
+            funcName = awardCtx.extra.get(dataUtils.addAwardsCallBackKey(), '')
+            func = getattr(self, funcName, None)
+            if not func:
+                return
+
             _briefList = awardVal.toBriefList()
             INFO_MSG('onGetRewardRecord:', src, _briefList)
-            self.client and self.client.onAddGatherRewardRecord(_briefList)
-        elif src == AAC_AACDD.datas.BONUS_SRC_PETROLL_REWARD:
-            _briefList = awardVal.toBriefList()
-            INFO_MSG('onGetRewardRecord:', src, _briefList)
-            self.onRandomSummonPetResult(_briefList, awardCtx)
+            func(_briefList, awardCtx)
 
     def checkEventTips(self, itemList, srcType, srcCtx):
         tips = MED.datas.get(srcType, None)
@@ -1866,6 +1911,27 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             if srcType in (AAC_AACDD.datas.BONUS_SRC_GATHER_DROP, AAC_AACDD.datas.BONUS_SRC_GATHER,):
                 gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips',
                     (message['ID'], [avatarName, str(self.gbID), str(itemId), str(0), str(itemNum)])))
+            elif srcType in (AAC_AACDD.datas.BONUS_SRC_KILL_MONSTER,):
+                mapId = formula.getMapId(self.baseSpaceNo)
+                mapData = GPGPD.datas.get(mapId, None)
+                if not mapData:
+                    return
+                mapName = mapData['name'] or ''
+                monsterData = CBD.datas.get(eventTipId, None)
+                if not monsterData:
+                    return
+                monsterName = monsterData['name'] or ''
+                gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips',
+                    (message['ID'], [avatarName, str(self.gbID), str(mapName), str(monsterName), str(itemId), str(0), str(itemNum)])))
+            elif srcType in (AAC_AACDD.datas.BONUS_SRC_TEAM_FIRST_PASS_REWARD, AAC_AACDD.datas.BONUS_SRC_TEAM_CLEAR_PASS_REWARD, \
+                             AAC_AACDD.datas.BONUS_SRC_RAID_FIRST_PASS_REWARD, AAC_AACDD.datas.BONUS_SRC_RAID_CLEAR_PASS_REWARD):
+                mapId = formula.getMapId(self.baseSpaceNo)
+                mapData = GPGPD.datas.get(mapId, None)
+                if not mapData:
+                    return
+                mapName = mapData['name'] or ''
+                gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips',
+                    (message['ID'], [avatarName, str(self.gbID), str(mapName), str(itemId), str(0), str(itemNum)])))
             else:
                 gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips',
                     (message['ID'], [avatarName, str(self.gbID), str(eventTipId), str(0), str(itemId), str(0), str(itemNum)])))
@@ -1945,7 +2011,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             return
         
         opUUID = KBEngine.genUUID64()
-        srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_DISASSEMBLE
+        srcType = AAC_AACDD.datas.BONUS_SRC_ITEM_DISASSEMBLE
         if not self.canAddWealthVal(srcType, awardVal):
             self.onMessagePre(MMD.datas.bagCapacityNotEnough, [])
             return
@@ -2023,7 +2089,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         INFO_MSG('reqItemDisassemble:')
 
         opUUID = KBEngine.genUUID64()
-        srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_DISASSEMBLE
+        srcType = AAC_AACDD.datas.BONUS_SRC_ITEM_DISASSEMBLE
         # case 1: 单种物品单个分解
         if 1 == costItemNum:
             awardVal = dropAward.getAwardOne(rewardID, awardCtx)
@@ -2434,6 +2500,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.client.onQueryCurrencyExchangeData(resKey, resVal)
 
     @gamedecorator.limitcall(0.2)
+    @gamedecorator.checkGameconfigEnable('currencyExchange')
     def exchangeCurrency(self, exposed, cId, cost):
         INFO_MSG("exchangeCurrency", cId, cost)
         data = CE_EX.datas.get(cId, None)
@@ -2444,6 +2511,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         # 超过单次限制
         singleLimit = data['timeLimit']
         if singleLimit != -1:
+            if data['exchangeType'] == 1:
+                singleLimit *= data['exchangeRate']
             if cost > singleLimit:
                 ERROR_MSG("exchangeCurrency singleLimit", cId, cost, singleLimit)
                 return
@@ -2452,6 +2521,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         dailyLimit = data['dailyLimit']
         dailyUsed = self.currencyRecordDic.get(cId, 0)
         if dailyLimit != -1:
+            if data['exchangeType'] == 1:
+                dailyLimit *= data['exchangeRate']
             if dailyUsed + cost > dailyLimit:
                 ERROR_MSG("exchangeCurrency dailyLimit", cId, dailyUsed, dailyLimit)
                 return
@@ -2498,7 +2569,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         LogTrackingMgr.LogTrackingMgr.Currency_Exchange(
             self.gbID,
             cId,
-            opUUID
+            opUUID,
+            dailyLimit,
+            dailyUsed,
+            dailyUsed + cost,
         )
 
     @gamedecorator.checkGameconfigEnable('bag')
@@ -2871,6 +2945,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             synthesisUpgradeNumList.append({'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)})
         self.client.onUpdateSynthesisUpgradeNum(synthesisUpgradeNumList)
         self.client.onRandomSynthesis(itemIdList)
+
+        # 广播
+        self.tryBroadcast(list(getItemInfo.keys()))
         self.makeSynthesisLog(
             self.gbID,
             list(costItemInfo.keys()),
@@ -2882,6 +2959,29 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             'randomSynthesis',
             opUUID
         )
+
+    def tryBroadcast(self, itemList):
+        avatarName = gameglobal.roleCache[self.id]['name']
+        for itemId in itemList:
+            self.broadcastPetQuality(avatarName, itemId)
+
+    def broadcastPetQuality(self, avatarName, itemId):
+        # 广播
+        if not dataUtils.isLingShouItem(itemId) or dataUtils.isLingShouEquipmentItem(itemId):
+            return
+
+        itemData = dataUtils.getCommItemData(itemId)
+        quality = itemData['quality']
+        petName = itemData['name']
+        if quality == gameconst.ItemQuality.PURPLE:
+            msgId = GGS.datas['quality3Broadcast']['value']
+            gameengine.broadcastBaseapp('onBroadcastToAllClients',
+                                        ('onMessage', (msgId, [avatarName, str(self.gbID), petName])))
+        elif quality == gameconst.ItemQuality.ORANGE:
+            msgId = GGS.datas['quality4Broadcast']['value']
+            gameengine.broadcastBaseapp('onBroadcastToAllClients',
+                                        ('onMessage', (msgId, [avatarName, str(self.gbID), petName])))
+        
 
     @gamedecorator.checkGameconfigEnable('bag')
     def reqUpgradeSynthesis(self, exposed, key):
@@ -2948,6 +3048,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=True, awardCtx=_ctx)
         self.client.onUpdateSynthesisUpgradeNum([{'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)}])
         # self.client.onUpgradeSynthesis(ranItemId)
+        # 广播
+        self.tryBroadcast(list(getItemInfo.keys()))
         self.makeSynthesisLog(
             self.gbID,
             list(costItemInfo.keys()),
@@ -3066,7 +3168,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         LogTrackingMgr.LogTrackingMgr.Capacity_Expansion(
             opUUID,
             self.gbID,
-            gameconst.CapacityExpansionType.BAG_GOLD,
+            gameconst.CapacityExpansionType.BAG_ITEM,
             oldCapacity,
             gridNum,
             self.bagData.capacity,
@@ -3187,11 +3289,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         INFO_MSG("checkBagItemLimitNoItemId", addNum)
         return self.getBagLimitItemNum() + addNum > self.drugsQuantityBase
 
-    def getGridDatasWithConds(self, itemId, bindType, count, args = None, excludedGridIDs = None):
-        ret, data = self.bagData.getGridIDsWithConds(itemId, bindType, count, args = args, excludedGridIDs = excludedGridIDs)
+    def getGridDatasWithConds(self, itemId, bindType, count, args = None, excludedGridIDs = None, isNormalTypeFirst = False):
+        ret, data, bindInfo = self.bagData.getGridIDsWithConds(itemId, bindType, count, args = args, excludedGridIDs = excludedGridIDs, isNormalTypeFirst = isNormalTypeFirst)
         if not ret:
-            return None
-        return data
+            return None, None
+        return data, bindInfo
 
     def onDrugsQuantitySync(self, drugsQuantity):
         INFO_MSG('onDrugsQuantitySync', drugsQuantity)

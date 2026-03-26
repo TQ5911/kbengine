@@ -18,6 +18,7 @@
         <doEnterWonderLand>
             <Arg>          ENTITYCALL                   </Arg>
             <Arg>          PLAYER_GBID                  </Arg>
+            <Arg>          PYTHON                       </Arg>
         </doEnterWonderLand>
 
         <onEnterWonderLandSuccess>

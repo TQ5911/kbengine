@@ -16,6 +16,41 @@ import petData_petGear as PDPGD
 
 
 class ImpAvatarPet(object):
+    def onInitPetProps(self, petIdList, petLevels):
+        # 最小宠物初始等级
+        minLevel = int(PDSD.datas['petMinLevel']['value'])
+        for idx in range(0, len(petIdList)):
+            lowLevel = minLevel
+            petId = petIdList[idx]
+            petData = PDPDD.datas[petId]
+            propList = petData['prop']
+            for propName, val in propList:
+                self.addProp(propName, val, gameconst.SourceType.PetProp)
+                DEBUG_MSG('onInitPetProps, base prop init:', petId, propName, val)
+            petLevel = petLevels[idx]
+            levelPropList = petData['levelProp']
+            for propName, val in levelPropList:
+                lowLevel += 1
+                if lowLevel > petLevel:
+                    break
+                self.addProp(propName, val, gameconst.SourceType.PetProp)
+                DEBUG_MSG('onInitPetProps, level prop init:', petId, petLevel, propName, val)
+
+    def updateLevelProps(self, petId, oldLevel, newLevel):
+        if oldLevel >= newLevel:
+            return
+        minLevel = int(PDSD.datas['petMinLevel']['value'])
+        petData = PDPDD.datas[petId]
+        levelPropList = petData['levelProp']
+        for propName, val in levelPropList:
+            minLevel += 1
+            if minLevel <= oldLevel:
+                continue
+            if minLevel > newLevel:
+                break
+            self.addProp(propName, val, gameconst.SourceType.PetProp)
+            DEBUG_MSG('updateLevelProps, level prop add:', petId, oldLevel, newLevel, propName, val)
+
     # ---------------------------      item  action  ------------------------------------
     def checkLingShouEggItemCond(self, gridId, itemId, useNum, ctx):
         pendingCheckId = self.setPendingCheckId(gridId, itemId, useNum, ctx)

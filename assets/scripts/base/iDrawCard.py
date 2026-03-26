@@ -146,6 +146,7 @@ class IDrawCard(object):
 
 		rewardId = rollReward
 		awardCtx = self._getAvatarAwardCtx(rewardId, None)
+		awardCtx.addContextVar(dataUtils.addAwardsCallBackKey(), 'onRandomSummonPetResult')
 		awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum, 'opUUID': opUUID })
 		detail = gameclass.AwardDetail(rewardId=rewardId)
 		self.addAwards(AAC_AACDD.datas.BONUS_SRC_PETROLL_REWARD, rewardId, 1, opUUID, detail, awardCtx, False)

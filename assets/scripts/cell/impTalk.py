@@ -86,7 +86,7 @@ class ImpTalk(object):
     def _checkDialogEventConfig(self, dialogId, idx):
         dialogData = DIALOG_DATA.datas.get(dialogId, None)
         if dialogData is None:
-            return
+            return None, None
 
         event_str = dialogData.get('event')
         event_list = event_str.split('|')
@@ -96,16 +96,16 @@ class ImpTalk(object):
         INFO_MSG('in _checkDialogEventConfig:', event_list, param_list)
         if 0 < len(event_list) < idx:
             ERROR_MSG('in _checkDialogEventConfig, event idx error:', idx)
-            return
+            return None, None
 
         if 0 < len(param_list) < idx:
             ERROR_MSG('in _checkDialogEventConfig, param idx error:', idx)
-            return
+            return None, None
 
         eventName = event_list[idx]
         if not eventName:
             WARNING_MSG('_checkDialogEventConfig, no eventName, dailog config error:', dialogId)
-            return
+            return None, None
 
         return event_list, param_list
 

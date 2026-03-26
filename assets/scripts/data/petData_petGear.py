@@ -233,37 +233,37 @@ datas = _tools.RODict({
     30003044: _tools.RODict({
         "ID": 30003044,
         "passiveSkill": 87010044,
-        "claimExp": 72000
+        "claimExp": 60000
     }),
     30003045: _tools.RODict({
         "ID": 30003045,
         "passiveSkill": 87010045,
-        "claimExp": 72000
+        "claimExp": 60000
     }),
     30003046: _tools.RODict({
         "ID": 30003046,
         "passiveSkill": 87010046,
-        "claimExp": 72000
+        "claimExp": 60000
     }),
     30003047: _tools.RODict({
         "ID": 30003047,
         "passiveSkill": 87010047,
-        "claimExp": 72000
+        "claimExp": 60000
     }),
     30003048: _tools.RODict({
         "ID": 30003048,
         "passiveSkill": 87010048,
-        "claimExp": 72000
+        "claimExp": 60000
     }),
     30003049: _tools.RODict({
         "ID": 30003049,
         "passiveSkill": 87010049,
-        "claimExp": 72000
+        "claimExp": 60000
     }),
     30003050: _tools.RODict({
         "ID": 30003050,
         "passiveSkill": 87010050,
-        "claimExp": 72000
+        "claimExp": 60000
     })
 })
 minKey = 30003001

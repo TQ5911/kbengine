@@ -601,7 +601,7 @@ datas = _tools.RODict({
     }),
     "guild_enmityCost": _tools.RODict({
         "key": "guild_enmityCost",
-        "value": (30000007, 50000),
+        "value": (30000007, 500),
     }),
     "guild_relieveUnion": _tools.RODict({
         "key": "guild_relieveUnion",

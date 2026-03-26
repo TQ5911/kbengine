@@ -8,7 +8,6 @@ import achievement_details as A_DD
 import gameconst
 import LogTrackingMgr
 
-
 # 等级成就
 def _checkAchieveLevelFinished(avatar, achieveData, achieveVal, ctx):
     achieveVal.step = max(achieveVal.step, avatar.getRoleCacheAttr('level', 1))
@@ -73,6 +72,20 @@ def _checkAchieveLeaderBoard(avatar, achieveData, achieveVal, ctx):
 
     else:
         return False
+    
+def _checkAchieveKillTarSuffixMonster(avatar, achieveData, achieveVal, ctx):
+    _suffixIds = achieveData['targetParam'][0]
+    if ctx.get('suffixId', 0) not in _suffixIds:
+        return False
+    achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][1]
+
+def _checkAchieveKillTarMonster(avatar, achieveData, achieveVal, ctx):
+    _monsterIds = achieveData['targetParam'][0]
+    if ctx.get('monsterId', 0) not in _monsterIds:
+        return False
+    achieveVal.step += 1
+    return achieveVal.step >= achieveData['targetParam'][1]
 
 # 第一个是checkFunc，第二个代表初始化时候是否要校验一次
 _CHECK_ACHIEVE_DIC = {
@@ -101,6 +114,8 @@ _CHECK_ACHIEVE_DIC = {
     gameconst.AchieveType.SIEGE_KILL: (_checkAchieveAddStep, False),
     gameconst.AchieveType.PERSONAL_BOX: (_checkAchieveAddStep, False),
     gameconst.AchieveType.VIEWPOINT: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.KILL_TAR_SUFFIX_MONSTER: (_checkAchieveKillTarSuffixMonster, False),
+    gameconst.AchieveType.KILL_TAR_MONSTER: (_checkAchieveKillTarMonster, False),
 }
 
 
@@ -153,6 +168,7 @@ class AchievementValVal(userType.UserSoleType):
                 avatar.achievementInfo.maxVersion,
                 _state,
                 self.step,
+                avatar.achievementInfo.sumPoint,
             )
 
         return self.step > _oldStep

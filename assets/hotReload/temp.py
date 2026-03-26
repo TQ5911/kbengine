@@ -2,55 +2,62 @@
 from KBEDebug import *
 import KBEngine
 def refreshCell():
+    import KBEngine
+    import formula
     import gameconst
-    import gametimer
-    import conflict_status as CSD
-    import conflict_status_def as CCDD
-    import SkillManager
-    def _onRemovedState(self, states, byConflictState=-1, removeReason=0):
-        for state in states:
-            if state == gameconst.State.Fighting:
-                self.leaveFightingState()
-            elif state == gameconst.State.autoFight:
-                DEBUG_MSG('ZTQ ', states, byConflictState)
-                self._stopAutoCombat()
-            elif state == gameconst.State.Moving and hasattr(self, 'removeMoveController'):
-                self.removeMoveController()
-            elif state == gameconst.State.Channeling or state == gameconst.State.moveChannel:
-                DEBUG_MSG('removeState  killChannelingSkill ')
-                if removeReason:
-                    self.killChannelingSkill(removeReason)
-                else:
-                    self.killChannelingSkill(gameconst.ChannelingBreak.CONFLICT_STATE)
-            elif state == gameconst.State.Casting:
-                DEBUG_MSG('removeState  killCastingSkill ', byConflictState)
-                if byConflictState >= 0 and byConflictState in (gameconst.State.Moving, gameconst.State.Idle):
-                    self.killCastingSkill(gameconst.EndCasting.Move)
-                elif byConflictState == gameconst.State.Death:
-                    self.killCastingSkill(gameconst.EndCasting.Dead)
-                elif byConflictState == gameconst.State.clientPick:
-                    self.killCastingSkill(gameconst.EndCasting.clientPick)
-                else:
-                    self.killCastingSkill(gameconst.EndCasting.ConflictState)
-            elif state == gameconst.State.riding:
-                self._onExitRiding(byConflictState)
-            elif state == gameconst.State.clientPick:
-                self._onExitClientPick()
-            elif state == gameconst.State.GeneralAttack:
-                if removeReason != gameconst.RemoveStateReason.SKILL_DONE:
-                    self._breakGeneralSkill()
-            elif state == gameconst.State.Shifting or state == gameconst.State.Dodging:
-                self.endMovement()
-            elif state == gameconst.State.Sprinting:
-                self.leaveSprintingState()
-            elif state == gameconst.State.Flying:
-                self._callback(1, '_onRemoveFlyingState', (), gametimer.TIMER_TAG_ON_REMOVE_FLY_STATE)
-            elif state == CCDD.datas.duel:
-                self.leaveDuelState()
-            buffTag = CSD.datas[state].get('buffTag')
-            if buffTag:
-                self.removeBuffByTag(buffTag)
-    SkillManager.SkillManager._onRemovedState = _onRemovedState
+    import utils
+    import sMath
+    import gamePlay_gamePlay as DDID
+    import impAutoCombat
+    def getNearestEnemy(self):
+        target = None
+        _inFightBack = self.getCommonFlagCell(gameconst.AvatarFlagCell.FIGHT_BACK)
+        if _inFightBack:
+            target = KBEngine.entities.get(self.fightBackTarget)
+        if not target:
+            targetId = self.autoCombatInfo.get('targetEnemyId', 0)
+            target = KBEngine.entities.get(targetId, None)
+        if not target and self.selectedTargetId:
+            target = KBEngine.entities.get(self.selectedTargetId, None)
+            if not target:
+                self.setSelectedTargetId(0)
+        _hateRecord = self.getTempMiscProp(gameconst.AvatarProps.hateRecord, {})
+        closeAutoRangel = DDID.datas.get(formula.getMapId(self.spaceNo), {}).get('closeAutoRangel', None)
+        if not target or target.spaceNo != self.spaceNo or not target.IsCombatUnit or sMath.distance2D(target.position, self.position) > self._getAutoFightRange(target) or not utils.checkTargetType('Enemy', self, target) or not self.checkCombatRangeY(target):
+            targetsList = []
+            entityIds = self.getTargetIdsByTargetType('Enemy')
+            priorityTargetEnemyIds = self.autoCombatInfo.get('priorityTargetEnemyId', None)
+            _teamTargetIds = self.getTeamTargets()
+            _maxVal = None
+            target = None
+            for eId in entityIds:
+                entity = KBEngine.entities.get(eId)
+                if not entity:
+                    continue
+                if entity.id == self.id:
+                    continue
+                if not self.checkCombatRangeY(entity):
+                    continue
+                if _inFightBack and eId not in _hateRecord:
+                    continue
+                if entity.IsCombatUnit and utils.checkCachedTargetType('Enemy', self, entity):
+                    targetsList.append(entity)
+                    _val = 1 if eId in _hateRecord else 0, 1 if entity.IsMonster and priorityTargetEnemyIds and entity.monsterId in priorityTargetEnemyIds else 0, 1 if eId in _teamTargetIds else 0, -sMath.distance2DToCompareFrom3DPosition(self.position, entity.position)
+                    if not closeAutoRangel and _val < (0, 0, 0, 1.0) and self.combatReturnInfo.switch and sMath.distance2D(entity.position, self.combatReturnInfo.pos) > self.combatReturnInfo.range:
+                        continue
+                    if _maxVal is None:
+                        _maxVal = _val
+                        target = entity
+                    elif _maxVal < _val:
+                        _maxVal = _val
+                        target = entity
+            if not target:
+                self.autoCombatInfo['targetEnemyId'] = 0
+            else:
+                self.autoCombatInfo['targetEnemyId'] = target.id
+                return target
+        return target
+    impAutoCombat.ImpAutoCombat.getNearestEnemy = getNearestEnemy
     # --auto genterate mark--
     pass
 def refreshBase():

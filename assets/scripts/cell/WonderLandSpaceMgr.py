@@ -44,6 +44,18 @@ class WonderLandSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpa
 
     def onPlayerRelogin(self, box, playerGbId):
         super().onPlayerRelogin(box, playerGbId)
+        _bossList = list(self.collToBoss.values())
+        box.client.onWonderLandBossInfo(_bossList)
+
+    def onPlayerEnter(self, pid):
+        super(WonderLandSpaceMgr, self).onPlayerEnter(pid)
+        _ent = KBEngine.entities.get(pid)
+        if not _ent:
+            ERROR_MSG("onPlayerEnter: _ent is None", pid)
+            return
+
+        _bossList = list(self.collToBoss.values())
+        _ent.client.onWonderLandBossInfo(_bossList)
 
     def summonRandomBoss(self):
         INFO_MSG("summonRandomBoss")

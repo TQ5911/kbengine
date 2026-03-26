@@ -46,7 +46,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "InitLoad": 0,
-            "Level": 40,
+            "Level": 38,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": "18",
@@ -95,18 +95,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 32098003,
-          "PosX": 241.428,
-          "PosY": 527.7434,
-          "PosZ": 25.41019,
+          "PosX": 236.3062,
+          "PosY": 527.7401,
+          "PosZ": 25.86073,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 0.0,
-            "TelX": 241.428,
-            "TelY": 527.7434,
-            "TelZ": 25.41019
+            "TelX": 236.3062,
+            "TelY": 527.7401,
+            "TelZ": 25.86073
           }
         }
       }
@@ -128,7 +128,7 @@ datas ={
         "Props": {
           "GroupID": "",
           "InitLoad": 0,
-          "Level": 40,
+          "Level": 38,
           "LightPillar": "",
           "MapEntityScale": 0,
           "MapEntityType": "18",

@@ -187,25 +187,29 @@ class ImpTeam(object):
     def applyCreateTeam(self, exposed, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         INFO_MSG('applyCreateTeam', teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
         if utils.formula.isRaidDungeonSpace(self.spaceNo):
-            ERROR_MSG("applyCreateTeam, , current space check fail")
+            WARNING_MSG("applyCreateTeam, current space check fail")
             return
         if not dataUtils.checkTeamPassword(password):
-            ERROR_MSG("applyCreateTeam, illegal password", password)
+            WARNING_MSG("applyCreateTeam, illegal password", password)
             return
         if teamTarget <=0:
-            ERROR_MSG("applyCreateTeam, illegal teamTarget", teamTarget)
+            WARNING_MSG("applyCreateTeam, illegal teamTarget", teamTarget)
             return
 
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if teamTargetInfo is None:
-            ERROR_MSG("applyCreateTeam, invalid teamTarget", teamTarget)
+            WARNING_MSG("applyCreateTeam, invalid teamTarget", teamTarget)
             return
 
         # 非自由组队的，检查下活动类型是否是组队
         if teamTarget > gameconst.PARE_ACTIVITY_ID:
             actData = AC_ADD.datas.get(int(teamTargetInfo['pareActivity']))
             if not actData or gameconst.ActivityControlType.TEAM != int(actData['needTeam']):
-                ERROR_MSG("applyCreateTeam, wrong activity control need team type", teamTarget)
+                WARNING_MSG("applyCreateTeam, wrong activity control need team type", teamTarget)
+                return
+            if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamUIVisibleId"), True) \
+                or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamDungeonUIVisibleId"), True):
+                WARNING_MSG("applyCreateTeam, func is locked")
                 return
 
         if not self.checkTeamCond(teamTarget, minLevel, minScore):
@@ -252,15 +256,15 @@ class ImpTeam(object):
     def isReachTeamMinCond(self, teamTarget):
         teamTargetInfo = TMACTD.datas.get(teamTarget)
         if not teamTargetInfo:
-            ERROR_MSG("isReachTeamMinCond, missing target", teamTarget)
+            WARNING_MSG("isReachTeamMinCond, missing target", teamTarget)
             return False
         cfgLevel = teamTargetInfo['minLevel']
         if self.level < cfgLevel:
-            ERROR_MSG("isReachTeamMinCond, minLevel not enough", self.level, cfgLevel)
+            WARNING_MSG("isReachTeamMinCond, minLevel not enough", self.level, cfgLevel)
             return False
         cfgMinScore = teamTargetInfo['minScore']
         if self.getTotalScore() < cfgMinScore:
-            ERROR_MSG("isReachTeamMinCond, minScore not enough", self.getTotalScore(), cfgMinScore)
+            WARNING_MSG("isReachTeamMinCond, minScore not enough", self.getTotalScore(), cfgMinScore)
             return False
         return True
 
@@ -270,18 +274,21 @@ class ImpTeam(object):
     def applyJoinTeam(self, exposed, teamId, password, applySource):
         INFO_MSG('applyJoinTeam::', teamId, password, applySource)
         if applySource not in gameconst.ApplySource.VALID_APPLY_SOURCE:
-            ERROR_MSG("applyJoinTeam not valid apply source", applySource)
+            WARNING_MSG("applyJoinTeam not valid apply source", applySource)
             return
         if self.isInTeam():
-            ERROR_MSG("applyJoinTeam player is already in raid ", self.teamId)
+            WARNING_MSG("applyJoinTeam player is already in raid ", self.teamId)
             return
         if self.isInRaid():
-            ERROR_MSG("applyJoinTeam player is already in team ", self.raidInfo.raidUUID)
+            WARNING_MSG("applyJoinTeam player is already in team ", self.raidInfo.raidUUID)
             return
         if not dataUtils.checkTeamPassword(password):
-            ERROR_MSG("applyJoinTeam, illegal password", password)
+            WARNING_MSG("applyJoinTeam, illegal password", password)
             return
-        gameengine.getTeamStub(teamId).applyJoinTeam(teamId, password, self._getTeamPlayerInfoDic(), False, applySource)
+        datas = {}
+        datas['isTeamUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamUIVisibleId"), False)
+        datas['isTeamDungeonUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamDungeonUIVisibleId"), False)
+        gameengine.getTeamStub(teamId).applyJoinTeam(teamId, password, self._getTeamPlayerInfoDic(), False, applySource, datas)
 
     def onApplyJoinTeam(self, teamId, captainGbId):
         INFO_MSG('onApplyJoinTeam::', teamId)
@@ -362,10 +369,13 @@ class ImpTeam(object):
                 return
 
         if self.teamId > 0:
-            gameengine.getTeamStub(self.teamId).applyInviteTeam(self.base, self.teamId, self.gbId, self.level, self.school, gbId, name)
+            datas = {}
+            datas['isTeamUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamUIVisibleId"), False)
+            datas['isTeamDungeonUIVisibleId'] = self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamDungeonUIVisibleId"), False)
+            gameengine.getTeamStub(self.teamId).applyInviteTeam(self.base, self.teamId, self.gbId, self.level, self.school, gbId, name, datas)
         else:
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell([gbId], 'procInviteTeamMsg', (
-                0, 0, self.gbId, self.name, self.name, self.level, self.school), self, 'onTeamInviteOffline', ())
+                0, 0, self.gbId, self.name, self.name, self.level, self.school, 0, 0, False), self, 'onTeamInviteOffline', ())
 
     def IDIPBanTeam(self, endTime, data):
         self.setPersistentMiscProp(gameconst.AvatarProps.idipBanSocialTeam, (endTime, data))
@@ -710,13 +720,19 @@ class ImpTeam(object):
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase([gbId], 'onMessagePre',
                                                               (TMMCD.datas['applySentMsg']['value'], []), None, '', ())
 
-    def procInviteTeamMsg(self, srcTeamId, teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool):
+    def procInviteTeamMsg(self, srcTeamId, teamTarget, srcPlayerGbId, srcPlayerName, captainName, srcLevel, srcSchool, teamScore, teamLevel, isDirect):
+        if teamTarget > gameconst.PARE_ACTIVITY_ID:
+            if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamUIVisibleId"), False) \
+                or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamDungeonUIVisibleId"), False):
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+                    (TMMCD.datas['teamInviteQuestMsg']['value'], [self.name]), None, '', ())
+                return
         if formula.isDungeonSpace(self.spaceNo):
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
                   (TMMCD.datas['team_inCopyScene']['value'], []), None, '', ())
             return
 
-        if self.teamId > 0:
+        if self.isInTeam(self.gbId):
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
                   (TMMCD.datas['targetInOtherTeamMsg']['value'], [self.name]), None, '', ())
             return
@@ -726,12 +742,23 @@ class ImpTeam(object):
                   (TMMCD.datas['targetInRaidMsg']['value'], [self.name]), None, '', ())
             return
 
-        if not self.isReachTeamMemMinLevel(bMsg=False):
-            WARNING_MSG('procInviteTeamMsg, level failed:', self.level)
+        if self.level < teamLevel:
+            WARNING_MSG('procInviteTeamMsg, level failed:', self.level, teamLevel)
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
-              (int(TMMCD.datas['teamInviteLevelMsg']['value']), [self.name, str(TMMCD.datas['teamMinLevel']['value'])]), None, '', ())
+              (int(TMMCD.datas['teamInviteLevelMsg']['value']), [self.name]), None, '', ())
             return
-
+        
+        totalScore = self.getTotalScore()
+        if totalScore < teamScore:
+            WARNING_MSG('procInviteTeamMsg, score failed:', totalScore, teamScore)
+            gameengine.getGlobalBase('PlayerStub').doOnOthersBase([srcPlayerGbId], 'onMessagePre',
+              (int(TMMCD.datas['teamInviteScoreMsg']['value']), [self.name]), None, '', ())
+            return
+        
+        if isDirect:
+            gameengine.getTeamStub(srcTeamId).addTeamMember(srcTeamId, self._getTeamPlayerInfoDic())
+            return
+        
         _skipInviteMsg = False
         teamInviteRecord = self.getTempMiscProp(gameconst.AvatarProps.teamInviteRecord, None)
         if teamInviteRecord is None:
@@ -763,10 +790,6 @@ class ImpTeam(object):
                                                     gametimer.TIMER_TAG_DO_REPLY_BECOME_CAPTAIN,
                                                     'replyTeamCaptainTimer')
         self.client.onApplyBecomeCaptainMsg(gbId, name)
-
-    def procDirectJoinMsg(self, teamId):
-        if self.teamId <= 0:
-            gameengine.getTeamStub(teamId).addTeamMember(teamId, self._getTeamPlayerInfoDic())
 
     # ---------------------------------------------------跟随相关---------------------------------------------------
 
@@ -1777,16 +1800,20 @@ class ImpTeam(object):
     @impRaid.raidPermissionCheck(needPermission=gameconst.RaidPermission.UNKNOWN, onlyMode=True)
     def reqPlayerAutoMatch(self, exposed, target):
         INFO_MSG('in reqPlayerAutoMatchTeam')
+        if not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamUIVisibleId"), True) \
+            or not self._isUIVisibleStrCell(dataUtils.getRaidConstDataValue("teamDungeonUIVisibleId"), True):
+            WARNING_MSG("reqPlayerAutoMatch, func is locked")
+            return
         if target == 0 or target == 1:
             WARNING_MSG("reqPlayerAutoMatch target error", target)
             return
 
         if self.isInTeam(self.gbId):
-            WARNING_MSG('   in reqPlayerAutoMatchTeam, already in a team:', self.teamId)
+            WARNING_MSG('reqPlayerAutoMatchTeam, already in a team:', self.teamId)
             return
 
         if self.isInRaid():
-            WARNING_MSG('   in reqPlayerAutoMatchTeam, already in a raid:', self.raidUUID)
+            WARNING_MSG('reqPlayerAutoMatchTeam, already in a raid:', self.raidUUID)
             return
 
         teamTargetInfo = TMACTD.datas.get(target)

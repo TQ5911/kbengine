@@ -692,8 +692,8 @@ datas = _tools.RODict({
     }),
     229: _tools.RODict({
         "ID": 229,
-        "color2": "#B4FDB5",
-        "color3": "<color=#B4FDB5>{0}</color>"
+        "color2": "#ECFFB6",
+        "color3": "<color=#ECFFB6>{0}</color>"
     }),
     230: _tools.RODict({
         "ID": 230,
@@ -702,8 +702,8 @@ datas = _tools.RODict({
     }),
     231: _tools.RODict({
         "ID": 231,
-        "color2": "#F5B8BF",
-        "color3": "<color=#F5B8BF>{0}</color>"
+        "color2": "#F1B4F6",
+        "color3": "<color=#F1B4F6>{0}</color>"
     }),
     232: _tools.RODict({
         "ID": 232,

@@ -778,6 +778,10 @@ class StateAngryWithAiSkill(StateImp):
     name = State.ANGRY
 
     def tick(self, ctrl):
+        if ctrl.farFromHome():
+            ctrl.destroyAllVassal()
+            ctrl.clearHateAndGoHome()
+            return
         if ctrl.inHate():
             ctrl.doAiAction()
             ctrl.useRandomSkill()

@@ -18,15 +18,15 @@ datas = _tools.RODict({
     30000224: _tools.RODict({
         "ID": 30000224,
         "materials": _tools.ROList([[30000223, 10]]),
-        "cost": _tools.ROList([[30000013, 1000]]),
+        "cost": _tools.ROList([[30000002, 5000]]),
         "lucky": None,
         "unboundProb": 0.1,
         "isOpen": 1
     }),
     30000225: _tools.RODict({
         "ID": 30000225,
-        "materials": _tools.ROList([[30000224, 5]]),
-        "cost": _tools.ROList([[30000013, 5000]]),
+        "materials": _tools.ROList([[30000224, 4]]),
+        "cost": _tools.ROList([[30000013, 1000]]),
         "lucky": None,
         "unboundProb": 0.1,
         "isOpen": 1
@@ -34,7 +34,7 @@ datas = _tools.RODict({
     30000226: _tools.RODict({
         "ID": 30000226,
         "materials": _tools.ROList([[30000225, 2]]),
-        "cost": _tools.ROList([[30000013, 15000]]),
+        "cost": _tools.ROList([[30000013, 5000]]),
         "lucky": None,
         "unboundProb": 0.1,
         "isOpen": 1

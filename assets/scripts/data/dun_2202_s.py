@@ -18,6 +18,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 35,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": "18",
             "MonsterGroupID": 1,
@@ -27,6 +28,7 @@ datas ={
             "RefreshTime": 1,
             "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -104,8 +106,32 @@ datas ={
             "Radius": 50.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
+          }
+        }
+      },
+      "CombatArea": {
+        "22028005": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "CombatArea",
+          "ClassNameType": 21,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EntityID": 0,
+          "ID": 22028005,
+          "PosX": 376.9,
+          "PosY": 317.1095,
+          "PosZ": 373.6,
+          "Props": {
+            "AreaType": 1,
+            "Radius": 63.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       }

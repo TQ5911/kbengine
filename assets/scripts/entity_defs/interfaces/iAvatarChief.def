@@ -20,9 +20,15 @@
     </CellMethods>
 
     <BaseMethods>
+        <increaseChiefRewardNumber>
+            <Exposed/>
+            <Arg>   UINT16   </Arg>
+            <Arg>   UINT16   </Arg>
+        </increaseChiefRewardNumber>
+        
         <useItemToIncreaseChiefRewardNumber>
             <Exposed/>
-            <Arg>   UINT8   </Arg>
+            <Arg>   UINT16   </Arg>
         </useItemToIncreaseChiefRewardNumber>
 
         <useCoinToIncreaseChiefRewardNumber>

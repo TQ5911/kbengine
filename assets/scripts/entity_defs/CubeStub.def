@@ -91,6 +91,23 @@
              <Arg>       PLAYER_GBID            </Arg>
              <Arg>       PYTHON                 </Arg>
              <Arg>       SPACE_NO               </Arg>
+             <Arg>       ARRAY  <of>    UINT8   </of>   </Arg>
         </enterRandomRoom>
+
+        <doGetCubeReadyLineCnt>
+             <Arg>       ENTITYCALL             </Arg>
+        </doGetCubeReadyLineCnt>
+
+        <checkSwitchCubeLine>
+             <Arg>       ENTITYCALL             </Arg>
+             <Arg>       LINE_NO                </Arg>
+        </checkSwitchCubeLine>
+
+        <doSwitchCubeLine>
+             <Arg>       ENTITYCALL             </Arg>
+             <Arg>       PLAYER_GBID            </Arg>
+             <Arg>       LINE_NO                </Arg>
+             <Arg>       PYTHON                 </Arg>
+        </doSwitchCubeLine>
     </BaseMethods>
 </root>

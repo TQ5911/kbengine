@@ -15,9 +15,12 @@ datas ={
         "PosY": 33.99687,
         "PosZ": 419.8018,
         "Props": {
+          "MapEntityType": 0,
           "Num": 0,
           "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": "",
+          "ShowInSceneMap": 1,
           "TelX": 322.4684,
           "TelY": 1.518272,
           "TelZ": 226.8232
@@ -1608,6 +1611,7 @@ datas ={
           "Props": {
             "GroupID": "",
             "Level": 3,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": "",
@@ -1615,7 +1619,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -1911,9 +1917,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 11212030,
           "ID": 40020085,
-          "PosX": 317.1747,
+          "PosX": 316.54,
           "PosY": 90.04079,
-          "PosZ": 348.3747,
+          "PosZ": 348.38,
           "Props": {
             "GroupID": "",
             "Level": 4,
@@ -2702,14 +2708,14 @@ datas ={
           "DisplayName": "",
           "EntityID": 1,
           "ID": 40028023,
-          "PosX": 752.0,
+          "PosX": 746.35,
           "PosY": 33.80736,
-          "PosZ": 354.0,
+          "PosZ": 353.95,
           "Props": {
             "AreaType": 2,
             "Height": 2.0,
             "Length": 30.0,
-            "MPosX": 749.0,
+            "MPosX": 743.0,
             "MPosY": 33.81,
             "MPosZ": 321.0,
             "Remark": "\u7834\u788e\u6865\u963b\u6321\u7a7a\u6c14\u5899",
@@ -3045,6 +3051,28 @@ datas ={
         "PosX": 248.5027,
         "PosY": 90.28662,
         "PosZ": 348.4185,
+        "Props": {
+          "MapEntityType": 0,
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "",
+          "ShowInSceneMap": 1
+        }
+      },
+      "40028043": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "RebornPos",
+        "ClassNameType": 7,
+        "CustomID": "",
+        "Dir": 273.1996,
+        "DisplayName": "",
+        "EntityID": 0,
+        "ID": 40028043,
+        "PosX": 346.3576,
+        "PosY": 90.04079,
+        "PosZ": 348.526,
         "Props": {
           "MapEntityType": 0,
           "Num": 0,

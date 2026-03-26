@@ -895,20 +895,7 @@ class IEventActions(object):
             props['hostId'] = self.hostId
             props['casterType'] = self.casterType
 
-        if CCD.datas[creationId].get('inherit'):
-            combatProps['minPhysicalAtk'] = self.getProp('minPhysicalAtk')
-            combatProps['maxPhysicalAtk'] = self.getProp('maxPhysicalAtk')
-            combatProps['minMagicAtk'] = self.getProp('minMagicAtk')
-            combatProps['maxMagicAtk'] = self.getProp('maxMagicAtk')
-            combatProps['atkBless'] = self.getProp('atkBless')
-            combatProps['hit'] = self.getProp('hit')
-            combatProps['fatal'] = self.getProp('fatal')
-            combatProps['mortal'] = self.getProp('mortal')
-            combatProps['stunEnh'] = self.getProp('stunEnh')
-            combatProps['silentEnh'] = self.getProp('silentEnh')
-            combatProps['knockEnh'] = self.getProp('knockEnh')
-            combatProps['frozenEnh'] = self.getProp('frozenEnh')
-            combatProps['force'] = self.force
+        self.inheritCombatProps(creationId)
 
         createCount, createRadius = 1, 0
         rawGameEntityId = 0
@@ -1007,20 +994,7 @@ class IEventActions(object):
             props['hostId'] = self.hostId
             props['casterType'] = self.casterType
 
-        if CCD.datas[creationId].get('inherit'):
-            combatProps['minPhysicalAtk'] = self.getProp('minPhysicalAtk')
-            combatProps['maxPhysicalAtk'] = self.getProp('maxPhysicalAtk')
-            combatProps['minMagicAtk'] = self.getProp('minMagicAtk')
-            combatProps['maxMagicAtk'] = self.getProp('maxMagicAtk')
-            combatProps['atkBless'] = self.getProp('atkBless')
-            combatProps['hit'] = self.getProp('hit')
-            combatProps['fatal'] = self.getProp('fatal')
-            combatProps['mortal'] = self.getProp('mortal')
-            combatProps['stunEnh'] = self.getProp('stunEnh')
-            combatProps['silentEnh'] = self.getProp('silentEnh')
-            combatProps['knockEnh'] = self.getProp('knockEnh')
-            combatProps['frozenEnh'] = self.getProp('frozenEnh')
-            combatProps['force'] = self.force
+        self.inheritCombatProps(creationId)
 
         fixedPos = fixedDir = None
         createCount, createRadius = 1, 0
@@ -1095,6 +1069,24 @@ class IEventActions(object):
                 creation.setAllSkillLv(skillLv)
 
         return True
+
+    def inheritCombatProps(self, creationId, combatProps):
+        if CCD.datas[creationId].get('inherit'):
+            combatProps['minPhysicalAtk'] = self.getProp('minPhysicalAtk')
+            combatProps['maxPhysicalAtk'] = self.getProp('maxPhysicalAtk')
+            combatProps['minMagicAtk'] = self.getProp('minMagicAtk')
+            combatProps['maxMagicAtk'] = self.getProp('maxMagicAtk')
+            combatProps['atkBless'] = self.getProp('atkBless')
+            combatProps['hit'] = self.getProp('hit')
+            combatProps['fatal'] = self.getProp('fatal')
+            combatProps['mortal'] = self.getProp('mortal')
+            combatProps['stunEnh'] = self.getProp('stunEnh')
+            combatProps['silentEnh'] = self.getProp('silentEnh')
+            combatProps['knockEnh'] = self.getProp('knockEnh')
+            combatProps['frozenEnh'] = self.getProp('frozenEnh')
+            combatProps['force'] = self.force
+            combatProps['accuracy'] = self.getProp("accuracy")
+            combatProps['evasion'] = self.getProp("evasion")
 
     def clearAllCreation(self, target, context, *args):
         self.destoryAllCreation()
@@ -1240,24 +1232,6 @@ class IEventActions(object):
 
         target.displacedBySkill(self.id, realDstPos, speed, timeEx, context)
 
-    def immuneDeath(self, target, context, *args):
-        immuneDuration, deadAfterimmuning = args
-        immInfo = gameclass.ImmuneDeathInfo(context.getDmgSourceType(), context.getDmgSourceId(),
-                                            immuneDuration, deadAfterimmuning, gameconst.ImmuneDeathState.IMMUNE_VALID)
-        self.setTempMiscProp(gameconst.AvatarProps.immuneDeath, immInfo)
-
-    def removeImmuneDeath(self, target, context, *args):
-        iInfo = self.getTempMiscProp(gameconst.AvatarProps.immuneDeath)
-        if iInfo.immuneDeathFinishTimerId:
-            iInfo.deadFuture = True
-        else :
-            self.popTempMiscProp(gameconst.AvatarProps.immuneDeath)
-
-    def setImmuneDeath(self, target, context, *args):
-        immInfo = gameclass.ImmuneDeathInfo(gameconst.SourceType.Default, 0, -1, False,
-                                            gameconst.ImmuneDeathState.IMMUNE_VALID)
-        self.setTempMiscProp(gameconst.AvatarProps.immuneDeath, immInfo)
-
     def clearSkillCD(self, target, context, *args):
         skillId, = args
 
@@ -1273,8 +1247,6 @@ class IEventActions(object):
 
     def endTimebackSkill(self, target, context, *args):
         bkData = self.popTempMiscProp(gameconst.AvatarProps.timebackSkillData)
-
-        skillVal = self._getSkillByActionContext(context)
 
         if self.spaceNo!=bkData.spaceNo:
             return False
@@ -1391,10 +1363,15 @@ class IEventActions(object):
             WARNING_MSG('dodgeSkill distance too far')
             return False
 
-        if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Dodging)):
-            self.setState(gameconst.State.Dodging)
-        else:
-            return False
+        # 非闪避技能，不设置闪避状态
+        #【【战斗】自动战斗下，法师来回移动下释放移形换影，小概率位移失效，见附件】
+        # https://www.tapd.cn/tapd_fe/59721401/bug/detail/1159721401001009436
+        if utils.hasSkillTag(skillVal.skillId, gameconst.SkillTag.DodgeSkill):
+            if self.checkConflictState(dataUtils.getStateEventId(gameconst.State.Dodging)):
+                self.cancelController('Movement')
+                self.setState(gameconst.State.Dodging)
+            else:
+                return False
 
         length = sMath.distance2D(self.position, realDstPos)
         delayTime = sMath.limit(length / speed, 0.01, 20.0)
@@ -1607,4 +1584,15 @@ class IEventActions(object):
 
         INFO_MSG('interactArenaKing')
         self.spaceMgr.doInteractArenaKing(self)
+
+    def broadMsg(self, msgId):
+        gameengine.broadcastBaseapp(
+            'broadcastToAllAvatar',
+            (
+                gameconst.BASE,
+                'onMessagePre',
+                (msgId, []),
+                (),
+            )
+        )
 

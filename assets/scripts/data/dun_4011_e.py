@@ -1,25 +1,8 @@
 datas ={
-  "1003": {
-    "type": "createMonster",
-    "entityID": [
-      40110001
-    ],
-    "num": 0,
-    "lv": "1",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {}
-  },
   "1001": {
     "type": "dunStart",
     "transition": {
       "finished": [
-        1003,
         1021,
         1020,
         1025
@@ -48,7 +31,7 @@ datas ={
   "1022": {
     "type": "popupdialog",
     "entityID": [
-      40110001
+      40114002
     ],
     "dialogID": 19900230,
     "transition": {}
@@ -56,7 +39,8 @@ datas ={
   "1025": {
     "type": "createNPC",
     "entityID": [
-      40114001
+      40114001,
+      40114002
     ],
     "num": 0,
     "lv": "1",

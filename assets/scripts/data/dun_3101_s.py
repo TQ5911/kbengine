@@ -3344,66 +3344,18 @@ datas ={
           "DisplayName": "",
           "EntityID": 17310002,
           "ID": 31018010,
-          "PosX": 175.1999,
-          "PosY": 527.7437,
-          "PosZ": 107.5512,
+          "PosX": 179.273,
+          "PosY": 527.7402,
+          "PosZ": 110.6253,
           "Props": {
             "CameraId": 0,
             "GateType": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 310.8671,
-            "TelX": 175.1999,
-            "TelY": 527.7437,
-            "TelZ": 107.5512
-          }
-        },
-        "31018011": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Teleporter",
-          "ClassNameType": 2,
-          "CustomID": "",
-          "Dir": 30.73438,
-          "DisplayName": "",
-          "EntityID": 17310002,
-          "ID": 31018011,
-          "PosX": 243.3868,
-          "PosY": 524.7953,
-          "PosZ": 45.50167,
-          "Props": {
-            "CameraId": 0,
-            "GateType": 1,
-            "Remark": "",
-            "ShowInSceneMap": 1,
-            "TelDir": 310.8671,
-            "TelX": 175.1999,
-            "TelY": 527.7437,
-            "TelZ": 107.5512
-          }
-        },
-        "31018012": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Teleporter",
-          "ClassNameType": 2,
-          "CustomID": "",
-          "Dir": 2.29939,
-          "DisplayName": "",
-          "EntityID": 17310002,
-          "ID": 31018012,
-          "PosX": 92.21968,
-          "PosY": 524.7932,
-          "PosZ": 47.47847,
-          "Props": {
-            "CameraId": 0,
-            "GateType": 1,
-            "Remark": "",
-            "ShowInSceneMap": 1,
-            "TelDir": 310.8671,
-            "TelX": 175.1999,
-            "TelY": 527.7437,
-            "TelZ": 107.5512
+            "TelX": 179.273,
+            "TelY": 527.7402,
+            "TelZ": 110.6253
           }
         }
       }

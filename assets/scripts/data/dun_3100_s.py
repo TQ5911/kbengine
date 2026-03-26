@@ -116,9 +116,9 @@ datas ={
           "DisplayName": "",
           "EntityID": 18000002,
           "ID": 31004004,
-          "PosX": 70.04895,
-          "PosY": 3.94,
-          "PosZ": 69.82829,
+          "PosX": 73.95,
+          "PosY": 3.668,
+          "PosZ": 67.8,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,
@@ -151,8 +151,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              600.0,
-              900.0
+              1200.0,
+              1800.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -178,8 +178,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              600.0,
-              900.0
+              1200.0,
+              1800.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -205,8 +205,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              600.0,
-              900.0
+              1200.0,
+              1800.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",

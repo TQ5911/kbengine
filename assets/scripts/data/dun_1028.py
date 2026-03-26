@@ -6,14 +6,14 @@ datas ={
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "mineCore",
-    "Dir": 37.58248,
+    "Dir": 43.3861,
     "DisplayName": "",
     "EntityID": 11238019,
     "ID": 10280001,
     "Name": "\u77ff\u533a\u6838\u5fc3",
-    "PosX": 285.22,
+    "PosX": 285.25,
     "PosY": 235.78,
-    "PosZ": 271.45,
+    "PosZ": 271.74,
     "Props": {
       "GroupID": "",
       "Level": 1,
@@ -43,9 +43,9 @@ datas ={
     "EntityID": 11238018,
     "ID": 10280002,
     "Name": "\u8363\u8a89\u65d7\u5e1c",
-    "PosX": 298.02,
+    "PosX": 298.09,
     "PosY": 235.5373,
-    "PosZ": 263.57,
+    "PosZ": 263.58,
     "Props": {
       "GroupID": "",
       "Level": 1,
@@ -75,9 +75,9 @@ datas ={
     "EntityID": 11238004,
     "ID": 10280003,
     "Name": "\u7956\u6728\u517d\u5c0a",
-    "PosX": 265.84,
-    "PosY": 247.9855,
-    "PosZ": 119.13,
+    "PosX": 265.834,
+    "PosY": 247.9807,
+    "PosZ": 119.1313,
     "Props": {
       "GroupID": "",
       "Level": 46,
@@ -107,12 +107,13 @@ datas ={
     "EntityID": 11238002,
     "ID": 10280004,
     "Name": "\u88c2\u5730\u86ee\u725b",
-    "PosX": 304.4748,
-    "PosY": 249.9977,
-    "PosZ": 387.398926,
+    "PosX": 303.0553,
+    "PosY": 249.7715,
+    "PosZ": 385.0734,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": "22",
       "MonsterGroupID": "",
@@ -122,6 +123,7 @@ datas ={
       "RefreshTime": 0.0,
       "RefreshTimedID": 2,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -201,12 +203,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280008,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 254.709412,
+    "PosX": 254.7094,
     "PosY": 248.0172,
-    "PosZ": 120.251617,
+    "PosZ": 120.2516,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -216,6 +219,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -231,12 +235,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280009,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 250.96051,
+    "PosX": 250.9605,
     "PosY": 248.0165,
-    "PosZ": 120.265411,
+    "PosZ": 120.2654,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 1,
@@ -246,6 +251,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -261,12 +267,13 @@ datas ={
     "EntityID": 11238012,
     "ID": 10280010,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 174.830017,
-    "PosY": 251.725479,
-    "PosZ": 84.1399841,
+    "PosX": 174.7687,
+    "PosY": 251.7564,
+    "PosZ": 83.99036,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 2,
@@ -276,6 +283,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -291,12 +299,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280011,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 176.789429,
-    "PosY": 251.684769,
+    "PosX": 176.7894,
+    "PosY": 251.6848,
     "PosZ": 87.3616,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 2,
@@ -306,6 +315,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -322,11 +332,12 @@ datas ={
     "ID": 10280012,
     "Name": "\u9752\u77db\u6218\u517d",
     "PosX": 173.0405,
-    "PosY": 251.737564,
+    "PosY": 251.7376,
     "PosZ": 87.3754,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 2,
@@ -336,6 +347,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -351,12 +363,13 @@ datas ={
     "EntityID": 11238012,
     "ID": 10280013,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 185.360474,
-    "PosY": 251.75322,
-    "PosZ": 63.2967224,
+    "PosX": 185.3605,
+    "PosY": 251.7532,
+    "PosZ": 63.29672,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 3,
@@ -366,6 +379,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -381,12 +395,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280014,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 187.319885,
-    "PosY": 251.723587,
+    "PosX": 187.3199,
+    "PosY": 251.7236,
     "PosZ": 66.51834,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 3,
@@ -396,6 +411,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -411,12 +427,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280015,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 183.570984,
-    "PosY": 251.739426,
-    "PosZ": 66.532135,
+    "PosX": 183.571,
+    "PosY": 251.7394,
+    "PosZ": 66.53214,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 3,
@@ -426,6 +443,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -441,12 +459,13 @@ datas ={
     "EntityID": 11238012,
     "ID": 10280016,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 165.107422,
-    "PosY": 251.710709,
-    "PosZ": 60.5128479,
+    "PosX": 165.1074,
+    "PosY": 251.7107,
+    "PosZ": 60.51285,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 4,
@@ -456,6 +475,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -501,12 +521,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280018,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 163.317932,
-    "PosY": 251.697586,
+    "PosX": 163.3179,
+    "PosY": 251.6976,
     "PosZ": 63.74826,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 4,
@@ -516,6 +537,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -532,11 +554,12 @@ datas ={
     "ID": 10280019,
     "Name": "\u82cd\u9b03\u6218\u517d",
     "PosX": 168.6929,
-    "PosY": 251.684769,
+    "PosY": 251.6848,
     "PosZ": 73.38931,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 5,
@@ -546,6 +569,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -561,12 +585,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280020,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 170.652313,
-    "PosY": 251.684769,
+    "PosX": 170.6523,
+    "PosY": 251.6848,
     "PosZ": 76.61105,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 5,
@@ -576,6 +601,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -591,12 +617,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280021,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 166.903381,
-    "PosY": 251.723648,
-    "PosZ": 76.6247253,
+    "PosX": 166.9034,
+    "PosY": 251.7236,
+    "PosZ": 76.62473,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 5,
@@ -606,6 +633,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -622,11 +650,12 @@ datas ={
     "ID": 10280022,
     "Name": "\u82cd\u9b03\u6218\u517d",
     "PosX": 176.5423,
-    "PosY": 251.713882,
-    "PosZ": 67.4225159,
+    "PosY": 251.7139,
+    "PosZ": 67.42252,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 6,
@@ -636,6 +665,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -681,12 +711,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280024,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 174.752777,
-    "PosY": 251.684769,
+    "PosX": 174.7528,
+    "PosY": 251.6848,
     "PosZ": 70.65793,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 6,
@@ -696,6 +727,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -711,12 +743,13 @@ datas ={
     "EntityID": 11238012,
     "ID": 10280025,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 259.3561,
-    "PosY": 213.1252,
-    "PosZ": 126.11615,
+    "PosX": 263.067,
+    "PosY": 247.9773,
+    "PosZ": 125.6503,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 7,
@@ -726,6 +759,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -741,12 +775,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280026,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 261.315582,
-    "PosY": 207.882065,
-    "PosZ": 129.33783,
+    "PosX": 263.976,
+    "PosY": 247.9753,
+    "PosZ": 129.8515,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 7,
@@ -756,6 +791,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -771,12 +807,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280027,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 257.56665,
-    "PosY": 227.674927,
-    "PosZ": 129.351547,
+    "PosX": 260.0264,
+    "PosY": 247.9793,
+    "PosZ": 130.1791,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 7,
@@ -786,6 +823,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -801,12 +839,13 @@ datas ={
     "EntityID": 11238012,
     "ID": 10280028,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 273.547638,
-    "PosY": 247.995316,
-    "PosZ": 127.078461,
+    "PosX": 273.5476,
+    "PosY": 247.9953,
+    "PosZ": 127.0785,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 8,
@@ -816,6 +855,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -831,12 +871,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280029,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 275.50705,
-    "PosY": 248.006058,
-    "PosZ": 130.30014,
+    "PosX": 275.507,
+    "PosY": 248.0061,
+    "PosZ": 130.3001,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 8,
@@ -846,6 +887,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -861,12 +903,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280030,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 271.758179,
-    "PosY": 248.015457,
-    "PosZ": 130.313873,
+    "PosX": 271.7582,
+    "PosY": 248.0155,
+    "PosZ": 130.3139,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 8,
@@ -876,6 +919,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -892,11 +936,12 @@ datas ={
     "ID": 10280031,
     "Name": "\u82cd\u9b03\u6218\u517d",
     "PosX": 273.7832,
-    "PosY": 248.072922,
-    "PosZ": 110.318878,
+    "PosY": 248.0729,
+    "PosZ": 110.3189,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 9,
@@ -906,6 +951,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -921,12 +967,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280032,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 275.742584,
-    "PosY": 248.058792,
-    "PosZ": 113.540619,
+    "PosX": 275.7426,
+    "PosY": 248.0588,
+    "PosZ": 113.5406,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 9,
@@ -936,6 +983,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -952,11 +1000,12 @@ datas ={
     "ID": 10280033,
     "Name": "\u9752\u77db\u6218\u517d",
     "PosX": 271.9938,
-    "PosY": 248.021988,
-    "PosZ": 113.554413,
+    "PosY": 248.022,
+    "PosZ": 113.5544,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 9,
@@ -966,6 +1015,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -981,12 +1031,13 @@ datas ={
     "EntityID": 11238012,
     "ID": 10280034,
     "Name": "\u82cd\u9b03\u6218\u517d",
-    "PosX": 262.249023,
-    "PosY": 248.029465,
-    "PosZ": 109.29361,
+    "PosX": 262.249,
+    "PosY": 248.0295,
+    "PosZ": 109.2936,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 10,
@@ -996,6 +1047,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1011,12 +1063,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280035,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 264.208435,
+    "PosX": 264.2084,
     "PosY": 248.0349,
-    "PosZ": 112.515289,
+    "PosZ": 112.5153,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 10,
@@ -1026,6 +1079,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1041,12 +1095,13 @@ datas ={
     "EntityID": 11238013,
     "ID": 10280036,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 260.459625,
-    "PosY": 248.042557,
-    "PosZ": 112.529083,
+    "PosX": 260.4596,
+    "PosY": 248.0426,
+    "PosZ": 112.5291,
     "Props": {
       "GroupID": "",
       "Level": 46,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 10,
@@ -1056,6 +1111,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1071,12 +1127,13 @@ datas ={
     "EntityID": 11238014,
     "ID": 10280037,
     "Name": "\u8d64\u888d\u517d\u6cd5",
-    "PosX": 427.711426,
+    "PosX": 427.7114,
     "PosY": 251.3283,
-    "PosZ": 131.497284,
+    "PosZ": 131.4973,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 11,
@@ -1086,6 +1143,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1102,11 +1160,12 @@ datas ={
     "ID": 10280038,
     "Name": "\u9752\u888d\u517d\u5deb",
     "PosX": 429.6709,
-    "PosY": 251.328873,
-    "PosZ": 134.719025,
+    "PosY": 251.3289,
+    "PosZ": 134.719,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 11,
@@ -1116,6 +1175,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1137,6 +1197,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 11,
@@ -1146,6 +1207,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1161,12 +1223,13 @@ datas ={
     "EntityID": 11238014,
     "ID": 10280040,
     "Name": "\u8d64\u888d\u517d\u6cd5",
-    "PosX": 415.860565,
-    "PosY": 251.338577,
-    "PosZ": 126.137665,
+    "PosX": 415.8606,
+    "PosY": 251.3386,
+    "PosZ": 126.1377,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 12,
@@ -1176,6 +1239,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1191,12 +1255,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280041,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 417.820038,
-    "PosY": 251.328079,
-    "PosZ": 129.359344,
+    "PosX": 417.82,
+    "PosY": 251.3281,
+    "PosZ": 129.3593,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 12,
@@ -1206,6 +1271,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1221,12 +1287,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280042,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 414.071136,
+    "PosX": 414.0711,
     "PosY": 251.3321,
-    "PosZ": 129.373077,
+    "PosZ": 129.3731,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 12,
@@ -1236,6 +1303,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1251,12 +1319,13 @@ datas ={
     "EntityID": 11238014,
     "ID": 10280043,
     "Name": "\u8d64\u888d\u517d\u6cd5",
-    "PosX": 403.723969,
-    "PosY": 251.391769,
-    "PosZ": 136.47287,
+    "PosX": 403.724,
+    "PosY": 251.3918,
+    "PosZ": 136.4729,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 13,
@@ -1266,6 +1335,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1281,12 +1351,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280044,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 405.683319,
-    "PosY": 251.380081,
-    "PosZ": 139.694427,
+    "PosX": 405.6833,
+    "PosY": 251.3801,
+    "PosZ": 139.6944,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 13,
@@ -1296,6 +1367,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1311,12 +1383,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280045,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 401.93454,
-    "PosY": 251.398941,
-    "PosZ": 139.708282,
+    "PosX": 401.9345,
+    "PosY": 251.3989,
+    "PosZ": 139.7083,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 13,
@@ -1326,6 +1399,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1343,10 +1417,11 @@ datas ={
     "Name": "\u8d64\u888d\u517d\u6cd5",
     "PosX": 407.238,
     "PosY": 251.3615,
-    "PosZ": 150.215912,
+    "PosZ": 150.2159,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 14,
@@ -1356,6 +1431,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1371,12 +1447,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280047,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 409.197357,
-    "PosY": 251.348892,
-    "PosZ": 153.437408,
+    "PosX": 409.1974,
+    "PosY": 251.3489,
+    "PosZ": 153.4374,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 14,
@@ -1386,6 +1463,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1401,12 +1479,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280048,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 405.448578,
-    "PosY": 251.362411,
-    "PosZ": 153.451324,
+    "PosX": 405.4486,
+    "PosY": 251.3624,
+    "PosZ": 153.4513,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 14,
@@ -1416,6 +1495,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1432,11 +1512,12 @@ datas ={
     "ID": 10280049,
     "Name": "\u8d64\u888d\u517d\u6cd5",
     "PosX": 418.3983,
-    "PosY": 251.332474,
-    "PosZ": 152.978851,
+    "PosY": 251.3325,
+    "PosZ": 152.9789,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 15,
@@ -1446,6 +1527,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1461,12 +1543,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280050,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 420.357666,
-    "PosY": 251.333084,
-    "PosZ": 156.200409,
+    "PosX": 420.3577,
+    "PosY": 251.3331,
+    "PosZ": 156.2004,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 15,
@@ -1476,6 +1559,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1491,12 +1575,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280051,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 416.608856,
-    "PosY": 251.333084,
-    "PosZ": 156.214325,
+    "PosX": 416.6089,
+    "PosY": 251.3331,
+    "PosZ": 156.2143,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 15,
@@ -1506,6 +1591,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1585,12 +1671,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280054,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 427.00293,
-    "PosY": 251.331314,
+    "PosX": 427.0029,
+    "PosY": 251.3313,
     "PosZ": 147.0635,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 16,
@@ -1600,6 +1687,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1615,12 +1703,13 @@ datas ={
     "EntityID": 11238014,
     "ID": 10280055,
     "Name": "\u8d64\u888d\u517d\u6cd5",
-    "PosX": 431.514771,
+    "PosX": 431.5148,
     "PosY": 251.4919,
-    "PosZ": 120.98587,
+    "PosZ": 120.9859,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 17,
@@ -1630,6 +1719,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1645,12 +1735,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280056,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 433.474121,
-    "PosY": 251.462143,
-    "PosZ": 124.207428,
+    "PosX": 433.4741,
+    "PosY": 251.4621,
+    "PosZ": 124.2074,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 17,
@@ -1660,6 +1751,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1675,12 +1767,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280057,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 429.725342,
+    "PosX": 429.7253,
     "PosY": 251.4225,
-    "PosZ": 124.221344,
+    "PosZ": 124.2213,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 17,
@@ -1690,6 +1783,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1705,12 +1799,13 @@ datas ={
     "EntityID": 11238014,
     "ID": 10280058,
     "Name": "\u8d64\u888d\u517d\u6cd5",
-    "PosX": 399.459442,
-    "PosY": 251.330185,
-    "PosZ": 156.564484,
+    "PosX": 399.4594,
+    "PosY": 251.3302,
+    "PosZ": 156.5645,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 18,
@@ -1720,6 +1815,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1735,12 +1831,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280059,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 401.418854,
+    "PosX": 401.4189,
     "PosY": 251.3507,
-    "PosZ": 159.78598,
+    "PosZ": 159.786,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 18,
@@ -1750,6 +1847,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1765,12 +1863,13 @@ datas ={
     "EntityID": 11238015,
     "ID": 10280060,
     "Name": "\u9752\u888d\u517d\u5deb",
-    "PosX": 397.670044,
+    "PosX": 397.67,
     "PosY": 251.4001,
-    "PosZ": 159.799835,
+    "PosZ": 159.7998,
     "Props": {
       "GroupID": "",
       "Level": 47,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 18,
@@ -1780,6 +1879,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1801,6 +1901,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 19,
@@ -1810,6 +1911,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1826,11 +1928,12 @@ datas ={
     "ID": 10280062,
     "Name": "\u5ca9\u725b\u68d2\u536b",
     "PosX": 332.86,
-    "PosY": 253.33049,
-    "PosZ": 489.720123,
+    "PosY": 253.3305,
+    "PosZ": 489.7201,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 19,
@@ -1840,6 +1943,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1855,12 +1959,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280063,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 327.822144,
-    "PosY": 256.31134,
-    "PosZ": 490.6254,
+    "PosX": 328.7221,
+    "PosY": 253.2383,
+    "PosZ": 490.9601,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 19,
@@ -1870,6 +1975,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1887,10 +1993,11 @@ datas ={
     "Name": "\u971c\u725b\u9524\u5175",
     "PosX": 305.107,
     "PosY": 253.2765,
-    "PosZ": 461.336121,
+    "PosZ": 461.3361,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 20,
@@ -1900,6 +2007,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -1946,11 +2054,12 @@ datas ={
     "ID": 10280066,
     "Name": "\u5ca9\u725b\u68d2\u536b",
     "PosX": 303.4191,
-    "PosY": 253.272781,
-    "PosZ": 466.261536,
+    "PosY": 253.2728,
+    "PosZ": 466.2615,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 20,
@@ -1976,12 +2085,13 @@ datas ={
     "EntityID": 11238008,
     "ID": 10280067,
     "Name": "\u971c\u725b\u9524\u5175",
-    "PosX": 297.83548,
-    "PosY": 253.265945,
+    "PosX": 297.8355,
+    "PosY": 253.2659,
     "PosZ": 475.6337,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 21,
@@ -1991,6 +2101,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2007,11 +2118,12 @@ datas ={
     "ID": 10280068,
     "Name": "\u5ca9\u725b\u68d2\u536b",
     "PosX": 301.1855,
-    "PosY": 253.194626,
-    "PosZ": 479.653717,
+    "PosY": 253.1946,
+    "PosZ": 479.6537,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 21,
@@ -2021,6 +2133,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2036,12 +2149,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280069,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 296.147583,
-    "PosY": 253.24382,
+    "PosX": 296.1476,
+    "PosY": 253.2438,
     "PosZ": 480.5591,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 21,
@@ -2051,6 +2165,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2067,11 +2182,12 @@ datas ={
     "ID": 10280070,
     "Name": "\u971c\u725b\u9524\u5175",
     "PosX": 310.32,
-    "PosY": 253.51207,
-    "PosZ": 487.610138,
+    "PosY": 253.5121,
+    "PosZ": 487.6101,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 22,
@@ -2081,6 +2197,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2096,12 +2213,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280071,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 313.669983,
-    "PosY": 253.368423,
-    "PosZ": 491.630157,
+    "PosX": 313.67,
+    "PosY": 253.3684,
+    "PosZ": 491.6302,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 22,
@@ -2111,6 +2229,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2126,12 +2245,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280072,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 308.63208,
+    "PosX": 308.6321,
     "PosY": 253.3686,
-    "PosZ": 492.535431,
+    "PosZ": 492.5354,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 22,
@@ -2141,6 +2261,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2156,12 +2277,13 @@ datas ={
     "EntityID": 11238008,
     "ID": 10280073,
     "Name": "\u971c\u725b\u9524\u5175",
-    "PosX": 315.262482,
-    "PosY": 253.210129,
-    "PosZ": 472.52713,
+    "PosX": 315.2625,
+    "PosY": 253.2101,
+    "PosZ": 472.5271,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 23,
@@ -2171,6 +2293,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2188,10 +2311,11 @@ datas ={
     "Name": "\u5ca9\u725b\u68d2\u536b",
     "PosX": 318.6125,
     "PosY": 253.2754,
-    "PosZ": 476.54715,
+    "PosZ": 476.5471,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 23,
@@ -2201,6 +2325,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2216,12 +2341,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280075,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 313.574615,
-    "PosY": 253.365982,
-    "PosZ": 477.452423,
+    "PosX": 313.5746,
+    "PosY": 253.366,
+    "PosZ": 477.4524,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 23,
@@ -2231,6 +2357,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2246,12 +2373,13 @@ datas ={
     "EntityID": 11238008,
     "ID": 10280076,
     "Name": "\u971c\u725b\u9524\u5175",
-    "PosX": 319.348938,
-    "PosY": 249.56868,
+    "PosX": 319.3489,
+    "PosY": 249.5687,
     "PosZ": 381.7545,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 24,
@@ -2261,6 +2389,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2276,12 +2405,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280077,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 322.698944,
-    "PosY": 249.592575,
-    "PosZ": 385.774475,
+    "PosX": 322.6989,
+    "PosY": 249.5926,
+    "PosZ": 385.7745,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 24,
@@ -2291,6 +2421,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2306,12 +2437,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280078,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 317.661041,
+    "PosX": 317.661,
     "PosY": 249.579,
     "PosZ": 386.6798,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 24,
@@ -2321,6 +2453,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2336,12 +2469,13 @@ datas ={
     "EntityID": 11238008,
     "ID": 10280079,
     "Name": "\u971c\u725b\u9524\u5175",
-    "PosX": 293.096222,
+    "PosX": 293.0962,
     "PosY": 249.5771,
     "PosZ": 372.3338,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 25,
@@ -2351,6 +2485,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2366,12 +2501,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280080,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 296.446259,
-    "PosY": 249.595932,
-    "PosZ": 376.353821,
+    "PosX": 296.4463,
+    "PosY": 249.5959,
+    "PosZ": 376.3538,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 25,
@@ -2381,6 +2517,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2396,12 +2533,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280081,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 291.408356,
-    "PosY": 249.581375,
-    "PosZ": 377.259125,
+    "PosX": 291.4084,
+    "PosY": 249.5814,
+    "PosZ": 377.2591,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 25,
@@ -2411,6 +2549,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2432,6 +2571,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 26,
@@ -2441,6 +2581,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2456,12 +2597,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280083,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 304.928131,
-    "PosY": 249.718124,
-    "PosZ": 400.140961,
+    "PosX": 304.9281,
+    "PosY": 249.7181,
+    "PosZ": 400.141,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 26,
@@ -2471,6 +2613,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2486,12 +2629,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280084,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 299.890228,
-    "PosY": 249.765366,
-    "PosZ": 401.046234,
+    "PosX": 300.1363,
+    "PosY": 249.8018,
+    "PosZ": 401.0687,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 26,
@@ -2501,6 +2645,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2517,11 +2662,12 @@ datas ={
     "ID": 10280085,
     "Name": "\u971c\u725b\u9524\u5175",
     "PosX": 307.2,
-    "PosY": 249.674088,
+    "PosY": 249.6741,
     "PosZ": 378.66,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 27,
@@ -2531,6 +2677,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2546,12 +2693,13 @@ datas ={
     "EntityID": 11238009,
     "ID": 10280086,
     "Name": "\u5ca9\u725b\u68d2\u536b",
-    "PosX": 312.03,
-    "PosY": 251.2769,
-    "PosZ": 391.28,
+    "PosX": 312.1422,
+    "PosY": 249.5615,
+    "PosZ": 391.3707,
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 27,
@@ -2561,6 +2709,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2582,6 +2731,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 48,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 27,
@@ -2591,6 +2741,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2612,6 +2763,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 34,
@@ -2621,6 +2773,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2637,11 +2790,12 @@ datas ={
     "ID": 10280107,
     "Name": "\u82cd\u725b\u536b\u58eb",
     "PosX": 355.9275,
-    "PosY": 248.03511,
+    "PosY": 248.0351,
     "PosZ": 344.0556,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 34,
@@ -2651,6 +2805,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2667,11 +2822,12 @@ datas ={
     "ID": 10280108,
     "Name": "\u82cd\u725b\u536b\u58eb",
     "PosX": 350.8896,
-    "PosY": 248.038284,
+    "PosY": 248.0383,
     "PosZ": 344.961,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 34,
@@ -2681,6 +2837,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2697,11 +2854,12 @@ datas ={
     "ID": 10280109,
     "Name": "\u5ca9\u725b\u76fe\u5175",
     "PosX": 369.546,
-    "PosY": 248.280441,
-    "PosZ": 331.206238,
+    "PosY": 248.2804,
+    "PosZ": 331.2062,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 35,
@@ -2711,6 +2869,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2727,11 +2886,12 @@ datas ={
     "ID": 10280110,
     "Name": "\u82cd\u725b\u536b\u58eb",
     "PosX": 372.8961,
-    "PosY": 247.988144,
+    "PosY": 247.9881,
     "PosZ": 335.2262,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 35,
@@ -2741,6 +2901,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2756,12 +2917,13 @@ datas ={
     "EntityID": 11238007,
     "ID": 10280111,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 367.858124,
-    "PosY": 248.062424,
+    "PosX": 367.8581,
+    "PosY": 248.0624,
     "PosZ": 336.1316,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 35,
@@ -2771,6 +2933,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2786,12 +2949,13 @@ datas ={
     "EntityID": 11238006,
     "ID": 10280112,
     "Name": "\u5ca9\u725b\u76fe\u5175",
-    "PosX": 367.440521,
-    "PosY": 247.989761,
-    "PosZ": 347.609772,
+    "PosX": 367.4405,
+    "PosY": 247.9898,
+    "PosZ": 347.6098,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 36,
@@ -2801,6 +2965,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2818,10 +2983,11 @@ datas ={
     "Name": "\u82cd\u725b\u536b\u58eb",
     "PosX": 370.7906,
     "PosY": 247.9871,
-    "PosZ": 351.629669,
+    "PosZ": 351.6297,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 36,
@@ -2831,6 +2997,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2848,10 +3015,11 @@ datas ={
     "Name": "\u82cd\u725b\u536b\u58eb",
     "PosX": 365.7527,
     "PosY": 248.0945,
-    "PosZ": 352.535126,
+    "PosZ": 352.5351,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 36,
@@ -2861,6 +3029,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2877,11 +3046,12 @@ datas ={
     "ID": 10280115,
     "Name": "\u5ca9\u725b\u76fe\u5175",
     "PosX": 379.3461,
-    "PosY": 248.04274,
-    "PosZ": 323.258057,
+    "PosY": 248.0427,
+    "PosZ": 323.2581,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 37,
@@ -2891,6 +3061,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2906,12 +3077,13 @@ datas ={
     "EntityID": 11238007,
     "ID": 10280116,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 382.696167,
+    "PosX": 382.6962,
     "PosY": 248.0118,
-    "PosZ": 327.277924,
+    "PosZ": 327.2779,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 37,
@@ -2921,6 +3093,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2937,11 +3110,12 @@ datas ={
     "ID": 10280117,
     "Name": "\u82cd\u725b\u536b\u58eb",
     "PosX": 377.6583,
-    "PosY": 248.013443,
-    "PosZ": 328.18335,
+    "PosY": 248.0134,
+    "PosZ": 328.1833,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 37,
@@ -2951,6 +3125,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2968,10 +3143,11 @@ datas ={
     "Name": "\u5ca9\u725b\u76fe\u5175",
     "PosX": 380.7397,
     "PosY": 248.0002,
-    "PosZ": 349.041626,
+    "PosZ": 349.0416,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 38,
@@ -2981,6 +3157,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -2997,11 +3174,12 @@ datas ={
     "ID": 10280119,
     "Name": "\u82cd\u725b\u536b\u58eb",
     "PosX": 384.0898,
-    "PosY": 247.997452,
-    "PosZ": 353.061523,
+    "PosY": 247.9975,
+    "PosZ": 353.0615,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 38,
@@ -3011,6 +3189,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3027,11 +3206,12 @@ datas ={
     "ID": 10280120,
     "Name": "\u82cd\u725b\u536b\u58eb",
     "PosX": 379.0519,
-    "PosY": 247.991379,
+    "PosY": 247.9914,
     "PosZ": 353.9669,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 38,
@@ -3041,6 +3221,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3056,12 +3237,13 @@ datas ={
     "EntityID": 11238006,
     "ID": 10280121,
     "Name": "\u5ca9\u725b\u76fe\u5175",
-    "PosX": 217.26712,
-    "PosY": 249.436172,
-    "PosZ": 156.731049,
+    "PosX": 217.2671,
+    "PosY": 249.4362,
+    "PosZ": 156.731,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 39,
@@ -3071,6 +3253,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3116,12 +3299,13 @@ datas ={
     "EntityID": 11238007,
     "ID": 10280123,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 215.579437,
-    "PosY": 249.64946,
-    "PosZ": 161.656342,
+    "PosX": 215.5794,
+    "PosY": 249.6495,
+    "PosZ": 161.6563,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 39,
@@ -3131,6 +3315,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3146,12 +3331,13 @@ datas ={
     "EntityID": 11238006,
     "ID": 10280124,
     "Name": "\u5ca9\u725b\u76fe\u5175",
-    "PosX": 197.536011,
-    "PosY": 249.644669,
-    "PosZ": 168.24411,
+    "PosX": 197.536,
+    "PosY": 249.6447,
+    "PosZ": 168.2441,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 40,
@@ -3161,6 +3347,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3176,12 +3363,13 @@ datas ={
     "EntityID": 11238007,
     "ID": 10280125,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 200.886078,
-    "PosY": 249.638687,
+    "PosX": 200.8861,
+    "PosY": 249.6387,
     "PosZ": 172.264,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 40,
@@ -3191,6 +3379,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3236,12 +3425,13 @@ datas ={
     "EntityID": 11238006,
     "ID": 10280127,
     "Name": "\u5ca9\u725b\u76fe\u5175",
-    "PosX": 211.285034,
-    "PosY": 249.637619,
-    "PosZ": 173.124481,
+    "PosX": 211.285,
+    "PosY": 249.6376,
+    "PosZ": 173.1245,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 41,
@@ -3251,6 +3441,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3266,12 +3457,13 @@ datas ={
     "EntityID": 11238007,
     "ID": 10280128,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 214.635132,
-    "PosY": 249.645889,
-    "PosZ": 177.144379,
+    "PosX": 214.6351,
+    "PosY": 249.6459,
+    "PosZ": 177.1444,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 41,
@@ -3281,6 +3473,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3296,12 +3489,13 @@ datas ={
     "EntityID": 11238007,
     "ID": 10280129,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 209.597321,
-    "PosY": 249.639389,
+    "PosX": 209.5973,
+    "PosY": 249.6394,
     "PosZ": 178.0499,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 41,
@@ -3311,6 +3505,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3326,12 +3521,13 @@ datas ={
     "EntityID": 11238006,
     "ID": 10280130,
     "Name": "\u5ca9\u725b\u76fe\u5175",
-    "PosX": 206.034485,
+    "PosX": 206.0345,
     "PosY": 249.5873,
-    "PosZ": 188.646027,
+    "PosZ": 188.646,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 42,
@@ -3341,6 +3537,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3356,12 +3553,13 @@ datas ={
     "EntityID": 11238007,
     "ID": 10280131,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 209.384583,
-    "PosY": 249.294083,
-    "PosZ": 192.665924,
+    "PosX": 209.3846,
+    "PosY": 249.2941,
+    "PosZ": 192.6659,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 42,
@@ -3371,6 +3569,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3386,12 +3585,13 @@ datas ={
     "EntityID": 11238007,
     "ID": 10280132,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 204.346771,
-    "PosY": 249.578018,
-    "PosZ": 193.571381,
+    "PosX": 204.3468,
+    "PosY": 249.578,
+    "PosZ": 193.5714,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 42,
@@ -3401,6 +3601,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3416,12 +3617,13 @@ datas ={
     "EntityID": 11238006,
     "ID": 10280133,
     "Name": "\u5ca9\u725b\u76fe\u5175",
-    "PosX": 222.349884,
-    "PosY": 249.674973,
-    "PosZ": 176.702179,
+    "PosX": 222.3499,
+    "PosY": 249.675,
+    "PosZ": 176.7022,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 43,
@@ -3431,6 +3633,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3446,12 +3649,13 @@ datas ={
     "EntityID": 11238007,
     "ID": 10280134,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 225.699982,
-    "PosY": 249.981735,
+    "PosX": 225.7,
+    "PosY": 249.9817,
     "PosZ": 180.7222,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 43,
@@ -3461,6 +3665,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3477,11 +3682,12 @@ datas ={
     "ID": 10280135,
     "Name": "\u82cd\u725b\u536b\u58eb",
     "PosX": 220.6622,
-    "PosY": 249.727371,
-    "PosZ": 181.627533,
+    "PosY": 249.7274,
+    "PosZ": 181.6275,
     "Props": {
       "GroupID": "",
       "Level": 50,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 43,
@@ -3491,6 +3697,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3507,11 +3714,12 @@ datas ={
     "ID": 10280136,
     "Name": "\u88c1\u51b3\u725b\u5f13\u624b",
     "PosX": 427.9618,
-    "PosY": 249.599289,
-    "PosZ": 388.404022,
+    "PosY": 249.5993,
+    "PosZ": 388.404,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 44,
@@ -3521,6 +3729,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3536,12 +3745,13 @@ datas ={
     "EntityID": 11238011,
     "ID": 10280137,
     "Name": "\u5ca9\u5288\u725b\u950b\u536b",
-    "PosX": 429.921143,
-    "PosY": 249.647476,
+    "PosX": 429.9211,
+    "PosY": 249.6475,
     "PosZ": 391.6257,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 44,
@@ -3551,6 +3761,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3566,12 +3777,13 @@ datas ={
     "EntityID": 11238011,
     "ID": 10280138,
     "Name": "\u5ca9\u5288\u725b\u950b\u536b",
-    "PosX": 426.172363,
-    "PosY": 249.603409,
-    "PosZ": 391.639526,
+    "PosX": 426.1724,
+    "PosY": 249.6034,
+    "PosZ": 391.6395,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 44,
@@ -3581,6 +3793,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3596,12 +3809,13 @@ datas ={
     "EntityID": 11238010,
     "ID": 10280139,
     "Name": "\u88c1\u51b3\u725b\u5f13\u624b",
-    "PosX": 433.442383,
-    "PosY": 249.667191,
+    "PosX": 433.4424,
+    "PosY": 249.6672,
     "PosZ": 367.8877,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 45,
@@ -3611,6 +3825,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3626,12 +3841,13 @@ datas ={
     "EntityID": 11238011,
     "ID": 10280140,
     "Name": "\u5ca9\u5288\u725b\u950b\u536b",
-    "PosX": 435.401733,
-    "PosY": 249.574936,
-    "PosZ": 371.109375,
+    "PosX": 435.4017,
+    "PosY": 249.5749,
+    "PosZ": 371.1094,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 45,
@@ -3641,6 +3857,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3656,12 +3873,13 @@ datas ={
     "EntityID": 11238011,
     "ID": 10280141,
     "Name": "\u5ca9\u5288\u725b\u950b\u536b",
-    "PosX": 431.652954,
-    "PosY": 249.568954,
+    "PosX": 431.653,
+    "PosY": 249.569,
     "PosZ": 371.1232,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 45,
@@ -3671,6 +3889,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3686,12 +3905,13 @@ datas ={
     "EntityID": 11238010,
     "ID": 10280142,
     "Name": "\u88c1\u51b3\u725b\u5f13\u624b",
-    "PosX": 422.1339,
-    "PosY": 249.572464,
-    "PosZ": 374.676147,
+    "PosX": 422.5046,
+    "PosY": 249.6254,
+    "PosZ": 374.1218,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 46,
@@ -3701,6 +3921,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3716,12 +3937,13 @@ datas ={
     "EntityID": 11238011,
     "ID": 10280143,
     "Name": "\u5ca9\u5288\u725b\u950b\u536b",
-    "PosX": 424.093262,
-    "PosY": 249.571884,
-    "PosZ": 377.897827,
+    "PosX": 424.0933,
+    "PosY": 249.5719,
+    "PosZ": 377.8978,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 46,
@@ -3731,6 +3953,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3746,12 +3969,13 @@ datas ={
     "EntityID": 11238011,
     "ID": 10280144,
     "Name": "\u5ca9\u5288\u725b\u950b\u536b",
-    "PosX": 420.344482,
-    "PosY": 249.571976,
-    "PosZ": 377.911621,
+    "PosX": 420.3445,
+    "PosY": 249.572,
+    "PosZ": 377.9116,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 46,
@@ -3761,6 +3985,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3776,12 +4001,13 @@ datas ={
     "EntityID": 11238010,
     "ID": 10280145,
     "Name": "\u88c1\u51b3\u725b\u5f13\u624b",
-    "PosX": 418.201752,
-    "PosY": 249.812759,
+    "PosX": 418.2018,
+    "PosY": 249.8128,
     "PosZ": 365.3442,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 47,
@@ -3791,6 +4017,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3807,11 +4034,12 @@ datas ={
     "ID": 10280146,
     "Name": "\u5ca9\u5288\u725b\u950b\u536b",
     "PosX": 420.161,
-    "PosY": 249.729263,
-    "PosZ": 368.565948,
+    "PosY": 249.7293,
+    "PosZ": 368.5659,
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 47,
@@ -3821,6 +4049,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3842,6 +4071,7 @@ datas ={
     "Props": {
       "GroupID": "",
       "Level": 49,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": 47,
@@ -3851,6 +4081,7 @@ datas ={
       "RefreshTime": 10.0,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e09\u4eba\u7ec4"
     }
   },
@@ -3913,19 +4144,21 @@ datas ={
     "ClassName": "BornPos",
     "ClassNameType": 6,
     "CustomID": "",
-    "Dir": 0.0,
+    "Dir": 99.5993,
     "DisplayName": "",
     "EntityID": 0,
     "ID": 10288001,
     "Name": "\u51fa\u751f\u70b9",
-    "PosX": 73.27582,
-    "PosY": 248.074112,
-    "PosZ": 64.7019958,
+    "PosX": 73.70079,
+    "PosY": 248.0614,
+    "PosZ": 65.60951,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 0.0,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288002": {
@@ -3940,14 +4173,16 @@ datas ={
     "EntityID": 1,
     "ID": 10288002,
     "Name": "\u590d\u6d3b\u70b9",
-    "PosX": 172.142578,
-    "PosY": 252.180374,
+    "PosX": 172.1426,
+    "PosY": 252.1804,
     "PosZ": 373.6777,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 0.0,
       "RefreshTimedID": 0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288003": {
@@ -4014,9 +4249,9 @@ datas ={
     "EntityID": 0,
     "ID": 10288005,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 225.429108,
-    "PosY": 251.805588,
-    "PosZ": 60.0179138,
+    "PosX": 225.4291,
+    "PosY": 251.8056,
+    "PosZ": 60.01791,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
@@ -4036,13 +4271,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288006,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 224.6387,
-    "PosY": 251.78569,
-    "PosZ": 52.3721,
+    "PosX": 224.6037,
+    "PosY": 251.8059,
+    "PosZ": 52.30801,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288007": {
@@ -4057,13 +4293,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288007,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 218.420319,
-    "PosY": 251.78569,
+    "PosX": 218.4203,
+    "PosY": 251.7857,
     "PosZ": 48.0076,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288008": {
@@ -4079,12 +4316,13 @@ datas ={
     "ID": 10288008,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 212.0892,
-    "PosY": 251.893875,
+    "PosY": 251.8939,
     "PosZ": 48.09024,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288009": {
@@ -4099,13 +4337,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288009,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 209.951019,
-    "PosY": 251.701889,
-    "PosZ": 53.6376038,
+    "PosX": 209.4017,
+    "PosY": 251.7029,
+    "PosZ": 53.7591,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288010": {
@@ -4120,13 +4359,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288010,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 225.127716,
-    "PosY": 251.865677,
-    "PosZ": 66.12033,
+    "PosX": 225.0643,
+    "PosY": 251.9185,
+    "PosZ": 66.28216,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288011": {
@@ -4141,13 +4381,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288011,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 216.2901,
-    "PosY": 251.786209,
-    "PosZ": 56.50583,
+    "PosX": 216.0062,
+    "PosY": 251.9106,
+    "PosZ": 57.00049,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288012": {
@@ -4163,12 +4404,13 @@ datas ={
     "ID": 10288012,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 215.3475,
-    "PosY": 251.77449,
+    "PosY": 251.7745,
     "PosZ": 72.40939,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288013": {
@@ -4184,12 +4426,13 @@ datas ={
     "ID": 10288013,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 209.1932,
-    "PosY": 251.764389,
+    "PosY": 251.7644,
     "PosZ": 69.19321,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288014": {
@@ -4204,13 +4447,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288014,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 377.9212,
-    "PosY": 251.6299,
-    "PosZ": 101.580841,
+    "PosX": 378.1665,
+    "PosY": 251.6858,
+    "PosZ": 101.4539,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288015": {
@@ -4231,7 +4475,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288016": {
@@ -4252,7 +4497,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288017": {
@@ -4288,13 +4534,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288018,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 403.850067,
+    "PosX": 403.8501,
     "PosY": 251.3166,
-    "PosZ": 94.7007141,
+    "PosZ": 94.70071,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288019": {
@@ -4310,12 +4557,13 @@ datas ={
     "ID": 10288019,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 408.7598,
-    "PosY": 251.50679,
+    "PosY": 251.5068,
     "PosZ": 92.06442,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288020": {
@@ -4330,13 +4578,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288020,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 413.340668,
-    "PosY": 251.383011,
+    "PosX": 413.3407,
+    "PosY": 251.383,
     "PosZ": 95.09659,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288021": {
@@ -4351,13 +4600,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288021,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 417.305267,
-    "PosY": 251.398087,
+    "PosX": 417.3053,
+    "PosY": 251.3981,
     "PosZ": 97.68063,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288022": {
@@ -4372,13 +4622,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288022,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 420.843872,
-    "PosY": 251.394485,
-    "PosZ": 101.061432,
+    "PosX": 420.8439,
+    "PosY": 251.3945,
+    "PosZ": 101.0614,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288023": {
@@ -4394,12 +4645,13 @@ datas ={
     "ID": 10288023,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 417.5648,
-    "PosY": 251.74971,
+    "PosY": 251.7497,
     "PosZ": 93.03244,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288024": {
@@ -4415,12 +4667,13 @@ datas ={
     "ID": 10288024,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 412.9044,
-    "PosY": 251.33168,
+    "PosY": 251.3317,
     "PosZ": 99.5726,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288025": {
@@ -4435,13 +4688,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288025,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 415.967621,
+    "PosX": 415.9676,
     "PosY": 251.346,
-    "PosZ": 103.594696,
+    "PosZ": 103.5947,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288026": {
@@ -4457,12 +4711,13 @@ datas ={
     "ID": 10288026,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 397.6554,
-    "PosY": 251.314713,
-    "PosZ": 114.318329,
+    "PosY": 251.3147,
+    "PosZ": 114.3183,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288027": {
@@ -4478,12 +4733,13 @@ datas ={
     "ID": 10288027,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 394.3374,
-    "PosY": 251.429214,
+    "PosY": 251.4292,
     "PosZ": 115.7106,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288028": {
@@ -4500,11 +4756,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 390.6088,
     "PosY": 251.8654,
-    "PosZ": 113.489838,
+    "PosZ": 113.4898,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288029": {
@@ -4520,12 +4777,13 @@ datas ={
     "ID": 10288029,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 387.8458,
-    "PosY": 251.490311,
-    "PosZ": 108.332428,
+    "PosY": 251.4903,
+    "PosZ": 108.3324,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288030": {
@@ -4562,12 +4820,13 @@ datas ={
     "ID": 10288031,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 392.5015,
-    "PosY": 251.329391,
-    "PosZ": 108.236725,
+    "PosY": 251.3294,
+    "PosZ": 108.2367,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288032": {
@@ -4584,11 +4843,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 385.8003,
     "PosY": 251.654,
-    "PosZ": 162.542389,
+    "PosZ": 162.5424,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288033": {
@@ -4605,11 +4865,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 383.4641,
     "PosY": 251.7224,
-    "PosZ": 166.176239,
+    "PosZ": 166.1762,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288034": {
@@ -4625,12 +4886,13 @@ datas ={
     "ID": 10288034,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 399.7847,
-    "PosY": 251.600784,
-    "PosZ": 169.555939,
+    "PosY": 251.6008,
+    "PosZ": 169.5559,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288035": {
@@ -4647,11 +4909,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 400.9031,
     "PosY": 252.0736,
-    "PosZ": 172.441742,
+    "PosZ": 172.4417,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288036": {
@@ -4667,12 +4930,13 @@ datas ={
     "ID": 10288036,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 395.5147,
-    "PosY": 251.596878,
-    "PosZ": 172.09201,
+    "PosY": 251.5969,
+    "PosZ": 172.092,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288037": {
@@ -4688,12 +4952,13 @@ datas ={
     "ID": 10288037,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 391.1625,
-    "PosY": 251.601791,
-    "PosZ": 175.26004,
+    "PosY": 251.6018,
+    "PosZ": 175.26,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288038": {
@@ -4708,13 +4973,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288038,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 382.7733,
-    "PosY": 251.551712,
-    "PosZ": 171.1445,
+    "PosX": 382.525,
+    "PosY": 251.6453,
+    "PosZ": 171.3703,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288039": {
@@ -4730,12 +4996,13 @@ datas ={
     "ID": 10288039,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 379.8939,
-    "PosY": 251.699478,
-    "PosZ": 174.013641,
+    "PosY": 251.6995,
+    "PosZ": 174.0136,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288040": {
@@ -4750,13 +5017,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288040,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 436.147827,
+    "PosX": 436.1478,
     "PosY": 250.4655,
-    "PosZ": 236.176117,
+    "PosZ": 236.1761,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288041": {
@@ -4773,11 +5041,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 438.1073,
     "PosY": 250.3763,
-    "PosZ": 240.572113,
+    "PosZ": 240.5721,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288042": {
@@ -4792,13 +5061,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288042,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 440.874878,
+    "PosX": 440.8749,
     "PosY": 250.3196,
     "PosZ": 245.2084,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288043": {
@@ -4819,7 +5089,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288044": {
@@ -4834,13 +5105,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288044,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 441.742065,
-    "PosY": 249.71669,
-    "PosZ": 251.283325,
+    "PosX": 441.7421,
+    "PosY": 249.7167,
+    "PosZ": 251.2833,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288045": {
@@ -4856,12 +5128,13 @@ datas ={
     "ID": 10288045,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 445.7334,
-    "PosY": 250.26088,
+    "PosY": 250.2609,
     "PosZ": 253.9725,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288046": {
@@ -4877,12 +5150,13 @@ datas ={
     "ID": 10288046,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 447.0293,
-    "PosY": 250.378616,
-    "PosZ": 258.776428,
+    "PosY": 250.3786,
+    "PosZ": 258.7764,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288047": {
@@ -4924,7 +5198,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288049": {
@@ -4940,12 +5215,13 @@ datas ={
     "ID": 10288049,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 445.4933,
-    "PosY": 250.150284,
-    "PosZ": 270.656616,
+    "PosY": 250.1503,
+    "PosZ": 270.6566,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288050": {
@@ -4960,13 +5236,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288050,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 441.664185,
+    "PosX": 441.6642,
     "PosY": 249.6173,
     "PosZ": 264.2193,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288051": {
@@ -4981,13 +5258,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288051,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 442.521851,
+    "PosX": 442.5219,
     "PosY": 249.9858,
     "PosZ": 274.1947,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288052": {
@@ -5002,13 +5280,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288052,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 438.158447,
-    "PosY": 249.889908,
-    "PosZ": 276.292328,
+    "PosX": 438.1584,
+    "PosY": 249.8899,
+    "PosZ": 276.2923,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288053": {
@@ -5023,13 +5302,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288053,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 438.192017,
-    "PosY": 249.514481,
-    "PosZ": 271.009918,
+    "PosX": 438.192,
+    "PosY": 249.5145,
+    "PosZ": 271.0099,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288054": {
@@ -5045,12 +5325,13 @@ datas ={
     "ID": 10288054,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 433.7384,
-    "PosY": 249.746475,
-    "PosZ": 277.345917,
+    "PosY": 249.7465,
+    "PosZ": 277.3459,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288055": {
@@ -5086,13 +5367,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288056,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 432.374146,
-    "PosY": 249.473892,
+    "PosX": 432.3741,
+    "PosY": 249.4739,
     "PosZ": 270.0011,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288057": {
@@ -5107,13 +5389,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288057,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 432.494263,
+    "PosX": 432.4943,
     "PosY": 249.484,
     "PosZ": 264.6577,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288058": {
@@ -5128,13 +5411,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288058,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 430.052856,
-    "PosY": 249.49678,
-    "PosZ": 259.447327,
+    "PosX": 430.0529,
+    "PosY": 249.4968,
+    "PosZ": 259.4473,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288059": {
@@ -5149,13 +5433,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288059,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 428.283081,
-    "PosY": 249.514175,
+    "PosX": 428.2831,
+    "PosY": 249.5142,
     "PosZ": 253.0271,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288060": {
@@ -5170,13 +5455,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288060,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 426.437744,
-    "PosY": 249.791275,
-    "PosZ": 262.491425,
+    "PosX": 426.4377,
+    "PosY": 249.7913,
+    "PosZ": 262.4914,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288061": {
@@ -5193,11 +5479,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 397.056,
     "PosY": 248.6031,
-    "PosZ": 276.691528,
+    "PosZ": 276.6915,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288062": {
@@ -5213,12 +5500,13 @@ datas ={
     "ID": 10288062,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 396.1139,
-    "PosY": 248.70549,
-    "PosZ": 271.903717,
+    "PosY": 248.7055,
+    "PosZ": 271.9037,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288063": {
@@ -5234,12 +5522,13 @@ datas ={
     "ID": 10288063,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 385.2911,
-    "PosY": 248.503891,
+    "PosY": 248.5039,
     "PosZ": 277.9876,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288064": {
@@ -5254,13 +5543,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288064,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 385.2538,
-    "PosY": 243.805557,
-    "PosZ": 282.1263,
+    "PosX": 386.8594,
+    "PosY": 248.0427,
+    "PosZ": 286.6311,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288065": {
@@ -5275,13 +5565,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288065,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 384.16452,
-    "PosY": 242.410477,
-    "PosZ": 267.492035,
+    "PosX": 384.1645,
+    "PosY": 242.4105,
+    "PosZ": 267.492,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288066": {
@@ -5297,12 +5588,13 @@ datas ={
     "ID": 10288066,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 388.3466,
-    "PosY": 248.398788,
-    "PosZ": 260.143921,
+    "PosY": 248.3988,
+    "PosZ": 260.1439,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288067": {
@@ -5318,12 +5610,13 @@ datas ={
     "ID": 10288067,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 385.4928,
-    "PosY": 248.268692,
+    "PosY": 248.2687,
     "PosZ": 257.9403,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288068": {
@@ -5338,13 +5631,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288068,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 327.627869,
-    "PosY": 249.3084,
-    "PosZ": 210.743408,
+    "PosX": 326.182,
+    "PosY": 247.981,
+    "PosZ": 209.9539,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288069": {
@@ -5359,13 +5653,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288069,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 323.3164,
-    "PosY": 249.346024,
-    "PosZ": 207.020111,
+    "PosX": 324.5173,
+    "PosY": 247.98259,
+    "PosZ": 206.628082,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288070": {
@@ -5380,13 +5675,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288070,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 323.816,
-    "PosY": 249.526077,
-    "PosZ": 203.63092,
+    "PosX": 325.016754,
+    "PosY": 247.989761,
+    "PosZ": 203.2388,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288071": {
@@ -5401,9 +5697,9 @@ datas ={
     "EntityID": 0,
     "ID": 10288071,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 326.62,
-    "PosY": 249.254349,
-    "PosZ": 200.585022,
+    "PosX": 327.82074,
+    "PosY": 248.077942,
+    "PosZ": 200.192932,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
@@ -5422,9 +5718,9 @@ datas ={
     "EntityID": 0,
     "ID": 10288072,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 331.163544,
-    "PosY": 251.050674,
-    "PosZ": 196.77948,
+    "PosX": 332.3643,
+    "PosY": 248.033127,
+    "PosZ": 196.387436,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
@@ -5443,9 +5739,9 @@ datas ={
     "EntityID": 0,
     "ID": 10288073,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 334.8549,
-    "PosY": 167.500214,
-    "PosZ": 190.9133,
+    "PosX": 336.055725,
+    "PosY": 227.753571,
+    "PosZ": 190.521225,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
@@ -5464,9 +5760,9 @@ datas ={
     "EntityID": 0,
     "ID": 10288074,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 337.761627,
-    "PosY": 249.998611,
-    "PosZ": 197.176239,
+    "PosX": 338.962555,
+    "PosY": 248.221985,
+    "PosZ": 196.78421,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
@@ -5485,9 +5781,9 @@ datas ={
     "EntityID": 0,
     "ID": 10288075,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 335.4591,
-    "PosY": 249.13533,
-    "PosZ": 200.8594,
+    "PosX": 336.6599,
+    "PosY": 247.976181,
+    "PosZ": 200.467331,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
@@ -5506,9 +5802,9 @@ datas ={
     "EntityID": 0,
     "ID": 10288076,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 340.058228,
-    "PosY": 250.6158,
-    "PosZ": 203.692871,
+    "PosX": 341.259064,
+    "PosY": 248.057922,
+    "PosZ": 203.3008,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
@@ -5527,9 +5823,9 @@ datas ={
     "EntityID": 0,
     "ID": 10288077,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 341.1061,
-    "PosY": 249.492752,
-    "PosZ": 208.997009,
+    "PosX": 342.306915,
+    "PosY": 247.991043,
+    "PosZ": 208.60495,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
@@ -5548,13 +5844,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288078,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 335.055,
-    "PosY": 249.446182,
-    "PosZ": 207.785217,
+    "PosX": 334.9292,
+    "PosY": 247.9804,
+    "PosZ": 207.5464,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288079": {
@@ -5569,13 +5866,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288079,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 335.8033,
-    "PosY": 249.256973,
-    "PosZ": 212.242462,
+    "PosX": 335.5217,
+    "PosY": 247.9817,
+    "PosZ": 212.0276,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288080": {
@@ -5590,13 +5888,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288080,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 317.6208,
-    "PosY": 249.630814,
-    "PosZ": 202.628082,
+    "PosX": 317.2698,
+    "PosY": 248.0324,
+    "PosZ": 202.196,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288081": {
@@ -5611,13 +5910,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288081,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 312.69693,
-    "PosY": 250.9952,
-    "PosZ": 198.119873,
+    "PosX": 312.463,
+    "PosY": 248.1939,
+    "PosZ": 197.9609,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288082": {
@@ -5632,13 +5932,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288082,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 306.208832,
-    "PosY": 250.748856,
-    "PosZ": 197.88855,
+    "PosX": 305.1302,
+    "PosY": 248.0551,
+    "PosZ": 197.4415,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288083": {
@@ -5653,13 +5954,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288083,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 306.0378,
-    "PosY": 249.2705,
-    "PosZ": 205.693024,
+    "PosX": 305.7289,
+    "PosY": 247.9598,
+    "PosZ": 205.7685,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288084": {
@@ -5674,13 +5976,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288084,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 319.825439,
-    "PosY": 249.537827,
-    "PosZ": 218.505219,
+    "PosX": 319.0682,
+    "PosY": 247.8872,
+    "PosZ": 218.4199,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288085": {
@@ -5695,13 +5998,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288085,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 322.694946,
-    "PosY": 249.538773,
-    "PosZ": 222.935913,
+    "PosX": 322.3831,
+    "PosY": 247.7298,
+    "PosZ": 222.8917,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288086": {
@@ -5716,13 +6020,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288086,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 324.738037,
-    "PosY": 249.540115,
-    "PosZ": 230.1,
+    "PosX": 325.0328,
+    "PosY": 246.9342,
+    "PosZ": 230.5227,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288087": {
@@ -5737,13 +6042,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288087,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 339.714325,
-    "PosY": 243.622269,
-    "PosZ": 161.285522,
+    "PosX": 339.7056,
+    "PosY": 248.0421,
+    "PosZ": 159.1817,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288088": {
@@ -5760,11 +6066,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 339.7563,
     "PosY": 248.1119,
-    "PosZ": 154.976227,
+    "PosZ": 154.9762,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288089": {
@@ -5780,12 +6087,13 @@ datas ={
     "ID": 10288089,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 337.6288,
-    "PosY": 247.997879,
-    "PosZ": 149.047516,
+    "PosY": 247.9979,
+    "PosZ": 149.0475,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288090": {
@@ -5800,13 +6108,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288090,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 328.6422,
-    "PosY": 250.767654,
-    "PosZ": 162.770477,
+    "PosX": 328.8713,
+    "PosY": 247.9706,
+    "PosZ": 163.1001,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288091": {
@@ -5821,13 +6130,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288091,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 322.820343,
-    "PosY": 239.829361,
-    "PosZ": 160.893433,
+    "PosX": 320.1178,
+    "PosY": 247.992,
+    "PosZ": 157.277,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288092": {
@@ -5842,13 +6152,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288092,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 313.728546,
-    "PosY": 247.982864,
-    "PosZ": 158.093719,
+    "PosX": 313.1874,
+    "PosY": 248.2513,
+    "PosZ": 157.4247,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288093": {
@@ -5863,13 +6174,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288093,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 307.194,
-    "PosY": 247.816086,
-    "PosZ": 155.260529,
+    "PosX": 306.9466,
+    "PosY": 248.2345,
+    "PosZ": 154.571,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288094": {
@@ -5884,13 +6196,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288094,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 305.869263,
-    "PosY": 240.110062,
-    "PosZ": 150.752319,
+    "PosX": 305.485,
+    "PosY": 247.9857,
+    "PosZ": 145.7963,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288095": {
@@ -5906,12 +6219,13 @@ datas ={
     "ID": 10288095,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 309.1122,
-    "PosY": 248.084976,
+    "PosY": 248.085,
     "PosZ": 141.168,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288096": {
@@ -5926,13 +6240,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288096,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 313.2747,
-    "PosY": 248.3304,
-    "PosZ": 139.809418,
+    "PosX": 313.1061,
+    "PosY": 247.9811,
+    "PosZ": 147.2803,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288097": {
@@ -5947,13 +6262,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288097,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 317.4255,
-    "PosY": 248.27211,
-    "PosZ": 141.347931,
+    "PosX": 317.4205,
+    "PosY": 248.1952,
+    "PosZ": 142.4359,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288098": {
@@ -5968,13 +6284,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288098,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 323.4503,
-    "PosY": 248.3014,
-    "PosZ": 142.3713,
+    "PosX": 322.0484,
+    "PosY": 248.0511,
+    "PosZ": 144.7596,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288099": {
@@ -5989,13 +6306,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288099,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 328.6784,
-    "PosY": 248.3904,
-    "PosZ": 142.59903,
+    "PosX": 324.5566,
+    "PosY": 247.9806,
+    "PosZ": 150.1805,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288100": {
@@ -6010,13 +6328,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288100,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 326.217,
-    "PosY": 221.5278,
-    "PosZ": 146.242249,
+    "PosX": 325.9531,
+    "PosY": 249.1794,
+    "PosZ": 140.9702,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288101": {
@@ -6032,12 +6351,13 @@ datas ={
     "ID": 10288101,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 331.5311,
-    "PosY": 248.009781,
-    "PosZ": 149.234711,
+    "PosY": 248.0098,
+    "PosZ": 149.2347,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288102": {
@@ -6053,12 +6373,13 @@ datas ={
     "ID": 10288102,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 188.7431,
-    "PosY": 248.220474,
-    "PosZ": 217.526123,
+    "PosY": 248.2205,
+    "PosZ": 217.5261,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288103": {
@@ -6073,13 +6394,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288103,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 190.69928,
+    "PosX": 190.6993,
     "PosY": 248.4399,
-    "PosZ": 223.274323,
+    "PosZ": 223.2743,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288104": {
@@ -6094,13 +6416,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288104,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 188.785522,
+    "PosX": 188.7855,
     "PosY": 248.5804,
     "PosZ": 230.2211,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288105": {
@@ -6115,13 +6438,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288105,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 175.366516,
-    "PosY": 248.079178,
-    "PosZ": 227.243011,
+    "PosX": 175.3627,
+    "PosY": 248.1888,
+    "PosZ": 227.1274,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288106": {
@@ -6142,7 +6466,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288107": {
@@ -6159,11 +6484,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 193.9996,
     "PosY": 248.2043,
-    "PosZ": 312.848328,
+    "PosZ": 312.8483,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288108": {
@@ -6180,11 +6506,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 197.0488,
     "PosY": 248.135,
-    "PosZ": 316.198822,
+    "PosZ": 316.1988,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288109": {
@@ -6199,13 +6526,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288109,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 202.554108,
+    "PosX": 202.5541,
     "PosY": 248.0876,
-    "PosZ": 316.762817,
+    "PosZ": 316.7628,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288110": {
@@ -6221,12 +6549,13 @@ datas ={
     "ID": 10288110,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 199.9711,
-    "PosY": 248.06398,
+    "PosY": 248.064,
     "PosZ": 298.5338,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288111": {
@@ -6241,13 +6570,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288111,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 187.883423,
+    "PosX": 187.8834,
     "PosY": 248.3337,
     "PosZ": 301.3958,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288112": {
@@ -6263,12 +6593,13 @@ datas ={
     "ID": 10288112,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 184.5188,
-    "PosY": 248.502274,
+    "PosY": 248.5023,
     "PosZ": 299.4725,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288113": {
@@ -6284,12 +6615,13 @@ datas ={
     "ID": 10288113,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 239.7846,
-    "PosY": 248.06868,
-    "PosZ": 322.779724,
+    "PosY": 248.0687,
+    "PosZ": 322.7797,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288114": {
@@ -6310,7 +6642,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288115": {
@@ -6325,13 +6658,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288115,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 237.319214,
+    "PosX": 237.3192,
     "PosY": 248.0746,
     "PosZ": 331.9089,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288116": {
@@ -6347,12 +6681,13 @@ datas ={
     "ID": 10288116,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 240.5668,
-    "PosY": 248.23378,
-    "PosZ": 335.899628,
+    "PosY": 248.2338,
+    "PosZ": 335.8996,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288117": {
@@ -6373,7 +6708,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288118": {
@@ -6389,12 +6725,13 @@ datas ={
     "ID": 10288118,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 246.9802,
-    "PosY": 248.272415,
+    "PosY": 248.2724,
     "PosZ": 330.402,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288119": {
@@ -6409,13 +6746,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288119,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 249.629913,
-    "PosY": 248.729813,
-    "PosZ": 327.255219,
+    "PosX": 249.6299,
+    "PosY": 248.7298,
+    "PosZ": 327.2552,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288120": {
@@ -6430,13 +6768,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288120,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 246.469513,
-    "PosY": 248.488174,
-    "PosZ": 321.176117,
+    "PosX": 246.4695,
+    "PosY": 248.4882,
+    "PosZ": 321.1761,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288121": {
@@ -6457,7 +6796,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288122": {
@@ -6472,13 +6812,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288122,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 248.988922,
-    "PosY": 247.699417,
-    "PosZ": 307.868927,
+    "PosX": 248.9889,
+    "PosY": 247.6994,
+    "PosZ": 307.8689,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288123": {
@@ -6494,12 +6835,13 @@ datas ={
     "ID": 10288123,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 257.6687,
-    "PosY": 247.709488,
+    "PosY": 247.7095,
     "PosZ": 313.3449,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288124": {
@@ -6514,13 +6856,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288124,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 261.3283,
-    "PosY": 247.7115,
-    "PosZ": 315.786224,
+    "PosX": 255.9447,
+    "PosY": 248.4359,
+    "PosZ": 317.9763,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288125": {
@@ -6536,12 +6879,13 @@ datas ={
     "ID": 10288125,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 263.5301,
-    "PosY": 248.555191,
+    "PosY": 248.5552,
     "PosZ": 321.3034,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288126": {
@@ -6557,12 +6901,13 @@ datas ={
     "ID": 10288126,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 259.9247,
-    "PosY": 248.820084,
+    "PosY": 248.8201,
     "PosZ": 322.3139,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288127": {
@@ -6577,13 +6922,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288127,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 146.296722,
-    "PosY": 248.249588,
-    "PosZ": 205.123322,
+    "PosX": 146.2967,
+    "PosY": 248.2496,
+    "PosZ": 205.1233,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288128": {
@@ -6598,13 +6944,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288128,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 135.9662,
-    "PosY": 248.333084,
-    "PosZ": 209.236328,
+    "PosX": 136.289,
+    "PosY": 248.3214,
+    "PosZ": 209.0539,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288129": {
@@ -6625,7 +6972,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288130": {
@@ -6662,12 +7010,13 @@ datas ={
     "ID": 10288131,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 131.488,
-    "PosY": 248.411789,
-    "PosZ": 194.014709,
+    "PosY": 248.4118,
+    "PosZ": 194.0147,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288132": {
@@ -6683,12 +7032,13 @@ datas ={
     "ID": 10288132,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 136.2776,
-    "PosY": 248.318375,
-    "PosZ": 174.585724,
+    "PosY": 248.3184,
+    "PosZ": 174.5857,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288133": {
@@ -6704,12 +7054,13 @@ datas ={
     "ID": 10288133,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 135.9732,
-    "PosY": 248.534592,
-    "PosZ": 168.732391,
+    "PosY": 248.5346,
+    "PosZ": 168.7324,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288134": {
@@ -6724,13 +7075,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288134,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 136.7466,
-    "PosY": 248.803787,
-    "PosZ": 163.931488,
+    "PosX": 136.9152,
+    "PosY": 248.858,
+    "PosZ": 163.8063,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288135": {
@@ -6747,11 +7099,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 141.1763,
     "PosY": 248.5736,
-    "PosZ": 161.891632,
+    "PosZ": 161.8916,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288136": {
@@ -6766,13 +7119,14 @@ datas ={
     "EntityID": 0,
     "ID": 10288136,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
-    "PosX": 151.850922,
+    "PosX": 151.8509,
     "PosY": 248.6787,
     "PosZ": 171.2239,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288137": {
@@ -6793,7 +7147,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288138": {
@@ -6810,11 +7165,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 271.7072,
     "PosY": 248.8896,
-    "PosZ": 328.521729,
+    "PosZ": 328.5217,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288139": {
@@ -6830,12 +7186,13 @@ datas ={
     "ID": 10288139,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 299.9594,
-    "PosY": 248.704849,
-    "PosZ": 199.963928,
+    "PosY": 248.7048,
+    "PosZ": 199.9639,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288140": {
@@ -6851,12 +7208,13 @@ datas ={
     "ID": 10288140,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 294.7251,
-    "PosY": 249.112686,
-    "PosZ": 206.621826,
+    "PosY": 249.1127,
+    "PosZ": 206.6218,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288141": {
@@ -6873,11 +7231,12 @@ datas ={
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 377.684,
     "PosY": 249.553,
-    "PosZ": 444.691681,
+    "PosZ": 444.6917,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288142": {
@@ -6898,7 +7257,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288143": {
@@ -6914,12 +7274,13 @@ datas ={
     "ID": 10288143,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 369.2037,
-    "PosY": 249.574417,
-    "PosZ": 440.203644,
+    "PosY": 249.5744,
+    "PosZ": 440.2036,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288144": {
@@ -6935,12 +7296,13 @@ datas ={
     "ID": 10288144,
     "Name": "\u7ec4\u5408\u5b9e\u4f8b\u70b9\u4f4d",
     "PosX": 364.0777,
-    "PosY": 249.718582,
-    "PosZ": 435.467072,
+    "PosY": 249.7186,
+    "PosZ": 435.4671,
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288145": {
@@ -6961,7 +7323,8 @@ datas ={
     "Props": {
       "Radius": 0.0,
       "RefreshTimedID": 3,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10288146": {
@@ -6976,9 +7339,9 @@ datas ={
     "EntityID": 0,
     "ID": 10288146,
     "Name": "\u8131\u5361\u70b9",
-    "PosX": 465.7321,
-    "PosY": 255.1049,
-    "PosZ": 470.5049,
+    "PosX": 465.774,
+    "PosY": 255.185,
+    "PosZ": 470.5466,
     "Props": {
       "Remark": "",
       "ShowInSceneMap": 1

@@ -1,4 +1,4 @@
-﻿using AOT;
+using AOT;
 namespace KBEngine
 {
 	using UnityEngine;
@@ -199,12 +199,14 @@ namespace KBEngine
 				throw new InvalidOperationException("Have already connected!");
 
             IPAddress address;
-			//审核时使用v6
+			//苹果审核时使用v6
+#if UNITY_IOS && !UNITY_EDITOR
 			if (VersionUtils.IsInAudit())
 			{
 				_socket = createIpv6Socket();
 			}
 			else
+#endif
 			{
 				if (IPAddress.TryParse(ip, out address))
 				{

@@ -6,6 +6,12 @@
             <Persistent>    true                        </Persistent>
         </leftCubeTimes>
 
+        <paidCubeTimes>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Persistent>    true                        </Persistent>
+        </paidCubeTimes>
+
         <cubeUseCoinTimes>
             <Type>          UINT8                       </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
@@ -38,24 +44,30 @@
             <Persistent>    true                        </Persistent>
         </fromCubeMapId>
 
-        <todayCubeCowDur>
-            <Type>          UINT32                      </Type>
-            <Flags>         OWN_CLIENT                  </Flags>
-            <Default>       0                           </Default>
-            <Persistent>    true                        </Persistent>
-        </todayCubeCowDur>
-
-        <cubeCowTimerId>
+        <cubeRoomKickTimerId>
             <Type>          TIMER_ID                    </Type>
             <Flags>         CELL_PRIVATE                </Flags>
             <Default>       0                           </Default>
-        </cubeCowTimerId>
+        </cubeRoomKickTimerId>
 
         <cubeQuota>
             <Type>          CUBE_QUOTA_DATA_INFO        </Type>
             <Flags>         CELL_PRIVATE                </Flags>
             <Persistent>    true                        </Persistent>
         </cubeQuota>
+
+        <cubePrayTimes>
+            <Type>          UINT8                       </Type>
+            <Flags>         BASE_AND_CLIENT             </Flags>
+            <Default>       0                           </Default>
+            <Persistent>    true                        </Persistent>
+        </cubePrayTimes>
+
+        <cubeRoomLeftTimeDic>
+            <Type>          PY_DICT                     </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Persistent>    true                        </Persistent>
+        </cubeRoomLeftTimeDic>
     </Properties>
 
     <BaseMethods>
@@ -75,6 +87,7 @@
             <Arg>           BOOL                    </Arg>
             <Arg>           BOOL                    </Arg>
             <Arg>           UINT8                   </Arg>
+            <Arg>           OP_UUID                 </Arg>
         </useItemAddCubeTimes>
 
         <addRoomDurationFailed>
@@ -84,6 +97,7 @@
         </addRoomDurationFailed>
 
         <addRoomDurationFailedRewindTimes>
+            <Arg>           OP_UUID                 </Arg>
         </addRoomDurationFailedRewindTimes>
 
         <autoRenewCubeRoom>
@@ -95,7 +109,7 @@
         </afterEnterCubeDeductTimes>
 
         <cubePray> <Exposed/>
-            <Arg>           BOOL                    </Arg>
+            <Arg>           UINT8                   </Arg>
         </cubePray>
 
         <onLogonEnterCubeGetSpaceBox>
@@ -103,6 +117,9 @@
             <Arg>           OBJECT_ID               </Arg>
             <Arg>           SPACE_NO                </Arg>
         </onLogonEnterCubeGetSpaceBox>
+
+        <getCubeReadyLineCnt> <Exposed/>
+        </getCubeReadyLineCnt>
     </BaseMethods>
 
     <CellMethods>
@@ -135,6 +152,7 @@
         <checkAddCubeRoomDurationCondition>
             <Arg>           ITEM_ID                 </Arg>
             <Arg>           UINT8                   </Arg>
+            <Arg>           OP_UUID                 </Arg>
         </checkAddCubeRoomDurationCondition>
 
         <directlyAddCubeRoomDuration>
@@ -162,6 +180,25 @@
 
         <randomCubeRoom> <Exposed/>
         </randomCubeRoom>
+
+        <getArenaKingPos> <Exposed/>
+        </getArenaKingPos>
+
+        <getCubeKickLeftTime> <Exposed/>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           OBJECT_ID               </Arg>
+            <Arg>           OBJECT_ID               </Arg>
+            <Arg>           LINE_NO                 </Arg>
+        </getCubeKickLeftTime>
+
+        <switchCubeLine> <Exposed/>
+            <Arg>           LINE_NO                 </Arg>
+        </switchCubeLine>
+
+        <onCheckSwitchCubeLineResult>
+            <Arg>           LINE_NO                 </Arg>
+            <Arg>           BOOL                    </Arg>        
+        </onCheckSwitchCubeLineResult>
     </CellMethods>
 
     <ClientMethods>
@@ -183,6 +220,7 @@
             <Arg>           BOOL                    </Arg>
             <Arg>           CUBE_SWITCH             </Arg>
             <Arg>           ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
+            <Arg>           UINT8                   </Arg>
         </onCubeLoginData>
 
         <onCubeRoomLeftTime>
@@ -196,5 +234,24 @@
         <onCubePrayResult>
             <Arg>           UINT8                   </Arg>
         </onCubePrayResult>
+
+        <onCubeRoomKickLeftTime>
+            <Arg>           LONGTIME                </Arg>
+        </onCubeRoomKickLeftTime>
+
+        <onCubeKickLeftTime>
+            <Arg>           LONGTIME                </Arg>
+            <Arg>           OBJECT_ID               </Arg>
+            <Arg>           OBJECT_ID               </Arg>
+            <Arg>           LINE_NO                 </Arg>
+        </onCubeKickLeftTime>
+
+        <onCubeReadyLineCnt>
+            <Arg>           UINT8                   </Arg>      
+        </onCubeReadyLineCnt>
+
+        <onArenaKingPos>
+            <Arg>           POSITION_ARG            </Arg>      
+        </onArenaKingPos>
     </ClientMethods>
 </root>

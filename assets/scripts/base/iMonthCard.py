@@ -24,12 +24,14 @@ import redisUtils
 import LogTrackingMgr
 import gamedecorator
 import gameconfig
+import gameengine
 
 class IMonthCard(object):
     def __init__(self):
         self.offlineHangupChecked = False
         self.tempLastDayRemainHangupMinutes = 0
         self.monthCardTimer = 0
+        self.lastMonthcardLoginTime = self.tLoginBase
         if not self.isMonthCardExpired():
             INFO_MSG("init month card timer", self.monthCardExpireTime)
             self.monthCardTimer = self.pyAddTimer(60, 60, gametimer.MONTH_CARD_CHECK_TIMER)
@@ -230,7 +232,7 @@ class IMonthCard(object):
             return
         
         #分线大世界 and 安全区 = 主城，有挂机收益
-        if mapData['ifSafeArea'] != 1:
+        if mapData['isMainCity'] != 1:
             return
         
         if self.remainHangupMinutes > 0:
@@ -257,7 +259,11 @@ class IMonthCard(object):
             return
         
         if self.tLastOfflineBase <= 0:
-            ERROR_MSG("checkOfflineHangup", "tLastOfflineBase <= 0", self.tLastOfflineBase, endTime)
+            WARNING_MSG("checkOfflineHangup", "tLastOfflineBase <= 0", self.tLastOfflineBase, endTime)
+            return
+        
+        if self.lastMonthcardLoginTime >= self.tLastOfflineBase:
+            WARNING_MSG("checkOfflineHangup", "lastMonthcardLoginTime >= tLastOfflineBase", self.lastMonthcardLoginTime, self.tLastOfflineBase)
             return
 
         totalMinutes = 0
@@ -289,8 +295,8 @@ class IMonthCard(object):
             INFO_MSG("checkOfflineHangup begin", "timeDelta", timeDelta, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime, "tLastOfflineBase", self.tLastOfflineBase, "endTime", endTime)
 
             #中间天数
-            dayDelta = (utils.getCurrentDayTS(endTime, gameconst.COMMON_CYCLE_TIME) - \
-                       utils.getCurrentDayTS(self.tLastOfflineBase, gameconst.COMMON_CYCLE_TIME)) // gameconst.ONE_DAY_SECONDS - 1
+            dayDelta = (utils.getCurrentDayTS(endTime - gameconst.COMMON_CYCLE_TIME, gameconst.COMMON_CYCLE_TIME) - \
+                       utils.getCurrentDayTS(self.tLastOfflineBase - gameconst.COMMON_CYCLE_TIME, gameconst.COMMON_CYCLE_TIME)) // gameconst.ONE_DAY_SECONDS - 1
             if dayDelta > 0:
                 minutes = min(accumulateTime, BCBCCD.datas['dailyBaseTime']['value'] * dayDelta)
                 totalMinutes += minutes
@@ -298,7 +304,7 @@ class IMonthCard(object):
                 INFO_MSG("checkOfflineHangup middle", "dayDelta", dayDelta, "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
 
             #今天
-            minutes = min((endTime - utils.getCurrentDayTS(endTime, gameconst.COMMON_CYCLE_TIME)) // 60, self.remainHangupMinutes)
+            minutes = min((endTime - utils.getCurrentDayTS(endTime - gameconst.COMMON_CYCLE_TIME, gameconst.COMMON_CYCLE_TIME)) // 60, self.remainHangupMinutes)
             minutes = min(minutes, accumulateTime)
             totalMinutes += minutes
             INFO_MSG("checkOfflineHangup end", "minutes", minutes, "totalMinutes", totalMinutes, "accumulateTime", accumulateTime)
@@ -308,7 +314,8 @@ class IMonthCard(object):
 
         self.totalOfflineExp = self._calcIdleIncome(totalMinutes)
         self.totalOfflineMinute = totalMinutes
-        INFO_MSG("checkOfflineHangup", "totalMinutes", totalMinutes, "totalOfflineExp", self.totalOfflineExp)
+        INFO_MSG("checkOfflineHangup", "totalMinutes", totalMinutes, "totalOfflineExp", self.totalOfflineExp,
+                 "lastMonthcardLoginTime", self.lastMonthcardLoginTime, "tLastOfflineBase", self.tLastOfflineBase)
         LogTrackingMgr.LogTrackingMgr.MonthCard_Offline(
             self.gbID,
             self.remainHangupMinutes,
@@ -317,7 +324,10 @@ class IMonthCard(object):
         return True
 
     def reqOfflineHangupData(self, exposed):
+        INFO_MSG("reqOfflineHangupData")
+        self.checkOfflineHangup()
         if self.totalOfflineExp != 0:
+            INFO_MSG("send offlineHangupData")
             self.client.onOfflineHangupData(self.totalOfflineMinute, self.totalOfflineExp)
     
     def reqGetOfflineExp(self, exposed):
@@ -378,4 +388,6 @@ class IMonthCard(object):
 
     def _onUpdateRedisSVIPFlag(self, cid, err, res):
         INFO_MSG("_onUpdateRedisSVIPFlag", "cid", cid, "err", err, "res", res)
-
+        if res and res == 1:
+            stubs = gameengine.getLoginStubsByAccountName(self.accountName)
+            gameclass.DuplicatedCallList(stubs).incSVIPOnlineNumBySetSVIP()

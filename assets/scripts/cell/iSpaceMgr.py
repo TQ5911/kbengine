@@ -43,8 +43,6 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         return 0
 
     def _startNotifyTick(self):
-        # self.pyAddTimer(5, 5, gametimer.NOTIFY_NEAR_MONSTER_TICK)
-        # self.pyAddTimer(5, 5, gametimer.ARROW_TRACKING_TICK)
         pass
 
     def syncPlayer(self, func):
@@ -70,8 +68,6 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
     def onTimer(self, tid, userData):
         self._onTimer(tid, userData)
-        if userData == gametimer.NOTIFY_NEAR_MONSTER_TICK:
-            self.notifyAvatarNearMonPos()
 
     def onGetWitness(self):
         pass

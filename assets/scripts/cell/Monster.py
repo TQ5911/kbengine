@@ -550,7 +550,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             detail = gameclass.AwardDetail(monsterId=self.monsterId, spaceNo=self.spaceNo)
             rewardIDList, shareRewardIDList, displayModeList = self.getDeathDrop()
             factor = 1.0
-            if self.getConfigData().get('type', 0) == gameconst.MonsterType.NORMAL:
+            if formula.isLineSpace(self.spaceNo) and self.getConfigData().get('nameSuffixID', 0) == gameconst.MonsterSuffix.NORMAL:
                 host = utils.getEntityRealEntity(killer)
                 if host and host.IsAvatar:
                     factor = host.getKillMonsterAwardFactor(self.level)
@@ -588,6 +588,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         host = utils.getHostEntity(killer)
         if host and host.IsAvatar:
             host.base.triggerAchievement(gameconst.AchieveType.KILL_MONSTER)
+            host.base.triggerAchievementWithCtx(gameconst.AchieveType.KILL_TAR_SUFFIX_MONSTER, {'suffixId': self.getConfigData().get('nameSuffixID', 0)})
+            host.base.triggerAchievementWithCtx(gameconst.AchieveType.KILL_TAR_MONSTER, {'monsterId': self.monsterId})
 
         # 需要计数或者刷新的怪物:
         if self.needCountRefresh or self.needCountNum:
@@ -609,11 +611,12 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         LogTrackingMgr.LogTrackingMgr.Kill_Monster(
             self.monsterId,
             formula.getMapId(self.spaceNo),
+            self.gameEntityId,
             _suffixId,
         )
 
     def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx):
-        INFO_MSG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
+        DEBUG_MSG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
         if killer:
             if killer.IsAvatar:
                 killer.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes)

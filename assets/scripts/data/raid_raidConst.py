@@ -31,9 +31,21 @@ datas = _tools.RODict({
         "ID": "raidUnlcokLevel",
         "value": 10,
     }),
+    "teamUIVisibleId": _tools.RODict({
+        "ID": "teamUIVisibleId",
+        "value": "Team",
+    }),
     "raidUIVisibleId": _tools.RODict({
         "ID": "raidUIVisibleId",
         "value": "Raid",
+    }),
+    "teamDungeonUIVisibleId": _tools.RODict({
+        "ID": "teamDungeonUIVisibleId",
+        "value": "UITeamDunPanel",
+    }),
+    "raidDungeonUIVisibleId": _tools.RODict({
+        "ID": "raidDungeonUIVisibleId",
+        "value": "UICrusadeSystemPanel",
     }),
     "raidInvDeniedMsg": _tools.RODict({
         "ID": "raidInvDeniedMsg",

@@ -249,7 +249,7 @@ class IFriendship(object):
             _st,
             _ed,
             RC_RCD.datas['relationApplicationMax_receive']['value'],
-            lambda cid, err, ret: self._sendFriendRequestAfterAddRedis(cid, err, ret, gbId, _ed)
+            functools.partial(self._sendFriendRequestAfterAddRedis, fcVal.gbId, _ed)
         )
 
         LogTrackingMgr.LogTrackingMgr.Friend_Opr(
@@ -271,7 +271,7 @@ class IFriendship(object):
             'level': rcVal['level'],
         }
 
-    def _sendFriendRequestAfterAddRedis(self, cid, err, ret, gbId, now):
+    def _sendFriendRequestAfterAddRedis(self, gbId, now, cid, err, ret):
         INFO_MSG("IFriends::_sendFriendRequestAfterAddRedis ret={}".format(ret))
         if err:
             ERROR_MSG("IFriends::_sendFriendRequestAfterAddRedis error={}".format(err))
@@ -1228,7 +1228,8 @@ class IFriendship(object):
 
         self.authStatistics.addUseMoney(self, money)
 
-    def onUpdateExpRate(self, expRate):
+    def onUpdateExpRate(self, exp, expRate):
+        self.setTempMiscProp(gameconst.AvatarProps.cellExperience, exp)
         if not self.accountEntity.isAuthHost(self.gbID):
             return
 

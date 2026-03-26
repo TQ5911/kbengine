@@ -142,8 +142,8 @@ def update_skills_by_playerLevel(ent, playerLevel, skillLevel=0):
                 max_skill_level = skill_level_index + 1
             else:
                 break
-
-        return max_skill_level
+        #因为技能升级从1级开始计算，所以需要加1
+        return max_skill_level + 1
 
     for skill_id, skill_info in SRSUD.datas.items():
         school_id = 1000 + int(str(skill_info.get('ID'))[3])  # 提取学校 ID
@@ -296,8 +296,6 @@ def enhanceRole(su, player, enhanceLevel=0):
     maxEnhanceLevel = len(GEGCD.datas['strengthenPercent']['value'])
     _, _, items = _gmGetEquipment(player, 0, maxQuality, maxClassLevel, maxEnhanceLevel)
 
-    
-    
     # 装备改造
     # 1.铭文 因为gm穿戴有延迟，所以先在包里处理铭文
     for equipItem in items:
@@ -325,9 +323,10 @@ def enhanceRole(su, player, enhanceLevel=0):
         player.gmAddItems(0, itemId, 1, 'gm_cmd:$enhanceRole', bindType)
     #  2.使用道具
     import actionContext
+    opUUID = KBEngine.genUUID64()
     for itemId in itemList:
         gridId, it = player.petBag.getItemObjByItemID(itemId, bindType)
-        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'item': it, 'school':player.getAvatarSchool()})
+        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'opUUID':opUUID, 'item': it, 'school':player.getAvatarSchool()})
         player.addLingShouBase(abCtx)
     #  3.设置出战
     battleIndex = player.battleIndex
@@ -339,9 +338,10 @@ def enhanceRole(su, player, enhanceLevel=0):
         player.updateLingShouBattleList(player.id, battleIndex, petId, slotId)
     #  4.穿戴装备
     #  5.设置跟随
-    player.cell.setFollowPet(True, petIds[0])
+    player.setFollowPet(player.id, True, petIds[0])
 
     # 收集系统
+    _gmFinishCollect(player, 0)
     # 经脉系统
     player.gmUnlockAllMeridian()
     return su.onCommandResult(0, 'ok', {})
@@ -361,13 +361,26 @@ def modifyAttrByLevel(su, player, level):
 
     attrList = []
     for attrName, attrVal in roleAttrData.items():
+        if attrName in ['level']:
+            continue
         if attrName not in FDD.datas:
             continue
+        fightDefineData = FDD.datas[attrName]
+        # 兼容
+        prefix = 'adj'
+        if attrName.startswith('base') or attrName.startswith('adj'):
+            attrName = fightDefineData.get('changeAffactProp', None) or attrName
+        elif attrName.startswith('mul'):
+            prefix = ''
+
         if player.getProp(attrName) is None:
             continue
         oldVal = player.getProp(attrName)
         delta = type(oldVal)(attrVal - oldVal)  # 根据当前属性差值补足
-        attrList.append(("adj" + attrName[0].upper() + attrName[1:], delta))
+        if prefix:
+            attrList.append((prefix + attrName[0].upper() + attrName[1:], delta))
+        else:
+            attrList.append((attrName, delta))
     forwardCommand(su, '$addAwardFightProps', player.id, str(attrList))
 
 @gm_cmd('$setskillLv', (Player("gbId/Id"), Int("skillLevel"),), RARG(0), gameconst.BASE, '设置技能等级', ALLSIDE, GOD_GROUPS, minArgs=0)
@@ -494,24 +507,26 @@ def getEntBodyEquipmentInfo(su, ent):
     bodyequipinfo = {}
     if not hasattr(ent, 'bodyEquipData'):
         return su.onCommandResult(0, f'Failed, {getattr(ent, "name", ent.id)} 没有 bodyEquipData 方法', {})
+    school = ent.school
     for equipType,equipdata in ent.bodyEquipData.equips_map.items():
         bodyrandomAffixesInfo = {}
         bodyblessInfo = {}
 
-        for randomAffixesInfo in equipdata.equipAttr.spiritAffixes:
-            affixeid = randomAffixesInfo.toAfxClientDic().get('affixId')
-            affixValue = randomAffixesInfo.toAfxClientDic().get('affixVal')
-            affixscore = randomAffixesInfo.getAfxScore()
-            bodyrandomAffixesInfo[affixeid] = {
-                '附灵ID': affixeid,
-                '附灵的值': affixValue,
-                '附灵的战力': affixscore,
-            }
+        for randomAffixesInfo in equipdata.equipAttr.spiritDatas:
+            for affix in randomAffixesInfo.spiritAffixes:
+                affixeid = affix.afxId
+                affixValue = affix.affixVal
+                affixscore = affix.getAfxScore(school)
+                bodyrandomAffixesInfo[affixeid] = {
+                    '附灵ID': affixeid,
+                    '附灵的值': affixValue,
+                    '附灵的战力': affixscore,
+                }
             
         for blessInfo in equipdata.equipAttr.blessAffixes:
             blessId = blessInfo.toAfxClientDic().get('affixId')
             blessValue = blessInfo.toAfxClientDic().get('affixVal')
-            blessscore = blessInfo.getAfxScore()
+            blessscore = blessInfo.getAfxScore(school)
             bodyblessInfo[blessId] = {
                 '祝福ID': blessId,
                 '祝福的值': blessValue,
@@ -520,28 +535,30 @@ def getEntBodyEquipmentInfo(su, ent):
         if equipdata.getItemName() in bodyequipinfo:
             bodyequipinfo[equipdata.getItemName()+'2'] = {
             '装备名字': equipdata.getItemName(),
-            '装备品阶': equipdata.grade(),
+            '装备品阶': equipdata.getGrade(),
+            '装备的升阶属性':equipdata.equipAttr.upgradeAttrs,
             '装备品质': equipdata.quality,
             '装备战力': equipdata.getEquipScore(),
             '装备ID': equipdata.itemId,
             '装备基础词条':equipdata.getBaseAttrInfo(),
             '装备的随机基础词条':equipdata.equipAttr.baseAttrsByAfxVal,
             '装备的强化等级':equipdata.getEnhanceLevel(),
-            '装备的强化属性':equipdata.equipAttr.enhancementAttrs,
+            '装备的强化属性':equipdata.equipAttr.enhanceAttrs,
             '装备的附灵属性':bodyrandomAffixesInfo,
             '装备的祝福属性':bodyblessInfo
         }
         else:
             bodyequipinfo[equipdata.getItemName()] = {
                 '装备名字': equipdata.getItemName(),
-                '装备品阶': equipdata.grade(),
+                '装备品阶': equipdata.getGrade(),
+                '装备的升阶属性':equipdata.equipAttr.upgradeAttrs,
                 '装备品质': equipdata.quality,
                 '装备战力': equipdata.getEquipScore(),
                 '装备ID': equipdata.itemId,
                 '装备基础词条':equipdata.getBaseAttrInfo(),
                 '装备的随机基础词条':equipdata.equipAttr.baseAttrsByAfxVal,
                 '装备的强化等级':equipdata.getEnhanceLevel(),
-                '装备的强化属性':equipdata.equipAttr.enhancementAttrs,
+                '装备的强化属性':equipdata.equipAttr.enhanceAttrs,
                 '装备的附灵属性':bodyrandomAffixesInfo,
                 '装备的祝福属性':bodyblessInfo
             }
@@ -1267,7 +1284,6 @@ def resetCrusadeNum(su, player):
     if player is None:
         return False, '执行失败'
     player.onCrusadeDailyRewardNumUpdate()
-    player.onCrusadeWeeklyAddRewardItemNumUpdate()
     return True, '执行成功'
 
 
@@ -1276,7 +1292,6 @@ def resetChiefNum(su, player):
     if player is None:
         return False, '执行失败'
     player.onChiefDailyRewardNumUpdate()
-    player.onChiefWeeklyAddRewardItemNumUpdate()
     return True, '执行成功'
 
 
@@ -1343,6 +1358,47 @@ def showPetDraw(su, player, petItemList):
     player.client.onRandomSummonPet(petItemList)
     return True, '执行成功'
 
+def _gmFinishCollect(player, collectId):
+    import collect_details as  PDETAIL
+    from avatarCollectInfo import collectItem
+    school = player.getAvatarSchool()
+    if collectId == 0:
+        propIndexList = []
+        for collectId, info in PDETAIL.datas.items():
+            unavailableClass = info.get('unavailableClass', [])
+            if unavailableClass and school in unavailableClass:
+                continue
+            equipment_len = len(info['equipment']) if info['equipment'] else 0
+            prop_len = len(info['props']) if info['props'] else 0
+            player.collectibleData.collectibleDict.setdefault(collectId, collectItem(collectId))
+            for collectGridID in range(equipment_len + prop_len):
+                player.collectibleData.collectibleDict[collectId].onComplete(collectGridID)
+            propIndexList.append(collectId)
+        player.cell.onCollectAward(propIndexList, 0)
+        player.sendCollectInfo()
+        
+    else:
+        info = PDETAIL.datas.get(collectId, None)
+        if not info:
+            return False, '执行失败，收集项不存在'
+        unavailableClass = info.get('unavailableClass', [])
+        if unavailableClass and school in unavailableClass:
+            return False, '执行失败，收集项本职业不可用'
+        equipment_len = len(info['equipment']) if info['equipment'] else 0
+        prop_len = len(info['props']) if info['props'] else 0
+        player.collectibleData.collectibleDict.setdefault(collectId, collectItem(collectId))
+        for collectGridID in range(equipment_len + prop_len):
+            player.collectibleData.collectibleDict[collectId].onComplete(collectGridID)
+        player.cell.onCollectAward([collectId], 0)
+        player.client.onGetCollectInfo([player.collectibleData.collectibleDict[collectId].toSavedDict()])
+    return True, '执行成功'
+
+@gm_cmd('$gmFinishCollect', (Player("gbId/Id"), Int('collectId')), RARG(0), gameconst.BASE, '完成收集系统', ALLSIDE, GOD_GROUPS)
+def gmFinishCollect(su, player, collectId):
+    if player is None:
+        return False, '执行失败'
+    return _gmFinishCollect(player, collectId)
+
 @gm_cmd('$gmUnlockAllMeridian', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '经脉升至满级', ALLSIDE, GOD_GROUPS)
 def gmUnlockAllMeridian(su,player):
     if player is None:
@@ -1370,5 +1426,20 @@ def levelUpPet(su, player, gridId, petId):
     if player is None:
         return False, '执行失败'
     player.levelUpPet(player.id, [gridId], petId)
+    return True, '执行成功'
+
+@gm_cmd('$saleItemInCoinAuction', (Player("gbId/Id"),Int("itemId"), Int("uniqueId"), Int("totalPrice"), Int("number"), Int("bagType")), RARG(0), gameconst.BASE, '升级宠物等级', ALLSIDE, GOD_GROUPS)
+def saleItemInCoinAuction(su, player, itemId, uniqueId, totalPrice, number, bagType):
+    if player is None:
+        return False, '执行失败'
+    player.saleItemInCoinAuction(player.id, itemId, uniqueId, totalPrice, number, bagType)
+    return True, '执行成功'
+
+@gm_cmd('$testBagLock', (Player("gbId/Id"),), RARG(0), gameconst.BASE, '测试背包锁住', ALLSIDE, GOD_GROUPS)
+def testBagLock(su, player):
+    if player is None:
+        return False, '执行失败'
+    player.bagData.tryLockBag(lockDesc='testBagLock', lockSecs=30)
+    player.petBag.tryLockBag(lockDesc='testBagLock', lockSecs=30)
     return True, '执行成功'
 # --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

@@ -27,6 +27,7 @@ import gearBase_gearConst as GB_GCD
 import formula_generalFormula as F_GFD
 import gearBase_typeTab as GB_TTD
 import qualityData_qualityData as QD_QDD
+import gearEnhance_gearconst as GE_GC
 
 class ImpEquipment(object):
     def __init__(self):
@@ -111,6 +112,33 @@ class ImpEquipment(object):
 
         self.base.cellUndressEquipmentSucc(bodyEquip.toItemSavedDict())
 
+    def checkBodyEquipEnhanceConditions(self, equipPos, uniqueId):
+        equipItem = self.bodyEquipData.getEquipItem(equipPos)
+        if not equipItem:
+            WARNING_MSG('checkBodyEquipEnhanceConditions, equipPos error:', equipPos)
+            return False, None, None, None, False
+        if equipItem.uniqueId != uniqueId:
+            WARNING_MSG('checkBodyEquipEnhanceConditions, uniqueId not matched:', equipItem.uniqueId, uniqueId)
+            return False, None, None, None, False
+        if dataUtils.checkEquipGrowingForbidden(equipItem):
+            ERROR_MSG('checkBodyEquipEnhanceConditions, equipment can not be growing, equipment:', equipItem)
+            return False, None, None, None, False
+
+        ret = dataUtils.checkEquipmentEnhancementType(equipItem.equipAttr.equipType)
+        if not ret:
+            ERROR_MSG('checkBodyEquipEnhanceConditions, equipment can not enhance, equipment:', equipItem)
+            return  False, None, None, None, False
+
+        if not equipItem.checkEnhancementValid(equipItem.equipAttr.getEnhanceLv() + 1):
+            ERROR_MSG('checkBodyEquipEnhanceConditions, equipment enhancement is invalid, equipment:', equipItem)
+            return  False, None, None, None, True
+
+        costItemDic, currencyDic = equipItem.enhanceNeedItems()
+        if not costItemDic or not currencyDic:
+            ERROR_MSG('checkBodyEquipEnhanceConditions, cost is empty:', equipItem.equipAttr.getEnhanceLv() + 1)
+            return  False, None, None, None, False
+        return True, equipItem, currencyDic, costItemDic, False
+
     @gamedecorator.checkGameconfigEnable('equip_strengthen')
     @utils.isMyself
     def reqEquipEnhance(self, exposed, equipIn, equipPos, uniqueId, gridIdList, gridCountList, autoBuy):
@@ -118,35 +146,13 @@ class ImpEquipment(object):
         if equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
             self.base.bagEquipEnhance(equipPos, uniqueId, gridIdList, gridCountList, autoBuy)
         elif equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
-            equipItem = self.bodyEquipData.getEquipItem(equipPos)
-            if not equipItem:
-                WARNING_MSG('     in reqEquipEnhance, equipPos error:', equipPos)
-                return
-            if equipItem.uniqueId != uniqueId:
-                WARNING_MSG('   in reqEquipEnhance, uniqueId not matched:', equipItem.uniqueId, uniqueId)
-                return
-            if dataUtils.checkEquipGrowingForbidden(equipItem):
-                ERROR_MSG('   in reqEquipEnhance, equipment can not be growing, equipment:', equipItem)
-                return
-
-            ret = dataUtils.checkEquipmentEnhancementType(equipItem.equipAttr.equipType)
-            if not ret:
-                ERROR_MSG('   in reqEquipEnhance, equipment can not enhance, equipment:', equipItem)
-                return False
-
-            if not equipItem.checkEnhancementValid(equipItem.equipAttr.getEnhanceLv() + 1):
-                ERROR_MSG('   in reqEquipEnhance, equipment enhancement is invalid, equipment:', equipItem)
-                return
-
             if not self.bodyEquipData.tryLockBodyEquips(desp='reqEquipEnhance'):
-                WARNING_MSG('   in reqEquipEnhance, locked')
+                WARNING_MSG('reqEquipEnhance, bodyEquipData is locked')
                 return
-
-            costItemDic, currencyDic = equipItem.enhanceNeedItems()
-            if not costItemDic or not currencyDic:
-                ERROR_MSG('     in reqEquipEnhance, cost is empty:', equipItem.equipAttr.getEnhanceLv() + 1)
+            ret, equipItem, currencyDic, costItemDic, _ = self.checkBodyEquipEnhanceConditions(equipPos, uniqueId)
+            if not ret:
                 return
-
+            
             opUUID = KBEngine.genUUID64()
             src = AAC_AACDD.datas.BONUS_SRC_ENHANCE_BODY_EQUIP
             detail = gameclass.AwardDetail(itemId=equipItem.uniqueId)
@@ -206,29 +212,37 @@ class ImpEquipment(object):
 
     @gamedecorator.checkGameconfigEnable('equip_class')
     @utils.isMyself
-    def reqEquipUpgrade(self, exposed, equipIn, equipPos, uniqueId, consumeGridId, autoBuy):
-        INFO_MSG('in reqEquipUpgrade:', equipIn, equipPos, uniqueId, consumeGridId, autoBuy)
-
+    def reqEquipUpgrade(self, exposed, upgradeType, equipIn, equipPos, uniqueId, consumeGridIds, targetLv, autoBuy):
+        INFO_MSG('in reqEquipUpgrade:', upgradeType, equipIn, equipPos, uniqueId, consumeGridIds, targetLv, autoBuy)
+        if upgradeType not in gameconst.EquipUpgradeType.VALID_UPGRADE_TYPE:
+            WARNING_MSG('     in reqEquipUpgrade, invalid upgradeType:', upgradeType)
+            return
         if equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
-            self.base.bagEquipUpgrade(equipPos, uniqueId, consumeGridId, autoBuy)
+            self.base.bagEquipUpgrade(upgradeType, equipPos, uniqueId, consumeGridIds, targetLv, autoBuy)
         elif equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
             equipItem = self.bodyEquipData.getEquipItem(equipPos)
             if not equipItem:
                 WARNING_MSG('     in reqEquipUpgrade, equipPos error:', equipPos)
                 return
+            
             if equipItem.uniqueId != uniqueId:
                 WARNING_MSG('   in reqEquipUpgrade, uniqueId not matched:', equipItem.uniqueId, uniqueId)
                 return
+            
             if dataUtils.checkEquipGrowingForbidden(equipItem):
                 ERROR_MSG('   in reqEquipUpgrade, equipment can not be growing, equipment:', equipItem)
                 return
-
+            
+            if len(consumeGridIds) == 0:
+                ERROR_MSG('   in reqEquipUpgrade, args error, consumed grid is empty')
+                return
+            
             ret = dataUtils.checkEquipmentUpgradeType(equipItem.equipAttr.equipType)
             if not ret:
                 ERROR_MSG('   in reqEquipUpgrade, equipment can not upgrade, equipment:', equipItem)
                 return False
-
-            if not equipItem.checkUpgradeValid():
+            
+            if not dataUtils.checkEquipUpgradeValid(equipItem.equipAttr.equipType, equipItem.equipAttr.quality, equipItem.getGrade(), upgradeType, targetLv):
                 ERROR_MSG('   in reqEquipUpgrade, equipment upgrade is invalid, equipment:', equipItem)
                 return
 
@@ -236,20 +250,18 @@ class ImpEquipment(object):
                 WARNING_MSG('   in reqEquipUpgrade, locked')
                 return
 
-            costItemDic = equipItem.upgradeNeedItems()
-            if not costItemDic:
-                ERROR_MSG('     in reqEquipUpgrade, cost is empty:', equipItem.getGrade() + 1)
-                return
-
             opUUID = KBEngine.genUUID64()
             src = AAC_AACDD.datas.BONUS_SRC_UPGRADE_BODY_EQUIP
             detail = gameclass.AwardDetail(itemId=equipItem.uniqueId)
-            self.base.baseEquipDeductItems(costItemDic, {consumeGridId:1}, None, None, opUUID, src, detail, self,
-                                  'cellEquipUpgrade', [consumeGridId, equipItem.itemId, equipItem.getGrade(), opUUID, equipPos], autoBuy, True)
+            gridIds = {}
+            for consumeGridId in consumeGridIds:
+                gridIds[consumeGridId] = 1
+            self.base.baseEquipDeductItems(None, gridIds, None, None, opUUID, src, detail, self,
+                                  'cellEquipUpgrade', [consumeGridIds, equipItem.itemId, equipItem.getGrade(), upgradeType, targetLv, opUUID, equipPos], autoBuy, True)
         return
 
-    def cellEquipUpgrade(self, opStat, bindValue, opUUID, slotId):
-        INFO_MSG('in cellEquipUpgrade:', opStat, bindValue, slotId)
+    def cellEquipUpgrade(self, opStat, bindValue, upgradeType, targetLv, opUUID, slotId):
+        INFO_MSG('in cellEquipUpgrade:', opStat, bindValue, upgradeType, targetLv, opUUID, slotId)
         self.unlockBodyEquips()
         if opStat != gameconst.BagOPStat.BAG_OP_STAT_OK:
             WARNING_MSG('in cellEquipUpgrade, items not enouth')
@@ -262,10 +274,11 @@ class ImpEquipment(object):
         upgradeAttrsBefore = equipItem.getUpgradeAttrs()
         gradeBefore = equipItem.getGrade()
         bindValueBefore = equipItem.getBindValue()
-        equipItem.doUpgradeEquip(self, opUUID, onBody=True)
+        equipItem.doUpgradeEquip(self, opUUID, upgradeType, targetLv, onBody=True)
         equipItem.setBindValue(equipItem.getOriginalBindValue() + bindValue)
         bindValueAfter = equipItem.getBindValue()
         self.updateEquipmentScore()
+        self.bodyEquipData.updateEquipDressAppearance(self, equipItem.uniqueId)
         LogTrackingMgr.LogTrackingMgr.Equip_Upgrade(opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, baseAttrsBefore, enhanceAttrsBefore, upgradeAttrsBefore, \
                                                     equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), gradeBefore, equipItem.getGrade(), bindValueBefore, bindValueAfter, \
                                                     equipItem.getEquipScore())
@@ -926,3 +939,131 @@ class ImpEquipment(object):
     def recalculateAllInscriptionEffects(self, isRelogin):
         INFO_MSG('in recalculateAllInscriptionEffects:', isRelogin)
         self.bodyEquipData.recalculateAllInscriptionEffects(self)
+
+    @gamedecorator.checkGameconfigEnable('equip_strengthen')
+    @utils.isMyself
+    def reqMultiEquipEnhance(self, exposed, equipIn, equipPos, equipUniqueIds):
+        INFO_MSG('reqMultiEquipEnhance:', exposed, equipIn, equipPos, equipUniqueIds)
+        if len(equipIn) == 0 or len(equipIn) > int(GE_GC.datas['gearEnhance_listNumLimit']['value']) \
+            or len(equipIn) != len(equipPos) or len(equipIn) != len(equipUniqueIds):
+            self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.ARG_ERR, [], [])
+            WARNING_MSG('reqMultiEquipEnhance, wrong args 1:')
+            return
+        
+        if not self.bodyEquipData.tryLockBodyEquips(desp='reqMultiEquipEnhance'):
+            self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.BODY_EQUIP_LOCKED, [], [])
+            WARNING_MSG('reqMultiEquipEnhance, body equip data is locked')
+            return
+        
+        # 背包部分强化
+        bagEquipDatas = {}
+        # 穿戴部分强化
+        validBodyItems = {}
+        for idx in range(0, len(equipIn)):
+            ins = equipIn[idx]
+            pos = equipPos[idx]
+            ids = equipUniqueIds[idx]
+            if ins == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
+                bagEquipDatas[pos] = ids
+            elif ins == gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
+                ret, equipItem, currencyDic, costItemDic, isTopLevel = self.checkBodyEquipEnhanceConditions(pos, ids)
+                if not ret:
+                    if isTopLevel:
+                        continue
+                    self.unlockBodyEquips()
+                    self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.ARG_ERR, [], [])
+                    WARNING_MSG('reqMultiEquipEnhance, wrong args 2:', ins, pos, ids)
+                    return
+                validBodyItems[equipItem.uniqueId] = [pos, equipItem.getAddBindValueStatus(), currencyDic, costItemDic]
+            else:
+                self.unlockBodyEquips()
+                self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.ARG_ERR, [], [])
+                WARNING_MSG('reqMultiEquipEnhance, wrong args 3:', ins, pos, ids)
+                return
+        # 检查下参与强化的装备数据
+        if len(bagEquipDatas) == 0 and len(validBodyItems) == 0:
+            self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.ARG_ERR, [], [])
+            WARNING_MSG('reqMultiEquipEnhance, wrong args 4:', bagEquipDatas, validBodyItems)
+            return  
+        self.base.baseMultiEquipEnhance(equipUniqueIds, bagEquipDatas, validBodyItems)
+
+    def cellMultiEquipEnhance(self, opUUID, bodyEquipInfos, bodyEquipBindInfos, enhanceResults, consumedItemInfos):
+        INFO_MSG('cellMultiEquipEnhance:', bodyEquipInfos, bodyEquipBindInfos, consumedItemInfos)
+        self.unlockBodyEquips()
+        for bodyEquipInfo in bodyEquipInfos:
+            slotId, uniqueId = bodyEquipInfo
+            equipItem = self.bodyEquipData.getEquipItem(slotId)
+            if not equipItem:
+                WARNING_MSG('cellMultiEquipEnhance, wrong arg 1:', slotId, uniqueId)
+                continue
+            if equipItem.uniqueId != uniqueId:
+                WARNING_MSG('cellMultiEquipEnhance, wrong arg: 2', slotId, equipItem.uniqueId, uniqueId)
+                continue
+
+            bindInfo = bodyEquipBindInfos.get(uniqueId, None)
+            if not bindInfo:
+                WARNING_MSG('cellMultiEquipEnhance, wrong arg: 3', slotId, equipItem.uniqueId, uniqueId)
+                continue
+            bindValue = bindInfo[0]
+
+            baseAttrsBefore = equipItem.getBaseAttrs()
+            enhanceAttrsBefore = equipItem.getEnhanceAttrs()
+            upgradeAttrsBefore = equipItem.getUpgradeAttrs()
+            addBindValueBefore = equipItem.getAddBindValueStatus()
+            levelBefore = equipItem.getEnhanceLevel()
+            bindValueBefore = equipItem.getBindValue()
+
+            if bindValue > 0:
+                equipItem.updateBindValue()
+
+            enhanceLv = equipItem.equipAttr.getEnhanceLv()
+            checkEnhanceLv = enhanceLv + 1
+            equipItem.checkEnhancementValid(checkEnhanceLv, False)
+            enhanceVal = equipItem.doEnhanceEquip(self, opUUID, enhanceLv, onBody=True)
+            bindValueAfter = equipItem.getBindValue()
+            # 装备破碎了
+            if enhanceVal == gameconst.EquipConstVale.ENHANCEMENT_BROKEN_FLAG:
+                bodyEquip = self.bodyEquipData.doBodyUndressEquip(self, slotId)
+                if bodyEquip:
+                    self.base.cellBrokenEquipment(opUUID, bodyEquip.toItemSavedDict())
+
+            LogTrackingMgr.LogTrackingMgr.Equip_Enhancement(opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, baseAttrsBefore, enhanceAttrsBefore, \
+                                                        upgradeAttrsBefore, equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), addBindValueBefore, \
+                                                        equipItem.getAddBindValueStatus(), bindValue, levelBefore, equipItem.getEnhanceLevel(), enhanceVal, equipItem.getEquipScore(), bindValueBefore, bindValueAfter)
+
+            self.base.triggerAchievement(gameconst.AchieveType.ENHANCE_EQUIPMENT)
+            enhanceResults.append([gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, enhanceVal, equipItem.itemId, equipItem.uniqueId, equipItem.getEnhanceLevel(), equipItem.getEquipScore(), equipItem.getAddBindValueStatus(), equipItem.bindType, equipItem.getMaxEnhanceLevel()])
+        self.updateEquipmentScore()
+        
+        
+        equipEnhanceDatas = []
+        equipConsumedDatas = []
+        for enhanceResult in enhanceResults:
+            equipEnhanceDatas.append({
+                'eqipIn': enhanceResult[0],
+                'eqipPos': enhanceResult[1],
+                'enhanceVal': enhanceResult[2],
+                'itemId': enhanceResult[3],
+                'uniqueId': enhanceResult[4],
+                'enhanceLv': enhanceResult[5],
+                'score': enhanceResult[6],
+                'addBindValueStatus': enhanceResult[7],
+                'bindType': enhanceResult[8],
+                'maxEnhanceLv': enhanceResult[9],
+            })
+        for itemId, bindInfo in consumedItemInfos.items():
+            bindCount = bindInfo[0]
+            normalCount = bindInfo[1]
+            if bindCount > 0:
+                equipConsumedDatas.append({
+                    'itemId':itemId,
+                    'itemNum':bindCount,
+                    'bindType':gameconst.ItemBindType.BIND
+                    })
+            if normalCount > 0:
+                equipConsumedDatas.append({
+                    'itemId':itemId,
+                    'itemNum':normalCount,
+                    'bindType':gameconst.ItemBindType.NORMAL
+                    })
+        self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.OK, equipEnhanceDatas, equipConsumedDatas)

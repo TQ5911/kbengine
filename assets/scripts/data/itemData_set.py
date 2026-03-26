@@ -289,6 +289,6 @@ datas = _tools.RODict({
     }),
     "sellingAmountText": _tools.RODict({
         "ID": "sellingAmountText",
-        "value": "出售数量：",
+        "value": "回收数量：",
     })
 })

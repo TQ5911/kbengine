@@ -41,7 +41,7 @@ datas = _tools.RODict({
     }),
     5: _tools.RODict({
         "ID": 5,
-        "upgradeExp": 750000,
+        "upgradeExp": 1400000,
         "upgradeCost": 700000,
         "juYingGeLv": 5
     })

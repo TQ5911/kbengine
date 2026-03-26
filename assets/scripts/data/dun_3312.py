@@ -3776,18 +3776,18 @@ datas ={
     "EntityID": 17310002,
     "ID": 33128010,
     "Name": "\u4f20\u9001\u70b9",
-    "PosX": 175.1786,
-    "PosY": 527.7436,
-    "PosZ": 107.5594,
+    "PosX": 179.3708,
+    "PosY": 527.7404,
+    "PosZ": 110.4982,
     "Props": {
       "CameraId": 0,
       "GateType": 1,
       "Remark": "",
       "ShowInSceneMap": 1,
       "TelDir": 0.0,
-      "TelX": 175.1786,
-      "TelY": 527.7436,
-      "TelZ": 107.5594
+      "TelX": 179.3708,
+      "TelY": 527.7404,
+      "TelZ": 110.4982
     }
   }
 }
